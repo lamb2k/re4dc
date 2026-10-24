@@ -1,0 +1,97 @@
+{
+  "verified_manifests": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-vis23/composition-int24-review/MANIFEST.json",
+      "members": 7,
+      "sha256": "c7a406d8e092447d77205452f96a1f687a53709ebecdc34669b78ed4aa168a43"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/triangle-shadow24/review-implementation/MANIFEST.json",
+      "members": 15,
+      "sha256": "129deb192524c738c11ac53b7cb1a7ab5dc64cc46a688e134498d7259a1a71cb"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/MANIFEST.json",
+      "members": 52,
+      "sha256": "a307ae69c26cdac34671f0819c25345369e0a2741775e96bb04c004f0af47a67"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/MANIFEST.json",
+      "members": 70,
+      "sha256": "bc0f03701b3014f1cf5040c086f18b455da9c436620c0626a54cda9c74ae65b1"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-continuation/SHA256-MANIFEST.json",
+      "members": 8,
+      "sha256": "e94d92d53ff62d6c7129ae75b79cde6d51643ad5787c4dc7e083e2df97737e8c"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/SHA256-MANIFEST.json",
+      "members": 13,
+      "sha256": "69240b032208526cf4e08e75388edca84d18a6af7af13f3be87d177d352c6342"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v2/SHA256-MANIFEST.json",
+      "members": 8,
+      "sha256": "830eb1160e8840917679b6d2e202afb44b53ba45aceaaa50431d610068292e9f"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-target846/SHA256-MANIFEST.json",
+      "members": 9,
+      "sha256": "4e8a440d8e40a549d911496e5124878f2fafef273d62197827955809434d0a92"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-target846/VALID-EXTENT-MANIFEST.json",
+      "members": 3,
+      "sha256": "abd4f24eb710c15615e68dd67d60627dd8881d8c642b9fcbd3c34db830377563"
+    }
+  ],
+  "syntax_only_checked": [
+    "dated-root-docs/takeover-refresh-20261024.py",
+    "root-integration-preparation/apply-composition-integration-guards-20261024.py",
+    "root-integration-preparation/commit-composition-integration-prep-20261024.py",
+    "root-integration-preparation/create-composition-integration-prep-20261024.py",
+    "root-integration-preparation/fix-composition-fixture-projection-20261024.py",
+    "root-integration-preparation/integration-preview-vis-compose-20261024.py",
+    "root-guarded-composition/check-guard-mutants.py",
+    "root-guarded-composition/failed-fixture-v1.py",
+    "independent-composition-review/FAILED-SCRIPT.py",
+    "independent-composition-review/review_host.py",
+    "frozen-composition-source/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py",
+    "generic-triangle-source/port/dreamcast/tools/d367/triangle_shadow24/exact_shadow.py",
+    "generic-triangle-source/port/dreamcast/tools/d367/triangle_shadow24/test_exact_shadow.py",
+    "generic-triangle-independent-review/extra_controls.py",
+    "generic-triangle-design/rational_controls.py",
+    "durable-normal/review/verify_completed_pair.py",
+    "durable-normal/review/root-readback-followup.py",
+    "normal-continuation-source/continue_full_pair.py",
+    "normal-continuation-source/continue_full_pair.sh",
+    "normal-continuation-source/prepare_continuation.py",
+    "normal-continuation-source/readback_continuation.py",
+    "QA-preparation-v1/prepare_qa_pair.py",
+    "QA-preparation-v1/prepare_three_arm.py",
+    "QA-preparation-v1/readback_three_arm.py",
+    "QA-preparation-v1/run_qa_three_arm.py",
+    "QA-preparation-v1/run_qa_three_arm.sh",
+    "QA-preparation-v2/prepare_successor.py",
+    "QA-preparation-v2/readback_successor.py",
+    "QA-preparation-v2/run_qa_three_arm.py",
+    "QA-preparation-v2/run_qa_three_arm.sh",
+    "QA-independent-profile-HOLD/failed-broad-profile-v1.py",
+    "QA-independent-profile-HOLD/verify_qa_three.py",
+    "rain846-HOLD-review/run_identity_controls.py",
+    "rain846-HOLD-review/run_valid_extent_controls.py",
+    "collect.py"
+  ],
+  "root_guard_source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+  "generic_math_source": "28c739468ae7d2d2d3c09f81330015e7769dc824",
+  "composition_review_commit": "03ac75c7f50b3438b46096e847fb15901db63e98",
+  "generic_math_review_reference": "dd61a3fb14f14dd9d6099b34bb466d926c315607 (producer-reported origin/codex/pvs23-data; object unavailable in local pool, exact C manifest and bytes verified)",
+  "QA_raw_three_complete": true,
+  "QA_full_profile_PIN_closure": "HOLD/PENDING; six resolved-map differences and historical external neck-header pin absent",
+  "memory_or_media_or_guest_acceptance": false,
+  "rain846_tools": "HOLD plus valid-extent addendum; active repair payload excluded",
+  "SDK_or_guest_runs": 0,
+  "runtime_or_integration_mutation": false,
+  "private_actual_geometry_copied": false
+}

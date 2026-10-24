@@ -1,0 +1,27 @@
+# Independent selected-target tooling review: HOLD at84648350
+
+Exact immutable commit84648350bb6a3bc4e1ec94026b0fb98937b1ff69; source runtime da413ff/fdb5 and baseline bca44 remain SOURCE CLEAR separately. This review changes no author runtime/tool/source and executes no SDK, environment source, Make query, compile, link or guest. Root has accepted these two narrow holds and authorized the author to repair tools only, then return a frozen successor.
+
+Independent exact git-byte RAM export: /dev/shm/gc-rain-tools-review846-0a356mah. Authored98 synthetic host controls pass unchanged, matrix check/plan and bash-n pass. PINS matches a2d28c7459fab885c0b9807048777270f08968a7fc3d5393507df8fed1476591 and preparation receipt matches frozen bytes. All recorded review commands are host-only, address-space bound256MiB; test suite itself uses128MiB. No source/header worktree mutation.
+
+## HOLD1: executed bootstrap C backend lacks an input pin
+
+run-matrix.sh correctly reserves under explicit root grant, canonical tree lease, one shared2-slot wrapper, address-space cap, owned TMPDIR and60s child timeout before sourcing KOS. environ_dreamcast.sh23 actually invokes sh-elf-gcc -x c -c -o /dev/null - -m4-single, then base environment invokes kos-cc -dumpversion. Pinning the gcc executable alone does not pin its actual cc1 C frontend. PINS tools binds gcc, C++ g++, cc1plus, assembler and environment scripts, but omits /opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1. This is a concrete invoked SDK input, not a hypothetical optional tool.
+
+Read-only actual cc1:31,154,920B, SHA2560709f996a2b9d58e563aa9abbf34f65cf53d5e8762a67f9850dc48302a8f4590. Required correction: pin it in candidate PINS and validate before/after future SDK work. No SDK query is needed for this repair. Existing bootstrap grant/lease/slot/TMPDIR/deadline ordering should remain.
+
+## HOLD2: disabled identity misses standalone externally visible definitions
+
+readback.Elf.allocated currently compares allocated section type/flags/size/alignment/data hash, omitting section sh_addr. require_identity compares those maps, e_flags and allocated relocations. Relocations include only the symbols referenced by those relocations. An exported entrypoint can be consumed by other objects without any relocation referencing it inside this selected object. Its value/binding/type/visibility/section/size must therefore be compared independently; current Elf constructor also discards st_other visibility.
+
+Independent actual ELF32/little-endian/SH synthetic schedules call the production readback class directly, without fake Elf classes or SDK. All of these are incorrectly accepted as disabled identity: allocated section address0->0x1234; exported function value0->2 when the object relocation refers instead to external symbol2; strong global->weak function binding; default->hidden visibility. The same checker correctly rejects an allocated code-byte mutation. The original fixture whose relocation refers to the defined function correctly rejects a changed function value, confirming that the missing case is the unreferenced external definition boundary. No generated current SH4 defect is claimed; these are deterministic checker contract counterexamples.
+
+Required correction accepted by root: include allocated addresses and all externally visible allocated definitions, with name/binding/type/visibility/section/value/size, or fail explicitly on an unhandled form. Retain strict disabled allocated+relocation checks and raw/strip-debug difference reporting. Do not normalize a definition change into debug noise. Add actual synthetic negatives for standalone values, binding, type/visibility, section/size and section address while retaining harmless debug-only acceptance. No whole-programme ABI/fullnormal identity follows from the selected matrix even after repair.
+
+## Other boundaries reviewed
+
+Grant/source/base/PINS/output/cases/limits and no-resume root admission agree. KOS probe is correctly SDK work inside allocation/lease/slot and owned bootstrap trace; outer380s bounds combined bootstrap+matrix, command60s/matrix360s and256MiB AS/output checks are explicit. One job, eight cases/two objects/eight partial links are the intended scope. Complete actual dependencies before/after compile and original argv deltas are retained. Disabled raw/debug differences are reported honestly rather than stripped into an invented full raw identity. ON128B/alignment/P2 literal/opcode observations correctly remain structural; actual boot-only four-line128B range/P2 accessor/provider opcodes and final linked P1 address still require root target review. Existing two source holds do not authorize SDK yet or change runtime SOURCE CLEAR.
+
+## Reproduction / handoff
+
+run_identity_controls.py takes --tools pointing at the frozen RAM export (or an exact846 helper export). It intentionally asserts historical wrong acceptance and preserves these originals. Successor independent review will execute the same mutations with inverted expected rejection and preserve the historical source. identity-controls.json records each schedule; source-pins.json binds exact reviewed helper/PINS/receipt bytes plus read-only KOS/cc1 inputs. Parent authorized author repair; no shared file edits by reviewer. Source/runtime/assets/recipe/guest/physical/controller ancestry/cache semantics/memory/pixels are outside this tooling verdict.

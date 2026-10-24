@@ -1,0 +1,18 @@
+test_actual_triangle_not_aabb_geometry (__main__.Controls.test_actual_triangle_not_aabb_geometry) ... ok
+test_cartesian_not_matched_endpoint_pairs (__main__.Controls.test_cartesian_not_matched_endpoint_pairs) ... ok
+test_depth_plane_and_mixed_eye_refusal (__main__.Controls.test_depth_plane_and_mixed_eye_refusal) ... ok
+test_distinct_complete_triangles_and_and_dependencies (__main__.Controls.test_distinct_complete_triangles_and_and_dependencies) ... ok
+test_edge_contact_outside_and_boundary_depth (__main__.Controls.test_edge_contact_outside_and_boundary_depth) ... ok
+test_full_eye_volume_and_independent_oracle (__main__.Controls.test_full_eye_volume_and_independent_oracle) ... ok
+test_full_panel_identity_cap_and_faces (__main__.Controls.test_full_panel_identity_cap_and_faces) ... ok
+test_input_bounds_nonfinite_and_work_budget (__main__.Controls.test_input_bounds_nonfinite_and_work_budget) ... ok
+test_no_per_vertex_or_per_eye_source_switch (__main__.Controls.test_no_per_vertex_or_per_eye_source_switch) ... ok
+test_orientation_and_affine_controls (__main__.Controls.test_orientation_and_affine_controls) ... ok
+test_pointwise_grid_against_independent_linear_solve (__main__.Controls.test_pointwise_grid_against_independent_linear_solve) ... ok
+test_semantic_mutants (__main__.Controls.test_semantic_mutants) ... ok
+test_source_degenerate_and_target_dimension (__main__.Controls.test_source_degenerate_and_target_dimension) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.532s
+
+OK

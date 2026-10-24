@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-24T08:28:07.8327694Z",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "plan_sha256": "d39c920ac5b8596b2244ea4267a6712a7e5cf1321b80448240bb3fc8ce7075a0",
+  "tools_sha256": "543c4654a2566828f8e314c2d342a70aba26dfaaf67434319258e010fcbb6ae2",
+  "action": "Sequential fresh same-QA baseline/OFF/ON full links, original failed baseline preflight retained",
+  "baseline_control": "GC features absent in baseline source; omit only three dead CLI names, require missing resolved names",
+  "sdk_slots": 1,
+  "jobs": 1,
+  "total_owned_bytes_cap": 2147483648,
+  "preserved_old_qa_root_in_cap": true,
+  "c_admission_gib": 26,
+  "c_floor_gib": 24,
+  "ram_admission_gib": 3,
+  "ram_floor_mib": 512,
+  "seconds_per_arm": 1800,
+  "guest_allocation": 0
+}

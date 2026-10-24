@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-24T08:23:22.683671+00:00",
+  "status": "LOCAL_INTEGRATION_PREPARATION_ONLY",
+  "base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "tree": "/root/work/lanes/codex-composition-int24",
+  "branch": "wip/codex-composition-int24-20261024",
+  "units": [
+    {
+      "unit": "GC gate catalog Motion",
+      "source": "aab201ceac0e18107f64a3212398afe916793327",
+      "local_preparation_merge": "1909c16f745ccaa8067d3b296b0a0ed28216b07a"
+    },
+    {
+      "unit": "effective0 visibility prerequisite",
+      "source": "7eb109ea14ff3fe635e687c2e21629c3f6cfa865",
+      "local_preparation_merge": "e3ed0d2ab2482ade7f5a3615009f59a43ccdcfae"
+    },
+    {
+      "unit": "PVS batch lifecycle defaultoff",
+      "source": "b6b4fa7a3cf3a5244d28a31eae9a8bf42f18ce45",
+      "local_preparation_merge": "dbe64c183a305df0d9735073827a05600091864c"
+    },
+    {
+      "unit": "rain causal diagnostic defaultoff",
+      "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+      "local_preparation_merge": "57c778ca8289bac5b05be698d7e522ec6e2721fc"
+    }
+  ],
+  "HEAD": "57c778ca8289bac5b05be698d7e522ec6e2721fc",
+  "claims": "Root only: strict cross-feature admission, selected-source integration and source/host review preparation. No SDK or guest allocation. Frozen author trees unchanged.",
+  "limits": "No integration or branch push, recipe/asset/SD/publication change, performance/heap/cut or hardware acceptance. Textual clean merges are not semantic qualification."
+}

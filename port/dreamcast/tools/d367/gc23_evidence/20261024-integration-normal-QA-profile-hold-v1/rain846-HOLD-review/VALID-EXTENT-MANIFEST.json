@@ -1,0 +1,14 @@
+{
+  "run_valid_extent_controls.py": {
+    "bytes": 1795,
+    "sha256": "cedc8a23ff330df82200ccca092baa1de5a26168f9e69a2afe5bdb03cea04412"
+  },
+  "valid-extent-controls.json": {
+    "bytes": 642,
+    "sha256": "9ec537f8a7e519cd279359fb0465fc58dd25bf4e6aaf70269c2f6f0022ebe5c4"
+  },
+  "VALID-EXTENT-ADDENDUM.md": {
+    "bytes": 388,
+    "sha256": "7c63c3951eb0a923efb8d433d7d9e2778c549e82cf98583a49be43ce9aac016f"
+  }
+}

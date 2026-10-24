@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-24T08:25:57.440851+00:00",
+  "tool_chunk": "2442a8",
+  "exit_code": 1,
+  "tests": 7,
+  "failures": 12,
+  "cause": "Extracted model_direct_account now contains GC accounting macros whose actual disabled definitions were omitted from the host fixture. Compile errors, not game runtime failure or accepted semantic-mutant detection.",
+  "evidence_limits": "Original tool output was truncated; this is a compact failure receipt plus exact failed fixture, not a complete compiler log."
+}

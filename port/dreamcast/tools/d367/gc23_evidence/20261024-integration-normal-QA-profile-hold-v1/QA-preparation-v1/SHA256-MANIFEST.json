@@ -1,0 +1,54 @@
+{
+  "FUTURE-GUEST-COMMANDS.json": {
+    "bytes": 7299,
+    "sha256": "41550c79de496cc8c75ea2be3707da64d8e2bcce5b0eac392f03f95757bf677a"
+  },
+  "HANDBACK.md": {
+    "bytes": 4661,
+    "sha256": "5860b56f0ce07862bbca54f3848d3978c1fb70797addda4f4641e3ec6eb31f83"
+  },
+  "PREPARATION-THREE.json": {
+    "bytes": 8660818,
+    "sha256": "82f4869f2c1306b7dacda950888b99c5acb1778dad5b14ea9ca9d97bd7029b27"
+  },
+  "PREPARATION.json": {
+    "bytes": 5740831,
+    "sha256": "f846a60c145819b85746ae97403cd5b6c0c3c7168b43e93f03b1317ba172d4cc"
+  },
+  "READBACK.json": {
+    "bytes": 592,
+    "sha256": "36e2dd31139cd6c18560f0f64691f6c5352ee9bdd44ab60408e3b565eb56d3e4"
+  },
+  "RUNNER-PINS.json": {
+    "bytes": 804,
+    "sha256": "0de251bf12c291cb1eaa10405b1fa74c69aa4590b55c0846a92c1a4b5cb83b3d"
+  },
+  "fixtures/kos-fight-49152-0.txt": {
+    "bytes": 770,
+    "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+  },
+  "fixtures/kos-fight-49152-1.txt": {
+    "bytes": 770,
+    "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b"
+  },
+  "prepare_qa_pair.py": {
+    "bytes": 5328,
+    "sha256": "aaf036f457f684c8b27772f326febebb8a25fda2a33afb7b9a4db7c27ef40a61"
+  },
+  "prepare_three_arm.py": {
+    "bytes": 4399,
+    "sha256": "31b1f813aaef60097d4221afe0b1674045334a5acf4844b9ef6e2e6204986cfd"
+  },
+  "readback_three_arm.py": {
+    "bytes": 3385,
+    "sha256": "53438e62326842b7be627e078566607555dc7a4e2149069789cc0cc623d70a71"
+  },
+  "run_qa_three_arm.py": {
+    "bytes": 10445,
+    "sha256": "6034c242cafee18da7ea9c4a3a0e5371cfd92fa4b566303505dc0267c8a0b49d"
+  },
+  "run_qa_three_arm.sh": {
+    "bytes": 1117,
+    "sha256": "4c8e509785ceba5e5a40076ab801a2ae3e319b964b91ae264e368e1df849e393"
+  }
+}

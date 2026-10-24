@@ -1,0 +1,27 @@
+[
+  {
+    "file": "NEXT-AUDIT-PROPOSAL.md",
+    "bytes": 1812,
+    "sha256": "ae240fbae354636851d1b212e38cdd7c10587cc464327d73f82db60158c6dbe3"
+  },
+  {
+    "file": "REVIEW.md",
+    "bytes": 6803,
+    "sha256": "c22ff98eee6188f54fdbda14c2f4ab2bdac3b17e58262b70430e1fb925d2ecae"
+  },
+  {
+    "file": "controls-final.json",
+    "bytes": 1198,
+    "sha256": "edf0cfc419de5192be2c91400d1259f7acb126231f5f3a281a9a343384c2ac56"
+  },
+  {
+    "file": "controls.json",
+    "bytes": 1071,
+    "sha256": "1970b46aa360e7cdaa9439d6c43d22af53328f6bc2f1779cf96c9ba202b30614"
+  },
+  {
+    "file": "rational_controls.py",
+    "bytes": 5585,
+    "sha256": "05314befc3380213a2d03ee463f54b7c9e9be39a7ba7fd302d950f2e06f9fb13"
+  }
+]

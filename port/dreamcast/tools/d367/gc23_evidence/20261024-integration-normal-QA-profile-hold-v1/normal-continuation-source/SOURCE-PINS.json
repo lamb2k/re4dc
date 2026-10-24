@@ -1,0 +1,10 @@
+{
+  "/root/work/lanes/gc-motion24/port/dreamcast/game/Makefile": {
+    "bytes": 219354,
+    "sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34"
+  },
+  "/root/work/lanes/gc-motion24/port/dreamcast/game/gc_asset_gate.mk": {
+    "bytes": 2731,
+    "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+  }
+}

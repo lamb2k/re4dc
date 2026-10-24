@@ -1,0 +1,191 @@
+{
+  "status": "PROPOSED_NOT_RUN_NO_MEDIA_OR_SYMBOLS_YET",
+  "environment": {
+    "RE4DC_EMU": "console",
+    "FP_NOLIMIT": "1",
+    "RE4DC_MAX_FLYCASTS": "16",
+    "WSLENV_append": "RE4DC_EMU:FP_NOLIMIT:RE4DC_MAX_FLYCASTS",
+    "trace": "Actual jobs must use existing WSL trace_lock.sh; max3 lane/global16. No guest allocated.",
+    "exceptions": "No prior4minute exception reused."
+  },
+  "commands": [
+    {
+      "name": "h2-off",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-off",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\h2-off-55",
+        "--syms",
+        "<EXACT_QA_OFF_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/segments/h2-warp.txt",
+        "--pad",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/segments/h2-pad.txt",
+        "--seconds",
+        "55",
+        "--period",
+        "12",
+        "--stop",
+        "route movie terminal=1 id=10030",
+        "--grace",
+        "2",
+        "--name",
+        "gc-motion24-h2-off"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED; existing whole-H2 timings/limits do not certify<=55. Endpoint missing is INCOMPLETE; fresh bounded exception only after concrete programme review.",
+      "squeeze_held": 0
+    },
+    {
+      "name": "kos-fight-off-0",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-off",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\kos-fight-off-49152-0-55",
+        "--syms",
+        "<EXACT_QA_OFF_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/fixtures/kos-fight-49152-0.txt",
+        "--seconds",
+        "55",
+        "--name",
+        "gc-motion24-kos-off-0"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED for this new programme; early endpoint can qualify only if actual held/headroom/fault/end checks pass. No timeout extension.",
+      "required": {
+        "held": 49152,
+        "min_headroom": 4096,
+        "OOM": 0,
+        "HALT": 0,
+        "MISSING": 0,
+        "goal": "warp: alert at room frame"
+      }
+    },
+    {
+      "name": "kos-fight-off-1",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-off",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\kos-fight-off-49152-1-55",
+        "--syms",
+        "<EXACT_QA_OFF_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/fixtures/kos-fight-49152-1.txt",
+        "--seconds",
+        "55",
+        "--name",
+        "gc-motion24-kos-off-1"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED for this new programme; early endpoint can qualify only if actual held/headroom/fault/end checks pass. No timeout extension.",
+      "required": {
+        "held": 49152,
+        "min_headroom": 4096,
+        "OOM": 0,
+        "HALT": 0,
+        "MISSING": 0,
+        "goal": "warp: alert at room frame"
+      }
+    },
+    {
+      "name": "h2-on",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-on",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\h2-on-55",
+        "--syms",
+        "<EXACT_QA_ON_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/segments/h2-warp.txt",
+        "--pad",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/segments/h2-pad.txt",
+        "--seconds",
+        "55",
+        "--period",
+        "12",
+        "--stop",
+        "route movie terminal=1 id=10030",
+        "--grace",
+        "2",
+        "--name",
+        "gc-motion24-h2-on"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED; existing whole-H2 timings/limits do not certify<=55. Endpoint missing is INCOMPLETE; fresh bounded exception only after concrete programme review.",
+      "squeeze_held": 0
+    },
+    {
+      "name": "kos-fight-on-0",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-on",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\kos-fight-on-49152-0-55",
+        "--syms",
+        "<EXACT_QA_ON_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/fixtures/kos-fight-49152-0.txt",
+        "--seconds",
+        "55",
+        "--name",
+        "gc-motion24-kos-on-0"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED for this new programme; early endpoint can qualify only if actual held/headroom/fault/end checks pass. No timeout extension.",
+      "required": {
+        "held": 49152,
+        "min_headroom": 4096,
+        "OOM": 0,
+        "HALT": 0,
+        "MISSING": 0,
+        "goal": "warp: alert at room frame"
+      }
+    },
+    {
+      "name": "kos-fight-on-1",
+      "argv": [
+        "python",
+        "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\base-on",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\qa-memory-aab-v1\\kos-fight-on-49152-1-55",
+        "--syms",
+        "<EXACT_QA_ON_LOG_HEAD_STAGE_FROM_NEW_SYMBOLS>",
+        "--warp",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/fixtures/kos-fight-49152-1.txt",
+        "--seconds",
+        "55",
+        "--name",
+        "gc-motion24-kos-on-1"
+      ],
+      "seconds": 55,
+      "feasibility": "NOT_PROVED for this new programme; early endpoint can qualify only if actual held/headroom/fault/end checks pass. No timeout extension.",
+      "required": {
+        "held": 49152,
+        "min_headroom": 4096,
+        "OOM": 0,
+        "HALT": 0,
+        "MISSING": 0,
+        "goal": "warp: alert at room frame"
+      }
+    }
+  ],
+  "tool": "/root/work/lanes/gc-motion24/port/dreamcast/tools/d367/fullplay/fp_run.py",
+  "symbols": "New QA runner emits syms.txt by exact current programme nm logbuf/head/stage minus8c000000, same route-build convention. Placeholder must be resolved before any run."
+}

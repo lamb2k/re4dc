@@ -1,0 +1,174 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "status": "READ_ONLY_PROPOSAL_NOT_ALLOCATED",
+  "normal_pair_receipt": {
+    "path": "/dev/shm/gc-motion24-full-pair-wrf50x14/continuation-v1/receipt.json",
+    "sha256": "1a546adada1d1555c3b28909f52d39007cb31bf4f269d480fc442d07b4ac2465"
+  },
+  "normal_OFF": {
+    "raw": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+    "end": 2353209524
+  },
+  "normal_ON": {
+    "raw": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+    "end": 2353272596
+  },
+  "source_pins": [
+    {
+      "path": "port/dreamcast/game/dbgwarp.mk",
+      "bytes": 5593,
+      "sha256": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+      "git_blob": "ded8a7f06b56d0eff561b45ba2a21cd299315328"
+    },
+    {
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "bytes": 105646,
+      "sha256": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7",
+      "git_blob": "5faa083e9d60efb24db972b2fc906757a0ac84b6"
+    },
+    {
+      "path": "port/dreamcast/game/Makefile",
+      "bytes": 219354,
+      "sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34",
+      "git_blob": "c1bd0ad71cda766d22c4930a125b30b039ab77b0"
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92",
+      "git_blob": "52b0bc63a46efea208e6e116cf93a5162e6d0acb"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "bytes": 70455,
+      "sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e",
+      "git_blob": "eacf1588dabd8b754247d893d48c53db49eddabe"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 532136,
+      "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85",
+      "git_blob": "1c03c7a57b5c16dd4fa6afd8926b6eefe42e9a9b"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/fp_run.py",
+      "bytes": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+      "git_blob": "d4125083a128aef94764a14bdda9d09bb3656e41"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/fp_twin.sh",
+      "bytes": 4513,
+      "sha256": "38faa0fa167df94d83512f72da013f79e8bcd6b9afbf44da6ddfcbfc9cdf40ad",
+      "git_blob": "e55b960f93f9885011797c41fdb14099b71a4f0c"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/fp_prep.sh",
+      "bytes": 3731,
+      "sha256": "ee88156eee52784b9153960283acf74507a0744ff39f50bbc5c75ab7594d0d33",
+      "git_blob": "a1fa008f53caf4d173496d1de0d7ccd5b2df4abc"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/kos_squeeze.sh",
+      "bytes": 3752,
+      "sha256": "2115c9639f7a264dd07b6d92186f787975ded011ed901111acfde15130598a3c",
+      "git_blob": "e1fc316b8c35ce6e89ca8ee0a4eb571983d25048"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/segments/h2-warp.txt",
+      "bytes": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012",
+      "git_blob": "827067a26120fc331643b73454e9163032f21947"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/fullplay/segments/h2-pad.txt",
+      "bytes": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1",
+      "git_blob": "85d663382d7837c284c4d2a68c645d19ea2911e0"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+      "bytes": 8400,
+      "sha256": "926cc12c99ffc78a0dedbbac18f50d7096434bbd4343e871478a98092e802a3e",
+      "git_blob": "0d0275529a0ec335519bb2b9d23fd08e5697925b"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/dedup_offline23/QUALIFICATION.md",
+      "bytes": 13065,
+      "sha256": "1aebd54eade8a04389fa1f2b491b59b7d798c1b15b3d84dd83914a165857f408",
+      "git_blob": "8a5f99fab419aecf6593af042ccbbc38e9769747"
+    },
+    {
+      "path": "port/dreamcast/tools/d367/dedup_offline23/main-support/main-standard-memory-build-v5.sh",
+      "bytes": 3526,
+      "sha256": "e17a80e48bf092ecc69bea84e0398f78c05ac2ddf98a911d821635f1c1092b04",
+      "git_blob": "8ae41ae00ca3b5d836c83789272567e492e9b8f2"
+    }
+  ],
+  "profiles": {
+    "standard-H2-off": {
+      "GC_ASSET_GATE": 0,
+      "GC_ASSET_MOTION_UNKNOWN": 0,
+      "GC_ASSET_CATALOG_SHA256": "0",
+      "DBG_WARP": 1,
+      "WARP_JUMP": 1,
+      "PC_SAMPLER": 0,
+      "TEX_CHECK": 1,
+      "MCHECK_LEONGC": 1,
+      "QA_MENU": 0,
+      "WORLD_METER": 0,
+      "KOS_CACHE_P2_DIAG": 0,
+      "KOS_WATCH": 0,
+      "KOS_SQUEEZE": 0,
+      "W11_FIXTURE": 0
+    },
+    "standard-H2-on": {
+      "GC_ASSET_GATE": 1,
+      "GC_ASSET_MOTION_UNKNOWN": 1,
+      "GC_ASSET_CATALOG_SHA256": "0",
+      "DBG_WARP": 1,
+      "WARP_JUMP": 1,
+      "PC_SAMPLER": 0,
+      "TEX_CHECK": 1,
+      "MCHECK_LEONGC": 1,
+      "QA_MENU": 0,
+      "WORLD_METER": 0,
+      "KOS_CACHE_P2_DIAG": 0,
+      "KOS_WATCH": 0,
+      "KOS_SQUEEZE": 0,
+      "W11_FIXTURE": 0
+    },
+    "KOS-squeeze-off": {
+      "GC_ASSET_GATE": 0,
+      "GC_ASSET_MOTION_UNKNOWN": 0,
+      "GC_ASSET_CATALOG_SHA256": "0",
+      "DBG_WARP": 1,
+      "WARP_JUMP": 1,
+      "PC_SAMPLER": 0,
+      "TEX_CHECK": 1,
+      "MCHECK_LEONGC": 1,
+      "QA_MENU": 0,
+      "WORLD_METER": 0,
+      "KOS_CACHE_P2_DIAG": 0,
+      "KOS_WATCH": 1,
+      "KOS_SQUEEZE": 1,
+      "W11_FIXTURE": 1
+    },
+    "KOS-squeeze-on": {
+      "GC_ASSET_GATE": 1,
+      "GC_ASSET_MOTION_UNKNOWN": 1,
+      "GC_ASSET_CATALOG_SHA256": "0",
+      "DBG_WARP": 1,
+      "WARP_JUMP": 1,
+      "PC_SAMPLER": 0,
+      "TEX_CHECK": 1,
+      "MCHECK_LEONGC": 1,
+      "QA_MENU": 0,
+      "WORLD_METER": 0,
+      "KOS_CACHE_P2_DIAG": 0,
+      "KOS_WATCH": 1,
+      "KOS_SQUEEZE": 1,
+      "W11_FIXTURE": 1
+    }
+  }
+}

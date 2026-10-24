@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+TREE=/root/work/lanes/gc-motion24
+SOURCE=aab201ceac0e18107f64a3212398afe916793327
+SELF='/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-continuation/continue_full_pair.sh'
+[ "${GC_MOTION24_FULL_ALLOCATED:-}" = "$SOURCE" ] || { echo ROOT_ALLOCATION_REQUIRED; exit 2; }
+[ "${GC_MOTION24_CONTINUATION_ALLOCATED:-}" = 15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7 ] || { echo ROOT_CONTINUATION_ALLOCATION_REQUIRED; exit 2; }
+if [ "${1:-}" = --slot ]; then
+  shift
+  export GC_MOTION24_FULL_SLOT=1
+  exec "$@"
+fi
+[ "$(git -C "$TREE" rev-parse HEAD)" = "$SOURCE" ]
+[ -z "$(git -C "$TREE" status --porcelain)" ]
+if pgrep -af '^(bash|/bin/bash|python|python3) [^ ]*rr-(cycle|qa|jobs)\.(sh|py)( |$)' >/dev/null; then echo RELEASE_PRIORITY_HOLD; exit 3; fi
+exec 7>"/tmp/d367-build-$(printf %s "$TREE" | md5sum | cut -c1-12).lock"
+flock -n 7 || exit 2
+exec /root/probe/d367-buildslot.sh bash "$SELF" --slot python3 -B '/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-continuation/continue_full_pair.py'

@@ -1,0 +1,24 @@
+{
+  "status": "SUCCESSOR_PURE_READBACK_PASS",
+  "removed": [
+    "GC_ASSET_GATE=0",
+    "GC_ASSET_CATALOG_SHA256=0",
+    "GC_ASSET_MOTION_UNKNOWN=0"
+  ],
+  "baseline_feature_absent": true,
+  "actual_three_preflights": true,
+  "seven_semantic_negatives": [
+    "baseline-GC-dead-option",
+    "baseline-source-feature-present",
+    "missing-common-QA-flag",
+    "OFF-Motion-enabled",
+    "ON-Motion-disabled",
+    "configured-catalog",
+    "preserved-root-unbudgeted"
+  ],
+  "preserved_initial_files": 22823,
+  "normal_files": 18029,
+  "owned_total": 624827751,
+  "SDK": 0,
+  "Make_queries": 0
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Make-GC-admission",
+    "method": "Controls.test_make_prerequisites_and_original_guard",
+    "exit_code": 1,
+    "intended_failure": "unsupported GC diagnostic configuration erroneously accepted",
+    "original_restored_sha256": "86d103d2bba0c69db30d6525b288ebb3de1be4c97acf2fb2c3978a52ec353278"
+  },
+  {
+    "name": "Static-GC-admission",
+    "method": "Controls.test_source_guards",
+    "exit_code": 1,
+    "intended_failure": "unsupported GC diagnostic configuration erroneously accepted",
+    "original_restored_sha256": "993a1e7cba8f06f4c34b59d38b1efdeecf6985a19842df3f4fa60fd90c6f5fc4"
+  },
+  {
+    "name": "UI-GC-admission",
+    "method": "Controls.test_source_guards",
+    "exit_code": 1,
+    "intended_failure": "unsupported GC diagnostic configuration erroneously accepted",
+    "original_restored_sha256": "e54f5c7dad91fb13b93f03ae7db6c6a65c462939db864e3085bf909866eb6258"
+  }
+]

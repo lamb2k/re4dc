@@ -1,0 +1,42 @@
+{
+ "reason": "Full command expectation map was not equal to actual resolved report",
+ "differences": {
+  "RENDER_QUALITY_ONLY": [
+   "1",
+   null
+  ],
+  "PS2_GANADO_DIR": [
+   "/root/probe/lanes-20261010/ps2cast-all-assets/pg5",
+   null
+  ],
+  "PS2_ENEMY_ROOMS": [
+   "0x3f",
+   "0x3ff"
+  ],
+  "ROUTE_SOON_RETURN": [
+   "1",
+   null
+  ],
+  "LEON_HEADLESS_DIR": [
+   "/root/re4data/private/garr18-head-20261019",
+   null
+  ],
+  "PS2_HDR_SETS": [
+   "128",
+   null
+  ]
+ },
+ "arms": [
+  "baseline",
+  "off",
+  "on"
+ ],
+ "earlier_checks_completed": [
+  "input1551",
+  "normal18029",
+  "failedQA22823",
+  "baseline source7538"
+ ],
+ "stage_executed": false,
+ "tool_sha256": "74563c4c7fc0608a3c907a7383784fc69ef671e3fdb83a698888bf9546103f03"
+}

@@ -1,0 +1,5 @@
+{
+  "host_preparation_checks": 98,
+  "SDK_invocations": 0,
+  "scope": "synthetic ELF readback, argument/grant/path/resource/protocol controls; no SH4 generated evidence"
+}

@@ -1,0 +1,12 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "utc": "2026-10-24T08:04:49.2930843Z",
+  "continuation_manifest": "e94d92d53ff62d6c7129ae75b79cde6d51643ad5787c4dc7e083e2df97737e8c",
+  "original_failure": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+  "pure_readback": "PASS9013OFFfiles and all prior pins",
+  "SDK_slots": 1,
+  "jobs": 1,
+  "action": "Validate preserved OFF only; build fresh ON only",
+  "limits": "Existing total2GiB,26GiB C admission/24floor,3GiB RAM admission/512MiB floor,1800sec ON",
+  "guest_allocation": 0
+}

@@ -1,0 +1,15 @@
+Done: Frozen aab normal OFF49a4/all14 identity and ON linked price complete. Root combinedQA baselinefb254/currentOFF match e016/all14; ON02a14f linked_end+63040, no guest/memory floor acceptance. Original dead-knob preflight failure preserved. Terminal source plan/control set ready.
+Doing now: Independent rain846 selected-target tooling review HOLD delivered (missing bootstrap cc1 pin; strict disabled ABI checker misses allocated addresses/standalone external definitions). Authored98 host controls pass; own actualELF mutants reproduce gaps. Author narrow tooling repair approved by root; reviewer waiting frozen successor, no SDK.
+Next: Re-review exact rain tool successor with original mutants inverted; root owns QA staging/independent readback and later guest exception/allocation. No SDK/guest or frozen source mutation by this lane.
+Blocked: No author SDK/guest allocation. Selected +1310 bytes is not a new linked programme/heap/full-stack measurement. Required3ff/wired1f6/Motion provenance refusal remain unchanged; raw/shadow/alternate paths, complete Motion/provenance/terminal/I001 acceptance remain open.
+Needs the user: Nothing for this authorized source unit.
+
+## Shared-file changes
+
+Exclusive diagnostic-only claims: port/dreamcast/game/platform/native_ui.cpp (accepted packet/direct intervals, pending reason, delayed model scope, safe flush); native_model.cpp (model gateway UNKNOWN context); native_actor_fast.cpp (main/chunk UNKNOWN context, per-chunk OneWindow accounting, 4-byte local flag); platform/include/native_actor_leon_pipe.inc (already-accounted previous interval before material switch); game/gc_asset_gate.mk (strict default-off knob, prerequisite and partial support admission). New owned helper platform/include/gc_asset_motion_unknown.h and platform/gc_asset_motion_unknown.cpp, new tools/d367/gc_port23 Motion tests/docs. Additional narrow model_bridge.cpp::flush claim: fixed delayed UNKNOWN around merged cached/build/single/fallback accepted model routes; GAME_CPPFLAGS knob propagation. No coarse/hands/static runtime edits are needed: their supported model leaves receive fixed unknown independently of geometry. No cloud animation, source sampling, motion runtime/cache/pose fields, assets, recipes or terminal wiring.
+
+## Source and scope
+
+Tree /root/work/lanes/gc-motion24, branch wip/gc-motion24-20261024, base 870789095c4c14fbdbf22043447b249063d2ec3a (runtime a132). Census seal fba3cb3af6cc8a1047be908e4de72adb499e2a72ac8d0f98b440a0863f59822f verified before edits. Original GC and catalog trees remain frozen.
+
+State is 24 raw bytes standalone context/pending/latch, one 4-byte RAII saved word and one 4-byte OneWindow local flag. Renderer-thread-only accepted records/events, separate ViewTrack UNKNOWN component, no source-positive identity/N/A/unique Motion asset or Motion completeness claim. Prior accepted prefix survives abort; chunk, switch and aggregate-close accounting are exclusive. No new owner/cache/node fields, heap, assets, conversion or recipe changes.

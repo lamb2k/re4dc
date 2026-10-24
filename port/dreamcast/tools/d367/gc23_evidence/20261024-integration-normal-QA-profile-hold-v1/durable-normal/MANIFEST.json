@@ -1,0 +1,323 @@
+{
+  "utc": "2026-10-24T08:32:49.870984+00:00",
+  "scope": "Private durable full normal programme/ELF/all14 evidence, not a QA disc or release. No asset change, SDK or guest. Original RAM outputs preserved.",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "files": [
+    {
+      "path": "off/re4dc-game.elf",
+      "bytes": 28568292,
+      "sha256": "90decb044fcd31a42c3bf819965ac6b682494772c2519c716461215fd32edd56",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/re4dc-game.elf"
+    },
+    {
+      "path": "off/program.bin",
+      "bytes": 3370820,
+      "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/program.bin"
+    },
+    {
+      "path": "off/em22.ovl",
+      "bytes": 27236,
+      "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em22.ovl"
+    },
+    {
+      "path": "off/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em2b.ovl"
+    },
+    {
+      "path": "off/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em2f.ovl"
+    },
+    {
+      "path": "off/em35.ovl",
+      "bytes": 52392,
+      "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em35.ovl"
+    },
+    {
+      "path": "off/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/em3b.ovl"
+    },
+    {
+      "path": "off/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl0f.ovl"
+    },
+    {
+      "path": "off/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl11.ovl"
+    },
+    {
+      "path": "off/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/pl14.ovl"
+    },
+    {
+      "path": "off/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/sscrn.ovl"
+    },
+    {
+      "path": "off/st1_0.ovl",
+      "bytes": 36340,
+      "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_0.ovl"
+    },
+    {
+      "path": "off/st1_1.ovl",
+      "bytes": 81540,
+      "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_1.ovl"
+    },
+    {
+      "path": "off/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_2.ovl"
+    },
+    {
+      "path": "off/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st1_3.ovl"
+    },
+    {
+      "path": "off/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/st2_0.ovl"
+    },
+    {
+      "path": "off/symbols.txt",
+      "bytes": 581672,
+      "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/symbols.txt"
+    },
+    {
+      "path": "off/sections.txt",
+      "bytes": 1039,
+      "sha256": "642a7405769c3f7f6f83e9dfb1c6653ff9ce87d163430e2bc0f97a3dc0e8bbff",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/sections.txt"
+    },
+    {
+      "path": "off/size.txt",
+      "bytes": 152,
+      "sha256": "59810a8387ca1637c9c56036ac59d1138fafb8c98714691789f09a5b706f5ac6",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/size.txt"
+    },
+    {
+      "path": "off/command.json",
+      "bytes": 7611,
+      "sha256": "7d818e8e808985de971900f42c63e0d0326116793f32d60ec4911c17374bb5ce",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/command.json"
+    },
+    {
+      "path": "off/build.log",
+      "bytes": 1263553,
+      "sha256": "7b975aa9cafe4b06ace0a1600876a817f1151b388199ac7335e89e36391dfa75",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/build.log"
+    },
+    {
+      "path": "off/resolved-knobs.txt",
+      "bytes": 221355,
+      "sha256": "bde3112cfd419e41aadb3678af34ebe1451ea271cb9cff968b1b92e24fabe630",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/off/out/resolved-knobs.txt"
+    },
+    {
+      "path": "on/re4dc-game.elf",
+      "bytes": 28947468,
+      "sha256": "4b02c431796617fdcda8ca804b6b938806f1fa5175ce132096f6dec79956d9b4",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/re4dc-game.elf"
+    },
+    {
+      "path": "on/program.bin",
+      "bytes": 3416952,
+      "sha256": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/program.bin"
+    },
+    {
+      "path": "on/em22.ovl",
+      "bytes": 27236,
+      "sha256": "5f204addf5aed11b190ef1852f47534ac51b1e7093f4815aab39954789cda1d0",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/em22.ovl"
+    },
+    {
+      "path": "on/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "b2f1cb25f1e834a854dcf619bacf0ed5c74dc5a8782d4b005f46559da7887cab",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/em2b.ovl"
+    },
+    {
+      "path": "on/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "e4a6b06883337095663026b1a4bf442516296cddc46d4b70258b119c732fc8f1",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/em2f.ovl"
+    },
+    {
+      "path": "on/em35.ovl",
+      "bytes": 52392,
+      "sha256": "09ebb3c7be0c0517e4c7e1b38e9cdfaa8bee543a80caf69c24a449e1209f2b95",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/em35.ovl"
+    },
+    {
+      "path": "on/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "63368ce690dd016c331600ce924a81b3fcc882677943e6007d0c86a4b00ba464",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/em3b.ovl"
+    },
+    {
+      "path": "on/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "58ada237fc7a75239cd0a2400477e31c6a707af02223931e1413e3cc6b0f9320",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/pl0f.ovl"
+    },
+    {
+      "path": "on/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "63b95398618daa902b48a8bbdcc14adacdec98401a53aea02577a099a3e52536",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/pl11.ovl"
+    },
+    {
+      "path": "on/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "16c483eed1afee260072a3ee5dbb27150e1f148878b309feafeb2ac556e438c2",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/pl14.ovl"
+    },
+    {
+      "path": "on/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "32e32aa026c4199b565fa432f2b889ad90c0626f30f85194ad39495c20a43a63",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/sscrn.ovl"
+    },
+    {
+      "path": "on/st1_0.ovl",
+      "bytes": 36340,
+      "sha256": "ad1333ab8b3589ceedbbb13583b4547370133a900d2423030c24549e212708d3",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/st1_0.ovl"
+    },
+    {
+      "path": "on/st1_1.ovl",
+      "bytes": 81540,
+      "sha256": "b828236836905dc88a587eb82a5840eea3c5c9356bc8bd02feb8c09f411702be",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/st1_1.ovl"
+    },
+    {
+      "path": "on/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "8b02d7e40e387b69967efaaa495d1448993c8583ead867a9963e75916db8c076",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/st1_2.ovl"
+    },
+    {
+      "path": "on/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ef98d97d5a66b8702068345c7ec6da31d4582cefd9e992847cbc7a1fca357f2b",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/st1_3.ovl"
+    },
+    {
+      "path": "on/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "fd8fe7ebdd7533d5191edb1cb27ec56b48910dd2c45d0cbcf1040561cb255139",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/st2_0.ovl"
+    },
+    {
+      "path": "on/symbols.txt",
+      "bytes": 603021,
+      "sha256": "4be276e19b8bb6060b951ae0973bd6af80f48a5f59141c6e32342d9bdf8c4eff",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/symbols.txt"
+    },
+    {
+      "path": "on/sections.txt",
+      "bytes": 1038,
+      "sha256": "8339bbebb164c4026f172104219968fcc71acbf9fb0a8dff6e75bb6f52da23e4",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/sections.txt"
+    },
+    {
+      "path": "on/size.txt",
+      "bytes": 151,
+      "sha256": "4a7a152f587de4439b8c5d5b4477319b6d28bf2620b634b54e5e3fd43effd6a7",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/size.txt"
+    },
+    {
+      "path": "on/command.json",
+      "bytes": 7610,
+      "sha256": "1906b721c34eb32c25038634ada0cc6962e5404c766001253b48c00fb55214a5",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/command.json"
+    },
+    {
+      "path": "on/build.log",
+      "bytes": 1295283,
+      "sha256": "ee217055c5512014b37eb75829abfff3b26aa446cb26a2991f835bea879310a7",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/build.log"
+    },
+    {
+      "path": "on/resolved-knobs.txt",
+      "bytes": 220041,
+      "sha256": "c0c253420b019c3d48f465963039a2ef297c4fd362369c23916c7fa412bca7da",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/on/out/resolved-knobs.txt"
+    },
+    {
+      "path": "receipts/receipt.json",
+      "bytes": 1809,
+      "sha256": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/receipt.json"
+    },
+    {
+      "path": "receipts/PREPARATION.json",
+      "bytes": 2386904,
+      "sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/PREPARATION.json"
+    },
+    {
+      "path": "receipts/continuation-v1/receipt.json",
+      "bytes": 10765,
+      "sha256": "1a546adada1d1555c3b28909f52d39007cb31bf4f269d480fc442d07b4ac2465",
+      "source": "/dev/shm/gc-motion24-full-pair-wrf50x14/continuation-v1/receipt.json"
+    },
+    {
+      "path": "review/INDEPENDENT-READBACK.json",
+      "bytes": 15260,
+      "sha256": "ce3c96ff99b9f4cc250de7126a68ebc14edc963e1181462c3582e95e10c10070",
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/INDEPENDENT-READBACK.json"
+    },
+    {
+      "path": "review/verify_completed_pair.py",
+      "bytes": 14061,
+      "sha256": "1a90e49bf926aa069361cc59938900a79d38b917c4d076e55daa0a278c2c3342",
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/verify_completed_pair.py"
+    },
+    {
+      "path": "review/root-readback-followup.py",
+      "bytes": 2551,
+      "sha256": "a8c164f7138784e89fd26cd43957f6416286ab6d3718d38218dbb505504c5631",
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/root-readback-followup.py"
+    },
+    {
+      "path": "review/root-followup-v1/INDEPENDENT-READBACK.json",
+      "bytes": 15260,
+      "sha256": "ef1b07207f0eea67f7ab47b6df5af4d3ad0437a94d2272504f96abcfbdef5b29",
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/root-followup-v1/INDEPENDENT-READBACK.json"
+    },
+    {
+      "path": "review/root-followup-v1/ROOT-GIT-EXPORT-BINDING.json",
+      "bytes": 816,
+      "sha256": "c95d8dd0960db0e0215c130202a57c11b2175221702109bc8650acf2f45406f7",
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-review/root-followup-v1/ROOT-GIT-EXPORT-BINDING.json"
+    }
+  ],
+  "bytes": 72473068,
+  "OFF_main": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+  "ON_main": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+  "heap_or_coverage_acceptance": false
+}

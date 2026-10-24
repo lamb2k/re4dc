@@ -1,0 +1,34 @@
+{
+  "HANDBACK.md": {
+    "bytes": 3962,
+    "sha256": "14a3b4503e7b2d62da9d1c69780cfc9edee495ba9569df1a150cff2b101e7c7a"
+  },
+  "PREPARATION.json": {
+    "bytes": 13972829,
+    "sha256": "d39c920ac5b8596b2244ea4267a6712a7e5cf1321b80448240bb3fc8ce7075a0"
+  },
+  "READBACK.json": {
+    "bytes": 594,
+    "sha256": "dd49ca61d945f48788acc1ca2a089c3e5cba309f6e4f84ca96c44d85b53f8013"
+  },
+  "RUNNER-PINS.json": {
+    "bytes": 668,
+    "sha256": "543c4654a2566828f8e314c2d342a70aba26dfaaf67434319258e010fcbb6ae2"
+  },
+  "prepare_successor.py": {
+    "bytes": 8573,
+    "sha256": "416b26d9991da8d67eb8dcdec55dabbb2c380b8c29054b863f667619d347b004"
+  },
+  "readback_successor.py": {
+    "bytes": 1731,
+    "sha256": "0b29c83477305911c8b3e9535f61e6c7b99e83dd89d77169f7354fe6617bb2cb"
+  },
+  "run_qa_three_arm.py": {
+    "bytes": 11072,
+    "sha256": "726bdc8d3a30719bffa3000de1b91797fd4b720640f9e3954458882aabd3cd48"
+  },
+  "run_qa_three_arm.sh": {
+    "bytes": 1117,
+    "sha256": "3d3440c250348f18d12ad6f3c144ee44d42d991c3fa932cb2b8f441869ec50e2"
+  }
+}

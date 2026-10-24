@@ -1,0 +1,550 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "terminal_receipt": "/dev/shm/gc-motion24-full-pair-wrf50x14/continuation-v1/receipt.json",
+  "terminal_receipt_sha256": "1a546adada1d1555c3b28909f52d39007cb31bf4f269d480fc442d07b4ac2465",
+  "status": "INDEPENDENT_FULL_LINK_READBACK_PASS",
+  "scope": "fresh programme/ELF/overlays/source/input/log-graph readback only; no SDK/Make/compiler/linker/guest execution; not heap, coverage, hardware or provenance acceptance",
+  "verified_manifests": {
+    "completed_OFF_files": 9013,
+    "pinned_inputs": 1539,
+    "old_full_pair_files": 2740,
+    "off_source_files": 7640,
+    "on_source_files": 7640
+  },
+  "fresh_unique_files_hashed": 20957,
+  "fresh_bytes_hashed": 835881517,
+  "original_failed_receipt_sha256": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+  "original_runner_sha256": "7251d227586634ef2654180791597de68282e3087ce0c3fe5a2fe097bc1890e6",
+  "continuation_runner_sha256": "850ead1f3722755a7ac5b016034a40471038c7de735253f5f27adde85162fd5f",
+  "continuation_contract_sha256": "d989ea016a0e19a349780d75d491e7a4efae258f39a0a38a9f85377bcf5c46a6",
+  "arms": {
+    "off": {
+      "raw_sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "raw_bytes": 3370820,
+      "ELF_sha256": "90decb044fcd31a42c3bf819965ac6b682494772c2519c716461215fd32edd56",
+      "sizes": {
+        "text": 2693812,
+        "data": 675588,
+        "bss": 962900
+      },
+      "addresses": {
+        "_edata": 2352246596,
+        "_etext": 2351296098,
+        "_end": 2353209524,
+        "__bss_start": 2352246600
+      },
+      "allocated_sections": [
+        {
+          "name": ".text",
+          "type": 1,
+          "flags": 6,
+          "addr": 2348875776,
+          "bytes": 2420224,
+          "align": 32
+        },
+        {
+          "name": ".init",
+          "type": 1,
+          "flags": 6,
+          "addr": 2351296000,
+          "bytes": 54,
+          "align": 4
+        },
+        {
+          "name": ".fini",
+          "type": 1,
+          "flags": 6,
+          "addr": 2351296056,
+          "bytes": 42,
+          "align": 4
+        },
+        {
+          "name": ".rodata",
+          "type": 1,
+          "flags": 2,
+          "addr": 2351296128,
+          "bytes": 272152,
+          "align": 32
+        },
+        {
+          "name": ".eh_frame",
+          "type": 1,
+          "flags": 2,
+          "addr": 2351568280,
+          "bytes": 1340,
+          "align": 4
+        },
+        {
+          "name": ".ctors",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351569748,
+          "bytes": 120,
+          "align": 4
+        },
+        {
+          "name": ".dtors",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351569868,
+          "bytes": 8,
+          "align": 4
+        },
+        {
+          "name": ".data",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351569888,
+          "bytes": 185176,
+          "align": 32
+        },
+        {
+          "name": ".re4dc_char_data",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351755072,
+          "bytes": 490272,
+          "align": 32
+        },
+        {
+          "name": ".got",
+          "type": 1,
+          "flags": 3,
+          "addr": 2352246584,
+          "bytes": 12,
+          "align": 4
+        },
+        {
+          "name": ".bss",
+          "type": 8,
+          "flags": 3,
+          "addr": 2352246624,
+          "bytes": 962900,
+          "align": 32
+        }
+      ],
+      "raw_reconstructed_from_ELF": {
+        "base": 2348875776,
+        "end": 2352246596,
+        "bytes": 3370820,
+        "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+        "sections": [
+          ".text",
+          ".init",
+          ".fini",
+          ".rodata",
+          ".eh_frame",
+          ".ctors",
+          ".dtors",
+          ".data",
+          ".re4dc_char_data",
+          ".got"
+        ]
+      },
+      "raw_object_count": 448,
+      "link_line_sha256": "4249a57ad7690b4720ab2537fd89b3278ef3a2e6bd782b8654053ab478c89c22",
+      "compiled_motion_flags": [],
+      "helper": {
+        "sha256": "c893e82007cc5fa687b28b91198cb3af7eeb8d0c177df0053fd69d00d19da342",
+        "allocated_bytes": 0,
+        "meaningful_symbols": 0,
+        "defined_gc_symbols": []
+      },
+      "defined_GC_symbols": 0,
+      "missing_bytes": 0,
+      "resolved_expected_flags": {
+        "STAT_ROUTINE_BYTES": "1",
+        "KOS_CACHE_P2": "1",
+        "KOS_CACHE_P2_DIAG": "0",
+        "SCENERY_DEDUP": "0",
+        "SCENERY_EMIT_PREFETCH": "0",
+        "SCENERY_SELECT_LEAN2": "0",
+        "CPU_BACKFACE": "0",
+        "ACTOR_BACKFACE": "0",
+        "VRAM_ROOM_ARENA": "0",
+        "PC_SAMPLER": "0",
+        "DBG_WARP": "0",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "GC_ASSET_GATE": "0",
+        "GC_ASSET_MOTION_UNKNOWN": "0"
+      }
+    },
+    "on": {
+      "raw_sha256": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+      "raw_bytes": 3416952,
+      "ELF_sha256": "4b02c431796617fdcda8ca804b6b938806f1fa5175ce132096f6dec79956d9b4",
+      "sizes": {
+        "text": 2739836,
+        "data": 676324,
+        "bss": 979860
+      },
+      "addresses": {
+        "_edata": 2352292728,
+        "_etext": 2351338914,
+        "_end": 2353272596,
+        "__bss_start": 2352292728
+      },
+      "allocated_sections": [
+        {
+          "name": ".text",
+          "type": 1,
+          "flags": 6,
+          "addr": 2348875776,
+          "bytes": 2463040,
+          "align": 32
+        },
+        {
+          "name": ".init",
+          "type": 1,
+          "flags": 6,
+          "addr": 2351338816,
+          "bytes": 54,
+          "align": 4
+        },
+        {
+          "name": ".fini",
+          "type": 1,
+          "flags": 6,
+          "addr": 2351338872,
+          "bytes": 42,
+          "align": 4
+        },
+        {
+          "name": ".rodata",
+          "type": 1,
+          "flags": 2,
+          "addr": 2351338944,
+          "bytes": 275360,
+          "align": 32
+        },
+        {
+          "name": ".eh_frame",
+          "type": 1,
+          "flags": 2,
+          "addr": 2351614304,
+          "bytes": 1340,
+          "align": 4
+        },
+        {
+          "name": ".ctors",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351615772,
+          "bytes": 132,
+          "align": 4
+        },
+        {
+          "name": ".dtors",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351615904,
+          "bytes": 8,
+          "align": 4
+        },
+        {
+          "name": ".data",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351615936,
+          "bytes": 185260,
+          "align": 32
+        },
+        {
+          "name": ".re4dc_char_data",
+          "type": 1,
+          "flags": 3,
+          "addr": 2351801216,
+          "bytes": 490912,
+          "align": 32
+        },
+        {
+          "name": ".got",
+          "type": 1,
+          "flags": 3,
+          "addr": 2352292716,
+          "bytes": 12,
+          "align": 4
+        },
+        {
+          "name": ".bss",
+          "type": 8,
+          "flags": 3,
+          "addr": 2352292736,
+          "bytes": 979860,
+          "align": 32
+        }
+      ],
+      "raw_reconstructed_from_ELF": {
+        "base": 2348875776,
+        "end": 2352292728,
+        "bytes": 3416952,
+        "sha256": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+        "sections": [
+          ".text",
+          ".init",
+          ".fini",
+          ".rodata",
+          ".eh_frame",
+          ".ctors",
+          ".dtors",
+          ".data",
+          ".re4dc_char_data",
+          ".got"
+        ]
+      },
+      "raw_object_count": 454,
+      "link_line_sha256": "99e2f47fc1c76486c7b5007ef04b79b91fb69d8c5208741d1ab3aa90fe02eca9",
+      "compiled_motion_flags": [
+        "-DRE4DC_GC_ASSET_GATE=1",
+        "-DRE4DC_GC_ASSET_CATALOG_SHA256=\"0\"",
+        "-DRE4DC_GC_ASSET_MOTION_UNKNOWN=1"
+      ],
+      "helper": {
+        "sha256": "1817893f1f0de76f613128692af62e4dd504402a650d90799ee2e3c5232aba2b",
+        "allocated_bytes": 490,
+        "meaningful_symbols": 12,
+        "defined_gc_symbols": [
+          "__ZN13re4dc_gcasset12_GLOBAL__N_1L6acceptEjj",
+          "__ZN13re4dc_gcasset12_GLOBAL__N_1L6motionE",
+          "__ZN13re4dc_gcasset19motion_model_reasonEv",
+          "__ZN13re4dc_gcasset12motion_enterEj",
+          "__ZN13re4dc_gcasset12motion_leaveEj",
+          "__ZN13re4dc_gcasset14motion_prepareEv",
+          "__ZN13re4dc_gcasset21motion_accept_pendingEj",
+          "__ZN13re4dc_gcasset21motion_accept_currentEj",
+          "__ZN13re4dc_gcasset24motion_pending_accountedEv",
+          "__ZN13re4dc_gcasset20motion_unknown_flushEv"
+        ]
+      },
+      "defined_GC_symbols": 285,
+      "missing_bytes": 0,
+      "resolved_expected_flags": {
+        "STAT_ROUTINE_BYTES": "1",
+        "KOS_CACHE_P2": "1",
+        "KOS_CACHE_P2_DIAG": "0",
+        "SCENERY_DEDUP": "0",
+        "SCENERY_EMIT_PREFETCH": "0",
+        "SCENERY_SELECT_LEAN2": "0",
+        "CPU_BACKFACE": "0",
+        "ACTOR_BACKFACE": "0",
+        "VRAM_ROOM_ARENA": "0",
+        "PC_SAMPLER": "0",
+        "DBG_WARP": "0",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "GC_ASSET_GATE": "1",
+        "GC_ASSET_MOTION_UNKNOWN": "1"
+      }
+    }
+  },
+  "all14_overlays": [
+    {
+      "name": "em22.ovl",
+      "off": {
+        "bytes": 27236,
+        "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e"
+      },
+      "on": {
+        "bytes": 27236,
+        "sha256": "5f204addf5aed11b190ef1852f47534ac51b1e7093f4815aab39954789cda1d0"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "em2b.ovl",
+      "off": {
+        "bytes": 67900,
+        "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695"
+      },
+      "on": {
+        "bytes": 67900,
+        "sha256": "b2f1cb25f1e834a854dcf619bacf0ed5c74dc5a8782d4b005f46559da7887cab"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "em2f.ovl",
+      "off": {
+        "bytes": 16800,
+        "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1"
+      },
+      "on": {
+        "bytes": 16800,
+        "sha256": "e4a6b06883337095663026b1a4bf442516296cddc46d4b70258b119c732fc8f1"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "em35.ovl",
+      "off": {
+        "bytes": 52392,
+        "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7"
+      },
+      "on": {
+        "bytes": 52392,
+        "sha256": "09ebb3c7be0c0517e4c7e1b38e9cdfaa8bee543a80caf69c24a449e1209f2b95"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "em3b.ovl",
+      "off": {
+        "bytes": 7568,
+        "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417"
+      },
+      "on": {
+        "bytes": 7568,
+        "sha256": "63368ce690dd016c331600ce924a81b3fcc882677943e6007d0c86a4b00ba464"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "pl0f.ovl",
+      "off": {
+        "bytes": 45608,
+        "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e"
+      },
+      "on": {
+        "bytes": 45608,
+        "sha256": "58ada237fc7a75239cd0a2400477e31c6a707af02223931e1413e3cc6b0f9320"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "pl11.ovl",
+      "off": {
+        "bytes": 35592,
+        "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e"
+      },
+      "on": {
+        "bytes": 35592,
+        "sha256": "63b95398618daa902b48a8bbdcc14adacdec98401a53aea02577a099a3e52536"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "pl14.ovl",
+      "off": {
+        "bytes": 18832,
+        "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e"
+      },
+      "on": {
+        "bytes": 18832,
+        "sha256": "16c483eed1afee260072a3ee5dbb27150e1f148878b309feafeb2ac556e438c2"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "sscrn.ovl",
+      "off": {
+        "bytes": 134372,
+        "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60"
+      },
+      "on": {
+        "bytes": 134372,
+        "sha256": "32e32aa026c4199b565fa432f2b889ad90c0626f30f85194ad39495c20a43a63"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "st1_0.ovl",
+      "off": {
+        "bytes": 36340,
+        "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a"
+      },
+      "on": {
+        "bytes": 36340,
+        "sha256": "ad1333ab8b3589ceedbbb13583b4547370133a900d2423030c24549e212708d3"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "st1_1.ovl",
+      "off": {
+        "bytes": 81540,
+        "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0"
+      },
+      "on": {
+        "bytes": 81540,
+        "sha256": "b828236836905dc88a587eb82a5840eea3c5c9356bc8bd02feb8c09f411702be"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "st1_2.ovl",
+      "off": {
+        "bytes": 50076,
+        "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c"
+      },
+      "on": {
+        "bytes": 50076,
+        "sha256": "8b02d7e40e387b69967efaaa495d1448993c8583ead867a9963e75916db8c076"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "st1_3.ovl",
+      "off": {
+        "bytes": 88748,
+        "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc"
+      },
+      "on": {
+        "bytes": 88748,
+        "sha256": "ef98d97d5a66b8702068345c7ec6da31d4582cefd9e992847cbc7a1fca357f2b"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    },
+    {
+      "name": "st2_0.ovl",
+      "off": {
+        "bytes": 96788,
+        "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2"
+      },
+      "on": {
+        "bytes": 96788,
+        "sha256": "fd8fe7ebdd7533d5191edb1cb27ec56b48910dd2c45d0cbcf1040561cb255139"
+      },
+      "byte_delta": 0,
+      "same_bytes": false,
+      "OFF_current_baseline_equal": true
+    }
+  ],
+  "deltas": {
+    "text": 46024,
+    "data": 736,
+    "bss": 16960,
+    "section_total": 63720,
+    "linked_end": 63072,
+    "end_vs_old_ON": 2688,
+    "raw_bytes": 46132,
+    "alignment_and_gap_residual": -648
+  },
+  "seconds": 1.3483388540043961,
+  "RLIMIT_AS_bytes": 268435456,
+  "execution": "read-only Python and git rev-parse/status only"
+}

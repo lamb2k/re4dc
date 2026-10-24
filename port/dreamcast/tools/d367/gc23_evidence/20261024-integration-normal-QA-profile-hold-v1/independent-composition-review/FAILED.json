@@ -1,0 +1,7 @@
+{
+ "stage": "Read-only Git status before controls",
+ "returncode": 128,
+ "reason": "fatal: unable to create threaded lstat: Resource temporarily unavailable",
+ "host_controls_started": false,
+ "review_tool_sha256": "e49559947b556579653d44a3bb9b9409d58d00e63314e89f94388a21461be32e"
+}

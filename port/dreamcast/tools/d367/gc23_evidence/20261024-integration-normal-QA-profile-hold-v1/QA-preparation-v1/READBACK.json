@@ -1,0 +1,26 @@
+{
+  "status": "PURE_PREPARATION_READBACK_PASS",
+  "sources": {
+    "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+    "off": "aab201ceac0e18107f64a3212398afe916793327",
+    "on": "aab201ceac0e18107f64a3212398afe916793327"
+  },
+  "arms": 3,
+  "input_pins": 1545,
+  "normal_files": 18029,
+  "source_files": {
+    "baseline": 7538,
+    "off": 7640,
+    "on": 7640
+  },
+  "negative_controls": [
+    "QA-profile-enabled",
+    "catalog-enabled",
+    "off-motion-enabled",
+    "drop-baseline",
+    "wrong-baseline-source",
+    "extra-jobs",
+    "missing-overlay"
+  ],
+  "SDK_commands": 0
+}

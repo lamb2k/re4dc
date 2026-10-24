@@ -1,0 +1,709 @@
+{
+  "files": [
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/re4dc-game.elf",
+      "bytes": 28568292,
+      "sha256": "90decb044fcd31a42c3bf819965ac6b682494772c2519c716461215fd32edd56",
+      "source_mtime_ns": 1792830767296636500,
+      "logical_destination": "durable-normal/off/re4dc-game.elf",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/program.bin",
+      "bytes": 3370820,
+      "sha256": "49a4173a1792823ff5e275b0681b2c354c4e45140b7078d87c1253f2e926090b",
+      "source_mtime_ns": 1792830767600682400,
+      "logical_destination": "durable-normal/off/program.bin",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/em22.ovl",
+      "bytes": 27236,
+      "sha256": "cd14fd000a473805597e24f61d488e2549ad2b46809f1fc3c7dc52732421725e",
+      "source_mtime_ns": 1792830767661283800,
+      "logical_destination": "durable-normal/off/em22.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "fadc1b3505681344de395939e8b5ad7b153eb02d4729e908c9bd5d06e89d6695",
+      "source_mtime_ns": 1792830767691651200,
+      "logical_destination": "durable-normal/off/em2b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "17afa2a879afc8c61a3750b4d5c9063c7065d136ee7c66ca766c9773dea1d4d1",
+      "source_mtime_ns": 1792830767721681800,
+      "logical_destination": "durable-normal/off/em2f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/em35.ovl",
+      "bytes": 52392,
+      "sha256": "3fb51ddc910a01679d01820cc7d0df87f6267ffac4ee61d9defce90d810041e7",
+      "source_mtime_ns": 1792830767753728300,
+      "logical_destination": "durable-normal/off/em35.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "1ea56bf2ad3a42b4e6c0d6bd89543848b387f0fcc3528b8aed693fddc4258417",
+      "source_mtime_ns": 1792830767783747300,
+      "logical_destination": "durable-normal/off/em3b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "50226caf841910bf04b1ef14907eca25dfa5814a80a6dffb206dfa7f14d6b23e",
+      "source_mtime_ns": 1792830767812910600,
+      "logical_destination": "durable-normal/off/pl0f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "de350602fa390882842f29a7d54200f4e9df5163e793a1142f995b898b548e5e",
+      "source_mtime_ns": 1792830767843659700,
+      "logical_destination": "durable-normal/off/pl11.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "39ef724019334655b7ec7276aece48c0291a9d522500f83dd48cf5859241f61e",
+      "source_mtime_ns": 1792830767875437200,
+      "logical_destination": "durable-normal/off/pl14.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "ea6b77ba2acd671dc2b72d7595849b13956188a86c6640ae86c619616fa77e60",
+      "source_mtime_ns": 1792830767907512000,
+      "logical_destination": "durable-normal/off/sscrn.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/st1_0.ovl",
+      "bytes": 36340,
+      "sha256": "e498f79b099b39ca15eeec0a2b3c1f3205dde759af74a63bf5a85bf32d75426a",
+      "source_mtime_ns": 1792830767939019800,
+      "logical_destination": "durable-normal/off/st1_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/st1_1.ovl",
+      "bytes": 81540,
+      "sha256": "b7bb236fd2c562ef6b0914750c251e85ec1ac30aa071569e94fdcfee422482c0",
+      "source_mtime_ns": 1792830767970538400,
+      "logical_destination": "durable-normal/off/st1_1.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "e6d24594fa2ded73a387d537ebea91d1275b6332346d547ac164945e6c43826c",
+      "source_mtime_ns": 1792830768000600100,
+      "logical_destination": "durable-normal/off/st1_2.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "d18e9fb74239e51d1833c776ae11ed92925810bc4209c787eddc870c97a78adc",
+      "source_mtime_ns": 1792830768032325200,
+      "logical_destination": "durable-normal/off/st1_3.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "b3e01aefbc3226560d23d0640116aaa69071159f5e75d27a25fc4c0d94a0e2c2",
+      "source_mtime_ns": 1792830768066090200,
+      "logical_destination": "durable-normal/off/st2_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/build.log",
+      "bytes": 1263553,
+      "sha256": "7b975aa9cafe4b06ace0a1600876a817f1151b388199ac7335e89e36391dfa75",
+      "source_mtime_ns": 1792830768239850200,
+      "logical_destination": "durable-normal/off/build.log",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/re4dc-game.elf",
+      "bytes": 28947468,
+      "sha256": "4b02c431796617fdcda8ca804b6b938806f1fa5175ce132096f6dec79956d9b4",
+      "source_mtime_ns": 1792830768508095000,
+      "logical_destination": "durable-normal/on/re4dc-game.elf",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/program.bin",
+      "bytes": 3416952,
+      "sha256": "33e382bd836c1abeeb2d6b5cfbd414c258191ba8335a44f9ef3afb5b5ac9bd3f",
+      "source_mtime_ns": 1792830768812316000,
+      "logical_destination": "durable-normal/on/program.bin",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/em22.ovl",
+      "bytes": 27236,
+      "sha256": "5f204addf5aed11b190ef1852f47534ac51b1e7093f4815aab39954789cda1d0",
+      "source_mtime_ns": 1792830768872510700,
+      "logical_destination": "durable-normal/on/em22.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "b2f1cb25f1e834a854dcf619bacf0ed5c74dc5a8782d4b005f46559da7887cab",
+      "source_mtime_ns": 1792830768903831300,
+      "logical_destination": "durable-normal/on/em2b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "e4a6b06883337095663026b1a4bf442516296cddc46d4b70258b119c732fc8f1",
+      "source_mtime_ns": 1792830768934802200,
+      "logical_destination": "durable-normal/on/em2f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/em35.ovl",
+      "bytes": 52392,
+      "sha256": "09ebb3c7be0c0517e4c7e1b38e9cdfaa8bee543a80caf69c24a449e1209f2b95",
+      "source_mtime_ns": 1792830768966153600,
+      "logical_destination": "durable-normal/on/em35.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "63368ce690dd016c331600ce924a81b3fcc882677943e6007d0c86a4b00ba464",
+      "source_mtime_ns": 1792830768995705400,
+      "logical_destination": "durable-normal/on/em3b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "58ada237fc7a75239cd0a2400477e31c6a707af02223931e1413e3cc6b0f9320",
+      "source_mtime_ns": 1792830769025344200,
+      "logical_destination": "durable-normal/on/pl0f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "63b95398618daa902b48a8bbdcc14adacdec98401a53aea02577a099a3e52536",
+      "source_mtime_ns": 1792830769054962900,
+      "logical_destination": "durable-normal/on/pl11.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "16c483eed1afee260072a3ee5dbb27150e1f148878b309feafeb2ac556e438c2",
+      "source_mtime_ns": 1792830769085681100,
+      "logical_destination": "durable-normal/on/pl14.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "32e32aa026c4199b565fa432f2b889ad90c0626f30f85194ad39495c20a43a63",
+      "source_mtime_ns": 1792830769115706100,
+      "logical_destination": "durable-normal/on/sscrn.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/st1_0.ovl",
+      "bytes": 36340,
+      "sha256": "ad1333ab8b3589ceedbbb13583b4547370133a900d2423030c24549e212708d3",
+      "source_mtime_ns": 1792830769147352400,
+      "logical_destination": "durable-normal/on/st1_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/st1_1.ovl",
+      "bytes": 81540,
+      "sha256": "b828236836905dc88a587eb82a5840eea3c5c9356bc8bd02feb8c09f411702be",
+      "source_mtime_ns": 1792830769177866100,
+      "logical_destination": "durable-normal/on/st1_1.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "8b02d7e40e387b69967efaaa495d1448993c8583ead867a9963e75916db8c076",
+      "source_mtime_ns": 1792830769208246600,
+      "logical_destination": "durable-normal/on/st1_2.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ef98d97d5a66b8702068345c7ec6da31d4582cefd9e992847cbc7a1fca357f2b",
+      "source_mtime_ns": 1792830769238922000,
+      "logical_destination": "durable-normal/on/st1_3.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "fd8fe7ebdd7533d5191edb1cb27ec56b48910dd2c45d0cbcf1040561cb255139",
+      "source_mtime_ns": 1792830769270434100,
+      "logical_destination": "durable-normal/on/st2_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/on/build.log",
+      "bytes": 1295283,
+      "sha256": "ee217055c5512014b37eb75829abfff3b26aa446cb26a2991f835bea879310a7",
+      "source_mtime_ns": 1792830769438198300,
+      "logical_destination": "durable-normal/on/build.log",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/re4dc-game.elf",
+      "bytes": 28751968,
+      "sha256": "4e0e540d0be71fc57bcfbbdc01dcf54b4acf55ef0eb60f6d6bd68ef9d27f9b02",
+      "source_mtime_ns": 1792831426875063100,
+      "logical_destination": "durable-QA-three/baseline/re4dc-game.elf",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/program.bin",
+      "bytes": 3409924,
+      "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "source_mtime_ns": 1792831427157827900,
+      "logical_destination": "durable-QA-three/baseline/program.bin",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/em22.ovl",
+      "bytes": 27236,
+      "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e",
+      "source_mtime_ns": 1792831427219871200,
+      "logical_destination": "durable-QA-three/baseline/em22.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b",
+      "source_mtime_ns": 1792831427257876700,
+      "logical_destination": "durable-QA-three/baseline/em2b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6",
+      "source_mtime_ns": 1792831427294413500,
+      "logical_destination": "durable-QA-three/baseline/em2f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/em35.ovl",
+      "bytes": 52392,
+      "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b",
+      "source_mtime_ns": 1792831427330416200,
+      "logical_destination": "durable-QA-three/baseline/em35.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946",
+      "source_mtime_ns": 1792831427368463100,
+      "logical_destination": "durable-QA-three/baseline/em3b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5",
+      "source_mtime_ns": 1792831427403465800,
+      "logical_destination": "durable-QA-three/baseline/pl0f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354",
+      "source_mtime_ns": 1792831427440463100,
+      "logical_destination": "durable-QA-three/baseline/pl11.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b",
+      "source_mtime_ns": 1792831427478467100,
+      "logical_destination": "durable-QA-three/baseline/pl14.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329",
+      "source_mtime_ns": 1792831427517464800,
+      "logical_destination": "durable-QA-three/baseline/sscrn.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab",
+      "source_mtime_ns": 1792831427556472000,
+      "logical_destination": "durable-QA-three/baseline/st1_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca",
+      "source_mtime_ns": 1792831427593041600,
+      "logical_destination": "durable-QA-three/baseline/st1_1.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0",
+      "source_mtime_ns": 1792831427632244700,
+      "logical_destination": "durable-QA-three/baseline/st1_2.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b",
+      "source_mtime_ns": 1792831427671244600,
+      "logical_destination": "durable-QA-three/baseline/st1_3.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5",
+      "source_mtime_ns": 1792831427708245700,
+      "logical_destination": "durable-QA-three/baseline/st2_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/baseline/build.log",
+      "bytes": 1269207,
+      "sha256": "198390391758c5329ff35ff0b9aee95d14bf291f8e1a0755dcd822dcf633d433",
+      "source_mtime_ns": 1792831427944754300,
+      "logical_destination": "durable-QA-three/baseline/build.log",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/re4dc-game.elf",
+      "bytes": 28751936,
+      "sha256": "9fc5d1680201885a4611fc290eb1d920bda369ac43ff8abc4dc510fa68d8a0bc",
+      "source_mtime_ns": 1792831428226818200,
+      "logical_destination": "durable-QA-three/off/re4dc-game.elf",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/program.bin",
+      "bytes": 3409924,
+      "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "source_mtime_ns": 1792831428517928400,
+      "logical_destination": "durable-QA-three/off/program.bin",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/em22.ovl",
+      "bytes": 27236,
+      "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e",
+      "source_mtime_ns": 1792831428583582100,
+      "logical_destination": "durable-QA-three/off/em22.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b",
+      "source_mtime_ns": 1792831428620584600,
+      "logical_destination": "durable-QA-three/off/em2b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6",
+      "source_mtime_ns": 1792831428658583900,
+      "logical_destination": "durable-QA-three/off/em2f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/em35.ovl",
+      "bytes": 52392,
+      "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b",
+      "source_mtime_ns": 1792831428694584200,
+      "logical_destination": "durable-QA-three/off/em35.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946",
+      "source_mtime_ns": 1792831428731587200,
+      "logical_destination": "durable-QA-three/off/em3b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5",
+      "source_mtime_ns": 1792831428768591100,
+      "logical_destination": "durable-QA-three/off/pl0f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354",
+      "source_mtime_ns": 1792831428805222800,
+      "logical_destination": "durable-QA-three/off/pl11.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b",
+      "source_mtime_ns": 1792831428841222400,
+      "logical_destination": "durable-QA-three/off/pl14.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329",
+      "source_mtime_ns": 1792831428877223100,
+      "logical_destination": "durable-QA-three/off/sscrn.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab",
+      "source_mtime_ns": 1792831428913226200,
+      "logical_destination": "durable-QA-three/off/st1_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca",
+      "source_mtime_ns": 1792831428948370000,
+      "logical_destination": "durable-QA-three/off/st1_1.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0",
+      "source_mtime_ns": 1792831428983883100,
+      "logical_destination": "durable-QA-three/off/st1_2.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b",
+      "source_mtime_ns": 1792831429018884700,
+      "logical_destination": "durable-QA-three/off/st1_3.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5",
+      "source_mtime_ns": 1792831429055889000,
+      "logical_destination": "durable-QA-three/off/st2_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/off/build.log",
+      "bytes": 1271801,
+      "sha256": "0870d1edac294d52331d63159258d4423ca813ed06fa3a135956a1d81495c354",
+      "source_mtime_ns": 1792831429293560600,
+      "logical_destination": "durable-QA-three/off/build.log",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/re4dc-game.elf",
+      "bytes": 29131708,
+      "sha256": "9d6cd3c690794cf604609199e933db0d6edea5ebfc4563844afb5cca3693ba0c",
+      "source_mtime_ns": 1792831429582756400,
+      "logical_destination": "durable-QA-three/on/re4dc-game.elf",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/program.bin",
+      "bytes": 3456024,
+      "sha256": "02a14f20f815607da8caa6b118e775a2f567b0f85a067f28c00c1cc6b14251ae",
+      "source_mtime_ns": 1792831429896021300,
+      "logical_destination": "durable-QA-three/on/program.bin",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/em22.ovl",
+      "bytes": 27236,
+      "sha256": "37aa0158ce22df0c95c1fe2d008b6a36f47750dbbc266cd663d55ada725a030b",
+      "source_mtime_ns": 1792831429964846000,
+      "logical_destination": "durable-QA-three/on/em22.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "c258d5c19f7c88ecc9683d2eaf46935df2fe0f0a22478f5a4a780c0c2beb0b31",
+      "source_mtime_ns": 1792831430001901600,
+      "logical_destination": "durable-QA-three/on/em2b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "5360a4c478ca10dad56996d2ebf9e9fe6b34956b4f3621e863861619deb1f21e",
+      "source_mtime_ns": 1792831430039902200,
+      "logical_destination": "durable-QA-three/on/em2f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/em35.ovl",
+      "bytes": 52392,
+      "sha256": "488121f425b6c5af4a33ee8c37492aa5a989ba06bb0f0d77dfe45cbcc3d6699e",
+      "source_mtime_ns": 1792831430077906400,
+      "logical_destination": "durable-QA-three/on/em35.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "ad2987eb26c2fc301278871a906be4accefe7beb8d2f6e6957023177268837ed",
+      "source_mtime_ns": 1792831430113905700,
+      "logical_destination": "durable-QA-three/on/em3b.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "70e4d2f25ea719a6cf991b5762928c0284afbb3413937e1a556fe71ca307973c",
+      "source_mtime_ns": 1792831430150904300,
+      "logical_destination": "durable-QA-three/on/pl0f.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "bbd19cc9243595342b0147cff95548b2505ca964fb2faa13d8077504e307608f",
+      "source_mtime_ns": 1792831430186368800,
+      "logical_destination": "durable-QA-three/on/pl11.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "1baceac42be189c14b7d6d4ab55102590180d5c3ead0b6f25127f14dc616fef0",
+      "source_mtime_ns": 1792831430222368500,
+      "logical_destination": "durable-QA-three/on/pl14.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "c9fdfa094650ef343950f85f071b4c9e03899421e69e2d0a1b811467c6dfde7b",
+      "source_mtime_ns": 1792831430259372600,
+      "logical_destination": "durable-QA-three/on/sscrn.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "d237ac8cae42579b45e0ed9b9bf9f37cb9035eb6a9d93ce2ee5a15c4158e0e8f",
+      "source_mtime_ns": 1792831430296887000,
+      "logical_destination": "durable-QA-three/on/st1_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "8125e4b105f5c3b0012b29dc0ac76d3f1c536a94b2f0d0e5ee843b9808fc824d",
+      "source_mtime_ns": 1792831430332886800,
+      "logical_destination": "durable-QA-three/on/st1_1.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "e893d7adb2e01ebee05baccf32dce2fbaa18065003328ae932d5b8fff8b54678",
+      "source_mtime_ns": 1792831430367959300,
+      "logical_destination": "durable-QA-three/on/st1_2.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "0ac1b30937a53d653cb1ee2d50d01e71a4398f9a1414e64d796d58e018516335",
+      "source_mtime_ns": 1792831430405471800,
+      "logical_destination": "durable-QA-three/on/st1_3.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "97e63a517fb12ccc3c361c72f812216da4b113e6531210f94407a64783df9e77",
+      "source_mtime_ns": 1792831430443470700,
+      "logical_destination": "durable-QA-three/on/st2_0.ovl",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2/programmes/on/build.log",
+      "bytes": 1303603,
+      "sha256": "cdebf53abc3e16020e17773437380c8fbb39335249cc6be80b5349b11a9c07b0",
+      "source_mtime_ns": 1792831430674155300,
+      "logical_destination": "durable-QA-three/on/build.log",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/PREPARATION-THREE.json",
+      "bytes": 8660818,
+      "sha256": "82f4869f2c1306b7dacda950888b99c5acb1778dad5b14ea9ca9d97bd7029b27",
+      "source_mtime_ns": 1792829670335834300,
+      "logical_destination": "QA-preparation-v1/PREPARATION-THREE.json",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v1/PREPARATION.json",
+      "bytes": 5740831,
+      "sha256": "f846a60c145819b85746ae97403cd5b6c0c3c7168b43e93f03b1317ba172d4cc",
+      "source_mtime_ns": 1792829564661910500,
+      "logical_destination": "QA-preparation-v1/PREPARATION.json",
+      "payload_copied": false
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/memory-qualification-prep/qa-pair-v2/PREPARATION.json",
+      "bytes": 13972829,
+      "sha256": "d39c920ac5b8596b2244ea4267a6712a7e5cf1321b80448240bb3fc8ce7075a0",
+      "source_mtime_ns": 1792830294861771800,
+      "logical_destination": "QA-preparation-v2/PREPARATION.json",
+      "payload_copied": false
+    }
+  ],
+  "disclosure": "Private binaries/objects/bulk build logs and large metadata plans verified read-only; no payload archived."
+}

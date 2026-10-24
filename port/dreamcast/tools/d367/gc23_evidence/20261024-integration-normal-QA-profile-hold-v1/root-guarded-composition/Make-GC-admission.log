@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_make_prerequisites_and_original_guard (__main__.Controls.test_make_prerequisites_and_original_guard) (k='GC_ASSET_GATE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 35, in test_make_prerequisites_and_original_guard
+    with self.subTest(k=k):self.assertNotEqual(call({k:'1'}).returncode,0)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_make_prerequisites_and_original_guard (__main__.Controls.test_make_prerequisites_and_original_guard) (k='GC_ASSET_MOTION_UNKNOWN')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 35, in test_make_prerequisites_and_original_guard
+    with self.subTest(k=k):self.assertNotEqual(call({k:'1'}).returncode,0)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.060s
+
+FAILED (failures=2)

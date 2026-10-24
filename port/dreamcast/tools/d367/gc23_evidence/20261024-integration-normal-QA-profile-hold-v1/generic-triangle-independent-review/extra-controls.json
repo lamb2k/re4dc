@@ -1,0 +1,88 @@
+{
+  "classification": "EXACT_REAL_GENERIC_IMPLEMENTATION_ONLY",
+  "checks": [
+    "dense/permuted/reflected3D affine-0",
+    "dense/permuted/reflected3D affine-1",
+    "dense/permuted/reflected3D affine-2",
+    "default73728 edge budget boundary accepted",
+    "default73728 edge budget next face refused",
+    "last supplied target cannot be silently skipped",
+    "one supplied face is only a subset proof not inventory authentication",
+    "same geometry distinct realID candidates still exceed16",
+    "supported tiny exact separation",
+    "oversize denominator UNKNOWN",
+    "no mutable source list accepted"
+  ],
+  "mutants": [
+    {
+      "mutant": "target_vertex_omission",
+      "method": "test_edge_contact_outside_and_boundary_depth",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "a8bd8723a92c25ba526d5e5020490b01d3d96212d5875e647d60dc5e21d7140e"
+    },
+    {
+      "mutant": "eye_vertex_omission",
+      "method": "test_no_per_vertex_or_per_eye_source_switch",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "7ae433978c06fd7a6ba709c1a91baa0843e8b6b910fd4605528fa868c17a4eba"
+    },
+    {
+      "mutant": "third_edge_omission",
+      "method": "test_edge_contact_outside_and_boundary_depth",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "b8373ee8266139db7da9554cef9553119817589b68d6360a738e11e639a9e86f"
+    },
+    {
+      "mutant": "edge_touch",
+      "method": "test_edge_contact_outside_and_boundary_depth",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "388444904dd1ea5ac74ec10ec150d4f4373115bd202ccffbf306cc450379c8c9"
+    },
+    {
+      "mutant": "depth_touch",
+      "method": "test_depth_plane_and_mixed_eye_refusal",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "4485f293adcd5f2a2c466553845471472596bcc923b902c43bf222cae23c3c4b"
+    },
+    {
+      "mutant": "mixed_eye_side",
+      "method": "test_depth_plane_and_mixed_eye_refusal",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "a159c236bdc65f95666d94a8fde0e9415c8eca06c4988945b017ef17d08870af"
+    },
+    {
+      "mutant": "panel_cap32",
+      "method": "test_full_panel_identity_cap_and_faces",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "d1bda8ba71e20cffd62922e4647ca9e98bcd368f04aa8c65cbc9ebe54e906a37"
+    },
+    {
+      "mutant": "panel_alias",
+      "method": "test_full_panel_identity_cap_and_faces",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "bd71c72e39b49d57fb651243cd18066faf4034cf322359d8025cd872fa9436b3"
+    },
+    {
+      "mutant": "zip_truncation",
+      "method": "test_distinct_complete_triangles_and_and_dependencies",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "7c483d9692ddcc91d25bb48db7699753a64e973ad33775470e4c5a1151bd044c"
+    },
+    {
+      "mutant": "work_limit",
+      "method": "test_input_bounds_nonfinite_and_work_budget",
+      "returncode": 1,
+      "intended_assertion_trace_sha256": "cf86c8b65bdb9aec5887ad17283aea8b664743c34353203d65387afef1886b4e"
+    }
+  ],
+  "scene_queries": 0,
+  "runtime_admitted": false,
+  "source_sha256": "9c0f85d588be2020a1506325da078e27a99c23b81f783ff3db268f6082a64f41",
+  "limits": {
+    "address_bytes": 268435456,
+    "jobs": 1,
+    "peak_self_rss_kib": 21504,
+    "peak_child_rss_kib": 21504,
+    "seconds": 1.1370023060007952
+  }
+}

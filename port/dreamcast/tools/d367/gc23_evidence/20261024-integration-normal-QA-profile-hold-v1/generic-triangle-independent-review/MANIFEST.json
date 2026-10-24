@@ -1,0 +1,77 @@
+[
+  {
+    "file": "REVIEW.md",
+    "bytes": 5515,
+    "sha256": "088c1f849b7f145ccd2456535385c348e011bbaeeb200343ef2dd79703885aba"
+  },
+  {
+    "file": "extra-controls.json",
+    "bytes": 3347,
+    "sha256": "6ecb3257f5250cad852f4290b71f59b8d4a0fd996dda78cd0c0465705ec84fd9"
+  },
+  {
+    "file": "extra_controls.py",
+    "bytes": 4723,
+    "sha256": "600a1cc74c1b269a4562a4dc2d630f2525480df50535d0975e1f0f8cce3a07cb"
+  },
+  {
+    "file": "host-review.json",
+    "bytes": 358,
+    "sha256": "be4237d0874179c743f160185ccc917bd9d2bd4fe8bd09336350a598ebe3efc6"
+  },
+  {
+    "file": "host-review.log",
+    "bytes": 1542,
+    "sha256": "db67c1ecce19cb4a92a7bf88a746cdc8b48025c2c3a3b56e6d4f24f207c9a7b2"
+  },
+  {
+    "file": "mutant-depth_touch.log",
+    "bytes": 1180,
+    "sha256": "4485f293adcd5f2a2c466553845471472596bcc923b902c43bf222cae23c3c4b"
+  },
+  {
+    "file": "mutant-edge_touch.log",
+    "bytes": 1029,
+    "sha256": "388444904dd1ea5ac74ec10ec150d4f4373115bd202ccffbf306cc450379c8c9"
+  },
+  {
+    "file": "mutant-eye_vertex_omission.log",
+    "bytes": 1186,
+    "sha256": "7ae433978c06fd7a6ba709c1a91baa0843e8b6b910fd4605528fa868c17a4eba"
+  },
+  {
+    "file": "mutant-mixed_eye_side.log",
+    "bytes": 1029,
+    "sha256": "a159c236bdc65f95666d94a8fde0e9415c8eca06c4988945b017ef17d08870af"
+  },
+  {
+    "file": "mutant-panel_alias.log",
+    "bytes": 1255,
+    "sha256": "bd71c72e39b49d57fb651243cd18066faf4034cf322359d8025cd872fa9436b3"
+  },
+  {
+    "file": "mutant-panel_cap32.log",
+    "bytes": 5829,
+    "sha256": "d1bda8ba71e20cffd62922e4647ca9e98bcd368f04aa8c65cbc9ebe54e906a37"
+  },
+  {
+    "file": "mutant-target_vertex_omission.log",
+    "bytes": 1034,
+    "sha256": "a8bd8723a92c25ba526d5e5020490b01d3d96212d5875e647d60dc5e21d7140e"
+  },
+  {
+    "file": "mutant-third_edge_omission.log",
+    "bytes": 1028,
+    "sha256": "b8373ee8266139db7da9554cef9553119817589b68d6360a738e11e639a9e86f"
+  },
+  {
+    "file": "mutant-work_limit.log",
+    "bytes": 1258,
+    "sha256": "cf86c8b65bdb9aec5887ad17283aea8b664743c34353203d65387afef1886b4e"
+  },
+  {
+    "file": "mutant-zip_truncation.log",
+    "bytes": 1138,
+    "sha256": "7c483d9692ddcc91d25bb48db7699753a64e973ad33775470e4c5a1151bd044c"
+  }
+]

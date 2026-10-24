@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+2778928	 676644	1002388	4457960	 4405e8	/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf

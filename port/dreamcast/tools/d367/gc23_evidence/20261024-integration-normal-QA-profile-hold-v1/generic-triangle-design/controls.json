@@ -1,0 +1,29 @@
+{
+  "classification": "EXACT_REAL_SYNTHETIC_ONLY",
+  "groups": 15,
+  "controls": [
+    "whole actual target triangle positive",
+    "same target AABB refused",
+    "nonzero full eye volume positive",
+    "tensor interpolation and exact barycentric identities",
+    "reversed geometric orientation requires matching uniform sign",
+    "target before source refused",
+    "target touching plane refused",
+    "eye touching or straddling plane refused",
+    "edge boundary strict refusal",
+    "source degeneracy refused",
+    "target degeneracy still satisfies convex hull theorem",
+    "one outside target vertex refuses whole face",
+    "per vertex mixed-source hits do not imply any whole-face cover",
+    "mixed-source example has an uncovered interior point",
+    "nominal source proof does not cover unbounded source perturbation"
+  ],
+  "scene_queries": 0,
+  "runtime_admitted": false,
+  "proof_basis": "algebraic identities and convex tensor weights, not tested samples",
+  "limits": {
+    "address_bytes": 268435456,
+    "jobs": 1,
+    "peak_rss_kib": 13056
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "scope": "Historical exact846 checker counterexamples, not generated target evidence",
+  "results": [
+    {
+      "label": "allocated-address",
+      "accepted_as_disabled_identity": true
+    },
+    {
+      "label": "unreferenced-function-value",
+      "accepted_as_disabled_identity": true
+    },
+    {
+      "label": "unreferenced-function-weak-binding",
+      "accepted_as_disabled_identity": true
+    },
+    {
+      "label": "unreferenced-function-hidden-visibility",
+      "accepted_as_disabled_identity": true
+    },
+    {
+      "label": "allocated-code-change",
+      "accepted_as_disabled_identity": false
+    }
+  ],
+  "SDK": 0
+}

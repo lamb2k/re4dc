@@ -1,0 +1,41 @@
+FFFF
+======================================================================
+FAIL: test_source_guards (__main__.Controls.test_source_guards) (rel='platform/native_static.cpp', k='GC_ASSET_GATE', v='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 48, in test_source_guards
+    with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_source_guards (__main__.Controls.test_source_guards) (rel='platform/native_static.cpp', k='GC_ASSET_GATE', v='2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 48, in test_source_guards
+    with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_source_guards (__main__.Controls.test_source_guards) (rel='platform/native_static.cpp', k='GC_ASSET_MOTION_UNKNOWN', v='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 48, in test_source_guards
+    with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_source_guards (__main__.Controls.test_source_guards) (rel='platform/native_static.cpp', k='GC_ASSET_MOTION_UNKNOWN', v='2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/codex-composition-int24/port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py", line 48, in test_source_guards
+    with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.558s
+
+FAILED (failures=4)

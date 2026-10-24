@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "source_revision": "28c739468ae7d2d2d3c09f81330015e7769dc824",
+  "returncode": 0,
+  "methods": 13,
+  "semantic_mutants_assertion_rejections": 10,
+  "independent_exact_point_cases": 2025,
+  "elapsed_seconds": 0.599811313993996,
+  "maximum_single_child_rss_kib": 18176,
+  "address_space_limit_bytes": 268435456,
+  "workers": 1,
+  "scene_queries": 0,
+  "runtime_admitted": false,
+  "source_members": [
+    {
+      "path": "port/dreamcast/tools/d367/triangle_shadow24/NEXT-AUDIT-PROPOSAL.md",
+      "bytes": 5995,
+      "sha256": "14ec4d65c63fdd6c474ee97196e28701fbd46a3cadeb1691a071b30929f14ed4",
+      "physical_equals_git": true
+    },
+    {
+      "path": "port/dreamcast/tools/d367/triangle_shadow24/README.md",
+      "bytes": 6157,
+      "sha256": "f62b264ce97284cb08d3a28f3e7f1a9b1c6c98a46e0023c8cbb44924d479e481",
+      "physical_equals_git": true
+    },
+    {
+      "path": "port/dreamcast/tools/d367/triangle_shadow24/exact_shadow.py",
+      "bytes": 6442,
+      "sha256": "9c0f85d588be2020a1506325da078e27a99c23b81f783ff3db268f6082a64f41",
+      "physical_equals_git": true
+    },
+    {
+      "path": "port/dreamcast/tools/d367/triangle_shadow24/test_exact_shadow.py",
+      "bytes": 12088,
+      "sha256": "5d7a12edefb993b8c530513b222e5d73d32e1e73a872e8cc9d1f1a24164839f7",
+      "physical_equals_git": true
+    }
+  ],
+  "log_sha256": "850492b4ffac26c94bce7299766156daf2e0d5abf0d4b6d9ac808f3de6381c1d"
+}

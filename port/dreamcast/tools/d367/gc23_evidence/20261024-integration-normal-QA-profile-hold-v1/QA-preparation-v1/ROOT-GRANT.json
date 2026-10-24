@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-24T08:20:57.9381574Z",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "baseline": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "plan_sha256": "82f4869f2c1306b7dacda950888b99c5acb1778dad5b14ea9ca9d97bd7029b27",
+  "tools_sha256": "0de251bf12c291cb1eaa10405b1fa74c69aa4590b55c0846a92c1a4b5cb83b3d",
+  "action": "Fresh sequential same-QA baseline/OFF/ON full links only, no guest",
+  "sdk_slots": 1,
+  "jobs": 1,
+  "owned_byte_cap": 2147483648,
+  "c_admission_gib": 26,
+  "c_floor_gib": 24,
+  "ram_admission_gib": 3,
+  "ram_floor_mib": 512,
+  "seconds_per_arm": 1800,
+  "guest_allocation": 0,
+  "readback": "PASS1545inputs/18029originalnormalfiles/3exports/7semanticnegatives"
+}

@@ -1,0 +1,26 @@
+{
+  "prepare_qa_pair.py": {
+    "bytes": 5328,
+    "sha256": "aaf036f457f684c8b27772f326febebb8a25fda2a33afb7b9a4db7c27ef40a61"
+  },
+  "prepare_three_arm.py": {
+    "bytes": 4399,
+    "sha256": "31b1f813aaef60097d4221afe0b1674045334a5acf4844b9ef6e2e6204986cfd"
+  },
+  "readback_three_arm.py": {
+    "bytes": 3385,
+    "sha256": "53438e62326842b7be627e078566607555dc7a4e2149069789cc0cc623d70a71"
+  },
+  "run_qa_three_arm.py": {
+    "bytes": 10445,
+    "sha256": "6034c242cafee18da7ea9c4a3a0e5371cfd92fa4b566303505dc0267c8a0b49d"
+  },
+  "run_qa_three_arm.sh": {
+    "bytes": 1117,
+    "sha256": "4c8e509785ceba5e5a40076ab801a2ae3e319b964b91ae264e368e1df849e393"
+  },
+  "PREPARATION-THREE.json": {
+    "bytes": 8660818,
+    "sha256": "82f4869f2c1306b7dacda950888b99c5acb1778dad5b14ea9ca9d97bd7029b27"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "REVIEW.md": {
+    "bytes": 5406,
+    "sha256": "4bff61b17557ec6cfeaa802cf36d71c3a1f43ecfddf84277973cc4e69f87475f"
+  },
+  "host98.log": {
+    "bytes": 172,
+    "sha256": "0486feb8ea24fd724bfd55e171bc756fbbe42b5b39970a9932a763343f246876"
+  },
+  "identity-controls.json": {
+    "bytes": 642,
+    "sha256": "9ec537f8a7e519cd279359fb0465fc58dd25bf4e6aaf70269c2f6f0022ebe5c4"
+  },
+  "independent-host.json": {
+    "bytes": 991,
+    "sha256": "3573697a50131acb0d8079149d2779a2d4a89809666fe5782f1f98031cfa343d"
+  },
+  "pins.log": {
+    "bytes": 48,
+    "sha256": "49236158d423b426292e8fb613ac37160a218285e412f121eac0ba5b7c928d42"
+  },
+  "plan.log": {
+    "bytes": 7348,
+    "sha256": "e3087cbd317182aa6d60f81bba6346ba51fce61c4193ffaa9872b9cb7adb112c"
+  },
+  "run_identity_controls.py": {
+    "bytes": 1768,
+    "sha256": "a264ef34020f1051a17bd63c6eefb56cfd21826c90c8470d383bfb556be97fa1"
+  },
+  "shell.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source-pins.json": {
+    "bytes": 1936,
+    "sha256": "76f46677d3fa2e1608070bec553898683856784cc699c4a3f4068c12eb868fa4"
+  }
+}

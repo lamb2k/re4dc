@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_no_per_vertex_or_per_eye_source_switch (__main__.Controls.test_no_per_vertex_or_per_eye_source_switch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/probe/codex-triangle-shadow24/port/dreamcast/tools/d367/triangle_shadow24/test_exact_shadow.py", line 100, in test_no_per_vertex_or_per_eye_source_switch
+    self.yes(es.cover_triangle((eyes[0],),p,point));self.unknown(es.cover_triangle(eyes,p,point),'EDGE_VOLUME')
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/probe/codex-triangle-shadow24/port/dreamcast/tools/d367/triangle_shadow24/test_exact_shadow.py", line 44, in unknown
+    self.assertIsInstance(x,es.Unknown)
+AssertionError: TriangleProof(sign=1, cartesian_pairs=6, min_eye_plane=Fraction(1, 100), min_target_plane=Fraction(1, 100), min_edge_volume=Fraction(1, 200)) is not an instance of <class 'shadow_under_test.Unknown'>
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

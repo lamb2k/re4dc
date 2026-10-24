@@ -1,0 +1,25 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "scope": "Fresh same-QA fb254 baseline and aab OFF/ON full links; no stage/guest/installed catalog/provenance/coverage acceptance",
+  "preparation_sha256": "82f4869f2c1306b7dacda950888b99c5acb1778dad5b14ea9ca9d97bd7029b27",
+  "source_manifest_sha256": "9e5dea476a1fba2f5d79c59490ed691fa7fc018ab0424cb8cfe36bd784a2f99b",
+  "arms": {
+    "baseline": {
+      "started": true,
+      "command_sha256": "ae6267680b3b9f31d7a0d8a492aaea0fafaf9cb1d6396b968df65e25baf3eb23",
+      "environment": {
+        "ASSETS": "/root/probe/lanes/play-actor-bundle",
+        "OUT": "/dev/shm/gc-motion24-qa-memory-2ugz4ae8/baseline/out",
+        "OBJDIR": "/dev/shm/gc-motion24-qa-memory-2ugz4ae8/baseline/out/obj",
+        "JOBS": "1",
+        "SOURCE_DATE_EPOCH": "1760000000",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "RE4DC_KOS_BASE": "/root/work/kos-re4dc-d367"
+      }
+    }
+  },
+  "complete": false,
+  "runner_sha256": "6034c242cafee18da7ea9c4a3a0e5371cfd92fa4b566303505dc0267c8a0b49d",
+  "failure": "RuntimeError('Fresh build failed baseline rc=1')",
+  "owned_bytes": 312632754
+}

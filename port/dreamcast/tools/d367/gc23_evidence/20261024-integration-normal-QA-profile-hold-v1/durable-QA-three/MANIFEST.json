@@ -1,0 +1,433 @@
+{
+  "utc": "2026-10-24T08:43:50.772105+00:00",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "files": [
+    {
+      "path": "baseline/re4dc-game.elf",
+      "bytes": 28751968,
+      "sha256": "4e0e540d0be71fc57bcfbbdc01dcf54b4acf55ef0eb60f6d6bd68ef9d27f9b02",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf"
+    },
+    {
+      "path": "baseline/program.bin",
+      "bytes": 3409924,
+      "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/program.bin"
+    },
+    {
+      "path": "baseline/em22.ovl",
+      "bytes": 27236,
+      "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/em22.ovl"
+    },
+    {
+      "path": "baseline/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/em2b.ovl"
+    },
+    {
+      "path": "baseline/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/em2f.ovl"
+    },
+    {
+      "path": "baseline/em35.ovl",
+      "bytes": 52392,
+      "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/em35.ovl"
+    },
+    {
+      "path": "baseline/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/em3b.ovl"
+    },
+    {
+      "path": "baseline/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/pl0f.ovl"
+    },
+    {
+      "path": "baseline/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/pl11.ovl"
+    },
+    {
+      "path": "baseline/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/pl14.ovl"
+    },
+    {
+      "path": "baseline/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/sscrn.ovl"
+    },
+    {
+      "path": "baseline/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/st1_0.ovl"
+    },
+    {
+      "path": "baseline/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/st1_1.ovl"
+    },
+    {
+      "path": "baseline/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/st1_2.ovl"
+    },
+    {
+      "path": "baseline/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/st1_3.ovl"
+    },
+    {
+      "path": "baseline/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/st2_0.ovl"
+    },
+    {
+      "path": "baseline/symbols.txt",
+      "bytes": 587037,
+      "sha256": "a58707668a229ef4a9eaf85bdd877451d2dc19b7f09ab22f5e2dcfc34b5665f7",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/symbols.txt"
+    },
+    {
+      "path": "baseline/syms.txt",
+      "bytes": 27,
+      "sha256": "80487ce14445e84e1d40fc81c050d6e433ef7bb7362f6482553f24fd30de1c3b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/syms.txt"
+    },
+    {
+      "path": "baseline/sections.txt",
+      "bytes": 1047,
+      "sha256": "2107090a25cefa81b77f8f590abe0b12327ac6ebe22a126001db833edf58f3b2",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/sections.txt"
+    },
+    {
+      "path": "baseline/size.txt",
+      "bytes": 160,
+      "sha256": "44002dc1410d288b2165ec1f96c8e8d3a176c81d3fe27d87c2e3dfc7070f29a5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/size.txt"
+    },
+    {
+      "path": "baseline/command.json",
+      "bytes": 7788,
+      "sha256": "a6ce46aba6d23fb4bc6b05e7da61ed97ae4a622bbbfaa5782768189449d21fb9",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/command.json"
+    },
+    {
+      "path": "baseline/build.log",
+      "bytes": 1269207,
+      "sha256": "198390391758c5329ff35ff0b9aee95d14bf291f8e1a0755dcd822dcf633d433",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/build.log"
+    },
+    {
+      "path": "baseline/resolved-knobs.txt",
+      "bytes": 240138,
+      "sha256": "c83ed8094a1814fe31df6f119a0a88373955a7801449a61d41d78b8b950d5306",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/resolved-knobs.txt"
+    },
+    {
+      "path": "off/re4dc-game.elf",
+      "bytes": 28751936,
+      "sha256": "9fc5d1680201885a4611fc290eb1d920bda369ac43ff8abc4dc510fa68d8a0bc",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf"
+    },
+    {
+      "path": "off/program.bin",
+      "bytes": 3409924,
+      "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/program.bin"
+    },
+    {
+      "path": "off/em22.ovl",
+      "bytes": 27236,
+      "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/em22.ovl"
+    },
+    {
+      "path": "off/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/em2b.ovl"
+    },
+    {
+      "path": "off/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/em2f.ovl"
+    },
+    {
+      "path": "off/em35.ovl",
+      "bytes": 52392,
+      "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/em35.ovl"
+    },
+    {
+      "path": "off/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/em3b.ovl"
+    },
+    {
+      "path": "off/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/pl0f.ovl"
+    },
+    {
+      "path": "off/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/pl11.ovl"
+    },
+    {
+      "path": "off/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/pl14.ovl"
+    },
+    {
+      "path": "off/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/sscrn.ovl"
+    },
+    {
+      "path": "off/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/st1_0.ovl"
+    },
+    {
+      "path": "off/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/st1_1.ovl"
+    },
+    {
+      "path": "off/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/st1_2.ovl"
+    },
+    {
+      "path": "off/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/st1_3.ovl"
+    },
+    {
+      "path": "off/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/st2_0.ovl"
+    },
+    {
+      "path": "off/symbols.txt",
+      "bytes": 587037,
+      "sha256": "a58707668a229ef4a9eaf85bdd877451d2dc19b7f09ab22f5e2dcfc34b5665f7",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/symbols.txt"
+    },
+    {
+      "path": "off/syms.txt",
+      "bytes": 27,
+      "sha256": "80487ce14445e84e1d40fc81c050d6e433ef7bb7362f6482553f24fd30de1c3b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/syms.txt"
+    },
+    {
+      "path": "off/sections.txt",
+      "bytes": 1042,
+      "sha256": "2b21c7ddc7136f7bbb1ac9a6bf1f0c36aa33eae7c8b352524ee39151937ff96d",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/sections.txt"
+    },
+    {
+      "path": "off/size.txt",
+      "bytes": 155,
+      "sha256": "8376bc2810b72a22ca26402ba4329e708c02ae753f27978cb43c6e008cb5e400",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/size.txt"
+    },
+    {
+      "path": "off/command.json",
+      "bytes": 7866,
+      "sha256": "6233cca81cde529aa72c3548276d875a299219c352dab1e8b6cd53d2f6aae846",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/command.json"
+    },
+    {
+      "path": "off/build.log",
+      "bytes": 1271801,
+      "sha256": "0870d1edac294d52331d63159258d4423ca813ed06fa3a135956a1d81495c354",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/build.log"
+    },
+    {
+      "path": "off/resolved-knobs.txt",
+      "bytes": 228819,
+      "sha256": "0b5f499f7b46a6bfacf8561f0200cf6fa3c81ff05517d5c6a3236d03ade2a80d",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/resolved-knobs.txt"
+    },
+    {
+      "path": "on/re4dc-game.elf",
+      "bytes": 29131708,
+      "sha256": "9d6cd3c690794cf604609199e933db0d6edea5ebfc4563844afb5cca3693ba0c",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf"
+    },
+    {
+      "path": "on/program.bin",
+      "bytes": 3456024,
+      "sha256": "02a14f20f815607da8caa6b118e775a2f567b0f85a067f28c00c1cc6b14251ae",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/program.bin"
+    },
+    {
+      "path": "on/em22.ovl",
+      "bytes": 27236,
+      "sha256": "37aa0158ce22df0c95c1fe2d008b6a36f47750dbbc266cd663d55ada725a030b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/em22.ovl"
+    },
+    {
+      "path": "on/em2b.ovl",
+      "bytes": 67900,
+      "sha256": "c258d5c19f7c88ecc9683d2eaf46935df2fe0f0a22478f5a4a780c0c2beb0b31",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/em2b.ovl"
+    },
+    {
+      "path": "on/em2f.ovl",
+      "bytes": 16800,
+      "sha256": "5360a4c478ca10dad56996d2ebf9e9fe6b34956b4f3621e863861619deb1f21e",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/em2f.ovl"
+    },
+    {
+      "path": "on/em35.ovl",
+      "bytes": 52392,
+      "sha256": "488121f425b6c5af4a33ee8c37492aa5a989ba06bb0f0d77dfe45cbcc3d6699e",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/em35.ovl"
+    },
+    {
+      "path": "on/em3b.ovl",
+      "bytes": 7568,
+      "sha256": "ad2987eb26c2fc301278871a906be4accefe7beb8d2f6e6957023177268837ed",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/em3b.ovl"
+    },
+    {
+      "path": "on/pl0f.ovl",
+      "bytes": 45608,
+      "sha256": "70e4d2f25ea719a6cf991b5762928c0284afbb3413937e1a556fe71ca307973c",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/pl0f.ovl"
+    },
+    {
+      "path": "on/pl11.ovl",
+      "bytes": 35592,
+      "sha256": "bbd19cc9243595342b0147cff95548b2505ca964fb2faa13d8077504e307608f",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/pl11.ovl"
+    },
+    {
+      "path": "on/pl14.ovl",
+      "bytes": 18832,
+      "sha256": "1baceac42be189c14b7d6d4ab55102590180d5c3ead0b6f25127f14dc616fef0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/pl14.ovl"
+    },
+    {
+      "path": "on/sscrn.ovl",
+      "bytes": 134372,
+      "sha256": "c9fdfa094650ef343950f85f071b4c9e03899421e69e2d0a1b811467c6dfde7b",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/sscrn.ovl"
+    },
+    {
+      "path": "on/st1_0.ovl",
+      "bytes": 36228,
+      "sha256": "d237ac8cae42579b45e0ed9b9bf9f37cb9035eb6a9d93ce2ee5a15c4158e0e8f",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/st1_0.ovl"
+    },
+    {
+      "path": "on/st1_1.ovl",
+      "bytes": 81572,
+      "sha256": "8125e4b105f5c3b0012b29dc0ac76d3f1c536a94b2f0d0e5ee843b9808fc824d",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/st1_1.ovl"
+    },
+    {
+      "path": "on/st1_2.ovl",
+      "bytes": 50076,
+      "sha256": "e893d7adb2e01ebee05baccf32dce2fbaa18065003328ae932d5b8fff8b54678",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/st1_2.ovl"
+    },
+    {
+      "path": "on/st1_3.ovl",
+      "bytes": 88748,
+      "sha256": "0ac1b30937a53d653cb1ee2d50d01e71a4398f9a1414e64d796d58e018516335",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/st1_3.ovl"
+    },
+    {
+      "path": "on/st2_0.ovl",
+      "bytes": 96788,
+      "sha256": "97e63a517fb12ccc3c361c72f812216da4b113e6531210f94407a64783df9e77",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/st2_0.ovl"
+    },
+    {
+      "path": "on/symbols.txt",
+      "bytes": 608386,
+      "sha256": "9cd9cdf556a536c18c702c761b4f292f16a8087e3adffed9edb7b0cb3b34c1e0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/symbols.txt"
+    },
+    {
+      "path": "on/syms.txt",
+      "bytes": 27,
+      "sha256": "12dd03e6f84767638b8fc05e8cacfbd9c3103f6a750b103e2e244e5eadc11062",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/syms.txt"
+    },
+    {
+      "path": "on/sections.txt",
+      "bytes": 1041,
+      "sha256": "3e51d6a2623bf9ec90da959beecd39ff5cff56c1fb59bae0742f23e99b1a0cb2",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/sections.txt"
+    },
+    {
+      "path": "on/size.txt",
+      "bytes": 154,
+      "sha256": "532a5aed02a975160410fc8ee4d3a9caa6a39d28aa21fb43e48e78e1da8d2e44",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/size.txt"
+    },
+    {
+      "path": "on/command.json",
+      "bytes": 7865,
+      "sha256": "c64788442db2558c80154e5344452076a352045337af780cc22f3e2a9641a221",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/command.json"
+    },
+    {
+      "path": "on/build.log",
+      "bytes": 1303603,
+      "sha256": "cdebf53abc3e16020e17773437380c8fbb39335249cc6be80b5349b11a9c07b0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/build.log"
+    },
+    {
+      "path": "on/resolved-knobs.txt",
+      "bytes": 227538,
+      "sha256": "35c7f4c5794fa90d37fff2a9e0b48df0457c6e75afd56b4d0f5e28f7151739c0",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/resolved-knobs.txt"
+    },
+    {
+      "path": "qa-receipt.json",
+      "bytes": 15548,
+      "sha256": "edb3118f0431ee91202baddaf5c2c72350d3012dc81ed8fc135cc38b95eb9763",
+      "source": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/qa-receipt.json"
+    }
+  ],
+  "bytes": 105556933,
+  "scope": "Private durable same-QA baseline/OFF/ON programme/ELF/all14 evidence only. Not a staged disc, guest, memory/coverage/terminal/provenance/performance or release/physical acceptance. Original RAM outputs preserved.",
+  "QA_vs_normal_end": {
+    "off": 61632,
+    "on": 61600
+  },
+  "QA_ON_vs_OFF_end": 63040
+}

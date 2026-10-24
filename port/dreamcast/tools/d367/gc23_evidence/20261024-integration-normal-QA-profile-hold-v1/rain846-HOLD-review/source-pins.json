@@ -1,0 +1,45 @@
+{
+  "reviewed_commit": "84648350bb6a3bc4e1ec94026b0fb98937b1ff69",
+  "files": {
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/matrix.py": {
+      "bytes": 17020,
+      "sha256": "41f86c7f256cba903d66d8554ea482ab83243c003667a2bb15fc8e6cbf466e67"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/readback.py": {
+      "bytes": 12013,
+      "sha256": "9f9c64f6dedb7fa251c0b522a6c069381f23f0d6493a05ec026f5e1515c061c3"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/run-matrix.sh": {
+      "bytes": 2101,
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/test_preparation.py": {
+      "bytes": 9383,
+      "sha256": "3754a8a4a485b608100f9e6ea86792b2b736e480f73dae8517b1e8dbeda1099d"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/README.md": {
+      "bytes": 8469,
+      "sha256": "04e737c314dcede94f9b8b230538513616e6947a07ce8edeb15daaef971b9a23"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS.json": {
+      "bytes": 44585,
+      "sha256": "a2d28c7459fab885c0b9807048777270f08968a7fc3d5393507df8fed1476591"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-GRANT-TEMPLATE.json": {
+      "bytes": 665,
+      "sha256": "52b857361fbfa79c14073293132b09800f1962bab4389c833b6cf0b817017dfc"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PREPARATION-RECEIPT.json": {
+      "bytes": 3543,
+      "sha256": "000b2d75670dde4a1845d3ed207e20d786e0b251b1e5e67cb380f44271067b6d"
+    },
+    "/root/work/kos-re4dc-d367/environ_dreamcast.sh": {
+      "bytes": 2670,
+      "sha256": "e4398b91d86abf48cd383403d3495aa2dfd05d8a6f3782c869bf460a19defe5b"
+    },
+    "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1": {
+      "bytes": 31154920,
+      "sha256": "0709f996a2b9d58e563aa9abbf34f65cf53d5e8762a67f9850dc48302a8f4590"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "files": [
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/symbols.txt",
+      "logical_destination": "durable-normal/off/symbols.txt",
+      "bytes": 581672,
+      "sha256": "0f16f8c9aad30e7e4b5d224a9fb603c8301d1384b32d371c51479a9ccce523a3",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-fullbuild-rain-bca44-v1/gc-full-current/off/symbols.txt",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/sections.txt",
+      "logical_destination": "durable-normal/off/sections.txt",
+      "bytes": 1039,
+      "sha256": "642a7405769c3f7f6f83e9dfb1c6653ff9ce87d163430e2bc0f97a3dc0e8bbff",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-failed-OFF/off/sections.txt",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/size.txt",
+      "logical_destination": "durable-normal/off/size.txt",
+      "bytes": 152,
+      "sha256": "59810a8387ca1637c9c56036ac59d1138fafb8c98714691789f09a5b706f5ac6",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-failed-OFF/off/size.txt",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/command.json",
+      "logical_destination": "durable-normal/off/command.json",
+      "bytes": 7611,
+      "sha256": "7d818e8e808985de971900f42c63e0d0326116793f32d60ec4911c17374bb5ce",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-failed-OFF/off/command.json",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/off/resolved-knobs.txt",
+      "logical_destination": "durable-normal/off/resolved-knobs.txt",
+      "bytes": 221355,
+      "sha256": "bde3112cfd419e41aadb3678af34ebe1451ea271cb9cff968b1b92e24fabe630",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-failed-OFF/off/resolved-knobs.txt",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/receipts/receipt.json",
+      "logical_destination": "durable-normal/receipts/receipt.json",
+      "bytes": 1809,
+      "sha256": "15cf2fd3805f3a67532d37669f08f7494720a762e1e5dbeabcec6d43287cdfa7",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-failed-OFF/receipt.json",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-normal-aab-current-v1/receipts/PREPARATION.json",
+      "logical_destination": "durable-normal/receipts/PREPARATION.json",
+      "bytes": 2386904,
+      "sha256": "186784375ab0add42a8d27aeeb938fad5e4af06e0a8ed0c7662cfecd889ce8ee",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-original-preparation/PREPARATION.json",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/full-link-continuation/READBACK.json",
+      "logical_destination": "normal-continuation-source/READBACK.json",
+      "bytes": 464,
+      "sha256": "f334b9cceeb5c2c5deb97f90445372af13a69f8ee6691e496581a49029d8a053",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-rain-diag-motion-off-context-v1/motion-root-validated-OFF-extract/READBACK.json",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-target846/shell.log",
+      "logical_destination": "rain846-HOLD-review/shell.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-static1d63-current-v1/target-static1d63-current/coarse_actor-absent.log",
+      "prior_evidence_ancestor": "8b7b01d535f02bf4bbdcdbf7d7ece16de010d132"
+    }
+  ],
+  "disclosure": "Exact bytes already retained in unchanged ancestor snapshots; logical destinations reconstruct by path/hash."
+}

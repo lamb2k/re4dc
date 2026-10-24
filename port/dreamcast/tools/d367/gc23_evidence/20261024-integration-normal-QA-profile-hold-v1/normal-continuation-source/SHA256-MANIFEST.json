@@ -1,0 +1,34 @@
+{
+  "CONTINUATION.json": {
+    "bytes": 2029157,
+    "sha256": "d989ea016a0e19a349780d75d491e7a4efae258f39a0a38a9f85377bcf5c46a6"
+  },
+  "HANDBACK.md": {
+    "bytes": 2845,
+    "sha256": "cb58088178c088e1280ac3d7192e17ea834b88280b9a5c28d78d8f321d3a4004"
+  },
+  "READBACK.json": {
+    "bytes": 464,
+    "sha256": "f334b9cceeb5c2c5deb97f90445372af13a69f8ee6691e496581a49029d8a053"
+  },
+  "SOURCE-PINS.json": {
+    "bytes": 353,
+    "sha256": "b44ab697d1a2a9abeeb888f13862a4a57a24eae041c8ad4cd80bd1daac46d543"
+  },
+  "continue_full_pair.py": {
+    "bytes": 9563,
+    "sha256": "850ead1f3722755a7ac5b016034a40471038c7de735253f5f27adde85162fd5f"
+  },
+  "continue_full_pair.sh": {
+    "bytes": 1073,
+    "sha256": "96267a51824706eabc1f2c76946b4fe6780080442eddc13258c8f1842592e50e"
+  },
+  "prepare_continuation.py": {
+    "bytes": 9447,
+    "sha256": "f737fcf3fe9287e9fa9af631b3ec7bab13fa78f3ae37fa504240a3b135f20b40"
+  },
+  "readback_continuation.py": {
+    "bytes": 1971,
+    "sha256": "2ab3a876532f1210f06cb1ea081f7676eb36cab91902961f6f362a3f4a8f7f19"
+  }
+}

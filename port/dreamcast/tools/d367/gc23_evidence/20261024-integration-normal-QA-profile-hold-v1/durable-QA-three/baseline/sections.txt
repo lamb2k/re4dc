@@ -1,0 +1,27 @@
+/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf  :
+section                size         addr
+.text               2452832   2348875776
+.init                    54   2351328608
+.fini                    42   2351328664
+.rodata              278636   2351328736
+.eh_frame              1340   2351607372
+.ctors                  120   2351608840
+.dtors                    8   2351608960
+.data                185176   2351608992
+.re4dc_char_data     490592   2351794176
+.got                     12   2352285688
+.bss                 985428   2352285728
+.ocram                    0   2080378880
+.comment                 18            0
+.debug_aranges       116896            0
+.debug_info        11725002            0
+.debug_abbrev       1111679            0
+.debug_line         6874649            0
+.debug_frame         615028            0
+.debug_str           540464            0
+.debug_loclists     3353260            0
+.debug_rnglists      412952            0
+.debug_line_str       40872            0
+Total              29185060
+
+

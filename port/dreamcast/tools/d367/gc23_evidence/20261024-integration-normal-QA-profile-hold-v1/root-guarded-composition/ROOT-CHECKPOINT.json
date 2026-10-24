@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-24T08:27:29.665297+00:00",
+  "source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+  "branch": "wip/codex-composition-int24-20261024",
+  "base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "scope": "Default-off source preparation and strict cross-feature guard; local no-ff units retained, no t15/int landing/recipe/SDK/guest/asset change. Independent integrated review pending.",
+  "runtime_guard_paths": [
+    "port/dreamcast/game/scenery19.mk",
+    "port/dreamcast/game/platform/native_static.cpp",
+    "port/dreamcast/game/platform/native_ui.cpp"
+  ],
+  "tests": "7 integrated actual-extracted methods;10 existing intended failing compiled runtime mutants;18 OFF CPP pairs;disabled extracted host object identity;3 extra admission-guard mutants",
+  "preserved_failure": "First integrated fixture lacked actual GC Gate0 macro projection; compile refusal preserved, not counted as a semantic pass"
+}

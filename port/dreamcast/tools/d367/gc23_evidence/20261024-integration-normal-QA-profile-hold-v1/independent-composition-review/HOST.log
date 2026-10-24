@@ -1,0 +1,12 @@
+test_actual_hot_cold_queue_snapshot0_and1 (__main__.Controls.test_actual_hot_cold_queue_snapshot0_and1) ... ok
+test_full_file_off_preprocess (__main__.Controls.test_full_file_off_preprocess) ... ok
+test_host_off_object_identity_and_state (__main__.Controls.test_host_off_object_identity_and_state) ... ok
+test_make_prerequisites_and_original_guard (__main__.Controls.test_make_prerequisites_and_original_guard) ... ok
+test_receipt_only_dispatch_and_mutant (__main__.Controls.test_receipt_only_dispatch_and_mutant) ... ok
+test_semantic_mutants (__main__.Controls.test_semantic_mutants) ... ok
+test_source_guards (__main__.Controls.test_source_guards) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 6.257s
+
+OK

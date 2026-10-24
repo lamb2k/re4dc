@@ -1,0 +1,160 @@
+{
+ "source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+ "scope": "Independent SOURCE/HOST only; actual material/numeric/scene/renderer services remain unqualified",
+ "source_members": {
+  "port/dreamcast/game/scenery19.mk": "86d103d2bba0c69db30d6525b288ebb3de1be4c97acf2fb2c3978a52ec353278",
+  "port/dreamcast/game/platform/native_static.cpp": "993a1e7cba8f06f4c34b59d38b1efdeecf6985a19842df3f4fa60fd90c6f5fc4",
+  "port/dreamcast/game/platform/native_ui.cpp": "e54f5c7dad91fb13b93f03ae7db6c6a65c462939db864e3085bf909866eb6258",
+  "port/dreamcast/tools/d367/composition_int24/test_compose_integrated.py": "2e6722fc783d63d0fbd8c4e70a7c204d46ce3d63d39c4b56f4e0976f752ab24a",
+  "port/dreamcast/tools/d367/composition_int24/README.md": "7e5d3cef22905eed5059b2a2c2717ed58408d08a6b4461b5a4e3ff02859cb977"
+ },
+ "exact_component_bindings": [
+  {
+   "path": "platform/include/pvs23_runtime.inc",
+   "reference": "7eb109ea1",
+   "sha256": "cb5f80d121fc0fdf593b1d5a49c55697f3c95a66549dd3fa828391fb97c2983b"
+  },
+  {
+   "path": "platform/include/pvs23_proof.hpp",
+   "reference": "7eb109ea1",
+   "sha256": "1881d1d814fdc7bb787991a2cd6f67ebab293d5c2a7efa42cdd515fb07821ba4"
+  },
+  {
+   "path": "t2exact.mk",
+   "reference": "7eb109ea1",
+   "sha256": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2"
+  },
+  {
+   "path": "platform/include/native_ui_source_world.inc",
+   "reference": "b6b4fa7a3",
+   "sha256": "b3a12a69f1d0216c348502441bb8d2b866bb3a5952d04d6c73a5260ce8a355c3"
+  },
+  {
+   "path": "platform/native_static.cpp",
+   "anchor": "void pvs_finish(bool success)",
+   "reference": "7eb109ea1",
+   "sha256": "ac69ca4039c86c596fe25f9b531a99afdbffb984229dd88decf13afadfe999bd"
+  },
+  {
+   "path": "platform/native_static.cpp",
+   "anchor": "void pvs_observed(",
+   "reference": "7eb109ea1",
+   "sha256": "fdcf8821144dfc586382b4c510fc020cc5582ea708e703e0371688b1392e3448"
+  },
+  {
+   "path": "platform/native_static.cpp",
+   "anchor": "void chunk_restart()",
+   "reference": "7eb109ea1",
+   "sha256": "88958fc8364b0d149cbe2c3fac08b8d3ddddbf3c6fe63d752e1df5acede9b1a9"
+  },
+  {
+   "path": "platform/native_static.cpp",
+   "anchor": "auto chunk_flush=[&]()->int",
+   "reference": "b6b4fa7a3",
+   "sha256": "44d1bd2d189389357006420b25505fff4e7b4fa8ac2177544f144aaecf69e3a2"
+  },
+  {
+   "path": "platform/native_ui.cpp",
+   "anchor": "extern \"C\" int re4dc_pvs23_opaque_ready",
+   "reference": "7eb109ea1",
+   "sha256": "c2890bf72bd9d2968e6dd6894cb53704544147d8f7b8d4f8f9722f5baadbcc39"
+  }
+ ],
+ "actual_affine_region_and_all4_propagations_identical": true,
+ "methods": 7,
+ "off_CPP_pairs": 18,
+ "extracted_host_object_identity": true,
+ "compiled_ubsan_controls": [
+  {
+   "expected_success": true,
+   "returncode": 0,
+   "stderr": ""
+  },
+  {
+   "expected_success": true,
+   "returncode": 0,
+   "stderr": ""
+  },
+  {
+   "expected_success": true,
+   "returncode": 0,
+   "stderr": ""
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-5ztbp7za/unit.cpp:13: int main(): Assertion `!pvs_cur && !pvs::calls && pvs::cur==&pvs::token' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-bgalouod/unit.cpp:241: void re4dc_pvs23_commit(unsigned int, unsigned int, const unsigned int*, const unsigned int*): Assertion `!sq_live && !direct_open' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-h9g18hpl/unit.cpp:22: void re4dc_log(const char*, ...): Assertion `!sq_live && !direct_open' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-3lkjro73/unit.cpp:22: void re4dc_log(const char*, ...): Assertion `!sq_live && !direct_open' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-t85vck_t/unit.cpp:421: int main(): Assertion `log_rows.back().frame==10 && log_rows.back().crc==1 && log_rows.back().fnv==2' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-loipwfw4/unit.cpp:402: void queued(unsigned int, unsigned int, unsigned int, bool): Assertion `part.uv_offset[0]==30 && part.uv_offset[1]==40' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-ugmj8kjj/unit.cpp:22: void re4dc_log(const char*, ...): Assertion `!sq_live && !direct_open' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-bfhbbg4b/unit.cpp:421: int main(): Assertion `log_rows.back().frame==10 && log_rows.back().crc==1 && log_rows.back().fnv==2' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-la7xm4zz/unit.cpp:417: int main(): Assertion `logs==1' failed.\n"
+  },
+  {
+   "expected_success": false,
+   "returncode": -6,
+   "stderr": "run: /dev/shm/iv23-int24-ubsan-hjzis4tn/unit.cpp:413: int main(): Assertion `sq_live && sourceWorldDiagnosticSqHeld' failed.\n"
+  }
+ ],
+ "assertion_mutants": 10,
+ "admission_guard_mutants": [
+  {
+   "label": "Make",
+   "intended_failure": "0 == 0"
+  },
+  {
+   "label": "Static",
+   "intended_failure": "0 == 0"
+  },
+  {
+   "label": "UI",
+   "intended_failure": "0 == 0"
+  }
+ ],
+ "review_tool_sha256": "a39fa9bd9c8ce44890b6a37071b4f29cb5ff3aefd91b87e422f3dd5af0dd62ad",
+ "elapsed_seconds": 13.120493477006676,
+ "limits": {
+  "address_space_bytes": 268435456,
+  "peak_child_rss_kib": 75868,
+  "jobs": 1
+ },
+ "reviewed_tree_unchanged": true,
+ "SDK_run": false,
+ "actual_new_cuts": 0,
+ "actual_source_receipts_admitted": false
+}

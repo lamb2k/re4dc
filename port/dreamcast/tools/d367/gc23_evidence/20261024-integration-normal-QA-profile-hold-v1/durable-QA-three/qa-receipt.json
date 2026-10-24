@@ -1,0 +1,417 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "scope": "Fresh same-QA fb254 baseline and aab OFF/ON full links; no stage/guest/installed catalog/provenance/coverage acceptance",
+  "preparation_sha256": "d39c920ac5b8596b2244ea4267a6712a7e5cf1321b80448240bb3fc8ce7075a0",
+  "source_manifest_sha256": "9e5dea476a1fba2f5d79c59490ed691fa7fc018ab0424cb8cfe36bd784a2f99b",
+  "arms": {
+    "baseline": {
+      "started": true,
+      "command_sha256": "a6ce46aba6d23fb4bc6b05e7da61ed97ae4a622bbbfaa5782768189449d21fb9",
+      "environment": {
+        "ASSETS": "/root/probe/lanes/play-actor-bundle",
+        "OUT": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out",
+        "OBJDIR": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/obj",
+        "JOBS": "1",
+        "SOURCE_DATE_EPOCH": "1760000000",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "RE4DC_KOS_BASE": "/root/work/kos-re4dc-d367"
+      },
+      "complete": true,
+      "seconds": 109.34710136600188,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28751968,
+          "sha256": "4e0e540d0be71fc57bcfbbdc01dcf54b4acf55ef0eb60f6d6bd68ef9d27f9b02"
+        },
+        "program.bin": {
+          "bytes": 3409924,
+          "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329"
+        },
+        "st1_0.ovl": {
+          "bytes": 36228,
+          "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab"
+        },
+        "st1_1.ovl": {
+          "bytes": 81572,
+          "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5"
+        }
+      },
+      "addresses": {
+        "__bss_start": 2352285704,
+        "_edata": 2352285700,
+        "_end": 2353271156,
+        "_etext": 2351328706
+      },
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2732904\t 675908\t 985428\t4394240\t 430d00\t/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf\n",
+      "resolved_sha256": "c83ed8094a1814fe31df6f119a0a88373955a7801449a61d41d78b8b950d5306",
+      "build_log_sha256": "198390391758c5329ff35ff0b9aee95d14bf291f8e1a0755dcd822dcf633d433",
+      "raw_object_count": 449,
+      "OFF_overlay_identity": {},
+      "raw_sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "missing_bytes": 0,
+      "owned_bytes": 773093933
+    },
+    "off": {
+      "started": true,
+      "command_sha256": "6233cca81cde529aa72c3548276d875a299219c352dab1e8b6cd53d2f6aae846",
+      "environment": {
+        "ASSETS": "/root/probe/lanes/play-actor-bundle",
+        "OUT": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out",
+        "OBJDIR": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/obj",
+        "JOBS": "1",
+        "SOURCE_DATE_EPOCH": "1760000000",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "RE4DC_KOS_BASE": "/root/work/kos-re4dc-d367"
+      },
+      "complete": true,
+      "seconds": 112.12874988201656,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 28751936,
+          "sha256": "9fc5d1680201885a4611fc290eb1d920bda369ac43ff8abc4dc510fa68d8a0bc"
+        },
+        "program.bin": {
+          "bytes": 3409924,
+          "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "f2959048e4a54d74443841bfdda188cdd2fa4bee16f3dd091380028f755b9c1e"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "d0b133fa37502e6dc1fb5a3233eb30cfedc1eabb6d1b8f3dcbb8f9ded895ce5b"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "3ec53d1677846cec454fd4527bef791491fc4eeee4e3ebba996a2bf454d539c6"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "67824586c651ca5707f9a886a767d43b7ee94eecbad8dffbdf083b78509fa46b"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "b1f23f87568fbbc747228ffdd214c66161e637f381632a945ce61f2a03d02946"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "77d62f86eedaada02b1d9dae2f70ada76e0b833c475cfc5bee48fb6e2928c8e5"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "233467137e10acd10fbc5895489fe792e3ade9a4b6a5e3d3d294d450d1991354"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "53669f8bb59b8ba8e346e721509b0f8930ff5c682ab3d1f9ff3934bc12e1f87b"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "6fd916c22cbddbf668703d024873913d0b9c8487d733fb2af7602d62eef85329"
+        },
+        "st1_0.ovl": {
+          "bytes": 36228,
+          "sha256": "820ecc0530f2605412638e3a40d77171340c769370f2835d7e1021eba45e5aab"
+        },
+        "st1_1.ovl": {
+          "bytes": 81572,
+          "sha256": "08435b560d442b215e700f58ded185886da49440ea370f555ef48e0d0033ffca"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "1296503e39c3caca4511f98582f3e9005a64de759c78f38ad4e422d79f4151a0"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "ffb4b18ab0ec4f9cf0967c45915834b4eb2c2721c9ddbdf99fb780365c7d299b"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "1850182d70cff004aa9f35f0609bfd97ea26f95be93f02483b9294da50f844a5"
+        }
+      },
+      "addresses": {
+        "__bss_start": 2352285704,
+        "_edata": 2352285700,
+        "_end": 2353271156,
+        "_etext": 2351328706
+      },
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2732904\t 675908\t 985428\t4394240\t 430d00\t/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf\n",
+      "resolved_sha256": "0b5f499f7b46a6bfacf8561f0200cf6fa3c81ff05517d5c6a3236d03ade2a80d",
+      "build_log_sha256": "0870d1edac294d52331d63159258d4423ca813ed06fa3a135956a1d81495c354",
+      "raw_object_count": 449,
+      "OFF_overlay_identity": {
+        "em22.ovl": true,
+        "em2b.ovl": true,
+        "em2f.ovl": true,
+        "em35.ovl": true,
+        "em3b.ovl": true,
+        "pl0f.ovl": true,
+        "pl11.ovl": true,
+        "pl14.ovl": true,
+        "sscrn.ovl": true,
+        "st1_0.ovl": true,
+        "st1_1.ovl": true,
+        "st1_2.ovl": true,
+        "st1_3.ovl": true,
+        "st2_0.ovl": true
+      },
+      "raw_sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+      "missing_bytes": 0,
+      "owned_bytes": 921190242
+    },
+    "on": {
+      "started": true,
+      "command_sha256": "c64788442db2558c80154e5344452076a352045337af780cc22f3e2a9641a221",
+      "environment": {
+        "ASSETS": "/root/probe/lanes/play-actor-bundle",
+        "OUT": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out",
+        "OBJDIR": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/obj",
+        "JOBS": "1",
+        "SOURCE_DATE_EPOCH": "1760000000",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "RE4DC_KOS_BASE": "/root/work/kos-re4dc-d367"
+      },
+      "complete": true,
+      "seconds": 110.0138785650197,
+      "files": {
+        "re4dc-game.elf": {
+          "bytes": 29131708,
+          "sha256": "9d6cd3c690794cf604609199e933db0d6edea5ebfc4563844afb5cca3693ba0c"
+        },
+        "program.bin": {
+          "bytes": 3456024,
+          "sha256": "02a14f20f815607da8caa6b118e775a2f567b0f85a067f28c00c1cc6b14251ae"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "37aa0158ce22df0c95c1fe2d008b6a36f47750dbbc266cd663d55ada725a030b"
+        },
+        "em2b.ovl": {
+          "bytes": 67900,
+          "sha256": "c258d5c19f7c88ecc9683d2eaf46935df2fe0f0a22478f5a4a780c0c2beb0b31"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "5360a4c478ca10dad56996d2ebf9e9fe6b34956b4f3621e863861619deb1f21e"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "488121f425b6c5af4a33ee8c37492aa5a989ba06bb0f0d77dfe45cbcc3d6699e"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "ad2987eb26c2fc301278871a906be4accefe7beb8d2f6e6957023177268837ed"
+        },
+        "pl0f.ovl": {
+          "bytes": 45608,
+          "sha256": "70e4d2f25ea719a6cf991b5762928c0284afbb3413937e1a556fe71ca307973c"
+        },
+        "pl11.ovl": {
+          "bytes": 35592,
+          "sha256": "bbd19cc9243595342b0147cff95548b2505ca964fb2faa13d8077504e307608f"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "1baceac42be189c14b7d6d4ab55102590180d5c3ead0b6f25127f14dc616fef0"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "c9fdfa094650ef343950f85f071b4c9e03899421e69e2d0a1b811467c6dfde7b"
+        },
+        "st1_0.ovl": {
+          "bytes": 36228,
+          "sha256": "d237ac8cae42579b45e0ed9b9bf9f37cb9035eb6a9d93ce2ee5a15c4158e0e8f"
+        },
+        "st1_1.ovl": {
+          "bytes": 81572,
+          "sha256": "8125e4b105f5c3b0012b29dc0ac76d3f1c536a94b2f0d0e5ee843b9808fc824d"
+        },
+        "st1_2.ovl": {
+          "bytes": 50076,
+          "sha256": "e893d7adb2e01ebee05baccf32dce2fbaa18065003328ae932d5b8fff8b54678"
+        },
+        "st1_3.ovl": {
+          "bytes": 88748,
+          "sha256": "0ac1b30937a53d653cb1ee2d50d01e71a4398f9a1414e64d796d58e018516335"
+        },
+        "st2_0.ovl": {
+          "bytes": 96788,
+          "sha256": "97e63a517fb12ccc3c361c72f812216da4b113e6531210f94407a64783df9e77"
+        }
+      },
+      "addresses": {
+        "__bss_start": 2352331800,
+        "_edata": 2352331800,
+        "_end": 2353334196,
+        "_etext": 2351371490
+      },
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2778928\t 676644\t1002388\t4457960\t 4405e8\t/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf\n",
+      "resolved_sha256": "35c7f4c5794fa90d37fff2a9e0b48df0457c6e75afd56b4d0f5e28f7151739c0",
+      "build_log_sha256": "cdebf53abc3e16020e17773437380c8fbb39335249cc6be80b5349b11a9c07b0",
+      "raw_object_count": 455,
+      "OFF_overlay_identity": {},
+      "raw_sha256": "02a14f20f815607da8caa6b118e775a2f567b0f85a067f28c00c1cc6b14251ae",
+      "missing_bytes": 0,
+      "owned_bytes": 1070896579
+    }
+  },
+  "complete": true,
+  "runner_sha256": "726bdc8d3a30719bffa3000de1b91797fd4b720640f9e3954458882aabd3cd48",
+  "actual_deadknob_preflight": {
+    "baseline": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "script_sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "snippet_sha256": "8a79ce5edc05b3e037546427faabd0b84a140c7bef51d18c7a01bdeaaf348ffd",
+      "scope": "Actual R21 array and exact KNOWN/DEAD block; stops before make/SDK"
+    },
+    "off": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "script_sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "snippet_sha256": "8a79ce5edc05b3e037546427faabd0b84a140c7bef51d18c7a01bdeaaf348ffd",
+      "scope": "Actual R21 array and exact KNOWN/DEAD block; stops before make/SDK"
+    },
+    "on": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "script_sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "snippet_sha256": "8a79ce5edc05b3e037546427faabd0b84a140c7bef51d18c7a01bdeaaf348ffd",
+      "scope": "Actual R21 array and exact KNOWN/DEAD block; stops before make/SDK"
+    }
+  },
+  "analysis_commands": [
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "-R",
+      ".stack",
+      "-O",
+      "binary",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/program.bin"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-S",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "-A",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/baseline/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "-R",
+      ".stack",
+      "-O",
+      "binary",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/program.bin"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-S",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "-A",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/out/obj/platform/gc_asset_motion_unknown.o"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+      "-R",
+      ".stack",
+      "-O",
+      "binary",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/program.bin"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+      "-S",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf"
+    ],
+    [
+      "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+      "-A",
+      "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/on/out/re4dc-game.elf"
+    ]
+  ],
+  "end_delta_vs_fresh_OFF": 63040,
+  "end_delta_vs_same_QA_baseline": 63040,
+  "QA_vs_normal_end": {
+    "off": 61632,
+    "on": 61600
+  }
+}
