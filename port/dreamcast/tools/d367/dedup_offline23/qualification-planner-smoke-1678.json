@@ -1,0 +1,80 @@
+{
+  "status": "PASS_PLANNER_READ_ONLY_SMOKE",
+  "source": "1678dbff45aa560f044017b842563cb13292b642",
+  "python_tests": 23,
+  "same_data29": true,
+  "same_original_baseline_pins": true,
+  "each_mode_off_on_and_qa_same4sets": true,
+  "qa_sampler_explicit0": true,
+  "legacy_default_retained": true,
+  "compact_manifest_pinned": true,
+  "legacy_source_identities": {
+    "r100": {
+      "original_bytes": 1537920,
+      "original_body_crc": 4214614684,
+      "alternate_physical_bytes": 1537920,
+      "alternate_body_crc": 3706631084,
+      "declared_source_bytes": 0,
+      "resolved_source_bytes": 1537920,
+      "meshlets": 1967
+    },
+    "r101": {
+      "original_bytes": 1283520,
+      "original_body_crc": 3076285401,
+      "alternate_physical_bytes": 1283520,
+      "alternate_body_crc": 1869563390,
+      "declared_source_bytes": 0,
+      "resolved_source_bytes": 1283520,
+      "meshlets": 1830
+    },
+    "r103": {
+      "original_bytes": 1074688,
+      "original_body_crc": 2368803173,
+      "alternate_physical_bytes": 1074688,
+      "alternate_body_crc": 1739154248,
+      "declared_source_bytes": 0,
+      "resolved_source_bytes": 1074688,
+      "meshlets": 1448
+    }
+  },
+  "compact_source_identities": {
+    "r100": {
+      "original_bytes": 1537920,
+      "original_body_crc": 4214614684,
+      "alternate_physical_bytes": 1488192,
+      "alternate_body_crc": 1165507231,
+      "declared_source_bytes": 1537920,
+      "resolved_source_bytes": 1537920,
+      "meshlets": 1967
+    },
+    "r101": {
+      "original_bytes": 1283520,
+      "original_body_crc": 3076285401,
+      "alternate_physical_bytes": 1243808,
+      "alternate_body_crc": 852052269,
+      "declared_source_bytes": 1283520,
+      "resolved_source_bytes": 1283520,
+      "meshlets": 1830
+    },
+    "r103": {
+      "original_bytes": 1074688,
+      "original_body_crc": 2368803173,
+      "alternate_physical_bytes": 1047968,
+      "alternate_body_crc": 3105994345,
+      "declared_source_bytes": 1074688,
+      "resolved_source_bytes": 1074688,
+      "meshlets": 1448
+    }
+  },
+  "outputs": {
+    "legacy": {
+      "path": "/dev/shm/qualification-plan-legacy-1678.json",
+      "sha256": "afa0015791c096a64407b29a85b7c031e4129bc36778090f5008a97d67e10068"
+    },
+    "compact": {
+      "path": "/dev/shm/qualification-plan-compact-1678.json",
+      "sha256": "cb16c5b4b13d0a5a8dbd69b899c1490bbc5ddb80380b50653b86164392801c83"
+    }
+  },
+  "limits": "Read-only plan and host tests; no actual programme build/stage/master/guest or target acceptance."
+}

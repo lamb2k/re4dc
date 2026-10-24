@@ -12,6 +12,7 @@ import re
 import shlex
 import subprocess
 import struct
+import zlib
 
 # Final conservative data at source e66ec61e4. Earlier *-prototype data is rejected.
 FILES = (
@@ -25,6 +26,46 @@ BASE = {
  'r101':'500d17dac6279aa1ca71c8698ac31292cb2d3452befacfbef2d25069f9f7bff3',
  'r103':'96d2382299065c6ab48f7696a88e37de7020fd0a21e37507d4bb87a0a739fdd3',
 }
+
+# Frozen private compact outputs reviewed at runtime11109 (source metadata only).
+STRIP_MANIFEST=Path(__file__).with_name('strip-share-private-pins.json')
+STRIP_MANIFEST_SHA256='af246116c7d408c9b44b52a9400e1255122b62502ae0018b2808fcc4d47a5b10'
+BASE_BYTES={room:size for room,ext,size,_ in FILES if ext=='re4mesh'}
+
+
+def alternate_specs(root,strip_share=False):
+    if not strip_share:
+        return [(room,ext,size,digest,root/(room+'-linear')/('ps2-dd3.'+ext)) for room,ext,size,digest in FILES],None
+    raw=STRIP_MANIFEST.read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=STRIP_MANIFEST_SHA256:raise ValueError('Frozen strip-share manifest pin mismatch')
+    rows=json.loads(raw)['variants'];specs=[]
+    for row in rows:
+        room=Path(row['input_path']).parent.name.removesuffix('-linear')
+        directory=root/(room+'-stripshare-v1')
+        if room not in BASE_BYTES or directory!=Path(row['output_directory']):raise ValueError('Frozen strip-share path mismatch')
+        if row['source_bytes']!=BASE_BYTES[room] or row['input_bytes']!=BASE_BYTES[room]:raise ValueError('Frozen source extent mismatch')
+        for name,info in row['files'].items():
+            ext=name.removeprefix('ps2-dd3.')
+            specs.append((room,ext,info['bytes'],info['sha256'],directory/name))
+    expected={(room,ext) for room,ext,_,_ in FILES}
+    if {(r,e) for r,e,_,_,_ in specs}!=expected or len(specs)!=4:raise ValueError('Expected exactly four compact alternates')
+    return specs,pin(STRIP_MANIFEST)
+
+
+def source_identity(original,alternate,strip_share=False):
+    if min(len(original),len(alternate))<112:raise ValueError('Short package certificate')
+    a=struct.unpack_from('<4s19I',original);b=struct.unpack_from('<4s19I',alternate)
+    if a[0]!=b'R4IM' or a[1]!=3 or a[2]!=len(original) or a[16]!=2 or any(a[17:20]):raise ValueError('Original package header mismatch')
+    if b[0]!=b'R4IM' or b[1]!=3 or b[2]!=len(alternate) or b[16]!=2 or b[19]!=int.from_bytes(b'SDO3','little'):raise ValueError('Alternate package header mismatch')
+    if zlib.crc32(original[80:])!=a[3] or zlib.crc32(alternate[80:])!=b[3]:raise ValueError('Package body CRC mismatch')
+    if b[18]!=a[3]:raise ValueError('Source certificate mismatch')
+    extent=b[17] or len(alternate)
+    if extent!=len(original):raise ValueError('Source extent mismatch')
+    if strip_share and (b[17]!=len(original) or len(alternate)>=len(original)):raise ValueError('Compact source/physical extent mismatch')
+    if not strip_share and (b[17] or len(alternate)!=len(original)):raise ValueError('Legacy byte-neutral extent mismatch')
+    return dict(original_bytes=len(original),original_body_crc=a[3],alternate_physical_bytes=len(alternate),
+                alternate_body_crc=b[3],declared_source_bytes=b[17],resolved_source_bytes=extent,meshlets=b[6])
+
 
 def pin(path):
     path=Path(path)
@@ -52,6 +93,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--tree',type=Path,required=True);ap.add_argument('--source',required=True)
     ap.add_argument('--alternates',type=Path,required=True)
+    ap.add_argument('--strip-share',action='store_true',help='Use the frozen compact strip-share-v1 manifest; legacy byte-neutral files remain the default')
     ap.add_argument('--baseline-native',type=Path,default=Path('/root/re4payload/t164-20261018/tree/dc/native'))
     ap.add_argument('--work',type=Path,required=True)
     ap.add_argument('--off-label',required=True);ap.add_argument('--on-label',required=True)
@@ -75,18 +117,22 @@ def main():
         words=shlex.split(value,comments=True)
         if len(words)!=1 or any(c in words[0] for c in '$`'):raise ValueError('Recipe export requires explicit handling: '+name)
         exports[name]=words[0]
-    alternates=[];sets=[];base_pins={}
-    for room,ext,size,digest in FILES:
-        p=a.alternates/(room+'-linear')/('ps2-dd3.'+ext);actual=pin(p)
+    alternates=[];sets=[];base_pins={};identities={}
+    specs,strip_manifest=alternate_specs(a.alternates,a.strip_share)
+    for room,ext,size,digest,p in specs:
+        actual=pin(p)
         if actual['bytes']!=size or actual['sha256']!=digest:raise ValueError('Frozen alternate pin mismatch: '+str(p))
         dest=f'dc/native/{room}/ps2-dd3.{ext}'
         alternates.append(dict(destination=dest,**actual));sets.extend(['--set',dest+'='+str(p)])
         if ext=='re4mesh':
             base=a.baseline_native/room/'ps2-world.re4mesh';bp=pin(base)
-            if bp['sha256']!=BASE[room] or bp['bytes']!=size:raise ValueError('Base package changed: '+str(base))
+            if bp['sha256']!=BASE[room] or bp['bytes']!=BASE_BYTES[room]:raise ValueError('Base package changed: '+str(base))
             old,new=base.read_bytes(),p.read_bytes()
-            if struct.unpack_from('<I',new,72)[0]!=struct.unpack_from('<I',old,12)[0]:raise ValueError('Source certificate mismatch')
+            identities[room]=source_identity(old,new,a.strip_share)
             base_pins[room]=bp
+    sg=next(Path(x['path']).read_bytes() for x in alternates if x['destination'].endswith('.r4sg'))
+    w=struct.unpack_from('<4s7I',sg);mi=identities['r101']
+    if w[:3]!=(b'R4SG',1,mi['meshlets']) or w[4]!=mi['alternate_body_crc'] or w[5]!=mi['alternate_physical_bytes'] or zlib.crc32(sg[32:])!=w[7]:raise ValueError('SG physical package binding mismatch')
     existing=('ch2/ch2-build.sh','test11/t11-fix.py','test8/t8-pkgtree.py',
               'stage_route.py','qa20/mkqa.py','mkgdi.sh','disc_lint.py','trace_lock.sh',
               'fullplay/fp_run.py','fullplay/kos_squeeze.sh','fullplay/gdemu_gate.sh',
@@ -128,7 +174,7 @@ def main():
         elf='/root/probe/lanes/route/out-'+label+'/re4dc-game.elf';fixture=work/'fix'/('pkg-'+label+'.json')
         qa_arms[name]=dict(status='PENDING: program/data/disc pins and safety gates',label=label,
             build=dict(environment={**exports,'T':str(a.tree),'K':str(work/'logs'),'LP':prefix,'CH2':ch2,
-                                     'XON':f'SCENERY_DEDUP={mode} QA_MENU=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=23 QA_SRC='+source[:8]},
+                                     'XON':f'SCENERY_DEDUP={mode} PC_SAMPLER=0 QA_MENU=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=23 QA_SRC='+source[:8]},
                        argv=['bash',tools['ch2/ch2-build.sh'],'rW']),
             stage=dict(environment={**exports,'RE4DC_RESIDENT_STRICT':'1'},argv=['python3',tools['test11/t11-fix.py'],label,str(fixture),'--base','payload','--data',data,*sets]),
             pkgtree=dict(environment={'PKG_K':str(work)},argv=['python3',tools['test8/t8-pkgtree.py'],label,str(fixture)]),
@@ -138,7 +184,9 @@ def main():
             master=dict(cwd=str(d),environment={'LAYOUT':'standard'},argv=['bash',tools['mkgdi.sh'],elf,str(work/'pkgtree'),str(work/'gdemu')]),
             lint=[['python3',tools['disc_lint.py'],'--profile',profile,str(work/'gdemu/disc.gdi')] for profile in ('loader','standard')])
     plan=dict(kind='PREFLIGHT ONLY; this tool executes no build, staging or guest',source=source,tree=str(a.tree),recipe=pin(recipe),
-              data_sets=data,recipe_exports=exports,alternates=alternates,baseline_packages=base_pins,arms=arms,tools=tools,gates=gates,
+              data_sets=data,recipe_exports=exports,alternates=alternates,baseline_packages=base_pins,
+              alternate_variant='strip-share-v1' if a.strip_share else 'legacy-byte-neutral',strip_share_manifest=strip_manifest,
+              source_identities=identities,arms=arms,tools=tools,gates=gates,
               execution=dict(owner='main lane',trace_lock=tools['trace_lock.sh'],max_lane_flycasts=3,normal_run_seconds=60,layout='standard',global_input=False),
               qa=dict(status='PENDING: separate QA_MENU=1 Off/On programs and their pins required',arms=qa_arms,
                       steps=['Build each arm through ch2-build.sh with unique LP and exact recipe; SCENERY_DEDUP0/3 plus QA_MENU1, WARP_AFTER_RESET1 and matching QA_SRC.',
