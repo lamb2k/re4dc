@@ -1,0 +1,463 @@
+{
+  "classification": "SUPPORTED_FULL_DOMAIN_NOMINAL_SUFFICIENT_TEST_REFUSAL_NO_CERTIFICATE",
+  "source": "f48fd69f47c914d57b229606556719c53ac73543",
+  "integration_base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "frozen_math_commit": "581482ed4274ac30e1c9da8ec92760e9b3f93354",
+  "report": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/patch2810-coverage24-r2/run-r2/report.json",
+    "bytes": 5584021,
+    "sha256": "18561eab52d3e097efe8a98eeaf92b90c2ca41f4b7c2c04c0c9cebf8108bf079"
+  },
+  "topology_audit": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/patch2810-audit/AUDIT.json",
+    "bytes": 16627,
+    "sha256": "6f1b579f17b0f3a875941465935cfc5e36774c599b7f37d5a7a527108c3ce0b4"
+  },
+  "copied_asset_pins": {
+    "base-report.json": {
+      "bytes": 30218,
+      "sha256": "f737c2b85398e73090f02ad7f33ba5ded734ae5902b06c9bb61f1e7a1d8a791d"
+    },
+    "original.r4pw": {
+      "bytes": 16448,
+      "sha256": "dccc680b038d7da2e299a1f518ea440c4793f504d34b14a1217c7944f74d3e70"
+    },
+    "ps2-world.ids": {
+      "bytes": 256,
+      "sha256": "8999b49ce73627e5b62d50f07f0936552c7c7645713e4183078577f3ca5189ba"
+    },
+    "ps2-world.r4pw": {
+      "bytes": 16448,
+      "sha256": "27a3dc3980df13f4dcaf97186e919821e6e0ebd6aa74ded1695c03b6d92b916b"
+    },
+    "ps2-world.re4mesh": {
+      "bytes": 793216,
+      "sha256": "31ec2e15faca0f171b1ae94290ecc22153eb06d256b6b6ef965bde3315f674b1"
+    }
+  },
+  "dependencies": {
+    "exact_patch.py": {
+      "bytes": 8027,
+      "sha256": "2f4f2017013a7d8ffca3d6563a79f699b3277f066e1a6fdc0fe558d4fb019f41"
+    },
+    "exact_union.py": {
+      "bytes": 5810,
+      "sha256": "b891139899814a5dc840d17982cbbc5147318d70e27ac91dfadd4928789880f8"
+    },
+    "exact_shadow.py": {
+      "bytes": 5783,
+      "sha256": "757edd8fb5bc58ce9839627ee05f2f12609912e1bb503b96b86a7b5f94d3e2de"
+    },
+    "feasibility.py": {
+      "bytes": 16345,
+      "sha256": "7b8b4aa5e05d60914282e646d7e62c8f00f03c125580ef8bc455ebb16d96102f"
+    },
+    "smaller_domains.py": {
+      "bytes": 12112,
+      "sha256": "a8935a9631476f6b643ff6ae273b0cb12340e2c9d2db113e1a554f691cfb0547"
+    },
+    "surface_mesh.py": {
+      "bytes": 3147,
+      "sha256": "45e31e1ec7b728940ab7d89064fe955f2a77ba5171614343645c5718100908b9"
+    },
+    "lod_surface_audit.py": {
+      "bytes": 16258,
+      "sha256": "16dc80ae88f8e499880e22a60bd1c3690a1a9139061815033289df2b14df5b07"
+    }
+  },
+  "source_policy_owned_head": "c62bf1fd4162f4ad60091597a8c713e79af8c51a",
+  "source_policy_files_exactly_match_discovery": true,
+  "source_geometry": {
+    "placement": 116,
+    "field": 116,
+    "owner": 254,
+    "part": 178,
+    "cluster": 182,
+    "level": 0,
+    "meshlet": 786,
+    "actual_faces": {
+      "8": [
+        18,
+        19,
+        20
+      ],
+      "12": [
+        20,
+        19,
+        24
+      ],
+      "13": [
+        25,
+        24,
+        19
+      ],
+      "14": [
+        24,
+        25,
+        26
+      ]
+    },
+    "independent_raw_parity_and_normals_equal": true
+  },
+  "targets": [
+    {
+      "instance": 199,
+      "placement": 121,
+      "field": 121,
+      "owner": 254,
+      "part": 186,
+      "cluster": 190,
+      "level": 0,
+      "meshlet": 812,
+      "corner_records": 64,
+      "ordinals": [
+        8,
+        12
+      ],
+      "faces": [
+        [
+          18,
+          19,
+          20
+        ],
+        [
+          20,
+          19,
+          24
+        ]
+      ],
+      "authored_level_counts": [
+        10,
+        0
+      ],
+      "all_raw_choices_effective": [
+        0,
+        0
+      ],
+      "topology": {
+        "vertices": 4,
+        "edges": 5,
+        "faces": 2,
+        "euler": 1,
+        "boundary": [
+          18,
+          19,
+          24,
+          20
+        ],
+        "all_vertex_links_checked": true
+      }
+    },
+    {
+      "instance": 202,
+      "placement": 123,
+      "field": 123,
+      "owner": 254,
+      "part": 188,
+      "cluster": 192,
+      "level": 0,
+      "meshlet": 822,
+      "corner_records": 40,
+      "ordinals": [
+        8,
+        12,
+        13,
+        14
+      ],
+      "faces": [
+        [
+          18,
+          19,
+          20
+        ],
+        [
+          20,
+          19,
+          24
+        ],
+        [
+          25,
+          24,
+          19
+        ],
+        [
+          24,
+          25,
+          26
+        ]
+      ],
+      "authored_level_counts": [
+        3,
+        0
+      ],
+      "all_raw_choices_effective": [
+        0,
+        0
+      ],
+      "topology": {
+        "vertices": 6,
+        "edges": 9,
+        "faces": 4,
+        "euler": 1,
+        "boundary": [
+          18,
+          19,
+          25,
+          26,
+          24,
+          20
+        ],
+        "all_vertex_links_checked": true
+      }
+    }
+  ],
+  "camera_count": 129,
+  "camera_profile": "e9bf7, old 54s request/55.4..55.8s wall; no new guest or current exact55 claim",
+  "summaries": {
+    "2000": {
+      "199/pair_union": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_edge_unknown": 129
+      },
+      "199/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "199/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "202/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_boundary_convexity_unknown": 129
+      },
+      "202/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      }
+    },
+    "500": {
+      "199/pair_union": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_edge_unknown": 129
+      },
+      "199/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "199/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "202/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_boundary_convexity_unknown": 129
+      },
+      "202/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      }
+    },
+    "250": {
+      "199/pair_union": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_edge_unknown": 129
+      },
+      "199/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "199/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      },
+      "202/strict_convex": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_boundary_convexity_unknown": 129
+      },
+      "202/boundary_kernel": {
+        "domains": 129,
+        "nominal_positive": 0,
+        "requested_positive": 0,
+        "refusal_target_edge_unknown": 129
+      }
+    }
+  },
+  "new_ray_queries": 0,
+  "ledger_accessed_or_written": false,
+  "nominal_unique_mode_tests": 1280,
+  "requested_uncertainty_tests": 0,
+  "proved_target_domains": 0,
+  "proved_corner_opportunity": 0,
+  "discovery_hint_distinct_corner_records": 104,
+  "runtime_admitted_corners": 0,
+  "gain_ms": null,
+  "hut647_refusal_summary": [
+    {
+      "size_mm": 2000,
+      "target": 199,
+      "nominal_reason": "edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            20,
+            18
+          ],
+          "worst_eye_corner": 2,
+          "worst_target_corner": 2,
+          "negative_products": 13,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "upper"
+        }
+      ]
+    },
+    {
+      "size_mm": 2000,
+      "target": 202,
+      "nominal_reason": "target_edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            25,
+            26
+          ],
+          "worst_eye_corner": 1,
+          "worst_target_corner": 1,
+          "negative_products": 16,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "lower"
+        }
+      ]
+    },
+    {
+      "size_mm": 500,
+      "target": 199,
+      "nominal_reason": "edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            20,
+            18
+          ],
+          "worst_eye_corner": 2,
+          "worst_target_corner": 2,
+          "negative_products": 16,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "upper"
+        }
+      ]
+    },
+    {
+      "size_mm": 500,
+      "target": 202,
+      "nominal_reason": "target_edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            25,
+            26
+          ],
+          "worst_eye_corner": 1,
+          "worst_target_corner": 1,
+          "negative_products": 16,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "lower"
+        }
+      ]
+    },
+    {
+      "size_mm": 250,
+      "target": 199,
+      "nominal_reason": "edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            20,
+            18
+          ],
+          "worst_eye_corner": 2,
+          "worst_target_corner": 2,
+          "negative_products": 16,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "upper"
+        }
+      ]
+    },
+    {
+      "size_mm": 250,
+      "target": 202,
+      "nominal_reason": "target_edge_unknown",
+      "failing_edges": [
+        {
+          "edge": [
+            25,
+            26
+          ],
+          "worst_eye_corner": 1,
+          "worst_target_corner": 1,
+          "negative_products": 16,
+          "zero_products": 0,
+          "products": 64,
+          "minimum_sign": "negative",
+          "worst_eye_y": "lower"
+        }
+      ]
+    }
+  ],
+  "controls": {
+    "public_independent_host_groups": 6,
+    "status": "PASS",
+    "new_rays": 0
+  },
+  "limits": {
+    "address_cap_bytes": 268435456,
+    "peak_rss_kib": 92040,
+    "output_cap_bytes": 16777216,
+    "jobs": 1,
+    "seconds": 30.42419348299154
+  },
+  "limitations": [
+    "Refusal of a conservative sufficient continuous condition means unknown, not proven visibility or no occlusion.",
+    "All full15 patch, new domain, point-eye, tiny height, ray search, runtime/certificate/table/recipe/asset/SDK/guest changes excluded.",
+    "Historical actual selected-let/SG identities and actual emitted-prefix/cull/near/raster/numeric/source-state proofs remain absent.",
+    "Private exact positions, plane ranges and product margins remain only in the pinned5.58MB private report; none are committed as assets."
+  ]
+}
