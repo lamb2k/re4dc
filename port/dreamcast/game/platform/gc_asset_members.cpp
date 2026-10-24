@@ -2,6 +2,7 @@
 #if RE4DC_GC_ASSET_GATE
 #include <cstdint>
 #include <cstring>
+#include <new>
 namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
@@ -12,11 +13,20 @@ struct Archive {
 } archives[ArchiveCount];
 struct Member {
     const unsigned char* base;const char* name;CheckedAsset asset;
-    unsigned bytes,owner,generation,serial,arc,uses;
+    unsigned bytes,owner,generation,serial,arc,uses,mutation;
 } members[MemberCount];
+template<class T>struct BorrowedRows {
+    T* values=nullptr;unsigned count=0;
+    T* begin(){return values;}T* end(){return values?values+count:values;}
+};
+BorrowedRows<OriginalModelProof> originals;
+struct Pose {const void* info;const void* positions;const void* normals;unsigned serial,frame,shape;};
+BorrowedRows<Pose> poses;
+static_assert(sizeof(void*)!=4 || sizeof(Pose)==24,"price prepared ancestry receipts");
+static_assert(sizeof(void*)!=4 || sizeof(OriginalModelProof)==72,"price bounded original constituent receipts");
 unsigned generation=1,serial=1;
-unsigned use_faults;
-static_assert(sizeof(void*)!=4 || (sizeof(Archive)<=24 && sizeof(Member)<=36),"bounded member metadata budget");
+unsigned use_faults,producer_depth;bool producer_fault;
+static_assert(sizeof(void*)!=4 || (sizeof(Archive)<=24 && sizeof(Member)<=40),"bounded member metadata budget");
 struct Span { const unsigned char* base=nullptr;const char* name=nullptr;unsigned bytes=0,arc=0; };
 bool contains(const void* base,unsigned bytes,const void* pointer,unsigned count) {
     const auto a=reinterpret_cast<std::uintptr_t>(base),b=reinterpret_cast<std::uintptr_t>(pointer);
@@ -106,11 +116,32 @@ bool current(const Member& member) {
         archives[member.owner].generation==member.generation &&
         contains(archives[member.owner].base,archives[member.owner].bytes,member.base,member.bytes);
 }
+bool capture_original(const Member& member,const void* data){
+    if(!member.serial)return false;
+    for(const auto& proof:originals)if(proof.serial==member.serial && proof.data==data)return true;
+    OriginalModelProof proof;
+    if(!original_parse(proof,member.serial,member.base,member.bytes,data))return false;
+    for(auto& slot:originals)if(!slot.serial){slot=proof;return true;}
+    return false;
+}
 void revoke(unsigned owner) {
     member_flush();
-    for(auto& member:members)if(member.base && member.owner==owner)member={};
+    for(auto& member:members)if(member.base && member.owner==owner){
+        for(auto& proof:originals)if(original_inside(member.base,member.bytes,proof.data,1)){
+            for(auto& pose:poses)if(pose.serial==proof.serial)pose={};
+            proof={};
+        }
+        member={};
+    }
     archives[owner]={};
 }
+}
+bool geometry_producer_enter(){if(producer_depth>=64){producer_fault=true;return false;}++producer_depth;return true;}
+void geometry_producer_leave(bool entered){if(!entered)return;if(!producer_depth){producer_fault=true;return;}--producer_depth;}
+bool geometry_producers_idle(){
+    if(producer_fault || producer_depth)return false;
+    for(const auto& member:members)if(member.mutation)return false;
+    return true;
 }
 bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family) {
     if(!owner || !archive || bytes<16 || generation==0xffffffffU) { unresolved(SourceGeometry,"member-adopt");return false; }
@@ -140,7 +171,10 @@ void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(a
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
 bool member_capture(const void* data) {
-    for(const auto& member:members)if(current(member) && contains(member.base,member.bytes,data,1))return true;
+    GeometryProducerScope producer;
+    for(const auto& member:members)if(current(member) && contains(member.base,member.bytes,data,1)){
+        capture_original(member,data);return true;
+    }
     unsigned owner=ArchiveCount;Span span;
     for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && contains(archives[i].base,archives[i].bytes,data,1)) {
         if(owner!=ArchiveCount || !find(archives[i],data,span)) { unresolved(SourceGeometry,"member-span");return false; }
@@ -153,7 +187,8 @@ bool member_capture(const void* data) {
         for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
         const CheckedAsset asset=bind_checked("model",id,digest);
         if(!asset.value){unresolved(SourceGeometry,"member-catalog-bind");return false;}
-        member={span.base,span.name,asset,span.bytes,owner,archives[owner].generation,++serial,span.arc,0};
+        member={span.base,span.name,asset,span.bytes,owner,archives[owner].generation,++serial,span.arc,0,0};
+        capture_original(member,data);
         return true;
     }
     unresolved(SourceGeometry,"member-capacity");return false;
@@ -176,6 +211,94 @@ bool member_contains(unsigned serial,const void* data,unsigned bytes) {
         return contains(member.base,member.bytes,data,bytes);
     return false;
 }
+unsigned member_original_storage_bytes(){return MemberCount*(sizeof(OriginalModelProof)+sizeof(Pose));}
+bool member_original_storage(void* memory,unsigned bytes){
+    const unsigned required=member_original_storage_bytes();
+    if(!memory || bytes!=required || required>32768 || reinterpret_cast<std::uintptr_t>(memory)%alignof(OriginalModelProof))return false;
+    if(originals.values)return originals.values==memory;
+    originals={static_cast<OriginalModelProof*>(memory),MemberCount};
+    poses={reinterpret_cast<Pose*>(static_cast<unsigned char*>(memory)+MemberCount*sizeof(OriginalModelProof)),MemberCount};
+    for(auto& proof:originals)new(&proof) OriginalModelProof{};
+    for(auto& pose:poses)new(&pose) Pose{};
+    return true;
+}
+void member_original_storage_retire(){
+    // Safe owner boundary only. Lost original pre-FE metadata cannot be
+    // reconstructed from a prepared stream; live draws then remain unknown.
+    for(auto& proof:originals)proof={};
+    for(auto& pose:poses)pose={};
+    originals={};poses={};
+}
+bool member_original_source(unsigned serial,const OriginalModelInput& input){
+    if(!serial)return false;
+    for(const auto& member:members)if(current(member) && member.serial==serial && !member.mutation){
+        for(const auto& proof:originals)if(proof.serial==serial && proof.data==input.data)
+            return original_select(proof,input);
+    }
+    return false;
+}
+void member_pose_reset(const void* info){for(auto& pose:poses)if(pose.info==info)pose={};}
+bool member_pose_publish(const void* info,unsigned serial,const OriginalModelInput& input,const void* positions,const void* normals,unsigned frame,bool lazy){
+    bool shape_ready=!input.uses_shape;
+    for(const auto& pose:poses)if(pose.info==info && pose.serial==serial && pose.frame==frame && pose.shape==1)shape_ready=true;
+    member_pose_reset(info);
+    if(!shape_ready)return false;
+    if(!info || !serial || (lazy?(positions || normals):(!positions || !normals)))return false;
+    bool valid=false;
+    for(const auto& member:members)if(current(member) && member.serial==serial && !member.mutation)
+        for(const auto& proof:originals)if(proof.serial==serial && proof.data==input.data && original_fields(proof,input))valid=true;
+    if(!valid)return false;
+    for(auto& pose:poses)if(!pose.info){pose={info,positions,normals,serial,frame,0};return true;}
+    return false;
+}
+void member_shape_reset(const void* info,unsigned serial,unsigned frame){
+    member_pose_reset(info);
+    if(!info || !serial)return;
+    for(auto& pose:poses)if(!pose.info){pose={info,nullptr,nullptr,serial,frame,1};return;}
+}
+void member_shape_source(const void* info,unsigned serial,unsigned frame,unsigned index,const void* delta,unsigned count){
+    Pose* state=nullptr;
+    for(auto& pose:poses)if(pose.info==info && pose.serial==serial && pose.frame==frame)state=&pose;
+    if(!state)return;
+    bool valid=false;
+    for(const auto& proof:originals)if(proof.serial==serial && proof.shape && proof.shape_bytes>=4 && state->shape==1){
+        const auto* shape=proof.data+proof.shape;const unsigned channels=original_word(shape);
+        if(channels>256 || index>=channels || channels>(proof.shape_bytes-4)/8)break;
+        const auto* entry=shape+4+index*8;const unsigned offset=original_word(entry),num=original_word(entry+4);
+        if(num!=count || num>65535 || offset>proof.shape_bytes-4 || num>(proof.shape_bytes-4-offset)/8 ||
+            delta!=shape+4+offset)break;
+        valid=true;
+        for(unsigned i=0;i<num;++i)if(original_half(shape+4+offset+i*8)>=(proof.counts&65535U)){valid=false;break;}
+    }
+    if(!valid)state->shape=2;
+}
+bool member_pose_current(const void* info,unsigned serial,const void* positions,const void* normals,unsigned frame){
+    if(!serial || !info)return false;
+    bool live=false;for(const auto& member:members)if(current(member) && member.serial==serial && !member.mutation)live=true;
+    if(!live)return false;
+    for(const auto& pose:poses)if(pose.info==info && pose.serial==serial && pose.frame==frame &&
+        pose.positions==positions && pose.normals==normals)return true;
+    return false;
+}
+unsigned member_derive_begin(const void* target,unsigned bytes){
+    if(!target || !bytes)return 0;
+    for(auto& member:members)if(current(member) && contains(member.base,member.bytes,target,bytes)){
+        if(member.mutation){member.mutation=0;return 0;}
+        if(!member.serial)return 0;
+        bool owned=false;
+        for(const auto& proof:originals)if(proof.serial==member.serial && original_stream_contains(proof,target,bytes))owned=true;
+        if(!owned){member.serial=0;return 0;}
+        member.mutation=member.serial;member.serial=0;return member.mutation;
+    }
+    return 0;
+}
+void member_derive_end(unsigned ticket,bool completed){
+    if(!ticket)return;
+    for(auto& member:members)if(member.mutation==ticket){
+        const bool valid=current(member) && !member.serial && completed;
+        member.mutation=0;member.serial=valid?ticket:0;return;
+    }
+}
 void member_accept(unsigned serial,unsigned mask) {
     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
     if(!serial || !mask || (mask&~allowed)) { use_faults|=mask&allowed?mask&allowed:1U<<SourceGeometry;return; }
@@ -197,4 +320,8 @@ void member_test_serial(unsigned value){serial=value;}
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
+#endif
+
+#if RE4DC_GC_ASSET_GATE
+extern "C" int re4dc_gcasset_geometry_idle(){return re4dc_gcasset::geometry_producers_idle()?1:0;}
 #endif

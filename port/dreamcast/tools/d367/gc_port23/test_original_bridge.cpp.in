@@ -1,0 +1,85 @@
+#include "gc_asset_members.h"
+#include "gc_asset_payloads.h"
+#include <cassert>
+#include <cstddef>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <cstdarg>
+using namespace re4dc_gcasset;
+bool sq_held=false;std::string logs;
+extern "C" void re4dc_log(const char*fmt,...){assert(!sq_held);char text[512];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+unsigned char* model_base;
+// Exact file-word providers with host address translation, not target ABI proof.
+struct ModelPart{unsigned char pad[24];unsigned size,polygons;};
+struct Ptr32{unsigned offset;operator unsigned char*() const{return model_base+offset;}ModelPart*operator->()const{return reinterpret_cast<ModelPart*>(model_base+offset);}};
+struct ModelData{Ptr32 pHead;unsigned pad[2];Ptr32 pClr,pTex,pWeight;unsigned char weight_palette_num,nParts;unsigned short displist_num;Ptr32 pParts;unsigned flags,nTex;unsigned char shift,pad_29;unsigned short weight_ext_num;unsigned shapeOfs;Ptr32 vtxOrig,nrmOrig;unsigned short nVtx,nNrm;unsigned version,blendTbl,flipTbl;};
+static_assert(sizeof(ModelData)==72 && offsetof(ModelData,nVtx)==56);
+struct cModelInfo{ModelData*pData;unsigned be_flag=0;void*pPosBuf[2]{};void*pNrmBuf[2]{};};
+struct cModel{unsigned kindid=1,id=0x21,type=0,nParts=1,be_flag=0x4000;};
+struct BodyInfo{const void*pRight=nullptr;const void*pLeft=nullptr;};
+struct Player:cModel{BodyInfo*Body=nullptr;};Player*pPL=nullptr;
+struct Global{unsigned vtx_buf_no=0,Frame_cnt=1;}global;Global*pG=&global;
+struct Lighting{bool ambient_vertex=false,material_vertex=false;};
+struct Re4dcModelPart{const void*model=nullptr;const void*info=nullptr;const void*part=nullptr;const unsigned char*positions=nullptr,*normals=nullptr,*uv=nullptr,*stream=nullptr,*colors=nullptr;unsigned stream_bytes=0,flags=0,shift=0,position_count=0,normal_count=0,position_stride=0,normal_stride=0,normal_shift=0,alpha_state=255;const Lighting*lighting=nullptr;};
+struct Re4dcActorSource{const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_count=0,normal_count=0,palette_entries=0,small_normals=0;};
+Re4dcActorSource actual_source;
+extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){*out=actual_source;return 1;}
+// BRIDGE_FUNCTIONS
+#define RE4DC_PROFILE_SCOPE(...)
+#define RE4DC_MODEL_DIAG() true
+#define PP_PATH(...)
+SourceUse gcasset_model_pending,observed,saved_view;
+unsigned observe_mode=0;
+// UI_ACCEPT_FUNCTIONS
+void observe_selected(const Re4dcModelPart*p){
+ assert(!geometry_producers_idle());observed=source_use;
+ if(observe_mode==2){saved_view=observed;return;}
+ if(observe_mode==1){gcasset_model_prepare(p);sq_held=true;gcasset_model_accept();sq_held=false;}
+}
+// MODEL_GATEWAY
+void put(unsigned char*p,unsigned value){memcpy(p,&value,4);}
+int main(){
+ alignas(32) unsigned char archive[1024]{},metadata[32768]{},prepared[64]{},foreign[64]{};
+ put(archive,1);put(archive+16,64);memcpy(archive+20,"BIN",3);model_base=archive+64;
+ auto*d=reinterpret_cast<ModelData*>(model_base);put(model_base,80);put(model_base+12,160);put(model_base+16,192);put(model_base+20,208);put(model_base+24,(1U<<16)|(1U<<8)|2);put(model_base+28,256);put(model_base+32,0x80000000U);put(model_base+44,400);put(model_base+400,1);put(model_base+404,8);put(model_base+408,1);put(model_base+48,96);put(model_base+52,128);put(model_base+56,(3U<<16)|3);put(model_base+60,0x20030818U);put(model_base+280,32);
+ auto*stream=model_base+288;stream[0]=0x90;stream[2]=3;for(unsigned i=0;i<3;++i){auto*v=stream+3+i*8;v[1]=v[3]=v[5]=v[7]=i;}
+ const Digest digest=fingerprint(model_base,960);char id[41];for(unsigned i=0;i<20;++i)sprintf(id+2*i,"%02x",digest.bytes[i]);CatalogRow row{"model",id,digest,PS2};assert(install(&row,1));begin(0x111,1,Required);
+ assert(member_original_storage(metadata,member_original_storage_bytes()));int owner;assert(member_adopt(&owner,archive,sizeof archive,true,OtherOwner));assert(member_capture(d));
+ cModel model;cModelInfo info{d};Lighting lighting;Re4dcModelPart part;part.model=&model;part.info=&info;part.part=model_base+256;part.positions=model_base+96;part.normals=model_base+128;part.uv=model_base+192;part.stream=stream;part.stream_bytes=32;part.colors=model_base+160;part.flags=0x80000000U;part.position_count=part.normal_count=3;part.position_stride=part.normal_stride=8;part.normal_shift=14;part.lighting=&lighting;
+ auto good=re4dc_gcasset_original_model_select(&part);assert(good.serial && good.mask==((1U<<SourceGeometry)|(1U<<Weapon)) && !good.payload);
+ observe_mode=0;re4dc_model_submit(&part);assert(observed.serial==good.serial && geometry_producers_idle());member_flush();end(1);
+ assert(logs.find("source_geometry=0")!=std::string::npos && logs.find("weapon=0")!=std::string::npos);logs.clear();begin(0x111,2,Required);
+ observe_mode=1;re4dc_model_submit(&part);member_flush();
+ observe_mode=2;re4dc_model_submit(&part);assert(saved_view.serial==good.serial && saved_view.mask==good.mask && !saved_view.payload);
+ model.id=0x99;observe_mode=1;{ReplayScope replay(saved_view.serial,saved_view.mask);re4dc_model_submit(&part);}member_flush();assert(observed.serial==good.serial && observed.mask==good.mask);model.id=0x21;
+ AssetDescription description;ModelMember member;assert(member_lookup(d,&member));assert(describe_checked(member.asset,&description) && description.provenance==PS2);
+ const unsigned char** arrays[]={&part.positions,&part.normals,&part.uv,&part.colors};
+ part.alpha_state=511;for(auto ptr:arrays){auto*saved=*ptr;*ptr=foreign;assert(!re4dc_gcasset_original_model_select(&part).serial);*ptr=saved;}part.alpha_state=255;
+ auto saved=d->pTex.offset;d->pTex.offset=700;part.uv=model_base+700;assert(!re4dc_gcasset_original_model_select(&part).serial);d->pTex.offset=saved;part.uv=model_base+192;
+ {MemberDerivationScope change(stream,32);assert(!re4dc_gcasset_original_model_select(&part).serial);stream[0]=0xfe;change.complete();}
+ assert(re4dc_gcasset_original_model_select(&part).serial==good.serial);
+ model.be_flag=0;part.positions=prepared;part.normals=prepared+32;part.position_stride=part.normal_stride=6;info.pPosBuf[0]=prepared;info.pNrmBuf[0]=prepared+32;
+ assert(!re4dc_gcasset_original_model_select(&part).serial);re4dc_gcasset_pose_publish(&info,1,0);assert(re4dc_gcasset_original_model_select(&part).serial==good.serial);
+ ++global.Frame_cnt;assert(!re4dc_gcasset_original_model_select(&part).serial);--global.Frame_cnt;
+ part.positions=foreign;assert(!re4dc_gcasset_original_model_select(&part).serial);part.positions=prepared;
+ re4dc_gcasset_pose_reset(&info);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ d->pWeight.offset=700;re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);d->pWeight.offset=208;
+ re4dc_gcasset_pose_publish(&info,1,0);assert(re4dc_gcasset_original_model_select(&part).serial);
+ info.be_flag=2;re4dc_gcasset_pose_reset(&info);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,prepared);re4dc_gcasset_shape_source(&info,0,model_base+412,1);re4dc_gcasset_pose_publish(&info,1,0);assert(re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,prepared);re4dc_gcasset_shape_source(&info,0,foreign,1);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,prepared);re4dc_gcasset_shape_source(&info,1,model_base+412,1);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,prepared);re4dc_gcasset_shape_source(&info,0,model_base+412,0);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,foreign);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);
+ re4dc_gcasset_shape_reset(&info,prepared);put(model_base+404,128);re4dc_gcasset_shape_source(&info,0,model_base+532,1);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);put(model_base+404,8);
+ re4dc_gcasset_shape_reset(&info,prepared);model_base[412]=3;re4dc_gcasset_shape_source(&info,0,model_base+412,1);re4dc_gcasset_pose_publish(&info,1,0);assert(!re4dc_gcasset_original_model_select(&part).serial);model_base[412]=0;
+ info.be_flag=0;
+ part.positions=part.normals=nullptr;re4dc_gcasset_pose_publish(&info,1,1);actual_source={model_base+96,model_base+128,3,3,2,0};assert(re4dc_gcasset_original_actor_select(&part,&actual_source).serial==good.serial);
+ auto supplied=actual_source;supplied.positions=foreign;assert(!re4dc_gcasset_original_actor_select(&part,&supplied).serial);
+ actual_source.normals=foreign;assert(!re4dc_gcasset_original_model_select(&part).serial);actual_source.normals=model_base+128;
+ member_retire(&owner);assert(!re4dc_gcasset_original_model_select(&part).serial);assert(!member_pose_current(&info,good.serial,nullptr,nullptr,1));
+ stream[0]=0x90;assert(member_adopt(&owner,archive,sizeof archive,true,OtherOwner));assert(member_capture(d));re4dc_gcasset_pose_publish(&info,1,1);assert(re4dc_gcasset_original_model_select(&part).serial!=good.serial);
+ {ReplayScope replay(saved_view.serial,saved_view.mask);re4dc_model_submit(&part);}assert(!observed.serial && observed.mask==saved_view.mask);member_flush();end(2);
+ assert(logs.find("source_geometry=2")!=std::string::npos && logs.find("weapon=2")!=std::string::npos && logs.find("unbound-accepted-model")!=std::string::npos);
+}

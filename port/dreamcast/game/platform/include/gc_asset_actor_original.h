@@ -7,8 +7,10 @@ namespace re4dc_gcasset {
 struct OriginalModelProof {
     const unsigned char* data=nullptr;
     unsigned serial=0,offset[7]{},flags=0,counts=0,joints=0,format=0,shape=0;
-    unsigned uv_bytes=0,color_bytes=0,parts_bytes=0,shape_bytes=0;
-    bool weights=false;
+    unsigned uv_bytes=0;
+    unsigned color_bytes:19,weights:1,reserved:12;
+    unsigned parts_bytes=0,shape_bytes=0;
+    OriginalModelProof():color_bytes(0),weights(0),reserved(0){}
 };
 inline unsigned original_word(const void* p){unsigned x;std::memcpy(&x,p,4);return x;}
 inline unsigned original_half(const void* p){unsigned short x;std::memcpy(&x,p,2);return x;}
@@ -91,7 +93,19 @@ struct OriginalModelInput {
     unsigned stream_bytes=0,flags=0,counts=0,joints=0,format=0,shape=0;
     bool uses_colors=false,uses_weights=false,uses_shape=false;
 };
-inline bool original_select(const OriginalModelProof& p,const OriginalModelInput& in){
+inline bool original_stream_contains(const OriginalModelProof& p,const void* target,unsigned bytes){
+    if(!p.serial || !target || !bytes)return false;
+    unsigned cursor=p.offset[4];
+    for(unsigned k=0;k<(p.joints>>16);++k){
+        if(cursor-p.offset[4]>p.parts_bytes || p.parts_bytes-(cursor-p.offset[4])<32)return false;
+        const auto* part=p.data+cursor;const unsigned length=original_word(part+24);
+        if(length>p.parts_bytes-(cursor-p.offset[4])-32)return false;
+        if(original_inside(part+32,length,target,bytes))return true;
+        cursor+=32+length;
+    }
+    return false;
+}
+inline bool original_fields(const OriginalModelProof& p,const OriginalModelInput& in){
     if(!p.serial || in.data!=p.data || in.flags!=p.flags || in.counts!=p.counts || in.joints!=p.joints ||
         in.format!=p.format || in.shape!=p.shape)return false;
     const void* actual[7]={in.head,in.colors,in.uv,in.weights,in.parts,in.positions,in.normals};
@@ -102,6 +116,10 @@ inline bool original_select(const OriginalModelProof& p,const OriginalModelInput
     }
     if((in.uses_colors && !p.color_bytes) || (in.uses_weights && !p.weights) ||
         (in.uses_shape && (!p.shape || !p.shape_bytes)))return false;
+    return true;
+}
+inline bool original_select(const OriginalModelProof& p,const OriginalModelInput& in){
+    if(!original_fields(p,in))return false;
     // Only a complete source-declared part, not an interior stream alias.
     unsigned cursor=p.offset[4];
     for(unsigned k=0;k<(p.joints>>16);++k){

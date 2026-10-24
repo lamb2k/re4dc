@@ -1,9 +1,13 @@
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+#include "include/gc_asset_motion_source.h"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 // Narrow ModelData indexed-stream adapter, not a GX display-list interpreter.
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
 #include "include/gc_asset_members.h"
+#include "include/gc_asset_actor.h"
 #if RE4DC_GC_ASSET_GATE
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
@@ -712,9 +716,15 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 #endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
+#if RE4DC_GC_ASSET_GATE
     // Replacement/static paths must supply their own immutable asset proof.
     // A source caller's BIN cannot certify the bytes their emitter consumes.
     re4dc_gcasset::SourceScope gcasset_source_scope;
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionSourceScope gcasset_motion_source_scope(p?p->model:nullptr,p?p->info:nullptr);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
@@ -774,18 +784,12 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #endif
 #endif
 #if RE4DC_GC_ASSET_GATE
-    if(p) {
-        const void* data=nullptr;re4dc_gcasset::ModelMember member;
-        if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
-            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.payload?re4dc_gcasset::replay_use.serial:0,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
-        else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
-           re4dc_gcasset::member_lookup(data,&member)) {
-            const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|
-                (re4dc_gcasset_weapon_consumer(p->model,p->info,member.arc,member.family)?1U<<re4dc_gcasset::Weapon:0U);
-            // Role is known, but a full BIN hash does not authenticate every
-            // consumed UV/color/weight/shape extent or prepared derivation.
-            re4dc_gcasset::source_use={0,mask,p->model,p->info};
-        }
+    if(p){
+        const auto raw=re4dc_gcasset_original_model_select(p);
+        const auto saved=re4dc_gcasset::replay_use;
+        if(saved.serial!=0xffffffffU){
+            re4dc_gcasset::source_use={saved.payload?saved.serial:(raw.serial==saved.serial?saved.serial:0),saved.mask,p->model,p->info,saved.payload};
+        }else re4dc_gcasset::source_use=raw;
     }
 #endif
 #if RE4DC_NATIVE_ACTOR
@@ -849,9 +853,14 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     }
 #endif
 #if RE4DC_GC_ASSET_GATE
-    // An actor decline may have restored a frozen/outer context. The generic
-    // walker has no complete constituent receipt yet; preserve class only.
-    re4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};
+    // Revalidate the actually materialized raw input after an actor decline.
+    // A package proof cannot leak into the generic source walker.
+    {
+        const auto raw=re4dc_gcasset_original_model_select(p);const auto saved=re4dc_gcasset::replay_use;
+        const unsigned mask=saved.serial!=0xffffffffU?saved.mask:re4dc_gcasset::source_use.mask;
+        const unsigned serial=saved.serial==0xffffffffU?raw.serial:(!saved.payload && raw.serial==saved.serial?raw.serial:0);
+        re4dc_gcasset::source_use={serial,mask,p?p->model:nullptr,p?p->info:nullptr};
+    }
 #endif
     if(!p || p->alpha_state>511 || ((p->alpha_state&256) && (!(p->flags&0x80000000U) || !p->colors)) || p->shift>30 || (p->position_stride!=6 && p->position_stride!=8) ||
        !p->position_count || !p->normal_count || p->stream_bytes>1024*1024 ||

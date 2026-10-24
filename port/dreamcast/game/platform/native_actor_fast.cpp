@@ -1,3 +1,6 @@
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+#include "include/gc_asset_motion_source.h"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
@@ -4585,6 +4588,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
         }
     }
     Re4dcActorStreamMutation mutation(&b,e.p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::MemberDerivationScope gcasset_member_mutation(&b,e.p.stream_bytes);
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     re4dc_gcasset::HandDerivationScope gcasset_mutation(&b,e.p.stream_bytes);
 #endif
@@ -4607,6 +4613,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
     std::memcpy(k.dir, &L.dir[0][0], sizeof(k.dir));
     std::memcpy(k.color, L.color, sizeof(k.color));
     ++stats.bake_builds;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_member_mutation.complete();
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     gcasset_mutation.complete();
 #endif
@@ -4942,6 +4951,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             unsigned size = cp->bytes();
             if (prelit_candidate(p)) size = add_bake_field(out, size, p.stream_bytes);
             Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE
+            re4dc_gcasset::MemberDerivationScope gcasset_member_mutation(p.stream,p.stream_bytes);
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
             re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
 #endif
@@ -4958,6 +4970,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
                 }
             }
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+            gcasset_member_mutation.complete();
 #endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
             gcasset_mutation.complete();
@@ -5019,10 +5034,16 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     // level 0, full detail.
     if (triangles > RE4DC_ACTOR_LOD_PART_MAX) {
         Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::MemberDerivationScope gcasset_member_mutation(p.stream,p.stream_bytes);
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
         re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
 #endif
         stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE
+        gcasset_member_mutation.complete();
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
         gcasset_mutation.complete();
 #endif
@@ -5031,10 +5052,16 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
     if (triangles >= kLodMinTriangles && !lod_take(triangles)) return;
     Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::MemberDerivationScope gcasset_member_mutation(p.stream,p.stream_bytes);
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     re4dc_gcasset::HandDerivationScope gcasset_mutation(p.stream,p.stream_bytes);
 #endif
     stream[2] &= u8(~kLodPending);
+#if RE4DC_GC_ASSET_GATE
+    if(triangles<kLodMinTriangles)gcasset_member_mutation.complete();
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     if(triangles<kLodMinTriangles)gcasset_mutation.complete();
 #endif
@@ -5053,6 +5080,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ) & ~31U;
     u8* work = out && room ? static_cast<u8*>(scratch(room)) : nullptr;
+#if RE4DC_GC_ASSET_GATE
+    if(!work)gcasset_member_mutation.complete(); // the only owned write was the completed flag clear
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     if(!work)gcasset_mutation.complete(); // the only owned write was the completed flag clear
 #endif
@@ -5104,6 +5134,9 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #endif
         ++stats.lod_parts; ++stats.lod_rebuilds;
     }
+#if RE4DC_GC_ASSET_GATE
+    gcasset_member_mutation.complete();
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     gcasset_mutation.complete();
 #endif
@@ -5581,6 +5614,9 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }  // namespace
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
@@ -5619,6 +5655,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const Re4dcModelPart& p = *part;
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionSourceScope gcasset_motion_source_scope(p.model,p.info);
+#endif
 #endif
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
     // Generic/source replay may occur after the transaction scope ended.
@@ -6358,6 +6397,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionSourceScope gcasset_motion_chunk_source_scope(p.model,p.info);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
@@ -6863,6 +6905,9 @@ void one_note(const OneRef& a, const OneRef& b, unsigned k, const void* info) {
 }  // namespace
 
 extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* part, const Re4dcActorChunk* chunks, unsigned n) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
     Re4dcModelPart& p = *part;
     auto load = [&](unsigned i) {
         const Re4dcActorChunk& c = chunks[i];

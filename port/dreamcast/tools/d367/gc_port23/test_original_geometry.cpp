@@ -1,6 +1,10 @@
 #include "gc_asset_actor_original.h"
 #include <cassert>
 #include <cstring>
+#ifdef RE4DC_GC_ASSET_TEST
+#include "gc_asset_members.h"
+extern "C" void re4dc_log(const char*,...){}
+#endif
 using namespace re4dc_gcasset;
 void put(unsigned char* p,unsigned v){std::memcpy(p,&v,4);}
 int main(){
@@ -40,4 +44,28 @@ int main(){
  d[412]=3;assert(original_parse(bad,18,file,sizeof file,d));assert(!bad.shape_bytes);d[412]=1;
  assert(original_parse(proof,19,file,sizeof file,d));assert(original_select(proof,in));
  proof.serial=0;assert(!original_select(proof,in));
+#ifdef RE4DC_GC_ASSET_TEST
+ // Use the actual bounded archive/member implementation; no identity comes
+ // from this parser alone. Capture happens once before relocation/FE writes.
+ put(file,1);put(file+16,64);std::memcpy(file+20,"BIN",3);
+ alignas(32) unsigned char metadata[32768]{};
+ assert(member_original_storage_bytes()<=sizeof metadata);assert(member_original_storage(metadata,member_original_storage_bytes()));
+ int owner;install(nullptr,0);begin(0x111,1,Required);ModelMember member;
+ assert(member_adopt(&owner,file,sizeof file,true));assert(member_capture(d));assert(member_lookup(d,&member));
+ const unsigned serial=member.serial;assert(member_original_source(serial,in));
+ {MemberDerivationScope change(stream,32);assert(change.ticket==serial);assert(!member_original_source(serial,in));stream[0]=0xfe;change.complete();}
+ assert(member_original_source(serial,in)); // same immutable source after a recognized complete representation write
+ in.uv=file+900;assert(!member_original_source(serial,in));in.uv=d+192;
+ {MemberDerivationScope failed(stream,32);assert(failed.ticket==serial);}
+ assert(!member_original_source(serial,in));member_retire(&owner);stream[0]=0x90;
+ assert(member_adopt(&owner,file,sizeof file,true));assert(member_capture(d));assert(member_lookup(d,&member));
+ assert(member.serial!=serial && member_original_source(member.serial,in));assert(!member_original_source(serial,in));
+ {MemberDerivationScope first(stream,32);MemberDerivationScope nested(stream,4);assert(!nested.ticket);first.complete();}
+ assert(!member_original_source(member.serial,in));member_retire(&owner);
+ for(unsigned k=0;k<150;++k){
+  assert(member_adopt(&owner,file,sizeof file,true));assert(member_capture(d));assert(member_lookup(d,&member));
+  assert(member_original_source(member.serial,in));member_retire(&owner);assert(!member_original_source(member.serial,in));
+ }
+ end(1);
+#endif
 }

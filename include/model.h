@@ -1,3 +1,9 @@
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_pose_reset(const void*);
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+#include "gc_asset_motion_source.h"
+#endif
 #ifndef MODEL_H
 #define MODEL_H
 
@@ -191,8 +197,18 @@ public:
     struct TEXPalette* pAddTpl;  // 0x120  additional texture palette (addTplAddr)
 
     cModelInfo();
-#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
-    virtual ~cModelInfo() { re4dc_actor_info_retire(this); }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_ACTOR_TRANSACTION || RE4DC_GC_ASSET_GATE || RE4DC_GC_ASSET_MOTION_SOURCE)
+    virtual ~cModelInfo() {
+#if RE4DC_ACTOR_TRANSACTION
+        re4dc_actor_info_retire(this);
+#endif
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_pose_reset(this);
+#endif
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+        re4dc_gcasset::motion_source_reset(this);
+#endif
+    }
 #endif
 
     void setTplAddr(void* tpl);   // pTpl = tpl, relocated
@@ -526,6 +542,9 @@ public:
 
     cModel();
     virtual ~cModel() {
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+        re4dc_gcasset::motion_source_reset(this);
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
         re4dc_actor_model_retire(this);
 #endif
