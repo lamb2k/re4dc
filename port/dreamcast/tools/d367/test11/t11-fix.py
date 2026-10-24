@@ -1029,6 +1029,15 @@ if os.path.isdir(PUI24SD):
 PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
 if os.path.isdir(PUI24FD):
     DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
+# leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
+# (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
+# materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
+# sizes / formats (VQ), so VRAM and heap are unchanged. After fol24 (it replaces the pack). With props24 / pui24 (also fol24 packs) the
+# coordinator composes one pack: build_leonhair24.py takes any input pack (RECIPE.txt). Private store /root/re4data/private/leonhair24-20261024 (C: twin without the pack).
+LH24D = os.environ.get('LH24D', '/root/re4data/private/leonhair24-20261024')
+if os.path.isdir(LH24D):
+    DATA['leonhair24'] = {'dc/tex.pak': LH24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonhair24'] = LH24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap

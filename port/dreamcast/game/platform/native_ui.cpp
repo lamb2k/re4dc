@@ -6697,6 +6697,9 @@ extern "C" void re4dc_ui_present(){
 #if RE4DC_UI_FRAG_WINDOW
     if(frame%120==0) re4dc_log("native UI frag window: frame=%u ok=%u none=%u bytes=%u drops=%u drop_ok=%u\n",frame,frag_win_ok,frag_win_none,frag_win_bytes,frag_drops,frag_drop_ok);
 #endif
+#if RE4DC_TEX_USE_CENSUS >= 2
+    static unsigned use_key_from=0,use_key_next=0;
+#endif
 #if RE4DC_TEX_USE_CENSUS
     // TEX_USE_CENSUS (test only): how much of the resident set the last 2 s / 20 s actually drew (entry.frame is the
     // last frame a draw or a preload touched it).
@@ -6721,7 +6724,24 @@ extern "C" void re4dc_ui_present(){
         }
         re4dc_log("tex use census: frame=%u resident=%u/%u B idle2s=%u/%u B idle20s=%u/%u B loads=%u freed=%u "
                   "room=%u/%u B room_idle20s=%u/%u B\n",frame,n,b,i60,b60,i600,b600,loads,reclaimed,rn,rb,r600,rb600);
+#if RE4DC_TEX_USE_CENSUS >= 2
+        // =2 (lane purge-cast24, test only): every resident key and the frames since a draw or preload touched it
+        if(frame>=600 && !use_key_from)use_key_from=frame;
+#endif
     }
+#if RE4DC_TEX_USE_CENSUS >= 2
+    // spread over frames (4 keys a frame) so the log ring keeps every line
+    if(use_key_from && frame>use_key_from){
+        unsigned i=0,printed=0;
+        for(const auto& e:entries){
+            if(!e.valid)continue;
+            if(i++<use_key_next)continue;
+            re4dc_log("tex use key: frame=%u key=%08x-%08x idle=%u\n",use_key_from,e.key.crc,e.key.fnv,(e.frame>=use_key_from?0U:use_key_from-e.frame));
+            ++use_key_next;if(++printed==4)break;
+        }
+        if(!printed)use_key_from=0xffffffffu;
+    }
+#endif
 #endif
 #if RE4DC_VRAM_CENSUS
     if(frame%120==0)vram_census("frame");

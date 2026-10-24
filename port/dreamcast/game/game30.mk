@@ -2612,7 +2612,7 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP)
 endif
 ifneq ($(TEX_USE_CENSUS),0)
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=$(TEX_USE_CENSUS)
 endif
 # CLOSED_PASS_KEEP=1 (needs PS2_WORLD_DRAW=1; native_ui.cpp, render only, default 0): a draw that asks for a PVR list
 # this scene already closed (an opaque or punch-through packet after the translucent list opened) stays in the open
