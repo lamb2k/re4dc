@@ -1,0 +1,62 @@
+{
+  "status": "PASS_HOST_ONLY_TARGET_GATES_PENDING",
+  "source": "11109d046d42c352c801c6c1a8e5a701de9bfe52",
+  "python_tests": 20,
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "reader_compile": [
+    "g++",
+    "-std=c++17",
+    "-O2",
+    "-DRE4DC_SCENERY_DEDUP=0_or_3",
+    "-Iport/dreamcast/tools/d367/ps2world/hostinc",
+    "port/dreamcast/tools/d367/dedup_offline23/test_reader.cpp",
+    "-o",
+    "/dev/shm/dedup-stripshare-host/frozen-reader0_or_3"
+  ],
+  "reader_runs": {
+    "modes": [
+      0,
+      3
+    ],
+    "variants": [
+      "linear",
+      "stripshare-v1"
+    ],
+    "rooms": [
+      "r100",
+      "r101",
+      "r103"
+    ],
+    "total": 12,
+    "ordered_corners": [
+      123664,
+      103562,
+      85192
+    ],
+    "actual_reader0_refused_both_variant_sets": true,
+    "no_reader_operator_new": true,
+    "source_crc_extent_matches_original": true,
+    "close_retains_source_crc_extent": true,
+    "successful_bind_to_malformed_to_base_recovery": true
+  },
+  "reader_binary_sha256": {
+    "/dev/shm/dedup-stripshare-host/frozen-reader0": "5449b4ac1283f27d5a3c31225228a321a1771d7e807491c0be34855382ccbe6e",
+    "/dev/shm/dedup-stripshare-host/frozen-reader3": "1da66bf74311f7debdfe795521340772076dec19c30d7b1ff90fe79345aea34f"
+  },
+  "reader_source_sha256": "4a5f1efb1c52d48b7ff466ae3f84db8b236f3228e3066ca24495e9da6aada119",
+  "python_test_log_sha256": "18ab53fc4666bf069d48b2cd3a5bfe48209b4390634bbb018ef7a3871b759d50",
+  "private_variant_manifest": "strip-share-private-pins.json",
+  "binding_receipt": "strip-binding-controls-11109-host.json",
+  "composition_receipt": "composition-controls-stripshare-11109-host.json",
+  "mode0_reader_preprocess": {
+    "equal_to_source": "7daa521c5",
+    "sha256": "4a2e8885d91d8f1348db56c711b5d98d01f9114cccf926972774ef59e694355b"
+  },
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "45e01825ba3140c5cf935c167fd6cb2c3d5c7215b69011ba1f27983d3f32a0c6",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/tools/d367/dedup_offline23/strip_share.py": "e5774b12b50a36bddf70e83e42d9783e291dc80884cd12cfdbc7530979ce2ded",
+    "port/dreamcast/tools/d367/dedup_offline23/test_strip_share.py": "14925f9ba27a80f1b541edf6bacb17bbe05334b1766537d6acf14fbe83516691"
+  },
+  "limits": "No SDK or full programme, staging, guest, rendered-room/pixel, performance or target memory/movie acceptance. Mock-I/O fresh header binding and movie-layout plus real C++reader source controls are host semantics; full KOS movie reload/generation and actual gates remain root-owned."
+}

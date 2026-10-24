@@ -1,0 +1,94 @@
+{
+  "kind": "PRIVATE_EXACT_ASSETS_HOST_ONLY_TARGET_GATES_PENDING",
+  "source_base": "5be38f009f9ae4d42daff69dacc537e8230bcfca",
+  "variants": [
+    {
+      "input_bytes": 1537920,
+      "output_bytes": 1488192,
+      "allocation_saving": 49728,
+      "strip_bytes_before": 153683,
+      "strip_bytes_after": 103941,
+      "meshlets": 1967,
+      "unique_blocks": 1285,
+      "duplicate_blocks": 682,
+      "source_bytes": 1537920,
+      "source_crc": 4214614684,
+      "body_crc": 1165507231,
+      "input_sha256": "19548f9d6b473b65ff634caefa45cdc907b86ec5a6f767357062c91ff2bd607b",
+      "output_sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d",
+      "ordered_strip_and_index_bytes_equal": true,
+      "all_vertex_bytes_equal": true,
+      "lod_and_source_records_equal": true,
+      "input_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-linear/ps2-dd3.re4mesh",
+      "groups_input_path": null,
+      "files": {
+        "ps2-dd3.re4mesh": {
+          "bytes": 1488192,
+          "sha256": "3d339013ff79b6b0c917b40beb326f9a063d959c9db10da33331a1f335d8fb1d"
+        }
+      },
+      "scope": "Offline exact-byte sharing only; target memory/movie/render gates NOT RUN",
+      "output_directory": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r100-stripshare-v1"
+    },
+    {
+      "input_bytes": 1283520,
+      "output_bytes": 1243808,
+      "allocation_saving": 39712,
+      "strip_bytes_before": 144779,
+      "strip_bytes_after": 105079,
+      "meshlets": 1830,
+      "unique_blocks": 1208,
+      "duplicate_blocks": 622,
+      "source_bytes": 1283520,
+      "source_crc": 3076285401,
+      "body_crc": 852052269,
+      "input_sha256": "19c227e5215fcdf8935d24c091c16be4d7767a0b30beaeace2122b04d777bef5",
+      "output_sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708",
+      "ordered_strip_and_index_bytes_equal": true,
+      "all_vertex_bytes_equal": true,
+      "lod_and_source_records_equal": true,
+      "input_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-linear/ps2-dd3.re4mesh",
+      "groups_input_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-linear/ps2-dd3.r4sg",
+      "files": {
+        "ps2-dd3.re4mesh": {
+          "bytes": 1243808,
+          "sha256": "e7f257773fb7ee43271994c867f5f4307a2a13c1d85cd93afcbcc15488c00708"
+        },
+        "ps2-dd3.r4sg": {
+          "bytes": 117152,
+          "sha256": "b1ffc00c3e00ca69874e1b2a0fbe84d243653bd6ccd280c2e837e2731300e30d"
+        }
+      },
+      "scope": "Offline exact-byte sharing only; target memory/movie/render gates NOT RUN",
+      "output_directory": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r101-stripshare-v1"
+    },
+    {
+      "input_bytes": 1074688,
+      "output_bytes": 1047968,
+      "allocation_saving": 26720,
+      "strip_bytes_before": 118843,
+      "strip_bytes_after": 92121,
+      "meshlets": 1448,
+      "unique_blocks": 1057,
+      "duplicate_blocks": 391,
+      "source_bytes": 1074688,
+      "source_crc": 2368803173,
+      "body_crc": 3105994345,
+      "input_sha256": "7785ad48983c33f0da8195453be0ba923acc5a1061036fce2d0bc3d11e241365",
+      "output_sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a",
+      "ordered_strip_and_index_bytes_equal": true,
+      "all_vertex_bytes_equal": true,
+      "lod_and_source_records_equal": true,
+      "input_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-linear/ps2-dd3.re4mesh",
+      "groups_input_path": null,
+      "files": {
+        "ps2-dd3.re4mesh": {
+          "bytes": 1047968,
+          "sha256": "2b805c88a9375180e41aeb55f8c0656d07fe96c32a12acf504b05be8b16d110a"
+        }
+      },
+      "scope": "Offline exact-byte sharing only; target memory/movie/render gates NOT RUN",
+      "output_directory": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/r103-stripshare-v1"
+    }
+  ]
+}

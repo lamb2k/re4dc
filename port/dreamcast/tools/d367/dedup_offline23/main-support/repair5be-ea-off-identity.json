@@ -1,0 +1,94 @@
+{
+  "baseline": {
+    "elf_sha256": "5281531df9ba82ffe92906208ead754d395c0dc1fcbd8ffc54150aa8e16664b2",
+    "raw_no_stack_sha256": "2527654c772b1ad05132d4c493d38edc6342407ad6eae13d107868e2728adc95",
+    "raw_bytes": 3368196,
+    "source": "ea969bb241f77291d2ca43d706c9dc2d1226ee76",
+    "end": "8c431358",
+    "knobs_sha256": "9437b5873255fc24a4ca70518149c7376454404c572601fafe03f8b95a9e1fe6",
+    "candidate_sha256": "72968c8ca0c91189c2628cb0beb7bf643f7e9f75bcc7e30a2adf9b79e4b2b3ce"
+  },
+  "dedup_off": {
+    "elf_sha256": "c36b14011551bc0f71122fd4bbfceb9fb60446c2e4923d0b1993eeaefe4e8494",
+    "raw_no_stack_sha256": "2527654c772b1ad05132d4c493d38edc6342407ad6eae13d107868e2728adc95",
+    "raw_bytes": 3368196,
+    "source": "5be38f009f9ae4d42daff69dacc537e8230bcfca",
+    "end": "8c431358",
+    "knobs_sha256": "e6b39271065babc0a4d95e16ee905a7453db8c949c4259dd04ad163938f7ed65",
+    "candidate_sha256": "72968c8ca0c91189c2628cb0beb7bf643f7e9f75bcc7e30a2adf9b79e4b2b3ce"
+  },
+  "overlays": [
+    {
+      "name": "em22.ovl",
+      "baseline": "13ecfc2c31e31af8ea5ffb49225d0a7f61534a1e05b15e63f5f5b1fdf090c50e",
+      "off": "13ecfc2c31e31af8ea5ffb49225d0a7f61534a1e05b15e63f5f5b1fdf090c50e"
+    },
+    {
+      "name": "em2b.ovl",
+      "baseline": "2fac71c209090e28580e1b281e7f7c4700808b3547c72faf05c1333ade07a40d",
+      "off": "2fac71c209090e28580e1b281e7f7c4700808b3547c72faf05c1333ade07a40d"
+    },
+    {
+      "name": "em2f.ovl",
+      "baseline": "0d73a3d3f6b4c1c5b6a78282151b0da5201056f9dcd154b21961518ea1a86fdf",
+      "off": "0d73a3d3f6b4c1c5b6a78282151b0da5201056f9dcd154b21961518ea1a86fdf"
+    },
+    {
+      "name": "em35.ovl",
+      "baseline": "213824ba90719c67406eec1e550441bb4b566833d3d245f8db3038ddb8ea5142",
+      "off": "213824ba90719c67406eec1e550441bb4b566833d3d245f8db3038ddb8ea5142"
+    },
+    {
+      "name": "em3b.ovl",
+      "baseline": "c15d35e946c227be9da42f3a00a3148771aba4aafd529b156a4e7a7371c70ce2",
+      "off": "c15d35e946c227be9da42f3a00a3148771aba4aafd529b156a4e7a7371c70ce2"
+    },
+    {
+      "name": "pl0f.ovl",
+      "baseline": "a97120b17c8a63dae1fd43fed3a4ad55fb846a21bcffc284b8b61ee369ab5e90",
+      "off": "a97120b17c8a63dae1fd43fed3a4ad55fb846a21bcffc284b8b61ee369ab5e90"
+    },
+    {
+      "name": "pl11.ovl",
+      "baseline": "498ea9cb5baef28e56edd5638cdb25dc11df15bad022804fe956319dd8da1388",
+      "off": "498ea9cb5baef28e56edd5638cdb25dc11df15bad022804fe956319dd8da1388"
+    },
+    {
+      "name": "pl14.ovl",
+      "baseline": "c3fc2d7a64081835bc2866fa6b9e4737876148e09be4e240be36139a10faf561",
+      "off": "c3fc2d7a64081835bc2866fa6b9e4737876148e09be4e240be36139a10faf561"
+    },
+    {
+      "name": "sscrn.ovl",
+      "baseline": "68a0e9d5c8344cfadd364519019ef537f9cca2f6b1548ed1ac8a90d59baab801",
+      "off": "68a0e9d5c8344cfadd364519019ef537f9cca2f6b1548ed1ac8a90d59baab801"
+    },
+    {
+      "name": "st1_0.ovl",
+      "baseline": "4a9e3a1f107c28447d7c7944bcb0b927a938c88c7d84b9d0c24a2a91ee1c2a8d",
+      "off": "4a9e3a1f107c28447d7c7944bcb0b927a938c88c7d84b9d0c24a2a91ee1c2a8d"
+    },
+    {
+      "name": "st1_1.ovl",
+      "baseline": "f1b4d1d47c34ccef5055b12094565cd37ce33d5e8d52a822c02c8fd20ba599e9",
+      "off": "f1b4d1d47c34ccef5055b12094565cd37ce33d5e8d52a822c02c8fd20ba599e9"
+    },
+    {
+      "name": "st1_2.ovl",
+      "baseline": "724a2ef468861cfa50545c070788b43fbd6234de24082398bfc25ed3a9e1e0e9",
+      "off": "724a2ef468861cfa50545c070788b43fbd6234de24082398bfc25ed3a9e1e0e9"
+    },
+    {
+      "name": "st1_3.ovl",
+      "baseline": "628bb615520d8ba4b6da7066abe2faf950d37e3c4e5902d7cdeb9d8775560714",
+      "off": "628bb615520d8ba4b6da7066abe2faf950d37e3c4e5902d7cdeb9d8775560714"
+    },
+    {
+      "name": "st2_0.ovl",
+      "baseline": "c143735e4b809229f8324baecb6252da9dca452c8124b3e2b0debf9c70010778",
+      "off": "c143735e4b809229f8324baecb6252da9dca452c8124b3e2b0debf9c70010778"
+    }
+  ],
+  "verdict": "PASS_CURRENT_OFF_RAW_AND_ALL_14_OVERLAYS_IDENTICAL",
+  "limits": "SH4 link identity only; no ON correctness, memory, release or hardware acceptance."
+}

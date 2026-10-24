@@ -1,0 +1,69 @@
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <iterator>
+#include <vector>
+#include "instanced_mesh.hpp"
+using Bytes=std::vector<unsigned char>;
+using re4dc::room::MeshPackage;
+struct {MeshPackage package;unsigned room=0x100;}ps2w;
+struct {unsigned mesh,side;}ps2_movie_files;
+struct {unsigned capacity;}ps2_movie;
+constexpr int O_RDONLY=0;
+static const Bytes* files[3];
+file_t fs_open(const char*,int){return 2;}
+int fs_total(file_t f){return int(files[f]->size());}
+void fs_close(file_t){}
+void fs_seek(file_t,int,int){}
+bool read_package(file_t f,unsigned char* p,unsigned n,unsigned){if(files[f]->size()<n)return false;std::memcpy(p,files[f]->data(),n);return true;}
+@CRC@
+namespace movie_world {@FNV@}
+@LAYOUT@
+Bytes load(const char* p){std::ifstream f(p,std::ios::binary);assert(f);return {std::istreambuf_iterator<char>(f),{}};}
+void word(Bytes& b,unsigned at,unsigned x){std::memcpy(b.data()+at,&x,4);}
+unsigned word(const Bytes& b,unsigned at){unsigned x;std::memcpy(&x,b.data()+at,4);return x;}
+bool bound(const Bytes& base,const Bytes& candidate){
+    files[1]=&base;files[2]=&candidate;file_t fm=1;
+    unsigned dd_base_crc=0,dd_base_bytes=0;bool dd_alternate=false;
+    @OPEN@
+    if(!dd_alternate || fm!=2)return false;
+    bool ok=true;const unsigned msize=candidate.size();
+    auto* s=const_cast<unsigned char*>(candidate.data());const char* why=nullptr;
+    @BOUND@
+    MeshPackage p;return ok && p.adopt(candidate.data(),candidate.size(),true,true);
+}
+int main(int argc,char**argv){
+    assert(argc==4);auto base=load(argv[1]),legacy=load(argv[2]),compact=load(argv[3]);
+    assert(bound(base,legacy));assert(bound(base,compact));
+    for(unsigned extent:{0U,1U,unsigned(compact.size()-1),unsigned(base.size()-1),unsigned(base.size()+32),0xffffffffU}){
+        auto bad=compact;word(bad,68,extent);assert(!bound(base,bad));
+    }
+    auto bad=compact;word(bad,72,word(bad,72)^1);assert(!bound(base,bad));
+    bad=compact;word(bad,8,bad.size()-32);assert(!bound(base,bad));
+    bad=compact;bad.back()^=1;assert(!bound(base,bad));
+    bad=compact;bad.resize(111);assert(!bound(base,bad));
+    bad=compact;bad.resize(base.size()+1);assert(!bound(base,bad));
+    auto foreign=base;word(foreign,12,word(foreign,12)^1);assert(!bound(foreign,compact));
+    foreign=base;word(foreign,8,foreign.size()-32);assert(!bound(foreign,compact));
+    foreign=base;word(foreign,68,1);assert(!bound(foreign,compact));
+    foreign=base;word(foreign,64,3);assert(!bound(foreign,compact));
+    if(base.size()==1537920){
+        assert(ps2w.package.adopt(compact.data(),compact.size(),true,true));
+        ps2_movie_files={1488192,19612};ps2_movie.capacity=1512928;
+        assert(ps2_movie_layout(0x100));ps2w.package.close();
+        assert(ps2_movie_layout(0x100)); // retained header during loan
+        ++ps2_movie.capacity;assert(!ps2_movie_layout(0x100));--ps2_movie.capacity;
+        ++ps2_movie_files.mesh;assert(!ps2_movie_layout(0x100));--ps2_movie_files.mesh;
+        ++ps2_movie_files.side;assert(!ps2_movie_layout(0x100));--ps2_movie_files.side;
+        assert(ps2w.package.adopt(compact.data(),compact.size(),true,true));
+        const unsigned crc=ps2_crc32(compact.data(),compact.size()),fnv=movie_world::fnv(compact.data(),compact.size());
+        bad=compact;word(bad,68,word(bad,68)+32);
+        assert(ps2_crc32(bad.data(),bad.size())!=crc && movie_world::fnv(bad.data(),bad.size())!=fnv);
+        assert(ps2w.package.adopt(legacy.data(),legacy.size(),true,true));
+        ps2_movie_files={1537920,19612};ps2_movie.capacity=1562656;assert(ps2_movie_layout(0x100));
+        assert(ps2w.package.adopt(base.data(),base.size(),true,true));assert(ps2_movie_layout(0x100));
+    }
+    std::puts("PASS legacy+compact fresh binding; malformed extent/CRC/size/baseline refused; exact layout/retained-header/fullfile hashes checked for r100");
+}

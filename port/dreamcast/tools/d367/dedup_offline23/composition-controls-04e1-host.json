@@ -1,0 +1,136 @@
+{
+  "status": "PASS_HOST_COMPOSITION_ONLY",
+  "source": "04e1c8f2057c9d4169f23f931cbf8f7a00ac0fb2",
+  "comparisons": 96,
+  "configurations": 8,
+  "helper_sha256": "77c78a2d43fdb3d0b1905e1b59eba1a58f60fed41cccbfe42bf366ac9da6b004",
+  "fixture_sha256": "b6480acabce30699e8feb022e7caad11c3a3a0d12ea1cfbfe543cc808dd94ed9",
+  "source_snapshot_manifest_sha256": "3c45ecef9f628620981638ec557848538e05fc9c4e08f40713d514116f690d88",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "mutation_returncode": 0,
+  "mutation_stdout_sha256": "80792eff4ebd51e4dd46265a9dc1635bc2671b03d8473b08a9281a6c8fc8c1d6",
+  "knobs": {
+    "SCENERY_DEDUP": 3,
+    "SCENERY_REPLAY_LEAN": [
+      0,
+      1
+    ],
+    "SCENERY_SUBMIT_BATCH": [
+      0,
+      1
+    ],
+    "SCENERY_SELECT_ONLY": 1
+  },
+  "cases": [
+    {
+      "submit_batch": 0,
+      "decoded_positions": 0,
+      "replay": 0,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 0,
+      "decoded_positions": 0,
+      "replay": 1,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 0,
+      "decoded_positions": 1,
+      "replay": 0,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 0,
+      "decoded_positions": 1,
+      "replay": 1,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 1,
+      "decoded_positions": 0,
+      "replay": 0,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 1,
+      "decoded_positions": 0,
+      "replay": 1,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 1,
+      "decoded_positions": 1,
+      "replay": 0,
+      "cases": 12,
+      "equal": true
+    },
+    {
+      "submit_batch": 1,
+      "decoded_positions": 1,
+      "replay": 1,
+      "cases": 12,
+      "equal": true
+    }
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "257a3cd15fe285bd237887b09c3bd3c1b82499f5e287290798f89252f5cecf78",
+    "port/dreamcast/game/platform/native_ui.cpp": "02904af5d6c775e20a59f1d23a17ef322d2fab011abbebd1e616e9e238e316f4",
+    "port/dreamcast/room/instanced_mesh.hpp": "a496527ae305f39ec99eb2fea320d61e8a1bcbceb209393bfa873b6749a53a63",
+    "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+    "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329"
+  },
+  "extracted_sha256": {
+    "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "DIRECT_BEGIN": "e82470291bd27f6a304ea6359915e956bff8d0fafd29a3f2d024077dc51993d9",
+    "DIRECT_END": "54850be8ae9a3ac45bc3d745530d0b0937941f5e03e3a50d0c9155f873bc451d",
+    "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+    "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+    "EMITTER_BIND": "b24a4060c80735b28117fc2ebcd07a41db2330f813f2992858ff2003b66cefd2",
+    "CHUNK_EMIT": "c2522eefbc162a3df9602adabddace5066e93762b01d946341517b6b3c51baf7",
+    "CHUNK_PART": "a14ea703c0b8d1dd0b226e8c29e0e4f65211e3b8beb55e532d65170ba550f773",
+    "CHUNK_FLUSH": "b2bf8cd679aa7f029b2a06e868722aae72c546a00a6dbdd189f58df70215a296",
+    "EMITTER": "e5f7a82f40ea971d080edc4f66b2788a852d1a870658cca52fa056f8be44b9c9",
+    "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+    "CORNERS": "b353ba52dfa5cfdae95ddf46880a2eedf8225b64bd13fe10639a0a91b39e76d7",
+    "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+    "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+    "STRIPS_LEAN": "5e445c6dc4e69a1ab1124fcb9c4c36ff6ab22eb8bb69b7931727bb4aecb92581",
+    "EMIT_PICK": "ce2a0201351cb7366bd84aa54e49b6fccbf0877cb91cf792e58adbda918972ff",
+    "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+    "DD_WORD": "f597223253fab273b900f014d5ce806b71e475c8bc3afbbb3485f185d856f6c5",
+    "DD_SOURCE": "147c180797291d188e7059397c28370dbc00b189a979f59a78745958f7401784",
+    "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+    "REPLAY_RESTART": "c20e2eb5790083de565c30871b2d7342beca01f64f1e8e8c86a53f642b03f191",
+    "DEDUP_FILL": "b0fe0ccfbba0fa11390c84c01021750a31edc50dea41d2f5f932389751d42ee4",
+    "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+    "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+    "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+    "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+    "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+    "ROOT": "7ca13d53ebd0b4e678fd10baf30568e69051863bfbf2cc9d2cd35271629821a3"
+  },
+  "original_dedup_fill_sha256": "f33b0f3a94937a42de5e213ca740c3570e405a1f86593722dd11fadebaf62a1e",
+  "output_sha256": {
+    "b0-d0-r0": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b0-d0-r1": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b0-d1-r0": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b0-d1-r1": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b1-d0-r0": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b1-d0-r1": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b1-d1-r0": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83",
+    "b1-d1-r1": "bcd3dbfe966dce074fed01dfb52f6ac1cb2087dae69158dc9015d9cacc3a0b83"
+  },
+  "missing_cache_reset_mutation_detected": true,
+  "target_gate_verdict": "NOT_EVALUATED",
+  "scope": "Actual extracted Emitter, MeshDraw corner/borrow/dedup/emit/restart, chunk replay and portable clipper; source admission of synthetic R4IM; controlled SQ/texture/owner edges. Only two SH4 FMAC instructions adapted to host arithmetic. No SH4 optimized clipping/FTRV/FSRRA, real room/frame, performance or target acceptance."
+}

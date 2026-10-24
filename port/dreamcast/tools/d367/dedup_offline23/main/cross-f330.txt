@@ -1,0 +1,9 @@
+name dedup23-cross-f330
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alivelog 150
+freeze 330

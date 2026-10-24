@@ -117,8 +117,23 @@ ifneq ($(SCENERY_DEDUP),0)
 ifeq ($(SCENERY_DEDUP),1)
 $(error SCENERY_DEDUP=1 is retired: its load-time reorder moved plain meshlets that pool-indexed meshlets address; use 2)
 endif
-ifneq ($(SCENERY_DEDUP),2)
-$(error SCENERY_DEDUP must be 0 or 2)
+ifeq ($(filter 2 3,$(SCENERY_DEDUP)),)
+$(error SCENERY_DEDUP must be 0, 2 or 3)
+endif
+# Mode3: byte-neutral offline ps2-dd3.* alternate; no SCDD table or load reorder.
+ifeq ($(SCENERY_DEDUP),3)
+# The header reader must have one definition in every translation unit.
+GAME_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=3
+ifneq ($(IO_ALIGNED),1)
+$(error SCENERY_DEDUP=3 needs IO_ALIGNED=1 for source header binding)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error SCENERY_DEDUP=3 needs PS2_WORLD_ROOMS=1 or 2)
+endif
+ifneq ($(filter-out 0,$(WORLD_VERT) $(SCENERY21_AB)),)
+$(error SCENERY_DEDUP=3 uses its own alternate data; WORLD_VERT and SCENERY21_AB must be 0)
+endif
 endif
 ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_DEDUP needs SCENERY_CHUNK)

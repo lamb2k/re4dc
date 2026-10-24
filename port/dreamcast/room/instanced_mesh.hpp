@@ -43,6 +43,11 @@ constexpr std::uint32_t kColorArgb1555=2;
 // adopt_by_encoding adopts it.
 constexpr std::uint32_t kColorOctVertex=3;
 constexpr std::uint16_t kIndexedMeshlet=0x8000U; // v3 Meshlet::strip_count flag
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+// SDO3: offline-only alternate PS2 world data, never a generic source package.
+constexpr std::uint32_t kOfflineDedupMarker=0x334f4453U; // little endian 'SDO3'
+constexpr std::uint16_t kOfflineDedupY=0x5344U,kOfflineDedupZ=0x4f33U;
+#endif
 struct MeshHeader {
     char magic[4];
     std::uint32_t version, bytes, crc;
@@ -170,6 +175,11 @@ public:
         data_=data;
         if(h_.reserved[0]!=(prelit?kColorArgb1555:kColorOctNormal))return fail("color encoding");
         if(h_.palette_count>16U)return fail("palette");
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+        if(h_.reserved[3] && h_.reserved[3]!=kOfflineDedupMarker)return fail("offline marker");
+        if(offline_dedup() && (!prelit || h_.version!=3))return fail("offline encoding");
+        if(offline_dedup() && h_.reserved[1] && h_.reserved[1]<h_.bytes)return fail("offline source extent");
+#endif
         if(!prelit)for(unsigned i=0;i<h_.vertex_count;++i)if((vertices()[i].color>>12)>=h_.palette_count)return fail("color");
         for(unsigned i=0;i<h_.part_count;++i)if(parts()[i].reserved)return fail("part state");
         for(unsigned m=0;m<h_.mesh_count;++m){
@@ -204,16 +214,63 @@ public:
             }
             if(count!=strip_total(l))return fail("strip count");
         }
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+        if(offline_dedup()){
+            for(unsigned i=0;i<h_.meshlet_count;++i){
+                const auto& l=meshlets()[i];const unsigned rep=repeat_count(l);
+                if(!rep)continue;
+                const unsigned n=l.vertex_count,u=n-rep;
+                if(rep>=n)return fail("offline repeats");
+                const auto* v=vertices()+l.first_vertex;
+                for(unsigned k=u;k<n;++k)
+                    if(v[k].x>=u || v[k].y!=kOfflineDedupY || v[k].z!=kOfflineDedupZ)
+                        return fail("offline source");
+            }
+        }
+#endif
         if(h_.version==3){
             // Part pools are ascending and disjoint: lighting a part's pool
             // once can never relight a corner another part already lit.
             std::uint32_t previous=0;
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+            unsigned covered=0,plain_end=0;
+#endif
             for(unsigned i=0;i<h_.part_count;++i){
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+                if(offline_dedup()){
+                    const auto& part=parts()[i];
+                    if(part.first_meshlet!=covered)return fail("offline part partition");
+                    covered+=part.meshlet_count;
+                    unsigned pool_lo=h_.vertex_count,pool_hi=0;
+                    for(unsigned j=0;j<part.meshlet_count;++j){
+                        const auto& l=meshlets()[part.first_meshlet+j];
+                        if(indexed(l)){
+                            const auto* o=pool_offsets(l);
+                            for(unsigned k=0;k<l.vertex_count;++k){
+                                const unsigned v=l.first_vertex+o[k];
+                                if(v<pool_lo)pool_lo=v;if(v+1U>pool_hi)pool_hi=v+1U;
+                            }
+                        }else{
+                            if(l.first_vertex<plain_end)return fail("offline plain alias");
+                            plain_end=l.first_vertex+l.vertex_count;
+                        }
+                    }
+                    // Conservative indexed pool interval, one part at a time: linear in vertices.
+                    for(unsigned j=0;j<part.meshlet_count;++j){
+                        const auto& l=meshlets()[part.first_meshlet+j];
+                        if(repeat_count(l) && pool_hi && l.first_vertex<pool_hi && l.first_vertex+l.vertex_count>pool_lo)
+                            return fail("offline pool alias");
+                    }
+                }
+#endif
                 std::uint32_t lo,hi;
                 if(!part_pool(parts()[i],lo,hi))continue;
                 if(lo<previous)return fail("part pool");
                 previous=hi;
             }
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+            if(offline_dedup() && covered!=h_.meshlet_count)return fail("offline part coverage");
+#endif
         }
         if(h_.version>=2){
             // Every level of every cluster lies inside its own part's meshlet
@@ -285,7 +342,51 @@ public:
     bool lod()const{return data_ && h_.version>=2;}
     bool shared()const{return data_ && h_.version==3;}
     static bool indexed(const Meshlet& l){return (l.strip_count&kIndexedMeshlet)!=0;}
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+    bool offline_dedup()const{return h_.reserved[3]==kOfflineDedupMarker;}
+    unsigned repeat_count(const Meshlet& l)const{return offline_dedup() && !indexed(l)?(l.strip_count>>7)&255U:0U;}
+    unsigned strip_total(const Meshlet& l)const{
+        return l.strip_count&(offline_dedup() && !indexed(l)?127U:unsigned(kIndexedMeshlet-1U));
+    }
+    std::uint32_t source_crc()const{return offline_dedup()?h_.reserved[2]:h_.crc;}
+    // SDO3 word17 records original extent after exact strip-block sharing; zero is legacy byte-neutral.
+    std::uint32_t source_bytes()const{return offline_dedup() && h_.reserved[1]?h_.reserved[1]:h_.bytes;}
+    // Authenticate every selected group source range before publishing an SDO3 SG borrow.
+    bool offline_groups(const std::uint8_t* data,unsigned bytes,unsigned groups)const{
+        if(!groups || groups>8U || bytes%(16U*groups) || bytes/(16U*groups)!=h_.meshlet_count)return false;
+        for(unsigned i=0;i<h_.meshlet_count;++i){
+            const auto& l=meshlets()[i];const unsigned u=l.vertex_count-repeat_count(l);
+            const auto* base=vertices()+l.first_vertex;const auto* sb=strip_begin(l);
+            const auto* g=reinterpret_cast<const std::uint16_t*>(data+16U*groups*i);unsigned prev=0;
+            for(unsigned j=0;j<groups;++j,g+=8){
+                const unsigned end=g[6],lo=g[7]&255U,hi=g[7]>>8;
+                if(end<prev || end>l.strip_bytes)return false;
+                if(end==prev)continue;
+                if(lo>hi || hi>=u)return false;
+                for(const std::uint8_t* p=sb+prev;p<sb+end;){
+                    const unsigned n=*p++;
+                    if(n<3U || n>unsigned(sb+end-p))return false;
+                    for(unsigned k=0;k<n;++k){
+                        const unsigned c=p[k],q=c<u?c:base[c].x;
+                        if(q<lo || q>hi)return false;
+                    }
+                    p+=n;
+                }
+                prev=end;
+            }
+            if(prev!=l.strip_bytes)return false;
+        }
+        return true;
+    }
+    // Used by generic/near/far clipping; source UV and colour always belong to in.
+    static const CompactVertex12& offline_position(const CompactVertex12* base,unsigned unique,unsigned count,
+                                                   const CompactVertex12& in){
+        const auto a=reinterpret_cast<std::uintptr_t>(&in),b=reinterpret_cast<std::uintptr_t>(base);
+        return base && a>=b+sizeof(*base)*unique && a<b+sizeof(*base)*count?base[in.x]:in;
+    }
+#else
     static unsigned strip_total(const Meshlet& l){return l.strip_count&unsigned(kIndexedMeshlet-1U);}
+#endif
     // Indexed meshlet: vertex_count offsets from first_vertex (the part pool).
     const std::uint16_t* pool_offsets(const Meshlet& l)const{
         return reinterpret_cast<const std::uint16_t*>(strips()+l.first_strip);
@@ -386,6 +487,9 @@ private:
         return offset>=head && offset<=size && (offset&3U)==0 &&
                std::uint64_t(count)*stride<=std::uint64_t(size-offset);
     }
+#if defined(RE4DC_SCENERY_DEDUP) && RE4DC_SCENERY_DEDUP==3
+    __attribute__((noinline,optimize("Os")))
+#endif
     bool fail(const char* why){data_=nullptr;error_=why;return false;}
     MeshHeader h_{};
     MeshLodHeader l_{};

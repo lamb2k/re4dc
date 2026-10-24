@@ -1,0 +1,13 @@
+# Current-integration standard H2: repaired footprint still fails
+
+Actual tested source is 5be38f009f9ae4d42daff69dacc537e8230bcfca, including integration ea969bb24 and runtime repair 3467e45c6. Later source commits through 6d6cff386 add only tools, receipts and integration documentation.
+
+Both standard rP programmes linked; their unmodified diagnostic twins reproduced the release raw images. Repaired OFF main and all 14 overlays match current integration. Both complete H2 console-mode Flycast runs reached s30 within the 60-second cap, presented/uploaded all 340 frames, and restored the movie arena. OFF heap_before is 98,016; ON is 93,920. The no-loss gate FAILS. No QA disc or physical-console improvement is claimed.
+
+The 562-byte actual unit saving is real, and the full ON release image end moved down by 544 bytes; its W diagnostic end moved down by 576 bytes. Absolute _end page alignment did not determine the arena floor. mem.cpp computes ARENA_FIT from (remaining KOS room - 196,672) rounded down to 4,096. OFF has only 568 bytes of fit slack. Current ON consumes 2,496 more bytes before allocation, so another 1,928 linked bytes would be needed before alignment effects. The arena still shrinks by 4,096 bytes.
+
+The next repair being implemented is exact offline sharing of byte-identical complete strip blocks, preserving every vertex, index order, UV/color, LOD and source ID. The read-only census suggests 49,728 bytes saved in r100, 39,712 in r101 and 26,720 in r103. These are estimates, not heap passes. A separate original source extent is required for semantic provenance; physical allocation, SG CRC/length and movie fingerprints remain actual. The smaller r100 movie loan also needs explicit layout support and fresh H2 evidence. Independent review is active.
+
+Prior camera-selected dedup estimates used lod_px=5 and do not represent the current release's effective lod_px=20. Do not reuse the old cross/farm percentages as current performance evidence. Whole-package corner equality and strip-sharing counts are independent of that camera model. World-merge23 is correcting the same model assumption before confirming its decision.
+
+The archived base-v4 helper refused its first run because its destination remained the previous standard base; it changed no base. Base-v5 uses unique repair5be destinations. All earlier programmes, evidence and failed tests are preserved. Helpers here are frozen receipts of exact source/labels, not generic drivers to invoke against a newer checkout.

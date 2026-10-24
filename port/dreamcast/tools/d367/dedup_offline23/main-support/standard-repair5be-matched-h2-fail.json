@@ -1,0 +1,99 @@
+{
+  "source": "5be38f009f9ae4d42daff69dacc537e8230bcfca",
+  "arms": {
+    "off": {
+      "source": "5be38f009f9ae4d42daff69dacc537e8230bcfca",
+      "run": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/full-h2-standard-repair5be-off-console-r1/run-result.json",
+        "bytes": 1562,
+        "sha256": "910d108bb18565bbd266d88b726717b6c8a2a4a26b8e031175b94fdbc5605f33"
+      },
+      "log": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/full-h2-standard-repair5be-off-console-r1/run-output.txt",
+        "bytes": 316463,
+        "sha256": "902a32118b9b3baa547d963848d327bbe8897eb6cfda816dcccbd813bf43c78c"
+      },
+      "elf": {
+        "path": "/root/probe/lanes/route/out-fpdd23stdoff5be3gW/re4dc-game.elf",
+        "bytes": 28696848,
+        "sha256": "da89889db3e47e309c094a33bd3c82434f72ebe75266cfa9790cb9f9c06b7941"
+      },
+      "knobs": {
+        "path": "/root/probe/lanes/route/out-fpdd23stdoff5be3gW/resolved-knobs.txt",
+        "bytes": 215888,
+        "sha256": "9b27fd8adaeca1756e5529546dc77022e058db5192799d58cecb206f6f695436"
+      },
+      "track03_sha256": "0038d1f726f46b71978fdaffac02f5108416a0a4c9820d82b285543fffc0d0ed",
+      "movies": {
+        "10003": {
+          "frames": 1465,
+          "heap_before": 885344
+        },
+        "10020": {
+          "frames": 571,
+          "heap_before": 790720
+        },
+        "10030": {
+          "frames": 340,
+          "heap_before": 98016
+        }
+      },
+      "arena_bytes": 11972608,
+      "kos_left": 197240,
+      "room_at_init": 12169848,
+      "restored": true,
+      "elapsed_s": 37.5
+    },
+    "on": {
+      "source": "5be38f009f9ae4d42daff69dacc537e8230bcfca",
+      "run": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/full-h2-standard-repair5be-on-console-r1/run-result.json",
+        "bytes": 1559,
+        "sha256": "9f40a48101698f82611c4634d0d805d699bc30a4474a0048bc5f714ed94538d5"
+      },
+      "log": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/dedup-offline23-20261023/full-h2-standard-repair5be-on-console-r1/run-output.txt",
+        "bytes": 312313,
+        "sha256": "8acc939af812b4cd15dd473495845b8aee8ec1bf6f5c711459b903905b7633f0"
+      },
+      "elf": {
+        "path": "/root/probe/lanes/route/out-fpdd23stdon5be3gW/re4dc-game.elf",
+        "bytes": 28712896,
+        "sha256": "2f552ca97ca42cf9d907e971e6ea42d19cdea89cafdad2a31f68ae86b29ef5b2"
+      },
+      "knobs": {
+        "path": "/root/probe/lanes/route/out-fpdd23stdon5be3gW/resolved-knobs.txt",
+        "bytes": 213522,
+        "sha256": "950b7365dd383e728b3983d6ff402cd1996edab667310f460f484e2bbdedf5ab"
+      },
+      "track03_sha256": "74e19f17e8de5b03dc3d893f17682d74169b8eba9cd2c04ee412b069cab5e2dd",
+      "movies": {
+        "10003": {
+          "frames": 1465,
+          "heap_before": 881248
+        },
+        "10020": {
+          "frames": 571,
+          "heap_before": 786624
+        },
+        "10030": {
+          "frames": 340,
+          "heap_before": 93920
+        }
+      },
+      "arena_bytes": 11968512,
+      "kos_left": 198840,
+      "room_at_init": 12167352,
+      "restored": true,
+      "elapsed_s": 35.3
+    }
+  },
+  "verdict": "FAIL_NO_LOSS_REQUIREMENT",
+  "heap_loss_bytes": 4096,
+  "off_arena_fit_slack": 568,
+  "on_added_init_room_bytes": 2496,
+  "minimum_additional_code_saving_before_alignment": 1928,
+  "correction": "Absolute _end page alignment was insufficient. ARENA_FIT rounds the remaining room minus its fixed reserve to 4096 bytes. The reviewed 562-byte unit saving does not restore the required heap floor.",
+  "next": "Audit exact offline strip-block sharing or further safe code reduction; preserve both failures and keep QA packaging blocked.",
+  "limits": "Console-mode Flycast correctness and measured heap evidence, not hardware performance or a full release pass."
+}

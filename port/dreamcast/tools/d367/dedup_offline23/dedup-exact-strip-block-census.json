@@ -1,0 +1,359 @@
+[
+  {
+    "room": "r100",
+    "meshlets": 1967,
+    "original_strip_bytes": 153683,
+    "referenced_strip_section_bytes": 153667,
+    "unused_strip_section_bytes": 16,
+    "strip_unused_vertex_slots": 0,
+    "strip_and_source_closure_unused_slots": 0,
+    "unique_exact_strip_blocks": 1285,
+    "duplicate_blocks": 682,
+    "identical_block_payload_bytes": 50266,
+    "two_byte_aligned_unique_block_bytes": 103941,
+    "exact_block_dedup_section_saving": 49742,
+    "duplicate_sizes": [
+      [
+        80,
+        269
+      ],
+      [
+        72,
+        33
+      ],
+      [
+        84,
+        26
+      ],
+      [
+        89,
+        23
+      ],
+      [
+        75,
+        20
+      ],
+      [
+        129,
+        18
+      ],
+      [
+        99,
+        17
+      ],
+      [
+        70,
+        16
+      ],
+      [
+        123,
+        16
+      ],
+      [
+        77,
+        14
+      ]
+    ],
+    "first_alias_examples": [
+      [
+        27,
+        24,
+        85
+      ],
+      [
+        39,
+        37,
+        56
+      ],
+      [
+        57,
+        54,
+        7
+      ],
+      [
+        60,
+        54,
+        7
+      ],
+      [
+        74,
+        54,
+        7
+      ],
+      [
+        77,
+        63,
+        14
+      ],
+      [
+        80,
+        54,
+        7
+      ],
+      [
+        83,
+        54,
+        7
+      ],
+      [
+        94,
+        85,
+        80
+      ],
+      [
+        99,
+        54,
+        7
+      ],
+      [
+        102,
+        98,
+        70
+      ],
+      [
+        103,
+        63,
+        14
+      ]
+    ],
+    "file_sha256": "19548f9d6b473b65ff634caefa45cdc907b86ec5a6f767357062c91ff2bd607b"
+  },
+  {
+    "room": "r101",
+    "meshlets": 1830,
+    "original_strip_bytes": 144779,
+    "referenced_strip_section_bytes": 144690,
+    "unused_strip_section_bytes": 89,
+    "strip_unused_vertex_slots": 0,
+    "strip_and_source_closure_unused_slots": 0,
+    "unique_exact_strip_blocks": 1208,
+    "duplicate_blocks": 622,
+    "identical_block_payload_bytes": 40086,
+    "two_byte_aligned_unique_block_bytes": 105079,
+    "exact_block_dedup_section_saving": 39700,
+    "duplicate_sizes": [
+      [
+        80,
+        267
+      ],
+      [
+        10,
+        51
+      ],
+      [
+        75,
+        38
+      ],
+      [
+        84,
+        35
+      ],
+      [
+        5,
+        24
+      ],
+      [
+        55,
+        21
+      ],
+      [
+        81,
+        21
+      ],
+      [
+        70,
+        10
+      ],
+      [
+        15,
+        8
+      ],
+      [
+        78,
+        7
+      ]
+    ],
+    "first_alias_examples": [
+      [
+        5,
+        4,
+        80
+      ],
+      [
+        7,
+        3,
+        78
+      ],
+      [
+        8,
+        4,
+        80
+      ],
+      [
+        9,
+        4,
+        80
+      ],
+      [
+        10,
+        6,
+        70
+      ],
+      [
+        57,
+        46,
+        7
+      ],
+      [
+        78,
+        4,
+        80
+      ],
+      [
+        79,
+        55,
+        15
+      ],
+      [
+        81,
+        4,
+        80
+      ],
+      [
+        84,
+        4,
+        80
+      ],
+      [
+        85,
+        82,
+        20
+      ],
+      [
+        87,
+        4,
+        80
+      ]
+    ],
+    "file_sha256": "19c227e5215fcdf8935d24c091c16be4d7767a0b30beaeace2122b04d777bef5"
+  },
+  {
+    "room": "r103",
+    "meshlets": 1448,
+    "original_strip_bytes": 118843,
+    "referenced_strip_section_bytes": 118768,
+    "unused_strip_section_bytes": 75,
+    "strip_unused_vertex_slots": 0,
+    "strip_and_source_closure_unused_slots": 0,
+    "unique_exact_strip_blocks": 1057,
+    "duplicate_blocks": 391,
+    "identical_block_payload_bytes": 27058,
+    "two_byte_aligned_unique_block_bytes": 92121,
+    "exact_block_dedup_section_saving": 26722,
+    "duplicate_sizes": [
+      [
+        80,
+        244
+      ],
+      [
+        72,
+        34
+      ],
+      [
+        84,
+        14
+      ],
+      [
+        35,
+        8
+      ],
+      [
+        34,
+        8
+      ],
+      [
+        55,
+        7
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        40,
+        5
+      ],
+      [
+        30,
+        5
+      ],
+      [
+        10,
+        5
+      ]
+    ],
+    "first_alias_examples": [
+      [
+        80,
+        50,
+        80
+      ],
+      [
+        110,
+        50,
+        80
+      ],
+      [
+        132,
+        50,
+        80
+      ],
+      [
+        133,
+        50,
+        80
+      ],
+      [
+        135,
+        50,
+        80
+      ],
+      [
+        149,
+        148,
+        35
+      ],
+      [
+        150,
+        148,
+        35
+      ],
+      [
+        156,
+        50,
+        80
+      ],
+      [
+        157,
+        50,
+        80
+      ],
+      [
+        158,
+        50,
+        80
+      ],
+      [
+        159,
+        50,
+        80
+      ],
+      [
+        160,
+        51,
+        12
+      ]
+    ],
+    "file_sha256": "7785ad48983c33f0da8195453be0ba923acc5a1061036fce2d0bc3d11e241365"
+  }
+]
