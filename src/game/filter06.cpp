@@ -373,6 +373,11 @@ static void RainDiagReturned(const RainDiagNativeKey* key)
         key->queue_room == 0x10c && key->room == 0x10c && pG->room_id == key->room &&
         d->rooms == ((key->queue_room << 16) | key->room) &&
         (d->state_flags & (RD_FEATURE | RD_QUEUE_KEY)) == (RD_FEATURE | RD_QUEUE_KEY) &&
+        d->particle_count == flt06.num &&
+        ((d->state_flags & RD_SIGNATURE) != 0) == (Filter06R10cRain() != 0) &&
+        (d->alpha_ids & 0xffffU) == ((u32) flt06.cur[3] | ((u32) flt06.col[3] << 8)) &&
+        ((d->state_flags & RD_STOP) != 0) == ((pG->Stop_flg & 0x08000000) != 0) &&
+        ((d->state_flags & RD_INDOOR) != 0) == ((pG->Status_flg[1] & 0x02000000) != 0) &&
         key->reported <= key->requested) {
         if (!RainDiagOpen(RD_RETURN, 0)) return;
         d->native_requested = key->requested; d->native_accepted = key->reported;

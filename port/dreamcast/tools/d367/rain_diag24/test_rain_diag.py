@@ -57,6 +57,10 @@ with tempfile.TemporaryDirectory(prefix='rain-diag24-host-',dir='/dev/shm') as t
     for diag in [[],['RE4DC_RAIN_R10C_DIAG=0']]:
      actual=pp(source,flags+diag);assert actual==baseline,(path,flags,diag)
      comparisons+=1
+ for path,source in [(FILTER,new),(ESP,esp)]:
+  baseline=pp(old(path),['__PPC__=1'])
+  for diag in [[],['RE4DC_RAIN_R10C_DIAG=0']]:
+   assert pp(source,['__PPC__=1']+diag)==baseline;comparisons+=1
  receipt['full_file_gate0_preprocess_comparisons']=comparisons
  # Exact Make include and target-specific flag checks; no SDK/compile recipe invoked.
  mk=ram/'effects30.mk';mf=ram/'test.mk';obj=ram/'obj';prereqs=['RAIN_DC','RAIN_PS2','D349_RENDERER_STACK','PVR_STREAM','NATIVE_LASER','EFFECT_SPRITES']
@@ -80,7 +84,26 @@ with tempfile.TemporaryDirectory(prefix='rain-diag24-host-',dir='/dev/shm') as t
  for key in prereqs:
   for value in ['0','1 0']:
    x=make(mnew,{'RAIN_R10C_DIAG':'1',key:value});assert x.returncode!=0;negatives.append(key+'='+value)
+ # Test each actual new guard independently of redundant older rain constraints.
+ isolated='RAIN_R10C_DC ?= 0\n'+mnew[mnew.index('# RAIN_R10C_DIAG:'):]
+ guard_mutants=[]
+ for key in prereqs:
+  guard='ifneq ($('+key+'),1)\n$(error RAIN_R10C_DIAG needs '+key+'=1)\nendif\n'
+  assert isolated.count(guard)==1
+  assert make(isolated,{'RAIN_R10C_DIAG':'1',key:'0'}).returncode!=0
+  assert make(isolated.replace(guard,''),{'RAIN_R10C_DIAG':'1',key:'0'}).returncode==0
+  guard_mutants.append(key)
+ strict='ifneq ($(RAIN_R10C_DIAG),1)\n$(error RAIN_R10C_DIAG is exactly 0 or 1)\nendif\n'
+ assert make(isolated.replace(strict,''),{'RAIN_R10C_DIAG':'2'}).returncode==0
+ guard_mutants.append('strict-DIAG')
+ receipt['make_guard_mutants_detected']=guard_mutants
  receipt['make_rejections']=negatives
+ # Native-only compile guard, using the exact extracted source; never target compiler/SDK.
+ cpp.write_text(unit(new,esp))
+ for target_def in [[],['-DRE4DC_GAME=1','-D__PPC__=1']]:
+  x=run(['g++','-std=c++17','-fsyntax-only','-DRE4DC_RAIN_DIAG_HOST_TEST=1','-DRE4DC_RAIN_R10C_DC=1','-DRE4DC_RAIN_R10C_DIAG=1']+target_def+[str(cpp)])
+  assert x.returncode!=0 and b'RAIN_R10C_DIAG requires the native Dreamcast game' in x.stderr
+ receipt['native_only_compile_rejections']=2
  # Every mutant must still compile, then fail an actual C++ control.
  mutants={
   'no-cold-writeback':('dcache_wback_range((uintptr_t) &re4dc_rain_r10c_diag, sizeof(re4dc_rain_r10c_diag));','(void) 0;'),
@@ -95,8 +118,12 @@ with tempfile.TemporaryDirectory(prefix='rain-diag24-host-',dir='/dev/shm') as t
   'return-ABA-ignore-sequence':('d->seq == key->seq && key->generation != 0','key->generation != 0'),
   'return-ignore-callback-generation':('d->callback_generation == key->generation &&','true &&'),
   'return-ignore-actual-frame':('pG->Frame_cnt == key->frame &&','true &&'),
-  'return-ignore-actual-room':('pG->room_id == key->room &&','true &&'),
   'return-ignore-queue-frame':('d->queue_frame == key->queue_frame &&','true &&'),
+  'return-ignore-alpha':('(d->alpha_ids & 0xffffU) == ((u32) flt06.cur[3] | ((u32) flt06.col[3] << 8)) &&','true &&'),
+  'return-ignore-stop':('((d->state_flags & RD_STOP) != 0) == ((pG->Stop_flg & 0x08000000) != 0) &&','true &&'),
+  'return-ignore-indoor':('((d->state_flags & RD_INDOOR) != 0) == ((pG->Status_flg[1] & 0x02000000) != 0) &&','true &&'),
+  'return-ignore-signature':('((d->state_flags & RD_SIGNATURE) != 0) == (Filter06R10cRain() != 0) &&','true &&'),
+  'return-ignore-count-and-signature':('d->particle_count == flt06.num &&\n        ((d->state_flags & RD_SIGNATURE) != 0) == (Filter06R10cRain() != 0) &&','true &&'),
   'bind-ignore-signature':('if (valid && controller && record && head &&','if (controller && record && head &&'),
   'bind-ignore-generation':('d->setter_generation == before + 1 && flt06.p','true && flt06.p'),
   'bind-retain-nested-cause':('RainDiagClearCause(); RainDiagCount(RDC_BIND_REJECT);','RainDiagCount(RDC_BIND_REJECT);'),
@@ -108,7 +135,7 @@ with tempfile.TemporaryDirectory(prefix='rain-diag24-host-',dir='/dev/shm') as t
  defeated=[]
  for name,(a,b) in mutants.items():
   assert new.count(a)==1,(name,new.count(a))
-  x=host(new.replace(a,b),esp,1,1);assert x.returncode!=0,name+' survived';defeated.append(name)
+  x=host(new.replace(a,b),esp,1,1);assert x.returncode==-6 and b'Assertion' in x.stderr,name+' did not fail an assertion';defeated.append(name)
  receipt['compiling_source_mutants_defeated']=defeated
  # Frozen source ordering and ownership boundaries; no extra helper/runtime edit assumed.
  main=(ROOT/'src/game/main.cpp').read_text();render=(ROOT/'src/game/trans.cpp').read_text();boot=main[main.index('void systemRestartInit()'):]

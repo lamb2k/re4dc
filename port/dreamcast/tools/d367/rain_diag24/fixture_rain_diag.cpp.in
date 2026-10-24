@@ -123,6 +123,12 @@ void frame_action(){++pG->Frame_cnt;}
 void room_action(){pG->room_id=0x10d;}
 void callback_gen_action(){++physical.callback_generation;}
 void queue_frame_action(){++physical.queue_frame;}
+void live_num_action(){flt06.num=1099;}
+void live_alpha_action(){flt06.cur[3]=17;}
+void live_target_action(){flt06.col[3]=79;}
+void live_stop_action(){pG->Stop_flg|=0x08000000;}
+void live_indoor_action(){pG->Status_flg[1]|=0x02000000;}
+void live_signature_action(){flt06.rate=.5f;}
 void tests_diag(){
 // First P2 backing may be stale while startup cached BSS zero is dirty. Only boot writes back.
 reset();std::memset(&physical,0x55,128);Filter06Init();assert(writebacks==1&&physical.abi_flags==1&&physical.setter_generation==1&&physical.counts[RDC_ROOM]==1);
@@ -156,6 +162,8 @@ for(unsigned ret:{0U,17U,320U}){setup();report_override=ret;image();assert(valid
 setup();report_override=321;image();assert(!valid_sample()&&!(physical.state_flags&RD_SAMPLE)&&physical.accepted_total==321);
 // A new setter or identical same-frame replacement callback during the call cannot borrow its return.
 for(auto action:{rebind_action,callback_action,frame_action,room_action,callback_gen_action,queue_frame_action}){setup();native_action=action;image();assert(!valid_sample()&&!(physical.state_flags&RD_SAMPLE)&&physical.accepted_total==320);}
+// Frozen interpreted live fields must also survive a provider which mutates without publishing a source event.
+for(auto action:{live_num_action,live_alpha_action,live_target_action,live_stop_action,live_indoor_action,live_signature_action}){setup();native_action=action;image();assert(!valid_sample()&&!(physical.state_flags&RD_SAMPLE)&&physical.accepted_total==320);}
 // Queue source frame is captured at callback; stale loss is observed and not consumed as a return.
 setup();flt06.cur[3]=80;Filter06Render();++pG->Frame_cnt;GXSetDrawSync(0xADEB);assert(!valid_sample()&&physical.counts[RDC_STALE]==1&&physical.counts[RDC_CONSUMED]==0&&!(physical.state_flags&RD_QUEUE_KEY));
 // Source setter generation remains distinct across recycled record/controller addresses.
