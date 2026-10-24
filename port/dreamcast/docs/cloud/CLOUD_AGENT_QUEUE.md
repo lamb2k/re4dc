@@ -44,6 +44,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 7 | ACTOR_BYTES_LEAN | landed 55c9aea7, default 0 |
 | 8 | ANIM_SAMPLE_LEAN | landed 55c9aea7, default 0 |
 | 9 | UI_DRAW_LEAN | landed 55c9aea7, default 0 |
+| 10 | WORLD_CENSUS24 (world phase census) | landed (merge of 4ef6243f), default 0; knob-off image identical to Test 23 d28b3cfc. Owner runs the r101 cross / farm census windows next |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
