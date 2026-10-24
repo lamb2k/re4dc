@@ -449,7 +449,8 @@ void gcasset_model_prepare(const Re4dcModelPart* p) {
     gcasset_model_pending={};const auto& source=re4dc_gcasset::source_use;
     if(source.payload || (p && p->model==source.model && p->info==source.info))gcasset_model_pending=source;
 }
-void gcasset_model_accept() {
+void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
+    if(re4dc_gcasset::payload_quads_accept(vertices,count))return;
     const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
     if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
     else re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);
@@ -485,12 +486,14 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
 #define RE4DC_GCA_PACKET(...) gcasset_packet_emitted(__VA_ARGS__)
 #define RE4DC_GCA_MODEL_PREPARE(...) gcasset_model_prepare(__VA_ARGS__)
 #define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(vertices,count) gcasset_model_accept(vertices,count)
 #define RE4DC_GCA_MODEL_TEXTURE(entry) do { gcasset_texture_emitted(entry);if(gcasset_model_pending.mask&(1U<<re4dc_gcasset::Weapon))gcasset_texture_emitted(entry,re4dc_gcasset::Weapon); } while(0)
 #else
 #define RE4DC_GCA_TEXTURE(...) ((void)0)
 #define RE4DC_GCA_PACKET(...) ((void)0)
 #define RE4DC_GCA_MODEL_PREPARE(...) ((void)0)
 #define RE4DC_GCA_MODEL_ACCEPT() ((void)0)
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(...) ((void)0)
 #define RE4DC_GCA_MODEL_TEXTURE(...) ((void)0)
 #endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
@@ -6985,7 +6988,7 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
         RE4DC_GCA_MODEL_TEXTURE(model_handle);
-        RE4DC_GCA_MODEL_ACCEPT();
+        RE4DC_GCA_MODEL_PACKET_ACCEPT(model_packets+model_pending,count);
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM

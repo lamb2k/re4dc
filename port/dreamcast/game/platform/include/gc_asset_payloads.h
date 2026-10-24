@@ -17,6 +17,16 @@ bool payload_capture(PayloadProof&,const void* owner,const void* base,unsigned b
 void payload_retire(PayloadProof&);
 void payload_accept(PayloadProof*,unsigned serial,unsigned consumer_mask);
 void payload_flush_all();
+// Borrowed, synchronous impostor batch. Only the exact committed vertex buffer
+// and four vertices per saved quad may consume these original owner serials.
+struct PayloadQuadUse { PayloadProof* proof;unsigned serial,mask; };
+struct PayloadQuadBatch { const PayloadQuadUse* uses;unsigned count;const void* vertices;unsigned vertex_count; };
+struct PayloadQuadScope {
+    const PayloadQuadBatch* previous;
+    explicit PayloadQuadScope(const PayloadQuadBatch&);
+    ~PayloadQuadScope();
+};
+bool payload_quads_accept(const void* vertices,unsigned count);
 struct PayloadScope {
     SourceUse previous;
     PayloadScope(PayloadProof&,const void* owner,const void* model=nullptr,const void* info=nullptr,unsigned mask=1U<<SourceGeometry);

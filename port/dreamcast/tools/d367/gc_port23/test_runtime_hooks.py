@@ -220,6 +220,7 @@ void re4dc_missing(const char*){assert(false);}
 #define RE4DC_GCA_MODEL_TEXTURE(...) ((void)0)
 ''' + helpers + r'''
 #define RE4DC_GCA_MODEL_ACCEPT() gcasset_model_accept()
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(vertices,count) gcasset_model_accept(vertices,count)
 ''' + commit + '\n' + direct + '\nvoid switch_account(unsigned vertices){\n' + switch[start:finish] + r'''
 }
 int main(){
@@ -242,6 +243,24 @@ int main(){
   logs.clear();gcasset_model_prepare(&p);member_retire(&owner);
   sq_held=true;switch_account(3);assert(logs.empty());sq_held=false;member_flush();
   assert(logs.find("unbound-accepted-model")!=std::string::npos); // late retained snapshot cannot survive retire
+  // Exact accepted mixed-owner quad batch; no whole-batch first-owner inference.
+  end(1);assert(install(nullptr,0));begin(0x113,2,Required);logs.clear();
+  PayloadProof a,b;int oa,ob;unsigned char ba[32]={4},bb[32]={5};
+  assert(payload_capture(a,&oa,ba,32) && payload_capture(b,&ob,bb,32));
+  PayloadQuadUse uses[]={{&a,a.serial,1U<<SourceGeometry},{&b,b.serial,1U<<SourceGeometry}};
+  PayloadQuadBatch batch{uses,2,model_packets+model_pending,8};
+  {PayloadQuadScope scope(batch);sq_held=true;re4dc_model_packet_commit(0);sq_held=false;}
+  payload_flush_all();assert(logs.empty());
+  {PayloadQuadScope scope(batch);sq_held=true;re4dc_model_packet_commit(8);sq_held=false;}
+  payload_flush_all();assert(logs.find("unique") == std::string::npos);
+  unsigned emitted=0;std::size_t at=0;while((at=logs.find("GC-ASSET v=",at))!=std::string::npos){++emitted;++at;}assert(emitted==2);
+  for(unsigned mode=0;mode<3;++mode){logs.clear();
+    if(mode==0)batch.vertices=model_packets+1;
+    if(mode==1){batch.vertices=model_packets;batch.vertex_count=7;}
+    if(mode==2){batch.vertex_count=8;payload_retire(b);}
+    {PayloadQuadScope scope(batch);sq_held=true;re4dc_model_packet_commit(8);sq_held=false;}
+    payload_flush_all();assert(logs.find("GC-ASSET v=")==std::string::npos && logs.find("unbound-accepted-payload")!=std::string::npos);
+  }
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-source-', dir='/dev/shm') as temporary:

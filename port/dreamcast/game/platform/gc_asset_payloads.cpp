@@ -4,6 +4,7 @@
 namespace re4dc_gcasset {
 namespace {
 PayloadProof* payloads;unsigned payload_count,payload_serial,payload_faults;
+const PayloadQuadBatch* payload_quad_batch;
 bool overlaps(const void* a,unsigned an,const void* b,unsigned bn){
     if(!a || !b || !an || !bn)return false;
     const auto x=reinterpret_cast<std::uintptr_t>(a),y=reinterpret_cast<std::uintptr_t>(b);
@@ -58,6 +59,23 @@ void payload_flush_all(){
     const unsigned faults=payload_faults;payload_faults=0;
     for(unsigned i=0;i<ConsumerCount;++i)if(faults&(1U<<i))unresolved(Consumer(i),"unbound-accepted-payload");
     for(auto* proof=payloads;proof;proof=proof->next)flush(*proof);
+}
+PayloadQuadScope::PayloadQuadScope(const PayloadQuadBatch& batch):previous(payload_quad_batch){
+    if(previous)payload_faults|=1U<<SourceGeometry;
+    payload_quad_batch=&batch;
+}
+PayloadQuadScope::~PayloadQuadScope(){payload_quad_batch=previous;}
+bool payload_quads_accept(const void* vertices,unsigned count){
+    const auto* batch=payload_quad_batch;if(!batch)return false;
+    const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
+    bool valid=batch->uses && batch->count && batch->count<=48 && vertices && vertices==batch->vertices &&
+        count==batch->vertex_count && count==batch->count*4;
+    for(unsigned i=0;valid && i<batch->count;++i){const auto& use=batch->uses[i];
+        valid=use.proof && use.serial && use.proof->owner && use.proof->serial==use.serial && use.mask && !(use.mask&~allowed);
+    }
+    if(!valid)payload_faults|=1U<<SourceGeometry;
+    else for(unsigned i=0;i<batch->count;++i){const auto& use=batch->uses[i];payload_accept(use.proof,use.serial,use.mask);}
+    return true; // An invalid active batch must never fall back to ambient model identity.
 }
 PayloadScope::PayloadScope(PayloadProof& proof,const void* owner,const void* model,const void* info,unsigned mask):previous(source_use){
     source_use={};

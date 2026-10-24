@@ -42,6 +42,36 @@ def patched(source):
          '        re4dc_log("native mesh: %s rejected: %s\\n",path,v.package.error());\n        RE4DC_GCAP_RETIRE(v);\n        re4dc_static_free(storage);')
     once('    if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}\n    const auto& mesh=',
          '    if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}\n    RE4DC_GCAP_SCOPE(v,p.model,p.info);\n    const auto& mesh=')
+    once('struct ImpostorQuad { const re4dc::room::MeshImpostor* record;',
+         '''struct ImpostorQuad {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadQuadUse asset_use{};
+#endif
+    const re4dc::room::MeshImpostor* record;''')
+    old='    q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);'
+    if source.count(old)!=2:
+        raise ValueError('Expected two exact impostor/tree-quad owner capture sites')
+    source=source.replace(old,old+'''
+#if RE4DC_GC_ASSET_GATE
+    q.asset_use={&v.asset_proof,v.asset_proof.serial,re4dc_gcasset::source_use.mask?re4dc_gcasset::source_use.mask:1U<<re4dc_gcasset::SourceGeometry};
+#endif''')
+    once('        auto* out=static_cast<pvr_vertex_t*>(packet.vertices);unsigned used=0;',
+         '''        auto* out=static_cast<pvr_vertex_t*>(packet.vertices);unsigned used=0;
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::PayloadQuadUse asset_uses[kImpostorQuads];unsigned asset_count=0;
+#endif''')
+    once('            used+=4;\n        }\n        if(bound){re4dc_model_packet_commit(used);++impostor_stats[3];}',
+         '''            used+=4;
+#if RE4DC_GC_ASSET_GATE
+            asset_uses[asset_count++]=q.asset_use;
+#endif
+        }
+        if(bound){
+#if RE4DC_GC_ASSET_GATE
+            const re4dc_gcasset::PayloadQuadBatch asset_batch{asset_uses,asset_count,packet.vertices,used};
+            re4dc_gcasset::PayloadQuadScope asset_scope(asset_batch);
+#endif
+            re4dc_model_packet_commit(used);++impostor_stats[3];}''')
     once('    Binding& b=*at.binding;View& v=*at.view;',
          '    Binding& b=*at.binding;View& v=*at.view;\n    RE4DC_GCAP_SCOPE(v,p.model,p.info);')
     once('    if(ok && !ps2w.package.adopt(s,msize,true,true))',

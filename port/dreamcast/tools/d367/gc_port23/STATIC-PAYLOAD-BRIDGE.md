@@ -31,12 +31,21 @@ replay cannot resolve a different current package. Frame and retire flushes run
 outside SQ. Catalog replacement invalidates all tokens; persistent package
 proofs fail until the owner safely reloads original immutable bytes.
 
+The generated proposal now also saves each queued impostor/tree quad's exact
+proof pointer, owner serial and consumer mask. Only quads actually copied into
+the bounded packet enter its borrowed proof list. The actual UI commit hook
+accepts that list only for the exact vertex buffer/count and four vertices per
+quad; retired/missing/mixed-up proof, wrong buffer/count or more than 48 quads
+fails without falling back to ambient model identity. Failed atlas binding and
+capacity-rejected quads produce no acknowledgement. A source-extracted control
+runs the generated real impostor flush together with the actual UI commit and
+real payload/core helpers. The shared renderer is still unapplied.
+
 Open integration boundaries, deliberately not certified by this patch:
 
-- Mixed-owner impostor batches need exact per-accepted-quad saved proof tickets;
-  attributing the whole batch to its first owner is forbidden.
-- r11fNativePass's early alternate owner and far-shell draw need their own
-  exact immutable payload/sidecar bounds and acceptance bridge.
+- Far-shell draw needs its own exact immutable payload bounds and acceptance
+  bridge. The r11f early transaction routes into the same scoped ps2_pass;
+  that mapping still needs whole-boundary integration review.
 - R4SG or any other consumed file that changes geometry/material/source
   interpretation requires a separate/composite reviewed identity. R4PW alone
   does not qualify those additional sidecars.
@@ -47,4 +56,7 @@ Until those paths are qualified, their actual generic accepted-source latch
 continues to emit explicit unbound errors. No complete coverage mask, linked
 image identity, memory/heap gate or guest acceptance follows from this proposal.
 Embedded proof target size is expected 44 B per owner plus one deferred pointer
-and small global registry state; actual SH4 object/link pricing remains required.
+and small global registry state. Mixed quad records add 12 B each (576 B for
+48), plus a borrowed 576-byte stack proof list, small scope descriptors and one
+4-byte active batch pointer on SH4. There is no heap table or resident catalog
+growth. Actual SH4 object/link pricing remains required.
