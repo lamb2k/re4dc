@@ -1,0 +1,27 @@
+# Actual target-triangle shadow implementation review, 2026-10-24
+
+CLEAR for the frozen generic exact-real implementation `28c739468ae7d2d2d3c09f81330015e7769dc824`, with external inventory/identity and renderer obligations explicitly unqualified. No concrete implementation defect found. This is not a whole-let scene certificate or runtime admission. No actual scene, asset, ray ledger, SDK, guest, runtime or renderer path was accessed or changed by the controls.
+
+## Exact freeze and source assessment
+
+Verified clean HEAD, all four physical files against frozen Git and the C source-final mirror, all three design-input pins, author HOST-RESULTS and log hashes. Source seal SHA256 `fb183103b4b8b0c0986396c2943d515ca9f3b59a67ff9a59b4858ac4e3cba52c`; HOST-RESULTS SHA256 `eeb52576c67eaba02e3ef0dd6b26cd3ea6f6b01ea98197e3a1d91666fa14e968`. Primitive SHA256 `9c0f85d588be2020a1506325da078e27a99c23b81f783ff3db268f6082a64f41`; tests SHA256 `5d7a12edefb993b8c530513b222e5d73d32e1e73a872e8cc9d1f1a24164839f7`. Prior theorem review c22 and root plan3cd9 bind exactly.
+
+`_edge` is det(E-U,V-U,T-U), the c22 convention H_AB(E,C)=d(E). The one sign is fixed from the first nonzero eye plane value, checked on ALL eyes and ALL three target vertices. All three edges test every Cartesian product, with strict boundaries. Nondegenerate source plus strict opposite sides gives a unique intersection strictly between eye and target; signed edge tests give positive source barycentrics. No source is switched within one target/cell proof. Orientation handling is geometric only; production culling is not changed or qualified. Target degeneracy is retained rather than pruned. Returned minima are unnormalized exact polynomial values, not physical clearance.
+
+`cover_assigned` validates nonempty, equally long immutable target and source tuples before indexed iteration. It cannot zip-truncate or omit a supplied failing face. All selected source references bind to both oriented faces of a full Panel. It validates the unused face too, rejects conflicting same-ID full definitions, and counts distinct Panel IDs with an AND dependency union of at most16. Thirty-two assigned source faces can correctly use16 full Panels; seventeen distinct IDs cannot be merged just because their geometry matches.
+
+The API proves ONLY the supplied target list. It cannot discover that a caller omitted an actual authored face from that list, nor authenticate a claimed Panel ID. This is explicitly documented, not solved by equal tuple lengths. A later opportunity adapter must bind the complete exact authored/effective target inventory and a one-to-one real production-Panel mapping before calling this a whole-let candidate. A single supplied triangle can correctly pass while a larger actual inventory would fail. The reviewer adversary demonstrates that distinction. The generic source CLEAR must not be presented as actual inventory or runtime clearance.
+
+## Bounds and independent controls
+
+Exact builtin int/Fraction scalars only; no float, bool, NaN/Inf, mutable list/generator or unsupported scalar conversion. Input numerator and denominator bits are bounded256, eye vertices64, target triangles1024. The batch work test counts targets*eyes*9 and refuses above73,728 without dropping faces. Primitive shape and arity are strict. UNKNOWN is not a visibility decision and rejects boolean coercion. Finite exact arithmetic supplies no SH4/FP/raster uncertainty enclosure or near-plane acceptance.
+
+Independent original suite: PASS13 methods, including2,025 exact Gaussian comparisons and ten semantic mutants;0.577s,18,304KiB maximum child RSS. Extra independent controls:11 assertions, dense/permuted/reflected3D affine transformations, actual default73,728 budget boundary and next-face refusal, final supplied uncovered face, the subset-vs-authenticated-inventory distinction,17 distinct equal-geometry Panel IDs, supported tiny rational separation, oversized denominator and mutable-source refusal. Extra peak21,504KiB under256MiB, serial; no scene queries. Exact tiny strict positives are nominal only.
+
+All ten frozen semantic mutants were also independently extracted and run separately. Each parsed/imported, executed the named semantic method, and failed exactly one intended assertion. Separate retained logs bind missing target/eye/third edge, edge/depth equality, mixed eye side, cap32, conflicting Panel alias, zip truncation and work-limit removal. No syntax/import failure is counted as semantic coverage.
+
+## Limits of the verdict
+
+Actual source/target inventory, original strip parity/corner slots, physical affines and policy/material/owner identity, effective selected LOD, source liveness, actual source cull/clip/depth/header/raster submission, per-panel prefix receipts, fresh camera/projection/FPSCR/package generation, exact selector domains, SH4/FTRV/FSRRA uncertainty and finite screen/depth coverage remain unqualified. No table/format/layout, memory fit or performance claim follows. The separately root-controlled retained-data audit may use this generic prerequisite only after it authenticates those inventory/identity inputs; any nominal positive remains a candidate. All prior guards and audits remain unchanged.
+
+Private review receipts and individual mutant traces are sealed in `C:/Game Dev/Emulators/codex-lanes/triangle-shadow24/review-implementation/MANIFEST.json`. The generic extra_controls.py is new reviewer-owned code only. This review does not execute or authorize NEXT-AUDIT-PROPOSAL.md.
