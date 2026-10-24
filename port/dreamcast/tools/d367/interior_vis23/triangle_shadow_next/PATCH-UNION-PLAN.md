@@ -99,3 +99,5 @@ material/header, raster edge/sample/depth and committed source-prefix receipts
 close. No renderer cut or >=1 ms claim follows from the geometric union. If the
 bounded actual pair union remains zero, report it and re-plan; do not turn this
 unit into repeated source-cap expansion or a watertight-room requirement.
+
+Independent refinement: the first source cohort must use the SAME actual shared meshlet corner indices and projected cache slots in both triangles, with identical kernel, transform and unchanged clipping construction. Coordinate-equal copies do not prove a renderer seam. The host interval dictionary uses one physical endpoint variable for each such index, reused across both triangles. The exact-real theorem is independently CLEAR in review-patch-union-plan.md (f26ed9355bae23be24f0445580191b06a73106e26810a5587f2903c5cb06565d); renderer/raster admission remains separate.
