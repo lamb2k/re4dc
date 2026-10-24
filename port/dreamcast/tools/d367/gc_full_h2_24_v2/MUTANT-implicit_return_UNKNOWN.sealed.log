@@ -1,0 +1,22 @@
+test_bare_already_exited_not_exit_proof (__main__.Repairs.test_bare_already_exited_not_exit_proof) ... ok
+test_blocked_identity_timer_prearmed (__main__.Repairs.test_blocked_identity_timer_prearmed) ... ok
+test_blocked_receipt_timer_prearmed (__main__.Repairs.test_blocked_receipt_timer_prearmed) ... ok
+test_expired_creation_return_kills_before_identity (__main__.Repairs.test_expired_creation_return_kills_before_identity) ... ok
+test_native_proof_bound_to_attempt_and_clock (__main__.Repairs.test_native_proof_bound_to_attempt_and_clock) ... ok
+test_signal_handler_records_without_unwinding_held_controller (__main__.Repairs.test_signal_handler_records_without_unwinding_held_controller) ... ok
+test_timer_start_failure_closes_actual_object (__main__.Repairs.test_timer_start_failure_closes_actual_object) ... ok
+test_unknown_cleanup_cannot_release_or_implicitly_return (__main__.Repairs.test_unknown_cleanup_cannot_release_or_implicitly_return) ... FAIL
+
+======================================================================
+FAIL: test_unknown_cleanup_cannot_release_or_implicitly_return (__main__.Repairs.test_unknown_cleanup_cannot_release_or_implicitly_return)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/dev/shm/h2-v2-mutants-kxyzcpkl/implicit_return_UNKNOWN/test_repairs.py", line 76, in test_unknown_cleanup_cannot_release_or_implicitly_return
+    self.assertGreaterEqual(len(pauses),2);self.assertEqual(closed,[9,6]);self.assertTrue(env['rec']['recovery_hold_entered']);self.assertTrue(env['rec']['closure']['proven']);self.assertFalse(env['active']['held'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 not greater than or equal to 2
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.024s
+
+FAILED (failures=1)

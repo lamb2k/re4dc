@@ -1,0 +1,70 @@
+{
+  "approved": false,
+  "authorization": "ONE_DIAGNOSTIC_427_FULL_H2_PAIR",
+  "source": "427784b1f48aa30742850bb5025925ab619b740e",
+  "off_actual_producer_source": "8ce5ee2d00027268c3e69c9c300b819c1b14c63f",
+  "raw": {
+    "off": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5",
+    "on": "9e3758b23940ab1ce88fcd37eae3dff28efb19086bd044f8552ff81350e33876"
+  },
+  "arm_order": [
+    "off",
+    "on"
+  ],
+  "actual_child_seconds": 300,
+  "harness_seconds": 290,
+  "grace": 5,
+  "user_allowance_question": "call_893faf52f48b4286ba0eb3333782ea2c",
+  "KOS_first": true,
+  "final": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/full-h2-427-v1",
+  "root_slots": 3,
+  "global_slots": 16,
+  "KOS_results": [],
+  "parent_kit": {
+    "path": "UNBOUND_FINAL_REVIEWED_SUCCESSOR_REQUIRED",
+    "identity": {}
+  },
+  "parent_independent_CLEAR": {
+    "status": "CLEAR_SOURCE_AND_BINDING",
+    "path": "UNBOUND",
+    "identity": {}
+  },
+  "poststage": {
+    "path": "UNBOUND",
+    "identity": {}
+  },
+  "arms": {
+    "off": {
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/rain-diag24-20261024/_qa-media-8ce-recovery-v4/base-off",
+      "syms": "UNBOUND_ACTUAL_ELF_SYMBOLS",
+      "raw": {
+        "path": "UNBOUND",
+        "identity": {
+          "sha256": "e0168b780b102356c9bc3ee785753a659be6a020b1d1d3f8db92f14a90c16de5"
+        }
+      },
+      "elf": {
+        "path": "UNBOUND",
+        "identity": {
+          "sha256": "270be61f74ea99b039c474860dcc612ff52fc1ac1fe8a1c0060c1a9b13a82397"
+        }
+      }
+    },
+    "on": {
+      "base": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-budget-retest-media-v2/on",
+      "syms": "UNBOUND_ACTUAL_ELF_SYMBOLS",
+      "raw": {
+        "path": "UNBOUND",
+        "identity": {
+          "sha256": "9e3758b23940ab1ce88fcd37eae3dff28efb19086bd044f8552ff81350e33876"
+        }
+      },
+      "elf": {
+        "path": "UNBOUND",
+        "identity": {
+          "sha256": "972ae22c49230765d077449c2bcff4bc6ddbb22d439d373fdddd22d434898160"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+test_arena_restore_and_order (__main__.Controls.test_arena_restore_and_order) ... ok
+test_complete_and_heap (__main__.Controls.test_complete_and_heap) ... ok
+test_fatal_no_pass (__main__.Controls.test_fatal_no_pass) ... ok
+test_fixed_route (__main__.Controls.test_fixed_route) ... ok
+test_four_KOS_complete_first (__main__.Controls.test_four_KOS_complete_first) ... ok
+test_grant_wrong_pair_or_unapproved (__main__.Controls.test_grant_wrong_pair_or_unapproved) ... ok
+test_hard_deadline_and_exit (__main__.Controls.test_hard_deadline_and_exit) ... ok
+test_heap_difference_not_hidden (__main__.Controls.test_heap_difference_not_hidden) ... ok
+test_instance_cleanup_identity (__main__.Controls.test_instance_cleanup_identity) ... ok
+test_missing_or_duplicate_terminal (__main__.Controls.test_missing_or_duplicate_terminal) ... ok
+test_missing_root_grant_refuses_before_work (__main__.Controls.test_missing_root_grant_refuses_before_work) ... ok
+test_nonwaiting_kernel_slot (__main__.Controls.test_nonwaiting_kernel_slot) ... ok
+test_partial_s30 (__main__.Controls.test_partial_s30) ... ok
+test_preserved_owner_exact_source (__main__.Controls.test_preserved_owner_exact_source) ... ok
+test_source_drift (__main__.Controls.test_source_drift) ... ok
+test_stop_and_transport (__main__.Controls.test_stop_and_transport) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.056s
+
+OK

@@ -1,0 +1,235 @@
+--- frozen-v1/core.py
++++ v2/core.py
+@@ -1,6 +1,6 @@
+ """One fixed diagnostic H2 pair; importing this file never starts work."""
+ from pathlib import Path,PurePosixPath
+-import hashlib,json,os,re,sys,types
++import hashlib,json,os,re,sys,types,math
+ HERE=Path(__file__).resolve().parent
+ SOURCE='427784b1f48aa30742850bb5025925ab619b740e'
+ OFF_SOURCE='8ce5ee2d00027268c3e69c9c300b819c1b14c63f'
+@@ -98,4 +98,20 @@
+  returns=list(re.finditer(r'MOVIEARENA return token='+borrow[0].group(1)+r'\b[^\r\n]*\brestored=1\b',text))
+  need(len(returns)==1 and borrow[0].end()<returns[0].start()<text.rfind('route movie terminal=1 id=10030'),'Unrestored/wrong-order s30 loan')
+  need(not re.search(r'Out of memory|\b(?:OOM|HALT|FAULT|MISSING)\b|no contiguous block',text),'Fatal route observation')
+- return dict(status='PASS_COMPLETE_H2_PLAYBACK_MEMORY_RECORDED_ONLY',movies=rows,s30_heap_before=rows[-1][-1],s30_frames=340,restored=True,memory_acceptance='ROOT_DECISION_REQUIRED',hardware_or_performance=False)+ return dict(status='PASS_COMPLETE_H2_PLAYBACK_MEMORY_RECORDED_ONLY',movies=rows,s30_heap_before=rows[-1][-1],s30_frames=340,restored=True,memory_acceptance='ROOT_DECISION_REQUIRED',hardware_or_performance=False)
++def handle_closure(proof,arm,grant_sha,seal,nonce,owned=None):
++ need(proof['kind']=='ACTUAL_RETAINED_POPEN_HANDLE_EXIT' and proof['wait_observed'] is True,'No retained-handle observed exit')
++ need(type(proof['native_handle']) is int and 0<proof['native_handle']<2**64 and type(proof['pid']) is int and 0<proof['pid']<2**32 and type(proof['exit_code']) is int and 0<=proof['exit_code']<2**32,'Invalid retained object')
++ need(proof['root_grant_sha256']==grant_sha and proof['source_seal']==seal and proof['nonce']==nonce,'Wrong authenticated attempt')
++ cmd=[win(FINAL/('h2-'+arm)/'flycast.exe'),'disc.gdi']
++ need(proof['command']==cmd and proof['guest_path']==cmd[0] and proof['executable_sha256']==read(HERE/'INPUTS.json')['helpers']['console']['identity']['sha256'],'Wrong created command/image')
++ begin=proof['creation_started_monotonic'];end=proof['exit_observed_monotonic'];elapsed=proof['observed_elapsed_s']
++ need(all(type(x) in [int,float] and math.isfinite(x) for x in [begin,end,elapsed]) and begin>=0 and end>=begin and elapsed==end-begin,'Invalid creation/exit clock')
++ if owned is not None:need(owned['pid']==proof['pid'] and owned['path']==cmd[0] and owned['sha256']==proof['executable_sha256'],'Contradictory owned identity')
++ # Late observed closure frees containment but never turns a failed300s gate into PASS.
++ return True
++
++def query_closure(proof,owned,grant_sha,seal,nonce):
++ need(proof['root_grant_sha256']==grant_sha and proof['source_seal']==seal and proof['nonce']==nonce and proof['guest_identity']==owned,'Wrong cleanup query attempt')
++ q=proof['query_result'];need(q.get('terminated_exact_instance') is True and q.get('exit_observed') is True and q['identity']==owned and type(q['exit_code']) is int and 0<=q['exit_code']<2**32 and q['exit_code']!=259,'No independent authenticated observed wait/exit')
++ return True--- frozen-v1/run.py
++++ v2/run.py
+@@ -1,6 +1,6 @@
+ """Root-granted fixed serial pair only. No SDK, stage or admission retries."""
+ from pathlib import Path
+-import argparse,hashlib,json,os,sys,subprocess,time,signal,fcntl,types
++import argparse,hashlib,json,os,sys,subprocess,time,signal,fcntl,types,secrets
+ HERE=Path(__file__).resolve().parent
+ 
+ def acquire(fd,paths):
+@@ -15,8 +15,22 @@
+   return str(p)
+  raise RuntimeError('No free owned slot; no wait/retry')
+ 
+-def stop(signum,frame):raise RuntimeError('Owned interruption '+str(signum))
+-
++def retain_reservations(check,recover,observe,publish,pause=time.sleep):
++ """Never return or raise while closure is UNKNOWN; same controller owns FDs."""
++ held=False
++ while True:
++  try:
++   if check():return held
++   held=True
++   recover() # Only an explicit fresh root recovery request can invoke a query.
++   if check():return held
++   snapshot=observe();publish(dict(state='RECOVERY_HOLD_OWNED_LEASES_RETAINED',resources=snapshot))
++  except BaseException as exc:
++   held=True
++   try:publish(dict(state='RECOVERY_HOLD_OWNED_LEASES_RETAINED',observation_failure=repr(exc)))
++   except BaseException:pass
++  try:pause(1)
++  except BaseException:pass
+ def main():
+  assert __debug__ and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
+  ap=argparse.ArgumentParser();ap.add_argument('--execute',action='store_true');ap.add_argument('--grant',type=Path);ap.add_argument('--grant-sha');ap.add_argument('--seal');v=ap.parse_args();assert v.execute and v.grant and v.grant_sha and v.seal,'Separate root execution grant required'
+@@ -25,13 +39,18 @@
+  c.own_seal(v.seal);assert c.sha(v.grant)==v.grant_sha;g=c.read(v.grant);parent,k,baseline=c.authenticate(g)
+  assert not any(os.environ.get(n) for n in ['BASH_ENV','ENV','LD_PRELOAD','LD_LIBRARY_PATH','PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'])
+  assert not parent.release_active();k.capacity(k.ADMIT);root=Path(c.FINAL);assert not root.exists(),'No rerun/overwrite';root.mkdir();c.fresh(root/'ATTEMPT.json',dict(grant=c.row(v.grant),source_seal=v.seal,guest_allowance_consumed=False))
++ active={'held':False,'interrupted':None}
++ def stop(sig,frame):
++  if active['held']:active['interrupted']=sig
++  else:raise RuntimeError('Owned interruption '+str(sig))
+  for sig in [signal.SIGTERM,signal.SIGINT,signal.SIGHUP]:signal.signal(sig,stop)
+  result=dict(source=c.SOURCE,off_actual_producer_source=c.OFF_SOURCE,raw=c.RAW,arms={},complete=False,scope='H2 playback+heap observation; root memory acceptance separate')
+  try:
+   for arm in ['off','on']:
+    cap=root/('h2-'+arm);cache=root/('cache-'+arm);assert not cap.exists() and not cache.exists();c.own_seal(v.seal);parent.check_poststage(g,k,arm);assert not parent.release_active();k.capacity(k.ADMIT)
+-   locks={};child=None;rec={};result['arms'][arm]=rec
++   locks={};child=None;spawn_attempted=False;rec={'nonce':secrets.token_hex(16)};result['arms'][arm]=rec
+    def capacity():
++    if active['interrupted'] is not None:raise RuntimeError('Owned interruption '+str(active['interrupted']))
+     k.capacity();s=os.statvfs('/mnt/c');assert s.f_bavail*s.f_frsize>=24*1024**3;old={(v['dev'],v['ino']) for v in baseline['members'].values()};new={} 
+     for p in root.rglob('*'):
+      if p.is_file():
+@@ -39,14 +58,16 @@
+       if key not in old:new[key]=s.st_size
+     assert sum(new.values())<=5*1024**3//4;assert not parent.release_active(),'Release priority'
+    inp=c.read(HERE/'INPUTS.json');py=inp['helpers']['python']['path']
+-   def command(cleanup=False):
+-    return [py,'-I','-S','-B','-X','pycache_prefix='+c.win(root/(('cleanup-cache-' if cleanup else 'cache-')+arm)),'-c',c.BOOT,c.win(HERE/'windows_entry.py'),c.sha(HERE/'windows_entry.py'),'--grant',c.win(v.grant),'--grant-sha',v.grant_sha,'--seal',v.seal,'--arm',arm,*(['--cleanup'] if cleanup else [])]
++   def command(cleanup=False,cleanup_id=0):
++    return [py,'-I','-S','-B','-X','pycache_prefix='+c.win(root/((('cleanup-cache-'+arm+'-'+str(cleanup_id)) if cleanup else ('cache-'+arm)))),'-c',c.BOOT,c.win(HERE/'windows_entry.py'),c.sha(HERE/'windows_entry.py'),'--grant',c.win(v.grant),'--grant-sha',v.grant_sha,'--seal',v.seal,'--arm',arm,'--nonce',rec['nonce'],'--cleanup-id',str(cleanup_id),*(['--cleanup'] if cleanup else [])]
+    env={'PATH':'/usr/bin:/bin','HOME':'/root','LANG':'C','RE4DC_EMU':'console','FP_NOLIMIT':'1','RE4DC_MAX_FLYCASTS':'16','TRACE_SLOTS':'16','RE4DC_CONSOLE_EXE':inp['helpers']['console']['windows_path'],'WSLENV':'RE4DC_EMU:FP_NOLIMIT:RE4DC_MAX_FLYCASTS:TRACE_SLOTS:RE4DC_CONSOLE_EXE'}
+    try:
++    active['held']=True
+     locks[6]=acquire(6,['/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-'+str(i)+'.lock' for i in range(3)])
+     locks[9]=acquire(9,['/root/probe/.trace.lock'+('' if i==0 else '.'+str(i)) for i in range(16)])
+     rec['kernel_locks']=parent.kernel_locks();capacity();start=time.monotonic()
+     with (root/(arm+'-controller.log')).open('x') as log:
++     spawn_attempted=True
+      child=subprocess.Popen(command(),stdout=log,stderr=subprocess.STDOUT,env=env,start_new_session=True,pass_fds=(6,9))
+      while child.poll() is None:
+       capacity();assert time.monotonic()-start<380,'Preparation+actual child+cleanup envelope380s';time.sleep(.5)
+@@ -55,18 +76,56 @@
+     assert rr['fixtures']=={n:dict(src=c.win(p['path']),bytes=p['identity']['size'],sha256=p['identity']['sha256']) for n,p in inp['fixtures'].items()}
+     rec['judgement']=c.judge((cap/'run-output.txt').read_text(errors='replace'),rr,bound);rec.update(run=c.row(cap/'run-result.json'),log=c.row(cap/'run-output.txt'),bounded=c.row(cap/'bounded-launch.json'),wrapper_seconds=time.monotonic()-start)
+    finally:
+-    # Linux wrapper group is owned; exact Windows instance is independently reauthenticated.
+-    if child:
+-     try:os.killpg(child.pid,signal.SIGTERM)
+-     except ProcessLookupError:pass
+-     try:child.wait(timeout=3)
+-     except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=3)
++    # No implicit exit/release on UNKNOWN: callbacks never leave this same
++    # controller until an authenticated retained-handle or query wait proves exit.
++    cleanup_ids=[];requests=set();closure={'proven':not spawn_attempted and child is None and not cap.exists(),'kind':'UNKNOWN'}
++    def cleanup_query(number):
++     with (root/(arm+'-cleanup-'+str(number)+'.log')).open('x') as f:q=subprocess.run(command(True,number),env=env,stdout=f,stderr=subprocess.STDOUT,timeout=10)
++     cleanup_ids.append(number)
++     if q.returncode!=0:raise RuntimeError('Exact-instance cleanup UNKNOWN')
+     try:
+-     if (cap/'OWNED-GUEST.json').exists():
+-      with (root/(arm+'-cleanup.log')).open('x') as f:r=subprocess.run(command(True),env=env,stdout=f,stderr=subprocess.STDOUT,timeout=10)
+-      assert r.returncode==0,'Exact-instance cleanup UNKNOWN';rec['cleanup']=c.row(cap/'OWNED-CLEANUP.json')
+-    finally:
+-     for fd in reversed(list(locks)):os.close(fd)
++     if child:
++      try:os.killpg(child.pid,signal.SIGTERM)
++      except ProcessLookupError:pass
++      try:child.wait(timeout=3)
++      except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=3)
++      if (cap/'OWNED-GUEST.json').exists():cleanup_query(0)
++    except BaseException as exc:rec['cleanup_failure']=repr(exc)
++    def check_closed():
++     if closure['proven']:return True
++     try:
++      c.own_seal(v.seal);owned=c.read(cap/'OWNED-GUEST.json') if (cap/'OWNED-GUEST.json').exists() else None
++      if (cap/'RETAINED-HANDLE-EXIT.json').exists():
++       c.handle_closure(c.read(cap/'RETAINED-HANDLE-EXIT.json'),arm,v.grant_sha,v.seal,rec['nonce'],owned);closure.update(proven=True,kind='ACTUAL_RETAINED_POPEN_HANDLE_EXIT',proof=c.row(cap/'RETAINED-HANDLE-EXIT.json'));return True
++      if owned is not None:
++       for number in cleanup_ids:
++        path=cap/('OWNED-CLEANUP-'+str(number)+'.json')
++        if path.exists():
++         try:c.query_closure(c.read(path),owned,v.grant_sha,v.seal,rec['nonce'])
++         except BaseException:continue
++         closure.update(proven=True,kind='INDEPENDENT_AUTHENTICATED_WAIT_EXIT',proof=c.row(path));return True
++     except BaseException as exc:rec['closure_observation_failure']=repr(exc)
++     return False
++    def recover():
++     for path in sorted(root.glob(arm+'-RECOVERY-REQUEST-*.json')):
++      key=str(path)
++      if key in requests:continue
++      requests.add(key);request=c.read(path)
++      assert request==dict(approved=True,action='QUERY_SAME_OWNED_INSTANCE_ONLY',grant_sha256=v.grant_sha,source_seal=v.seal,nonce=rec['nonce'],arm=arm),'Wrong root recovery request'
++      assert (cap/'OWNED-GUEST.json').exists(),'No authentic exact-instance identity available; retain hold'
++      cleanup_query(len(requests))
++    def observe_hold():
++     # Resource/priority/signal problems are recorded while reservations remain.
++     return dict(parent_resources=k.capacity(),interrupted_signal=active['interrupted'],release_active=parent.release_active(),locks=parent.kernel_locks())
++    def publish_hold(record):
++     first=root/(arm+'-RECOVERY-HOLD.json');latest=root/(arm+'-RECOVERY-LATEST.json');payload=dict(record,nonce=rec['nonce'],closure=closure)
++     if not first.exists():c.fresh(first,payload)
++     pending=root/(arm+'-RECOVERY-PENDING.json');pending.write_text(c.__dict__['json'].dumps(payload)+'\n');os.replace(pending,latest)
++    held=retain_reservations(check_closed,recover,observe_hold,publish_hold)
++    rec['closure']=closure;rec['recovery_hold_entered']=held
++    for fd in reversed(list(locks)):os.close(fd)
++    active['held']=False
++    if held or rec.get('cleanup_failure'):raise RuntimeError('Containment resolved; original H2 attempt failed, no further guest')
+    capacity()
+   result['complete']=True;result['s30_heap_ON_minus_OFF']=result['arms']['on']['judgement']['s30_heap_before']-result['arms']['off']['judgement']['s30_heap_before']
+  except BaseException as exc:result['failure']=repr(exc);raise
+--- frozen-v1/windows_entry.py
++++ v2/windows_entry.py
+@@ -6,13 +6,13 @@
+  pins=json.loads((HERE/'SOURCE-SEAL.json').read_text())['members'];p=HERE/(name+'.py');b=p.read_bytes();assert hashlib.sha256(b).hexdigest()==pins[p.name]['sha256'];m=types.ModuleType(name);m.__file__=str(p);sys.modules[name]=m;exec(compile(b,str(p),'exec',dont_inherit=True),m.__dict__);return m
+ def main():
+  assert __debug__ and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
+- a=argparse.ArgumentParser();a.add_argument('--grant',required=True,type=Path);a.add_argument('--grant-sha',required=True);a.add_argument('--seal',required=True);a.add_argument('--arm',required=True,choices=['off','on']);a.add_argument('--cleanup',action='store_true');v=a.parse_args()
++ a=argparse.ArgumentParser();a.add_argument('--grant',required=True,type=Path);a.add_argument('--grant-sha',required=True);a.add_argument('--seal',required=True);a.add_argument('--arm',required=True,choices=['off','on']);a.add_argument('--nonce',required=True);a.add_argument('--cleanup-id',default='0');a.add_argument('--cleanup',action='store_true');v=a.parse_args()
+  assert hashlib.sha256((HERE/'SOURCE-SEAL.json').read_bytes()).hexdigest()==v.seal
+- c=load('core');c.own_seal(v.seal);assert c.sha(v.grant)==v.grant_sha;g=c.read(v.grant);c.grant(g)
++ c=load('core');c.own_seal(v.seal);assert len(v.nonce)==32 and all(x in '0123456789abcdef' for x in v.nonce);assert c.sha(v.grant)==v.grant_sha;g=c.read(v.grant);c.grant(g)
+  owner=load('owned_process');cap=Path(c.win(c.FINAL/('h2-'+v.arm)));pin=c.read(HERE/'INPUTS.json');expected=pin['helpers']['console']['identity']
+  if v.cleanup:
+   if (cap/'OWNED-GUEST.json').exists():
+-   ident=c.read(cap/'OWNED-GUEST.json');assert Path(ident['path']).resolve()==(cap/'flycast.exe').resolve() and ident['sha256']==expected['sha256'];c.fresh(cap/'OWNED-CLEANUP.json',owner.terminate(ident))
++   ident=c.read(cap/'OWNED-GUEST.json');assert Path(ident['path']).resolve()==(cap/'flycast.exe').resolve() and ident['sha256']==expected['sha256'];c.fresh(cap/('OWNED-CLEANUP-'+v.cleanup_id+'.json'),dict(root_grant_sha256=v.grant_sha,nonce=v.nonce,source_seal=v.seal,guest_identity=ident,query_result=owner.terminate(ident)))
+   return
+  assert sys.pycache_prefix and not Path(sys.pycache_prefix).exists() and not cap.exists()
+  assert os.environ.get('RE4DC_EMU')=='console' and os.environ.get('FP_NOLIMIT')=='1' and os.environ.get('RE4DC_MAX_FLYCASTS')=='16'
+@@ -20,6 +20,10 @@
+  argv=c.route(g,v.arm);harness=Path(argv[0]);c.verify(harness,pin['helpers']['harness']['identity'])
+  for n in ['warp','pad']:c.verify(c.win(pin['fixtures'][n]['path']),pin['fixtures'][n]['identity'])
+  original=subprocess.Popen;guest=None;timer=None;state=dict(deadline_seconds=c.LIMIT,timer_seconds=c.TIMER,deadline_fired=False,guest_exited=False,harness_sha256=c.sha(harness),expected_executable_sha256=expected['sha256'])
++ def witness_exit(process,before,command):
++  # Only called after wait() on THIS retained Popen native handle returned.
++  now=time.monotonic();proof=dict(kind='ACTUAL_RETAINED_POPEN_HANDLE_EXIT',native_handle=int(process._handle),wait_observed=True,pid=process.pid,command=list(command),guest_path=str(cap/'flycast.exe'),executable_sha256=expected['sha256'],root_grant_sha256=v.grant_sha,nonce=v.nonce,source_seal=v.seal,exit_code=process.returncode,creation_started_monotonic=before,exit_observed_monotonic=now,observed_elapsed_s=now-before)
++  if not (cap/'RETAINED-HANDLE-EXIT.json').exists():c.fresh(cap/'RETAINED-HANDLE-EXIT.json',proof)
+  class OwnedPopen(original):
+   def __init__(self,*args,**kwargs):
+    nonlocal guest,timer
+@@ -32,11 +36,22 @@
+    super().__init__(*args,**kwargs)
+    if is_guest:
+     guest=self;state.update(pid=self.pid,guest_started_monotonic=before_create)
++    # The retained actual Popen object owns its deadline BEFORE any identity,
++    # hashing or receipt I/O. Closure does not depend on those operations.
++    def stop():
++     if self.poll() is None:
++      state['deadline_fired']=True;self.terminate()
++     self.wait(timeout=max(.01,c.LIMIT-(time.monotonic()-before_create)))
++     state.update(guest_exited=self.poll() is not None,guest_observed_elapsed_s=time.monotonic()-before_create,guest_rc=self.poll())
++     if state['guest_exited']:witness_exit(self,before_create,cmd)
++    try:
++     timer=threading.Timer(max(0,c.TIMER-(time.monotonic()-before_create)),stop);timer.daemon=True
++     if time.monotonic()-before_create>=c.TIMER:stop()
++     else:timer.start()
++    except BaseException:
++     self.terminate();self.wait(timeout=max(.01,c.LIMIT-(time.monotonic()-before_create)));raise
+     try:
+      ident=owner.identity(int(self._handle),self.pid);assert ident['sha256']==expected['sha256'] and Path(ident['path']).resolve()==(cap/'flycast.exe').resolve();c.fresh(cap/'OWNED-GUEST.json',ident)
+-     def stop():
+-      if self.poll() is None:state['deadline_fired']=True;self.terminate()
+-     timer=threading.Timer(max(0,c.TIMER-(time.monotonic()-state['guest_started_monotonic'])),stop);timer.daemon=True;timer.start()
+     except BaseException:self.terminate();self.wait(timeout=3);raise
+  subprocess.Popen=OwnedPopen
+  try:
+@@ -48,5 +63,6 @@
+    if guest.poll() is None:guest.terminate()
+    guest.wait(timeout=max(.01,c.LIMIT-(time.monotonic()-state['guest_started_monotonic'])))
+    state.update(guest_exited=True,guest_observed_elapsed_s=time.monotonic()-state['guest_started_monotonic'],guest_rc=guest.poll())
++   witness_exit(guest,state['guest_started_monotonic'],[str(cap/'flycast.exe'),'disc.gdi'])
+   if cap.exists():c.fresh(cap/'bounded-launch.json',state)
+ if __name__=='__main__':main()

@@ -1,0 +1,30 @@
+{
+  "public": 16,
+  "source_extracted_repairs": 8,
+  "total": 24,
+  "results": {
+    "test_host.py": {
+      "returncode": 0,
+      "seconds": 0.26664432598045096
+    },
+    "test_repairs.py": {
+      "returncode": 0,
+      "seconds": 0.2669074509758502
+    },
+    "late_timer_registration": {
+      "mutant_compiled": true,
+      "caught": true,
+      "returncode": 1,
+      "seconds": 0.26704551599686965
+    },
+    "implicit_return_UNKNOWN": {
+      "mutant_compiled": true,
+      "caught": true,
+      "returncode": 1,
+      "seconds": 0.21733479102840647
+    }
+  },
+  "RAM_limit_bytes": 268435456,
+  "per_process_seconds_cap": 120,
+  "SDK_stage_guest_native_query": false
+}

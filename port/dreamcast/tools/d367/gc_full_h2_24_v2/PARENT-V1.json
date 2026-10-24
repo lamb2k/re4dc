@@ -1,0 +1,10 @@
+{
+  "parent_source_seal": "bb0b32798e517b4220b120542c3cdf411137bde24df4838b58bcbf9c3faeb137",
+  "review_hold": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-full-h2-prep-v1/REVIEW-HOLD.json",
+    "sha256": "16b24906d97de391ce4808b1ac6e357e12ca585555fe3477233cd2ac15d5b4bf"
+  },
+  "original_members_unchanged": 15,
+  "grant_scope": "Two confirmed timing/containment defects only",
+  "native_guest_execution": false
+}

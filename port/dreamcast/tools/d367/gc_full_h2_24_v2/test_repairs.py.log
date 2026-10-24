@@ -1,0 +1,13 @@
+test_bare_already_exited_not_exit_proof (__main__.Repairs.test_bare_already_exited_not_exit_proof) ... ok
+test_blocked_identity_timer_prearmed (__main__.Repairs.test_blocked_identity_timer_prearmed) ... ok
+test_blocked_receipt_timer_prearmed (__main__.Repairs.test_blocked_receipt_timer_prearmed) ... ok
+test_expired_creation_return_kills_before_identity (__main__.Repairs.test_expired_creation_return_kills_before_identity) ... ok
+test_native_proof_bound_to_attempt_and_clock (__main__.Repairs.test_native_proof_bound_to_attempt_and_clock) ... ok
+test_signal_handler_records_without_unwinding_held_controller (__main__.Repairs.test_signal_handler_records_without_unwinding_held_controller) ... ok
+test_timer_start_failure_closes_actual_object (__main__.Repairs.test_timer_start_failure_closes_actual_object) ... ok
+test_unknown_cleanup_cannot_release_or_implicitly_return (__main__.Repairs.test_unknown_cleanup_cannot_release_or_implicitly_return) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.044s
+
+OK
