@@ -4,14 +4,18 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 22, 2026.
+**Last updated:** October 24, 2026.
 
-**Current build: Test 22** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): smoother distant
-textures (mipmaps), no disc read when you shoot, no stutter at in-game events, faster inventory opening, lake trees
-fixed, trail effects back, and fixes for the dam crash (#52), memory after a reset (#26), Ganado death stalls and the
-Mendez pause (#48, #49). A QA build for testers is the second download.
+**Current build: Test 23** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): PS2 river water,
+trap explosions, Mendez no longer freezes (#55), steady barn lights, no hang on slow disc reads (#28), mipmaps on
+bushes and cut-outs, fewer see-through effects, faster inventory and a better El Gigante up close. A QA build for
+testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 22:** smoother distant textures (mipmaps), no disc read when you shoot, no stutter at in-game events, faster
+inventory opening, lake trees fixed, trail effects back, and fixes for the dam crash (#52), memory after a reset (#26),
+Ganado death stalls and the Mendez pause (#48, #49).
 
 - **Test 21:** lighter, smoother fights. Fights no longer stall reloading enemy animations, Ashley no longer stalls
 the game before the El Gigante fight, the night road villagers (r111) use their PS2 model, the dam rooms use the PS2
@@ -54,11 +58,11 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Status | Meaning | Count |
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
-| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 9 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 | Fixed and checked in our tests; the problem was not console-only | 50 |
-| 🛠️ In progress | Being fixed now | 1 |
+| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 | Fixed and checked in our tests; the problem was not console-only | 59 |
+| 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 19 |
+| ⏸️ Open | Known, not yet worked on | 15 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -76,11 +80,12 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| Mendez freezes after grabbing Leon (chapter 2-3 barn, r11f) | test 22 and earlier | 🟢 Fixed in test 23: his state word was read in the wrong byte order; the bear hug holds and the fight goes on | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |
 | Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🟢 Fixed in test 22: the paused world stays as it was and play resumes cleanly, in the Mendez fight too | [#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49) |
 | A crash on a real Dreamcast when the first villager at the dam appears (a disc read failed and the enemy was never made) | test 20, 21 | 🟢 Fixed in test 22, needs console check: a failed enemy read is retried, and the dam guards a missing enemy | [#52](https://github.com/lamb2k/re4dc/issues/52) |
-| At the castle gate (r200), at the end of chapter 2-3, one texture fails its preparation check in our tests. Play goes on | test 22 | ⏸️ Open, not blocking: started with the mipmap data | |
-| Video memory is short by one 32 KB block for the look buffer when you enter the village (r101). Play goes on | test 22 | ⏸️ Open, not blocking: the room texture memory arrangement that fixes it is held for Test 23 | |
+| At the castle gate (r200), at the end of chapter 2-3, one texture fails its preparation check in our tests. Play goes on | test 22 | 🟢 Fixed in test 23: the picture loads and passes its check |  |
+| Video memory is short by one 32 KB block for the look buffer when you enter the village (r101). Play goes on | test 22 | 🟢 Fixed in test 23, needs console check: the room texture memory arrangement is on, and every room fits with no failed block in our tests. An earlier test disc with it crashed once on a console; the cache fix that may explain it is in, and Flycast runs clean. Please report any crash in the village |  |
 | Random crashes on a real console, often in the village or shortly after a room loads (memory corruption) | test 7, test 8 | 🟢 Fixed, needs console check | [#23](https://github.com/lamb2k/re4dc/issues/23), [#27](https://github.com/lamb2k/re4dc/issues/27), [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Changing the Rendering level sometimes crashes a few seconds later | test 8 | 🟢 Fixed in test 9: the Rendering option was removed. Test 12 brings the row back with two choices, Standard and FSAA (both full 480-line pictures), checked in both and while switching | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Loading a save and then starting a New Game shows an error | test 7, test 8 | 🟢 Fixed in test 9 | [#26](https://github.com/lamb2k/re4dc/issues/26) |
@@ -89,7 +94,7 @@ Not bugs: work that goes on from test to test.
 | After loading a save and resetting, the first room starts with less free memory (no crash seen) | test 9 to 21 | 🟢 Fixed in test 22: Leon's outfit data from the save was reloaded for the New Game; the reset now forgets it, so the first room starts with the same memory as after a fresh boot | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | The intro stops on `MISSING motion key read` (one disc read came back incomplete) | test 7 | 🟢 Fixed, needs console check: since test 8 the read is retried up to 3 times | [#25](https://github.com/lamb2k/re4dc/issues/25) |
 | Some memory is not freed when leaving a room (a side effect of the test 9 reset fix; no crash seen on the test 9 route) | test 9 | 🟢 Fixed in test 9.1 | |
-| Black screen when started from DreamShell with an IDE mod | test 9, 10 | 🟢 Fixed in test 16, needs a DreamShell check: DreamShell's loader handles the game's fast "streaming" disc reads differently, so some reads came back wrong. Test 16 still reads with the fast mode first, but checks that every read really arrived; the first time one fails, times out or comes back empty, the game switches to plain sector reads (the way most discs are read, with a slower method as the last resort) for the rest of the session, and shows on screen what it is doing if a read misbehaves | [#28](https://github.com/lamb2k/re4dc/issues/28) |
+| Black screen when started from DreamShell with an IDE mod | test 9, 10 | 🟢 Fixed in test 16, needs a DreamShell check: DreamShell's loader handles the game's fast "streaming" disc reads differently, so some reads came back wrong. Test 16 still reads with the fast mode first, but checks that every read really arrived; the first time one fails, times out or comes back empty, the game switches to plain sector reads (the way most discs are read, with a slower method as the last resort) for the rest of the session, and shows on screen what it is doing if a read misbehaves. From test 23 a read that never finishes times out and is read again (the DreamShell hang on the first music read) | [#28](https://github.com/lamb2k/re4dc/issues/28) |
 | Freezes or crashes on some GDEMU units while other games work, often while a room loads; one freeze at the SEGA screen | test 7, 8 and later | 🟢 Fixed in test 16: the disc is now a standard GD-ROM image, laid out like a pressed GD-ROM (as the community tool mkdcdisc writes it): the table of contents real GD-ROMs carry, the full-size data track and the program as the last file. The disc of the earlier tests came from our own script and differed from that layout in several places. The test 14 game in the standard format ran fine on our GDEMU console on October 16, 2026 ("new gdi runs fine"), and it passes the GDEMU disc-timing checks in our console-like emulator. Test 14 also fixed the disc library underneath (a read waits until the drive's transfer has really finished; two drive hangs fixed). If a GDEMU still freezes with test 16, please report it with whether your GDEMU is an original or a clone, the firmware version shown in its menu, and your SD card's brand and size; leave "Shrink GDI" off. Details: [CONTRIBUTING-PORT.md section 8](../CONTRIBUTING-PORT.md#8-disc-image-and-compatibility). From test 16 the game also switches to plain sector reads by itself (for the rest of the session) as soon as a fast "streaming" read fails or times out, so a unit that cannot stream keeps playing instead of freezing; loading speed is unchanged when nothing fails. | [#17](https://github.com/lamb2k/re4dc/issues/17), [#24](https://github.com/lamb2k/re4dc/issues/24), [#25](https://github.com/lamb2k/re4dc/issues/25), [#27](https://github.com/lamb2k/re4dc/issues/27) |
 | A texture is refused for about 2 seconds when video memory is too broken up, though enough is free (r105 key event, r10b, r119) | test 9, 9.1, 10, 11 | 🟢 Fixed in test 15: fixed in test 13 for the r105 key event; from test 15 every chapter 1 room and r119 loads its pictures once when you enter it (lists per room, and 39 large pictures in a smaller compressed format), so nothing is refused for lack of one free block | |
 | On the r10b boat, and in r105 after the chapter 1-2 results screen, a few effect pictures can be skipped while video memory is full | test 12.2, 13 | 🟢 Fixed in test 15: the rooms' pictures load once at room entry and stay in video memory, and after the chapter results and save screens the room's pictures are loaded back in one go before play resumes | |
@@ -104,7 +109,11 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| El Gigante looks blocky up close: he is drawn with his low-detail model | test 17 and later | ⏸️ Open: a better close-up model is planned for Test 23 | |
+| River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |
+| Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |
+| The light in Mendez's barn flickers | test 22 and earlier | 🟢 Fixed in test 23 | [#55](https://github.com/lamb2k/re4dc/issues/55) |
+| The lever gears (r11c) disappear | test 22 | 🟢 Fixed in test 23: the gears stay drawn and turn | [#52](https://github.com/lamb2k/re4dc/issues/52) |
+| El Gigante looks blocky up close: he is drawn with his low-detail model | test 17 and later | 🟢 Fixed in test 23: a better close-up model (checked by the maintainer) |  |
 | Trees on the lake islands (r10b) look shredded | test 21 and earlier | 🟢 Fixed in test 22: the bark uses its own picture again | |
 | The r100 cliff cutscene (after the first house) skips about 43 of its 340 frames, so it looks choppier. The game goes on normally | test 19 | 🟢 Fixed in test 19.1: the scenery shares repeated corner points, so the movie has its memory again (340 of 340 frames) | [#45](https://github.com/lamb2k/re4dc/issues/45) |
 | In r117, after the Saddler scene starts, a few effect sprites are skipped for about 3 seconds while video memory is short. Play continues | test 19 | 🟢 Fixed in test 19.1: no sprites skipped in r117 (0 refusals) | [#46](https://github.com/lamb2k/re4dc/issues/46) |
@@ -139,7 +148,7 @@ Not bugs: work that goes on from test to test.
 | In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 17.1 | 🟢 Fixed in test 18: r102's pictures load with the room's resident list after a save is loaded | [#33](https://github.com/lamb2k/re4dc/issues/33) |
 | A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17.1 | 🟢 Fixed in test 18: the rooms' resident picture lists now hold these pictures | |
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |
-| In r200, at the castle gate, some effect sprites are skipped for about a second: the per-frame list of see-through parts is full. Play continues | test 17 to 18 | ⏸️ Open: making the list bigger does not fit in memory yet. Test 18 fixed the rest of [#39](https://github.com/lamb2k/re4dc/issues/39) (the world picture and the effect pictures on the way from r10f) | [#41](https://github.com/lamb2k/re4dc/issues/41) |
+| In r200, at the castle gate, some effect sprites are skipped for about a second: the per-frame list of see-through parts is full. Play continues | test 17 to 18 | 🟢 Fixed in test 23: effects in busy rooms get more room and the barn light keeps its slot | [#41](https://github.com/lamb2k/re4dc/issues/41) |
 | After a chainsaw kill, Leon is drawn with his GameCube model for the death scene | test 17.1 and earlier | 🟢 Fixed in test 18: Leon keeps his PS2 model, his head included | |
 | Arriving at the night lake shore (r11b) straight from the Del Lago fight, three large pictures wait about 2 seconds for a free block of video memory and one effect sprite is skipped. Play continues | test 17.1, 18 | ⏸️ Open, not blocking: found by our new chapter 2-1 checks; test 17.1 does the same (12 waits there, 8 in test 18) | [#43](https://github.com/lamb2k/re4dc/issues/43) |
 | Our not-drawn check finds enemies in view that are not drawn for a while: four Ganados in r111 and seven of the enemies in r113 (model em2a). Play is not affected | test 17.1, 18 | 🔍 Investigating, not blocking: found by our in-view not-drawn check in the test 18 checks; test 17.1 does the same | [#42](https://github.com/lamb2k/re4dc/issues/42) |
@@ -161,7 +170,7 @@ Not bugs: work that goes on from test to test.
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
 | For contributors: a kit build of the Test 21 source with its own knob file does not give the exact published Test 21 program bytes (26da4fe3, published bd0970c0). The Test 22 kit build does match the Test 22 program. Play is not affected | test 21 | ⏸️ Open, not blocking: older builds are not byte-reproducible across toolchain and tree state | |
-| Opening the inventory still reads about 0.8 to 1.4 MB from the disc each time | test 22 and earlier | 🛠️ In progress: test 22 packs the data smaller (about 0.6 MB less per open); reading only the item you open is planned for Test 23 | |
+| Opening the inventory still reads about 0.8 to 1.4 MB from the disc each time | test 22 and earlier | 🟢 Fixed in test 23: the inventory opens faster |  |
 | At most 4 Ganados are active at once (6 from test 12 in the village and test 13 in every chapter 1 room; 4 from test 16.1); the others wait and arrive as you kill them | test 12, 13, 16.1 | ⏸️ Open: by design, for the frame rate. Every villager still appears, and the waves, the kills and the events are unchanged. Test 16.1 lowers the limit from 6 to 4 in every room |  |
 | A fifth Ganado could appear for a moment in some village areas (r107), over the limit of 4 | test 16.1 | 🟢 Fixed in test 16.2: every Ganado a room sends waits for its turn under the limit |  |
 | In r108, the Ganados holding a weapon use the GameCube model instead of the PS2 one | test 16, 16.1 | 🟢 Fixed in test 16.2 |  |

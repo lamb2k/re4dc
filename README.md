@@ -7,8 +7,31 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 22](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 23](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 23
+
+PS2 river water, trap fire and a Mendez fix, still up to the castle gate. Full details are in the
+[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **River water.** The cave river, the dam river by the water wheel and the merchant cave pool draw their PS2 water
+  ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+
+  ![River water in the cave: Test 22 left, Test 23 right](docs/images/releases/test-23/river-water.jpg)
+  <br>The cave river. Left Test 22, right Test 23. Flycast capture.
+- **Trap explosions.** Tree and door traps explode with fire ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+
+  ![A tree trap: Test 22 left, Test 23 right](docs/images/releases/test-23/trap-explosion.jpg)
+  <br>A tree trap in the forest. Left Test 22, right Test 23. Flycast capture.
+- **Mendez keeps fighting.** He no longer freezes after grabbing Leon ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- **Steady barn lights**, and effects in busy rooms stop dropping out ([#55](https://github.com/lamb2k/re4dc/issues/55), [#41](https://github.com/lamb2k/re4dc/issues/41)).
+- **No hang on slow disc reads** with DreamShell and similar loaders ([#28](https://github.com/lamb2k/re4dc/issues/28)).
+- **Mipmaps in more places.** Bushes and other cut-out pictures get smaller copies too.
+- **Fewer see-through effects.** Mist, glows and dust are cut. Blood, fire, explosions, grenades and the laser sight stay.
+- **Faster inventory**, and **a better-looking El Gigante** up close.
+- **Fixed:** the lever gears ([#52](https://github.com/lamb2k/re4dc/issues/52)), the castle gate texture and the boat weapon display.
+- **Safety fixes** for the effect pool, the church light puzzle and the dam encounter.
 
 ## What's new in Test 22
 
@@ -145,28 +168,12 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
-## Coming soon: Test 23
+## Coming soon: Test 24
 
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 23.
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 24.
 
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate (Test 24).
-- [ ] **Mipmaps in more places**, with the room texture memory arranged to fit them.
-- [ ] **Less scenery drawn when it can't be seen** (Test 24).
-- [x] **Faster inventory.**
-- [x] **A better-looking El Gigante up close.**
-- [x] **River water:** the cave river, the dam river by the water wheel and the merchant cave pool now draw their PS2 water ([#55](https://github.com/lamb2k/re4dc/issues/55)).
-- [x] **Trap explosions:** tree and door traps now explode with fire ([#55](https://github.com/lamb2k/re4dc/issues/55)).
-- [x] **Missing gears:** the lever gears stay drawn and turn ([#52](https://github.com/lamb2k/re4dc/issues/52)).
-- [x] **Castle gate texture:** the one picture at the castle gate that failed its check now loads.
-- [x] **Mendez keeps fighting:** he no longer freezes after grabbing Leon, and his bear hug holds ([#55](https://github.com/lamb2k/re4dc/issues/55)).
-- [x] **Steady barn lights:** the light in Mendez's barn no longer flickers, and effects in busy rooms stop dropping out ([#55](https://github.com/lamb2k/re4dc/issues/55), [#41](https://github.com/lamb2k/re4dc/issues/41)).
-- [x] **No hang on slow disc reads:** a disc read that never finishes now gives up and reads again, for DreamShell and similar loaders ([#28](https://github.com/lamb2k/re4dc/issues/28)).
-- [x] **Fewer see-through effects:** mist, glows and dust are cut. Blood, fire, explosions, grenades and the laser sight stay.
-
-- [x] **Boat weapon display:** boarding the boat shows the harpoon and hides handgun ammunition.
-
-- [x] **Effect and puzzle safety:** full effect-pool reuse releases old effects correctly; the church light puzzle handles a missing beam.
-- [x] **Dam encounter safety:** a villager that retires while loading is retried instead of being used by the scripted encounter.
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
+- [ ] **Less scenery drawn when it can't be seen.**
 
 ## What's new in Test 17.1
 
