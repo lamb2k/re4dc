@@ -618,8 +618,16 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
             const auto* row=actor_current_role(m,p->info[role],p->appearance,role);
 #endif
             if(!row){out.error=Error::MissingOwnerProof;return out;}
-            const bool original=(role==2 && row->source_bin==451) ||
-                (role==3 && row->source_bin==456) || role==4;
+#if RE4DC_ACTOR_GANADO_PS2_GRIP
+            // ACTOR_GANADO_PS2_GRIP: a grip hand planned from the variant package draws the appearance atlas
+            // (material 0), not the source hand material.
+            const bool variant_run=run.immutable_asset_id>=kRe4dcGanadoStumpAsset &&
+                run.immutable_asset_id<kRe4dcGanadoStumpAsset+RE4DC_GANADO_STUMP_IDS;
+#else
+            const bool variant_run=false;
+#endif
+            const bool original=!variant_run && ((role==2 && row->source_bin==451) ||
+                (role==3 && row->source_bin==456) || role==4);
             if(!original) {if(run.material!=0){out.error=Error::Material;return out;}continue;}
             Re4dcActorOwnedMaterial want{};
 #if RE4DC_ACTOR_PROOF_LEAN == 1

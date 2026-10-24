@@ -7,7 +7,11 @@
 #define RE4DC_ACTOR_GANADO_PS2_STUMP 0
 #endif
 // Immutable chunk IDs the stumps take after the fixed table (one per cast appearance).
-#define RE4DC_GANADO_STUMP_IDS (9u*RE4DC_ACTOR_GANADO_PS2_STUMP)
+#ifndef RE4DC_ACTOR_GANADO_PS2_GRIP
+#define RE4DC_ACTOR_GANADO_PS2_GRIP 0
+#endif
+// ACTOR_GANADO_PS2_GRIP (lane purge-cast24 10-24): + the grip hands 451 / 456 (ps2_ganado_stump.py --grip): 11 geometries.
+#define RE4DC_GANADO_STUMP_IDS ((9u+2u*RE4DC_ACTOR_GANADO_PS2_GRIP)*RE4DC_ACTOR_GANADO_PS2_STUMP)
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 // Fixed chunks 1..46 precede optional far chunks 47..66. The variants take the next nine IDs (package geometry k:
 // kRe4dcGanadoStumpAsset + k; k = appearance for the five stumps); the registry and player costume/hand IDs follow.

@@ -171,6 +171,10 @@ bool owner_ganado_bind_tx(cModel* m) {
 #endif
 const ganado_extra::Chunk* owner_original_chunk(unsigned role) {
     const unsigned bin=owner_source_bin[owner_current_slot][role];
+#if RE4DC_ACTOR_GANADO_PS2_GRIP
+    // ACTOR_GANADO_PS2_GRIP: the grip hands 451 / 456 are package variants (the PS2 meshes), not the GC extra chunks.
+    if((role==2 || role==3) && bound && ganado_var::find(bound->appearance,role,bin)>=0)return nullptr;
+#endif
     if((role==2 && bin==451) || (role==3 && bin==456) || role==4)return ganado_extra::find(bin);
     return nullptr;
 }

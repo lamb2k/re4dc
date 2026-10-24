@@ -497,6 +497,11 @@ DATA['trap24'] = {'dc/native/%s/registry.re4nmr' % _r: '%s/dc/native/%s/registry
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
 DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
+# grip24 (lane purge-cast24 10-24, GC purge): stump17's package + the PS2 grip hands 451 / 456 (ps2_ganado_stump.py --grip).
+# Only with ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=<GRIP24D> (the runtime header must match the package).
+# Order: after stump17 (it replaces the package). Private store /root/re4data/private/grip24-20261024 (RECIPE.txt).
+GRIP24D = os.environ.get('GRIP24D', '/root/re4data/private/grip24-20261024')
+DATA['grip24'] = {'dc/native/ganado/ganado_var.re4gv': GRIP24D + '/dc/native/ganado/ganado_var.re4gv'}
 PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261018')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
 # pak17-20261018: tex.pak is verified (52d9b001); loose-keys.txt and base.json were regenerated (no recorded sha) and

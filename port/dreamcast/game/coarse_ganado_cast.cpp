@@ -191,6 +191,7 @@ struct GateBall { float c[3], r; };
 // The variant package's published descriptors (coarse_actor_owner_ganado.inc ganado_var; zero while not loaded).
 // Package geometries 0..4 are the stumps of appearances 0..4.
 namespace ganado_var { gc::Chunk chunk[ganado_ps2_stump::count]; }
+static_assert(ganado_ps2_stump::count==RE4DC_GANADO_STUMP_IDS,"ganado_ps2_stump_runtime.h: 9 geometries (stump17), 11 with ACTOR_GANADO_PS2_GRIP");
 // One additional near gate per cast appearance uses its stump's positions / weights (gate app kStumpGateApp + a).
 // Its body and hands keep the appearance's near chunks. Stump actors never choose the far tier.
 static_assert(ganado_ps2_stump::apps==kApps,"ganado_ps2_stump_runtime.h: one stump per cast appearance");
