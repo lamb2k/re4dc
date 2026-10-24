@@ -1,0 +1,155 @@
+// Actual MotionMoveCore integration with synthetic native keys and established
+// host model layouts. Unchanged matrix arithmetic is a recorded deterministic
+// edge; the production angle wrapper and part lookup are included below.
+static unsigned core_cases, core_lease_acquires, core_lease_releases, core_sample_events;
+static unsigned long long core_edge_hash=1469598103934665603ULL;
+static std::uintptr_t core_key_base;
+cModel* pPL;
+struct Re4dcMotionLease {
+    Re4dcMotionLease(MotionData*,u32** current,u32* fallback) {
+        *current=fallback; ++core_lease_acquires;
+    }
+    ~Re4dcMotionLease() { ++core_lease_releases; }
+};
+#define MOTION_KEY(w,i) native_keys[i]
+#define SEQ_FRAME(k) ((f32)((k)>>6)+(f32)((k)&0x3f)*0.015625f)
+
+static void matrix_edge(unsigned kind,const Vec* v) {
+    add_hash(core_edge_hash,&kind,sizeof kind);add_hash(core_edge_hash,v,sizeof *v);
+}
+void RotMatrix(Mtx m,Vec* v) {
+    matrix_edge(1,v);
+    for(unsigned r=0;r<3;++r) for(unsigned c=0;c<4;++c) m[r][c]=r==c?1.0f:0.0f;
+    m[0][1]=v->x;m[1][2]=v->y;m[2][0]=v->z;
+}
+void TransMatrix(Mtx m,Vec* v) {
+    matrix_edge(2,v);m[0][3]=v->x;m[1][3]=v->y;m[2][3]=v->z;
+}
+void ScaleMatrix(Mtx m,Vec* v) {
+    matrix_edge(3,v);m[0][0]*=v->x;m[1][1]*=v->y;m[2][2]*=v->z;
+}
+static void fixture_sample_event(unsigned site,HermitePrm* p) {
+    fixture_core_site=site;++fixture_core_sites[site];++core_sample_events;
+    const u32 words[]={site,bits(p->frame),bits(p->maxFrame),p->flags,p->type,
+        u32(reinterpret_cast<std::uintptr_t>(p->key)-core_key_base)};
+    add_hash(core_edge_hash,words,sizeof words);
+}
+
+@GET_PARTS@
+
+@RAD_LIMIT@
+
+@MOVE_CORE@
+
+static void append_float(std::vector<u32>& words,const float* f,unsigned n) {
+    for(unsigned i=0;i<n;++i) words.push_back(bits(f[i]));
+}
+static void append_model(std::vector<u32>& words,const cModel& model) {
+    words.insert(words.end(),{model.be_flag,model.nParts,model.kindid,model.id,model.motParts.flags});
+    for(const Vec* v:{&model.pos,&model.ang,&model.scale,&model.r_scale,&model.world,&model.world_old2})
+        append_float(words,&v->x,3);
+    append_float(words,&model.mat[0][0],12);append_float(words,&model.l_mat[0][0],12);
+    append_float(words,&model.prevMat[0][0],12);
+    for(const auto& h:model.motParts.hist) for(u16 value:h) words.push_back(value);
+}
+static void core_snapshot(cModel& model,const std::array<cModel,8>& parts,const MotionWork& w,
+                          const AttachCamera& cam,unsigned serial) {
+    std::vector<u32> words={0xc0deface,core_cases++,serial,w.Mot_flag,w.Mot_attr,w.Mot_state,
+        bits(w.Mot_frame),bits(w.Mot_frame_old),bits(w.Mot_frame_sav),bits(w.Seq_frame),w.Seq.frame,
+        core_lease_acquires,core_lease_releases,core_sample_events,u32(core_edge_hash),u32(core_edge_hash>>32),
+        errors,u32(error_hash),u32(error_hash>>32),cam.type,cam.frame};
+    append_model(words,model);for(const auto& part:parts) append_model(words,part);
+    for(const auto& value:cam.out) append_float(words,&value.x,3);
+    for(const auto& h:cam.hist) for(u16 value:h) words.push_back(value);
+    output.write(reinterpret_cast<const char*>(words.data()),words.size()*4);counts.output_words+=words.size();
+}
+static void core_tests() {
+    constexpr unsigned joint_count=16, slot_bytes=512, image_bytes=joint_count*slot_bytes;
+    void* image=mmap(nullptr,image_bytes,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0);
+    assert(image!=MAP_FAILED);core_key_base=reinterpret_cast<std::uintptr_t>(image);
+    assert(core_key_base+image_bytes<=0xffffffffULL);
+    const unsigned types[joint_count]={5,0,0,6,6,5,0,10,1,0,5,6,0,5,0,0};
+    const unsigned kinds[joint_count]={2,0,4,0,8,0,0x10,0,0x20,0,2,8,4,0,0,2};
+    const unsigned channels[joint_count]={0,6,0,7,0,6,0,7,0,6,0,0,0,0,7,0};
+    const u8 part_numbers[joint_count]={0,0,0,0,1,0,2,0,3,0,4,5,6,7,0,7};
+    unsigned serial=0;
+    for(unsigned mode=0;mode<8;++mode) for(unsigned layout=0;layout<4;++layout)
+    for(unsigned camera=0;camera<3;++camera) for(unsigned start=0;start<4;++start)
+    for(unsigned encoding=0;encoding<2;++encoding) {
+        cMotModel model{};std::array<cModel,8> parts{};
+        MotionWork blend{};MotionData motion{12,8};MotionSeqKey sequence{};AttachCamera cam{};
+        u32 key_table[joint_count];u16 info[joint_count];u8 numbers[joint_count];u16 flips[8];
+        Stream stream;
+        for(unsigned joint=0;joint<joint_count;++joint) {
+            const std::array<std::vector<u16>,3> frames={{{0,6,12},{0,6,12},{0,6,12}}};
+            const unsigned alignment=(joint==10?1:joint==11?2:0);
+            build(stream,types[joint],frames,alignment,0,serial+joint);
+            if(joint==9) for(unsigned a=0;a<3;++a) for(unsigned k=0;k<3;++k) {
+                put32(stream.key()+a*44+8+k*12,bits(400.0f));
+                put32(stream.key()+a*44+12+k*12,0);put32(stream.key()+a*44+16+k*12,0);
+            }
+            u8* destination=static_cast<u8*>(image)+joint*slot_bytes+alignment;
+            std::memcpy(destination,stream.key(),stream.bytes);
+            key_table[joint]=u32(reinterpret_cast<std::uintptr_t>(destination));
+            info[joint]=u16((types[joint]<<12)|(channels[joint]<<8)|kinds[joint]);
+            numbers[joint]=part_numbers[joint];
+        }
+        model.nParts=layout==3?6:8;model.kindid=serial%5;model.id=serial%251;
+        model.pParts=parts.data();model.be_flag=(layout==0||layout==3)?0x2000:0;
+        model.ang={0.25f,-0.5f,0.125f};model.pos={1.0f,2.0f,3.0f};model.scale={1.0f,1.5f,2.0f};
+        pPL=layout==3?&model:nullptr;
+        for(unsigned p=0;p<parts.size();++p) {
+            parts[p].pParts=p+1<parts.size()?&parts[p+1]:nullptr;
+            parts[p].pos={11.0f+float(p),12.0f,13.0f};parts[p].ang={0.1f,0.2f,0.3f};
+            parts[p].scale={1.1f,1.2f,1.3f};parts[p].r_scale={1.0f,1.0f,1.0f};
+            parts[p].motParts.flags=(p&1)?0x04000000:0;
+            if(serial%5==1 && p==2) parts[p].motParts.flags|=0x20000000;
+            for(unsigned h=0;h<6;++h) for(unsigned a=0;a<3;++a)
+                parts[p].motParts.hist[h][a]=u16((h+a+p)%3);
+            if(serial%5==0) parts[p].motParts.hist[0][2]=9;
+            flips[p]=u16(7-p);
+        }
+        if(layout==2) parts[3].pParts=nullptr;
+        flips[4]=0xfffe; // supported negative getPartsPtr form: the model itself
+        model.Motion.flip=mode==6?nullptr:flips;
+        MotionWork& w=mode==7?blend:model.Motion;
+        w.pMot=&motion;w.pHermite_data=key_table;w.pJoint_no=numbers;w.pJoint_kind=info;
+        w.Joint_num=joint_count;w.Mot_frame_max=12;w.Mot_frame_sav=7.25f;
+        const u16 attrs[8]={0,4,6,0x1004,0x1006,0x40,0x40,0};
+        w.Mot_attr=u16(attrs[mode]|(encoding?0x8000:0));
+        w.Mot_flag=0x04000000U|((serial&1)?0x40000000U:0)|((mode==7)?0x88000000U:0);
+        w.pSeq_top=(serial%7==0)?&sequence:nullptr;
+        const u8 camera_parts[5]={1,3,5,7,9};std::memcpy(cam.parts,camera_parts,5);
+        cam.type=camera==1?0:1;
+        w.pAttachCam=camera?&cam:nullptr;
+        for(unsigned h=0;h<5;++h) for(unsigned a=0;a<3;++a) cam.hist[h][a]=u16((h+a)%3);
+        const float first[]={0,1.5f,12,12.5f};const float times[]={first[start],12,1.5f};
+        for(float frame:times) {
+            w.Seq_frame=frame;w.Seq.frame=u16(frame*64.0f);
+            const bool wraps=(w.Mot_attr&4)&&!w.pSeq_top&&bool(w.Mot_attr&2)==bool(w.Mot_attr&0x1000);
+            const bool clamp=frame>=w.Mot_frame_max&&!wraps;
+            const unsigned old_clamped=fixture_clamped_calls,old_events=core_sample_events;
+            MotionMoveCore(&model,&w,serial&1);
+#if ANIM_SAMPLE_CLAMPED
+            assert(fixture_clamped_calls-old_clamped==(clamp?core_sample_events-old_events:0));
+#else
+            assert(fixture_clamped_calls==old_clamped);
+#endif
+            assert(w.pMot==&motion && w.pHermite_data==key_table && w.pJoint_no==numbers && w.pJoint_kind==info);
+            core_snapshot(model,parts,w,cam,serial);
+        }
+        ++serial;
+    }
+    // An inactive motion returns before lease acquisition, matrix edges or samples.
+    cMotModel inactive{};std::array<cModel,8> no_parts{};AttachCamera no_cam{};
+    const unsigned old_events=core_sample_events,old_leases=core_lease_acquires;
+    MotionMoveCore(&inactive,&inactive.Motion,0);assert(core_sample_events==old_events&&core_lease_acquires==old_leases);
+    core_snapshot(inactive,no_parts,inactive.Motion,no_cam,serial++);
+    assert(core_lease_acquires==core_lease_releases);
+    for(unsigned n:fixture_core_sites) assert(n>0);
+#if ANIM_SAMPLE_CLAMPED
+    for(unsigned n:fixture_clamped_sites) assert(n>0);
+#endif
+    fixture_core_site=9;
+    munmap(image,image_bytes);
+}

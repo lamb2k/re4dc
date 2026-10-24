@@ -1,0 +1,74 @@
+// Evidence fixture linked against the complete Make-built motion translation unit.
+// No sampler body is copied. Only logging is an observed return edge.
+#include "motion.h"
+#include "db_log.h"
+#include <cstdint>
+#include <cstddef>
+extern "C" {
+alignas(32) u8 fixture_keys[8192];
+alignas(32) HermitePrm fixture_prm;
+alignas(32) Vec fixture_out;
+alignas(32) u16 fixture_hist[3];
+}
+static cLog fixture_log;
+cLogPtr pLog = {&fixture_log};
+void cLog::err(int, int, const char*, ...) {}
+extern "C" void re4dc_log(const char*, ...) {}
+extern "C" int fixture_sample() {
+    return HermiteInterpolation(&fixture_prm, &fixture_out, fixture_hist);
+}
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1, sizeof(HermitePrm), sizeof(Vec), sizeof(fixture_keys),
+    reinterpret_cast<std::uintptr_t>(fixture_keys),
+    reinterpret_cast<std::uintptr_t>(&fixture_prm),
+    reinterpret_cast<std::uintptr_t>(&fixture_out),
+    reinterpret_cast<std::uintptr_t>(fixture_hist),
+    offsetof(HermitePrm,frame), offsetof(HermitePrm,maxFrame),
+    offsetof(HermitePrm,flags), offsetof(HermitePrm,type), offsetof(HermitePrm,key)
+};
+
+// Complete MotionMoveCore executes over synthetic live-object layouts. Existing
+// model lookup, key leasing and unrelated matrix/angle work are typed adapters.
+#include "math_sub.h"
+#include "player.h"
+extern "C" {
+alignas(32) u8 fixture_model_storage[sizeof(cModel)];
+alignas(32) u8 fixture_parts_storage[64 * sizeof(cModel)];
+alignas(32) MotionWork fixture_work;
+alignas(32) MotionData fixture_motion;
+alignas(32) AttachCamera fixture_camera;
+alignas(32) u32 fixture_table[64];
+alignas(32) u16 fixture_kinds[64], fixture_numbers[64];
+}
+cPlayer* pPL = nullptr;
+cModel* cModel::getPartsPtr(int no) {
+    return reinterpret_cast<cModel*>(fixture_parts_storage + no * sizeof(cModel));
+}
+extern "C" int re4dc_motion_acquire(const void*, unsigned**) { return 0; }
+extern "C" void re4dc_motion_release(int) {}
+void RotMatrix(Mtx, Vec*) {}
+void TransMatrix(Mtx, Vec*) {}
+void ScaleMatrix(Mtx, Vec*) {}
+extern "C" void VecRadLimit(Vec*) {}
+extern "C" void fixture_pose() {
+    MotionMoveCore(reinterpret_cast<cModel*>(fixture_model_storage), &fixture_work, 0);
+}
+extern "C" const std::uintptr_t fixture_pose_layout[] = {
+    1, sizeof(cModel), sizeof(MotionWork), sizeof(AttachCamera),
+    reinterpret_cast<std::uintptr_t>(fixture_model_storage),
+    reinterpret_cast<std::uintptr_t>(fixture_parts_storage),
+    reinterpret_cast<std::uintptr_t>(&fixture_work),
+    reinterpret_cast<std::uintptr_t>(&fixture_motion),
+    reinterpret_cast<std::uintptr_t>(&fixture_camera),
+    reinterpret_cast<std::uintptr_t>(fixture_table),
+    reinterpret_cast<std::uintptr_t>(fixture_kinds),
+    reinterpret_cast<std::uintptr_t>(fixture_numbers),
+    offsetof(cModel,nParts), offsetof(cModel,Motion), offsetof(cModel,pos), offsetof(cModel,ang), offsetof(cModel,scale),
+    offsetof(MotionWork,pMot), offsetof(MotionWork,pHermite_data), offsetof(MotionWork,pJoint_kind),
+    offsetof(MotionWork,pJoint_no), offsetof(MotionWork,Joint_num), offsetof(MotionWork,Mot_attr),
+    offsetof(MotionWork,Mot_flag), offsetof(MotionWork,Seq_frame), offsetof(MotionWork,Mot_frame_max),
+    offsetof(MotionWork,Mot_frame), offsetof(MotionWork,Mot_frame_old), offsetof(MotionWork,Mot_frame_sav),
+    offsetof(MotionWork,pAttachCam), offsetof(MotionWork,flip),
+    offsetof(AttachCamera,type), offsetof(AttachCamera,parts), offsetof(AttachCamera,out), offsetof(AttachCamera,hist), offsetof(AttachCamera,frame),
+    offsetof(MotionParts,hist), offsetof(MotionParts,flags)
+};

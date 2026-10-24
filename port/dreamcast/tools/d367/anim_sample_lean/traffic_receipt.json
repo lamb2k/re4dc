@@ -1,0 +1,3500 @@
+{
+  "status": "PASS",
+  "scope": "Attribute complete compiled sampler/pose data traffic by mapped region.\n\nThis reruns the target fixtures without a timing model. Regions are disjoint\nbyte ranges, but adjacent regions can share a 32-byte line: region line counts\nmust not be summed as a whole-call cache working set. Stack/literal reductions\nare identified separately from key payload traffic. Actual addresses remain\nsynthetic; distinct lines and repeated visits are not cache-miss predictions.\n",
+  "source_sha256": {
+    "traffic_regions.py": "68ccc7bd29d1e32257e279e20c6e30b84a9a123fbf1e3720389bacb47db1f5e8",
+    "target_run.py": "bce29899e875d96d81869f929be7252f8bb566892404e2f560323de3dc75906e",
+    "pose_run.py": "8807166e36a94b3c139b60bc56f1dee0ff5edbd5695b0fc4ea8234042f076793"
+  },
+  "target_build_sha256": "8343cebf4cd2744d9f5895f25c6331452b3aa204b888d8099e22fa42fed22369",
+  "sampler": [
+    {
+      "name": "t0-n8-clamp",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 12,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 15,
+            "load_bytes": 64,
+            "store_bytes": 54,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "literal_or_other": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 13,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "stack": {
+            "load_instructions": 6,
+            "store_instructions": 6,
+            "load_bytes": 24,
+            "store_bytes": 24,
+            "unique_data_lines": 1,
+            "demand_line_visits": 12,
+            "repeated_demand_line_visits": 11
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "literal_or_other": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n8-exact_middle",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 21,
+            "load_bytes": 64,
+            "store_bytes": 78,
+            "unique_data_lines": 3,
+            "demand_line_visits": 37,
+            "repeated_demand_line_visits": 34
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 21,
+            "load_bytes": 64,
+            "store_bytes": 78,
+            "unique_data_lines": 3,
+            "demand_line_visits": 37,
+            "repeated_demand_line_visits": 34
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n8-clamp",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 12,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 15,
+            "load_bytes": 64,
+            "store_bytes": 54,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 13,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "stack": {
+            "load_instructions": 5,
+            "store_instructions": 6,
+            "load_bytes": 20,
+            "store_bytes": 24,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n8-clamp_ignore_history",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "stack": {
+            "load_instructions": 13,
+            "store_instructions": 15,
+            "load_bytes": 52,
+            "store_bytes": 54,
+            "unique_data_lines": 2,
+            "demand_line_visits": 28,
+            "repeated_demand_line_visits": 26
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 13,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "stack": {
+            "load_instructions": 5,
+            "store_instructions": 6,
+            "load_bytes": 20,
+            "store_bytes": 24,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n8-clamp_invalid_history",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 11,
+            "store_instructions": 0,
+            "load_bytes": 38,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 4,
+            "load_bytes": 0,
+            "store_bytes": 16,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "history": {
+            "load_instructions": 8,
+            "store_instructions": 3,
+            "load_bytes": 16,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "stack": {
+            "load_instructions": 56,
+            "store_instructions": 58,
+            "load_bytes": 218,
+            "store_bytes": 226,
+            "unique_data_lines": 4,
+            "demand_line_visits": 114,
+            "repeated_demand_line_visits": 110
+          },
+          "axis0_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_bytes": 10,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 2
+          },
+          "axis1_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_bytes": 10,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 2
+          },
+          "axis2_count": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          },
+          "literal_or_other": {
+            "load_instructions": 13,
+            "store_instructions": 0,
+            "load_bytes": 49,
+            "store_bytes": 0,
+            "unique_data_lines": 7,
+            "demand_line_visits": 13,
+            "repeated_demand_line_visits": 6
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 13,
+            "store_instructions": 0,
+            "load_bytes": 46,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 13,
+            "repeated_demand_line_visits": 12
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 5,
+            "load_bytes": 0,
+            "store_bytes": 20,
+            "unique_data_lines": 1,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 4
+          },
+          "history": {
+            "load_instructions": 10,
+            "store_instructions": 3,
+            "load_bytes": 20,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 13,
+            "repeated_demand_line_visits": 12
+          },
+          "stack": {
+            "load_instructions": 62,
+            "store_instructions": 64,
+            "load_bytes": 242,
+            "store_bytes": 250,
+            "unique_data_lines": 4,
+            "demand_line_visits": 126,
+            "repeated_demand_line_visits": 122
+          },
+          "axis0_count": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 12,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 3
+          },
+          "axis1_count": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_bytes": 10,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 2
+          },
+          "axis2_count": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          },
+          "literal_or_other": {
+            "load_instructions": 15,
+            "store_instructions": 0,
+            "load_bytes": 57,
+            "store_bytes": 0,
+            "unique_data_lines": 8,
+            "demand_line_visits": 15,
+            "repeated_demand_line_visits": 7
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n8-interior",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 24,
+            "load_bytes": 64,
+            "store_bytes": 84,
+            "unique_data_lines": 3,
+            "demand_line_visits": 40,
+            "repeated_demand_line_visits": 37
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis0_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis1_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "literal_or_other": {
+            "load_instructions": 7,
+            "store_instructions": 0,
+            "load_bytes": 28,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 7,
+            "repeated_demand_line_visits": 4
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 24,
+            "load_bytes": 64,
+            "store_bytes": 84,
+            "unique_data_lines": 3,
+            "demand_line_visits": 40,
+            "repeated_demand_line_visits": 37
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis0_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis1_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "literal_or_other": {
+            "load_instructions": 7,
+            "store_instructions": 0,
+            "load_bytes": 28,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 7,
+            "repeated_demand_line_visits": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-mixed",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 24,
+            "load_bytes": 64,
+            "store_bytes": 84,
+            "unique_data_lines": 3,
+            "demand_line_visits": 40,
+            "repeated_demand_line_visits": 37
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 2
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 3,
+            "load_bytes": 12,
+            "store_bytes": 6,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 24,
+            "load_bytes": 64,
+            "store_bytes": 84,
+            "unique_data_lines": 3,
+            "demand_line_visits": 40,
+            "repeated_demand_line_visits": 37
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 3,
+            "demand_line_visits": 5,
+            "repeated_demand_line_visits": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-late_runout",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 11,
+            "store_instructions": 0,
+            "load_bytes": 38,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 4,
+            "load_bytes": 0,
+            "store_bytes": 16,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "history": {
+            "load_instructions": 8,
+            "store_instructions": 6,
+            "load_bytes": 16,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 14,
+            "repeated_demand_line_visits": 13
+          },
+          "stack": {
+            "load_instructions": 65,
+            "store_instructions": 56,
+            "load_bytes": 254,
+            "store_bytes": 210,
+            "unique_data_lines": 3,
+            "demand_line_visits": 121,
+            "repeated_demand_line_visits": 118
+          },
+          "axis0_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis0_frames": {
+            "load_instructions": 12,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 12,
+            "repeated_demand_line_visits": 11
+          },
+          "axis0_payload": {
+            "load_instructions": 8,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 8,
+            "repeated_demand_line_visits": 7
+          },
+          "axis1_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis1_frames": {
+            "load_instructions": 18,
+            "store_instructions": 0,
+            "load_bytes": 24,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 18,
+            "repeated_demand_line_visits": 16
+          },
+          "axis1_payload": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_frames": {
+            "load_instructions": 8,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 8,
+            "repeated_demand_line_visits": 7
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "literal_or_other": {
+            "load_instructions": 11,
+            "store_instructions": 0,
+            "load_bytes": 41,
+            "store_bytes": 0,
+            "unique_data_lines": 7,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 4
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 11,
+            "store_instructions": 0,
+            "load_bytes": 38,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 10
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 4,
+            "load_bytes": 0,
+            "store_bytes": 16,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "history": {
+            "load_instructions": 8,
+            "store_instructions": 6,
+            "load_bytes": 16,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 14,
+            "repeated_demand_line_visits": 13
+          },
+          "stack": {
+            "load_instructions": 65,
+            "store_instructions": 56,
+            "load_bytes": 254,
+            "store_bytes": 210,
+            "unique_data_lines": 3,
+            "demand_line_visits": 121,
+            "repeated_demand_line_visits": 118
+          },
+          "axis0_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis0_frames": {
+            "load_instructions": 12,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 12,
+            "repeated_demand_line_visits": 11
+          },
+          "axis0_payload": {
+            "load_instructions": 8,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 8,
+            "repeated_demand_line_visits": 7
+          },
+          "axis1_count": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "axis1_frames": {
+            "load_instructions": 18,
+            "store_instructions": 0,
+            "load_bytes": 24,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 18,
+            "repeated_demand_line_visits": 16
+          },
+          "axis1_payload": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 1
+          },
+          "axis2_frames": {
+            "load_instructions": 8,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 8,
+            "repeated_demand_line_visits": 7
+          },
+          "axis2_payload": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "literal_or_other": {
+            "load_instructions": 11,
+            "store_instructions": 0,
+            "load_bytes": 41,
+            "store_bytes": 0,
+            "unique_data_lines": 7,
+            "demand_line_visits": 11,
+            "repeated_demand_line_visits": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n8-clamp",
+      "regions": {
+        "l0": {
+          "parameters": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 21,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 6,
+            "store_instructions": 0,
+            "load_bytes": 12,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 6,
+            "repeated_demand_line_visits": 5
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 15,
+            "load_bytes": 64,
+            "store_bytes": 54,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 2
+          }
+        },
+        "l1": {
+          "parameters": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_bytes": 13,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 4,
+            "repeated_demand_line_visits": 3
+          },
+          "output": {
+            "load_instructions": 0,
+            "store_instructions": 3,
+            "load_bytes": 0,
+            "store_bytes": 12,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "history": {
+            "load_instructions": 3,
+            "store_instructions": 0,
+            "load_bytes": 6,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 3,
+            "repeated_demand_line_visits": 2
+          },
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 5,
+            "load_bytes": 16,
+            "store_bytes": 20,
+            "unique_data_lines": 1,
+            "demand_line_visits": 9,
+            "repeated_demand_line_visits": 8
+          },
+          "axis0_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis0_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis1_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_count": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_frames": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "axis2_payload": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_bytes": 2,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 1,
+            "repeated_demand_line_visits": 0
+          },
+          "literal_or_other": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 2,
+            "repeated_demand_line_visits": 0
+          }
+        }
+      }
+    }
+  ],
+  "pose": [
+    {
+      "name": "t0-n16-interior",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 528,
+            "store_instructions": 0,
+            "load_bytes": 1056,
+            "store_bytes": 0,
+            "unique_data_lines": 136,
+            "demand_line_visits": 528,
+            "repeated_demand_line_visits": 392
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 476,
+            "load_bytes": 2132,
+            "store_bytes": 1664,
+            "unique_data_lines": 6,
+            "demand_line_visits": 1021,
+            "repeated_demand_line_visits": 1015
+          },
+          "literal_or_other": {
+            "load_instructions": 229,
+            "store_instructions": 0,
+            "load_bytes": 808,
+            "store_bytes": 0,
+            "unique_data_lines": 12,
+            "demand_line_visits": 229,
+            "repeated_demand_line_visits": 217
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 528,
+            "store_instructions": 0,
+            "load_bytes": 1056,
+            "store_bytes": 0,
+            "unique_data_lines": 136,
+            "demand_line_visits": 528,
+            "repeated_demand_line_visits": 392
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 461,
+            "load_bytes": 2132,
+            "store_bytes": 1604,
+            "unique_data_lines": 6,
+            "demand_line_visits": 1006,
+            "repeated_demand_line_visits": 1000
+          },
+          "literal_or_other": {
+            "load_instructions": 214,
+            "store_instructions": 0,
+            "load_bytes": 748,
+            "store_bytes": 0,
+            "unique_data_lines": 11,
+            "demand_line_visits": 214,
+            "repeated_demand_line_visits": 203
+          }
+        }
+      }
+    },
+    {
+      "name": "t0-n16-clamped",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 144,
+            "store_instructions": 0,
+            "load_bytes": 288,
+            "store_bytes": 0,
+            "unique_data_lines": 68,
+            "demand_line_visits": 144,
+            "repeated_demand_line_visits": 76
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 64,
+            "load_bytes": 256,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 176,
+            "repeated_demand_line_visits": 120
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 332,
+            "load_bytes": 2132,
+            "store_bytes": 1184,
+            "unique_data_lines": 6,
+            "demand_line_visits": 877,
+            "repeated_demand_line_visits": 871
+          },
+          "literal_or_other": {
+            "load_instructions": 181,
+            "store_instructions": 0,
+            "load_bytes": 616,
+            "store_bytes": 0,
+            "unique_data_lines": 11,
+            "demand_line_visits": 181,
+            "repeated_demand_line_visits": 170
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 144,
+            "store_instructions": 0,
+            "load_bytes": 288,
+            "store_bytes": 0,
+            "unique_data_lines": 68,
+            "demand_line_visits": 144,
+            "repeated_demand_line_visits": 76
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 64,
+            "store_instructions": 64,
+            "load_bytes": 160,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 128,
+            "repeated_demand_line_visits": 72
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 353,
+            "store_instructions": 173,
+            "load_bytes": 1364,
+            "store_bytes": 644,
+            "unique_data_lines": 5,
+            "demand_line_visits": 526,
+            "repeated_demand_line_visits": 521
+          },
+          "literal_or_other": {
+            "load_instructions": 166,
+            "store_instructions": 0,
+            "load_bytes": 556,
+            "store_bytes": 0,
+            "unique_data_lines": 10,
+            "demand_line_visits": 166,
+            "repeated_demand_line_visits": 156
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-interior",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 336,
+            "store_instructions": 0,
+            "load_bytes": 672,
+            "store_bytes": 0,
+            "unique_data_lines": 100,
+            "demand_line_visits": 336,
+            "repeated_demand_line_visits": 236
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 476,
+            "load_bytes": 2132,
+            "store_bytes": 1664,
+            "unique_data_lines": 6,
+            "demand_line_visits": 1021,
+            "repeated_demand_line_visits": 1015
+          },
+          "literal_or_other": {
+            "load_instructions": 277,
+            "store_instructions": 0,
+            "load_bytes": 1000,
+            "store_bytes": 0,
+            "unique_data_lines": 13,
+            "demand_line_visits": 277,
+            "repeated_demand_line_visits": 264
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 336,
+            "store_instructions": 0,
+            "load_bytes": 672,
+            "store_bytes": 0,
+            "unique_data_lines": 100,
+            "demand_line_visits": 336,
+            "repeated_demand_line_visits": 236
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 461,
+            "load_bytes": 2132,
+            "store_bytes": 1604,
+            "unique_data_lines": 6,
+            "demand_line_visits": 1006,
+            "repeated_demand_line_visits": 1000
+          },
+          "literal_or_other": {
+            "load_instructions": 262,
+            "store_instructions": 0,
+            "load_bytes": 940,
+            "store_bytes": 0,
+            "unique_data_lines": 12,
+            "demand_line_visits": 262,
+            "repeated_demand_line_visits": 250
+          }
+        }
+      }
+    },
+    {
+      "name": "t5-n16-clamped",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 96,
+            "store_instructions": 0,
+            "load_bytes": 192,
+            "store_bytes": 0,
+            "unique_data_lines": 60,
+            "demand_line_visits": 96,
+            "repeated_demand_line_visits": 36
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 64,
+            "load_bytes": 256,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 176,
+            "repeated_demand_line_visits": 120
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 332,
+            "load_bytes": 2132,
+            "store_bytes": 1184,
+            "unique_data_lines": 6,
+            "demand_line_visits": 877,
+            "repeated_demand_line_visits": 871
+          },
+          "literal_or_other": {
+            "load_instructions": 229,
+            "store_instructions": 0,
+            "load_bytes": 808,
+            "store_bytes": 0,
+            "unique_data_lines": 12,
+            "demand_line_visits": 229,
+            "repeated_demand_line_visits": 217
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 96,
+            "store_instructions": 0,
+            "load_bytes": 192,
+            "store_bytes": 0,
+            "unique_data_lines": 60,
+            "demand_line_visits": 96,
+            "repeated_demand_line_visits": 36
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 64,
+            "store_instructions": 64,
+            "load_bytes": 160,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 128,
+            "repeated_demand_line_visits": 72
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 337,
+            "store_instructions": 173,
+            "load_bytes": 1300,
+            "store_bytes": 644,
+            "unique_data_lines": 5,
+            "demand_line_visits": 510,
+            "repeated_demand_line_visits": 505
+          },
+          "literal_or_other": {
+            "load_instructions": 182,
+            "store_instructions": 0,
+            "load_bytes": 620,
+            "store_bytes": 0,
+            "unique_data_lines": 11,
+            "demand_line_visits": 182,
+            "repeated_demand_line_visits": 171
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n16-interior",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 336,
+            "store_instructions": 0,
+            "load_bytes": 576,
+            "store_bytes": 0,
+            "unique_data_lines": 76,
+            "demand_line_visits": 336,
+            "repeated_demand_line_visits": 260
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 497,
+            "store_instructions": 332,
+            "load_bytes": 1940,
+            "store_bytes": 1184,
+            "unique_data_lines": 6,
+            "demand_line_visits": 829,
+            "repeated_demand_line_visits": 823
+          },
+          "literal_or_other": {
+            "load_instructions": 277,
+            "store_instructions": 0,
+            "load_bytes": 1000,
+            "store_bytes": 0,
+            "unique_data_lines": 12,
+            "demand_line_visits": 277,
+            "repeated_demand_line_visits": 265
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 336,
+            "store_instructions": 0,
+            "load_bytes": 576,
+            "store_bytes": 0,
+            "unique_data_lines": 76,
+            "demand_line_visits": 336,
+            "repeated_demand_line_visits": 260
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 112,
+            "load_bytes": 256,
+            "store_bytes": 352,
+            "unique_data_lines": 56,
+            "demand_line_visits": 224,
+            "repeated_demand_line_visits": 168
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 497,
+            "store_instructions": 317,
+            "load_bytes": 1940,
+            "store_bytes": 1124,
+            "unique_data_lines": 6,
+            "demand_line_visits": 814,
+            "repeated_demand_line_visits": 808
+          },
+          "literal_or_other": {
+            "load_instructions": 262,
+            "store_instructions": 0,
+            "load_bytes": 940,
+            "store_bytes": 0,
+            "unique_data_lines": 11,
+            "demand_line_visits": 262,
+            "repeated_demand_line_visits": 251
+          }
+        }
+      }
+    },
+    {
+      "name": "t6-n16-clamped",
+      "regions": {
+        "l0": {
+          "keys": {
+            "load_instructions": 96,
+            "store_instructions": 0,
+            "load_bytes": 192,
+            "store_bytes": 0,
+            "unique_data_lines": 56,
+            "demand_line_visits": 96,
+            "repeated_demand_line_visits": 40
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 112,
+            "store_instructions": 64,
+            "load_bytes": 256,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 176,
+            "repeated_demand_line_visits": 120
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 545,
+            "store_instructions": 332,
+            "load_bytes": 2132,
+            "store_bytes": 1184,
+            "unique_data_lines": 6,
+            "demand_line_visits": 877,
+            "repeated_demand_line_visits": 871
+          },
+          "literal_or_other": {
+            "load_instructions": 229,
+            "store_instructions": 0,
+            "load_bytes": 808,
+            "store_bytes": 0,
+            "unique_data_lines": 12,
+            "demand_line_visits": 229,
+            "repeated_demand_line_visits": 217
+          }
+        },
+        "l1": {
+          "keys": {
+            "load_instructions": 96,
+            "store_instructions": 0,
+            "load_bytes": 192,
+            "store_bytes": 0,
+            "unique_data_lines": 56,
+            "demand_line_visits": 96,
+            "repeated_demand_line_visits": 40
+          },
+          "model": {
+            "load_instructions": 17,
+            "store_instructions": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 17,
+            "repeated_demand_line_visits": 15
+          },
+          "parts": {
+            "load_instructions": 64,
+            "store_instructions": 64,
+            "load_bytes": 160,
+            "store_bytes": 256,
+            "unique_data_lines": 56,
+            "demand_line_visits": 128,
+            "repeated_demand_line_visits": 72
+          },
+          "work": {
+            "load_instructions": 101,
+            "store_instructions": 4,
+            "load_bytes": 343,
+            "store_bytes": 16,
+            "unique_data_lines": 5,
+            "demand_line_visits": 105,
+            "repeated_demand_line_visits": 100
+          },
+          "camera": {
+            "load_instructions": 0,
+            "store_instructions": 0,
+            "load_bytes": 0,
+            "store_bytes": 0,
+            "unique_data_lines": 0,
+            "demand_line_visits": 0,
+            "repeated_demand_line_visits": 0
+          },
+          "key_table": {
+            "load_instructions": 31,
+            "store_instructions": 0,
+            "load_bytes": 124,
+            "store_bytes": 0,
+            "unique_data_lines": 2,
+            "demand_line_visits": 31,
+            "repeated_demand_line_visits": 29
+          },
+          "kinds": {
+            "load_instructions": 48,
+            "store_instructions": 0,
+            "load_bytes": 48,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 48,
+            "repeated_demand_line_visits": 47
+          },
+          "numbers": {
+            "load_instructions": 16,
+            "store_instructions": 0,
+            "load_bytes": 16,
+            "store_bytes": 0,
+            "unique_data_lines": 1,
+            "demand_line_visits": 16,
+            "repeated_demand_line_visits": 15
+          },
+          "stack": {
+            "load_instructions": 321,
+            "store_instructions": 157,
+            "load_bytes": 1236,
+            "store_bytes": 580,
+            "unique_data_lines": 4,
+            "demand_line_visits": 478,
+            "repeated_demand_line_visits": 474
+          },
+          "literal_or_other": {
+            "load_instructions": 182,
+            "store_instructions": 0,
+            "load_bytes": 620,
+            "store_bytes": 0,
+            "unique_data_lines": 11,
+            "demand_line_visits": 182,
+            "repeated_demand_line_visits": 171
+          }
+        }
+      }
+    }
+  ],
+  "raw_sampler_cases": 39,
+  "raw_pose_cases": 28,
+  "raw_receipt_sha256": "2fcdccd9710a74b4fb72fda2b36e2511645e8bddfec549856a820ca426d4e912"
+}

@@ -128,3 +128,15 @@ cache benefit. This branch leaves the status table for the coordinator.
 3. The 16 + 12 byte split: not yet. Decide after the console A/B shows whether emit-side misses matter. Keep the proposal in the report.
 
 Go on to Build 6 meanwhile.
+
+### 2026-10-24: Build 8 hand-back (`codex/anim-sample-lean-20261024`)
+
+Candidate: `ANIM_SAMPLE_LEAN=1`, default 0. Base `d5c1ceab`.
+The [report](BUILD8_ANIM_SAMPLE_LEAN_20261024.md) records the source/compiled
+audit, rejected decode/per-call-dispatch attempts, and the per-pose selection
+of a clamped sampler. No update-rate, quaternion or motion-data change is made.
+
+1. Can the animation census count sampled vectors per pose and classify clamped,
+   ordinary and wrapping poses at r101 and in the piled-body farm case?
+2. Does console A/B confirm that less sampler stack/traffic repays the
+   once-per-pose dispatch cost in the measured mix?
