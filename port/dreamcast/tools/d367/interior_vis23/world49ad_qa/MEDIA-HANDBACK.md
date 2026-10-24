@@ -1,0 +1,13 @@
+# World49ad private QA media checkpoint
+
+The source49ad programme-only reference/OFF/Both work and allocated private OFF/Both media work are complete. This checkpoint remains subject to root's final sealed-results review; it does not enable production options.
+
+Source 49ad20f9932d638ddb7becf5db6f86b92e0a76a2 is frozen in the isolated interior-world49ad-qa tree. No runtime, recipe, generic stager or existing qualification-tree changes were made. OFF reproduces the unmodified current QA reference main/all14; only SELECT_LEAN2 and EMIT_PREFETCH differ for Both. The full current recipe, all four audit fixes, STAT1/EMretry1, quality5*far4=20 and normal QA configuration are bound by the programme seal.
+
+Both final C destinations are RE4DC-QA23-WorldEmit-{Off,Both}-49ad20f9. Each standard raw2352 GDI passes all1747 files, raw main/all14, re-scrambled main,34QA text files, exact one private candidate and unchanged tex.pak readback; standard/loader lint pass. All original assets are retained. Between arms only main and14 overlays differ. The private one-file PS2 asset is LOAD/UPLOAD REPAIR ONLY; visible use and Mendez appearance remain unproven/unapproved. No fallback or production asset/recipe edit is enabled.
+
+Six allocated guests only, all sequential through own lease/stat3/trace16, Windows-verified console mode and exact55s child limit. Actual final-GDI ordinary-input boots pass separately from the two fixture proxies. Automated menu-warp requires initial101/gen1,33presets, active UI, exact r103 request, soft reset and preset arm, then103/gen2 in order. Six wrong-file/reset/stale-generation/UI negatives are rejected. The initial OFF checker FALSE is preserved alongside its source-linked correction. H2 fully uploads/presents340frames and restores matching loan tokens. Actual normal-QA heap_before is40576 OFF and44448 Both; no production heap-floor, KOS squeeze/watch, QA Mendez, hardware timing or physical-console acceptance is inferred.
+
+Only each newly owned proxy track03.iso cache was removed after the arm passed and actual final tracks were freshly rehashed. Base manifest/SHA/IP, fixtures, programmes, captures/logs, exact helper versions and deletion journals are preserved. No prior evidence/base was deleted. No ZIP, publication or SD copy was performed.
+
+Evidence: C:/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/final-qa-stage. Final identity, evidence seal, steps and all gate receipts live there and in each final destination. The independent interior research63a8bd8c1 remains parked and preserved. No new guest/build allocation is requested or consumed after this handback.
