@@ -1,0 +1,55 @@
+{
+  "base_source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "date_utc": "2026-10-24T15:02:03.478658+00:00",
+  "scope": "Authored read-only helper/tests/report plus hash-only material/texture/source metadata. Full private EFF-derived census retained externally only. No asset/image/geometry/private runtime bytes.",
+  "copied": [
+    {
+      "path": "c-side/identify_river.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/identify_river.py",
+      "bytes": 4803,
+      "sha256": "d978f4ccef799d435d09f77e8e199c407cb5fc293bfc96ca279b9acab2ac0ddd"
+    },
+    {
+      "path": "c-side/bind_existing_inputs.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/bind_existing_inputs.py",
+      "bytes": 4500,
+      "sha256": "4a4072c2a1d75bea360e87bef67a31929faf0f977867c568c77e1ab0a7dd80f8"
+    },
+    {
+      "path": "c-side/test_identify_river.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/test_identify_river.py",
+      "bytes": 1958,
+      "sha256": "102923435f69245c27c56800d67f19cc3b80c6df909ff565de05f467d48dfbd1"
+    },
+    {
+      "path": "c-side/REPORT.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/REPORT.md",
+      "bytes": 7356,
+      "sha256": "772a3fbfb2169920112a838b48120f688158de8440b43eabe6964b34a01525f8"
+    },
+    {
+      "path": "c-side/SUMMARY.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/SUMMARY.json",
+      "bytes": 13633,
+      "sha256": "a636a8cc838b113673390ce37ee3b4944644ff7c2521a0e63d37f1b9aed363bb"
+    },
+    {
+      "path": "c-side/BINDINGS.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/BINDINGS.json",
+      "bytes": 128402,
+      "sha256": "6ab0d10bcba9c5e5fa180b346d1501391f5b180546c2673befaf3c229489bfe1"
+    },
+    {
+      "path": "c-side/CLAIM.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/CLAIM.md",
+      "bytes": 534,
+      "sha256": "6272e18ad98a86652a049a4a742a4da0f63bc2ee126ee51746af6e2d141786e7"
+    },
+    {
+      "path": "c-side/SHA256SUMS",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/SHA256SUMS",
+      "bytes": 655,
+      "sha256": "790f7f8617ec9543be24d6d4d00536a9471389bb52d9d8592ba924a47c784785"
+    }
+  ]
+}

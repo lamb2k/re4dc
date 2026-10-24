@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "files": 8,
+  "archive_bytes": 161841,
+  "source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "live_source_compared": true,
+  "syntax_only": true,
+  "archived_helpers_executed": false,
+  "private_fixtures_opened": false,
+  "verifier_controls": {
+    "positive": 1,
+    "negative": 5
+  }
+}

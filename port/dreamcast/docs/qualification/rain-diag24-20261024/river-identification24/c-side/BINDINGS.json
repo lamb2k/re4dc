@@ -1,0 +1,4855 @@
+{
+  "source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "census_pin": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/river-identification24/PS2-CENSUS.json",
+    "bytes": 476411,
+    "sha256": "f609f0376419aafc84f814acb1dc35b59ed0d0d5b690b3f563cc601be16b6e4b"
+  },
+  "extraction_manifest": {
+    "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/extract-manifest.json",
+    "bytes": 612169,
+    "sha256": "55748e1fc6ed586ebfcda738bd0eed490eb7fb0d731b5e0a80a5a6030c814464"
+  },
+  "rooms": {
+    "r100": {
+      "member": {
+        "index": 2294,
+        "name": "r100.dat",
+        "offset": 1848064000,
+        "size": 5214368,
+        "sha256": "75fe9de6fe15af37a454ae6d0a0667aec6a578a898afb5028bf79acf8b4b6441"
+      },
+      "water_like_count": 0,
+      "water_like_texture_counts": {},
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/ps2-rooms-20260929/inputs/r100/r100_004.SMD",
+          "bytes": 3182432,
+          "sha256": "a3718d4e470e17a40769accdb7a2552a8058d79397051279b9b4b6a9ae8768da"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/ps2-rooms-20260929/inputs/r100/r100_004.TPL",
+          "bytes": 640384,
+          "sha256": "70dbe0889512d31785bb273f72b0b8bb90f21f304af6a505f0edeb6c8c901506"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/ps2-rooms-20260929/inputs/r100/r100_004.scenario.idxmaterial",
+          "bytes": 13762,
+          "sha256": "d592d153fdf88b315254cd96903bcac48abb0077cf57139f0d8d1566a32fcfb3"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/ps2-rooms-20260929/inputs/r100/r100_004.scenario.mtl",
+          "bytes": 7357,
+          "sha256": "b85640ed5822c1e3df965e2f827f9efaceed0bd58a74ba0130ccb866ae920398",
+          "material_count": 55
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/ps2-rooms-20260929/inputs/r100/r100_004.scenario.idx_ps2_smd",
+          "bytes": 56448,
+          "sha256": "bf8476fd49f77078dd2a12451805cc1442cf2b5fad6000650011566021e7df73"
+        }
+      ]
+    },
+    "r107": {
+      "member": {
+        "index": 2313,
+        "name": "r107.dat",
+        "offset": 1882404864,
+        "size": 3572832,
+        "sha256": "44cf88c5b7fd87fd414da97b7364dbff1178857006d8d6cdb698b7143af210bb"
+      },
+      "water_like_count": 2,
+      "water_like_texture_counts": {
+        "0xfe": 1,
+        "0xf7": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r107/r107_004.SMD",
+          "bytes": 2643680,
+          "sha256": "3dd709e8b423044038587e4b381d3971b79bbf4a820b19eb69d4804cc810d3b8"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r107/r107_004.TPL",
+          "bytes": 737344,
+          "sha256": "0a5d4786e94fe951aa4fce2659389456cdbd555f925b3d002e106412f48391b2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r107/r107_004.scenario.idxmaterial",
+          "bytes": 12541,
+          "sha256": "7904c75d5b3bcff4f6e612c75f4e5288eb598c1a112187c058b527d6df098a45"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r107/r107_004.scenario.mtl",
+          "bytes": 6707,
+          "sha256": "0924599e9a7a5dbc5d0eb3a13c53476fa9b4715858249e0f36a57e05d46c7d8f",
+          "material_count": 50
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r107/r107_004.scenario.idx_ps2_smd",
+          "bytes": 12940,
+          "sha256": "a8b83ed02f1d1dcb279237d050d0ad9e66fe246e27b24419f7e76fbcac9ce019"
+        }
+      ]
+    },
+    "r10a": {
+      "member": {
+        "index": 2319,
+        "name": "r10a.dat",
+        "offset": 1893623808,
+        "size": 3559904,
+        "sha256": "a121349288f080ba5026ed3de218197366181952ad39269d219b9af1b21c6ed9"
+      },
+      "water_like_count": 4,
+      "water_like_texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10a/r10a_004.SMD",
+          "bytes": 2254368,
+          "sha256": "0d9f7f1d9267d418fed3c2befba4581bd1887c5c5c12d1a61fc8dab42e740dfd"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10a/r10a_004.TPL",
+          "bytes": 848592,
+          "sha256": "fae78de9e9be6ba3818bc4009ae9cd46bd1209832c78792789349ccaf0d2e9d0"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10a/r10a_004.scenario.idxmaterial",
+          "bytes": 10558,
+          "sha256": "20d2a803032dabf931c056a07b2612f20a725fb7115f4252d223e39160341a3e"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10a/r10a_004.scenario.mtl",
+          "bytes": 5667,
+          "sha256": "ef3c923f566bf67988bc2f32f41c8e8e7aa360ad6063b1842a913bdfd41e9484",
+          "material_count": 42
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10a/r10a_004.scenario.idx_ps2_smd",
+          "bytes": 40956,
+          "sha256": "deee016d0c0b4612cbb479b19903c8a4536560b800d68fb1d7c91ba7d6272522"
+        }
+      ]
+    },
+    "r106": {
+      "member": {
+        "index": 2311,
+        "name": "r106.dat",
+        "offset": 1877698560,
+        "size": 4351584,
+        "sha256": "b6a63ba847c8acd61132ff71bbb536037afafcf5be4ece50462e713a18da2cef"
+      },
+      "water_like_count": 1,
+      "water_like_texture_counts": {
+        "0xf7": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r106/r106_004.SMD",
+          "bytes": 2837536,
+          "sha256": "917828039e50ad49d6ad0ebe3d0d57ecd35b0aa13e3331ca98032d56674013a9"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r106/r106_004.TPL",
+          "bytes": 604400,
+          "sha256": "276079faa4b09d5d0572ef78f50e723a0ad276446b8e3cbb8fb4bfbe9fe7d5e4"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r106/r106_004.scenario.idxmaterial",
+          "bytes": 10555,
+          "sha256": "8542445d428b6785d3d1b531116514e3f00d24e7a6774d84476aed53e9c5a8ba"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r106/r106_004.scenario.mtl",
+          "bytes": 5667,
+          "sha256": "41091b3612cce5796654513312f18ffaf29099e8e66bc64ebc96d6f01ac0b144",
+          "material_count": 42
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r106/r106_004.scenario.idx_ps2_smd",
+          "bytes": 30172,
+          "sha256": "898cf5701845e46da276d6dd13f4f63a224c85e0b45cb2d75eb78b3dba5492cd"
+        }
+      ]
+    },
+    "r108": {
+      "member": {
+        "index": 2315,
+        "name": "r108.dat",
+        "offset": 1886197760,
+        "size": 3573248,
+        "sha256": "9fd0d93ec9e9a3bdd6ba9c65dabcc31cb1e8464a5559d26fd3d10ec702d9a414"
+      },
+      "water_like_count": 2,
+      "water_like_texture_counts": {
+        "0xfe": 2
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r108/r108_004.SMD",
+          "bytes": 2608032,
+          "sha256": "0bc2f42782d5537dc96434dc99893ffa4af3601ed063d75978050bb6606b929c"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r108/r108_004.TPL",
+          "bytes": 663472,
+          "sha256": "503f2280a62867734b6ac579118a254dbaa1fd4f8506d94786e9d830b214dce0"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r108/r108_004.scenario.idxmaterial",
+          "bytes": 17953,
+          "sha256": "6690cc345663f06a829dfedd249c3bf7bb70348bbeb3cfd487931f3942aac8c0"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r108/r108_004.scenario.mtl",
+          "bytes": 9567,
+          "sha256": "d02f5e26e784a91e85047e1754e2a84ebe49e81bea6e9ded7c3025ed3e5b7e82",
+          "material_count": 72
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r108/r108_004.scenario.idx_ps2_smd",
+          "bytes": 26284,
+          "sha256": "8b6cca6c0e144715fb6bb82212996a1edb1d745bbe757088e296b42d3aeda66f"
+        }
+      ]
+    },
+    "r10b": {
+      "member": {
+        "index": 2321,
+        "name": "r10b.dat",
+        "offset": 1897424896,
+        "size": 3451104,
+        "sha256": "34746c99c9140211c1927b1c31f3cad0780c2fc0d0b092b6f245a25b44536e3c"
+      },
+      "water_like_count": 5,
+      "water_like_texture_counts": {
+        "0xfe": 2,
+        "0xf2": 2,
+        "0xf7": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10b/r10b_004.SMD",
+          "bytes": 2334464,
+          "sha256": "083d19657e68d5793cb51df6d4a635b0edfa6d4540ba93d75efac19e5f3d99fd"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10b/r10b_004.TPL",
+          "bytes": 944864,
+          "sha256": "9d323a8127f4da14f96a6befe1abe26f6dbe5d165556075bffa106475428857f"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10b/r10b_004.scenario.idxmaterial",
+          "bytes": 13276,
+          "sha256": "cc628b4d384cf7b8d7546b89c75fb3a7956cb1fed564e666e633f4a0b945dff2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10b/r10b_004.scenario.mtl",
+          "bytes": 7097,
+          "sha256": "736d8b7588cfc526edefd1786391ca693fd67a2aead419e54a4823d1ce380219",
+          "material_count": 53
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10b/r10b_004.scenario.idx_ps2_smd",
+          "bytes": 23026,
+          "sha256": "55fc7862ff01944ddc543eb24bc315610565f6c12064dee33cb6f15cbfe6e93d"
+        }
+      ]
+    },
+    "r11a": {
+      "member": {
+        "index": 2343,
+        "name": "r11a.dat",
+        "offset": 1944455168,
+        "size": 3356608,
+        "sha256": "1c4a12c1ee60820c519cc588c6c50ba1767c16118a9cc4c6f110e0f263cf3fc6"
+      },
+      "water_like_count": 12,
+      "water_like_texture_counts": {
+        "0xef": 1,
+        "0xf2": 2,
+        "0xf7": 1,
+        "0xc5": 8
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11a/r11a_004.SMD",
+          "bytes": 2224096,
+          "sha256": "95134c617a5e6789d4d22c17b8fc956023377cb7cc20541ed16f5694f5eb7e73"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11a/r11a_004.TPL",
+          "bytes": 790624,
+          "sha256": "730d6dbdb58d3c97786c758974e43c93981cf712ec985ea3a7b5178d9ff901a6"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11a/r11a_004.scenario.idxmaterial",
+          "bytes": 9329,
+          "sha256": "4f422df29691666e377a45d97cbb784951e310daccd1e0a5c74ac08a657a05dd"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11a/r11a_004.scenario.mtl",
+          "bytes": 5017,
+          "sha256": "4f967b5f495b0e6a39a02dc0f654c454dd7034a27c1485a709826f147b2844fe",
+          "material_count": 37
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11a/r11a_004.scenario.idx_ps2_smd",
+          "bytes": 43457,
+          "sha256": "8673bda5b7c1f8260053f767d59e62bd2adbfbe1485d6490be81a00860dec60b"
+        }
+      ]
+    },
+    "r11b": {
+      "member": {
+        "index": 2345,
+        "name": "r11b.dat",
+        "offset": 1948030976,
+        "size": 3816384,
+        "sha256": "e8c8e01fd9b4a626a39ab2d1f2c625462384914ec5c164b50b1c6039c731389e"
+      },
+      "water_like_count": 13,
+      "water_like_texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1,
+        "0xc5": 7,
+        "0xef": 2
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11b/r11b_004.SMD",
+          "bytes": 2545280,
+          "sha256": "20470d617f9b59bd4167d469eb1603dbe75d3a7aaaf2b3b078d24e51487cd1d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11b/r11b_004.TPL",
+          "bytes": 1016736,
+          "sha256": "ae73b3edee5f87ba4257f6f6c2b1babff08ecc8444cf572d546479482c28a0e8"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11b/r11b_004.scenario.idxmaterial",
+          "bytes": 15006,
+          "sha256": "10070c58a398d9799693392ecd36e3a4baf9f4d2b9a7bf60e524bc9ec65531fe"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11b/r11b_004.scenario.mtl",
+          "bytes": 8007,
+          "sha256": "ecf0ac2c13c804ff3b5d876ea8051b6829febbf0a16e26a6e4c881901992fa3b",
+          "material_count": 60
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r11b/r11b_004.scenario.idx_ps2_smd",
+          "bytes": 24945,
+          "sha256": "331dcbc9d582631fd5e7cd435c7eb46042319b7a67f53e31d6c57dcfefe6607f"
+        }
+      ]
+    },
+    "r10c": {
+      "member": {
+        "index": 2323,
+        "name": "r10c.dat",
+        "offset": 1901326336,
+        "size": 4489280,
+        "sha256": "e72ce65989122f1c177f3767f1ade56f5a17e3e63eb79adc100e059a71ef7d40"
+      },
+      "water_like_count": 18,
+      "water_like_texture_counts": {
+        "0xc5": 12,
+        "0xef": 3,
+        "0xf7": 2,
+        "0xfe": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10c/r10c_004.SMD",
+          "bytes": 2911488,
+          "sha256": "0a6189c0f11c9abb321f03de2ed67d56c334a1343113ba710b7b214e5bfd8565"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10c/r10c_004.TPL",
+          "bytes": 1297552,
+          "sha256": "925a44a0290f54bf69966e9ad2560ec833cc1f504c0e25e18efaa508a43fedac"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10c/r10c_004.scenario.idxmaterial",
+          "bytes": 10070,
+          "sha256": "df6e6994a3165d91330aca9f9d5355d01a0dc93c3ce08c1957ca0b03d6733c79"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10c/r10c_004.scenario.mtl",
+          "bytes": 5407,
+          "sha256": "45dec115f6812d56fd1ccd882c110a97b9ac7320d414f11b4478945d2e32bb6f",
+          "material_count": 40
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10c/r10c_004.scenario.idx_ps2_smd",
+          "bytes": 41246,
+          "sha256": "a1eb3575ae4b6a5d46438c3a03b320b80db05c944db3d96dd67e23a1f1162fc2"
+        }
+      ]
+    },
+    "r10d": {
+      "member": {
+        "index": 2325,
+        "name": "r10d.dat",
+        "offset": 1905991680,
+        "size": 2824192,
+        "sha256": "e5f00bab2f5da831ed9a5d707e27662118669809cb6c9eabeba37d6e52d41db9"
+      },
+      "water_like_count": 4,
+      "water_like_texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10d/r10d_004.SMD",
+          "bytes": 2193280,
+          "sha256": "654a6abb1bb207cfe0ab83506f094dceb76fdd56ea81c5d16a4e69f862b2768b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10d/r10d_004.TPL",
+          "bytes": 468992,
+          "sha256": "c8e1359cae50a162e89078f13cc87f19419607230b68d9194859ba7258a7e526"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10d/r10d_004.scenario.idxmaterial",
+          "bytes": 15255,
+          "sha256": "af0f14b20054cfe841c3149b869dcee1c63b0759d16e38a3da96ec8cb0182ca4"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10d/r10d_004.scenario.mtl",
+          "bytes": 8137,
+          "sha256": "2f7a7d6ae2af55ea0bb703d58faa848c7703103b106de0abd06a71742b337be0",
+          "material_count": 61
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10d/r10d_004.scenario.idx_ps2_smd",
+          "bytes": 45821,
+          "sha256": "42c391cee76538c0ece455ba771363d7e54d1bda4a6a212b1fb4ae72bec4dff8"
+        }
+      ]
+    },
+    "r10e": {
+      "member": {
+        "index": 2327,
+        "name": "r10e.dat",
+        "offset": 1909030912,
+        "size": 3854784,
+        "sha256": "6a2879d2686e677862eb15002d9a5c6ea9e22418c7b27a2e55075ed54f3e1d49"
+      },
+      "water_like_count": 4,
+      "water_like_texture_counts": {
+        "0xfe": 2,
+        "0xf7": 2
+      },
+      "matches_existing_extraction_member": true,
+      "world_material_inputs": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10e/r10e_004.SMD",
+          "bytes": 3176096,
+          "sha256": "75bc58f08a6309ecf2203efb29e413d0b24057b505fe6c2604d6bcc800c05566"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10e/r10e_004.TPL",
+          "bytes": 1237040,
+          "sha256": "8cd97c90eead2abef4fd70c6a5e21e01459008d8255fd0b4c87a7b790dea192a"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10e/r10e_004.scenario.idxmaterial",
+          "bytes": 13793,
+          "sha256": "cf6d8e06945ab1567a606e69bd3c170e7c2d9db7aefdbdd162c4e18a08da7326"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10e/r10e_004.scenario.mtl",
+          "bytes": 7599,
+          "sha256": "5306db27e4fe8b7c757221eae677da171d69f2c111ef8536591eecbe663c77ec",
+          "material_count": 55
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/inputs/r10e/r10e_004.scenario.idx_ps2_smd",
+          "bytes": 22331,
+          "sha256": "b7b217907f7101c34f8700eb25ebdc52195b7bdd3aaeb580577e103f654f90af"
+        }
+      ]
+    }
+  },
+  "source_files": [
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r100.cpp",
+      "bytes": 51922,
+      "sha256": "a732b24228538d15b42343c7e26cb57bc0c502b8f79f9a3b409fd061132a9c6a"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r106.cpp",
+      "bytes": 20397,
+      "sha256": "69de1aab19713764a212ef25270fbfbf2a2ede0a6ed40819244a8763a236a150"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r107.cpp",
+      "bytes": 8305,
+      "sha256": "ebb702517beed3fa10a9ebe2eb33aed8223f57b2e34513a87536f9406b87249a"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r108.cpp",
+      "bytes": 17483,
+      "sha256": "50e0619138759dfa8ddfaf6fe038a4264f6f2b640837605b22d37315d99a297c"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r10a.cpp",
+      "bytes": 7978,
+      "sha256": "d3a1ea31476f16a5ddb7d1fa16676ec103b9343a9a710ec195601a4990985dbc"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r10b.cpp",
+      "bytes": 32896,
+      "sha256": "22dfbb44e9a589a7f8cdfeb965b5a292fcf8fa2a8058f03e0500fce98482bc44"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r10c.cpp",
+      "bytes": 50185,
+      "sha256": "86608234203aa49e8d036508af64c2fb472c1a25c4df3c635fa226b3c6ad0ecf"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r10d.cpp",
+      "bytes": 603,
+      "sha256": "ccbdf478d44d961e14141a0069a55bd34a17c611ee834df96c363b7d6d510c14"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r10e.cpp",
+      "bytes": 2328,
+      "sha256": "7938ab87019eeb07ace41da3ee44e7f4770070810e839e9b055fe5f65ffa354b"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r11a.cpp",
+      "bytes": 5821,
+      "sha256": "d41cfbeee752bc8dbd18bd28f238fd48418b073a5c9e414eb72a8002caedee01"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/st1/r11b.cpp",
+      "bytes": 26811,
+      "sha256": "9b7e943c91a0e7b3c9f200e19b83ff406b54d4dece8faae416515d8c2bf2446b"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/game/esp08.cpp",
+      "bytes": 44481,
+      "sha256": "9adab05f380fad0215ee4a367d5d402c317d927c1f98b0eb165b51f4a96edb15"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/src/game/espgen45.cpp",
+      "bytes": 71457,
+      "sha256": "b663cc8d926267c4bcb7860403389f58234a30518733af73b766a9ce6f130ffb"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/port/dreamcast/tools/d367/water/water_ps2_table.py",
+      "bytes": 6625,
+      "sha256": "1707a329a490e7fe7552c67ccc41464c66f4bb0f3343cdd29c9c8af154c830eb"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/port/dreamcast/tools/d367/water/water_ps2_ext.py",
+      "bytes": 7719,
+      "sha256": "df40df09b97faa807056ce8a480d0f4e07b58b13ae895004fe123b1909bb6153"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/tools/audit_ps2_fx_recipes.py",
+      "bytes": 43182,
+      "sha256": "9ed3c1bd47e4b724454ab716a95814c567819661bd9ecb3ed9bdae77be310abf"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/port/dreamcast/tools/ps2_room_extract.py",
+      "bytes": 9714,
+      "sha256": "ed47a3b7ae20c5912a406267cdb62703b2eb294beb71615d561c025e1ddcf442"
+    },
+    {
+      "path": "/root/work/lanes/rain-diag24/port/dreamcast/tools/d367/test12fx/fx_ps2_pack.py",
+      "bytes": 19682,
+      "sha256": "7d9a8b0056896927309c0f10c909b450a79aa2fb99e06e8d47450dcd486617e8"
+    }
+  ],
+  "existing_images_inspected": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/sheets/r106-ps2-sheet.png",
+      "bytes": 5184138,
+      "sha256": "5d946a7d8b855164fd529dbba9a6541a4f0245efe1b97c5d677cd811b6f1922b"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/sheets/r107-ps2-sheet.png",
+      "bytes": 2758710,
+      "sha256": "79a5917df9c6f131efb7a23b2800e52550694d5ab55ec241d27582e32b6b1b6f"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2rooms-20260930/sheets/r10a-ps2-sheet.png",
+      "bytes": 3140941,
+      "sha256": "387af561470fa75727e2c38e25a265086b3f5b7b19e842f5044e028aff087d97"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10c-river.png",
+      "bytes": 864053,
+      "sha256": "ff630ccc74019b8bcd70df0eefdbb7479936068069d6e4cea3b8b8ea6407f2a6"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/fix-water-traps23/stills/r10e-river.png",
+      "bytes": 808830,
+      "sha256": "1fdddb75598832c665bb381df722ea22731403a59f388920036e4465ce7f2939"
+    }
+  ],
+  "limits": {
+    "address_space_bytes": 268435456,
+    "timeout_seconds": 120
+  },
+  "assets_copied": false,
+  "effect_key_map": {
+    "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/KEYS.tsv",
+    "bytes": 105191,
+    "sha256": "9286a741d602f4885e48a0c50e36ab6fda8c4c09916be2939b9b9d5c708f2a71"
+  },
+  "effect_texture_bindings": [
+    {
+      "key": "47a9bc5b-b0495b0f",
+      "room": "common",
+      "gc_binding": "etc/core.das:0#1:0xf7",
+      "frame": 0,
+      "width": 1,
+      "height": 1,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/common/47a9bc5b-b0495b0f.re4tex",
+        "bytes": 208,
+        "sha256": "91ad12accc6fd1ad52b1f6289ef2ffebc1cbc31b91a964e6295498419e301900"
+      }
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/dd6bff57-ab7a09f0.re4tex",
+        "bytes": 2224,
+        "sha256": "5f4d38dde915ba10580e044492add07b1570a4ae281ddc99fcb6c9eed04243d4"
+      }
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/e94814ce-693cf8d6.re4tex",
+        "bytes": 2224,
+        "sha256": "3b736e223cdeeba98b2821a684f2e3b3055c129d0640d60bd21980510c27e6b2"
+      }
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/c6b07177-604d5e06.re4tex",
+        "bytes": 2224,
+        "sha256": "6d56744538c3d25321e3df96ee96b6a297b544c9df0efcf73145ac15d8937987"
+      }
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/a771e076-78cefa9d.re4tex",
+        "bytes": 2224,
+        "sha256": "bf821d3338d3eb4cf3aabd333d5149565059c00de8b3ea6be767f204397ad229"
+      }
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/4a224131-e624d9d0.re4tex",
+        "bytes": 2224,
+        "sha256": "a032d9ce5ae94e57bc17f839ae57a7ed68117e32b7610d84cdbb7a5831f0bc06"
+      }
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/991e9d55-3564b585.re4tex",
+        "bytes": 2224,
+        "sha256": "5fa5545961147cd30665555b36120d9c29bbfd14372397c5aa57c17200ec53df"
+      }
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/6425ad38-767b2cce.re4tex",
+        "bytes": 2224,
+        "sha256": "6c9e685bde9a1b92508f0a42d04deafc5dfe99ca000cbc6703b02ea5276320f8"
+      }
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/77ebb0d4-a25a9eab.re4tex",
+        "bytes": 2224,
+        "sha256": "6ee52c9f37530b3abdc3138464346e399d9a585b07364610ea115599be760731"
+      }
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/f40e2a84-320609ee.re4tex",
+        "bytes": 2224,
+        "sha256": "beaa0adccffae963bb2f5e8c9b5e1861540b4c0afdde8937ff84d93f75dfb1e2"
+      }
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/15361bb6-27953591.re4tex",
+        "bytes": 2224,
+        "sha256": "a7953edcb96a97768fd4dca405bf2277a6be377bc67048382addca00d6c9ac22"
+      }
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/4486f8d3-3f96c2a7.re4tex",
+        "bytes": 2224,
+        "sha256": "bc95a8d5b5b7ce0aef5a9373e6a1ccd96ce7282503914b04909a1112eb7a5fc6"
+      }
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/6fd9bbd1-18d46ecd.re4tex",
+        "bytes": 2224,
+        "sha256": "15b925e88527ccce1d05ff67c3fc75ffe1e472c5a65c76165e678105c6c8ff3e"
+      }
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/04a2bba3-291f00a9.re4tex",
+        "bytes": 2224,
+        "sha256": "b6223e278d69bdf4c35124e4e3469e35c39df998b013601693a1d0507ed14b2c"
+      }
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/51c0c149-49dd7b22.re4tex",
+        "bytes": 2224,
+        "sha256": "294af247e905d56d050133aeec7e89c7b089bbe1d848e6e74ffdd782b92e32d3"
+      }
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/8d6235c0-2c8bba09.re4tex",
+        "bytes": 2224,
+        "sha256": "89ea6a02c30eb456d8725e28eec2556b03bc54116406e9075263e808200c6da9"
+      }
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/b7a40fb5-553cca82.re4tex",
+        "bytes": 2224,
+        "sha256": "e5141804d7bd48cfea61e092a558c4e6436de16e5a03e30145f17443b1f32c5c"
+      }
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/7e4a7ed0-b5fc4c16.re4tex",
+        "bytes": 2224,
+        "sha256": "38550f77384b83e12619999d8f46b03713d300c0dd45ed394ee3a062e78b976c"
+      }
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/52cc1e41-e15b2e1f.re4tex",
+        "bytes": 2224,
+        "sha256": "c038d780e5242cccfda3e85fffa1b30ee069a8890f5f217f382652dc500e5afb"
+      }
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/55672057-6b739107.re4tex",
+        "bytes": 2224,
+        "sha256": "b4223a65cba46b8f78592bb6df873621f1ee6fffd38a15ab693f5ee2367870b2"
+      }
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/ac632acb-aa5f73e5.re4tex",
+        "bytes": 2224,
+        "sha256": "e165e45b7b966c114552f7676da7591c76dc43fe55da2e66713f1d0e2ccf38e2"
+      }
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/dce54934-5b0bbb02.re4tex",
+        "bytes": 2224,
+        "sha256": "e2e05de9a9e0e19253e0ca7e2b55ad31d3df3d0449563ba10c065dfb9efcaf9c"
+      }
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/0431fda9-19187e02.re4tex",
+        "bytes": 2224,
+        "sha256": "6c53045a1ba4de08747f8901486a94e07853d5867c899bf6d4ea0a26e68497c7"
+      }
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/317e8c18-f0efb3fa.re4tex",
+        "bytes": 2224,
+        "sha256": "bbbcd5046b43433d3ed2132182cb925fb702d0a08a49283d64b60783440fed5a"
+      }
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/41e3ed60-ca5eec4d.re4tex",
+        "bytes": 2224,
+        "sha256": "a0111cd806c4e3ceefdc6bad2db6208995eeac12059f19edc7f131f00a78be4d"
+      }
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/bb29ae16-9a67f89f.re4tex",
+        "bytes": 2224,
+        "sha256": "a30cd228378c02fc11f4bb01f9af88217210a4caedd4d482a5757ca16ebb4971"
+      }
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/7cd5408d-f31a7898.re4tex",
+        "bytes": 2224,
+        "sha256": "e240c70a0686271d3975a83dcc6cc2847d102e505aebb8131f07082c07e3000f"
+      }
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/782b1a81-474ab0c2.re4tex",
+        "bytes": 2224,
+        "sha256": "114b7d7966a717b93aadc8ec61c740066ca0839c68a672341c93646ecdfc19ab"
+      }
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/0d8676fe-412d14d1.re4tex",
+        "bytes": 2224,
+        "sha256": "07b1ba1be6b2cb1ce7213fa1dc367efa30fa830938c5291ca8994678f715c83b"
+      }
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/c57e4505-0bbdfe54.re4tex",
+        "bytes": 2224,
+        "sha256": "b12b220283e2da4b7473bbab9aeb47334b33d4574228ff8336698870933344fa"
+      }
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/7b2df057-4ab242c0.re4tex",
+        "bytes": 2224,
+        "sha256": "ef57d81b890be3877884394ff39b8906deac6372d89c95594140b7fb56a17601"
+      }
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/a5bb9eed-36a41ddf.re4tex",
+        "bytes": 2224,
+        "sha256": "c07f2361bd21daed38316fdd343cee95da27cf10f679efb3c682865020e543d5"
+      }
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/7911410c-94568c31.re4tex",
+        "bytes": 2224,
+        "sha256": "5fad500e9f7cf8b02e45c26d1caae435f383eaafd61b37d1d32f69dca1bb6d57"
+      }
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/bd723cbc-2765b278.re4tex",
+        "bytes": 2224,
+        "sha256": "87e8c227d031d278e26b4be0616d9cce8a97bb1e07281312845d167d905d5391"
+      }
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/d50291a0-8813a418.re4tex",
+        "bytes": 2224,
+        "sha256": "3b89a884010e3539b97023032606cac8787fb3597b7cc09eebb089d5fd8c1cf4"
+      }
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/1fc98123-72c19dd0.re4tex",
+        "bytes": 2224,
+        "sha256": "65f967081ae2c11aa2575e4ec425734e568e98de736da8511ec1b10477d73c61"
+      }
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/c0f1d849-077de052.re4tex",
+        "bytes": 2224,
+        "sha256": "68d1faca00283b87588e7517f3be2bc90e1875a2acac7f206fd5e4d2fa59a1e0"
+      }
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/5735df1f-bd82aa18.re4tex",
+        "bytes": 2224,
+        "sha256": "b0897a170bdd0ac8bd10780ecabb2b0ef801a817711f579bdefc36a2f6f3f236"
+      }
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/a7bbc005-fe52f18b.re4tex",
+        "bytes": 2224,
+        "sha256": "3a91ea9725bf8170ff83bda7fa08f74702d04fa7d7fa00a454e21b28cc3fe1c7"
+      }
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/4062a4dc-8cfda8be.re4tex",
+        "bytes": 2224,
+        "sha256": "82a7fafd9f9858a5e3fb96448ba3a0d2d26ef199e284cda084ea3b151a358c7a"
+      }
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/0b8d70e8-46c70a16.re4tex",
+        "bytes": 2224,
+        "sha256": "797838270294882cfe99a259a6806bc0d86d9dbfafae5384c449f8a58548ebb8"
+      }
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/88c4cef1-a6faf9f5.re4tex",
+        "bytes": 2224,
+        "sha256": "854e5a45d669e4390e0cf92c238ebfe5bb0263861c4deefba4a4cf0027ab49a2"
+      }
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/0bdde404-e9922998.re4tex",
+        "bytes": 2224,
+        "sha256": "3e0ea2c29315157541bb03e6d06b834779e8bcce7af1a629dfd480bf3ece415b"
+      }
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/3248a31b-575b4d8c.re4tex",
+        "bytes": 2224,
+        "sha256": "c5198677bbe572f95b293256c2ea0c02c99c778ae139daaec27180f6d1d4e203"
+      }
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/f315d9a4-1691b858.re4tex",
+        "bytes": 2224,
+        "sha256": "acab1bb49946bb642f128e6152ffade13af51a15c4dd43bd7bb187be481adde3"
+      }
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/96aa8fab-5e866d6f.re4tex",
+        "bytes": 2224,
+        "sha256": "2c16699a4a5056d76bee708b63af73df113540f50551cbacb9809230cba184cb"
+      }
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/c6e4e3d2-35ebfa43.re4tex",
+        "bytes": 2224,
+        "sha256": "b4bd438e5f86e7674b3e95e94ca418b5457a6fc4051787e106dc547009aa6066"
+      }
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/408b8b32-cca8248d.re4tex",
+        "bytes": 2224,
+        "sha256": "d66d91f79cecd9aeec49149d70268cca9d9c913e4b600d4c2dfd830190204e68"
+      }
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/4397ef85-6558749e.re4tex",
+        "bytes": 2224,
+        "sha256": "4698291c4799c85d6a631f251f2ea09bbf03d25579a854062bd4bf01dba94a92"
+      }
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/7dfc6425-691cfd5a.re4tex",
+        "bytes": 2224,
+        "sha256": "375fcdfd039e3fb91c8d0f10f1aba12bfd2856894df16d07a92ca712f94edfc7"
+      }
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/83b167b4-3c4ff916.re4tex",
+        "bytes": 2224,
+        "sha256": "8e2d91313a850c3979e7f0fad3fdcd8a2a95e599f01bcbafd2dc0b5aca6c4292"
+      }
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/13791fc9-be0024d5.re4tex",
+        "bytes": 2224,
+        "sha256": "1fd5ca67c6b9097db387fd7b3ff0fe169ccf7f508782495abe21b34fc6944059"
+      }
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/32787969-e3a3ece8.re4tex",
+        "bytes": 2224,
+        "sha256": "db55cfa8d4dfca9738f84660060b7588938e05fbe9204ac2d1d05d4a52da8610"
+      }
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/58a7d32a-40465dea.re4tex",
+        "bytes": 2224,
+        "sha256": "950d62a2b18ddd24c45b5e5a0e678a87bee8ee365edc5b245ebe055b0012f43a"
+      }
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/4367ef33-7cce64f4.re4tex",
+        "bytes": 2224,
+        "sha256": "f44a79aa73f57cf4be60891cad6c191c50a5ccacb65c803e74b817fec62ebffa"
+      }
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/a9e9370e-a4979bfe.re4tex",
+        "bytes": 2224,
+        "sha256": "7d4a64fe674426632c044202ad1e9a157d440dd8b67c5dc31efe10c732ca1627"
+      }
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/35fd3bd6-a48fd542.re4tex",
+        "bytes": 2224,
+        "sha256": "bb1ae1439434d5c955b0f84db08f9645cabf1844d729bf9c20610ba2d28c7f14"
+      }
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/a6a79039-b6d8a8a5.re4tex",
+        "bytes": 2224,
+        "sha256": "49fc8c85a3eddb617963285578d76c2de8591a361e7ad251c44563fa1510bba0"
+      }
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/bedf3881-17836b3b.re4tex",
+        "bytes": 2224,
+        "sha256": "8e1fed68ddcc743bad7d0af3814e685615eb63c1c49742955ef8b1c447c0d97b"
+      }
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/e573f65f-0fe86e34.re4tex",
+        "bytes": 2224,
+        "sha256": "4bd66ea62a64e80dbc787918b201219b89bc4d011189289e729172e1a6471d66"
+      }
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r107",
+      "gc_binding": "st1/r107.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r107/639554f6-6f5ef287.re4tex",
+        "bytes": 2224,
+        "sha256": "1e29f95c840abb2a0bc4f3b3f5f2641a04d34beae7cd224c9e0339b19ca8a6c8"
+      }
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r108",
+      "gc_binding": "st1/r108.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "70654fc9-79af5308",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xf2",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r10a/70654fc9-79af5308.re4tex",
+        "bytes": 32944,
+        "sha256": "767e6b270ab2f8422346ea1842fcce6daea6dfc1b2866bd51c2d704279206910"
+      }
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r10a",
+      "gc_binding": "st1/r10a.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e7688cd5-7f2fd56d",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xc5",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": null
+    },
+    {
+      "key": "70654fc9-79af5308",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xf2",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": null
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r10b",
+      "gc_binding": "st1/r10b.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e7688cd5-7f2fd56d",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xc5",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/e7688cd5-7f2fd56d.re4tex",
+        "bytes": 32944,
+        "sha256": "b0e306c8d74da9c27d0211c943f34e7a8d2e3a476b4180aef1b9c5b9cb8d651d"
+      }
+    },
+    {
+      "key": "f23c6c80-9942fa97",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/f23c6c80-9942fa97.re4tex",
+        "bytes": 2224,
+        "sha256": "6db17a9ae452ba8d6f3a1ccd5ec562b58badafeed6a19da7c5e9ef990f109c87"
+      }
+    },
+    {
+      "key": "405f330f-3bba5d87",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/405f330f-3bba5d87.re4tex",
+        "bytes": 2224,
+        "sha256": "a0aa227eed9458f6b49814160b06754f26d7cdbd1c4f3218f57231820524fae4"
+      }
+    },
+    {
+      "key": "89d08fc4-10c53cec",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/89d08fc4-10c53cec.re4tex",
+        "bytes": 2224,
+        "sha256": "2096a09ed3afac97dc8fd47a305d55274ba82f0f4154390d5008f0b1cb5f8af4"
+      }
+    },
+    {
+      "key": "29a3de27-41f6b065",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/29a3de27-41f6b065.re4tex",
+        "bytes": 2224,
+        "sha256": "71bcf0893782c64eb4a819e1a18637a46108fd9cf1d739fce3c503c9cf7d963d"
+      }
+    },
+    {
+      "key": "9369fb53-c05b1278",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/9369fb53-c05b1278.re4tex",
+        "bytes": 2224,
+        "sha256": "8d71bcb2ffb3460eed921736058566e8309a8960d6a2ddba89e5872fe534b01b"
+      }
+    },
+    {
+      "key": "4d468e2e-d37bb337",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/4d468e2e-d37bb337.re4tex",
+        "bytes": 2224,
+        "sha256": "0ec61ae1511393259a42c388835f8fe5a643e44663d40f50da9aebb6284cc4a8"
+      }
+    },
+    {
+      "key": "54ed5002-d3cc0176",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/54ed5002-d3cc0176.re4tex",
+        "bytes": 2224,
+        "sha256": "fc5e4720e3dfefd31bbd48227400bfeeef581ef538442b041f70de8d3eff8345"
+      }
+    },
+    {
+      "key": "987c4151-15e97b87",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/987c4151-15e97b87.re4tex",
+        "bytes": 2224,
+        "sha256": "5d13aaf0682d38c84f9e89617452cb032f348b50850d85fbbe0b0ddb2eac4778"
+      }
+    },
+    {
+      "key": "cf5fbf45-24f46520",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/cf5fbf45-24f46520.re4tex",
+        "bytes": 2224,
+        "sha256": "427ec06df5a88149026bd205df7d4bea7f2c3b661fd37160f2c1235a95856f53"
+      }
+    },
+    {
+      "key": "44f445f3-59f30f5e",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/44f445f3-59f30f5e.re4tex",
+        "bytes": 2224,
+        "sha256": "edc5c05a08d46a4ab6c4cd0c6b55ffbb0ef40eae572359c6932cdad474ddf97c"
+      }
+    },
+    {
+      "key": "d624373d-23087fa9",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/d624373d-23087fa9.re4tex",
+        "bytes": 2224,
+        "sha256": "8075fc472c76bd2240d3899b8255204619ac02bf067747c746c75ddfa5ad40e3"
+      }
+    },
+    {
+      "key": "0aca90cc-50fffa52",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/0aca90cc-50fffa52.re4tex",
+        "bytes": 2224,
+        "sha256": "0e91be148c63859258c8cc04ceaa905124d93001dd893d490dbb788dd97b3490"
+      }
+    },
+    {
+      "key": "444deefe-2b764f8c",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/444deefe-2b764f8c.re4tex",
+        "bytes": 2224,
+        "sha256": "40ffe441754d850542023cadd8399bda0260d542da62ad5284c72e363dd1a84a"
+      }
+    },
+    {
+      "key": "4bf6fe6c-7d952576",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/4bf6fe6c-7d952576.re4tex",
+        "bytes": 2224,
+        "sha256": "9097003e8f002007497b7ceb25dfbf572c25d39245d26acaae51e17e95688777"
+      }
+    },
+    {
+      "key": "0e3ffe5d-a5478e04",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/0e3ffe5d-a5478e04.re4tex",
+        "bytes": 2224,
+        "sha256": "5378ec267732f61a2a2976020a243d67054c4bb41f15f7ed52c16ecb1db22e4b"
+      }
+    },
+    {
+      "key": "26376589-3548f7b9",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/26376589-3548f7b9.re4tex",
+        "bytes": 2224,
+        "sha256": "ffdacf3545f4d52fe66a8c2bb3330ada869d2e88b7b88518783ad8ba6e6e9e22"
+      }
+    },
+    {
+      "key": "4a955153-6d1c14cc",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/4a955153-6d1c14cc.re4tex",
+        "bytes": 2224,
+        "sha256": "0fbac3255982d3dcf4794b2cd54d21de43bfb2e9eef6bfa5d2a3fb9cfce9aa3a"
+      }
+    },
+    {
+      "key": "bb9d30dc-813519d4",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/bb9d30dc-813519d4.re4tex",
+        "bytes": 2224,
+        "sha256": "211a7bc1b69d9574406d10b606f84147b7ceb625a913cc1eb8b9ceb4c4fe3710"
+      }
+    },
+    {
+      "key": "29e4db5f-e5857c67",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/29e4db5f-e5857c67.re4tex",
+        "bytes": 2224,
+        "sha256": "42152a6bdcabdac1fab27ecaa7b367e67c6ed13b4cb9db399bc31df3e4b33cc2"
+      }
+    },
+    {
+      "key": "f11e57f9-843cbf7a",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/f11e57f9-843cbf7a.re4tex",
+        "bytes": 2224,
+        "sha256": "a6c874e39d0c13b33d1f606bdb9b3173d179a100452b3cb2d13e9f06b5f01174"
+      }
+    },
+    {
+      "key": "88d130dd-0fcc4459",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/88d130dd-0fcc4459.re4tex",
+        "bytes": 2224,
+        "sha256": "5f871e611898c4c862aa3921c6b2b4bcf1fef9521c074530e6aca615f267c8be"
+      }
+    },
+    {
+      "key": "a0341e8a-d38ec5e7",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/a0341e8a-d38ec5e7.re4tex",
+        "bytes": 2224,
+        "sha256": "c8e49c74fae12a857bbe607f331eb241f6e546c57ea225a281de0eea9aabce16"
+      }
+    },
+    {
+      "key": "236b1c0d-97a65afa",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/236b1c0d-97a65afa.re4tex",
+        "bytes": 2224,
+        "sha256": "18ebe88f521bd47d30257c3f4cc10d4c5867823c4a65210dadc3a7cd8ac325ce"
+      }
+    },
+    {
+      "key": "70995c9f-04d57a2c",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/70995c9f-04d57a2c.re4tex",
+        "bytes": 2224,
+        "sha256": "060d5885f9573e53c6337c57a885d907a9f688358afb708ba179c8d832628bb0"
+      }
+    },
+    {
+      "key": "51c6910e-3c6c43c2",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/51c6910e-3c6c43c2.re4tex",
+        "bytes": 2224,
+        "sha256": "768aa5f8e84b91e253d5cdbad7335007bfd25d144aaa31e3dc732f20912b7d7b"
+      }
+    },
+    {
+      "key": "b2243b28-aa5b0b6a",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/b2243b28-aa5b0b6a.re4tex",
+        "bytes": 2224,
+        "sha256": "16e93f155407217838230e965d930879c24ba9d5c6b71b89febed49ed28d11ca"
+      }
+    },
+    {
+      "key": "38393ce8-465a08b7",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/38393ce8-465a08b7.re4tex",
+        "bytes": 2224,
+        "sha256": "393182ebc50f73593fabc05295ef9b22a6158327c9a390d98ffed85de617a8ba"
+      }
+    },
+    {
+      "key": "5d62118c-05751bb9",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/5d62118c-05751bb9.re4tex",
+        "bytes": 2224,
+        "sha256": "c55f9506c76a0ce9ec630e14709164d82429cc4a99624e65708fac4367645c42"
+      }
+    },
+    {
+      "key": "442ce3a0-58c0c487",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/442ce3a0-58c0c487.re4tex",
+        "bytes": 2224,
+        "sha256": "f62d45ac6b71ce91e59470fac09f4f703a86a5ec46f44030d00ca29539edf951"
+      }
+    },
+    {
+      "key": "e4e75b35-5f57c1c1",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xef",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": {
+        "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/r11a/e4e75b35-5f57c1c1.re4tex",
+        "bytes": 2224,
+        "sha256": "01166089cd513702236b7e6ee6b6454882e51699d6836e1db812f2c4a667b80c"
+      }
+    },
+    {
+      "key": "70654fc9-79af5308",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xf2",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": null
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r11a",
+      "gc_binding": "st1/r11a.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e7688cd5-7f2fd56d",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xc5",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": null
+    },
+    {
+      "key": "f23c6c80-9942fa97",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "405f330f-3bba5d87",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "89d08fc4-10c53cec",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "29a3de27-41f6b065",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "9369fb53-c05b1278",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4d468e2e-d37bb337",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "54ed5002-d3cc0176",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "987c4151-15e97b87",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "cf5fbf45-24f46520",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "44f445f3-59f30f5e",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d624373d-23087fa9",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0aca90cc-50fffa52",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "444deefe-2b764f8c",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4bf6fe6c-7d952576",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0e3ffe5d-a5478e04",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "26376589-3548f7b9",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a955153-6d1c14cc",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb9d30dc-813519d4",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "29e4db5f-e5857c67",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f11e57f9-843cbf7a",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88d130dd-0fcc4459",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a0341e8a-d38ec5e7",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "236b1c0d-97a65afa",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "70995c9f-04d57a2c",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c6910e-3c6c43c2",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b2243b28-aa5b0b6a",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "38393ce8-465a08b7",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5d62118c-05751bb9",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "442ce3a0-58c0c487",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e4e75b35-5f57c1c1",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xef",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "70654fc9-79af5308",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xf2",
+      "frame": 0,
+      "width": 256,
+      "height": 256,
+      "package": null
+    },
+    {
+      "key": "dd6bff57-ab7a09f0",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 0,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e94814ce-693cf8d6",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 1,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6b07177-604d5e06",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 2,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a771e076-78cefa9d",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 3,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4a224131-e624d9d0",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 4,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "991e9d55-3564b585",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 5,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6425ad38-767b2cce",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 6,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "77ebb0d4-a25a9eab",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 7,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f40e2a84-320609ee",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 8,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "15361bb6-27953591",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 9,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4486f8d3-3f96c2a7",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 10,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "6fd9bbd1-18d46ecd",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 11,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "04a2bba3-291f00a9",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 12,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "51c0c149-49dd7b22",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 13,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "8d6235c0-2c8bba09",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 14,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "b7a40fb5-553cca82",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 15,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7e4a7ed0-b5fc4c16",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 16,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "52cc1e41-e15b2e1f",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 17,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "55672057-6b739107",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 18,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "ac632acb-aa5f73e5",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 19,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "dce54934-5b0bbb02",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 20,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0431fda9-19187e02",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 21,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "317e8c18-f0efb3fa",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 22,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "41e3ed60-ca5eec4d",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 23,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bb29ae16-9a67f89f",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 24,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7cd5408d-f31a7898",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 25,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "782b1a81-474ab0c2",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 26,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0d8676fe-412d14d1",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 27,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c57e4505-0bbdfe54",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 28,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7b2df057-4ab242c0",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 29,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a5bb9eed-36a41ddf",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 30,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7911410c-94568c31",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 31,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bd723cbc-2765b278",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 32,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "d50291a0-8813a418",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 33,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "1fc98123-72c19dd0",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 34,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c0f1d849-077de052",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 35,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "5735df1f-bd82aa18",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 36,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a7bbc005-fe52f18b",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 37,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4062a4dc-8cfda8be",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 38,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0b8d70e8-46c70a16",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 39,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "88c4cef1-a6faf9f5",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 40,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "0bdde404-e9922998",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 41,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "3248a31b-575b4d8c",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 42,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "f315d9a4-1691b858",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 43,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "96aa8fab-5e866d6f",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 44,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "c6e4e3d2-35ebfa43",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 45,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "408b8b32-cca8248d",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 46,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4397ef85-6558749e",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 47,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "7dfc6425-691cfd5a",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 48,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "83b167b4-3c4ff916",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 49,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "13791fc9-be0024d5",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 50,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "32787969-e3a3ece8",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 51,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "58a7d32a-40465dea",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 52,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "4367ef33-7cce64f4",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 53,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a9e9370e-a4979bfe",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 54,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "35fd3bd6-a48fd542",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 55,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "a6a79039-b6d8a8a5",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 56,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "bedf3881-17836b3b",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 57,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "e573f65f-0fe86e34",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 58,
+      "width": 64,
+      "height": 64,
+      "package": null
+    },
+    {
+      "key": "639554f6-6f5ef287",
+      "room": "r11b",
+      "gc_binding": "st1/r11b.arc#7:0xfe",
+      "frame": 59,
+      "width": 64,
+      "height": 64,
+      "package": null
+    }
+  ],
+  "notes": [
+    "Existing image sheets mix offline renders and Dolphin reference; not fresh guest/look acceptance.",
+    "GC water-object IDs are not a proven one-to-one PS2 SMD placement map.",
+    "The effect ID/texture filter is a superset; f7/base-only and c5/vertical sheets do not independently identify river water.",
+    "The r100 TexRender path is current recovered GameCube-derived source, not a newly disassembled PS2 runtime proof.",
+    "No unique binding from the user phrase to an actual scene is available."
+  ]
+}

@@ -1,0 +1,486 @@
+{
+  "schema": "river-identification-summary-v1",
+  "date": "2026-10-24",
+  "conclusion": "BOUNDED_AMBIGUITY",
+  "unique_user_scene_identified": false,
+  "literal_opening_candidate": "r100",
+  "source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "afs_table_sha256": "a7b0c37119f9ccabf8711ead7d83189065fe1d5df8c427cffe32022403ce3182",
+  "full_iso_hash_claim": false,
+  "rooms_scanned": 29,
+  "member_bytes_read": 107802720,
+  "elapsed_seconds": 0.6220115330070257,
+  "address_space_limit_bytes": 268435456,
+  "per_command_timeout_seconds": 120,
+  "private_detail_report_sha256": "f609f0376419aafc84f814acb1dc35b59ed0d0d5b690b3f563cc601be16b6e4b",
+  "bindings_sha256": "6ab0d10bcba9c5e5fa180b346d1501391f5b180546c2673befaf3c229489bfe1",
+  "ranked_hypotheses": [
+    {
+      "rooms": "r100",
+      "landmark": "Opening village approach / police-car bridge",
+      "reason": "Highest if first stage means the literal first playable room; source water material/bridge evidence, not a confirmed user-view match."
+    },
+    {
+      "rooms": "r107",
+      "landmark": "Lake-house / fish-water basin",
+      "reason": "Earliest explicit native water-table room on ordinary 1-2 route, not a flowing-river identity."
+    },
+    {
+      "rooms": "r10a",
+      "landmark": "Boulder / water path",
+      "reason": "Early 1-3 broad shallow-water route before the lake; four source surface layers."
+    },
+    {
+      "rooms": "r10c,r10d,r10e",
+      "landmark": "Dam / mine side route / village channels",
+      "reason": "Strongest explicit river naming in existing converter and r10c/e stills, but later 2-1 route and separate from the opening-room interpretation."
+    },
+    {
+      "rooms": "r106,r108",
+      "landmark": "Village-hall-side plane / church-side plane",
+      "reason": "Secondary candidates; IDs alone are not sufficient water or river proof."
+    },
+    {
+      "rooms": "r10b,r11a,r11b",
+      "landmark": "Lake / shore paths",
+      "reason": "Known lake-associated alternatives; no unique binding to river phrase."
+    }
+  ],
+  "room_counts": [
+    {
+      "room": "r100",
+      "member": {
+        "index": 2294,
+        "name": "r100.dat",
+        "offset": 1848064000,
+        "size": 5214368,
+        "sha256": "75fe9de6fe15af37a454ae6d0a0667aec6a578a898afb5028bf79acf8b4b6441"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r101",
+      "member": {
+        "index": 2301,
+        "name": "r101.dat",
+        "offset": 1856077824,
+        "size": 4793024,
+        "sha256": "9775f65af2fa8a4afb257975838db4bb7976cffa46b76f3cb58b3b2f9643e809"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r102",
+      "member": {
+        "index": 2303,
+        "name": "r102.dat",
+        "offset": 1861171200,
+        "size": 4460672,
+        "sha256": "db48fa40949d4382e21ddf6e0dd8eb060bdf5eadb63a0b0342206becc10fef99"
+      },
+      "large_world_Esp08_count": 2,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r103",
+      "member": {
+        "index": 2305,
+        "name": "r103.dat",
+        "offset": 1865910272,
+        "size": 4120896,
+        "sha256": "42d1e16ad88002afada588f97734dcef36434699f08ef90310b72f792945f036"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r104",
+      "member": {
+        "index": 2307,
+        "name": "r104.dat",
+        "offset": 1870317568,
+        "size": 2880576,
+        "sha256": "85ed19ea1b68abe17c11305d5b5c69bcb5afbe3646340d26c4a3ba028e97fc1c"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r105",
+      "member": {
+        "index": 2309,
+        "name": "r105.dat",
+        "offset": 1873577984,
+        "size": 3813696,
+        "sha256": "84e8623535bc0adb5ac419373844a34dc9473c0e618dc82132dc1573896774fe"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r106",
+      "member": {
+        "index": 2311,
+        "name": "r106.dat",
+        "offset": 1877698560,
+        "size": 4351584,
+        "sha256": "b6a63ba847c8acd61132ff71bbb536037afafcf5be4ece50462e713a18da2cef"
+      },
+      "large_world_Esp08_count": 1,
+      "water_associated_filter_count": 1,
+      "texture_counts": {
+        "0xf7": 1
+      }
+    },
+    {
+      "room": "r107",
+      "member": {
+        "index": 2313,
+        "name": "r107.dat",
+        "offset": 1882404864,
+        "size": 3572832,
+        "sha256": "44cf88c5b7fd87fd414da97b7364dbff1178857006d8d6cdb698b7143af210bb"
+      },
+      "large_world_Esp08_count": 2,
+      "water_associated_filter_count": 2,
+      "texture_counts": {
+        "0xfe": 1,
+        "0xf7": 1
+      }
+    },
+    {
+      "room": "r108",
+      "member": {
+        "index": 2315,
+        "name": "r108.dat",
+        "offset": 1886197760,
+        "size": 3573248,
+        "sha256": "9fd0d93ec9e9a3bdd6ba9c65dabcc31cb1e8464a5559d26fd3d10ec702d9a414"
+      },
+      "large_world_Esp08_count": 2,
+      "water_associated_filter_count": 2,
+      "texture_counts": {
+        "0xfe": 2
+      }
+    },
+    {
+      "room": "r109",
+      "member": {
+        "index": 2317,
+        "name": "r109.dat",
+        "offset": 1889945600,
+        "size": 3351648,
+        "sha256": "31a12edae547e820a7a597997761fae211cda2dbc6c578d07f00ea3c52fd7f1d"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r10a",
+      "member": {
+        "index": 2319,
+        "name": "r10a.dat",
+        "offset": 1893623808,
+        "size": 3559904,
+        "sha256": "a121349288f080ba5026ed3de218197366181952ad39269d219b9af1b21c6ed9"
+      },
+      "large_world_Esp08_count": 4,
+      "water_associated_filter_count": 4,
+      "texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1
+      }
+    },
+    {
+      "room": "r10b",
+      "member": {
+        "index": 2321,
+        "name": "r10b.dat",
+        "offset": 1897424896,
+        "size": 3451104,
+        "sha256": "34746c99c9140211c1927b1c31f3cad0780c2fc0d0b092b6f245a25b44536e3c"
+      },
+      "large_world_Esp08_count": 6,
+      "water_associated_filter_count": 5,
+      "texture_counts": {
+        "0xfe": 2,
+        "0xf2": 2,
+        "0xf7": 1
+      }
+    },
+    {
+      "room": "r10c",
+      "member": {
+        "index": 2323,
+        "name": "r10c.dat",
+        "offset": 1901326336,
+        "size": 4489280,
+        "sha256": "e72ce65989122f1c177f3767f1ade56f5a17e3e63eb79adc100e059a71ef7d40"
+      },
+      "large_world_Esp08_count": 18,
+      "water_associated_filter_count": 18,
+      "texture_counts": {
+        "0xc5": 12,
+        "0xef": 3,
+        "0xf7": 2,
+        "0xfe": 1
+      }
+    },
+    {
+      "room": "r10d",
+      "member": {
+        "index": 2325,
+        "name": "r10d.dat",
+        "offset": 1905991680,
+        "size": 2824192,
+        "sha256": "e5f00bab2f5da831ed9a5d707e27662118669809cb6c9eabeba37d6e52d41db9"
+      },
+      "large_world_Esp08_count": 4,
+      "water_associated_filter_count": 4,
+      "texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1
+      }
+    },
+    {
+      "room": "r10e",
+      "member": {
+        "index": 2327,
+        "name": "r10e.dat",
+        "offset": 1909030912,
+        "size": 3854784,
+        "sha256": "6a2879d2686e677862eb15002d9a5c6ea9e22418c7b27a2e55075ed54f3e1d49"
+      },
+      "large_world_Esp08_count": 4,
+      "water_associated_filter_count": 4,
+      "texture_counts": {
+        "0xfe": 2,
+        "0xf7": 2
+      }
+    },
+    {
+      "room": "r10f",
+      "member": {
+        "index": 2329,
+        "name": "r10f.dat",
+        "offset": 1913178112,
+        "size": 4734784,
+        "sha256": "58e924c5b6a35bb925e3075d3c71d17cf3e19217e86b745aad099ddf9110c759"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r111",
+      "member": {
+        "index": 2331,
+        "name": "r111.dat",
+        "offset": 1918236672,
+        "size": 4547040,
+        "sha256": "b5b8ddf6bb6c3fe5f8e46f2a5200c1b1eef6b977d67faf2e2d822368f1f15569"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r112",
+      "member": {
+        "index": 2333,
+        "name": "r112.dat",
+        "offset": 1923108864,
+        "size": 4340000,
+        "sha256": "6a71a5ffa0945df68c87a0afa58bdedd4a870caa88a97ef496402b5671568d31"
+      },
+      "large_world_Esp08_count": 2,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r113",
+      "member": {
+        "index": 2335,
+        "name": "r113.dat",
+        "offset": 1927729152,
+        "size": 3942240,
+        "sha256": "f8ea2977dfe758779169b656829cc9bdfa8b15e314c9ac810f00c97c2ebd3ba7"
+      },
+      "large_world_Esp08_count": 1,
+      "water_associated_filter_count": 1,
+      "texture_counts": {
+        "0xc5": 1
+      }
+    },
+    {
+      "room": "r117",
+      "member": {
+        "index": 2337,
+        "name": "r117.dat",
+        "offset": 1931935744,
+        "size": 3404032,
+        "sha256": "05dfb807deeed9f2d4c5438d3acaac9e06d70e7f422d82979e5f6f57dc5b457b"
+      },
+      "large_world_Esp08_count": 5,
+      "water_associated_filter_count": 5,
+      "texture_counts": {
+        "0xc5": 4,
+        "0xef": 1
+      }
+    },
+    {
+      "room": "r118",
+      "member": {
+        "index": 2339,
+        "name": "r118.dat",
+        "offset": 1935626240,
+        "size": 3948704,
+        "sha256": "15a900e5b69d8528f3ef1d146cc3db82334e1865cf57a5d43dbbea9b7ffd02f9"
+      },
+      "large_world_Esp08_count": 9,
+      "water_associated_filter_count": 9,
+      "texture_counts": {
+        "0xef": 1,
+        "0xc5": 8
+      }
+    },
+    {
+      "room": "r119",
+      "member": {
+        "index": 2341,
+        "name": "r119.dat",
+        "offset": 1939746816,
+        "size": 4344736,
+        "sha256": "7140a6a755a7280a14e6eac82d4639a3b681ab39dbbf593bc2f5fe507b729883"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r11a",
+      "member": {
+        "index": 2343,
+        "name": "r11a.dat",
+        "offset": 1944455168,
+        "size": 3356608,
+        "sha256": "1c4a12c1ee60820c519cc588c6c50ba1767c16118a9cc4c6f110e0f263cf3fc6"
+      },
+      "large_world_Esp08_count": 12,
+      "water_associated_filter_count": 12,
+      "texture_counts": {
+        "0xef": 1,
+        "0xf2": 2,
+        "0xf7": 1,
+        "0xc5": 8
+      }
+    },
+    {
+      "room": "r11b",
+      "member": {
+        "index": 2345,
+        "name": "r11b.dat",
+        "offset": 1948030976,
+        "size": 3816384,
+        "sha256": "e8c8e01fd9b4a626a39ab2d1f2c625462384914ec5c164b50b1c6039c731389e"
+      },
+      "large_world_Esp08_count": 13,
+      "water_associated_filter_count": 13,
+      "texture_counts": {
+        "0xfe": 1,
+        "0xf2": 2,
+        "0xf7": 1,
+        "0xc5": 7,
+        "0xef": 2
+      }
+    },
+    {
+      "room": "r11c",
+      "member": {
+        "index": 2347,
+        "name": "r11c.dat",
+        "offset": 1952167936,
+        "size": 3388480,
+        "sha256": "257445d53ec97477cfc1dbdcb06bc65430cb97f571fbb955fccecf4cb0508b1b"
+      },
+      "large_world_Esp08_count": 9,
+      "water_associated_filter_count": 7,
+      "texture_counts": {
+        "0xc5": 7
+      }
+    },
+    {
+      "room": "r11d",
+      "member": {
+        "index": 2349,
+        "name": "r11d.dat",
+        "offset": 1955999744,
+        "size": 3351840,
+        "sha256": "365c5ce88d7aa80e13111a74609ad195773ef53e01c2f1dc5b1a8dea00ad84a5"
+      },
+      "large_world_Esp08_count": 8,
+      "water_associated_filter_count": 8,
+      "texture_counts": {
+        "0xef": 8
+      }
+    },
+    {
+      "room": "r11e",
+      "member": {
+        "index": 2351,
+        "name": "r11e.dat",
+        "offset": 1959491584,
+        "size": 2949312,
+        "sha256": "67aa9ea587c51d2b8447091f56d4b5d7f378b46e2c6c0692c09c815160237873"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r11f",
+      "member": {
+        "index": 2353,
+        "name": "r11f.dat",
+        "offset": 1962592256,
+        "size": 3341856,
+        "sha256": "24338177ac8c432a0607a26d8d1737d285c71d1ccbeeaa17b8d38c65ca3d00c9"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    },
+    {
+      "room": "r120",
+      "member": {
+        "index": 2355,
+        "name": "r120.dat",
+        "offset": 1965936640,
+        "size": 24896,
+        "sha256": "cc46dc19342b0f48de625d8b8bebfe1cc0245e9d212f4cab10618572c6557b71"
+      },
+      "large_world_Esp08_count": 0,
+      "water_associated_filter_count": 0,
+      "texture_counts": {}
+    }
+  ],
+  "controls": {
+    "tests": 7,
+    "positive": 2,
+    "negative": 5,
+    "status": "PASS"
+  },
+  "guest_SDK_staging_conversion_runtime_recipe_cloud": false,
+  "smallest_implementation_claim": "No runtime implementation yet. Own a future r100-specific immutable material-to-PS2-placement proof only if the opening bridge/pond landmark is bound; do not reuse GC object IDs as PS2 IDs. Existing later-river path stays separate."
+}
