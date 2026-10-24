@@ -68,8 +68,7 @@ struct HashProf {
     HashProf(const char* w,void* c,unsigned n):what(w),caller(c),bytes(n),t0(timer_us_gettime64()){}
     ~HashProf(){
         const unsigned long long us=timer_us_gettime64()-t0;total_us+=us;total_bytes+=bytes;++calls;
-        if(us>=20000)re4dc_log("GC-ASSET-PROF hash=%s caller=%p bytes=%u us=%llu total_calls=%u total_us=%llu total_bytes=%llu
-",
+        if(us>=20000)re4dc_log("GC-ASSET-PROF hash=%s caller=%p bytes=%u us=%llu total_calls=%u total_us=%llu total_bytes=%llu\n",
             what,caller,bytes,us,calls,total_us,total_bytes);
     }
 };
@@ -95,6 +94,7 @@ bool fingerprint_read(Digest& out, Read read, void* context, unsigned count) {
     hash.finish(out.bytes);return true;
 }
 bool fingerprint_read_prefix(Digest& out,Digest& first,Read read,void* context,unsigned count,unsigned prefix){
+    RE4DC_GCA_HASH_PROF("read-prefix",count);
     out={};first={};if(!prefix || prefix>count){++queue_faults;return false;}
     IdentitySha full,part;unsigned char buffer[512];
     while(count){const unsigned take=count<sizeof buffer?count:sizeof buffer;
