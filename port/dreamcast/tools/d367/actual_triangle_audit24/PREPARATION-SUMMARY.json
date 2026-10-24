@@ -1,0 +1,814 @@
+{
+  "classification": "PREPARATION_ONLY_NO_ACTUAL_SHADOW_PREDICATES",
+  "base": "fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2",
+  "private_report": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-r3/report.json",
+    "bytes": 1697979,
+    "sha256": "22b2fe4dc83c0a0ba846eefb822fe1dead4bbbaa850b1e838dc5eaaadc56d57c"
+  },
+  "summary": {
+    "max_geometry_scalar_bits": 93,
+    "max_eye_scalar_bits": 28,
+    "targets": 25,
+    "domains_per_target": 387,
+    "wholelet_domain_cases": 9675,
+    "target_triangle_occurrences": 889,
+    "source_face_occurrences": 1036,
+    "unique_source_faces": 625,
+    "panel_records": 536,
+    "unrepresentable_source_occurrences": 3,
+    "target_degenerate_occurrences": 0,
+    "primitive_calls_upper": 17424288,
+    "edge_determinants_upper": 1254548736,
+    "plane_evaluations_upper": 191667168,
+    "final_assignment_edge_upper": 24771096
+  },
+  "limits": {
+    "address_cap_bytes": 268435456,
+    "output_cap_bytes": 16777216,
+    "seconds": 1.1224839679780416,
+    "peak_rss_kib": 102736,
+    "jobs": 1
+  },
+  "actual_shadow_predicate_calls": 0,
+  "new_rays": 0,
+  "ledger_accesses": 0,
+  "targets": [
+    {
+      "rank": 0,
+      "physical": [
+        121,
+        121,
+        186,
+        190,
+        0,
+        812
+      ],
+      "instance": 199,
+      "preSG_corners": 64,
+      "complete_target_faces": 32,
+      "source_faces": 27,
+      "available_full_panels": 19,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        10,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 32,
+        "source_faces": 27,
+        "primitive_calls_upper": 334368,
+        "edge_determinants_upper": 24074496,
+        "plane_evaluations_upper": 3678048,
+        "final_assignment_edge_upper": 891648
+      }
+    },
+    {
+      "rank": 1,
+      "physical": [
+        123,
+        123,
+        188,
+        192,
+        0,
+        822
+      ],
+      "instance": 202,
+      "preSG_corners": 40,
+      "complete_target_faces": 48,
+      "source_faces": 19,
+      "available_full_panels": 15,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 48,
+        "source_faces": 19,
+        "primitive_calls_upper": 352944,
+        "edge_determinants_upper": 25411968,
+        "plane_evaluations_upper": 3882384,
+        "final_assignment_edge_upper": 1337472
+      }
+    },
+    {
+      "rank": 2,
+      "physical": [
+        91,
+        91,
+        159,
+        163,
+        1,
+        725
+      ],
+      "instance": 165,
+      "preSG_corners": 10,
+      "complete_target_faces": 4,
+      "source_faces": 39,
+      "available_full_panels": 30,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        1,
+        1
+      ],
+      "fresh_effective_lod_guard_required": true,
+      "precount": {
+        "domains": 387,
+        "target_faces": 4,
+        "source_faces": 39,
+        "primitive_calls_upper": 60372,
+        "edge_determinants_upper": 4346784,
+        "plane_evaluations_upper": 664092,
+        "final_assignment_edge_upper": 111456
+      }
+    },
+    {
+      "rank": 3,
+      "physical": [
+        195,
+        195,
+        254,
+        258,
+        0,
+        1005
+      ],
+      "instance": 284,
+      "preSG_corners": 8,
+      "complete_target_faces": 4,
+      "source_faces": 16,
+      "available_full_panels": 12,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        2,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 4,
+        "source_faces": 16,
+        "primitive_calls_upper": 24768,
+        "edge_determinants_upper": 1783296,
+        "plane_evaluations_upper": 272448,
+        "final_assignment_edge_upper": 111456
+      }
+    },
+    {
+      "rank": 4,
+      "physical": [
+        128,
+        128,
+        195,
+        199,
+        0,
+        831
+      ],
+      "instance": 209,
+      "preSG_corners": 64,
+      "complete_target_faces": 55,
+      "source_faces": 28,
+      "available_full_panels": 21,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        5,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 55,
+        "source_faces": 28,
+        "primitive_calls_upper": 595980,
+        "edge_determinants_upper": 42910560,
+        "plane_evaluations_upper": 6555780,
+        "final_assignment_edge_upper": 1532520
+      }
+    },
+    {
+      "rank": 5,
+      "physical": [
+        217,
+        217,
+        275,
+        279,
+        0,
+        1046
+      ],
+      "instance": 307,
+      "preSG_corners": 64,
+      "complete_target_faces": 38,
+      "source_faces": 9,
+      "available_full_panels": 7,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        2,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 38,
+        "source_faces": 9,
+        "primitive_calls_upper": 132354,
+        "edge_determinants_upper": 9529488,
+        "plane_evaluations_upper": 1455894,
+        "final_assignment_edge_upper": 1058832
+      }
+    },
+    {
+      "rank": 6,
+      "physical": [
+        94,
+        94,
+        161,
+        165,
+        0,
+        736
+      ],
+      "instance": 169,
+      "preSG_corners": 63,
+      "complete_target_faces": 32,
+      "source_faces": 19,
+      "available_full_panels": 13,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 32,
+        "source_faces": 19,
+        "primitive_calls_upper": 235296,
+        "edge_determinants_upper": 16941312,
+        "plane_evaluations_upper": 2588256,
+        "final_assignment_edge_upper": 891648
+      }
+    },
+    {
+      "rank": 7,
+      "physical": [
+        166,
+        166,
+        161,
+        165,
+        0,
+        736
+      ],
+      "instance": 250,
+      "preSG_corners": 63,
+      "complete_target_faces": 32,
+      "source_faces": 11,
+      "available_full_panels": 8,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 32,
+        "source_faces": 11,
+        "primitive_calls_upper": 136224,
+        "edge_determinants_upper": 9808128,
+        "plane_evaluations_upper": 1498464,
+        "final_assignment_edge_upper": 891648
+      }
+    },
+    {
+      "rank": 8,
+      "physical": [
+        94,
+        94,
+        161,
+        165,
+        0,
+        735
+      ],
+      "instance": 169,
+      "preSG_corners": 62,
+      "complete_target_faces": 40,
+      "source_faces": 18,
+      "available_full_panels": 13,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 40,
+        "source_faces": 18,
+        "primitive_calls_upper": 278640,
+        "edge_determinants_upper": 20062080,
+        "plane_evaluations_upper": 3065040,
+        "final_assignment_edge_upper": 1114560
+      }
+    },
+    {
+      "rank": 9,
+      "physical": [
+        166,
+        166,
+        161,
+        165,
+        0,
+        735
+      ],
+      "instance": 250,
+      "preSG_corners": 62,
+      "complete_target_faces": 40,
+      "source_faces": 11,
+      "available_full_panels": 8,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 40,
+        "source_faces": 11,
+        "primitive_calls_upper": 170280,
+        "edge_determinants_upper": 12260160,
+        "plane_evaluations_upper": 1873080,
+        "final_assignment_edge_upper": 1114560
+      }
+    },
+    {
+      "rank": 10,
+      "physical": [
+        91,
+        91,
+        160,
+        164,
+        1,
+        733
+      ],
+      "instance": 166,
+      "preSG_corners": 57,
+      "complete_target_faces": 45,
+      "source_faces": 45,
+      "available_full_panels": 39,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        7,
+        2
+      ],
+      "fresh_effective_lod_guard_required": true,
+      "precount": {
+        "domains": 387,
+        "target_faces": 45,
+        "source_faces": 45,
+        "primitive_calls_upper": 783675,
+        "edge_determinants_upper": 56424600,
+        "plane_evaluations_upper": 8620425,
+        "final_assignment_edge_upper": 1253880
+      }
+    },
+    {
+      "rank": 11,
+      "physical": [
+        128,
+        128,
+        195,
+        199,
+        0,
+        834
+      ],
+      "instance": 209,
+      "preSG_corners": 52,
+      "complete_target_faces": 60,
+      "source_faces": 24,
+      "available_full_panels": 19,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        5,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 60,
+        "source_faces": 24,
+        "primitive_calls_upper": 557280,
+        "edge_determinants_upper": 40124160,
+        "plane_evaluations_upper": 6130080,
+        "final_assignment_edge_upper": 1671840
+      }
+    },
+    {
+      "rank": 12,
+      "physical": [
+        127,
+        127,
+        194,
+        198,
+        0,
+        829
+      ],
+      "instance": 208,
+      "preSG_corners": 49,
+      "complete_target_faces": 80,
+      "source_faces": 37,
+      "available_full_panels": 27,
+      "unrepresentable_sources": 1,
+      "authored_counts": [
+        2
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 80,
+        "source_faces": 37,
+        "primitive_calls_upper": 1145520,
+        "edge_determinants_upper": 82477440,
+        "plane_evaluations_upper": 12600720,
+        "final_assignment_edge_upper": 2229120
+      }
+    },
+    {
+      "rank": 13,
+      "physical": [
+        127,
+        127,
+        194,
+        198,
+        0,
+        830
+      ],
+      "instance": 208,
+      "preSG_corners": 48,
+      "complete_target_faces": 64,
+      "source_faces": 37,
+      "available_full_panels": 27,
+      "unrepresentable_sources": 1,
+      "authored_counts": [
+        2
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 64,
+        "source_faces": 37,
+        "primitive_calls_upper": 916416,
+        "edge_determinants_upper": 65981952,
+        "plane_evaluations_upper": 10080576,
+        "final_assignment_edge_upper": 1783296
+      }
+    },
+    {
+      "rank": 14,
+      "physical": [
+        194,
+        194,
+        253,
+        257,
+        0,
+        1003
+      ],
+      "instance": 283,
+      "preSG_corners": 47,
+      "complete_target_faces": 24,
+      "source_faces": 135,
+      "available_full_panels": 121,
+      "unrepresentable_sources": 1,
+      "authored_counts": [
+        1
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 24,
+        "source_faces": 135,
+        "primitive_calls_upper": 1253880,
+        "edge_determinants_upper": 90279360,
+        "plane_evaluations_upper": 13792680,
+        "final_assignment_edge_upper": 668736
+      }
+    },
+    {
+      "rank": 15,
+      "physical": [
+        155,
+        155,
+        221,
+        225,
+        0,
+        908
+      ],
+      "instance": 239,
+      "preSG_corners": 43,
+      "complete_target_faces": 71,
+      "source_faces": 231,
+      "available_full_panels": 214,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        1
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 71,
+        "source_faces": 231,
+        "primitive_calls_upper": 6347187,
+        "edge_determinants_upper": 456997464,
+        "plane_evaluations_upper": 69819057,
+        "final_assignment_edge_upper": 1978344
+      }
+    },
+    {
+      "rank": 16,
+      "physical": [
+        156,
+        156,
+        222,
+        226,
+        0,
+        909
+      ],
+      "instance": 240,
+      "preSG_corners": 42,
+      "complete_target_faces": 64,
+      "source_faces": 108,
+      "available_full_panels": 100,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        1
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 64,
+        "source_faces": 108,
+        "primitive_calls_upper": 2674944,
+        "edge_determinants_upper": 192595968,
+        "plane_evaluations_upper": 29424384,
+        "final_assignment_edge_upper": 1783296
+      }
+    },
+    {
+      "rank": 17,
+      "physical": [
+        128,
+        128,
+        195,
+        199,
+        0,
+        835
+      ],
+      "instance": 209,
+      "preSG_corners": 39,
+      "complete_target_faces": 46,
+      "source_faces": 8,
+      "available_full_panels": 4,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        5,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 46,
+        "source_faces": 8,
+        "primitive_calls_upper": 142416,
+        "edge_determinants_upper": 10253952,
+        "plane_evaluations_upper": 1566576,
+        "final_assignment_edge_upper": 1281744
+      }
+    },
+    {
+      "rank": 18,
+      "physical": [
+        94,
+        94,
+        161,
+        165,
+        0,
+        737
+      ],
+      "instance": 169,
+      "preSG_corners": 34,
+      "complete_target_faces": 20,
+      "source_faces": 16,
+      "available_full_panels": 11,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 20,
+        "source_faces": 16,
+        "primitive_calls_upper": 123840,
+        "edge_determinants_upper": 8916480,
+        "plane_evaluations_upper": 1362240,
+        "final_assignment_edge_upper": 557280
+      }
+    },
+    {
+      "rank": 19,
+      "physical": [
+        166,
+        166,
+        161,
+        165,
+        0,
+        737
+      ],
+      "instance": 250,
+      "preSG_corners": 34,
+      "complete_target_faces": 20,
+      "source_faces": 9,
+      "available_full_panels": 7,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        3
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 20,
+        "source_faces": 9,
+        "primitive_calls_upper": 69660,
+        "edge_determinants_upper": 5015520,
+        "plane_evaluations_upper": 766260,
+        "final_assignment_edge_upper": 557280
+      }
+    },
+    {
+      "rank": 20,
+      "physical": [
+        209,
+        209,
+        268,
+        272,
+        0,
+        1022
+      ],
+      "instance": 299,
+      "preSG_corners": 31,
+      "complete_target_faces": 22,
+      "source_faces": 6,
+      "available_full_panels": 5,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        1,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 22,
+        "source_faces": 6,
+        "primitive_calls_upper": 51084,
+        "edge_determinants_upper": 3678048,
+        "plane_evaluations_upper": 561924,
+        "final_assignment_edge_upper": 613008
+      }
+    },
+    {
+      "rank": 21,
+      "physical": [
+        221,
+        221,
+        278,
+        282,
+        1,
+        1053
+      ],
+      "instance": 311,
+      "preSG_corners": 28,
+      "complete_target_faces": 14,
+      "source_faces": 51,
+      "available_full_panels": 47,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        2,
+        1
+      ],
+      "fresh_effective_lod_guard_required": true,
+      "precount": {
+        "domains": 387,
+        "target_faces": 14,
+        "source_faces": 51,
+        "primitive_calls_upper": 276318,
+        "edge_determinants_upper": 19894896,
+        "plane_evaluations_upper": 3039498,
+        "final_assignment_edge_upper": 390096
+      }
+    },
+    {
+      "rank": 22,
+      "physical": [
+        194,
+        194,
+        252,
+        256,
+        1,
+        1002
+      ],
+      "instance": 282,
+      "preSG_corners": 23,
+      "complete_target_faces": 16,
+      "source_faces": 79,
+      "available_full_panels": 68,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        2,
+        1,
+        0
+      ],
+      "fresh_effective_lod_guard_required": true,
+      "precount": {
+        "domains": 387,
+        "target_faces": 16,
+        "source_faces": 79,
+        "primitive_calls_upper": 489168,
+        "edge_determinants_upper": 35220096,
+        "plane_evaluations_upper": 5380848,
+        "final_assignment_edge_upper": 445824
+      }
+    },
+    {
+      "rank": 23,
+      "physical": [
+        91,
+        91,
+        160,
+        164,
+        1,
+        734
+      ],
+      "instance": 166,
+      "preSG_corners": 14,
+      "complete_target_faces": 14,
+      "source_faces": 49,
+      "available_full_panels": 41,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        7,
+        2
+      ],
+      "fresh_effective_lod_guard_required": true,
+      "precount": {
+        "domains": 387,
+        "target_faces": 14,
+        "source_faces": 49,
+        "primitive_calls_upper": 265482,
+        "edge_determinants_upper": 19114704,
+        "plane_evaluations_upper": 2920302,
+        "final_assignment_edge_upper": 390096
+      }
+    },
+    {
+      "rank": 24,
+      "physical": [
+        217,
+        217,
+        275,
+        279,
+        0,
+        1047
+      ],
+      "instance": 307,
+      "preSG_corners": 8,
+      "complete_target_faces": 4,
+      "source_faces": 4,
+      "available_full_panels": 3,
+      "unrepresentable_sources": 0,
+      "authored_counts": [
+        2,
+        0
+      ],
+      "fresh_effective_lod_guard_required": false,
+      "precount": {
+        "domains": 387,
+        "target_faces": 4,
+        "source_faces": 4,
+        "primitive_calls_upper": 6192,
+        "edge_determinants_upper": 445824,
+        "plane_evaluations_upper": 68112,
+        "final_assignment_edge_upper": 111456
+      }
+    }
+  ],
+  "runtime_admitted": false,
+  "actual_opportunity": "UNTESTED",
+  "limitations": [
+    "All target faces retained including degenerates; no target subset can be positive.",
+    "Sources comprise complete saved matched components, independent actual triangles only; no union/topology theorem.",
+    "Production Panel requires two distinct opposite-edge adjacent retained actual faces in same physical let; deterministic lowest ordinal partner; unrepresentable source remains UNKNOWN.",
+    "Future geometric proof only: numeric/raster/source prefix/emission/actual selector/LOD/frame liveness remain unqualified.",
+    "Known perlet exposure is hut647 preSG only; other128 cameras have no perlet exposure proof.",
+    "Target effective levels remain actual including1; multi-effective targets need fresh effectiveLOD guard.",
+    "Raw exhaustive work census is not a120s execution allocation; root must bound actual run before predicates."
+  ]
+}
