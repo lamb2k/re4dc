@@ -25,6 +25,7 @@ struct kthread_t {int state;void* wait_obj;const char* wait_msg;};
 struct OSThread {kthread_t* kt;unsigned nativeIoDepth;int suspend,state;void* queue;int gateCount=0;};
 static OSThread g_mainThread,*g_threads[32];static int g_threadCount,g_gate;
 static unsigned gcasset_os_terminal,gcasset_os_creating,gcasset_os_late;
+static kthread_t* g_reapPending[32];static unsigned g_reapPendingCount;
 static kthread_t *thd_current,*motion_busy;
 static int irq_depth,interrupt_context,unparks,parks,waits;
 int irq_disable(){return irq_depth++;}
@@ -40,6 +41,11 @@ int main(){
  kthread_t main{STATE_READY,nullptr,nullptr},task{STATE_WAIT,&g_gate,"os-suspend"};
  OSThread t{&task,0,1,0,nullptr};g_mainThread.kt=&main;thd_current=&main;g_threads[0]=&t;g_threadCount=1;
  unsigned blocked=99;
+ // Reused source slot: its replacement is idle, but the prior KOS task is not.
+ kthread_t prior{STATE_READY,nullptr,nullptr};g_reapPending[0]=&prior;g_reapPendingCount=1;
+ assert(!re4dc_gcasset_os_quiesce(&blocked) && !gcasset_os_terminal);
+ prior.state=STATE_FINISHED;assert(re4dc_gcasset_os_quiesce(&blocked));
+ g_reapPendingCount=0;gcasset_os_terminal=0;
  assert(re4dc_gcasset_os_quiesce(&blocked)==1 && blocked==0 && gcasset_os_terminal==1 && irq_depth==0);
  assert(OSResumeThread(&t)==1 && t.suspend==1 && unparks==0 && gcasset_os_late==1);
  assert(!re4dc_gcasset_os_quiesce(&blocked));

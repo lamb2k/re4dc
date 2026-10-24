@@ -343,6 +343,11 @@ extern "C" unsigned re4dc_gcasset_os_quiesce(unsigned* blocked){
     if(!re4dc_gcasset_os_frame_boundary()){if(blocked)*blocked=~0U;return 0;}
     const int old=irq_disable();unsigned mask=0;
     if(gcasset_os_creating || gcasset_os_late)mask=~0U;
+    // A reused OSThread slot may still retain its prior KOS record until it
+    // finishes. It is no longer in g_threads: never infer its idle state from
+    // the replacement record or cancel it to manufacture quiescence.
+    for(unsigned i=0;i<g_reapPendingCount;++i)
+        if(g_reapPending[i] && g_reapPending[i]->state!=STATE_FINISHED)mask=~0U;
     for(int i=0;i<g_threadCount;++i){
         const OSThread* t=g_threads[i];const kthread_t* kt=t->kt;
         if(!kt || kt==g_mainThread.kt || kt->state==STATE_FINISHED)continue;
