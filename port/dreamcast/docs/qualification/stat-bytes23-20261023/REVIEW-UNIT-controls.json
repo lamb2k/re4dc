@@ -1,0 +1,53 @@
+{
+  "commit": "c11a7eeaa1f2149b4176ec45aabbbb95206b5e85",
+  "direct_sites": 62,
+  "macro_definitions": 7,
+  "distinct_predicates": 18,
+  "distinct_stores": 13,
+  "states_per_knob": 524288,
+  "macro_store_cases_per_knob": 65536,
+  "results": [
+    {
+      "knob": 0,
+      "pass": true
+    },
+    {
+      "knob": 1,
+      "pass": true
+    }
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/Makefile": "010fd331654f61a1c771968c84601a4cb28340f8cf51ec481db26aaf34010ef7",
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": "aa299089fe55b8490b7e5cf92f5c4ed9a639f2c304ba4f380159314bde0636e6",
+    "src/em21/em21.cpp": "076b791c9ca46c57440094432f2576bc77d53267bd6ea700fb186f7a7d0995aa",
+    "src/em25/em25.cpp": "2b637d8149ac2eb6903c2d9e40a2509b2761370aa86b0e93b2570dfc237c0a26",
+    "src/em2a/em2a.cpp": "d76bf6227b9239617da4296fe4accd8cf324a948cd5cbe5acd7abe9115f9903a",
+    "src/em2b/em2b.cpp": "dfa9703956d12ee502c59cb289215a46e04d44cfcb5747ab2b9af6c7fda00f03",
+    "src/em2c/em2c.cpp": "f6df66a38a91d43e2373fd878afaa4939f044e60d01e74d0117c85226f21aaf8",
+    "src/em2d/em2d.cpp": "6d84b59b7a8c139c9130db3b532a8b4b634298a4996df47dcebc14ef41e41b79",
+    "src/em32/em32.cpp": "16d71772b2801a2b2948ecea494f6f354e8b9ec9eb999f0bd447d0ee164801ae",
+    "src/em36/em36.cpp": "d02a76cd0ea82b8d4b23119bba3e849ef9c38df520ca717b9804a17de42454af",
+    "src/em38/em38.cpp": "8347f4cd58e09a0755228a6dd260b261668cc0031f8a22fcb84d30491f6599ba",
+    "src/em39/em39.cpp": "753d1998ef4eecb4930f3d850f611ec0d21d2eb13a51905bbc149a1c9698ae9a",
+    "src/game/cockpit.cpp": "fd8f5d5a869bee24bf9ae753af79d19997d1e24d7331c8c3d9dc2d45ff870164",
+    "src/game/obj14.cpp": "81efcc350ae1a19f5a188313ccf79a3c8de020fabb67efbbe5df17d17e1e44c5",
+    "src/game/obj15.cpp": "3427b1703f17e9d36af32e155b404f0dac7190fe85605575b99510044029ae58",
+    "src/game/pl_class.cpp": "44bd19c3802a717933455b4ba8b0b92ca717d6efb2de6a2463785a4cadaf3bf4",
+    "src/game/pl_npc.cpp": "bf6da8339ccc1c3527e6c37a18250afcdf0cfb46250244b9b25d479822465e76",
+    "src/game/pl_sub.cpp": "50c9e54f82602026354f8a756b6c2f44b703b534c407c6b17d20f6f973ec9b43",
+    "src/game/pl_wep.cpp": "8993921995c7115b88f98ffb623fcf884cc7a3435d2cd078a9fae0600fc55f79",
+    "src/game/player.cpp": "c77019dd247c611c8ef7c1ab92202b26b5d470c6d8d01a7e3f76e73cd0ede0da",
+    "src/pl0f/pl0f.cpp": "1336f3d64a2c09e3a107090bdff6e3dd26070b14550a230520da665b56abd640",
+    "src/pl14/pl14.cpp": "4800d5df22077ef8f7e77b5cbe1128a93bd4c47635278af9c9e22c3b34e486ef",
+    "src/st3/r30c.cpp": "a60c947bb20e1e6291657efab38c4667705f65f4606da2b3a19ddd294e79b30b",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "port/dreamcast/game/sscrn_bridge.cpp": "aef6d4ff09bca48b6a566062b372f4385ae0a5a8e6544a69d6440b5f8a80558f",
+    "port/dreamcast/game/vmu_context.cpp": "8cf86c65424995ca60edd692df1540d9c0f3b41e9ddaa3f7243a2b3a3b00bff9",
+    "port/dreamcast/game/vmu_render.cpp": "1dfb615e16861ed1471b754db60a6d244651b950c51c43c62507c69e6550f99c",
+    "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4"
+  },
+  "fixture_sha256": "b81366bb821eef4471af095956c01fe8b93e81e7fd5d850ff58d1261db957d4a",
+  "limits": "Actual union/header/helper extracted. Not full class, game context, target or PS2 binary oracle.",
+  "base": "7b6ad1546d70c8d1b73a4d76fc83340baee3e5b5",
+  "tree": "bd898a6d69d19379a6cf7a01fca1ab44ac048943"
+}

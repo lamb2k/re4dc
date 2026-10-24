@@ -1,0 +1,95 @@
+{
+  "status": "PASS_BOUNDED_ON_CENSUS",
+  "source": "2a14662d4b025031cd93f64eed6a5d8159d473b7",
+  "source_clean": true,
+  "data_source": "933936ea7f45ba81c09277a780ed00111407aa23",
+  "rooms": [
+    "r100",
+    "r101",
+    "r102",
+    "r103",
+    "r104",
+    "r105",
+    "r106",
+    "r107",
+    "r108",
+    "r109",
+    "r10a",
+    "r10b",
+    "r10f",
+    "r111",
+    "r112",
+    "r113",
+    "r117",
+    "r118",
+    "r119",
+    "r11a",
+    "r11b",
+    "r11c",
+    "r11d",
+    "r11e",
+    "r11f",
+    "r200",
+    "r10c"
+  ],
+  "total": 27,
+  "passed": 27,
+  "evidence_kind": "Flycast console regression, not hardware or performance",
+  "no_per_site_repro_or_absent_overlay_claim": true,
+  "track03_sha256": "e6960258ab7732b3fb925ec6dd5951782adb1f88932f464dfb7cd2c1e35c8c53",
+  "captures_executable_sha256": [
+    "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+  ],
+  "harness_sha256": [
+    "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+  ],
+  "guest_seconds_range": [
+    40.859,
+    41.516
+  ],
+  "deadlines_fired": 0,
+  "screenshots": 108,
+  "nmrs_rows": 1584,
+  "slot_coordination": {
+    "coordinator_pid": 4101998,
+    "paused_after_finished_rooms": 14,
+    "stopped_state_verified": "Tsl+",
+    "resumed_state_verified": "Ssl+",
+    "reason": "root H2/KOS probes before remaining13",
+    "finished_coordinator_exit": 0
+  },
+  "final_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/final-receipt.json",
+  "final_receipt_sha256": "a69e6c541e3f6ed0ae4fd4f761d8bdc1d0bc12b79c532489cdbb7c89cc2ba69a",
+  "results_sha256": "ad4e9639cd839ed259280d7d39086f9a67fe272c8f1636e12d5129f8292f686d",
+  "aggregate": {
+    "castgc": [
+      "r200  00  Leon     PS2       52650   0       Leon/pl08 plan",
+      "r200  03  Ashley   PS2       52650   0       registry package ashley11",
+      "r200  12  em12     CROWD-SKIP 0       0       PS2 Ganado cast",
+      "r200  3b  em3b     PS2       52650   0       registry package truck-em3b-00",
+      "CAST-GC stat23-on: 1584 census lines, 61 room/model rows, 0 GC or MIXED character rows not allowed (PASS)"
+    ],
+    "leongc": [
+      "LEON-GC PASS /mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/cg-r11e/run-output.txt (0 fallback frames)",
+      "LEON-GC PASS /mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/cg-r11f/run-output.txt (0 fallback frames)",
+      "LEON-GC PASS /mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/cg-r200/run-output.txt (0 fallback frames)",
+      "LEON-GC PASS /mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/cg-r10c/run-output.txt (0 fallback frames)",
+      "LEON-GC PASS"
+    ],
+    "texchk": [
+      "  TEXCHK PASS",
+      "== /mnt/c/Flycast-Evidence/re4-dreamcast/stat-bytes23/takeover-2a14662d/census-on/cg-r10c/run-output.txt",
+      "  last summary: frame=4560 fails=0 skips=0 meta_changes=0 vram_changes=0 binds=8786 arms=151; room ends=1",
+      "  TEXCHK PASS",
+      "TEXCHK PASS (27/27 logs pass)"
+    ]
+  },
+  "baseline_note": "rr933 existing26-room logs only; not freshOFF/currentpaired evidence; sample counts/windows differ",
+  "script_sha256": {
+    "census-bound-run.py": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c",
+    "judge-census-on.py": "b8693d381f2ac1bb9635696fcc3756b2e5856865cd28b35d6ca8239a9feeefa1",
+    "stat-guest-slot.sh": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+    "takeover-census-on.py": "cdaecce5d87e6b04818b985d41f7e13f8145209f62fa6831bdea402c6d861c7d",
+    "takeover-stage-v2.sh": "17c4ae443d87f511f01ba1e51683e4c97cf83288d422d38a81174bd586d6f9be"
+  }
+}

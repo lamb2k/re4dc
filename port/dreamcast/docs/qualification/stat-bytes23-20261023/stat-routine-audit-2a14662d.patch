@@ -1,0 +1,844 @@
+diff --git a/port/dreamcast/game/Makefile b/port/dreamcast/game/Makefile
+index 05efde70a..3007d7535 100644
+--- a/port/dreamcast/game/Makefile
++++ b/port/dreamcast/game/Makefile
+@@ -2286,6 +2286,23 @@ GAME_OPT ?= -O1
+ GAME_CPPFLAGS = -std=gnu++20 -fpermissive -w $(GAME_OPT) \
+ 	-include platform/include/re4dc_prelude.h \
+ 	-I$(ROOT)/include -I$(ROOT)/src -Iplatform/include -DRE4DC_GAME
++# STAT_ROUTINE_BYTES=1 (lane stat-bytes23 2026-10-23; default 0 = image unchanged): every remaining GameCube
++# big-endian store / test of the cModel::stat routine word (STAT_BE in re4dc_prelude.h): player / partner / HUD
++# tests, the r100 trap dog (em21 + em2a), El Gigante (em2b), Luis (pl14), the boat (pl0f), the bell / gatling
++# objects and the later bosses. em10 / em35 keep their own GANADO_ / EM35_ROUTINE_BYTES knobs.
++STAT_ROUTINE_BYTES ?= 0
++ifneq ($(STAT_ROUTINE_BYTES),0)
++ifneq ($(STAT_ROUTINE_BYTES),1)
++$(error STAT_ROUTINE_BYTES must be 0 or 1)
++endif
++GAME_CPPFLAGS += -DRE4DC_STAT_ROUTINE_BYTES=1
++endif
++# STAT_DIAG=1 (test / QA discs only; default 0): STATDIAG log lines (player / partner routine-word tests where the
++# GameCube meaning and the raw word compare disagree, the r100 trap dog and its trap's routine changes, a self test).
++STAT_DIAG ?= 0
++ifneq ($(STAT_DIAG),0)
++GAME_CPPFLAGS += -DRE4DC_STAT_DIAG=1
++endif
+ PLATFORM_CPPFLAGS = -std=gnu++20 -Wall -Wextra $(GAME_OPT) \
+ 	-Iplatform/include -DRE4DC_GAME
+ 
+diff --git a/port/dreamcast/game/platform/include/re4dc_prelude.h b/port/dreamcast/game/platform/include/re4dc_prelude.h
+index e7bc5b0e5..a0337a46b 100644
+--- a/port/dreamcast/game/platform/include/re4dc_prelude.h
++++ b/port/dreamcast/game/platform/include/re4dc_prelude.h
+@@ -12,12 +12,28 @@
+ 
+ #ifdef __cplusplus
+ extern "C" {
++
++
+ #endif
+ void* memcpy(void* dst, const void* src, unsigned int n);
+ 
+ int strcmp(const char* a, const char* b);
+ #ifdef __cplusplus
+ }
++
++
++#endif
++
++
++
++// STAT_ROUTINE_BYTES=1 (Makefile; lane stat-bytes23 2026-10-23): cModel::stat is the four routine bytes
++// r_no_0..3 read as one word. The recovered sources store / test it as a GameCube big-endian word (r_no_0 in the
++// top byte); on the little-endian Dreamcast r_no_0 is the low byte, so those constants named the wrong routine /
++// step. STAT_BE() wraps every such constant (stores, masks and compare values); off it is the constant unchanged.
++#if defined(RE4DC_STAT_ROUTINE_BYTES) && RE4DC_STAT_ROUTINE_BYTES && !defined(__PPC__)
++#define STAT_BE(x) ((unsigned int) __builtin_bswap32((unsigned int) (x)))
++#else
++#define STAT_BE(x) (x)
+ #endif
+ 
+ #endif
+diff --git a/port/dreamcast/game/vmu_context.cpp b/port/dreamcast/game/vmu_context.cpp
+index 30c012fb6..160b8ffcc 100644
+--- a/port/dreamcast/game/vmu_context.cpp
++++ b/port/dreamcast/game/vmu_context.cpp
+@@ -65,7 +65,9 @@ extern "C" void re4dc_vmu_snapshot() {
+     s.call=radio>=0&&SubScreenWk.type==SS_OPEN_TERM&&!SubScreenWk.cancel;
+     unsigned weapon=WeaponId2WeaponNo(ItemMgr.m_wep_id);
+     s.ammo_kind=re4vmu::Hidden;
+-    if(re4vmu::ammo_visible(pG->pl_type,pPL->stat,weapon)){
++    // The portable VMU helper takes the original big-endian routine word.
++    // Normalize the native four-byte union under the same audit switch as the HUD.
++    if(re4vmu::ammo_visible(pG->pl_type,STAT_BE(pPL->stat),weapon)){
+         // Match ItemMgr's explicit debug infinite mode without showing its sentinel 100.
+         bool infinite=(s32)pG->Debug_flg[3]>=0&&(pG->Debug_flg[2]&0x00400000);
+         s.ammo_kind=infinite?re4vmu::Infinite:re4vmu::Finite;
+diff --git a/src/em21/em21.cpp b/src/em21/em21.cpp
+index 972d609ef..78b3459f9 100644
+--- a/src/em21/em21.cpp
++++ b/src/em21/em21.cpp
+@@ -146,7 +146,7 @@ void em21DmCk(cEm21* em)
+                 em->dmg.m_Timer = c;
+             }
+             if (mode != 2) {
+-                if ((em->stat & 0xFFFF0000) == 0x01050000 && w->pTrap) {
++                if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000) && w->pTrap) {
+                     w->pTrap->r_no_0 = 1;
+                     w->pTrap->r_no_1 = 4;
+                     w->pTrap->r_no_2 = 0;
+@@ -170,7 +170,7 @@ void em21DmCk(cEm21* em)
+     if (em->set == 2) {
+         return;
+     }
+-    if ((em->stat & 0xFFFF0000) == 0x01050000 && w->pTrap) {
++    if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000) && w->pTrap) {
+         w->pTrap->r_no_0 = 1;
+         w->pTrap->r_no_1 = 4;
+         w->pTrap->r_no_2 = 0;
+@@ -256,6 +256,9 @@ void cEm21::move()
+         return;
+     }
+     em21NeckMove(this);
++#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
++    { extern void re4dc_stat_diag_em21(cEm21*); re4dc_stat_diag_em21(this); }
++#endif
+     partsWorldCalc();
+     d = SQRTF((pos.x - pos_old.x) * (pos.x - pos_old.x) + (pos.z - pos_old.z) * (pos.z - pos_old.z));
+     EmAtCheck(this);
+@@ -630,7 +633,7 @@ static void em21_R1_R100TrapWait(cEm21* em)
+         }
+         MotionMoveF(em, 0);
+         em21TrapSearch(em);
+-        if (w->pTrap && (w->pTrap->stat & 0xFFFF0000) == 0x01040000) {
++        if (w->pTrap && (w->pTrap->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01040000)) {
+             em->dmg.m_Timer = 0x3C;
+             EmRoutineSet(em, 1, 7, 0, 1);
+             return;
+@@ -1422,3 +1425,24 @@ int em21GetBarkPos(cEm21* em)
+     w->barkPos = e->pos;
+     return 1;
+ }
++#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
++// STAT_DIAG=1 (lane stat-bytes23): log each routine change of the dog and of its bear trap (em2a).
++extern "C" void re4dc_log(const char* fmt, ...);
++static u32 s_em21DiagLast[8], s_em21DiagTrap[8];
++void re4dc_stat_diag_em21(cEm21* em)
++{
++    Em21Work* w = EM21_WK(em);
++    const unsigned k = em->id & 7;
++    const u32 r = (u32) em->r_no_0 << 24 | (u32) em->r_no_1 << 16 | (u32) em->r_no_2 << 8 | em->r_no_3;
++    const cModel* t = w->pTrap;
++    const u32 tr = t ? ((u32) t->r_no_0 << 24 | (u32) t->r_no_1 << 16 | (u32) t->r_no_2 << 8 | t->r_no_3) : 0xFFFFFFFFu;
++    if ((r & 0xFFFF0000u) != (s_em21DiagLast[k] & 0xFFFF0000u) || tr != s_em21DiagTrap[k]) {
++        re4dc_log("STATDIAG em21 f=%u room=%x id=%u set=%u r=%02x.%02x.%02x.%02x trap=%08x hp=%d pos=%d,%d\n",
++                  (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, (unsigned) em->id, (unsigned) em->set, r >> 24,
++                  (r >> 16) & 0xFF, (r >> 8) & 0xFF, r & 0xFF, (unsigned) tr, (int) em->hp, (int) em->pos.x,
++                  (int) em->pos.z);
++    }
++    s_em21DiagLast[k] = r;
++    s_em21DiagTrap[k] = tr;
++}
++#endif
+diff --git a/src/em25/em25.cpp b/src/em25/em25.cpp
+index 6caf7d8d2..13fdf1eb0 100644
+--- a/src/em25/em25.cpp
++++ b/src/em25/em25.cpp
+@@ -1442,7 +1442,7 @@ void cEm25::setHide()
+ // 1 while the parasite is parked in Hide (R0 1 / R1 0).
+ int cEm25::ckHide()
+ {
+-    return (stat & 0xFFFF0000) == 0x01000000;
++    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01000000);
+ }
+ 
+ // Room script: a floor parasite is born at `ppos` facing `ang` (Birth 1).
+diff --git a/src/em2a/em2a.cpp b/src/em2a/em2a.cpp
+index 74ad64a08..12e6d099e 100644
+--- a/src/em2a/em2a.cpp
++++ b/src/em2a/em2a.cpp
+@@ -153,7 +153,7 @@ void em2aDmCkTrap1(cEm2a* em)
+     em->hp = 0;
+     SndCall(8, 2, &em->pos, em->id, 0, em);
+     EmDmBloodSet2(em, 0x22, 9, 0, 0, 0);
+-    if ((em->stat & 0xFFFF0000) == 0x01050000) {
++    if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01050000)) {
+         EmRoutineSet(em, 1, 4, 0, 0);
+     } else {
+         GameAddPoint(LVADD_CRITICALHIT);
+diff --git a/src/em2b/em2b.cpp b/src/em2b/em2b.cpp
+index 45e922db3..bead4fe1b 100644
+--- a/src/em2b/em2b.cpp
++++ b/src/em2b/em2b.cpp
+@@ -132,7 +132,7 @@ static void plem2bDmBlow(cPlayer* pl);
+ #define PL_ARC(no) PL_ARC_PTR(pl->subArc, no)
+ 
+ // Routine word test: xFC / xFD as the upper half of cModel::stat.
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ // The enemy a player damage callback belongs to (pl_sub SetPlDamage's first argument).
+ #define PL_EM(pl) ((cEm2b*) (pl)->dmgType)
+diff --git a/src/em2c/em2c.cpp b/src/em2c/em2c.cpp
+index 66f9534d8..6540456fa 100644
+--- a/src/em2c/em2c.cpp
++++ b/src/em2c/em2c.cpp
+@@ -149,7 +149,7 @@ struct PlayerPtr {
+ #define pPLS (((PlayerPtr*) &pPL)->p)
+ 
+ // Routine test on the cModel status word (xFC / xFD as the upper half of `stat`).
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ // Routine bytes written through an int inline (player.cpp PlRoutineSet).
+ static inline void EmRoutineSet(cEm* em, int r0, int r1, int r2, int r3)
+diff --git a/src/em2d/em2d.cpp b/src/em2d/em2d.cpp
+index cbb70cdb0..b14dcffe0 100644
+--- a/src/em2d/em2d.cpp
++++ b/src/em2d/em2d.cpp
+@@ -231,7 +231,7 @@ struct PlayerPtr {
+ #define pPLS (((PlayerPtr*) &pPL)->p)
+ 
+ // Routine test on the cModel status word (xFC / xFD as the upper half of `stat`).
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ // Routine bytes written through an int inline (player.cpp PlRoutineSet).
+ static inline void EmRoutineSet(cEm* em, int r0, int r1, int r2, int r3)
+@@ -1781,9 +1781,9 @@ static void em2d_R1_br_JumpAtk(cEm2d* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em2dCatchCk(em)) {
+         if ((Rnd() & 1) || (s16) pG->pl_life > 300) {
+-            em->stat = 0x010C0000;
++            em->stat = STAT_BE(0x010C0000);
+         } else {
+-            em->stat = 0x010B0000;
++            em->stat = STAT_BE(0x010B0000);
+         }
+     }
+ }
+@@ -3105,9 +3105,9 @@ static void em2d_R1_W_Fall(cEm2d* em)
+             if (em2dFallCatchCk(em)) {
+                 em->pos.y = pPL->pos.y;
+                 if ((Rnd() & 1) != 0 || (s16) pG->pl_life <= 299) {
+-                    em->stat = 0x010B0000;
++                    em->stat = STAT_BE(0x010B0000);
+                 } else {
+-                    em->stat = 0x010C0000;
++                    em->stat = STAT_BE(0x010C0000);
+                 }
+             }
+         }
+@@ -3123,9 +3123,9 @@ static void em2d_R1_W_Fall(cEm2d* em)
+             if (em2dFallCatchCk(em)) {
+                 em->pos.y = pPL->pos.y;
+                 if ((Rnd() & 1) != 0 || (s16) pG->pl_life <= 299) {
+-                    em->stat = 0x010B0000;
++                    em->stat = STAT_BE(0x010B0000);
+                 } else {
+-                    em->stat = 0x010C0000;
++                    em->stat = STAT_BE(0x010C0000);
+                 }
+             }
+         }
+@@ -3624,9 +3624,9 @@ static void em2d_R1_br_A_Catch(cEm2d* em)
+ {
+     if (em->hp > 0 && em2dAirCatchCk(em)) {
+         if (Rnd() & 1) {
+-            em->stat = 0x01250000;
++            em->stat = STAT_BE(0x01250000);
+         } else {
+-            em->stat = 0x01260000;
++            em->stat = STAT_BE(0x01260000);
+         }
+     }
+ }
+@@ -4012,9 +4012,9 @@ static void em2d_R1_C_Fall(cEm2d* em)
+         if (em2dFallCatchCk(em)) {
+             em->pos.y = pPL->pos.y;
+             if ((Rnd() & 1) || (s16) pG->pl_life <= 299) {
+-                em->stat = 0x010B0000;
++                em->stat = STAT_BE(0x010B0000);
+             } else {
+-                em->stat = 0x010C0000;
++                em->stat = STAT_BE(0x010C0000);
+             }
+         }
+         break;
+diff --git a/src/em32/em32.cpp b/src/em32/em32.cpp
+index 1dc6e7e99..8da64f708 100644
+--- a/src/em32/em32.cpp
++++ b/src/em32/em32.cpp
+@@ -1913,7 +1913,7 @@ static void em32_R1_br_Catch(cEm32* em)
+             fabsf(Muku2(pPL->ang.y, ang, 3.14159274f));
+             EM32_CLAW_ATK(em, 1);
+             if (w->Atk_ck) {
+-                em->stat = 0x01110000;
++                em->stat = STAT_BE(0x01110000);
+             }
+         }
+     }
+@@ -2078,7 +2078,7 @@ static void plem32_CatchHit(cPlayer* pl)
+         pl->r_no_2++;
+     case 1:
+         EmCatchMotionMove(pl, 1.0f, 1.0f);
+-        if ((((cEm32*) pPL->dmgType)->stat & 0xFFFF0000) == 0x01110000) {
++        if ((((cEm32*) pPL->dmgType)->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01110000)) {
+             break;
+         }
+         goto end;
+@@ -2923,7 +2923,7 @@ static void em32_R1_br_C_Atk(cEm32* em)
+             EM32_CLAW_ATK(em, 3);
+         }
+         if (w->Atk_ck) {
+-            em->stat = 0x011B0000;
++            em->stat = STAT_BE(0x011B0000);
+         }
+     }
+ }
+@@ -3208,7 +3208,7 @@ static void em32_R1_br_P_Catch(cEm32* em)
+             fabsf(Muku2(pPL->ang.y, ang, 3.14159274f));
+             EM32_CLAW_ATK(em, 1);
+             if (w->Atk_ck) {
+-                em->stat = 0x011E0000;
++                em->stat = STAT_BE(0x011E0000);
+             }
+         }
+     }
+@@ -3379,7 +3379,7 @@ static void plem32_P_CatchHit(cPlayer* pl)
+             em32PlDivideSet2(PL_EM(pl));
+             pl->be_flag &= ~2;
+         }
+-        if ((((cEm32*) pPL->dmgType)->stat & 0xFFFF0000) != 0x011E0000) {
++        if ((((cEm32*) pPL->dmgType)->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x011E0000)) {
+             EndPlDamage();
+             pl->dmg.set(0, 30);
+         }
+diff --git a/src/em36/em36.cpp b/src/em36/em36.cpp
+index 1e16b608e..aa2e3317c 100644
+--- a/src/em36/em36.cpp
++++ b/src/em36/em36.cpp
+@@ -1626,7 +1626,7 @@ static void em36_R1_br_Catch(cEm36* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em36CatchCk(em)) {
+         VibSetData(VIB_TBL, 7, 1);
+-        em->stat = 0x010B0000;
++        em->stat = STAT_BE(0x010B0000);
+     }
+ }
+ 
+@@ -1700,7 +1700,7 @@ static void em36_R1_Catch(cEm36* em)
+ }
+ 
+ 
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ // The effects of the appearance are removed when the player is caught.
+ // (a macro: through an inline the kind array's address becomes a pseudo, the loads must reload
+@@ -1919,7 +1919,7 @@ static void em36_R1_br_LongCatch(cEm36* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em36LongCatchCk(em)) {
+         VibSetData(VIB_TBL, 7, 1);
+-        em->stat = 0x010D0000;
++        em->stat = STAT_BE(0x010D0000);
+     }
+ }
+ 
+@@ -2008,11 +2008,11 @@ static void em36_R1_LongCatchHit(cEm36* em)
+             case 0:
+             case 1:
+             default:
+-                em->stat = 0x010B0000;
++                em->stat = STAT_BE(0x010B0000);
+                 break;
+             case 2:
+             case 3:
+-                em->stat = 0x010E0000;
++                em->stat = STAT_BE(0x010E0000);
+                 break;
+             }
+         }
+@@ -2176,7 +2176,7 @@ static void em36_R1_br_LostCatch(cEm36* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em36BiteCk(em)) {
+         VibSetData(VIB_TBL, 7, 1);
+-        em->stat = 0x01150000;
++        em->stat = STAT_BE(0x01150000);
+     }
+ }
+ 
+@@ -2621,7 +2621,7 @@ static void em36_R1_br_D_Catch(cEm36* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em36BiteCk(em)) {
+         VibSetData(VIB_TBL, 7, 1);
+-        em->stat = 0x01150000;
++        em->stat = STAT_BE(0x01150000);
+     }
+ }
+ 
+diff --git a/src/em38/em38.cpp b/src/em38/em38.cpp
+index 6e0b8f00b..16b378567 100644
+--- a/src/em38/em38.cpp
++++ b/src/em38/em38.cpp
+@@ -122,8 +122,8 @@ static inline void EmRoutineSet(cEm* em, int r0, int r1, int r2, int r3)
+ }
+ 
+ // Routine test / store on the cModel status word (em10.cpp EM_RTN / EM_RTN_SET).
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
+-#define EM_RTN_SET(em, fc, fd) ((em)->stat = (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
++#define EM_RTN_SET(em, fc, fd) ((em)->stat = STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ // int stores through a reference: the following pG load stays below them (em3a).
+ static inline void IntSet(int& x, int v)
+diff --git a/src/em39/em39.cpp b/src/em39/em39.cpp
+index c08056885..174b986cb 100644
+--- a/src/em39/em39.cpp
++++ b/src/em39/em39.cpp
+@@ -187,7 +187,7 @@ struct SubCharPtr {
+ #define pSUBS (((SubCharPtr*) &pSUB)->p)
+ 
+ // Routine test on the cModel status word (xFC / xFD as the upper half of `stat`).
+-#define EM_RTN(em, fc, fd) (((em)->stat & 0xFFFF0000) == (u32) (((fc) << 24) | ((fd) << 16)))
++#define EM_RTN(em, fc, fd) (((em)->stat & STAT_BE(0xFFFF0000)) == STAT_BE((u32) (((fc) << 24) | ((fd) << 16))))
+ 
+ extern "C" void _prolog()
+ {
+@@ -1210,7 +1210,7 @@ static void em39_R1_Failure(cEm39* em)
+     case 1:
+         if (MotionMoveF(em, 0)) {
+             if (em39GetCliffPos(em)) {
+-                em->stat = 0x012E0000;
++                em->stat = STAT_BE(0x012E0000);
+             } else {
+                 AtariOn(&em->atari, 0x300);
+                 EmRoutineSet(em, 1, 4, 0, 0);
+@@ -3040,7 +3040,7 @@ static void em39_R1_br_KnifeCatch(cEm39* em)
+ {
+     if (em->hp > 0 && (em->seFlags28B & 2) && em39CatchCk(em)) {
+         VibSetData((VibDataTbl*) (pG->pArc->ofs_1C + (u32) pG->pArc), 7, 1);
+-        em->stat = 0x011B0000;
++        em->stat = STAT_BE(0x011B0000);
+     }
+ }
+ 
+@@ -4783,7 +4783,7 @@ static void em39_R1_br_T_Atk(cEm39* em)
+                 if ((s16) pG->pl_life <= 0) {
+                     pG->pl_life = 1;
+                 }
+-                em->stat = 0x012E0000;
++                em->stat = STAT_BE(0x012E0000);
+             } else {
+                 EmPlBloodSet2(em, &em->pos, 1, 0x2F, 0x2C);
+                 pPL->ang.y = GetXZAngle(&pPL->pos, &em->pos);
+@@ -4924,7 +4924,7 @@ static void em39_R1_br_T_LongAtk(cEm39* em)
+                 if ((s16) pG->pl_life <= 0) {
+                     pG->pl_life = 1;
+                 }
+-                em->stat = 0x012E0000;
++                em->stat = STAT_BE(0x012E0000);
+             } else {
+                 EmPlBloodSet2(em, &em->pos, 1, 0x2F, 0x2C);
+                 pPL->ang.y = GetXZAngle(&pPL->pos, &em->pos);
+@@ -5296,7 +5296,7 @@ static void em39_R1_br_T_Kick(cEm39* em)
+         SndCall(8, 0x38, &pPL->pos, em->id, 0, pPL);
+         if (em39GetCliffPos(em)) {
+             LifeDownSet2(pPL, 500, 0, 1);
+-            em->stat = 0x012E0000;
++            em->stat = STAT_BE(0x012E0000);
+         } else {
+             LifeDownSet(pPL, 500, 0);
+             pPL->ang.y = GetXZAngle(&pPL->pos, &em->pos);
+@@ -5412,7 +5412,7 @@ static void em39_R1_br_T_LowKick(cEm39* em)
+         VibSetData((VibDataTbl*) (pG->pArc->ofs_1C + (u32) pG->pArc), 7, 1);
+         LifeDownSet2(pPL, 500, 0, 1);
+         SndCall(8, 0x38, &pPL->pos, em->id, 0, pPL);
+-        em->stat = 0x012D0000;
++        em->stat = STAT_BE(0x012D0000);
+     }
+ }
+ 
+@@ -8698,7 +8698,7 @@ void em39FootEff(cEm39* em)
+     no = (u8) (v - 1);
+     switch (no) {
+     case 2:
+-        if ((em->stat & 0xFFFF0000) == 0x01090000) {
++        if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01090000)) {
+             EstSet(0, -1, &em->getPartsPtr(0x15)->world, &em->ang, 0x2F, 0x2E, 0, 0, 0, 0);
+         }
+         if (pG->room_id != 0x31C) {
+@@ -8706,7 +8706,7 @@ void em39FootEff(cEm39* em)
+         }
+         break;
+     case 3:
+-        if ((em->stat & 0xFFFF0000) == 0x01090000) {
++        if ((em->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01090000)) {
+             EstSet(0, -1, &em->getPartsPtr(0x19)->world, &em->ang, 0x2F, 0x2E, 0, 0, 0, 0);
+         }
+         if (pG->room_id != 0x31C) {
+diff --git a/src/game/cockpit.cpp b/src/game/cockpit.cpp
+index 2e74611a9..3cd0ae3c7 100644
+--- a/src/game/cockpit.cpp
++++ b/src/game/cockpit.cpp
+@@ -651,9 +651,9 @@ static int dispBulletDigit(u8 no)
+         return 0;
+     }
+ #if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+-    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
++    if ((re4dc_ss_actor_player_stat() & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
+ #else
+-    if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
++    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
+ #endif
+         return 0;
+     }
+@@ -696,9 +696,9 @@ u8 dispBulletIconMarkNo(u8 no)
+         return 0xFF;
+     }
+ #if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+-    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
++    if ((re4dc_ss_actor_player_stat() & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
+ #else
+-    if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
++    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000F0000)) {
+ #endif
+         if (pG->room_id == 0x333) {
+             return 0xFF;
+diff --git a/src/game/obj14.cpp b/src/game/obj14.cpp
+index f220b672e..d49f85df2 100644
+--- a/src/game/obj14.cpp
++++ b/src/game/obj14.cpp
+@@ -271,13 +271,13 @@ void cObjBell::setBreak()
+ // 1 when the room flagged the bell as breakable (stat high half 0x0100).
+ int cObjBell::ckBreakEnable()
+ {
+-    return (stat & 0xFFFF0000) == 0x01000000;
++    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01000000);
+ }
+ 
+ // 1 when the bell is broken (stat high half 0x0101).
+ int cObjBell::ckBreak()
+ {
+-    return (stat & 0xFFFF0000) == 0x01010000;
++    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000);
+ }
+ 
+ // Pendulum set-up: parts 1 -> 2 chain with max swing 45 / 25 degrees, gravity 15.
+diff --git a/src/game/obj15.cpp b/src/game/obj15.cpp
+index 3e4a83ac3..d18be835a 100644
+--- a/src/game/obj15.cpp
++++ b/src/game/obj15.cpp
+@@ -492,7 +492,7 @@ void obj15DmCk(cObjGatling* obj)
+     GatlingWork* w = &obj->gatling;
+     u32 i;
+ 
+-    if ((obj->stat & 0xFFFF0000) == 0x01010000) {
++    if ((obj->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000)) {
+         return;
+     }
+     for (i = 0; i < 3; i++) {
+@@ -537,7 +537,7 @@ void cObjGatling::setMaxRot(f32 r)
+ // 1 when the gun is flagged breakable/broken (stat high half 0x0101).
+ int cObjGatling::ckBreak()
+ {
+-    return (stat & 0xFFFF0000) == 0x01010000;
++    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000);
+ }
+ 
+ // 0 = weapon hits break it, else only setBreak does.
+@@ -552,7 +552,7 @@ void cObjGatling::setBreak()
+     GatlingWork* w = &gatling;
+     u32 i;
+ 
+-    if ((stat & 0xFFFF0000) == 0x01010000) {
++    if ((stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000)) {
+         return;
+     }
+     SndStop(w->seHandle, 0);
+diff --git a/src/game/pl_class.cpp b/src/game/pl_class.cpp
+index 084d7580b..b48469460 100644
+--- a/src/game/pl_class.cpp
++++ b/src/game/pl_class.cpp
+@@ -923,7 +923,7 @@ int cPlayer::isKamae()
+         }
+     }
+     if (r_no_1 == 6) {
+-        if ((stat & 0xFFFF) == 0) {
++        if ((stat & STAT_BE(0xFFFF)) == 0) {
+             return 0;
+         }
+         if (r_no_2 == 4) {
+diff --git a/src/game/pl_npc.cpp b/src/game/pl_npc.cpp
+index 09e5cbb51..78cedbf28 100644
+--- a/src/game/pl_npc.cpp
++++ b/src/game/pl_npc.cpp
+@@ -1825,7 +1825,7 @@ void cSubChar::moveFallWait()
+         sub540++;
+     }
+     if (subX534 == 0) {
+-        if (subHideMode == 0 && (pPL->stat & 0xFFFF0000) != 0x000E0000) {
++        if (subHideMode == 0 && (pPL->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x000E0000)) {
+             subX534 = 1;
+         }
+     }
+@@ -2532,7 +2532,7 @@ int cSubChar::actionCheck()
+         d.z = -satNorm.z;
+         ang.y += Muku3(&d, ang.y, 3.1415927f);
+     }
+-    if (m_PlActTime && dist <= 300.0f && (pPL->stat & 0xFFFF0000) != 0x000E0000) {
++    if (m_PlActTime && dist <= 300.0f && (pPL->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x000E0000)) {
+         if (getCliffHeight(m_PlActAngY) < 2900.0f) {
+             m_PlActTime = 0;
+             pos = m_PlActPos;
+@@ -2560,7 +2560,7 @@ int cSubChar::ladder2Check()
+     if (fabsf(distPos.y - pos.y) < 1000.0f) {
+         return 0;
+     }
+-    if ((pPL->stat & 0xFFFF0000) == 0x00100000) {
++    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
+         return 0;
+     }
+     {
+@@ -3104,7 +3104,7 @@ void cSubChar::control(int mode)
+         if (r_no_0 == 5) {
+             SubRoutineSet(this, 0, 0, 0, 0);
+         }
+-        if ((stat & 0xFFFF0000) != 0x00100000) {
++        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
+             BitOff16(subFlags, 1);
+             subFlags |= 2;
+             AtariOn(&atari, 0x300);
+@@ -3114,7 +3114,7 @@ void cSubChar::control(int mode)
+         if (r_no_0 == 5) {
+             SubRoutineSet(this, 0, 0, 0, 0);
+         }
+-        if ((stat & 0xFFFF0000) != 0x00100000) {
++        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
+             setPos(&pPL->pos);
+         }
+         r_no_0 = 0;
+@@ -3126,7 +3126,7 @@ void cSubChar::control(int mode)
+         if (r_no_0 == 5) {
+             SubRoutineSet(this, 0, 0, 0, 0);
+         }
+-        if ((stat & 0xFFFF0000) != 0x00100000) {
++        if ((stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x00100000)) {
+             BitOff16(subFlags, 3);
+             AtariOn(&atari, 0x300);
+         }
+@@ -3269,7 +3269,7 @@ u32 SubCharGetStatus()
+         }
+         break;
+     }
+-    if (SUBFLAG(sub)->check(1) || SUBFLAG(sub)->check(0) || (sub->stat & 0xFFFF0000) == 0x00100000) {
++    if (SUBFLAG(sub)->check(1) || SUBFLAG(sub)->check(0) || (sub->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
+         ret |= 0x40000000;
+     } else {
+         ret |= 0x20000000;
+@@ -3959,7 +3959,7 @@ u32 SubCharGetCondition()
+     Re4dcSsActorView view;
+     if (re4dc_ss_actor_view(&view)) {
+         if (!view.partner_present) return 0;
+-        u32 ret = view.partner_wait || (view.partner_stat & 0xFFFF0000) == 0x00100000 ? 2 : 1;
++        u32 ret = view.partner_wait || (view.partner_stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000) ? 2 : 1;
+         if (pG->Status_flg[1] & 0x10000) return ret | 8;
+         if (view.partner_move) return ret | 0x20;
+         if (view.partner_routine0 != 0) return ret;
+@@ -3973,7 +3973,7 @@ u32 SubCharGetCondition()
+     if (sub == 0) {
+         return 0;
+     }
+-    if (SUBFLAG(sub)->check(1) || (sub->stat & 0xFFFF0000) == 0x00100000) {
++    if (SUBFLAG(sub)->check(1) || (sub->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x00100000)) {
+         ret = 2;
+     } else {
+         ret = 1;
+diff --git a/src/game/pl_sub.cpp b/src/game/pl_sub.cpp
+index f68ab573a..33c7be120 100644
+--- a/src/game/pl_sub.cpp
++++ b/src/game/pl_sub.cpp
+@@ -536,7 +536,7 @@ void SubCharCtrl(int mode, int flag)
+     } else {
+         BitOff16(sub->subFlags, 0x80);
+     }
+-    if ((sub->stat & 0xFFFF0000) != 0x000F0000) {
++    if ((sub->stat & STAT_BE(0xFFFF0000)) != STAT_BE(0x000F0000)) {
+         sub->subAux0 = 0;
+     }
+     sub->subAux1 = 0;
+@@ -1088,7 +1088,7 @@ int PlGetWeaponNo()
+ {
+     cPlayer* pl = pPL;
+ 
+-    if (((pl->stat & 0xFFFF0000) == 0x000B0000 && pl->r_no_2 != 3) || joyLKamae()) {
++    if (((pl->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000B0000) && pl->r_no_2 != 3) || joyLKamae()) {
+         return 0x10;
+     }
+     return pG->weapon_no;
+diff --git a/src/game/pl_wep.cpp b/src/game/pl_wep.cpp
+index 21b0ec12e..c81356bdb 100644
+--- a/src/game/pl_wep.cpp
++++ b/src/game/pl_wep.cpp
+@@ -593,7 +593,7 @@ int cPlWep::getMarkerPos(Vec* out)
+ {
+     cPlayer* pl = pPL;
+ 
+-    if ((pl->stat & 0xFFFFFF00) != 0x00060100 || pl->r_no_3 == 0) {
++    if ((pl->stat & STAT_BE(0xFFFFFF00)) != STAT_BE(0x00060100) || pl->r_no_3 == 0) {
+         return 0;
+     }
+     *out = m_pWep->wep.marker;
+@@ -872,7 +872,7 @@ int PlCornerCheck()
+ 
+     rot.y = pPL->ang.y;
+     dir = rot;
+-    if ((pPL->stat & 0xFFFF0000) == 0x000D0000) {
++    if ((pPL->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x000D0000)) {
+         dir.y += PI;
+         dir.y = LIMIT_ANGLE(dir.y);
+     }
+diff --git a/src/game/player.cpp b/src/game/player.cpp
+index fb6c4afdc..5b1c750a6 100644
+--- a/src/game/player.cpp
++++ b/src/game/player.cpp
+@@ -356,7 +356,7 @@ void cPlayer::move()
+         ShapeMove(Body->pShape);
+     }
+     if ((int) pos.x == (int) pos_old.x && (int) pos.y == (int) pos_old.y && (int) pos.z == (int) pos_old.z
+-        && (stat & 0xFFFFFF00) == 0x100 && !(pG->Status_flg[0] & 0x20)) {
++        && (stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x100) && !(pG->Status_flg[0] & 0x20)) {
+         moved = 0;
+         if ((int) pG->Debug_flg[0] >= 0) {
+             goto moveChecked;
+@@ -385,9 +385,12 @@ moveChecked:
+             }
+         }
+     }
+-    if ((stat & 0xFFFFFF00) == 0x00060000) {
++    if ((stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x00060000)) {
+         pParts->ang.y *= 0.5f;
+     }
++#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
++    { extern void re4dc_stat_diag_player(cPlayer*); re4dc_stat_diag_player(this); }
++#endif
+     ang.y = LIMIT_ANGLE(ang.y);
+     m_Flag = (u16) m_Flag;
+     shadowCtrl();
+@@ -1573,3 +1576,77 @@ f32 getHeighAdjust(cPlayer* pl)
+     PSVECAdd(&p, &pl->m_ActCross, &p);
+     return SatMgr.getFloor(&p, 600.0f, 100000.0f, 0, 0) - pl->pos.y;
+ }
++#if defined(RE4DC_STAT_DIAG) && RE4DC_STAT_DIAG
++// STAT_DIAG=1 (lane stat-bytes23): for each routine-word test of the player / partner that STAT_ROUTINE_BYTES
++// repairs, evaluate the GameCube meaning (named bytes) and the raw little-endian word compare on the live stat, and
++// log the first frame they disagree plus a count every 600 frames. Also a one-time self test of STAT_BE.
++extern "C" void re4dc_log(const char* fmt, ...);
++struct StatDiagSite {
++    const char* name;
++    u32 mask, val;
++    u8 who;  // 0 player, 1 partner
++};
++static const StatDiagSite s_statDiagSites[] = {
++    {"player.cpp:359 moved", 0xFFFFFF00, 0x00000100, 0},
++    {"player.cpp:388 r6/0", 0xFFFFFF00, 0x00060000, 0},
++    {"pl_class.cpp:926 isKamae", 0x0000FFFF, 0x00000000, 0},
++    {"pl_sub.cpp:1091 wepno", 0xFFFF0000, 0x000B0000, 0},
++    {"pl_wep.cpp:596 marker", 0xFFFFFF00, 0x00060100, 0},
++    {"pl_wep.cpp:875 corner", 0xFFFF0000, 0x000D0000, 0},
++    {"cockpit.cpp:656 bullets", 0xFFFF0000, 0x000F0000, 0},
++    {"pl_npc.cpp:1828 pl0E", 0xFFFF0000, 0x000E0000, 0},
++    {"pl_npc.cpp:2563 pl10", 0xFFFF0000, 0x00100000, 0},
++    {"pl0f.cpp:974 boat", 0xFFFFFF00, 0x000F0200, 0},
++    {"pl_sub.cpp:539 sub0F", 0xFFFF0000, 0x000F0000, 1},
++    {"pl_npc.cpp:3107 sub10", 0xFFFF0000, 0x00100000, 1},
++};
++static u32 s_statDiagCount[sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0])];
++static u8 s_statDiagLogged[sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0])];
++static u32 s_statDiagFrames;
++void re4dc_stat_diag_player(cPlayer* pl)
++{
++    if (s_statDiagFrames == 0) {
++        // self test: the bytes of GC word 0x010D0002 are r_no_0 1, r_no_1 0xD, r_no_2 0, r_no_3 2
++        static u32 s_buf[(sizeof(cModel) + 3) / 4];
++        cModel& m = *(cModel*) s_buf;
++        m.r_no_0 = 1; m.r_no_1 = 0xD; m.r_no_2 = 0; m.r_no_3 = 2;
++        const int ok = m.stat == STAT_BE(0x010D0002) && (m.stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x010D0000);
++        re4dc_log("STATDIAG selftest %s (STAT_BE(0x010D0002)=%08x stat=%08x knob=%d)\n", ok ? "match" : "MISMATCH",
++                  (unsigned) STAT_BE(0x010D0002), (unsigned) m.stat,
++#if defined(RE4DC_STAT_ROUTINE_BYTES) && RE4DC_STAT_ROUTINE_BYTES
++                  1
++#else
++                  0
++#endif
++        );
++    }
++    ++s_statDiagFrames;
++    cModel* sub = (cModel*) pSUB;
++    for (unsigned i = 0; i < sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0]); ++i) {
++        const StatDiagSite& d = s_statDiagSites[i];
++        const cModel* m = d.who ? sub : (cModel*) pl;
++        if (!m) continue;
++        const u32 s = m->stat;
++        const u32 named = (u32) m->r_no_0 << 24 | (u32) m->r_no_1 << 16 | (u32) m->r_no_2 << 8 | m->r_no_3;
++        const int gc = (named & d.mask) == d.val;
++        const int raw = (s & d.mask) == d.val;
++        if (gc != raw) {
++            ++s_statDiagCount[i];
++            if (s_statDiagLogged[i] < 3) {
++                ++s_statDiagLogged[i];
++                re4dc_log("STATDIAG differ f=%u room=%x site=%s r=%02x.%02x.%02x.%02x gc=%d raw=%d\n",
++                          (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, d.name, m->r_no_0, m->r_no_1, m->r_no_2,
++                          m->r_no_3, gc, raw);
++            }
++        }
++    }
++    if (s_statDiagFrames % 600 == 0) {
++        for (unsigned i = 0; i < sizeof(s_statDiagSites) / sizeof(s_statDiagSites[0]); ++i) {
++            if (s_statDiagCount[i]) {
++                re4dc_log("STATDIAG count f=%u site=%s frames=%u\n", (unsigned) pG->Frame_cnt, s_statDiagSites[i].name,
++                          (unsigned) s_statDiagCount[i]);
++            }
++        }
++    }
++}
++#endif
+diff --git a/src/pl0f/pl0f.cpp b/src/pl0f/pl0f.cpp
+index a6c7c5789..106acd845 100644
+--- a/src/pl0f/pl0f.cpp
++++ b/src/pl0f/pl0f.cpp
+@@ -971,7 +971,7 @@ void pl0fBoatControl(cPl0f* em)
+         cPlayer* pl = pPL;
+         cModel* p = em->getPartsPtr(1);
+ 
+-        if ((pPL->stat & 0xFFFFFF00) == 0x000F0200) {
++        if ((pPL->stat & STAT_BE(0xFFFFFF00)) == STAT_BE(0x000F0200)) {
+             p->ang.y = pl->blendRate500 * (1.0f / 255.0f) * -0.5235988f;
+         } else {
+             p->ang.y *= 0.9f;
+diff --git a/src/pl14/pl14.cpp b/src/pl14/pl14.cpp
+index be9f16b40..0c2bbc157 100644
+--- a/src/pl14/pl14.cpp
++++ b/src/pl14/pl14.cpp
+@@ -1417,7 +1417,7 @@ int cSubLuis::damageCheck()
+ {
+     int dead;
+ 
+-    if ((stat & 0xFFFF0000) == 0x04000000) {
++    if ((stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x04000000)) {
+         action.set(6);
+         return 1;
+     }
+diff --git a/src/st3/r30c.cpp b/src/st3/r30c.cpp
+index d29b4335c..6aea42927 100644
+--- a/src/st3/r30c.cpp
++++ b/src/st3/r30c.cpp
+@@ -347,7 +347,7 @@ static void r31c_AshleyDieCheck()
+         pSUB = 0;
+         if (!(stat & 1)) {
+             pG->ashley_life = 0;
+-            r30c_work.p->ashley->stat = 0x02000000;
++            r30c_work.p->ashley->stat = STAT_BE(0x02000000);
+         }
+         if ((s16) pG->ashley_life > 0) {
+             SceSleep(1);
