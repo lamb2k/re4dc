@@ -62,7 +62,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 | Fixed and checked in our tests; the problem was not console-only | 59 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 15 |
+| ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -109,6 +109,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | ⏸️ Open, not blocking: a side effect of the routine byte-order fixes that let the fight finish; the PS2 model comes back in Test 24 | |
 | River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | The light in Mendez's barn flickers | test 22 and earlier | 🟢 Fixed in test 23 | [#55](https://github.com/lamb2k/re4dc/issues/55) |
