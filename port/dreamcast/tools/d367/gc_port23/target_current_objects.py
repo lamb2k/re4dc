@@ -78,17 +78,15 @@ def main():
         prior = json.loads(prior_path.read_text())
         if prior['baseline'] != BASE or prior['profile'] != str(PROFILE) or prior['pins'] != pins:
             raise RuntimeError('Prior source/profile/SDK contract changed')
-        changed = git('diff', '--name-only', prior['source'], source).splitlines()
-        allowed = {'port/dreamcast/tools/d367/gc_port23/target_current_objects.py',
-                   'port/dreamcast/tools/d367/gc_port23/target_current_objects.sh'}
-        if set(changed) - allowed:raise RuntimeError('Only harness repairs may reuse prior objects')
         for row in prior['objects']:
+            origin = Path(row.get('reused_from', str(prior_path)))
             label = row['unit'].replace('../', '').replace('/', '_').rsplit('.', 1)[0] + '-' + row['arm']
-            inputs = json.loads((prior_path.parent / (label + '-inputs.json')).read_text())
-            if any(sha(Path(path)) != value for path, value in inputs.items()):raise RuntimeError('Prior dependency changed')
-            if sha(prior_path.parent / (label + '.o')) != row['sha256'] or sha(prior_path.parent / (label + '-nodebug.o')) != row['nodebug_sha256']:
+            inputs = json.loads((origin.parent / (label + '-inputs.json')).read_text())
+            if any(not Path(path).is_file() or sha(Path(path)) != value for path, value in inputs.items()):continue
+            if sha(origin.parent / (label + '.o')) != row['sha256'] or sha(origin.parent / (label + '-nodebug.o')) != row['nodebug_sha256']:
                 raise RuntimeError('Prior object changed')
-            reused[row['unit'], row['arm']] = dict(row, compiled_source=prior['source'], reused_from=str(prior_path))
+            prior_args = json.loads((origin.parent / (label + '-command.json')).read_text())
+            reused[row['unit'], row['arm']] = (dict(row, compiled_source=row.get('compiled_source', prior['source']), reused_from=str(origin)), prior_args)
     report = dict(source=source, baseline=BASE, profile=str(PROFILE), pins=pins, knobs=required, objects=[],
                   note='Selected objects only; default catalog pin0. No linked heap/image/guest/provenance acceptance.')
     (scratch / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
@@ -98,9 +96,6 @@ def main():
         arms = [('baseline', None), ('absent', None), ('zero', 0), ('on', 1)] if unit in UNITS else [('zero', 0), ('on', 1)]
         if unit == 'platform/gc_asset_disc.cpp':arms.append(('on-synthetic-pin', 1))
         for arm, gate in arms:
-            if (unit, arm) in reused:
-                row = reused[unit, arm];results[arm] = row;report['objects'].append(row)
-                print('REUSED pinned ' + unit + ' ' + arm, flush=True);continue
             cwd = baseline / 'port/dreamcast/game' if arm == 'baseline' else GAME
             args = commands[unit if unit in commands else 'platform/audio_stub.cpp'].copy()
             args[args.index('-c') + 1] = unit
@@ -118,6 +113,13 @@ def main():
                 if unit == 'platform/native_ui.cpp':args.append('-DRE4DC_GC_ASSET_COARSE_LEON=1')
                 if unit == 'platform/native_actor_fast.cpp':args.append('-DRE4DC_GC_ASSET_LEON_HAND_PACK=1')
             args.append('-fstack-usage')
+            if (unit, arm) in reused:
+                row, prior_args = reused[unit, arm]
+                def normalized(command):
+                    command = command.copy();command[command.index('-o') + 1] = '@output';return command
+                if normalized(args) == normalized(prior_args):
+                    results[arm] = row;report['objects'].append(row)
+                    print('REUSED pinned ' + unit + ' ' + arm, flush=True);continue
             (scratch / (label + '-command.json')).write_text(json.dumps(args, indent=2) + '\n')
             dependencies = scratch / (label + '.d')
             with (scratch / (label + '.log')).open('w') as log:

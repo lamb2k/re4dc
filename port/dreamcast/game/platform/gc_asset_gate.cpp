@@ -168,7 +168,7 @@ static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit
     }
     if(transition)std::strcpy(scope_text,"phase=transition");
     else if(startup)std::strcpy(scope_text,"phase=startup");
-    else std::snprintf(scope_text,sizeof scope_text,"room=%04x",room);
+    else std::sprintf(scope_text,"room=%04x",room); // at most 13 bytes plus NUL in scope_text[24]
     if(transition){
         if((why==InitialRoom && from!=FromStartup) || (why==RoomRetire && from>0xffffU) || unsigned(why)>RoomRetire)
             unresolved(Ui,"transition-metadata");
