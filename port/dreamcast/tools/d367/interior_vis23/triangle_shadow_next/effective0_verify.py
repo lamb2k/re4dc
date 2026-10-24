@@ -1,6 +1,7 @@
 """Independent effective0 fact verifier from the final copied physical package."""
 from pathlib import Path
 import feasibility as f
+EXPECTED_CAPABILITY_GUARD='#if !defined(RE4DC_PS2_PVS_EFFECTIVE0_SOURCES) || RE4DC_PS2_PVS_EFFECTIVE0_SOURCES != 1 || \\\n    !defined(RE4DC_PS2_WORLD_NONEMPTY_LOD) || RE4DC_PS2_WORLD_NONEMPTY_LOD != 1\n#error Effective-only0 source certificate requires reviewed capability and actual nonempty fallback\n#endif\n'
 
 
 def verify(receipt,root,repo,pack):
@@ -37,6 +38,8 @@ def verify(receipt,root,repo,pack):
       if key is not None:keys.add(key)
     expected.append(dict(placement=pi,field=pl['placement'],part=part,cluster=ci,meshlet_counts=counts,effective_source_levels=[0],raw_to_effective=mapped,base_first_meshlet=fm,base_meshlet_count=nm,oriented_faces=len(keys)))
  if receipt['clusters']!=expected or receipt['physical_clusters']!=len(expected) or receipt['oriented_faces']!=sum(r['oriented_faces'] for r in expected):raise ValueError('Effective source facts do not match final package')
- if expected and ('#error Effective-only0 source certificate' not in receipt.get('capability_guard','') or 'RE4DC_PS2_PVS_EFFECTIVE0_SOURCES != 1' not in receipt['capability_guard'] or 'RE4DC_PS2_WORLD_NONEMPTY_LOD != 1' not in receipt['capability_guard']):raise ValueError('Missing source capability requirement')
+ if receipt.get('capability_guard') != (EXPECTED_CAPABILITY_GUARD if expected else ''):raise ValueError('Noncanonical source capability requirement')
  if receipt.get('runtime_admitted_cuts')!=0:raise ValueError('Source facts cannot assert runtime cuts')
+ for name,digest in f.audit.FROZEN_INPUT_SHA256.items():
+  if f.digest(root/name)!=digest or receipt['final_inputs'].get(name)!=f.identity(root/name):raise ValueError('Final input changed during independent verification '+name)
  return dict(verified=True,physical_clusters=len(expected),oriented_faces=sum(r['oriented_faces'] for r in expected),actual_raw_choices=sum(len(r['meshlet_counts']) for r in expected),visibility_admitted=False)

@@ -24,6 +24,7 @@ def final_inputs(root):
 
 
 def produce(root,repo,pack,enabled=False,nonempty=False):
+ if type(enabled) is not bool or type(nonempty) is not bool:raise ValueError('Capability values must be explicit booleans')
  root=Path(root);repo=Path(repo);pins=final_inputs(root);p=f.Pkg(root/'ps2-world.re4mesh',root/'ps2-world.r4pw');policy=(root/'ps2-world.r4pw').read_bytes();ids=(root/'ps2-world.ids').read_bytes()[16:16+len(p.placements)];conditional=f.audit.conditional_fields(ids);materials,mpins=f.material_census(repo,Path(pack),p);rows=[]
  if enabled and not nonempty:raise ValueError('Effective0 requires actual nonempty fallback')
  for pi,pl in enumerate(p.placements):
