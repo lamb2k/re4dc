@@ -3,6 +3,10 @@
 import hashlib,json,os,pathlib,re,subprocess,tempfile,time,unittest
 ROOT=pathlib.Path(__file__).resolve().parents[5]
 GAME=ROOT/'port/dreamcast/game';PL=GAME/'platform';BASE='fb254e82ee6f9a3d9e34d53d1d442348a46b9cf2'
+# Preserve the original b6/fb qualification; separately compare current composed
+# source against the reviewed integrated pre-composer (GC+selected-affine) tree.
+HISTORICAL_COMPOSE='b6b4fa7a3cf3a5244d28a31eae9a8bf42f18ce45'
+INTEGRATED_PRECOMPOSE='e3ed0d2ab2482ade7f5a3615009f59a43ccdcfae'
 def text(rel):return (GAME/rel).read_text()
 def function(s,anchor):
  a=s.index(anchor);i=s.index('{',a);level=1;j=i+1
@@ -12,7 +16,7 @@ def function(s,anchor):
 def between(s,a,b):return s[s.index(a):s.index(b,s.index(a))]
 def cpp_tokens(s):return re.findall(r'"(?:\\.|[^"\\])*"|[A-Za-z_]\w*|\d+|\S',s)
 ONE='PS2_PVS SCENERY_SUBMIT_BATCH SCENERY_CHUNK SCENERY_SELECT_ONLY SCENERY_REPLAY_LEAN TA_DIRECT MESH_DIRECT PS2_WORLD_MESH PS2_WORLD_HDR_CACHE PS2_STRIP_GROUPS MESH_FASTPATH MESH_VP_SCHED HW_LEAN PVR_STREAM D349_RENDERER_STACK PS2_WORLD_SOURCE_OWNER PS2_WORLD_SOURCE_TEX_PREP'.split()
-ZERO='WORLD_SCRATCH TA_GUARD PS2_WORLD_TRANSITION_OWNER PS2_WORLD_R11F_OWNER SCENERY_PIECE_STATE SCENERY_DEDUP SCENERY_CONE CPU_BACKFACE TA_MATERIAL_DIAG WORLD_HOLE_DIAG PS2_WORLD_PREFLIGHT_DIAG'.split()
+ZERO='WORLD_SCRATCH TA_GUARD PS2_WORLD_TRANSITION_OWNER PS2_WORLD_R11F_OWNER SCENERY_PIECE_STATE SCENERY_DEDUP SCENERY_CONE CPU_BACKFACE TA_MATERIAL_DIAG WORLD_HOLE_DIAG PS2_WORLD_PREFLIGHT_DIAG GC_ASSET_GATE GC_ASSET_MOTION_UNKNOWN'.split()
 class Controls(unittest.TestCase):
  def build(self,src,expected=True):
   with tempfile.TemporaryDirectory(prefix='pvsbc-host-',dir='/dev/shm') as t:
@@ -21,6 +25,9 @@ class Controls(unittest.TestCase):
    self.assertEqual(c.returncode,0,c.stderr)
    r=subprocess.run([str(p/'run')],capture_output=True,text=True)
    self.assertEqual(r.returncode==0,expected,r.stderr)
+   if not expected:
+    self.assertEqual(r.returncode,-6,r.stderr)
+    self.assertIn('Assertion',r.stderr)
  def test_make_prerequisites_and_original_guard(self):
   with tempfile.TemporaryDirectory(prefix='pvsbc-make-',dir='/dev/shm') as t:
    p=pathlib.Path(t)/'Makefile';p.write_text('OBJDIR=obj\ninclude '+str(GAME/'scenery19.mk')+'\n.PHONY: all\nall:;@:\n')
@@ -44,21 +51,23 @@ class Controls(unittest.TestCase):
    self.assertEqual(compile({}).returncode,0,rel)
    must=ONE if rel.endswith('native_static.cpp') else [x for x in ONE if x in ['PS2_PVS','SCENERY_SUBMIT_BATCH','TA_DIRECT','PS2_WORLD_HDR_CACHE','PVR_STREAM','D349_RENDERER_STACK','PS2_WORLD_SOURCE_OWNER','PS2_WORLD_SOURCE_TEX_PREP']]
    for k in must+ZERO+['PS2_PVS_DEFAULT','PS2_PVS_BATCH_COMPOSE','PS2_INTERIOR_CULL']:
-    for v in (['0','2'] if k in must else ['2']):
+    for v in (['0','2'] if k in must else (['1','2'] if k in ZERO else ['2'])):
      with self.subTest(rel=rel,k=k,v=v):self.assertNotEqual(compile({k:v}).returncode,0)
  def test_full_file_off_preprocess(self):
-  for rel in ['platform/native_static.cpp','platform/native_ui.cpp','platform/include/native_ui_source_world.inc']:
-   old=subprocess.check_output(['git','-C',str(ROOT),'show',BASE+':port/dreamcast/game/'+rel],text=True)
-   for pvs,batch in [(0,0),(0,1),(1,0)]:
-    flags=['-DRE4DC_PS2_PVS_BATCH_COMPOSE=0','-DRE4DC_PS2_PVS='+str(pvs),'-DRE4DC_SCENERY_SUBMIT_BATCH='+str(batch),'-DRE4DC_TA_DIRECT=1','-DRE4DC_PS2_WORLD_HDR_CACHE=1','-DRE4DC_PS2_WORLD_SOURCE_OWNER=1','-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1','-DRE4DC_SCENERY_CHUNK=1','-DRE4DC_NATIVE_MESH=1','-DRE4DC_MESH_FASTPATH=1','-DRE4DC_MESH_DIRECT=1','-DRE4DC_PS2_WORLD_MESH=1','-DRE4DC_MESH_LOD=1','-DRE4DC_PS2_WORLD_LEAN=1','-DRE4DC_MESH_PRIME_LAZY=1','-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_MESH_STRIP_LEAN=1','-DRE4DC_HW_LEAN=1','-DRE4DC_MESH_DEPTH_CULL=1','-D__sh__=1','-DRE4DC_PVR_STREAM=1','-DRE4DC_D349_RENDERER_STACK=1']
-    streams=[]
-    for s in [old,text(rel)]:
-     s=re.sub(r'^#include .*\n','',s,flags=re.M)
-     r=subprocess.run(['g++','-x','c++','-E','-P',*flags,'-'],input=s,capture_output=True,text=True)
-     self.assertEqual(r.returncode,0,r.stderr);streams.append(cpp_tokens(r.stdout))
-    self.assertEqual(*streams,(rel,pvs,batch))
- def fixture(self,snapshot=0,baseline=False):
-  read=(lambda rel:subprocess.check_output(['git','-C',str(ROOT),'show',BASE+':port/dreamcast/game/'+rel],text=True)) if baseline else text
+  for before,after,label in [(BASE,HISTORICAL_COMPOSE,'historical-b6-vs-fb'),(INTEGRATED_PRECOMPOSE,None,'current-vs-integrated-precomposer')]:
+   for rel in ['platform/native_static.cpp','platform/native_ui.cpp','platform/include/native_ui_source_world.inc']:
+    old=subprocess.check_output(['git','-C',str(ROOT),'show',before+':port/dreamcast/game/'+rel],text=True)
+    for pvs,batch in [(0,0),(0,1),(1,0)]:
+     flags=['-DRE4DC_GC_ASSET_GATE=0','-DRE4DC_GC_ASSET_MOTION_UNKNOWN=0','-DRE4DC_PS2_PVS_BATCH_COMPOSE=0','-DRE4DC_PS2_PVS='+str(pvs),'-DRE4DC_SCENERY_SUBMIT_BATCH='+str(batch),'-DRE4DC_TA_DIRECT=1','-DRE4DC_PS2_WORLD_HDR_CACHE=1','-DRE4DC_PS2_WORLD_SOURCE_OWNER=1','-DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=1','-DRE4DC_SCENERY_CHUNK=1','-DRE4DC_NATIVE_MESH=1','-DRE4DC_MESH_FASTPATH=1','-DRE4DC_MESH_DIRECT=1','-DRE4DC_PS2_WORLD_MESH=1','-DRE4DC_MESH_LOD=1','-DRE4DC_PS2_WORLD_LEAN=1','-DRE4DC_MESH_PRIME_LAZY=1','-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_MESH_STRIP_LEAN=1','-DRE4DC_HW_LEAN=1','-DRE4DC_MESH_DEPTH_CULL=1','-D__sh__=1','-DRE4DC_PVR_STREAM=1','-DRE4DC_D349_RENDERER_STACK=1']
+     streams=[]
+     for s in [old,subprocess.check_output(['git','-C',str(ROOT),'show',after+':port/dreamcast/game/'+rel],text=True) if after else text(rel)]:
+      s=re.sub(r'^#include .*\n','',s,flags=re.M)
+      r=subprocess.run(['g++','-x','c++','-E','-P',*flags,'-'],input=s,capture_output=True,text=True)
+      self.assertEqual(r.returncode,0,r.stderr);streams.append(cpp_tokens(r.stdout))
+     self.assertEqual(*streams,(label,rel,pvs,batch))
+ def fixture(self,snapshot=0,baseline=False,source_ref=None):
+  ref=source_ref or (BASE if baseline else None)
+  read=(lambda rel:subprocess.check_output(['git','-C',str(ROOT),'show',ref+':port/dreamcast/game/'+rel],text=True)) if ref else text
   ui=read('platform/native_ui.cpp');st=read('platform/native_static.cpp');sw=read('platform/include/native_ui_source_world.inc')
   acquire=between(sw,'Key sourceWorldPreparedKey{};','#endif\n#if (defined(RE4DC_PS2_WORLD_SOURCE_TEX_MIP)')
   # Last endif is the outer SOURCE_TEX_PREP, not part of the extracted fixture.
@@ -78,7 +87,15 @@ class Controls(unittest.TestCase):
   flush=function(st,'auto chunk_flush=[&]()->int')
   finish=function(st,'void pvs_finish(bool success)')
   restart=function(st,'void chunk_restart()')
-  return r'''
+  # Project the real disabled GC branch; do not mock a GC handle/provider.
+  # fb254 had no GC instrumentation: preserve that historical fixture unchanged.
+  disabled_model_macros=''
+  if '#define RE4DC_GCA_MODEL_ACCEPT' in ui:
+   disabled=between(ui,'#else\n#define RE4DC_GCA_TEXTURE(...) ((void)0)','#endif\n#if defined(RE4DC_FX_PS2_PACK)')
+   disabled_model_macros='\n'.join(re.findall(r'^#define RE4DC_GCA_MODEL_(?:ACCEPT\(\)|TEXTURE\(\.\.\.\)) \(\(void\)0\)$',disabled,re.M))+'\n'
+   self.assertEqual(len(disabled_model_macros.splitlines()),2)
+  else:self.assertIn(ref,[BASE,HISTORICAL_COMPOSE],'Current GC0 source macro branch missing')
+  return disabled_model_macros+r'''
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -86,6 +103,8 @@ class Controls(unittest.TestCase):
 #include <cstdarg>
 #include <string>
 #define RE4DC_PS2_PVS_BATCH_COMPOSE 1
+#define RE4DC_GC_ASSET_GATE 0
+#define RE4DC_GC_ASSET_MOTION_UNKNOWN 0
 #define RE4DC_PS2_WORLD_SOURCE_TEX_PREP 1
 #define RE4DC_SCENERY_SUBMIT_BATCH 1
 #define RE4DC_SCENERY_REPLAY_LEAN 1
@@ -188,14 +207,16 @@ int main(){
  def test_host_off_object_identity_and_state(self):
   with tempfile.TemporaryDirectory(prefix='pvsbc-identity-',dir='/dev/shm') as t:
    p=pathlib.Path(t);objects=[]
-   for baseline in [True,False]:
-    prefix=self.fixture(baseline=baseline).split('struct Entry {')[0]
-    prefix=prefix.replace('#define RE4DC_PS2_PVS_BATCH_COMPOSE 1','#define RE4DC_PS2_PVS_BATCH_COMPOSE 0')
-    f=p/'unit.cpp';obj=p/('old.o' if baseline else 'new.o');f.write_text(prefix)
-    r=subprocess.run(['g++','-std=c++17','-O2','-g0','-c',str(f),'-o',str(obj)],capture_output=True,text=True)
-    self.assertEqual(r.returncode,0,r.stderr)
-    subprocess.run(['objcopy','--strip-all',str(obj)],check=True);objects.append(obj.read_bytes())
-   self.assertEqual(*objects)
+   for before,after in [(BASE,HISTORICAL_COMPOSE),(INTEGRATED_PRECOMPOSE,None)]:
+    objects=[]
+    for index,ref in enumerate([before,after]):
+     prefix=self.fixture(source_ref=ref).split('struct Entry {')[0]
+     prefix=prefix.replace('#define RE4DC_PS2_PVS_BATCH_COMPOSE 1','#define RE4DC_PS2_PVS_BATCH_COMPOSE 0')
+     f=p/'unit.cpp';obj=p/('old.o' if index==0 else 'new.o');f.write_text(prefix)
+     r=subprocess.run(['g++','-std=c++17','-O2','-g0','-c',str(f),'-o',str(obj)],capture_output=True,text=True)
+     self.assertEqual(r.returncode,0,r.stderr)
+     subprocess.run(['objcopy','--strip-all',str(obj)],check=True);objects.append(obj.read_bytes())
+    self.assertEqual(*objects,(before,after))
    # Source-owned resident state:16-byte event plus1-byte held bool on host.
    f.write_text(self.fixture().split('struct Entry {')[0]);obj=p/'on.o'
    subprocess.run(['g++','-std=c++17','-O2','-c',str(f),'-o',str(obj)],check=True)

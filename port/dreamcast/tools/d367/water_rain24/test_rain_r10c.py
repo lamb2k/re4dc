@@ -42,11 +42,38 @@ assert not re.search(r'Frame_cnt\s*(?:\+\+|--|=(?!=)|\+=|-=)',render)
 assert 'OT_TYPE_MAX = 18' in (ROOT/'include/trans_ot.h').read_text()
 hook=extract((ROOT/'port/dreamcast/game/platform/gx_stub.cpp').read_text(),'void GXSetDrawSync(u16 token)')
 assert '#if RE4DC_D349_RENDERER_STACK' in hook and hook.index('re4dc_model_finish_source_draws()')<hook.index('re4dc_rain_flush()')
-# Simulation, RNG-bearing functions and old-night subset predicate remain byte-for-byte source identical.
+# Retain the original historical baseline. The later independently qualified DIAG
+# adds only guarded observation statements to Filter06Trans; compare its ACTUAL
+# preprocessed DIAG0 simulation in every PS2/native combination, not raw text.
 simulation={}
-for sig in ['void cParticle06::init(', 'void cParticle06::move()', 'void Filter06Trans()', 'static int Filter06Ps2Rain()']:
+for sig in ['void cParticle06::init(', 'void cParticle06::move()', 'static int Filter06Ps2Rain()']:
  a=extract(baseline,sig);b=extract(new,sig);assert a==b,sig+' changed';simulation[sig]=h(a)
-receipt={'scope':'host source excerpts, source-order checks, preprocessing and GNU Make flags; no SH4 ABI/target/image/current-loaded proof','base':BASE,'source_sha256':h(new),'unchanged_simulation_function_sha256':simulation,'frame_lifecycle_sha256':{'main_loop_excerpt':h(loop),'Render':h(render),'GXSetDrawSync':h(hook)},'passed':[]}
+def simulation_projection(source,flags):
+ body=extract(source,'void Filter06Trans()')
+ x=call(['g++','-x','c++','-E','-P',*['-D'+f for f in flags],'-'],input=body.encode())
+ assert x.returncode==0,x.stderr.decode()
+ return x.stdout
+def check_trans_simulation(source):
+ comparisons=[]
+ for ps2 in [0,1]:
+  for native in [0,1]:
+   flags=['RE4DC_RAIN_PS2='+str(ps2),'RE4DC_RAIN_R10C_DC='+str(native)]
+   original=simulation_projection(baseline,flags)
+   for diag in [[],['RE4DC_RAIN_R10C_DIAG=0']]:
+    actual=simulation_projection(source,flags+diag)
+    assert actual==original,'Filter06Trans simulation changed with DIAG0'
+    comparisons.append({'ps2':ps2,'native':native,'diag':'absent' if not diag else '0','sha256':h(actual)})
+ return comparisons
+trans_simulation=check_trans_simulation(new)
+# A genuine simulation change or leaking diagnostic guard must remain detectable.
+trans_negatives=[]
+for name,a,b in [('alpha-update','flt06.alphaF +=','flt06.alphaF -='),('diagnostic-guard-leak','#if defined(RE4DC_RAIN_R10C_DIAG) && RE4DC_RAIN_R10C_DIAG','#if !defined(RE4DC_RAIN_R10C_DIAG) || !RE4DC_RAIN_R10C_DIAG')]:
+ body=extract(new,'void Filter06Trans()');assert a in body
+ mutant=new.replace(body,body.replace(a,b,1),1)
+ try:check_trans_simulation(mutant)
+ except AssertionError:trans_negatives.append(name)
+ else:raise AssertionError(name+' simulation guard mutant survived')
+receipt={'scope':'host source excerpts, source-order checks, preprocessing and GNU Make flags; no SH4 ABI/target/image/current-loaded proof','base':BASE,'source_sha256':h(new),'unchanged_simulation_function_sha256':simulation,'diagnostic_guarded_Trans':{'historical_raw_sha256':h(extract(baseline,'void Filter06Trans()')),'current_raw_sha256':h(extract(new,'void Filter06Trans()')),'actual_DIAG0_preprocessed_comparisons':trans_simulation,'projection_negatives_defeated':trans_negatives,'DIAG1_scope':'separate actual rain_diag24 controls; no DIAG1 simulation identity claim'},'frame_lifecycle_sha256':{'main_loop_excerpt':h(loop),'Render':h(render),'GXSetDrawSync':h(hook)},'passed':[]}
 with tempfile.TemporaryDirectory(prefix='water-rain24-r10c-controls-',dir='/dev/shm') as temp:
  ram=pathlib.Path(temp);cpp=ram/'host.cpp';exe=ram/'host'
  def host(text,enabled,night=False):
@@ -61,19 +88,19 @@ with tempfile.TemporaryDirectory(prefix='water-rain24-r10c-controls-',dir='/dev/
  receipt['old_night_parity']={'bytes':len(nights[0].stdout),'sha256':h(nights[0].stdout),'arms':['baseline','new OFF','new ON']}
  mutants={
  'room-only-signature':('pG->room_id == 0x10C && flt06.p != 0 && flt06.num == 1100 &&','pG->room_id == 0x10C || flt06.p != 0 && flt06.num == 1100 &&'),
- 'stale-frame':('s_raindc_queued_frame != pG->Frame_cnt','false'),
+ 'stale-frame':('if (r10c && (s_raindc_queued_frame != pG->Frame_cnt ||','if (r10c && (false ||'),
  'prior-registration-frame':('s_raindc_queued_frame = pG->Frame_cnt;','s_raindc_queued_frame = pG->Frame_cnt - 1;'),
  'stop-keeps-moving':('if (r10c && (pG->Stop_flg & 0x08000000))','if (false)'),
  'wrong-alpha-normalizer':('s_raindc_alpha) * (1.0f / 80.0f)','s_raindc_alpha) * (1.0f / 60.0f)'),
  'night-color-for-r10c':('r10c ? 0xD2D2D2U','r10c ? 0xB4B4B4U'),
- 'repeat-pending':('    s_raindc_pending = 0;\n    u32 now','    s_raindc_pending = 1;\n    u32 now'),
+ 'repeat-pending':('    s_raindc_pending = 0;\n#if defined(RE4DC_RAIN_R10C_DIAG)','    s_raindc_pending = 1;\n#if defined(RE4DC_RAIN_R10C_DIAG)'),
  'no-setter-cancel':('    RainDcR10cCancel();\n#endif\n    flt06.num = level;','    /* omitted */\n#endif\n    flt06.num = level;'),
  'no-room-init-cancel':('    RainDcR10cCancel();\n#endif\n    memclr_asm(&flt06','    /* omitted */\n#endif\n    memclr_asm(&flt06'),
  'ignore-indoor-flush':('(pG->Status_flg[1] & 0x02000000) || !Render_checkBlurPermission()','false || !Render_checkBlurPermission()'),
  'ignore-height-flush':('Screen.height != 448.0f || Filter09GetbUse()','false || Filter09GetbUse()')}
  for name,(a,b) in mutants.items():
   assert new.count(a)==1,(name,new.count(a));result=host(new.replace(a,b),1)
-  assert result.returncode!=0,name+' survived'
+  assert result.returncode==-6 and b'Assertion' in result.stderr,name+' did not fail a compiled behavioral assertion'
  receipt['source_mutants_defeated']=list(mutants)
  # Preprocess every token of the actual file with empty include stubs; no target ABI/codegen claim.
  stubs=ram/'stubs';stubs.mkdir()
