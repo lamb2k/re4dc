@@ -14,6 +14,12 @@ struct PayloadProof {
     bool registered=false;
 };
 bool payload_capture(PayloadProof&,const void* owner,const void* base,unsigned bytes,const void* layout=nullptr,unsigned layout_bytes=0);
+// Compiled immutable arrays have no contiguous file representation. Hash a
+// versioned, length-framed sequence once at startup, outside submission/locks.
+// The caller owns all spans for the proof's whole lifetime and must select it
+// only after matching the actual consumed arrays. No span table is retained.
+struct PayloadSpan {const void* data;unsigned bytes;};
+bool payload_capture_fragments(PayloadProof&,const void* owner,const PayloadSpan*,unsigned count);
 void payload_retire(PayloadProof&);
 void payload_accept(PayloadProof*,unsigned serial,unsigned consumer_mask);
 void payload_flush_all();

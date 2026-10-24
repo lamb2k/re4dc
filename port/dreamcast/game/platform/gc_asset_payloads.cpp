@@ -15,6 +15,11 @@ CheckedAsset capture(const char* kind,const void* data,unsigned bytes){
     for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
     return bind_checked(kind,id,digest);
 }
+CheckedAsset capture_digest(const Digest& digest){
+    constexpr char hex[]="0123456789abcdef";char id[41];
+    for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
+    return bind_checked("geometry",id,digest);
+}
 void flush(PayloadProof& proof){
     const unsigned mask=proof.uses;proof.uses=0;
     for(unsigned i=0;i<ConsumerCount;++i)if(mask&(1U<<i)){
@@ -43,6 +48,50 @@ bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsi
     if(!asset.value || (layout_bytes && !side.value)){unresolved(SourceGeometry,"payload-catalog-bind");return false;}
     proof.owner=owner;proof.base=base;proof.bytes=bytes;proof.layout=layout;proof.layout_bytes=layout_bytes;
     proof.asset=asset;proof.layout_asset=side;proof.serial=++payload_serial;return true;
+}
+bool payload_capture_fragments(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count){
+    // Read-only compiled owner only: no mutable package may use this borrowed
+    // representation, whose secondary span addresses are deliberately not kept.
+    if(!owner || !spans || !count || count>48 || proof.owner){
+        payload_retire(proof);unresolved(SourceGeometry,"fragment-owner");return false;
+    }
+    unsigned bytes=16+4*count;
+    for(unsigned i=0;i<count;++i){
+        const auto base=reinterpret_cast<std::uintptr_t>(spans[i].data);
+        if(!base || !spans[i].bytes || spans[i].bytes>40U*1024*1024-bytes ||
+           base+spans[i].bytes<base){unresolved(SourceGeometry,"fragment-bounds");return false;}
+        bytes+=spans[i].bytes;
+    }
+    // Reuse registry/capacity/serial protections; publish only after the entire
+    // borrowed sequence hashes successfully.
+    struct Reader {
+        const PayloadSpan* spans;unsigned count,stage=0,at=0;
+        unsigned char word[16]={'G','C','F','R','A','G','0','1',0,0,0,0,0,0,0,0};
+        static unsigned read(void* context,void* target,unsigned requested){
+            auto& r=*static_cast<Reader*>(context);auto* out=static_cast<unsigned char*>(target);unsigned written=0;
+            while(written<requested){
+                const void* data;unsigned size;
+                if(!r.stage){data=r.word;size=16;}
+                else {const unsigned index=(r.stage-1)/2;if(index>=r.count)break;
+                    if(r.stage&1){const unsigned n=r.spans[index].bytes;for(unsigned k=0;k<4;++k)r.word[k]=n>>(8*k);data=r.word;size=4;}
+                    else {data=r.spans[index].data;size=r.spans[index].bytes;}}
+                const unsigned left=size-r.at,take=left<requested-written?left:requested-written;
+                const auto* p=static_cast<const unsigned char*>(data)+r.at;
+                for(unsigned i=0;i<take;++i)out[written+i]=p[i];
+                written+=take;r.at+=take;
+                if(r.at==size){r.at=0;++r.stage;}
+            }
+            return written;
+        }
+    } reader{spans,count};
+    for(unsigned k=0;k<4;++k)reader.word[8+k]=count>>(8*k);
+    Digest digest{};if(!fingerprint_read(digest,Reader::read,&reader,bytes))return false;
+    for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner==owner){payload_retire(*old);unresolved(SourceGeometry,"fragment-owner-overlap");return false;}
+    if(!proof.registered){if(payload_count==128){unresolved(SourceGeometry,"payload-owner-capacity");return false;}
+        proof.next=payloads;payloads=&proof;proof.registered=true;++payload_count;}
+    if(payload_serial>=0xfffffffeU){unresolved(SourceGeometry,"payload-serial-exhausted");return false;}
+    const CheckedAsset asset=capture_digest(digest);if(!asset.value){unresolved(SourceGeometry,"payload-catalog-bind");return false;}
+    proof.owner=owner;proof.asset=asset;proof.serial=++payload_serial;return true;
 }
 void payload_retire(PayloadProof& proof){
     flush(proof);proof.owner=proof.base=proof.layout=nullptr;proof.bytes=proof.layout_bytes=0;

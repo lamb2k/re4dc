@@ -68,3 +68,5 @@ and small global registry state. Mixed quad records add 12 B each (576 B for
 4-byte active batch pointer on SH4. Far-shell adds one stable 44-byte proof,
 excluded entirely when the gate is off. There is no heap table or resident catalog
 growth. Actual SH4 object/link pricing remains required.
+
+Compiled actor arrays now have a bounded helper contract: payload_capture_fragments hashes ASCII GCFRAG01, little-endian u32 span count and reserved zero (16-byte header), then each little-endian u32 byte length and its exact bytes in caller order. At most 48 spans and 40 MiB total; the reader streams through the existing 512-byte SHA scratch. No span list or extra PayloadProof fields are retained. This API is for explicitly immutable compiled owners only; the integration must match actual consumed arrays/descriptors before selection and must not use it for mutable/reloaded packages. Full digest binds geometry; no origin comes from compiled/local/PS2-named data. SourceGeometry/Weapon coverage remains unwired pending real actor-pack and specialized static consumers.
