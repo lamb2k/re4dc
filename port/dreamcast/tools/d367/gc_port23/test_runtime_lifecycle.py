@@ -19,9 +19,15 @@ class RuntimeLifecycleTests(unittest.TestCase):
     else re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-global");
 #endif
 '''
-        self.assertEqual(current.count(include), 1)
-        self.assertEqual(current.count(guard), 1)
-        self.assertEqual(current.replace(include, '').replace(guard, ''), incoming)
+        def check_projection(text):
+            self.assertEqual(text.count(include), 1)
+            self.assertEqual(text.count(guard), 1)
+            self.assertEqual(text.replace(include, '').replace(guard, ''), incoming)
+        check_projection(current)
+        enter = next(line for line in current.splitlines(keepends=True) if 're4dc_cache_p2_diag_enter(' in line)
+        for mutation in [current + 're4dc_gcasset_room_enter(0);\n',
+                         current.replace('#if RE4DC_GC_ASSET_GATE\n', '#if 1\n'), current.replace(enter, '')]:
+            with self.assertRaises(AssertionError):check_projection(mutation)
         self.assertEqual(current.count('re4dc_cache_p2_diag_'), 3)
         for path in ['port/dreamcast/game/kos_cache_p2.mk', 'port/dreamcast/game/platform/kos_cache_p2_diag.cpp',
                      'port/dreamcast/docs/KOS_CACHE_P2_DIAG_20261023.md',
