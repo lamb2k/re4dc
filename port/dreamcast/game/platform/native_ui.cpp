@@ -1032,8 +1032,8 @@ constexpr unsigned kModelMetadataBytes=RE4DC_MODEL_DRAW_PLANS?32*1024:0;
 #if RE4DC_GC_ASSET_SOURCE_PROOFS
 // Existing 32 KiB tail only. The proof profile trades the draw-plan cache for
 // original-source ownership; no slab growth or packet/preparation shrinkage.
-constexpr unsigned kGcGeometryBytes=12288,kGcMotionBytes=12288;
-static_assert(kGcGeometryBytes+kGcMotionBytes<=kModelMetadataBytes,"source partitions fit existing metadata");
+constexpr unsigned kGcGeometryBytes=12288,kGcMotionBytes=12288,kGcCompoundBytes=3584;
+static_assert(kGcGeometryBytes+kGcMotionBytes+kGcCompoundBytes<=kModelMetadataBytes,"source partitions fit existing metadata");
 #endif
 #if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
 const void* gcasset_room_source_owner;
@@ -5648,7 +5648,9 @@ void gcasset_startup(){
         auto* metadata=reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes+kModelDeferredSpillBytes;
         source_storage=re4dc_gcasset::member_original_storage_bytes()==kGcGeometryBytes &&
             re4dc_gcasset::member_original_storage(metadata,kGcGeometryBytes) &&
-            re4dc_gcasset::motion_source_storage_bind(metadata+kGcGeometryBytes,kGcMotionBytes);
+            re4dc_gcasset::motion_source_storage_bind(metadata+kGcGeometryBytes,kGcMotionBytes) &&
+            re4dc_gcasset::payload_compound_storage_bytes()==kGcCompoundBytes &&
+            re4dc_gcasset::payload_compound_storage(metadata+kGcGeometryBytes+kGcMotionBytes,kGcCompoundBytes);
     }
 #endif
     re4dc_gcasset::ensure_disc_catalog();

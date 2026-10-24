@@ -35,13 +35,15 @@ class SourceStorage(unittest.TestCase):
 alignas(32) unsigned char slab[65536];
 unsigned char* model_packets=slab;
 constexpr unsigned kModelMetadataBytes=32768,kModelPacketBytes=12288,kModelPreparationBytes=12288,kModelStaticLightBytes=0,kModelDeferredSpillBytes=8192;
-constexpr unsigned kGcGeometryBytes=12288,kGcMotionBytes=12288;
-bool ensure=true,geometry_ok=true,motion_ok=true;unsigned expected_bytes=12288,calls=0;
+constexpr unsigned kGcGeometryBytes=12288,kGcMotionBytes=12288,kGcCompoundBytes=3584;
+bool ensure=true,geometry_ok=true,motion_ok=true,compound_ok=true;unsigned expected_bytes=12288,calls=0;
 bool ensure_model_storage(){return ensure;}
 namespace re4dc_gcasset {
 unsigned member_original_storage_bytes(){return expected_bytes;}
 bool member_original_storage(void* p,unsigned n){++calls;assert(p==slab+32768 && n==12288);return geometry_ok;}
 bool motion_source_storage_bind(void* p,unsigned n){++calls;assert(p==slab+45056 && n==12288);return motion_ok;}
+unsigned payload_compound_storage_bytes(){return 3584;}
+bool payload_compound_storage(void* p,unsigned n){++calls;assert(p==slab+57344 && n==3584);return compound_ok;}
 }
 bool bind_actual(){
 """+binding+r"""
@@ -49,12 +51,13 @@ bool bind_actual(){
 }
 """+cache+r"""
 int main(){
- assert(bind_actual() && calls==2);unsigned bytes=999;
+ assert(bind_actual() && calls==3);unsigned bytes=999;
  assert(re4dc_model_metadata_storage(&bytes)==nullptr && bytes==0);
  ensure=false;calls=0;assert(!bind_actual() && calls==0);
  ensure=true;expected_bytes=12289;assert(!bind_actual() && calls==0);
  expected_bytes=12288;geometry_ok=false;assert(!bind_actual() && calls==1);
  geometry_ok=true;motion_ok=false;calls=0;assert(!bind_actual() && calls==2);
+ motion_ok=true;compound_ok=false;calls=0;assert(!bind_actual() && calls==3);
 }
 """
         with tempfile.TemporaryDirectory(prefix='gc-source-storage24-') as tmp:

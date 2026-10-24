@@ -56,7 +56,7 @@ PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_motion_unknown.o
 endif
 
 # Original immutable source receipts are diagnostic only. This profile borrows
-# 24 KiB from the existing 32 KiB model metadata slab; the draw-plan cache is
+# 27.5 KiB from the existing 32 KiB model metadata slab; the draw-plan cache is
 # explicitly unavailable in this profile. No extra slab/packet bytes are added.
 ifneq ($(GC_ASSET_MOTION_SOURCE),0)
 ifneq ($(GC_ASSET_MOTION_SOURCE),1)
