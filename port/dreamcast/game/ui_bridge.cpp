@@ -1,4 +1,7 @@
 #include "platform/include/movie_world_arena.h"
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+#include "platform/include/kos_cache_p2_diag.h"
+#endif
 // Source ID layout/animation/ordering -> existing native texture/PVR mechanisms.
 #include "light.h"
 #include "id_sys.h"
@@ -439,6 +442,9 @@ extern "C" void re4dc_room_leave(){
 #endif
     re4dc_room4_close();
     audit(2);
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    re4dc_cache_p2_diag_leave(unsigned(pG?pG->room_id:0xffff));
+#endif
     re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused);
     if(cells)re4dc_log("room lifecycle: %u native heap-4 cells (%u B) outlived retirement\n",cells,bytes);
 }
@@ -459,6 +465,9 @@ extern "C" void re4dc_warp_poll(void);
 extern "C" void re4dc_std_room_enter(unsigned room);   // platform/native_static.cpp
 #endif
 extern "C" void re4dc_room_enter(){
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    re4dc_cache_p2_diag_enter(unsigned(pG?pG->room_id:0xffff));
+#endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     re4dc_disc_meter_room(1,unsigned(pG->room_id));   // or here for the first room (no door)
 #endif
@@ -568,6 +577,9 @@ extern "C" int re4dc_room_cycle_poll(){
     re4dc_w11_room_poll(generation);                    // death / life fixture (sscrn_bridge.cpp)
 #endif
     ++room_frames;
+#if defined(RE4DC_KOS_CACHE_P2_DIAG) && RE4DC_KOS_CACHE_P2_DIAG
+    if(room_frames%150==0)re4dc_cache_p2_diag_poll(unsigned(pG?pG->room_id:0xffff),room_frames);
+#endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     if(room_frames==1)re4dc_disc_meter_room(2,unsigned(pG->room_id)); if(room_frames==1)RE4DC_DOORPH_END(unsigned(pG->room_id));   // first gameMainLoop frame: the load ends
 #endif

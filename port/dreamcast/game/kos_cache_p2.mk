@@ -6,6 +6,20 @@ ifneq ($(KOS_CACHE_P2),1)
 $(error KOS_CACHE_P2 must be 0 or 1)
 endif
 endif
+# Test-only observer; no object/flag/helper changes when it is zero.
+KOS_CACHE_P2_DIAG ?= 0
+ifneq ($(KOS_CACHE_P2_DIAG),0)
+ifneq ($(KOS_CACHE_P2_DIAG),1)
+$(error KOS_CACHE_P2_DIAG must be 0 or 1)
+endif
+endif
+ifeq ($(KOS_CACHE_P2_DIAG),1)
+ifneq ($(KOS_CACHE_P2),1)
+$(error KOS_CACHE_P2_DIAG=1 requires KOS_CACHE_P2=1)
+endif
+endif
+# PLATFORM_OBJS is a wildcard: keep the new diagnostic TU absent when off.
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/kos_cache_p2_diag.o,$(PLATFORM_OBJS))
 ifeq ($(KOS_CACHE_P2),1)
 KOSCACHE := $(OBJDIR)/koscache-p2
 KOSCACHE_TOOLS := $(CURDIR)/../tools/d367/kos_cache_audit
@@ -15,6 +29,16 @@ KOSCACHE_ASM := $(KOSCACHE)/tree/kernel/arch/dreamcast/kernel/cache_p2.S
 KOSCACHE_CHECK := $(KOSCACHE)/require_p2.h
 KOSCACHE_CPPFLAGS := -DKOS_CACHE_P2=1 -I$(abspath $(KOSCACHE))/tree/kernel/arch/dreamcast/include -include $(abspath $(KOSCACHE_CHECK))
 KOSCACHE_OBJS := $(addprefix $(KOSCACHE)/,exec.o dmac.o g1ata.o broadband_adapter.o cache_p2.o)
+KOSCACHE_DIAG_ARG :=
+ifeq ($(KOS_CACHE_P2_DIAG),1)
+KOSCACHE_DIAG_ARG := --diagnostics
+KOSCACHE_OBJS += $(OBJDIR)/platform/kos_cache_p2_diag.o
+$(OBJDIR)/platform/kos_cache_p2_diag.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_CACHE_P2_DIAG=1
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_KOS_CACHE_P2_DIAG=1
+$(OBJDIR)/platform/kos_cache_p2_diag.o $(OBJDIR)/ui_bridge.o: platform/include/kos_cache_p2_diag.h
+KOSCACHE_INPUTS_DIAG := $(KOS_BASE)/kernel/arch/dreamcast/kernel/timer.c \
+    $(KOS_BASE)/kernel/arch/dreamcast/include/arch/timer.h $(KOS_BASE)/include/kos/timer.h
+endif
 KOSCACHE_INPUTS := $(KOS_BASE)/Makefile $(KOS_BASE)/kernel/arch/dreamcast/kernel/Makefile \
 	$(KOS_BASE)/include/kos/cache.h $(KOS_BASE)/kernel/arch/dreamcast/include/arch/cache.h \
 	$(KOS_BASE)/kernel/arch/dreamcast/kernel/exec.c \
@@ -24,8 +48,8 @@ KOSCACHE_INPUTS := $(KOS_BASE)/Makefile $(KOS_BASE)/kernel/arch/dreamcast/kernel
 
 # The original header in KOS_BASE remains untouched. prepare.py checks the pin,
 # exact input bytes and complete KOS inline-call inventory before applying.
-$(KOSCACHE_HEADER) $(KOSCACHE_ASM) $(KOSCACHE_CHECK) &: $(KOSCACHE_INPUTS) $(KOSCACHE_PATCH) $(KOSCACHE_TOOLS)/prepare.py
-	python3 $(KOSCACHE_TOOLS)/prepare.py --kos-root $(KOS_BASE) --output $(KOSCACHE) --patch $(KOSCACHE_PATCH)
+$(KOSCACHE_HEADER) $(KOSCACHE_ASM) $(KOSCACHE_CHECK) &: $(KOSCACHE_INPUTS) $(KOSCACHE_PATCH) $(KOSCACHE_TOOLS)/prepare.py $(KOSCACHE_TOOLS)/cache_diag.py $(KOSCACHE_INPUTS_DIAG)
+	python3 $(KOSCACHE_TOOLS)/prepare.py --kos-root $(KOS_BASE) --output $(KOSCACHE) --patch $(KOSCACHE_PATCH) $(KOSCACHE_DIAG_ARG)
 
 # All game-side writeback APIs pass through these three translation units.
 # Explicit prerequisites make the header available before parallel compiles.
