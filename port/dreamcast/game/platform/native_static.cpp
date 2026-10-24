@@ -610,7 +610,11 @@ void gcasset_static_bytes(re4dc_gcasset::StaticManifest* m,re4dc_gcasset::Static
 #if RE4DC_GC_ASSET_GATE
 unsigned gcasset_static_profile(){
     return 0x01000000U | (unsigned(RE4DC_SCENERY_ENCODING)&3U) |
-        ((RE4DC_MESH_LOD!=0)?4U:0U) | ((unsigned(RE4DC_SCENERY_DEDUP)&3U)<<4);
+        ((RE4DC_MESH_LOD!=0)?4U:0U)
+#if defined(RE4DC_SCENERY_DEDUP)
+        | ((unsigned(RE4DC_SCENERY_DEDUP)&3U)<<4)
+#endif
+        ; // absent knob is the same mode0 as the existing preprocessor paths
 }
 void gcasset_static_ordinary_manifest(re4dc_gcasset::StaticManifest& source,re4dc_gcasset::StaticOwner owner,unsigned room,const void* data,unsigned bytes){
     using namespace re4dc_gcasset;

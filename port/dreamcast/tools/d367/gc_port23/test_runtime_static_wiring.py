@@ -386,6 +386,29 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);PayloadProof a,b;i
         self.assertEqual(payload.count(old),1)
         runner.compile(fixture,payload.replace(old,'payload_accept(use.proof,use.serial,1U<<SourceGeometry);'),reject=True)
 
+    def test_actual_profile_handles_absent_dedup_without_defining_it(self):
+        source=(GAME/'platform/native_static.cpp').read_text()
+        profile=function(source,'unsigned gcasset_static_profile(){')
+        old=subprocess.check_output(['git','-C',str(GAME.parents[2]),'show','77d8a20b2e6c6a8f3eccb6119081c27a3dd4ea22:port/dreamcast/game/platform/native_static.cpp'],text=True)
+        original=function(old,'unsigned gcasset_static_profile(){')
+        with tempfile.TemporaryDirectory(prefix='gc-static-profile-default-',dir='/dev/shm') as temp:
+            for mode in [None,0,1,2,3]:
+                with self.subTest(dedup=mode):
+                    root=Path(temp);test=root/'test.cpp';expected=0x1000005|((mode or 0)<<4)
+                    fixture='#include <cassert>\n'+profile+'\nint main(){assert(gcasset_static_profile()=='+str(expected)+'U);}\n'
+                    if mode is None:fixture+='\n#ifdef RE4DC_SCENERY_DEDUP\n#error invented global dedup definition\n#endif\n'
+                    test.write_text(fixture)
+                    flags=['-DRE4DC_SCENERY_ENCODING=1','-DRE4DC_MESH_LOD=1']+([] if mode is None else ['-DRE4DC_SCENERY_DEDUP='+str(mode)])
+                    command=['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror',*flags,str(test),'-o',str(root/'test')]
+                    built=subprocess.run(command,capture_output=True,text=True);self.assertEqual(built.returncode,0,built.stderr)
+                    subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(root/'test')],check=True)
+                    if mode is None:
+                        # Preserve the exact actual-target compiler failure:
+                        # resolved0 omits the macro from its real command.
+                        test.write_text(fixture.replace(profile,original))
+                        failed=subprocess.run(command,capture_output=True,text=True)
+                        self.assertNotEqual(failed.returncode,0);self.assertIn('RE4DC_SCENERY_DEDUP',failed.stderr)
+
     def test_gate0_static_and_shell_tokens_equal_reviewed_parent(self):
         flags=['RE4DC_MESH_LOD=1','RE4DC_QUALITY=1','RE4DC_MESH_TEXTURES=1','RE4DC_NATIVE_STATIC=1','RE4DC_NATIVE_MESH=1','RE4DC_PS2_WORLD_MESH=1','RE4DC_PS2_WORLD_ROOMS=1','RE4DC_SCENERY_CONE=1','RE4DC_SCENERY_PIECE_STATE=1','RE4DC_PS2_PVS=2','RE4DC_PS2_STRIP_GROUPS=1','RE4DC_TRANS_POLICY=139','RE4DC_PS2_WORLD_DYNAMIC=1','RE4DC_QUALITY_ASSETS=1','RE4DC_PS2_INTERIOR_CULL=1','RE4DC_TREE_IMPOSTOR=1','RE4DC_FAR_SHELL=1']
         for name in ['native_static.cpp','far_shell.inc','room_file.c']:
