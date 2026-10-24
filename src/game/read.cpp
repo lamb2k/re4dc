@@ -287,14 +287,21 @@ void ReadAreaData()
         PSet(pG->pRoom, (void*) roomInfo.addr[0][0]);
         out_data_size = roomInfo.size[0][0];
 #if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
-        re4dc_gcasset::motion_source_archive(pG->pRoom,pG->pRoom,out_data_size);
+        const void* gcasset_motion_room_owner=pG->pRoom;
+        re4dc_gcasset::motion_source_archive(gcasset_motion_room_owner,pG->pRoom,out_data_size);
 #endif
 
         if (!re4dc_effect_bind_room(pG->pRoom, out_data_size)) {
+#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_retire(gcasset_motion_room_owner);
+#endif
             re4dc_missing("invalid prepared native room effects");
             return;
         }
         if (!re4dc_ui_bind_room(pG->pRoom, out_data_size)) {
+#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_retire(gcasset_motion_room_owner);
+#endif
             re4dc_missing("invalid prepared native room identities");
             return;
         }

@@ -121,7 +121,13 @@ bool motion_source_archive(const void* owner,const void* base,unsigned bytes){
     const unsigned directory=16+8*count;bool external=false;
     for(unsigned i=0;i<count;++i){
         const unsigned at=word(p+16+4*i);if(at<directory || at>=bytes){unresolved(Motion,"motion-archive-span");return false;}
-        const auto* tag=p+16+4*count+4*i;if(!std::memcmp(tag,"MTC",3))external=true;
+        const auto* tag=p+16+4*count+4*i;
+        const bool motion_member=!std::memcmp(tag,"FCV",3) || !std::memcmp(tag,"BIN",3) ||
+            !std::memcmp(tag,"EVD",3) || !std::memcmp(tag,"EVS",3);
+        // A nonzero REL offset terminates original asset ownership. Never
+        // reinterpret REL/code bytes as a last BIN/FCV by falling back to EOF.
+        if(rel && motion_member && at>=rel){unresolved(Motion,"motion-member-at-rel");return false;}
+        if(!std::memcmp(tag,"MTC",3))external=true;
         // Zero-tag alias slots may point at their next real member. Reject all
         // nonempty aliases so no captured span has two interpretations.
         for(unsigned j=0;j<i;++j)if(word(p+16+4*j)==at && word(tag) && word(p+16+4*count+4*j)){

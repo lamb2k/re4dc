@@ -11,7 +11,7 @@ import unittest
 import re
 ROOT=Path(__file__).resolve().parents[5]
 PLATFORM=ROOT/'port/dreamcast/game/platform'
-FLAGS=['-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_GATE=1','-DRE4DC_GC_ASSET_MOTION_UNKNOWN=1','-DRE4DC_GC_ASSET_MOTION_SOURCE=1','-DRE4DC_GC_ASSET_TEST=1','-I'+str(PLATFORM/'include')]
+FLAGS=['-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GAME=1','-DRE4DC_GC_ASSET_GATE=1','-DRE4DC_GC_ASSET_MOTION_UNKNOWN=1','-DRE4DC_GC_ASSET_MOTION_SOURCE=1','-DRE4DC_GC_ASSET_TEST=1','-I'+str(PLATFORM/'include')]
 FIXTURE=r"""
 #include "gc_asset_motion_source.h"
 #include "gc_asset_motion_unknown.h"
@@ -22,6 +22,7 @@ FIXTURE=r"""
 #include <vector>
 using namespace re4dc_gcasset;
 NATIVE_FIXTURE
+ROOM_FIXTURE
 namespace re4dc_gcasset {Digest gate_fingerprint(const void*,unsigned);CheckedAsset gate_bind_checked(const char*,const char*,const Digest&);}
 bool protected_context=false,motion_mutex=false;unsigned hashes=0,accepts=0,faults=0;CheckedAsset accepted[128]{};
 extern "C" void re4dc_log(const char*,...){assert(!protected_context);}
@@ -135,6 +136,21 @@ int main(){
  // Foreign keys cannot be blessed by an authentic proxy/header or source name.
  motion_source_reset(&model);motion_source_note_key(&model,proxy,clip+16,0);assert(motion_source_snapshot(&model).fault);
  native_stop();
+ // Asset extents at/after REL are not sources; no hash/bind or positive use.
+ unsigned char bad_rel[64]{};word(bad_rel,1);word(bad_rel+4,24);word(bad_rel+16,24);std::memcpy(bad_rel+20,"BIN",3);
+ const unsigned rel_hashes=hashes;assert(!motion_source_archive(&owner,bad_rel,sizeof bad_rel));assert(hashes==rel_hashes);
+ motion_source_reset(&model);motion_source_note(&model,bad_rel+24,MotionBind);assert(motion_source_snapshot(&model).count==0);
+ // Original room capture precedes effect/UI binds. Either failure must retire
+ // that exact captured owner; the same allocation can then be safely reused.
+ motion_source_view_retire(&camera);
+ unsigned char room_arc[160]{};word(room_arc,2);word(room_arc+16,32);word(room_arc+20,96);std::memcpy(room_arc+24,"FCV",3);std::memcpy(room_arc+28,"BIN",3);
+ room_arc[34]=1;word(room_arc+44,16);room_arc[48]=room_arc[64]=room_arc[80]=1;
+ actual_room_attempt(room_arc,sizeof room_arc,false,true);const unsigned failed_generation=room_last_serial;assert(room_ui_calls==0);
+ motion_source_reset(&room_subject);motion_source_note_key(&room_subject,room_arc+32,room_arc+48,0);assert(!motion_source_snapshot(&room_subject).count);
+ actual_room_attempt(room_arc,sizeof room_arc,true,false);assert(room_ui_calls==1 && room_last_serial!=failed_generation);
+ motion_source_reset(&room_subject);motion_source_note_key(&room_subject,room_arc+32,room_arc+48,0);assert(!motion_source_snapshot(&room_subject).count);
+ actual_room_attempt(room_arc,sizeof room_arc,true,true);assert(room_ui_calls==2);motion_source_reset(&room_subject);motion_source_note_key(&room_subject,room_arc+32,room_arc+48,0);assert(motion_source_snapshot(&room_subject).count==1);
+ motion_source_retire(room_arc);
  // Invalid directory sizes/ranges and serial exhaustion do not read a span.
  word(arc,4097);assert(!motion_source_archive(&owner,arc,sizeof arc));
  assert(!motion_source_adopt(&owner,reinterpret_cast<void*>(~std::uintptr_t(0)-3),8,MotionFcv));
@@ -151,7 +167,7 @@ class MotionSourceTests(unittest.TestCase):
    def production_block(call):
     at=read.index(call);start=read.rfind('#if',0,at);finish=read.index('#endif',at)+len('#endif')
     return read[start:finish]
-   fixture=FIXTURE.replace('NATIVE_FIXTURE',self.native_fixture())
+   fixture=FIXTURE.replace('NATIVE_FIXTURE',self.native_fixture()).replace('ROOM_FIXTURE',self.room_fixture())
    fixture=fixture.replace('LOADER_CAPTURE',production_block('re4dc_gcasset::motion_source_archive(m,pArc,len);'))
    fixture=fixture.replace('LOADER_RETIRE',production_block('re4dc_gcasset::motion_source_retire(m);'))
    (p/'fixture.cpp').write_text(fixture)
@@ -204,9 +220,29 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table){
 }
 extern "C" void re4dc_motion_release(int token){assert(token==1 && native_slot.pins);--native_slot.pins;owners[0]={};}
 '''.replace('COLD_CAPTURE',capture)+publish+idle
+ def room_fixture(self):
+  source=(ROOT/'src/game/read.cpp').read_text()
+  start=source.index('#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE\n        const void* gcasset_motion_room_owner=')
+  end=source.index('        readTime = StopwatchStop(NULL);',start)
+  return r'''
+struct RoomGlobals {void* pRoom;};RoomGlobals room_globals{};RoomGlobals* pG=&room_globals;
+bool room_effect_ok,room_ui_ok;unsigned room_ui_calls=0,room_last_serial=0;int room_subject=0;
+bool re4dc_effect_bind_room(void* base,unsigned){
+ re4dc_gcasset::motion_source_reset(&room_subject);
+ re4dc_gcasset::motion_source_note_key(&room_subject,static_cast<unsigned char*>(base)+32,static_cast<unsigned char*>(base)+48,0);
+ room_last_serial=re4dc_gcasset::motion_source_snapshot(&room_subject).serial[0];assert(room_last_serial);
+ if(!room_effect_ok)pG->pRoom=reinterpret_cast<void*>(1); // failure callback cannot change captured owner
+ return room_effect_ok;
+}
+bool re4dc_ui_bind_room(void*,unsigned){++room_ui_calls;return room_ui_ok;}
+void re4dc_missing(const char*){}
+void actual_room_attempt(void* base,unsigned out_data_size,bool effects,bool ui){pG->pRoom=base;room_effect_ok=effects;room_ui_ok=ui;
+BODY
+}
+'''.replace('BODY',source[start:end])
  def test_production_helper_with_real_hash_catalog_and_tokens(self):self.compile_run()
  def test_retirement_and_stale_mutations(self):
-  for mutant in [('for(auto& s:state->sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external)continue;','if(external){}'),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}'),('if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))','if(false && (role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))'),('if(state->frozen_context){if(!receipt_current(state->context,model,info))','if(false){if(!receipt_current(state->context,model,info))'),('const CheckedAsset asset=capture_digest(s.digest);','const CheckedAsset asset=capture(s.base,s.bytes);')]:
+  for mutant in [('for(auto& s:state->sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external)continue;','if(external){}'),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}'),('if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))','if(false && (role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))'),('if(state->frozen_context){if(!receipt_current(state->context,model,info))','if(false){if(!receipt_current(state->context,model,info))'),('const CheckedAsset asset=capture_digest(s.digest);','const CheckedAsset asset=capture(s.base,s.bytes);'),('if(rel && motion_member && at>=rel)','if(false && rel && motion_member && at>=rel)')]:
    with self.subTest(mutant=mutant[0]):self.compile_run(mutant,reject=True)
  def test_default_header_evaluates_no_arguments_and_object_empty(self):
   with tempfile.TemporaryDirectory(prefix='gc-motion-off24-',dir='/dev/shm') as t:
@@ -229,6 +265,10 @@ extern "C" void re4dc_motion_release(int token){assert(token==1 && native_slot.p
    path='src/game/'+name
    source=(ROOT/path).read_text();self.assertTrue(source.startswith(include));source=source[len(include):]
    if name=='shape.cpp':
+    member_include='#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE\n#include "gc_asset_members.h"\n#endif\n'
+    producer_scope='#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE\n    re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;\n#endif\n'
+    self.assertEqual(source.count(member_include),1);source=source.replace(member_include,'')
+    self.assertEqual(source.count(producer_scope),2);source=source.replace(producer_scope,'')
     for block in ['#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE\nextern "C" void re4dc_gcasset_shape_reset(const void* info,const void* dst);\nextern "C" void re4dc_gcasset_shape_source(const void* info,unsigned index,const void* delta,unsigned count);\n#endif\n\n','#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE\n    re4dc_gcasset_shape_reset(info,dst);\n#endif\n','#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE\n                    re4dc_gcasset_shape_source(info,w->idx[i],src,(unsigned)num);\n#endif\n']:
      self.assertEqual(source.count(block),1);source=source.replace(block,'')
    lines=source.splitlines(True);out=[];skip=0
@@ -321,4 +361,34 @@ int main(){int data=0;for(bool held:{false,true}){Binding b{held};reserved=held;
      self.assertEqual(run.returncode,0,run.stderr)
      result=subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(p/'run')],capture_output=True,text=True,timeout=10)
      self.assertEqual(result.returncode,0,result.stderr)
+ def test_actual_shape_reset_producer_scope_and_callback_order(self):
+  import sys
+  sys.path.insert(0,str(ROOT/'port/dreamcast/tools/d367/gc_port23'))
+  from test_runtime_hooks import function
+  source=(ROOT/'src/game/shape.cpp').read_text()
+  reset=function(source,'void ResetShape(cModelInfo* info, void* dst)\n{')
+  calculate=source[source.index('void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)\n{'):source.index('// Never called (superseded by CalculateShape_new)')]
+  self.assertIn('re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;',calculate)
+  header=(PLATFORM/'include/gc_asset_members.h').read_text()
+  if 'struct GeometryProducerScope {' not in header:
+   header=subprocess.run(['git','show','e17ed34d7:port/dreamcast/game/platform/include/gc_asset_members.h'],cwd=ROOT,check=True,capture_output=True,text=True).stdout
+  at=header.index('struct GeometryProducerScope {');scope=header[at:header.index('};',at)+2]
+  fixture=r'''#include <cassert>
+#include <cstring>
+unsigned depth=0,callbacks=0;bool admit=true;
+namespace re4dc_gcasset {bool geometry_producer_enter(){if(admit)++depth;return admit;}void geometry_producer_leave(bool entered){if(entered){assert(depth);--depth;}}
+SCOPE
+}
+struct Data {const void* vtxOrig;unsigned nVtx;};struct cModelInfo {Data* pData;};
+extern "C" void re4dc_gcasset_shape_reset(const void* info,const void* dst){auto* m=static_cast<const cModelInfo*>(info);assert(depth==1 && !std::memcmp(dst,m->pData->vtxOrig,m->pData->nVtx*8));++callbacks;}
+using std::memcpy;
+RESET
+int main(){unsigned original[4]={1,2,3,4},destination[4]{};Data data{original,2};cModelInfo model{&data};ResetShape(&model,destination);assert(depth==0 && callbacks==1);}
+'''.replace('SCOPE',scope).replace('RESET',reset)
+  with tempfile.TemporaryDirectory(prefix='gc-motion-shape-producer-',dir='/dev/shm') as t:
+   p=Path(t);(p/'fixture.cpp').write_text(fixture)
+   result=subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GAME=1','-DRE4DC_GC_ASSET_GATE=1','-DRE4DC_GC_ASSET_MOTION_SOURCE=0',str(p/'fixture.cpp'),'-o',str(p/'run')],capture_output=True,text=True,timeout=60)
+   self.assertEqual(result.returncode,0,result.stderr)
+   run=subprocess.run(['/lib64/ld-linux-x86-64.so.2',str(p/'run')],capture_output=True,text=True,timeout=10)
+   self.assertEqual(run.returncode,0,run.stderr)
 if __name__=='__main__':unittest.main()

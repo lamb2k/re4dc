@@ -1,6 +1,9 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "gc_asset_motion_source.h"
 #endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+#include "gc_asset_members.h"
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
 #endif
@@ -175,6 +178,9 @@ u32 re4dc_otwc_shape_model_id;
 // Restore the original vertex positions.
 void ResetShape(cModelInfo* info, void* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
+#endif
     memcpy(dst, info->pData->vtxOrig, info->pData->nVtx * 8);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
     re4dc_gcasset_shape_reset(info,dst);
@@ -229,6 +235,9 @@ struct ShapeEntry {
 // (vertex index + s16 dx/dy/dz from the model's shape table) and adds it to the vertices.
 void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
+#endif
     ShapeWork work;
     ShapeWork* w = &work;
     HermiteParam prm;
