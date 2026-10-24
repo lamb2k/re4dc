@@ -101,3 +101,12 @@ acceptance now require consumer3 errors while emitting no asset-positive row.
 Three additional compiling mutants erase raw/cache class or recapture replay
 class; each must fail runtime assertions. Earlier683 source and its review
 counterexample remain preserved; overall coverage is still partial.
+
+Independent successor review is CLEAR at bf276b34df658caf945e98302f7d42c94e6ee47e.
+The original683 counterexample was preserved and rerun with corrected production
+bodies: SourceGeometry plus Weapon errors, both asset counters0, no asset row.
+Independent19 compiled runs (four baseline/fifteen mutants) behaved as required.
+Full frozen host86 discovered/85 executed/one historical skip plus C++ controls
+passed. Selected current-profile SH4 pricing subsequently completed: actual48B
+Frame receipts; main clone1716B self-stack versus OFF1676, selector88B. Details
+and limits are in TARGET-CURRENT-PRICING.md; no full programme/guest/coverage pass.

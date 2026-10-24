@@ -1,5 +1,49 @@
 # Current selected SH4 object pricing
 
+Latest frozen source bf276b34df658caf945e98302f7d42c94e6ee47e, independently
+CLEAR for the bounded source unit. One allocated SDK slot and tree lease were
+used for selected objects only, JOBS1, and are RELEASED. Actual current d5c
+profile/commands/SDK below stayed pinned before/after;14 changed dependency
+units were compiled and three unchanged units reused with exact pins. All12
+existing OFF baseline/absent/explicit0 stripped objects are IDENTICAL; all five
+OFF helpers have zero text/data/BSS and no defined symbols.
+
+Latest selected pre-link increment: text40467/data84/BSS16080 =56631 bytes.
+Synthetic valid64hex catalog pin retains another445 text =57076 bytes; this is
+syntax/code retention only, never a real installed catalog. Compared with156,
+text grows1249 and BSS52: actual fixed Frame receipts48 plus tenth counter4.
+Coarse actor delta9208/36/461; native actor fast588/0/48; native model172/0/0;
+gate10885/4/5052; members3480/24/4952. Other selected section deltas are unchanged.
+The four actual Frame receipts are48B in the SH4 symbol table, no Frame layout
+change. Actual DWARF still shows DeferredPart20 OFF/32 ON, ModelPart288,
+SourceUse20 and PayloadProof44.
+
+Actual compiler self-stack: main actor is split into an8B wrapper and1716B
+clone at source5561 (OFF1676, clone+40). Disassembly confirms the wrapper restores
+stack/PR before tail-jumping to the clone; do not add the two frames blindly.
+The new main selector has an88B self-frame. END64 to68; begin52, emitted_checked
+204 and pump160 unchanged. Bake120 to124, relod600 to604, convert296 and
+submit_chunks1392 unchanged. These are compiler frames, not nested/FS/runtime
+high-water acceptance. All formatter maxima remain247/255/157/168 including
+newline; logger256.
+
+69 GC imports have132 selected GLOBAL definitions and zero missing definitions;
+local symbols are excluded from provider accounting. Current soft-gusa core has
+no undefined atomic helpers. Actual pinned KOS archive defines the three weak
+fixed-width atomic providers and both SPU memory providers. Final linked map,
+image/heap/KOS/queue/high-water/guest gates remain open. Wired1f6/required3ff is
+still partial; no I-001 or asset-origin pass.
+
+Tiny receipts: C:/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/
+target-current-bf276b34d-d5c-profile5e4 (report/pricing/undefined/log/analysis/
+SHA manifest, read back). Raw objects/commands/dependencies remain in
+/dev/shm/gc-port23-current-bf276b34d-6upb7qxi,96MiB under the256MiB allocation
+cap. C admission29.387GiB and after29.31GiB exceeded26/24GiB gates. No programme
+link, media, stage or guest run.
+
+Historical156 receipt (preserved)
+--------------------------------
+
 Source156658987 after merging integrationd5c1ceab9. One allocated shared SDK
 slot and this tree's lease were used, JOBS1; both are released. No programme
 link, media, stage or guest was run. Later source changes are not qualified by
@@ -72,7 +116,7 @@ strict complete consumer coverage and terminal producer quiescence. Current
 SourceGeometry/Weapon/Motion bits remain unwired. Protocol v2 requires Motion
 explicitly but provides no Motion producer or ancestry proof.
 
-Successor repricing inputs (no new target run)
+Successor repricing inputs (completed at bf276 above)
 -------------------------------------------
 
 Comparing the actual retained156 compiler dependency hashes with the current

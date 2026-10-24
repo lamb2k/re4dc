@@ -2,18 +2,20 @@
 
 Frozen hand source: 7e299c281, based on integration933936ea, independently CLEAR.
 Current integrationd5c1ceab9 is merged in e0f80c509. The replacement Weapon
-classification is independently CLEAR at d62995038. Its main-gateway/Frame
-successor described in MAIN-GEOMETRY.md awaits independent review;
+classification is independently CLEAR at d62995038. The main-gateway/Frame,
+raw-refusal and protocol-v2 boundary is independently CLEAR with the class-loss
+correction at bf276b34d, as described in MAIN-GEOMETRY.md;
 the static and Motion rows remain proposals. No catalog, allowance, asset, rr
 wiring or recipe is changed. Current runtime coverage remains
-explicitly partial: SourceGeometry and Weapon bits are absent (mask1f6 with
-native glyphs). Host controls do not authorize either bit. Future qualification
+explicitly partial: SourceGeometry, Weapon and Motion bits are absent (mask1f6
+with native glyphs, protocol-v2 required3ff). Host controls do not authorize
+those bits. Future qualification
 must first merge root's current integration and use its actual resolved profile;
 the older542/933 receipts do not establish current programme acceptance.
 
 | Accepted path | Present proof and consumer hook | Remaining condition / minimum next change |
 | --- | --- | --- |
-| Original BIN source path: props, old object/no NMRS, traps, grip parts, player/weapon/option models | Bounded archive/member capture before calcModelAddr; native_model gateway selects exact current member; actual UI packet/direct/batch acknowledgements latch SourceGeometry and source-backed Weapon mask. Both deferred queues freeze owner serial. Core reload retires before overwrite. | Enumerate actual reachable bindings in the new merged profile and run accepted negatives for uncaptured, retired, alias/rebound and preparation failure paths. A missing member is an explicit accepted-use error, not a PS2 guess. Existing tests are boundary controls, not proof every gameplay class was reached. |
+| Original BIN source path: props, old object/no NMRS, traps, grip parts, player/weapon/option models | Bounded archive/member capture before calcModelAddr supplies source/class evidence only. Native_model raw gateway, raw main and generic fallback retain serial0/null payload because complete consumed UV/color/weight/shape ancestry is unproved. Actual UI packet/direct/batch acceptance records SourceGeometry and known Weapon errors. Deferred raw identity remains0 with frozen class; core reload retires before overwrite. | Enumerate actual reachable bindings and complete consumed constituent receipts before any raw positive. A catalog-PS2 full BIN cannot bless external arrays. Missing/retired/rebound/preparation failures stay explicit accepted-use errors. Existing tests are boundary controls, not proof every gameplay class was reached. |
 | Registry/partner/PL08 replacement actor packages | Full original file/cell capture before preflight/adoption, retire before free; actual source arrays/ranges match the selected package; one_chunk acknowledges every emitted owner in a shared window. | Confirm Frame/owned-record reuse and every current profile owner against actual transaction retirement. The original caller BIN cannot supply replacement provenance. Freeze/replay still-live original package serial, never a fresh current match. |
 | Compiled Leon body/hair | Named-startup length-framed full arrays/scalars/bind/hair identity, captured before preparation; exact current descriptor matching; actual header/profile pin tool. | Selected current-profile SH4 pricing and OFF objects completed at156658987; full linked/map/image qualification remains open. Bind exact reviewed ancestry for all constituent arrays, or retain unknown. Framed local conversion alone is not original-DC content. |
 | Packed hands, RETAIN0 | Full container plus directory SHA from the same read; exact direct/worker/AICA copy chain and child slot generation; controlled convert/relod/bake scopes; selected five array spans/counts; frozen deferred serial. | Independent frozen7e review is CLEAR, including five compiling negative mutants. Selected current-profile target/frame pricing completed at156658987; final linked/provider/high-water qualification remains open. RETAIN1 is explicitly unknown. The private original conversion chain has not been authenticated; current catalog authority remains unknown. |
