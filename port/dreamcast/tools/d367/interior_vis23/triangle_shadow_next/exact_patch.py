@@ -67,14 +67,16 @@ def indexed_disk(triangles):
     return dict(faces=faces,vertices=sorted(vertices),boundary=tuple(cycle),edges=len(edges),interior_edges=len(edges)-len(outer),euler=1,vertex_links=links,kind='Authenticated abstract indexed disk only')
 
 
-def prove_patch(vertices,triangles,eye_box,target_box,vertex_error=0,eye_error=0,target_error=0,eye_clearance=0,target_clearance=0):
+def prove_patch(vertices,triangles,eye_box,target_box,vertex_error=0,eye_error=0,target_error=0,eye_clearance=0,target_clearance=0,boundary_mode="strict_convex"):
     """Sufficient exact/interval full-box finite-chain triangle coverage.
 
-    Directed triangle boundaries cancel to the real convex boundary. Positive
-    face orientations give nonnegative winding counts summing to one inside.
+    Directed boundaries cancel to the real boundary chain. Strict-convex mode
+    establishes winding one; boundary-kernel mode establishes winding >= one.
+    Positive face orientations supply nonnegative triangle coverage counts.
     The finite CLOSED triangle union covers internal edges/vertices by closure.
     Every actual face plane separates E/T, so a real hit precedes the target.
     """
+    if boundary_mode not in ("strict_convex","boundary_kernel"):raise ValueError("boundary_mode")
     try:topology=indexed_disk(triangles)
     except ValueError as error:return dict(proven=False,reason='topology',detail=str(error))
     faces=topology['faces'];cycle=topology['boundary'];used=topology['vertices']
@@ -106,14 +108,15 @@ def prove_patch(vertices,triangles,eye_box,target_box,vertex_error=0,eye_error=0
             chart_min=lower if chart_min is None else min(chart_min,lower)
     # Finish the ENTIRE convex boundary stage before target-edge tests.
     convex_min=None
-    for k,ia in enumerate(cycle):
-        ib=cycle[(k+1)%len(cycle)];a,b=v[ia],v[ib]
-        for j in cycle:
-            if j in (ia,ib):continue
-            for e in es:
-                value=-det(sub(a,e),sub(b,e),sub(v[j],e));lower=signed_lower(value,sigma)
-                if lower<=0:return dict(proven=False,reason='boundary_convexity_unknown',edge=[ia,ib],other_vertex=j)
-                convex_min=lower if convex_min is None else min(convex_min,lower)
+    if boundary_mode=="strict_convex":
+        for k,ia in enumerate(cycle):
+            ib=cycle[(k+1)%len(cycle)];a,b=v[ia],v[ib]
+            for j in cycle:
+                if j in (ia,ib):continue
+                for e in es:
+                    value=-det(sub(a,e),sub(b,e),sub(v[j],e));lower=signed_lower(value,sigma)
+                    if lower<=0:return dict(proven=False,reason='boundary_convexity_unknown',edge=[ia,ib],other_vertex=j,interval_lower=str(lower),nominal_collinear=not any(cross(sub(nominal[ib],nominal[ia]),sub(nominal[j],nominal[ia]))))
+                    convex_min=lower if convex_min is None else min(convex_min,lower)
     edge_min=None
     for k,ia in enumerate(cycle):
         ib=cycle[(k+1)%len(cycle)];a,b=v[ia],v[ib]
@@ -122,4 +125,4 @@ def prove_patch(vertices,triangles,eye_box,target_box,vertex_error=0,eye_error=0
                 value=-det(sub(a,e),sub(b,e),sub(t,e));lower=signed_lower(value,sigma)
                 if lower<=0:return dict(proven=False,reason='target_edge_unknown',edge=[ia,ib])
                 edge_min=lower if edge_min is None else min(edge_min,lower)
-    return dict(proven=True,sigma=sigma,faces=len(faces),topology=topology,chart_direction=[str(x) for x in direction],chart_min=str(chart_min),convex_min=str(convex_min),target_edge_min=str(edge_min),face_plane_margins=[dict(eye=str(a),target=str(b),normal_l1_upper=str(n)) for a,b,n in margins],shared_endpoints='One correlated physical variable per actual index/cache/kernel/transform/clip identity; real renderer construction still unqualified',renderer_admitted=False)
+    return dict(proven=True,boundary_mode=boundary_mode,coverage_winding='one' if boundary_mode=='strict_convex' else 'at_least_one',sigma=sigma,faces=len(faces),topology=topology,chart_direction=[str(x) for x in direction],chart_min=str(chart_min),convex_min=str(convex_min),target_edge_min=str(edge_min),face_plane_margins=[dict(eye=str(a),target=str(b),normal_l1_upper=str(n)) for a,b,n in margins],shared_endpoints='One correlated physical variable per actual index/cache/kernel/transform/clip identity; real renderer construction still unqualified',renderer_admitted=False)

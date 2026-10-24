@@ -67,6 +67,26 @@ class ConnectedTests(unittest.TestCase):
         for q in (Q(-1,10),Q(1,10)):
             v[6]=(q,q,q);self.assertTrue(prove_patch(v,t,self.eye,self.target)['proven'])
         self.assertTrue(prove_patch(v,t,self.eye,self.target,vertex_error=Q(1,10))['proven'])
+    def test_boundary_kernel_collinear_and_concave(self):
+        def make(points):
+            v={i:(x,y,0) for i,(x,y) in enumerate(points)};n=len(v);v[n]=(0,0,0)
+            return v,tuple((n,i,(i+1)%n) for i in range(n))
+        eye=((Q(-1,10),Q(-1,10),10),(Q(1,10),Q(1,10),11));target=((-1,-1,-11),(1,1,-10))
+        for points in (((-4,-4),(0,-4),(4,-4),(4,0),(4,4),(0,4),(-4,4),(-4,0)),((-4,-4),(4,-4),(4,4),(0,2),(-4,4))):
+            v,t=make(points)
+            strict=prove_patch(v,t,eye,target);self.assertFalse(strict['proven']);self.assertEqual(strict['reason'],'boundary_convexity_unknown')
+            result=prove_patch(v,t,eye,target,boundary_mode='boundary_kernel');self.assertTrue(result['proven']);self.assertEqual(result['coverage_winding'],'at_least_one')
+        # Actual covered point (3,5/2,0), but outside the conservative kernel.
+        self.assertFalse(prove_patch(v,t,((0,0,10),)*2,((6,5,-10),)*2,boundary_mode='boundary_kernel')['proven'])
+        # Face, chart, uncertainty, outer edge, topology constraints remain.
+        v,t=fan()
+        for mode in ('strict_convex','boundary_kernel'):
+            self.assertFalse(prove_patch(v,t,((0,0,10),)*2,((30,-20,-10),)*2,boundary_mode=mode)['proven'])
+            self.assertFalse(prove_patch(v,t,self.eye,self.target,vertex_error=32,boundary_mode=mode)['proven'])
+            self.assertFalse(prove_patch(v,(t[0][::-1],)+t[1:],self.eye,self.target,boundary_mode=mode)['proven'])
+            v[3]=(20,0,13);self.assertFalse(prove_patch(v,t,self.eye,self.target,boundary_mode=mode)['proven']);v[3]=(20,0,0)
+        with self.assertRaises(ValueError):prove_patch(v,t,self.eye,self.target,boundary_mode='guess')
+
     def test_twentyseven_samples_can_miss_a_real_hole(self):
         outer=[(-2,-2,0),(2,-2,0),(2,2,0),(-2,2,0)];inner=[(Q(1,5),Q(1,5),0),(Q(2,5),Q(1,5),0),(Q(2,5),Q(2,5),0),(Q(1,5),Q(2,5),0)]
         v,t=ring(outer,inner)
