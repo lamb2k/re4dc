@@ -1,0 +1,27 @@
+{
+  "scope": "source/design proposal and controls only; no runtime implementation, SDK, stage or guest",
+  "source": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "pair_result_sha256": "0a1488bdf04beab0d5843c9cef994221e101a0c0647da3b4820a49978f731cd6",
+  "previous_helper_snapshot": "e0363d649a76a191a7b1b4b37a49abfbc2c6f072",
+  "persistent_proposed_bytes": 128,
+  "checks": 23,
+  "source_files_pinned": 26,
+  "files": {
+    "RAIN-DIAG-NEXT-PLAN.md": {
+      "bytes": 18793,
+      "sha256": "39c437e568b65efd3f5cfeacd60f18877e22c4327aa5f9ddafbef4f5c031d7df"
+    },
+    "check_rain_diag_design.py": {
+      "bytes": 6939,
+      "sha256": "084a653b600e7af322cbca24d339bf95d153140031c5298e7a1a88043cb02f56"
+    },
+    "SOURCE-PINS-AND-DESIGN-CONTROLS.json": {
+      "bytes": 10951,
+      "sha256": "d7df0278e31876bc5b631a25eb74300ff4208bbbedaf05d657dc8d5146f4d2b3"
+    }
+  },
+  "archive_owner": "UNKNOWN",
+  "outer_dispatch_skip_history": "UNOBSERVED within proposed three-file scope",
+  "natural_complete_lifecycle_under_50s": "UNPROVEN",
+  "no_more_guests": true
+}
