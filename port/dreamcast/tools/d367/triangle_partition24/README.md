@@ -34,3 +34,5 @@ D=$TREE/port/dreamcast/tools/d367/triangle_partition24
 ```
 
 Private preparation, if provided by a successor, must first rederive the complete original inventory from frozen actual bytes, keep every canonical child and full provenance private, preserve the same finite source roster and authentic eye domains, and publish fourfold candidate/final reservations before any private predicates. No discovery, new tiny domains or source-pool widening is implied.
+
+Separate preparation-only tools and exact resource/source binding are documented in PRIVATE-PREPARATION.md. Their presence is not private shadow execution authorization.
