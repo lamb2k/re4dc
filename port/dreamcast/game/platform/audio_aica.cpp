@@ -2124,6 +2124,13 @@ extern "C" unsigned re4dc_gcasset_audio_admission(unsigned open){
     mutex_unlock(&g_lock);
     return checkpoints;
 }
+extern "C" unsigned re4dc_gcasset_audio_handoff(unsigned room,unsigned visit){
+    mutex_lock(&g_lock);
+    const unsigned checkpoints=gcasset_audio_checkpoints;gcasset_audio_checkpoints=0;
+    (void)re4dc_gcasset::handoff_audio_admission(room,visit); // failure persists in core fault accounting
+    mutex_unlock(&g_lock);
+    return checkpoints;
+}
 #endif
 #if RE4DC_RADIO_SUB_RT
 // RADIO_SUB_RT (subscreen.mk): disc stream starts so far and when the last one began to sound (KOS timer us,

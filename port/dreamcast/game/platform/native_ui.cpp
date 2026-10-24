@@ -5125,7 +5125,7 @@ extern "C" void re4dc_ui_retire_room(){
     texchk::room_end();
 #endif
 #if RE4DC_GC_ASSET_GATE
-    re4dc_gcasset_finish();
+    re4dc_gcasset_retire();
 #endif
     re4dc_actor_archive_retire_transient();
 #if RE4DC_GC_ASSET_GATE
@@ -5520,6 +5520,7 @@ extern "C" void re4dc_vga_soft_init(void); // vga_soft.cpp (VGA_SOFT): the verti
 // GC_ASSET_LIFECYCLE_BEGIN
 namespace {
 unsigned gcasset_visit_serial;bool gcasset_started,gcasset_visit_live;
+enum GcAssetPhase { GcStartup,GcRoom,GcTransition };GcAssetPhase gcasset_phase;unsigned gcasset_current_room;
 constexpr unsigned gcasset_wired_mask(){
     // Specialized static/coarse payload bridges are not integrated yet. Keep
     // both affected consumer classes visibly incomplete, even in empty rooms.
@@ -5536,15 +5537,12 @@ void gcasset_flush(){
 }
 void gcasset_startup(){
     if(gcasset_started)return;
-    gcasset_started=true;re4dc_gcasset_audio_admission(0);
+    gcasset_started=true;gcasset_phase=GcStartup;re4dc_gcasset_audio_admission(0);
     re4dc_gcasset::ensure_disc_catalog();
     re4dc_gcasset::begin_startup_closed(++gcasset_visit_serial,gcasset_wired_mask());
     gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
 }
-}
-extern "C" void re4dc_gcasset_finish(){
-    if(!gcasset_visit_live){re4dc_gcasset::pump();return;}
-    const unsigned audio=re4dc_gcasset_audio_admission(0);
+void gcasset_close_visit(unsigned audio){
     gcasset_flush();gcasset_packet_reset();
     // The actual renderer observer/flush paths are source-extracted in tests.
     // Active sound coverage additionally requires the real audio_step flush.
@@ -5557,13 +5555,31 @@ extern "C" void re4dc_gcasset_finish(){
         if(audio&(1U<<consumer))re4dc_gcasset::checked(consumer);
     re4dc_gcasset::end(frame);gcasset_visit_live=false;
 }
+}
+extern "C" void re4dc_gcasset_finish(){
+    const unsigned audio=re4dc_gcasset_audio_admission(0);
+    if(gcasset_visit_live)gcasset_close_visit(audio);else re4dc_gcasset::pump();
+}
+extern "C" void re4dc_gcasset_retire(){
+    if(!gcasset_visit_live){re4dc_gcasset::pump();return;}
+    if(gcasset_phase==GcTransition){gcasset_flush();return;} // repeated accepted retirement is idempotent
+    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");re4dc_gcasset_finish();return;}
+    const unsigned next=gcasset_visit_serial+1;
+    const unsigned from=gcasset_phase==GcStartup?re4dc_gcasset::FromStartup:gcasset_current_room;
+    const auto why=gcasset_phase==GcStartup?re4dc_gcasset::InitialRoom:re4dc_gcasset::RoomRetire;
+    const unsigned audio=re4dc_gcasset_audio_handoff(0,next);
+    gcasset_close_visit(audio);gcasset_phase=GcTransition;gcasset_visit_serial=next;
+    re4dc_gcasset::begin_transition_handoff(next,gcasset_wired_mask(),from,why);gcasset_visit_live=true;
+}
 extern "C" void re4dc_gcasset_room_enter(unsigned room){
     if(!gcasset_started){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-without-startup");gcasset_startup();}
-    if(gcasset_visit_live){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-enter-without-retire");re4dc_gcasset_finish();}
-    re4dc_gcasset_audio_admission(0);
-    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");return;}
-    re4dc_gcasset::begin_closed(room,++gcasset_visit_serial,gcasset_wired_mask());
-    gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
+    if(gcasset_visit_serial==~0U){re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"visit-serial-exhausted");re4dc_gcasset_finish();return;}
+    const unsigned next=gcasset_visit_serial+1;
+    if(!gcasset_visit_live || gcasset_phase!=GcTransition)re4dc_gcasset::unresolved(re4dc_gcasset::Ui,"room-enter-without-transition");
+    const unsigned audio=re4dc_gcasset_audio_handoff(room,next);
+    if(gcasset_visit_live)gcasset_close_visit(audio);
+    gcasset_phase=GcRoom;gcasset_current_room=room;gcasset_visit_serial=next;
+    re4dc_gcasset::begin_room_handoff(room,next,gcasset_wired_mask());gcasset_visit_live=true;
 }
 // GC_ASSET_LIFECYCLE_END
 #endif

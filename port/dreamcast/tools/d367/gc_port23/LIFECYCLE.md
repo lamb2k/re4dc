@@ -42,12 +42,12 @@ Old/unexpected outstanding work still fails, future overflow still fails, and
 explicit terminal close cancels the handoff so pending future work cannot be
 silently excluded. No event is retagged. The real production formatter controls
 include maximum-width transition metadata and all counters. The core/judge
-handoff contract is implemented; actual lifecycle adoption is the next step.
+handoff contract is implemented and adopted by the actual lifecycle helpers.
 
 Successful native UI initialization now starts the named startup visit. Every
-accepted direct UI room retirement finalizes after the existing movie-owner
-refusal and before member/package retirement. Repeated finalization is
-idempotent but still pumps late audio errors. The actual audio_step records
+accepted direct UI room retirement hands off to transition after the existing
+movie-owner refusal and before member/package retirement. Repeated retirement
+in that transition is idempotent and still flushes accepted events. The actual audio_step records
 SoundBank/SoundStream checkpoints after its original flush under g_lock; the
 main finalizer only marks those bits if this visit actually observed that step.
 The gate currently requires AICA_AUDIO=1; silent-backend lifecycle qualification
@@ -67,17 +67,20 @@ open and before room-file/package loads. Root-reviewed audits23 commit 6a3f6b60e
 was picked first; all twelve guarded cache diagnostic lines remain composed.
 Source-extracted actual enter/leave functions preserve the movie-owner refusal
 and absent-live-heap guards: a refused retirement cannot print END. The accepted
-UI retirement uses the same finalizer as direct retirement.
+UI retirement uses the same transition handoff as direct retirement. The next
+room entry atomically publishes its new admission, closes transition unlocked,
+and begins that room. An omitted transition is an explicit error, even though
+the diagnostic continues collecting evidence. An injected producer during the
+old flush/new BEGIN gap retains its transition identity in the source controls.
 
 `re4dc_gcasset_finish` is an exported callable; rr-owned final-stop wiring is
 still pending and belongs to root. It closes diagnostic admission, not the
 existing audio producer. Later accepted key-ons create unowned faults for the
 next pump/BEGIN. A trace cut immediately after END cannot establish absence of
 future events; final-stop integration must quiesce accepted producers and retain
-the final drain. Accepted loading/door audio in a gap between room retirement
-and next entry currently also fails explicitly as unowned. No transition phase
-or inferred room relabeling has been added; that remains a lifecycle coverage
-hold for integration review.
+the final drain. Loading/door audio now stays in the explicit transition visit;
+it receives no inferred game room or PS2 provenance. Missing reviewed transition
+allowances, overflow, stale proofs and missing real audio coverage still fail.
 
 Source-extracted real UI helpers and audio-admission code exercise startup to
 room transitions, same-mutex publication, unlocked flush/logging, duplicate
