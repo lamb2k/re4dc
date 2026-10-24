@@ -35,6 +35,13 @@ bool payload_copy_register(PayloadProof&,const void* owner,const void* base,unsi
 void payload_copy_invalidate(PayloadProof&,const void* owner);
 bool payload_copy_publish(PayloadProof&,const void* owner,const PayloadProof& source,unsigned source_serial);
 bool payload_copy_current(const PayloadProof&);
+// Compound ancestry has no new digest or inferred origin. A child freezes one
+// existing exact package/layout/copy generation plus one original member.
+// Borrowed metadata only; root binds before loading, drains before retirement.
+unsigned payload_compound_storage_bytes();
+bool payload_compound_storage(void* memory,unsigned exact_bytes);
+void payload_compound_storage_retire();
+PayloadProof* payload_with_member(PayloadProof&,unsigned parent_serial,unsigned member_serial);
 void payload_retire(PayloadProof&);
 void payload_accept(PayloadProof*,unsigned serial,unsigned consumer_mask);
 void payload_flush_all();

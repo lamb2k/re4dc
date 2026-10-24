@@ -167,7 +167,11 @@ int main(){
         self.assertLess(commit.index('if(count)'),commit.index('RE4DC_GCA_MODEL_PACKET_ACCEPT'))
         for marker in ['extern "C" int re4dc_actor_submit(', 'extern "C" void re4dc_model_submit(']:
             source=actor if 'actor_submit' in marker else (PLATFORM/'native_model.cpp').read_text()
-            self.assertIn('MotionUnknownScope gcasset_motion_scope',source[source.index(marker):source.index(marker)+550])
+            body=source[source.index(marker):]
+            first_work='++stats.parts;' if 'actor_submit' in marker else 'RE4DC_PROFILE_SCOPE(ModelSetup);'
+            prefix=body[:body.index(first_work)]
+            self.assertIn('MotionUnknownScope gcasset_motion_scope',prefix)
+            self.assertLess(prefix.index('GeometryProducerScope'),prefix.index('MotionUnknownScope'))
         start=ui.index('Re4dcModelPart view=restore_view(deferred_first);');delayed=ui[start:ui.index('AVD_EVENT(FinishEnd',start)]
         self.assertLess(delayed.index('MotionUnknownScope'),delayed.index('re4dc_model_submit(&view)'))
         close=function(ui,'void gcasset_close_visit(');self.assertLess(close.index('gcasset_flush()'),close.index('re4dc_gcasset::end('))
@@ -342,7 +346,10 @@ int main(){install(nullptr,0);begin(0x111,1,0x1f6);ModelPart a,b;int object,info
                 current=(GAME/unit).read_text();files=[]
                 for name,source in [('old',old),('current',current)]:
                     file=root/(name+'.cpp');file.write_text(re.sub(r'^#include .*\n','',source,flags=re.M));files.append(file)
-                for gate in [0,1]:
+                # Gate1 geometry ancestry intentionally changes in SOURCE-WEAPON24.
+                # Historical UNKNOWN0 full-profile identity is not asserted.
+                # Keep literal historical Gate0 identity and disabled helper.
+                for gate in [0]:
                     flags=['-DRE4DC_GC_ASSET_GATE='+str(gate),'-DRE4DC_GC_ASSET_MOTION_UNKNOWN=0','-DRE4DC_COARSE_ONE_SUBMIT=1',
                         '-DRE4DC_ACTOR_DIRECT=1','-DRE4DC_NATIVE_ACTOR_SKIN_LAZY=1','-DRE4DC_NATIVE_ACTOR=1','-DRE4DC_NATIVE_ACTOR_FAST=1','-DRE4DC_MODEL_STREAM_FIX=1']
                     streams=[subprocess.check_output(['g++','-E','-P',*flags,str(f)],text=True) for f in files]

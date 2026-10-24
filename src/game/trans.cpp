@@ -1,3 +1,8 @@
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+#include "gc_asset_members.h"
+extern "C" void re4dc_gcasset_pose_reset(const void*);
+extern "C" void re4dc_gcasset_pose_publish(const void*,unsigned,unsigned);
+#endif
 // game/trans.cpp: the model renderer. ModelTrans registers a model in the ordering tables,
 // commonScreenMatSub skins its vertices into the primitive buffer, ModelRender / commonModelTrans
 // set up the TEV stages of every material and submit the display lists.
@@ -1893,6 +1898,9 @@ extern "C" void re4dc_registry_snapshot(cModel*, const Mtx*);
 #endif
 int commonScreenMatSub(cModel* m, cModelInfo* info)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
 #if defined(__sh__)
     unsigned dc_stamp=re4dc_model_source_stamp();
 #endif
@@ -1932,6 +1940,10 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
 #endif
 
     for (; info != 0; info = info->pList) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+        // Revoke before ANY failed allocation, morph or lazy registration.
+        re4dc_gcasset_pose_reset(info);
+#endif
         ModelData* d = info->pData;
         ModelTexInfo* t = MODEL_TEX(info);
         void* src;
@@ -1986,6 +1998,9 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             if (g_skinLazyNow) {
                 // SKIN_PALETTE_LAZY: registered with its copy reserved, built at the first render read.
                 if (skinDeferPending(m, info, d, &dc_mtx_built)) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+                re4dc_gcasset_pose_publish(info,pG->Frame_cnt,1);
+#endif
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -2015,6 +2030,9 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                 const int ok = re4dc_skin_defer_lazy(info, d);
                 if (ok) { ++skincen_def; skincen_defv += d->nVtx; } else { ++skincen_fail; skincen_failv += d->nVtx; }
                 if (ok) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+                    re4dc_gcasset_pose_publish(info,pG->Frame_cnt,1);
+#endif
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -2027,6 +2045,9 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             if (0) {
 #else
             if (re4dc_skin_defer_lazy(info, d)) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+                re4dc_gcasset_pose_publish(info,pG->Frame_cnt,1);
+#endif
 #endif
                 info->pPosBuf[pG->vtx_buf_no] = 0;
                 info->pNrmBuf[pG->vtx_buf_no] = 0;
@@ -2145,6 +2166,9 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
         {
             int re4dc_skin_defer(cModelInfo* info, ModelData* d);
             if (!(info->be_flag & 2) && re4dc_skin_defer(info, d)) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+                re4dc_gcasset_pose_publish(info,pG->Frame_cnt,1);
+#endif
                 setupGQR6(0x32073207);
                 if (d->flags & 0x20000000) {
                     setupGQR6(0x20062006);
@@ -2206,6 +2230,9 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
 #endif
 #else
         re4dc_model_skipped_writeback(d->nNrm*6);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_pose_publish(info,pG->Frame_cnt,0);
 #endif
     }
     return 1;
@@ -6017,10 +6044,16 @@ static int faceLazyDefer(cModel* m, cModelInfo* info, ModelData* d)
 // pass's palette, positions and normals; GQR6 restored).
 extern "C" void re4dc_face_lazy_resolve(const void* info_ptr)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
     cModelInfo* info = (cModelInfo*) info_ptr;
     if (!info || info != g_faceLazy.info || g_faceLazy.pos != info->pPosBuf[pG->vtx_buf_no]) {
         return;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_pose_reset(info);
+#endif
     g_faceLazy.info = 0;
     cModel* m = g_faceLazy.m;
     ModelData* d = info->pData;
@@ -6051,6 +6084,9 @@ extern "C" void re4dc_face_lazy_resolve(const void* info_ptr)
     DCStoreRangeNoSync(info->pNrmBuf[pG->vtx_buf_no], d->nNrm * 6);
 #endif
     g_gqr6 = saved;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_pose_publish(info,pG->Frame_cnt,0);
+#endif
 }
 #endif
 #endif
@@ -6063,8 +6099,14 @@ extern "C" void re4dc_face_lazy_resolve(const void* info_ptr)
 // buffer, same lifetime; no allocation -> 0 and the part is not drawn).
 extern "C" int re4dc_skin_materialize(const void* info_ptr, const float* palette)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
     cModelInfo* info = (cModelInfo*) info_ptr;
     ModelData* d = info->pData;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_pose_reset(info);
+#endif
 #if RE4DC_SKIN_PALETTE_LAZY
     re4dc_skin_palette_resolve(palette);
 #endif
@@ -6092,6 +6134,9 @@ extern "C" int re4dc_skin_materialize(const void* info_ptr, const float* palette
     }
     g_skin_palette = 0;
     g_gqr6 = saved;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_pose_publish(info,pG->Frame_cnt,0);
+#endif
     return 1;
 }
 #endif

@@ -214,6 +214,10 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char a[64
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
 '''
+        # Package-only fixtures provide no original ModelData ownership proof.
+        fixture = '#include "gc_asset_members.h"\nstruct Re4dcModelPart;struct Re4dcActorSource;\n' + fixture
+        fixture += '\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*){return {};}\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*){return {};}\n'
+        fixture += '\nextern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned){return 0;}\n'
         with tempfile.TemporaryDirectory(prefix='gc-port23-actor-source-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',

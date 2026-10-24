@@ -100,6 +100,9 @@ extern "C" void re4dc_log(const char* fmt,...){assert(!sq_held);char text[256];v
 bool re4dc_static_submit(const Re4dcModelPart*){return false;}
 ''' + bridge + '\n' + classifier + '\n' + helpers + r'''
 void observe_selected(const Re4dcModelPart* p){gcasset_model_prepare(p);sq_held=true;gcasset_model_accept();sq_held=false;}
+''' + r'''
+// No original ModelData constituent proof exists in this malformed-BIN fixture.
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*p){return {0,1U<<re4dc_gcasset::SourceGeometry,p->model,p->info};}
 ''' + gateway + r'''
 std::vector<unsigned char> blob(unsigned byte){std::vector<unsigned char>b(128);unsigned one=1,off=32;std::memcpy(b.data(),&one,4);std::memcpy(b.data()+16,&off,4);std::memcpy(b.data()+20,"BIN",3);b[40]=byte;return b;}
 std::string id(const re4dc_gcasset::ModelMember&m){re4dc_gcasset::AssetDescription row;assert(re4dc_gcasset::describe_checked(m.asset,&row));return row.id;}
@@ -138,7 +141,7 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
 #include "gc_asset_members.h"
 #include "gc_asset_payloads.h"
 #include <cassert>
-namespace re4dc_gcasset {SourceUse source_use;ReplayUse replay_use;}
+namespace re4dc_gcasset {SourceUse source_use;ReplayUse replay_use;bool geometry_producer_enter(){return true;}void geometry_producer_leave(bool){}}
 struct Re4dcModelPart {const void* model;const void* info;unsigned serial;const void* world;const void* view;unsigned source_key[3];const void* stream;};
 struct Info {const void* data;};
 unsigned a,b,lookups,selections,expected=0,calls;bool replace;
@@ -149,6 +152,7 @@ int re4dc_static_submit(const Re4dcModelPart*){assert(!re4dc_gcasset::source_use
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void* info,const void** data){*data=static_cast<const Info*>(info)->data;return 0;}
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
 bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*p){++lookups;return {0,1U<<re4dc_gcasset::SourceGeometry,p->model,p->info};}
 void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
 ''' + gateway + r'''
 struct DeferredPart{unsigned asset_serial=0,asset_mask=0;re4dc_gcasset::PayloadProof* asset_payload=nullptr;};
@@ -167,11 +171,11 @@ int main(){
   source_use={77,1U<<SourceGeometry,p.model,p.info};DeferredPart node;freeze(&node,p);
   assert(node.asset_serial==77);
   info.data=&b;source_use.serial=99;expected=0;replay(&node,p);
-  assert(p.stream==&a && info.data==&b && lookups==1 && source_use.serial==99);
+  assert(p.stream==&a && info.data==&b && lookups==2 && source_use.serial==99);
   assert(replay_use.serial==0xffffffffU); // replay cannot relabel old A geometry using current B info
-  expected=0;re4dc_model_submit(&p);assert(lookups==2);
-  // An unqualified/static enqueue carries explicit zero, never a fresh lookup.
-  source_use={};DeferredPart unknown;freeze(&unknown,p);expected=0;replay(&unknown,p);assert(lookups==2);
+  expected=0;re4dc_model_submit(&p);assert(lookups==3);
+  // An unqualified/static enqueue carries explicit zero, never a positive identity. The actual gateway revalidates even unknown replay.
+  source_use={};DeferredPart unknown;freeze(&unknown,p);expected=0;replay(&unknown,p);assert(lookups==4);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-gateway-', dir='/dev/shm') as temporary:

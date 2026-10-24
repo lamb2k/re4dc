@@ -4,6 +4,7 @@
 #if RE4DC_GC_ASSET_GATE
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned);
+extern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned);
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*);
 namespace {
 unsigned gcasset_actor_consumer_mask(const Re4dcModelPart& part){
@@ -47,10 +48,8 @@ namespace {
 re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part,const Re4dcActorSource* source,bool classify){
     using namespace re4dc_gcasset;
     if(!part || !source)return {};
-    // These reads are not among the selected package's proven five ranges.
-    // Never let a package/BIN token bless an external vertex color source.
-    if((part->alpha_state&256) || (part->lighting &&
-       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};
+    const bool colors=(part->alpha_state&256) || (part->lighting &&
+       (part->lighting->ambient_vertex || part->lighting->material_vertex));
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
@@ -87,9 +86,17 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
     }
 #endif
     // Other hand owners remain unqualified, never the caller BIN.
-    if(!selected || ambiguous)return {};
+    if(ambiguous)return {};
+    if(!selected)return re4dc_gcasset_original_actor_select(part,source);
     const unsigned mask=classify?gcasset_actor_consumer_mask(*part):1U<<SourceGeometry;
     if(!mask)return {};
+    if(colors){
+        const unsigned bytes=original_color_bytes(part->stream,part->stream_bytes,part->flags);
+        const unsigned member=bytes?re4dc_gcasset_original_color_member(part,bytes):0;
+        auto* compound=member?payload_with_member(*selected,selected->serial,member):nullptr;
+        if(!compound)return {0,mask,part->model,part->info};
+        selected=compound;
+    }
     return {selected->serial,mask,part->model,part->info,selected};
 }
 }
@@ -98,11 +105,15 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
     if(!part || !source)return {};
     const ReplayUse saved=replay_use;
     if(saved.serial!=0xffffffffU){
-        if(!saved.payload)return {};
+        if(!saved.payload){
+            const auto raw=re4dc_gcasset_original_actor_select(part,source);
+            if(raw.serial!=saved.serial)return {0,saved.mask,part->model,part->info};
+            return {saved.serial,saved.mask,part->model,part->info};
+        }
         // Validate current consumed arrays against the SAVED identity only.
         // A matching current geometry never replaces its frozen class mask.
         const auto current=gcasset_actor_current_select(part,source,false);
-        if(current.payload!=saved.payload || current.serial!=saved.serial)return {};
+        if(current.payload!=saved.payload || current.serial!=saved.serial)return {0,saved.mask,part->model,part->info};
         return {saved.serial,saved.mask,part->model,part->info,saved.payload};
     }
     return gcasset_actor_current_select(part,source,true);
@@ -117,7 +128,11 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
         (previous && previous->model==part->model && previous->info==part->info && previous->mask?
             previous->mask:gcasset_actor_consumer_mask(*part));
     const SourceUse unknown{0,mask,part->model,part->info,nullptr};
-    if(saved.serial!=0xffffffffU && !saved.payload)return unknown;
+    if(saved.serial!=0xffffffffU && !saved.payload){
+        const auto raw=re4dc_gcasset_original_model_select(part);
+        if(raw.serial!=saved.serial)return unknown;
+        return {saved.serial,saved.mask,part->model,part->info};
+    }
     Re4dcActorSource source{};
     if(!re4dc_actor_model_source(part->info,&source))return unknown;
     // Array-less parts consume the authenticated source via the existing lazy
@@ -128,10 +143,7 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
         const auto replacement=re4dc_gcasset_actor_select(part,&source);
         if(replacement.serial)return replacement;
     }
-    // Raw generic input is deliberately unqualified until COMPLETE consumed
-    // UV/color/weight/shape extents and their derivations are authenticated.
-    // A complete stream plus position/normal bounds is insufficient. nTex is
-    // not a UV extent, and an address prefix cannot supply the missing proof.
-    return unknown;
+    const auto raw=re4dc_gcasset_original_model_select(part);
+    return raw.serial?raw:unknown;
 }
 #endif

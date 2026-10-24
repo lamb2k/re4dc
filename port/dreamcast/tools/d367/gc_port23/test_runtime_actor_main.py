@@ -15,7 +15,7 @@ class ActorMainTests(unittest.TestCase):
         model = (GAME / 'platform/native_model.cpp').read_text()
         start = model.index('extern "C" void re4dc_model_submit(const Re4dcModelPart* p){')
         gateway = model[start:model.index('#if RE4DC_NATIVE_ACTOR\n', start)]+'observe_selected(p);\n}\n'
-        guard = model[model.index('#if RE4DC_GC_ASSET_GATE\n    // An actor decline'):]
+        guard = model[model.index('#if RE4DC_GC_ASSET_GATE\n    // Revalidate the actually'):]
         guard = guard[:guard.index('#endif')+len('#endif')]
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
@@ -80,9 +80,9 @@ int main(){unsigned char bin[128]={},foreign[64]={};unsigned one=1,offset=32;mem
 '''
         self.compile_run(fixture, direct=True)
         for label, old, new in [
-            ('blanket raw BIN', 'source_use={0,mask,p->model,p->info};', 'source_use={member.serial,mask,p->model,p->info};'),
-            ('restore positive replay', 'replay_use.payload?re4dc_gcasset::replay_use.serial:0', 'replay_use.serial'),
-            ('leaked fallback proof', 're4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};', ''),
+            ('blanket raw BIN', 'else re4dc_gcasset::source_use=raw;', 'else {const void*data=nullptr;ModelMember member;re4dc_gcasset_model_identity(p->model,p->info,&data);if(member_lookup(data,&member))re4dc_gcasset::source_use={member.serial,raw.mask,p->model,p->info};}'),
+            ('restore positive replay', 'raw.serial==saved.serial?saved.serial:0', 'saved.serial'),
+            ('leaked fallback proof', guard, '#if RE4DC_GC_ASSET_GATE\n#endif'),
         ]:
             with self.subTest(mutant=label):
                 self.assertEqual(fixture.count(old),1)
@@ -129,11 +129,11 @@ int main(){unsigned char bytes[512]={71},alien[64]={19};const auto digest=finger
 }
 '''
         self.compile_run(fixture)
-        color = 'if((part->alpha_state&256) || (part->lighting &&\n       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};'
+        color = 'if(colors){'
         for label, old, new in [
             ('external UV', 'gcasset_actor_inside(proof,c.uv,uv_bytes)', '(uv_bytes>0)'),
             ('external weights', 'gcasset_actor_inside(proof,c.weights,c.palette_count*16)', '(c.palette_count>0)'),
-            ('external colors', color, '(void)part;'),
+            ('external colors', color, 'if(false && colors){'),
             ('foreign shape arrays', 'if(!part->positions || (part->positions==source.positions', 'if(true || (part->positions==source.positions'),
         ]:
             with self.subTest(mutant=label):
@@ -257,10 +257,10 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;uns
             ('cached generation', 'if(!saved.serial || saved.serial!=use.serial || saved.mask!=use.mask || saved.payload!=use.payload){use.serial=0;use.payload=nullptr;}', '(void)saved;(void)use;'),
             ('cached class erased', '{use.serial=0;use.payload=nullptr;}', 'use={};'),
             ('accepted snapshot bypass', 'payload_accept(current?selected.payload:nullptr,current?selected.serial:0,', 'payload_accept(((void)current,selected.payload),selected.serial,'),
-            ('unproved raw generic', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return unknown;', '    // not a UV extent, and an address prefix cannot supply the missing proof.\n    return previous?*previous:SourceUse{};'),
-            ('raw class erased', '    return unknown;\n}\n#endif', '    return {};\n}\n#endif'),
-            ('replay class recaptured', 'saved.serial!=0xffffffffU?saved.mask:', 'false?saved.mask:'),
-            ('mixed replay arrays', 'if(current.payload!=saved.payload || current.serial!=saved.serial)return {};', '(void)current;'),
+            ('unproved raw generic', '    return raw.serial?raw:unknown;', '    return raw.serial?raw:(previous?*previous:SourceUse{});'),
+            ('raw class erased', '    return raw.serial?raw:unknown;', '    return raw.serial?raw:SourceUse{};'),
+            ('replay class recaptured', '        return {saved.serial,saved.mask,part->model,part->info};\n    }\n    Re4dcActorSource source{};', '        return {saved.serial,re4dc_gcasset_original_model_select(part).mask,part->model,part->info};\n    }\n    Re4dcActorSource source{};'),
+            ('mixed replay arrays', 'if(current.payload!=saved.payload || current.serial!=saved.serial)return {0,saved.mask,part->model,part->info};', '(void)current;'),
         ]
         for label, old, new in mutants:
             with self.subTest(mutant=label):
@@ -268,6 +268,12 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int model,info;uns
                 self.compile_run(fixture.replace(old, new), reject=True)
 
     def compile_run(self, fixture, reject=False, direct=False):
+        # These historical package fixtures have no complete original source
+        # provider. Keep it explicitly unqualified; actual original providers
+        # are exercised by test_original_geometry.py instead.
+        fixture = '#include "gc_asset_members.h"\nstruct Re4dcModelPart;struct Re4dcActorSource;\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*);\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);\n' + fixture
+        fixture += '\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*p){if(!p)return {};const void*data=nullptr;re4dc_gcasset::ModelMember m;re4dc_gcasset_model_identity(p->model,p->info,&data);bool bound=re4dc_gcasset::member_lookup(data,&m);unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|(re4dc_gcasset_weapon_consumer(p->model,p->info,bound?m.arc:0,bound?unsigned(m.family):0)?1U<<re4dc_gcasset::Weapon:0U);return {0,mask,p->model,p->info};}\nextern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*p,const Re4dcActorSource*){return re4dc_gcasset_original_model_select(p);}\n'
+        fixture += '\nextern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart*,unsigned){return 0;}\n'
         with tempfile.TemporaryDirectory(prefix='gc-port23-actor-main-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture)
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',

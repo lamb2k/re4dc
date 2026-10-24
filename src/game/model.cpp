@@ -1,3 +1,9 @@
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_pose_reset(const void*);
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+#include "gc_asset_motion_source.h"
+#endif
 // game/model: the model class hierarchy (D:/Bio4/Prog/model.cpp). cModel (a cCoord with parts) owns
 // a chain of cModelInfo (one per .bin model data + TPL: the body, then added parts models) and a
 // linked list of cParts (one per joint, from cPartsMgr), and carries the MotionWork, collision
@@ -165,6 +171,9 @@ static inline void U8Set(u8& d, u8 v)
 // alpha_omit 0xFF.
 cModel::cModel()
 {
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_reset(this);
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
     re4dc_actor_model_changed(this);
 #endif
@@ -291,6 +300,9 @@ int cModel::initJoint(void* bin)
 // Frees the parts list.
 void cModel::releaseJoint()
 {
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_reset(this);
+#endif
     if (pParts != NULL) {
         releasePartsList(0);
     }
@@ -342,6 +354,10 @@ void cModel::setPartsOffset(void* bin)
         p->world_old = p->world;
         p->world_old2 = p->world;
     }
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    // Only after both actual rest/world matrix writes, never mere binding.
+    re4dc_gcasset::motion_source_note(this,bin,re4dc_gcasset::MotionBind);
+#endif
 }
 
 // Links each parts to its parent joint from the model data (0xFF = the model itself).
@@ -1331,6 +1347,12 @@ void cModel::drawAllBoundingBox(cModelInfo* info)
 // New model info: white colour, identity matrix, visible, opaque.
 cModelInfo::cModelInfo() : cUnit(1)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_pose_reset(this);
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_reset(this);
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
     re4dc_actor_info_retire(this);
 #endif
@@ -1719,6 +1741,12 @@ void cModel::releaseModelInfo()
     while (info) {
         cModelInfo* dead = info;
         info = info->pList;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_pose_reset(dead);
+#endif
+#if defined(RE4DC_GC_ASSET_MOTION_SOURCE) && RE4DC_GC_ASSET_MOTION_SOURCE
+        re4dc_gcasset::motion_source_reset(dead);
+#endif
         mm->destroy(dead);
     }
     pModelInfo = 0;

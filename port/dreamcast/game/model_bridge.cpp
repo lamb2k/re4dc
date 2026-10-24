@@ -9,6 +9,7 @@
 #include "native_model.h"
 #if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
 #include "gc_asset_members.h"
+#include "gc_asset_actor.h"
 #include "player.h"
 #endif
 #if RE4DC_NATIVE_FOG
@@ -881,6 +882,9 @@ extern "C" unsigned long long re4dc_otp_now_us();
 #endif
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_producer_scope;
+#endif
     if(!RE4DC_MODEL_DIAG() || pass)return;
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     struct BridgeProf { const void* m; unsigned long long t0; unsigned b0;
@@ -1034,6 +1038,59 @@ extern "C" unsigned re4dc_gcasset_model_identity(const void* model,const void* i
     return (unsigned(m->kindid)&255U)<<24 | (unsigned(m->id)&255U)<<16 | (unsigned(m->type)&255U)<<8 |
         (unsigned(m->nParts)&255U);
 }
+namespace {
+bool gcasset_original_input(const void* info_ptr,re4dc_gcasset::OriginalModelInput& input,re4dc_gcasset::ModelMember& member){
+    if(!info_ptr)return false;
+    const auto* info=static_cast<const cModelInfo*>(info_ptr);const auto* d=info->pData;
+    if(!re4dc_gcasset::member_lookup(d,&member) || !member.serial)return false;
+    input.data=d;input.head=d->pHead;input.colors=d->pClr;input.uv=d->pTex;input.weights=d->pWeight;
+    input.parts=d->pParts;input.positions=d->vtxOrig;input.normals=d->nrmOrig;
+    input.flags=d->flags;input.counts=unsigned(d->nVtx)|(unsigned(d->nNrm)<<16);
+    input.joints=unsigned(d->weight_palette_num)|(unsigned(d->nParts)<<8)|(unsigned(d->displist_num)<<16);
+    input.format=unsigned(d->shift)|(unsigned(d->pad_29)<<8)|(unsigned(d->weight_ext_num)<<16);input.shape=d->shapeOfs;
+    return true;
+}
+}
+extern "C" void re4dc_gcasset_pose_reset(const void* info){re4dc_gcasset::member_pose_reset(info);}
+extern "C" void re4dc_gcasset_pose_publish(const void* info_ptr,unsigned frame,unsigned lazy){
+    using namespace re4dc_gcasset;
+    OriginalModelInput input;ModelMember member;
+    if(!gcasset_original_input(info_ptr,input,member)){member_pose_reset(info_ptr);return;}
+    const auto* info=static_cast<const cModelInfo*>(info_ptr);
+    input.uses_weights=true;input.uses_shape=(info->be_flag&2)!=0;
+    member_pose_publish(info,member.serial,input,lazy?nullptr:info->pPosBuf[pG->vtx_buf_no],
+        lazy?nullptr:info->pNrmBuf[pG->vtx_buf_no],frame,lazy!=0);
+}
+extern "C" void re4dc_gcasset_shape_reset(const void* info_ptr,const void* dst){
+    using namespace re4dc_gcasset;
+    OriginalModelInput input;ModelMember member;
+    const auto* info=static_cast<const cModelInfo*>(info_ptr);
+    if(!gcasset_original_input(info_ptr,input,member) || dst!=info->pPosBuf[pG->vtx_buf_no]){member_pose_reset(info_ptr);return;}
+    input.uses_shape=true;
+    // Reuse the exact captured layout/first part guard without reading a
+    // foreign part pointer. ResetShape's source is original vertex storage.
+    if(!member_contains(member.serial,input.parts,32)){member_pose_reset(info_ptr);return;}
+    input.part=input.parts;input.stream=static_cast<const unsigned char*>(input.parts)+32;
+    input.stream_bytes=static_cast<const ModelData*>(input.data)->pParts->size;
+    if(!member_original_source(member.serial,input)){member_pose_reset(info_ptr);return;}
+    member_shape_reset(info,member.serial,pG->Frame_cnt);
+}
+extern "C" void re4dc_gcasset_shape_source(const void* info_ptr,unsigned index,const void* delta,unsigned count){
+    using namespace re4dc_gcasset;
+    OriginalModelInput input;ModelMember member;
+    if(!gcasset_original_input(info_ptr,input,member)){member_pose_reset(info_ptr);return;}
+    member_shape_source(info_ptr,member.serial,pG->Frame_cnt,index,delta,count);
+}
+
+extern "C" unsigned re4dc_gcasset_original_color_member(const Re4dcModelPart* part,unsigned bytes){
+    using namespace re4dc_gcasset;
+    if(!part || !part->colors)return 0;
+    OriginalModelInput input;ModelMember member;
+    if(!gcasset_original_input(part->info,input,member) || part->colors!=input.colors)return 0;
+    input.uses_colors=true;
+    return member_original_colors(member.serial,input,bytes)?member.serial:0;
+}
+
 // Class/role selects a diagnostic consumer only; member SHA determines origin.
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void* model,const void* info,unsigned arc,unsigned family) {
     if(!model || !info)return 0;
@@ -1048,6 +1105,58 @@ extern "C" unsigned re4dc_gcasset_weapon_consumer(const void* model,const void* 
        ((m->kindid==1 && m->id==0x0a && arc==0x7a) || (m->kindid==0 && m->id==0x4f && arc==0x72)))return 1;
     return pPL && model==pPL && pPL->Body && (info==pPL->Body->pRight || info==pPL->Body->pLeft);
 }
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart* part){
+    using namespace re4dc_gcasset;
+    if(!part || !part->model || !part->info)return {};
+    OriginalModelInput input;ModelMember member;
+    const bool bound=gcasset_original_input(part->info,input,member);
+    const auto* model=static_cast<const cModel*>(part->model);const auto* info=static_cast<const cModelInfo*>(part->info);
+    const unsigned mask=(1U<<SourceGeometry)|(re4dc_gcasset_weapon_consumer(part->model,part->info,
+        bound?member.arc:0,bound?unsigned(member.family):unsigned(OtherOwner))?1U<<Weapon:0U);
+    const SourceUse unknown{0,mask,part->model,part->info};
+    if(!bound)return unknown;
+    const auto* d=info->pData;
+    const bool rigid=(model->be_flag&0x4000) ||
+        (d->weight_palette_num<=1 && d->weight_ext_num<=0xff && !(info->be_flag&2) && d->nParts==1);
+    input.part=part->part;input.stream=part->stream;input.stream_bytes=part->stream_bytes;
+    input.uses_weights=!rigid;input.uses_shape=!rigid && (info->be_flag&2);
+    input.uses_colors=(part->alpha_state&256) || (part->lighting &&
+        (part->lighting->ambient_vertex || part->lighting->material_vertex));
+    if(part->uv!=input.uv || (input.uses_colors && part->colors!=input.colors) ||
+        part->flags!=input.flags || part->shift!=d->shift || part->position_count!=d->nVtx ||
+        part->normal_count!=d->nNrm || !member_original_source(member.serial,input))return unknown;
+    if(rigid){
+        if(part->positions!=input.positions || part->normals!=input.normals || part->position_stride!=8 ||
+            part->normal_stride!=((d->flags&0x20000000U)?4U:8U) ||
+            part->normal_shift!=((d->flags&0x20000000U)?6U:14U))return unknown;
+    }else if(!part->positions){
+#if RE4DC_NATIVE_ACTOR_FAST
+        Re4dcActorSource source{};
+        if(part->normals || !member_pose_current(info,member.serial,nullptr,nullptr,pG->Frame_cnt) ||
+            !re4dc_actor_model_source(info,&source) || source.positions!=input.positions || source.normals!=input.normals ||
+            source.position_count!=d->nVtx || source.normal_count!=d->nNrm ||
+            source.palette_entries!=(d->weight_ext_num>255?d->weight_ext_num:d->weight_palette_num) ||
+            source.small_normals!=unsigned((d->flags&0x20000000U)!=0))return unknown;
+#else
+        return unknown;
+#endif
+    }else if(part->position_stride!=6 || part->normal_stride!=((d->flags&0x20000000U)?3U:6U) ||
+        part->normal_shift!=((d->flags&0x20000000U)?6U:14U) ||
+        !member_pose_current(info,member.serial,part->positions,part->normals,pG->Frame_cnt))return unknown;
+    return {member.serial,mask,part->model,part->info};
+}
+#if RE4DC_NATIVE_ACTOR_FAST
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart* part,const Re4dcActorSource* source){
+    auto selected=re4dc_gcasset_original_model_select(part);
+    if(!selected.serial)return selected;
+    if(!source)return {0,selected.mask,part->model,part->info};
+    const auto* d=static_cast<const cModelInfo*>(part->info)->pData;
+    if(source->positions!=d->vtxOrig || source->normals!=d->nrmOrig || source->position_count!=d->nVtx ||
+        source->normal_count!=d->nNrm || source->palette_entries!=(d->weight_ext_num>255?d->weight_ext_num:d->weight_palette_num) ||
+        source->small_normals!=unsigned((d->flags&0x20000000U)!=0))return {0,selected.mask,part->model,part->info};
+    return selected;
+}
+#endif
 #endif
 #if defined(RE4DC_MODEL_DROP_LOG) && RE4DC_MODEL_DROP_LOG
 // MODEL_DROP_LOG (native_ui.cpp): a refused part's model as kind<<24 | id<<16 | type<<8 | nParts (low byte), or

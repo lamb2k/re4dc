@@ -6,6 +6,8 @@
 #endif
 struct Re4dcModelPart;
 struct Re4dcActorSource;
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_model_select(const Re4dcModelPart*);
+extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_original_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcModelPart*,const re4dc_gcasset::SourceUse*);
 extern "C" void re4dc_gcasset_actor_startup();
@@ -33,7 +35,9 @@ struct ActorSourceScope {
     void accepted(){
         const bool current=source_use.serial==selected.serial && source_use.mask==selected.mask &&
             source_use.payload==selected.payload && source_use.model==selected.model && source_use.info==selected.info;
-        payload_accept(current?selected.payload:nullptr,current?selected.serial:0,selected.mask?selected.mask:1U<<SourceGeometry);
+        const unsigned mask=selected.mask?selected.mask:1U<<SourceGeometry;
+        if(selected.payload || !selected.serial)payload_accept(current?selected.payload:nullptr,current?selected.serial:0,mask);
+        else member_accept(current?selected.serial:0,mask);
     }
 };
 struct ActorMainSourceScope {
