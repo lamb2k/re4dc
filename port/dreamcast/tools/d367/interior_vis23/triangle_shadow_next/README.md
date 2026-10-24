@@ -39,21 +39,21 @@ coverage and do not change the runtime.
 
 ## Frozen run and refusal analysis
 
-The source2f5cd21cf run examined only the 256 largest area-ranked eligible faces
-in each one-LOD and multi-LOD stratum: 512 of24,874 descriptor-qualified stable
-unconditional faces. Across19 full serialized domains and220 static ordinary
-cluster targets,2,130,432 pairs yielded zero float-filter survivors and therefore
+The source 2f5cd21cf run examined only the 256 largest area-ranked eligible faces
+in each one-LOD and multi-LOD stratum: 512 of 24,874 descriptor-qualified stable
+unconditional faces. Across 19 full serialized domains and 220 static ordinary
+cluster targets, 2,130,432 pairs yielded zero float-filter survivors and therefore
 zero accepted exact candidates. This is partial coverage, not exact exclusion
-of every rejected pair or a global NO-GO for triangle occlusion. Peak RSS84,240
-KiB, hard address-space cap256 MiB, one job.
+of every rejected pair or a global NO-GO for triangle occlusion. Peak RSS 84,240
+KiB, hard address-space cap 256 MiB, one job.
 
-`diagnose.py` preserves that same512 cohort. Heuristic float refusals divide into
-1,463,849 target-plane cases,201,699 eye-plane cases and464,884 triangle-edge
-coverage cases. The20 closest opposite-plane pairs all fail the exact sufficient
-edge test. The40 existing per-LOD meshlet boxes in those same closest pairs also
+`diagnose.py` preserves that same 512 cohort. Heuristic float refusals divide into
+1,463,849 target-plane cases, 201,699 eye-plane cases and 464,884 triangle-edge
+coverage cases. The 20 closest opposite-plane pairs all fail the exact sufficient
+edge test. The 40 existing per-LOD meshlet boxes in those same closest pairs also
 fail it; this narrow counterfactual does not exclude all smaller geometry.
-The220 target boxes have diagonal54 mm to11.90 m, median1.257 m. Cells are2 m in
-XZ and600..1400 mm high. These facts explain the tested geometry; they do not
+The 220 target boxes have diagonal 54 mm to 11.90 m, median1.257 m. Cells are 2 m in
+XZ and 600..1400 mm high. These facts explain the tested geometry; they do not
 establish camera/raster admission.
 
 Current PVS target bits address placement-owned cluster instances shared across
@@ -63,15 +63,15 @@ offline search. No smaller partition or new runtime/data contract is approved.
 
 Current renderer admission and cuts remain zero. Actual selector-rounding/true
 eye enclosure, source cull and near/far clipping, SH4 arithmetic, raster edge and
-depth coverage, resident material/header state, complete16-panel committed
+depth coverage, resident material/header state, complete 16-panel committed
 source-prefix receipts and source-matched net exclusive cost remain unclosed.
-MODELLED ms is unavailable; the>=1 ms GO is not established. No target build,
+MODELLED ms is unavailable; the >=1 ms GO is not established. No target build,
 Flycast, console run, gain or look claim is made. All unproved and unsampled
 cases keep drawing.
 
 Private evidence: `C:/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/I001-fb254-triangle-shadow-r1`.
 It retains the source2f run, preliminary receipts, exact run-source snapshots,
 synthetic controls, the unchanged control PVS, independent math note and seal.
-Historical cameras are e9bf7:54 s requested,55.4..55.8 s total wall; they are not
-current exact55-child qualification. Private geometry/report coordinates stay
+Historical cameras are e9bf7: 54 s requested, 55.4..55.8 s total wall; they are not
+current exact 55-child qualification. Private geometry/report coordinates stay
 out of Git. No continuation beyond this bounded source sample is implied.
