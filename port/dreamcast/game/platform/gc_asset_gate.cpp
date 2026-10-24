@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstring>
 #include <new>
+#include <cstdlib>
+#include <algorithm>
 #include <atomic>
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
@@ -129,7 +131,9 @@ namespace {
 // from the catalog bytes in any chunking. Same accept/reject verdicts as the old
 // hash-then-row-by-row passes; nothing is published unless the pin matches.
 struct InstallParse {
-    unsigned bytes=0,seen=0,rows=0,block_rows=0,row=0,carry=0;bool bad=false;
+    unsigned bytes=0,seen=0,rows=0,block_rows=0,row=0,carry=0,texn=0;bool bad=false,want_tex=false;
+    TexEntry* tex=nullptr;
+    ~InstallParse(){std::free(tex);}
     unsigned char header[128];unsigned char part[112];
     IdentitySha hash;AssetDescription previous{},current;
     void header_done(){
@@ -138,11 +142,13 @@ struct InstallParse {
            bytes!=128+index_word(header+12)*112){bad=true;return;}
         for(unsigned i=24;i<128;++i)if(header[i]){bad=true;return;}
         rows=index_word(header+12);block_rows=rows<=SparseKeys*BufferRows?BufferRows:2*BufferRows;
+        if(want_tex && !(tex=static_cast<TexEntry*>(std::malloc(rows*sizeof(TexEntry)))))bad=true;
     }
     void row_done(){
         if(row>=rows || !index_decode_row(part,current) ||
            (row && index_compare(previous,current.kind,current.id,current.digest)>=0)){bad=true;return;}
         if(!(row%block_rows))sparse_prefix(current.kind,current.id,current.digest,sparse_key[row/block_rows]);
+        if(tex && !std::strcmp(current.kind,"texture")){auto& e=tex[texn++];std::memcpy(e.prefix,current.digest.bytes,4);e.row=(unsigned short)row;}
         previous=current;++row;
     }
     void feed(const unsigned char* p,unsigned n){
@@ -176,7 +182,8 @@ bool install_index_stream(CatalogStream stream,void* stream_context,CatalogReadA
     if(!new_catalog_epoch())return false;
     const unsigned epoch=catalog_epoch;
     if(!read || bytes<128 || bytes>128+CatalogLimit*112)return false;
-    InstallParse parse;parse.bytes=bytes;
+    tex_table_free();
+    InstallParse parse;parse.bytes=bytes;parse.want_tex=read!=nullptr;
     if(stream){
         // Bulk sequential reader (the disc adapter's 16 KiB storage reads).
         if(!stream(stream_context,install_sink,&parse) || !index_generation(epoch))return false;
@@ -191,6 +198,9 @@ bool install_index_stream(CatalogStream stream,void* stream_context,CatalogReadA
     // Do not publish provisional globals or overwrite a newer callback install.
     if(active || !index_generation(epoch))return false;
     catalog_read=read;catalog_context=context;catalog_bytes=bytes;catalog_rows=rows;
+    std::sort(parse.tex,parse.tex+parse.texn,tex_less);
+    if(parse.tex && parse.texn){void* shrunk=std::realloc(parse.tex,parse.texn*sizeof(TexEntry));if(shrunk)parse.tex=static_cast<TexEntry*>(shrunk);}
+    tex_table=parse.tex;tex_count=parse.texn;parse.tex=nullptr;
     catalog_ok=true;return true;
 }
 unsigned catalog_generation(){return catalog_ok?catalog_epoch:0;}
@@ -217,7 +227,8 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     unsigned index=rows;AssetDescription row;
     if(catalog_read) {
         unsigned found=rows;
-        const SparseResult result=sparse_find(kind,id,digest,epoch,found);
+        const SparseResult result=tex_table && !std::strcmp(kind,"texture")?tex_find(id,digest,epoch,found):
+            sparse_find(kind,id,digest,epoch,found);
         if(!catalog_ok || !index_generation(epoch))return {};
         if(result==SparseFault){catalog_fault(CatalogRead);return {};}
         if(result==SparseFound)index=found;
