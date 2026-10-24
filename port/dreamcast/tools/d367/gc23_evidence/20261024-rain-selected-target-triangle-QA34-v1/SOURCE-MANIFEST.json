@@ -1,0 +1,1937 @@
+{
+  "parent_evidence_commit": "6a7783ae2e7407eff23124b844d3b39ec1993f79",
+  "captured_utc": "2026-10-24T09:14:52.481614+00:00",
+  "root_docs_frozen_utc": "2026-10-24T09:11:24.715521+00:00",
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-target-triangle-qa34-20261024/stable-dated-inputs/takeover-refresh-20261024.py",
+      "destination": "dated-root-docs/takeover-refresh-20261024.py",
+      "bytes": 22182,
+      "sha256": "f29b949533bd9b701a112cb8e07523b7bf6b1a8b08de283c4af4162720e346a5",
+      "lf_sha256": "545cdd1745a4d095e219208b12d3c7cfbf1daf9e98744ca6fd8d6db0f2a2b858",
+      "crlf_count": 31,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792833084726022100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-target-triangle-qa34-20261024/stable-dated-inputs/CODEX-TAKEOVER-STATUS.md",
+      "destination": "dated-root-docs/CODEX-TAKEOVER-STATUS.md",
+      "bytes": 26770,
+      "sha256": "7141c77328591d078c5b45cac47e1f19e576c3174d5f0b9150d822adfaa71586",
+      "lf_sha256": "18b2ab45ea1f49be233304dffd261e4ae2fb7e1fa9f55183a747786590806c3e",
+      "crlf_count": 38,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792833084738025300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-target-triangle-qa34-20261024/stable-dated-inputs/CLAUDE-CARRY23.md",
+      "destination": "dated-root-docs/CLAUDE-CARRY23.md",
+      "bytes": 25630,
+      "sha256": "18131f6a5c020e09c305c0804fdf3a152f8397e7c9780c77e58f60f9e396ed76",
+      "lf_sha256": "46a881122fb0859fa4b8dd8d0580fb243222a2e8edbcd3aa740866323205e47a",
+      "crlf_count": 90,
+      "text_encoding": "non-UTF8 original; cp1252-compatible diagnostic only",
+      "source_mtime_ns": 1792833084749022200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-target-triangle-qa34-20261024/stable-dated-inputs/CAPTURED-DOCS.json",
+      "destination": "dated-root-docs/CAPTURED-DOCS.json",
+      "bytes": 806,
+      "sha256": "5d35d7db32e96b303de1af7fe4e900075ed99619b651e459e7090798719c41bc",
+      "lf_sha256": "5d35d7db32e96b303de1af7fe4e900075ed99619b651e459e7090798719c41bc",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792833084753060300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/README.md",
+      "destination": "rain-root-tool-v1/README.md",
+      "bytes": 9173,
+      "sha256": "21b2c9d467b6f8c4adbe43ba64b879a4880fe560ed1c4319f528647bf24137a8",
+      "lf_sha256": "21b2c9d467b6f8c4adbe43ba64b879a4880fe560ed1c4319f528647bf24137a8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368359919200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/matrix.py",
+      "destination": "rain-root-tool-v1/matrix.py",
+      "bytes": 17337,
+      "sha256": "b2e3e690a6fe604573bfb1327fca6d049753d61391d7f444f1f3023ec04073d0",
+      "lf_sha256": "b2e3e690a6fe604573bfb1327fca6d049753d61391d7f444f1f3023ec04073d0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368366919000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/readback.py",
+      "destination": "rain-root-tool-v1/readback.py",
+      "bytes": 12910,
+      "sha256": "80415cee5c1395b7484e3eef77941a89a040b7567746a8250c3814a3e3fe94ee",
+      "lf_sha256": "80415cee5c1395b7484e3eef77941a89a040b7567746a8250c3814a3e3fe94ee",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368373917300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/test_preparation.py",
+      "destination": "rain-root-tool-v1/test_preparation.py",
+      "bytes": 10646,
+      "sha256": "e098ba4dcb17be0d7882f37e396ad616f2310e33a793d3107729d22942fc0d67",
+      "lf_sha256": "e098ba4dcb17be0d7882f37e396ad616f2310e33a793d3107729d22942fc0d67",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368380183600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/PINS-ROOT-FIX-V1.json",
+      "destination": "rain-root-tool-v1/PINS-ROOT-FIX-V1.json",
+      "bytes": 44864,
+      "sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+      "lf_sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368388187500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/ROOT-GRANT-TEMPLATE-ROOT-FIX-V1.json",
+      "destination": "rain-root-tool-v1/ROOT-GRANT-TEMPLATE-ROOT-FIX-V1.json",
+      "bytes": 665,
+      "sha256": "2cebca3741c2332d05c72812c6248b7da27717c2fdb394b0a9b9ee39fda4f0c8",
+      "lf_sha256": "2cebca3741c2332d05c72812c6248b7da27717c2fdb394b0a9b9ee39fda4f0c8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368394188300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/ROOT-REPAIR-RECEIPT-V1.json",
+      "destination": "rain-root-tool-v1/ROOT-REPAIR-RECEIPT-V1.json",
+      "bytes": 940,
+      "sha256": "91dac28162b81026ccf388dabeb60fd252d814963552dacd736acf191b33bd09",
+      "lf_sha256": "91dac28162b81026ccf388dabeb60fd252d814963552dacd736acf191b33bd09",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368402187900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/SOURCE-SEAL.json",
+      "destination": "rain-root-tool-v1/SOURCE-SEAL.json",
+      "bytes": 1219,
+      "sha256": "9ae45aba44eacc0b740fd2c148cef0b3f7c3a7e2593db4a68e19fe69acad6044",
+      "lf_sha256": "9ae45aba44eacc0b740fd2c148cef0b3f7c3a7e2593db4a68e19fe69acad6044",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832368405188300
+    },
+    {
+      "source": "git:da4cf4518df491b1d26c8615a263ba0ff5911799:port/dreamcast/tools/d367/rain_diag24/target_matrix/run-matrix.sh",
+      "destination": "rain-root-tool-v1/run-matrix.sh",
+      "bytes": 2101,
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "lf_sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/README.md",
+      "destination": "rain-root-tool-v2/README.md",
+      "bytes": 9632,
+      "sha256": "f6d30e1c0df4c2a1b9f8fcba8e71f7b39b2d6f9f1093aff742e892757c539e27",
+      "lf_sha256": "f6d30e1c0df4c2a1b9f8fcba8e71f7b39b2d6f9f1093aff742e892757c539e27",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751568976700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/matrix.py",
+      "destination": "rain-root-tool-v2/matrix.py",
+      "bytes": 17337,
+      "sha256": "74eed3bd74e874ad6a00e4466ac619eacdf13f051c050a5fe48ca9048bc16c6e",
+      "lf_sha256": "74eed3bd74e874ad6a00e4466ac619eacdf13f051c050a5fe48ca9048bc16c6e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751574975600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/readback.py",
+      "destination": "rain-root-tool-v2/readback.py",
+      "bytes": 13001,
+      "sha256": "e2c12b4854f3bc7c51eb0cb41b67d0bf44dd5ec217d3edd105c985e1dd52ac2c",
+      "lf_sha256": "e2c12b4854f3bc7c51eb0cb41b67d0bf44dd5ec217d3edd105c985e1dd52ac2c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751581977200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/test_preparation.py",
+      "destination": "rain-root-tool-v2/test_preparation.py",
+      "bytes": 10981,
+      "sha256": "d5a02d0ffb110648189b5779c08b12cbe9825c5c0dfd31d30ec8d5e9c472b2f8",
+      "lf_sha256": "d5a02d0ffb110648189b5779c08b12cbe9825c5c0dfd31d30ec8d5e9c472b2f8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751587976300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/PINS-ROOT-FIX-V2.json",
+      "destination": "rain-root-tool-v2/PINS-ROOT-FIX-V2.json",
+      "bytes": 44864,
+      "sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+      "lf_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751594977600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/ROOT-GRANT-TEMPLATE-ROOT-FIX-V2.json",
+      "destination": "rain-root-tool-v2/ROOT-GRANT-TEMPLATE-ROOT-FIX-V2.json",
+      "bytes": 665,
+      "sha256": "29ef3757f200e22f9bcd30c04204b7407f0d11c13220fddd2635c28fe4b5a554",
+      "lf_sha256": "29ef3757f200e22f9bcd30c04204b7407f0d11c13220fddd2635c28fe4b5a554",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751601976300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/ROOT-REPAIR-RECEIPT-V2.json",
+      "destination": "rain-root-tool-v2/ROOT-REPAIR-RECEIPT-V2.json",
+      "bytes": 539,
+      "sha256": "90d91ecb8c403ec17d21209a13824680fb7f9d09d2ecbd34eae94e0f3e4fe343",
+      "lf_sha256": "90d91ecb8c403ec17d21209a13824680fb7f9d09d2ecbd34eae94e0f3e4fe343",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751607978100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/SOURCE-SEAL.json",
+      "destination": "rain-root-tool-v2/SOURCE-SEAL.json",
+      "bytes": 1148,
+      "sha256": "9d21c7a3ab3db4d4f83debb39d9615c5693760bdaf5807f0d44a63a1124fbdcf",
+      "lf_sha256": "9d21c7a3ab3db4d4f83debb39d9615c5693760bdaf5807f0d44a63a1124fbdcf",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832751610976900
+    },
+    {
+      "source": "git:a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1:port/dreamcast/tools/d367/rain_diag24/target_matrix/run-matrix.sh",
+      "destination": "rain-root-tool-v2/run-matrix.sh",
+      "bytes": 2101,
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "lf_sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/REVIEW.md",
+      "destination": "review-rain-targetda4/REVIEW.md",
+      "bytes": 2981,
+      "sha256": "ae52f1df4d808f10cba0f386d846d489367e9886274c5bee02ff8038074a1f0a",
+      "lf_sha256": "ae52f1df4d808f10cba0f386d846d489367e9886274c5bee02ff8038074a1f0a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832724094014500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/extra-abi-controls.json",
+      "destination": "review-rain-targetda4/extra-abi-controls.json",
+      "bytes": 906,
+      "sha256": "b3616881433b147f329d6c859340740c85478c9dc5e5a197e5f842a7a70ce6e7",
+      "lf_sha256": "b3616881433b147f329d6c859340740c85478c9dc5e5a197e5f842a7a70ce6e7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832606079208900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/gnu-unique-counterexample.json",
+      "destination": "review-rain-targetda4/gnu-unique-counterexample.json",
+      "bytes": 411,
+      "sha256": "3c2ebcdb23321b62a7a7d77bfacb78222a1b1e3f74ca3a3e3e42361f003d95ba",
+      "lf_sha256": "3c2ebcdb23321b62a7a7d77bfacb78222a1b1e3f74ca3a3e3e42361f003d95ba",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832674631615900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/host109.log",
+      "destination": "review-rain-targetda4/host109.log",
+      "bytes": 173,
+      "sha256": "df4d1e0f8fbec191821b14199ad269cb117cd6de7b0b90d33806ab8646e8643c",
+      "lf_sha256": "df4d1e0f8fbec191821b14199ad269cb117cd6de7b0b90d33806ab8646e8643c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832634010848600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/independent-host.json",
+      "destination": "review-rain-targetda4/independent-host.json",
+      "bytes": 678,
+      "sha256": "c28eb3fd056e245da7522008edc3c4a424371ac68e00f4c463b2c02e28ed05e8",
+      "lf_sha256": "c28eb3fd056e245da7522008edc3c4a424371ac68e00f4c463b2c02e28ed05e8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832634036335700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/old-PINS-refused.log",
+      "destination": "review-rain-targetda4/old-PINS-refused.log",
+      "bytes": 861,
+      "sha256": "ad567daf8b6008b62d5d771672f7095d7c29dfd022bcadd2d9d0c60aa2359fe9",
+      "lf_sha256": "ad567daf8b6008b62d5d771672f7095d7c29dfd022bcadd2d9d0c60aa2359fe9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832633759132700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/original-mutants-fixed.json",
+      "destination": "review-rain-targetda4/original-mutants-fixed.json",
+      "bytes": 660,
+      "sha256": "654487ef5f40974e6bac481b6fc1a07db3f6ab2c17b822628ca78ce1dadce494",
+      "lf_sha256": "654487ef5f40974e6bac481b6fc1a07db3f6ab2c17b822628ca78ce1dadce494",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832605950553100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/run_extra_abi_controls.py",
+      "destination": "review-rain-targetda4/run_extra_abi_controls.py",
+      "bytes": 2802,
+      "sha256": "f8089ec02c0d1be48c9466d8c2dce60ff717aee551ee91adc7cce0627aa50f8e",
+      "lf_sha256": "f8089ec02c0d1be48c9466d8c2dce60ff717aee551ee91adc7cce0627aa50f8e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832605954066900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/run_gnu_unique_control.py",
+      "destination": "review-rain-targetda4/run_gnu_unique_control.py",
+      "bytes": 773,
+      "sha256": "e3ec7c607b1673e5550411de0c64a4549c1246484ec10a3bae56bb0142f6685a",
+      "lf_sha256": "e3ec7c607b1673e5550411de0c64a4549c1246484ec10a3bae56bb0142f6685a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832724091011800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/run_original_mutants_fixed.py",
+      "destination": "review-rain-targetda4/run_original_mutants_fixed.py",
+      "bytes": 1808,
+      "sha256": "c67dd28446397e7dc3c57c069d0dc11a183caa39baf9a020ce0d0b2fe434f359",
+      "lf_sha256": "c67dd28446397e7dc3c57c069d0dc11a183caa39baf9a020ce0d0b2fe434f359",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832605826858800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/source-pins.json",
+      "destination": "review-rain-targetda4/source-pins.json",
+      "bytes": 2941,
+      "sha256": "a9934d1a2c9e23a95ece7cdde4fd228dbf245c7c5d5554c35a28b58f3e308f2e",
+      "lf_sha256": "a9934d1a2c9e23a95ece7cdde4fd228dbf245c7c5d5554c35a28b58f3e308f2e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832634042337800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/unauthorized-new-grant-refused.log",
+      "destination": "review-rain-targetda4/unauthorized-new-grant-refused.log",
+      "bytes": 1110,
+      "sha256": "2c3e9251f0c823e1a713f6cd488a19263b272aca4ffa52a51f946f83b8ff2dda",
+      "lf_sha256": "2c3e9251f0c823e1a713f6cd488a19263b272aca4ffa52a51f946f83b8ff2dda",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832634004848700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/SHA256-MANIFEST.json",
+      "destination": "review-rain-targetda4/SHA256-MANIFEST.json",
+      "bytes": 1981,
+      "sha256": "f8e038da65f273ac42281ccadd0af1b26bc6e3673ed8f7d63fc8ef9707bd25e3",
+      "lf_sha256": "f8e038da65f273ac42281ccadd0af1b26bc6e3673ed8f7d63fc8ef9707bd25e3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832724210049800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/REVIEW.md",
+      "destination": "review-rain-targeta7/REVIEW.md",
+      "bytes": 3299,
+      "sha256": "908f9c6c25a745cbb92dd656aba03e5ab78514c8f1674848a24ccd44728fd81f",
+      "lf_sha256": "908f9c6c25a745cbb92dd656aba03e5ab78514c8f1674848a24ccd44728fd81f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832846230120100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/bindings.json",
+      "destination": "review-rain-targeta7/bindings.json",
+      "bytes": 1015,
+      "sha256": "d0f0bdf20166125987bcfafbac76bda818e08c893b318f1d10192f57bee4473f",
+      "lf_sha256": "d0f0bdf20166125987bcfafbac76bda818e08c893b318f1d10192f57bee4473f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832813931787300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/extraABI.log",
+      "destination": "review-rain-targeta7/extraABI.log",
+      "bytes": 906,
+      "sha256": "b3616881433b147f329d6c859340740c85478c9dc5e5a197e5f842a7a70ce6e7",
+      "lf_sha256": "b3616881433b147f329d6c859340740c85478c9dc5e5a197e5f842a7a70ce6e7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832788811055200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/guard-removal-mutant.log",
+      "destination": "review-rain-targeta7/guard-removal-mutant.log",
+      "bytes": 492,
+      "sha256": "08368e65cf3598016fdf1733f80adf88ab7363af13f7cc9ee5765ef7f0751f5a",
+      "lf_sha256": "08368e65cf3598016fdf1733f80adf88ab7363af13f7cc9ee5765ef7f0751f5a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832814003959400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/host-runs.json",
+      "destination": "review-rain-targeta7/host-runs.json",
+      "bytes": 961,
+      "sha256": "2028562ab5cd4588b7ae44f010e1887f9a965f893342a66ab7a02a6f2ebc64c7",
+      "lf_sha256": "2028562ab5cd4588b7ae44f010e1887f9a965f893342a66ab7a02a6f2ebc64c7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832788814054700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/host111.log",
+      "destination": "review-rain-targeta7/host111.log",
+      "bytes": 173,
+      "sha256": "de795ac9e749ba4131e99caefbfd8704826d95a1ff67a5617cd1fa181697e53a",
+      "lf_sha256": "de795ac9e749ba4131e99caefbfd8704826d95a1ff67a5617cd1fa181697e53a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832788126398800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/original846-mutants.log",
+      "destination": "review-rain-targeta7/original846-mutants.log",
+      "bytes": 660,
+      "sha256": "654487ef5f40974e6bac481b6fc1a07db3f6ab2c17b822628ca78ce1dadce494",
+      "lf_sha256": "654487ef5f40974e6bac481b6fc1a07db3f6ab2c17b822628ca78ce1dadce494",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832788685170800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/source-pins.json",
+      "destination": "review-rain-targeta7/source-pins.json",
+      "bytes": 2871,
+      "sha256": "49bad6aae9a88c9674aaead04159c66d6b845bfb20367ffa9ef6f6635c14af52",
+      "lf_sha256": "49bad6aae9a88c9674aaead04159c66d6b845bfb20367ffa9ef6f6635c14af52",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832846226120000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/SHA256-MANIFEST.json",
+      "destination": "review-rain-targeta7/SHA256-MANIFEST.json",
+      "bytes": 1383,
+      "sha256": "f12e5cc0f03e51b65c43e0bac11e422a8ce48883ca20004cd45f6b9501fc613e",
+      "lf_sha256": "f12e5cc0f03e51b65c43e0bac11e422a8ce48883ca20004cd45f6b9501fc613e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832846319250700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/TARGET-READBACK-v1.json",
+      "destination": "rain-selected-target/TARGET-READBACK-v1.json",
+      "bytes": 74751,
+      "sha256": "4beb4d868fc8147d04a83559fa8bcd452dece416e99305f19599c269be463a6a",
+      "lf_sha256": "4beb4d868fc8147d04a83559fa8bcd452dece416e99305f19599c269be463a6a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832912393367500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/ROOT-SELECTED-TARGET-GRANT-v1.json",
+      "destination": "rain-selected-target/ROOT-SELECTED-TARGET-GRANT-v1.json",
+      "bytes": 665,
+      "sha256": "ada17a4a956bfa2bb1b02b532aedfe944a7eadb260172562e7114d90982c55e2",
+      "lf_sha256": "ada17a4a956bfa2bb1b02b532aedfe944a7eadb260172562e7114d90982c55e2",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832878051807800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetrun-a7/TARGET-READBACK.json",
+      "destination": "rain-selected-target-review/TARGET-READBACK.json",
+      "bytes": 74751,
+      "sha256": "4beb4d868fc8147d04a83559fa8bcd452dece416e99305f19599c269be463a6a",
+      "lf_sha256": "4beb4d868fc8147d04a83559fa8bcd452dece416e99305f19599c269be463a6a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832957900008000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetrun-a7/record-reference-ledger.json",
+      "destination": "rain-selected-target-review/record-reference-ledger.json",
+      "bytes": 18397,
+      "sha256": "1f4ceef158a7107aa21b91640fd8ddcfa175811a82c498166deada6f5093e775",
+      "lf_sha256": "1f4ceef158a7107aa21b91640fd8ddcfa175811a82c498166deada6f5093e775",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792833051070688200
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/pins.json",
+      "destination": "rain-target-matrix/pins.json",
+      "bytes": 44864,
+      "sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+      "lf_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889128226806
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/grant.json",
+      "destination": "rain-target-matrix/grant.json",
+      "bytes": 665,
+      "sha256": "ada17a4a956bfa2bb1b02b532aedfe944a7eadb260172562e7114d90982c55e2",
+      "lf_sha256": "ada17a4a956bfa2bb1b02b532aedfe944a7eadb260172562e7114d90982c55e2",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889128226806
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/RESERVED.json",
+      "destination": "rain-target-matrix/RESERVED.json",
+      "bytes": 872,
+      "sha256": "b7d24605d1552f55111d9a98ecea2c6d038d37c9b141cbf7584188a4dc8bbed1",
+      "lf_sha256": "b7d24605d1552f55111d9a98ecea2c6d038d37c9b141cbf7584188a4dc8bbed1",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832888640216661
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44.su",
+      "bytes": 400,
+      "sha256": "1daaf8e4e5b401cf323c58425be7a3f95423b58d0e5a531e42c67112ee72c268",
+      "lf_sha256": "1daaf8e4e5b401cf323c58425be7a3f95423b58d0e5a531e42c67112ee72c268",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894472336703
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894472336703
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894492337105
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894380334855
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894328333810
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/espgen44-argv.json",
+      "bytes": 6513,
+      "sha256": "5b08487fb6ac62fdd0f9cb78415bb7e6afd2c644e9575f2f69e2f89fe7141f0c",
+      "lf_sha256": "5b08487fb6ac62fdd0f9cb78415bb7e6afd2c644e9575f2f69e2f89fe7141f0c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894320333651
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06.su",
+      "bytes": 1792,
+      "sha256": "53805cb7aac2d61921128c1773c6bdf2035b655b1ef1b2a36ad1e6557f22ae95",
+      "lf_sha256": "53805cb7aac2d61921128c1773c6bdf2035b655b1ef1b2a36ad1e6557f22ae95",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894176330758
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06.d",
+      "bytes": 3318,
+      "sha256": "ccacfee1e3a56bededf095ffcbde8807c7fa6a5ca820d2cada73542e21c67df1",
+      "lf_sha256": "ccacfee1e3a56bededf095ffcbde8807c7fa6a5ca820d2cada73542e21c67df1",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894176330758
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06-actual-pins.json",
+      "bytes": 13312,
+      "sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "lf_sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894204331320
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06-before-pins.json",
+      "bytes": 13312,
+      "sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "lf_sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893984326901
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06-before.d",
+      "bytes": 1702,
+      "sha256": "89aa308815c0d083c0ca69036b6cdd9f927ea6f82ba09a67f8041a3d3289fc89",
+      "lf_sha256": "89aa308815c0d083c0ca69036b6cdd9f927ea6f82ba09a67f8041a3d3289fc89",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893936325936
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-d1/filter06-argv.json",
+      "bytes": 6451,
+      "sha256": "3143a2f843bb1f1a8279e9b5bd1181d8e7d9aee42b630963e9c443fb263c69ea",
+      "lf_sha256": "3143a2f843bb1f1a8279e9b5bd1181d8e7d9aee42b630963e9c443fb263c69ea",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893924325695
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44.su",
+      "bytes": 400,
+      "sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "lf_sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893728321755
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893728321755
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893752322238
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893640319986
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893588318941
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/espgen44-argv.json",
+      "bytes": 6513,
+      "sha256": "c2cc1c53e4cabebff95d51b849f3c4156dcc6c1d3e67e03fb61863f2328d4b6b",
+      "lf_sha256": "c2cc1c53e4cabebff95d51b849f3c4156dcc6c1d3e67e03fb61863f2328d4b6b",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893580318780
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06.su",
+      "bytes": 949,
+      "sha256": "da54fd3120183e36e7d000f8f6a264d9abcba9cf7dea86501e7e66e6ece9bea1",
+      "lf_sha256": "da54fd3120183e36e7d000f8f6a264d9abcba9cf7dea86501e7e66e6ece9bea1",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893448316127
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893448316127
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893464316449
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893300313152
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893252312187
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-d0/filter06-argv.json",
+      "bytes": 6451,
+      "sha256": "7bfbc3cb66292ce1f50c756ef51c56ba73ab44f4b949879d1f3844db3d0d7f4e",
+      "lf_sha256": "7bfbc3cb66292ce1f50c756ef51c56ba73ab44f4b949879d1f3844db3d0d7f4e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893244312027
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44.su",
+      "bytes": 400,
+      "sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "lf_sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893044308007
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893044308007
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832893072308570
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892956306238
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892908305273
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-argv.json",
+      "bytes": 6449,
+      "sha256": "1fcb4aff6147f9950b817e26d68cbbaf098b0fb06ccf4a318487af81879ac29d",
+      "lf_sha256": "1fcb4aff6147f9950b817e26d68cbbaf098b0fb06ccf4a318487af81879ac29d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892900305112
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06.su",
+      "bytes": 949,
+      "sha256": "da54fd3120183e36e7d000f8f6a264d9abcba9cf7dea86501e7e66e6ece9bea1",
+      "lf_sha256": "da54fd3120183e36e7d000f8f6a264d9abcba9cf7dea86501e7e66e6ece9bea1",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892772302475
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892772302475
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892784302724
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892620299321
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892572298325
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-argv.json",
+      "bytes": 6387,
+      "sha256": "0a7f74b4942c798ff550e87f8160a59f566f391ab823802db7b2a6cff4e228cd",
+      "lf_sha256": "0a7f74b4942c798ff550e87f8160a59f566f391ab823802db7b2a6cff4e228cd",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892564298158
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44.su",
+      "bytes": 400,
+      "sha256": "1daaf8e4e5b401cf323c58425be7a3f95423b58d0e5a531e42c67112ee72c268",
+      "lf_sha256": "1daaf8e4e5b401cf323c58425be7a3f95423b58d0e5a531e42c67112ee72c268",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892372294175
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892372294175
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892392294590
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892280292266
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892232291270
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/espgen44-argv.json",
+      "bytes": 6514,
+      "sha256": "03cdd112664c7c7c627081bf0ffea813407ad56a6808d2d23f6280c6877fec02",
+      "lf_sha256": "03cdd112664c7c7c627081bf0ffea813407ad56a6808d2d23f6280c6877fec02",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892220291020
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06.su",
+      "bytes": 1622,
+      "sha256": "6b782b0e8aee5e48a61f4199d4761604b7dd235f17e3d6d79caa0e8a59e2dca3",
+      "lf_sha256": "6b782b0e8aee5e48a61f4199d4761604b7dd235f17e3d6d79caa0e8a59e2dca3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892072287950
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06.d",
+      "bytes": 3318,
+      "sha256": "ccacfee1e3a56bededf095ffcbde8807c7fa6a5ca820d2cada73542e21c67df1",
+      "lf_sha256": "ccacfee1e3a56bededf095ffcbde8807c7fa6a5ca820d2cada73542e21c67df1",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892072287950
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06-actual-pins.json",
+      "bytes": 13312,
+      "sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "lf_sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832892108288698
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06-before-pins.json",
+      "bytes": 13312,
+      "sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "lf_sha256": "8b881bc21df04e99fb1079ddf2e6f0732d969ac8171c234d7797036a5ab4f470",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891892284214
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06-before.d",
+      "bytes": 1702,
+      "sha256": "89aa308815c0d083c0ca69036b6cdd9f927ea6f82ba09a67f8041a3d3289fc89",
+      "lf_sha256": "89aa308815c0d083c0ca69036b6cdd9f927ea6f82ba09a67f8041a3d3289fc89",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891848283301
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-d1/filter06-argv.json",
+      "bytes": 6392,
+      "sha256": "dd49be8be1182053b7cd92e57b0ba0263da42896cc8e0031cbf5b39bb51249a9",
+      "lf_sha256": "dd49be8be1182053b7cd92e57b0ba0263da42896cc8e0031cbf5b39bb51249a9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891836283053
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44.su",
+      "bytes": 400,
+      "sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "lf_sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891648279148
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891648279148
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891668279564
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891556277239
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891508276242
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/espgen44-argv.json",
+      "bytes": 6514,
+      "sha256": "95b852124f52c681b5b3d042e051eae90765e9de8784e7e172bd8f268b195b42",
+      "lf_sha256": "95b852124f52c681b5b3d042e051eae90765e9de8784e7e172bd8f268b195b42",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891500276076
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06.su",
+      "bytes": 808,
+      "sha256": "030e04da714ce86717d9527f430c225fc4ffcee15d1f967214f225f3e0f4fc7d",
+      "lf_sha256": "030e04da714ce86717d9527f430c225fc4ffcee15d1f967214f225f3e0f4fc7d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891360273171
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891360273171
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891388273753
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891228270431
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891180269434
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-d0/filter06-argv.json",
+      "bytes": 6392,
+      "sha256": "2d9990f25e81570e5bd350327fc3d33d74397fc71b6c9cf774e455decb471d5e",
+      "lf_sha256": "2d9990f25e81570e5bd350327fc3d33d74397fc71b6c9cf774e455decb471d5e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891168269185
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44.su",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44.su",
+      "bytes": 400,
+      "sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "lf_sha256": "198dc92f273c17015e773dcdac88aa16e7afe749420d9f5687a2fbc504408369",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890980265282
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44.d",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890980265282
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832891004265780
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "lf_sha256": "a74be5a39019a40a682b71d176dfee887851486ced7da7f8199cc8d25274ab00",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890892263454
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890844262457
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-argv.json",
+      "bytes": 6450,
+      "sha256": "91c4498b5e8822ee83db58a4a125a7ff8a5714bd60782038bd95309e97abf9d8",
+      "lf_sha256": "91c4498b5e8822ee83db58a4a125a7ff8a5714bd60782038bd95309e97abf9d8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890836262291
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06.su",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06.su",
+      "bytes": 808,
+      "sha256": "030e04da714ce86717d9527f430c225fc4ffcee15d1f967214f225f3e0f4fc7d",
+      "lf_sha256": "030e04da714ce86717d9527f430c225fc4ffcee15d1f967214f225f3e0f4fc7d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890704259550
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06.d",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890704259550
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890724259966
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "lf_sha256": "eecbedf8e17bb7969b325560e91d0e90aba91fa96b535af65b5b6877d4cdb118",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890564256642
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-before.d",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890516255645
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-argv.json",
+      "bytes": 6328,
+      "sha256": "b7214bfe2dec862a0756a52097e7bbf0eec80bce32f37ce6a763e8a7c8d2a35b",
+      "lf_sha256": "b7214bfe2dec862a0756a52097e7bbf0eec80bce32f37ce6a763e8a7c8d2a35b",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890508255478
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44.su",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44.su",
+      "bytes": 400,
+      "sha256": "b683e289748c83a1c3fe9ac720e7d4c32af3ae287cc092e7b657f1b1f2ce9dbb",
+      "lf_sha256": "b683e289748c83a1c3fe9ac720e7d4c32af3ae287cc092e7b657f1b1f2ce9dbb",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890324251658
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44.d",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890324251658
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "lf_sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890344252072
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "lf_sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890236249830
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890188248833
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/base-f1/espgen44-argv.json",
+      "bytes": 6449,
+      "sha256": "1fcb4aff6147f9950b817e26d68cbbaf098b0fb06ccf4a318487af81879ac29d",
+      "lf_sha256": "1fcb4aff6147f9950b817e26d68cbbaf098b0fb06ccf4a318487af81879ac29d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890180248666
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06.d",
+      "destination": "rain-target-matrix/cases/base-f1/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890056246090
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/base-f1/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "lf_sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832890068246339
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/base-f1/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "lf_sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889912243099
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-before.d",
+      "destination": "rain-target-matrix/cases/base-f1/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889864242102
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/base-f1/filter06-argv.json",
+      "bytes": 6387,
+      "sha256": "0a7f74b4942c798ff550e87f8160a59f566f391ab823802db7b2a6cff4e228cd",
+      "lf_sha256": "0a7f74b4942c798ff550e87f8160a59f566f391ab823802db7b2a6cff4e228cd",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889856241935
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44.su",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44.su",
+      "bytes": 400,
+      "sha256": "b683e289748c83a1c3fe9ac720e7d4c32af3ae287cc092e7b657f1b1f2ce9dbb",
+      "lf_sha256": "b683e289748c83a1c3fe9ac720e7d4c32af3ae287cc092e7b657f1b1f2ce9dbb",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889668238028
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44.d",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44.d",
+      "bytes": 1635,
+      "sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "lf_sha256": "00cd8c1e1b0950da15594309d8dc2b28eafd85f9f77b769a5f933c1428a97e9c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889668238028
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-actual-pins.json",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44-actual-pins.json",
+      "bytes": 9359,
+      "sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "lf_sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889692238526
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-before-pins.json",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44-before-pins.json",
+      "bytes": 9359,
+      "sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "lf_sha256": "d2e0aa012917425c54749159abc9a94d5fca7483cc6bf2ca90d53b612b549399",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889584236283
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-before.d",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44-before.d",
+      "bytes": 847,
+      "sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "lf_sha256": "0342029309ba08089ed417bd45662abfad360babc125a9ce07cc388946dc235c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889536235286
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-argv.json",
+      "destination": "rain-target-matrix/cases/base-f0/espgen44-argv.json",
+      "bytes": 6450,
+      "sha256": "91c4498b5e8822ee83db58a4a125a7ff8a5714bd60782038bd95309e97abf9d8",
+      "lf_sha256": "91c4498b5e8822ee83db58a4a125a7ff8a5714bd60782038bd95309e97abf9d8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889528235119
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06.d",
+      "destination": "rain-target-matrix/cases/base-f0/filter06.d",
+      "bytes": 1660,
+      "sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "lf_sha256": "ed69044339ee4920b3d1f2428ec703d446328cfc32307eff152ea145595c637c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889396232376
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-actual-pins.json",
+      "destination": "rain-target-matrix/cases/base-f0/filter06-actual-pins.json",
+      "bytes": 8863,
+      "sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "lf_sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889420232874
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-before-pins.json",
+      "destination": "rain-target-matrix/cases/base-f0/filter06-before-pins.json",
+      "bytes": 8863,
+      "sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "lf_sha256": "ee432e3f1c7e27390c9b3b2576bd6e61f7e040a4b2bdaa09548cc8cda76e996c",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889260229550
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-before.d",
+      "destination": "rain-target-matrix/cases/base-f0/filter06-before.d",
+      "bytes": 859,
+      "sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "lf_sha256": "8f29bebead270bb67eb4abdefe8c1f05aed1dc2107f562a844868799b54a63c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889212228553
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-argv.json",
+      "destination": "rain-target-matrix/cases/base-f0/filter06-argv.json",
+      "bytes": 6328,
+      "sha256": "b7214bfe2dec862a0756a52097e7bbf0eec80bce32f37ce6a763e8a7c8d2a35b",
+      "lf_sha256": "b7214bfe2dec862a0756a52097e7bbf0eec80bce32f37ce6a763e8a7c8d2a35b",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832889204228386
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/matrix-result.json",
+      "destination": "rain-target-matrix/matrix-result.json",
+      "bytes": 238713,
+      "sha256": "05794301d502d13dec25e8118509a1a7a13af22dc12e4b683382eea1a877719f",
+      "lf_sha256": "05794301d502d13dec25e8118509a1a7a13af22dc12e4b683382eea1a877719f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832894888345059
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/README.md",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/README.md",
+      "bytes": 6941,
+      "sha256": "8718ca47211c62ac3098040cff2bb432bdc5c0b50c2a022c15686e083f3359e4",
+      "lf_sha256": "8718ca47211c62ac3098040cff2bb432bdc5c0b50c2a022c15686e083f3359e4",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/RUNNER-PREPARATION.md",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/RUNNER-PREPARATION.md",
+      "bytes": 6148,
+      "sha256": "96409740cc6516dda9a93862a438ffd7b47e404861990443ef444d1dc35b5422",
+      "lf_sha256": "96409740cc6516dda9a93862a438ffd7b47e404861990443ef444d1dc35b5422",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/origin-before-checkpoint.txt",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/origin-before-checkpoint.txt",
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "lf_sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/plan_controls.py",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/plan_controls.py",
+      "bytes": 2391,
+      "sha256": "adb1cc8b1c1bcca89e7edf5e81a25f54045705c6346c75086299b2228ed8a05d",
+      "lf_sha256": "adb1cc8b1c1bcca89e7edf5e81a25f54045705c6346c75086299b2228ed8a05d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/prepare.py",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/prepare.py",
+      "bytes": 19279,
+      "sha256": "24eaf824220f564482f61a71bd3a4d1230642d2f8803a7b19f94eada54b70779",
+      "lf_sha256": "24eaf824220f564482f61a71bd3a4d1230642d2f8803a7b19f94eada54b70779",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/runner-origin-before-checkpoint.txt",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/runner-origin-before-checkpoint.txt",
+      "bytes": 41,
+      "sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "lf_sha256": "2521e0c5121485db437427b55cfbb02df70233cf492dbe609c6c06b79af0b809",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/runner.py",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/runner.py",
+      "bytes": 14432,
+      "sha256": "16b5ee651f6d9c7aea3e709d104d4b30aad7f22fc13bd574f0da666dc4b2d71d",
+      "lf_sha256": "16b5ee651f6d9c7aea3e709d104d4b30aad7f22fc13bd574f0da666dc4b2d71d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/test_prepare.py",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/test_prepare.py",
+      "bytes": 2747,
+      "sha256": "1e100da6d583021ee7e0b32ab1b1b89008b5c9b0d6ca3466107062ed57742a9d",
+      "lf_sha256": "1e100da6d583021ee7e0b32ab1b1b89008b5c9b0d6ca3466107062ed57742a9d",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/test_runner.py",
+      "destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/test_runner.py",
+      "bytes": 7526,
+      "sha256": "4c94b692fd4a35ebbcfd92abb458a028e7b3996536443372e385315d2a94b226",
+      "lf_sha256": "4c94b692fd4a35ebbcfd92abb458a028e7b3996536443372e385315d2a94b226",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": null
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-prep-readback-v1/command0.log",
+      "destination": "triangle-root-prep-readback/command0.log",
+      "bytes": 973,
+      "sha256": "cda830aee33904cce26b2e07b8ace9bbcc5fa3dc36027f411b900046dcc3e0fd",
+      "lf_sha256": "cda830aee33904cce26b2e07b8ace9bbcc5fa3dc36027f411b900046dcc3e0fd",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832441857559600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-prep-readback-v1/command1.log",
+      "destination": "triangle-root-prep-readback/command1.log",
+      "bytes": 933,
+      "sha256": "672b46da739a7aefa0ba5e7e466d6a03a25f7380f65223279456a4d3b48a4ec9",
+      "lf_sha256": "672b46da739a7aefa0ba5e7e466d6a03a25f7380f65223279456a4d3b48a4ec9",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832443087954600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-prep-readback-v1/ROOT-READBACK.json",
+      "destination": "triangle-root-prep-readback/ROOT-READBACK.json",
+      "bytes": 1332,
+      "sha256": "a750c0274d9978aead1757ffc337aa50b12a0db4aa8322d47805dcf33bb5a016",
+      "lf_sha256": "a750c0274d9978aead1757ffc337aa50b12a0db4aa8322d47805dcf33bb5a016",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832443155464500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-runner-review-v3/HOST.log",
+      "destination": "triangle-root-runner-review/HOST.log",
+      "bytes": 2892,
+      "sha256": "ce9ac551fb285b55ec7c31bf74f2f546f9323e0c217371bf4daa1aa1132aa8c0",
+      "lf_sha256": "ce9ac551fb285b55ec7c31bf74f2f546f9323e0c217371bf4daa1aa1132aa8c0",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832853981557700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-runner-review-v3/PLAN.log",
+      "destination": "triangle-root-runner-review/PLAN.log",
+      "bytes": 353,
+      "sha256": "6bd0b41af4a7f3884857c7953c65dcf20bc16ce16ac4bcda8819e06528f14878",
+      "lf_sha256": "6bd0b41af4a7f3884857c7953c65dcf20bc16ce16ac4bcda8819e06528f14878",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832854478817600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/interior-discovery24/root-runner-review-v3/REVIEW.json",
+      "destination": "triangle-root-runner-review/REVIEW.json",
+      "bytes": 1459,
+      "sha256": "6318f97f6832bac3fa7f1e024468e5faf843db1dc48c8f6d2f82f906eeb53766",
+      "lf_sha256": "6318f97f6832bac3fa7f1e024468e5faf843db1dc48c8f6d2f82f906eeb53766",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832854493967200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/ACTUAL-RESOLVED-MAPS.json",
+      "destination": "QA-sealed-preparation/ACTUAL-RESOLVED-MAPS.json",
+      "bytes": 1348402,
+      "sha256": "dca8981af595b70d77f0d730ac6168122f9c19bc9cda9a78a25ef111c5c17c37",
+      "lf_sha256": "dca8981af595b70d77f0d730ac6168122f9c19bc9cda9a78a25ef111c5c17c37",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832763221999300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/CURRENT-CANDIDATE-EXTENTS.json",
+      "destination": "QA-sealed-preparation/CURRENT-CANDIDATE-EXTENTS.json",
+      "bytes": 122947,
+      "sha256": "66baec2bdf57e84091d173eafcc6c40fed2aa88c85d8f91d6a7efd21abf6d880",
+      "lf_sha256": "66baec2bdf57e84091d173eafcc6c40fed2aa88c85d8f91d6a7efd21abf6d880",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831775518736900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/CURRENT-CANDIDATE-MANIFEST.json",
+      "destination": "QA-sealed-preparation/CURRENT-CANDIDATE-MANIFEST.json",
+      "bytes": 231281,
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a",
+      "lf_sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831775509735200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/DEPENDENCY-CENSUS.json",
+      "destination": "QA-sealed-preparation/DEPENDENCY-CENSUS.json",
+      "bytes": 8741683,
+      "sha256": "bc97b7bc19c528bd0edcb8959d9e085d5c44c71e1b1485a6801c9c3ead893a69",
+      "lf_sha256": "bc97b7bc19c528bd0edcb8959d9e085d5c44c71e1b1485a6801c9c3ead893a69",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832128821395100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/FAILED-MEDIA-PREFLIGHT-v1.json",
+      "destination": "QA-sealed-preparation/FAILED-MEDIA-PREFLIGHT-v1.json",
+      "bytes": 331,
+      "sha256": "f6d478b82744f104540bbb277ea858a7e9a924c20ee0a522dae2fe889057b3da",
+      "lf_sha256": "f6d478b82744f104540bbb277ea858a7e9a924c20ee0a522dae2fe889057b3da",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831731195784700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/HAIR-EOL-BRIDGE.json",
+      "destination": "QA-sealed-preparation/HAIR-EOL-BRIDGE.json",
+      "bytes": 32654,
+      "sha256": "91f99a8fd029da78fa0d768ec4891ca3a6b1beacb6f6e25aff0137f170e1a318",
+      "lf_sha256": "91f99a8fd029da78fa0d768ec4891ca3a6b1beacb6f6e25aff0137f170e1a318",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832350367045600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/MEDIA-PLAN.json",
+      "destination": "QA-sealed-preparation/MEDIA-PLAN.json",
+      "bytes": 4971,
+      "sha256": "9498983b83812968280627ee2442ff16da61724b681c4ce6c70ead1e09f5ba94",
+      "lf_sha256": "9498983b83812968280627ee2442ff16da61724b681c4ce6c70ead1e09f5ba94",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831780818541900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/OFF-EXPECTED-MANIFEST.json",
+      "destination": "QA-sealed-preparation/OFF-EXPECTED-MANIFEST.json",
+      "bytes": 231654,
+      "sha256": "94552aeda0487057fb21c8e7784a6178e3ccf46a4df6a2ef84c5954b11e5d49f",
+      "lf_sha256": "94552aeda0487057fb21c8e7784a6178e3ccf46a4df6a2ef84c5954b11e5d49f",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831775533038300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/ON-EXPECTED-MANIFEST.json",
+      "destination": "QA-sealed-preparation/ON-EXPECTED-MANIFEST.json",
+      "bytes": 231654,
+      "sha256": "8ed8c24e660e908f79e30d7b8f5eabab30413bd4fc9f4e3f89e00a42d2261adc",
+      "lf_sha256": "8ed8c24e660e908f79e30d7b8f5eabab30413bd4fc9f4e3f89e00a42d2261adc",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831775550038100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/PREPARATION-CONTROLS-r2.json",
+      "destination": "QA-sealed-preparation/PREPARATION-CONTROLS-r2.json",
+      "bytes": 3901,
+      "sha256": "8b89ada42a9e608d2b5cf0a55b772d0bf1b3cb5117a4d3ac4be0e04b359c371b",
+      "lf_sha256": "8b89ada42a9e608d2b5cf0a55b772d0bf1b3cb5117a4d3ac4be0e04b359c371b",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832560161473500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/PREPARATION-CONTROLS-r3.json",
+      "destination": "QA-sealed-preparation/PREPARATION-CONTROLS-r3.json",
+      "bytes": 4240,
+      "sha256": "0cc2273d7528dbaf4a8c7fe26d3733fccba2a5fef94e92dae3460364c079c85e",
+      "lf_sha256": "0cc2273d7528dbaf4a8c7fe26d3733fccba2a5fef94e92dae3460364c079c85e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832579442594800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/PREPARATION-CONTROLS-r4.json",
+      "destination": "QA-sealed-preparation/PREPARATION-CONTROLS-r4.json",
+      "bytes": 4365,
+      "sha256": "2b202a7faa8247101fb7f7d2f00076ddc01ef54b060674edb4cd9d4ef8e0b338",
+      "lf_sha256": "2b202a7faa8247101fb7f7d2f00076ddc01ef54b060674edb4cd9d4ef8e0b338",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832709311872900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/PREPARATION-CONTROLS.json",
+      "destination": "QA-sealed-preparation/PREPARATION-CONTROLS.json",
+      "bytes": 2973,
+      "sha256": "83efeb2445c57cab798c5091e93dff24f575ef264333c15287be10ecc907c1f3",
+      "lf_sha256": "83efeb2445c57cab798c5091e93dff24f575ef264333c15287be10ecc907c1f3",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832446061706400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/README.md",
+      "destination": "QA-sealed-preparation/README.md",
+      "bytes": 4749,
+      "sha256": "60ef49397c854db129e3c12bb2f76120eb591aa1a4a3a5af97e049bed1319847",
+      "lf_sha256": "60ef49397c854db129e3c12bb2f76120eb591aa1a4a3a5af97e049bed1319847",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832708771951300
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/ROOT-SUPPLEMENTAL-CLOSURE-v1.json",
+      "destination": "QA-sealed-preparation/ROOT-SUPPLEMENTAL-CLOSURE-v1.json",
+      "bytes": 755,
+      "sha256": "9abb162ac247641fdf46355b1ff9756cdf516ddd5f8635ea7431e2e88e8e96e7",
+      "lf_sha256": "9abb162ac247641fdf46355b1ff9756cdf516ddd5f8635ea7431e2e88e8e96e7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832486778340500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/SIX-KEY-SUPPLEMENT.json",
+      "destination": "QA-sealed-preparation/SIX-KEY-SUPPLEMENT.json",
+      "bytes": 4166,
+      "sha256": "3b65c9771159efa9a4ece90f3ae027bd3130361f2154d754a2c98aa3c5c3bb61",
+      "lf_sha256": "3b65c9771159efa9a4ece90f3ae027bd3130361f2154d754a2c98aa3c5c3bb61",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832412866506000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/dependency_census.py",
+      "destination": "QA-sealed-preparation/dependency_census.py",
+      "bytes": 6857,
+      "sha256": "47af5b96ba3d89d49b9b6e2843a50cb402cf0a68d585f8202e174a7bb7cb6ce2",
+      "lf_sha256": "47af5b96ba3d89d49b9b6e2843a50cb402cf0a68d585f8202e174a7bb7cb6ce2",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832124546024800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/failed-media-preflight-v1.py",
+      "destination": "QA-sealed-preparation/failed-media-preflight-v1.py",
+      "bytes": 6389,
+      "sha256": "94144cffb499635e7147eb9dbd9c4ac2fe6aa6d65cd052f8df7fef69d2ff6b56",
+      "lf_sha256": "94144cffb499635e7147eb9dbd9c4ac2fe6aa6d65cd052f8df7fef69d2ff6b56",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831731188786100
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/future_master.py",
+      "destination": "QA-sealed-preparation/future_master.py",
+      "bytes": 11289,
+      "sha256": "a4af2683510ed91e00b70efe97545ec475d633d9ad9b201f6b7649ce71e06494",
+      "lf_sha256": "a4af2683510ed91e00b70efe97545ec475d633d9ad9b201f6b7649ce71e06494",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832613582837400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/h2-bound-run.py",
+      "destination": "QA-sealed-preparation/h2-bound-run.py",
+      "bytes": 2439,
+      "sha256": "75ed49f0e7ad3ba51d66019655b882487b522c9a1845ce691921edccab1c06ac",
+      "lf_sha256": "75ed49f0e7ad3ba51d66019655b882487b522c9a1845ce691921edccab1c06ac",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832613589837700
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/post_slot.py",
+      "destination": "QA-sealed-preparation/post_slot.py",
+      "bytes": 2212,
+      "sha256": "c73ce37681cc5f8cbe3e68b77c9a87ba0b76f30c6d3178118081331528094b96",
+      "lf_sha256": "c73ce37681cc5f8cbe3e68b77c9a87ba0b76f30c6d3178118081331528094b96",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832657737951900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/prepare_media.py",
+      "destination": "QA-sealed-preparation/prepare_media.py",
+      "bytes": 6395,
+      "sha256": "780f74823a83b85805ddd43ec780d8d7f9a9cce8c575241c31cb8f9345b55edb",
+      "lf_sha256": "780f74823a83b85805ddd43ec780d8d7f9a9cce8c575241c31cb8f9345b55edb",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792831731201784400
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/test_preparation.py",
+      "destination": "QA-sealed-preparation/test_preparation.py",
+      "bytes": 4674,
+      "sha256": "c3cde6a1d517bdab640f2709bff74a526cabbe6f5ee432b2b7e78b2a3cced57e",
+      "lf_sha256": "c3cde6a1d517bdab640f2709bff74a526cabbe6f5ee432b2b7e78b2a3cced57e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832708778954000
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/verify_hair_eol_bridge.py",
+      "destination": "QA-sealed-preparation/verify_hair_eol_bridge.py",
+      "bytes": 3554,
+      "sha256": "dfa961548db1b5375a05e156705e52c28e2cf5c75d486a2fdd2ed94f7bd1a1a8",
+      "lf_sha256": "dfa961548db1b5375a05e156705e52c28e2cf5c75d486a2fdd2ed94f7bd1a1a8",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832349812296900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/TOOLCHAIN-SEAL.json",
+      "destination": "QA-sealed-preparation/TOOLCHAIN-SEAL.json",
+      "bytes": 6855,
+      "sha256": "130d48651e89216555a01f2f481eb76490494491e6a934acab1fd9094c75d786",
+      "lf_sha256": "130d48651e89216555a01f2f481eb76490494491e6a934acab1fd9094c75d786",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832763631060600
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/ROOT-SUPPLEMENTAL-CLOSURE-v1.json",
+      "destination": "QA-root-review/ROOT-SUPPLEMENTAL-CLOSURE-v1.json",
+      "bytes": 755,
+      "sha256": "9abb162ac247641fdf46355b1ff9756cdf516ddd5f8635ea7431e2e88e8e96e7",
+      "lf_sha256": "9abb162ac247641fdf46355b1ff9756cdf516ddd5f8635ea7431e2e88e8e96e7",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832486778340500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-root-review-v1/ROOT-REVIEW.json",
+      "destination": "QA-root-review/ROOT-REVIEW.json",
+      "bytes": 656,
+      "sha256": "7254e438375dc8c6a44ddc84cd86397bbd1a3fb09130753d58f43e1fbca596f6",
+      "lf_sha256": "7254e438375dc8c6a44ddc84cd86397bbd1a3fb09130753d58f43e1fbca596f6",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832988043918800
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-root-review-v1/ROOT-CONTROLS.json",
+      "destination": "QA-root-review/ROOT-CONTROLS.json",
+      "bytes": 4365,
+      "sha256": "8d7339543b34d70ddefc445eebdec308005b9dd2b04d5a49ba41a951c83a929e",
+      "lf_sha256": "8d7339543b34d70ddefc445eebdec308005b9dd2b04d5a49ba41a951c83a929e",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832980461547500
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-root-review-v1/CONTROLS.log",
+      "destination": "QA-root-review/CONTROLS.log",
+      "bytes": 65,
+      "sha256": "753a6cb444bf9bf4e23a5e65edd72660d1b670b03fc7e502369f6f34333ade40",
+      "lf_sha256": "753a6cb444bf9bf4e23a5e65edd72660d1b670b03fc7e502369f6f34333ade40",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792832980454548900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py",
+      "destination": "QA-external-generic-tools/exact_child55.py",
+      "bytes": 2438,
+      "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c",
+      "lf_sha256": "daa1160e4201d24782adc3e7b799f3e5b9b93a292c19745dcb19e9b02a69a4e8",
+      "crlf_count": 2,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792798810546503200
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+      "destination": "QA-external-generic-tools/stat_guest_slot.sh",
+      "bytes": 249,
+      "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+      "lf_sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792798580738223900
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-port23/root-source-snapshot-rain-target-triangle-qa34-20261024/collect.py",
+      "destination": "collect.py",
+      "bytes": 14982,
+      "sha256": "432a3d616629fcc6b34741dc1f694489b938bb49e8fbd3d9402f7688cf2347ce",
+      "lf_sha256": "432a3d616629fcc6b34741dc1f694489b938bb49e8fbd3d9402f7688cf2347ce",
+      "crlf_count": 0,
+      "text_encoding": "utf-8",
+      "source_mtime_ns": 1792833290947095500
+    }
+  ]
+}

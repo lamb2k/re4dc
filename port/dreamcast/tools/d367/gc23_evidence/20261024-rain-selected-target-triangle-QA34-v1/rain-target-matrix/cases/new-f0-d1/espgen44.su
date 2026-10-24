@@ -1,0 +1,4 @@
+../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)	0	static
+../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)	0	static
+../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)	32	static
+../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)	52	static

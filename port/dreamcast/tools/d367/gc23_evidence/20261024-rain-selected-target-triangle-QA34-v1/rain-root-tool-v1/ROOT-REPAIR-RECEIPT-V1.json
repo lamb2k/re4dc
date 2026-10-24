@@ -1,0 +1,22 @@
+{
+  "scope": "Root narrow target-tool repair only; no SDK/runtime/guest",
+  "supersedes_tools_commit": "84648350bb6a3bc4e1ec94026b0fb98937b1ff69",
+  "runtime_source": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "pins_sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+  "host_result": {
+    "host_preparation_checks": 109,
+    "SDK_invocations": 0,
+    "scope": "synthetic ELF readback, argument/grant/path/resource/protocol controls; no SH4 generated evidence"
+  },
+  "tool_cc1": {
+    "path": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1",
+    "resolved": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1",
+    "bytes": 31154920,
+    "sha256": "0709f996a2b9d58e563aa9abbf34f65cf53d5e8762a67f9850dc48302a8f4590"
+  },
+  "original_PINS_preserved": true,
+  "runtime_changed": false,
+  "SDK_invocations": 0,
+  "independent_review": "PENDING",
+  "timestamp": "2026-10-24T08:59:10.748373+00:00"
+}

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 235, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 217, in main
+    p=json.loads(pathlib.Path(args.pins).read_text());validate(p)
+                                                      ^^^^^^^^^^^
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 80, in validate
+    validate_tools(p)
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 74, in validate_tools
+    if set(p['tools'])!=set(TOOLS):raise ValueError('incomplete tool closure including bootstrap cc1')
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: incomplete tool closure including bootstrap cc1

@@ -1,0 +1,29 @@
+test_actual_level_identity (test_prepare.Controls.test_actual_level_identity) ... ok
+test_complete_component_not_hit_subset (test_prepare.Controls.test_complete_component_not_hit_subset) ... ok
+test_degenerate_buddy_refused (test_prepare.Controls.test_degenerate_buddy_refused) ... ok
+test_distinct_actual_adjacent_panel (test_prepare.Controls.test_distinct_actual_adjacent_panel) ... ok
+test_finite_work_no_short_zip (test_prepare.Controls.test_finite_work_no_short_zip) ... ok
+test_physical_id_not_coordinate_alias (test_prepare.Controls.test_physical_id_not_coordinate_alias) ... ok
+test_pinned_input_mutation_refused (test_prepare.Controls.test_pinned_input_mutation_refused) ... ok
+test_prefix_and_self_refuse (test_prepare.Controls.test_prefix_and_self_refuse) ... ok
+test_target_completeness_and_order (test_prepare.Controls.test_target_completeness_and_order) ... ok
+test_budget_halt_no_later_small_case_packing (test_runner.Controls.test_budget_halt_no_later_small_case_packing) ... ok
+test_candidate_and_final_accounting_caps (test_runner.Controls.test_candidate_and_final_accounting_caps) ... ok
+test_complete_inventory_mutations_before_predicate (test_runner.Controls.test_complete_inventory_mutations_before_predicate) ... ok
+test_failure_after_earlier_triangle_success_no_partial_positive (test_runner.Controls.test_failure_after_earlier_triangle_success_no_partial_positive) ... ok
+test_final_helper_refusal_not_positive (test_runner.Controls.test_final_helper_refusal_not_positive) ... ok
+test_float_source_cannot_grant_positive (test_runner.Controls.test_float_source_cannot_grant_positive) ... ok
+test_full_final_reserve_before_candidates (test_runner.Controls.test_full_final_reserve_before_candidates) ... ok
+test_interruption_discards_current_case_and_stops_remaining (test_runner.Controls.test_interruption_discards_current_case_and_stops_remaining) ... ok
+test_mutated_prepared_pin_refused_before_binding (test_runner.Controls.test_mutated_prepared_pin_refused_before_binding) ... ok
+test_real_generic_complete_positive (test_runner.Controls.test_real_generic_complete_positive) ... ok
+test_seventeen_actual_dependencies_refused_no_backtracking (test_runner.Controls.test_seventeen_actual_dependencies_refused_no_backtracking) ... ok
+test_target_degenerate_retained_as_complete_geometry (test_runner.Controls.test_target_degenerate_retained_as_complete_geometry) ... ok
+test_unrepresentable_source_is_explicit_unknown (test_runner.Controls.test_unrepresentable_source_is_explicit_unknown) ... ok
+test_unused_reservation_released_only_after_whole_case (test_runner.Controls.test_unused_reservation_released_only_after_whole_case) ... ok
+test_wholecase_pre_reservation_not_early_exit_guess (test_runner.Controls.test_wholecase_pre_reservation_not_early_exit_guess) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.022s
+
+OK

@@ -1,0 +1,19 @@
+{
+  "status": "ROOT_MEDIA_PREPARATION_CLEAR_STAGE_ONLY",
+  "seal_sha256": "130d48651e89216555a01f2f481eb76490494491e6a934acab1fd9094c75d786",
+  "members_rehashed": 34,
+  "external_tools_rehashed": 6,
+  "host_controls": 38,
+  "fresh_unchanged_control_sources": "/dev/shm/gc-media-root-controls-p9sk8qof",
+  "prior_control_receipts_excluded_only_to_allow_new_exclusive_result": [
+    "PREPARATION-CONTROLS-r2.json",
+    "PREPARATION-CONTROLS-r3.json",
+    "PREPARATION-CONTROLS-r4.json",
+    "PREPARATION-CONTROLS.json"
+  ],
+  "allowed_differences": 18,
+  "SDK": false,
+  "stage": false,
+  "guest": false,
+  "timestamp": "2026-10-24T09:09:48.041113+00:00"
+}

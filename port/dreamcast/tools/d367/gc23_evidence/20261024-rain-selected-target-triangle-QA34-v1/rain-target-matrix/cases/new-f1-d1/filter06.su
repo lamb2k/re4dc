@@ -1,0 +1,23 @@
+../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()	0	static
+../../../src/game/filter06.cpp:115:12:int Filter06R10cRain()	0	static
+../../../src/game/filter06.cpp:124:13:void RainDcR10cCancel()	0	static
+../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()	0	static
+../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)	16	static
+../../../src/game/filter06.cpp:182:12:int RainDiagOpen(u32, u32)	0	static
+../../../src/game/filter06.cpp:226:13:void RainDiagClearCause()	0	static
+../../../src/game/filter06.cpp:220:13:void RainDiagClose()	16	static
+../../../src/game/filter06.cpp:195:13:void RainDiagCount(u32)	0	static
+../../../src/game/filter06.cpp:258:13:void RainDiagInvalidate(u32, u32, u32, u32)	12	static
+../../../src/game/filter06.cpp:301:13:void RainDiagEvent(u32, u32, u32)	8	static
+D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()	48	static
+../../../src/game/filter06.cpp:336:12:int RainDiagCheck(u32, int)	12	static
+../../../src/game/filter06.cpp:267:16:u32 re4dc_rain_diag_generation()	0	static
+../../../src/game/filter06.cpp:272:17:void re4dc_rain_diag_bind44(u32, const void*, const void*, const void*, u32, u32, u32)	20	static
+../../../src/game/filter06.cpp:292:17:void re4dc_rain_diag_destruct44(const void*)	8	static
+../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()	96	static
+../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)	28	static
+../../../src/game/filter06.cpp:623:6:void cParticle06::move()	40	static
+D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()	8	static
+D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()	4	static
+D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()	32	static
+D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)	68	static

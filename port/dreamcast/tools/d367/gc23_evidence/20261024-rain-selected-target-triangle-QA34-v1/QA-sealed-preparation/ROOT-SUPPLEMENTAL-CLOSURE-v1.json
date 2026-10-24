@@ -1,0 +1,16 @@
+{
+  "status": "ROOT_SUPPLEMENTAL_DEPENDENCY_AND_EXACT_EOL_BRIDGE_CLEAR",
+  "scope": "Supplemental current dependency rehash and historical identity bridge; original missing prehash not rewritten; SDK intermediates not falsely hash-claimed",
+  "dependency_files": 2572,
+  "distinct_current_paths_rehashed": 7443,
+  "unretained_sdk_intermediates": 30,
+  "external_original_omissions": 6,
+  "five_historical_matches": true,
+  "hair_exact_invertible_EOL_bridge": true,
+  "SDK_run": false,
+  "stage_run": false,
+  "guest_run": false,
+  "census_sha256": "bc97b7bc19c528bd0edcb8959d9e085d5c44c71e1b1485a6801c9c3ead893a69",
+  "bridge_sha256": "91f99a8fd029da78fa0d768ec4891ca3a6b1beacb6f6e25aff0137f170e1a318",
+  "timestamp": "2026-10-24T09:01:26.774066+00:00"
+}

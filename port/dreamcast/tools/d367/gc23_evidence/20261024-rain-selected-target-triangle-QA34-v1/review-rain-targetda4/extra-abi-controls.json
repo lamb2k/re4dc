@@ -1,0 +1,46 @@
+{
+  "scope": "Frozen da4 strict selected disabled ELF tests only",
+  "controls": [
+    {
+      "label": "full-st_other-high-bit",
+      "rejected": true
+    },
+    {
+      "label": "external-definition-type",
+      "rejected": true
+    },
+    {
+      "label": "external-definition-size",
+      "rejected": true
+    },
+    {
+      "label": "external-definition-section",
+      "rejected": true
+    },
+    {
+      "label": "unreferenced-import-visibility",
+      "rejected": true
+    },
+    {
+      "label": "unreferenced-import-binding",
+      "rejected": true
+    },
+    {
+      "label": "allocated-entry-size",
+      "rejected": true
+    },
+    {
+      "label": "ABI-e_flags",
+      "rejected": true
+    },
+    {
+      "label": "duplicate-external-definition-multiset",
+      "rejected": true
+    },
+    {
+      "label": "debug-only-file-offset-difference",
+      "accepted": true
+    }
+  ],
+  "SDK": 0
+}

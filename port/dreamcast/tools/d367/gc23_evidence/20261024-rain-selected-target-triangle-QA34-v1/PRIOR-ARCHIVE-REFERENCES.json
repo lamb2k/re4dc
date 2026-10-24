@@ -1,0 +1,101 @@
+{
+  "files": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/pins.log",
+      "logical_destination": "review-rain-targetda4/pins.log",
+      "bytes": 48,
+      "sha256": "49236158d423b426292e8fb613ac37160a218285e412f121eac0ba5b7c928d42",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/rain846-HOLD-review/pins.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/plan.log",
+      "logical_destination": "review-rain-targetda4/plan.log",
+      "bytes": 7348,
+      "sha256": "e3087cbd317182aa6d60f81bba6346ba51fce61c4193ffaa9872b9cb7adb112c",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/rain846-HOLD-review/plan.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/shell.log",
+      "logical_destination": "review-rain-targetda4/shell.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-static1d63-current-v1/target-static1d63-current/coarse_actor-absent.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/pins.log",
+      "logical_destination": "review-rain-targeta7/pins.log",
+      "bytes": 48,
+      "sha256": "49236158d423b426292e8fb613ac37160a218285e412f121eac0ba5b7c928d42",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/rain846-HOLD-review/pins.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/plan.log",
+      "logical_destination": "review-rain-targeta7/plan.log",
+      "bytes": 7348,
+      "sha256": "e3087cbd317182aa6d60f81bba6346ba51fce61c4193ffaa9872b9cb7adb112c",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/rain846-HOLD-review/plan.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/shell.log",
+      "logical_destination": "review-rain-targeta7/shell.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-static1d63-current-v1/target-static1d63-current/coarse_actor-absent.log",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06.su",
+      "logical_destination": "rain-target-matrix/cases/base-f1/filter06.su",
+      "bytes": 949,
+      "sha256": "46a9a2454053711fbcd98d306c3e116841303bbf43d189aea262139b3a308bec",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-fullbuild-rain-bca44-v1/rain-selected-target/on.su",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06.su",
+      "logical_destination": "rain-target-matrix/cases/base-f0/filter06.su",
+      "bytes": 808,
+      "sha256": "a981b5b7abc12af466ae148dce4c3b357ac68fc38a86be9b5a829afd7be6fd31",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-fullbuild-rain-bca44-v1/rain-selected-target/absent.su",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/FAILED-BROAD-PROFILE-v1.json",
+      "logical_destination": "QA-sealed-preparation/FAILED-BROAD-PROFILE-v1.json",
+      "bytes": 737,
+      "sha256": "c75dbd5c29ddd88d7bf8a929ec11d9abdfadec7ca4986945f6f7fbe1f1d07b38",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/QA-independent-profile-HOLD/FAILED-BROAD-PROFILE-v1.json",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/QA-READBACK.json",
+      "logical_destination": "QA-sealed-preparation/QA-READBACK.json",
+      "bytes": 13209,
+      "sha256": "2d23710e1de201a7529d863a83a5ef39639246fa7a0f51176785b8b0b15b820c",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/QA-independent-profile-HOLD/QA-READBACK.json",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/failed-broad-profile-v1.py",
+      "logical_destination": "QA-sealed-preparation/failed-broad-profile-v1.py",
+      "bytes": 7642,
+      "sha256": "74563c4c7fc0608a3c907a7383784fc69ef671e3fdb83a698888bf9546103f03",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/QA-independent-profile-HOLD/failed-broad-profile-v1.py",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/verify_qa_three.py",
+      "logical_destination": "QA-sealed-preparation/verify_qa_three.py",
+      "bytes": 8724,
+      "sha256": "39279f9c8f7382bd9c430d3c72762cb042c1a19f8b4124b7dd1458877d45665e",
+      "prior_archive_path": "port/dreamcast/tools/d367/gc23_evidence/20261024-integration-normal-QA-profile-hold-v1/QA-independent-profile-HOLD/verify_qa_three.py",
+      "ancestor": "6a7783ae2e7407eff23124b844d3b39ec1993f79"
+    }
+  ],
+  "policy": "Exact prior ancestor bytes referenced, no duplicate payload."
+}

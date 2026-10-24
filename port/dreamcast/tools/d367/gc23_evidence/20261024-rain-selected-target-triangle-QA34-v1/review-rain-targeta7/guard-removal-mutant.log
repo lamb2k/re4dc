@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/dev/shm/rain-a7-mutant-t0sjvu1l/test_preparation.py", line 126, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/dev/shm/rain-a7-mutant-t0sjvu1l/test_preparation.py", line 50, in main
+    reject(lambda:readback.require_identity(unique,unique))
+  File "/dev/shm/rain-a7-mutant-t0sjvu1l/test_preparation.py", line 13, in reject
+    raise AssertionError('negative accepted')
+AssertionError: negative accepted

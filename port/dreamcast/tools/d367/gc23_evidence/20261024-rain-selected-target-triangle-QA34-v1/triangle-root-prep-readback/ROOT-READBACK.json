@@ -1,0 +1,47 @@
+{
+  "scope": "Independent root importer replay only; no actual shadow predicates",
+  "source": "d8620e8b6a13706d89aa8415d3397f5f4d06c589",
+  "original_report": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-r3/report.json",
+    "sha256": "22b2fe4dc83c0a0ba846eefb822fe1dead4bbbaa850b1e838dc5eaaadc56d57c"
+  },
+  "fresh_report": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-root-readback-v1/report.json",
+    "sha256": "db0652bcefe7286812625ad82fdca054e01a96b08d2de6c71c1ab7618335011e"
+  },
+  "exact_keys": [
+    "classification",
+    "base",
+    "generic_source",
+    "generic_sha256",
+    "discovery",
+    "audit",
+    "source",
+    "inputs",
+    "capability",
+    "material_pins",
+    "production_panel_source",
+    "authentic_camera_logs",
+    "domains",
+    "panel_atlas",
+    "targets",
+    "summary",
+    "actual_shadow_predicate_calls",
+    "new_rays",
+    "ledger_accesses",
+    "runtime_admitted",
+    "limitations"
+  ],
+  "all_exact": true,
+  "controls": 9,
+  "limits": {
+    "address_cap_bytes": 268435456,
+    "output_cap_bytes": 16777216,
+    "seconds": 1.114075210003648,
+    "peak_rss_kib": 102960,
+    "jobs": 1
+  },
+  "actual_predicates": 0,
+  "rays": 0,
+  "timestamp": "2026-10-24T09:00:43.152955+00:00"
+}

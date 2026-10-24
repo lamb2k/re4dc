@@ -1,0 +1,166 @@
+{
+  "status": "PREPARED_NOT_RUN_PROFILE_PIN_CLOSURE_PENDING_ROOT_REVIEW",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "QA_root": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8",
+  "QA_receipt": {
+    "size": 15548,
+    "sha256": "edb3118f0431ee91202baddaf5c2c72350d3012dc81ed8fc135cc38b95eb9763"
+  },
+  "QA_readback": {
+    "size": 13209,
+    "sha256": "2d23710e1de201a7529d863a83a5ef39639246fa7a0f51176785b8b0b15b820c"
+  },
+  "candidate": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-fb254e82",
+  "candidate_identity": {
+    "size": 24395,
+    "sha256": "2e43f6f01573a604e323287e6e4134824b093daeec0cc31bbd559fd592132fab"
+  },
+  "candidate_tracks": {
+    "disc.gdi": {
+      "size": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f"
+    },
+    "track01.bin": {
+      "size": 1058400,
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+    },
+    "track02.raw": {
+      "size": 1237152,
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+    },
+    "track03.bin": {
+      "size": 1185760800,
+      "sha256": "7cc0a64936f8eafa4ec3fb605582500d9fbc6e5a712f407836009773c58624aa"
+    }
+  },
+  "sourceIP": {
+    "size": 32768,
+    "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+  },
+  "original_manifest": {
+    "size": 231281,
+    "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+  },
+  "assets": {
+    "files": 1697,
+    "logical_bytes": 1017241266,
+    "read_only_fixture": "/root/work/lanes/dedup-offline23-main/stage-on/pkgtree",
+    "fixture_extra_files_excluded": true,
+    "tex_pak": {
+      "size": 162154496,
+      "sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da"
+    }
+  },
+  "allowed_differences": [
+    "1ST_READ.BIN",
+    "dc/em22.ovl",
+    "dc/em2b.ovl",
+    "dc/em2f.ovl",
+    "dc/em35.ovl",
+    "dc/em3b.ovl",
+    "dc/padscript.txt",
+    "dc/pl0f.ovl",
+    "dc/pl11.ovl",
+    "dc/pl14.ovl",
+    "dc/sscrn.ovl",
+    "dc/st1_0.ovl",
+    "dc/st1_1.ovl",
+    "dc/st1_2.ovl",
+    "dc/st1_3.ovl",
+    "dc/st2_0.ovl",
+    "dc/w11.txt",
+    "dc/warp.txt"
+  ],
+  "expected_manifests": {
+    "off": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/OFF-EXPECTED-MANIFEST.json",
+      "identity": {
+        "size": 231654,
+        "sha256": "94552aeda0487057fb21c8e7784a6178e3ccf46a4df6a2ef84c5954b11e5d49f"
+      }
+    },
+    "on": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/ON-EXPECTED-MANIFEST.json",
+      "identity": {
+        "size": 231654,
+        "sha256": "8ed8c24e660e908f79e30d7b8f5eabab30413bd4fc9f4e3f89e00a42d2261adc"
+      }
+    }
+  },
+  "cross_arm_differences": [
+    "1ST_READ.BIN",
+    "dc/em22.ovl",
+    "dc/em2b.ovl",
+    "dc/em2f.ovl",
+    "dc/em35.ovl",
+    "dc/em3b.ovl",
+    "dc/pl0f.ovl",
+    "dc/pl11.ovl",
+    "dc/pl14.ovl",
+    "dc/sscrn.ovl",
+    "dc/st1_0.ovl",
+    "dc/st1_1.ovl",
+    "dc/st1_2.ovl",
+    "dc/st1_3.ovl",
+    "dc/st2_0.ovl"
+  ],
+  "base_paths": {
+    "off": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-off",
+    "on": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-media-aab-v1/base-on"
+  },
+  "work_paths": {
+    "off": "/root/probe/gc-motion24-qa-media-v1/off",
+    "on": "/root/probe/gc-motion24-qa-media-v1/on"
+  },
+  "capacity": {
+    "owned_cap_bytes": 4294967296,
+    "C_admission_bytes": 27917287424,
+    "C_floor_bytes": 25769803776,
+    "absolute_C_floor_bytes": 21474836480,
+    "stage_ext4": 0,
+    "cache": "NONE; fresh own outputs only",
+    "PRUNE_AUTO": 0,
+    "logical_estimate_bytes": 4152723576,
+    "model": "Conservative counts two linked roots and two ISO bases; no shared cache; actual cap monitored before/between phases"
+  },
+  "fixtures": {
+    "warp_lba": 400,
+    "pad_lba": 420,
+    "w11_lba": 440,
+    "fixture_bytes": 8192,
+    "track1_sectors": 606,
+    "track2_sectors": 302,
+    "track3_lba": 45000
+  },
+  "official_tools": {
+    "fullplay/fp_iso.py": {
+      "size": 8006,
+      "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da"
+    },
+    "fullplay/fp_master.sh": {
+      "size": 6937,
+      "sha256": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f"
+    },
+    "fullplay/fp_run.py": {
+      "size": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    "trace_lock.sh": {
+      "size": 2169,
+      "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+    }
+  },
+  "genisoimage": {
+    "size": 694424,
+    "sha256": "9bacc5951ca0767701cfd8e6b47537f199977e51a6e943f4edfdcf9d639d99d2"
+  },
+  "helper": {
+    "size": 6395,
+    "sha256": "780f74823a83b85805ddd43ec780d8d7f9a9cce8c575241c31cb8f9345b55edb"
+  },
+  "no_stage": true,
+  "no_SDK": true,
+  "no_guest": true,
+  "root_grant_required": true,
+  "seconds": 49.01839305300382
+}

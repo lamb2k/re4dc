@@ -1,0 +1,410 @@
+[
+  {
+    "feature": 0,
+    "section": ".text._ZL12RainDiagOpenmm",
+    "record_literal_offset": 96,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t17 d1       \tmov.l\t60 <RainDiagOpen(unsigned long, unsigned long)+0x60>,r1\t! 0 <RainDiagOpen(unsigned long, unsigned long)>\n   2:\t18 d2       \tmov.l\t64 <RainDiagOpen(unsigned long, unsigned long)+0x64>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t11 50       \tmov.l\t@(4,r1),r0\n   8:\t01 88       \tcmp/eq\t#1,r0\n   a:\t25 8f       \tbf.s\t58 <RainDiagOpen(unsigned long, unsigned long)+0x58>"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._ZL18RainDiagClearCausev",
+    "record_literal_offset": 48,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0b d1       \tmov.l\t30 <RainDiagClearCause()+0x30>,r1\t! 0 <RainDiagClearCause()>\n   2:\t0c d2       \tmov.l\t34 <RainDiagClearCause()+0x34>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t1e 52       \tmov.l\t@(56,r1),r2\n   8:\t11 93       \tmov.w\t2e <RainDiagClearCause()+0x2e>,r3\t! 9ffd\n   a:\t39 22       \tand\tr3,r2"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._ZL14RainDiagForgetv",
+    "record_literal_offset": 56,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 8,
+        "register": "r1",
+        "following": "   8:\t0b d1       \tmov.l\t38 <RainDiagForget()+0x38>,r1\t! 0 <RainDiagForget()>\n   a:\t0c d2       \tmov.l\t3c <RainDiagForget()+0x3c>,r2\t! a0000000\n   c:\t2b 21       \tor\tr2,r1\n   e:\t12 53       \tmov.l\t@(8,r1),r3\n  10:\tfd e2       \tmov\t#-3,r2\n  12:\t26 33       \tcmp/hi\tr2,r3"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._ZL13RainDiagClosev",
+    "record_literal_offset": 220,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 8,
+        "register": "r8",
+        "following": "   8:\t34 d8       \tmov.l\tdc <RainDiagClose()+0xdc>,r8\t! 0 <RainDiagClose()>\n   a:\t35 d1       \tmov.l\te0 <RainDiagClose()+0xe0>,r1\t! a0000000\n   c:\t1b 28       \tor\tr1,r8\n   e:\t35 d1       \tmov.l\te4 <RainDiagClose()+0xe4>,r1\t! 0 <RainDiagClose()>\n  10:\t12 69       \tmov.l\t@r1,r9\n  12:\t5d 91       \tmov.w\td0 <RainDiagClose()+0xd0>,r1\t! 51bc"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._ZL13RainDiagCountm",
+    "record_literal_offset": 56,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0d d1       \tmov.l\t38 <RainDiagCount(unsigned long)+0x38>,r1\t! 0 <RainDiagCount(unsigned long)>\n   2:\t0e d2       \tmov.l\t3c <RainDiagCount(unsigned long)+0x3c>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t4c 34       \tadd\tr4,r4\n   8:\t1c 34       \tadd\tr1,r4\n   a:\t43 60       \tmov\tr4,r0"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.Filter06Render",
+    "record_literal_offset": 760,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 596,
+        "register": "r1",
+        "following": " 254:\t28 d1       \tmov.l\t2f8 <Filter06Render+0x2f8>,r1\t! 0 <Filter06Render>\n 256:\t29 d2       \tmov.l\t2fc <Filter06Render+0x2fc>,r2\t! a0000000\n 258:\t2b 21       \tor\tr2,r1\n 25a:\t1e 52       \tmov.l\t@(56,r1),r2\n 25c:\t48 93       \tmov.w\t2f0 <Filter06Render+0x2f0>,r3\t! bfff\n 25e:\t39 22       \tand\tr3,r2"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.re4dc_rain_diag_generation",
+    "record_literal_offset": 48,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0b d1       \tmov.l\t30 <re4dc_rain_diag_generation+0x30>,r1\t! 0 <re4dc_rain_diag_generation>\n   2:\t0c d2       \tmov.l\t34 <re4dc_rain_diag_generation+0x34>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t11 50       \tmov.l\t@(4,r1),r0\n   8:\t01 88       \tcmp/eq\t#1,r0\n   a:\t02 8d       \tbt.s\t12 <re4dc_rain_diag_generation+0x12>"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.re4dc_rain_diag_bind44",
+    "record_literal_offset": 216,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 90,
+        "register": "r2",
+        "following": "  5a:\t1f d2       \tmov.l\td8 <re4dc_rain_diag_bind44+0xd8>,r2\t! 0 <re4dc_rain_diag_bind44>\n  5c:\t1f d1       \tmov.l\tdc <re4dc_rain_diag_bind44+0xdc>,r1\t! a0000000\n  5e:\t1b 22       \tor\tr1,r2\n  60:\t22 53       \tmov.l\t@(8,r2),r3\n  62:\tf3 51       \tmov.l\t@(12,r15),r1\n  64:\t01 71       \tadd\t#1,r1"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.re4dc_rain_diag_destruct44",
+    "record_literal_offset": 76,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 26,
+        "register": "r1",
+        "following": "  1a:\t0c d1       \tmov.l\t4c <re4dc_rain_diag_destruct44+0x4c>,r1\t! 0 <re4dc_rain_diag_destruct44>\n  1c:\t0c d2       \tmov.l\t50 <re4dc_rain_diag_destruct44+0x50>,r2\t! a0000000\n  1e:\t2b 21       \tor\tr2,r1\n  20:\t1e 52       \tmov.l\t@(56,r1),r2\n  22:\t10 93       \tmov.w\t46 <re4dc_rain_diag_destruct44+0x46>,r3\t! bffd\n  24:\t39 22       \tand\tr3,r2"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.re4dc_rain_flush",
+    "record_literal_offset": 408,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 252,
+        "register": "r1",
+        "following": "  fc:\t26 d1       \tmov.l\t198 <re4dc_rain_flush+0x198>,r1\t! 0 <re4dc_rain_flush>\n  fe:\t27 d2       \tmov.l\t19c <re4dc_rain_flush+0x19c>,r2\t! a0000000\n 100:\t2b 21       \tor\tr2,r1\n 102:\t12 60       \tmov.l\t@r1,r0\n 104:\t09 1f       \tmov.l\tr0,@(36,r15)\n 106:\t12 51       \tmov.l\t@(8,r1),r1"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text.re4dc_rain_flush",
+    "record_literal_offset": 1052,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 658,
+        "register": "r1",
+        "following": " 292:\t62 d1       \tmov.l\t41c <re4dc_rain_flush+0x41c>,r1\t! 0 <re4dc_rain_flush>\n 294:\t62 d2       \tmov.l\t420 <re4dc_rain_flush+0x420>,r2\t! a0000000\n 296:\t13 6a       \tmov\tr1,r10\n 298:\t2b 2a       \tor\tr2,r10\n 29a:\ta1 50       \tmov.l\t@(4,r10),r0\n 29c:\t01 88       \tcmp/eq\t#1,r0"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._Z12Filter06Initv",
+    "record_literal_offset": 92,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r7",
+        "following": "   0:\t16 d7       \tmov.l\t5c <Filter06Init()+0x5c>,r7\t! 0 <Filter06Init()>\n   2:\t17 d1       \tmov.l\t60 <Filter06Init()+0x60>,r1\t! 80\n   4:\t12 37       \tcmp/hs\tr1,r7\n   6:\t0d 8d       \tbt.s\t24 <Filter06Init()+0x24>\n   8:\t22 4f       \tsts.l\tpr,@-r15\n   a:\t73 62       \tmov\tr7,r2"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._Z12Filter06Initv",
+    "record_literal_offset": 96,
+    "raw_literal": 128,
+    "loads": [
+      {
+        "instruction_offset": 2,
+        "register": "r1",
+        "following": "   2:\t17 d1       \tmov.l\t60 <Filter06Init()+0x60>,r1\t! 80\n   4:\t12 37       \tcmp/hs\tr1,r7\n   6:\t0d 8d       \tbt.s\t24 <Filter06Init()+0x24>\n   8:\t22 4f       \tsts.l\tpr,@-r15\n   a:\t73 62       \tmov\tr7,r2\n   c:\t20 72       \tadd\t#32,r2"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._Z13Filter06Transv",
+    "record_literal_offset": 472,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 346,
+        "register": "r1",
+        "following": " 15a:\t1f d1       \tmov.l\t1d8 <Filter06Trans()+0x1d8>,r1\t! 0 <Filter06Trans()>\n 15c:\t1f d2       \tmov.l\t1dc <Filter06Trans()+0x1dc>,r2\t! a0000000\n 15e:\t2b 21       \tor\tr2,r1\n 160:\t1e 50       \tmov.l\t@(56,r1),r0\n 162:\t80 cb       \tor\t#128,r0\n 164:\t0e 11       \tmov.l\tr0,@(56,r1)"
+      }
+    ]
+  },
+  {
+    "feature": 0,
+    "section": ".text._Z13Filter06Transv",
+    "record_literal_offset": 672,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 626,
+        "register": "r1",
+        "following": " 272:\t0b d1       \tmov.l\t2a0 <Filter06Trans()+0x2a0>,r1\t! 0 <Filter06Trans()>\n 274:\t0b d2       \tmov.l\t2a4 <Filter06Trans()+0x2a4>,r2\t! a0000000\n 276:\t2b 21       \tor\tr2,r1\n 278:\t1e 50       \tmov.l\t@(56,r1),r0\n 27a:\t80 cb       \tor\t#128,r0\n 27c:\t0e 11       \tmov.l\tr0,@(56,r1)"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._ZL12RainDiagOpenmm",
+    "record_literal_offset": 96,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t17 d1       \tmov.l\t60 <RainDiagOpen(unsigned long, unsigned long)+0x60>,r1\t! 0 <RainDiagOpen(unsigned long, unsigned long)>\n   2:\t18 d2       \tmov.l\t64 <RainDiagOpen(unsigned long, unsigned long)+0x64>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t11 50       \tmov.l\t@(4,r1),r0\n   8:\t01 88       \tcmp/eq\t#1,r0\n   a:\t25 8f       \tbf.s\t58 <RainDiagOpen(unsigned long, unsigned long)+0x58>"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._ZL18RainDiagClearCausev",
+    "record_literal_offset": 48,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0b d1       \tmov.l\t30 <RainDiagClearCause()+0x30>,r1\t! 0 <RainDiagClearCause()>\n   2:\t0c d2       \tmov.l\t34 <RainDiagClearCause()+0x34>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t1e 52       \tmov.l\t@(56,r1),r2\n   8:\t11 93       \tmov.w\t2e <RainDiagClearCause()+0x2e>,r3\t! 9ffd\n   a:\t39 22       \tand\tr3,r2"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._ZL13RainDiagClosev",
+    "record_literal_offset": 256,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 8,
+        "register": "r8",
+        "following": "   8:\t3d d8       \tmov.l\t100 <RainDiagClose()+0x100>,r8\t! 0 <RainDiagClose()>\n   a:\t3e d1       \tmov.l\t104 <RainDiagClose()+0x104>,r1\t! a0000000\n   c:\t1b 28       \tor\tr1,r8\n   e:\t3e d1       \tmov.l\t108 <RainDiagClose()+0x108>,r1\t! 0 <RainDiagClose()>\n  10:\t12 69       \tmov.l\t@r1,r9\n  12:\t6e 91       \tmov.w\tf2 <RainDiagClose()+0xf2>,r1\t! 51bc"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._ZL13RainDiagCountm",
+    "record_literal_offset": 56,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0d d1       \tmov.l\t38 <RainDiagCount(unsigned long)+0x38>,r1\t! 0 <RainDiagCount(unsigned long)>\n   2:\t0e d2       \tmov.l\t3c <RainDiagCount(unsigned long)+0x3c>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t4c 34       \tadd\tr4,r4\n   8:\t1c 34       \tadd\tr1,r4\n   a:\t43 60       \tmov\tr4,r0"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._ZL18RainDiagInvalidatemmmm",
+    "record_literal_offset": 136,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 56,
+        "register": "r1",
+        "following": "  38:\t13 d1       \tmov.l\t88 <RainDiagInvalidate(unsigned long, unsigned long, unsigned long, unsigned long)+0x88>,r1\t! 0 <RainDiagInvalidate(unsigned long, unsigned long, unsigned long, unsigned long)>\n  3a:\t14 d2       \tmov.l\t8c <RainDiagInvalidate(unsigned long, unsigned long, unsigned long, unsigned long)+0x8c>,r2\t! a0000000\n  3c:\t2b 21       \tor\tr2,r1\n  3e:\t12 53       \tmov.l\t@(8,r1),r3\n  40:\tfd e2       \tmov\t#-3,r2\n  42:\t26 33       \tcmp/hi\tr2,r3"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.Filter06Render",
+    "record_literal_offset": 964,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 682,
+        "register": "r1",
+        "following": " 2aa:\t46 d1       \tmov.l\t3c4 <Filter06Render+0x3c4>,r1\t! 0 <Filter06Render>\n 2ac:\t46 d2       \tmov.l\t3c8 <Filter06Render+0x3c8>,r2\t! a0000000\n 2ae:\t2b 21       \tor\tr2,r1\n 2b0:\t1e 52       \tmov.l\t@(56,r1),r2\n 2b2:\t7e 93       \tmov.w\t3b2 <Filter06Render+0x3b2>,r3\t! bfff\n 2b4:\t39 22       \tand\tr3,r2"
+      },
+      {
+        "instruction_offset": 860,
+        "register": "r2",
+        "following": " 35c:\t19 d2       \tmov.l\t3c4 <Filter06Render+0x3c4>,r2\t! 0 <Filter06Render>\n 35e:\t1a d1       \tmov.l\t3c8 <Filter06Render+0x3c8>,r1\t! a0000000\n 360:\t1b 22       \tor\tr1,r2\n 362:\t2e 51       \tmov.l\t@(56,r2),r1\n 364:\t29 93       \tmov.w\t3ba <Filter06Render+0x3ba>,r3\t! 4000\n 366:\t3b 21       \tor\tr3,r1"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_diag_generation",
+    "record_literal_offset": 48,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r1",
+        "following": "   0:\t0b d1       \tmov.l\t30 <re4dc_rain_diag_generation+0x30>,r1\t! 0 <re4dc_rain_diag_generation>\n   2:\t0c d2       \tmov.l\t34 <re4dc_rain_diag_generation+0x34>,r2\t! a0000000\n   4:\t2b 21       \tor\tr2,r1\n   6:\t11 50       \tmov.l\t@(4,r1),r0\n   8:\t01 88       \tcmp/eq\t#1,r0\n   a:\t02 8d       \tbt.s\t12 <re4dc_rain_diag_generation+0x12>"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_diag_bind44",
+    "record_literal_offset": 216,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 90,
+        "register": "r2",
+        "following": "  5a:\t1f d2       \tmov.l\td8 <re4dc_rain_diag_bind44+0xd8>,r2\t! 0 <re4dc_rain_diag_bind44>\n  5c:\t1f d1       \tmov.l\tdc <re4dc_rain_diag_bind44+0xdc>,r1\t! a0000000\n  5e:\t1b 22       \tor\tr1,r2\n  60:\t22 53       \tmov.l\t@(8,r2),r3\n  62:\tf3 51       \tmov.l\t@(12,r15),r1\n  64:\t01 71       \tadd\t#1,r1"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_diag_destruct44",
+    "record_literal_offset": 76,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 26,
+        "register": "r1",
+        "following": "  1a:\t0c d1       \tmov.l\t4c <re4dc_rain_diag_destruct44+0x4c>,r1\t! 0 <re4dc_rain_diag_destruct44>\n  1c:\t0c d2       \tmov.l\t50 <re4dc_rain_diag_destruct44+0x50>,r2\t! a0000000\n  1e:\t2b 21       \tor\tr2,r1\n  20:\t1e 52       \tmov.l\t@(56,r1),r2\n  22:\t10 93       \tmov.w\t46 <re4dc_rain_diag_destruct44+0x46>,r3\t! bffd\n  24:\t39 22       \tand\tr3,r2"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_flush",
+    "record_literal_offset": 424,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 306,
+        "register": "r8",
+        "following": " 132:\t1d d8       \tmov.l\t1a8 <re4dc_rain_flush+0x1a8>,r8\t! 0 <re4dc_rain_flush>\n 134:\t1d d1       \tmov.l\t1ac <re4dc_rain_flush+0x1ac>,r1\t! a0000000\n 136:\t1b 28       \tor\tr1,r8\n 138:\t8d 55       \tmov.l\t@(52,r8),r5\n 13a:\t29 45       \tshlr16\tr5\n 13c:\t0c d0       \tmov.l\t170 <re4dc_rain_flush+0x170>,r0\t! 0 <re4dc_rain_flush>"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_flush",
+    "record_literal_offset": 888,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 598,
+        "register": "r1",
+        "following": " 256:\t48 d1       \tmov.l\t378 <re4dc_rain_flush+0x378>,r1\t! 0 <re4dc_rain_flush>\n 258:\t48 d2       \tmov.l\t37c <re4dc_rain_flush+0x37c>,r2\t! a0000000\n 25a:\t2b 21       \tor\tr2,r1\n 25c:\t12 64       \tmov.l\t@r1,r4\n 25e:\t4a 1f       \tmov.l\tr4,@(40,r15)\n 260:\t12 51       \tmov.l\t@(8,r1),r1"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text.re4dc_rain_flush",
+    "record_literal_offset": 1360,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 1184,
+        "register": "r8",
+        "following": " 4a0:\t2b d8       \tmov.l\t550 <re4dc_rain_flush+0x550>,r8\t! 0 <re4dc_rain_flush>\n 4a2:\t2c d1       \tmov.l\t554 <re4dc_rain_flush+0x554>,r1\t! a0000000\n 4a4:\t1b 28       \tor\tr1,r8\n 4a6:\t81 50       \tmov.l\t@(4,r8),r0\n 4a8:\t01 88       \tcmp/eq\t#1,r0\n 4aa:\t19 8b       \tbf\t4e0 <re4dc_rain_flush+0x4e0>"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._Z12Filter06Initv",
+    "record_literal_offset": 92,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 0,
+        "register": "r7",
+        "following": "   0:\t16 d7       \tmov.l\t5c <Filter06Init()+0x5c>,r7\t! 0 <Filter06Init()>\n   2:\t17 d1       \tmov.l\t60 <Filter06Init()+0x60>,r1\t! 80\n   4:\t12 37       \tcmp/hs\tr1,r7\n   6:\t0d 8d       \tbt.s\t24 <Filter06Init()+0x24>\n   8:\t22 4f       \tsts.l\tpr,@-r15\n   a:\t73 62       \tmov\tr7,r2"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._Z12Filter06Initv",
+    "record_literal_offset": 96,
+    "raw_literal": 128,
+    "loads": [
+      {
+        "instruction_offset": 2,
+        "register": "r1",
+        "following": "   2:\t17 d1       \tmov.l\t60 <Filter06Init()+0x60>,r1\t! 80\n   4:\t12 37       \tcmp/hs\tr1,r7\n   6:\t0d 8d       \tbt.s\t24 <Filter06Init()+0x24>\n   8:\t22 4f       \tsts.l\tpr,@-r15\n   a:\t73 62       \tmov\tr7,r2\n   c:\t20 72       \tadd\t#32,r2"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._Z13Filter06Transv",
+    "record_literal_offset": 472,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 346,
+        "register": "r1",
+        "following": " 15a:\t1f d1       \tmov.l\t1d8 <Filter06Trans()+0x1d8>,r1\t! 0 <Filter06Trans()>\n 15c:\t1f d2       \tmov.l\t1dc <Filter06Trans()+0x1dc>,r2\t! a0000000\n 15e:\t2b 21       \tor\tr2,r1\n 160:\t1e 50       \tmov.l\t@(56,r1),r0\n 162:\t80 cb       \tor\t#128,r0\n 164:\t0e 11       \tmov.l\tr0,@(56,r1)"
+      }
+    ]
+  },
+  {
+    "feature": 1,
+    "section": ".text._Z13Filter06Transv",
+    "record_literal_offset": 672,
+    "raw_literal": 0,
+    "loads": [
+      {
+        "instruction_offset": 626,
+        "register": "r1",
+        "following": " 272:\t0b d1       \tmov.l\t2a0 <Filter06Trans()+0x2a0>,r1\t! 0 <Filter06Trans()>\n 274:\t0b d2       \tmov.l\t2a4 <Filter06Trans()+0x2a4>,r2\t! a0000000\n 276:\t2b 21       \tor\tr2,r1\n 278:\t1e 50       \tmov.l\t@(56,r1),r0\n 27a:\t80 cb       \tor\t#128,r0\n 27c:\t0e 11       \tmov.l\tr0,@(56,r1)"
+      }
+    ]
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "extracts": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/triangle-opportunity-prep24/PREPARATION-SUMMARY.json",
+      "parent_sha256": "c9db2b90d607c0c351606d4141ee1ba2456674e254b0e1d294a2693eeffca9f0",
+      "JSON_pointers": {
+        "/classification": "PREPARATION_ONLY_NO_ACTUAL_SHADOW_PREDICATES",
+        "/summary": {
+          "max_geometry_scalar_bits": 93,
+          "max_eye_scalar_bits": 28,
+          "targets": 25,
+          "domains_per_target": 387,
+          "wholelet_domain_cases": 9675,
+          "target_triangle_occurrences": 889,
+          "source_face_occurrences": 1036,
+          "unique_source_faces": 625,
+          "panel_records": 536,
+          "unrepresentable_source_occurrences": 3,
+          "target_degenerate_occurrences": 0,
+          "primitive_calls_upper": 17424288,
+          "edge_determinants_upper": 1254548736,
+          "plane_evaluations_upper": 191667168,
+          "final_assignment_edge_upper": 24771096
+        },
+        "/limits": {
+          "address_cap_bytes": 268435456,
+          "output_cap_bytes": 16777216,
+          "seconds": 1.1224839679780416,
+          "peak_rss_kib": 102736,
+          "jobs": 1
+        },
+        "/actual_shadow_predicate_calls": 0,
+        "/new_rays": 0,
+        "/ledger_accesses": 0
+      }
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-hut647-root-r1/report.json",
+      "parent_sha256": "7e301a48c99a46afc2397d9e823aab08c1b5b0c0e9add46af7ed80d3835afef8",
+      "JSON_pointers": {
+        "/classification": "EXACT_REAL_OPPORTUNITY_ONLY_NO_RUNTIME_CERTIFICATE",
+        "/generic_source": "28c739468ae7d2d2d3c09f81330015e7769dc824",
+        "/limits": {
+          "candidate_call_cap": 100000,
+          "candidate_edge_cap_upper": 7200000,
+          "final_triangle_call_cap": 2667,
+          "final_edge_cap_upper": 192024,
+          "wall_cap_seconds": 120,
+          "computation_deadline_seconds": 115,
+          "address_cap_bytes": 268435456,
+          "output_cap_bytes": 16777216,
+          "jobs": 1
+        },
+        "/work": {
+          "candidate_call_cap": 100000,
+          "candidate_calls": 3255,
+          "candidate_edge_upper": 234360,
+          "final_call_cap": 2667,
+          "final_triangle_calls_upper": 0,
+          "final_batch_invocations": 0,
+          "final_edge_upper": 0,
+          "unused_reservations_returned_only_after_case": true
+        },
+        "/seconds": 1.275570713012712,
+        "/peak_rss_kib": 183588,
+        "/new_rays": 0,
+        "/ledger_accesses": 0,
+        "/runtime_admitted": false
+      },
+      "derived_case_count": 75,
+      "derived_status_counts": {
+        "UNKNOWN_NO_FIXED_SOURCE": 75
+      },
+      "excluded": [
+        "plan",
+        "prepared",
+        "held_camera_cases",
+        "results",
+        "seal"
+      ]
+    }
+  ],
+  "policy": "Exact named JSON fields/scalar counters only; per-target physical IDs and geometry/result arrays excluded."
+}

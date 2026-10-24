@@ -1,0 +1,174 @@
+{
+ "status": "PREPARATION_CONTROLS_PASS_NO_STAGE",
+ "controls": [
+  {
+   "name": "syntax-dependency_census.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-failed-broad-profile-v1.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-failed-media-preflight-v1.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-future_master.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-prepare_media.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-test_preparation.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-verify_hair_eol_bridge.py",
+   "passed": true
+  },
+  {
+   "name": "syntax-verify_qa_three.py",
+   "passed": true
+  },
+  {
+   "name": "exact-OFF18",
+   "passed": true
+  },
+  {
+   "name": "exact-ON18",
+   "passed": true
+  },
+  {
+   "name": "changed-texture",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "extra-overlay",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "missing-overlay",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "wrong-arm-overlay",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "fixture-content",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "unapproved-dedup-alternate",
+   "refused": true,
+   "reason": "Programme/assets readback differs from exact expected manifest"
+  },
+  {
+   "name": "fresh-child",
+   "passed": true
+  },
+  {
+   "name": "existing-output-refused",
+   "refused": true,
+   "reason": "Nonfresh or escaped owned output /dev/shm/gc-qa-media-controls-okcnum2h/old"
+  },
+  {
+   "name": "parent-escape-refused",
+   "refused": true,
+   "reason": "Nonfresh or escaped owned output /dev/shm/gc-qa-media-controls-okcnum2h/../escape"
+  },
+  {
+   "name": "relative-output-refused",
+   "refused": true,
+   "reason": "Nonfresh or escaped owned output relative"
+  },
+  {
+   "name": "symlink-refused",
+   "refused": true,
+   "reason": "Nonfresh or escaped owned output /dev/shm/gc-qa-media-controls-okcnum2h/alias/fresh"
+  },
+  {
+   "name": "owned-directory-symlink-refused",
+   "refused": true,
+   "reason": "Owned symlink refused"
+  },
+  {
+   "name": "hardlink-bytes-counted-once",
+   "passed": true
+  },
+  {
+   "name": "lower-floor-28-27",
+   "passed": true
+  },
+  {
+   "name": "lower-floor-23-28",
+   "refused": true,
+   "reason": "Capacity floor {'windows_free': 24696061952, 'wsl_free': 30064771072, 'lower_free': 24696061952, 'required': 25769803776}"
+  },
+  {
+   "name": "lower-floor-28-23",
+   "refused": true,
+   "reason": "Capacity floor {'windows_free': 30064771072, 'wsl_free': 24696061952, 'lower_free': 24696061952, 'required': 25769803776}"
+  },
+  {
+   "name": "source-key-refused-../outside",
+   "refused": true,
+   "reason": "Escaped/noncanonical source manifest member ../outside"
+  },
+  {
+   "name": "source-key-refused-/absolute",
+   "refused": true,
+   "reason": "Escaped/noncanonical source manifest member /absolute"
+  },
+  {
+   "name": "source-key-refused-dc/../../outside",
+   "refused": true,
+   "reason": "Escaped/noncanonical source manifest member dc/../../outside"
+  },
+  {
+   "name": "source-key-refused-dc//ambiguous",
+   "refused": true,
+   "reason": "Escaped/noncanonical source manifest member dc//ambiguous"
+  },
+  {
+   "name": "source-key-refused-./noncanonical",
+   "refused": true,
+   "reason": "Escaped/noncanonical source manifest member ./noncanonical"
+  },
+  {
+   "name": "absolute-pinned-host-tool-execution",
+   "passed": true
+  },
+  {
+   "name": "synthetic-PATH-relative-tool-refused",
+   "refused": true,
+   "reason": "Unpinned PATH host tool refused"
+  },
+  {
+   "name": "synthetic-PATH-foreign-absolute-tool-refused",
+   "refused": true,
+   "reason": "Unpinned PATH host tool refused"
+  },
+  {
+   "name": "synthetic-PATH-pinned-tool-retained",
+   "passed": true
+  },
+  {
+   "name": "root-grant-absent-no-stage",
+   "refused": true,
+   "reason": "Root exact reviewed toolchain allocation is required"
+  }
+ ],
+ "stage_run": false,
+ "SDK_run": false,
+ "genisoimage_run": false,
+ "guest_run": false
+}

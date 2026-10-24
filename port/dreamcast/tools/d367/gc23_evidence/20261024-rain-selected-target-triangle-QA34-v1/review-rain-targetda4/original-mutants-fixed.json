@@ -1,0 +1,26 @@
+{
+  "scope": "Exact da4 successor: original846 valid-extent mutations now rejected, no target evidence",
+  "results": [
+    {
+      "label": "allocated-address",
+      "accepted_as_disabled_identity": false
+    },
+    {
+      "label": "unreferenced-function-value",
+      "accepted_as_disabled_identity": false
+    },
+    {
+      "label": "unreferenced-function-weak-binding",
+      "accepted_as_disabled_identity": false
+    },
+    {
+      "label": "unreferenced-function-hidden-visibility",
+      "accepted_as_disabled_identity": false
+    },
+    {
+      "label": "allocated-code-change",
+      "accepted_as_disabled_identity": false
+    }
+  ],
+  "SDK": 0
+}

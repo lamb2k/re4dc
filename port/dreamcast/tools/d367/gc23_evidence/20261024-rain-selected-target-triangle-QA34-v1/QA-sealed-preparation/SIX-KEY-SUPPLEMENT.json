@@ -1,0 +1,93 @@
+{
+  "status": "SOURCE_AND_ACTUAL_ARGV_CLASSIFICATION_ROOT_REVIEW_PENDING",
+  "originals_preserved": [
+    "FAILED-BROAD-PROFILE-v1.json",
+    "failed-broad-profile-v1.py",
+    "QA-READBACK.json",
+    "DEPENDENCY-CENSUS.json"
+  ],
+  "sources": {
+    "port/dreamcast/tools/d367/build-r21.sh": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/build-r21.sh",
+      "bytes": 17300,
+      "sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93"
+    },
+    "port/dreamcast/game/knobs.mk": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/game/knobs.mk",
+      "bytes": 627,
+      "sha256": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863"
+    },
+    "port/dreamcast/game/Makefile": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/game/Makefile",
+      "bytes": 219354,
+      "sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34"
+    },
+    "port/dreamcast/game/game30.mk": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/game/game30.mk",
+      "bytes": 230828,
+      "sha256": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de"
+    },
+    "port/dreamcast/game/crowd.mk": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/game/crowd.mk",
+      "bytes": 49398,
+      "sha256": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca"
+    },
+    "port/dreamcast/game/ps2leon.mk": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/game/ps2leon.mk",
+      "bytes": 9378,
+      "sha256": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916"
+    },
+    "src/game/stage.cpp": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/src/game/stage.cpp",
+      "bytes": 16798,
+      "sha256": "f95342121195ba1e4ad3d89629c946636866dbca36578d35f42b4cda5b9a1c60"
+    }
+  },
+  "reporting_rule": "build-r21.sh NAMES enumerates make assignments, not every caller-read argument; knobs.mk writes only KNOB_NAMES. Caller-only variables can be used without individual report keys.",
+  "actual_report_common_all3": {
+    "PS2_ENEMY_ROOMS": "0x3ff",
+    "RENDER_FSAA": "1",
+    "RENDER_OPTION": "1"
+  },
+  "keys": {
+    "PS2_ENEMY_ROOMS": {
+      "command": "0x3f",
+      "actual": "0x3ff",
+      "proof": "PS2_CH1_ENEMY1 overrides |0x33f; PS2_CH2_ENEMY1 adds|0xc0; actual13 CPPdefines/arm and stage.cpp reader",
+      "equation": "0x3ff"
+    },
+    "RENDER_QUALITY_ONLY": {
+      "command": "1",
+      "individual_report_key": "absent",
+      "effective": "not defined under RENDER_FSAA1; actual FSAA1+OPTION1",
+      "proof": "Exact game30.mk conditional and all3 compile logs; not silently claimed active"
+    },
+    "ROUTE_SOON_RETURN": {
+      "command": "1",
+      "individual_report_key": "absent",
+      "effective": "CPP1 on sce_at.o and route_end.o",
+      "proof": "Actual2 compile commands/arm and Make reader"
+    },
+    "PS2_HDR_SETS": {
+      "command": "128",
+      "individual_report_key": "absent",
+      "effective": "CPP128 on native_ui.o",
+      "proof": "Actual1 compile command/arm; nativeUI table count reader"
+    },
+    "PS2_GANADO_DIR": {
+      "command": "/root/probe/lanes-20261010/ps2cast-all-assets/pg5",
+      "individual_report_key": "absent",
+      "scope": "generator/private input path, not a per-variable resolved-report entry",
+      "proof": "Actual -iquote and glod derive command, Oct10 exact source SHA receipt plus all5 generated headers equal; supplemental not original prehash"
+    },
+    "LEON_HEADLESS_DIR": {
+      "command": "/root/re4data/private/garr18-head-20261019",
+      "individual_report_key": "absent",
+      "scope": "compiler private include path",
+      "proof": "Actual -I, all5 coarse_actor.d, historicalOct19 SHA receipt for current neck; supplemental not original prehash"
+    }
+  },
+  "all6_external_header_supplement": "DEPENDENCY-CENSUS.json plus exact HAIR-EOL-BRIDGE.json; original raw mismatch retained, bridge needs root review",
+  "SDK_run": false,
+  "stage_run": false
+}

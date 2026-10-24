@@ -1,0 +1,14 @@
+{
+  "scope": "Root V2 fail-closed external-binding tool repair only",
+  "parent": "da4cf4518df491b1d26c8615a263ba0ff5911799",
+  "runtime": "fdb5ed4212fc78823f625ab75b78cc237cfd181a",
+  "pins_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+  "host": {
+    "host_preparation_checks": 111,
+    "SDK_invocations": 0,
+    "scope": "synthetic ELF readback, argument/grant/path/resource/protocol controls; no SH4 generated evidence"
+  },
+  "originals_preserved": true,
+  "SDK_invocations": 0,
+  "review": "PENDING"
+}

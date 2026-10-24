@@ -1,0 +1,2289 @@
+{
+  "scope": "selected SH4 objects only; no whole programme/guest/cache execution/ancestry/look acceptance",
+  "objects": [
+    {
+      "feature": 0,
+      "diag": "absent",
+      "unit": "filter06",
+      "raw_sha256": "a6da6aaed7033d0a7b66a1234de3395e9b77b8821ceae9825fe9740409e8b427",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 4044,
+        "data": 4,
+        "bss": 16828,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 76,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 76,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 0,
+      "diag": "absent",
+      "unit": "espgen44",
+      "raw_sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 316,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    },
+    {
+      "feature": 0,
+      "diag": "0",
+      "unit": "filter06",
+      "raw_sha256": "a6da6aaed7033d0a7b66a1234de3395e9b77b8821ceae9825fe9740409e8b427",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 4044,
+        "data": 4,
+        "bss": 16828,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 76,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 76,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 0,
+      "diag": "0",
+      "unit": "espgen44",
+      "raw_sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 316,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    },
+    {
+      "feature": 0,
+      "diag": "1",
+      "unit": "filter06",
+      "raw_sha256": "55dc4e69f00284aadda91950b4d407dab0acfe16f9225587a2f778d09035538b",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "201464475b1e9dc8a38f9ef64b10235152f32818314fe4f42802f48e6ad4c672",
+      "strip_debug_raw_equal_baseline": false,
+      "differing_sections": [
+        ".rela.text._ZL15Filter06Ps2Rainv",
+        ".text._ZL16Filter06R10cRainv",
+        ".rela.text._ZL16Filter06R10cRainv",
+        ".rela.text._ZL10RainDcUnitv",
+        ".rela.text._ZL11RainDcSpawnP10RainDcDropi",
+        ".text._ZL12RainDiagOpenmm",
+        ".rela.text._ZL12RainDiagOpenmm",
+        ".text._ZL18RainDiagClearCausev",
+        ".rela.text._ZL18RainDiagClearCausev",
+        ".text._ZL14RainDiagForgetv",
+        ".rela.text._ZL14RainDiagForgetv",
+        ".text._ZL13RainDiagClosev",
+        ".rela.text._ZL13RainDiagClosev",
+        ".text._ZL13RainDiagCountm",
+        ".rela.text._ZL13RainDiagCountm",
+        ".text._ZL13RainDiagEventmmm",
+        ".rela.text._ZL13RainDiagEventmmm",
+        ".text.Filter06Render",
+        ".rela.text.Filter06Render",
+        ".text.re4dc_rain_diag_generation",
+        ".rela.text.re4dc_rain_diag_generation",
+        ".text.re4dc_rain_diag_bind44",
+        ".rela.text.re4dc_rain_diag_bind44",
+        ".text.re4dc_rain_diag_destruct44",
+        ".rela.text.re4dc_rain_diag_destruct44",
+        ".text.re4dc_rain_flush",
+        ".rela.text.re4dc_rain_flush",
+        ".rela.text._ZN11cParticle064initEm",
+        ".rela.text._ZN11cParticle064moveEv",
+        ".text._Z16Filter06RoomInitv",
+        ".rela.text._Z16Filter06RoomInitv",
+        ".text._Z12Filter06Initv",
+        ".rela.text._Z12Filter06Initv",
+        ".text._Z13Filter06Transv",
+        ".rela.text._Z13Filter06Transv",
+        ".text.Filter06SetParam",
+        ".rela.text.Filter06SetParam",
+        ".bss.re4dc_rain_r10c_diag",
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".rela.debug_loclists",
+        ".debug_aranges",
+        ".rela.debug_aranges",
+        ".debug_rnglists",
+        ".rela.debug_rnglists",
+        ".debug_line",
+        ".rela.debug_line",
+        ".debug_str",
+        ".debug_line_str",
+        ".debug_frame",
+        ".rela.debug_frame",
+        ".symtab",
+        ".strtab",
+        ".shstrtab"
+      ],
+      "record": {
+        "name": "_re4dc_rain_r10c_diag",
+        "bytes": 128,
+        "section": ".bss.re4dc_rain_r10c_diag",
+        "section_alignment": 32,
+        "section_relative_value": 0,
+        "absolute_P1_address": "UNPROVEN ET_REL"
+      },
+      "sizes": {
+        "text": 5992,
+        "data": 4,
+        "bss": 16956,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:115:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:182:12:int RainDiagOpen(u32, u32)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:226:13:void RainDiagClearCause()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:235:13:void RainDiagForget()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:220:13:void RainDiagClose()",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:195:13:void RainDiagCount(u32)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:301:13:void RainDiagEvent(u32, u32, u32)",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:267:16:u32 re4dc_rain_diag_generation()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:272:17:void re4dc_rain_diag_bind44(u32, const void*, const void*, const void*, u32, u32, u32)",
+          "self_bytes": 20,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:292:17:void re4dc_rain_diag_destruct44(const void*)",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 88,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 76,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 0,
+      "diag": "1",
+      "unit": "espgen44",
+      "raw_sha256": "ce5352384db13fc8a30547ad5bf57a2594314742ee9b8d06e048423575dd22df",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "97cce15be9aa9fb3d5120b588a627da78c88fbb91d9c4a4b75cdc1b9cc1da4f5",
+      "strip_debug_raw_equal_baseline": false,
+      "differing_sections": [
+        ".text.Espgen44_Destruct",
+        ".rela.text.Espgen44_Destruct",
+        ".text.Espgen44_SetFreeWork",
+        ".rela.text.Espgen44_SetFreeWork",
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".rela.debug_loclists",
+        ".debug_aranges",
+        ".debug_rnglists",
+        ".rela.debug_rnglists",
+        ".debug_line",
+        ".rela.debug_line",
+        ".debug_str",
+        ".debug_frame",
+        ".symtab",
+        ".strtab"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 488,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 52,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_re4dc_rain_diag_destruct44": 1,
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_re4dc_rain_diag_generation": 1,
+        "_re4dc_rain_diag_bind44": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "absent",
+      "unit": "filter06",
+      "raw_sha256": "19d7c428fd8bce4c9ed9660ed92f78c5ca99201d84c9e6832a9439aad4310682",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 4720,
+        "data": 4,
+        "bss": 16836,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:115:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:124:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 72,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:113:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:120:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 72,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "absent",
+      "unit": "espgen44",
+      "raw_sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 316,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "0",
+      "unit": "filter06",
+      "raw_sha256": "19d7c428fd8bce4c9ed9660ed92f78c5ca99201d84c9e6832a9439aad4310682",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 4720,
+        "data": 4,
+        "bss": 16836,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:115:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:124:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 72,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:113:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:120:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 72,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "0",
+      "unit": "espgen44",
+      "raw_sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "strip_debug_raw_equal_baseline": true,
+      "differing_sections": [
+        ".debug_info",
+        ".debug_line",
+        ".rela.debug_line"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 316,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "1",
+      "unit": "filter06",
+      "raw_sha256": "ed7c05f7c946997447f9374de60cff37a7b501d299cce1b94553eee760840265",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "f389989087384d51fdec7781ef1d434c1e7de4ae1be4ad98a3e1d86a035d8bfe",
+      "strip_debug_raw_equal_baseline": false,
+      "differing_sections": [
+        ".rela.text._ZL15Filter06Ps2Rainv",
+        ".rela.text._ZL16Filter06R10cRainv",
+        ".rela.text._ZL16RainDcR10cCancelv",
+        ".rela.text._ZL10RainDcUnitv",
+        ".text._ZL12RainDiagOpenmm",
+        ".rela.text._ZL12RainDiagOpenmm",
+        ".text._ZL18RainDiagClearCausev",
+        ".rela.text._ZL18RainDiagClearCausev",
+        ".text._ZL13RainDiagClosev",
+        ".rela.text._ZL13RainDiagClosev",
+        ".text._ZL13RainDiagCountm",
+        ".rela.text._ZL13RainDiagCountm",
+        ".text._ZL18RainDiagInvalidatemmmm",
+        ".rela.text._ZL18RainDiagInvalidatemmmm",
+        ".text._ZL13RainDiagEventmmm",
+        ".rela.text._ZL13RainDiagEventmmm",
+        ".text.Filter06Render",
+        ".rela.text.Filter06Render",
+        ".text._ZL13RainDiagCheckmi",
+        ".rela.text._ZL13RainDiagCheckmi",
+        ".text.re4dc_rain_diag_generation",
+        ".rela.text.re4dc_rain_diag_generation",
+        ".text.re4dc_rain_diag_bind44",
+        ".rela.text.re4dc_rain_diag_bind44",
+        ".text.re4dc_rain_diag_destruct44",
+        ".rela.text.re4dc_rain_diag_destruct44",
+        ".text.re4dc_rain_flush",
+        ".rela.text.re4dc_rain_flush",
+        ".rela.text._ZN11cParticle064initEm",
+        ".rela.text._ZN11cParticle064moveEv",
+        ".text._Z16Filter06RoomInitv",
+        ".rela.text._Z16Filter06RoomInitv",
+        ".text._Z12Filter06Initv",
+        ".rela.text._Z12Filter06Initv",
+        ".text._Z13Filter06Transv",
+        ".rela.text._Z13Filter06Transv",
+        ".text.Filter06SetParam",
+        ".rela.text.Filter06SetParam",
+        ".bss.re4dc_rain_r10c_diag",
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".rela.debug_loclists",
+        ".debug_aranges",
+        ".rela.debug_aranges",
+        ".debug_rnglists",
+        ".rela.debug_rnglists",
+        ".debug_line",
+        ".rela.debug_line",
+        ".debug_str",
+        ".debug_line_str",
+        ".debug_frame",
+        ".rela.debug_frame",
+        ".symtab",
+        ".strtab",
+        ".shstrtab"
+      ],
+      "record": {
+        "name": "_re4dc_rain_r10c_diag",
+        "bytes": 128,
+        "section": ".bss.re4dc_rain_r10c_diag",
+        "section_alignment": 32,
+        "section_relative_value": 0,
+        "absolute_P1_address": "UNPROVEN ET_REL"
+      },
+      "sizes": {
+        "text": 7288,
+        "data": 4,
+        "bss": 16964,
+        "rodata": 166
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:115:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:124:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:398:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:407:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:182:12:int RainDiagOpen(u32, u32)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:226:13:void RainDiagClearCause()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:220:13:void RainDiagClose()",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:195:13:void RainDiagCount(u32)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:258:13:void RainDiagInvalidate(u32, u32, u32, u32)",
+          "self_bytes": 12,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:301:13:void RainDiagEvent(u32, u32, u32)",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:311:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:336:12:int RainDiagCheck(u32, int)",
+          "self_bytes": 12,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:267:16:u32 re4dc_rain_diag_generation()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:272:17:void re4dc_rain_diag_bind44(u32, const void*, const void*, const void*, u32, u32, u32)",
+          "self_bytes": 20,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:292:17:void re4dc_rain_diag_destruct44(const void*)",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:543:17:void re4dc_rain_flush()",
+          "self_bytes": 96,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:608:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:623:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:201:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:232:6:void Filter06Trans()",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:285:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/filter06.cpp:74:12:int Filter06Ps2Rain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:113:12:int Filter06R10cRain()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:120:13:void RainDcR10cCancel()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:129:12:f32 RainDcUnit()",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:138:13:void RainDcSpawn(RainDcDrop*, int)",
+          "self_bytes": 16,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:308:6:void Filter06Render()",
+          "self_bytes": 48,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:239:17:void re4dc_rain_flush()",
+          "self_bytes": 72,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:304:6:void cParticle06::init(u32)",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/filter06.cpp:319:6:void cParticle06::move()",
+          "self_bytes": 40,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:198:6:void Filter06RoomInit()",
+          "self_bytes": 8,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:192:6:void Filter06Init()",
+          "self_bytes": 4,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:226:6:void Filter06Trans()",
+          "self_bytes": 28,
+          "classification": "static"
+        },
+        {
+          "declaration": "D:/Bio4/Prog/filter06.cpp:276:6:void Filter06SetParam(u32, int, int, int, int, f32, Vec*, f32, Vec*, f32, int)",
+          "self_bytes": 68,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      },
+      "baseline_undefined_symbols": {
+        "_pG": 1,
+        "_GXSetBlendMode": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXSetCurrentMtx": 1,
+        "_GXSetCullMode": 1,
+        "_GXSetZMode": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetNumTevStages": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetTevColorIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevAlphaOp": 1,
+        "_GXClearVtxDesc": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXEnableTexOffsets": 1,
+        "_GXBegin": 1,
+        "_GXWGFifo": 1,
+        "_PSMTXCopy": 1,
+        "_GXGetViewportv": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "_Screen": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_re4dc_log": 1,
+        "_fRand1_1": 1,
+        "_PSVECNormalize": 1,
+        "_pLog": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_memclr_asm": 1,
+        "_AddOtDirect": 1,
+        "__Z9mem_allocmPKciii": 1
+      }
+    },
+    {
+      "feature": 1,
+      "diag": "1",
+      "unit": "espgen44",
+      "raw_sha256": "ce5352384db13fc8a30547ad5bf57a2594314742ee9b8d06e048423575dd22df",
+      "raw_equal_baseline": false,
+      "strip_debug_sha256": "97cce15be9aa9fb3d5120b588a627da78c88fbb91d9c4a4b75cdc1b9cc1da4f5",
+      "strip_debug_raw_equal_baseline": false,
+      "differing_sections": [
+        ".text.Espgen44_Destruct",
+        ".rela.text.Espgen44_Destruct",
+        ".text.Espgen44_SetFreeWork",
+        ".rela.text.Espgen44_SetFreeWork",
+        ".debug_info",
+        ".rela.debug_info",
+        ".debug_abbrev",
+        ".debug_loclists",
+        ".rela.debug_loclists",
+        ".debug_aranges",
+        ".debug_rnglists",
+        ".rela.debug_rnglists",
+        ".debug_line",
+        ".rela.debug_line",
+        ".debug_str",
+        ".debug_frame",
+        ".symtab",
+        ".strtab"
+      ],
+      "record": null,
+      "sizes": {
+        "text": 488,
+        "data": 0,
+        "bss": 0,
+        "rodata": 0
+      },
+      "self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:25:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:40:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:62:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 52,
+          "classification": "static"
+        }
+      ],
+      "baseline_self_stack": [
+        {
+          "declaration": "../../../src/game/espgen44.cpp:15:6:void Espgen44_Move(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:20:6:void Espgen44_Trans(EspgenWork*)",
+          "self_bytes": 0,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:35:6:void Espgen44_Destruct(EspgenWork*)",
+          "self_bytes": 32,
+          "classification": "static"
+        },
+        {
+          "declaration": "../../../src/game/espgen44.cpp:54:5:int Espgen44_SetFreeWork(EspgenWork*, EspGenWork*, EspSeqData*, cModel*, u16, f32 (*)[3][4], Vec*, Vec*, EspSeqOpt*)",
+          "self_bytes": 28,
+          "classification": "static"
+        }
+      ],
+      "undefined_symbols": {
+        "_re4dc_rain_diag_destruct44": 1,
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_re4dc_rain_diag_generation": 1,
+        "_re4dc_rain_diag_bind44": 1
+      },
+      "baseline_undefined_symbols": {
+        "_Filter06SetParam": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1
+      }
+    }
+  ],
+  "off_identity": [
+    {
+      "feature": 0,
+      "diag": "absent",
+      "unit": "filter06",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 0,
+      "diag": "absent",
+      "unit": "espgen44",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 0,
+      "diag": "0",
+      "unit": "filter06",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 0,
+      "diag": "0",
+      "unit": "espgen44",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 1,
+      "diag": "absent",
+      "unit": "filter06",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 1,
+      "diag": "absent",
+      "unit": "espgen44",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 1,
+      "diag": "0",
+      "unit": "filter06",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    },
+    {
+      "feature": 1,
+      "diag": "0",
+      "unit": "espgen44",
+      "allocated_and_relocations_identical": true,
+      "raw_equal": false,
+      "strip_debug_raw_equal": true
+    }
+  ],
+  "on_pricing": [
+    {
+      "feature": 0,
+      "selected_pair_section_delta": {
+        "text": 2120,
+        "data": 0,
+        "bss": 128,
+        "rodata": 0
+      },
+      "new_or_changed_external_imports": {},
+      "pair_undefined_symbols": {
+        "_GXSetCurrentMtx": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_pLog": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetZMode": 1,
+        "_GXSetCullMode": 1,
+        "_PSVECNormalize": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_GXClearVtxDesc": 1,
+        "_memclr_asm": 1,
+        "_GXGetViewportv": 1,
+        "_pG": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "__Z9mem_allocmPKciii": 1,
+        "_GXWGFifo": 1,
+        "_GXBegin": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXSetNumTevStages": 1,
+        "_PSMTXCopy": 1,
+        "_re4dc_log": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetTevColorIn": 1,
+        "_AddOtDirect": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetBlendMode": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetTevAlphaOp": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXEnableTexOffsets": 1,
+        "_fRand1_1": 1
+      },
+      "baseline_pair_undefined_symbols": {
+        "_GXSetCurrentMtx": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_pLog": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetZMode": 1,
+        "_GXSetCullMode": 1,
+        "_PSVECNormalize": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_GXClearVtxDesc": 1,
+        "_memclr_asm": 1,
+        "_GXGetViewportv": 1,
+        "_pG": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "__Z9mem_allocmPKciii": 1,
+        "_GXWGFifo": 1,
+        "_GXBegin": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_GXSetNumTevStages": 1,
+        "_PSMTXCopy": 1,
+        "_re4dc_log": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetTevColorIn": 1,
+        "_AddOtDirect": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetBlendMode": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetTevAlphaOp": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXEnableTexOffsets": 1,
+        "_fRand1_1": 1
+      },
+      "new_imports_resolved_by_frozen_provider": true,
+      "absolute_linked_padding_stack_headroom": "UNPROVEN"
+    },
+    {
+      "feature": 1,
+      "selected_pair_section_delta": {
+        "text": 2740,
+        "data": 0,
+        "bss": 128,
+        "rodata": 0
+      },
+      "new_or_changed_external_imports": {},
+      "pair_undefined_symbols": {
+        "_GXSetCurrentMtx": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_pLog": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetZMode": 1,
+        "_GXSetCullMode": 1,
+        "_PSVECNormalize": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_GXClearVtxDesc": 1,
+        "_memclr_asm": 1,
+        "_GXGetViewportv": 1,
+        "_pG": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "__Z9mem_allocmPKciii": 1,
+        "_GXWGFifo": 1,
+        "_GXBegin": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_Screen": 1,
+        "_GXSetNumTevStages": 1,
+        "_PSMTXCopy": 1,
+        "_re4dc_log": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetTevColorIn": 1,
+        "_AddOtDirect": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetBlendMode": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetTevAlphaOp": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXEnableTexOffsets": 1,
+        "_fRand1_1": 1
+      },
+      "baseline_pair_undefined_symbols": {
+        "_GXSetCurrentMtx": 1,
+        "_GXSetTevAlphaIn": 1,
+        "_GXSetTevColorOp": 1,
+        "_pLog": 1,
+        "_re4dc_rain_dc_streaks": 1,
+        "_GXSetVtxAttrFmt": 1,
+        "_GXSetTevOrder": 1,
+        "_GXSetZMode": 1,
+        "_GXSetCullMode": 1,
+        "_PSVECNormalize": 1,
+        "Filter05SetParam__Fiiiiiiifff": 1,
+        "_GXClearVtxDesc": 1,
+        "_memclr_asm": 1,
+        "_GXGetViewportv": 1,
+        "_pG": 1,
+        "__Z26Render_checkBlurPermissionv": 1,
+        "__Z9mem_allocmPKciii": 1,
+        "_GXWGFifo": 1,
+        "_GXBegin": 1,
+        "__Z23CameraCurrentProjectionv": 1,
+        "_Screen": 1,
+        "_GXSetNumTevStages": 1,
+        "_PSMTXCopy": 1,
+        "_re4dc_log": 1,
+        "__Z15Filter09GetbUsev": 1,
+        "_GXSetNumTexGens": 1,
+        "_GXSetTevColorIn": 1,
+        "_AddOtDirect": 1,
+        "_GXSetNumChans": 1,
+        "_GXSetVtxDesc": 1,
+        "_GXSetBlendMode": 1,
+        "_GXSetChanCtrl": 1,
+        "_GXSetTevAlphaOp": 1,
+        "__ZN4cLog3errEiiPKcz": 1,
+        "_GXLoadPosMtxImm": 1,
+        "_GXEnableTexOffsets": 1,
+        "_fRand1_1": 1
+      },
+      "new_imports_resolved_by_frozen_provider": true,
+      "absolute_linked_padding_stack_headroom": "UNPROVEN"
+    }
+  ],
+  "opcodes_require_root_review": true,
+  "opcode_observations": [
+    {
+      "feature": 0,
+      "ocbwb_occurrences": 1,
+      "ocbi_occurrences": 0,
+      "ocbp_occurrences": 0,
+      "P2_mask_literal_seen": true,
+      "boot_128B_fourline_and_all_P2_access_semantics": "REQUIRES actual function/relocation opcode review; never inferred from counts"
+    },
+    {
+      "feature": 1,
+      "ocbwb_occurrences": 1,
+      "ocbi_occurrences": 0,
+      "ocbp_occurrences": 0,
+      "P2_mask_literal_seen": true,
+      "boot_128B_fourline_and_all_P2_access_semantics": "REQUIRES actual function/relocation opcode review; never inferred from counts"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 235, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 219, in main
+    if args.grant:grant_check(p,args.pins,json.loads(pathlib.Path(args.grant).read_text()),args.out);path_check(args.out)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dev/shm/gc-rain-tools-reviewda4-zlv99edr/matrix.py", line 102, in grant_check
+    if not isinstance(g,dict) or any(g.get(k)!=v for k,v in expected.items()) or g.get('authorized') is not True or not re.fullmatch(r'[A-Za-z0-9_-]{8,80}',g.get('grant_id','')):raise ValueError('missing/mismatched root allocation grant')
+                                                                                                                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: missing/mismatched root allocation grant

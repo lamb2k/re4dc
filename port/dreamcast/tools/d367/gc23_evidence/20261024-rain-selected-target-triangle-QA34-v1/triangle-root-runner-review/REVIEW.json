@@ -1,0 +1,42 @@
+{
+  "status": "ROOT_INDEPENDENT_RUNNER_SOURCE_HOST_CLEAR",
+  "source": "78cbd962ee0d98dc700d0fb452500a16ac35b14c",
+  "root_is_non_author": true,
+  "host_groups": 24,
+  "fresh_plan_semantic_keys_exact": [
+    "classification",
+    "tool",
+    "prepared",
+    "preparation_source",
+    "seal",
+    "generic_source",
+    "generic_sha256",
+    "plan",
+    "held_camera_cases",
+    "limits",
+    "actual_private_predicate_calls",
+    "new_rays",
+    "ledger_accesses",
+    "runtime_admitted"
+  ],
+  "cases": 75,
+  "other_cases_untested": 9600,
+  "candidate_cap": 100000,
+  "final_triangle_cap": 2667,
+  "seconds_cap": 120,
+  "private_predicates": 0,
+  "rays": 0,
+  "SDK": 0,
+  "original_importer_unchanged": true,
+  "changed_only_added_files": [
+    "A\tport/dreamcast/tools/d367/actual_triangle_audit24/RUNNER-PREPARATION.md",
+    "A\tport/dreamcast/tools/d367/actual_triangle_audit24/plan_controls.py",
+    "A\tport/dreamcast/tools/d367/actual_triangle_audit24/runner-origin-before-checkpoint.txt",
+    "A\tport/dreamcast/tools/d367/actual_triangle_audit24/runner.py",
+    "A\tport/dreamcast/tools/d367/actual_triangle_audit24/test_runner.py"
+  ],
+  "plan_sha256": "bf0b1a90f52db5e5f6b1471e2ccff20a873450e62291e3b2998a102158f0b134",
+  "prior_preflight_refusals_preserved": true,
+  "stat_cache_cause": "Author postcommit doc EOL normalization; exact blob bytes unchanged, index stat refreshed before this run",
+  "timestamp": "2026-10-24T09:07:34.491601+00:00"
+}

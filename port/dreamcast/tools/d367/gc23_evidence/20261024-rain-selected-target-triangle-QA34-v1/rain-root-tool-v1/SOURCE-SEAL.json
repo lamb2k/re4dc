@@ -1,0 +1,37 @@
+{
+  "head": "da4cf4518df491b1d26c8615a263ba0ff5911799",
+  "branch": "origin/wip/rain-diag24-20261024",
+  "parent": "84648350bb6a3bc4e1ec94026b0fb98937b1ff69",
+  "members": {
+    "README.md": {
+      "bytes": 9173,
+      "sha256": "21b2c9d467b6f8c4adbe43ba64b879a4880fe560ed1c4319f528647bf24137a8"
+    },
+    "matrix.py": {
+      "bytes": 17337,
+      "sha256": "b2e3e690a6fe604573bfb1327fca6d049753d61391d7f444f1f3023ec04073d0"
+    },
+    "readback.py": {
+      "bytes": 12910,
+      "sha256": "80415cee5c1395b7484e3eef77941a89a040b7567746a8250c3814a3e3fe94ee"
+    },
+    "test_preparation.py": {
+      "bytes": 10646,
+      "sha256": "e098ba4dcb17be0d7882f37e396ad616f2310e33a793d3107729d22942fc0d67"
+    },
+    "PINS-ROOT-FIX-V1.json": {
+      "bytes": 44864,
+      "sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9"
+    },
+    "ROOT-GRANT-TEMPLATE-ROOT-FIX-V1.json": {
+      "bytes": 665,
+      "sha256": "2cebca3741c2332d05c72812c6248b7da27717c2fdb394b0a9b9ee39fda4f0c8"
+    },
+    "ROOT-REPAIR-RECEIPT-V1.json": {
+      "bytes": 940,
+      "sha256": "91dac28162b81026ccf388dabeb60fd252d814963552dacd736acf191b33bd09"
+    }
+  },
+  "SDK_invocations": 0,
+  "independent_review": "PENDING"
+}

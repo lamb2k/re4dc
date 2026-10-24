@@ -1,0 +1,71 @@
+{
+  "verified_manifests": [
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v1/SOURCE-SEAL.json",
+      "label": "rain-root-tool-v1",
+      "name": "SOURCE-SEAL.json",
+      "members": 7,
+      "sha256": "9ae45aba44eacc0b740fd2c148cef0b3f7c3a7e2593db4a68e19fe69acad6044"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/rain-diag24/target-matrix-root-repair-v2/SOURCE-SEAL.json",
+      "label": "rain-root-tool-v2",
+      "name": "SOURCE-SEAL.json",
+      "members": 7,
+      "sha256": "9d21c7a3ab3db4d4f83debb39d9615c5693760bdaf5807f0d44a63a1124fbdcf"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targetda4/SHA256-MANIFEST.json",
+      "label": "review-rain-targetda4",
+      "name": "SHA256-MANIFEST.json",
+      "members": 15,
+      "sha256": "f8e038da65f273ac42281ccadd0af1b26bc6e3673ed8f7d63fc8ef9707bd25e3"
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/review-rain-targeta7/SHA256-MANIFEST.json",
+      "label": "review-rain-targeta7",
+      "name": "SHA256-MANIFEST.json",
+      "members": 11,
+      "sha256": "f12e5cc0f03e51b65c43e0bac11e422a8ce48883ca20004cd45f6b9501fc613e"
+    }
+  ],
+  "QA_seal_members": 34,
+  "syntax_only_checked": [
+    "dated-root-docs/takeover-refresh-20261024.py",
+    "rain-root-tool-v1/matrix.py",
+    "rain-root-tool-v1/readback.py",
+    "rain-root-tool-v1/test_preparation.py",
+    "rain-root-tool-v1/run-matrix.sh",
+    "rain-root-tool-v2/matrix.py",
+    "rain-root-tool-v2/readback.py",
+    "rain-root-tool-v2/test_preparation.py",
+    "rain-root-tool-v2/run-matrix.sh",
+    "review-rain-targetda4/run_extra_abi_controls.py",
+    "review-rain-targetda4/run_gnu_unique_control.py",
+    "review-rain-targetda4/run_original_mutants_fixed.py",
+    "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/plan_controls.py",
+    "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/prepare.py",
+    "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/runner.py",
+    "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/test_prepare.py",
+    "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/test_runner.py",
+    "QA-sealed-preparation/dependency_census.py",
+    "QA-sealed-preparation/failed-media-preflight-v1.py",
+    "QA-sealed-preparation/future_master.py",
+    "QA-sealed-preparation/h2-bound-run.py",
+    "QA-sealed-preparation/post_slot.py",
+    "QA-sealed-preparation/prepare_media.py",
+    "QA-sealed-preparation/test_preparation.py",
+    "QA-sealed-preparation/verify_hair_eol_bridge.py",
+    "QA-external-generic-tools/exact_child55.py",
+    "QA-external-generic-tools/stat_guest_slot.sh",
+    "collect.py"
+  ],
+  "rain_selected_cases": 8,
+  "triangle_actual_cases": 75,
+  "triangle_report_sha256": "7e301a48c99a46afc2397d9e823aab08c1b5b0c0e9add46af7ed80d3835afef8",
+  "SDK_or_guest_runs": 0,
+  "runtime_or_integration_mutation": false,
+  "active_stage_outputs_or_plans_captured": false,
+  "private_geometry_or_binary_payloads_copied": false,
+  "limits": "Rain selected target metadata only, no full programme/guest/cache/look acceptance. Triangle exact-real opportunity only, no runtime/numeric-raster/continuous-view/cull certificate. QA preparation/root stage-only clear, no staging completion/media/guest/memory claim; frozen historical HOLD and EOL bridge remain separate dated records."
+}

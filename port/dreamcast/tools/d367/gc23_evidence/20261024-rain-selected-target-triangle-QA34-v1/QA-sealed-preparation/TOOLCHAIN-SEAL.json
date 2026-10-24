@@ -1,0 +1,195 @@
+{
+  "status": "FROZEN_PREPARATION_ROOT_FINAL_REVIEW_REQUIRED_NO_STAGE",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "QA_receipt_sha256": "edb3118f0431ee91202baddaf5c2c72350d3012dc81ed8fc135cc38b95eb9763",
+  "members": {
+    "ACTUAL-RESOLVED-MAPS.json": {
+      "size": 1348402,
+      "sha256": "dca8981af595b70d77f0d730ac6168122f9c19bc9cda9a78a25ef111c5c17c37"
+    },
+    "CURRENT-CANDIDATE-EXTENTS.json": {
+      "size": 122947,
+      "sha256": "66baec2bdf57e84091d173eafcc6c40fed2aa88c85d8f91d6a7efd21abf6d880"
+    },
+    "CURRENT-CANDIDATE-MANIFEST.json": {
+      "size": 231281,
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+    },
+    "DEPENDENCY-CENSUS.json": {
+      "size": 8741683,
+      "sha256": "bc97b7bc19c528bd0edcb8959d9e085d5c44c71e1b1485a6801c9c3ead893a69"
+    },
+    "FAILED-BROAD-PROFILE-v1.json": {
+      "size": 737,
+      "sha256": "c75dbd5c29ddd88d7bf8a929ec11d9abdfadec7ca4986945f6f7fbe1f1d07b38"
+    },
+    "FAILED-MEDIA-PREFLIGHT-v1.json": {
+      "size": 331,
+      "sha256": "f6d478b82744f104540bbb277ea858a7e9a924c20ee0a522dae2fe889057b3da"
+    },
+    "FUTURE-GUEST-COMMANDS.json": {
+      "size": 13102,
+      "sha256": "8cc78216993e479161842a4971e8ee77026470764deb1de15dc292cc85d71574"
+    },
+    "HAIR-EOL-BRIDGE.json": {
+      "size": 32654,
+      "sha256": "91f99a8fd029da78fa0d768ec4891ca3a6b1beacb6f6e25aff0137f170e1a318"
+    },
+    "MEDIA-PLAN.json": {
+      "size": 4971,
+      "sha256": "9498983b83812968280627ee2442ff16da61724b681c4ce6c70ead1e09f5ba94"
+    },
+    "OFF-EXPECTED-MANIFEST.json": {
+      "size": 231654,
+      "sha256": "94552aeda0487057fb21c8e7784a6178e3ccf46a4df6a2ef84c5954b11e5d49f"
+    },
+    "ON-EXPECTED-MANIFEST.json": {
+      "size": 231654,
+      "sha256": "8ed8c24e660e908f79e30d7b8f5eabab30413bd4fc9f4e3f89e00a42d2261adc"
+    },
+    "PREPARATION-CONTROLS-r2.json": {
+      "size": 3901,
+      "sha256": "8b89ada42a9e608d2b5cf0a55b772d0bf1b3cb5117a4d3ac4be0e04b359c371b"
+    },
+    "PREPARATION-CONTROLS-r3.json": {
+      "size": 4240,
+      "sha256": "0cc2273d7528dbaf4a8c7fe26d3733fccba2a5fef94e92dae3460364c079c85e"
+    },
+    "PREPARATION-CONTROLS-r4.json": {
+      "size": 4365,
+      "sha256": "2b202a7faa8247101fb7f7d2f00076ddc01ef54b060674edb4cd9d4ef8e0b338"
+    },
+    "PREPARATION-CONTROLS.json": {
+      "size": 2973,
+      "sha256": "83efeb2445c57cab798c5091e93dff24f575ef264333c15287be10ecc907c1f3"
+    },
+    "QA-READBACK.json": {
+      "size": 13209,
+      "sha256": "2d23710e1de201a7529d863a83a5ef39639246fa7a0f51176785b8b0b15b820c"
+    },
+    "README.md": {
+      "size": 4749,
+      "sha256": "60ef49397c854db129e3c12bb2f76120eb591aa1a4a3a5af97e049bed1319847"
+    },
+    "ROOT-SUPPLEMENTAL-CLOSURE-v1.json": {
+      "size": 755,
+      "sha256": "9abb162ac247641fdf46355b1ff9756cdf516ddd5f8635ea7431e2e88e8e96e7"
+    },
+    "SIX-KEY-SUPPLEMENT.json": {
+      "size": 4166,
+      "sha256": "3b65c9771159efa9a4ece90f3ae027bd3130361f2154d754a2c98aa3c5c3bb61"
+    },
+    "SOURCE-IP.BIN": {
+      "size": 32768,
+      "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c"
+    },
+    "dependency_census.py": {
+      "size": 6857,
+      "sha256": "47af5b96ba3d89d49b9b6e2843a50cb402cf0a68d585f8202e174a7bb7cb6ce2"
+    },
+    "failed-broad-profile-v1.py": {
+      "size": 7642,
+      "sha256": "74563c4c7fc0608a3c907a7383784fc69ef671e3fdb83a698888bf9546103f03"
+    },
+    "failed-media-preflight-v1.py": {
+      "size": 6389,
+      "sha256": "94144cffb499635e7147eb9dbd9c4ac2fe6aa6d65cd052f8df7fef69d2ff6b56"
+    },
+    "fixtures/h2-pad.txt": {
+      "size": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+    },
+    "fixtures/h2-warp.txt": {
+      "size": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+    },
+    "fixtures/kos-fight-49152-0.txt": {
+      "size": 770,
+      "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+    },
+    "fixtures/kos-fight-49152-1.txt": {
+      "size": 770,
+      "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b"
+    },
+    "future_master.py": {
+      "size": 11289,
+      "sha256": "a4af2683510ed91e00b70efe97545ec475d633d9ad9b201f6b7649ce71e06494"
+    },
+    "h2-bound-run.py": {
+      "size": 2439,
+      "sha256": "75ed49f0e7ad3ba51d66019655b882487b522c9a1845ce691921edccab1c06ac"
+    },
+    "post_slot.py": {
+      "size": 2212,
+      "sha256": "c73ce37681cc5f8cbe3e68b77c9a87ba0b76f30c6d3178118081331528094b96"
+    },
+    "prepare_media.py": {
+      "size": 6395,
+      "sha256": "780f74823a83b85805ddd43ec780d8d7f9a9cce8c575241c31cb8f9345b55edb"
+    },
+    "test_preparation.py": {
+      "size": 4674,
+      "sha256": "c3cde6a1d517bdab640f2709bff74a526cabbe6f5ee432b2b7e78b2a3cced57e"
+    },
+    "verify_hair_eol_bridge.py": {
+      "size": 3554,
+      "sha256": "dfa961548db1b5375a05e156705e52c28e2cf5c75d486a2fdd2ed94f7bd1a1a8"
+    },
+    "verify_qa_three.py": {
+      "size": 8724,
+      "sha256": "39279f9c8f7382bd9c430d3c72762cb042c1a19f8b4124b7dd1458877d45665e"
+    }
+  },
+  "external_tools": {
+    "python3": {
+      "path": "/usr/bin/python3",
+      "identity": {
+        "size": 8020928,
+        "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+      }
+    },
+    "genisoimage": {
+      "path": "/usr/bin/genisoimage",
+      "identity": {
+        "size": 694424,
+        "sha256": "9bacc5951ca0767701cfd8e6b47537f199977e51a6e943f4edfdcf9d639d99d2"
+      }
+    },
+    "WindowsPython": {
+      "path": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+      "identity": {
+        "size": 104952,
+        "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+      }
+    },
+    "exact_child55": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py",
+      "identity": {
+        "size": 2438,
+        "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+      }
+    },
+    "stat_guest_slot": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+      "identity": {
+        "size": 249,
+        "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549"
+      }
+    },
+    "console_exe": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+      "identity": {
+        "size": 14416384,
+        "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+      }
+    }
+  },
+  "actual_stage": false,
+  "actual_SDK": false,
+  "actual_guest": false,
+  "prune_auto": 0,
+  "stage_ext4": 0,
+  "guest_allocation": "separate exact root grant only; H2 requires fresh long exception",
+  "unretained_intermediates": "No retrospective output hash claimed",
+  "originals_preserved": true
+}

@@ -1,0 +1,65 @@
+{
+  "commit": "da4cf4518df491b1d26c8615a263ba0ff5911799",
+  "mirror_seal_sha256": "9ae45aba44eacc0b740fd2c148cef0b3f7c3a7e2593db4a68e19fe69acad6044",
+  "PINS": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+  "files": {
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/README.md": {
+      "bytes": 9173,
+      "sha256": "21b2c9d467b6f8c4adbe43ba64b879a4880fe560ed1c4319f528647bf24137a8"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/matrix.py": {
+      "bytes": 17337,
+      "sha256": "b2e3e690a6fe604573bfb1327fca6d049753d61391d7f444f1f3023ec04073d0"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/readback.py": {
+      "bytes": 12910,
+      "sha256": "80415cee5c1395b7484e3eef77941a89a040b7567746a8250c3814a3e3fe94ee"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/test_preparation.py": {
+      "bytes": 10646,
+      "sha256": "e098ba4dcb17be0d7882f37e396ad616f2310e33a793d3107729d22942fc0d67"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS-ROOT-FIX-V1.json": {
+      "bytes": 44864,
+      "sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-GRANT-TEMPLATE-ROOT-FIX-V1.json": {
+      "bytes": 665,
+      "sha256": "2cebca3741c2332d05c72812c6248b7da27717c2fdb394b0a9b9ee39fda4f0c8"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-REPAIR-RECEIPT-V1.json": {
+      "bytes": 940,
+      "sha256": "91dac28162b81026ccf388dabeb60fd252d814963552dacd736acf191b33bd09"
+    },
+    "src/game/filter06.cpp": {
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "unchanged_from_846": true
+    },
+    "src/game/espgen44.cpp": {
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "unchanged_from_846": true
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "unchanged_from_846": true
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/run-matrix.sh": {
+      "bytes": 2101,
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "unchanged_from_846": true
+    }
+  },
+  "changed_paths": [
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS-ROOT-FIX-V1.json",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/README.md",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-GRANT-TEMPLATE-ROOT-FIX-V1.json",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-REPAIR-RECEIPT-V1.json",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/matrix.py",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/readback.py",
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/test_preparation.py"
+  ],
+  "SDK": 0
+}

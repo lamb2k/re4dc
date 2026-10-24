@@ -1,0 +1,14 @@
+test_actual_level_identity (test_prepare.Controls.test_actual_level_identity) ... ok
+test_complete_component_not_hit_subset (test_prepare.Controls.test_complete_component_not_hit_subset) ... ok
+test_degenerate_buddy_refused (test_prepare.Controls.test_degenerate_buddy_refused) ... ok
+test_distinct_actual_adjacent_panel (test_prepare.Controls.test_distinct_actual_adjacent_panel) ... ok
+test_finite_work_no_short_zip (test_prepare.Controls.test_finite_work_no_short_zip) ... ok
+test_physical_id_not_coordinate_alias (test_prepare.Controls.test_physical_id_not_coordinate_alias) ... ok
+test_pinned_input_mutation_refused (test_prepare.Controls.test_pinned_input_mutation_refused) ... ok
+test_prefix_and_self_refuse (test_prepare.Controls.test_prefix_and_self_refuse) ... ok
+test_target_completeness_and_order (test_prepare.Controls.test_target_completeness_and_order) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+OK

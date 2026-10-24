@@ -1,0 +1,58 @@
+{
+  "source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "controls": [
+    {
+      "binding": 3,
+      "schedule": "same-format",
+      "rejected": true
+    },
+    {
+      "binding": 3,
+      "schedule": "changed-value",
+      "rejected": true
+    },
+    {
+      "binding": 10,
+      "schedule": "same-format",
+      "rejected": true
+    },
+    {
+      "binding": 10,
+      "schedule": "changed-value",
+      "rejected": true
+    },
+    {
+      "binding": 13,
+      "schedule": "same-format",
+      "rejected": true
+    },
+    {
+      "binding": 13,
+      "schedule": "changed-value",
+      "rejected": true
+    },
+    {
+      "binding": 15,
+      "schedule": "same-format",
+      "rejected": true
+    },
+    {
+      "binding": 15,
+      "schedule": "changed-value",
+      "rejected": true
+    },
+    {
+      "binding": 0,
+      "identical_admitted": true
+    },
+    {
+      "binding": 1,
+      "identical_admitted": true
+    },
+    {
+      "binding": 2,
+      "identical_admitted": true
+    }
+  ],
+  "SDK": 0
+}

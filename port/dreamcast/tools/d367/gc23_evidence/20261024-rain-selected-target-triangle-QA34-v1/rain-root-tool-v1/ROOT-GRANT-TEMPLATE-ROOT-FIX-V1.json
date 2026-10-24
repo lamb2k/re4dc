@@ -1,0 +1,24 @@
+{
+  "kind": "ROOT_SELECTED_SH4_GRANT",
+  "authorized": false,
+  "grant_id": "ROOT_MUST_ALLOCATE_FRESH_ID",
+  "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+  "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "pins_sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+  "output": "/dev/shm/rain-diag24-target-ROOT_ALLOCATE_FRESH_ID",
+  "jobs": 1,
+  "address_space_bytes": 268435456,
+  "owned_output_bytes": 268435456,
+  "command_seconds": 60,
+  "wall_seconds": 360,
+  "case_names": [
+    "base-f0",
+    "base-f1",
+    "new-f0-dabsent",
+    "new-f0-d0",
+    "new-f0-d1",
+    "new-f1-dabsent",
+    "new-f1-d0",
+    "new-f1-d1"
+  ]
+}

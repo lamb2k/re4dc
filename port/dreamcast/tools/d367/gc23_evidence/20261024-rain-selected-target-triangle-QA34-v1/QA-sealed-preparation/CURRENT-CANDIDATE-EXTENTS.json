@@ -1,0 +1,6850 @@
+{
+  "1ST_READ.BIN": {
+    "lba": 547354,
+    "size": 3370820
+  },
+  "st2/r200.arc": {
+    "lba": 543741,
+    "size": 1891008
+  },
+  "st2/r200.dar": {
+    "lba": 544665,
+    "size": 5505600
+  },
+  "st1/r100.arc": {
+    "lba": 455553,
+    "size": 2876704
+  },
+  "st1/r100.dar": {
+    "lba": 456958,
+    "size": 5373952
+  },
+  "st1/r100_00.dat": {
+    "lba": 459582,
+    "size": 1920
+  },
+  "st1/r100_01.dat": {
+    "lba": 459583,
+    "size": 21760
+  },
+  "st1/r100_02.dat": {
+    "lba": 459594,
+    "size": 10720
+  },
+  "st1/r100_03.dat": {
+    "lba": 459600,
+    "size": 7328
+  },
+  "st1/r100_04.dat": {
+    "lba": 459604,
+    "size": 12640
+  },
+  "st1/r101.arc": {
+    "lba": 459611,
+    "size": 1848800
+  },
+  "st1/r101.dar": {
+    "lba": 460514,
+    "size": 6778880
+  },
+  "st1/r102.arc": {
+    "lba": 463824,
+    "size": 1277408
+  },
+  "st1/r102.dar": {
+    "lba": 464448,
+    "size": 4712448
+  },
+  "st1/r103.arc": {
+    "lba": 466749,
+    "size": 1455456
+  },
+  "st1/r103.dar": {
+    "lba": 467460,
+    "size": 4919296
+  },
+  "st1/r104.arc": {
+    "lba": 469862,
+    "size": 1276800
+  },
+  "st1/r104.dar": {
+    "lba": 470486,
+    "size": 4950016
+  },
+  "st1/r105.arc": {
+    "lba": 472903,
+    "size": 1399936
+  },
+  "st1/r105.dar": {
+    "lba": 473587,
+    "size": 5752832
+  },
+  "st1/r106.arc": {
+    "lba": 476396,
+    "size": 1611200
+  },
+  "st1/r106.dar": {
+    "lba": 477183,
+    "size": 5507072
+  },
+  "st1/r107.arc": {
+    "lba": 479872,
+    "size": 1323968
+  },
+  "st1/r107.dar": {
+    "lba": 480519,
+    "size": 5380096
+  },
+  "st1/r108.arc": {
+    "lba": 483146,
+    "size": 1346208
+  },
+  "st1/r108.dar": {
+    "lba": 483804,
+    "size": 4677632
+  },
+  "st1/r109.arc": {
+    "lba": 486088,
+    "size": 532672
+  },
+  "st1/r109.dar": {
+    "lba": 486349,
+    "size": 2867200
+  },
+  "st1/r10a.arc": {
+    "lba": 487749,
+    "size": 1649152
+  },
+  "st1/r10a.dar": {
+    "lba": 488555,
+    "size": 5765120
+  },
+  "st1/r10b.arc": {
+    "lba": 491370,
+    "size": 1689600
+  },
+  "st1/r10b.dar": {
+    "lba": 492195,
+    "size": 5808128
+  },
+  "st1/r10c.arc": {
+    "lba": 495031,
+    "size": 1594304
+  },
+  "st1/r10c.dar": {
+    "lba": 495810,
+    "size": 6631232
+  },
+  "st1/r10d.arc": {
+    "lba": 499048,
+    "size": 879072
+  },
+  "st1/r10d.dar": {
+    "lba": 499478,
+    "size": 3395840
+  },
+  "st1/r10e.arc": {
+    "lba": 501137,
+    "size": 862752
+  },
+  "st1/r10e.dar": {
+    "lba": 501559,
+    "size": 3641024
+  },
+  "st1/r10f.arc": {
+    "lba": 503337,
+    "size": 1220224
+  },
+  "st1/r10f.dar": {
+    "lba": 503933,
+    "size": 5033856
+  },
+  "st1/r111.arc": {
+    "lba": 506391,
+    "size": 1442016
+  },
+  "st1/r111.dar": {
+    "lba": 507096,
+    "size": 5506848
+  },
+  "st1/r112.arc": {
+    "lba": 509785,
+    "size": 1242464
+  },
+  "st1/r112.dar": {
+    "lba": 510392,
+    "size": 5100448
+  },
+  "st1/r113.arc": {
+    "lba": 512883,
+    "size": 1581920
+  },
+  "st1/r113.dar": {
+    "lba": 513656,
+    "size": 5687328
+  },
+  "st1/r117.arc": {
+    "lba": 516434,
+    "size": 884096
+  },
+  "st1/r117.dar": {
+    "lba": 516866,
+    "size": 4149248
+  },
+  "st1/r118.arc": {
+    "lba": 518892,
+    "size": 1379360
+  },
+  "st1/r118.dar": {
+    "lba": 519566,
+    "size": 5378048
+  },
+  "st1/r119.arc": {
+    "lba": 522192,
+    "size": 1306176
+  },
+  "st1/r119.dar": {
+    "lba": 522830,
+    "size": 4300800
+  },
+  "st1/r11a.arc": {
+    "lba": 524930,
+    "size": 1422816
+  },
+  "st1/r11a.dar": {
+    "lba": 525625,
+    "size": 5476352
+  },
+  "st1/r11b.arc": {
+    "lba": 528299,
+    "size": 1480704
+  },
+  "st1/r11b.dar": {
+    "lba": 529022,
+    "size": 5896192
+  },
+  "st1/r11c.arc": {
+    "lba": 531901,
+    "size": 1298528
+  },
+  "st1/r11c.dar": {
+    "lba": 532536,
+    "size": 4930144
+  },
+  "st1/r11d.arc": {
+    "lba": 534944,
+    "size": 1219488
+  },
+  "st1/r11d.dar": {
+    "lba": 535540,
+    "size": 5334816
+  },
+  "st1/r11e.arc": {
+    "lba": 538145,
+    "size": 1078976
+  },
+  "st1/r11e.dar": {
+    "lba": 538672,
+    "size": 3398208
+  },
+  "st1/r11f.arc": {
+    "lba": 540332,
+    "size": 2114336
+  },
+  "st1/r11f.dar": {
+    "lba": 541365,
+    "size": 4865120
+  },
+  "ss/item/cap01.bin": {
+    "lba": 441040,
+    "size": 185096
+  },
+  "ss/item/cap01.tpl": {
+    "lba": 441131,
+    "size": 63680
+  },
+  "ss/item/cap02.bin": {
+    "lba": 441163,
+    "size": 187112
+  },
+  "ss/item/cap02.tpl": {
+    "lba": 441255,
+    "size": 59392
+  },
+  "ss/item/cap03.bin": {
+    "lba": 441284,
+    "size": 176136
+  },
+  "ss/item/cap03.tpl": {
+    "lba": 441371,
+    "size": 70592
+  },
+  "ss/item/cap04.bin": {
+    "lba": 441406,
+    "size": 175944
+  },
+  "ss/item/cap04.tpl": {
+    "lba": 441492,
+    "size": 78752
+  },
+  "ss/item/cap05.bin": {
+    "lba": 441531,
+    "size": 189736
+  },
+  "ss/item/cap05.tpl": {
+    "lba": 441624,
+    "size": 60672
+  },
+  "ss/item/cap06.bin": {
+    "lba": 441654,
+    "size": 68744
+  },
+  "ss/item/cap06.tpl": {
+    "lba": 441688,
+    "size": 54688
+  },
+  "ss/item/cap07.bin": {
+    "lba": 441715,
+    "size": 70408
+  },
+  "ss/item/cap07.tpl": {
+    "lba": 441750,
+    "size": 55712
+  },
+  "ss/item/cap08.bin": {
+    "lba": 441778,
+    "size": 63112
+  },
+  "ss/item/cap08.tpl": {
+    "lba": 441809,
+    "size": 53632
+  },
+  "ss/item/cap09.bin": {
+    "lba": 441836,
+    "size": 70920
+  },
+  "ss/item/cap09.tpl": {
+    "lba": 441871,
+    "size": 54176
+  },
+  "ss/item/cap10.bin": {
+    "lba": 441898,
+    "size": 82216
+  },
+  "ss/item/cap10.tpl": {
+    "lba": 441939,
+    "size": 86560
+  },
+  "ss/item/cap11.bin": {
+    "lba": 441982,
+    "size": 87624
+  },
+  "ss/item/cap11.tpl": {
+    "lba": 442025,
+    "size": 70400
+  },
+  "ss/item/cap12.bin": {
+    "lba": 442060,
+    "size": 70728
+  },
+  "ss/item/cap12.tpl": {
+    "lba": 442095,
+    "size": 39296
+  },
+  "ss/item/cap13.bin": {
+    "lba": 442115,
+    "size": 68456
+  },
+  "ss/item/cap13.tpl": {
+    "lba": 442149,
+    "size": 48288
+  },
+  "ss/item/cap14.bin": {
+    "lba": 442173,
+    "size": 82920
+  },
+  "ss/item/cap14.tpl": {
+    "lba": 442214,
+    "size": 45696
+  },
+  "ss/item/cap15.bin": {
+    "lba": 442237,
+    "size": 64200
+  },
+  "ss/item/cap15.tpl": {
+    "lba": 442269,
+    "size": 40544
+  },
+  "ss/item/cap16.bin": {
+    "lba": 442289,
+    "size": 76168
+  },
+  "ss/item/cap16.tpl": {
+    "lba": 442327,
+    "size": 39776
+  },
+  "ss/item/cap17.bin": {
+    "lba": 442347,
+    "size": 74152
+  },
+  "ss/item/cap17.tpl": {
+    "lba": 442384,
+    "size": 59936
+  },
+  "ss/item/cap18.bin": {
+    "lba": 442414,
+    "size": 94024
+  },
+  "ss/item/cap18.tpl": {
+    "lba": 442460,
+    "size": 67200
+  },
+  "ss/item/cap19.bin": {
+    "lba": 442493,
+    "size": 73704
+  },
+  "ss/item/cap19.tpl": {
+    "lba": 442529,
+    "size": 65184
+  },
+  "ss/item/cap20.bin": {
+    "lba": 442561,
+    "size": 66696
+  },
+  "ss/item/cap20.tpl": {
+    "lba": 442594,
+    "size": 72224
+  },
+  "ss/item/cap21.bin": {
+    "lba": 442630,
+    "size": 178216
+  },
+  "ss/item/cap21.tpl": {
+    "lba": 442718,
+    "size": 75424
+  },
+  "ss/item/cap22.bin": {
+    "lba": 442755,
+    "size": 145160
+  },
+  "ss/item/cap22.tpl": {
+    "lba": 442826,
+    "size": 110432
+  },
+  "ss/item/cap23.bin": {
+    "lba": 442880,
+    "size": 116072
+  },
+  "ss/item/cap23.tpl": {
+    "lba": 442937,
+    "size": 64096
+  },
+  "ss/item/cap24.bin": {
+    "lba": 442969,
+    "size": 108808
+  },
+  "ss/item/cap24.tpl": {
+    "lba": 443023,
+    "size": 83712
+  },
+  "ss/item/idm000.bin": {
+    "lba": 443064,
+    "size": 1958
+  },
+  "ss/item/idm000.tpl": {
+    "lba": 443065,
+    "size": 65600
+  },
+  "ss/item/idm001.bin": {
+    "lba": 443098,
+    "size": 11942
+  },
+  "ss/item/idm001.tpl": {
+    "lba": 443104,
+    "size": 131200
+  },
+  "ss/item/idm002.bin": {
+    "lba": 443169,
+    "size": 9926
+  },
+  "ss/item/idm002.tpl": {
+    "lba": 443174,
+    "size": 131200
+  },
+  "ss/item/idm003.bin": {
+    "lba": 443239,
+    "size": 73318
+  },
+  "ss/item/idm003.tpl": {
+    "lba": 443275,
+    "size": 65600
+  },
+  "ss/item/idm004.bin": {
+    "lba": 443308,
+    "size": 1414
+  },
+  "ss/item/idm004.tpl": {
+    "lba": 443309,
+    "size": 65600
+  },
+  "ss/item/idm005.bin": {
+    "lba": 443342,
+    "size": 5926
+  },
+  "ss/item/idm005.tpl": {
+    "lba": 443345,
+    "size": 65600
+  },
+  "ss/item/idm006.bin": {
+    "lba": 443378,
+    "size": 54022
+  },
+  "ss/item/idm006.tpl": {
+    "lba": 443405,
+    "size": 98464
+  },
+  "ss/item/idm007.bin": {
+    "lba": 443454,
+    "size": 1446
+  },
+  "ss/item/idm007.tpl": {
+    "lba": 443455,
+    "size": 65600
+  },
+  "ss/item/idm008.bin": {
+    "lba": 443488,
+    "size": 7878
+  },
+  "ss/item/idm008.tpl": {
+    "lba": 443492,
+    "size": 32832
+  },
+  "ss/item/idm009.bin": {
+    "lba": 443509,
+    "size": 7878
+  },
+  "ss/item/idm009.tpl": {
+    "lba": 443513,
+    "size": 32832
+  },
+  "ss/item/idm00a.bin": {
+    "lba": 443530,
+    "size": 7878
+  },
+  "ss/item/idm00a.tpl": {
+    "lba": 443534,
+    "size": 32832
+  },
+  "ss/item/idm00b.bin": {
+    "lba": 443551,
+    "size": 17382
+  },
+  "ss/item/idm00b.tpl": {
+    "lba": 443560,
+    "size": 65952
+  },
+  "ss/item/idm00c.bin": {
+    "lba": 443593,
+    "size": 12070
+  },
+  "ss/item/idm00c.tpl": {
+    "lba": 443599,
+    "size": 82208
+  },
+  "ss/item/idm00e.bin": {
+    "lba": 443640,
+    "size": 9926
+  },
+  "ss/item/idm00e.tpl": {
+    "lba": 443645,
+    "size": 131200
+  },
+  "ss/item/idm00f.bin": {
+    "lba": 443710,
+    "size": 13894
+  },
+  "ss/item/idm00f.tpl": {
+    "lba": 443717,
+    "size": 131200
+  },
+  "ss/item/idm011.bin": {
+    "lba": 443782,
+    "size": 15046
+  },
+  "ss/item/idm011.tpl": {
+    "lba": 443790,
+    "size": 147616
+  },
+  "ss/item/idm012.bin": {
+    "lba": 443863,
+    "size": 17094
+  },
+  "ss/item/idm012.tpl": {
+    "lba": 443872,
+    "size": 66336
+  },
+  "ss/item/idm013.bin": {
+    "lba": 443905,
+    "size": 17062
+  },
+  "ss/item/idm013.tpl": {
+    "lba": 443914,
+    "size": 66336
+  },
+  "ss/item/idm014.bin": {
+    "lba": 443947,
+    "size": 17094
+  },
+  "ss/item/idm014.tpl": {
+    "lba": 443956,
+    "size": 66336
+  },
+  "ss/item/idm015.bin": {
+    "lba": 443989,
+    "size": 17062
+  },
+  "ss/item/idm015.tpl": {
+    "lba": 443998,
+    "size": 66336
+  },
+  "ss/item/idm016.bin": {
+    "lba": 444031,
+    "size": 17094
+  },
+  "ss/item/idm016.tpl": {
+    "lba": 444040,
+    "size": 66336
+  },
+  "ss/item/idm017.bin": {
+    "lba": 444073,
+    "size": 90950
+  },
+  "ss/item/idm017.tpl": {
+    "lba": 444118,
+    "size": 65600
+  },
+  "ss/item/idm018.bin": {
+    "lba": 444151,
+    "size": 1446
+  },
+  "ss/item/idm018.tpl": {
+    "lba": 444152,
+    "size": 65600
+  },
+  "ss/item/idm019.bin": {
+    "lba": 444185,
+    "size": 54022
+  },
+  "ss/item/idm019.tpl": {
+    "lba": 444212,
+    "size": 98464
+  },
+  "ss/item/idm01a.bin": {
+    "lba": 444261,
+    "size": 1318
+  },
+  "ss/item/idm01a.tpl": {
+    "lba": 444262,
+    "size": 65600
+  },
+  "ss/item/idm01b.bin": {
+    "lba": 444295,
+    "size": 8320
+  },
+  "ss/item/idm01b.tpl": {
+    "lba": 444300,
+    "size": 2112
+  },
+  "ss/item/idm01c.bin": {
+    "lba": 444302,
+    "size": 54022
+  },
+  "ss/item/idm01c.tpl": {
+    "lba": 444329,
+    "size": 98464
+  },
+  "ss/item/idm01d.bin": {
+    "lba": 444378,
+    "size": 2982
+  },
+  "ss/item/idm01d.tpl": {
+    "lba": 444380,
+    "size": 131200
+  },
+  "ss/item/idm01e.bin": {
+    "lba": 444445,
+    "size": 8550
+  },
+  "ss/item/idm01e.tpl": {
+    "lba": 444450,
+    "size": 131200
+  },
+  "ss/item/idm01f.bin": {
+    "lba": 444515,
+    "size": 11206
+  },
+  "ss/item/idm01f.tpl": {
+    "lba": 444521,
+    "size": 131200
+  },
+  "ss/item/idm020.bin": {
+    "lba": 444586,
+    "size": 1446
+  },
+  "ss/item/idm020.tpl": {
+    "lba": 444587,
+    "size": 65600
+  },
+  "ss/item/idm021.bin": {
+    "lba": 444620,
+    "size": 57094
+  },
+  "ss/item/idm021.tpl": {
+    "lba": 444648,
+    "size": 65600
+  },
+  "ss/item/idm022.bin": {
+    "lba": 444681,
+    "size": 70886
+  },
+  "ss/item/idm022.tpl": {
+    "lba": 444716,
+    "size": 82080
+  },
+  "ss/item/idm023.bin": {
+    "lba": 444757,
+    "size": 58918
+  },
+  "ss/item/idm023.tpl": {
+    "lba": 444786,
+    "size": 131200
+  },
+  "ss/item/idm024.bin": {
+    "lba": 444851,
+    "size": 69542
+  },
+  "ss/item/idm024.tpl": {
+    "lba": 444885,
+    "size": 147648
+  },
+  "ss/item/idm025.bin": {
+    "lba": 444958,
+    "size": 80326
+  },
+  "ss/item/idm025.tpl": {
+    "lba": 444998,
+    "size": 65600
+  },
+  "ss/item/idm026.bin": {
+    "lba": 445031,
+    "size": 91558
+  },
+  "ss/item/idm026.tpl": {
+    "lba": 445076,
+    "size": 82048
+  },
+  "ss/item/idm027.bin": {
+    "lba": 445117,
+    "size": 86598
+  },
+  "ss/item/idm027.tpl": {
+    "lba": 445160,
+    "size": 65600
+  },
+  "ss/item/idm028.bin": {
+    "lba": 445193,
+    "size": 100518
+  },
+  "ss/item/idm028.tpl": {
+    "lba": 445243,
+    "size": 82080
+  },
+  "ss/item/idm029.bin": {
+    "lba": 445284,
+    "size": 122534
+  },
+  "ss/item/idm029.tpl": {
+    "lba": 445344,
+    "size": 131200
+  },
+  "ss/item/idm02a.bin": {
+    "lba": 445409,
+    "size": 106694
+  },
+  "ss/item/idm02a.tpl": {
+    "lba": 445462,
+    "size": 131200
+  },
+  "ss/item/idm02b.bin": {
+    "lba": 445527,
+    "size": 106566
+  },
+  "ss/item/idm02b.tpl": {
+    "lba": 445580,
+    "size": 147616
+  },
+  "ss/item/idm02c.bin": {
+    "lba": 445653,
+    "size": 29414
+  },
+  "ss/item/idm02c.tpl": {
+    "lba": 445668,
+    "size": 16448
+  },
+  "ss/item/idm02d.bin": {
+    "lba": 445677,
+    "size": 77766
+  },
+  "ss/item/idm02d.tpl": {
+    "lba": 445715,
+    "size": 131200
+  },
+  "ss/item/idm02e.bin": {
+    "lba": 445780,
+    "size": 33030
+  },
+  "ss/item/idm02e.tpl": {
+    "lba": 445797,
+    "size": 65600
+  },
+  "ss/item/idm02f.bin": {
+    "lba": 445830,
+    "size": 70950
+  },
+  "ss/item/idm02f.tpl": {
+    "lba": 445865,
+    "size": 69792
+  },
+  "ss/item/idm030.bin": {
+    "lba": 445900,
+    "size": 58758
+  },
+  "ss/item/idm030.tpl": {
+    "lba": 445929,
+    "size": 131200
+  },
+  "ss/item/idm031.bin": {
+    "lba": 445994,
+    "size": 62438
+  },
+  "ss/item/idm031.tpl": {
+    "lba": 446025,
+    "size": 164032
+  },
+  "ss/item/idm032.bin": {
+    "lba": 446106,
+    "size": 70278
+  },
+  "ss/item/idm032.tpl": {
+    "lba": 446141,
+    "size": 147648
+  },
+  "ss/item/idm033.bin": {
+    "lba": 446214,
+    "size": 74118
+  },
+  "ss/item/idm033.tpl": {
+    "lba": 446251,
+    "size": 180512
+  },
+  "ss/item/idm034.bin": {
+    "lba": 446340,
+    "size": 69190
+  },
+  "ss/item/idm034.tpl": {
+    "lba": 446374,
+    "size": 65600
+  },
+  "ss/item/idm035.bin": {
+    "lba": 446407,
+    "size": 90950
+  },
+  "ss/item/idm035.tpl": {
+    "lba": 446452,
+    "size": 65600
+  },
+  "ss/item/idm036.bin": {
+    "lba": 446485,
+    "size": 105798
+  },
+  "ss/item/idm036.tpl": {
+    "lba": 446537,
+    "size": 69760
+  },
+  "ss/item/idm037.bin": {
+    "lba": 446572,
+    "size": 133958
+  },
+  "ss/item/idm037.tpl": {
+    "lba": 446638,
+    "size": 65600
+  },
+  "ss/item/idm038.bin": {
+    "lba": 446671,
+    "size": 22662
+  },
+  "ss/item/idm038.tpl": {
+    "lba": 446683,
+    "size": 131200
+  },
+  "ss/item/idm039.bin": {
+    "lba": 446748,
+    "size": 11590
+  },
+  "ss/item/idm039.tpl": {
+    "lba": 446754,
+    "size": 131200
+  },
+  "ss/item/idm03a.bin": {
+    "lba": 446819,
+    "size": 12358
+  },
+  "ss/item/idm03a.tpl": {
+    "lba": 446826,
+    "size": 131200
+  },
+  "ss/item/idm03b.bin": {
+    "lba": 446891,
+    "size": 45350
+  },
+  "ss/item/idm03b.tpl": {
+    "lba": 446914,
+    "size": 65664
+  },
+  "ss/item/idm03c.bin": {
+    "lba": 446947,
+    "size": 21798
+  },
+  "ss/item/idm03c.tpl": {
+    "lba": 446958,
+    "size": 65664
+  },
+  "ss/item/idm03d.bin": {
+    "lba": 446991,
+    "size": 12742
+  },
+  "ss/item/idm03d.tpl": {
+    "lba": 446998,
+    "size": 196768
+  },
+  "ss/item/idm03e.bin": {
+    "lba": 447095,
+    "size": 97062
+  },
+  "ss/item/idm03e.tpl": {
+    "lba": 447143,
+    "size": 147648
+  },
+  "ss/item/idm03f.bin": {
+    "lba": 447216,
+    "size": 18726
+  },
+  "ss/item/idm03f.tpl": {
+    "lba": 447226,
+    "size": 16512
+  },
+  "ss/item/idm040.bin": {
+    "lba": 447235,
+    "size": 5094
+  },
+  "ss/item/idm040.tpl": {
+    "lba": 447238,
+    "size": 32896
+  },
+  "ss/item/idm041.bin": {
+    "lba": 447255,
+    "size": 4934
+  },
+  "ss/item/idm041.tpl": {
+    "lba": 447258,
+    "size": 32896
+  },
+  "ss/item/idm042.bin": {
+    "lba": 447275,
+    "size": 11558
+  },
+  "ss/item/idm042.tpl": {
+    "lba": 447281,
+    "size": 16448
+  },
+  "ss/item/idm043.bin": {
+    "lba": 447290,
+    "size": 11878
+  },
+  "ss/item/idm043.tpl": {
+    "lba": 447296,
+    "size": 16512
+  },
+  "ss/item/idm044.bin": {
+    "lba": 447305,
+    "size": 25862
+  },
+  "ss/item/idm044.tpl": {
+    "lba": 447318,
+    "size": 65600
+  },
+  "ss/item/idm045.bin": {
+    "lba": 447351,
+    "size": 15302
+  },
+  "ss/item/idm045.tpl": {
+    "lba": 447359,
+    "size": 65600
+  },
+  "ss/item/idm046.bin": {
+    "lba": 447392,
+    "size": 21094
+  },
+  "ss/item/idm046.tpl": {
+    "lba": 447403,
+    "size": 135328
+  },
+  "ss/item/idm047.bin": {
+    "lba": 447470,
+    "size": 4902
+  },
+  "ss/item/idm047.tpl": {
+    "lba": 447473,
+    "size": 131200
+  },
+  "ss/item/idm051.bin": {
+    "lba": 447538,
+    "size": 74566
+  },
+  "ss/item/idm051.tpl": {
+    "lba": 447575,
+    "size": 78016
+  },
+  "ss/item/idm052.bin": {
+    "lba": 447614,
+    "size": 20614
+  },
+  "ss/item/idm052.tpl": {
+    "lba": 447625,
+    "size": 8256
+  },
+  "ss/item/idm056.bin": {
+    "lba": 447630,
+    "size": 31334
+  },
+  "ss/item/idm056.tpl": {
+    "lba": 447646,
+    "size": 45312
+  },
+  "ss/item/idm057.bin": {
+    "lba": 447669,
+    "size": 14502
+  },
+  "ss/item/idm057.tpl": {
+    "lba": 447677,
+    "size": 32896
+  },
+  "ss/item/idm058.bin": {
+    "lba": 447694,
+    "size": 38854
+  },
+  "ss/item/idm058.tpl": {
+    "lba": 447713,
+    "size": 131200
+  },
+  "ss/item/idm059.bin": {
+    "lba": 447778,
+    "size": 33766
+  },
+  "ss/item/idm059.tpl": {
+    "lba": 447795,
+    "size": 131520
+  },
+  "ss/item/idm05a.bin": {
+    "lba": 447860,
+    "size": 21766
+  },
+  "ss/item/idm05a.tpl": {
+    "lba": 447871,
+    "size": 131520
+  },
+  "ss/item/idm05b.bin": {
+    "lba": 447936,
+    "size": 17478
+  },
+  "ss/item/idm05b.tpl": {
+    "lba": 447945,
+    "size": 131200
+  },
+  "ss/item/idm05c.bin": {
+    "lba": 448010,
+    "size": 14054
+  },
+  "ss/item/idm05c.tpl": {
+    "lba": 448017,
+    "size": 131200
+  },
+  "ss/item/idm05d.bin": {
+    "lba": 448082,
+    "size": 15078
+  },
+  "ss/item/idm05d.tpl": {
+    "lba": 448090,
+    "size": 131520
+  },
+  "ss/item/idm05e.bin": {
+    "lba": 448155,
+    "size": 29702
+  },
+  "ss/item/idm05e.tpl": {
+    "lba": 448170,
+    "size": 131200
+  },
+  "ss/item/idm05f.bin": {
+    "lba": 448235,
+    "size": 15942
+  },
+  "ss/item/idm05f.tpl": {
+    "lba": 448243,
+    "size": 98592
+  },
+  "ss/item/idm060.bin": {
+    "lba": 448292,
+    "size": 15942
+  },
+  "ss/item/idm060.tpl": {
+    "lba": 448300,
+    "size": 98592
+  },
+  "ss/item/idm061.bin": {
+    "lba": 448349,
+    "size": 15942
+  },
+  "ss/item/idm061.tpl": {
+    "lba": 448357,
+    "size": 98592
+  },
+  "ss/item/idm062.bin": {
+    "lba": 448406,
+    "size": 31942
+  },
+  "ss/item/idm062.tpl": {
+    "lba": 448422,
+    "size": 139424
+  },
+  "ss/item/idm063.bin": {
+    "lba": 448491,
+    "size": 31942
+  },
+  "ss/item/idm063.tpl": {
+    "lba": 448507,
+    "size": 139424
+  },
+  "ss/item/idm064.bin": {
+    "lba": 448576,
+    "size": 31942
+  },
+  "ss/item/idm064.tpl": {
+    "lba": 448592,
+    "size": 139424
+  },
+  "ss/item/idm065.bin": {
+    "lba": 448661,
+    "size": 34182
+  },
+  "ss/item/idm065.tpl": {
+    "lba": 448678,
+    "size": 147648
+  },
+  "ss/item/idm066.bin": {
+    "lba": 448751,
+    "size": 34182
+  },
+  "ss/item/idm066.tpl": {
+    "lba": 448768,
+    "size": 147648
+  },
+  "ss/item/idm067.bin": {
+    "lba": 448841,
+    "size": 34182
+  },
+  "ss/item/idm067.tpl": {
+    "lba": 448858,
+    "size": 147648
+  },
+  "ss/item/idm068.bin": {
+    "lba": 448931,
+    "size": 36454
+  },
+  "ss/item/idm068.tpl": {
+    "lba": 448949,
+    "size": 155904
+  },
+  "ss/item/idm069.bin": {
+    "lba": 449026,
+    "size": 14566
+  },
+  "ss/item/idm069.tpl": {
+    "lba": 449034,
+    "size": 131200
+  },
+  "ss/item/idm06a.bin": {
+    "lba": 449099,
+    "size": 1318
+  },
+  "ss/item/idm06a.tpl": {
+    "lba": 449100,
+    "size": 65600
+  },
+  "ss/item/idm06b.bin": {
+    "lba": 449133,
+    "size": 36230
+  },
+  "ss/item/idm06b.tpl": {
+    "lba": 449151,
+    "size": 73856
+  },
+  "ss/item/idm06c.bin": {
+    "lba": 449188,
+    "size": 70854
+  },
+  "ss/item/idm06c.tpl": {
+    "lba": 449223,
+    "size": 78016
+  },
+  "ss/item/idm06d.bin": {
+    "lba": 449262,
+    "size": 47974
+  },
+  "ss/item/idm06d.tpl": {
+    "lba": 449286,
+    "size": 32832
+  },
+  "ss/item/idm06e.bin": {
+    "lba": 449303,
+    "size": 23590
+  },
+  "ss/item/idm06e.tpl": {
+    "lba": 449315,
+    "size": 131200
+  },
+  "ss/item/idm06f.bin": {
+    "lba": 449380,
+    "size": 23590
+  },
+  "ss/item/idm06f.tpl": {
+    "lba": 449392,
+    "size": 131200
+  },
+  "ss/item/idm070.bin": {
+    "lba": 449457,
+    "size": 17382
+  },
+  "ss/item/idm070.tpl": {
+    "lba": 449466,
+    "size": 131200
+  },
+  "ss/item/idm072.bin": {
+    "lba": 449531,
+    "size": 10118
+  },
+  "ss/item/idm072.tpl": {
+    "lba": 449536,
+    "size": 4160
+  },
+  "ss/item/idm074.bin": {
+    "lba": 449539,
+    "size": 3238
+  },
+  "ss/item/idm074.tpl": {
+    "lba": 449541,
+    "size": 196768
+  },
+  "ss/item/idm076.bin": {
+    "lba": 449638,
+    "size": 422
+  },
+  "ss/item/idm076.tpl": {
+    "lba": 449639,
+    "size": 65664
+  },
+  "ss/item/idm077.bin": {
+    "lba": 449672,
+    "size": 12006
+  },
+  "ss/item/idm077.tpl": {
+    "lba": 449678,
+    "size": 65664
+  },
+  "ss/item/idm07a.bin": {
+    "lba": 449711,
+    "size": 22438
+  },
+  "ss/item/idm07a.tpl": {
+    "lba": 449722,
+    "size": 131200
+  },
+  "ss/item/idm07b.bin": {
+    "lba": 449787,
+    "size": 16230
+  },
+  "ss/item/idm07b.tpl": {
+    "lba": 449795,
+    "size": 65664
+  },
+  "ss/item/idm080.bin": {
+    "lba": 449828,
+    "size": 18662
+  },
+  "ss/item/idm080.tpl": {
+    "lba": 449838,
+    "size": 131200
+  },
+  "ss/item/idm081.bin": {
+    "lba": 449903,
+    "size": 422
+  },
+  "ss/item/idm081.tpl": {
+    "lba": 449904,
+    "size": 65664
+  },
+  "ss/item/idm082.bin": {
+    "lba": 449937,
+    "size": 4198
+  },
+  "ss/item/idm082.tpl": {
+    "lba": 449940,
+    "size": 98464
+  },
+  "ss/item/idm083.bin": {
+    "lba": 449989,
+    "size": 3238
+  },
+  "ss/item/idm083.tpl": {
+    "lba": 449991,
+    "size": 196768
+  },
+  "ss/item/idm084.bin": {
+    "lba": 450088,
+    "size": 3238
+  },
+  "ss/item/idm084.tpl": {
+    "lba": 450090,
+    "size": 196768
+  },
+  "ss/item/idm085.bin": {
+    "lba": 450187,
+    "size": 6278
+  },
+  "ss/item/idm085.tpl": {
+    "lba": 450191,
+    "size": 131200
+  },
+  "ss/item/idm086.bin": {
+    "lba": 450256,
+    "size": 3142
+  },
+  "ss/item/idm086.tpl": {
+    "lba": 450258,
+    "size": 65664
+  },
+  "ss/item/idm087.bin": {
+    "lba": 450291,
+    "size": 5318
+  },
+  "ss/item/idm087.tpl": {
+    "lba": 450294,
+    "size": 131200
+  },
+  "ss/item/idm088.bin": {
+    "lba": 450359,
+    "size": 41062
+  },
+  "ss/item/idm088.tpl": {
+    "lba": 450380,
+    "size": 147648
+  },
+  "ss/item/idm089.bin": {
+    "lba": 450453,
+    "size": 38822
+  },
+  "ss/item/idm089.tpl": {
+    "lba": 450472,
+    "size": 131200
+  },
+  "ss/item/idm08a.bin": {
+    "lba": 450537,
+    "size": 34246
+  },
+  "ss/item/idm08a.tpl": {
+    "lba": 450554,
+    "size": 131712
+  },
+  "ss/item/idm08b.bin": {
+    "lba": 450619,
+    "size": 28614
+  },
+  "ss/item/idm08b.tpl": {
+    "lba": 450633,
+    "size": 131200
+  },
+  "ss/item/idm08c.bin": {
+    "lba": 450698,
+    "size": 17702
+  },
+  "ss/item/idm08c.tpl": {
+    "lba": 450707,
+    "size": 32896
+  },
+  "ss/item/idm08d.bin": {
+    "lba": 450724,
+    "size": 10374
+  },
+  "ss/item/idm08d.tpl": {
+    "lba": 450730,
+    "size": 131200
+  },
+  "ss/item/idm08e.bin": {
+    "lba": 450795,
+    "size": 14182
+  },
+  "ss/item/idm08e.tpl": {
+    "lba": 450802,
+    "size": 8320
+  },
+  "ss/item/idm08f.bin": {
+    "lba": 450807,
+    "size": 7398
+  },
+  "ss/item/idm08f.tpl": {
+    "lba": 450811,
+    "size": 131200
+  },
+  "ss/item/idm090.bin": {
+    "lba": 450876,
+    "size": 23654
+  },
+  "ss/item/idm090.tpl": {
+    "lba": 450888,
+    "size": 131200
+  },
+  "ss/item/idm091.bin": {
+    "lba": 450953,
+    "size": 27142
+  },
+  "ss/item/idm091.tpl": {
+    "lba": 450967,
+    "size": 131200
+  },
+  "ss/item/idm092.bin": {
+    "lba": 451032,
+    "size": 3238
+  },
+  "ss/item/idm092.tpl": {
+    "lba": 451034,
+    "size": 196768
+  },
+  "ss/item/idm093.bin": {
+    "lba": 451131,
+    "size": 19590
+  },
+  "ss/item/idm093.tpl": {
+    "lba": 451141,
+    "size": 147744
+  },
+  "ss/item/idm094.bin": {
+    "lba": 451214,
+    "size": 45126
+  },
+  "ss/item/idm094.tpl": {
+    "lba": 451237,
+    "size": 65600
+  },
+  "ss/item/idm095.bin": {
+    "lba": 451270,
+    "size": 8230
+  },
+  "ss/item/idm095.tpl": {
+    "lba": 451275,
+    "size": 98592
+  },
+  "ss/item/idm096.bin": {
+    "lba": 451324,
+    "size": 35944
+  },
+  "ss/item/idm096.tpl": {
+    "lba": 451342,
+    "size": 115136
+  },
+  "ss/item/idm097.bin": {
+    "lba": 451399,
+    "size": 8230
+  },
+  "ss/item/idm097.tpl": {
+    "lba": 451404,
+    "size": 98592
+  },
+  "ss/item/idm098.bin": {
+    "lba": 451453,
+    "size": 14982
+  },
+  "ss/item/idm098.tpl": {
+    "lba": 451461,
+    "size": 65664
+  },
+  "ss/item/idm099.bin": {
+    "lba": 451494,
+    "size": 32134
+  },
+  "ss/item/idm099.tpl": {
+    "lba": 451510,
+    "size": 73856
+  },
+  "ss/item/idm09a.bin": {
+    "lba": 451547,
+    "size": 29862
+  },
+  "ss/item/idm09a.tpl": {
+    "lba": 451562,
+    "size": 131200
+  },
+  "ss/item/idm09b.bin": {
+    "lba": 451627,
+    "size": 12838
+  },
+  "ss/item/idm09b.tpl": {
+    "lba": 451634,
+    "size": 131200
+  },
+  "ss/item/idm09c.bin": {
+    "lba": 451699,
+    "size": 13574
+  },
+  "ss/item/idm09c.tpl": {
+    "lba": 451706,
+    "size": 131200
+  },
+  "ss/item/idm09d.bin": {
+    "lba": 451771,
+    "size": 37542
+  },
+  "ss/item/idm09d.tpl": {
+    "lba": 451790,
+    "size": 139456
+  },
+  "ss/item/idm09e.bin": {
+    "lba": 451859,
+    "size": 40230
+  },
+  "ss/item/idm09e.tpl": {
+    "lba": 451879,
+    "size": 131264
+  },
+  "ss/item/idm09f.bin": {
+    "lba": 451944,
+    "size": 49414
+  },
+  "ss/item/idm09f.tpl": {
+    "lba": 451969,
+    "size": 135424
+  },
+  "ss/item/idm0a0.bin": {
+    "lba": 452036,
+    "size": 3142
+  },
+  "ss/item/idm0a0.tpl": {
+    "lba": 452038,
+    "size": 65600
+  },
+  "ss/item/idm0a1.bin": {
+    "lba": 452071,
+    "size": 14502
+  },
+  "ss/item/idm0a1.tpl": {
+    "lba": 452079,
+    "size": 39168
+  },
+  "ss/item/idm0a3.bin": {
+    "lba": 452099,
+    "size": 17446
+  },
+  "ss/item/idm0a3.tpl": {
+    "lba": 452108,
+    "size": 131200
+  },
+  "ss/item/idm0a4.bin": {
+    "lba": 452173,
+    "size": 14182
+  },
+  "ss/item/idm0a4.tpl": {
+    "lba": 452180,
+    "size": 131200
+  },
+  "ss/item/idm0a5.bin": {
+    "lba": 452245,
+    "size": 12742
+  },
+  "ss/item/idm0a5.tpl": {
+    "lba": 452252,
+    "size": 131200
+  },
+  "ss/item/idm0a6.bin": {
+    "lba": 452317,
+    "size": 24518
+  },
+  "ss/item/idm0a6.tpl": {
+    "lba": 452329,
+    "size": 131200
+  },
+  "ss/item/idm0a7.bin": {
+    "lba": 452394,
+    "size": 20678
+  },
+  "ss/item/idm0a7.tpl": {
+    "lba": 452405,
+    "size": 131200
+  },
+  "ss/item/idm0a8.bin": {
+    "lba": 452470,
+    "size": 17286
+  },
+  "ss/item/idm0a8.tpl": {
+    "lba": 452479,
+    "size": 66336
+  },
+  "ss/item/idm0aa.bin": {
+    "lba": 452512,
+    "size": 7878
+  },
+  "ss/item/idm0aa.tpl": {
+    "lba": 452516,
+    "size": 65600
+  },
+  "ss/item/idm0ab.bin": {
+    "lba": 452549,
+    "size": 113254
+  },
+  "ss/item/idm0ab.tpl": {
+    "lba": 452605,
+    "size": 69760
+  },
+  "ss/item/idm0b8.bin": {
+    "lba": 452640,
+    "size": 24070
+  },
+  "ss/item/idm0b8.tpl": {
+    "lba": 452652,
+    "size": 180512
+  },
+  "ss/item/idm0b9.bin": {
+    "lba": 452741,
+    "size": 17606
+  },
+  "ss/item/idm0b9.tpl": {
+    "lba": 452750,
+    "size": 90368
+  },
+  "ss/item/idm0ba.bin": {
+    "lba": 452795,
+    "size": 17606
+  },
+  "ss/item/idm0ba.tpl": {
+    "lba": 452804,
+    "size": 90368
+  },
+  "ss/item/idm0bb.bin": {
+    "lba": 452849,
+    "size": 17606
+  },
+  "ss/item/idm0bb.tpl": {
+    "lba": 452858,
+    "size": 90368
+  },
+  "ss/item/idm0bc.bin": {
+    "lba": 452903,
+    "size": 27622
+  },
+  "ss/item/idm0bc.tpl": {
+    "lba": 452917,
+    "size": 188736
+  },
+  "ss/item/idm0bd.bin": {
+    "lba": 453010,
+    "size": 27622
+  },
+  "ss/item/idm0bd.tpl": {
+    "lba": 453024,
+    "size": 188736
+  },
+  "ss/item/idm0be.bin": {
+    "lba": 453117,
+    "size": 27558
+  },
+  "ss/item/idm0be.tpl": {
+    "lba": 453131,
+    "size": 188736
+  },
+  "ss/item/idm0bf.bin": {
+    "lba": 453224,
+    "size": 31206
+  },
+  "ss/item/idm0bf.tpl": {
+    "lba": 453240,
+    "size": 196992
+  },
+  "ss/item/idm0c0.bin": {
+    "lba": 453337,
+    "size": 31110
+  },
+  "ss/item/idm0c0.tpl": {
+    "lba": 453353,
+    "size": 196992
+  },
+  "ss/item/idm0c1.bin": {
+    "lba": 453450,
+    "size": 31110
+  },
+  "ss/item/idm0c1.tpl": {
+    "lba": 453466,
+    "size": 196992
+  },
+  "ss/item/idm0c2.bin": {
+    "lba": 453563,
+    "size": 34662
+  },
+  "ss/item/idm0c2.tpl": {
+    "lba": 453580,
+    "size": 205216
+  },
+  "ss/item/idm0c3.bin": {
+    "lba": 453681,
+    "size": 49638
+  },
+  "ss/item/idm0c3.tpl": {
+    "lba": 453706,
+    "size": 65664
+  },
+  "ss/item/idm0c4.bin": {
+    "lba": 453739,
+    "size": 18662
+  },
+  "ss/item/idm0c4.tpl": {
+    "lba": 453749,
+    "size": 131200
+  },
+  "ss/item/idm0c5.bin": {
+    "lba": 453814,
+    "size": 13798
+  },
+  "ss/item/idm0c5.tpl": {
+    "lba": 453821,
+    "size": 69824
+  },
+  "ss/item/idm0c6.bin": {
+    "lba": 453856,
+    "size": 32870
+  },
+  "ss/item/idm0c6.tpl": {
+    "lba": 453873,
+    "size": 131200
+  },
+  "ss/item/idm0c7.bin": {
+    "lba": 453938,
+    "size": 11782
+  },
+  "ss/item/idm0c7.tpl": {
+    "lba": 453944,
+    "size": 82112
+  },
+  "ss/item/idm0c8.bin": {
+    "lba": 453985,
+    "size": 11782
+  },
+  "ss/item/idm0c8.tpl": {
+    "lba": 453991,
+    "size": 82112
+  },
+  "ss/item/idm0c9.bin": {
+    "lba": 454032,
+    "size": 11782
+  },
+  "ss/item/idm0c9.tpl": {
+    "lba": 454038,
+    "size": 82112
+  },
+  "ss/item/idm0ca.bin": {
+    "lba": 454079,
+    "size": 38726
+  },
+  "ss/item/idm0ca.tpl": {
+    "lba": 454098,
+    "size": 147648
+  },
+  "ss/item/idm0cb.bin": {
+    "lba": 454171,
+    "size": 38726
+  },
+  "ss/item/idm0cb.tpl": {
+    "lba": 454190,
+    "size": 147648
+  },
+  "ss/item/idm0cc.bin": {
+    "lba": 454263,
+    "size": 38726
+  },
+  "ss/item/idm0cc.tpl": {
+    "lba": 454282,
+    "size": 147648
+  },
+  "ss/item/idm0cd.bin": {
+    "lba": 454355,
+    "size": 44486
+  },
+  "ss/item/idm0cd.tpl": {
+    "lba": 454377,
+    "size": 164128
+  },
+  "ss/item/idm0ce.bin": {
+    "lba": 454458,
+    "size": 44486
+  },
+  "ss/item/idm0ce.tpl": {
+    "lba": 454480,
+    "size": 164128
+  },
+  "ss/item/idm0cf.bin": {
+    "lba": 454561,
+    "size": 44358
+  },
+  "ss/item/idm0cf.tpl": {
+    "lba": 454583,
+    "size": 164128
+  },
+  "ss/item/idm0d0.bin": {
+    "lba": 454664,
+    "size": 52902
+  },
+  "ss/item/idm0d0.tpl": {
+    "lba": 454690,
+    "size": 180608
+  },
+  "ss/item/idm0d1.bin": {
+    "lba": 454779,
+    "size": 20070
+  },
+  "ss/item/idm0d1.tpl": {
+    "lba": 454789,
+    "size": 131200
+  },
+  "ss/item/idm0d2.bin": {
+    "lba": 454854,
+    "size": 10534
+  },
+  "ss/item/idm0d2.tpl": {
+    "lba": 454860,
+    "size": 16832
+  },
+  "ss/item/idm0d3.bin": {
+    "lba": 454869,
+    "size": 10534
+  },
+  "ss/item/idm0d3.tpl": {
+    "lba": 454875,
+    "size": 16832
+  },
+  "ss/item/idm0d4.bin": {
+    "lba": 454884,
+    "size": 10534
+  },
+  "ss/item/idm0d4.tpl": {
+    "lba": 454890,
+    "size": 16832
+  },
+  "ss/item/idm0d5.bin": {
+    "lba": 454899,
+    "size": 25350
+  },
+  "ss/item/idm0d5.tpl": {
+    "lba": 454912,
+    "size": 147648
+  },
+  "ss/item/idm0d6.bin": {
+    "lba": 454985,
+    "size": 25318
+  },
+  "ss/item/idm0d6.tpl": {
+    "lba": 454998,
+    "size": 147648
+  },
+  "ss/item/idm0d7.bin": {
+    "lba": 455071,
+    "size": 25318
+  },
+  "ss/item/idm0d7.tpl": {
+    "lba": 455084,
+    "size": 147648
+  },
+  "ss/item/idm0d8.bin": {
+    "lba": 455157,
+    "size": 30566
+  },
+  "ss/item/idm0d8.tpl": {
+    "lba": 455172,
+    "size": 164128
+  },
+  "ss/item/idm0d9.bin": {
+    "lba": 455253,
+    "size": 30566
+  },
+  "ss/item/idm0d9.tpl": {
+    "lba": 455268,
+    "size": 164128
+  },
+  "ss/item/idm0da.bin": {
+    "lba": 455349,
+    "size": 30534
+  },
+  "ss/item/idm0da.tpl": {
+    "lba": 455364,
+    "size": 164128
+  },
+  "ss/item/idm0db.bin": {
+    "lba": 455445,
+    "size": 35814
+  },
+  "ss/item/idm0db.tpl": {
+    "lba": 455463,
+    "size": 180608
+  },
+  "ss/item/id\ufffd\ufffd\ufffdf\ufffd\ufffd\ufffd\ufffd\ufffdx\ufffdg.txt": {
+    "lba": 455552,
+    "size": 1419
+  },
+  "ss/eng/chap01.dat": {
+    "lba": 427882,
+    "size": 375232
+  },
+  "ss/eng/chap02.dat": {
+    "lba": 428066,
+    "size": 374944
+  },
+  "ss/eng/chap03.dat": {
+    "lba": 428250,
+    "size": 389376
+  },
+  "ss/eng/chap04.dat": {
+    "lba": 428441,
+    "size": 374944
+  },
+  "ss/eng/chap05.dat": {
+    "lba": 428625,
+    "size": 375072
+  },
+  "ss/eng/chap06.dat": {
+    "lba": 428809,
+    "size": 352992
+  },
+  "ss/eng/chap07.dat": {
+    "lba": 428982,
+    "size": 389376
+  },
+  "ss/eng/chapter.dat": {
+    "lba": 429173,
+    "size": 1050112
+  },
+  "ss/eng/f00a.tpl": {
+    "lba": 429686,
+    "size": 115264
+  },
+  "ss/eng/f01a.tpl": {
+    "lba": 429743,
+    "size": 115264
+  },
+  "ss/eng/f01b.tpl": {
+    "lba": 429800,
+    "size": 115264
+  },
+  "ss/eng/f01c.tpl": {
+    "lba": 429857,
+    "size": 115264
+  },
+  "ss/eng/f01d.tpl": {
+    "lba": 429914,
+    "size": 115264
+  },
+  "ss/eng/f01e.tpl": {
+    "lba": 429971,
+    "size": 115264
+  },
+  "ss/eng/f01f.tpl": {
+    "lba": 430028,
+    "size": 115264
+  },
+  "ss/eng/f01g.tpl": {
+    "lba": 430085,
+    "size": 115264
+  },
+  "ss/eng/f01q.tpl": {
+    "lba": 430142,
+    "size": 115264
+  },
+  "ss/eng/f01r.tpl": {
+    "lba": 430199,
+    "size": 115264
+  },
+  "ss/eng/f01s.tpl": {
+    "lba": 430256,
+    "size": 115264
+  },
+  "ss/eng/f01t.tpl": {
+    "lba": 430313,
+    "size": 115264
+  },
+  "ss/eng/f02a.tpl": {
+    "lba": 430370,
+    "size": 115264
+  },
+  "ss/eng/f02b.tpl": {
+    "lba": 430427,
+    "size": 115264
+  },
+  "ss/eng/f03a.tpl": {
+    "lba": 430484,
+    "size": 115264
+  },
+  "ss/eng/f03b.tpl": {
+    "lba": 430541,
+    "size": 115264
+  },
+  "ss/eng/f03c.tpl": {
+    "lba": 430598,
+    "size": 115264
+  },
+  "ss/eng/f03d.tpl": {
+    "lba": 430655,
+    "size": 115264
+  },
+  "ss/eng/f03q.tpl": {
+    "lba": 430712,
+    "size": 115264
+  },
+  "ss/eng/f03r.tpl": {
+    "lba": 430769,
+    "size": 115264
+  },
+  "ss/eng/f03s.tpl": {
+    "lba": 430826,
+    "size": 115264
+  },
+  "ss/eng/f04a.tpl": {
+    "lba": 430883,
+    "size": 115264
+  },
+  "ss/eng/f05a.tpl": {
+    "lba": 430940,
+    "size": 115264
+  },
+  "ss/eng/f06a.tpl": {
+    "lba": 430997,
+    "size": 115264
+  },
+  "ss/eng/f07a.tpl": {
+    "lba": 431054,
+    "size": 115264
+  },
+  "ss/eng/f07b.tpl": {
+    "lba": 431111,
+    "size": 115264
+  },
+  "ss/eng/f08a.tpl": {
+    "lba": 431168,
+    "size": 115264
+  },
+  "ss/eng/f09a.tpl": {
+    "lba": 431225,
+    "size": 115264
+  },
+  "ss/eng/f09b.tpl": {
+    "lba": 431282,
+    "size": 115264
+  },
+  "ss/eng/f09c.tpl": {
+    "lba": 431339,
+    "size": 115264
+  },
+  "ss/eng/f09d.tpl": {
+    "lba": 431396,
+    "size": 115264
+  },
+  "ss/eng/f09e.tpl": {
+    "lba": 431453,
+    "size": 115264
+  },
+  "ss/eng/f10a.tpl": {
+    "lba": 431510,
+    "size": 115264
+  },
+  "ss/eng/f11a.tpl": {
+    "lba": 431567,
+    "size": 115264
+  },
+  "ss/eng/f12a.tpl": {
+    "lba": 431624,
+    "size": 115264
+  },
+  "ss/eng/f13a.tpl": {
+    "lba": 431681,
+    "size": 115264
+  },
+  "ss/eng/f13b.tpl": {
+    "lba": 431738,
+    "size": 115264
+  },
+  "ss/eng/f14a.tpl": {
+    "lba": 431795,
+    "size": 115264
+  },
+  "ss/eng/f15a.tpl": {
+    "lba": 431852,
+    "size": 115264
+  },
+  "ss/eng/f15b.tpl": {
+    "lba": 431909,
+    "size": 115264
+  },
+  "ss/eng/f16a.tpl": {
+    "lba": 431966,
+    "size": 115264
+  },
+  "ss/eng/f16b.tpl": {
+    "lba": 432023,
+    "size": 115264
+  },
+  "ss/eng/f17a.tpl": {
+    "lba": 432080,
+    "size": 115264
+  },
+  "ss/eng/f18a.tpl": {
+    "lba": 432137,
+    "size": 115264
+  },
+  "ss/eng/f19a.tpl": {
+    "lba": 432194,
+    "size": 115264
+  },
+  "ss/eng/f20a.tpl": {
+    "lba": 432251,
+    "size": 115264
+  },
+  "ss/eng/f20b.tpl": {
+    "lba": 432308,
+    "size": 115264
+  },
+  "ss/eng/f21a.tpl": {
+    "lba": 432365,
+    "size": 115264
+  },
+  "ss/eng/f21b.tpl": {
+    "lba": 432422,
+    "size": 115264
+  },
+  "ss/eng/f22a.tpl": {
+    "lba": 432479,
+    "size": 115264
+  },
+  "ss/eng/f23a.tpl": {
+    "lba": 432536,
+    "size": 115264
+  },
+  "ss/eng/f24a.tpl": {
+    "lba": 432593,
+    "size": 115264
+  },
+  "ss/eng/f25a.tpl": {
+    "lba": 432650,
+    "size": 115264
+  },
+  "ss/eng/f26a.tpl": {
+    "lba": 432707,
+    "size": 115264
+  },
+  "ss/eng/f27a.tpl": {
+    "lba": 432764,
+    "size": 115264
+  },
+  "ss/eng/f28a.tpl": {
+    "lba": 432821,
+    "size": 115264
+  },
+  "ss/eng/f29a.tpl": {
+    "lba": 432878,
+    "size": 115264
+  },
+  "ss/eng/id22c.dat": {
+    "lba": 432935,
+    "size": 289792
+  },
+  "ss/eng/id333.dat": {
+    "lba": 433077,
+    "size": 116960
+  },
+  "ss/eng/id400.dat": {
+    "lba": 433135,
+    "size": 38176
+  },
+  "ss/eng/omk_r0.dat": {
+    "lba": 433154,
+    "size": 1716256
+  },
+  "ss/eng/omk_r1.dat": {
+    "lba": 433993,
+    "size": 1742144
+  },
+  "ss/eng/omk_t0.dat": {
+    "lba": 434844,
+    "size": 1807200
+  },
+  "ss/eng/omk_t1.dat": {
+    "lba": 435727,
+    "size": 1831904
+  },
+  "ss/eng/option.dat": {
+    "lba": 436622,
+    "size": 149920
+  },
+  "ss/eng/result.dat": {
+    "lba": 436696,
+    "size": 358784
+  },
+  "ss/eng/ss_cap.dat": {
+    "lba": 436872,
+    "size": 701664
+  },
+  "ss/eng/ss_cmmn.dat": {
+    "lba": 437215,
+    "size": 531040
+  },
+  "ss/eng/ss_cmmn.lz": {
+    "lba": 437475,
+    "size": 261623
+  },
+  "ss/eng/ss_file.dat": {
+    "lba": 437603,
+    "size": 716544
+  },
+  "ss/eng/ss_item.dat": {
+    "lba": 437953,
+    "size": 602816
+  },
+  "ss/eng/ss_map.dat": {
+    "lba": 438248,
+    "size": 259072
+  },
+  "ss/eng/ss_pzzl.dat": {
+    "lba": 438375,
+    "size": 912704
+  },
+  "ss/eng/ss_pzzl.lz": {
+    "lba": 438821,
+    "size": 560430
+  },
+  "ss/eng/ss_shop.dat": {
+    "lba": 439095,
+    "size": 305600
+  },
+  "ss/eng/ss_term.dat": {
+    "lba": 439245,
+    "size": 551104
+  },
+  "ss/eng/tel0000_101_b.fcv": {
+    "lba": 439515,
+    "size": 110846
+  },
+  "ss/eng/tel0000_101_f.fcv": {
+    "lba": 439570,
+    "size": 8246
+  },
+  "ss/eng/tel0100_101_b.fcv": {
+    "lba": 439575,
+    "size": 106918
+  },
+  "ss/eng/tel0100_101_f.fcv": {
+    "lba": 439628,
+    "size": 8462
+  },
+  "ss/eng/title.dat": {
+    "lba": 439633,
+    "size": 2518944
+  },
+  "ss/eng/title.snd": {
+    "lba": 440863,
+    "size": 362208
+  },
+  "ss/cmn/f01.tpl": {
+    "lba": 414356,
+    "size": 511456
+  },
+  "ss/cmn/f02.tpl": {
+    "lba": 414606,
+    "size": 230528
+  },
+  "ss/cmn/f03.tpl": {
+    "lba": 414719,
+    "size": 511456
+  },
+  "ss/cmn/f04.tpl": {
+    "lba": 414969,
+    "size": 115264
+  },
+  "ss/cmn/f06.tpl": {
+    "lba": 415026,
+    "size": 115264
+  },
+  "ss/cmn/f07.tpl": {
+    "lba": 415083,
+    "size": 115264
+  },
+  "ss/cmn/f09.tpl": {
+    "lba": 415140,
+    "size": 511456
+  },
+  "ss/cmn/f10.tpl": {
+    "lba": 415390,
+    "size": 115264
+  },
+  "ss/cmn/f11.tpl": {
+    "lba": 415447,
+    "size": 115264
+  },
+  "ss/cmn/f12.tpl": {
+    "lba": 415504,
+    "size": 115264
+  },
+  "ss/cmn/itm00.bin": {
+    "lba": 415561,
+    "size": 672
+  },
+  "ss/cmn/itm00.tpl": {
+    "lba": 415562,
+    "size": 4160
+  },
+  "ss/cmn/itm01.bin": {
+    "lba": 415565,
+    "size": 3936
+  },
+  "ss/cmn/itm01.tpl": {
+    "lba": 415567,
+    "size": 4160
+  },
+  "ss/cmn/itm02.bin": {
+    "lba": 415570,
+    "size": 3936
+  },
+  "ss/cmn/itm02.tpl": {
+    "lba": 415572,
+    "size": 8320
+  },
+  "ss/cmn/itm04.bin": {
+    "lba": 415577,
+    "size": 672
+  },
+  "ss/cmn/itm04.tpl": {
+    "lba": 415578,
+    "size": 4160
+  },
+  "ss/cmn/itm05.bin": {
+    "lba": 415581,
+    "size": 2656
+  },
+  "ss/cmn/itm05.tpl": {
+    "lba": 415583,
+    "size": 4160
+  },
+  "ss/cmn/itm06.bin": {
+    "lba": 415586,
+    "size": 3584
+  },
+  "ss/cmn/itm06.tpl": {
+    "lba": 415588,
+    "size": 6304
+  },
+  "ss/cmn/itm07.bin": {
+    "lba": 415592,
+    "size": 672
+  },
+  "ss/cmn/itm07.tpl": {
+    "lba": 415593,
+    "size": 4160
+  },
+  "ss/cmn/itm0e.bin": {
+    "lba": 415596,
+    "size": 3936
+  },
+  "ss/cmn/itm0e.tpl": {
+    "lba": 415598,
+    "size": 4160
+  },
+  "ss/cmn/itm18.bin": {
+    "lba": 415601,
+    "size": 672
+  },
+  "ss/cmn/itm18.tpl": {
+    "lba": 415602,
+    "size": 4160
+  },
+  "ss/cmn/itm19.bin": {
+    "lba": 415605,
+    "size": 3584
+  },
+  "ss/cmn/itm19.tpl": {
+    "lba": 415607,
+    "size": 6304
+  },
+  "ss/cmn/itm1a.bin": {
+    "lba": 415611,
+    "size": 672
+  },
+  "ss/cmn/itm1a.tpl": {
+    "lba": 415612,
+    "size": 16448
+  },
+  "ss/cmn/itm20.bin": {
+    "lba": 415621,
+    "size": 672
+  },
+  "ss/cmn/itm20.tpl": {
+    "lba": 415622,
+    "size": 4160
+  },
+  "ss/cmn/itm46.bin": {
+    "lba": 415625,
+    "size": 6368
+  },
+  "ss/cmn/itm46.tpl": {
+    "lba": 415629,
+    "size": 8320
+  },
+  "ss/cmn/itm6a.bin": {
+    "lba": 415634,
+    "size": 672
+  },
+  "ss/cmn/itm6a.tpl": {
+    "lba": 415635,
+    "size": 16448
+  },
+  "ss/cmn/itm72.bin": {
+    "lba": 415644,
+    "size": 9984
+  },
+  "ss/cmn/itm72.tpl": {
+    "lba": 415649,
+    "size": 4160
+  },
+  "ss/cmn/itm78.bin": {
+    "lba": 415652,
+    "size": 4832
+  },
+  "ss/cmn/itm78.tpl": {
+    "lba": 415655,
+    "size": 4224
+  },
+  "ss/cmn/itm95.bin": {
+    "lba": 415658,
+    "size": 7968
+  },
+  "ss/cmn/itm95.tpl": {
+    "lba": 415662,
+    "size": 12448
+  },
+  "ss/cmn/itm97.bin": {
+    "lba": 415669,
+    "size": 7712
+  },
+  "ss/cmn/itm97.tpl": {
+    "lba": 415673,
+    "size": 12448
+  },
+  "ss/cmn/map_obj1.dat": {
+    "lba": 415680,
+    "size": 567488
+  },
+  "ss/cmn/map_obj2.dat": {
+    "lba": 415958,
+    "size": 444864
+  },
+  "ss/cmn/map_obj2a.dat": {
+    "lba": 416176,
+    "size": 451136
+  },
+  "ss/cmn/map_obj2b.dat": {
+    "lba": 416397,
+    "size": 245024
+  },
+  "ss/cmn/map_obj2c.dat": {
+    "lba": 416517,
+    "size": 147968
+  },
+  "ss/cmn/map_obj3a.dat": {
+    "lba": 416590,
+    "size": 48032
+  },
+  "ss/cmn/map_obj3b.dat": {
+    "lba": 416614,
+    "size": 77440
+  },
+  "ss/cmn/map_obj3c.dat": {
+    "lba": 416652,
+    "size": 130432
+  },
+  "ss/cmn/map_obj3d.dat": {
+    "lba": 416716,
+    "size": 86976
+  },
+  "ss/cmn/map_obj3e.dat": {
+    "lba": 416759,
+    "size": 465536
+  },
+  "ss/cmn/map_obj3f.dat": {
+    "lba": 416987,
+    "size": 97184
+  },
+  "ss/cmn/map_obj4a.dat": {
+    "lba": 417035,
+    "size": 14720
+  },
+  "ss/cmn/map_obj4b.dat": {
+    "lba": 417043,
+    "size": 36384
+  },
+  "ss/cmn/map_obj4c.dat": {
+    "lba": 417061,
+    "size": 73888
+  },
+  "ss/cmn/map_obj4d.dat": {
+    "lba": 417098,
+    "size": 41408
+  },
+  "ss/cmn/map_obj4e.dat": {
+    "lba": 417119,
+    "size": 41184
+  },
+  "ss/cmn/map_obj4f.dat": {
+    "lba": 417140,
+    "size": 21504
+  },
+  "ss/cmn/map_obj4g.dat": {
+    "lba": 417151,
+    "size": 127968
+  },
+  "ss/cmn/save_e.dat": {
+    "lba": 417214,
+    "size": 559040
+  },
+  "ss/cmn/save_f.dat": {
+    "lba": 417487,
+    "size": 551392
+  },
+  "ss/cmn/save_g.dat": {
+    "lba": 417757,
+    "size": 551392
+  },
+  "ss/cmn/save_i.dat": {
+    "lba": 418027,
+    "size": 551392
+  },
+  "ss/cmn/save_j.dat": {
+    "lba": 418297,
+    "size": 928416
+  },
+  "ss/cmn/save_s.dat": {
+    "lba": 418751,
+    "size": 551392
+  },
+  "ss/cmn/ss_em18.dat": {
+    "lba": 419021,
+    "size": 234848
+  },
+  "ss/cmn/ss_oc101.dat": {
+    "lba": 419136,
+    "size": 705408
+  },
+  "ss/cmn/ss_oc102.dat": {
+    "lba": 419481,
+    "size": 581408
+  },
+  "ss/cmn/ss_oc103a.dat": {
+    "lba": 419765,
+    "size": 568160
+  },
+  "ss/cmn/ss_oc103b.dat": {
+    "lba": 420043,
+    "size": 626048
+  },
+  "ss/cmn/ss_oc104.dat": {
+    "lba": 420349,
+    "size": 642560
+  },
+  "ss/cmn/ss_oc105.dat": {
+    "lba": 420663,
+    "size": 793984
+  },
+  "ss/cmn/ss_oc106.dat": {
+    "lba": 421051,
+    "size": 582496
+  },
+  "ss/cmn/ss_oc107.dat": {
+    "lba": 421336,
+    "size": 602496
+  },
+  "ss/cmn/ss_oc108.dat": {
+    "lba": 421631,
+    "size": 645120
+  },
+  "ss/cmn/ss_oc109.dat": {
+    "lba": 421946,
+    "size": 540032
+  },
+  "ss/cmn/ss_oc110.dat": {
+    "lba": 422210,
+    "size": 580224
+  },
+  "ss/cmn/ss_oc111.dat": {
+    "lba": 422494,
+    "size": 603040
+  },
+  "ss/cmn/ss_oc112.dat": {
+    "lba": 422789,
+    "size": 550080
+  },
+  "ss/cmn/ss_oc201.dat": {
+    "lba": 423058,
+    "size": 669728
+  },
+  "ss/cmn/ss_oc202.dat": {
+    "lba": 423386,
+    "size": 632224
+  },
+  "ss/cmn/ss_oc203.dat": {
+    "lba": 423695,
+    "size": 674400
+  },
+  "ss/cmn/ss_oc204.dat": {
+    "lba": 424025,
+    "size": 516384
+  },
+  "ss/cmn/ss_oc205.dat": {
+    "lba": 424278,
+    "size": 571232
+  },
+  "ss/cmn/ss_oc206.dat": {
+    "lba": 424557,
+    "size": 417504
+  },
+  "ss/cmn/ss_oc301.dat": {
+    "lba": 424761,
+    "size": 637344
+  },
+  "ss/cmn/ss_oc302.dat": {
+    "lba": 425073,
+    "size": 713504
+  },
+  "ss/cmn/ss_oc303.dat": {
+    "lba": 425422,
+    "size": 819232
+  },
+  "ss/cmn/ss_oc304.dat": {
+    "lba": 425823,
+    "size": 689344
+  },
+  "ss/cmn/ss_oc305.dat": {
+    "lba": 426160,
+    "size": 648224
+  },
+  "ss/cmn/ss_tel01.dat": {
+    "lba": 426477,
+    "size": 408000
+  },
+  "ss/cmn/ss_wep00.dat": {
+    "lba": 426677,
+    "size": 42464
+  },
+  "ss/cmn/ss_wep01.dat": {
+    "lba": 426698,
+    "size": 52992
+  },
+  "ss/cmn/ss_wep02.dat": {
+    "lba": 426724,
+    "size": 43264
+  },
+  "ss/cmn/ss_wep03.dat": {
+    "lba": 426746,
+    "size": 76160
+  },
+  "ss/cmn/ss_wep04.dat": {
+    "lba": 426784,
+    "size": 52416
+  },
+  "ss/cmn/ss_wep05.dat": {
+    "lba": 426810,
+    "size": 59168
+  },
+  "ss/cmn/ss_wep06.dat": {
+    "lba": 426839,
+    "size": 73504
+  },
+  "ss/cmn/ss_wep07.dat": {
+    "lba": 426875,
+    "size": 36736
+  },
+  "ss/cmn/ss_wep08.dat": {
+    "lba": 426893,
+    "size": 48704
+  },
+  "ss/cmn/ss_wep09.dat": {
+    "lba": 426917,
+    "size": 106880
+  },
+  "ss/cmn/ss_wep10.dat": {
+    "lba": 426970,
+    "size": 82016
+  },
+  "ss/cmn/ss_wep11.dat": {
+    "lba": 427011,
+    "size": 83456
+  },
+  "ss/cmn/ss_wep12.dat": {
+    "lba": 427052,
+    "size": 42432
+  },
+  "ss/cmn/ss_wep13.dat": {
+    "lba": 427073,
+    "size": 25728
+  },
+  "ss/cmn/ss_wep14.dat": {
+    "lba": 427086,
+    "size": 87840
+  },
+  "ss/cmn/ss_wep15.dat": {
+    "lba": 427129,
+    "size": 56736
+  },
+  "ss/cmn/ss_wep16.dat": {
+    "lba": 427157,
+    "size": 32672
+  },
+  "ss/cmn/ss_wep17.dat": {
+    "lba": 427173,
+    "size": 43680
+  },
+  "ss/cmn/ss_wep19.dat": {
+    "lba": 427195,
+    "size": 35040
+  },
+  "ss/cmn/ss_wep28.dat": {
+    "lba": 427213,
+    "size": 63136
+  },
+  "ss/cmn/ss_wep29.dat": {
+    "lba": 427244,
+    "size": 41760
+  },
+  "ss/cmn/ss_wep30.dat": {
+    "lba": 427265,
+    "size": 36416
+  },
+  "ss/cmn/ss_wep33.dat": {
+    "lba": 427283,
+    "size": 37920
+  },
+  "ss/cmn/ss_wep34.dat": {
+    "lba": 427302,
+    "size": 8128
+  },
+  "ss/cmn/ss_wep35.dat": {
+    "lba": 427306,
+    "size": 5984
+  },
+  "ss/cmn/ss_wep36.dat": {
+    "lba": 427309,
+    "size": 12640
+  },
+  "ss/cmn/ss_wep37.dat": {
+    "lba": 427316,
+    "size": 7072
+  },
+  "ss/cmn/ss_wep38.dat": {
+    "lba": 427320,
+    "size": 38912
+  },
+  "ss/cmn/ss_wep39.dat": {
+    "lba": 427339,
+    "size": 35136
+  },
+  "ss/cmn/ss_wep40.dat": {
+    "lba": 427357,
+    "size": 45248
+  },
+  "ss/cmn/ss_wep41.dat": {
+    "lba": 427380,
+    "size": 25024
+  },
+  "ss/cmn/ss_wep42.dat": {
+    "lba": 427393,
+    "size": 49152
+  },
+  "ss/cmn/ss_wep43.dat": {
+    "lba": 427417,
+    "size": 43136
+  },
+  "ss/cmn/ss_wep44.dat": {
+    "lba": 427439,
+    "size": 41888
+  },
+  "ss/cmn/ss_wep45.dat": {
+    "lba": 427460,
+    "size": 32928
+  },
+  "ss/cmn/ss_wep47.dat": {
+    "lba": 427477,
+    "size": 43808
+  },
+  "ss/cmn/title.snd": {
+    "lba": 427499,
+    "size": 782720
+  },
+  "rel/sscrn.rel": {
+    "lba": 412672,
+    "size": 310156
+  },
+  "rel/st1_0.rel": {
+    "lba": 412824,
+    "size": 64
+  },
+  "rel/st1_1.rel": {
+    "lba": 412825,
+    "size": 64
+  },
+  "rel/st1_2.rel": {
+    "lba": 412826,
+    "size": 64
+  },
+  "rel/st1_3.rel": {
+    "lba": 412827,
+    "size": 64
+  },
+  "rel/st2_0.rel": {
+    "lba": 412828,
+    "size": 169020
+  },
+  "rel/st2_1.rel": {
+    "lba": 412911,
+    "size": 206676
+  },
+  "rel/st2_2.rel": {
+    "lba": 413012,
+    "size": 120284
+  },
+  "rel/st2_3.rel": {
+    "lba": 413071,
+    "size": 226828
+  },
+  "rel/st2_4.rel": {
+    "lba": 413182,
+    "size": 51388
+  },
+  "rel/st4_0.rel": {
+    "lba": 413208,
+    "size": 119620
+  },
+  "rel/tools.rel": {
+    "lba": 414105,
+    "size": 512356
+  },
+  "rel/t_camera.rel": {
+    "lba": 413267,
+    "size": 206300
+  },
+  "rel/t_emlist.rel": {
+    "lba": 413368,
+    "size": 80844
+  },
+  "rel/t_esp.rel": {
+    "lba": 413408,
+    "size": 441468
+  },
+  "rel/t_event.rel": {
+    "lba": 413624,
+    "size": 208220
+  },
+  "rel/t_id.rel": {
+    "lba": 413726,
+    "size": 94652
+  },
+  "rel/t_light.rel": {
+    "lba": 413773,
+    "size": 177676
+  },
+  "rel/t_movie.rel": {
+    "lba": 413860,
+    "size": 235380
+  },
+  "rel/t_sce.rel": {
+    "lba": 413975,
+    "size": 265364
+  },
+  "op/op01.das": {
+    "lba": 412634,
+    "size": 34880
+  },
+  "op/op02.das": {
+    "lba": 412652,
+    "size": 19008
+  },
+  "op/op03.das": {
+    "lba": 412662,
+    "size": 18784
+  },
+  "font/common_j.fnt": {
+    "lba": 410039,
+    "size": 230688
+  },
+  "font/common_p.fnt": {
+    "lba": 410152,
+    "size": 98848
+  },
+  "font/dvd_j.fnt": {
+    "lba": 410201,
+    "size": 20832
+  },
+  "font/event1_j.fnt": {
+    "lba": 410212,
+    "size": 173024
+  },
+  "font/event1_p.fnt": {
+    "lba": 410297,
+    "size": 525216
+  },
+  "font/event2_j.fnt": {
+    "lba": 410554,
+    "size": 144224
+  },
+  "font/event2_p.fnt": {
+    "lba": 410625,
+    "size": 525024
+  },
+  "font/event3_j.fnt": {
+    "lba": 410882,
+    "size": 144224
+  },
+  "font/event3_p.fnt": {
+    "lba": 410953,
+    "size": 524576
+  },
+  "font/event4_j.fnt": {
+    "lba": 411210,
+    "size": 45472
+  },
+  "font/sscrn_j.fnt": {
+    "lba": 411495,
+    "size": 189472
+  },
+  "font/sscrn_p.fnt": {
+    "lba": 411588,
+    "size": 525792
+  },
+  "font/ss_file_j.fnt": {
+    "lba": 411233,
+    "size": 345952
+  },
+  "font/ss_term_j.fnt": {
+    "lba": 411402,
+    "size": 189472
+  },
+  "font/stage1_j.fnt": {
+    "lba": 411845,
+    "size": 131872
+  },
+  "font/stage1_p.fnt": {
+    "lba": 411910,
+    "size": 525472
+  },
+  "font/stage2_j.fnt": {
+    "lba": 412167,
+    "size": 160672
+  },
+  "font/stage2_p.fnt": {
+    "lba": 412246,
+    "size": 524896
+  },
+  "font/stage3_j.fnt": {
+    "lba": 412503,
+    "size": 144224
+  },
+  "font/stage4_j.fnt": {
+    "lba": 412574,
+    "size": 86624
+  },
+  "font/system_j.fnt": {
+    "lba": 412617,
+    "size": 33184
+  },
+  "event/evd/r11cs00.evd": {
+    "lba": 410018,
+    "size": 27456
+  },
+  "event/evd/r11cs10.evd": {
+    "lba": 410032,
+    "size": 7296
+  },
+  "event/evd/r11cs20.evd": {
+    "lba": 410036,
+    "size": 5568
+  },
+  "evd/r100s03.evd": {
+    "lba": 403644,
+    "size": 1341504
+  },
+  "evd/r100s03.evd.evq": {
+    "lba": 404300,
+    "size": 116
+  },
+  "evd/r100s20.evd": {
+    "lba": 404301,
+    "size": 689632
+  },
+  "evd/r100s20.evd.evq": {
+    "lba": 404638,
+    "size": 76
+  },
+  "evd/r100s40.evd": {
+    "lba": 404639,
+    "size": 2227072
+  },
+  "evd/r100s40.evd.evq": {
+    "lba": 405727,
+    "size": 168
+  },
+  "evd/r100s41.evd": {
+    "lba": 405728,
+    "size": 694560
+  },
+  "evd/r100s41.evd.evq": {
+    "lba": 406068,
+    "size": 76
+  },
+  "evd/r100s43.evd": {
+    "lba": 406069,
+    "size": 669248
+  },
+  "evd/r100s43.evd.evq": {
+    "lba": 406396,
+    "size": 76
+  },
+  "evd/r100s44.evd": {
+    "lba": 406397,
+    "size": 309632
+  },
+  "evd/r100s44.evd.evq": {
+    "lba": 406549,
+    "size": 52
+  },
+  "evd/r101s00.evd": {
+    "lba": 406550,
+    "size": 453984
+  },
+  "evd/r101s00.evd.evq": {
+    "lba": 406772,
+    "size": 60
+  },
+  "evd/r101s21.evd": {
+    "lba": 406773,
+    "size": 2181600
+  },
+  "evd/r101s21.evd.evq": {
+    "lba": 407839,
+    "size": 168
+  },
+  "evd/r101s30.evd": {
+    "lba": 407840,
+    "size": 2373792
+  },
+  "evd/r101s30.evd.evq": {
+    "lba": 409000,
+    "size": 180
+  },
+  "evd/r11cs00.evd": {
+    "lba": 409001,
+    "size": 27456
+  },
+  "evd/r11cs00.evd.evq": {
+    "lba": 409015,
+    "size": 36
+  },
+  "evd/r11cs10.evd": {
+    "lba": 409016,
+    "size": 7296
+  },
+  "evd/r11cs10.evd.evq": {
+    "lba": 409020,
+    "size": 36
+  },
+  "evd/r11cs20.evd": {
+    "lba": 409021,
+    "size": 5568
+  },
+  "evd/r11cs20.evd.evq": {
+    "lba": 409024,
+    "size": 36
+  },
+  "evd/r11fs01.evd": {
+    "lba": 409025,
+    "size": 1475072
+  },
+  "evd/r11fs01.evd.evq": {
+    "lba": 409746,
+    "size": 124
+  },
+  "evd/r11fs10.evd": {
+    "lba": 409747,
+    "size": 551040
+  },
+  "evd/r11fs10.evd.evq": {
+    "lba": 410017,
+    "size": 68
+  },
+  "etc/core.das": {
+    "lba": 401182,
+    "size": 3885728
+  },
+  "etc/emleon00.esl": {
+    "lba": 403080,
+    "size": 8160
+  },
+  "etc/emleon01.esl": {
+    "lba": 403084,
+    "size": 8160
+  },
+  "etc/emleon02.esl": {
+    "lba": 403088,
+    "size": 8160
+  },
+  "etc/emleon03.esl": {
+    "lba": 403092,
+    "size": 8160
+  },
+  "etc/emleon04.esl": {
+    "lba": 403096,
+    "size": 8160
+  },
+  "etc/emleon05.esl": {
+    "lba": 403100,
+    "size": 8160
+  },
+  "etc/emleon06.esl": {
+    "lba": 403104,
+    "size": 8160
+  },
+  "etc/emleon07.esl": {
+    "lba": 403108,
+    "size": 8160
+  },
+  "etc/emleon08.esl": {
+    "lba": 403112,
+    "size": 8192
+  },
+  "etc/emleon09.esl": {
+    "lba": 403116,
+    "size": 8192
+  },
+  "etc/memcard.das": {
+    "lba": 403299,
+    "size": 59744
+  },
+  "etc/moji8.tpl": {
+    "lba": 403329,
+    "size": 6208
+  },
+  "etc/omake00.esl": {
+    "lba": 403333,
+    "size": 8160
+  },
+  "etc/omake01.esl": {
+    "lba": 403337,
+    "size": 8160
+  },
+  "etc/omake02.esl": {
+    "lba": 403341,
+    "size": 8160
+  },
+  "etc/pl010a.bin": {
+    "lba": 403345,
+    "size": 84658
+  },
+  "etc/pl010a.tpl": {
+    "lba": 403387,
+    "size": 136960
+  },
+  "etc/pl010d.bin": {
+    "lba": 403454,
+    "size": 69106
+  },
+  "etc/pl010e.bin": {
+    "lba": 403488,
+    "size": 2184
+  },
+  "etc/pl01lh00.bin": {
+    "lba": 403490,
+    "size": 9704
+  },
+  "etc/pl01rh00.bin": {
+    "lba": 403495,
+    "size": 10026
+  },
+  "etc/pl050a.bin": {
+    "lba": 403500,
+    "size": 66672
+  },
+  "etc/pl050a.tpl": {
+    "lba": 403533,
+    "size": 88672
+  },
+  "etc/pl050d.bin": {
+    "lba": 403577,
+    "size": 50456
+  },
+  "etc/pl050e.bin": {
+    "lba": 403602,
+    "size": 60112
+  },
+  "etc/pl05lh00.bin": {
+    "lba": 403632,
+    "size": 9774
+  },
+  "etc/pl05rh00.bin": {
+    "lba": 403637,
+    "size": 9998
+  },
+  "etc/sizetbl.dat": {
+    "lba": 403642,
+    "size": 2660
+  },
+  "etc/eng/event.eff": {
+    "lba": 403120,
+    "size": 179712
+  },
+  "etc/eng/event001.uwf": {
+    "lba": 403208,
+    "size": 5172
+  },
+  "etc/eng/id101.eff": {
+    "lba": 403211,
+    "size": 179712
+  },
+  "em/em11.drs": {
+    "lba": 336193,
+    "size": 7148160
+  },
+  "em/em12.drs": {
+    "lba": 339684,
+    "size": 6341600
+  },
+  "em/em13.drs": {
+    "lba": 342781,
+    "size": 6829984
+  },
+  "em/em14.drs": {
+    "lba": 346116,
+    "size": 10484256
+  },
+  "em/em15.drs": {
+    "lba": 351236,
+    "size": 6681472
+  },
+  "em/em16.drs": {
+    "lba": 354499,
+    "size": 6938816
+  },
+  "em/em17.drs": {
+    "lba": 357888,
+    "size": 6149440
+  },
+  "em/em18.drs": {
+    "lba": 360891,
+    "size": 1074784
+  },
+  "em/em21.drs": {
+    "lba": 361416,
+    "size": 821856
+  },
+  "em/em22.drs": {
+    "lba": 361818,
+    "size": 2676320
+  },
+  "em/em23.drs": {
+    "lba": 363125,
+    "size": 594336
+  },
+  "em/em24.drs": {
+    "lba": 363416,
+    "size": 615392
+  },
+  "em/em26.drs": {
+    "lba": 363717,
+    "size": 535744
+  },
+  "em/em27.drs": {
+    "lba": 363979,
+    "size": 355904
+  },
+  "em/em28.drs": {
+    "lba": 364153,
+    "size": 350144
+  },
+  "em/em29.drs": {
+    "lba": 364324,
+    "size": 561312
+  },
+  "em/em2a.drs": {
+    "lba": 364599,
+    "size": 616608
+  },
+  "em/em2b.drs": {
+    "lba": 364901,
+    "size": 8521152
+  },
+  "em/em2e.drs": {
+    "lba": 369062,
+    "size": 89344
+  },
+  "em/em2f.drs": {
+    "lba": 369106,
+    "size": 4097824
+  },
+  "em/em35.drs": {
+    "lba": 371107,
+    "size": 9995008
+  },
+  "em/em3b.drs": {
+    "lba": 375988,
+    "size": 584160
+  },
+  "em/pl00.drs": {
+    "lba": 376274,
+    "size": 3053536
+  },
+  "em/pl01.drs": {
+    "lba": 377765,
+    "size": 1527424
+  },
+  "em/pl02.drs": {
+    "lba": 378511,
+    "size": 1770784
+  },
+  "em/pl03.drs": {
+    "lba": 379376,
+    "size": 554240
+  },
+  "em/pl04.drs": {
+    "lba": 379647,
+    "size": 658112
+  },
+  "em/pl05.drs": {
+    "lba": 379969,
+    "size": 1499136
+  },
+  "em/pl06.drs": {
+    "lba": 380701,
+    "size": 2068864
+  },
+  "em/pl07.drs": {
+    "lba": 381712,
+    "size": 2191200
+  },
+  "em/pl08.drs": {
+    "lba": 382782,
+    "size": 3079136
+  },
+  "em/pl09.drs": {
+    "lba": 384286,
+    "size": 2242528
+  },
+  "em/pl0a.drs": {
+    "lba": 385381,
+    "size": 2420608
+  },
+  "em/pl0b.drs": {
+    "lba": 386563,
+    "size": 2096992
+  },
+  "em/pl0c.drs": {
+    "lba": 387587,
+    "size": 2204096
+  },
+  "em/pl0d.drs": {
+    "lba": 388664,
+    "size": 2043712
+  },
+  "em/pl0e.drs": {
+    "lba": 389662,
+    "size": 1393472
+  },
+  "em/pl0f.drs": {
+    "lba": 390343,
+    "size": 2442304
+  },
+  "em/pl10.drs": {
+    "lba": 391536,
+    "size": 2202656
+  },
+  "em/pl11.drs": {
+    "lba": 392612,
+    "size": 2181536
+  },
+  "em/pl12.drs": {
+    "lba": 393678,
+    "size": 1367040
+  },
+  "em/pl14.drs": {
+    "lba": 394346,
+    "size": 1549088
+  },
+  "em/pl15.drs": {
+    "lba": 395103,
+    "size": 1360000
+  },
+  "em/wep00.drs": {
+    "lba": 395768,
+    "size": 82400
+  },
+  "em/wep01.drs": {
+    "lba": 395809,
+    "size": 437536
+  },
+  "em/wep02.drs": {
+    "lba": 396023,
+    "size": 668416
+  },
+  "em/wep03.drs": {
+    "lba": 396350,
+    "size": 504864
+  },
+  "em/wep04.drs": {
+    "lba": 396597,
+    "size": 420544
+  },
+  "em/wep05.drs": {
+    "lba": 396803,
+    "size": 537536
+  },
+  "em/wep06.drs": {
+    "lba": 397066,
+    "size": 470880
+  },
+  "em/wep07.drs": {
+    "lba": 397296,
+    "size": 490848
+  },
+  "em/wep08.drs": {
+    "lba": 397536,
+    "size": 487456
+  },
+  "em/wep09.drs": {
+    "lba": 397775,
+    "size": 659456
+  },
+  "em/wep10.drs": {
+    "lba": 398097,
+    "size": 555104
+  },
+  "em/wep11.drs": {
+    "lba": 398369,
+    "size": 432768
+  },
+  "em/wep12.drs": {
+    "lba": 398581,
+    "size": 474784
+  },
+  "em/wep13.drs": {
+    "lba": 398813,
+    "size": 458560
+  },
+  "em/wep14.drs": {
+    "lba": 399037,
+    "size": 628704
+  },
+  "em/wep15.drs": {
+    "lba": 399344,
+    "size": 521056
+  },
+  "em/wep16.drs": {
+    "lba": 399599,
+    "size": 242176
+  },
+  "em/wep17.drs": {
+    "lba": 399718,
+    "size": 503744
+  },
+  "em/wep18.drs": {
+    "lba": 399964,
+    "size": 510944
+  },
+  "em/wep19.drs": {
+    "lba": 400214,
+    "size": 208864
+  },
+  "em/wep20.drs": {
+    "lba": 400316,
+    "size": 442720
+  },
+  "em/wep21.drs": {
+    "lba": 400533,
+    "size": 665920
+  },
+  "em/wep24.drs": {
+    "lba": 400859,
+    "size": 660544
+  },
+  "debug/config.txt": {
+    "lba": 336186,
+    "size": 366
+  },
+  "debug/roominfo.dat": {
+    "lba": 336187,
+    "size": 10790
+  },
+  "dc/codec_ready.txt": {
+    "lba": 77824,
+    "size": 5
+  },
+  "dc/diagnostic-scope.txt": {
+    "lba": 77825,
+    "size": 223
+  },
+  "dc/em22.ovl": {
+    "lba": 77826,
+    "size": 27236
+  },
+  "dc/em2b.ovl": {
+    "lba": 77840,
+    "size": 67900
+  },
+  "dc/em2f.ovl": {
+    "lba": 77874,
+    "size": 16800
+  },
+  "dc/em35.ovl": {
+    "lba": 77883,
+    "size": 52392
+  },
+  "dc/em3b.ovl": {
+    "lba": 77909,
+    "size": 7568
+  },
+  "dc/loadind.dat": {
+    "lba": 77913,
+    "size": 1664
+  },
+  "dc/model-diagnostic.flag": {
+    "lba": 77914,
+    "size": 85
+  },
+  "dc/pl0f.ovl": {
+    "lba": 256320,
+    "size": 45608
+  },
+  "dc/pl11.ovl": {
+    "lba": 256343,
+    "size": 35592
+  },
+  "dc/pl14.ovl": {
+    "lba": 256361,
+    "size": 18832
+  },
+  "dc/resident.bin": {
+    "lba": 256371,
+    "size": 88576
+  },
+  "dc/sscrn.ovl": {
+    "lba": 256415,
+    "size": 134372
+  },
+  "dc/st1_0.ovl": {
+    "lba": 256481,
+    "size": 36340
+  },
+  "dc/st1_1.ovl": {
+    "lba": 256499,
+    "size": 81540
+  },
+  "dc/st1_2.ovl": {
+    "lba": 256539,
+    "size": 50076
+  },
+  "dc/st1_3.ovl": {
+    "lba": 256564,
+    "size": 88748
+  },
+  "dc/st2_0.ovl": {
+    "lba": 256608,
+    "size": 96788
+  },
+  "dc/tex.pak": {
+    "lba": 256656,
+    "size": 162154496
+  },
+  "dc/texlow/f/f47bd095-ec43c743.re4tex": {
+    "lba": 336162,
+    "size": 18608
+  },
+  "dc/texlow/f/fc58c9a8-e7a08670.re4tex": {
+    "lba": 336172,
+    "size": 10416
+  },
+  "dc/texlow/f/fc9c61df-f5aa959f.re4tex": {
+    "lba": 336178,
+    "size": 3216
+  },
+  "dc/texlow/f/fd3d8794-bb70f519.re4tex": {
+    "lba": 336180,
+    "size": 10416
+  },
+  "dc/texlow/e/e831a98f-ace53a55.re4tex": {
+    "lba": 336146,
+    "size": 18576
+  },
+  "dc/texlow/e/ea4b493a-dcd2aec4.re4tex": {
+    "lba": 336156,
+    "size": 3216
+  },
+  "dc/texlow/e/eaaf4961-556f130e.re4tex": {
+    "lba": 336158,
+    "size": 6320
+  },
+  "dc/texlow/d/d5558c72-9668d80d.re4tex": {
+    "lba": 336134,
+    "size": 10416
+  },
+  "dc/texlow/d/dd2c1c57-26585c5a.re4tex": {
+    "lba": 336140,
+    "size": 10416
+  },
+  "dc/texlow/c/c1eb66a7-93b9292b.re4tex": {
+    "lba": 336116,
+    "size": 18608
+  },
+  "dc/texlow/c/c63541b7-937b388d.re4tex": {
+    "lba": 336126,
+    "size": 3216
+  },
+  "dc/texlow/c/ceb4070a-b81f5b19.re4tex": {
+    "lba": 336128,
+    "size": 10416
+  },
+  "dc/texlow/b/b0810ada-e2994a70.re4tex": {
+    "lba": 336098,
+    "size": 3216
+  },
+  "dc/texlow/b/b2372831-53c12477.re4tex": {
+    "lba": 336100,
+    "size": 6320
+  },
+  "dc/texlow/b/b2ccaaa3-79ec5b06.re4tex": {
+    "lba": 336104,
+    "size": 6288
+  },
+  "dc/texlow/b/b4b6940a-0b0c01cb.re4tex": {
+    "lba": 336108,
+    "size": 6320
+  },
+  "dc/texlow/b/b52b2722-ad9a1eff.re4tex": {
+    "lba": 336112,
+    "size": 6320
+  },
+  "dc/texlow/a/a024d424-eebb15d6.re4tex": {
+    "lba": 336088,
+    "size": 6320
+  },
+  "dc/texlow/a/a3943bb1-eec75484.re4tex": {
+    "lba": 336092,
+    "size": 6320
+  },
+  "dc/texlow/a/af040e00-9c2ae0f5.re4tex": {
+    "lba": 336096,
+    "size": 3216
+  },
+  "dc/texlow/9/9ec02924-b15bf85a.re4tex": {
+    "lba": 336084,
+    "size": 6320
+  },
+  "dc/texlow/8/82f78534-df80de25.re4tex": {
+    "lba": 336070,
+    "size": 6320
+  },
+  "dc/texlow/8/86c0121b-841ef8be.re4tex": {
+    "lba": 336074,
+    "size": 6320
+  },
+  "dc/texlow/8/875b4430-5428fac4.re4tex": {
+    "lba": 336078,
+    "size": 3216
+  },
+  "dc/texlow/8/8c58ec0d-96eacb5f.re4tex": {
+    "lba": 336080,
+    "size": 6320
+  },
+  "dc/texlow/7/73aed70b-db3cc2dc.re4tex": {
+    "lba": 336056,
+    "size": 6320
+  },
+  "dc/texlow/7/79faed7d-de7a1023.re4tex": {
+    "lba": 336060,
+    "size": 18576
+  },
+  "dc/texlow/6/6836912e-e089be7e.re4tex": {
+    "lba": 336052,
+    "size": 6320
+  },
+  "dc/texlow/5/5119ab6b-af6cf246.re4tex": {
+    "lba": 336020,
+    "size": 6320
+  },
+  "dc/texlow/5/570e2032-fcc53f7c.re4tex": {
+    "lba": 336024,
+    "size": 18576
+  },
+  "dc/texlow/5/589a31e5-8ef2a5cd.re4tex": {
+    "lba": 336034,
+    "size": 10416
+  },
+  "dc/texlow/5/5bb6cc3f-11d151a0.re4tex": {
+    "lba": 336040,
+    "size": 6320
+  },
+  "dc/texlow/5/5c900ef9-0eeea1a0.re4tex": {
+    "lba": 336044,
+    "size": 6320
+  },
+  "dc/texlow/5/5e1f34ef-bc16c9e3.re4tex": {
+    "lba": 336048,
+    "size": 6320
+  },
+  "dc/texlow/4/4163e909-11fb0185.re4tex": {
+    "lba": 336008,
+    "size": 6288
+  },
+  "dc/texlow/4/43d869dc-e6de0e9e.re4tex": {
+    "lba": 336012,
+    "size": 3216
+  },
+  "dc/texlow/4/4a31369a-f0dd9700.re4tex": {
+    "lba": 336014,
+    "size": 3216
+  },
+  "dc/texlow/4/4db31258-f3377366.re4tex": {
+    "lba": 336016,
+    "size": 6320
+  },
+  "dc/texlow/3/31188b11-c17ef9b4.re4tex": {
+    "lba": 335988,
+    "size": 10416
+  },
+  "dc/texlow/3/33fcc410-c215ac41.re4tex": {
+    "lba": 335994,
+    "size": 10416
+  },
+  "dc/texlow/3/3628abf0-44e6d158.re4tex": {
+    "lba": 336000,
+    "size": 6320
+  },
+  "dc/texlow/3/3a43023f-cf202672.re4tex": {
+    "lba": 336004,
+    "size": 6320
+  },
+  "dc/texlow/2/20554644-9100e6e3.re4tex": {
+    "lba": 335976,
+    "size": 10416
+  },
+  "dc/texlow/2/255f85b3-495d7d69.re4tex": {
+    "lba": 335982,
+    "size": 6320
+  },
+  "dc/texlow/2/2d5a9317-0e1e1a1e.re4tex": {
+    "lba": 335986,
+    "size": 3216
+  },
+  "dc/texlow/0/0cefe1fe-65cb497f.re4tex": {
+    "lba": 335966,
+    "size": 6320
+  },
+  "dc/texlow/0/0f22c146-e845149f.re4tex": {
+    "lba": 335970,
+    "size": 10416
+  },
+  "dc/tex/3f690586-7edb7c3e.re4tex": {
+    "lba": 335833,
+    "size": 65680
+  },
+  "dc/tex/4da9c3fa-98934ea1.re4tex": {
+    "lba": 335866,
+    "size": 65680
+  },
+  "dc/tex/61519868-9ee3f93f.re4tex": {
+    "lba": 335899,
+    "size": 67728
+  },
+  "dc/tex/fc75dd46-779f14bd.re4tex": {
+    "lba": 335933,
+    "size": 65680
+  },
+  "dc/native/trclass.idx": {
+    "lba": 256319,
+    "size": 60
+  },
+  "dc/native/r22c/room.r4rc": {
+    "lba": 256318,
+    "size": 1888
+  },
+  "dc/native/r22b/room.r4rc": {
+    "lba": 256315,
+    "size": 5472
+  },
+  "dc/native/r22a/room.r4rc": {
+    "lba": 256310,
+    "size": 8784
+  },
+  "dc/native/r229/room.r4rc": {
+    "lba": 256302,
+    "size": 14640
+  },
+  "dc/native/r228/room.r4rc": {
+    "lba": 256295,
+    "size": 12432
+  },
+  "dc/native/r227/room.r4rc": {
+    "lba": 256275,
+    "size": 39584
+  },
+  "dc/native/r226/room.r4rc": {
+    "lba": 256268,
+    "size": 14112
+  },
+  "dc/native/r225/room.r4rc": {
+    "lba": 256257,
+    "size": 21584
+  },
+  "dc/native/r224/room.r4rc": {
+    "lba": 256247,
+    "size": 20320
+  },
+  "dc/native/r223/room.r4rc": {
+    "lba": 256236,
+    "size": 22304
+  },
+  "dc/native/r222/room.r4rc": {
+    "lba": 256230,
+    "size": 11184
+  },
+  "dc/native/r221/room.r4rc": {
+    "lba": 256215,
+    "size": 29312
+  },
+  "dc/native/r220/room.r4rc": {
+    "lba": 256211,
+    "size": 6592
+  },
+  "dc/native/r21d/room.r4rc": {
+    "lba": 256189,
+    "size": 44016
+  },
+  "dc/native/r21b/room.r4rc": {
+    "lba": 256153,
+    "size": 73120
+  },
+  "dc/native/r21a/room.r4rc": {
+    "lba": 256139,
+    "size": 27488
+  },
+  "dc/native/r219/room.r4rc": {
+    "lba": 256136,
+    "size": 5744
+  },
+  "dc/native/r218/room.r4rc": {
+    "lba": 256125,
+    "size": 20560
+  },
+  "dc/native/r217/room.r4rc": {
+    "lba": 256118,
+    "size": 13408
+  },
+  "dc/native/r216/room.r4rc": {
+    "lba": 256111,
+    "size": 12672
+  },
+  "dc/native/r215/room.r4rc": {
+    "lba": 256107,
+    "size": 6384
+  },
+  "dc/native/r214/room.r4rc": {
+    "lba": 256094,
+    "size": 25360
+  },
+  "dc/native/r213/room.r4rc": {
+    "lba": 256082,
+    "size": 23904
+  },
+  "dc/native/r212/room.r4rc": {
+    "lba": 256077,
+    "size": 9280
+  },
+  "dc/native/r211/room.r4rc": {
+    "lba": 256070,
+    "size": 13456
+  },
+  "dc/native/r210/room.r4rc": {
+    "lba": 256065,
+    "size": 9744
+  },
+  "dc/native/r20f/room.r4rc": {
+    "lba": 256053,
+    "size": 23648
+  },
+  "dc/native/r20e/room.r4rc": {
+    "lba": 256044,
+    "size": 17200
+  },
+  "dc/native/r20d/room.r4rc": {
+    "lba": 256030,
+    "size": 27504
+  },
+  "dc/native/r20c/room.r4rc": {
+    "lba": 256023,
+    "size": 13088
+  },
+  "dc/native/r20b/room.r4rc": {
+    "lba": 256006,
+    "size": 33536
+  },
+  "dc/native/r20a/room.r4rc": {
+    "lba": 255995,
+    "size": 22208
+  },
+  "dc/native/r209/room.r4rc": {
+    "lba": 255976,
+    "size": 37936
+  },
+  "dc/native/r208/room.r4rc": {
+    "lba": 255959,
+    "size": 32912
+  },
+  "dc/native/r207/room.r4rc": {
+    "lba": 255955,
+    "size": 6576
+  },
+  "dc/native/r206/room.r4rc": {
+    "lba": 255949,
+    "size": 11776
+  },
+  "dc/native/r205/room.r4rc": {
+    "lba": 255932,
+    "size": 34208
+  },
+  "dc/native/r204/room.r4rc": {
+    "lba": 255923,
+    "size": 16688
+  },
+  "dc/native/r203/room.r4rc": {
+    "lba": 255914,
+    "size": 17424
+  },
+  "dc/native/r202/room.r4rc": {
+    "lba": 255898,
+    "size": 32128
+  },
+  "dc/native/r201/room.r4rc": {
+    "lba": 255887,
+    "size": 22128
+  },
+  "dc/native/r200/partner.re4nmr": {
+    "lba": 255423,
+    "size": 229952
+  },
+  "dc/native/r200/ps2-world.ids": {
+    "lba": 255536,
+    "size": 128
+  },
+  "dc/native/r200/ps2-world.r4pw": {
+    "lba": 255537,
+    "size": 7144
+  },
+  "dc/native/r200/ps2-world.r4tc": {
+    "lba": 255541,
+    "size": 176
+  },
+  "dc/native/r200/ps2-world.re4mesh": {
+    "lba": 255542,
+    "size": 510048
+  },
+  "dc/native/r200/registry.re4nmr": {
+    "lba": 255792,
+    "size": 137504
+  },
+  "dc/native/r200/room.r4rc": {
+    "lba": 255860,
+    "size": 54592
+  },
+  "dc/native/r11f/partner.re4nmr": {
+    "lba": 254759,
+    "size": 229952
+  },
+  "dc/native/r11f/ps2-world.ids": {
+    "lba": 254872,
+    "size": 160
+  },
+  "dc/native/r11f/ps2-world.r4pw": {
+    "lba": 254873,
+    "size": 9076
+  },
+  "dc/native/r11f/ps2-world.r4tc": {
+    "lba": 254878,
+    "size": 196
+  },
+  "dc/native/r11f/ps2-world.re4mesh": {
+    "lba": 254879,
+    "size": 797056
+  },
+  "dc/native/r11f/registry.re4nmr": {
+    "lba": 255269,
+    "size": 276000
+  },
+  "dc/native/r11f/room.r4rc": {
+    "lba": 255404,
+    "size": 37104
+  },
+  "dc/native/r11e/partner.re4nmr": {
+    "lba": 254212,
+    "size": 229952
+  },
+  "dc/native/r11e/ps2-world.ids": {
+    "lba": 254325,
+    "size": 256
+  },
+  "dc/native/r11e/ps2-world.r4pw": {
+    "lba": 254326,
+    "size": 18172
+  },
+  "dc/native/r11e/ps2-world.r4tc": {
+    "lba": 254335,
+    "size": 384
+  },
+  "dc/native/r11e/ps2-world.re4mesh": {
+    "lba": 254336,
+    "size": 704864
+  },
+  "dc/native/r11e/registry.re4nmr": {
+    "lba": 254681,
+    "size": 126016
+  },
+  "dc/native/r11e/room.r4rc": {
+    "lba": 254743,
+    "size": 31488
+  },
+  "dc/native/r11d/partner.re4nmr": {
+    "lba": 253620,
+    "size": 229952
+  },
+  "dc/native/r11d/ps2-world.ids": {
+    "lba": 253733,
+    "size": 224
+  },
+  "dc/native/r11d/ps2-world.r4pw": {
+    "lba": 253734,
+    "size": 15340
+  },
+  "dc/native/r11d/ps2-world.r4tc": {
+    "lba": 253742,
+    "size": 336
+  },
+  "dc/native/r11d/ps2-world.re4mesh": {
+    "lba": 253743,
+    "size": 775360
+  },
+  "dc/native/r11d/registry.re4nmr": {
+    "lba": 254122,
+    "size": 127040
+  },
+  "dc/native/r11d/room.r4rc": {
+    "lba": 254185,
+    "size": 53888
+  },
+  "dc/native/r11c/partner.re4nmr": {
+    "lba": 252863,
+    "size": 229952
+  },
+  "dc/native/r11c/ps2-world.ids": {
+    "lba": 252976,
+    "size": 128
+  },
+  "dc/native/r11c/ps2-world.r4pw": {
+    "lba": 252977,
+    "size": 9232
+  },
+  "dc/native/r11c/ps2-world.r4tc": {
+    "lba": 252982,
+    "size": 248
+  },
+  "dc/native/r11c/ps2-world.re4mesh": {
+    "lba": 252983,
+    "size": 977792
+  },
+  "dc/native/r11c/registry.re4nmr": {
+    "lba": 253461,
+    "size": 245088
+  },
+  "dc/native/r11c/room.r4rc": {
+    "lba": 253581,
+    "size": 78576
+  },
+  "dc/native/r11b/ps2-world.ids": {
+    "lba": 252388,
+    "size": 160
+  },
+  "dc/native/r11b/ps2-world.r4pw": {
+    "lba": 252389,
+    "size": 10836
+  },
+  "dc/native/r11b/ps2-world.r4tc": {
+    "lba": 252395,
+    "size": 256
+  },
+  "dc/native/r11b/ps2-world.re4mesh": {
+    "lba": 252396,
+    "size": 769824
+  },
+  "dc/native/r11b/registry.re4nmr": {
+    "lba": 252772,
+    "size": 73824
+  },
+  "dc/native/r11b/room.r4rc": {
+    "lba": 252809,
+    "size": 110480
+  },
+  "dc/native/r11a/ps2-world.ids": {
+    "lba": 251977,
+    "size": 288
+  },
+  "dc/native/r11a/ps2-world.r4pw": {
+    "lba": 251978,
+    "size": 18664
+  },
+  "dc/native/r11a/ps2-world.r4tc": {
+    "lba": 251988,
+    "size": 404
+  },
+  "dc/native/r11a/ps2-world.re4mesh": {
+    "lba": 251989,
+    "size": 741888
+  },
+  "dc/native/r11a/registry.re4nmr": {
+    "lba": 252352,
+    "size": 9888
+  },
+  "dc/native/r11a/room.r4rc": {
+    "lba": 252357,
+    "size": 63168
+  },
+  "dc/native/r119/ps2-world.ids": {
+    "lba": 251371,
+    "size": 128
+  },
+  "dc/native/r119/ps2-world.r4pw": {
+    "lba": 251372,
+    "size": 7420
+  },
+  "dc/native/r119/ps2-world.r4tc": {
+    "lba": 251376,
+    "size": 180
+  },
+  "dc/native/r119/ps2-world.re4mesh": {
+    "lba": 251377,
+    "size": 1058272
+  },
+  "dc/native/r119/registry.re4nmr": {
+    "lba": 251894,
+    "size": 127840
+  },
+  "dc/native/r119/room.r4rc": {
+    "lba": 251957,
+    "size": 39968
+  },
+  "dc/native/r118/partner.re4nmr": {
+    "lba": 250693,
+    "size": 229952
+  },
+  "dc/native/r118/ps2-world.ids": {
+    "lba": 250806,
+    "size": 192
+  },
+  "dc/native/r118/ps2-world.r4pw": {
+    "lba": 250807,
+    "size": 12076
+  },
+  "dc/native/r118/ps2-world.r4tc": {
+    "lba": 250813,
+    "size": 260
+  },
+  "dc/native/r118/ps2-world.re4mesh": {
+    "lba": 250814,
+    "size": 923552
+  },
+  "dc/native/r118/registry.re4nmr": {
+    "lba": 251265,
+    "size": 148224
+  },
+  "dc/native/r118/room.r4rc": {
+    "lba": 251338,
+    "size": 66032
+  },
+  "dc/native/r117/partner.re4nmr": {
+    "lba": 250078,
+    "size": 229952
+  },
+  "dc/native/r117/ps2-world.ids": {
+    "lba": 250191,
+    "size": 256
+  },
+  "dc/native/r117/ps2-world.r4pw": {
+    "lba": 250192,
+    "size": 18664
+  },
+  "dc/native/r117/ps2-world.r4tc": {
+    "lba": 250202,
+    "size": 416
+  },
+  "dc/native/r117/ps2-world.re4mesh": {
+    "lba": 250203,
+    "size": 848640
+  },
+  "dc/native/r117/registry.re4nmr": {
+    "lba": 250618,
+    "size": 113760
+  },
+  "dc/native/r117/room.r4rc": {
+    "lba": 250674,
+    "size": 37856
+  },
+  "dc/native/r113/partner.re4nmr": {
+    "lba": 249389,
+    "size": 229952
+  },
+  "dc/native/r113/ps2-world.ids": {
+    "lba": 249502,
+    "size": 160
+  },
+  "dc/native/r113/ps2-world.r4pw": {
+    "lba": 249503,
+    "size": 10952
+  },
+  "dc/native/r113/ps2-world.r4tc": {
+    "lba": 249509,
+    "size": 284
+  },
+  "dc/native/r113/ps2-world.re4mesh": {
+    "lba": 249510,
+    "size": 986560
+  },
+  "dc/native/r113/registry.re4nmr": {
+    "lba": 249992,
+    "size": 90304
+  },
+  "dc/native/r113/room.r4rc": {
+    "lba": 250037,
+    "size": 82784
+  },
+  "dc/native/r112/partner.re4nmr": {
+    "lba": 249013,
+    "size": 229952
+  },
+  "dc/native/r112/ps2-world.ids": {
+    "lba": 249126,
+    "size": 64
+  },
+  "dc/native/r112/ps2-world.r4pw": {
+    "lba": 249127,
+    "size": 4496
+  },
+  "dc/native/r112/ps2-world.r4tc": {
+    "lba": 249130,
+    "size": 160
+  },
+  "dc/native/r112/ps2-world.re4mesh": {
+    "lba": 249131,
+    "size": 392704
+  },
+  "dc/native/r112/registry.re4nmr": {
+    "lba": 249323,
+    "size": 105088
+  },
+  "dc/native/r112/room.r4rc": {
+    "lba": 249375,
+    "size": 26880
+  },
+  "dc/native/r111/partner.re4nmr": {
+    "lba": 248244,
+    "size": 229952
+  },
+  "dc/native/r111/ps2-world.ids": {
+    "lba": 248357,
+    "size": 224
+  },
+  "dc/native/r111/ps2-world.r4pw": {
+    "lba": 248358,
+    "size": 15572
+  },
+  "dc/native/r111/ps2-world.r4tc": {
+    "lba": 248366,
+    "size": 332
+  },
+  "dc/native/r111/ps2-world.re4mesh": {
+    "lba": 248367,
+    "size": 1135328
+  },
+  "dc/native/r111/registry.re4nmr": {
+    "lba": 248922,
+    "size": 90304
+  },
+  "dc/native/r111/room.r4rc": {
+    "lba": 248967,
+    "size": 93824
+  },
+  "dc/native/r10f/partner.re4nmr": {
+    "lba": 247572,
+    "size": 229952
+  },
+  "dc/native/r10f/ps2-world.ids": {
+    "lba": 247685,
+    "size": 192
+  },
+  "dc/native/r10f/ps2-world.r4pw": {
+    "lba": 247686,
+    "size": 13284
+  },
+  "dc/native/r10f/ps2-world.r4tc": {
+    "lba": 247693,
+    "size": 332
+  },
+  "dc/native/r10f/ps2-world.re4mesh": {
+    "lba": 247694,
+    "size": 948896
+  },
+  "dc/native/r10f/registry.re4nmr": {
+    "lba": 248158,
+    "size": 105088
+  },
+  "dc/native/r10f/room.r4rc": {
+    "lba": 248210,
+    "size": 68224
+  },
+  "dc/native/r10e/ps2-world.ids": {
+    "lba": 247078,
+    "size": 160
+  },
+  "dc/native/r10e/ps2-world.r4pw": {
+    "lba": 247079,
+    "size": 9644
+  },
+  "dc/native/r10e/ps2-world.re4mesh": {
+    "lba": 247084,
+    "size": 883360
+  },
+  "dc/native/r10e/registry.re4nmr": {
+    "lba": 247516,
+    "size": 105088
+  },
+  "dc/native/r10e/room.r4rc": {
+    "lba": 247568,
+    "size": 8112
+  },
+  "dc/native/r10d/ps2-world.ids": {
+    "lba": 246624,
+    "size": 256
+  },
+  "dc/native/r10d/ps2-world.r4pw": {
+    "lba": 246625,
+    "size": 16448
+  },
+  "dc/native/r10d/ps2-world.re4mesh": {
+    "lba": 246634,
+    "size": 793216
+  },
+  "dc/native/r10d/registry.re4nmr": {
+    "lba": 247022,
+    "size": 105088
+  },
+  "dc/native/r10d/room.r4rc": {
+    "lba": 247074,
+    "size": 6928
+  },
+  "dc/native/r10c/ps2-world.ids": {
+    "lba": 246210,
+    "size": 256
+  },
+  "dc/native/r10c/ps2-world.r4pw": {
+    "lba": 246211,
+    "size": 16252
+  },
+  "dc/native/r10c/ps2-world.re4mesh": {
+    "lba": 246219,
+    "size": 806176
+  },
+  "dc/native/r10c/room.r4rc": {
+    "lba": 246613,
+    "size": 21728
+  },
+  "dc/native/r10b/ps2-world.ids": {
+    "lba": 245764,
+    "size": 160
+  },
+  "dc/native/r10b/ps2-world.r4pw": {
+    "lba": 245765,
+    "size": 9800
+  },
+  "dc/native/r10b/ps2-world.r4tc": {
+    "lba": 245770,
+    "size": 228
+  },
+  "dc/native/r10b/ps2-world.re4mesh": {
+    "lba": 245771,
+    "size": 696416
+  },
+  "dc/native/r10b/registry.re4nmr": {
+    "lba": 246112,
+    "size": 91616
+  },
+  "dc/native/r10b/room.r4rc": {
+    "lba": 246157,
+    "size": 107120
+  },
+  "dc/native/r10a/ps2-world.ids": {
+    "lba": 245344,
+    "size": 256
+  },
+  "dc/native/r10a/ps2-world.r4pw": {
+    "lba": 245345,
+    "size": 17840
+  },
+  "dc/native/r10a/ps2-world.r4tc": {
+    "lba": 245354,
+    "size": 396
+  },
+  "dc/native/r10a/ps2-world.re4mesh": {
+    "lba": 245355,
+    "size": 733824
+  },
+  "dc/native/r10a/registry.re4nmr": {
+    "lba": 245714,
+    "size": 26880
+  },
+  "dc/native/r10a/room.r4rc": {
+    "lba": 245728,
+    "size": 72576
+  },
+  "dc/native/r109/ps2-world.ids": {
+    "lba": 244817,
+    "size": 128
+  },
+  "dc/native/r109/ps2-world.r4pw": {
+    "lba": 244818,
+    "size": 7324
+  },
+  "dc/native/r109/ps2-world.r4sg": {
+    "lba": 244822,
+    "size": 76128
+  },
+  "dc/native/r109/ps2-world.r4tc": {
+    "lba": 244860,
+    "size": 172
+  },
+  "dc/native/r109/ps2-world.re4mesh": {
+    "lba": 244861,
+    "size": 933152
+  },
+  "dc/native/r109/registry.re4nmr": {
+    "lba": 245317,
+    "size": 20672
+  },
+  "dc/native/r109/room.r4rc": {
+    "lba": 245328,
+    "size": 30752
+  },
+  "dc/native/r108/ps2-world.ids": {
+    "lba": 244281,
+    "size": 192
+  },
+  "dc/native/r108/ps2-world.r4pw": {
+    "lba": 244282,
+    "size": 11392
+  },
+  "dc/native/r108/ps2-world.r4tc": {
+    "lba": 244288,
+    "size": 256
+  },
+  "dc/native/r108/ps2-world.re4mesh": {
+    "lba": 244289,
+    "size": 912480
+  },
+  "dc/native/r108/registry.re4nmr": {
+    "lba": 244735,
+    "size": 99872
+  },
+  "dc/native/r108/room.r4rc": {
+    "lba": 244784,
+    "size": 65776
+  },
+  "dc/native/r107/ps2-world.ids": {
+    "lba": 243797,
+    "size": 96
+  },
+  "dc/native/r107/ps2-world.r4pw": {
+    "lba": 243798,
+    "size": 7420
+  },
+  "dc/native/r107/ps2-world.r4tc": {
+    "lba": 243802,
+    "size": 256
+  },
+  "dc/native/r107/ps2-world.re4mesh": {
+    "lba": 243803,
+    "size": 898400
+  },
+  "dc/native/r107/registry.re4nmr": {
+    "lba": 244242,
+    "size": 19520
+  },
+  "dc/native/r107/room.r4rc": {
+    "lba": 244252,
+    "size": 57520
+  },
+  "dc/native/r106/ps2-world.ids": {
+    "lba": 243233,
+    "size": 192
+  },
+  "dc/native/r106/ps2-world.r4pw": {
+    "lba": 243234,
+    "size": 10768
+  },
+  "dc/native/r106/ps2-world.r4tc": {
+    "lba": 243240,
+    "size": 188
+  },
+  "dc/native/r106/ps2-world.re4mesh": {
+    "lba": 243241,
+    "size": 991712
+  },
+  "dc/native/r106/registry.re4nmr": {
+    "lba": 243726,
+    "size": 66112
+  },
+  "dc/native/r106/room.r4rc": {
+    "lba": 243759,
+    "size": 76672
+  },
+  "dc/native/r105/ps2-world.ids": {
+    "lba": 242807,
+    "size": 288
+  },
+  "dc/native/r105/ps2-world.r4pw": {
+    "lba": 242808,
+    "size": 18028
+  },
+  "dc/native/r105/ps2-world.r4tc": {
+    "lba": 242817,
+    "size": 360
+  },
+  "dc/native/r105/ps2-world.re4mesh": {
+    "lba": 242818,
+    "size": 752448
+  },
+  "dc/native/r105/registry.re4nmr": {
+    "lba": 243186,
+    "size": 45824
+  },
+  "dc/native/r105/room.r4rc": {
+    "lba": 243209,
+    "size": 47552
+  },
+  "dc/native/r104/ps2-world.ids": {
+    "lba": 242397,
+    "size": 320
+  },
+  "dc/native/r104/ps2-world.r4pw": {
+    "lba": 242398,
+    "size": 18668
+  },
+  "dc/native/r104/ps2-world.r4tc": {
+    "lba": 242408,
+    "size": 244
+  },
+  "dc/native/r104/ps2-world.re4mesh": {
+    "lba": 242409,
+    "size": 648096
+  },
+  "dc/native/r104/registry.re4nmr": {
+    "lba": 242726,
+    "size": 105088
+  },
+  "dc/native/r104/room.r4rc": {
+    "lba": 242778,
+    "size": 57680
+  },
+  "dc/native/r103/ps2-world.ids": {
+    "lba": 241801,
+    "size": 160
+  },
+  "dc/native/r103/ps2-world.r4pw": {
+    "lba": 241802,
+    "size": 11272
+  },
+  "dc/native/r103/ps2-world.r4tc": {
+    "lba": 241808,
+    "size": 292
+  },
+  "dc/native/r103/ps2-world.re4mesh": {
+    "lba": 241809,
+    "size": 1074688
+  },
+  "dc/native/r103/registry.re4nmr": {
+    "lba": 242334,
+    "size": 42400
+  },
+  "dc/native/r103/room.r4rc": {
+    "lba": 242355,
+    "size": 85728
+  },
+  "dc/native/r103/low/index.txt": {
+    "lba": 241794,
+    "size": 4280
+  },
+  "dc/native/r103/low/MAINSCENARIO.re4mesh": {
+    "lba": 241438,
+    "size": 728096
+  },
+  "dc/native/r103/low/plan.json": {
+    "lba": 241797,
+    "size": 6758
+  },
+  "dc/native/r102/ps2-world.ids": {
+    "lba": 241173,
+    "size": 64
+  },
+  "dc/native/r102/ps2-world.r4pw": {
+    "lba": 241174,
+    "size": 4412
+  },
+  "dc/native/r102/ps2-world.r4tc": {
+    "lba": 241177,
+    "size": 160
+  },
+  "dc/native/r102/ps2-world.re4mesh": {
+    "lba": 241178,
+    "size": 395968
+  },
+  "dc/native/r102/registry.re4nmr": {
+    "lba": 241372,
+    "size": 105088
+  },
+  "dc/native/r102/room.r4rc": {
+    "lba": 241424,
+    "size": 27024
+  },
+  "dc/native/r101/far-shell.fsh": {
+    "lba": 240068,
+    "size": 119744
+  },
+  "dc/native/r101/MAINSCENARIO.re4mesh": {
+    "lba": 239573,
+    "size": 1013440
+  },
+  "dc/native/r101/ps2-world.ids": {
+    "lba": 240420,
+    "size": 256
+  },
+  "dc/native/r101/ps2-world.r4pw": {
+    "lba": 240421,
+    "size": 17100
+  },
+  "dc/native/r101/ps2-world.r4sg": {
+    "lba": 240430,
+    "size": 117152
+  },
+  "dc/native/r101/ps2-world.r4tc": {
+    "lba": 240488,
+    "size": 368
+  },
+  "dc/native/r101/ps2-world.re4mesh": {
+    "lba": 240489,
+    "size": 1283520
+  },
+  "dc/native/r101/registry.re4nmr": {
+    "lba": 241116,
+    "size": 19968
+  },
+  "dc/native/r101/room.r4rc": {
+    "lba": 241126,
+    "size": 94288
+  },
+  "dc/native/r101/low/index.txt": {
+    "lba": 240416,
+    "size": 3357
+  },
+  "dc/native/r101/low/MAINSCENARIO.re4mesh": {
+    "lba": 240127,
+    "size": 590112
+  },
+  "dc/native/r101/low/plan.json": {
+    "lba": 240418,
+    "size": 3379
+  },
+  "dc/native/r100/COMMON.re4mesh": {
+    "lba": 236871,
+    "size": 133184
+  },
+  "dc/native/r100/far-shell.fsh": {
+    "lba": 238066,
+    "size": 122363
+  },
+  "dc/native/r100/FILE_00.re4mesh": {
+    "lba": 236937,
+    "size": 17472
+  },
+  "dc/native/r100/FILE_00.re4room": {
+    "lba": 236946,
+    "size": 38564
+  },
+  "dc/native/r100/FILE_01.re4mesh": {
+    "lba": 236965,
+    "size": 398560
+  },
+  "dc/native/r100/FILE_01.re4room": {
+    "lba": 237160,
+    "size": 725066
+  },
+  "dc/native/r100/FILE_02.re4mesh": {
+    "lba": 237515,
+    "size": 187008
+  },
+  "dc/native/r100/FILE_02.re4room": {
+    "lba": 237607,
+    "size": 108624
+  },
+  "dc/native/r100/FILE_03.re4mesh": {
+    "lba": 237661,
+    "size": 297984
+  },
+  "dc/native/r100/FILE_04.re4mesh": {
+    "lba": 237807,
+    "size": 304512
+  },
+  "dc/native/r100/interior.cell": {
+    "lba": 238126,
+    "size": 33256
+  },
+  "dc/native/r100/MAINSCENARIO.re4mesh": {
+    "lba": 237956,
+    "size": 138976
+  },
+  "dc/native/r100/MAINSCENARIO.re4room": {
+    "lba": 238024,
+    "size": 84484
+  },
+  "dc/native/r100/ps2-world.ids": {
+    "lba": 238735,
+    "size": 320
+  },
+  "dc/native/r100/ps2-world.r4pw": {
+    "lba": 238736,
+    "size": 19612
+  },
+  "dc/native/r100/ps2-world.r4tc": {
+    "lba": 238746,
+    "size": 328
+  },
+  "dc/native/r100/ps2-world.re4mesh": {
+    "lba": 238747,
+    "size": 1537920
+  },
+  "dc/native/r100/registry.re4nmr": {
+    "lba": 239498,
+    "size": 65120
+  },
+  "dc/native/r100/room.r4rc": {
+    "lba": 239530,
+    "size": 86304
+  },
+  "dc/native/r100/low/COMMON.re4mesh": {
+    "lba": 238143,
+    "size": 133184
+  },
+  "dc/native/r100/low/FILE_00.re4mesh": {
+    "lba": 238209,
+    "size": 15424
+  },
+  "dc/native/r100/low/FILE_01.re4mesh": {
+    "lba": 238217,
+    "size": 354848
+  },
+  "dc/native/r100/low/FILE_02.re4mesh": {
+    "lba": 238391,
+    "size": 125792
+  },
+  "dc/native/r100/low/FILE_03.re4mesh": {
+    "lba": 238453,
+    "size": 210304
+  },
+  "dc/native/r100/low/FILE_04.re4mesh": {
+    "lba": 238556,
+    "size": 232896
+  },
+  "dc/native/r100/low/index.txt": {
+    "lba": 238730,
+    "size": 2622
+  },
+  "dc/native/r100/low/MAINSCENARIO.re4mesh": {
+    "lba": 238670,
+    "size": 122688
+  },
+  "dc/native/r100/low/plan.json": {
+    "lba": 238732,
+    "size": 4560
+  },
+  "dc/native/pl08/leon_pl08.re4cp": {
+    "lba": 236824,
+    "size": 34144
+  },
+  "dc/native/pl08/leon_pl08_ps2.re4cp": {
+    "lba": 236841,
+    "size": 61184
+  },
+  "dc/native/pl00/leon_hands_pl00.re4hp": {
+    "lba": 236777,
+    "size": 95520
+  },
+  "dc/native/ganado/ganado_lod.re4gl": {
+    "lba": 236608,
+    "size": 326880
+  },
+  "dc/native/ganado/ganado_var.re4gv": {
+    "lba": 236768,
+    "size": 18368
+  },
+  "dc/movie/r100s03.seq": {
+    "lba": 81520,
+    "size": 10312565
+  },
+  "dc/movie/r100s20.seq": {
+    "lba": 86556,
+    "size": 4046542
+  },
+  "dc/movie/r100s30.seq": {
+    "lba": 88532,
+    "size": 2402304
+  },
+  "dc/movie/r100s40.seq": {
+    "lba": 89705,
+    "size": 8233479
+  },
+  "dc/movie/r100s41.seq": {
+    "lba": 93726,
+    "size": 1189295
+  },
+  "dc/movie/r100s43.seq": {
+    "lba": 94307,
+    "size": 839920
+  },
+  "dc/movie/r100s44.seq": {
+    "lba": 94718,
+    "size": 1109783
+  },
+  "dc/movie/r101s00.seq": {
+    "lba": 95260,
+    "size": 1489179
+  },
+  "dc/movie/r101s21.seq": {
+    "lba": 95988,
+    "size": 5560836
+  },
+  "dc/movie/r101s30.seq": {
+    "lba": 98704,
+    "size": 9198341
+  },
+  "dc/movie/r102s00.seq": {
+    "lba": 103196,
+    "size": 1733233
+  },
+  "dc/movie/r104s00.seq": {
+    "lba": 104043,
+    "size": 34047933
+  },
+  "dc/movie/r104s00c.seq": {
+    "lba": 120668,
+    "size": 458343
+  },
+  "dc/movie/r104s01.seq": {
+    "lba": 120892,
+    "size": 3940184
+  },
+  "dc/movie/r104s02.seq": {
+    "lba": 122816,
+    "size": 364944
+  },
+  "dc/movie/r104s10.seq": {
+    "lba": 122995,
+    "size": 1274762
+  },
+  "dc/movie/r104s20.seq": {
+    "lba": 123618,
+    "size": 1961684
+  },
+  "dc/movie/r105s00.seq": {
+    "lba": 124576,
+    "size": 11712861
+  },
+  "dc/movie/r105s10.seq": {
+    "lba": 130296,
+    "size": 7793404
+  },
+  "dc/movie/r106s00.seq": {
+    "lba": 134102,
+    "size": 12184020
+  },
+  "dc/movie/r10bs00.seq": {
+    "lba": 140052,
+    "size": 9266186
+  },
+  "dc/movie/r10bs10.seq": {
+    "lba": 144577,
+    "size": 7572527
+  },
+  "dc/movie/r10bs20.seq": {
+    "lba": 148275,
+    "size": 5679991
+  },
+  "dc/movie/r10bs20c.seq": {
+    "lba": 151049,
+    "size": 2104790
+  },
+  "dc/movie/r10bs21.seq": {
+    "lba": 152077,
+    "size": 2512528
+  },
+  "dc/movie/r10bs22.seq": {
+    "lba": 153304,
+    "size": 9235027
+  },
+  "dc/movie/r117s00.seq": {
+    "lba": 157814,
+    "size": 6325278
+  },
+  "dc/movie/r117s10.seq": {
+    "lba": 160903,
+    "size": 29177756
+  },
+  "dc/movie/r119s00.seq": {
+    "lba": 175150,
+    "size": 13506879
+  },
+  "dc/movie/r119s10.seq": {
+    "lba": 181746,
+    "size": 3202767
+  },
+  "dc/movie/r119s20.seq": {
+    "lba": 183310,
+    "size": 5622994
+  },
+  "dc/movie/r119s30.seq": {
+    "lba": 186056,
+    "size": 1051632
+  },
+  "dc/movie/r11bs00.seq": {
+    "lba": 186570,
+    "size": 10399953
+  },
+  "dc/movie/r11cs00.seq": {
+    "lba": 191649,
+    "size": 16100668
+  },
+  "dc/movie/r11cs10.seq": {
+    "lba": 199511,
+    "size": 5584817
+  },
+  "dc/movie/r11cs20.seq": {
+    "lba": 202238,
+    "size": 3697013
+  },
+  "dc/movie/r11fs00.seq": {
+    "lba": 204044,
+    "size": 10326964
+  },
+  "dc/movie/r11fs00c.seq": {
+    "lba": 209087,
+    "size": 1265793
+  },
+  "dc/movie/r11fs01.seq": {
+    "lba": 209706,
+    "size": 3198402
+  },
+  "dc/movie/r11fs02.seq": {
+    "lba": 211268,
+    "size": 7564564
+  },
+  "dc/movie/r11fs10.seq": {
+    "lba": 214962,
+    "size": 1855221
+  },
+  "dc/movie/r11fs11.seq": {
+    "lba": 215868,
+    "size": 2359119
+  },
+  "dc/movie/r120s00.seq": {
+    "lba": 217020,
+    "size": 13935502
+  },
+  "dc/movie/r120s01.seq": {
+    "lba": 223825,
+    "size": 16552235
+  },
+  "dc/movie/r200s00.seq": {
+    "lba": 231908,
+    "size": 9623838
+  },
+  "dc/mot/00778734-43ffdc43.fcv": {
+    "lba": 77915,
+    "size": 7968
+  },
+  "dc/mot/00e13eaf-0272c255.fcv": {
+    "lba": 77919,
+    "size": 5184
+  },
+  "dc/mot/0159d025-7b6f5ab2.fcv": {
+    "lba": 77922,
+    "size": 8192
+  },
+  "dc/mot/02aa9671-30e56669.fcv": {
+    "lba": 77926,
+    "size": 13376
+  },
+  "dc/mot/0489e2c1-41049a96.fcv": {
+    "lba": 77933,
+    "size": 4896
+  },
+  "dc/mot/053e750b-2f055a7c.fcv": {
+    "lba": 77936,
+    "size": 18336
+  },
+  "dc/mot/0566377d-9d364001.fcv": {
+    "lba": 77945,
+    "size": 17664
+  },
+  "dc/mot/0591ef42-0b3e6653.fcv": {
+    "lba": 77954,
+    "size": 53184
+  },
+  "dc/mot/05956265-e1b8491b.fcv": {
+    "lba": 77980,
+    "size": 15584
+  },
+  "dc/mot/0664c7bb-5999b45a.fcv": {
+    "lba": 77988,
+    "size": 10816
+  },
+  "dc/mot/06f9ebe6-b4cbd551.fcv": {
+    "lba": 77994,
+    "size": 10080
+  },
+  "dc/mot/06fc8700-a6e939df.fcv": {
+    "lba": 77999,
+    "size": 9952
+  },
+  "dc/mot/07036b95-f4c9c6a3.fcv": {
+    "lba": 78004,
+    "size": 5312
+  },
+  "dc/mot/0710eb38-4a0c51e3.fcv": {
+    "lba": 78007,
+    "size": 22528
+  },
+  "dc/mot/07688fa0-46cd60ed.fcv": {
+    "lba": 78018,
+    "size": 5088
+  },
+  "dc/mot/0850666f-8293a503.fcv": {
+    "lba": 78021,
+    "size": 14208
+  },
+  "dc/mot/098a09d6-041fce4b.fcv": {
+    "lba": 78028,
+    "size": 9376
+  },
+  "dc/mot/0c06c6e4-c7ad9ad2.fcv": {
+    "lba": 78033,
+    "size": 9056
+  },
+  "dc/mot/0c1946cf-7e32b9c9.fcv": {
+    "lba": 78038,
+    "size": 9760
+  },
+  "dc/mot/0c518dd7-282bc9d7.fcv": {
+    "lba": 78043,
+    "size": 8352
+  },
+  "dc/mot/0d4369c5-a7d2839a.fcv": {
+    "lba": 78048,
+    "size": 16992
+  },
+  "dc/mot/0d5fd83d-35fdeaec.fcv": {
+    "lba": 78057,
+    "size": 33696
+  },
+  "dc/mot/0f0cc9ce-46e887fb.fcv": {
+    "lba": 78074,
+    "size": 15424
+  },
+  "dc/mot/0fd30303-18f32605.fcv": {
+    "lba": 78082,
+    "size": 10560
+  },
+  "dc/mot/100ca27e-3af29872.fcv": {
+    "lba": 78088,
+    "size": 5280
+  },
+  "dc/mot/10412990-08300007.fcv": {
+    "lba": 78091,
+    "size": 9760
+  },
+  "dc/mot/1096b792-c4dc0e6b.fcv": {
+    "lba": 78096,
+    "size": 3392
+  },
+  "dc/mot/10e75a44-a0c1b929.fcv": {
+    "lba": 78098,
+    "size": 18592
+  },
+  "dc/mot/10f5cbfa-1c4e6cfa.fcv": {
+    "lba": 78108,
+    "size": 5568
+  },
+  "dc/mot/111080f5-7eb902a8.fcv": {
+    "lba": 78111,
+    "size": 7392
+  },
+  "dc/mot/11fdd1d2-ec2cf3e3.fcv": {
+    "lba": 78115,
+    "size": 15360
+  },
+  "dc/mot/123ce089-29a8bcd0.fcv": {
+    "lba": 78123,
+    "size": 18784
+  },
+  "dc/mot/123e1a52-f60d6baa.fcv": {
+    "lba": 78133,
+    "size": 4288
+  },
+  "dc/mot/13d7e24e-f2e26dec.fcv": {
+    "lba": 78136,
+    "size": 29856
+  },
+  "dc/mot/13db2063-f46503db.fcv": {
+    "lba": 78151,
+    "size": 13472
+  },
+  "dc/mot/1456ade1-28304c89.fcv": {
+    "lba": 78158,
+    "size": 18112
+  },
+  "dc/mot/14ca5ebc-425dba3c.fcv": {
+    "lba": 78167,
+    "size": 18592
+  },
+  "dc/mot/155c3832-94040b82.fcv": {
+    "lba": 78177,
+    "size": 44512
+  },
+  "dc/mot/157be360-295209f9.fcv": {
+    "lba": 78199,
+    "size": 20832
+  },
+  "dc/mot/159156ec-c1d5e3f6.fcv": {
+    "lba": 78210,
+    "size": 12416
+  },
+  "dc/mot/15ed1b53-60984899.fcv": {
+    "lba": 78217,
+    "size": 22880
+  },
+  "dc/mot/17443bca-bd538920.fcv": {
+    "lba": 78229,
+    "size": 17472
+  },
+  "dc/mot/177e41fd-ecf041e4.fcv": {
+    "lba": 78238,
+    "size": 16448
+  },
+  "dc/mot/17a43c49-1602de38.fcv": {
+    "lba": 78247,
+    "size": 9216
+  },
+  "dc/mot/18a85864-66f1727d.fcv": {
+    "lba": 78252,
+    "size": 18752
+  },
+  "dc/mot/18bfe535-bad6c45b.fcv": {
+    "lba": 78262,
+    "size": 53696
+  },
+  "dc/mot/18f9ad45-ba6230e7.fcv": {
+    "lba": 78289,
+    "size": 22400
+  },
+  "dc/mot/19057ea6-7ed68962.fcv": {
+    "lba": 78300,
+    "size": 15552
+  },
+  "dc/mot/19a2d5bf-062558f3.fcv": {
+    "lba": 78308,
+    "size": 12224
+  },
+  "dc/mot/19b9f5a8-76a92e10.fcv": {
+    "lba": 78314,
+    "size": 7648
+  },
+  "dc/mot/1aebfbcc-dba392db.fcv": {
+    "lba": 78318,
+    "size": 12928
+  },
+  "dc/mot/1e1eb154-57749096.fcv": {
+    "lba": 78325,
+    "size": 5792
+  },
+  "dc/mot/1eca8db7-c22e970b.fcv": {
+    "lba": 78328,
+    "size": 23648
+  },
+  "dc/mot/1f9eff65-44ee650a.fcv": {
+    "lba": 78340,
+    "size": 18464
+  },
+  "dc/mot/208100af-d2a2cd99.fcv": {
+    "lba": 78350,
+    "size": 3968
+  },
+  "dc/mot/227f1b67-4b29454d.fcv": {
+    "lba": 78352,
+    "size": 9632
+  },
+  "dc/mot/22cd38ae-aa232041.fcv": {
+    "lba": 78357,
+    "size": 26432
+  },
+  "dc/mot/238aef90-74a2ea38.fcv": {
+    "lba": 78370,
+    "size": 17408
+  },
+  "dc/mot/23f316fd-6def67f6.fcv": {
+    "lba": 78379,
+    "size": 31616
+  },
+  "dc/mot/23f8ee94-74a3aef5.fcv": {
+    "lba": 78395,
+    "size": 22048
+  },
+  "dc/mot/2437c0f8-2bf09918.fcv": {
+    "lba": 78406,
+    "size": 11072
+  },
+  "dc/mot/24ab7f76-4aa3fd28.fcv": {
+    "lba": 78412,
+    "size": 15424
+  },
+  "dc/mot/24bbc949-2931f8bb.fcv": {
+    "lba": 78420,
+    "size": 10784
+  },
+  "dc/mot/24e92217-8b01debc.fcv": {
+    "lba": 78426,
+    "size": 8640
+  },
+  "dc/mot/258e84af-98aeac53.fcv": {
+    "lba": 78431,
+    "size": 14304
+  },
+  "dc/mot/25f2069f-d3f07b48.fcv": {
+    "lba": 78438,
+    "size": 6048
+  },
+  "dc/mot/266982ac-e26be91c.fcv": {
+    "lba": 78441,
+    "size": 41376
+  },
+  "dc/mot/26874458-1851e29d.fcv": {
+    "lba": 78462,
+    "size": 5664
+  },
+  "dc/mot/26a9d48f-6b86c24b.fcv": {
+    "lba": 78465,
+    "size": 11136
+  },
+  "dc/mot/2738b960-50ac522c.fcv": {
+    "lba": 78471,
+    "size": 16608
+  },
+  "dc/mot/28638952-f770535b.fcv": {
+    "lba": 78480,
+    "size": 36128
+  },
+  "dc/mot/29eb16bb-dd0d8374.fcv": {
+    "lba": 78498,
+    "size": 8992
+  },
+  "dc/mot/29fee797-b813130a.fcv": {
+    "lba": 78503,
+    "size": 11200
+  },
+  "dc/mot/2a19a5e3-54c11c3e.fcv": {
+    "lba": 78509,
+    "size": 6944
+  },
+  "dc/mot/2a4f0f2b-e97fd25e.fcv": {
+    "lba": 78513,
+    "size": 5664
+  },
+  "dc/mot/2ad78b98-e9df3ecf.fcv": {
+    "lba": 78516,
+    "size": 3392
+  },
+  "dc/mot/2bf6fe77-2a4dcfac.fcv": {
+    "lba": 78518,
+    "size": 17984
+  },
+  "dc/mot/2c36cb1c-8d6d1162.fcv": {
+    "lba": 78527,
+    "size": 16608
+  },
+  "dc/mot/2d67f621-fcb0aed1.fcv": {
+    "lba": 78536,
+    "size": 15904
+  },
+  "dc/mot/2d93ec8b-18fc7eae.fcv": {
+    "lba": 78544,
+    "size": 9696
+  },
+  "dc/mot/2df52b3d-1026a08e.fcv": {
+    "lba": 78549,
+    "size": 8128
+  },
+  "dc/mot/3159e54c-93aec492.fcv": {
+    "lba": 78553,
+    "size": 10272
+  },
+  "dc/mot/32c9e759-0d09bab9.fcv": {
+    "lba": 78559,
+    "size": 10304
+  },
+  "dc/mot/33260397-72ae8712.fcv": {
+    "lba": 78565,
+    "size": 9248
+  },
+  "dc/mot/3365efa3-21531f7e.fcv": {
+    "lba": 78570,
+    "size": 11104
+  },
+  "dc/mot/3369fafe-5ab1708a.fcv": {
+    "lba": 78576,
+    "size": 14528
+  },
+  "dc/mot/3512ee9c-51dab15e.fcv": {
+    "lba": 78584,
+    "size": 9216
+  },
+  "dc/mot/351fd1b1-7bd8bfb6.fcv": {
+    "lba": 78589,
+    "size": 2752
+  },
+  "dc/mot/3521a1be-07b25d22.fcv": {
+    "lba": 78591,
+    "size": 31552
+  },
+  "dc/mot/35815645-69892a69.fcv": {
+    "lba": 78607,
+    "size": 10144
+  },
+  "dc/mot/36462c1c-7f6fe3b5.fcv": {
+    "lba": 78612,
+    "size": 5120
+  },
+  "dc/mot/3733db5e-914b8430.fcv": {
+    "lba": 78615,
+    "size": 24320
+  },
+  "dc/mot/37cc94e4-8210adaf.fcv": {
+    "lba": 78627,
+    "size": 17088
+  },
+  "dc/mot/38312128-724d010f.fcv": {
+    "lba": 78636,
+    "size": 11168
+  },
+  "dc/mot/3945afda-35b1f6c0.fcv": {
+    "lba": 78642,
+    "size": 36320
+  },
+  "dc/mot/394a3bab-439026d9.fcv": {
+    "lba": 78660,
+    "size": 6688
+  },
+  "dc/mot/39d2c347-efb714bb.fcv": {
+    "lba": 78664,
+    "size": 448
+  },
+  "dc/mot/3a00c4c3-1b3d6293.fcv": {
+    "lba": 78665,
+    "size": 5632
+  },
+  "dc/mot/3a576cf9-23152fb6.fcv": {
+    "lba": 78668,
+    "size": 7360
+  },
+  "dc/mot/3a5dece5-818bdfa1.fcv": {
+    "lba": 78672,
+    "size": 5664
+  },
+  "dc/mot/3b4f24b4-8eda0eb0.fcv": {
+    "lba": 78675,
+    "size": 2752
+  },
+  "dc/mot/3be6fac4-09ee59e9.fcv": {
+    "lba": 78677,
+    "size": 123008
+  },
+  "dc/mot/3cbb9b2a-84798043.fcv": {
+    "lba": 78738,
+    "size": 9888
+  },
+  "dc/mot/3d395991-10b9ea17.fcv": {
+    "lba": 78743,
+    "size": 4544
+  },
+  "dc/mot/3f03d97b-b4c8fb5b.fcv": {
+    "lba": 78746,
+    "size": 20896
+  },
+  "dc/mot/3f116861-05763bf7.fcv": {
+    "lba": 78757,
+    "size": 18208
+  },
+  "dc/mot/3fbdb464-c0aa9b72.fcv": {
+    "lba": 78766,
+    "size": 3488
+  },
+  "dc/mot/3fc73652-c09b609e.fcv": {
+    "lba": 78768,
+    "size": 8320
+  },
+  "dc/mot/4381556a-19f2c2c3.fcv": {
+    "lba": 78773,
+    "size": 19936
+  },
+  "dc/mot/43f89c94-2b6a3d2c.fcv": {
+    "lba": 78783,
+    "size": 20864
+  },
+  "dc/mot/455830f6-d13a1e98.fcv": {
+    "lba": 78794,
+    "size": 18816
+  },
+  "dc/mot/461a0bb4-30c4bc70.fcv": {
+    "lba": 78804,
+    "size": 5728
+  },
+  "dc/mot/4639e0fb-ac569e46.fcv": {
+    "lba": 78807,
+    "size": 22144
+  },
+  "dc/mot/472e85cc-d756bcf5.fcv": {
+    "lba": 78818,
+    "size": 14208
+  },
+  "dc/mot/47e94284-85c580a9.fcv": {
+    "lba": 78825,
+    "size": 25952
+  },
+  "dc/mot/47e95547-660895cf.fcv": {
+    "lba": 78838,
+    "size": 17344
+  },
+  "dc/mot/4874cae8-a717ca16.fcv": {
+    "lba": 78847,
+    "size": 16064
+  },
+  "dc/mot/494b2307-aac7265e.fcv": {
+    "lba": 78855,
+    "size": 8032
+  },
+  "dc/mot/4a1d5991-f3d8d39e.fcv": {
+    "lba": 78859,
+    "size": 30784
+  },
+  "dc/mot/4ad90d6e-1268c045.fcv": {
+    "lba": 78875,
+    "size": 9472
+  },
+  "dc/mot/4adc2acf-6b67cdce.fcv": {
+    "lba": 78880,
+    "size": 7744
+  },
+  "dc/mot/4babbc85-9e5122d1.fcv": {
+    "lba": 78884,
+    "size": 11744
+  },
+  "dc/mot/4c297961-81575fb6.fcv": {
+    "lba": 78890,
+    "size": 4992
+  },
+  "dc/mot/4c4a3483-8be0de5f.fcv": {
+    "lba": 78893,
+    "size": 16608
+  },
+  "dc/mot/4d0f5567-a56ed76c.fcv": {
+    "lba": 78902,
+    "size": 14592
+  },
+  "dc/mot/4d8de0bc-e0bf6d06.fcv": {
+    "lba": 78910,
+    "size": 8352
+  },
+  "dc/mot/4da3bc28-d68ca285.fcv": {
+    "lba": 78915,
+    "size": 4480
+  },
+  "dc/mot/4f7b78a9-be02a4d7.fcv": {
+    "lba": 78918,
+    "size": 10784
+  },
+  "dc/mot/4fa44391-3cdd4c5a.fcv": {
+    "lba": 78924,
+    "size": 19296
+  },
+  "dc/mot/4fd9e2ef-8881fa07.fcv": {
+    "lba": 78934,
+    "size": 7936
+  },
+  "dc/mot/501a8ba0-999afb13.fcv": {
+    "lba": 78938,
+    "size": 17728
+  },
+  "dc/mot/50890401-aa05a949.fcv": {
+    "lba": 78947,
+    "size": 7136
+  },
+  "dc/mot/5095b851-4a551e8a.fcv": {
+    "lba": 78951,
+    "size": 31584
+  },
+  "dc/mot/515f2c4f-c6cd9d95.fcv": {
+    "lba": 78967,
+    "size": 128
+  },
+  "dc/mot/532f7c10-293db07a.fcv": {
+    "lba": 78968,
+    "size": 22112
+  },
+  "dc/mot/535a5394-ca641c68.fcv": {
+    "lba": 78979,
+    "size": 6880
+  },
+  "dc/mot/53e53ee4-0e5da083.fcv": {
+    "lba": 78983,
+    "size": 53312
+  },
+  "dc/mot/54c472be-1b029fcd.fcv": {
+    "lba": 79010,
+    "size": 27136
+  },
+  "dc/mot/5500c429-10e31118.fcv": {
+    "lba": 79024,
+    "size": 19072
+  },
+  "dc/mot/55436b07-ccb23427.fcv": {
+    "lba": 79034,
+    "size": 8096
+  },
+  "dc/mot/55ad7706-38e80e68.fcv": {
+    "lba": 79038,
+    "size": 17984
+  },
+  "dc/mot/57372a4b-b1a43fc5.fcv": {
+    "lba": 79047,
+    "size": 224
+  },
+  "dc/mot/5870d246-6a80ae53.fcv": {
+    "lba": 79048,
+    "size": 24544
+  },
+  "dc/mot/58f8f44f-18a75801.fcv": {
+    "lba": 79060,
+    "size": 28416
+  },
+  "dc/mot/5930fb51-be7802a5.fcv": {
+    "lba": 79074,
+    "size": 13696
+  },
+  "dc/mot/5999d3e3-15f5d667.fcv": {
+    "lba": 79081,
+    "size": 28416
+  },
+  "dc/mot/5a18c808-b493cf7c.fcv": {
+    "lba": 79095,
+    "size": 7840
+  },
+  "dc/mot/5bc90039-252d0d3b.fcv": {
+    "lba": 79099,
+    "size": 10720
+  },
+  "dc/mot/5bda6eb4-95dd506d.fcv": {
+    "lba": 79105,
+    "size": 5056
+  },
+  "dc/mot/5bdf561e-f21bf745.fcv": {
+    "lba": 79108,
+    "size": 32608
+  },
+  "dc/mot/5c04300e-931976b7.fcv": {
+    "lba": 79124,
+    "size": 26080
+  },
+  "dc/mot/5c964985-904ab47a.fcv": {
+    "lba": 79137,
+    "size": 10272
+  },
+  "dc/mot/5e5c8406-b273b3c1.fcv": {
+    "lba": 79143,
+    "size": 12224
+  },
+  "dc/mot/5e9bcce9-8d51eae4.fcv": {
+    "lba": 79149,
+    "size": 29760
+  },
+  "dc/mot/5e9cf5aa-5c1e0a94.fcv": {
+    "lba": 79164,
+    "size": 14976
+  },
+  "dc/mot/5f2c5b04-67e9ddf7.fcv": {
+    "lba": 79172,
+    "size": 2080
+  },
+  "dc/mot/5fb7ade2-266fa10e.fcv": {
+    "lba": 79174,
+    "size": 16544
+  },
+  "dc/mot/5fc90469-b5d237db.fcv": {
+    "lba": 79183,
+    "size": 23296
+  },
+  "dc/mot/5ffcdc79-69f63d5a.fcv": {
+    "lba": 79195,
+    "size": 9088
+  },
+  "dc/mot/604a0c50-524f0510.fcv": {
+    "lba": 79200,
+    "size": 4960
+  },
+  "dc/mot/604d76a1-1ba62f3d.fcv": {
+    "lba": 79203,
+    "size": 11296
+  },
+  "dc/mot/610ebd49-6a139252.fcv": {
+    "lba": 79209,
+    "size": 35584
+  },
+  "dc/mot/61b69470-3d82f443.fcv": {
+    "lba": 79227,
+    "size": 9760
+  },
+  "dc/mot/61c8650f-02d2f82f.fcv": {
+    "lba": 79232,
+    "size": 6816
+  },
+  "dc/mot/61f9293f-a871259f.fcv": {
+    "lba": 79236,
+    "size": 26144
+  },
+  "dc/mot/6280f627-9068a7a1.fcv": {
+    "lba": 79249,
+    "size": 10624
+  },
+  "dc/mot/633744a2-fece8887.fcv": {
+    "lba": 79255,
+    "size": 5696
+  },
+  "dc/mot/6350f25f-0900af21.fcv": {
+    "lba": 79258,
+    "size": 10496
+  },
+  "dc/mot/637d22a6-981b3fda.fcv": {
+    "lba": 79264,
+    "size": 14144
+  },
+  "dc/mot/648e518b-9bece019.fcv": {
+    "lba": 79271,
+    "size": 17696
+  },
+  "dc/mot/65164bc9-427e0d2d.fcv": {
+    "lba": 79280,
+    "size": 25376
+  },
+  "dc/mot/66023c1d-9f868f04.fcv": {
+    "lba": 79293,
+    "size": 2304
+  },
+  "dc/mot/66440df4-c8b4aeb0.fcv": {
+    "lba": 79295,
+    "size": 38752
+  },
+  "dc/mot/665e8df2-3f346946.fcv": {
+    "lba": 79314,
+    "size": 16736
+  },
+  "dc/mot/66988de6-251fde3d.fcv": {
+    "lba": 79323,
+    "size": 23456
+  },
+  "dc/mot/6759a9f6-ac49d197.fcv": {
+    "lba": 79335,
+    "size": 8704
+  },
+  "dc/mot/68454626-d5d5f147.fcv": {
+    "lba": 79340,
+    "size": 7488
+  },
+  "dc/mot/686e80d2-cfc60b64.fcv": {
+    "lba": 79344,
+    "size": 15552
+  },
+  "dc/mot/68e1f4f7-8203c8a3.fcv": {
+    "lba": 79352,
+    "size": 8384
+  },
+  "dc/mot/69370ad4-e309c0fd.fcv": {
+    "lba": 79357,
+    "size": 11840
+  },
+  "dc/mot/6989563a-97d3fbc6.fcv": {
+    "lba": 79363,
+    "size": 14560
+  },
+  "dc/mot/69dfb41a-5697eaec.fcv": {
+    "lba": 79371,
+    "size": 67552
+  },
+  "dc/mot/6a300b14-7ae9f066.fcv": {
+    "lba": 79404,
+    "size": 5152
+  },
+  "dc/mot/6a3e4ff5-4d319e86.fcv": {
+    "lba": 79407,
+    "size": 16320
+  },
+  "dc/mot/6a8ca5ef-8080de43.fcv": {
+    "lba": 79415,
+    "size": 15744
+  },
+  "dc/mot/6aa12a2a-c5621db0.fcv": {
+    "lba": 79423,
+    "size": 6976
+  },
+  "dc/mot/6ab5db75-332c55a4.fcv": {
+    "lba": 79427,
+    "size": 15904
+  },
+  "dc/mot/6ac8ff0d-1137e5a3.fcv": {
+    "lba": 79435,
+    "size": 9792
+  },
+  "dc/mot/6be68f47-7dae697d.fcv": {
+    "lba": 79440,
+    "size": 3680
+  },
+  "dc/mot/6c07f19d-293e08c5.fcv": {
+    "lba": 79442,
+    "size": 10208
+  },
+  "dc/mot/6ce026db-cc43696b.fcv": {
+    "lba": 79447,
+    "size": 6304
+  },
+  "dc/mot/6d64fc79-e6bb4eb8.fcv": {
+    "lba": 79451,
+    "size": 8192
+  },
+  "dc/mot/6e7d544f-244e1051.fcv": {
+    "lba": 79455,
+    "size": 7872
+  },
+  "dc/mot/6f016573-43fa64bc.fcv": {
+    "lba": 79459,
+    "size": 9024
+  },
+  "dc/mot/6f48bad3-ba09145a.fcv": {
+    "lba": 79464,
+    "size": 13312
+  },
+  "dc/mot/6f869eda-f44e1f6f.fcv": {
+    "lba": 79471,
+    "size": 3456
+  },
+  "dc/mot/7023b1dd-d512f29e.fcv": {
+    "lba": 79473,
+    "size": 9504
+  },
+  "dc/mot/71a919bb-699e8315.fcv": {
+    "lba": 79478,
+    "size": 11648
+  },
+  "dc/mot/7213333e-8b9aaa06.fcv": {
+    "lba": 79484,
+    "size": 9664
+  },
+  "dc/mot/723fcc7b-c92da903.fcv": {
+    "lba": 79489,
+    "size": 29984
+  },
+  "dc/mot/732ab342-f2e27c74.fcv": {
+    "lba": 79504,
+    "size": 22144
+  },
+  "dc/mot/73f573a1-8d62360c.fcv": {
+    "lba": 79515,
+    "size": 10656
+  },
+  "dc/mot/743e57d5-0766d4f4.fcv": {
+    "lba": 79521,
+    "size": 14912
+  },
+  "dc/mot/76ad7fde-0c13fb8d.fcv": {
+    "lba": 79529,
+    "size": 21312
+  },
+  "dc/mot/78f58a7b-957dbdc1.fcv": {
+    "lba": 79540,
+    "size": 12608
+  },
+  "dc/mot/7935b455-1ca64e18.fcv": {
+    "lba": 79547,
+    "size": 8992
+  },
+  "dc/mot/795a2262-deabea80.fcv": {
+    "lba": 79552,
+    "size": 11200
+  },
+  "dc/mot/79ac4a04-bfc122f5.fcv": {
+    "lba": 79558,
+    "size": 11392
+  },
+  "dc/mot/7a6218c9-760b84e7.fcv": {
+    "lba": 79564,
+    "size": 34976
+  },
+  "dc/mot/7b6c9a6d-df834d2d.fcv": {
+    "lba": 79582,
+    "size": 19008
+  },
+  "dc/mot/7ce3f6c7-202e474f.fcv": {
+    "lba": 79592,
+    "size": 11872
+  },
+  "dc/mot/7d6f16bf-c7a97e22.fcv": {
+    "lba": 79598,
+    "size": 30336
+  },
+  "dc/mot/7edd9ef6-1f4928df.fcv": {
+    "lba": 79613,
+    "size": 10144
+  },
+  "dc/mot/7ef82e55-b5494992.fcv": {
+    "lba": 79618,
+    "size": 5824
+  },
+  "dc/mot/7f0d144f-91ee3184.fcv": {
+    "lba": 79621,
+    "size": 23360
+  },
+  "dc/mot/7f367e99-08745c29.fcv": {
+    "lba": 79633,
+    "size": 49632
+  },
+  "dc/mot/7fbf234c-49d31f56.fcv": {
+    "lba": 79658,
+    "size": 19744
+  },
+  "dc/mot/806195b1-5680610b.fcv": {
+    "lba": 79668,
+    "size": 15872
+  },
+  "dc/mot/81163a31-0304b939.fcv": {
+    "lba": 79676,
+    "size": 14656
+  },
+  "dc/mot/812606f4-0c001f00.fcv": {
+    "lba": 79684,
+    "size": 4352
+  },
+  "dc/mot/818ca719-e4de6d13.fcv": {
+    "lba": 79687,
+    "size": 9824
+  },
+  "dc/mot/820c9096-34381f8b.fcv": {
+    "lba": 79692,
+    "size": 24480
+  },
+  "dc/mot/83377dc0-5ad254a3.fcv": {
+    "lba": 79704,
+    "size": 16512
+  },
+  "dc/mot/84be3e71-bb1e66b2.fcv": {
+    "lba": 79713,
+    "size": 8032
+  },
+  "dc/mot/86c90707-9098f505.fcv": {
+    "lba": 79717,
+    "size": 12864
+  },
+  "dc/mot/8719f039-617409c2.fcv": {
+    "lba": 79724,
+    "size": 23648
+  },
+  "dc/mot/8791e64a-7f37e1a5.fcv": {
+    "lba": 79736,
+    "size": 16928
+  },
+  "dc/mot/87a0027c-9aead501.fcv": {
+    "lba": 79745,
+    "size": 9376
+  },
+  "dc/mot/889d0c25-2c414f6a.fcv": {
+    "lba": 79750,
+    "size": 13280
+  },
+  "dc/mot/89764eee-daa11d95.fcv": {
+    "lba": 79757,
+    "size": 11456
+  },
+  "dc/mot/8b33e88d-60dc4b2e.fcv": {
+    "lba": 79763,
+    "size": 7392
+  },
+  "dc/mot/8b37242d-f73dd34d.fcv": {
+    "lba": 79767,
+    "size": 3488
+  },
+  "dc/mot/8bee3cf4-71081450.fcv": {
+    "lba": 79769,
+    "size": 12928
+  },
+  "dc/mot/8c054cac-926278c4.fcv": {
+    "lba": 79776,
+    "size": 14080
+  },
+  "dc/mot/8c60aab2-26a9d72d.fcv": {
+    "lba": 79783,
+    "size": 21344
+  },
+  "dc/mot/8caf3e43-64f09926.fcv": {
+    "lba": 79794,
+    "size": 10368
+  },
+  "dc/mot/8cd72750-e9bffbf1.fcv": {
+    "lba": 79800,
+    "size": 8992
+  },
+  "dc/mot/8ce05846-845f0fc9.fcv": {
+    "lba": 79805,
+    "size": 3808
+  },
+  "dc/mot/8d522ece-9c9996bf.fcv": {
+    "lba": 79807,
+    "size": 13216
+  },
+  "dc/mot/8dd59b74-fd8126e3.fcv": {
+    "lba": 79814,
+    "size": 25664
+  },
+  "dc/mot/8dffbbec-945a33f3.fcv": {
+    "lba": 79827,
+    "size": 13440
+  },
+  "dc/mot/8e130053-d570fcbf.fcv": {
+    "lba": 79834,
+    "size": 5952
+  },
+  "dc/mot/8e2ea093-d323009a.fcv": {
+    "lba": 79837,
+    "size": 26176
+  },
+  "dc/mot/8e5fbab4-b81d3c14.fcv": {
+    "lba": 79850,
+    "size": 25280
+  },
+  "dc/mot/8ec50b82-32efc065.fcv": {
+    "lba": 79863,
+    "size": 12032
+  },
+  "dc/mot/8ec8c4bd-c10f2567.fcv": {
+    "lba": 79869,
+    "size": 5664
+  },
+  "dc/mot/8f33847b-4126293b.fcv": {
+    "lba": 79872,
+    "size": 21152
+  },
+  "dc/mot/8f54fb09-417aa821.fcv": {
+    "lba": 79883,
+    "size": 5856
+  },
+  "dc/mot/8fefb9a2-779f3fe3.fcv": {
+    "lba": 79886,
+    "size": 5024
+  },
+  "dc/mot/8ffed9df-23ac05d1.fcv": {
+    "lba": 79889,
+    "size": 6496
+  },
+  "dc/mot/902bff70-ad8d96a1.fcv": {
+    "lba": 79893,
+    "size": 32416
+  },
+  "dc/mot/904e1704-6cc2d2b4.fcv": {
+    "lba": 79909,
+    "size": 11552
+  },
+  "dc/mot/908ca0d7-4912c1ba.fcv": {
+    "lba": 79915,
+    "size": 10464
+  },
+  "dc/mot/9097142e-74a9729c.fcv": {
+    "lba": 79921,
+    "size": 3424
+  },
+  "dc/mot/90b231e3-e6ea7dc5.fcv": {
+    "lba": 79923,
+    "size": 17152
+  },
+  "dc/mot/91d6b4e5-bbf998b6.fcv": {
+    "lba": 79932,
+    "size": 4800
+  },
+  "dc/mot/92488506-a43eaf55.fcv": {
+    "lba": 79935,
+    "size": 26688
+  },
+  "dc/mot/92503ed4-d5cc7ea5.fcv": {
+    "lba": 79949,
+    "size": 5344
+  },
+  "dc/mot/9256a5bf-cf2b1a71.fcv": {
+    "lba": 79952,
+    "size": 15648
+  },
+  "dc/mot/9282a245-02f4e9fd.fcv": {
+    "lba": 79960,
+    "size": 608
+  },
+  "dc/mot/92c419e2-307b79f6.fcv": {
+    "lba": 79961,
+    "size": 9504
+  },
+  "dc/mot/93540a03-42607795.fcv": {
+    "lba": 79966,
+    "size": 4832
+  },
+  "dc/mot/94aa7b95-13494959.fcv": {
+    "lba": 79969,
+    "size": 6560
+  },
+  "dc/mot/95152d53-0ff66f3d.fcv": {
+    "lba": 79973,
+    "size": 23488
+  },
+  "dc/mot/96059865-bc8462ea.fcv": {
+    "lba": 79985,
+    "size": 11840
+  },
+  "dc/mot/978b0a82-e029957c.fcv": {
+    "lba": 79991,
+    "size": 26080
+  },
+  "dc/mot/97d9ff15-563909b9.fcv": {
+    "lba": 80004,
+    "size": 20192
+  },
+  "dc/mot/99442cc6-da86bb68.fcv": {
+    "lba": 80014,
+    "size": 3968
+  },
+  "dc/mot/99915d81-afa9510a.fcv": {
+    "lba": 80016,
+    "size": 9056
+  },
+  "dc/mot/99aff81b-8b38bae1.fcv": {
+    "lba": 80021,
+    "size": 5568
+  },
+  "dc/mot/9a56f94a-b782624a.fcv": {
+    "lba": 80024,
+    "size": 12320
+  },
+  "dc/mot/9cfff643-5b3037ee.fcv": {
+    "lba": 80031,
+    "size": 9536
+  },
+  "dc/mot/9d1bdf7d-0c91b6d0.fcv": {
+    "lba": 80036,
+    "size": 12992
+  },
+  "dc/mot/9d6697ba-c3d4525c.fcv": {
+    "lba": 80043,
+    "size": 11648
+  },
+  "dc/mot/9db0ddba-747a46ec.fcv": {
+    "lba": 80049,
+    "size": 17536
+  },
+  "dc/mot/a042f356-c9c19597.fcv": {
+    "lba": 80058,
+    "size": 31680
+  },
+  "dc/mot/a104b505-9775eb7b.fcv": {
+    "lba": 80074,
+    "size": 11104
+  },
+  "dc/mot/a360a9f1-4603fc05.fcv": {
+    "lba": 80080,
+    "size": 2208
+  },
+  "dc/mot/a40ab5f0-4c9b71fa.fcv": {
+    "lba": 80082,
+    "size": 40928
+  },
+  "dc/mot/a44c9b02-1f7642be.fcv": {
+    "lba": 80102,
+    "size": 6720
+  },
+  "dc/mot/a62165ca-f4f8ee1c.fcv": {
+    "lba": 80106,
+    "size": 16800
+  },
+  "dc/mot/a72a4b59-5e6aadaa.fcv": {
+    "lba": 80115,
+    "size": 27584
+  },
+  "dc/mot/a7c4e557-aec31ccb.fcv": {
+    "lba": 80129,
+    "size": 16896
+  },
+  "dc/mot/a8b4f200-98ba86b7.fcv": {
+    "lba": 80138,
+    "size": 18720
+  },
+  "dc/mot/a9dd23a9-3a57ff02.fcv": {
+    "lba": 80148,
+    "size": 9920
+  },
+  "dc/mot/ab6cde95-99cd6184.fcv": {
+    "lba": 80153,
+    "size": 17984
+  },
+  "dc/mot/ab7e9ca3-a9b7911b.fcv": {
+    "lba": 80162,
+    "size": 8384
+  },
+  "dc/mot/ac48039f-4984cda5.fcv": {
+    "lba": 80167,
+    "size": 10240
+  },
+  "dc/mot/ad170bc8-6b97b037.fcv": {
+    "lba": 80172,
+    "size": 448
+  },
+  "dc/mot/ad738992-e9719b86.fcv": {
+    "lba": 80173,
+    "size": 58112
+  },
+  "dc/mot/ae069160-f319eddc.fcv": {
+    "lba": 80202,
+    "size": 2976
+  },
+  "dc/mot/ae84fcc6-5af243b9.fcv": {
+    "lba": 80204,
+    "size": 8960
+  },
+  "dc/mot/b123f28a-5db132e9.fcv": {
+    "lba": 80209,
+    "size": 4224
+  },
+  "dc/mot/b1d066f4-f6968fa3.fcv": {
+    "lba": 80212,
+    "size": 8448
+  },
+  "dc/mot/b2a929d2-61c234db.fcv": {
+    "lba": 80217,
+    "size": 16896
+  },
+  "dc/mot/b333a184-878394db.fcv": {
+    "lba": 80226,
+    "size": 10784
+  },
+  "dc/mot/b33a5bbd-1c106ef5.fcv": {
+    "lba": 80232,
+    "size": 18624
+  },
+  "dc/mot/b46a662b-6478ab29.fcv": {
+    "lba": 80242,
+    "size": 8352
+  },
+  "dc/mot/b4b7edb8-9f5c6152.fcv": {
+    "lba": 80247,
+    "size": 5632
+  },
+  "dc/mot/b52ac2e5-85c9a57f.fcv": {
+    "lba": 80250,
+    "size": 16768
+  },
+  "dc/mot/b5bf4b6c-c5b1aae2.fcv": {
+    "lba": 80259,
+    "size": 26656
+  },
+  "dc/mot/b5c611f3-7a4ccd59.fcv": {
+    "lba": 80273,
+    "size": 5120
+  },
+  "dc/mot/b733bdf3-c2f74b2c.fcv": {
+    "lba": 80276,
+    "size": 2752
+  },
+  "dc/mot/b73afbb9-c5d8fcae.fcv": {
+    "lba": 80278,
+    "size": 26528
+  },
+  "dc/mot/b756b15f-d2ac58b8.fcv": {
+    "lba": 80291,
+    "size": 13568
+  },
+  "dc/mot/b9689745-8889ccd7.fcv": {
+    "lba": 80298,
+    "size": 10592
+  },
+  "dc/mot/b98aaf99-efee5385.fcv": {
+    "lba": 80304,
+    "size": 26720
+  },
+  "dc/mot/ba075062-6311d544.fcv": {
+    "lba": 80318,
+    "size": 22528
+  },
+  "dc/mot/ba4d09f9-27cc4d48.fcv": {
+    "lba": 80329,
+    "size": 17408
+  },
+  "dc/mot/ba8f0d02-c5c38a01.fcv": {
+    "lba": 80338,
+    "size": 11520
+  },
+  "dc/mot/bbe1f3ca-18aa9c5f.fcv": {
+    "lba": 80344,
+    "size": 25184
+  },
+  "dc/mot/bc1311a7-c159b8a4.fcv": {
+    "lba": 80357,
+    "size": 3488
+  },
+  "dc/mot/bce65bdb-edf8b5ee.fcv": {
+    "lba": 80359,
+    "size": 10848
+  },
+  "dc/mot/bdb5c0d2-d043f7ed.fcv": {
+    "lba": 80365,
+    "size": 3584
+  },
+  "dc/mot/bdc42083-a5307756.fcv": {
+    "lba": 80367,
+    "size": 7904
+  },
+  "dc/mot/bdd7ca03-1fefbdde.fcv": {
+    "lba": 80371,
+    "size": 8960
+  },
+  "dc/mot/be6aa05a-608827fb.fcv": {
+    "lba": 80376,
+    "size": 16736
+  },
+  "dc/mot/be6fcb9b-a8d7afa3.fcv": {
+    "lba": 80385,
+    "size": 19680
+  },
+  "dc/mot/bed66d58-d2703623.fcv": {
+    "lba": 80395,
+    "size": 20640
+  },
+  "dc/mot/bf7deabb-5a002bf0.fcv": {
+    "lba": 80406,
+    "size": 46144
+  },
+  "dc/mot/c05f708f-e600d213.fcv": {
+    "lba": 80429,
+    "size": 4224
+  },
+  "dc/mot/c065225f-d580e444.fcv": {
+    "lba": 80432,
+    "size": 25376
+  },
+  "dc/mot/c091710f-8170b248.fcv": {
+    "lba": 80445,
+    "size": 5600
+  },
+  "dc/mot/c0f0e8df-e7ef7545.fcv": {
+    "lba": 80448,
+    "size": 8128
+  },
+  "dc/mot/c1592058-75f3c290.fcv": {
+    "lba": 80452,
+    "size": 6208
+  },
+  "dc/mot/c388b921-5045f795.fcv": {
+    "lba": 80456,
+    "size": 896
+  },
+  "dc/mot/c3ce1c9b-d51131df.fcv": {
+    "lba": 80457,
+    "size": 5248
+  },
+  "dc/mot/c3cf1845-254f56a8.fcv": {
+    "lba": 80460,
+    "size": 9760
+  },
+  "dc/mot/c3eec4eb-1a3744e3.fcv": {
+    "lba": 80465,
+    "size": 65568
+  },
+  "dc/mot/c4105c23-ad3667d5.fcv": {
+    "lba": 80498,
+    "size": 6272
+  },
+  "dc/mot/c4205287-b6fd0840.fcv": {
+    "lba": 80502,
+    "size": 22112
+  },
+  "dc/mot/c577583d-66fdc869.fcv": {
+    "lba": 80513,
+    "size": 9088
+  },
+  "dc/mot/c61ed7e5-47d1b1d4.fcv": {
+    "lba": 80518,
+    "size": 25440
+  },
+  "dc/mot/c64f139d-98988b59.fcv": {
+    "lba": 80531,
+    "size": 9152
+  },
+  "dc/mot/c73dc131-c768df97.fcv": {
+    "lba": 80536,
+    "size": 9536
+  },
+  "dc/mot/c8442cbb-a799f0fa.fcv": {
+    "lba": 80541,
+    "size": 8480
+  },
+  "dc/mot/c88b649f-bf9dc1d0.fcv": {
+    "lba": 80546,
+    "size": 5344
+  },
+  "dc/mot/c88e9d40-c12b6f3b.fcv": {
+    "lba": 80549,
+    "size": 90816
+  },
+  "dc/mot/c90de8a7-d44fb609.fcv": {
+    "lba": 80594,
+    "size": 7680
+  },
+  "dc/mot/c96d1d7e-d431555e.fcv": {
+    "lba": 80598,
+    "size": 30880
+  },
+  "dc/mot/c97de4b8-c76141ff.fcv": {
+    "lba": 80614,
+    "size": 5568
+  },
+  "dc/mot/ca128a4b-eae47bd2.fcv": {
+    "lba": 80617,
+    "size": 8160
+  },
+  "dc/mot/ca97ed20-2e051778.fcv": {
+    "lba": 80621,
+    "size": 14784
+  },
+  "dc/mot/ca99f55a-3667a360.fcv": {
+    "lba": 80629,
+    "size": 10240
+  },
+  "dc/mot/cbf56074-251f3c30.fcv": {
+    "lba": 80634,
+    "size": 12192
+  },
+  "dc/mot/cc761742-dc45a568.fcv": {
+    "lba": 80640,
+    "size": 8576
+  },
+  "dc/mot/ccaabfa6-792e7576.fcv": {
+    "lba": 80645,
+    "size": 1120
+  },
+  "dc/mot/ccb56d06-a2b2cbb7.fcv": {
+    "lba": 80646,
+    "size": 18432
+  },
+  "dc/mot/ccb8babd-9543b919.fcv": {
+    "lba": 80655,
+    "size": 14400
+  },
+  "dc/mot/cde21a90-de180789.fcv": {
+    "lba": 80663,
+    "size": 5248
+  },
+  "dc/mot/ce859b45-c5e22ec5.fcv": {
+    "lba": 80666,
+    "size": 11264
+  },
+  "dc/mot/ce9ddede-17fbbe42.fcv": {
+    "lba": 80672,
+    "size": 50432
+  },
+  "dc/mot/ceefb3ba-29da1fda.fcv": {
+    "lba": 80697,
+    "size": 8416
+  },
+  "dc/mot/cf236946-82ee6f4d.fcv": {
+    "lba": 80702,
+    "size": 7168
+  },
+  "dc/mot/d055553d-487779e2.fcv": {
+    "lba": 80706,
+    "size": 7680
+  },
+  "dc/mot/d06c15f1-d97f2095.fcv": {
+    "lba": 80710,
+    "size": 15008
+  },
+  "dc/mot/d11d9fcd-11d4ce6b.fcv": {
+    "lba": 80718,
+    "size": 7648
+  },
+  "dc/mot/d18f6d5b-0ae3acd8.fcv": {
+    "lba": 80722,
+    "size": 14464
+  },
+  "dc/mot/d1f9eeca-0a1ca159.fcv": {
+    "lba": 80730,
+    "size": 5696
+  },
+  "dc/mot/d2954541-f00ff6d5.fcv": {
+    "lba": 80733,
+    "size": 5504
+  },
+  "dc/mot/d2de0269-4555e8bf.fcv": {
+    "lba": 80736,
+    "size": 6656
+  },
+  "dc/mot/d36e94d8-0adc3bdc.fcv": {
+    "lba": 80740,
+    "size": 10144
+  },
+  "dc/mot/d3703231-6b523819.fcv": {
+    "lba": 80745,
+    "size": 8704
+  },
+  "dc/mot/d3a09888-7b9789d5.fcv": {
+    "lba": 80750,
+    "size": 6944
+  },
+  "dc/mot/d3a69b66-702674f3.fcv": {
+    "lba": 80754,
+    "size": 9024
+  },
+  "dc/mot/d4a6c1cc-7fce15d8.fcv": {
+    "lba": 80759,
+    "size": 30048
+  },
+  "dc/mot/d4f47e96-4f9713af.fcv": {
+    "lba": 80774,
+    "size": 16960
+  },
+  "dc/mot/d592356b-35cac17c.fcv": {
+    "lba": 80783,
+    "size": 55104
+  },
+  "dc/mot/d6341799-1a63b34b.fcv": {
+    "lba": 80810,
+    "size": 7328
+  },
+  "dc/mot/d63b838f-4f92eeb2.fcv": {
+    "lba": 80814,
+    "size": 19328
+  },
+  "dc/mot/d6488dc1-be3ec3c9.fcv": {
+    "lba": 80824,
+    "size": 18848
+  },
+  "dc/mot/d663d931-505c9f1a.fcv": {
+    "lba": 80834,
+    "size": 10016
+  },
+  "dc/mot/d6913ad9-ad462c06.fcv": {
+    "lba": 80839,
+    "size": 86208
+  },
+  "dc/mot/d6cc3476-0f63681e.fcv": {
+    "lba": 80882,
+    "size": 17632
+  },
+  "dc/mot/d79f69ec-a3d9b3aa.fcv": {
+    "lba": 80891,
+    "size": 23808
+  },
+  "dc/mot/d7a32ac9-47870145.fcv": {
+    "lba": 80903,
+    "size": 9536
+  },
+  "dc/mot/d7be1cea-10da42b9.fcv": {
+    "lba": 80908,
+    "size": 3872
+  },
+  "dc/mot/d874ee27-52cde7d3.fcv": {
+    "lba": 80910,
+    "size": 10368
+  },
+  "dc/mot/d879bfcd-4738d9c5.fcv": {
+    "lba": 80916,
+    "size": 4896
+  },
+  "dc/mot/d8b79f85-eb928ef2.fcv": {
+    "lba": 80919,
+    "size": 16160
+  },
+  "dc/mot/d9c6d07c-85dc5cac.fcv": {
+    "lba": 80927,
+    "size": 10304
+  },
+  "dc/mot/d9d5a45d-c1cb85ed.fcv": {
+    "lba": 80933,
+    "size": 27456
+  },
+  "dc/mot/dad1ba8b-cd135d35.fcv": {
+    "lba": 80947,
+    "size": 20544
+  },
+  "dc/mot/db3253fe-a391234e.fcv": {
+    "lba": 80958,
+    "size": 17312
+  },
+  "dc/mot/db38b315-9044690d.fcv": {
+    "lba": 80967,
+    "size": 13920
+  },
+  "dc/mot/de5c8e4f-aaf694ef.fcv": {
+    "lba": 80974,
+    "size": 3488
+  },
+  "dc/mot/de6d7f5f-cb185f72.fcv": {
+    "lba": 80976,
+    "size": 22816
+  },
+  "dc/mot/df74b323-79f85494.fcv": {
+    "lba": 80988,
+    "size": 17984
+  },
+  "dc/mot/df97e100-9c8ab749.fcv": {
+    "lba": 80997,
+    "size": 8000
+  },
+  "dc/mot/dfd36c2d-1b93d8f2.fcv": {
+    "lba": 81001,
+    "size": 2048
+  },
+  "dc/mot/e013a79d-b71ca50b.fcv": {
+    "lba": 81002,
+    "size": 10848
+  },
+  "dc/mot/e098bb8c-aff343a5.fcv": {
+    "lba": 81008,
+    "size": 67968
+  },
+  "dc/mot/e151ebf8-47c321e7.fcv": {
+    "lba": 81042,
+    "size": 21760
+  },
+  "dc/mot/e19c16f9-6d8af89c.fcv": {
+    "lba": 81053,
+    "size": 18528
+  },
+  "dc/mot/e1adabb0-c6ef684a.fcv": {
+    "lba": 81063,
+    "size": 320
+  },
+  "dc/mot/e317c6ba-6cd42a51.fcv": {
+    "lba": 81064,
+    "size": 16512
+  },
+  "dc/mot/e4328954-ab32a7cb.fcv": {
+    "lba": 81073,
+    "size": 15744
+  },
+  "dc/mot/e4913fad-a0f614a8.fcv": {
+    "lba": 81081,
+    "size": 15040
+  },
+  "dc/mot/e52f2bc8-c268e4d5.fcv": {
+    "lba": 81089,
+    "size": 7424
+  },
+  "dc/mot/e597bd00-f2ba8574.fcv": {
+    "lba": 81093,
+    "size": 9728
+  },
+  "dc/mot/e59a4c58-9b2a3614.fcv": {
+    "lba": 81098,
+    "size": 17440
+  },
+  "dc/mot/e5f57c6d-64797adc.fcv": {
+    "lba": 81107,
+    "size": 14560
+  },
+  "dc/mot/e61856d7-01ebab32.fcv": {
+    "lba": 81115,
+    "size": 19648
+  },
+  "dc/mot/e69a9367-ccdad4b6.fcv": {
+    "lba": 81125,
+    "size": 15808
+  },
+  "dc/mot/e7035ae6-90528164.fcv": {
+    "lba": 81133,
+    "size": 11200
+  },
+  "dc/mot/e80a69e0-0fa1f79a.fcv": {
+    "lba": 81139,
+    "size": 18944
+  },
+  "dc/mot/e853d29e-ac1e7f24.fcv": {
+    "lba": 81149,
+    "size": 2656
+  },
+  "dc/mot/e89a64e4-938a4ad2.fcv": {
+    "lba": 81151,
+    "size": 3584
+  },
+  "dc/mot/eaa1231b-cb8a14f8.fcv": {
+    "lba": 81153,
+    "size": 448
+  },
+  "dc/mot/eaef67c5-d43bc5b6.fcv": {
+    "lba": 81154,
+    "size": 14528
+  },
+  "dc/mot/eb21e0a1-b056c840.fcv": {
+    "lba": 81162,
+    "size": 34272
+  },
+  "dc/mot/ebeb39e2-000fa3d3.fcv": {
+    "lba": 81179,
+    "size": 19808
+  },
+  "dc/mot/ec06834a-05e32d17.fcv": {
+    "lba": 81189,
+    "size": 35008
+  },
+  "dc/mot/ec17bef9-a18647a1.fcv": {
+    "lba": 81207,
+    "size": 18464
+  },
+  "dc/mot/ec48ad72-4ec72a9e.fcv": {
+    "lba": 81217,
+    "size": 13216
+  },
+  "dc/mot/ecf9937b-40a4cf36.fcv": {
+    "lba": 81224,
+    "size": 6656
+  },
+  "dc/mot/edad3560-fb1e8884.fcv": {
+    "lba": 81228,
+    "size": 5888
+  },
+  "dc/mot/eeac6575-21a1228a.fcv": {
+    "lba": 81231,
+    "size": 25472
+  },
+  "dc/mot/eecf4e5a-fdf35833.fcv": {
+    "lba": 81244,
+    "size": 10656
+  },
+  "dc/mot/ef620b4a-7b39605e.fcv": {
+    "lba": 81250,
+    "size": 3744
+  },
+  "dc/mot/efd8b45d-87239e48.fcv": {
+    "lba": 81252,
+    "size": 31168
+  },
+  "dc/mot/f005272e-590906bc.fcv": {
+    "lba": 81268,
+    "size": 9856
+  },
+  "dc/mot/f013b09c-5ef3a24d.fcv": {
+    "lba": 81273,
+    "size": 14304
+  },
+  "dc/mot/f0448a79-19fe5c0a.fcv": {
+    "lba": 81280,
+    "size": 15616
+  },
+  "dc/mot/f0b26803-726e7ab6.fcv": {
+    "lba": 81288,
+    "size": 31296
+  },
+  "dc/mot/f17b80ed-84f8c8a7.fcv": {
+    "lba": 81304,
+    "size": 25568
+  },
+  "dc/mot/f2ad3b6c-d8dc64c3.fcv": {
+    "lba": 81317,
+    "size": 58144
+  },
+  "dc/mot/f31a85bf-f515ec9f.fcv": {
+    "lba": 81346,
+    "size": 10528
+  },
+  "dc/mot/f35c4d1d-bb39dacf.fcv": {
+    "lba": 81352,
+    "size": 5184
+  },
+  "dc/mot/f3fd7d93-b1852491.fcv": {
+    "lba": 81355,
+    "size": 23744
+  },
+  "dc/mot/f3ff3c86-45a9b21a.fcv": {
+    "lba": 81367,
+    "size": 32000
+  },
+  "dc/mot/f49c7ada-32cad162.fcv": {
+    "lba": 81383,
+    "size": 7360
+  },
+  "dc/mot/f4d5a96f-c16db4af.fcv": {
+    "lba": 81387,
+    "size": 3072
+  },
+  "dc/mot/f5456e0b-c749a21d.fcv": {
+    "lba": 81389,
+    "size": 26432
+  },
+  "dc/mot/f5cef2ad-aedaa9ea.fcv": {
+    "lba": 81402,
+    "size": 320
+  },
+  "dc/mot/f6ef4b72-ba861b9d.fcv": {
+    "lba": 81403,
+    "size": 12224
+  },
+  "dc/mot/f6f772e7-aaf2bb5f.fcv": {
+    "lba": 81409,
+    "size": 19328
+  },
+  "dc/mot/f75f9ac2-590da3e1.fcv": {
+    "lba": 81419,
+    "size": 9632
+  },
+  "dc/mot/f76c0497-17379806.fcv": {
+    "lba": 81424,
+    "size": 15104
+  },
+  "dc/mot/f84755f0-f786313f.fcv": {
+    "lba": 81432,
+    "size": 19360
+  },
+  "dc/mot/f927b441-6aaa83bf.fcv": {
+    "lba": 81442,
+    "size": 3232
+  },
+  "dc/mot/f96d9d8c-f8b843b7.fcv": {
+    "lba": 81444,
+    "size": 4448
+  },
+  "dc/mot/f9dc32ad-cf1be08c.fcv": {
+    "lba": 81447,
+    "size": 11520
+  },
+  "dc/mot/f9f3b679-952057e4.fcv": {
+    "lba": 81453,
+    "size": 5696
+  },
+  "dc/mot/fa096580-78224be5.fcv": {
+    "lba": 81456,
+    "size": 27264
+  },
+  "dc/mot/fa3a03c2-e7b4255c.fcv": {
+    "lba": 81470,
+    "size": 19648
+  },
+  "dc/mot/fb83df26-4b340f46.fcv": {
+    "lba": 81480,
+    "size": 8096
+  },
+  "dc/mot/fc023680-7d42cbf6.fcv": {
+    "lba": 81484,
+    "size": 14528
+  },
+  "dc/mot/fe7d7237-87386e90.fcv": {
+    "lba": 81492,
+    "size": 12576
+  },
+  "dc/mot/feb3a055-3b2cddb4.fcv": {
+    "lba": 81499,
+    "size": 15552
+  },
+  "dc/mot/ff454031-526f54d8.fcv": {
+    "lba": 81507,
+    "size": 20544
+  },
+  "dc/mot/ff5fb790-2e20d94d.fcv": {
+    "lba": 81518,
+    "size": 3712
+  },
+  "bgm/aica_str.dat": {
+    "lba": 49293,
+    "size": 48134144
+  },
+  "bgm/bgmtbl.dat": {
+    "lba": 72796,
+    "size": 9152
+  },
+  "bgm/bio4midi.dat": {
+    "lba": 72801,
+    "size": 9647776
+  },
+  "bgm/bio4midi.hed": {
+    "lba": 77512,
+    "size": 96
+  },
+  "bgm/bio4str.hed": {
+    "lba": 77513,
+    "size": 44384
+  },
+  "bgm/doorse.dat": {
+    "lba": 77535,
+    "size": 588224
+  },
+  "bgm/doorse.hed": {
+    "lba": 77823,
+    "size": 128
+  }
+}

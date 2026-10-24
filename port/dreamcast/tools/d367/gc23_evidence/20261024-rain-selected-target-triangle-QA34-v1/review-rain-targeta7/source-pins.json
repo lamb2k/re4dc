@@ -1,0 +1,67 @@
+{
+  "source": "a7bffa9e318aa4143e97a32a5fbe7ae8e52838a1",
+  "files": {
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/README.md": {
+      "bytes": 9632,
+      "sha256": "f6d30e1c0df4c2a1b9f8fcba8e71f7b39b2d6f9f1093aff742e892757c539e27"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/matrix.py": {
+      "bytes": 17337,
+      "sha256": "74eed3bd74e874ad6a00e4466ac619eacdf13f051c050a5fe48ca9048bc16c6e"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/readback.py": {
+      "bytes": 13001,
+      "sha256": "e2c12b4854f3bc7c51eb0cb41b67d0bf44dd5ec217d3edd105c985e1dd52ac2c"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/test_preparation.py": {
+      "bytes": 10981,
+      "sha256": "d5a02d0ffb110648189b5779c08b12cbe9825c5c0dfd31d30ec8d5e9c472b2f8"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS-ROOT-FIX-V2.json": {
+      "bytes": 44864,
+      "sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-GRANT-TEMPLATE-ROOT-FIX-V2.json": {
+      "bytes": 665,
+      "sha256": "29ef3757f200e22f9bcd30c04204b7407f0d11c13220fddd2635c28fe4b5a554"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/ROOT-REPAIR-RECEIPT-V2.json": {
+      "bytes": 539,
+      "sha256": "90d91ecb8c403ec17d21209a13824680fb7f9d09d2ecbd34eae94e0f3e4fe343"
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS.json": {
+      "bytes": 44585,
+      "sha256": "a2d28c7459fab885c0b9807048777270f08968a7fc3d5393507df8fed1476591",
+      "preserved": true
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/PINS-ROOT-FIX-V1.json": {
+      "bytes": 44864,
+      "sha256": "d9b3a25f4039645de7569ff1040ebd22f074ebe14f174eaaebb6eefdf45719e9",
+      "preserved": true
+    },
+    "src/game/filter06.cpp": {
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "unchanged_runtime_or_wrapper": true
+    },
+    "src/game/espgen44.cpp": {
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "unchanged_runtime_or_wrapper": true
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "bytes": 40013,
+      "sha256": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+      "unchanged_runtime_or_wrapper": true
+    },
+    "port/dreamcast/tools/d367/rain_diag24/target_matrix/run-matrix.sh": {
+      "bytes": 2101,
+      "sha256": "bd02811520ed2e8bb62baa54f1bc064c222303cc9a44b1208251463f08486b6f",
+      "unchanged_runtime_or_wrapper": true
+    }
+  },
+  "candidate_PINS_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+  "mirror_seal_sha256": "9d21c7a3ab3db4d4f83debb39d9615c5693760bdaf5807f0d44a63a1124fbdcf",
+  "runtime_edits": 0,
+  "SDK": 0
+}

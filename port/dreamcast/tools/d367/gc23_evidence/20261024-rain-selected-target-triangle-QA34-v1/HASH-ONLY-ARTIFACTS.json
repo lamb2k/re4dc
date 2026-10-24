@@ -1,0 +1,2254 @@
+{
+  "files": [
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894608339435,
+      "logical_destination": "rain-target-matrix/new-f1-d1-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894608339435,
+      "logical_destination": "rain-target-matrix/new-f1-d1-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894552338311,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894496337185,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894496337185,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894436335980,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894436335980,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832894388335017,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894320333651,
+      "logical_destination": "rain-target-matrix/new-f1-d1-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894264332525,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894204331320,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894204331320,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894044328106,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832894044328106,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-includes.log",
+      "bytes": 1891,
+      "sha256": "66c8746ba4a24248a6be5f41bafed8aee6036bab0bb489b274e4171b26aaf7ff",
+      "source_mtime_ns": 1792832893996327141,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d1-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893928325775,
+      "logical_destination": "rain-target-matrix/new-f1-d1-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893868324569,
+      "logical_destination": "rain-target-matrix/new-f1-d0-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893868324569,
+      "logical_destination": "rain-target-matrix/new-f1-d0-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893812323443,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893756322318,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893756322318,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893696321112,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893696321112,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832893648320147,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893584318860,
+      "logical_destination": "rain-target-matrix/new-f1-d0-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893524317655,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893468316529,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893468316529,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893356314278,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893356314278,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832893308313313,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-d0-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893244312027,
+      "logical_destination": "rain-target-matrix/new-f1-d0-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893184310821,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893184310821,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893128309695,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893072308570,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893072308570,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893012307363,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832893012307363,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832892964306399,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892900305112,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892840303885,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892784302724,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892784302724,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892676300482,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892676300482,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832892628299486,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f1-dabsent-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892564298158,
+      "logical_destination": "rain-target-matrix/new-f1-dabsent-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892504296913,
+      "logical_destination": "rain-target-matrix/new-f0-d1-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892504296913,
+      "logical_destination": "rain-target-matrix/new-f0-d1-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892448295751,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892392294590,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892392294590,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892336293428,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892336293428,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832892288292432,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892224291104,
+      "logical_destination": "rain-target-matrix/new-f0-d1-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892164289859,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892108288698,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832892108288698,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891948285376,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891948285376,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-includes.log",
+      "bytes": 1891,
+      "sha256": "66c8746ba4a24248a6be5f41bafed8aee6036bab0bb489b274e4171b26aaf7ff",
+      "source_mtime_ns": 1792832891900284380,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d1-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891836283053,
+      "logical_destination": "rain-target-matrix/new-f0-d1-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891780281888,
+      "logical_destination": "rain-target-matrix/new-f0-d0-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891780281888,
+      "logical_destination": "rain-target-matrix/new-f0-d0-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891724280727,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891668279564,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891668279564,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891612278402,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891612278402,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832891568277488,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891500276076,
+      "logical_destination": "rain-target-matrix/new-f0-d0-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891444274914,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891388273753,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891388273753,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891280271510,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891280271510,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832891232270514,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-d0-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891172269269,
+      "logical_destination": "rain-target-matrix/new-f0-d0-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891112268023,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891112268023,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891060266943,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891004265780,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832891004265780,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890948264617,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890948264617,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832890900263621,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890836262291,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890780261126,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890728260048,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890728260048,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890620257804,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890620257804,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832890572256807,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/new-f0-dabsent-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890508255478,
+      "logical_destination": "rain-target-matrix/new-f0-dabsent-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890452254314,
+      "logical_destination": "rain-target-matrix/base-f1-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890452254314,
+      "logical_destination": "rain-target-matrix/base-f1-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890400253236,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890344252072,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890344252072,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890288250910,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890288250910,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832890244249995,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890180248666,
+      "logical_destination": "rain-target-matrix/base-f1-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890124247503,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890072246424,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832890072246424,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889964244180,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889964244180,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832889916243181,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f1-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889856241935,
+      "logical_destination": "rain-target-matrix/base-f1-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-partial-link.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889800240775,
+      "logical_destination": "rain-target-matrix/base-f0-partial-link.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-partial-link.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889800240775,
+      "logical_destination": "rain-target-matrix/base-f0-partial-link.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889748239690,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889692238526,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889692238526,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889636237364,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889636237364,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-includes.log",
+      "bytes": 807,
+      "sha256": "c2f202fa78f21e25fb21b5ed33cd98973e62737bc3c824c4043061161889f162",
+      "source_mtime_ns": 1792832889592236449,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-espgen44-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889528235119,
+      "logical_destination": "rain-target-matrix/base-f0-espgen44-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-disassemble.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889472233955,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-disassemble.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-strip.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889420232874,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-strip.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-strip.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889420232874,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-strip.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889312230631,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-compile.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889312230631,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-compile.stdout",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-includes.log",
+      "bytes": 810,
+      "sha256": "1033e792328182b8df87ddd0c0b4a8f1df279809b73a85f897cf5d10cadf1224",
+      "source_mtime_ns": 1792832889268229716,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-includes.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/base-f0-filter06-deps.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_mtime_ns": 1792832889204228386,
+      "logical_destination": "rain-target-matrix/base-f0-filter06-deps.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/environment.nul",
+      "bytes": 4554,
+      "sha256": "a938855a6e46b3074bf90b72fec4f5994048192b70b654759e9d832a524c699a",
+      "source_mtime_ns": 1792832888672217328,
+      "logical_destination": "rain-target-matrix/environment.nul",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/environment-bootstrap.log",
+      "bytes": 11681,
+      "sha256": "1a5c5a77291944594c07fa45c9d9a6215278c21342936531bdaa16347afb5319",
+      "source_mtime_ns": 1792832888672217328,
+      "logical_destination": "rain-target-matrix/environment-bootstrap.log",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/pair.o",
+      "bytes": 97920,
+      "sha256": "34d493be1f8bce616eb57b00232d2b421859c7869f81511c8e2e56839d8af12d",
+      "source_mtime_ns": 1792832894612339516,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-disassembly.txt",
+      "bytes": 8973,
+      "sha256": "66517846090e8359522548067f68dbb65e8d673981497136860f646d7c3be8cb",
+      "source_mtime_ns": 1792832894552338311,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44-nodebug.o",
+      "bytes": 1772,
+      "sha256": "97cce15be9aa9fb3d5120b588a627da78c88fbb91d9c4a4b75cdc1b9cc1da4f5",
+      "source_mtime_ns": 1792832894496337185,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44.o",
+      "bytes": 14188,
+      "sha256": "ce5352384db13fc8a30547ad5bf57a2594314742ee9b8d06e048423575dd22df",
+      "source_mtime_ns": 1792832894472336703,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/espgen44.ii",
+      "bytes": 79683,
+      "sha256": "24498d47b2999e75eec90473c00da6560a0fccf905255eca9fccba03ac5b96fc",
+      "source_mtime_ns": 1792832894388335017,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-disassembly.txt",
+      "bytes": 140775,
+      "sha256": "87c469e457ecad0059d32d204d261d7d318aa5696ea72922e2220a7d1f6e30f3",
+      "source_mtime_ns": 1792832894268332605,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06-nodebug.o",
+      "bytes": 17532,
+      "sha256": "f389989087384d51fdec7781ef1d434c1e7de4ae1be4ad98a3e1d86a035d8bfe",
+      "source_mtime_ns": 1792832894208331400,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06.o",
+      "bytes": 85300,
+      "sha256": "ed7c05f7c946997447f9374de60cff37a7b501d299cce1b94553eee760840265",
+      "source_mtime_ns": 1792832894188330999,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d1/filter06.ii",
+      "bytes": 101246,
+      "sha256": "5988aa804b88dd3c816a8744a78d7f806e43983b5d1c32eb6a63a36e61dafe9a",
+      "source_mtime_ns": 1792832893996327141,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d1/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/pair.o",
+      "bytes": 71076,
+      "sha256": "3834dd9a51f72f6a60209a9eca946871b93fc120fdebd94c4579015de2eabf80",
+      "source_mtime_ns": 1792832893868324569,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-disassembly.txt",
+      "bytes": 5747,
+      "sha256": "32355a3967e4580c5a3313372478820719e2628f2f6a946ba8287af7ffb0303b",
+      "source_mtime_ns": 1792832893812323443,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832893756322318,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44.o",
+      "bytes": 12968,
+      "sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "source_mtime_ns": 1792832893732321835,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/espgen44.ii",
+      "bytes": 79170,
+      "sha256": "7a4ed4f6892f58a7e7543fd2c957001382949becd76b0196e972576244b067aa",
+      "source_mtime_ns": 1792832893648320147,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-disassembly.txt",
+      "bytes": 88407,
+      "sha256": "e9947c70d67af04f928e2040ca07656937eb1fc3d36d3606de0fe34eb51e52a2",
+      "source_mtime_ns": 1792832893528317734,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06-nodebug.o",
+      "bytes": 12284,
+      "sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "source_mtime_ns": 1792832893468316529,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06.o",
+      "bytes": 59556,
+      "sha256": "19d7c428fd8bce4c9ed9660ed92f78c5ca99201d84c9e6832a9439aad4310682",
+      "source_mtime_ns": 1792832893456316288,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-d0/filter06.ii",
+      "bytes": 75202,
+      "sha256": "8375c832272201f94966ad406cc1c7378384fef9112254bdb4211ec52b87cfdc",
+      "source_mtime_ns": 1792832893308313313,
+      "logical_destination": "rain-target-matrix/cases/new-f1-d0/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/pair.o",
+      "bytes": 71076,
+      "sha256": "3834dd9a51f72f6a60209a9eca946871b93fc120fdebd94c4579015de2eabf80",
+      "source_mtime_ns": 1792832893188310902,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-disassembly.txt",
+      "bytes": 5752,
+      "sha256": "ebcf60215e229367b4ec36865f1d725513fa4ba811b1fb6bee6c7eeffa64ebdd",
+      "source_mtime_ns": 1792832893132309776,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832893076308650,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44.o",
+      "bytes": 12968,
+      "sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "source_mtime_ns": 1792832893048308088,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/espgen44.ii",
+      "bytes": 79170,
+      "sha256": "7a4ed4f6892f58a7e7543fd2c957001382949becd76b0196e972576244b067aa",
+      "source_mtime_ns": 1792832892964306399,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-disassembly.txt",
+      "bytes": 88412,
+      "sha256": "1a231b415ce1cd1f1ccfc1063ed8d00d007dd20e4295b2adad8e6e8ae7f19a11",
+      "source_mtime_ns": 1792832892844303969,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06-nodebug.o",
+      "bytes": 12284,
+      "sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "source_mtime_ns": 1792832892788302807,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06.o",
+      "bytes": 59556,
+      "sha256": "19d7c428fd8bce4c9ed9660ed92f78c5ca99201d84c9e6832a9439aad4310682",
+      "source_mtime_ns": 1792832892780302641,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f1-dabsent/filter06.ii",
+      "bytes": 75202,
+      "sha256": "8375c832272201f94966ad406cc1c7378384fef9112254bdb4211ec52b87cfdc",
+      "source_mtime_ns": 1792832892628299486,
+      "logical_destination": "rain-target-matrix/cases/new-f1-dabsent/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/pair.o",
+      "bytes": 91360,
+      "sha256": "0f287ae2bcd88d7824b5e74553c7170b3b08a46c2eb7f88f66ebc1f4c1215b9b",
+      "source_mtime_ns": 1792832892508296997,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-disassembly.txt",
+      "bytes": 8973,
+      "sha256": "76e6ce30741ab0fb438f71dbdf5389313a61c7e9fa1960cee977745f6fdb163f",
+      "source_mtime_ns": 1792832892452295835,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44-nodebug.o",
+      "bytes": 1772,
+      "sha256": "97cce15be9aa9fb3d5120b588a627da78c88fbb91d9c4a4b75cdc1b9cc1da4f5",
+      "source_mtime_ns": 1792832892396294673,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44.o",
+      "bytes": 14188,
+      "sha256": "ce5352384db13fc8a30547ad5bf57a2594314742ee9b8d06e048423575dd22df",
+      "source_mtime_ns": 1792832892372294175,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/espgen44.ii",
+      "bytes": 79683,
+      "sha256": "24498d47b2999e75eec90473c00da6560a0fccf905255eca9fccba03ac5b96fc",
+      "source_mtime_ns": 1792832892288292432,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-disassembly.txt",
+      "bytes": 113049,
+      "sha256": "091dd8cb27f6da477bc37507d8d3f34c2f1aa8618f25f57c9bb4bedb54b812b7",
+      "source_mtime_ns": 1792832892168289942,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06-nodebug.o",
+      "bytes": 15056,
+      "sha256": "201464475b1e9dc8a38f9ef64b10235152f32818314fe4f42802f48e6ad4c672",
+      "source_mtime_ns": 1792832892112288780,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06.o",
+      "bytes": 78740,
+      "sha256": "55dc4e69f00284aadda91950b4d407dab0acfe16f9225587a2f778d09035538b",
+      "source_mtime_ns": 1792832892080288116,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d1/filter06.ii",
+      "bytes": 99237,
+      "sha256": "34a6e408db8406b3ad3994fe5a8c46d347ba4e350bbed279fe08166def43167d",
+      "source_mtime_ns": 1792832891900284380,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d1/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/pair.o",
+      "bytes": 67008,
+      "sha256": "42eea3df0da0fcd87900b4353e27c61ce5d7916e6e0e06e054584fde4cd6d1c3",
+      "source_mtime_ns": 1792832891780281888,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-disassembly.txt",
+      "bytes": 5747,
+      "sha256": "631b8f0922dfe4805a916e9a37d07ddcaf4a424b984363bef86a38f6c2d94060",
+      "source_mtime_ns": 1792832891724280727,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832891672279647,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44.o",
+      "bytes": 12968,
+      "sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "source_mtime_ns": 1792832891648279148,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/espgen44.ii",
+      "bytes": 79170,
+      "sha256": "7a4ed4f6892f58a7e7543fd2c957001382949becd76b0196e972576244b067aa",
+      "source_mtime_ns": 1792832891568277488,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-disassembly.txt",
+      "bytes": 74274,
+      "sha256": "145cacf9ada381f9f34003ae4173d91bd7388b2c114f0cfe2b0bdf50406dc8c5",
+      "source_mtime_ns": 1792832891448274997,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06-nodebug.o",
+      "bytes": 10660,
+      "sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "source_mtime_ns": 1792832891392273835,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06.o",
+      "bytes": 55480,
+      "sha256": "a6da6aaed7033d0a7b66a1234de3395e9b77b8821ceae9825fe9740409e8b427",
+      "source_mtime_ns": 1792832891368273338,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-d0/filter06.ii",
+      "bytes": 73602,
+      "sha256": "e528df4e84280a923487cf88443e6f9679274c93bd12728a95a02c00b33bbfed",
+      "source_mtime_ns": 1792832891236270597,
+      "logical_destination": "rain-target-matrix/cases/new-f0-d0/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/pair.o",
+      "bytes": 67008,
+      "sha256": "42eea3df0da0fcd87900b4353e27c61ce5d7916e6e0e06e054584fde4cd6d1c3",
+      "source_mtime_ns": 1792832891116268106,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-disassembly.txt",
+      "bytes": 5752,
+      "sha256": "74f3611acf2966194acdfdb12dc59600d2a35817be0a34100f18432c649e49a1",
+      "source_mtime_ns": 1792832891060266943,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832891008265863,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44.o",
+      "bytes": 12968,
+      "sha256": "42a2848ecc6f9172faa8e593f4c42e9ca920828b6d4b9ca62c932c4741906ac8",
+      "source_mtime_ns": 1792832890984265364,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/espgen44.ii",
+      "bytes": 79170,
+      "sha256": "7a4ed4f6892f58a7e7543fd2c957001382949becd76b0196e972576244b067aa",
+      "source_mtime_ns": 1792832890900263621,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-disassembly.txt",
+      "bytes": 74279,
+      "sha256": "bc94b0a6356dfa5f697581655e051ac9ffc7a9bc7f86a4674a336e92e8ce58d2",
+      "source_mtime_ns": 1792832890784261210,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06-nodebug.o",
+      "bytes": 10660,
+      "sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "source_mtime_ns": 1792832890728260048,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06.o",
+      "bytes": 55480,
+      "sha256": "a6da6aaed7033d0a7b66a1234de3395e9b77b8821ceae9825fe9740409e8b427",
+      "source_mtime_ns": 1792832890712259716,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/new-f0-dabsent/filter06.ii",
+      "bytes": 73602,
+      "sha256": "e528df4e84280a923487cf88443e6f9679274c93bd12728a95a02c00b33bbfed",
+      "source_mtime_ns": 1792832890572256807,
+      "logical_destination": "rain-target-matrix/cases/new-f0-dabsent/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/pair.o",
+      "bytes": 71072,
+      "sha256": "8fd530ea49b6544bd2260b58e789b3a7b06afb394c870fbdac0862cc5138f478",
+      "source_mtime_ns": 1792832890456254398,
+      "logical_destination": "rain-target-matrix/cases/base-f1/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-disassembly.txt",
+      "bytes": 5745,
+      "sha256": "715579a3438fa88458886a8b6f34998eb5c90f8dae6470131d5311df8a7b12ce",
+      "source_mtime_ns": 1792832890400253236,
+      "logical_destination": "rain-target-matrix/cases/base-f1/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832890348252156,
+      "logical_destination": "rain-target-matrix/cases/base-f1/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44.o",
+      "bytes": 12964,
+      "sha256": "a4809a57b04836c02e182c667a6dd57f1523df09c433e0e9621c393d309bfbc5",
+      "source_mtime_ns": 1792832890324251658,
+      "logical_destination": "rain-target-matrix/cases/base-f1/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/espgen44.ii",
+      "bytes": 79154,
+      "sha256": "1b371ef540cf0bf5ce14eec62959ec8a82609ca36601afd6db8be0051c39bd63",
+      "source_mtime_ns": 1792832890244249995,
+      "logical_destination": "rain-target-matrix/cases/base-f1/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-disassembly.txt",
+      "bytes": 88405,
+      "sha256": "3492a21df5f7f9f5617a0637ddf0de7a9be4d49f92dd2e64680799ce381b4804",
+      "source_mtime_ns": 1792832890128247586,
+      "logical_destination": "rain-target-matrix/cases/base-f1/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06-nodebug.o",
+      "bytes": 12284,
+      "sha256": "08aa48752a9f1725b3a3538503c1a828728a0d086388b0282e053dce450c4976",
+      "source_mtime_ns": 1792832890072246424,
+      "logical_destination": "rain-target-matrix/cases/base-f1/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06.o",
+      "bytes": 59552,
+      "sha256": "729fde154912acd0a6491215748b562798b1fa1191ae3640a0f97f2f1095aefd",
+      "source_mtime_ns": 1792832890068246339,
+      "logical_destination": "rain-target-matrix/cases/base-f1/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f1/filter06.ii",
+      "bytes": 75033,
+      "sha256": "5b2b3093cb5d0e11997bc2b2259207ed576a052a311c3541afc6e422c576abd4",
+      "source_mtime_ns": 1792832889916243181,
+      "logical_destination": "rain-target-matrix/cases/base-f1/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/pair.o",
+      "bytes": 67004,
+      "sha256": "65dc79f73c6ccd4b2eeb855ab8843b0fe6da116a2d9bdf32c1c5f90c3131803b",
+      "source_mtime_ns": 1792832889800240775,
+      "logical_destination": "rain-target-matrix/cases/base-f0/pair.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-disassembly.txt",
+      "bytes": 5745,
+      "sha256": "2e5ba150362dd6b62603bed5b700afb72dce56eb502014948862869819600a4b",
+      "source_mtime_ns": 1792832889748239690,
+      "logical_destination": "rain-target-matrix/cases/base-f0/espgen44-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44-nodebug.o",
+      "bytes": 1436,
+      "sha256": "b8f06fe88c1beb1fb2b7a1b567c33982f1ba665a2da7c564fe6b07754af18a73",
+      "source_mtime_ns": 1792832889696238610,
+      "logical_destination": "rain-target-matrix/cases/base-f0/espgen44-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44.o",
+      "bytes": 12964,
+      "sha256": "a4809a57b04836c02e182c667a6dd57f1523df09c433e0e9621c393d309bfbc5",
+      "source_mtime_ns": 1792832889672238112,
+      "logical_destination": "rain-target-matrix/cases/base-f0/espgen44.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/espgen44.ii",
+      "bytes": 79154,
+      "sha256": "1b371ef540cf0bf5ce14eec62959ec8a82609ca36601afd6db8be0051c39bd63",
+      "source_mtime_ns": 1792832889592236449,
+      "logical_destination": "rain-target-matrix/cases/base-f0/espgen44.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-disassembly.txt",
+      "bytes": 74272,
+      "sha256": "c3ae03cda90b08e7bd748e683d168761494ca49350f00f2948f9578503b51e76",
+      "source_mtime_ns": 1792832889476234038,
+      "logical_destination": "rain-target-matrix/cases/base-f0/filter06-disassembly.txt",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06-nodebug.o",
+      "bytes": 10660,
+      "sha256": "9ec8a10ab17be823e7218a379110de7cfe29622a3ecf4dfd66297fb42c27c3c6",
+      "source_mtime_ns": 1792832889420232874,
+      "logical_destination": "rain-target-matrix/cases/base-f0/filter06-nodebug.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06.o",
+      "bytes": 55480,
+      "sha256": "ec33a938a6e1617df4fb14882450a42842e34d1310973942f77d0eda2b305f3b",
+      "source_mtime_ns": 1792832889404232542,
+      "logical_destination": "rain-target-matrix/cases/base-f0/filter06.o",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/cases/base-f0/filter06.ii",
+      "bytes": 73559,
+      "sha256": "c1055bb7a50bf6a5e1123f7e439e2dcf24e012ad1d62a0cf0839fc08a7577556",
+      "source_mtime_ns": 1792832889268229716,
+      "logical_destination": "rain-target-matrix/cases/base-f0/filter06.ii",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/vec.h",
+      "bytes": 7572,
+      "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+      "source_mtime_ns": 1792832889180227887,
+      "logical_destination": "rain-target-matrix/bench/include/vec.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/va_ppc.h",
+      "bytes": 3470,
+      "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+      "source_mtime_ns": 1792832889180227887,
+      "logical_destination": "rain-target-matrix/bench/include/va_ppc.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/types.h",
+      "bytes": 3235,
+      "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+      "source_mtime_ns": 1792832889176227805,
+      "logical_destination": "rain-target-matrix/bench/include/types.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/trans_ot.h",
+      "bytes": 2766,
+      "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48",
+      "source_mtime_ns": 1792832889176227805,
+      "logical_destination": "rain-target-matrix/bench/include/trans_ot.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/tpl.h",
+      "bytes": 1133,
+      "sha256": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+      "source_mtime_ns": 1792832889172227721,
+      "logical_destination": "rain-target-matrix/bench/include/tpl.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/rnd.h",
+      "bytes": 305,
+      "sha256": "720a81ce6f22cd5edbb6a2762dd8b9d31f89c6f1476163a6dc165fae5ffce383",
+      "source_mtime_ns": 1792832889168227638,
+      "logical_destination": "rain-target-matrix/bench/include/rnd.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/model.h",
+      "bytes": 31880,
+      "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+      "source_mtime_ns": 1792832889168227638,
+      "logical_destination": "rain-target-matrix/bench/include/model.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/math_sub.h",
+      "bytes": 4966,
+      "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+      "source_mtime_ns": 1792832889164227555,
+      "logical_destination": "rain-target-matrix/bench/include/math_sub.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_sub.h",
+      "bytes": 2548,
+      "sha256": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6",
+      "source_mtime_ns": 1792832889164227555,
+      "logical_destination": "rain-target-matrix/bench/include/main_sub.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_mem.h",
+      "bytes": 3872,
+      "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+      "source_mtime_ns": 1792832889160227471,
+      "logical_destination": "rain-target-matrix/bench/include/main_mem.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/lightPath.h",
+      "bytes": 841,
+      "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d",
+      "source_mtime_ns": 1792832889160227471,
+      "logical_destination": "rain-target-matrix/bench/include/lightPath.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/light.h",
+      "bytes": 14105,
+      "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c",
+      "source_mtime_ns": 1792832889156227389,
+      "logical_destination": "rain-target-matrix/bench/include/light.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/gx.h",
+      "bytes": 8362,
+      "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8",
+      "source_mtime_ns": 1792832889156227389,
+      "logical_destination": "rain-target-matrix/bench/include/gx.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/global.h",
+      "bytes": 19112,
+      "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+      "source_mtime_ns": 1792832889152227305,
+      "logical_destination": "rain-target-matrix/bench/include/global.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/filter.h",
+      "bytes": 1804,
+      "sha256": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4",
+      "source_mtime_ns": 1792832889152227305,
+      "logical_destination": "rain-target-matrix/bench/include/filter.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/espgen.h",
+      "bytes": 13619,
+      "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+      "source_mtime_ns": 1792832889148227222,
+      "logical_destination": "rain-target-matrix/bench/include/espgen.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/esp.h",
+      "bytes": 24972,
+      "sha256": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+      "source_mtime_ns": 1792832889144227140,
+      "logical_destination": "rain-target-matrix/bench/include/esp.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/db_log.h",
+      "bytes": 2704,
+      "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+      "source_mtime_ns": 1792832889144227140,
+      "logical_destination": "rain-target-matrix/bench/include/db_log.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/camera.h",
+      "bytes": 2482,
+      "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+      "source_mtime_ns": 1792832889140227056,
+      "logical_destination": "rain-target-matrix/bench/include/camera.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/cManager.h",
+      "bytes": 19670,
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+      "source_mtime_ns": 1792832889140227056,
+      "logical_destination": "rain-target-matrix/bench/include/cManager.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/atariInfo.h",
+      "bytes": 6210,
+      "sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+      "source_mtime_ns": 1792832889136226973,
+      "logical_destination": "rain-target-matrix/bench/include/atariInfo.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/atari.h",
+      "bytes": 8500,
+      "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+      "source_mtime_ns": 1792832889136226973,
+      "logical_destination": "rain-target-matrix/bench/include/atari.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub2.h",
+      "bytes": 656,
+      "sha256": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d",
+      "source_mtime_ns": 1792832889132226890,
+      "logical_destination": "rain-target-matrix/bench/include/at_sub2.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub.h",
+      "bytes": 2813,
+      "sha256": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679",
+      "source_mtime_ns": 1792832889128226806,
+      "logical_destination": "rain-target-matrix/bench/include/at_sub.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/src/game/filter06.cpp",
+      "bytes": 36906,
+      "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+      "source_mtime_ns": 1792832893924325695,
+      "logical_destination": "rain-target-matrix/bench/src/game/filter06.cpp",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/src/game/espgen44.cpp",
+      "bytes": 4163,
+      "sha256": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+      "source_mtime_ns": 1792832894320333651,
+      "logical_destination": "rain-target-matrix/bench/src/game/espgen44.cpp",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/kos-env.sh",
+      "bytes": 1225,
+      "sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+      "source_mtime_ns": 1792832889196228219,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/kos-env.sh",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/gx_fast.h",
+      "bytes": 2775,
+      "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959",
+      "source_mtime_ns": 1792832889184227970,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/gx_fast.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/effects30.mk",
+      "bytes": 39097,
+      "sha256": "3fb6de911aa2aee82bd72bb77fe8685c08f86b059556325bae2868d615de1830",
+      "source_mtime_ns": 1792832889184227970,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/effects30.mk",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/re4dc_prelude.h",
+      "bytes": 1460,
+      "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+      "source_mtime_ns": 1792832889196228219,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/platform/include/re4dc_prelude.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/native_ui.h",
+      "bytes": 7767,
+      "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+      "source_mtime_ns": 1792832889192228137,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/platform/include/native_ui.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/actor_lifetime.h",
+      "bytes": 2887,
+      "sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+      "source_mtime_ns": 1792832889188228054,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/platform/include/actor_lifetime.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h",
+      "bytes": 1122,
+      "sha256": "c6781c08e9d9a4e7b59bd0c7f5dfb94f09841a03e2ff70238a2668e60d7def9f",
+      "source_mtime_ns": 1792832889188228054,
+      "logical_destination": "rain-target-matrix/bench/port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h",
+      "payload_copied": false,
+      "disclosure": "Selected target object, preprocessor/disassembly, log, or environment payload excluded."
+    },
+    {
+      "source": "git:78cbd962ee0d98dc700d0fb452500a16ac35b14c:port/dreamcast/tools/d367/actual_triangle_audit24/PREPARATION-SUMMARY.json",
+      "bytes": 19721,
+      "sha256": "c9db2b90d607c0c351606d4141ee1ba2456674e254b0e1d294a2693eeffca9f0",
+      "logical_destination": "generic-triangle/port/dreamcast/tools/d367/actual_triangle_audit24/PREPARATION-SUMMARY.json",
+      "payload_copied": false,
+      "disclosure": "Per-target physical index arrays deliberately excluded."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/triangle-opportunity-prep24/PREPARATION-SUMMARY.json",
+      "bytes": 19721,
+      "sha256": "c9db2b90d607c0c351606d4141ee1ba2456674e254b0e1d294a2693eeffca9f0",
+      "source_mtime_ns": 1792831807649894100,
+      "logical_destination": "triangle-private-preparation/PREPARATION-SUMMARY.json",
+      "payload_copied": false,
+      "disclosure": "Per-target physical index arrays excluded; nonprivate aggregate extracted separately."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-r3/report.json",
+      "bytes": 1697979,
+      "sha256": "22b2fe4dc83c0a0ba846eefb822fe1dead4bbbaa850b1e838dc5eaaadc56d57c",
+      "source_mtime_ns": 1792831725913242400,
+      "logical_destination": "triangle-private-reports/original_report.json",
+      "payload_copied": false,
+      "disclosure": "Actual geometry report; no payload archived."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-prep24-root-readback-v1/report.json",
+      "bytes": 1697978,
+      "sha256": "db0652bcefe7286812625ad82fdca054e01a96b08d2de6c71c1ab7618335011e",
+      "source_mtime_ns": 1792832443037081800,
+      "logical_destination": "triangle-private-reports/fresh_report.json",
+      "payload_copied": false,
+      "disclosure": "Actual geometry report; no payload archived."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/interior-vis23-20261023/actual-triangle-hut647-root-r1/report.json",
+      "bytes": 92462,
+      "sha256": "7e301a48c99a46afc2397d9e823aab08c1b5b0c0e9add46af7ed80d3835afef8",
+      "source_mtime_ns": 1792832889190885400,
+      "logical_destination": "triangle-private-reports/actual75-report.json",
+      "payload_copied": false,
+      "disclosure": "Actual geometry/case/results arrays excluded; only scalar result counters extracted."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/FUTURE-GUEST-COMMANDS.json",
+      "bytes": 13102,
+      "sha256": "8cc78216993e479161842a4971e8ee77026470764deb1de15dc292cc85d71574",
+      "source_mtime_ns": 1792832657976080700,
+      "logical_destination": "QA-sealed-preparation/FUTURE-GUEST-COMMANDS.json",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/SOURCE-IP.BIN",
+      "bytes": 32768,
+      "sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c",
+      "source_mtime_ns": 1792831775522036100,
+      "logical_destination": "QA-sealed-preparation/SOURCE-IP.BIN",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/h2-pad.txt",
+      "bytes": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1",
+      "source_mtime_ns": 1792832657788964300,
+      "logical_destination": "QA-sealed-preparation/fixtures/h2-pad.txt",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/h2-warp.txt",
+      "bytes": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012",
+      "source_mtime_ns": 1792832657780964500,
+      "logical_destination": "QA-sealed-preparation/fixtures/h2-warp.txt",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-0.txt",
+      "bytes": 770,
+      "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128",
+      "source_mtime_ns": 1792832657755957700,
+      "logical_destination": "QA-sealed-preparation/fixtures/kos-fight-49152-0.txt",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/qa-memory-media-prep/fixtures/kos-fight-49152-1.txt",
+      "bytes": 770,
+      "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b",
+      "source_mtime_ns": 1792832657772959100,
+      "logical_destination": "QA-sealed-preparation/fixtures/kos-fight-49152-1.txt",
+      "payload_copied": false,
+      "disclosure": "Private input/fixture or future guest-command payload excluded; seal identity only."
+    },
+    {
+      "source": "/usr/bin/python3",
+      "bytes": 8020928,
+      "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+      "source_mtime_ns": 1788171506000000000,
+      "logical_destination": "QA-external-tool-identities/python3",
+      "payload_copied": false,
+      "disclosure": "External host binary identity only; never copied or executed."
+    },
+    {
+      "source": "/usr/bin/genisoimage",
+      "bytes": 694424,
+      "sha256": "9bacc5951ca0767701cfd8e6b47537f199977e51a6e943f4edfdcf9d639d99d2",
+      "source_mtime_ns": 1710435193000000000,
+      "logical_destination": "QA-external-tool-identities/genisoimage",
+      "payload_copied": false,
+      "disclosure": "External host binary identity only; never copied or executed."
+    },
+    {
+      "source": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+      "bytes": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "source_mtime_ns": 1744131456000000000,
+      "logical_destination": "QA-external-tool-identities/WindowsPython",
+      "payload_copied": false,
+      "disclosure": "External host binary identity only; never copied or executed."
+    },
+    {
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+      "bytes": 14416384,
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+      "source_mtime_ns": 1792753117809705800,
+      "logical_destination": "QA-external-tool-identities/console_exe",
+      "payload_copied": false,
+      "disclosure": "External host binary identity only; never copied or executed."
+    }
+  ],
+  "payload_copied": false
+}

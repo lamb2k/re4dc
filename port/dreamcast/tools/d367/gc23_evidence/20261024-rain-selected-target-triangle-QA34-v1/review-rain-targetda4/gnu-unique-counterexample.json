@@ -1,0 +1,12 @@
+{
+  "binding": 10,
+  "meaning": "STB_GNU_UNIQUE externally visible definition",
+  "value_before": 0,
+  "value_after": 2,
+  "text_bytes": 8,
+  "symbol_size": 4,
+  "accepted_as_disabled_identity": true,
+  "allocated_relocations_unchanged": true,
+  "note": "Current pinned normal two-TU objects use only binding0/1; this is fail-closed ABI-format contract gap, not a generated current target defect",
+  "SDK": 0
+}

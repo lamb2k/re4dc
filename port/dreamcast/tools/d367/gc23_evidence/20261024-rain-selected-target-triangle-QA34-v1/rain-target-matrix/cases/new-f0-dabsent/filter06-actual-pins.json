@@ -1,0 +1,146 @@
+{
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/src/game/filter06.cpp": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/src/game/filter06.cpp",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/src/game/filter06.cpp",
+    "bytes": 36906,
+    "sha256": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/re4dc_prelude.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/re4dc_prelude.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/re4dc_prelude.h",
+    "bytes": 1460,
+    "sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/filter.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/filter.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/filter.h",
+    "bytes": 1804,
+    "sha256": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/types.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/types.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/types.h",
+    "bytes": 3235,
+    "sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/vec.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/vec.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/vec.h",
+    "bytes": 7572,
+    "sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/atari.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/atari.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/atari.h",
+    "bytes": 8500,
+    "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/db_log.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/db_log.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/db_log.h",
+    "bytes": 2704,
+    "sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/va_ppc.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/va_ppc.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/va_ppc.h",
+    "bytes": 3470,
+    "sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129"
+  },
+  "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdarg.h": {
+    "path": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdarg.h",
+    "resolved": "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/include/stdarg.h",
+    "bytes": 4310,
+    "sha256": "3014f1490722369be2ab7e10a3bd88a53435083fea5fc30fb8b6f87520684bb7"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/cManager.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/cManager.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/cManager.h",
+    "bytes": 19670,
+    "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub.h",
+    "bytes": 2813,
+    "sha256": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub2.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub2.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/at_sub2.h",
+    "bytes": 656,
+    "sha256": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_mem.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_mem.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_mem.h",
+    "bytes": 3872,
+    "sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/light.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/light.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/light.h",
+    "bytes": 14105,
+    "sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/gx.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/gx.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/gx.h",
+    "bytes": 8362,
+    "sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/gx_fast.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/gx_fast.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/gx_fast.h",
+    "bytes": 2775,
+    "sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/lightPath.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/lightPath.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/lightPath.h",
+    "bytes": 841,
+    "sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_sub.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_sub.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/main_sub.h",
+    "bytes": 2548,
+    "sha256": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/trans_ot.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/trans_ot.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/trans_ot.h",
+    "bytes": 2766,
+    "sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/global.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/global.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/global.h",
+    "bytes": 19112,
+    "sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/camera.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/camera.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/camera.h",
+    "bytes": 2482,
+    "sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/rnd.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/rnd.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/rnd.h",
+    "bytes": 305,
+    "sha256": "720a81ce6f22cd5edbb6a2762dd8b9d31f89c6f1476163a6dc165fae5ffce383"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/math_sub.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/math_sub.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/include/math_sub.h",
+    "bytes": 4966,
+    "sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507"
+  },
+  "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/native_ui.h": {
+    "path": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/native_ui.h",
+    "resolved": "/dev/shm/rain-diag24-target-root_a7_20261024_r1/bench/port/dreamcast/game/platform/include/native_ui.h",
+    "bytes": 7767,
+    "sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882"
+  }
+}

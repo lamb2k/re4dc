@@ -1,0 +1,7 @@
+{
+  "reason": "Requested proposed output root already exists; refusal before any media read/write",
+  "existing": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/qa-memory-aab-v2",
+  "stage_executed": false,
+  "outputs_written": [],
+  "tool_sha256": "94144cffb499635e7147eb9dbd9c4ac2fe6aa6d65cd052f8df7fef69d2ff6b56"
+}

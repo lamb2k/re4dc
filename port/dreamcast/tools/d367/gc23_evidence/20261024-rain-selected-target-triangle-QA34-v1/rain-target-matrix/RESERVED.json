@@ -1,0 +1,28 @@
+{
+  "pins_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+  "grant": {
+    "kind": "ROOT_SELECTED_SH4_GRANT",
+    "authorized": true,
+    "grant_id": "root_rain_a7_target_20261024_r1",
+    "source": "da413ff058f88fa136375ecff629610fc59c0e51",
+    "base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+    "pins_sha256": "f7161f224e09c03eaab81976850e67a1e395399f1a0848cf7f6ba884f13167da",
+    "output": "/dev/shm/rain-diag24-target-root_a7_20261024_r1",
+    "jobs": 1,
+    "address_space_bytes": 268435456,
+    "owned_output_bytes": 268435456,
+    "command_seconds": 60,
+    "wall_seconds": 360,
+    "case_names": [
+      "base-f0",
+      "base-f1",
+      "new-f0-dabsent",
+      "new-f0-d0",
+      "new-f0-d1",
+      "new-f1-dabsent",
+      "new-f1-d0",
+      "new-f1-d1"
+    ]
+  },
+  "state": "reserved under root allocation; SDK may follow"
+}
