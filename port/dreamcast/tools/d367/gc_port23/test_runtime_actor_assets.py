@@ -12,6 +12,45 @@ GAME = HERE.parents[2] / 'game'
 
 
 class ActorAssetTests(unittest.TestCase):
+    def test_actual_compiled_capture_and_selection(self):
+        compiled = (GAME / 'platform/include/gc_asset_actor_compiled.inc').read_text()
+        selection = (GAME / 'platform/include/gc_asset_actor_select.inc').read_text()
+        fixture = r'''
+#include "gc_asset_actor.h"
+#include "coarse_actor_preflight.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <initializer_list>
+#include <string>
+using namespace re4dc_gcasset;
+std::string logs;extern "C" void re4dc_log(const char*fmt,...){char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
+struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;};
+struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
+namespace leon4k{struct Chunk{unsigned source_info,position_count=1,normal_count=1,palette_count=1,triangles=1,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};Chunk chunks[8];float bind[2][12]{};}
+unsigned char arrays[8][5][32]{};
+re4dc_source::ChunkInput input_for(unsigned k){return {{arrays[k][0],8},{arrays[k][1],8},{arrays[k][2],4},{arrays[k][3],32},{arrays[k][4],16},1,1,1,1,119};}
+#define RE4DC_OWNER_INPUT(ns,prefix,c,bones) input_for(c.source_info)
+namespace leon_hair_runs{unsigned char uv[4]={1,2,3,4},stream[32]={9};struct Run{const unsigned char*stream;unsigned bytes;};Run runs[]={{stream,32}};}
+#define RE4DC_LEON_HAIR_UV_DATA leon_hair_runs::uv
+#define RE4DC_LEON_HAIR_UV_SIZE sizeof(leon_hair_runs::uv)
+''' + compiled + '\n' + selection + r'''
+int main(){assert(install(nullptr,0));begin_startup_closed(1,Required);
+ for(unsigned k=0;k<8;++k){auto&c=leon4k::chunks[k];c.source_info=k;c.positions=arrays[k][0];c.normals=arrays[k][1];c.uv=arrays[k][2];c.stream=arrays[k][3];c.weights=arrays[k][4];arrays[k][3][0]=k;}
+ re4dc_gcasset_actor_startup();assert(gcasset_compiled_actor.serial);const unsigned serial=gcasset_compiled_actor.serial;re4dc_gcasset_actor_startup();assert(gcasset_compiled_actor.serial==serial);assert(logs.find("GC-ASSET v=")==std::string::npos);
+ const auto&c=leon4k::chunks[0];Re4dcModelPart p{&p,&p,c.stream,c.uv,32,1,1};Re4dcActorSource s{c.positions,c.normals,1,1,1,0};assert(re4dc_gcasset_actor_select(&p,&s).serial==serial);
+ const auto&hair=leon4k::chunks[7];p.stream=leon_hair_runs::stream;p.uv=leon_hair_runs::uv;s.positions=hair.positions;s.normals=hair.normals;assert(re4dc_gcasset_actor_select(&p,&s).serial==serial);
+ // Dynamic hand descriptors are absent from the compiled identity.
+ const auto&hand=leon4k::chunks[5];p.stream=hand.stream;p.uv=hand.uv;s.positions=hand.positions;s.normals=hand.normals;assert(!re4dc_gcasset_actor_select(&p,&s).serial);
+ // Descriptor pointer rebinding cannot bless unhashed arrays with this token.
+ auto&mutable_c=leon4k::chunks[0];mutable_c.positions=arrays[5][0];p.stream=mutable_c.stream;p.uv=mutable_c.uv;s.positions=mutable_c.positions;s.normals=mutable_c.normals;assert(!re4dc_gcasset_actor_select(&p,&s).serial);
+ AssetDescription row;assert(describe_checked(gcasset_compiled_actor.asset,&row) && row.provenance==Unknown);retire_catalog();assert(!describe_checked(gcasset_compiled_actor.asset,&row));
+}
+'''
+        self.compile_run(fixture, ['-DRE4DC_ACTOR_TRANSACTION=1', '-DRE4DC_LEON_HAND_PACK=1', '-DRE4DC_LEON_LOD=0'])
+
     def test_actual_pack_selection_and_shared_window_acknowledgement(self):
         selection = (GAME / 'platform/include/gc_asset_actor_select.inc').read_text()
         fast = (GAME / 'platform/native_actor_fast.cpp').read_text()

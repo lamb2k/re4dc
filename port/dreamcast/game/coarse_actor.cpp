@@ -3,6 +3,9 @@
 // native actor representation; no source game data is overwritten.
 #include "platform/include/gc_asset_payloads.h"
 #include "platform/include/gc_asset_actor.h"
+#if RE4DC_GC_ASSET_GATE
+#include <initializer_list>
+#endif
 #include "platform/include/bfc_class.h"
 #include "global.h"
 #include "model.h"
@@ -487,4 +490,5 @@ extern "C" const char* re4dc_charbake_label(void){return re4dc_charbake::variant
 #include "actor_tex_prep_leon_pick.inc"
 #endif
 
+#include "platform/include/gc_asset_actor_compiled.inc"
 #include "platform/include/gc_asset_actor_select.inc"

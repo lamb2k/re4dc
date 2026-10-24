@@ -50,8 +50,8 @@ bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsi
     proof.asset=asset;proof.layout_asset=side;proof.serial=++payload_serial;return true;
 }
 bool payload_capture_fragments(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count){
-    // Read-only compiled owner only: no mutable package may use this borrowed
-    // representation, whose secondary span addresses are deliberately not kept.
+    // Stable compiled source owner only, before preparation. Reloaded packages
+    // must use the bounded contiguous capture/retire protocol instead.
     if(!owner || !spans || !count || count>48 || proof.owner){
         payload_retire(proof);unresolved(SourceGeometry,"fragment-owner");return false;
     }

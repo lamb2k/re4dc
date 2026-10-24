@@ -26,6 +26,7 @@ class RuntimeLifecycleTests(unittest.TestCase):
 #include <initializer_list>
 using namespace re4dc_gcasset;
 std::string logs;bool mutex_held;unsigned locks,unlocks;
+unsigned actor_starts;extern "C" void re4dc_gcasset_actor_startup(){assert(!mutex_held);++actor_starts;}
 extern "C" void re4dc_log(const char*fmt,...){assert(!mutex_held);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
 unsigned gcasset_audio_checkpoints;int g_lock;
 void mutex_lock(int*){assert(!mutex_held);mutex_held=true;++locks;}
@@ -51,7 +52,7 @@ void audio_step_checkpoint(){mutex_lock(&g_lock);
 ''' + checkpoint + r'''
 mutex_unlock(&g_lock);}
 int main(){unsigned char bytes[]={1,2,3};CatalogRow row{"texture","title",fingerprint(bytes,3),Unknown};assert(install(&row,1));asset=bind_checked("texture","title",row.digest);
- gcasset_startup();assert(gcasset_visit_live && logs.find("phase=startup visit=1")!=std::string::npos);
+ gcasset_startup();assert(gcasset_visit_live && actor_starts==1 && logs.find("phase=startup visit=1")!=std::string::npos);
  entries[0].pending=true;audio_step_checkpoint();inject_audio=true;re4dc_gcasset_retire();
  assert(logs.find("phase=startup visit=1 kind=texture")!=std::string::npos && logs.find("checked=1f6")!=std::string::npos);
  assert(logs.find("wired=1f6")!=std::string::npos); // static geometry/weapon coverage is deliberately unfinished
@@ -80,7 +81,7 @@ int main(){unsigned char bytes[]={1,2,3};CatalogRow row{"texture","title",finger
         with tempfile.TemporaryDirectory(prefix='gc-port23-lifecycle-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
-                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_MES=1',
+                            '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_GC_ASSET_COARSE_LEON=1', '-DRE4DC_NATIVE_MES=1',
                             '-DRE4DC_MOVIE_WORLD_ARENA=1', '-DRE4DC_KOS_CACHE_P2_DIAG=1',
                             '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
                             str(GAME / 'platform/gc_asset_gate.cpp'), '-o', str(executable)], check=True)

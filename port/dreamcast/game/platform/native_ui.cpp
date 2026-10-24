@@ -5,6 +5,7 @@
 #include "include/gc_asset_audio.h"
 #include "include/gc_asset_movie.h"
 #include "include/gc_asset_lifecycle.h"
+#include "include/gc_asset_actor.h"
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
@@ -5544,6 +5545,9 @@ void gcasset_startup(){
     gcasset_started=true;gcasset_phase=GcStartup;re4dc_gcasset_audio_admission(0);
     re4dc_gcasset::ensure_disc_catalog();
     re4dc_gcasset::begin_startup_closed(++gcasset_visit_serial,gcasset_wired_mask());
+#if defined(RE4DC_GC_ASSET_COARSE_LEON) && RE4DC_GC_ASSET_COARSE_LEON
+    re4dc_gcasset_actor_startup();
+#endif
     gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
 }
 void gcasset_close_visit(unsigned audio){

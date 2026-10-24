@@ -4,6 +4,7 @@
 struct Re4dcModelPart;
 struct Re4dcActorSource;
 extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelPart*,const Re4dcActorSource*);
+extern "C" void re4dc_gcasset_actor_startup();
 namespace re4dc_gcasset {
 // Memory-only selection/acknowledgement. A shared OneWindow may retain SQ
 // ownership across chunks; neither this bridge nor selection may perform IO,

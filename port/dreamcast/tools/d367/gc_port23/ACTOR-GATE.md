@@ -36,15 +36,34 @@ while SQ remains owned across chunks. Source-extracted controls exercise the
 actual selector and direct-accept block with two owners, zero slots, mixed
 arrays, an out-of-range stream and retirement between selection/acceptance.
 
-This is incomplete coverage. Compiled Leon/hair arrays and hand slots still
-need exact immutable captures and matching selection. Weapon classification
-for replacement chunks, Frame/cache reuse and owned-record lifetime must be
+Compiled Leon/hair source arrays are captured once at named startup, before
+first permitted in-place stream preparation. The framed identity includes
+every compiled role's positions/normals/UV/stream/weights, fixed scalar metadata,
+bind matrices and additional hair UV/run streams. Dynamic hand roles are
+excluded. Selection additionally checks descriptors still name the captured
+compiled arrays; a pointer rebind cannot borrow the old token. The mk mirrors
+the actual COARSE_LEON value into the diagnostic UI object only when the gate
+is on, so the startup bridge has a real provider in that profile.
+
+qualify_actor_compiled.py pins the actual profile/runtime/hair header hashes,
+compiles the real helper against those private headers and the public preflight
+types in RAM, and rechecks inputs/source afterward. The current inputs produce
+geometry SHA256 017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252,
+provenance unknown. This source-byte control makes no PS2-origin claim and does
+not write a catalog, allowance or replacement asset.
+
+This is incomplete coverage. Hand slots still need their original source
+capture and exact accepted matching. Weapon classification for replacement
+chunks, Frame/cache reuse and owned-record lifetime must be
 reviewed against the real actor transaction. The current profile requires
 packed hands; optional LOD is outside this claim. No SourceGeometry/Weapon
 coverage bit is added, and no full gate or target acceptance is claimed.
 
-Metadata pricing: two registry proofs plus PL08 add an expected 132 bytes on
-SH4 (3 x 44), pending target layout/link measurement. Selection adds no table
+Metadata pricing: two registry proofs plus PL08 and compiled arrays add an
+expected 176 bytes on SH4 (4 x 44), plus a startup boolean/alignment, pending
+target layout/link measurement. Startup has 576 explicit bytes of borrowed
+span/metadata arrays, other local descriptors, and nested 512-byte SHA scratch;
+actual stack high water remains unpriced. Selection adds no table
 or OneWindow fields; the scoped pair of copied SourceUse values is expected
 40 stack bytes on SH4. Compiled-fragment hashing adds 892 x86 text bytes with
 unchanged helper data/BSS; those numbers are not SH4 or linked heap evidence.

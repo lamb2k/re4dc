@@ -3,7 +3,7 @@
 // supply the exact consumed array addresses and extents.
 #if RE4DC_GC_ASSET_GATE
 namespace {
-bool gcasset_actor_inside(const re4dc_gcasset::PayloadProof& proof,const void* data,unsigned bytes){
+inline bool gcasset_actor_inside(const re4dc_gcasset::PayloadProof& proof,const void* data,unsigned bytes){
     if(!proof.owner || !proof.serial || !proof.base || !data || !bytes)return false;
     const auto base=reinterpret_cast<std::uintptr_t>(proof.base),at=reinterpret_cast<std::uintptr_t>(data);
     return at>=base && at-base<=proof.bytes && bytes<=proof.bytes-unsigned(at-base);
@@ -30,6 +30,17 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
     if(!part || !source)return {};
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
+#if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
+    if(gcasset_compiled_actor.serial){
+        for(unsigned k=0;k<8;++k){const auto input=gcasset_compiled_input(k);if(!gcasset_compiled_current(k))continue;
+            if(gcasset_actor_chunk(leon4k::chunks[k],input.uv.size,*part,*source))accept(gcasset_compiled_actor);
+        }
+        auto hair=leon4k::chunks[7];hair.uv=RE4DC_LEON_HAIR_UV_DATA;
+        for(const auto& run:leon_hair_runs::runs){hair.stream=run.stream;hair.stream_bytes=run.bytes;
+            if(gcasset_compiled_current(7) && gcasset_actor_chunk(hair,RE4DC_LEON_HAIR_UV_SIZE,*part,*source))accept(gcasset_compiled_actor);
+        }
+    }
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && RE4DC_NATIVE_MODEL_REGISTRY_PACK
     for(unsigned g=0;g<registry.geometry_count;++g){
 #if RE4DC_NMR_MASK
@@ -46,7 +57,7 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_select(const Re4dcModelP
         if(gcasset_actor_chunk(c,uv_bytes,*part,*source) && gcasset_actor_bound(gcasset_pl08,c,uv_bytes))accept(gcasset_pl08);
     }
 #endif
-    // Other compiled/hand owners remain unqualified, never the caller BIN.
+    // Other hand owners remain unqualified, never the caller BIN.
     if(!selected || ambiguous)return {};
     return {selected->serial,1U<<SourceGeometry,part->model,part->info,selected};
 }
