@@ -930,6 +930,18 @@ DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native
 R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
 DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
                       for x in ('re4mesh', 'r4pw', 'ids')}
+# Lane purge-weapons24 (10-24, GC purge, coordinator decision C): wep24 = Leon's weapon archives with the PS2 weapon
+# models and pictures (tools/d367/ps2cast/ps2_weapons.py + ps2_items_tex.py). Each em/wepNN.drs is the release's own file
+# (image d28b3cfc, with its sound bank and compacted REL) with the drawn weapon BINs rebuilt from the PS2 wepNN.dat
+# in their GC slots (same offsets / sizes, GC joints and part headers) and the weapon TPL records rekeyed to the PS2
+# pictures (loose dc/tex packages). Motions, REL, sounds, Leon's hand BINs unchanged. 19 files, 48 BINs, 43 pictures;
+# wep05 (Broken Butterfly) stays GC (PS2 bone 1 rest differs by 15 mm). Last in the data line: it replaces any earlier
+# em/wepNN.drs. Private store copy: re4-assets-private/wep24-20261024 (RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24D = os.environ.get('WEP24D', '/root/re4data/private/wep24-20261024')
+DATA['wep24'] = {'em/wep%s.drs' % n: WEP24D + '/em/wep%s.drs' % n
+                 for n in ('01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17', '18',
+                           '20', '21', '24')}
+DATA['wep24']['tex'] = WEP24D + '/tex'
 
 
 if __name__ == '__main__':
