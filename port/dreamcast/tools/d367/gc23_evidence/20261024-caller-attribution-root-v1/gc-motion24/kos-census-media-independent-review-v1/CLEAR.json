@@ -1,0 +1,43 @@
+{
+  "status": "INDEPENDENT_CENSUS_STAGE_PAIR_READBACK_CLEAR_GUEST_NOT_RUN",
+  "READBACK": {
+    "size": 3212,
+    "sha256": "a8ec47d810e9de77bbc3536abd2c87e81bf935849a1df2cf8e4897a977813edd"
+  },
+  "members": {
+    "OFF-COMMAND.json": {
+      "size": 544,
+      "sha256": "270f562426e15da684a44fde3a569cfc37cc959c5e620fdfea2cdac7c6ecdb42"
+    },
+    "OFF-READBACK.json": {
+      "size": 246924,
+      "sha256": "35e6d8ad44d7f7c94bab6ce34c44ff3e446c053b119574dedf3da23c6407e66c"
+    },
+    "OFF-RUN.txt": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ON-COMMAND.json": {
+      "size": 541,
+      "sha256": "8fd0a07f3704878b24bb10d0e9a4b5a28f3a7dd802f5cbc40656bd8f8616b594"
+    },
+    "ON-READBACK.json": {
+      "size": 246923,
+      "sha256": "ac7ccec6a71a6400e96629b41747d56b88810d4ee695e87f15bf4b27d699963c"
+    },
+    "ON-RUN.txt": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "READBACK.json": {
+      "size": 3212,
+      "sha256": "a8ec47d810e9de77bbc3536abd2c87e81bf935849a1df2cf8e4897a977813edd"
+    },
+    "review.py": {
+      "size": 5393,
+      "sha256": "5d6b2ea21de0169f5ab9f62e70902008dec92424d96c09b2ebd06387516cc726"
+    }
+  },
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "limits": "Source, media identities and staging readback only. No guest, allocator coverage, KOS-memory or performance qualification."
+}

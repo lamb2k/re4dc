@@ -1,0 +1,61 @@
+{
+  "status": "CLEAR_POSTSTAGE_ALL_FILES_NO_GUEST",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "arms": {
+    "off": {
+      "readback_path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/OFF-READBACK.json",
+      "readback_identity": {
+        "size": 246924,
+        "sha256": "35e6d8ad44d7f7c94bab6ce34c44ff3e446c053b119574dedf3da23c6407e66c"
+      },
+      "complete_identity": {
+        "size": 247094,
+        "sha256": "fce019ae6d0a172d3bf1c3aa859bb37cf16c49a7035b5b1ce274411d5531161a"
+      }
+    },
+    "on": {
+      "readback_path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/ON-READBACK.json",
+      "readback_identity": {
+        "size": 246923,
+        "sha256": "ac7ccec6a71a6400e96629b41747d56b88810d4ee695e87f15bf4b27d699963c"
+      },
+      "complete_identity": {
+        "size": 247093,
+        "sha256": "0cbf492e210cd95ba7f8904c733285e3678f4462751af8b2bd8854229f7a3f69"
+      }
+    }
+  },
+  "independent_READBACK": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/READBACK.json",
+    "identity": {
+      "size": 3212,
+      "sha256": "a8ec47d810e9de77bbc3536abd2c87e81bf935849a1df2cf8e4897a977813edd"
+    }
+  },
+  "independent_CLEAR": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/CLEAR.json",
+    "identity": {
+      "size": 1473,
+      "sha256": "12b16b0e89aa833ce4de9105ec6191ffab26ea669d4e5462d6bba6a100abbee9"
+    }
+  },
+  "kit_seal": {
+    "size": 4321,
+    "sha256": "812c92f2eb0ec29a41051754e16c44de87a8ea7bfeebd066da0ac41524e11a3c"
+  },
+  "binding": {
+    "size": 10666,
+    "sha256": "1dc5998b5c4426b73706d2df56bd3a8158f98570bbb5485cb2f68ba49d6867eb"
+  },
+  "final_C_media": {
+    "files": 36,
+    "logical_bytes": 2053596544,
+    "unique_inode_bytes": 2053596544
+  },
+  "combined_kit_work_media": {
+    "files": 3500,
+    "logical_bytes": 4097396366,
+    "unique_inode_bytes": 3080155100
+  },
+  "no_SDK_stage_guest": true
+}

@@ -1,0 +1,354 @@
+{
+  "status": "SOURCE_AUDIT_COMPLETE_NO_CONFIRMED_PERSISTENT_DIAGNOSTIC_FD",
+  "utc": "2026-10-24T11:13:40.268877+00:00",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "clean_frozen_tree_before_and_after": true,
+  "source_files": {
+    "port/dreamcast/game/platform/gc_asset_disc.cpp": {
+      "working_bytes": {
+        "size": 3922,
+        "sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde"
+      },
+      "git_blob_sha256": "ecd578a098bc2cc9739bd2f1e537b80c46883f0a9f2fa3b1e7294709a5bd2dde",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/gc_asset_gate.cpp": {
+      "working_bytes": {
+        "size": 19622,
+        "sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9"
+      },
+      "git_blob_sha256": "8e271fbe41023a5dd1e2e0d2d4163e6cacc8389b830ecd7a10848f680ac783d9",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/gc_asset_audio.cpp": {
+      "working_bytes": {
+        "size": 9332,
+        "sha256": "2233cf89175b240fb8319699bed7561a580bdda1df640db1f230c25bab3a8409"
+      },
+      "git_blob_sha256": "2233cf89175b240fb8319699bed7561a580bdda1df640db1f230c25bab3a8409",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/gc_asset_motion_unknown.cpp": {
+      "working_bytes": {
+        "size": 2265,
+        "sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a"
+      },
+      "git_blob_sha256": "961c6a3c42319fdc1cd86536482e051111f6cfefc64b3ce590d0a6f98efae48a",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/gc_asset_members.cpp": {
+      "working_bytes": {
+        "size": 10577,
+        "sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a"
+      },
+      "git_blob_sha256": "3f1c768789846928c5aea662171f44fa5c07e5b5579ef93a09528407b132c12a",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/gc_asset_payloads.cpp": {
+      "working_bytes": {
+        "size": 18596,
+        "sha256": "c9015ed87c6085995182e9a6b795baa6e4c52bd6337f49fcfc7ca5a40a0f926d"
+      },
+      "git_blob_sha256": "c9015ed87c6085995182e9a6b795baa6e4c52bd6337f49fcfc7ca5a40a0f926d",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "working_bytes": {
+        "size": 532136,
+        "sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85"
+      },
+      "git_blob_sha256": "df4157517b49e5ae6ea0f352863a576d58deb16f5c2fe9cabbab3c5552ec0f85",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/native_movie.cpp": {
+      "working_bytes": {
+        "size": 70455,
+        "sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e"
+      },
+      "git_blob_sha256": "276e8e6f092320f9fcaf6fa9ff27c39550ae2b30939668d3aadf4b2af464e39e",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/native_movie_stream.c": {
+      "working_bytes": {
+        "size": 23345,
+        "sha256": "a0e1d2979ae217c0c1cc426dac919758fbf50e69a99431ab9939ae258a7e5aaa"
+      },
+      "git_blob_sha256": "a0e1d2979ae217c0c1cc426dac919758fbf50e69a99431ab9939ae258a7e5aaa",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/native_motion.cpp": {
+      "working_bytes": {
+        "size": 57091,
+        "sha256": "4940dd38cf323dbac855765cafdef40fdd70b514e0c73f9c518c8a1ee4aa0c15"
+      },
+      "git_blob_sha256": "4940dd38cf323dbac855765cafdef40fdd70b514e0c73f9c518c8a1ee4aa0c15",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "working_bytes": {
+        "size": 406053,
+        "sha256": "d0a43e079d22febbbf87cc7ef042bb3f43bac0ad4c3cb8881cdf0d97fec6bcb3"
+      },
+      "git_blob_sha256": "d0a43e079d22febbbf87cc7ef042bb3f43bac0ad4c3cb8881cdf0d97fec6bcb3",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/room_file.c": {
+      "working_bytes": {
+        "size": 8757,
+        "sha256": "e8f96e63390271f55fc349350352293fad6d64f2cea974e530b9e498a9ff65d6"
+      },
+      "git_blob_sha256": "e8f96e63390271f55fc349350352293fad6d64f2cea974e530b9e498a9ff65d6",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/dvd.cpp": {
+      "working_bytes": {
+        "size": 20989,
+        "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f"
+      },
+      "git_blob_sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/include/gc_asset_hand_source.inc": {
+      "working_bytes": {
+        "size": 5053,
+        "sha256": "55083926ee847cb798cf7aadefdfa20888b5b9791e9e2f9f4c1d56a919e8f3ce"
+      },
+      "git_blob_sha256": "55083926ee847cb798cf7aadefdfa20888b5b9791e9e2f9f4c1d56a919e8f3ce",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/include/gc_asset_actor_compiled.inc": {
+      "working_bytes": {
+        "size": 2743,
+        "sha256": "2124f9b363d2a8f7bbc544b961b8d624c43de3f119b20f15ae72f50cbb773072"
+      },
+      "git_blob_sha256": "2124f9b363d2a8f7bbc544b961b8d624c43de3f119b20f15ae72f50cbb773072",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/include/gc_asset_lifecycle.h": {
+      "working_bytes": {
+        "size": 353,
+        "sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff"
+      },
+      "git_blob_sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/platform/include/texpack_index.inc": {
+      "working_bytes": {
+        "size": 14013,
+        "sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+      },
+      "git_blob_sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/ui_bridge.cpp": {
+      "working_bytes": {
+        "size": 47895,
+        "sha256": "cb2bd2ca4ace0abf7cc33719ec3f4cc9b4b24ba6bca7c7ddec6d64dd3a6beeb8"
+      },
+      "git_blob_sha256": "cb2bd2ca4ace0abf7cc33719ec3f4cc9b4b24ba6bca7c7ddec6d64dd3a6beeb8",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/motion_bridge.cpp": {
+      "working_bytes": {
+        "size": 1709,
+        "sha256": "17f4d9d7d89a6501835020d373377cfb2b4e9a6249cf54ff2fcd277d0484b145"
+      },
+      "git_blob_sha256": "17f4d9d7d89a6501835020d373377cfb2b4e9a6249cf54ff2fcd277d0484b145",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/coarse_actor.cpp": {
+      "working_bytes": {
+        "size": 24271,
+        "sha256": "26a1abbb6d9c1aedf401681efb4e31fea90e27ffca4f2ccd186106177bf3a859"
+      },
+      "git_blob_sha256": "26a1abbb6d9c1aedf401681efb4e31fea90e27ffca4f2ccd186106177bf3a859",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/coarse_actor_leon_hands.inc": {
+      "working_bytes": {
+        "size": 24001,
+        "sha256": "f99d173a0df7cef72ba8ae7b322c55cd35e6a4831d0c7ce8a301de3e4eed06e3"
+      },
+      "git_blob_sha256": "f99d173a0df7cef72ba8ae7b322c55cd35e6a4831d0c7ce8a301de3e4eed06e3",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/coarse_actor_pl08_pack.inc": {
+      "working_bytes": {
+        "size": 6104,
+        "sha256": "a0c1db7ac527011c946472071dc5b906bb3fd72ca5b1474b0038d04a74fbdfa3"
+      },
+      "git_blob_sha256": "a0c1db7ac527011c946472071dc5b906bb3fd72ca5b1474b0038d04a74fbdfa3",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/coarse_actor_registry_pack.inc": {
+      "working_bytes": {
+        "size": 20464,
+        "sha256": "3919584de9a10fa56237cda1f7710bd6bbe3c407262ab453b26e1e22d8061406"
+      },
+      "git_blob_sha256": "3919584de9a10fa56237cda1f7710bd6bbe3c407262ab453b26e1e22d8061406",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/gc_asset_gate.mk": {
+      "working_bytes": {
+        "size": 2731,
+        "sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2"
+      },
+      "git_blob_sha256": "4e34c10a9a44aa749ce2182e3756eb94f96495942f9a13f9d518b3c9265546a2",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/Makefile": {
+      "working_bytes": {
+        "size": 219354,
+        "sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34"
+      },
+      "git_blob_sha256": "f922eb853d6f7ca5ddf30d2a1f2539035e7187f1f845fa576e0b6beffc35db34",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/game30.mk": {
+      "working_bytes": {
+        "size": 230828,
+        "sha256": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de"
+      },
+      "git_blob_sha256": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de",
+      "exact_git_source": true
+    },
+    "port/dreamcast/game/crowd.mk": {
+      "working_bytes": {
+        "size": 49398,
+        "sha256": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca"
+      },
+      "git_blob_sha256": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+      "exact_git_source": true
+    },
+    "src/game/game.cpp": {
+      "working_bytes": {
+        "size": 69160,
+        "sha256": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03"
+      },
+      "git_blob_sha256": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03",
+      "exact_git_source": true
+    },
+    "port/dreamcast/room/texture_package.cpp": {
+      "working_bytes": {
+        "size": 55741,
+        "sha256": "e0c0c2fa606e117c87f19142095b5953ef5d1fbad9cb1215566e6d1995618fe5"
+      },
+      "git_blob_sha256": "e0c0c2fa606e117c87f19142095b5953ef5d1fbad9cb1215566e6d1995618fe5",
+      "exact_git_source": true
+    },
+    "port/dreamcast/tools/d367/build-r21.sh": {
+      "working_bytes": {
+        "size": 17300,
+        "sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93"
+      },
+      "git_blob_sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "exact_git_source": true
+    }
+  },
+  "terminal": {
+    "path": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/root-continuation-v1/receipt.json",
+    "identity": {
+      "size": 7434,
+      "sha256": "584ecc6dd664e35f8ba044eeaecb7d0a4cd4066b2cbe2d073a93151b742150e0"
+    }
+  },
+  "resolved": {
+    "off": {
+      "path": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/off/out/resolved-knobs.txt",
+      "identity": {
+        "size": 231238,
+        "sha256": "69ba7939a3b798a137e5cee479ff4fa3a8d34d32a8e8d2c84d955cd1e6b0c6ca"
+      },
+      "selected_exact_values": {
+        "AICA_AUDIO": "1",
+        "AICA_STREAMS": "1",
+        "DVD_FDCACHE": "0",
+        "COARSE_LEON": "1",
+        "ACTOR_TRANSACTION": "1",
+        "LEON_HAND_PACK": "1",
+        "LEON_HAND_RETAIN": "0",
+        "GC_ASSET_GATE": "0",
+        "GC_ASSET_MOTION_UNKNOWN": "0",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "MOTION_FAST_READ": "1",
+        "TEX_PACK_WINDOW": "0",
+        "KOS_CENSUS": "1"
+      }
+    },
+    "on": {
+      "path": "/dev/shm/gc-motion24-kos-census-v1-2g7teq3g/on/out/resolved-knobs.txt",
+      "identity": {
+        "size": 229969,
+        "sha256": "0c7683348c61559fa95f835a4db7be3c388b8633bdf00e6fa6dc0578ed3d0995"
+      },
+      "selected_exact_values": {
+        "AICA_AUDIO": "1",
+        "AICA_STREAMS": "1",
+        "DVD_FDCACHE": "0",
+        "COARSE_LEON": "1",
+        "ACTOR_TRANSACTION": "1",
+        "LEON_HAND_PACK": "1",
+        "LEON_HAND_RETAIN": "0",
+        "GC_ASSET_GATE": "1",
+        "GC_ASSET_MOTION_UNKNOWN": "1",
+        "GC_ASSET_CATALOG_SHA256": "0",
+        "MOTION_FAST_READ": "1",
+        "TEX_PACK_WINDOW": "0",
+        "KOS_CENSUS": "1"
+      }
+    }
+  },
+  "SDK_API_source_inspection_only": {
+    "root": "/root/work/kos-re4dc-d367",
+    "git_HEAD": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "files": {
+      "include/kos/fs.h": {
+        "size": 29006,
+        "sha256": "f149e93eb3e913001e68a91803c03cbc54f8a78101c98ceb9733aa3d31401a10"
+      },
+      "kernel/fs/fs.c": {
+        "size": 20831,
+        "sha256": "4a81efd9c3bcb13a08c802a2474eca15ea4eb6a2eec93be33ad3b0471a09ccfd"
+      },
+      "kernel/arch/dreamcast/fs/fs_iso9660.c": {
+        "size": 35768,
+        "sha256": "1edcdd8dcc0d740f4d53c57bad69e606f49358805c842336688bb507d6c318c1"
+      }
+    },
+    "historical_object_identity_not_inferred": true
+  },
+  "existing_root_metadata_hash_references_only": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-PAIR-RESULT.json": {
+      "size": 20476,
+      "sha256": "f2aa0789c085a7a8d81e405463c7eabb9d11722afee2bca9c48fdb5e0cffd70a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/caller-off-PROCESS.json": {
+      "size": 8020,
+      "sha256": "90374775ec19f293587c49f12a2479300b3af11de086fa84970bad5fe1fde240"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/caller-on-PROCESS.json": {
+      "size": 8012,
+      "sha256": "f608a9a3a1e595d5a580123d207dc7ec65c15fff5f94af095885cfd21a3b5ebe"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-STAGE-PAIR-RESULT.json": {
+      "size": 591,
+      "sha256": "05b4b90bc53c671f162231b9738eee0ee7b850d279cdac72dd46c440a10fe3ee"
+    }
+  },
+  "findings": {
+    "GC_direct_open_sites": 5,
+    "pin0_catalog_opens": 0,
+    "motion_unknown_file_opens": 0,
+    "confirmed_audio_diagnostic_extra_open_path": true,
+    "confirmed_extra_permanently_retained_fd": false,
+    "sampled_extra_fd_owner": "UNKNOWN",
+    "allocator_coverage": "UNKNOWN",
+    "original_memory_cause": "UNKNOWN"
+  },
+  "reported_not_independently_recomputed_guest_difference": {
+    "iso_open_requested_delta": 352,
+    "fs_hnd_open_requested_delta": 16,
+    "scope": "Root-reported enter census only; separate ledger readback ongoing"
+  },
+  "no_runtime_changes_or_handle_closes_or_build_or_stage_or_guest": true
+}

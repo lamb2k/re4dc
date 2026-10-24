@@ -1,0 +1,139 @@
+{
+  "scope": "Root generic source and hash-only receipts; no asset/programme/geometry/log payload",
+  "archive_construction_note": "Initial explicit list refused a nonexistent SEAL.json before staging; copied authentic files preserved, real seal names discovered in same bounded directories.",
+  "source_parent": "aab201ceac0e18107f64a3212398afe916793327",
+  "repair_source": "46154d278b8e102f590c0cb8909be7e19f3f1d5b",
+  "memory_repaired": false,
+  "screenshot_accepted": false,
+  "steady_owner": "UNKNOWN",
+  "nominal_partition75": {
+    "report_sha256": "d45d875195ae1c2cb21426a8591b93e8449b49cc3370ee8a15b9bdd848221380",
+    "all75": "UNKNOWN_NO_FIXED_SOURCE",
+    "candidate_calls": 3737,
+    "edge_upper": 269064,
+    "final_positive": 0,
+    "runtime_cuts": 0
+  },
+  "members": {
+    "takeover-refresh-20261024.py": {
+      "bytes": 12772,
+      "sha256": "315572aa486252672d47688d76a0fc77667ab5702f177c6583e9610bca3c0112",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/takeover-refresh-20261024.py"
+    },
+    "CODEX-TAKEOVER-STATUS.md": {
+      "bytes": 12533,
+      "sha256": "1c10e0b22c62c0c776cb77b8583626bcae5c5b5e991e73ec7baf2afa702b18d3",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/CODEX-TAKEOVER-STATUS.md"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/REPORT.md": {
+      "bytes": 6208,
+      "sha256": "ec979659b21bf6fd0271ada250fafe8859fd714b9a7e1cc157fcf5de7b079b85",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/REPORT.md"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/on-INDEPENDENT.json": {
+      "bytes": 11953,
+      "sha256": "ab7e146a73218a6491f6bcaef53679f2e34f0d849ae02ae62c778fb76b535715",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/on-INDEPENDENT.json"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/STATUS.md": {
+      "bytes": 567,
+      "sha256": "ff363b79206e76dbd24b4fb680a436bf6046861dc1b49cde9db57a96835fc688",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/STATUS.md"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/READBACK.json": {
+      "bytes": 63437,
+      "sha256": "8dba567224f201f7cfaf0ac652e582e532e12c2d7eb1d79d776ca769b4e5a440",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/READBACK.json"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/SOURCE-SEAL.json": {
+      "bytes": 973,
+      "sha256": "74ebb05a1db2c9cdfb8725bd21e13fe71b9b7408ed893b4bbc9cd080c4c6cb57",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/SOURCE-SEAL.json"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/readback.py": {
+      "bytes": 9809,
+      "sha256": "5cd70ebb4333427928db0cf6e3f5f74cd79348bfca2325d7a2c7eb8b149bd205",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/readback.py"
+    },
+    "gc-motion24/kos-census-attribution-readback-v1/off-INDEPENDENT.json": {
+      "bytes": 11950,
+      "sha256": "5f3faec362889801b81f59157f6f65167b0e84eb80d6df913d19463b30f759cb",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-attribution-readback-v1/off-INDEPENDENT.json"
+    },
+    "gc-motion24/kos-census-fd-source-audit-v1/REPORT.md": {
+      "bytes": 8855,
+      "sha256": "7fa585310686865208a325488d241c0e655da6390a657c44940e3f10141e9612",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-fd-source-audit-v1/REPORT.md"
+    },
+    "gc-motion24/kos-census-fd-source-audit-v1/inspect_source.py": {
+      "bytes": 2455,
+      "sha256": "2a3bbe29770946634a64b13d764d6f2311cdacea3b5e8a730761840af07ff3cd",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-fd-source-audit-v1/inspect_source.py"
+    },
+    "gc-motion24/kos-census-fd-source-audit-v1/seal_audit.py": {
+      "bytes": 4573,
+      "sha256": "87f42e49cf371cae3e77b7c3a22b1f42af4d6dbf34b1efe66b344a2fba883048",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-fd-source-audit-v1/seal_audit.py"
+    },
+    "gc-motion24/kos-census-fd-source-audit-v1/SEAL.json": {
+      "bytes": 719,
+      "sha256": "de122a57d599507fe2100c5c21f5097456789745f9a3cea3e0c5bee78692e4f0",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-fd-source-audit-v1/SEAL.json"
+    },
+    "gc-motion24/kos-census-fd-source-audit-v1/READBACK.json": {
+      "bytes": 13962,
+      "sha256": "c0e6c271c265e0d52fd26a313dfffe9aa734605872040ac21634c0fc25d82cf4",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-fd-source-audit-v1/READBACK.json"
+    },
+    "gc-motion24/kos-census-media-independent-review-v1/CLEAR.json": {
+      "bytes": 1473,
+      "sha256": "12b16b0e89aa833ce4de9105ec6191ffab26ea669d4e5462d6bba6a100abbee9",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/CLEAR.json"
+    },
+    "gc-motion24/kos-census-media-independent-review-v1/POSTSTAGE-SUMMARY.json": {
+      "bytes": 2073,
+      "sha256": "70cf08fa32676005b7f18796d2d1dafed2de2d764835a73351d832e883dfcb1a",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/POSTSTAGE-SUMMARY.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/CENSUS-ON-FULL-v1.json": {
+      "bytes": 12287,
+      "sha256": "5353e618b000e607c471a618a40feaa006941fb3ef76af04e808d19c07a90338",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/CENSUS-ON-FULL-v1.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/ROOT-STAGE-PAIR-RESULT.json": {
+      "bytes": 591,
+      "sha256": "05b4b90bc53c671f162231b9738eee0ee7b850d279cdac72dd46c440a10fe3ee",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-STAGE-PAIR-RESULT.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-PAIR-RESULT.json": {
+      "bytes": 20476,
+      "sha256": "f2aa0789c085a7a8d81e405463c7eabb9d11722afee2bca9c48fdb5e0cffd70a",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-PAIR-RESULT.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/root-caller-pair-v1.py": {
+      "bytes": 6275,
+      "sha256": "5223282af23dc18266d1d819ef997ca904057d5ac4e53a884bab51eb9f9d62f0",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/root-caller-pair-v1.py"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/CENSUS-OFF-v1.json": {
+      "bytes": 12057,
+      "sha256": "194c40ede6c54f3442e742b1996c30063b440aa1419b78ff97682ba4eee0824c",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/CENSUS-OFF-v1.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-GUEST-GRANT-v1.json": {
+      "bytes": 3484,
+      "sha256": "195f59bdb3e94945e51bfcb47b0b759f1a1abb488631a6c63a06c45e3d91992b",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-GUEST-GRANT-v1.json"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/root-caller-pair-v2.py": {
+      "bytes": 6394,
+      "sha256": "4092d7eb8f839c76125f6db98c7d298bef99c2e36e3e358251699e90b2751634",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/root-caller-pair-v2.py"
+    },
+    "gc-motion24/kos-census-media-root-review-v1/parse-full-log-v1.py": {
+      "bytes": 1699,
+      "sha256": "41e7109e8ebce2493981648be99a43aaf582f84b3eacd4bbaae21175fe62a2aa",
+      "original": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/parse-full-log-v1.py"
+    }
+  }
+}

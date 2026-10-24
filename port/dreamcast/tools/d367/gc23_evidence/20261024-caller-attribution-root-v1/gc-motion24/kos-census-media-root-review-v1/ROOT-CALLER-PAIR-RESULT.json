@@ -1,0 +1,515 @@
+{
+  "complete": true,
+  "scope": "Two serial allocation-attribution console guests only; no KOS48KiB or H2 or performance acceptance",
+  "grant_sha256": "195f59bdb3e94945e51bfcb47b0b759f1a1abb488631a6c63a06c45e3d91992b",
+  "poststage_review": {
+    "size": 2073,
+    "sha256": "70cf08fa32676005b7f18796d2d1dafed2de2d764835a73351d832e883dfcb1a"
+  },
+  "arms": {
+    "off": {
+      "argv": [
+        "/usr/bin/bash",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+        "/usr/bin/bash",
+        "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+        "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\captures\\kos-off-0-0-r1-pycache",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\census-bound-run.py",
+        "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\off",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\captures\\kos-off-0-0-r1",
+        "--syms",
+        "0x3f8100 0x408104 0x408100",
+        "--warp",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\kos-census-media-prep-v1\\fixtures\\kos-squeeze0.txt",
+        "--seconds",
+        "45",
+        "--period",
+        "25",
+        "--name",
+        "gc-motion24-kos-census-off-0-0"
+      ],
+      "environment_explicit": {
+        "RE4DC_EMU": "console",
+        "FP_NOLIMIT": "1",
+        "RE4DC_MAX_FLYCASTS": "16",
+        "RE4DC_CONSOLE_EXE": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+        "TRACE_SLOTS": "16",
+        "GC_CENSUS_GUEST_ALLOCATED": "195f59bdb3e94945e51bfcb47b0b759f1a1abb488631a6c63a06c45e3d91992b",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_utc": "2026-10-24T11:03:06.440641+00:00",
+      "returncode": 0,
+      "kernel_lock_sample": [
+        {
+          "pid": 979018,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979021,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979021,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        },
+        {
+          "pid": 979027,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979027,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        }
+      ],
+      "cap": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1",
+      "bounded": {
+        "harness": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "harness_sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+        "deadline_seconds": 55,
+        "deadline_fired": false,
+        "expected_executable": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+        "expected_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+        "pid": 12620,
+        "guest_started_monotonic": 589048.625,
+        "guest_exited": true,
+        "guest_observed_elapsed_s": 45.796,
+        "guest_rc": 1
+      },
+      "run": {
+        "name": "gc-motion24-kos-census-off-0-0",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-24T11:03:07.184966+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\off",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\off",
+          "kind": "CENSUS_DIAGNOSTIC_STAGE_ONLY",
+          "track03_sha256": "a91ccbcc6faf70f6c4ac94f5d91a50514b5706e1b8adc61e98001d37811c5dec"
+        },
+        "seconds": 45,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\kos-census-media-prep-v1\\fixtures\\kos-squeeze0.txt",
+            "bytes": 766,
+            "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+          },
+          "pad": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [
+          {
+            "kind": "screenshot",
+            "error": "No module named 'PIL'"
+          }
+        ],
+        "key_log": [],
+        "align": false,
+        "emu": "console",
+        "emu_env": {},
+        "reader_exit": 0,
+        "log_idle_s": 0.6,
+        "end_utc": "2026-10-24T11:03:53.145555+00:00",
+        "elapsed_s": 45.8,
+        "emulator_exited": true
+      },
+      "capture_files": {
+        "bounded-launch.json": {
+          "size": 656,
+          "sha256": "e82d3fe4594b6131d33915d6ab5c13a10e8f95eeb0b3929414b0a47bdf4ba6f6"
+        },
+        "capture_ui_vram.py": {
+          "size": 3725,
+          "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+        },
+        "disc.gdi": {
+          "size": 87,
+          "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+        },
+        "emu.cfg": {
+          "size": 628,
+          "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+        },
+        "fixture-warp.txt": {
+          "size": 766,
+          "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+        },
+        "flycast.exe": {
+          "size": 14416384,
+          "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+        },
+        "flycast.log": {
+          "size": 2347,
+          "sha256": "1d5b2e42443432564aefd107ed2c7dddd3681bb30ede7bd8f83053213bbd0e93"
+        },
+        "flycast.pid": {
+          "size": 5,
+          "sha256": "4d9960e7326e106744ca0c231b3901f516157da41d22e55eede244b88bb833eb"
+        },
+        "read-log.err": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "read_log.py": {
+          "size": 5311,
+          "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+        },
+        "run-output.txt": {
+          "size": 450403,
+          "sha256": "32aa8e7aceb21417a58e776cb4c60337b4ce66fbbb72b335dd4fa3144ac0e036"
+        },
+        "run-result.json": {
+          "size": 1437,
+          "sha256": "7ab1d45c4a36a0020d853a0ae69c1f76d18cd179c320063dfc7f4b4466be7e7e"
+        },
+        "serial.txt": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "syms.txt": {
+          "size": 28,
+          "sha256": "a26a18a10692bdb07dbcc1897cc45a00c6d3d8a37682b04271a9346e343f5026"
+        },
+        "data/T0000_vmu_save_A1.bin": {
+          "size": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "data/vmu_save_A2.bin": {
+          "size": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "shots/t0025/boot.log": {
+          "size": 46,
+          "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+        },
+        "shots/t0025/emu.cfg": {
+          "size": 628,
+          "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+        },
+        "shots/t0025/flycast.log": {
+          "size": 2347,
+          "sha256": "1d5b2e42443432564aefd107ed2c7dddd3681bb30ede7bd8f83053213bbd0e93"
+        },
+        "shots/t0025/flycast.pid": {
+          "size": 5,
+          "sha256": "4d9960e7326e106744ca0c231b3901f516157da41d22e55eede244b88bb833eb"
+        }
+      },
+      "complete": true,
+      "controller_elapsed_s": 48.336618053988786
+    },
+    "on": {
+      "argv": [
+        "/usr/bin/bash",
+        "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+        "/usr/bin/bash",
+        "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+        "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+        "-I",
+        "-S",
+        "-B",
+        "-X",
+        "pycache_prefix=C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\captures\\kos-on-0-0-r1-pycache",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\stat-bytes23\\census-bound-run.py",
+        "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "--base",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\on",
+        "--cap",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\captures\\kos-on-0-0-r1",
+        "--syms",
+        "0x403520 0x413524 0x413520",
+        "--warp",
+        "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\kos-census-media-prep-v1\\fixtures\\kos-squeeze0.txt",
+        "--seconds",
+        "45",
+        "--period",
+        "25",
+        "--name",
+        "gc-motion24-kos-census-on-0-0"
+      ],
+      "environment_explicit": {
+        "RE4DC_EMU": "console",
+        "FP_NOLIMIT": "1",
+        "RE4DC_MAX_FLYCASTS": "16",
+        "RE4DC_CONSOLE_EXE": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+        "TRACE_SLOTS": "16",
+        "GC_CENSUS_GUEST_ALLOCATED": "195f59bdb3e94945e51bfcb47b0b759f1a1abb488631a6c63a06c45e3d91992b",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_utc": "2026-10-24T11:03:55.850825+00:00",
+      "returncode": 0,
+      "kernel_lock_sample": [
+        {
+          "pid": 979073,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979076,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979076,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        },
+        {
+          "pid": 979082,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979082,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        }
+      ],
+      "cap": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1",
+      "bounded": {
+        "harness": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\gc-motion24-qa-memory-v2-dbqczoc8\\off\\source\\port\\dreamcast\\tools\\d367\\fullplay\\fp_run.py",
+        "harness_sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+        "deadline_seconds": 55,
+        "deadline_fired": false,
+        "expected_executable": "C:\\Flycast-Evidence\\re4-dreamcast\\flycast-console-bin\\flycast-console.exe",
+        "expected_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+        "pid": 41624,
+        "guest_started_monotonic": 589097.625,
+        "guest_exited": true,
+        "guest_observed_elapsed_s": 45.812,
+        "guest_rc": 1
+      },
+      "run": {
+        "name": "gc-motion24-kos-census-on-0-0",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-24T11:03:56.176714+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\on",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\gc-motion24-20261024\\kos-census-media-v1\\on",
+          "kind": "CENSUS_DIAGNOSTIC_STAGE_ONLY",
+          "track03_sha256": "3aa475126911316eb497504981337460325b7068bde2c3b5a11d661200ae291d"
+        },
+        "seconds": 45,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Game Dev\\Emulators\\codex-lanes\\gc-motion24\\kos-census-media-prep-v1\\fixtures\\kos-squeeze0.txt",
+            "bytes": 766,
+            "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+          },
+          "pad": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [
+          {
+            "kind": "screenshot",
+            "error": "No module named 'PIL'"
+          }
+        ],
+        "key_log": [],
+        "align": false,
+        "emu": "console",
+        "emu_env": {},
+        "reader_exit": 0,
+        "log_idle_s": 0.5,
+        "end_utc": "2026-10-24T11:04:42.167522+00:00",
+        "elapsed_s": 45.9,
+        "emulator_exited": true
+      },
+      "capture_files": {
+        "bounded-launch.json": {
+          "size": 656,
+          "sha256": "8caa0d490a26643d6d09c27cbff0ce60a42a12c39335e6f1b6e6d7cdc20abebf"
+        },
+        "capture_ui_vram.py": {
+          "size": 3725,
+          "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+        },
+        "disc.gdi": {
+          "size": 87,
+          "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+        },
+        "emu.cfg": {
+          "size": 628,
+          "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+        },
+        "fixture-warp.txt": {
+          "size": 766,
+          "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+        },
+        "flycast.exe": {
+          "size": 14416384,
+          "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+        },
+        "flycast.log": {
+          "size": 2347,
+          "sha256": "0c9bc1cd4af443f874fbf9c1de84ea2479723c925b0328d571b0bd38061dac99"
+        },
+        "flycast.pid": {
+          "size": 5,
+          "sha256": "6ea34f8ff0e18e29440a3249cfcba4965718eca80325b0d8299716aa397ff183"
+        },
+        "read-log.err": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "read_log.py": {
+          "size": 5311,
+          "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+        },
+        "run-output.txt": {
+          "size": 25011254,
+          "sha256": "c1ddd400578fdfdba4b95c416b85e13fe6e29c20a9815885433bdbcac85e01e4"
+        },
+        "run-result.json": {
+          "size": 1434,
+          "sha256": "8972fdd3fba4fa3eb8aa7f4813058377294074baa2ade991c84c1001a0cda5fa"
+        },
+        "serial.txt": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "syms.txt": {
+          "size": 28,
+          "sha256": "d4dd852efaacc46949138f9f7cc7b4be328db52b560f959439f378180a56c553"
+        },
+        "data/T0000_vmu_save_A1.bin": {
+          "size": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "data/vmu_save_A2.bin": {
+          "size": 131072,
+          "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+        },
+        "shots/t0025/boot.log": {
+          "size": 46,
+          "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+        },
+        "shots/t0025/emu.cfg": {
+          "size": 628,
+          "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+        },
+        "shots/t0025/flycast.log": {
+          "size": 2347,
+          "sha256": "0c9bc1cd4af443f874fbf9c1de84ea2479723c925b0328d571b0bd38061dac99"
+        },
+        "shots/t0025/flycast.pid": {
+          "size": 5,
+          "sha256": "6ea34f8ff0e18e29440a3249cfcba4965718eca80325b0d8299716aa397ff183"
+        }
+      },
+      "complete": true,
+      "controller_elapsed_s": 47.4323497779842
+    }
+  },
+  "template": {
+    "emu.cfg": {
+      "size": 576,
+      "sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840"
+    },
+    "read_log.py": {
+      "size": 5311,
+      "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+    },
+    "capture_ui_vram.py": {
+      "size": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    },
+    "data/T0000_vmu_save_A1.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "data/vmu_save_A2.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "helpers": {
+    "slot": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+      "identity": {
+        "size": 249,
+        "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549"
+      }
+    },
+    "bound": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py",
+      "identity": {
+        "size": 2438,
+        "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+      }
+    },
+    "console": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+      "identity": {
+        "size": 14416384,
+        "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+      }
+    },
+    "python": {
+      "path": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+      "identity": {
+        "size": 104952,
+        "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+      }
+    },
+    "trace_lock": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+      "identity": {
+        "size": 2169,
+        "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+      }
+    },
+    "harness": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_run.py",
+      "identity": {
+        "size": 15608,
+        "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+      }
+    }
+  },
+  "C_free": 40704270336,
+  "owned_bytes": 3135009842
+}

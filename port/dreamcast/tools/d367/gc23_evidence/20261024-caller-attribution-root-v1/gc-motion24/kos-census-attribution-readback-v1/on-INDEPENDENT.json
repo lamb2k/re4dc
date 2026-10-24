@@ -1,0 +1,391 @@
+{
+  "status": "BOUNDED_REQUESTED_ROWS_PARSED_COVERAGE_UNKNOWN",
+  "groups": [
+    {
+      "phase": "enter",
+      "room": "101",
+      "blocks": 60,
+      "bytes": 11942474,
+      "callers": 23,
+      "lost": 0,
+      "overflow": 0,
+      "header_line": 2467,
+      "rows": [
+        {
+          "ra": "8c1d411a",
+          "blocks": 1,
+          "bytes": 11833344,
+          "caller": {
+            "ra": "8c1d411a",
+            "call_pc": "8c1d4116",
+            "function_candidates": [
+              "_re4dc_mem_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c20cd10",
+          "blocks": 1,
+          "bytes": 65536,
+          "caller": {
+            "ra": "8c20cd10",
+            "call_pc": "8c20cd0c",
+            "function_candidates": [
+              "_fs_iso9660_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c246aec",
+          "blocks": 1,
+          "bytes": 16384,
+          "caller": {
+            "ra": "8c246aec",
+            "call_pc": "8c246ae8",
+            "function_candidates": [
+              "_maple_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24d56a",
+          "blocks": 10,
+          "bytes": 11520,
+          "caller": {
+            "ra": "8c24d56a",
+            "call_pc": "8c24d566",
+            "function_candidates": [
+              "_thd_create_ex"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24d784",
+          "blocks": 1,
+          "bytes": 4096,
+          "caller": {
+            "ra": "8c24d784",
+            "call_pc": "8c24d780",
+            "function_candidates": [
+              "_thd_create_ex"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c2464fc",
+          "blocks": 3,
+          "bytes": 3720,
+          "caller": {
+            "ra": "8c2464fc",
+            "call_pc": "8c2464f8",
+            "function_candidates": [
+              "_maple_driver_attach"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c20fe5e",
+          "blocks": 1,
+          "bytes": 1664,
+          "caller": {
+            "ra": "8c20fe5e",
+            "call_pc": "8c20fe5a",
+            "function_candidates": [
+              "_re4dc_loadind_boot"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c1cd0a8",
+          "blocks": 1,
+          "bytes": 1152,
+          "caller": {
+            "ra": "8c1cd0a8",
+            "call_pc": "8c1cd0a4",
+            "function_candidates": [
+              "__ZN12_GLOBAL__N_1L4joinEv"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c254f50",
+          "blocks": 1,
+          "bytes": 1080,
+          "caller": {
+            "ra": "8c254f50",
+            "call_pc": "8c254f4c",
+            "function_candidates": [
+              "_fs_pty_create"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c254f60",
+          "blocks": 1,
+          "bytes": 1080,
+          "caller": {
+            "ra": "8c254f60",
+            "call_pc": "8c254f5c",
+            "function_candidates": [
+              "_fs_pty_create"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c20c5c8",
+          "blocks": 3,
+          "bytes": 1056,
+          "caller": {
+            "ra": "8c20c5c8",
+            "call_pc": "8c20c5c4",
+            "function_candidates": [
+              "_iso_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c26dfb4",
+          "blocks": 1,
+          "bytes": 1024,
+          "caller": {
+            "ra": "8c26dfb4",
+            "call_pc": "8c26dfb0",
+            "function_candidates": [
+              "___smakebuf_r"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c20cd1e",
+          "blocks": 1,
+          "bytes": 256,
+          "caller": {
+            "ra": "8c20cd1e",
+            "call_pc": "8c20cd1a",
+            "function_candidates": [
+              "_fs_iso9660_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24ed16",
+          "blocks": 10,
+          "bytes": 200,
+          "caller": {
+            "ra": "8c24ed16",
+            "call_pc": "8c24ed12",
+            "function_candidates": [
+              "_vblank_handler_add"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24bb66",
+          "blocks": 8,
+          "bytes": 160,
+          "caller": {
+            "ra": "8c24bb66",
+            "call_pc": "8c24bb62",
+            "function_candidates": [
+              "_snd_mem_malloc"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c242c96",
+          "blocks": 4,
+          "bytes": 64,
+          "caller": {
+            "ra": "8c242c96",
+            "call_pc": "8c242c92",
+            "function_candidates": [
+              "_fs_hnd_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c2561fc",
+          "blocks": 1,
+          "bytes": 36,
+          "caller": {
+            "ra": "8c2561fc",
+            "call_pc": "8c2561f8",
+            "function_candidates": [
+              "_fs_ramdisk_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24e820",
+          "blocks": 4,
+          "bytes": 32,
+          "caller": {
+            "ra": "8c24e820",
+            "call_pc": "8c24e81c",
+            "function_candidates": [
+              "_arch_tls_setup_data"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c246580",
+          "blocks": 3,
+          "bytes": 32,
+          "caller": {
+            "ra": "8c246580",
+            "call_pc": "8c24657c",
+            "function_candidates": [
+              "_maple_driver_attach"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c24ba02",
+          "blocks": 1,
+          "bytes": 20,
+          "caller": {
+            "ra": "8c24ba02",
+            "call_pc": "8c24b9fe",
+            "function_candidates": [
+              "_snd_mem_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c254d00",
+          "blocks": 1,
+          "bytes": 12,
+          "caller": {
+            "ra": "8c254d00",
+            "call_pc": "8c254cfc",
+            "function_candidates": [
+              "_pty_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c2561ec",
+          "blocks": 1,
+          "bytes": 4,
+          "caller": {
+            "ra": "8c2561ec",
+            "call_pc": "8c2561e8",
+            "function_candidates": [
+              "_fs_ramdisk_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        {
+          "ra": "8c2608b8",
+          "blocks": 1,
+          "bytes": 2,
+          "caller": {
+            "ra": "8c2608b8",
+            "call_pc": "8c2608b4",
+            "function_candidates": [
+              "__strdup_r"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        }
+      ],
+      "status": "BOUNDED_REQUESTED_ROWS_ONLY",
+      "arena_context": {
+        "begin": "8c4758e0",
+        "end": "8cfbe8e0",
+        "requested": 11833344,
+        "source_line": 19
+      },
+      "heap_context": {
+        "phase": "enter",
+        "free": 6864,
+        "used": 11942908,
+        "break": 184320,
+        "line": 2466,
+        "sample_relation": "preceding lifecycle heap snapshot; sequential, not atomic with census"
+      },
+      "errors": [],
+      "arena_exclusion": {
+        "status": "AUTHENTICATED_ONE_REQUESTED_ARENA_BLOCK_EXCLUDED",
+        "requested": 11833344,
+        "ra": "8c1d411a",
+        "callsite_proof": {
+          "status": "EXACT_BINARY_ARENA_MEMALIGN_CALLSITE",
+          "ra": "8c1d411a",
+          "call_pc": "8c1d4116",
+          "literal_load": "8c1d4110",
+          "literal": "8c1d41ec",
+          "target": "8c1d3390",
+          "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+        }
+      },
+      "nonarena_requested_bytes": 109130,
+      "mallinfo_requested_residual": {
+        "status": "UNKNOWN_ALLOCATOR_OVERHEAD_OR_UNWRAPPED_OR_SEQUENTIAL_SAMPLING",
+        "used_minus_all_census_requested": 434,
+        "free": 6864,
+        "break": 184320,
+        "headroom": 191184,
+        "atomic": false,
+        "used_less_arena_requested_including_its_allocator_overhead": 109564
+      }
+    }
+  ],
+  "errors": [],
+  "valid_whole_groups": 1,
+  "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761",
+  "KOS_watch_lines": 85,
+  "steady_caller_ledger": "UNKNOWN unless an actual lifecycle census group occurs; mode1 has no periodic peak/thread report",
+  "coverage": "UNKNOWN; zero loss/overflow and row sums only authenticate the bounded requested-byte ledger",
+  "source_log_authenticity": "Separate root-owned capture/process/media binding is required; parser never authenticates a guest merely from supplied text.",
+  "memory_or_performance_or_guest_acceptance": false,
+  "arm": "on",
+  "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/run-output.txt",
+  "log_bytes": 25011254,
+  "log_sha256": "c1ddd400578fdfdba4b95c416b85e13fe6e29c20a9815885433bdbcac85e01e4"
+}

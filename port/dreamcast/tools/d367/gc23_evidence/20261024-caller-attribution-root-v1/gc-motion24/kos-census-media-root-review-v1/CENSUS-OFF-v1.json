@@ -1,0 +1,393 @@
+{
+  "status": "BOUNDED_REQUESTED_ROWS_PARSED_COVERAGE_UNKNOWN",
+  "groups": [
+    {
+      "phase": "enter",
+      "room": "101",
+      "blocks": 58,
+      "bytes": 12007642,
+      "callers": 23,
+      "lost": 0,
+      "overflow": 0,
+      "header_line": 578,
+      "rows": [
+        {
+          "ra": "8c1d3346",
+          "blocks": 1,
+          "bytes": 11898880,
+          "caller": {
+            "ra": "8c1d3346",
+            "call_pc": "8c1d3342",
+            "function_candidates": [
+              "_re4dc_mem_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c20a40c",
+          "blocks": 1,
+          "bytes": 65536,
+          "caller": {
+            "ra": "8c20a40c",
+            "call_pc": "8c20a408",
+            "function_candidates": [
+              "_fs_iso9660_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c23c3dc",
+          "blocks": 1,
+          "bytes": 16384,
+          "caller": {
+            "ra": "8c23c3dc",
+            "call_pc": "8c23c3d8",
+            "function_candidates": [
+              "_maple_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c242e5a",
+          "blocks": 10,
+          "bytes": 11520,
+          "caller": {
+            "ra": "8c242e5a",
+            "call_pc": "8c242e56",
+            "function_candidates": [
+              "_thd_create_ex"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c243074",
+          "blocks": 1,
+          "bytes": 4096,
+          "caller": {
+            "ra": "8c243074",
+            "call_pc": "8c243070",
+            "function_candidates": [
+              "_thd_create_ex"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c23bdec",
+          "blocks": 3,
+          "bytes": 3720,
+          "caller": {
+            "ra": "8c23bdec",
+            "call_pc": "8c23bde8",
+            "function_candidates": [
+              "_maple_driver_attach"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c20d55a",
+          "blocks": 1,
+          "bytes": 1664,
+          "caller": {
+            "ra": "8c20d55a",
+            "call_pc": "8c20d556",
+            "function_candidates": [
+              "_re4dc_loadind_boot"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c1cc2d4",
+          "blocks": 1,
+          "bytes": 1152,
+          "caller": {
+            "ra": "8c1cc2d4",
+            "call_pc": "8c1cc2d0",
+            "function_candidates": [
+              "__ZN12_GLOBAL__N_1L4joinEv"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c24a850",
+          "blocks": 1,
+          "bytes": 1080,
+          "caller": {
+            "ra": "8c24a850",
+            "call_pc": "8c24a84c",
+            "function_candidates": [
+              "_fs_pty_create"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c24a840",
+          "blocks": 1,
+          "bytes": 1080,
+          "caller": {
+            "ra": "8c24a840",
+            "call_pc": "8c24a83c",
+            "function_candidates": [
+              "_fs_pty_create"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c2638a4",
+          "blocks": 1,
+          "bytes": 1024,
+          "caller": {
+            "ra": "8c2638a4",
+            "call_pc": "8c2638a0",
+            "function_candidates": [
+              "___smakebuf_r"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c209cc4",
+          "blocks": 2,
+          "bytes": 704,
+          "caller": {
+            "ra": "8c209cc4",
+            "call_pc": "8c209cc0",
+            "function_candidates": [
+              "_iso_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c20a41a",
+          "blocks": 1,
+          "bytes": 256,
+          "caller": {
+            "ra": "8c20a41a",
+            "call_pc": "8c20a416",
+            "function_candidates": [
+              "_fs_iso9660_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c244606",
+          "blocks": 10,
+          "bytes": 200,
+          "caller": {
+            "ra": "8c244606",
+            "call_pc": "8c244602",
+            "function_candidates": [
+              "_vblank_handler_add"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c241456",
+          "blocks": 8,
+          "bytes": 160,
+          "caller": {
+            "ra": "8c241456",
+            "call_pc": "8c241452",
+            "function_candidates": [
+              "_snd_mem_malloc"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c238586",
+          "blocks": 3,
+          "bytes": 48,
+          "caller": {
+            "ra": "8c238586",
+            "call_pc": "8c238582",
+            "function_candidates": [
+              "_fs_hnd_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c24baec",
+          "blocks": 1,
+          "bytes": 36,
+          "caller": {
+            "ra": "8c24baec",
+            "call_pc": "8c24bae8",
+            "function_candidates": [
+              "_fs_ramdisk_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c23be70",
+          "blocks": 3,
+          "bytes": 32,
+          "caller": {
+            "ra": "8c23be70",
+            "call_pc": "8c23be6c",
+            "function_candidates": [
+              "_maple_driver_attach"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c244110",
+          "blocks": 4,
+          "bytes": 32,
+          "caller": {
+            "ra": "8c244110",
+            "call_pc": "8c24410c",
+            "function_candidates": [
+              "_arch_tls_setup_data"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c2412f2",
+          "blocks": 1,
+          "bytes": 20,
+          "caller": {
+            "ra": "8c2412f2",
+            "call_pc": "8c2412ee",
+            "function_candidates": [
+              "_snd_mem_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c24a5f0",
+          "blocks": 1,
+          "bytes": 12,
+          "caller": {
+            "ra": "8c24a5f0",
+            "call_pc": "8c24a5ec",
+            "function_candidates": [
+              "_pty_open"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c24badc",
+          "blocks": 1,
+          "bytes": 4,
+          "caller": {
+            "ra": "8c24badc",
+            "call_pc": "8c24bad8",
+            "function_candidates": [
+              "_fs_ramdisk_init"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        {
+          "ra": "8c2561a8",
+          "blocks": 1,
+          "bytes": 2,
+          "caller": {
+            "ra": "8c2561a8",
+            "call_pc": "8c2561a4",
+            "function_candidates": [
+              "__strdup_r"
+            ],
+            "unique_function": true,
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        }
+      ],
+      "status": "BOUNDED_REQUESTED_ROWS_ONLY",
+      "arena_context": {
+        "begin": "8c4662c0",
+        "end": "8cfbf2c0",
+        "requested": 11898880,
+        "source_line": 19
+      },
+      "heap_context": {
+        "phase": "enter",
+        "free": 8656,
+        "used": 12008220,
+        "break": 180224,
+        "line": 577,
+        "sample_relation": "preceding lifecycle heap snapshot; sequential, not atomic with census"
+      },
+      "errors": [],
+      "arena_exclusion": {
+        "status": "AUTHENTICATED_ONE_REQUESTED_ARENA_BLOCK_EXCLUDED",
+        "requested": 11898880,
+        "ra": "8c1d3346",
+        "callsite_proof": {
+          "status": "EXACT_BINARY_ARENA_MEMALIGN_CALLSITE",
+          "ra": "8c1d3346",
+          "call_pc": "8c1d3342",
+          "literal_load": "8c1d333c",
+          "literal": "8c1d3418",
+          "target": "8c1d25bc",
+          "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+        }
+      },
+      "nonarena_requested_bytes": 108762,
+      "mallinfo_requested_residual": {
+        "status": "UNKNOWN_ALLOCATOR_OVERHEAD_OR_UNWRAPPED_OR_SEQUENTIAL_SAMPLING",
+        "used_minus_all_census_requested": 578,
+        "free": 8656,
+        "break": 180224,
+        "headroom": 188880,
+        "atomic": false,
+        "used_less_arena_requested_including_its_allocator_overhead": 109340
+      }
+    }
+  ],
+  "errors": [],
+  "valid_whole_groups": 1,
+  "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2",
+  "KOS_watch_lines": 92,
+  "steady_caller_ledger": "UNKNOWN unless an actual lifecycle census group occurs; mode1 has no periodic peak/thread report",
+  "coverage": "UNKNOWN; zero loss/overflow and row sums only authenticate the bounded requested-byte ledger",
+  "source_log_authenticity": "Separate root-owned capture/process/media binding is required; parser never authenticates a guest merely from supplied text.",
+  "memory_or_performance_or_guest_acceptance": false,
+  "binding_sha256": "1dc5998b5c4426b73706d2df56bd3a8158f98570bbb5485cb2f68ba49d6867eb",
+  "arm": "off",
+  "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/run-output.txt",
+  "log_bytes": 450403,
+  "log_sha256": "32aa8e7aceb21417a58e776cb4c60337b4ce66fbbb72b335dd4fa3144ac0e036",
+  "follow_for": 0
+}

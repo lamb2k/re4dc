@@ -1,0 +1,30 @@
+{
+  "schema": "actual-census-attribution-independent-readback-v1",
+  "files": {
+    "READBACK.json": {
+      "size": 63437,
+      "sha256": "8dba567224f201f7cfaf0ac652e582e532e12c2d7eb1d79d776ca769b4e5a440"
+    },
+    "REPORT.md": {
+      "size": 6208,
+      "sha256": "ec979659b21bf6fd0271ada250fafe8859fd714b9a7e1cc157fcf5de7b079b85"
+    },
+    "STATUS.md": {
+      "size": 567,
+      "sha256": "ff363b79206e76dbd24b4fb680a436bf6046861dc1b49cde9db57a96835fc688"
+    },
+    "off-INDEPENDENT.json": {
+      "size": 11950,
+      "sha256": "5f3faec362889801b81f59157f6f65167b0e84eb80d6df913d19463b30f759cb"
+    },
+    "on-INDEPENDENT.json": {
+      "size": 11953,
+      "sha256": "ab7e146a73218a6491f6bcaef53679f2e34f0d849ae02ae62c778fb76b535715"
+    },
+    "readback.py": {
+      "size": 9809,
+      "sha256": "5cd70ebb4333427928db0cf6e3f5f74cd79348bfca2325d7a2c7eb8b149bd205"
+    }
+  },
+  "seal_sha256": "5cffc8d40f7e747d0727bed463960352bf5793ba8048c43efea59f9c1a84722c"
+}

@@ -1,0 +1,98 @@
+{
+  "scope": "Two serial allocation-attribution console guests only; no KOS48KiB or H2 or performance acceptance",
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "proposal": {
+    "size": 6746,
+    "sha256": "dd6b9ca67ec7fc0640889d796f6ce662cd793ccd3ed1468cc36c5ee6cf10c52c"
+  },
+  "kit_seal": {
+    "size": 4321,
+    "sha256": "812c92f2eb0ec29a41051754e16c44de87a8ea7bfeebd066da0ac41524e11a3c"
+  },
+  "binding": {
+    "size": 10666,
+    "sha256": "1dc5998b5c4426b73706d2df56bd3a8158f98570bbb5485cb2f68ba49d6867eb"
+  },
+  "helpers": {
+    "slot": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh",
+      "identity": {
+        "size": 249,
+        "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549"
+      }
+    },
+    "bound": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py",
+      "identity": {
+        "size": 2438,
+        "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+      }
+    },
+    "console": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe",
+      "identity": {
+        "size": 14416384,
+        "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+      }
+    },
+    "python": {
+      "path": "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+      "identity": {
+        "size": 104952,
+        "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+      }
+    },
+    "trace_lock": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh",
+      "identity": {
+        "size": 2169,
+        "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+      }
+    },
+    "harness": {
+      "path": "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_run.py",
+      "identity": {
+        "size": 15608,
+        "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+      }
+    }
+  },
+  "template": {
+    "emu.cfg": {
+      "size": 576,
+      "sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840"
+    },
+    "read_log.py": {
+      "size": 5311,
+      "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+    },
+    "capture_ui_vram.py": {
+      "size": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    },
+    "data/T0000_vmu_save_A1.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "data/vmu_save_A2.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "fixture": {
+    "size": 766,
+    "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+  },
+  "harness_seconds": 45,
+  "exact_child_seconds": 55,
+  "own_guests": 1,
+  "total_guests": 2,
+  "root_pool": 3,
+  "global_pool": 16,
+  "held": 0,
+  "fragment": 0,
+  "FP_NOLIMIT": "1 diagnostic only",
+  "amendment": "Set --period25 instead of0 to preserve one diagnostic screenshot per arm; no pixel-equivalence claim. Windows parent uses -I -S -B and fresh never-written pycache prefix.",
+  "fresh_H2_exception": false,
+  "requires_independent_poststage_readback": true
+}

@@ -1,0 +1,23 @@
+{
+  "source": "aab201ceac0e18107f64a3212398afe916793327",
+  "status": "SOURCE_AUDIT_COMPLETE_NO_CONFIRMED_PERSISTENT_DIAGNOSTIC_FD",
+  "members": {
+    "READBACK.json": {
+      "size": 13962,
+      "sha256": "c0e6c271c265e0d52fd26a313dfffe9aa734605872040ac21634c0fc25d82cf4"
+    },
+    "REPORT.md": {
+      "size": 8855,
+      "sha256": "7fa585310686865208a325488d241c0e655da6390a657c44940e3f10141e9612"
+    },
+    "inspect_source.py": {
+      "size": 2455,
+      "sha256": "2a3bbe29770946634a64b13d764d6f2311cdacea3b5e8a730761840af07ff3cd"
+    },
+    "seal_audit.py": {
+      "size": 4573,
+      "sha256": "87f42e49cf371cae3e77b7c3a22b1f42af4d6dbf34b1efe66b344a2fba883048"
+    }
+  },
+  "no_runtime_acceptance": true
+}

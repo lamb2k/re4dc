@@ -1,0 +1,1737 @@
+{
+  "decision": "CLEAR_BOUND_ENTER_REQUESTED_LEDGER_ONLY_STEADY_OWNER_UNKNOWN",
+  "root_receipt_identity": {
+    "size": 20476,
+    "sha256": "f2aa0789c085a7a8d81e405463c7eabb9d11722afee2bca9c48fdb5e0cffd70a"
+  },
+  "observations": {
+    "off": {
+      "pid": 12620,
+      "elapsed": 45.796,
+      "guest_rc": 1,
+      "log_bytes": 450403,
+      "log_sha256": "32aa8e7aceb21417a58e776cb4c60337b4ce66fbbb72b335dd4fa3144ac0e036",
+      "lines": 5076,
+      "groups": 1,
+      "census_group": {
+        "phase": "enter",
+        "room": "101",
+        "blocks": 58,
+        "bytes": 12007642,
+        "callers": 23,
+        "lost": 0,
+        "overflow": 0,
+        "header_line": 578,
+        "rows": [
+          {
+            "ra": "8c1d3346",
+            "blocks": 1,
+            "bytes": 11898880,
+            "caller": {
+              "ra": "8c1d3346",
+              "call_pc": "8c1d3342",
+              "function_candidates": [
+                "_re4dc_mem_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c20a40c",
+            "blocks": 1,
+            "bytes": 65536,
+            "caller": {
+              "ra": "8c20a40c",
+              "call_pc": "8c20a408",
+              "function_candidates": [
+                "_fs_iso9660_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c23c3dc",
+            "blocks": 1,
+            "bytes": 16384,
+            "caller": {
+              "ra": "8c23c3dc",
+              "call_pc": "8c23c3d8",
+              "function_candidates": [
+                "_maple_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c242e5a",
+            "blocks": 10,
+            "bytes": 11520,
+            "caller": {
+              "ra": "8c242e5a",
+              "call_pc": "8c242e56",
+              "function_candidates": [
+                "_thd_create_ex"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c243074",
+            "blocks": 1,
+            "bytes": 4096,
+            "caller": {
+              "ra": "8c243074",
+              "call_pc": "8c243070",
+              "function_candidates": [
+                "_thd_create_ex"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c23bdec",
+            "blocks": 3,
+            "bytes": 3720,
+            "caller": {
+              "ra": "8c23bdec",
+              "call_pc": "8c23bde8",
+              "function_candidates": [
+                "_maple_driver_attach"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c20d55a",
+            "blocks": 1,
+            "bytes": 1664,
+            "caller": {
+              "ra": "8c20d55a",
+              "call_pc": "8c20d556",
+              "function_candidates": [
+                "_re4dc_loadind_boot"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c1cc2d4",
+            "blocks": 1,
+            "bytes": 1152,
+            "caller": {
+              "ra": "8c1cc2d4",
+              "call_pc": "8c1cc2d0",
+              "function_candidates": [
+                "__ZN12_GLOBAL__N_1L4joinEv"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c24a850",
+            "blocks": 1,
+            "bytes": 1080,
+            "caller": {
+              "ra": "8c24a850",
+              "call_pc": "8c24a84c",
+              "function_candidates": [
+                "_fs_pty_create"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c24a840",
+            "blocks": 1,
+            "bytes": 1080,
+            "caller": {
+              "ra": "8c24a840",
+              "call_pc": "8c24a83c",
+              "function_candidates": [
+                "_fs_pty_create"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c2638a4",
+            "blocks": 1,
+            "bytes": 1024,
+            "caller": {
+              "ra": "8c2638a4",
+              "call_pc": "8c2638a0",
+              "function_candidates": [
+                "___smakebuf_r"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c209cc4",
+            "blocks": 2,
+            "bytes": 704,
+            "caller": {
+              "ra": "8c209cc4",
+              "call_pc": "8c209cc0",
+              "function_candidates": [
+                "_iso_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c20a41a",
+            "blocks": 1,
+            "bytes": 256,
+            "caller": {
+              "ra": "8c20a41a",
+              "call_pc": "8c20a416",
+              "function_candidates": [
+                "_fs_iso9660_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c244606",
+            "blocks": 10,
+            "bytes": 200,
+            "caller": {
+              "ra": "8c244606",
+              "call_pc": "8c244602",
+              "function_candidates": [
+                "_vblank_handler_add"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c241456",
+            "blocks": 8,
+            "bytes": 160,
+            "caller": {
+              "ra": "8c241456",
+              "call_pc": "8c241452",
+              "function_candidates": [
+                "_snd_mem_malloc"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c238586",
+            "blocks": 3,
+            "bytes": 48,
+            "caller": {
+              "ra": "8c238586",
+              "call_pc": "8c238582",
+              "function_candidates": [
+                "_fs_hnd_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c24baec",
+            "blocks": 1,
+            "bytes": 36,
+            "caller": {
+              "ra": "8c24baec",
+              "call_pc": "8c24bae8",
+              "function_candidates": [
+                "_fs_ramdisk_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c23be70",
+            "blocks": 3,
+            "bytes": 32,
+            "caller": {
+              "ra": "8c23be70",
+              "call_pc": "8c23be6c",
+              "function_candidates": [
+                "_maple_driver_attach"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c244110",
+            "blocks": 4,
+            "bytes": 32,
+            "caller": {
+              "ra": "8c244110",
+              "call_pc": "8c24410c",
+              "function_candidates": [
+                "_arch_tls_setup_data"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c2412f2",
+            "blocks": 1,
+            "bytes": 20,
+            "caller": {
+              "ra": "8c2412f2",
+              "call_pc": "8c2412ee",
+              "function_candidates": [
+                "_snd_mem_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c24a5f0",
+            "blocks": 1,
+            "bytes": 12,
+            "caller": {
+              "ra": "8c24a5f0",
+              "call_pc": "8c24a5ec",
+              "function_candidates": [
+                "_pty_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c24badc",
+            "blocks": 1,
+            "bytes": 4,
+            "caller": {
+              "ra": "8c24badc",
+              "call_pc": "8c24bad8",
+              "function_candidates": [
+                "_fs_ramdisk_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          },
+          {
+            "ra": "8c2561a8",
+            "blocks": 1,
+            "bytes": 2,
+            "caller": {
+              "ra": "8c2561a8",
+              "call_pc": "8c2561a4",
+              "function_candidates": [
+                "__strdup_r"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+            }
+          }
+        ],
+        "status": "BOUNDED_REQUESTED_ROWS_ONLY",
+        "arena_context": {
+          "begin": "8c4662c0",
+          "end": "8cfbf2c0",
+          "requested": 11898880,
+          "source_line": 19
+        },
+        "heap_context": {
+          "phase": "enter",
+          "free": 8656,
+          "used": 12008220,
+          "break": 180224,
+          "line": 577,
+          "sample_relation": "preceding lifecycle heap snapshot; sequential, not atomic with census"
+        },
+        "errors": [],
+        "arena_exclusion": {
+          "status": "AUTHENTICATED_ONE_REQUESTED_ARENA_BLOCK_EXCLUDED",
+          "requested": 11898880,
+          "ra": "8c1d3346",
+          "callsite_proof": {
+            "status": "EXACT_BINARY_ARENA_MEMALIGN_CALLSITE",
+            "ra": "8c1d3346",
+            "call_pc": "8c1d3342",
+            "literal_load": "8c1d333c",
+            "literal": "8c1d3418",
+            "target": "8c1d25bc",
+            "ELF_sha256": "5edbbdda44eba9da38b7ada8db0543f9d2d2cdd7eeb158182fc2cae5f8422ea2"
+          }
+        },
+        "nonarena_requested_bytes": 108762,
+        "mallinfo_requested_residual": {
+          "status": "UNKNOWN_ALLOCATOR_OVERHEAD_OR_UNWRAPPED_OR_SEQUENTIAL_SAMPLING",
+          "used_minus_all_census_requested": 578,
+          "free": 8656,
+          "break": 180224,
+          "headroom": 188880,
+          "atomic": false,
+          "used_less_arena_requested_including_its_allocator_overhead": 109340
+        }
+      },
+      "aggregate_by_function": {
+        "_re4dc_mem_init": {
+          "blocks": 1,
+          "bytes": 11898880
+        },
+        "_fs_iso9660_init": {
+          "blocks": 2,
+          "bytes": 65792
+        },
+        "_maple_init": {
+          "blocks": 1,
+          "bytes": 16384
+        },
+        "_thd_create_ex": {
+          "blocks": 11,
+          "bytes": 15616
+        },
+        "_maple_driver_attach": {
+          "blocks": 6,
+          "bytes": 3752
+        },
+        "_re4dc_loadind_boot": {
+          "blocks": 1,
+          "bytes": 1664
+        },
+        "__ZN12_GLOBAL__N_1L4joinEv": {
+          "blocks": 1,
+          "bytes": 1152
+        },
+        "_fs_pty_create": {
+          "blocks": 2,
+          "bytes": 2160
+        },
+        "___smakebuf_r": {
+          "blocks": 1,
+          "bytes": 1024
+        },
+        "_iso_open": {
+          "blocks": 2,
+          "bytes": 704
+        },
+        "_vblank_handler_add": {
+          "blocks": 10,
+          "bytes": 200
+        },
+        "_snd_mem_malloc": {
+          "blocks": 8,
+          "bytes": 160
+        },
+        "_fs_hnd_open": {
+          "blocks": 3,
+          "bytes": 48
+        },
+        "_fs_ramdisk_init": {
+          "blocks": 2,
+          "bytes": 40
+        },
+        "_arch_tls_setup_data": {
+          "blocks": 4,
+          "bytes": 32
+        },
+        "_snd_mem_init": {
+          "blocks": 1,
+          "bytes": 20
+        },
+        "_pty_open": {
+          "blocks": 1,
+          "bytes": 12
+        },
+        "__strdup_r": {
+          "blocks": 1,
+          "bytes": 2
+        }
+      },
+      "lifecycle_lines": [
+        {
+          "line": 576,
+          "text": "room lifecycle: phase=enter room=101 generation=1 frames=0 heap4=8c8b82a0-8cfbf2c0 size=7368736 free=7323424 heap_check=ok native4=2/45088 stale=0 refused=0\r"
+        },
+        {
+          "line": 577,
+          "text": "room lifecycle: phase=enter vram_free=2510080 kos_free=8656 kos_used=12008220 kos_break=180224 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4\r"
+        }
+      ],
+      "squeeze_lines": [
+        {
+          "line": 21,
+          "text": "kos squeeze: held=0 requested=0 frag=0 pieces=0 headroom 200016 -> 200016 (free 3408 -> 3408, break 196608 -> 196608)\r"
+        }
+      ],
+      "alert_lines": [
+        {
+          "line": 2690,
+          "text": "warp: alert at room frame 30 (entry 1) pl=-7916,0,1997 vbl=1278 wall_ms=21607\r"
+        }
+      ],
+      "census_raw_lines": [
+        {
+          "line": 578,
+          "text": "kos census: phase=enter room=101 blocks=58 bytes=12007642 callers=23 lost=0 overflow=0\r"
+        },
+        {
+          "line": 579,
+          "text": "kos census: phase=enter room=101 ra=8c1d3346 blocks=1 bytes=11898880\r"
+        },
+        {
+          "line": 580,
+          "text": "kos census: phase=enter room=101 ra=8c20a40c blocks=1 bytes=65536\r"
+        },
+        {
+          "line": 581,
+          "text": "kos census: phase=enter room=101 ra=8c23c3dc blocks=1 bytes=16384\r"
+        },
+        {
+          "line": 582,
+          "text": "kos census: phase=enter room=101 ra=8c242e5a blocks=10 bytes=11520\r"
+        },
+        {
+          "line": 583,
+          "text": "kos census: phase=enter room=101 ra=8c243074 blocks=1 bytes=4096\r"
+        },
+        {
+          "line": 584,
+          "text": "kos census: phase=enter room=101 ra=8c23bdec blocks=3 bytes=3720\r"
+        },
+        {
+          "line": 585,
+          "text": "kos census: phase=enter room=101 ra=8c20d55a blocks=1 bytes=1664\r"
+        },
+        {
+          "line": 586,
+          "text": "kos census: phase=enter room=101 ra=8c1cc2d4 blocks=1 bytes=1152\r"
+        },
+        {
+          "line": 587,
+          "text": "kos census: phase=enter room=101 ra=8c24a850 blocks=1 bytes=1080\r"
+        },
+        {
+          "line": 588,
+          "text": "kos census: phase=enter room=101 ra=8c24a840 blocks=1 bytes=1080\r"
+        },
+        {
+          "line": 589,
+          "text": "kos census: phase=enter room=101 ra=8c2638a4 blocks=1 bytes=1024\r"
+        },
+        {
+          "line": 590,
+          "text": "kos census: phase=enter room=101 ra=8c209cc4 blocks=2 bytes=704\r"
+        },
+        {
+          "line": 591,
+          "text": "kos census: phase=enter room=101 ra=8c20a41a blocks=1 bytes=256\r"
+        },
+        {
+          "line": 592,
+          "text": "kos census: phase=enter room=101 ra=8c244606 blocks=10 bytes=200\r"
+        },
+        {
+          "line": 593,
+          "text": "kos census: phase=enter room=101 ra=8c241456 blocks=8 bytes=160\r"
+        },
+        {
+          "line": 594,
+          "text": "kos census: phase=enter room=101 ra=8c238586 blocks=3 bytes=48\r"
+        },
+        {
+          "line": 595,
+          "text": "kos census: phase=enter room=101 ra=8c24baec blocks=1 bytes=36\r"
+        },
+        {
+          "line": 596,
+          "text": "kos census: phase=enter room=101 ra=8c23be70 blocks=3 bytes=32\r"
+        },
+        {
+          "line": 597,
+          "text": "kos census: phase=enter room=101 ra=8c244110 blocks=4 bytes=32\r"
+        },
+        {
+          "line": 598,
+          "text": "kos census: phase=enter room=101 ra=8c2412f2 blocks=1 bytes=20\r"
+        },
+        {
+          "line": 599,
+          "text": "kos census: phase=enter room=101 ra=8c24a5f0 blocks=1 bytes=12\r"
+        },
+        {
+          "line": 600,
+          "text": "kos census: phase=enter room=101 ra=8c24badc blocks=1 bytes=4\r"
+        },
+        {
+          "line": 601,
+          "text": "kos census: phase=enter room=101 ra=8c2561a8 blocks=1 bytes=2\r"
+        }
+      ],
+      "run_errors": [
+        {
+          "kind": "screenshot",
+          "error": "No module named 'PIL'"
+        }
+      ],
+      "asset_error_counts": {},
+      "first_asset_error": null,
+      "last_log_lines": [
+        {
+          "line": 5071,
+          "text": "w11 frame: phase=game frames=60 mean_us=33445 max_us=38778 heap12=-1\r"
+        },
+        {
+          "line": 5072,
+          "text": "COARSE t=5221 frames=120 pieces=0 blocks=0 polys=0 backs=0 hidden=0 tris=0 verts=0/0 clipped=0 actors=0 seg=0 fx=0 us=6455/8965\r"
+        },
+        {
+          "line": 5073,
+          "text": "PS2DYN frame=5222 room=101 binds=15 hidden=0 moved=0 overflow=0\r"
+        },
+        {
+          "line": 5074,
+          "text": "PACE vmu t=5223 win_vb=60 drawn=30 gpu_n=30 gpu_avg_us=7501 gpu_max_us=7503 gpu_busy=22% wait_n=30 wait_avg_us=1 wait_max_us=1 reg_n=30 reg_avg_us=16656 page=FPS 29.9|SPD 100%|CPU 62%|GPU 8/8 A|MODE fast\r"
+        },
+        {
+          "line": 5075,
+          "text": "[end: head=445134 stage=8195 overruns=0]\r"
+        },
+        {
+          "line": 5076,
+          "text": "[capture stop reason=deadline elapsed=45.001]\r"
+        }
+      ],
+      "kos_watch_first_last": [
+        {
+          "line": 466,
+          "text": "kos watch: frame=86 free=2064 used=12006620 break=188416 headroom=190480 min=190480 top=189680 holes=800\r"
+        },
+        {
+          "line": 5070,
+          "text": "kos watch: frame=5220 free=2872 used=12145076 break=49152 headroom=52024 min=52024 top=49888 holes=2136\r"
+        }
+      ],
+      "kos_watch_min_headroom": 52024,
+      "kernel_lock_sample": [
+        {
+          "pid": 979018,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979021,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979021,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        },
+        {
+          "pid": 979027,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979027,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        }
+      ]
+    },
+    "on": {
+      "pid": 41624,
+      "elapsed": 45.812,
+      "guest_rc": 1,
+      "log_bytes": 25011254,
+      "log_sha256": "c1ddd400578fdfdba4b95c416b85e13fe6e29c20a9815885433bdbcac85e01e4",
+      "lines": 499210,
+      "groups": 1,
+      "census_group": {
+        "phase": "enter",
+        "room": "101",
+        "blocks": 60,
+        "bytes": 11942474,
+        "callers": 23,
+        "lost": 0,
+        "overflow": 0,
+        "header_line": 2467,
+        "rows": [
+          {
+            "ra": "8c1d411a",
+            "blocks": 1,
+            "bytes": 11833344,
+            "caller": {
+              "ra": "8c1d411a",
+              "call_pc": "8c1d4116",
+              "function_candidates": [
+                "_re4dc_mem_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c20cd10",
+            "blocks": 1,
+            "bytes": 65536,
+            "caller": {
+              "ra": "8c20cd10",
+              "call_pc": "8c20cd0c",
+              "function_candidates": [
+                "_fs_iso9660_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c246aec",
+            "blocks": 1,
+            "bytes": 16384,
+            "caller": {
+              "ra": "8c246aec",
+              "call_pc": "8c246ae8",
+              "function_candidates": [
+                "_maple_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24d56a",
+            "blocks": 10,
+            "bytes": 11520,
+            "caller": {
+              "ra": "8c24d56a",
+              "call_pc": "8c24d566",
+              "function_candidates": [
+                "_thd_create_ex"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24d784",
+            "blocks": 1,
+            "bytes": 4096,
+            "caller": {
+              "ra": "8c24d784",
+              "call_pc": "8c24d780",
+              "function_candidates": [
+                "_thd_create_ex"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c2464fc",
+            "blocks": 3,
+            "bytes": 3720,
+            "caller": {
+              "ra": "8c2464fc",
+              "call_pc": "8c2464f8",
+              "function_candidates": [
+                "_maple_driver_attach"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c20fe5e",
+            "blocks": 1,
+            "bytes": 1664,
+            "caller": {
+              "ra": "8c20fe5e",
+              "call_pc": "8c20fe5a",
+              "function_candidates": [
+                "_re4dc_loadind_boot"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c1cd0a8",
+            "blocks": 1,
+            "bytes": 1152,
+            "caller": {
+              "ra": "8c1cd0a8",
+              "call_pc": "8c1cd0a4",
+              "function_candidates": [
+                "__ZN12_GLOBAL__N_1L4joinEv"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c254f50",
+            "blocks": 1,
+            "bytes": 1080,
+            "caller": {
+              "ra": "8c254f50",
+              "call_pc": "8c254f4c",
+              "function_candidates": [
+                "_fs_pty_create"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c254f60",
+            "blocks": 1,
+            "bytes": 1080,
+            "caller": {
+              "ra": "8c254f60",
+              "call_pc": "8c254f5c",
+              "function_candidates": [
+                "_fs_pty_create"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c20c5c8",
+            "blocks": 3,
+            "bytes": 1056,
+            "caller": {
+              "ra": "8c20c5c8",
+              "call_pc": "8c20c5c4",
+              "function_candidates": [
+                "_iso_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c26dfb4",
+            "blocks": 1,
+            "bytes": 1024,
+            "caller": {
+              "ra": "8c26dfb4",
+              "call_pc": "8c26dfb0",
+              "function_candidates": [
+                "___smakebuf_r"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c20cd1e",
+            "blocks": 1,
+            "bytes": 256,
+            "caller": {
+              "ra": "8c20cd1e",
+              "call_pc": "8c20cd1a",
+              "function_candidates": [
+                "_fs_iso9660_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24ed16",
+            "blocks": 10,
+            "bytes": 200,
+            "caller": {
+              "ra": "8c24ed16",
+              "call_pc": "8c24ed12",
+              "function_candidates": [
+                "_vblank_handler_add"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24bb66",
+            "blocks": 8,
+            "bytes": 160,
+            "caller": {
+              "ra": "8c24bb66",
+              "call_pc": "8c24bb62",
+              "function_candidates": [
+                "_snd_mem_malloc"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c242c96",
+            "blocks": 4,
+            "bytes": 64,
+            "caller": {
+              "ra": "8c242c96",
+              "call_pc": "8c242c92",
+              "function_candidates": [
+                "_fs_hnd_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c2561fc",
+            "blocks": 1,
+            "bytes": 36,
+            "caller": {
+              "ra": "8c2561fc",
+              "call_pc": "8c2561f8",
+              "function_candidates": [
+                "_fs_ramdisk_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24e820",
+            "blocks": 4,
+            "bytes": 32,
+            "caller": {
+              "ra": "8c24e820",
+              "call_pc": "8c24e81c",
+              "function_candidates": [
+                "_arch_tls_setup_data"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c246580",
+            "blocks": 3,
+            "bytes": 32,
+            "caller": {
+              "ra": "8c246580",
+              "call_pc": "8c24657c",
+              "function_candidates": [
+                "_maple_driver_attach"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c24ba02",
+            "blocks": 1,
+            "bytes": 20,
+            "caller": {
+              "ra": "8c24ba02",
+              "call_pc": "8c24b9fe",
+              "function_candidates": [
+                "_snd_mem_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c254d00",
+            "blocks": 1,
+            "bytes": 12,
+            "caller": {
+              "ra": "8c254d00",
+              "call_pc": "8c254cfc",
+              "function_candidates": [
+                "_pty_open"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c2561ec",
+            "blocks": 1,
+            "bytes": 4,
+            "caller": {
+              "ra": "8c2561ec",
+              "call_pc": "8c2561e8",
+              "function_candidates": [
+                "_fs_ramdisk_init"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          },
+          {
+            "ra": "8c2608b8",
+            "blocks": 1,
+            "bytes": 2,
+            "caller": {
+              "ra": "8c2608b8",
+              "call_pc": "8c2608b4",
+              "function_candidates": [
+                "__strdup_r"
+              ],
+              "unique_function": true,
+              "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+            }
+          }
+        ],
+        "status": "BOUNDED_REQUESTED_ROWS_ONLY",
+        "arena_context": {
+          "begin": "8c4758e0",
+          "end": "8cfbe8e0",
+          "requested": 11833344,
+          "source_line": 19
+        },
+        "heap_context": {
+          "phase": "enter",
+          "free": 6864,
+          "used": 11942908,
+          "break": 184320,
+          "line": 2466,
+          "sample_relation": "preceding lifecycle heap snapshot; sequential, not atomic with census"
+        },
+        "errors": [],
+        "arena_exclusion": {
+          "status": "AUTHENTICATED_ONE_REQUESTED_ARENA_BLOCK_EXCLUDED",
+          "requested": 11833344,
+          "ra": "8c1d411a",
+          "callsite_proof": {
+            "status": "EXACT_BINARY_ARENA_MEMALIGN_CALLSITE",
+            "ra": "8c1d411a",
+            "call_pc": "8c1d4116",
+            "literal_load": "8c1d4110",
+            "literal": "8c1d41ec",
+            "target": "8c1d3390",
+            "ELF_sha256": "1c4d8c6daf709825c6ab89b6bde2ef74bed7f6d911cec3c75fe6da1812f68761"
+          }
+        },
+        "nonarena_requested_bytes": 109130,
+        "mallinfo_requested_residual": {
+          "status": "UNKNOWN_ALLOCATOR_OVERHEAD_OR_UNWRAPPED_OR_SEQUENTIAL_SAMPLING",
+          "used_minus_all_census_requested": 434,
+          "free": 6864,
+          "break": 184320,
+          "headroom": 191184,
+          "atomic": false,
+          "used_less_arena_requested_including_its_allocator_overhead": 109564
+        }
+      },
+      "aggregate_by_function": {
+        "_re4dc_mem_init": {
+          "blocks": 1,
+          "bytes": 11833344
+        },
+        "_fs_iso9660_init": {
+          "blocks": 2,
+          "bytes": 65792
+        },
+        "_maple_init": {
+          "blocks": 1,
+          "bytes": 16384
+        },
+        "_thd_create_ex": {
+          "blocks": 11,
+          "bytes": 15616
+        },
+        "_maple_driver_attach": {
+          "blocks": 6,
+          "bytes": 3752
+        },
+        "_re4dc_loadind_boot": {
+          "blocks": 1,
+          "bytes": 1664
+        },
+        "__ZN12_GLOBAL__N_1L4joinEv": {
+          "blocks": 1,
+          "bytes": 1152
+        },
+        "_fs_pty_create": {
+          "blocks": 2,
+          "bytes": 2160
+        },
+        "_iso_open": {
+          "blocks": 3,
+          "bytes": 1056
+        },
+        "___smakebuf_r": {
+          "blocks": 1,
+          "bytes": 1024
+        },
+        "_vblank_handler_add": {
+          "blocks": 10,
+          "bytes": 200
+        },
+        "_snd_mem_malloc": {
+          "blocks": 8,
+          "bytes": 160
+        },
+        "_fs_hnd_open": {
+          "blocks": 4,
+          "bytes": 64
+        },
+        "_fs_ramdisk_init": {
+          "blocks": 2,
+          "bytes": 40
+        },
+        "_arch_tls_setup_data": {
+          "blocks": 4,
+          "bytes": 32
+        },
+        "_snd_mem_init": {
+          "blocks": 1,
+          "bytes": 20
+        },
+        "_pty_open": {
+          "blocks": 1,
+          "bytes": 12
+        },
+        "__strdup_r": {
+          "blocks": 1,
+          "bytes": 2
+        }
+      },
+      "lifecycle_lines": [
+        {
+          "line": 2465,
+          "text": "room lifecycle: phase=enter room=101 generation=1 frames=0 heap4=8c8c78c0-8cfbe8e0 size=7303200 free=7257888 heap_check=ok native4=2/45088 stale=0 refused=0\r"
+        },
+        {
+          "line": 2466,
+          "text": "room lifecycle: phase=enter vram_free=2510080 kos_free=6864 kos_used=11942908 kos_break=184320 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4\r"
+        }
+      ],
+      "squeeze_lines": [
+        {
+          "line": 21,
+          "text": "kos squeeze: held=0 requested=0 frag=0 pieces=0 headroom 202544 -> 202544 (free 1840 -> 1840, break 200704 -> 200704)\r"
+        }
+      ],
+      "alert_lines": [
+        {
+          "line": 8189,
+          "text": "warp: alert at room frame 30 (entry 1) pl=-7916,0,1997 vbl=2677 wall_ms=45004\r"
+        }
+      ],
+      "census_raw_lines": [
+        {
+          "line": 2467,
+          "text": "kos census: phase=enter room=101 blocks=60 bytes=11942474 callers=23 lost=0 overflow=0\r"
+        },
+        {
+          "line": 2468,
+          "text": "kos census: phase=enter room=101 ra=8c1d411a blocks=1 bytes=11833344\r"
+        },
+        {
+          "line": 2469,
+          "text": "kos census: phase=enter room=101 ra=8c20cd10 blocks=1 bytes=65536\r"
+        },
+        {
+          "line": 2470,
+          "text": "kos census: phase=enter room=101 ra=8c246aec blocks=1 bytes=16384\r"
+        },
+        {
+          "line": 2471,
+          "text": "kos census: phase=enter room=101 ra=8c24d56a blocks=10 bytes=11520\r"
+        },
+        {
+          "line": 2472,
+          "text": "kos census: phase=enter room=101 ra=8c24d784 blocks=1 bytes=4096\r"
+        },
+        {
+          "line": 2473,
+          "text": "kos census: phase=enter room=101 ra=8c2464fc blocks=3 bytes=3720\r"
+        },
+        {
+          "line": 2474,
+          "text": "kos census: phase=enter room=101 ra=8c20fe5e blocks=1 bytes=1664\r"
+        },
+        {
+          "line": 2475,
+          "text": "kos census: phase=enter room=101 ra=8c1cd0a8 blocks=1 bytes=1152\r"
+        },
+        {
+          "line": 2476,
+          "text": "kos census: phase=enter room=101 ra=8c254f50 blocks=1 bytes=1080\r"
+        },
+        {
+          "line": 2477,
+          "text": "kos census: phase=enter room=101 ra=8c254f60 blocks=1 bytes=1080\r"
+        },
+        {
+          "line": 2478,
+          "text": "kos census: phase=enter room=101 ra=8c20c5c8 blocks=3 bytes=1056\r"
+        },
+        {
+          "line": 2479,
+          "text": "kos census: phase=enter room=101 ra=8c26dfb4 blocks=1 bytes=1024\r"
+        },
+        {
+          "line": 2480,
+          "text": "kos census: phase=enter room=101 ra=8c20cd1e blocks=1 bytes=256\r"
+        },
+        {
+          "line": 2481,
+          "text": "kos census: phase=enter room=101 ra=8c24ed16 blocks=10 bytes=200\r"
+        },
+        {
+          "line": 2482,
+          "text": "kos census: phase=enter room=101 ra=8c24bb66 blocks=8 bytes=160\r"
+        },
+        {
+          "line": 2483,
+          "text": "kos census: phase=enter room=101 ra=8c242c96 blocks=4 bytes=64\r"
+        },
+        {
+          "line": 2484,
+          "text": "kos census: phase=enter room=101 ra=8c2561fc blocks=1 bytes=36\r"
+        },
+        {
+          "line": 2485,
+          "text": "kos census: phase=enter room=101 ra=8c24e820 blocks=4 bytes=32\r"
+        },
+        {
+          "line": 2486,
+          "text": "kos census: phase=enter room=101 ra=8c246580 blocks=3 bytes=32\r"
+        },
+        {
+          "line": 2487,
+          "text": "kos census: phase=enter room=101 ra=8c24ba02 blocks=1 bytes=20\r"
+        },
+        {
+          "line": 2488,
+          "text": "kos census: phase=enter room=101 ra=8c254d00 blocks=1 bytes=12\r"
+        },
+        {
+          "line": 2489,
+          "text": "kos census: phase=enter room=101 ra=8c2561ec blocks=1 bytes=4\r"
+        },
+        {
+          "line": 2490,
+          "text": "kos census: phase=enter room=101 ra=8c2608b8 blocks=1 bytes=2\r"
+        }
+      ],
+      "run_errors": [
+        {
+          "kind": "screenshot",
+          "error": "No module named 'PIL'"
+        }
+      ],
+      "asset_error_counts": {
+        "catalog-pin-missing/consumer0": 1,
+        "catalog-token/consumer4": 640,
+        "catalog-token/consumer1": 362648,
+        "catalog-token/consumer5": 40717,
+        "catalog-token/consumer6": 574,
+        "payload-catalog-bind/consumer0": 2,
+        "member-unbound/consumer0": 141,
+        "composite-incomplete/consumer0": 1,
+        "unmapped-texture-address/consumer1": 89,
+        "motion-unknown-accepted-records/consumer9": 4558,
+        "catalog-token/consumer3": 8870,
+        "unbound-accepted-model/consumer0": 4436,
+        "unbound-accepted-model/consumer3": 4435,
+        "unbound-accepted-payload/consumer0": 4558,
+        "catalog-token/consumer2": 57752
+      },
+      "first_asset_error": {
+        "line": 269,
+        "text": "GC-ASSET-ERROR v=2 why=catalog-pin-missing consumer=0\r"
+      },
+      "last_log_lines": [
+        {
+          "line": 499205,
+          "text": "GC-ASSET-ERROR v=2 why=catalog-token consumer=1\r"
+        },
+        {
+          "line": 499206,
+          "text": "GC-ASSET-ERROR v=2 why=unbound-accepted-model consumer=0\r"
+        },
+        {
+          "line": 499207,
+          "text": "GC-ASSET-ERROR v=2 why=unbound-accepted-model consumer=3\r"
+        },
+        {
+          "line": 499208,
+          "text": "GC-ASSET-ERROR v=2 why=unbound-accepted-payload consumer=0\r"
+        },
+        {
+          "line": 499209,
+          "text": "[end: head=24511745 stage=8195 overruns=0]\r"
+        },
+        {
+          "line": 499210,
+          "text": "[capture stop reason=deadline elapsed=45.004]\r"
+        }
+      ],
+      "kos_watch_first_last": [
+        {
+          "line": 420,
+          "text": "kos watch: frame=86 free=4336 used=11941340 break=188416 headroom=192752 min=192752 top=190880 holes=1872\r"
+        },
+        {
+          "line": 496703,
+          "text": "kos watch: frame=4740 free=5168 used=12079772 break=49152 headroom=54320 min=54320 top=52288 holes=2032\r"
+        }
+      ],
+      "kos_watch_min_headroom": 54320,
+      "kernel_lock_sample": [
+        {
+          "pid": 979073,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979076,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979076,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        },
+        {
+          "pid": 979082,
+          "fd": 6,
+          "target": "/root/work/lanes/stat-bytes23-complete-scratch/guest-slots/slot-0.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t2556495\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:2556495 0 EOF\n"
+        },
+        {
+          "pid": 979082,
+          "fd": 9,
+          "target": "/root/probe/.trace.lock",
+          "fdinfo": "pos:\t0\nflags:\t0100001\nmnt_id:\t69\nino:\t427355\nlock:\t1: FLOCK  ADVISORY  WRITE 0 08:20:427355 0 EOF\n"
+        }
+      ]
+    }
+  },
+  "nonarena_changes": {
+    "_fs_hnd_open": {
+      "off": {
+        "blocks": 3,
+        "bytes": 48
+      },
+      "on": {
+        "blocks": 4,
+        "bytes": 64
+      },
+      "delta_blocks": 1,
+      "delta_bytes": 16
+    },
+    "_iso_open": {
+      "off": {
+        "blocks": 2,
+        "bytes": 704
+      },
+      "on": {
+        "blocks": 3,
+        "bytes": 1056
+      },
+      "delta_blocks": 1,
+      "delta_bytes": 352
+    }
+  },
+  "steady_caller_phase": "UNKNOWN_ABSENT",
+  "residual_attribution": "UNKNOWN allocator overhead, unwrapped allocation or sequential sampling; not measured requested bytes",
+  "adapter_identity": {
+    "size": 1699,
+    "sha256": "41e7109e8ebce2493981648be99a43aaf582f84b3eacd4bbaae21175fe62a2aa"
+  },
+  "ON_clean_matched_control": false,
+  "retained_handle_vs_transient_classification": "UNKNOWN from one enter snapshot; extra ISO/open bookkeeping is observed at the sample, persistence/close ownership not established",
+  "pins": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-GUEST-GRANT-v1.json": {
+      "size": 3484,
+      "sha256": "195f59bdb3e94945e51bfcb47b0b759f1a1abb488631a6c63a06c45e3d91992b"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/root-caller-pair-v2.py": {
+      "size": 6394,
+      "sha256": "4092d7eb8f839c76125f6db98c7d298bef99c2e36e3e358251699e90b2751634"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/TOOLCHAIN-SEAL.json": {
+      "size": 4321,
+      "sha256": "812c92f2eb0ec29a41051754e16c44de87a8ea7bfeebd066da0ac41524e11a3c"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/ARENA-CALLSITES.json": {
+      "size": 4868,
+      "sha256": "c44f68ea654605216dc251bfb76e7be07c043453bf1541c652ce41384193ed40"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/BASE-PLAN.json": {
+      "size": 4275,
+      "sha256": "b07d5be8a8028cdda01287991fd0512e6689bbcae735f2a640c88b957852a7fb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/BINDING.json": {
+      "size": 10666,
+      "sha256": "1dc5998b5c4426b73706d2df56bd3a8158f98570bbb5485cb2f68ba49d6867eb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/CORRECTED-TERMINAL.json": {
+      "size": 7434,
+      "sha256": "584ecc6dd664e35f8ba044eeaecb7d0a4cd4066b2cbe2d073a93151b742150e0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/CURRENT-CANDIDATE-MANIFEST.json": {
+      "size": 231281,
+      "sha256": "4d07e720300fcd72ae1081a00fe6a702331983ed2e8af4fdfadb0346691a726a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/HOST-CONTROLS-r1.json": {
+      "size": 322,
+      "sha256": "c436ba78d238c06f5cf10430253656bd2877d605951ab67e091d9e46d6d28bbb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/HOST-CONTROLS-r1.txt": {
+      "size": 3118,
+      "sha256": "2b5f506d61a9a7ef2caf007d6e2d9e534a5c72c98e90656dfe1fcf8fb1a59088"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/HOST-CONTROLS.json": {
+      "size": 358,
+      "sha256": "0115b8a8fda2ba08d2122eb38c391051cef6d71504358432d2b0f12509b45ae0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/HOST-CONTROLS.txt": {
+      "size": 3210,
+      "sha256": "c241918d54b81329fa21f4f463d30a16b226910424989bf99535395435234199"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/OBSERVATION-PROPOSAL.json": {
+      "size": 6746,
+      "sha256": "dd6b9ca67ec7fc0640889d796f6ce662cd793ccd3ed1468cc36c5ee6cf10c52c"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/OFF-EXPECTED-MANIFEST.json": {
+      "size": 231654,
+      "sha256": "3f25c12d6beef505001ff855b318a36433e7a3d392489743dc3311bdd8b5104e"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/OFF-MODE1-GRAPH.json": {
+      "size": 40751,
+      "sha256": "2bbe86aae5c1dd01ba0bc1cef155090fb58f083723ac75b71630f090abb5d809"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/ON-EXPECTED-MANIFEST.json": {
+      "size": 231654,
+      "sha256": "501f8790650b031799ffbdcdeb7eb20e66f2dceb39b548810bbb3cb0a993b876"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/ON-MODE1-GRAPH.json": {
+      "size": 40854,
+      "sha256": "289aa59c7a76f1ea2b8a7bf5fec4c63c1d0d5c09cf8ad4fbae0aa1c35fd2eb27"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/PREHANDOVER-CORRECTION.md": {
+      "size": 587,
+      "sha256": "544c18cd935ec4cc23d73b197999cf49cb7e02846daa2aa7add14a3560c7cd78"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/PREHANDOVER-SEAL-r1.json": {
+      "size": 3753,
+      "sha256": "a3b29010f55e0077b04a1c5a8406ea8959e227f834f0ef5cda9f1b7596490e6b"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/README.md": {
+      "size": 5991,
+      "sha256": "f05b28d1974748979ba842d8b4c36d4c83a6527a48e803b98d7ad94b7bb41179"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/arena_readback.py": {
+      "size": 628,
+      "sha256": "163584306eb10e67579c82062a0880d69e2452f1cad2ebe12781e020f58d1391"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/bind.py": {
+      "size": 3749,
+      "sha256": "f82a84eefcf54f5e8e873388902336b5b24677c9b9e9f739c9d595268606be87"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/census.py": {
+      "size": 8316,
+      "sha256": "3e1f725e96cc2472404c7867a92b624d7f49dc80b7648d7e210244e652fefc8a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/common.py": {
+      "size": 4763,
+      "sha256": "e645cbb46277a0d52f18271fee597d2883b778de049b3a32740d4d184b0bf858"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/elf.py": {
+      "size": 4603,
+      "sha256": "f09afa32a37ec032511526bd1b518b8c4d9f01ccf26c8b2082415093183d3e89"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/finalize.py": {
+      "size": 1661,
+      "sha256": "0d3867387bca43c09a844a578ed3a62f80977fe88707aa0d8bafb3df41cee808"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/fixtures/kos-squeeze0.txt": {
+      "size": 766,
+      "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/prepare.py": {
+      "size": 2792,
+      "sha256": "508d3d8cbe27458c70618027db3e4ecbed5d9030b4309d65f9d7bfba19bca5a0"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/propose_observation.py": {
+      "size": 4006,
+      "sha256": "04da8953190edb7f687fdb613f04fe96ea0ed0fb88ba2045f0810cda6349684f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/readback.py": {
+      "size": 1898,
+      "sha256": "b750d6f045c0ddd4a62c15cb2b1c624b2932b8e10fa1b620ffa354e5ab66e26c"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/stage.py": {
+      "size": 6315,
+      "sha256": "9869670c4549d479769644a2f8ab5af7cd8ffca0d308740a3963d0c37f787bf9"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-prep-v1/test_media.py": {
+      "size": 8028,
+      "sha256": "39036a9a870b9b37ed15b5681765617b91dd218ace4596cadba6a48d87d36016"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/parse-full-log-v1.py": {
+      "size": 1699,
+      "sha256": "41e7109e8ebce2493981648be99a43aaf582f84b3eacd4bbaae21175fe62a2aa"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/ROOT-CALLER-PAIR-RESULT.json": {
+      "size": 20476,
+      "sha256": "f2aa0789c085a7a8d81e405463c7eabb9d11722afee2bca9c48fdb5e0cffd70a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/POSTSTAGE-SUMMARY.json": {
+      "size": 2073,
+      "sha256": "70cf08fa32676005b7f18796d2d1dafed2de2d764835a73351d832e883dfcb1a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat-guest-slot.sh": {
+      "size": 249,
+      "sha256": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/census-bound-run.py": {
+      "size": 2438,
+      "sha256": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/flycast-console-bin/flycast-console.exe": {
+      "size": 14416384,
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+    },
+    "/mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe": {
+      "size": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    },
+    "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/trace_lock.sh": {
+      "size": 2169,
+      "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+    },
+    "/dev/shm/gc-motion24-qa-memory-v2-dbqczoc8/off/source/port/dreamcast/tools/d367/fullplay/fp_run.py": {
+      "size": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/caller-off-PROCESS.json": {
+      "size": 8020,
+      "sha256": "90374775ec19f293587c49f12a2479300b3af11de086fa84970bad5fe1fde240"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/bounded-launch.json": {
+      "size": 656,
+      "sha256": "e82d3fe4594b6131d33915d6ab5c13a10e8f95eeb0b3929414b0a47bdf4ba6f6"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/capture_ui_vram.py": {
+      "size": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/disc.gdi": {
+      "size": 87,
+      "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/emu.cfg": {
+      "size": 628,
+      "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/fixture-warp.txt": {
+      "size": 766,
+      "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/flycast.exe": {
+      "size": 14416384,
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/flycast.log": {
+      "size": 2347,
+      "sha256": "1d5b2e42443432564aefd107ed2c7dddd3681bb30ede7bd8f83053213bbd0e93"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/flycast.pid": {
+      "size": 5,
+      "sha256": "4d9960e7326e106744ca0c231b3901f516157da41d22e55eede244b88bb833eb"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/read-log.err": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/read_log.py": {
+      "size": 5311,
+      "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/run-output.txt": {
+      "size": 450403,
+      "sha256": "32aa8e7aceb21417a58e776cb4c60337b4ce66fbbb72b335dd4fa3144ac0e036"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/run-result.json": {
+      "size": 1437,
+      "sha256": "7ab1d45c4a36a0020d853a0ae69c1f76d18cd179c320063dfc7f4b4466be7e7e"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/serial.txt": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/syms.txt": {
+      "size": 28,
+      "sha256": "a26a18a10692bdb07dbcc1897cc45a00c6d3d8a37682b04271a9346e343f5026"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/data/T0000_vmu_save_A1.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/data/vmu_save_A2.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/shots/t0025/boot.log": {
+      "size": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/shots/t0025/emu.cfg": {
+      "size": 628,
+      "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/shots/t0025/flycast.log": {
+      "size": 2347,
+      "sha256": "1d5b2e42443432564aefd107ed2c7dddd3681bb30ede7bd8f83053213bbd0e93"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-off-0-0-r1/shots/t0025/flycast.pid": {
+      "size": 5,
+      "sha256": "4d9960e7326e106744ca0c231b3901f516157da41d22e55eede244b88bb833eb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/OFF-READBACK.json": {
+      "size": 246924,
+      "sha256": "35e6d8ad44d7f7c94bab6ce34c44ff3e446c053b119574dedf3da23c6407e66c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/off/COMPLETE.json": {
+      "size": 247094,
+      "sha256": "fce019ae6d0a172d3bf1c3aa859bb37cf16c49a7035b5b1ce274411d5531161a"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/CENSUS-OFF-v1.json": {
+      "size": 12057,
+      "sha256": "194c40ede6c54f3442e742b1996c30063b440aa1419b78ff97682ba4eee0824c"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/caller-on-PROCESS.json": {
+      "size": 8012,
+      "sha256": "f608a9a3a1e595d5a580123d207dc7ec65c15fff5f94af095885cfd21a3b5ebe"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/bounded-launch.json": {
+      "size": 656,
+      "sha256": "8caa0d490a26643d6d09c27cbff0ce60a42a12c39335e6f1b6e6d7cdc20abebf"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/capture_ui_vram.py": {
+      "size": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/disc.gdi": {
+      "size": 87,
+      "sha256": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/emu.cfg": {
+      "size": 628,
+      "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/fixture-warp.txt": {
+      "size": 766,
+      "sha256": "2135dc0afa68b75ce635bee447f978a258c5947bef1f736ff0245d21f4483a82"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/flycast.exe": {
+      "size": 14416384,
+      "sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/flycast.log": {
+      "size": 2347,
+      "sha256": "0c9bc1cd4af443f874fbf9c1de84ea2479723c925b0328d571b0bd38061dac99"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/flycast.pid": {
+      "size": 5,
+      "sha256": "6ea34f8ff0e18e29440a3249cfcba4965718eca80325b0d8299716aa397ff183"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/read-log.err": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/read_log.py": {
+      "size": 5311,
+      "sha256": "6c43705318caa4c63fddd2995c04bdc9c3730abfe66400192be89f4d1e845059"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/run-output.txt": {
+      "size": 25011254,
+      "sha256": "c1ddd400578fdfdba4b95c416b85e13fe6e29c20a9815885433bdbcac85e01e4"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/run-result.json": {
+      "size": 1434,
+      "sha256": "8972fdd3fba4fa3eb8aa7f4813058377294074baa2ade991c84c1001a0cda5fa"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/serial.txt": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/syms.txt": {
+      "size": 28,
+      "sha256": "d4dd852efaacc46949138f9f7cc7b4be328db52b560f959439f378180a56c553"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/data/T0000_vmu_save_A1.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/data/vmu_save_A2.bin": {
+      "size": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/shots/t0025/boot.log": {
+      "size": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/shots/t0025/emu.cfg": {
+      "size": 628,
+      "sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/shots/t0025/flycast.log": {
+      "size": 2347,
+      "sha256": "0c9bc1cd4af443f874fbf9c1de84ea2479723c925b0328d571b0bd38061dac99"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/captures/kos-on-0-0-r1/shots/t0025/flycast.pid": {
+      "size": 5,
+      "sha256": "6ea34f8ff0e18e29440a3249cfcba4965718eca80325b0d8299716aa397ff183"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-independent-review-v1/ON-READBACK.json": {
+      "size": 246923,
+      "sha256": "ac7ccec6a71a6400e96629b41747d56b88810d4ee695e87f15bf4b27d699963c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-motion24-20261024/kos-census-media-v1/on/COMPLETE.json": {
+      "size": 247093,
+      "sha256": "0cbf492e210cd95ba7f8904c733285e3678f4462751af8b2bd8854229f7a3f69"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-motion24/kos-census-media-root-review-v1/CENSUS-ON-FULL-v1.json": {
+      "size": 12287,
+      "sha256": "5353e618b000e607c471a618a40feaa006941fb3ef76af04e808d19c07a90338"
+    }
+  },
+  "limits": {
+    "address_space_bytes": 268435456,
+    "process_seconds": 120,
+    "actual_seconds": 3.1273313740093727,
+    "peak_kib": 54220
+  },
+  "SDK_stage_guest_native_queries": 0,
+  "screenshots_accepted": false,
+  "KOS48KiB_H2_performance_acceptance": false
+}

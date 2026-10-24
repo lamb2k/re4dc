@@ -1,0 +1,22 @@
+{
+  "complete": true,
+  "scope": "Two private diagnostic media stages only; no guest, SDK or memory qualification.",
+  "arms": {
+    "off": {
+      "seconds": 100.81406065099873,
+      "complete_receipt": {
+        "size": 247094,
+        "sha256": "fce019ae6d0a172d3bf1c3aa859bb37cf16c49a7035b5b1ce274411d5531161a"
+      }
+    },
+    "on": {
+      "seconds": 102.80575997600681,
+      "complete_receipt": {
+        "size": 247093,
+        "sha256": "0cbf492e210cd95ba7f8904c733285e3678f4462751af8b2bd8854229f7a3f69"
+      }
+    }
+  },
+  "owned_bytes": 3080155100,
+  "C_free": 40799412224
+}
