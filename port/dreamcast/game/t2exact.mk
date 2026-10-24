@@ -64,6 +64,29 @@ endif
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_PS2_PVS=1
 endif
 #
+# PS2_PVS_EFFECTIVE0_SOURCES=1: permit an actual nonempty base source when
+# every higher authored level is empty and the real nonempty fallback is active.
+# Source receipts/material/numeric guards and the sixteen-panel cap are unchanged.
+PS2_PVS_EFFECTIVE0_SOURCES ?= 0
+ifneq ($(PS2_PVS_EFFECTIVE0_SOURCES),0)
+ifneq ($(PS2_PVS_EFFECTIVE0_SOURCES),1)
+$(error PS2_PVS_EFFECTIVE0_SOURCES must be 0 or 1)
+endif
+ifneq ($(PS2_PVS),1)
+$(error PS2_PVS_EFFECTIVE0_SOURCES needs PS2_PVS=1)
+endif
+ifneq ($(MESH_LOD),1)
+$(error PS2_PVS_EFFECTIVE0_SOURCES needs MESH_LOD=1)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error PS2_PVS_EFFECTIVE0_SOURCES needs PS2_WORLD_ROOMS=1 or 2)
+endif
+ifneq ($(PS2_WORLD_NONEMPTY_LOD),1)
+$(error PS2_PVS_EFFECTIVE0_SOURCES needs PS2_WORLD_NONEMPTY_LOD=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS_EFFECTIVE0_SOURCES=1
+endif
+#
 # SG_SELECT_LEAN=1 (job 2; exact, render only; needs PS2_STRIP_GROUPS=1): lean::sg_select_lean / sg_coef_lean /
 # box_mask_lean in native_static.cpp give the same results bit for bit, cheaper: each plane keeps only its non-zero
 # terms of the knob-off fmac chain, in the same order (P = max(n, 0), Q = min(n, 0): one per axis; a +0 term leaves

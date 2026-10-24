@@ -6994,6 +6994,11 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #define RE4DC_PS2_AFFINE pl.affine
 #endif
+#if RE4DC_PS2_PVS
+        // A receipt must describe the immutable baked geometry actually selected.
+        // Capture this with mvq; fresh source state can change before queued replay.
+        const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#endif
 #if RE4DC_PS2_WORLD_LEAN
 #if RE4DC_SKY_ANY
         const bool lean_sky=re4dc_sky_mode() && ps2_sky_row(ps2w.room,pl.placement); // sky rows: their own far, no pretest
@@ -7149,7 +7154,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                     x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                    x.placement=i;
+                    x.placement=pvs_source_placement;
 #endif
                     x.marked=marked;x.first=npk;
 #if RE4DC_SKY_ANY
@@ -7171,7 +7176,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
 #if RE4DC_PS2_PVS
-            d.pvs_placement=i;
+            d.pvs_placement=pvs_source_placement;
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
@@ -7209,7 +7214,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                x.placement=i;
+                x.placement=pvs_source_placement;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
