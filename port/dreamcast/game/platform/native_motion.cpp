@@ -1102,6 +1102,8 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
     return 0;
 }
 #if RE4DC_GC_ASSET_MOTION_SOURCE
+extern "C" unsigned re4dc_motion_gcasset_counter_lock(){return unsigned(irq_disable());}
+extern "C" void re4dc_motion_gcasset_counter_unlock(unsigned old){irq_restore(int(old));}
 extern "C" void re4dc_motion_gcasset_publish(int token,const void* header) {
     const void* source_owner=nullptr;unsigned source_serial=0;
     {

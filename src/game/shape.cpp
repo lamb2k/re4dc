@@ -178,6 +178,9 @@ u32 re4dc_otwc_shape_model_id;
 // Restore the original vertex positions.
 void ResetShape(cModelInfo* info, void* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
     re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
 #endif
@@ -235,6 +238,9 @@ struct ShapeEntry {
 // (vertex index + s16 dx/dy/dz from the model's shape table) and adds it to the vertices.
 void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
     re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
 #endif

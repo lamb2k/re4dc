@@ -23,6 +23,7 @@ FIXTURE=r"""
 using namespace re4dc_gcasset;
 NATIVE_FIXTURE
 ROOM_FIXTURE
+EVALUATOR_FIXTURE
 namespace re4dc_gcasset {Digest gate_fingerprint(const void*,unsigned);CheckedAsset gate_bind_checked(const char*,const char*,const Digest&);}
 bool protected_context=false,motion_mutex=false;unsigned hashes=0,accepts=0,faults=0;CheckedAsset accepted[128]{};
 extern "C" void re4dc_log(const char*,...){assert(!protected_context);}
@@ -41,11 +42,13 @@ void actual_retire_archive(const void* m){
 LOADER_RETIRE
 }
 int main(){
+ assert(!motion_source_idle());
  alignas(32) unsigned char source_storage[16448]{};std::memset(source_storage,0x5a,sizeof source_storage);
  assert(motion_source_test_storage_bytes()<=16384);
  assert(!motion_source_storage_bind(source_storage+1,16384));
  assert(!motion_source_storage_bind(source_storage+32,1));
  assert(motion_source_storage_bind(source_storage+32,16384));
+ actual_evaluator_controls();motion_source_flush();faults=0;
  assert(motion_source_storage_bind(source_storage+32,16384));
  assert(!motion_source_storage_bind(source_storage+64,16384));
  unsigned owner=0,model=0,camera=0,shape=0;unsigned char fcv[64]{1,2,1},evd[96]{4,5},bind[80]{9,10};word(fcv+12,16);fcv[16]=fcv[32]=fcv[48]=1;
@@ -167,7 +170,7 @@ class MotionSourceTests(unittest.TestCase):
    def production_block(call):
     at=read.index(call);start=read.rfind('#if',0,at);finish=read.index('#endif',at)+len('#endif')
     return read[start:finish]
-   fixture=FIXTURE.replace('NATIVE_FIXTURE',self.native_fixture()).replace('ROOM_FIXTURE',self.room_fixture())
+   fixture=FIXTURE.replace('NATIVE_FIXTURE',self.native_fixture()).replace('ROOM_FIXTURE',self.room_fixture()).replace('EVALUATOR_FIXTURE',self.evaluator_fixture())
    fixture=fixture.replace('LOADER_CAPTURE',production_block('re4dc_gcasset::motion_source_archive(m,pArc,len);'))
    fixture=fixture.replace('LOADER_RETIRE',production_block('re4dc_gcasset::motion_source_retire(m);'))
    (p/'fixture.cpp').write_text(fixture)
@@ -192,6 +195,8 @@ class MotionSourceTests(unittest.TestCase):
   capture=source[start:finish]
   publish=function(source,'extern "C" void re4dc_motion_gcasset_publish(')
   idle=function(source,'extern "C" int re4dc_motion_gcasset_idle(')
+  counter_lock=function(source,'extern "C" unsigned re4dc_motion_gcasset_counter_lock(')
+  counter_unlock=function(source,'extern "C" void re4dc_motion_gcasset_counter_unlock(')
   return r'''
 #include "native_motion.h"
 #include <cstdint>
@@ -219,7 +224,33 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table){
  }return 1;
 }
 extern "C" void re4dc_motion_release(int token){assert(token==1 && native_slot.pins);--native_slot.pins;owners[0]={};}
-'''.replace('COLD_CAPTURE',capture)+publish+idle
+'''.replace('COLD_CAPTURE',capture)+counter_lock+counter_unlock+publish+idle
+ def evaluator_fixture(self):
+  motion=(ROOT/'src/game/motion.cpp').read_text()
+  sig='void MotionMoveCore(cModel* m, MotionWork* w, int flag)\n{'
+  start=motion.index(sig);scope_at=motion.index('#if defined(RE4DC_GAME)',start)
+  scope_end=motion.index('#endif',scope_at)+len('#endif');scope=motion[scope_at:scope_end]
+  early_at=motion.index('    if (w->pMot == 0) {',scope_end);early_end=motion.index('    }',early_at)+5
+  early=motion[early_at:early_end]
+  for path,signature in [('cam_motion.cpp','void CameraMotion::move()\n{'),('shape.cpp','void ResetShape(cModelInfo* info, void* dst)\n{'),('shape.cpp','void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)\n{')]:
+   text=(ROOT/'src/game'/path).read_text();at=text.index(signature);self.assertIn(scope,text[at:at+len(signature)+len(scope)+4])
+  return r'''
+struct MotionWork {void* pMot;};unsigned evaluator_callbacks=0;
+void blocked_evaluator_callback(){assert(!re4dc_gcasset::motion_source_idle());re4dc_gcasset::MotionProducerScope nested;assert(!re4dc_gcasset::motion_source_idle());++evaluator_callbacks;}
+void actual_evaluator_prefix(MotionWork* w){
+SCOPE
+EARLY
+ blocked_evaluator_callback();assert(!re4dc_gcasset::motion_source_idle());
+}
+void actual_evaluator_controls(){using namespace re4dc_gcasset;
+ assert(motion_source_idle());MotionWork none{nullptr};actual_evaluator_prefix(&none);assert(motion_source_idle() && !evaluator_callbacks);
+ int value=0;MotionWork live{&value};actual_evaluator_prefix(&live);assert(motion_source_idle() && evaluator_callbacks==1);
+ const bool active=motion_producer_enter();assert(active && !motion_source_idle());motion_producer_leave(active);assert(motion_source_idle());
+ motion_source_test_depth(~0U,false);{MotionProducerScope overflow;assert(!overflow.entered && !motion_source_idle());}
+ motion_source_test_depth(0,true);assert(!motion_source_idle());motion_source_test_depth(0,false);assert(motion_source_idle());
+ motion_producer_leave(true);assert(!motion_source_idle());motion_source_test_depth(0,false);
+}
+'''.replace('SCOPE',scope).replace('EARLY',early)
  def room_fixture(self):
   source=(ROOT/'src/game/read.cpp').read_text()
   start=source.index('#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE\n        const void* gcasset_motion_room_owner=')
@@ -242,7 +273,7 @@ BODY
 '''.replace('BODY',source[start:end])
  def test_production_helper_with_real_hash_catalog_and_tokens(self):self.compile_run()
  def test_retirement_and_stale_mutations(self):
-  for mutant in [('for(auto& s:state->sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external)continue;','if(external){}'),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}'),('if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))','if(false && (role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))'),('if(state->frozen_context){if(!receipt_current(state->context,model,info))','if(false){if(!receipt_current(state->context,model,info))'),('const CheckedAsset asset=capture_digest(s.digest);','const CheckedAsset asset=capture(s.base,s.bytes);'),('if(rel && motion_member && at>=rel)','if(false && rel && motion_member && at>=rel)')]:
+  for mutant in [('for(auto& s:state->sources)if(s.owner==owner)s={};',''),('if(found && checked_current(found->asset))','if(found)'),('if(external)continue;','if(external){}'),('if(s.bytes==bytes && s.role==unsigned(role))return true;','if(s.bytes==bytes && s.role==unsigned(role)){capture(base,bytes);return true;}'),('if((role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))','if(false && (role==MotionFcv || role==MotionShape) && !original_fcv(base,bytes))'),('if(state->frozen_context){if(!receipt_current(state->context,model,info))','if(false){if(!receipt_current(state->context,model,info))'),('const CheckedAsset asset=capture_digest(s.digest);','const CheckedAsset asset=capture(s.base,s.bytes);'),('if(rel && motion_member && at>=rel)','if(false && rel && motion_member && at>=rel)'),('else {++state->scope_depth;entered=true;}','else {entered=true;}'),('else --state->scope_depth;','else {}'),('bootstrap_fault || state->scope_depth || state->depth_overflow','bootstrap_fault || state->scope_depth')]:
    with self.subTest(mutant=mutant[0]):self.compile_run(mutant,reject=True)
  def test_default_header_evaluates_no_arguments_and_object_empty(self):
   with tempfile.TemporaryDirectory(prefix='gc-motion-off24-',dir='/dev/shm') as t:

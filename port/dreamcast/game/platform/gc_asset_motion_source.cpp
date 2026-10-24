@@ -4,6 +4,8 @@
 #include <cstring>
 #include <new>
 #include <type_traits>
+extern "C" unsigned re4dc_motion_gcasset_counter_lock();
+extern "C" void re4dc_motion_gcasset_counter_unlock(unsigned);
 namespace re4dc_gcasset {
 namespace {
 constexpr unsigned SourceCount=128,SubjectCount=64,MaxBytes=40U*1024*1024;
@@ -13,7 +15,7 @@ struct Subject {const void* owner=nullptr;SubjectReceipt receipt{};unsigned gene
 struct State {
     Source sources[SourceCount]{};Subject subjects[SubjectCount]{};
     unsigned next_serial=0,subject_generation=0,faults=0,scope_depth=0;const void* view=nullptr;
-    MotionReceipt context{},pending{};bool pending_accounted=false,frozen_context=false;
+    MotionReceipt context{},pending{};bool pending_accounted=false,frozen_context=false,depth_overflow=false;
 };
 State* state=nullptr;unsigned bootstrap_fault=0;
 static_assert(sizeof(void*)!=4 || sizeof(State)<=MotionStorageBytes,"Motion state must fit its existing 12KiB slab partition");
@@ -192,10 +194,13 @@ void motion_source_external_invalidate(const void* owner){
 bool motion_source_storage_bind(void* base,unsigned bytes){
     if(!base || (reinterpret_cast<std::uintptr_t>(base)&(MotionStorageAlignment-1)) || bytes<MotionStorageBytes || bytes<sizeof(State))return false;
     if(state)return state==base;
-    state=new(base) State{};return true;
+    state=new(base) State{};if(bootstrap_fault)state->depth_overflow=true;return true;
 }
 bool motion_source_idle(){
-    if(!state || state->scope_depth)return false;
+    const unsigned irq=re4dc_motion_gcasset_counter_lock();
+    const bool active=!state || bootstrap_fault || state->scope_depth || state->depth_overflow;
+    re4dc_motion_gcasset_counter_unlock(irq);
+    if(active)return false;
     for(const auto& source:state->sources)if(source.used)return false;
     return true;
 }
@@ -274,10 +279,24 @@ void motion_source_view(const void* owner){if(state)state->view=owner;else boots
 void motion_source_view_retire(const void* owner){if(!state)return;if(state->view==owner)state->view=nullptr;motion_source_reset(owner);}
 MotionReceipt motion_source_current(){return state?state->context:rejected();}
 MotionReceipt motion_source_exchange(const MotionReceipt& receipt){if(!state)return rejected();const auto old=state->context;state->context=receipt;return old;}
+bool motion_producer_enter(){
+    const unsigned irq=re4dc_motion_gcasset_counter_lock();bool entered=false;
+    if(!state)bootstrap_fault=1;
+    else if(state->scope_depth==~0U){state->depth_overflow=true;state->faults=1;}
+    else {++state->scope_depth;entered=true;}
+    re4dc_motion_gcasset_counter_unlock(irq);return entered;
+}
+void motion_producer_leave(bool entered){
+    if(!entered)return;
+    const unsigned irq=re4dc_motion_gcasset_counter_lock();
+    if(!state)bootstrap_fault=1;
+    else if(!state->scope_depth){state->depth_overflow=true;state->faults=1;}
+    else --state->scope_depth;
+    re4dc_motion_gcasset_counter_unlock(irq);
+}
 bool motion_source_replay_active(){return state && state->frozen_context;}
 MotionReceipt motion_source_scope_enter(const void* model,const void* info){
     if(!state){bootstrap_fault=1;return rejected();}
-    ++state->scope_depth;
     const auto old=state->context;
     if(state->frozen_context){if(!receipt_current(state->context,model,info))state->context=rejected();}
     else state->context=motion_source_snapshot(model,info);
@@ -285,11 +304,10 @@ MotionReceipt motion_source_scope_enter(const void* model,const void* info){
 }
 MotionReceipt motion_source_replay_enter(const MotionReceipt& receipt){
     if(!state){bootstrap_fault=1;return rejected();}
-    ++state->scope_depth;
     const auto old=state->context;state->frozen_context=true;
     state->context=receipt_current(receipt,receipt.model,receipt.info)?receipt:rejected();return old;
 }
-void motion_source_restore(const MotionReceipt& receipt,bool frozen){if(!state)return;if(state->scope_depth)--state->scope_depth;else state->faults=1;state->context=receipt;state->frozen_context=frozen;}
+void motion_source_restore(const MotionReceipt& receipt,bool frozen){if(!state)return;state->context=receipt;state->frozen_context=frozen;}
 void motion_source_prepare(){if(!state){bootstrap_fault=1;return;}state->pending=state->context;state->pending_accounted=false;}
 void motion_source_accept(const MotionReceipt& receipt,unsigned records){
     if(!state){if(records)bootstrap_fault=1;return;}
@@ -314,6 +332,7 @@ void motion_source_pending_accounted(){if(!state)return;state->pending_accounted
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void motion_source_test_serial(unsigned serial){if(state)state->next_serial=serial;}
 unsigned motion_source_test_storage_bytes(){return sizeof(State);}
+void motion_source_test_depth(unsigned depth,bool overflow){if(state){state->scope_depth=depth;state->depth_overflow=overflow;}}
 #endif
 }
 #endif

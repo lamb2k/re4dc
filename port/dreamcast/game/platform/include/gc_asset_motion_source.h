@@ -55,11 +55,23 @@ void motion_source_view(const void* subject); // selected CameraMotion only
 void motion_source_view_retire(const void* subject);
 MotionReceipt motion_source_current();
 MotionReceipt motion_source_exchange(const MotionReceipt&);
+// Real ordinary evaluator stacks, including early returns and blocked callees.
+// The fixed counter shares funded State, with short IRQ-protected updates only.
+bool motion_producer_enter();
+void motion_producer_leave(bool entered);
+struct MotionProducerScope {
+    bool entered=motion_producer_enter();
+    ~MotionProducerScope(){motion_producer_leave(entered);}
+    MotionProducerScope()=default;
+    MotionProducerScope(const MotionProducerScope&)=delete;
+    MotionProducerScope& operator=(const MotionProducerScope&)=delete;
+};
 bool motion_source_replay_active();
 MotionReceipt motion_source_scope_enter(const void* model,const void* info);
 MotionReceipt motion_source_replay_enter(const MotionReceipt&);
 void motion_source_restore(const MotionReceipt&,bool frozen);
 struct MotionSourceScope {
+    MotionProducerScope producer;
     bool previous_frozen;
     MotionReceipt previous;
     explicit MotionSourceScope(const void* model,const void* info=nullptr):previous_frozen(motion_source_replay_active()),previous(motion_source_scope_enter(model,info)){}
@@ -77,6 +89,7 @@ void motion_source_flush(); // unlocked; accepted original identities only
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void motion_source_test_serial(unsigned);
 unsigned motion_source_test_storage_bytes();
+void motion_source_test_depth(unsigned,bool overflow);
 #endif
 }
 #endif

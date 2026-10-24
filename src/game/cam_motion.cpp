@@ -79,6 +79,9 @@ CameraMotion::~CameraMotion()
 // placed in the room), and sets `end` when the sequence finished.
 void CameraMotion::move()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
     HermitePrm prm;
     Vec pos;
     Vec at;

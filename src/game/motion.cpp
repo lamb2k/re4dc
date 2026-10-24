@@ -675,6 +675,9 @@ u16 MotionMoveSub(cModel* m, MotionWork* w)
 // model matrix unless Mot_flag 0x40000000.
 void MotionMoveCore(cModel* m, MotionWork* w, int flag)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
     HermitePrm prm;
     HermitePrm* pp = &prm;
     AttachCamera* cam;
