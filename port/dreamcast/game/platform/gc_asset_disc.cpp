@@ -9,6 +9,7 @@
 #include <atomic>
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 #include <arch/timer.h>
+extern "C" void re4dc_log(const char*,...);
 static unsigned re4dc_gca_disc_reads; static unsigned long long re4dc_gca_disc_us;
 namespace re4dc_gcasset {
 unsigned prof_disc_reads(){return re4dc_gca_disc_reads;}
@@ -84,6 +85,9 @@ bool ensure_disc_catalog(){
     if(state==Ready)return true;
     if(state!=Initial && state!=FreshInstall)return false;
     disc_state.store(Installing);Digest expected{};
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    struct InstallProf{unsigned long long t0=timer_us_gettime64();~InstallProf(){re4dc_log("GC-ASSET-PROF install_us=%llu\n",timer_us_gettime64()-t0);}} install_prof;
+#endif
     if(!disc_pin(expected)){disc_failed();unresolved(SourceGeometry,"catalog-pin-missing");return false;}
     off_t bytes=-1;
     {
