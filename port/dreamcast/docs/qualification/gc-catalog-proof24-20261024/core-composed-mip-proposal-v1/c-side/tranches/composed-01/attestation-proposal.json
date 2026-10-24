@@ -1,0 +1,1336 @@
+{
+  "entries": [
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "983d1064-22def69d",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "b74e88cb1dd00ef28d3745c69e600602cefa743f327a021be33f15083522d54f"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "ac28b504-561ef735",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "748a55e17d2fc203ed1f6766ab76e26d3556cb0a7d2263092bcc10fd359bbf95"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "96f42df9-7cc934e6",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "a732b25f9260584da8053b77fc107ca0fc4e06007c6d881c15116cfae7ad9c3a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "8f860273-a3891f63",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "24859f4bd84e28a14c59b4c898eba87bfbea9d692435b43c96f78dff6e3e20af"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "3475ba97-a5787cf0",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "7e9fe93a2fba7775f87c1e5e202db1796f213f828c6a11f794176d5415aeefd5"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "9a54e191-4e229da7",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "4152c4a55c8033363cc0e2c2e39dee994e51b6e213d2c3c7f8c7c2da5c232a5a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "68e36ca0-6805ca8f",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "d11a3d80321e6b6788a4801a67fc7169687ec485e81335105f7fd846a203a6eb"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "a91ae8d9-fcfb3fde",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "914d420fa0dbf3c79c8a4334a34b3aef07524d2bacc0789c51d2692b10306b23"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "7900d78c-b7c02490",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "890074aeaa00ad3e383430c8ca7971ffafcc8874cff05b7d68367225f6cb376a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "c3b143d6-4a1c5907",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "3cc638c2afd7fe289b051c475c5d702c4ce1179b80c60d41f754ff8d23cc5ce8"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "3ab1d090-cb5ddf44",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "71e0aebbe2958347fd98a9b5e6a22ed206305017c260e2cb6243794908716f1a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "41a3ab03-27811ab8",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "756e34e43ae160daeb28473ad20a884efa43cad14866f3c5107470f66bb8186a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "fdf15325-0deb119d",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "93e36a439e8957854e105cb4b6b5e060960f8cc4c50802e020de285d1718a276"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "be4500e7-00c29fc3",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "50a5758447514aa5177a2d87cde6419bdfe5b9b49a4089ce70131cd1d8bd78b2"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "a9d62b83-e7373dea",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "8d50217c4f32725a02afe69cbae3d97c9599b4f7824935c50e5f3d4c63dfc7a5"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "0bb40b55-74e3dbc0",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "ccda1fce6c8ba51889075b009d39f777c5bf9d2c6dfedf29a573f8172dd20b57"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "7fd978f3-be1eb3be",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "7052ffe13598fd787936de8100457747296fc3aa1b5409fed74eaf1a0dce5dcb"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "b04cd24a-daf35b0d",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "a083f2818c8a8d31c26694357813bb08da330898d88ff4f07555ff93784c2562"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "31db8ccd-bfa63f38",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "2dc8218d6f6784eb6aa3767e18ba97681f7c44a2d0c5f87050a2db7ef4d93eab"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "d940afe8-81da4226",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "80954b9c66b05b69892fb8074c3310ca0eaba1bce36d317c1406dce96117b277"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "f6bf9f22-eb76b136",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "d6ca4d60bc363c997a12063cd1a6bff1177ae0d09b22ab6422864f706298dd3f"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "c1d12e6d-f029b608",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "f93b0e7b2a76b5ed23c1f106d9367c94bea513e6ba2ea53a99e474a272958306"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "b2f69ff1-50ce99f2",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "a3452da3f1a24be4a8f22bf0db48aa324b112070dd4d586b6fbb7d1166bf3348"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "f4ed21f8-0bc4b181",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "bd42e06487769bb2a9815ba946ebf174fcb64a95816762c296bf401996a6677f"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "f4d142dc-38fd90b5",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "21aae3760f558385baf389ddc7c26b69dc00974d0d998ce1e8f3f8692fdc4474"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "9305bb14-b14bc9d1",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "06a2601590c74388c7eb59be643ccf3a9e822418d82f8aebe4f527556358493e"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "c9ae6026-842ff598",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "9e95303b292f8fe5597f013f1ccf7560b84f48933341124dd8ab4225ec66af89"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "b39d7d87-09155edd",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "353cf1d5d742bcb4aab9df663a99baf020bc30b08c26799baf3b70eee2cbe549"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "8a4b3f56-826ac189",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "45a7672559f83f7bd2497a3a107d9d66ff62f54e57f14cf40a5a708f584b47d4"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "697c9e1c-d1e7e8dc",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "836a574efb98886d98e31ef0a7c7535f7b92f151b3de5a5dda81fa2fd725110c"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "cb3f9aac-e2af9117",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "9c4fe4b8b06812ef848f76136f545874ce91a77c12303b817271e99167317f35"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "f3fce72b-cfe27001",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "36f5aae8a584c896ca51d85ef26bff81f9386604bc004172f580f195bc1dcc1f"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "c78beae2-52b8d459",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "1f88b29076f79383c524feed2bb0121d36c8647f1c162fb55875851309c46237"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "2b35d968-d13684b6",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "ea5e9114be7c93eb7fedc1ed9b85a45feddd7cd3c0f1383ad7da0f2ef0adf984"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "1b9a8e27-61903f6e",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "30482bec967904ede2701d8e4547da782498d5ca68c13f0b85707d28b62fd752"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "1d80f411-2fb53e6a",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "2a900fe05607ec18672b0083c3d18dcead5ee4a90a0b10ffabd458f1194e530e"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "d425c598-ab208c82",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "bead9564b428fb0d0fdd322cd7839a3475c9e1c96cdc16604b760fd54425a53c"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+          "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+          "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+          "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+          "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+        }
+      ],
+      "id": "8150bd32-2deb427b",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat pictures through historical shared-palette conversion and frozen PAL4 mip composition equal full current selected member; historical base aggregate also exact. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "69f62fcd921abd511516be1fb6b5723e0f9b0dd8f5f8edbf43526b7655a72c62"
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484"
+}

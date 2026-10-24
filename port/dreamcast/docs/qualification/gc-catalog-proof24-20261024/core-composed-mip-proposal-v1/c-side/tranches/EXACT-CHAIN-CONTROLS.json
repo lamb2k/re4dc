@@ -1,0 +1,27 @@
+{
+  "asset_bytes_RAM_only": true,
+  "checks": 9,
+  "controls": {
+    "actual_animated_frames_distinct": true,
+    "changed_source_pixels_change_output": true,
+    "lower_mip_mutation_keeps_base_and_palette_but_fails_full_SHA": true,
+    "truncated_original_TPL_rejected": true,
+    "unsupported_depth": true,
+    "unsupported_swizzle": true,
+    "wrong_frame_changes_full_SHA": true,
+    "wrong_per_frame_palette_changes_output": true,
+    "zero_width": true
+  },
+  "filesystem_asset_output": false,
+  "positive": {
+    "frozen_mip_base_exact": true,
+    "frozen_mip_palette_exact": true
+  },
+  "schema": 1,
+  "source_helper": {
+    "bytes": 4085,
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/test_core_chain_controls_v1.py",
+    "sha256": "1c8010de95acefcd1526446c1dfcfff546c9cd6740a33d66c76e13b0d99f91af"
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,74 @@
+{
+  "additional_unique_current_identities": 162,
+  "all_historical_base_INDEX_aggregates_exact": true,
+  "all_proposed_current_payloads_fullbyte_equal": true,
+  "allowances_added": 0,
+  "asset_files_written": 0,
+  "complete_I001_acceptance": false,
+  "composed_mip_current_fullbyte_matches": 56,
+  "direct_current_fullbyte_matches": 106,
+  "historical_gate_labels": "locators only, no fresh look",
+  "max_process_observed_seconds": 1.902613872953225,
+  "max_process_peak_KiB": 48044,
+  "negative_controls_receipt": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/EXACT-CHAIN-CONTROLS.json",
+    "sha256": "f6c61ac16bafdc549e2531629d1d07220223eb0813d509a1ea491b7466456df8"
+  },
+  "original_PS2_texture_IDs": 24,
+  "per_process_AS_bytes": 268435456,
+  "per_process_timeout_seconds": 120,
+  "private_catalog_unchanged": {
+    "index_sha256": "6aceb9e4a1631cd6c199b51baa13ee9f7f7a21558b475fffa4d66e5d5b8b8105",
+    "ps2": 1,
+    "unknown": 7303
+  },
+  "production_pin": 0,
+  "proposal": {
+    "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/CORE-162-ATTESTATION-PROPOSAL.json",
+    "reviewed": false,
+    "sha256": "30c9ec62e95c25fa47fd419369ca2491861c8d495edb34f8e7a450e41627c0c5"
+  },
+  "runtime_emission_use_coverage": false,
+  "schema": 1,
+  "scope": "Core.dat EFF1 linear PSMT4 interlace0/1 at historical5182665f; 56outputs additionally frozen PAL4 mip0425534d. Unsupported swizzle/PSMT8 not processed.",
+  "source_authority": "Same exact original private PS2 Core.dat/EFF1 as independently root-approved f7, standing trusted private dump authority. Batch approval absent; no retail authenticity certificate.",
+  "status": "162_EXACT_CHAINS_UNAPPROVED_ROOT_BATCH_AUTHORITY_REVIEW_PENDING",
+  "tranches": [
+    {
+      "checks_sha256": "aa7e3f350619cf4c11123d7ab347750e656bda285e9c93a9f17d626ad2f73b3c",
+      "folder": "tranche-01",
+      "proposal_sha256": "5f1bf6245fb8ff8009fd04493e4c824a9a4a1f83a2c99cbf0ee6e6abc34a221d",
+      "proposed": 4
+    },
+    {
+      "checks_sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca",
+      "folder": "tranche-02",
+      "proposal_sha256": "1fc5d676e39f190b96c94a912bbd9fa2a597ec0db2eac05e148035be1f537421",
+      "proposed": 23
+    },
+    {
+      "checks_sha256": "e06ec7b1a2b67768d78d75f972b0861b3115880e1cc44ebb24a5ee7108115f1c",
+      "folder": "tranche-03",
+      "proposal_sha256": "82e8e4c3a473c405eefdc7a92424c069994a52e644c895c194a4685e61cc83dd",
+      "proposed": 37
+    },
+    {
+      "checks_sha256": "44e33ced809c6a47b3779d62fa9985243f8482f13031e6ca2c52a9fd0efd077b",
+      "folder": "tranche-04",
+      "proposal_sha256": "8a042517c9d470f7030bddaf95518dddfb4990f30d332961521fa05d6e1a0a72",
+      "proposed": 42
+    },
+    {
+      "checks_sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969",
+      "folder": "composed-01",
+      "proposal_sha256": "513373f0c43ca3e9571e38e11d00e28703bcebb0ec6296ef5bf3cd99e8e4371a",
+      "proposed": 38
+    },
+    {
+      "checks_sha256": "e386e0c7f0ca0ce1199c69688046fc1de1d82d32fb13a43521899b517d22fac3",
+      "folder": "composed-02",
+      "proposal_sha256": "fbc6b4f68262dc7996f96c7c5f7707cd57f2c6c2ccabde9e2d6b5bec4647289f",
+      "proposed": 18
+    }
+  ]
+}

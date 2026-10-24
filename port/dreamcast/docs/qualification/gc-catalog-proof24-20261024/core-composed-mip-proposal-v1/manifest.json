@@ -1,0 +1,103 @@
+{
+  "base_source": "405f4f2eee9e7e8ea9179c139ace20baa60beb68",
+  "copied": [
+    {
+      "bytes": 13130,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/check_core_mip_composed_v1.py",
+      "path": "c-side/tranches/check_core_mip_composed_v1.py",
+      "sha256": "d171354fcabf759b5f22c6b572b4fec370458cb6c5978538e7596f6d3a44e04f"
+    },
+    {
+      "bytes": 4085,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/test_core_chain_controls_v1.py",
+      "path": "c-side/tranches/test_core_chain_controls_v1.py",
+      "sha256": "1c8010de95acefcd1526446c1dfcfff546c9cd6740a33d66c76e13b0d99f91af"
+    },
+    {
+      "bytes": 875,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/EXACT-CHAIN-CONTROLS.json",
+      "path": "c-side/tranches/EXACT-CHAIN-CONTROLS.json",
+      "sha256": "f6c61ac16bafdc549e2531629d1d07220223eb0813d509a1ea491b7466456df8"
+    },
+    {
+      "bytes": 3277,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/COMPOSED-SUMMARY.json",
+      "path": "c-side/tranches/COMPOSED-SUMMARY.json",
+      "sha256": "c7cc8a42fc5e6de0f243c5c247b5bc61c56f325d716dc30870fc01e209d67244"
+    },
+    {
+      "bytes": 238555,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/CORE-162-ATTESTATION-PROPOSAL.json",
+      "path": "c-side/tranches/CORE-162-ATTESTATION-PROPOSAL.json",
+      "sha256": "30c9ec62e95c25fa47fd419369ca2491861c8d495edb34f8e7a450e41627c0c5"
+    },
+    {
+      "bytes": 133588,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/CHECKS.json",
+      "path": "c-side/tranches/composed-01/CHECKS.json",
+      "sha256": "736d3d53e1d3456ae23ac2fac4b582ab7aec2eb5d8e8b55a97b45315beea3969"
+    },
+    {
+      "bytes": 75747,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/attestation-proposal.json",
+      "path": "c-side/tranches/composed-01/attestation-proposal.json",
+      "sha256": "513373f0c43ca3e9571e38e11d00e28703bcebb0ec6296ef5bf3cd99e8e4371a"
+    },
+    {
+      "bytes": 33531,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-convert_tpl-0425534d.py",
+      "path": "c-side/tranches/composed-01/historical-convert_tpl-0425534d.py",
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "bytes": 6853,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_pal4-0425534d.py",
+      "path": "c-side/tranches/composed-01/historical-mipmap_pal4-0425534d.py",
+      "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+    },
+    {
+      "bytes": 10431,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-01/historical-mipmap_vq-0425534d.py",
+      "path": "c-side/tranches/composed-01/historical-mipmap_vq-0425534d.py",
+      "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+    },
+    {
+      "bytes": 211578,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-02/CHECKS.json",
+      "path": "c-side/tranches/composed-02/CHECKS.json",
+      "sha256": "e386e0c7f0ca0ce1199c69688046fc1de1d82d32fb13a43521899b517d22fac3"
+    },
+    {
+      "bytes": 35947,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-02/attestation-proposal.json",
+      "path": "c-side/tranches/composed-02/attestation-proposal.json",
+      "sha256": "fbc6b4f68262dc7996f96c7c5f7707cd57f2c6c2ccabde9e2d6b5bec4647289f"
+    },
+    {
+      "bytes": 33531,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-02/historical-convert_tpl-0425534d.py",
+      "path": "c-side/tranches/composed-02/historical-convert_tpl-0425534d.py",
+      "sha256": "a3d383254d784604662fde05644961229f79050c41176d1711f293082d6ba18b"
+    },
+    {
+      "bytes": 6853,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-02/historical-mipmap_pal4-0425534d.py",
+      "path": "c-side/tranches/composed-02/historical-mipmap_pal4-0425534d.py",
+      "sha256": "3531935b2a4401948aefba85baa1b32592cf46a50359510608374c1ff0aee106"
+    },
+    {
+      "bytes": 10431,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/composed-02/historical-mipmap_vq-0425534d.py",
+      "path": "c-side/tranches/composed-02/historical-mipmap_vq-0425534d.py",
+      "sha256": "209bdc7368f6a235ee23daab10d70af7e4be68c93b4b0fe35c1228bffea82525"
+    },
+    {
+      "bytes": 2108,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/CORE-BATCH-HANDBACK.md",
+      "path": "c-side/CORE-BATCH-HANDBACK.md",
+      "sha256": "23df71dadcebe2aa456cadbeb92757f35372263ecfb101461600c93b59a62c29"
+    }
+  ],
+  "created_utc": "2026-10-24T16:26:15.819782+00:00",
+  "scope": "Authored public source plus exact hash metadata. No private game asset/index binary/capture data. Preceding405f checkpoint contains original four base tranches."
+}
