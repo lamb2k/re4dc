@@ -3464,3 +3464,4 @@ include kos_cache_p2.mk
 
 # World programme Gate 0, diagnostic only; default 0.
 include world_census24.mk
+include perf_phase_miss.mk

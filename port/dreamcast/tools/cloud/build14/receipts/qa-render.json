@@ -1,0 +1,109 @@
+{
+  "format": "RE4DC_COMPACT_RECEIPT1",
+  "full_receipt": {
+    "path": "/tmp/b14-current-qa-final/qa-render.json",
+    "bytes": 4905,
+    "sha256": "e3c09588f76e04a94a79cec8eee2e2745e186b7b0fab304a78b58fee5324e691"
+  },
+  "encoding": "Lossless repeated-subtree interning; $ref names pool entries. Every original metric and command is retained.",
+  "value": {
+    "status": "PASS",
+    "scope": "Actual paused QA page/font with six-digit simulated PMU controls,320/640 pixels.\n\nUses the existing Build10 framebuffer capture/guard harness and Build14's real\ncensus/observer test setup. Captures stay outside Git. This is a display and\nbuffer-bounds gate, never a Dreamcast event or timing result.\n",
+    "layouts": [
+      {
+        "width": 320,
+        "height": 240,
+        "bpp": 2,
+        "rows": 79,
+        "pages": 8,
+        "guards": true
+      },
+      {
+        "width": 320,
+        "height": 240,
+        "bpp": 4,
+        "rows": 79,
+        "pages": 8,
+        "guards": true
+      },
+      {
+        "width": 640,
+        "height": 480,
+        "bpp": 2,
+        "rows": 54,
+        "pages": 3,
+        "guards": true
+      },
+      {
+        "width": 640,
+        "height": 480,
+        "bpp": 4,
+        "rows": 54,
+        "pages": 3,
+        "guards": true
+      }
+    ],
+    "command": [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-unused-function",
+      "-DRE4DC_WORLD_CENSUS24=1",
+      "-DRE4DC_WORLD_CENSUS24_HOST=1",
+      "-DRE4DC_PERF_PHASE_MISS=1",
+      "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+      "-DRE4DC_PERF_PHASE_MISS_EVENT=37",
+      "-I/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/platform/include",
+      "/tmp/b14-current-qa-final/qa.cpp",
+      "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/world_census24.cpp",
+      "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/perf_phase_miss.cpp",
+      "-o",
+      "/tmp/b14-current-qa-final/qa"
+    ],
+    "source_sha256": {
+      "port/dreamcast/game/qa_menu.cpp": "ce9abc92fd23da5146d77e241898d098095f5daf1c291ac41718dc1208f2b682",
+      "port/dreamcast/game/world_census24.cpp": "20d4436cb48ab88b2a32b7a35aab7fb4cb9ced679223d4a4b01023dfaf55eefe",
+      "port/dreamcast/game/perf_phase_miss.cpp": "3a2752829ed570ea672e79babd9a3376a6df376df13401193c45c65d46ea7c0d",
+      "port/dreamcast/game/platform/include/perf_phase_miss.h": "34c91fa99fd9da826285397bf4191d80d106f845862e44b1d3e3f3d91a4d2192",
+      "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+      "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+      "port/dreamcast/tools/cloud/build14/check_core.cpp": "25a3c75a6658cbdeebe8f68fc9b2527e04a6c5a43fc24f6b90da2491cffb2d60",
+      "port/dreamcast/tools/cloud/build10/qa_render_fixture.cpp": "c6fe12b836e5b7f45f926100039de6455533524669a3d951dd7bd617053b1dc9",
+      "port/dreamcast/tools/cloud/build14/qa_render_check.py": "d01ff518972f37f01806eb47ea7501974623b556317574d128c76e63870b0c6e"
+    },
+    "extracted_sha256": "c30f5418aa55f60bd6bc61aa2c9f31eb0650467e46ceacb37d2cdb4ddbb30dfe",
+    "captures": {
+      "qa-320-2-0.ppm": "1e18985c2deccc05a055d0dce9cfa8f06bef913af86298ca6951253bcb910eff",
+      "qa-320-2-1.ppm": "2266587edd373b41fd508159719b30f436fb7019c68b49bb9cb8293c9501efab",
+      "qa-320-2-2.ppm": "5030c6c80d1f1801012020bb9ad3f7736623bdf7c872cef76cbcdb3211db3cce",
+      "qa-320-2-3.ppm": "55d67cb54447236eb12beba21c73d14bf9d7b09088fb2e189a14d1a903d78c54",
+      "qa-320-2-4.ppm": "c0b53b5865b99aa82db53a8046688754b3bea4015b32c2252977fdfe3c3ba76f",
+      "qa-320-2-5.ppm": "da34b9afe108e5a6ceb6144c8125fe42019e660e08ffe70cf26c1ff78c7b9ae0",
+      "qa-320-2-6.ppm": "f38601fcf753dd99f5c95bdad5f767dc6db873b3a9a9c5959b2fc5ce1352a4d3",
+      "qa-320-2-7.ppm": "68c377a1a01a9e71514d0fe946630ba5294c5235b6d9026e87d5bfebe5e9e99e",
+      "qa-320-4-0.ppm": "44624d20e2807823fcddde7b4a811e99fc1010eecd3f5f50286a9d9b7324ed1d",
+      "qa-320-4-1.ppm": "4857fed86d76b2d1b1f2db64db1da1cfeff8d7a5bdcd0accc6e426557223fdff",
+      "qa-320-4-2.ppm": "2558079cb187dc57f6236e90cabcfc4217c1e50adb036601c3df701ba2b1b7cc",
+      "qa-320-4-3.ppm": "9b26b7c669b6cc95551663e8a2f1a0a8bdf5871e2378c61a88ef13db8534bad1",
+      "qa-320-4-4.ppm": "82c4f2a77751ccb4c438ea2c0964142686afbe95fbb88d56830f8b78dfaac2b7",
+      "qa-320-4-5.ppm": "78e640154f9e12f6995470e5d91455e9763cd7f075cd08f45d75027ea2173075",
+      "qa-320-4-6.ppm": "aeff3792c8c34b8b4f631bde4000453ab700f3d7160f7d7c09485dbffb9b2a85",
+      "qa-320-4-7.ppm": "5b54454a29c4fd96b6f61db42c29de8bf59140f55fb01145730abaf047eda66d",
+      "qa-640-2-0.ppm": "228cee6e95253eadfb26132a5850eaffbd2ce3e989cc0e7161fa5bd50aa8b3ca",
+      "qa-640-2-1.ppm": "59d62e266d48ac215fea7179f991d8c7f894423c7dd42ec70f97141af5a91625",
+      "qa-640-2-2.ppm": "af877c0f5f83a184845ddd37f0cf2ee253c8fe5683c174ae0c2ca63100b20641",
+      "qa-640-4-0.ppm": "72e1a84a1f79027e7af6c068aed363cd67061e2f6fd14822720a84656976243e",
+      "qa-640-4-1.ppm": "77d534606d9e4c35da332aa8af487ad72d674dbaa51a7f5303b9023cf453a97f",
+      "qa-640-4-2.ppm": "cdc9f6822ea92616f188fda3312242363cea51e5618dfcdf1423cc0114cf5cf3"
+    },
+    "control_values": {
+      "resident": 12,
+      "heavy": 400000,
+      "qualification": "SIMULATED"
+    }
+  },
+  "pool": {}
+}
