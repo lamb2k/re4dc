@@ -79,7 +79,7 @@ def bind_source(repo,profile):
   # Owned earlier PVS receipts alter native_static outside these core policy
   # blocks. All other bounded renderer policy files must equal integration.
   if rel.endswith('native_static.cpp'):
-   for begin,end in [('const float px_x=RE4DC_SCREEN_HALF_WF','    const auto& pk=ps2w.package;'),('    int draw_clusters(){','            ++stats.lod_draws')]:
+   for begin,end in [('const float px_x=RE4DC_SCREEN_HALF_WF*std::fabs(P[1])','    const auto& pk=ps2w.package;'),('    int draw_clusters(){','            ++stats.lod_draws')]:
     if block(original.decode(),begin,end)!=block(current.decode(),begin,end):raise ValueError('Core selector changed')
   elif current!=original:raise ValueError('Renderer policy differs from integration: '+rel)
   rows[rel]=dict(integration_sha256=hashlib.sha256(original).hexdigest(),owned_tree_sha256=hashlib.sha256(current).hexdigest())

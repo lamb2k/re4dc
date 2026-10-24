@@ -28,6 +28,8 @@ class Geometry(unittest.TestCase):
  def test_tjunction_unresolved(self):
   ts=list(T);x,y,z=ts.pop(0);mid=tuple((x[k]+y[k])//2 for k in range(3));ts += [a.canonical([x,mid,z]),a.canonical([mid,y,z])];self.assertTrue(any(r['boundary_edges'] for r in a.topology(ts)))
  def test_degenerate_rejected(self):self.assertIsNone(a.canonical([(0,0,0),(1,1,1),(2,2,2)]))
+ def test_ambiguous_policy_marker_refused(self):
+  with self.assertRaises(ValueError):a.block('begin begin end','begin','end')
  def test_missing_lod_refused(self):
   with self.assertRaises(ValueError):a.invariant([T],[1,1])
   with self.assertRaises(ValueError):a.selectable([])
