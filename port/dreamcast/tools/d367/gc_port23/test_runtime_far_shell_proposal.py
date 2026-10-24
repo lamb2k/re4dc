@@ -1,9 +1,9 @@
-"""Exercise actual far-shell loader/draw bodies from the unapplied proposal."""
+"""Exercise current actual far-shell composite loader/draw/retire bodies."""
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from far_shell_payload_patch import patched
+
 from test_runtime_hooks import function
 
 HERE = Path(__file__).resolve().parent
@@ -17,14 +17,14 @@ class FarShellProposalTests(unittest.TestCase):
             command = ['g++', '-x', 'c++', '-E', '-P', '-DRE4DC_GC_ASSET_GATE=0',
                        '-DRE4DC_FAR_SHELL_PART='+str(part), '-']
             original = subprocess.run(command, input=source, text=True, capture_output=True, check=True).stdout
-            proposed = subprocess.run(command, input=patched(source), text=True, capture_output=True, check=True).stdout
+            proposed = subprocess.run(command, input=subprocess.check_output(['git','-C',str(GAME.parents[2]),'show','9d560ca3574e0757fe1a79ef103fc1c42b5917c4:port/dreamcast/game/platform/far_shell.inc'],text=True), text=True, capture_output=True, check=True).stdout
             self.assertEqual(original.split(), proposed.split())
 
     def test_actual_proposed_load_draw_retire(self):
-        source = patched((GAME / 'platform/far_shell.inc').read_text())
+        source = (GAME / 'platform/far_shell.inc').read_text()
         types = source[source.index('struct Head {'):source.index('// Residency policy')]
         fixture = r'''
-#include "gc_asset_payloads.h"
+#include "gc_asset_static.h"
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
@@ -36,6 +36,11 @@ class FarShellProposalTests(unittest.TestCase):
 using namespace re4dc_gcasset;
 bool sq_held;std::string logs;
 extern "C" void re4dc_log(const char* fmt,...){assert(!sq_held);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+unsigned gcasset_static_profile(){return 7;}
+struct Re4dcModelPart{const void*model;const void*info;unsigned alpha_state;struct Lighting{bool ambient_vertex,material_vertex;};const Lighting*lighting;};
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**){assert(false);return 0;}
+extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){assert(false);return 0;}
+#include "gc_asset_static_source.inc"
 namespace farshell {
 ''' + types + r'''
 }
@@ -69,7 +74,7 @@ void build(){file.assign(sizeof(Head)+sizeof(Mat)+sizeof(Group)+3*sizeof(Vert)+4
 int main(){assert(install(nullptr,0));begin(0x111,1,Required);build();open(0x111);assert(st.h && asset_proof.serial);
  // Capture excludes generated LUT/alignment: exact complete file only.
  AssetDescription desc;assert(describe_checked(asset_proof.asset,&desc));assert(!memcmp(desc.digest.bytes,fingerprint(file.data(),file.size()).bytes,32));
- const unsigned first=asset_proof.serial;assert(re4dc_far_shell_draw(5,25));assert(submissions==1);payload_flush_all();assert(rows()==1);
+ const unsigned first=asset_proof.serial;assert(re4dc_far_shell_draw(5,25));assert(submissions==1);payload_flush_all();assert(rows()==2);
  logs.clear();accept=false;re4dc_far_shell_draw(5,25);payload_flush_all();assert(submissions==1 && logs.empty());accept=true;
  // No vertices accepted when every source vertex is behind near plane.
  auto*group=const_cast<Group*>(st.groups);group->origin[2]=0;re4dc_far_shell_draw(5,25);payload_flush_all();assert(submissions==1);group->origin[2]=-10;

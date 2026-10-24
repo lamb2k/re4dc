@@ -1586,6 +1586,10 @@ bool open(MeshView& v,unsigned index,unsigned room){
     const unsigned size=unsigned(fs_total(file));
 #if RE4DC_QUALITY_ASSETS
     if(low && size!=std_room.mesh_bytes[view]){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_invalidate_all();
+        re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
         re4dc_log("quality assets: %s is %u B, index says %u: Original package\n",path,size,std_room.mesh_bytes[view]);
         fs_close(file);std_room.mesh_views&=~(1U<<view);v.attempted=false;return open(v,index,room);
     }
@@ -1628,7 +1632,12 @@ bool open(MeshView& v,unsigned index,unsigned room){
         re4dc_static_free(storage);++stats.open_failures;
 #if RE4DC_QUALITY_ASSETS
         // A rejected Standard package: this owner opens its Original package instead.
-        if(low){std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
+        if(low){
+#if RE4DC_GC_ASSET_GATE
+            gcasset_static_invalidate_all();
+            re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+            std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
 #endif
         return false;
     }
@@ -1649,7 +1658,12 @@ bool open(MeshView& v,unsigned index,unsigned room){
     if(std_room.active && std_room.room==room){
         if(!low || !std_check_view(view,v.package)){
             if(low)re4dc_log("quality assets: %s records do not match the package: records off for this room\n",path);
-            if(low){std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
+            if(low){
+#if RE4DC_GC_ASSET_GATE
+                gcasset_static_invalidate_all();
+                re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+                std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
         }else std_room.checked|=1U<<view;
     }
 #endif
@@ -1783,6 +1797,14 @@ std::uint16_t pack1555(const float rgb[3],unsigned alpha){
 // relative lights stay as first seen - the labelled Dreamcast compromise.
 void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::MeshPart& part,
                 const Re4dcModelPart& p){
+#if RE4DC_GC_ASSET_GATE
+    // A first-light rewrite outlives this caller and later deferred lighting
+    // snapshots. Unknown derivation must revoke the stable owner as well as
+    // this draw's selected use; a later flag-free caller cannot promote it.
+    if(!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||
+       re4dc_gcasset::source_use.serial!=v.asset_proof.serial)
+        re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
     const std::uint32_t* palette=v.package.palette();
     re4dc::render::PreparedSourceLights lights;
@@ -4976,6 +4998,9 @@ std::uint8_t moved_of[kIds];
 float delta[kMoved][12];
 unsigned binds=0,hidden=0,moved=0,overflow=0,logged_frame=0;
 void reset(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     if(block)re4dc_static_free(block);
 #if RE4DC_PS2_WORLD_PARTS
     if(slots)for(unsigned i=0;i<nslots;++i)if(slots[i].parts)re4dc_static_free(slots[i].parts);
@@ -5351,8 +5376,10 @@ static bool listed(unsigned r){
 #if RE4DC_GC_ASSET_GATE
                     // The existing single bounded read consumes got bytes;
                     // it establishes no digest of an unread file suffix.
-                    const auto digest=re4dc_gcasset::fingerprint(b,unsigned(got));
-                    re4dc_gcasset::payload_capture_receipt(idx_asset_proof,idx_rooms,digest,unsigned(got));
+                    if(got<=ssize_t(sizeof(b))){
+                        const auto digest=re4dc_gcasset::fingerprint(b,unsigned(got));
+                        re4dc_gcasset::payload_capture_receipt(idx_asset_proof,idx_rooms,digest,unsigned(got));
+                    }
 #endif
                     std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
         }
@@ -5512,6 +5539,9 @@ static void note(unsigned pass,unsigned drawn){
 // scenery21: the room file's SCCN / SCPS sections against this package (crc, bytes, counts; SCCN also needs the
 // package's strip groups). A missing or stale section leaves its knob's path off for the room (SCN21 log line says why).
 void scn21_open(GCASSET_STATIC_ONLY_PARAM){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     auto& pk=ps2w.package;const auto& h=pk.header();
     unsigned len=0,ver=0,fl=0;
 #if RE4DC_SCENERY21_AB
@@ -5570,7 +5600,7 @@ void scn21_open(GCASSET_STATIC_ONLY_PARAM){
         }
         if(!why){
 #if RE4DC_GC_ASSET_GATE
-            if(re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
+            if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
 #endif
             piece::table=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
             std::memset(piece::table,0,4U*w[2]);   // slot words are this program's: start empty at every open
@@ -5768,7 +5798,7 @@ void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     }
     if(!why){
 #if RE4DC_GC_ASSET_GATE
-        if(re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCDD,sec,len,ver,fl);
+        if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCDD,sec,len,ver,fl);
 #endif
         dedup::block=const_cast<void*>(re4dc_room_file_block());dedup::bytes=len;
         dedup::run(pk,ps2w.sg_block?ps2w.sg_block+32:nullptr,ps2w.sg_groups,ps2w.gather,1);
@@ -5945,7 +5975,8 @@ bool ps2_open(){
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::StaticManifest gcasset_source;
-    if(ok)re4dc_gcasset::static_manifest_begin(gcasset_source,re4dc_gcasset::StaticWorld,ps2w.room,gcasset_static_profile(),s,msize);
+    if(ok && msize<=mbytes && mbytes<=total && psize<=total-mbytes && total<=40U*1024*1024)
+        re4dc_gcasset::static_manifest_begin(gcasset_source,re4dc_gcasset::StaticWorld,ps2w.room,gcasset_static_profile(),s,msize);
     using namespace re4dc_gcasset;
 #if !(RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS)
     static_manifest_note(gcasset_source,R4ID,Disabled);
@@ -6010,7 +6041,8 @@ bool ps2_open(){
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
 #if RE4DC_GC_ASSET_GATE
-    static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
+    if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
+    else static_manifest_note(gcasset_source,R4PW,Unproven);
 #endif
     // Geometry/material policy identity is separate from the physical R4PW
     // checksum. Only the certified scoped17 lineage can reuse original baked
@@ -6201,7 +6233,12 @@ bool ps2_open(){
 #endif
 #if RE4DC_GC_ASSET_GATE
         if(fg==FILEHND_INVALID)static_manifest_note(gcasset_source,R4SG,Absent);
-        else if(!gwhy)static_manifest_bytes(gcasset_source,R4SG,gb,gsize,w[1]);
+        else if(!gwhy){
+#if RE4DC_WORLD_VERT
+            if(gsize<=galloc && galloc<=40U*1024*1024)
+#endif
+                static_manifest_bytes(gcasset_source,R4SG,gb,gsize,w[1]);
+        }
 #endif
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];

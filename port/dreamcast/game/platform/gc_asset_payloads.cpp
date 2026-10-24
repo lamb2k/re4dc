@@ -254,13 +254,12 @@ PayloadQuadScope::PayloadQuadScope(const PayloadQuadBatch& batch):previous(paylo
 PayloadQuadScope::~PayloadQuadScope(){payload_quad_batch=previous;}
 bool payload_quads_accept(const void* vertices,unsigned count){
     const auto* batch=payload_quad_batch;if(!batch)return false;
-    const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
-    bool valid=batch->uses && batch->count && batch->count<=48 && vertices && vertices==batch->vertices &&
+    const bool valid=batch->uses && batch->count && batch->count<=48 && vertices && vertices==batch->vertices &&
         count==batch->vertex_count && count==batch->count*4;
-    for(unsigned i=0;valid && i<batch->count;++i){const auto& use=batch->uses[i];
-        valid=use.proof && use.serial && use.proof->owner && use.proof->serial==use.serial && use.mask && !(use.mask&~allowed);
-    }
     if(!valid)payload_faults|=1U<<SourceGeometry;
+    // After exact packet-shape authentication each emitted quad has its own
+    // frozen owner/serial/class. A stale Weapon receipt cannot erase that
+    // known class, nor suppress a different valid owner in this same packet.
     else for(unsigned i=0;i<batch->count;++i){const auto& use=batch->uses[i];payload_accept(use.proof,use.serial,use.mask);}
     return true; // An invalid active batch must never fall back to ambient model identity.
 }

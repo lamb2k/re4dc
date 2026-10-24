@@ -44,6 +44,9 @@ extern char re4dc_bench_arm(void) __attribute__((weak));
 #define MAXSEC 8
 static struct {
     unsigned room, nsec, bytes;
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    unsigned gcasset_prepared; /* one bit per borrowed section, reset by actual owner reset */
+#endif
     uint8_t* block;
     re4dc_room_header hdr;
     struct { char tag[4]; uint16_t version, flags; uint8_t* data; uint32_t len; } sec[MAXSEC];
@@ -178,6 +181,20 @@ int re4dc_gcasset_room_span(const void* data, unsigned bytes, unsigned version, 
     if (!rf.block || !data || !bytes || header != &rf.hdr || at < base || at-base > rf.bytes || bytes > rf.bytes-(at-base)) return 0;
     for (unsigned i=0; i<rf.nsec; ++i)
         if (rf.sec[i].data == data && rf.sec[i].len == bytes && rf.sec[i].version == version && rf.sec[i].flags == flags) return 1;
+    return 0;
+}
+/* Claim original bytes once before SCPS/SCDD's first controlled rewrite. A
+ * world-only reload cannot hash the prepared parent as a fresh original. */
+int re4dc_gcasset_room_original(const void* data, unsigned bytes, unsigned version, unsigned flags, const void* header)
+{
+    if (!re4dc_gcasset_room_span(data,bytes,version,flags,header)) return 0;
+    for (unsigned i=0; i<rf.nsec; ++i)
+        if (rf.sec[i].data == data) {
+            const unsigned bit=1u<<i;
+            if (rf.gcasset_prepared & bit) return 0;
+            rf.gcasset_prepared |= bit;
+            return 1;
+        }
     return 0;
 }
 #endif

@@ -1,10 +1,10 @@
-"""Controls on the generated, unapplied native_static handoff patch."""
+"""Current actual partial movie reload and mixed-owner accepted batch controls."""
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
 from test_runtime_hooks import function
-from static_payload_patch import patched
+
 
 HERE = Path(__file__).resolve().parent
 GAME = HERE.parents[2] / 'game'
@@ -12,9 +12,9 @@ GAME = HERE.parents[2] / 'game'
 
 class StaticProposalTests(unittest.TestCase):
     def test_proposed_actual_movie_reload_refusals(self):
-        source = patched((GAME / 'platform/native_static.cpp').read_text())
+        source = (GAME / 'platform/native_static.cpp').read_text()
         fixture = r'''
-#include "gc_asset_payloads.h"
+#include "gc_asset_static.h"
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
@@ -37,6 +37,7 @@ alignas(32) unsigned char arena[256];
 struct Movie{movie_world::Phase phase=movie_world::Phase::returning;unsigned capacity;void*base=arena;}ps2_movie;
 struct Files{unsigned mesh=32,side=sizeof(Ps2Head)+sizeof(Ps2Part)+sizeof(Ps2Placement),mesh_crc=1,mesh_fnv=1,side_crc=1,side_fnv=1;}ps2_movie_files;
 struct MovieWorldRead{~MovieWorldRead(){}};struct Re4dcIoScope{~Re4dcIoScope(){}};
+void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)payload_invalidate(ps2w.asset_proof,&ps2w);}
 bool ps2_movie_current(){return true;}bool ps2_movie_layout(unsigned){return true;}
 using file_t=int;constexpr int O_RDONLY=0,FILEHND_INVALID=-1;
 std::vector<unsigned char> mesh(32,2),side(ps2_movie_files.side);bool short_read=false;unsigned reads;
@@ -46,14 +47,14 @@ bool read_package(file_t fd,void*dest,unsigned count,unsigned){assert(!ps2w.asse
 unsigned ps2_crc32(const void*,unsigned){return 1;}
 ''' + function(source, 'bool ps2_movie_reload(){') + r'''
 void prepare(){Ps2Head h{{'R','4','P','W'},1,1,1,1,1};Ps2Part p{0,0,16,16};Ps2Placement placement{};memcpy(side.data(),&h,sizeof h);memcpy(side.data()+sizeof h,&p,sizeof p);memcpy(side.data()+sizeof h+sizeof p,&placement,sizeof placement);ps2_movie.capacity=((ps2_movie_files.mesh+31)&~31U)+((ps2_movie_files.side+31)&~31U);}
-int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();assert(ps2_movie_reload());const unsigned original=ps2w.asset_proof.serial;assert(original);
- AssetDescription desc;assert(describe_checked(ps2w.asset_proof.asset,&desc));assert(!memcmp(desc.digest.bytes,fingerprint(mesh.data(),mesh.size()).bytes,32)); // capture before adopt mutation
+int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();unsigned char source[32]={7};assert(payload_capture(ps2w.asset_proof,&ps2w,source,sizeof source));assert(ps2w.asset_proof.serial);
+ assert(ps2_movie_reload());assert(!ps2w.asset_proof.serial); // mesh+R4PW cannot authenticate retained prepared sidecars
  short_read=true;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);short_read=false;
  ps2w.package.fail=true;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);ps2w.package.fail=false;
  reinterpret_cast<Ps2Head*>(side.data())->version=2;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial && ps2w.package.closed);
  prepare();reinterpret_cast<Ps2Part*>(side.data()+sizeof(Ps2Head))->pass=3;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);
  prepare();reinterpret_cast<Ps2Placement*>(side.data()+sizeof(Ps2Head)+sizeof(Ps2Part))->mesh=1;assert(!ps2_movie_reload());assert(!ps2w.asset_proof.serial);
- prepare();mesh[1]^=1;assert(ps2_movie_reload());assert(ps2w.asset_proof.serial>original);assert(describe_checked(ps2w.asset_proof.asset,&desc));assert(!memcmp(desc.digest.bytes,fingerprint(mesh.data(),mesh.size()).bytes,32));assert(reads>=10);
+ prepare();mesh[1]^=1;assert(ps2_movie_reload());assert(!ps2w.asset_proof.serial && reads>=10);payload_retire(ps2w.asset_proof);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-reload-proposal-', dir='/dev/shm') as temporary:
@@ -66,11 +67,11 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();assert(p
             subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
     def test_proposed_actual_mixed_owner_impostor_flush(self):
-        static = patched((GAME / 'platform/native_static.cpp').read_text())
+        static = (GAME / 'platform/native_static.cpp').read_text()
         ui = (GAME / 'platform/native_ui.cpp').read_text()
         helper = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
         fixture = r'''
-#include "gc_asset_payloads.h"
+#include "gc_asset_static.h"
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
@@ -102,14 +103,17 @@ unsigned rows(){unsigned n=0;std::size_t at=0;while((at=logs.find("GC-ASSET v=",
 int main(){assert(install(nullptr,0));begin(0x111,1,Required);PayloadProof proof[3];int owner[3];unsigned char bytes[3][32]={{1},{2},{3}};
  for(unsigned i=0;i<3;++i)assert(payload_capture(proof[i],&owner[i],bytes[i],32));
  re4dc::room::MeshImpostor record{1,2,64,64,1,64,64};
- for(unsigned i=0;i<3;++i){auto&q=impostor_queue[i];q.record=&record;q.asset_use={&proof[i],proof[i].serial,1U<<SourceGeometry};}
+ for(unsigned i=0;i<3;++i){auto&q=impostor_queue[i];q.record=&record;q.source={&proof[i],proof[i].serial,1U<<SourceGeometry};}
  impostor_count=3;re4dc_static_flush_impostors();payload_flush_all();assert(submissions==1 && rows()==2); // capacity rejects third owner
  logs.clear();impostor_frame=++frame;impostor_count=2;bound=false;
  for(unsigned i=0;i<2;++i)impostor_queue[i].record=&record;
  re4dc_static_flush_impostors();payload_flush_all();assert(submissions==1 && logs.empty()); // failed bind emits nothing
  logs.clear();impostor_frame=++frame;impostor_count=2;bound=true;
  for(unsigned i=0;i<2;++i)impostor_queue[i].record=&record;
- payload_retire(proof[0]);re4dc_static_flush_impostors();payload_flush_all();assert(submissions==2 && !rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
+ payload_retire(proof[0]);re4dc_static_flush_impostors();payload_flush_all();assert(submissions==2 && !rows() && logs.find("unbound-accepted-payload")!=std::string::npos); logs.clear();begin(0x111,2,Required);impostor_frame=++frame;impostor_count=2;
+ for(unsigned i=0;i<2;++i)impostor_queue[i].record=&record;
+ impostor_queue[0].source.mask=(1U<<SourceGeometry)|(1U<<Weapon);
+ re4dc_static_flush_impostors();payload_flush_all();end(2);assert(submissions==3 && rows()==1 && logs.find("consumer=3")!=std::string::npos && logs.find("source_geometry=1")!=std::string::npos && logs.find("weapon=0")!=std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-static-proposal-', dir='/dev/shm') as temporary:

@@ -2,6 +2,7 @@
 #include "gc_asset_payloads.h"
 #if RE4DC_GC_ASSET_GATE
 extern "C" int re4dc_gcasset_room_span(const void*,unsigned,unsigned,unsigned,const void*);
+extern "C" int re4dc_gcasset_room_original(const void*,unsigned,unsigned,unsigned,const void*);
 namespace re4dc_gcasset {
 // Cold, local serialization only. No component list survives publication.
 enum StaticOwner : unsigned { StaticView=1,StaticMesh,StaticWorld,StaticShell,StaticIndex };
