@@ -57,7 +57,7 @@ not a fresh s30 heap gate, and no packages are written. Original source CRC/exte
 and every resolved input hash/size are checked against the current recipe and
 frozen compact pins. Any future output needs fresh physical CRC/SG/provenance binds.
 
-Run18 host controls with python -m unittest discover -v in this directory. Tests
+Run21 host controls with python -m unittest discover -v in this directory. Tests
 cover joins, winding/provoking, rotations, UV/color seams, groups/transparency,
 degenerate multiplicity, length limits, deterministic non-growth, topology floors,
 and wrong hash/same-size content/wrong extent refusal. Windows Python312 with numpy
@@ -66,3 +66,12 @@ only a new small JSON report and refuse overwriting prior evidence. Inputs are t
 private resolved-inputs.json and exact compact root, supplied explicitly. Preserve
 all r1/r2 reports; final frozen rerun is r3. No SDK, guest, timing, hardware,
 look acceptance, production change or I-001 GO is claimed.
+
+Legacy PS2CAM diagnostic limitation: the256-byte logger truncates the last
+viewport depth word and can concatenate rows. The model never reads vp4/vp5;
+source side planes require only vp0..3 and LOD uses screen resolution/P. Every
+requested legacy row now explicitly proves four complete finite viewport words,
+zero XY offsets and positive extent. Tests reject missing used words, nonzero
+bias and zero extent, and prove arbitrary unused tails do not change model inputs.
+No missing nibble is completed; reports inventory truncated tails. This narrow
+insensitivity does not authenticate all25 camera floats or full runtime state.

@@ -5,9 +5,31 @@ Not runtime or pixel evidence.
 import re,struct
 from pathlib import Path
 import numpy as np
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'worldlean'))
 import sgprice as sg
 
+def legacy_viewport_audit(path,first=500,last=794,stride=7):
+    """Validate only the four viewport inputs consumed by this model.
+    Never repair/trust the truncated final depth viewport word. Legacy logger
+    rows may concatenate without LF; labels delimit rather than readlines().
+    """
+    wanted=set(range(first,last+1,stride));rows={}
+    for m in re.finditer(r'PS2CAM f=(\d+) cf=[0-9a-f]{8} c=[0-9a-f ]+ p=[0-9a-f ]+ vp=([0-9a-f ]+)',Path(path).read_text(errors='replace')):
+        f=int(m[1])
+        if f not in wanted:continue
+        words=m[2].split()
+        if len(words)<4 or any(not re.fullmatch('[0-9a-f]{8}',w) for w in words[:4]):raise ValueError('incomplete consumed viewport words')
+        vp=struct.unpack('<4f',struct.pack('<4I',*(int(w,16) for w in words[:4])))
+        if not np.isfinite(vp).all() or vp[0]!=0 or vp[1]!=0 or vp[2]<=0 or vp[3]<=0:raise ValueError('unsupported viewport offsets/extent')
+        value=dict(consumed_first4_hex=words[:4],remaining_words=words[4:],complete_6word_row=len(words)==6 and all(re.fullmatch('[0-9a-f]{8}',w) for w in words))
+        if f in rows and rows[f]!=value:raise ValueError('conflicting viewport frame')
+        rows[f]=value
+    if rows.keys()!=wanted:raise ValueError('missing consumed viewport proof')
+    return dict(scope='Only first4 viewport words authenticated for this corner/LOD model; vp4/vp5 unused, no full-camera or repaired-tail claim.',truncated_rows=sum(not x['complete_6word_row'] for x in rows.values()),frames=rows)
+
 def cameras(path,first=500,last=794,stride=7):
+    legacy_viewport_audit(path,first,last,stride)
     pattern=r'PS2CAM f=(\d+) cf=([0-9a-f]{8}) c=([0-9a-f ]+) p=([0-9a-f ]+) vp='
     found={}
     for match in re.finditer(pattern,Path(path).read_text(errors='replace')):

@@ -5,7 +5,7 @@ import numpy as np
 from estimate_loaded import HERE,TOOLS,SOURCE,sha,pin,groups
 sys.path.insert(0,str(TOOLS/'worldlean'))
 import sgprice as sg
-from camera_selection import cameras,selection
+from camera_selection import cameras,selection,legacy_viewport_audit
 from estimate_graph import candidates,require_pin,frozen_variants
 
 def hostpath(s):
@@ -74,6 +74,6 @@ def main():
    totals[k]['optimistic_selected_reduction_ceiling_percent']=100*(1-totals[k]['optimistic_selected_min_corners']/totals['baseline']['selected_corners'])
    for metric in ('selected_corners','post_trivial_reject_preclip_corners'):
     totals[k][metric+'_reduction_percent']=100*(1-totals[k][metric]/totals['baseline'][metric])
-  results[room]=dict(camera=pin(log),compact=pin(mesh),loaded=loaded,totals=totals,frames=rows);print(room,json.dumps(totals),flush=True)
+  results[room]=dict(camera=pin(log),legacy_viewport=legacy_viewport_audit(log),compact=pin(mesh),loaded=loaded,totals=totals,frames=rows);print(room,json.dumps(totals),flush=True)
  output.write_text(json.dumps(dict(source=SOURCE,lod_divisor=20,frames='500..794 stride7',scope='MODELLED real-camera strip corners; post-trivial-reject counts are before actual near clipping. Does not model TA interpolation/coverage/depth ties. SG groups retain exact triangle membership and boxes; no assets/guests.',inputs_sha256=sha(inputs),helper_files={p.name:sha(p) for p in HERE.glob('*.py')},rooms=results),indent=2)+'\n')
 if __name__=='__main__':main()
