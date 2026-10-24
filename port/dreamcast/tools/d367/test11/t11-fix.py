@@ -900,6 +900,13 @@ if os.path.isdir(MIP22BD):
     for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
         DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
     PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
+# fol24 (lane mip-finish24 10-24, Test 23): mip22b's tex.pak + coverage-preserving alpha mip chains for 169 held foliage /
+# cut-out keys of the 27 ch1-ch2 PS2 worlds (tools/d367/foliagemip22/recover_alpha.py). Needs FOLIAGE_MIP24=1 (86 rebound
+# rect21 rows). After mip22b; release line only (not KSETS). Private store copy: re4-assets-private/fol24-20261024.
+FOL24D = os.environ.get('FOL24D', '/root/re4data/private/fol24-20261024')
+if os.path.isdir(FOL24D):
+    DATA['fol24'] = {'dc/tex.pak': FOL24D + '/dc/tex.pak'}
+    PAK_DERIVED['fol24'] = FOL24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
