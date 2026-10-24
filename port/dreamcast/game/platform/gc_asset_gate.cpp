@@ -153,7 +153,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     // run keeps reaching later identities. build_catalog.py --harvest reviews them.
     if(index==rows) {
         char hex[65];
-        for(unsigned b=0;b<32;++b)std::snprintf(hex+2*b,3,"%02x",digest.bytes[b]);
+        for(unsigned b=0;b<32;++b)::snprintf(hex+2*b,3,"%02x",unsigned(digest.bytes[b]));
         re4dc_log("GC-ASSET-HARVEST v=1 kind=%s id=%s sha256=%s\n",kind,id,hex);
         return {};
     }
