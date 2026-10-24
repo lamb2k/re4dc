@@ -2286,6 +2286,23 @@ GAME_OPT ?= -O1
 GAME_CPPFLAGS = -std=gnu++20 -fpermissive -w $(GAME_OPT) \
 	-include platform/include/re4dc_prelude.h \
 	-I$(ROOT)/include -I$(ROOT)/src -Iplatform/include -DRE4DC_GAME
+# STAT_ROUTINE_BYTES=1 (lane stat-bytes23 2026-10-23; default 0 = image unchanged): every remaining GameCube
+# big-endian store / test of the cModel::stat routine word (STAT_BE in re4dc_prelude.h): player / partner / HUD
+# tests, the r100 trap dog (em21 + em2a), El Gigante (em2b), Luis (pl14), the boat (pl0f), the bell / gatling
+# objects and the later bosses. em10 / em35 keep their own GANADO_ / EM35_ROUTINE_BYTES knobs.
+STAT_ROUTINE_BYTES ?= 0
+ifneq ($(STAT_ROUTINE_BYTES),0)
+ifneq ($(STAT_ROUTINE_BYTES),1)
+$(error STAT_ROUTINE_BYTES must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_STAT_ROUTINE_BYTES=1
+endif
+# STAT_DIAG=1 (test / QA discs only; default 0): STATDIAG log lines (player / partner routine-word tests where the
+# GameCube meaning and the raw word compare disagree, the r100 trap dog and its trap's routine changes, a self test).
+STAT_DIAG ?= 0
+ifneq ($(STAT_DIAG),0)
+GAME_CPPFLAGS += -DRE4DC_STAT_DIAG=1
+endif
 PLATFORM_CPPFLAGS = -std=gnu++20 -Wall -Wextra $(GAME_OPT) \
 	-Iplatform/include -DRE4DC_GAME
 

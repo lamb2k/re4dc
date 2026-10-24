@@ -1417,7 +1417,7 @@ int cSubLuis::damageCheck()
 {
     int dead;
 
-    if ((stat & 0xFFFF0000) == 0x04000000) {
+    if ((stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x04000000)) {
         action.set(6);
         return 1;
     }

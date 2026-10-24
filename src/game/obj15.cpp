@@ -492,7 +492,7 @@ void obj15DmCk(cObjGatling* obj)
     GatlingWork* w = &obj->gatling;
     u32 i;
 
-    if ((obj->stat & 0xFFFF0000) == 0x01010000) {
+    if ((obj->stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000)) {
         return;
     }
     for (i = 0; i < 3; i++) {
@@ -537,7 +537,7 @@ void cObjGatling::setMaxRot(f32 r)
 // 1 when the gun is flagged breakable/broken (stat high half 0x0101).
 int cObjGatling::ckBreak()
 {
-    return (stat & 0xFFFF0000) == 0x01010000;
+    return (stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000);
 }
 
 // 0 = weapon hits break it, else only setBreak does.
@@ -552,7 +552,7 @@ void cObjGatling::setBreak()
     GatlingWork* w = &gatling;
     u32 i;
 
-    if ((stat & 0xFFFF0000) == 0x01010000) {
+    if ((stat & STAT_BE(0xFFFF0000)) == STAT_BE(0x01010000)) {
         return;
     }
     SndStop(w->seHandle, 0);
