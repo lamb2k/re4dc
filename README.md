@@ -164,6 +164,8 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [x] **No hang on slow disc reads:** a disc read that never finishes now gives up and reads again, for DreamShell and similar loaders ([#28](https://github.com/lamb2k/re4dc/issues/28)).
 - [x] **Fewer see-through effects:** mist, glows and dust are cut. Blood, fire, explosions, grenades and the laser sight stay.
 
+- [x] **Boat weapon display:** boarding the boat shows the harpoon and hides handgun ammunition.
+
 ## What's new in Test 17.1
 
 A hotfix of Test 17.
