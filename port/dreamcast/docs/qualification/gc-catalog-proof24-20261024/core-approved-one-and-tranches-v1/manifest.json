@@ -1,0 +1,139 @@
+{
+  "base_source": "a788dc9f4a1be091d969166ec4f4c9277ec5255a",
+  "copied": [
+    {
+      "bytes": 1623,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/ROOT-APPROVED-ATTESTATION.json",
+      "path": "c-side/root-review/ROOT-APPROVED-ATTESTATION.json",
+      "sha256": "84a7942c3e952f0d5d5b31f2d7802595fde41b15710e9bc407738701618faea3"
+    },
+    {
+      "bytes": 638,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/ROOT-REVIEW.json",
+      "path": "c-side/root-review/ROOT-REVIEW.json",
+      "sha256": "0e71e7d62b7b21bab913e1ee4c8bc7e2653d826c356bf79ad457309fe906243b"
+    },
+    {
+      "bytes": 7140,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/CHECKS.json",
+      "path": "c-side/root-review/CHECKS.json",
+      "sha256": "f73682dc7c4688f7c0313d8316d65929645834a1ac2b8313d4f2d122ca24a202"
+    },
+    {
+      "bytes": 16757,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/historical-fx_ps2_pack-5182665f.py",
+      "path": "c-side/root-review/historical-fx_ps2_pack-5182665f.py",
+      "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+    },
+    {
+      "bytes": 32480,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/historical-convert_tpl-5182665f.py",
+      "path": "c-side/root-review/historical-convert_tpl-5182665f.py",
+      "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+    },
+    {
+      "bytes": 3263,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/SUMMARY.json",
+      "path": "c-side/tranches/SUMMARY.json",
+      "sha256": "561e6e6c01f14a417213d54c58a57965d4e30a18c358e4e7cba377b8cfa376ab"
+    },
+    {
+      "bytes": 2940,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/UNAPPROVED-REJECTION.json",
+      "path": "c-side/tranches/UNAPPROVED-REJECTION.json",
+      "sha256": "69c0f2c8da754064cb82ba60a08cc47e8b36841fa5c92c7237c7942c5a2e9cdc"
+    },
+    {
+      "bytes": 11848,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/check_core_tranche_v1.py",
+      "path": "c-side/tranches/check_core_tranche_v1.py",
+      "sha256": "5248fc52654b882ec7dde93cb47b7dff4affabd61e61289502f4d58ffc845599"
+    },
+    {
+      "bytes": 14497,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-01/CHECKS.json",
+      "path": "c-side/tranches/tranche-01/CHECKS.json",
+      "sha256": "aa7e3f350619cf4c11123d7ab347750e656bda285e9c93a9f17d626ad2f73b3c"
+    },
+    {
+      "bytes": 4919,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-01/attestation-proposal.json",
+      "path": "c-side/tranches/tranche-01/attestation-proposal.json",
+      "sha256": "5f1bf6245fb8ff8009fd04493e4c824a9a4a1f83a2c99cbf0ee6e6abc34a221d"
+    },
+    {
+      "bytes": 62011,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+      "path": "c-side/tranches/tranche-02/CHECKS.json",
+      "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+    },
+    {
+      "bytes": 27681,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/attestation-proposal.json",
+      "path": "c-side/tranches/tranche-02/attestation-proposal.json",
+      "sha256": "1fc5d676e39f190b96c94a912bbd9fa2a597ec0db2eac05e148035be1f537421"
+    },
+    {
+      "bytes": 118054,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-03/CHECKS.json",
+      "path": "c-side/tranches/tranche-03/CHECKS.json",
+      "sha256": "e06ec7b1a2b67768d78d75f972b0861b3115880e1cc44ebb24a5ee7108115f1c"
+    },
+    {
+      "bytes": 44453,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-03/attestation-proposal.json",
+      "path": "c-side/tranches/tranche-03/attestation-proposal.json",
+      "sha256": "82e8e4c3a473c405eefdc7a92424c069994a52e644c895c194a4685e61cc83dd"
+    },
+    {
+      "bytes": 99702,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-04/CHECKS.json",
+      "path": "c-side/tranches/tranche-04/CHECKS.json",
+      "sha256": "44e33ced809c6a47b3779d62fa9985243f8482f13031e6ca2c52a9fd0efd077b"
+    },
+    {
+      "bytes": 50443,
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-04/attestation-proposal.json",
+      "path": "c-side/tranches/tranche-04/attestation-proposal.json",
+      "sha256": "8a042517c9d470f7030bddaf95518dddfb4990f30d332961521fa05d6e1a0a72"
+    },
+    {
+      "bytes": 35,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1/allowlist.json",
+      "path": "c-side/private-one-approved-metadata/allowlist.json",
+      "sha256": "f65b36057b1b48860873c56c97f6046b80cf16dc34546a0bea00932fee4e5ab2"
+    },
+    {
+      "bytes": 290,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1/data-option.json",
+      "path": "c-side/private-one-approved-metadata/data-option.json",
+      "sha256": "b585b080deb12f99a735f0babb807eda7131c8a5b781f82e4b2e1949d4a8b0ca"
+    },
+    {
+      "bytes": 2986,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1/report.json",
+      "path": "c-side/private-one-approved-metadata/report.json",
+      "sha256": "c7cf6777eaeec869d40c246cb018c24f8c7e2ec1b8a5ebfb34f27fa5d4eeb447"
+    },
+    {
+      "bytes": 2307,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1-execution/RUN.json",
+      "path": "c-side/private-one-approved-execution/RUN.json",
+      "sha256": "c1e706733d0fcad42cb6ce7c2724a0267af0b01f0ea5317099640e6eb1d32e3c"
+    },
+    {
+      "bytes": 254,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1-execution/stdout.txt",
+      "path": "c-side/private-one-approved-execution/stdout.txt",
+      "sha256": "b066b86a0e5e8289f567588a6e046556e5f51f880d59b90ba9a1bdcf7721afdc"
+    },
+    {
+      "bytes": 0,
+      "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1-execution/stderr.txt",
+      "path": "c-side/private-one-approved-execution/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "created_utc": "2026-10-24T16:22:12.383760+00:00",
+  "scope": "Authored public source and exact hash/identity metadata only. No private source pixels/indices/CLUTs/assets/index binary/raw captures."
+}

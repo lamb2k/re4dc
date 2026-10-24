@@ -1,0 +1,131 @@
+{
+  "PS2_texture_IDs": 24,
+  "all_historical_INDEX_aggregates_match": true,
+  "all_replays_RAM_only": true,
+  "allowances_added": 0,
+  "approved_current_index_origins": {
+    "ps2": 1,
+    "unknown": 7303
+  },
+  "current_revision_mismatches": 56,
+  "exact_current_output_matches": 106,
+  "full_outputs_replayed": 162,
+  "max_elapsed_seconds": 1.4753198119578883,
+  "mismatch_identities": [
+    "983d1064-22def69d",
+    "ac28b504-561ef735",
+    "96f42df9-7cc934e6",
+    "8f860273-a3891f63",
+    "3475ba97-a5787cf0",
+    "9a54e191-4e229da7",
+    "68e36ca0-6805ca8f",
+    "a91ae8d9-fcfb3fde",
+    "7900d78c-b7c02490",
+    "c3b143d6-4a1c5907",
+    "3ab1d090-cb5ddf44",
+    "41a3ab03-27811ab8",
+    "fdf15325-0deb119d",
+    "be4500e7-00c29fc3",
+    "a9d62b83-e7373dea",
+    "0bb40b55-74e3dbc0",
+    "7fd978f3-be1eb3be",
+    "b04cd24a-daf35b0d",
+    "31db8ccd-bfa63f38",
+    "d940afe8-81da4226",
+    "f6bf9f22-eb76b136",
+    "c1d12e6d-f029b608",
+    "b2f69ff1-50ce99f2",
+    "f4ed21f8-0bc4b181",
+    "f4d142dc-38fd90b5",
+    "9305bb14-b14bc9d1",
+    "c9ae6026-842ff598",
+    "b39d7d87-09155edd",
+    "8a4b3f56-826ac189",
+    "697c9e1c-d1e7e8dc",
+    "cb3f9aac-e2af9117",
+    "f3fce72b-cfe27001",
+    "c78beae2-52b8d459",
+    "2b35d968-d13684b6",
+    "1b9a8e27-61903f6e",
+    "1d80f411-2fb53e6a",
+    "d425c598-ab208c82",
+    "8150bd32-2deb427b",
+    "62989b27-9b5c857e",
+    "68676842-54104b8e",
+    "c5cb641e-a55d3fa6",
+    "5869dc01-fd601af6",
+    "adfef1dc-5eab705e",
+    "578ccd57-b8f703e9",
+    "e0578c65-e3b2ea67",
+    "eb576189-4016b3b9",
+    "24e067f6-fd37d81e",
+    "aec5eb72-a4c677ca",
+    "1bc4a837-34489f42",
+    "62a393e3-d34973e2",
+    "74d04f5b-5fd982cc",
+    "177bff14-fed45929",
+    "408416ee-1e6d9ee2",
+    "66b5d85b-4564df4e",
+    "f04e8004-448f44d2",
+    "2f0f159a-a8c6630f"
+  ],
+  "mismatches_never_proposed": true,
+  "production_pin": 0,
+  "schema": 1,
+  "source_tranches": 4,
+  "status": "ROOT_BATCH_ORIGIN_REVIEW_PENDING",
+  "tranches": [
+    {
+      "IDs": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "matches": 4,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-01/CHECKS.json",
+      "sha256": "aa7e3f350619cf4c11123d7ab347750e656bda285e9c93a9f17d626ad2f73b3c"
+    },
+    {
+      "IDs": [
+        0,
+        10,
+        11,
+        14,
+        15,
+        18,
+        24,
+        25,
+        27
+      ],
+      "matches": 23,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+      "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+    },
+    {
+      "IDs": [
+        37,
+        38,
+        40,
+        50,
+        80,
+        90,
+        150,
+        178,
+        205
+      ],
+      "matches": 37,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-03/CHECKS.json",
+      "sha256": "e06ec7b1a2b67768d78d75f972b0861b3115880e1cc44ebb24a5ee7108115f1c"
+    },
+    {
+      "IDs": [
+        44,
+        46
+      ],
+      "matches": 42,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-04/CHECKS.json",
+      "sha256": "44e33ced809c6a47b3779d62fa9985243f8482f13031e6ca2c52a9fd0efd077b"
+    }
+  ]
+}

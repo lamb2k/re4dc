@@ -1,0 +1,58 @@
+{
+  "source": "a788dc9f4a1be091d969166ec4f4c9277ec5255a",
+  "command": [
+    "python3",
+    "-B",
+    "/root/work/lanes/gc-catalog-proof24/port/dreamcast/tools/d367/gc_port23/proof_catalog24.py",
+    "--selection",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-inputs/selection.json",
+    "--selection-sha256",
+    "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484",
+    "--manifest",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1-inputs/manifest-selected1697.json",
+    "--manifest-sha256",
+    "a2e52995f549c8be11df4f8047c54e1b558ce89fe148b151ac797a9a6de037e9",
+    "--reviewed-proofs",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/ROOT-APPROVED-ATTESTATION.json",
+    "--reviewed-proofs-sha256",
+    "84a7942c3e952f0d5d5b31f2d7802595fde41b15710e9bc407738701618faea3",
+    "--historical-proposals",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-port23-20261023/seed/reviewed-v1/reviewed-seed.json",
+    "--historical-proposals-sha256",
+    "117cb44162e1efa822e06db124cfa78dd5a60f0f5e7de7ec9958fd6c4af9274c",
+    "--store-root",
+    "/root/re4data/private",
+    "--store-root",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1",
+    "--out-dir",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1"
+  ],
+  "returncode": 0,
+  "elapsed_seconds": 0.7370869460282847,
+  "peak_child_maxrss_KiB": 65756,
+  "address_space_limit_bytes": 268435456,
+  "timeout_seconds": 120,
+  "approved_attestation_sha256": "84a7942c3e952f0d5d5b31f2d7802595fde41b15710e9bc407738701618faea3",
+  "allUnknown_index_retained_sha256": "7861254ae33c183b2e2f8e8b63f82390dc727a341e9433b7f252c9f0d699f806",
+  "new_index_sha256": "6aceb9e4a1631cd6c199b51baa13ee9f7f7a21558b475fffa4d66e5d5b8b8105",
+  "new_index_bytes": 818176,
+  "binary_diff": {
+    "changed_bytes": [
+      228256
+    ],
+    "record": 2036,
+    "old_origin": 0,
+    "new_origin": 2,
+    "other_index_bytes_unchanged": true
+  },
+  "origins": {
+    "authored": 0,
+    "gc": 0,
+    "ps2": 1,
+    "unknown": 7303
+  },
+  "allowances": 0,
+  "historical_proposals_unapproved": 5761,
+  "production_pin": 0,
+  "asset_output_or_SDK_guest_stage": false
+}

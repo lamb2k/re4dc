@@ -1,0 +1,535 @@
+{
+  "entries": [
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "1f48bf1c-2eea6d6f",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "f74a1e259c672ddf787618e951aeb531698c00b7735457e8ae801489664c0ddf"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "bcdc6ed8-fbaafaa2",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "6073a61a75c1b6c8905fe8717e699b14d9a20a907a2309f046c32e306124eee4"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "cf7c5b6e-d4fed47f",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "d085eaefd63fb19d0b7e18fc37bc0bd63ef0aa9532fcc0bd8371514108ca8dbb"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "899f1f10-5f4b35e8",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "fecdf0752a7fd8dd613c5ba5006b0261f99cf19c9d4a8921ca46de85b970f188"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "1fe2fb03-971d6991",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "3add3a216d13bc608bc1e15c817379d1bbaa9202655289cb69244aa098c05642"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "7eab4f36-caa6cd09",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "00c0628fc8fce837a3c5751ea65e126fbffd11fa3e95a8b270946f65a16ecee8"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "e048b6da-63b85704",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "74f65822fa524730e143e5239a03d28611b362b0bd04c87aebf7887a461aa657"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "e75953b4-9617848a",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "c37ddb5c2191c284beb5475a312f37f581fccc8b99077ee22c435911e6bcf268"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "2f2bd1c8-a6e2b42e",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "b372d494591aea7f390a23e5717435295bcf8548c209d8ef13b4c11dc458a9c2"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "6c7a7add-39c3bc12",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "ee5843a47b1574f9a3ae8058d547c3cb8b977c8e67a3d374993b906afc9bc0f9"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "4e59a981-fe3e4c4b",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "e43fb08b28bcd551e7020cbc4fde727c91ad17d30c153e092373ef0a5a50c589"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "807e9dda-c15de168",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "2e75eaf906b7fc28fe771d5eb6311a070d6cfcc5615ca9ab9ddf85a8f000cbd9"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "3a9b26c5-74f61d09",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "19bbd1854d13f6a14b96721e12e2687966fd6089875dc8d7e41f58451b4e5b6a"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "fa91f9a3-82f254e1",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "3b0c2e6f9e6ee9928c5745addb2fdc97193535f2ee3c7a3ec6547750f8431100"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "ef19abb0-b4b6584d",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "100ac568e821a8aca5a8d6a303c053088d4a992b2b7681eacc5c3c991bd08b22"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "a8d4f2c1-7fd43a93",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "363e53d87a7e59a2d0bb7d0ce25a31a05eaf1d85f90b037ada9a9311cbd9a820"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "58fd30d4-d3f6764b",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "7df7f2e622c35330052c9af328f6936a6c9c1bf364c01c721829068106e0ffc6"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "915d302a-b2f3a54f",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "e686f2bb6e42fb765d4d13a69402b065b67b8b64f762c2b00ae3728fdb903608"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "0c4d801d-7265f1aa",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "49c67423dfd8adc1e3ed3c99df47faabe2174c1a541daedf14036bc4a4e2ab41"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "741557a7-4864e5c8",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "d3b148059f7a01dc81480c886dff9d4169f653a6a23b822bc0c6cf2c21a008d1"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "6737009a-4c6901f4",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "2e89db37cb2182ff1c353b56f6459f9412b21d7d96131a89ee4ace3905062fb1"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "93fba4ec-53851cbd",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "75b9f63a0548091f8e373f677f395e35174305f17c86977b8d8b71e9518b9e01"
+    },
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/core-tranches-v1/tranche-02/CHECKS.json",
+          "sha256": "21c3f6fc5fb0f13acb66bcb96e00bad62de6cd0ba6d2647349999108dd5bb4ca"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        }
+      ],
+      "id": "f803aac2-db682455",
+      "kind": "texture",
+      "owner": "gc-catalog-proof24-root-batch-review-pending",
+      "provenance": "ps2",
+      "reason": "Exact original Core.dat source pictures, historical shared-palette converter and full existing-library/current-selected member output match. Root batch origin approval pending.",
+      "reviewed": false,
+      "sha256": "291385f0fff100ff67e46a87c7514235840602ecf76800a4eff8346b5fdd5fc2"
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484"
+}

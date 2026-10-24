@@ -1,0 +1,33 @@
+{
+  "entries": [
+    {
+      "chain": [
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/CHECKS.json",
+          "sha256": "f73682dc7c4688f7c0313d8316d65929645834a1ac2b8313d4f2d122ca24a202"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/historical-fx_ps2_pack-5182665f.py",
+          "sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/historical-convert_tpl-5182665f.py",
+          "sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2"
+        },
+        {
+          "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/ROOT-REVIEW.json",
+          "sha256": "0e71e7d62b7b21bab913e1ee4c8bc7e2653d826c356bf79ad457309fe906243b"
+        }
+      ],
+      "id": "47a9bc5b-b0495b0f",
+      "kind": "texture",
+      "owner": "root-gc-source-audit24",
+      "provenance": "ps2",
+      "reason": "Exact selected full texture output independently reproduced in RAM from the user-provided original PS2 USA Core.dat EFF1 f7 disc span using pinned historical converter functions. Trusted private PS2 source; no retail dump certification, hardware, look or accepted-use claim.",
+      "reviewed": true,
+      "sha256": "91ad12accc6fd1ad52b1f6289ef2ffebc1cbc31b91a964e6295498419e301900"
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484"
+}

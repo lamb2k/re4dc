@@ -1,0 +1,9 @@
+{
+  "provenance": [
+    "Private candidate index only; production pin remains0; no gate/coverage acceptance."
+  ],
+  "remove": [],
+  "replace": {
+    "dc/gc-assets.idx": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-one-approved-v1/gc-assets.idx"
+  }
+}

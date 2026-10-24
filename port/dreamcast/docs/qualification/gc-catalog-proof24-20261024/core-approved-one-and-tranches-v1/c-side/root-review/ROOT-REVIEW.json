@@ -1,0 +1,8 @@
+{
+  "verdict": "APPROVE_ONE_EXACT_ORIGIN_IDENTITY_ONLY",
+  "checker_sha256": "d1813c40a5f27acc76f34b891cf6e38b69dec8944841a57f813386b969c6d62a",
+  "recheck_sha256": "f73682dc7c4688f7c0313d8316d65929645834a1ac2b8313d4f2d122ca24a202",
+  "source_authority": "Existing user-provided original PS2 source dump at the established project path; platform and exact original member verified. No full retail/untampered-disc certification asserted.",
+  "scope": "One full208-byte texture payload only; no blanket converter/pack authority or accepted-draw coverage. Original allUnknown index unchanged.",
+  "UTC": "2026-10-24T16:13:37.320459+00:00"
+}

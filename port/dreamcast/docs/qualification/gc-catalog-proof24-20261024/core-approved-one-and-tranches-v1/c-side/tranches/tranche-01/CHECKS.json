@@ -1,0 +1,383 @@
+{
+  "RAM_only_asset_bytes": true,
+  "allowances_added": 0,
+  "authority": "Standing trusted user private PS2 disc source; same exact Core.dat/EFF as root-approved f7. No independent retail certificate.",
+  "catalog_mutated": false,
+  "elapsed_seconds": 0.2864596570143476,
+  "filesystem_asset_outputs": 0,
+  "historical_converter": {
+    "C_functions": {
+      "_pack_4444": "1d4801debec4f492e0e8a22721ae9e2ee325ec88cd323006fae1abf4314159a8",
+      "_twiddle_table": "c3929328ecad9cee734ebc24d53674b73e888a05f4bc34df3fe67712e6d1ccc4",
+      "twiddle_16bpp": "a0e4f8ffa048d8f22c0b82c19443edbdbdd8172dd318118e2bf1e314b5512f07"
+    },
+    "commit": "5182665f6d6b62aee348e58266c015c891da5d85",
+    "convert_tpl_sha256": "e306b31fb8a46d2fc993c75be22ee0064454fd0d91d32135b5c5bb08b4d232c2",
+    "fx_functions": {
+      "package": "0ccffad27099c6f941d2258393d4aca06f23fbbef58effdee302adf1fdb03046",
+      "palette16": "9cc2b98aadedd767f0c54e561a1374ccd243b442b730210a389f384a89d17ae4",
+      "premul": "c91decf3b9ff94a3f487c00617549247c952a6b297968fe8bbffd4e04072269d"
+    },
+    "fx_sha256": "41d9cafee8e82bd254bad6c02e202b0f398892b7a9ba894fd7fc3aa71c9ce3d5"
+  },
+  "ids": [
+    4,
+    5,
+    6,
+    7
+  ],
+  "inputs": {
+    "INDEX": {
+      "bytes": 409810,
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/INDEX.tsv",
+      "sha256": "653cbe89abd8a86e8e47f0dadb35b9477197feeb2659857f45e1b5680ffeea7d"
+    },
+    "KEYS": {
+      "bytes": 105191,
+      "path": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/effects-tex/KEYS.tsv",
+      "sha256": "9286a741d602f4885e48a0c50e36ab6fda8c4c09916be2939b9b9d5c708f2a71"
+    },
+    "catalog": {
+      "bytes": 5030573,
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/gc-catalog-proof24-20261024/private-current-v1/catalog.json",
+      "sha256": "8d29e181e545ff745685412b8a2f9edf00c2dd692bb3847150575394d820b364"
+    },
+    "helper_dependency": {
+      "bytes": 12987,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-discovery-v1/check_core_f7_v1.py",
+      "sha256": "d1813c40a5f27acc76f34b891cf6e38b69dec8944841a57f813386b969c6d62a"
+    },
+    "root_one_approval": {
+      "bytes": 1623,
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/gc-catalog-proof24/origin-root-review-v1/ROOT-APPROVED-ATTESTATION.json",
+      "sha256": "84a7942c3e952f0d5d5b31f2d7802595fde41b15710e9bc407738701618faea3"
+    }
+  },
+  "matched_proposed_identities": 4,
+  "max_address_space_bytes": 268435456,
+  "negative_controls": [
+    {
+      "header_swap": true,
+      "id": 4,
+      "malformed_picture": true,
+      "truncated_full_output": true,
+      "wrong_key": true
+    },
+    {
+      "header_swap": true,
+      "id": 5,
+      "malformed_picture": true,
+      "truncated_full_output": true,
+      "wrong_key": true
+    },
+    {
+      "header_swap": true,
+      "id": 6,
+      "malformed_picture": true,
+      "truncated_full_output": true,
+      "wrong_key": true
+    },
+    {
+      "header_swap": true,
+      "id": 7,
+      "malformed_picture": true,
+      "truncated_full_output": true,
+      "wrong_key": true
+    }
+  ],
+  "platform": {
+    "SYSTEM_CNF": {
+      "bytes": 57,
+      "offset": 567296,
+      "sha256": "342b765b1f20ad259725416d9cee60dab312862440f20b7639f2e5e6bf103ef7"
+    },
+    "boot_ELF": {
+      "ELF_machine": "MIPS",
+      "bytes": 3096892,
+      "header64_sha256": "ad297b0cb704fef2541b96a959fa41411ffab933123bfa28d5cc80f6021411fb",
+      "name": "SLUS_211.34;1",
+      "offset": 569344
+    },
+    "full_ISO_hash_computed": false,
+    "pvd_sha256": "f5d790d62a8136d4b98127aeeef0de439c6e83a349a52d1be5e0be146d39069a",
+    "retail_authenticity_or_untampered_dump_independently_proved": false,
+    "root_directory_sha256": "75ff643deb3451ad801fe2cd5a65055d9ebb9893636f174ee9cb7060a3918d77",
+    "volume_id": ""
+  },
+  "production_pin": 0,
+  "results": [
+    {
+      "INDEX_row": {
+        "bytes": "2224",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@5182665f",
+        "dc_format": "PAL4_ARGB4444 64x64 x1 (GC 96x96 x1)",
+        "gate": "PASS:fx12-b-cand,fx12-h-cand,fx12b-candm-a",
+        "gc_id": "etc/core.das:0#1:0x04",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "2b66e26d6a233d8c42e13b40106557e3e1ad2fadf4e659acd9ad1fdb90961892"
+      },
+      "aggregate_bytes": 2224,
+      "aggregate_receipt_match": true,
+      "aggregate_replayed_sha256": "2b66e26d6a233d8c42e13b40106557e3e1ad2fadf4e659acd9ad1fdb90961892",
+      "outputs": [
+        {
+          "PS2_frame": 0,
+          "actual_selected_fullbyte_equal": true,
+          "bytes": 2224,
+          "equals_existing_library": true,
+          "equals_selected_full_SHA": true,
+          "frame": 0,
+          "height": 64,
+          "id": "608502e3-1b560125",
+          "kind": "texture",
+          "quantizer_error": 0.0,
+          "selected_member_bytes": 2224,
+          "selected_member_offset": 63135744,
+          "selected_pack_sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+          "selected_sha256": "22792d6c5a9432cdaf74d703849ee58ab3db94d79fc88dd85b652a2f1473c447",
+          "sha256": "22792d6c5a9432cdaf74d703849ee58ab3db94d79fc88dd85b652a2f1473c447",
+          "status": "MATCH_UNAPPROVED",
+          "width": 64
+        }
+      ],
+      "source": {
+        "TPL_bytes": 2240,
+        "TPL_offset": 87760,
+        "TPL_sha256": "88b82660c139364b21cabe1b3bece87928c6569df7361ff982672af555db00b7",
+        "id": 4,
+        "pictures": [
+          {
+            "RGBA_sha256": "4d231842c2f668d6d6e0a8a36273e5387181285c456b0ef64b1a469ab19f50f1",
+            "depth": 8,
+            "descriptor_offset": 87776,
+            "descriptor_sha256": "8d061c199e1eb3b93b620a621ffe6988d2406171fcc66a1b1d2b5a58a8527f2b",
+            "frame": 0,
+            "height": 64,
+            "indices_bytes": 2048,
+            "indices_offset": 87824,
+            "indices_sha256": "7e8857ce59419510126abd1b9de9e2b55d6b0163ac73b3a44c9fd552ae9d1cb7",
+            "interlace": 0,
+            "palette_span_bytes": 96,
+            "palette_span_offset": 89872,
+            "palette_span_sha256": "1d730a4da8243fd2f4246a8c915158e1d93c02ccb42dd1e397a14bbf7bd45bb1",
+            "width": 64
+          }
+        ],
+        "slot": 3
+      }
+    },
+    {
+      "INDEX_row": {
+        "bytes": "2224",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@5182665f",
+        "dc_format": "PAL4_ARGB4444 64x64 x1 (GC 64x64 x1)",
+        "gate": "PASS:fx12-b-cand,fx12-h-cand,fx12b-candm-a",
+        "gc_id": "etc/core.das:0#1:0x05",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "8593100ad6dc5398752cda784e7c6e7cea0d75f41282114438429bd25c7d81d8"
+      },
+      "aggregate_bytes": 2224,
+      "aggregate_receipt_match": true,
+      "aggregate_replayed_sha256": "8593100ad6dc5398752cda784e7c6e7cea0d75f41282114438429bd25c7d81d8",
+      "outputs": [
+        {
+          "PS2_frame": 0,
+          "actual_selected_fullbyte_equal": true,
+          "bytes": 2224,
+          "equals_existing_library": true,
+          "equals_selected_full_SHA": true,
+          "frame": 0,
+          "height": 64,
+          "id": "4134be3a-1a9db0e3",
+          "kind": "texture",
+          "quantizer_error": 0.0,
+          "selected_member_bytes": 2224,
+          "selected_member_offset": 42614784,
+          "selected_pack_sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+          "selected_sha256": "bcc4651f2b711949a8ff2121f63949eeac62ad90b62d43037d68e497aa2d458a",
+          "sha256": "bcc4651f2b711949a8ff2121f63949eeac62ad90b62d43037d68e497aa2d458a",
+          "status": "MATCH_UNAPPROVED",
+          "width": 64
+        }
+      ],
+      "source": {
+        "TPL_bytes": 2240,
+        "TPL_offset": 90000,
+        "TPL_sha256": "dbb26759b05e15ef372b843129dc25327ec44de489860d3f0653e4c2db0dfbe4",
+        "id": 5,
+        "pictures": [
+          {
+            "RGBA_sha256": "9e312d75e2b88f017a39b80447cacfeca2b156b40040adcfe3235c9b7c687885",
+            "depth": 8,
+            "descriptor_offset": 90016,
+            "descriptor_sha256": "8d061c199e1eb3b93b620a621ffe6988d2406171fcc66a1b1d2b5a58a8527f2b",
+            "frame": 0,
+            "height": 64,
+            "indices_bytes": 2048,
+            "indices_offset": 90064,
+            "indices_sha256": "5da48abcddfc0dc590167cc850294fb58bd32dba68718cdfe6738e5d99613900",
+            "interlace": 0,
+            "palette_span_bytes": 96,
+            "palette_span_offset": 92112,
+            "palette_span_sha256": "d1951c3c08adafc09f1ab56a12d70638e8ef2ea2a71b24964130882e8c604d50",
+            "width": 64
+          }
+        ],
+        "slot": 4
+      }
+    },
+    {
+      "INDEX_row": {
+        "bytes": "2224",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@5182665f",
+        "dc_format": "PAL4_ARGB4444 64x64 x1 (GC 96x80 x1)",
+        "gate": "PASS:fx12-b-cand,fx12-h-cand,fx12b-candm-a",
+        "gc_id": "etc/core.das:0#1:0x06",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "1ebe2b11a05d50ccf3a4e55ab5bf559a5851fc663ba90cd7b214a10b3aef4c9e"
+      },
+      "aggregate_bytes": 2224,
+      "aggregate_receipt_match": true,
+      "aggregate_replayed_sha256": "1ebe2b11a05d50ccf3a4e55ab5bf559a5851fc663ba90cd7b214a10b3aef4c9e",
+      "outputs": [
+        {
+          "PS2_frame": 0,
+          "actual_selected_fullbyte_equal": true,
+          "bytes": 2224,
+          "equals_existing_library": true,
+          "equals_selected_full_SHA": true,
+          "frame": 0,
+          "height": 64,
+          "id": "bbdd9532-bd70681b",
+          "kind": "texture",
+          "quantizer_error": 0.0,
+          "selected_member_bytes": 2224,
+          "selected_member_offset": 121956352,
+          "selected_pack_sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+          "selected_sha256": "62a560fe6db0c1c3d5d647a971390257357423bd6a23ddcd7a8b0e963edb82e0",
+          "sha256": "62a560fe6db0c1c3d5d647a971390257357423bd6a23ddcd7a8b0e963edb82e0",
+          "status": "MATCH_UNAPPROVED",
+          "width": 64
+        }
+      ],
+      "source": {
+        "TPL_bytes": 2240,
+        "TPL_offset": 92240,
+        "TPL_sha256": "450a03b785da8764b9a23181ad0c11c8b7453af8e50c06d25a9f797fb6c5e376",
+        "id": 6,
+        "pictures": [
+          {
+            "RGBA_sha256": "8f5c69298238d481d522aa151116be63ab27c91db747e2c7a697243b388a1242",
+            "depth": 8,
+            "descriptor_offset": 92256,
+            "descriptor_sha256": "8d061c199e1eb3b93b620a621ffe6988d2406171fcc66a1b1d2b5a58a8527f2b",
+            "frame": 0,
+            "height": 64,
+            "indices_bytes": 2048,
+            "indices_offset": 92304,
+            "indices_sha256": "bf42798361e686e5022bfcc094b7271ddac3c964c3e07fcccb69b3e40f7274f7",
+            "interlace": 0,
+            "palette_span_bytes": 96,
+            "palette_span_offset": 94352,
+            "palette_span_sha256": "1c8030bd3e28641c82cc587299dbf30bd972cf777cd2cc82befc0cd7a840ce18",
+            "width": 64
+          }
+        ],
+        "slot": 5
+      }
+    },
+    {
+      "INDEX_row": {
+        "bytes": "688",
+        "class": "effects-tex",
+        "converter": "fx_ps2_pack.py@5182665f",
+        "dc_format": "PAL4_ARGB4444 32x32 x1 (GC 56x56 x1)",
+        "gate": "PASS:fx12-b-cand,fx12-h-cand,fx12b-candm-a",
+        "gc_id": "etc/core.das:0#1:0x07",
+        "owner_lane": "fx12",
+        "ps2_source": "Core.dat:1",
+        "room": "common",
+        "sha256": "0583e6b575b4c21780385f6ebcbb87ca43774650d3489fb3d8f79307fa2d9e78"
+      },
+      "aggregate_bytes": 688,
+      "aggregate_receipt_match": true,
+      "aggregate_replayed_sha256": "0583e6b575b4c21780385f6ebcbb87ca43774650d3489fb3d8f79307fa2d9e78",
+      "outputs": [
+        {
+          "PS2_frame": 0,
+          "actual_selected_fullbyte_equal": true,
+          "bytes": 688,
+          "equals_existing_library": true,
+          "equals_selected_full_SHA": true,
+          "frame": 0,
+          "height": 32,
+          "id": "d462d907-d1bbdb27",
+          "kind": "texture",
+          "quantizer_error": 0.0,
+          "selected_member_bytes": 688,
+          "selected_member_offset": 137211904,
+          "selected_pack_sha256": "5bba464a1175d8ebe153d5aecb629ea9637807c2bf4fc438a32c17148d0729da",
+          "selected_sha256": "6c212e2769108cba67311765d956037c5403739d01f766b08b54ab77d80aafe0",
+          "sha256": "6c212e2769108cba67311765d956037c5403739d01f766b08b54ab77d80aafe0",
+          "status": "MATCH_UNAPPROVED",
+          "width": 32
+        }
+      ],
+      "source": {
+        "TPL_bytes": 704,
+        "TPL_offset": 94480,
+        "TPL_sha256": "930ad88f0b7562ca099e44aa8b78fa8546f1a7e2a6b105eb3953c8a3d2750736",
+        "id": 7,
+        "pictures": [
+          {
+            "RGBA_sha256": "e99da97e8cae313605a21205bfe717dd24c55af85506518f1c95b87a9e22fdd4",
+            "depth": 8,
+            "descriptor_offset": 94496,
+            "descriptor_sha256": "3c85d263f056a14fb033187d1d83e01f9c88df477f97ac496a428858f114eccb",
+            "frame": 0,
+            "height": 32,
+            "indices_bytes": 512,
+            "indices_offset": 94544,
+            "indices_sha256": "9a04f881a7f6c949dcee3fa7da641bc07d836c4abf749a361e8e17f811eb7753",
+            "interlace": 0,
+            "palette_span_bytes": 96,
+            "palette_span_offset": 95056,
+            "palette_span_sha256": "97f7e6b916da23bcc9cd3acf61f95dc211dd9ff496ca9ec2f1ddac8757490b8a",
+            "width": 32
+          }
+        ],
+        "slot": 6
+      }
+    }
+  ],
+  "schema": 1,
+  "selection_sha256": "5f917f3521be886568e3880f63404def99a9cfaa1c0810321713f216c98d4484",
+  "source_disc": {
+    "EFF_bytes": 861056,
+    "EFF_entry": 1,
+    "EFF_offset": 14400,
+    "EFF_sha256": "e0a571bec16baa427c4267feb59ea6ec9aa64703b833d7ed42598115c62b0124",
+    "afs_table_sha256": "a7b0c37119f9ccabf8711ead7d83189065fe1d5df8c427cffe32022403ce3182",
+    "bytes": 4435836928,
+    "member": {
+      "index": 368,
+      "name": "Core.dat",
+      "offset": 1260908544,
+      "sha256": "c48e2165a41cb20b124a11a96e9b00bcdcd051f435475004edcc23a47e920e33",
+      "size": 1524064
+    },
+    "path": "/mnt/c/Users/Public/ps2/DVD/Resident Evil 4 (USA).iso"
+  },
+  "status": "MECHANICAL_MATCHES_UNAPPROVED_ROOT_REVIEW_REQUIRED",
+  "timeout_seconds": 120,
+  "total_decoded_pixels": 13312
+}
