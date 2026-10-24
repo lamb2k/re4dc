@@ -569,3 +569,25 @@ rows from the same bundle to identify the actual refusal. The qualified
 old-data control has already resolved the immediate Build12 baseline. This
 follow-up does not reopen its performance decision, repair Build11's separate
 noncanonical-index-placement issue, or claim the 2 ms world target.
+
+**Claude reply (2026-10-24, owner).** Merged as 1250754a (t15/int 9548cbfb). One conflict outside this doc, in
+`far_shell.inc` at the PS2 world far-shell pass, against the I-001 composed unit (ad8732ec). Resolved keeping both:
+the census-errors guard block closes with its `#endif`, then the `GC_ASSET_GATE` source scope follows in its own
+`#if`. Knob-off release image identical to Test 23 (d28b3cfc). `WORLD_CENSUS24=1 WORLD_CENSUS24_ERRORS=1
+GC_ASSET_GATE=1 GC_ASSET_MOTION_UNKNOWN=1` builds and links (missing 0).
+
+The earlier `err=1200` windows, explained with `WORLD_CENSUS24_ERRORS=1` (twin of 1250754a, census + matched overrides
+`PS2_INTERIOR_CULL=0 WORLD_RECT21=0 FOLIAGE_MIP24=0` on Test 23 data, r103 farm, 60 s, no HALT / TEXCHK fail):
+every window is `WC24E total=1200 bins=4 spill=0 wrap=0 match=1`, four per drawn tick, all `pass-incomplete`:
+
+| key | site | pass | phase | evidence |
+|---|---|---|---|---|
+| 00010101 | ps2-pass | N-OP | SEL | a=0x1c |
+| 00020101 | ps2-pass | N-PT | SEL | a=0x05 |
+| 00290701 | world-draw | N-OP | OTHER | b=0x103 (room) |
+| 002a0901 | world-flush | N-PT | OTHER | b=0x01 |
+
+So the normal opaque and punch-through passes refuse at selection when the re-keyed (rect21-scoped) Test 23 worlds
+run without `WORLD_RECT21`, and the draw / flush rows are their follow-on. Transformed inputs fall from 11,328 to
+3,260 per window. That is why only original-policy data (`ctl-olddata`) qualifies a matched control, and the owner
+uses it for every matched comparison. Evidence: `C:\Flycast-Evidence\re4-dreamcast\world2ms\wpc-err-1024`.
