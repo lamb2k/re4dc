@@ -98,6 +98,54 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 **Do:** find the HUD draw path, price it per element and per glyph, and cache what doesn't change between frames, such as the ammo and health quads.
 
+## World 2 ms programme builds (added 2026-10-24)
+
+The plan is [WORLD_2MS_PLAN_20261024.md](WORLD_2MS_PLAN_20261024.md), merged on t15/int c7e2d624. These builds are its code-only parts. You have no game data, so prove each one on synthetic or public fixtures. The local owner runs them on the private r101 world and on the console. Same ground rules as above: one branch and one commit per build, default-off knobs or tool flags, identity when off, report traffic as well as cycles.
+
+| Build | What | State |
+|---|---|---|
+| 10 | Gate 0 world phase census | next |
+| 11 | R4IM/R4PW ↔ Blender identity round trip | queued |
+| 12 | Local-indexed vs direct-strip world variants | queued |
+| 13 | Meshlet size option + 16+12 record split | queued |
+| 14 | Cache-miss counter for phase boundaries | queued |
+
+### Build 10: Gate 0 world census (`WORLD_CENSUS24`)
+Everything later is decided from this. It gives one trustworthy baseline (plan Gate 0).
+- Count per **drawn frame** and per **logic tick**, kept separate:
+  - world phases: selection, transform, clip, header/material, submit; near, far shell, opaque, cutout, translucent;
+  - transformed vertex inputs, emitted strip corners, headers and material changes;
+  - meshlets picked: indexed vs plain, and nr==0 picks.
+- Also report presentation cadence, explicit waits and a reconciled residual: whole frame minus named phases.
+- Buffered summaries only, never logging in hot loops. Print one line every N drawn frames over a 300-600 frame window, and show it in the QA overlay as a page.
+- Reuse the existing world meter (tools/d367/pvs23/README.md) where it fits. Document how per tick maps to per drawn frame.
+
+### Build 11: world ↔ Blender identity round trip (tools only)
+- A Python exporter/importer between the current R4IM v3 + R4PW world packages and Blender. Keep positions, UVs, prelit colours, texture keys, pass, placement/source identities and winding.
+- Prove a byte-identical round trip on synthetic packages. Regenerate every CRC sidecar.
+- Write down the pinned Blender version, coordinate convention and triangulation rule.
+- Don't change geometry. This is the foundation for plan Gate 2.
+- Start from tools/ps2_world_r4im.py and the far-shell extractor (tools/d367/farshell). WORLD-NEXT.md lists what is missing.
+
+### Build 12: two world data variants (`SCENERY_LOCAL_INDEXED`, `SCENERY_DIRECT_STRIPS`)
+Plan section "Compare local indexed data with direct strips".
+- **Variant A:** dense per-meshlet local vertices plus local strip indices, with no shared-pool gather.
+- **Variant B:** sequential strip-corner input with direct transform and submit where valid, falling back for clipping cases.
+- Converter flags in the world builder produce each variant from the same source; the runtime reads each behind its own knob.
+- Exact output against the current path on synthetic worlds: the same TA words in the same order, or a documented equivalent.
+- Report bytes resident, transforms and traffic for each.
+
+### Build 13: meshlet size and record split
+- **Builder option:** a meshlet vertex limit of 32/64/128/256. Report the header, restart, duplicated-corner and setup cost for each.
+- **`SCENERY_RECORD_SPLIT`:** the 16-byte emit + 12-byte bounds layout from the Build 5 report, as a reader plus a builder option. It's judged on its own, not dependent on prefetch.
+
+### Build 14: cache-miss phase counter (`PERF_PHASE_MISS`)
+- Use the free KOS performance counter, never the one used for timekeeping, to count operand-cache misses and stalls at world phase boundaries.
+- Include a cache-resident control and a miss-heavy control that prove the event works.
+- Diagnostic only; default off.
+
+**Order:** 10 first. 11 and 12 can run in parallel after it, then 13 and 14.
+
 ## Open questions back to Claude
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
