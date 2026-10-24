@@ -107,6 +107,11 @@ def main():
                     help="stripify with swaps (repeat a corner to turn; same drawn triangles, longer strips)")
     ap.add_argument("--meshlet-vertices", type=int, default=64,
                     help="largest meshlet (runtime bound 256; default 64, user-adopted 2026-09-28: -2.5 hw ms for +53 KB)")
+    layouts = ap.add_mutually_exclusive_group()
+    layouts.add_argument("--scenery-local-indexed", action="store_true", default=argparse.SUPPRESS,
+                         help="also write exact local-vertex alternate ps2-sli1.re4mesh beside the unchanged output")
+    layouts.add_argument("--scenery-direct-strips", action="store_true", default=argparse.SUPPRESS,
+                         help="also write exact sequential-corner alternate ps2-sds1.re4mesh beside the unchanged output")
     a = ap.parse_args()
     if not 3 <= a.meshlet_vertices <= 256:
         raise SystemExit("--meshlet-vertices must be 3..256")
@@ -133,8 +138,21 @@ def main():
     body += b"".join(struct.pack("<HH12f", mi, p["placement"], *[x for row in p["affine"] for x in row])
                      for mi, p in placements)
     side = struct.pack("<4s7I", b"R4PW", 1, len(placements), len(parts_meta), len(meshes), zlib.crc32(body), 0, 0) + body
+    layout_report = None
+    if getattr(a, "scenery_local_indexed", False) or getattr(a, "scenery_direct_strips", False):
+        import scenery_data_variants as layouts
+        variant = "local-indexed" if getattr(a, "scenery_local_indexed", False) else "direct-strips"
+        candidate, _, layout_report = layouts.convert(blob, variant, side)
+        candidate_path = a.out.parent / (layouts.STEMS[variant] + ".re4mesh")
+        if candidate_path.resolve() == a.out.with_suffix(".re4mesh").resolve():
+            raise SystemExit("normal output stem must differ from the alternate filename")
+        if candidate_path.exists() and a.out.with_suffix(".re4mesh").exists() and candidate_path.samefile(a.out.with_suffix(".re4mesh")):
+            raise SystemExit("normal and alternate output paths alias through a hard link")
+        layout_report["path"] = str(candidate_path)
     a.out.with_suffix(".re4mesh").write_bytes(blob)
     a.out.with_suffix(".r4pw").write_bytes(side)
+    if layout_report is not None:
+        candidate_path.write_bytes(candidate)
     level0 = summary["level0_triangles"]
     summary.pop("meshes_detail")
     report = dict(source=str(a.r4p), source_sha256=hashlib.sha256(pkg.bytes).hexdigest(),
@@ -145,6 +163,8 @@ def main():
                   re4mesh_bytes=len(blob), re4mesh_sha256=hashlib.sha256(blob).hexdigest(),
                   r4pw_bytes=len(side), r4pw_sha256=hashlib.sha256(side).hexdigest(), level0_triangles=level0,
                   summary=summary)
+    if layout_report is not None:
+        report["layout_candidate"] = layout_report
     a.out.with_suffix(".json").write_text(json.dumps(report, indent=1, default=str))
     print(json.dumps({k: report[k] for k in ("meshes", "placements", "source_triangles", "level0_triangles",
                                              "re4mesh_bytes", "r4pw_bytes")}))

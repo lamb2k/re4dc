@@ -69,6 +69,25 @@
 #if RE4DC_SCENERY_EMIT_PREFETCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
 #error SCENERY_EMIT_PREFETCH needs the direct PS2 scenery chunk path
 #endif
+#ifndef RE4DC_SCENERY_LOCAL_INDEXED
+#define RE4DC_SCENERY_LOCAL_INDEXED 0
+#endif
+#ifndef RE4DC_SCENERY_DIRECT_STRIPS
+#define RE4DC_SCENERY_DIRECT_STRIPS 0
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+#if (RE4DC_SCENERY_LOCAL_INDEXED != 0 && RE4DC_SCENERY_LOCAL_INDEXED != 1) || \
+    (RE4DC_SCENERY_DIRECT_STRIPS != 0 && RE4DC_SCENERY_DIRECT_STRIPS != 1) || \
+    (RE4DC_SCENERY_LOCAL_INDEXED && RE4DC_SCENERY_DIRECT_STRIPS)
+#error Select one Build 12 world data variant, value 1
+#endif
+#if !RE4DC_PS2_WORLD_ROOMS || !RE4DC_IO_ALIGNED || !RE4DC_SCENERY_CHUNK || \
+    !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || RE4DC_WORLD_VERT || RE4DC_SCENERY21_AB || \
+    RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE || RE4DC_PS2_PVS || RE4DC_PS2_INTERIOR_CULL || RE4DC_WORLD_RECT21
+#error Unsupported world data variant recipe
+#endif
+#include "../../room/scenery_data_variants.hpp"
+#endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
 #endif
@@ -265,6 +284,9 @@ extern "C" void re4dc_bf_room_update(){
 #endif
 #if RE4DC_MESH_VP_SCHED
 #include "../../room/mesh_fastpath_sched.hpp"
+#endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+#include "../../room/scenery_direct_strips.hpp"
 #endif
 #endif
 #ifndef RE4DC_MESH_STRIP_LEAN
@@ -2628,6 +2650,55 @@ struct MeshDraw : Emitter {
         k.finish();
         return true;
     }
+#if RE4DC_SCENERY_DIRECT_STRIPS
+    // SDS1_DIRECT_BEGIN: reuse the ordinary material/SQ owner and transform
+    // arithmetic. Only the authenticated sequential payload, a full pick,
+    // a conservative inside bound and ordinary sized strips may bypass the
+    // transformed cache. Every refusal returns to the original path before
+    // emitting a corner. TA_HASH/back-face diagnostics retain that path too.
+    bool sequential_direct(const re4dc::room::Meshlet& l){
+#if !RE4DC_TA_HASH && !RE4DC_CPU_BACKFACE && RE4DC_MESH_VP_SCHED==1 && RE4DC_HW_LEAN
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+#endif
+        namespace data=re4dc::scenery_data;
+        if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)return false;
+        const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
+        const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+        if(re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far)!=re4dc::vp::kChecksNone)return false;
+        const auto source=data::payload(package,l);
+        const auto* end=source.strips+source.strip_bytes;
+        // The old path sends oversize strips through its clipper even inside.
+        // Keep that exact fallback and decide it before any irreversible SQ burst.
+        for(const auto* s=source.strips;s<end;){const unsigned n=*s++;if(n>limit)return false;s+=n;}
+        const auto* in=reinterpret_cast<const re4dc::vp::Vertex12*>(source.vertices);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        // Fused work has no separate cached-submit interval. Charge the whole
+        // transform/SQ loop here; output corners stay in direct-account once.
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
+        unsigned vertices=0,strips=0;
+        for(const auto* s=source.strips;s<end;){
+            const unsigned n=*s++;
+            sq=data::emit_direct_strip(sq,in+vertices,n,k);
+            vertices+=n;++strips;s+=n;
+        }
+        input+=vertices-2U*strips;output+=vertices-2U*strips;slots+=vertices;
+        stats.vertices+=vertices;stats.strips+=strips;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::Transformed,vertices);
+        re4dc::wc24::count(re4dc::wc24::StripInputs,vertices);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        re4dc_wm_corners(nullptr,vertices,0U); // the bound proves every transformed input inside
+#endif
+        return true;
+#else
+        (void)l;return false;
+#endif
+    }
+    // SDS1_DIRECT_END
+#endif
     // One visible meshlet: every vertex once through XMTRX, then each strip is
     // accepted (copied from the cache), culled (all corners outside one screen
     // edge) or handed to the unchanged clipper (a corner outside near/far),
@@ -2647,6 +2718,9 @@ struct MeshDraw : Emitter {
                 if(!es && cs)scn_cen[6]++;
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+        if(sequential_direct(l))return 1;
 #endif
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
@@ -3310,6 +3384,9 @@ struct MeshDraw : Emitter {
                 if(!es && cs)scn_cen[6]++;
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+        if(pk.nr==0xffU && sequential_direct(l))return 1;
 #endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         const auto* base=emit_corners(l,pk);
@@ -5713,6 +5790,27 @@ void dedup_open(){
 }
 #endif
 #endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+constexpr auto kSceneryVariant=RE4DC_SCENERY_LOCAL_INDEXED?
+    re4dc::scenery_data::Kind::LocalIndexed:re4dc::scenery_data::Kind::DirectStrips;
+bool scenery_variant_room(unsigned room){
+    // These consumers certify physical package layouts. Build 12 does not
+    // relax their ownership/movie contracts to admit a differently sized file.
+#if RE4DC_MOVIE_WORLD_ARENA
+    if(room==0x11f)return false;
+#if RE4DC_MOVIE_WORLD_ARENA_S30
+    if(room==0x100)return false;
+#endif
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+    if(room==0x11f)return false;
+#endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER
+    if(room==0x200)return false;
+#endif
+    (void)room;return true;
+}
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -5746,10 +5844,32 @@ bool ps2_open(){
         if(fm!=FILEHND_INVALID)ps2w.alt=true;
     }
     if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
-#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3
+#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3 || RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    unsigned variant_source_crc=0,variant_source_bytes=0;
+    bool variant_alternate=false,variant_source_ok=false;
+    if(!scenery_variant_room(ps2w.room)){
+        re4dc_log("SCNVAR room=%03x requested=%s admitted=base reason=pinned-owner-or-movie\n",
+            ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+    }else if(fm!=FILEHND_INVALID){
+        char vpath[48];snprintf(vpath,sizeof(vpath),"/cd/dc/native/r%03x/%s.re4mesh",ps2w.room,
+                               re4dc::scenery_data::stem(kSceneryVariant));
+        const file_t fv=fs_open(vpath,O_RDONLY);
+        if(fv!=FILEHND_INVALID){
+            alignas(32) re4dc::room::MeshHeader source{};
+            const auto bytes=fs_total(fm);
+            variant_source_ok=bytes>=112 && bytes<=UINT32_MAX &&
+                read_package(fm,reinterpret_cast<unsigned char*>(&source),sizeof(source),0) &&
+                re4dc::scenery_data::source_header(source,unsigned(bytes));
+            if(variant_source_ok){variant_source_crc=source.crc;variant_source_bytes=source.bytes;}
+            fs_close(fm);fm=fv;variant_alternate=true;
+        }else re4dc_log("SCNVAR room=%03x requested=%s admitted=base reason=alternate-absent\n",
+                       ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+    }
 #endif
 #if RE4DC_SCENERY_DEDUP==3
     // Bind alternate source CRC/extent to the freshly read standard file header.
@@ -5840,6 +5960,16 @@ bool ps2_open(){
     }
 #endif
     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    if(ok){
+        if(variant_alternate){
+            if(!variant_source_ok)why="variant standard header";
+            else if(ps2_crc32(s+80,msize-80U)!=ps2w.package.header().crc)why="variant crc";
+            else why=re4dc::scenery_data::validate(ps2w.package,kSceneryVariant,variant_source_bytes,variant_source_crc);
+            if(why)ok=false;
+        }else if(ps2w.package.header().reserved[3]){why="variant filename";ok=false;}
+    }
+#endif
 #if RE4DC_PS2_OPEN_TRACE
     re4dc_log("PS2OPEN adopt ok=%d why=%s\n",int(ok),why?why:"-");
 #endif
@@ -6014,6 +6144,10 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+        if(re4dc::scenery_data::kind(ps2w.package)!=re4dc::scenery_data::Kind::None)
+            snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/%s.r4sg",ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+#endif
 #if RE4DC_SCENERY_DEDUP==3
         if(ps2w.package.offline_dedup())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-dd3.r4sg",ps2w.room);
 #endif
@@ -6072,6 +6206,11 @@ bool ps2_open(){
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    re4dc_log("SCNVAR room=%03x requested=%s admitted=%s mesh_bytes=%u gather_reserved=%u actual_crc=%08x source_crc=%08x\n",
+        ps2w.room,re4dc::scenery_data::stem(kSceneryVariant),variant_alternate?re4dc::scenery_data::stem(kSceneryVariant):"base",
+        mh.bytes,kGatherBytes,mh.crc,re4dc::scenery_data::source_crc(ps2w.package));
+#endif
 #if RE4DC_FAR_SHELL
     farshell::pol.tried=false;
     farshell::sync();   // FAR_SHELL: the room's far shell, read with its world package only at View distance Short
