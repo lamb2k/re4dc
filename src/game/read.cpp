@@ -1,4 +1,7 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "gc_asset_motion_source.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
 #include "native_effect.h"
 #endif
@@ -283,12 +286,22 @@ void ReadAreaData()
         }
         PSet(pG->pRoom, (void*) roomInfo.addr[0][0]);
         out_data_size = roomInfo.size[0][0];
+#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
+        const void* gcasset_motion_room_owner=pG->pRoom;
+        re4dc_gcasset::motion_source_archive(gcasset_motion_room_owner,pG->pRoom,out_data_size);
+#endif
 
         if (!re4dc_effect_bind_room(pG->pRoom, out_data_size)) {
+#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_retire(gcasset_motion_room_owner);
+#endif
             re4dc_missing("invalid prepared native room effects");
             return;
         }
         if (!re4dc_ui_bind_room(pG->pRoom, out_data_size)) {
+#if defined(RE4DC_GAME) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_retire(gcasset_motion_room_owner);
+#endif
             re4dc_missing("invalid prepared native room identities");
             return;
         }
@@ -315,6 +328,9 @@ void CoreDataRead()
     re4dc_effect_unbind((void*) CORE_DATA_ADDR);
 #if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
     re4dc_gcasset_retire_archive((void*) CORE_DATA_ADDR);
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_retire((void*) CORE_DATA_ADDR);
+#endif
 #endif
 #endif
     pG->pArc = (ArcFile*) CORE_DATA_ADDR;
@@ -322,6 +338,9 @@ void CoreDataRead()
     req = DVD_READ(3, CORE_DATA_ADDR, 0, 0, 0, 0x8001);
     Dvd.ReadCheckInfo(req, &info);
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_archive((void*) CORE_DATA_ADDR,pG->pArc,info.size[0][0]);
+#endif
     if (!re4dc_effect_bind_core(pG->pArc, info.size[0][0])) {
         re4dc_missing("invalid prepared native core effects");
         return;
@@ -418,6 +437,9 @@ void InitModule(ReadModule* m)
     }
 #endif
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_retire(m);
+#endif
     // Required before archive destruction, including the separately linked REL.
     re4dc_motion_unbind(m->pArc);
 #endif
@@ -602,6 +624,10 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
         pLog->err(0, 0, "readEmData(): error! %s", name);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    // Close old immutable receipts before a caller-supplied target is written.
+    re4dc_gcasset::motion_source_retire(m);
+#endif
     mode = 1;
     if (pG->Rno0 == 2) {
         mode = 0x100;
@@ -701,6 +727,9 @@ issued:
         newSize = len;
     }
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_archive(m,pArc,len);
+#endif
     if (!re4dc_ui_bind_enemy(pArc, len)) {
         re4dc_missing("invalid prepared enemy texture identities");
         return 0;
@@ -954,6 +983,9 @@ void ReadPlayerData(int type, int costume)
     }
     name = (char*) FileTbl[file].name;
     SET_DRS_NAME(name);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_retire(&PlReadModule);
+#endif
 #line 1124 "D:/Bio4/Prog/read.cpp"
     req = DVD_READ_N(FileTbl[file].name, (void*) PL_DATA_ADDR, 0, 0, 0, 0x8100);
     while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {
@@ -977,8 +1009,15 @@ void ReadPlayerData(int type, int costume)
     bssSize = 0;
     pArc = NULL;
     pModule = NULL;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    if (dll == 0) re4dc_gcasset::motion_source_archive(&PlReadModule,data,info.size[0][0]);
+#endif
     if (dll != 0) {
         ReleasePlData();
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+        // Only the successful MRAM read is contiguous; never hash sum(MRAM,ARAM).
+        re4dc_gcasset::motion_source_archive(&PlReadModule,data,info.size[0][0]);
+#endif
         pArc = (void*) PL_DATA_ADDR;
         pModule = (OSModuleHeader*) (*(u32*) (data + 4) + (u32) data);
         dataSize = (u32) pModule - (u32) data;
@@ -1022,6 +1061,9 @@ void ReadPlayerData(int type, int costume)
 // Frees the player module slot.
 void ReleasePlData()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_retire(&PlReadModule);
+#endif
     if (PlReadModule.pArc != NULL) {
         InitModule(&PlReadModule);
         PlReadModule.pArc = NULL;
@@ -1125,6 +1167,9 @@ static void* wepHeap4Alloc(u32 need)
 
 void ReleaseWepData()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_retire(&WepReadModule);
+#endif
 #if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
     wepResidentFile = 0;
     oldWepId = 0xFF;
@@ -1463,6 +1508,9 @@ void ReadWepData(u32 no, u32 type)
         HALT();
     }
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_archive(&WepReadModule,data,info.size[0][0]);
+#endif
     if (!re4dc_ui_bind_weapon(data, total)) {
         re4dc_missing("invalid prepared weapon texture identities");
     }

@@ -9,6 +9,7 @@
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN && !RE4DC_GC_ASSET_GATE
 #error "GC_ASSET_MOTION_UNKNOWN requires GC_ASSET_GATE=1"
 #endif
+#include "gc_asset_motion_source.h"
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
 namespace re4dc_gcasset {
 // Potential motion-derived accepted input, never an asset identity or N/A.

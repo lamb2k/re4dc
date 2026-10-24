@@ -1,4 +1,10 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "gc_asset_motion_source.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+#include "gc_asset_members.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
 #endif
 // game/shape: vertex-morph ("shape") animation of a model part — the face morphs of the player /
@@ -31,6 +37,11 @@ int SetShape(cModelInfo* info, ShapeData* data, f32 rate);
 void ResetShape(cModelInfo* info, void* dst);
 void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst);
 }
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_shape_reset(const void* info,const void* dst);
+extern "C" void re4dc_gcasset_shape_source(const void* info,unsigned index,const void* delta,unsigned count);
+#endif
 
 void ShapeEnd(void* work);
 
@@ -167,7 +178,21 @@ u32 re4dc_otwc_shape_model_id;
 // Restore the original vertex positions.
 void ResetShape(cModelInfo* info, void* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
+#endif
     memcpy(dst, info->pData->vtxOrig, info->pData->nVtx * 8);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_shape_reset(info,dst);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    // Actual neutral vertex overwrite ends prior morph-output ancestry.
+    re4dc_gcasset::motion_source_reset(info);
+    re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
+#endif
 }
 
 // Shape evaluation work (0xD0 bytes, cleared).
@@ -213,6 +238,12 @@ struct ShapeEntry {
 // (vertex index + s16 dx/dy/dz from the model's shape table) and adds it to the vertices.
 void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::MotionProducerScope gcasset_motion_producer;
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::GeometryProducerScope gcasset_geometry_scope;
+#endif
     ShapeWork work;
     ShapeWork* w = &work;
     HermiteParam prm;
@@ -271,6 +302,15 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                     s16* src = (s16*) (e->ofs + (u32) tbl);
                     s32 num = e->num;
                     s32 n;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+                    re4dc_gcasset_shape_source(info,w->idx[i],src,(unsigned)num);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+                    if (num > 0) {
+                        re4dc_gcasset::motion_source_note_key(info,data,(const void*) w->table[i],w->flags[i] >> 12,re4dc_gcasset::MotionShape);
+                        re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
+                    }
+#endif
 
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
                     {
