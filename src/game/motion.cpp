@@ -823,7 +823,7 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
         if (kind & 2) {
             MOTION_POSE_SAMPLE(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
-            re4dc_gcasset::motion_source_note(m,w->pMot,re4dc_gcasset::MotionFcv);
+            re4dc_gcasset::motion_source_note_key(m,w->pMot,(const void*) MOTION_KEY(w,i),pp->type);
 #endif
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {
@@ -833,7 +833,7 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
         } else if (kind & 4) {
             MOTION_POSE_SAMPLE(pp, &p->pos, flip ? MOTION_PARTS(p)->hist[4] : MOTION_PARTS(p)->hist[1]);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
-            re4dc_gcasset::motion_source_note(m,w->pMot,re4dc_gcasset::MotionFcv);
+            re4dc_gcasset::motion_source_note_key(m,w->pMot,(const void*) MOTION_KEY(w,i),pp->type);
 #endif
             if (w->Mot_attr & 0x40) {
                 p->pos.x = -p->pos.x;
@@ -841,12 +841,12 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
         } else if (kind & 8) {
             MOTION_POSE_SAMPLE(pp, &p->scale, flip ? MOTION_PARTS(p)->hist[5] : MOTION_PARTS(p)->hist[2]);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
-            re4dc_gcasset::motion_source_note(m,w->pMot,re4dc_gcasset::MotionFcv);
+            re4dc_gcasset::motion_source_note_key(m,w->pMot,(const void*) MOTION_KEY(w,i),pp->type);
 #endif
         } else if (kind & 0x30) {
             MOTION_POSE_SAMPLE(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
-            re4dc_gcasset::motion_source_note(m,w->pMot,re4dc_gcasset::MotionFcv);
+            re4dc_gcasset::motion_source_note_key(m,w->pMot,(const void*) MOTION_KEY(w,i),pp->type);
 #endif
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {

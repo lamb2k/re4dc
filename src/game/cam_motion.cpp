@@ -105,23 +105,30 @@ void CameraMotion::move()
         switch (w->partsNo[i]) {
         case 0:
             HermiteInterpolation(pp, &pos, w->hist[i]);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_note_key(this,w->data,(const void*) native_keys[i],pp->type);
+#endif
             break;
         case 1:
             HermiteInterpolation(pp, &at, w->hist[i]);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_note_key(this,w->data,(const void*) native_keys[i],pp->type);
+#endif
             break;
         case 2:
             HermiteInterpolation(pp, &roll, w->hist[i]);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_note_key(this,w->data,(const void*) native_keys[i],pp->type);
+#endif
             break;
         case 3:
             HermiteInterpolation(pp, &fov, w->hist[i]);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_note_key(this,w->data,(const void*) native_keys[i],pp->type);
+#endif
             break;
         }
     }
-#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
-    // Evaluation records ancestry only. Selection of the actual view is a
-    // separate producer boundary; a moved hidden camera must not emit a use.
-    re4dc_gcasset::motion_source_note(this,w->data,re4dc_gcasset::MotionFcv);
-#endif
     param.pos = pos;
     param.at = at;
     param.roll = roll.y;

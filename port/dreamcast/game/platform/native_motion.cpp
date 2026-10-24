@@ -1,3 +1,4 @@
+#include "include/gc_asset_motion_source.h"
 // Narrow source-motion key residency adapter. Original FCV/SEQ evaluation stays
 // in motion.cpp; original archive and whole-clip paths remain selectable.
 #include "native_motion.h"
@@ -318,6 +319,9 @@ bool reserved_data(const Binding& b,const unsigned char* p) {
 void discard(Binding& b,unsigned i) {
     auto& s=b.slots[i];if(!s.data)return;
     if(s.pins)fail("motion discard pinned");
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+    re4dc_gcasset::motion_source_external_invalidate(&s);
+#endif
     const unsigned bytes=aligned(word(record(b,i)+4));
 #if RE4DC_MOTION_RESERVE_PACK
     if(!reserved_data(b,s.data)) // subregions stay with their slab until binding retirement
@@ -748,6 +752,13 @@ unsigned* load(Binding& b,unsigned i) {
 #endif
             re4dc_motion_free(data);fail("motion identity/header mismatch");
         }
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+        // The complete read, CRC/FNV and original proxy-prefix checks above
+        // succeeded. Compute immutable SHA before ANY offset becomes a pointer.
+        // This cold path holds only the existing motion mutex, never SQ/LH/G2.
+        // Binding to the catalog waits until acquire returns with a pinned lease.
+        re4dc_gcasset::motion_source_external_capture(&s,proxy,head,data,size);
+#endif
         auto* table=reinterpret_cast<unsigned*>(data+head-4*data[2]);
         for(unsigned j=0;j<data[2];++j) {
             const unsigned offset=table[j];
@@ -756,6 +767,9 @@ unsigned* load(Binding& b,unsigned i) {
             if(!reserved_data(b,data))
 #elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
+#endif
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+            re4dc_gcasset::motion_source_external_invalidate(&s);
 #endif
             re4dc_motion_free(data);fail("motion key offset"); }
             table[j]=static_cast<unsigned>(reinterpret_cast<std::uintptr_t>(data)+offset);
@@ -1080,6 +1094,36 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
     }
     return 0;
 }
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+extern "C" void re4dc_motion_gcasset_publish(int token,const void* header) {
+    const void* source_owner=nullptr;unsigned source_serial=0;
+    {
+        Locked guard;
+        if(token>0 && token<=int(kArchives*256)) {
+            const unsigned t=unsigned(token-1);auto& b=bindings[t/256];const unsigned i=t%256;
+            if(b.archive && i<b.count) {
+                auto& s=b.slots[i];
+                if(s.pins && s.data && header==b.archive+word(record(b,i))) {
+                    source_owner=&s;
+                    source_serial=re4dc_gcasset::motion_source_external_serial(&s,s.data,header);
+                }
+            }
+        }
+    } // actual mutex unlock; the acquire lease still pins Slot and Binding
+    re4dc_gcasset::motion_source_external_publish(source_owner,source_serial);
+}
+extern "C" int re4dc_motion_gcasset_idle() {
+    // Root first stops the real game/model producers. This finite witness
+    // then refuses an in-flight load/mutex owner or any outstanding lease.
+    // It is not an assertion that an instantaneously empty queue is stopped.
+    if(mutex_trylock(&lock)!=0)return 0;
+    bool idle=true;const int old=irq_disable();
+    for(const auto& o:owners)if(o.thread && o.leases)idle=false;
+    irq_restore(old);
+    for(const auto& b:bindings)if(b.archive)for(unsigned i=0;i<b.count;++i)if(b.slots[i].pins)idle=false;
+    mutex_unlock(&lock);return idle?1:0;
+}
+#endif
 extern "C" void re4dc_motion_release(int token) {
     Locked guard;if(token<=0 || token>int(kArchives*256))fail("motion lease token");
     unsigned t=token-1;auto& b=bindings[t/256];unsigned i=t%256;

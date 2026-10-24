@@ -35,6 +35,11 @@ void ResetShape(cModelInfo* info, void* dst);
 void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst);
 }
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_shape_reset(const void* info,const void* dst);
+extern "C" void re4dc_gcasset_shape_source(const void* info,unsigned index,const void* delta,unsigned count);
+#endif
+
 void ShapeEnd(void* work);
 
 // Start a shape animation on a model part. Returns 0 when the data has no frames.
@@ -171,6 +176,14 @@ u32 re4dc_otwc_shape_model_id;
 void ResetShape(cModelInfo* info, void* dst)
 {
     memcpy(dst, info->pData->vtxOrig, info->pData->nVtx * 8);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_shape_reset(info,dst);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
+    // Actual neutral vertex overwrite ends prior morph-output ancestry.
+    re4dc_gcasset::motion_source_reset(info);
+    re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
+#endif
 }
 
 // Shape evaluation work (0xD0 bytes, cleared).
@@ -274,9 +287,12 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                     s16* src = (s16*) (e->ofs + (u32) tbl);
                     s32 num = e->num;
                     s32 n;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+                    re4dc_gcasset_shape_source(info,w->idx[i],src,(unsigned)num);
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_GC_ASSET_MOTION_SOURCE
                     if (num > 0) {
-                        re4dc_gcasset::motion_source_note(info,data,re4dc_gcasset::MotionShape);
+                        re4dc_gcasset::motion_source_note_key(info,data,(const void*) w->table[i],w->flags[i] >> 12,re4dc_gcasset::MotionShape);
                         re4dc_gcasset::motion_source_note(info,info->pData,re4dc_gcasset::MotionBind);
                     }
 #endif

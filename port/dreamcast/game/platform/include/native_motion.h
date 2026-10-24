@@ -1,4 +1,5 @@
 #pragma once
+#include "gc_asset_motion_source.h"
 // Source FCV identities stay archive-owned. Only evaluated key payloads move.
 struct Re4dcMotionStats {
     unsigned hits, misses, evictions, loads, failures, resident_bytes, peak_cache_bytes;
@@ -10,6 +11,10 @@ int re4dc_motion_bind(void* archive, unsigned bytes);
 void re4dc_motion_unbind(void* archive);
 void re4dc_motion_retire_all();
 int re4dc_motion_acquire(const void* header, unsigned** table);
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+void re4dc_motion_gcasset_publish(int token,const void* header);
+int re4dc_motion_gcasset_idle();
+#endif
 void re4dc_motion_release(int token);
 int re4dc_motion_thread_busy(const void* owner);
 void re4dc_motion_get_stats(Re4dcMotionStats*);
@@ -40,6 +45,9 @@ public:
         unsigned* table=nullptr;
         token_=re4dc_motion_acquire(header,&table);
         if(token_) *destination_=table;
+#if RE4DC_GC_ASSET_MOTION_SOURCE
+        if(token_) re4dc_motion_gcasset_publish(token_,header);
+#endif
     }
     ~Re4dcMotionLease() {
         if(token_) { *destination_=saved_; re4dc_motion_release(token_); }
