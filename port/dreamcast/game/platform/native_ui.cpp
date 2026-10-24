@@ -3466,15 +3466,16 @@ void vram_room_frame(){
 }   // namespace (fx_none_cut.inc is plain data)
 struct FxNoneCutRow { unsigned short room; unsigned crc,fnv; };
 #include "fx_none_cut.inc"
-extern "C" unsigned re4dc_wm_room(void);   // dbgwarp_bridge.cpp
+extern "C" void re4dc_profile_source(re4dc::profile::Source* out);   // ui_bridge.cpp
 namespace {
 unsigned short fxnone_room[kTextureCount];   // room + 1 when decided for the entry's current texture
 unsigned char fxnone_cut[kTextureCount];
-unsigned fxnone_cuts;
+unsigned fxnone_cuts,fxnone_frame=~0U,fxnone_now;
 bool fx_none_cut(const Entry& e){
     const unsigned i=unsigned(&e-entries);
     if(i>=kTextureCount)return false;
-    const unsigned room=re4dc_wm_room()&0xffffU;
+    if(fxnone_frame!=frame){re4dc::profile::Source s{};re4dc_profile_source(&s);fxnone_now=s.room&0xffffU;fxnone_frame=frame;}
+    const unsigned room=fxnone_now;
     if(fxnone_room[i]==room+1U)return fxnone_cut[i]!=0;
     bool lib=false,cut=false;
     for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
