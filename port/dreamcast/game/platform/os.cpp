@@ -22,6 +22,7 @@
 
 #include "re4dc_platform.h"
 #include "pc_sampler.h"
+#include "include/gc_asset_gate.h"
 
 typedef signed char s8;
 typedef unsigned char u8;
@@ -92,6 +93,24 @@ enum { OS_THREAD_STATE_READY = 1, OS_THREAD_STATE_RUNNING = 2, OS_THREAD_STATE_W
 static OSThread g_mainThread;
 static OSThread* g_threads[32];
 static int g_threadCount;
+#if RE4DC_GC_ASSET_GATE
+// Diagnostic terminal stop only. IRQ-guarded on this single SH4. No new task
+// can cross admission after all existing tasks reach known platform waits.
+static unsigned gcasset_os_terminal,gcasset_os_creating,gcasset_os_late;
+struct GcAssetOsCreation {
+    bool live;
+    GcAssetOsCreation(){
+        const int old=irq_disable();
+        live=!gcasset_os_terminal && gcasset_os_creating!=~0U;
+        if(live)++gcasset_os_creating;else gcasset_os_late=1;
+        irq_restore(old);
+    }
+    ~GcAssetOsCreation(){
+        if(live){const int old=irq_disable();--gcasset_os_creating;irq_restore(old);}
+    }
+};
+#endif
+
 
 extern "C" {
 
@@ -249,6 +268,15 @@ static int unpark(OSThread* t)
 
 static void checkGate(OSThread* t)
 {
+#if RE4DC_GC_ASSET_GATE
+    if(gcasset_os_terminal && t!=&g_mainThread){
+        // A semaphore/queue waiter can wake after the stop snapshot. It must
+        // never return from this platform boundary into source game work.
+        const int old=irq_disable();
+        for(;;)genwait_wait(&gcasset_os_terminal,"gcasset-terminal",0);
+        irq_restore(old);
+    }
+#endif
     if (t->suspend > 0) {
         parkSelf(t);
     }
@@ -301,6 +329,38 @@ static bool registered(const OSThread* thread)
     return false;
 }
 
+#if RE4DC_GC_ASSET_GATE
+// Call from a finished game-frame boundary, after stopping external producers.
+// A generic KOS WAIT is not proof: only the exact platform waits whose return
+// passes checkGate are accepted. No task is cancelled or parked mid-operation.
+extern "C" unsigned re4dc_gcasset_os_frame_boundary(){
+    if(irq_inside_int() || !g_mainThread.kt || thd_current!=g_mainThread.kt)return 0;
+    const int old=irq_disable();
+    const bool ready=!g_mainThread.nativeIoDepth && !re4dc_motion_thread_busy(thd_current);
+    irq_restore(old);return ready?1U:0U;
+}
+extern "C" unsigned re4dc_gcasset_os_quiesce(unsigned* blocked){
+    if(!re4dc_gcasset_os_frame_boundary()){if(blocked)*blocked=~0U;return 0;}
+    const int old=irq_disable();unsigned mask=0;
+    if(gcasset_os_creating || gcasset_os_late)mask=~0U;
+    for(int i=0;i<g_threadCount;++i){
+        const OSThread* t=g_threads[i];const kthread_t* kt=t->kt;
+        if(!kt || kt==g_mainThread.kt || kt->state==STATE_FINISHED)continue;
+        bool waiting=false;
+        if(kt->state==STATE_WAIT && kt->wait_obj && !t->nativeIoDepth && !re4dc_motion_thread_busy(kt)){
+            waiting=(kt->wait_obj==&g_gate && t->suspend>0) ||
+                (gcasset_os_terminal && kt->wait_obj==&gcasset_os_terminal && kt->wait_msg && !strcmp(kt->wait_msg,"gcasset-terminal")) ||
+                (kt->wait_msg && !strcmp(kt->wait_msg,"os-queue") && t->queue && kt->wait_obj==t->queue) ||
+                (kt->wait_msg && !strcmp(kt->wait_msg,"os-sema"));
+        }
+        if(!waiting)mask|=1U<<unsigned(i);
+    }
+    if(!mask)gcasset_os_terminal=1;
+    if(blocked)*blocked=mask;
+    irq_restore(old);return mask?0U:1U;
+}
+#endif
+
 extern "C" void re4dc_os_thread_stats(unsigned* registered_threads, unsigned* reaped, unsigned* pending)
 {
     int old = irq_disable();
@@ -313,6 +373,10 @@ extern "C" void re4dc_os_thread_stats(unsigned* registered_threads, unsigned* re
 
 int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param, void* stack, u32 stackSize, OSPriority priority, u16 attr)
 {
+#if RE4DC_GC_ASSET_GATE
+    GcAssetOsCreation creation;
+    if(!creation.live)return 0;
+#endif
     {
         // Only a registered OSThread's kt is a record this layer created.
         int old = irq_disable();
@@ -378,6 +442,9 @@ s32 OSResumeThread(OSThread* thread)
 {
     int old = irq_disable();
     s32 prev = thread->suspend;
+#if RE4DC_GC_ASSET_GATE
+    if(gcasset_os_terminal){gcasset_os_late=1;irq_restore(old);return prev;}
+#endif
     int yield = 0;
     if (thread->suspend > 0) {
         thread->suspend--;
