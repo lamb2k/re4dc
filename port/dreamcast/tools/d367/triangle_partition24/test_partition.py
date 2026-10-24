@@ -104,6 +104,11 @@ class Controls(unittest.TestCase):
  def test_conditional_perturbation_lift_no_automatic_endpoint_authority(self):
   w=(Q(1,2),Q(1,2),0);r=((32,32,32),)*3
   self.assertEqual(p.conditional_radius(w,r).reason,'ENDPOINT_BOUND_UNQUALIFIED');self.assertEqual(p.conditional_radius(w,r,True),(32,32,32));self.assertEqual(p.conditional_radius((Q(-1),1,1),r,True).reason,'NONCONVEX_BOUND')
+  for failure in (MemoryError,OverflowError):
+   with self.subTest(allocation_failure=failure.__name__):
+    with patch.object(p,'_point',side_effect=failure):
+     answer=p.conditional_radius(w,r,True)
+     self.assertIs(type(answer),p.Unknown);self.assertEqual(answer.reason,'MEMORY_ALLOCATION')
   inv=self.inventory();parents=tuple(dataclasses.replace(t,vertices=tuple(tuple(v+(1 if k==0 else 0) for k,v in enumerate(point)) for point in t.vertices)) for t in inv.parents);shifted=p.Inventory(parents,inv.source_binding_sha256,p.inventory_digest(parents,inv.source_binding_sha256));ch=p.canonical_partition(shifted)
   self.assertEqual(ch[0].vertices[1],ch[1].vertices[0]);self.assertEqual(ch[0].vertices[2],ch[2].vertices[0]);self.assertEqual(ch[3].vertices[0],ch[0].vertices[1])
   # Equal endpoint errors persist; opposite errors cancel at the correlated midpoint.
