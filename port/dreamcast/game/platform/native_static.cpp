@@ -3011,13 +3011,72 @@ struct MeshDraw : Emitter {
         std::uint8_t pad[2];
     };
 #include "include/scenery_chunk_select.inc"
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+    // The existing partial transform already relies on every selected strip
+    // index lying in [lo,hi]. Keep those same gather slots for the clipper.
+    // Dedup's fill reads repeat records outside that span, so it keeps the
+    // complete gather. Zero picks return before this helper is called.
+    const re4dc::room::CompactVertex12* chunk_corners(const re4dc::room::Meshlet& l,const Pick& pk){
+        const auto* base=package.vertices()+l.first_vertex;
+        if(!package.indexed(l))return base;
+        if(pk.nr==0xffU)return corners(l);
+#if RE4DC_SCENERY_DEDUP
+        if(dd_word(l)>>24)return corners(l);
+#endif
+        typedef std::uint32_t __attribute__((may_alias)) Word;
+        const std::uint16_t* offsets=package.pool_offsets(l);
+        const Word* in=reinterpret_cast<const Word*>(base);
+        Word* out=reinterpret_cast<Word*>(gathered+pk.lo);
+        for(unsigned i=pk.lo;i<=pk.hi;++i,out+=3){
+            const Word* c=in+3U*offsets[i];
+            out[0]=c[0];out[1]=c[1];out[2]=c[2];
+        }
+        return gathered;
+    }
+    // At most the first two 32-byte lines of a nonempty, backed range. Do not
+    // hint beyond its end, or confuse these normal-RAM hints with SQ dispatch.
+    static void chunk_prefetch_lines(const void* p,unsigned bytes){
+        __builtin_prefetch(p);
+        const std::uintptr_t first=reinterpret_cast<std::uintptr_t>(p);
+        const std::uintptr_t next=(first+32U)&~std::uintptr_t(31U);
+        if(next-first<bytes)__builtin_prefetch(reinterpret_cast<const void*>(next));
+    }
+    void chunk_prefetch_payload(const Pick& pk){
+        if(!pk.nr)return;
+        const auto& l=package.meshlets()[pk.let];
+        unsigned first=0,count=l.vertex_count;
+        if(pk.nr!=0xffU){first=pk.lo;count=pk.hi-pk.lo+1U;}
+        const auto* base=package.vertices()+l.first_vertex;
+        if(package.indexed(l)){
+#if RE4DC_SCENERY_DEDUP
+            if(dd_word(l)>>24){first=0;count=l.vertex_count;}
+#endif
+            const std::uint16_t* offsets=package.pool_offsets(l)+first;
+            chunk_prefetch_lines(offsets,2U*count);
+            // first_vertex is the pool base, not the first referenced corner.
+            chunk_prefetch_lines(base+offsets[0],sizeof(*base));
+        }else chunk_prefetch_lines(base+first,sizeof(*base)*count);
+        // A partial pick can start after the first strip group. Avoid adding
+        // a line which that pick would never read; its selected strips retain
+        // the original walker and order.
+        if(l.strip_bytes && (pk.nr==0xffU || (pk.gmask&1U)))
+            __builtin_prefetch(package.strip_begin(l));
+    }
+    int emit_pick(const Pick& pk,const Pick* next){
+#else
     int emit_pick(const Pick& pk){
+#endif
         namespace vp=re4dc::vp;
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
         ++stats.batches;
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+        // chunk_emit hinted this header before the current bind/borrow work.
+        // Its payload now has this pick's transform/strip work to arrive.
+        if(next)chunk_prefetch_payload(*next);
+#endif
         const auto& l=package.meshlets()[pk.let];
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
         struct CenScope {
@@ -3029,7 +3088,19 @@ struct MeshDraw : Emitter {
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
 #endif
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+        // Preserve material/owner checks and their failures even for a pick
+        // with no groups. No vertex or projected-cache slot is consumed.
+        if(!pk.nr){
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+            cen.n=0;
+#endif
+            return 1;
+        }
+        const auto* base=chunk_corners(l,pk);
+#else
         const auto* base=corners(l);
+#endif
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
         if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
             if(lean_part){lean::prime_at=cache;lean::primed=primed;}
@@ -3102,7 +3173,11 @@ struct MeshDraw : Emitter {
     }
     // CHUNK_REPLAY_RESTART_END
 #endif
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n,const Pick* run_end){
+#else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+#endif
 #if !RE4DC_SCENERY_REPLAY_LEAN
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
@@ -3111,6 +3186,15 @@ struct MeshDraw : Emitter {
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+            // Picks are contiguous across parts, including empty queued parts.
+            // Only geometry is inspected ahead; material/cull/sky/UV retain
+            // their original per-part bind and accounting boundaries.
+            const Pick* next=pk+i+1;
+            if(next>=run_end)next=nullptr;
+            if(next && next->nr)chunk_prefetch_lines(package.meshlets()+next->let,16U);
+            const int r=emit_pick(pk[i],next);if(r<=0)return r;}
+#else
 #if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
             if(i+1<n && RE4DC_C20_PREF_ON()){
@@ -3119,6 +3203,7 @@ struct MeshDraw : Emitter {
             }
 #endif
             const int r=emit_pick(pk[i]);if(r<=0)return r;}
+#endif
         if(used)re4dc_model_packet_commit(used);
         re4dc_model_result(0,input,output);
         return 1;
@@ -6247,7 +6332,14 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+            // Seed only the first nonempty part. Subsequent starts were hinted
+            // while the preceding queued pick emitted, even across empty parts.
+            if(!x.first && x.count)e.chunk_prefetch_payload(cpk[0]);
+            const int result=e.chunk_emit(cpk+x.first,x.count,cpk+npk);
+#else
             const int result=e.chunk_emit(cpk+x.first,x.count);
+#endif
             e.end_direct();
 #if RE4DC_SCENERY_SUBMIT_BATCH
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);

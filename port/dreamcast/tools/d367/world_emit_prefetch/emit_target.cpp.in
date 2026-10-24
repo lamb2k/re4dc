@@ -1,0 +1,127 @@
+// Include the frozen complete translation unit: the timed routines below call
+// the production gather and empty-pick bodies, with no transform replacement.
+#include "@NATIVE_SOURCE@"
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <new>
+
+struct EmitInput {
+    unsigned count,nr,lo,hi,gmask,primed,next_nr,header_hint;
+};
+extern "C" {
+alignas(32) unsigned char fixture_package_data[128*1024];
+EmitInput fixture_input;
+MeshDraw::Pick fixture_picks[65];
+unsigned fixture_result[8];
+}
+static re4dc::room::MeshPackage fixture_package;
+static Re4dcModelPart fixture_part;
+alignas(32) static re4dc::room::CompactVertex12 fixture_gather[256];
+alignas(32) static pvr_vertex_t fixture_cache[256];
+alignas(32) static unsigned char fixture_outcodes[256];
+alignas(32) static std::uint32_t fixture_lut[512];
+static unsigned fixture_key[6];
+alignas(MeshDraw) static unsigned char fixture_storage[sizeof(MeshDraw)];
+static MeshDraw* fixture_draw;
+
+extern "C" int fixture_adopt(unsigned bytes) {
+    return fixture_package.adopt(fixture_package_data,bytes,true,true);
+}
+
+// Constructor, resident-palette/material acquisition and fixture resets are
+// outside every timed interval. The empty-pick case has a successfully bound
+// direct emitter, as a later meshlet in a real part does.
+extern "C" void fixture_prepare() {
+    fixture_part={};
+    fixture_part.alpha_state=255;
+    fixture_part.source_key[2]=1;
+    fixture_part.viewport[2]=640;fixture_part.viewport[3]=480;
+    std::memset(fixture_storage,0,sizeof(fixture_storage));
+    fixture_draw=new(fixture_storage) MeshDraw{{fixture_part,{},1,1000},
+        fixture_package,fixture_package.parts()[0],fixture_lut,fixture_gather};
+    fixture_draw->bound=true;
+    fixture_draw->submitted=true;
+    fixture_draw->streaming=true;
+    fixture_draw->direct=true;
+    fixture_draw->ps2=fixture_key;
+    fixture_draw->sq=reinterpret_cast<std::uint32_t*>(0xe0000000U);
+    fixture_draw->gathered=fixture_gather;
+    fixture_draw->cache=fixture_cache;
+    fixture_draw->outcodes=fixture_outcodes;
+    fixture_draw->primed=fixture_input.primed;
+    fixture_draw->lean_part=true;
+    std::memset(fixture_gather,0xa5,sizeof(fixture_gather));
+    std::memset(fixture_cache,0xa5,sizeof(fixture_cache));
+    std::memset(fixture_outcodes,0xa5,sizeof(fixture_outcodes));
+    stats={};lean::st={};
+    std::memset(fixture_result,0,sizeof(fixture_result));
+    for(unsigned i=0;i<=fixture_input.count;++i) {
+        fixture_picks[i]={static_cast<std::uint16_t>(i),
+            static_cast<std::uint8_t>(i<fixture_input.count?fixture_input.nr:fixture_input.next_nr),
+            static_cast<std::uint8_t>(fixture_input.gmask),
+            static_cast<std::uint8_t>(fixture_input.lo),
+            static_cast<std::uint8_t>(fixture_input.hi),{0,0}};
+    }
+}
+
+// Exact production gather phase. Comparing returned selected slots proves the
+// narrowed gather's live output, while untouched slots retain their sentinel.
+extern "C" __attribute__((noinline)) const void* fixture_gather_phase(unsigned index) {
+    const auto& pk=fixture_picks[index];
+    const auto& l=fixture_package.meshlets()[pk.let];
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+    return fixture_draw->chunk_corners(l,pk);
+#else
+    return fixture_draw->corners(l);
+#endif
+}
+
+// A separately priced hint phase; this is not a complete meshlet emission or
+// its interleaved pipeline. PREF requests and demand reads are kept separate.
+extern "C" __attribute__((noinline)) void fixture_prefetch_phase(unsigned index) {
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+    const auto& pk=fixture_picks[index];
+    if(fixture_input.header_hint && pk.nr)
+        MeshDraw::chunk_prefetch_lines(fixture_package.meshlets()+pk.let,16U);
+    fixture_draw->chunk_prefetch_payload(pk);
+#else
+    (void)index;
+#endif
+}
+
+// All current picks have nr==0 in every invocation from Python. This executes
+// the real body and returns before the first FTRV; an unexpected geometry path
+// fails closed in the scalar interpreter instead of being approximated.
+extern "C" __attribute__((noinline)) int fixture_emit_zero() {
+#if defined(RE4DC_SCENERY_EMIT_PREFETCH) && RE4DC_SCENERY_EMIT_PREFETCH
+    return fixture_draw->chunk_emit(fixture_picks,fixture_input.count,
+        fixture_picks+fixture_input.count+(fixture_input.next_nr!=0));
+#else
+    return fixture_draw->chunk_emit(fixture_picks,fixture_input.count);
+#endif
+}
+extern "C" void fixture_snapshot() {
+    fixture_result[0]=stats.groups_visible;
+    fixture_result[1]=stats.batches;
+    fixture_result[2]=stats.bind_rejects;
+    fixture_result[3]=stats.reserve_rejects;
+    fixture_result[4]=fixture_draw->input;
+    fixture_result[5]=fixture_draw->output;
+    fixture_result[6]=fixture_draw->primed;
+    fixture_result[7]=fixture_draw->used;
+}
+
+extern "C" const std::uintptr_t fixture_layout[]={
+    1,sizeof(EmitInput),sizeof(MeshDraw),sizeof(MeshDraw::Pick),
+    reinterpret_cast<std::uintptr_t>(&fixture_input),
+    reinterpret_cast<std::uintptr_t>(fixture_package_data),sizeof(fixture_package_data),
+    reinterpret_cast<std::uintptr_t>(fixture_picks),sizeof(fixture_picks),
+    reinterpret_cast<std::uintptr_t>(fixture_gather),sizeof(fixture_gather),
+    reinterpret_cast<std::uintptr_t>(fixture_cache),sizeof(fixture_cache),
+    reinterpret_cast<std::uintptr_t>(fixture_outcodes),sizeof(fixture_outcodes),
+    reinterpret_cast<std::uintptr_t>(fixture_storage),sizeof(fixture_storage),
+    reinterpret_cast<std::uintptr_t>(&fixture_package),sizeof(fixture_package),
+    reinterpret_cast<std::uintptr_t>(fixture_result),sizeof(fixture_result),
+    reinterpret_cast<std::uintptr_t>(&stats),sizeof(stats)
+};

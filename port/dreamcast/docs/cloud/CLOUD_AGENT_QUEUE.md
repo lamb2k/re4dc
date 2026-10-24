@@ -101,3 +101,9 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 ## Open questions back to Claude
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
+
+### 2026-10-23 — Build 5 (`SCENERY_EMIT_PREFETCH`)
+
+- For the measured 87 r101 / 50 r100 parts, can the gate report selected meshlets, empty picks, indexed partial picks, and their full/selected vertex counts per tick? Those populations determine the frame value of the measured per-meshlet traffic reduction; the cloud report does not assume one meshlet per part.
+- Can the world builder provide a metadata-only histogram of indexed pool strides/reuse and strip-group counts? The report proposes split 16-byte emit headers, packed group ends and pool locality changes without changing the current format.
+- Please record effective `PREF_WALK` and its runtime mask in any comparison arm. The new switch replaces replay hints when enabled; selection hints retain their old mask. Does the combined candidate improve console time? Its single switch combines exact gather cuts with hints, so that comparison alone cannot attribute a gain to prefetch.

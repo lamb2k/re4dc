@@ -1,0 +1,305 @@
+// Actual production Emitter, borrow/gather, emit_pick, replay and clipper.
+// Geometry is a small validated synthetic R4IM; no game asset is present.
+#define RE4DC_SCENERY_CHUNK 1
+#define RE4DC_MESH_DIRECT 1
+#define RE4DC_PS2_WORLD_MESH 1
+#define RE4DC_PS2_VERTEX_ALPHA 1
+#define RE4DC_PS2_PVS 0
+#define RE4DC_SKY_ANY 1
+#define RE4DC_MESH_FASTPATH 1
+#define RE4DC_MESH_PRIME_LAZY 1
+#define RE4DC_PS2_WORLD_LEAN 23
+#define RE4DC_PS2_STRIP_GROUPS 1
+#define RE4DC_MESH_VP_SCHED 1
+#define RE4DC_MESH_STRIP_LEAN 1
+#define RE4DC_HW_LEAN 1
+#define RE4DC_SCENERY_SCREEN_MEMO 1
+#define RE4DC_SCENERY_DEDUP 2
+#define RE4DC_INV255 /255.0f
+#include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
+#include "@ROOT@/port/dreamcast/room/pvr_geometry.hpp"
+#include "@ROOT@/port/dreamcast/room/static_room_prepare.hpp"
+
+// Record RAM-prefetch requests separately from TA words. Address evaluation
+// and live-range assertions execute; host cache behavior is not SH-4 evidence.
+// The old PREF_WALK edge is also recorded; SQ dispatch uses sq_flush instead.
+struct PrefRegion {std::uintptr_t first,last;unsigned kind;};
+static std::vector<PrefRegion> prefetch_regions;
+static std::vector<std::uint32_t> prefetch_words;
+static unsigned prefetch_mask=4;
+static void prefetch_region(const void* p,std::size_t bytes,unsigned kind){
+    const auto first=reinterpret_cast<std::uintptr_t>(p);
+    prefetch_regions.push_back({first,first+bytes,kind});
+}
+static void fixture_prefetch(const void* p){
+    const auto address=reinterpret_cast<std::uintptr_t>(p);
+    for(const auto& region:prefetch_regions)if(address>=region.first&&address<region.last){
+        prefetch_words.push_back(region.kind);prefetch_words.push_back(unsigned(address-region.first));return;
+    }
+    std::fprintf(stderr,"prefetch outside registered live data: %p\n",p);std::abort();
+}
+#define __builtin_prefetch(p,...) fixture_prefetch(p)
+#define RE4DC_C20_PREF_ON() ((prefetch_mask&4U)!=0)
+#define RE4DC_C20_PREF(p) fixture_prefetch(p)
+
+namespace re4dc::render {
+@SHADE_COLOR@
+@INTERPOLATE_VERTEX@
+@CLIP_PROJECTED_TRIANGLE@
+}
+struct QueuePart {unsigned cull=1;float uv_offset[2]{.125f,-.25f},projection[7]{},viewport[6]{};};
+using Re4dcModelPart=QueuePart;
+struct Re4dcModelPacket {void* vertices;unsigned capacity;float u_scale,v_scale;};
+static unsigned model_parts,model_empty_parts,model_input,model_output,packet_aborts;
+static unsigned pick_calls,lut_calls,screen_loads,queue_native,queue_fallback,queue_aborts;
+static unsigned re4dc_mv_camera_frame=~0U;
+static unsigned scn_cen[10]{};
+static float re4dc_mv_projection[7],re4dc_mv_viewport[6];
+static std::vector<unsigned> queue_events;
+static std::uint32_t lut[512],ps2_lut4[512];
+static bool ps2_lut4_built;
+namespace piece {static const void* pkg;static unsigned* table;}
+namespace whd {static void note(unsigned,const unsigned*){assert(!locked);}}
+namespace lean {
+constexpr unsigned kMode=23;
+static pvr_vertex_t* prime_at;
+static unsigned primed;
+static struct {unsigned prime_reuse=0,prime_bad=0;}st;
+}
+@STATIC_STATS@
+static unsigned re4dc_ui_frame(){return frame;}
+@ALPHA_LUT@
+static int re4dc_model_packet_streaming(){return 1;}
+static void re4dc_model_packet_commit(unsigned){assert(false);}
+static void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+    assert(reason==0);++model_parts;if(!output)++model_empty_parts;model_input+=input;model_output+=output;
+    queue_events.insert(queue_events.end(),{8,reason,input,output});
+}
+static void re4dc_model_packet_abort(){assert(!locked);++packet_aborts;stream_aborted=true;model_used=0;model_handle=nullptr;}
+static int re4dc_model_direct_begin(const QueuePart*,Re4dcModelDirect*){assert(false);return 0;}
+static int re4dc_model_packet_begin(const QueuePart*,Re4dcModelPacket*){assert(false);return 0;}
+static std::uint32_t* re4dc_ta_put(std::uint32_t* q,const pvr_vertex_t* v,unsigned n){
+    for(unsigned i=0;i<n;++i){std::memcpy(q,v+i,32);sq_flush(q);q+=8;}return q;
+}
+
+// SH4-only walk_lean's hardware edge, using the repository's portable codes
+// and emit helpers. It has the documented depth-cull/clip/screen-cull ordering.
+// The production C++ strips_lean caller and clipper remain unmodified below.
+namespace re4dc::vp {
+static const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* end,const std::uint8_t* oc,
+    const pvr_vertex_t* cache,unsigned limit,std::uint32_t*& q,unsigned& culled,unsigned& emitted){
+    while(s<end){
+        const unsigned n=*s;
+        const auto code=codes(oc,s+1,n);
+        if(code.all&depth_mask(kChecksAll)){++culled;s+=n+1;continue;}
+        if((code.any&depth_mask(kChecksAll))||n>limit)return s;
+        if(code.all&screen_mask(kChecksAll))++culled;
+        else {
+            auto* first=reinterpret_cast<pvr_vertex_t*>(q);
+            auto* last=emit(first,cache,s+1,n);
+            for(auto* v=first;v<last;++v)sq_flush(reinterpret_cast<std::uint32_t*>(v));
+            q=reinterpret_cast<std::uint32_t*>(last);++emitted;
+        }
+        s+=n+1;
+    }
+    return s;
+}
+}
+@LOAD_SCREEN@
+@EMITTER@;
+@DEDUP@
+struct MeshDraw:Emitter {
+    const re4dc::room::MeshPackage& package;const re4dc::room::MeshPart& part;
+    const std::uint32_t* lut;re4dc::room::CompactVertex12* gather_pool;
+    bool lean_inside=false,lean_part=false;const float* lean_am=nullptr;
+    const std::uint8_t* sg=nullptr;unsigned sg_groups=0;
+    unsigned pc_mode=0;const float* pc_wq=nullptr;bool pc_all=false,pc_check=false;
+    float cull_far=0,lod_scale=0;unsigned part_index=0;
+    re4dc::room::CompactBatch batch{};
+    re4dc::room::CompactVertex12* gathered=nullptr;
+    pvr_vertex_t* cache=nullptr;std::uint8_t* outcodes=nullptr;
+    re4dc::vp::Constants k{};unsigned primed=0;
+    @BORROW_GATHER@
+    @CORNERS@
+    @DD_WORD@
+    @BORROW@
+    @LEAN_FLUSH@
+    @STRIPS_LEAN@
+    @PICK_DEFINITION@;
+    @EMIT_METHODS@
+};
+
+// Two meshlets per part, eight vertices and two four-corner strips each.
+// v3 additionally exercises indexed gather and preserved gather ownership.
+static std::vector<std::uint8_t> make_package(unsigned version){
+    using namespace re4dc::room;
+    MeshHeader h{};std::memcpy(h.magic,"R4IM",4);h.version=version;
+    h.mesh_count=1;h.part_count=8;h.meshlet_count=16;h.vertex_count=128;h.palette_count=1;
+    h.strip_bytes=16*(version==3?26U:10U);h.reserved[0]=kColorArgb1555;
+    unsigned at=sizeof(h)+(version>=2?sizeof(MeshLodHeader):0);
+    const auto section=[&](unsigned count,unsigned bytes){at=(at+3)&~3U;unsigned result=at;at+=count*bytes;return result;};
+    h.mesh_offset=section(1,sizeof(MeshRecord));h.part_offset=section(8,sizeof(MeshPart));
+    h.meshlet_offset=section(16,sizeof(Meshlet));h.vertex_offset=section(128,sizeof(CompactVertex12));
+    h.strip_offset=section(h.strip_bytes,1);h.palette_offset=section(1,4);
+    MeshLodHeader lod{};
+    if(version>=2){lod.cluster_count=lod.level_count=8;lod.part_lod_offset=section(8,sizeof(MeshPartLod));
+        lod.cluster_offset=section(8,sizeof(MeshCluster));lod.level_offset=section(8,sizeof(MeshLevel));}
+    h.bytes=at;std::vector<std::uint8_t> data(at);std::memcpy(data.data(),&h,sizeof(h));
+    if(version>=2)std::memcpy(data.data()+sizeof(h),&lod,sizeof(lod));
+    auto& record=*reinterpret_cast<MeshRecord*>(data.data()+h.mesh_offset);record.part_count=record.source_parts=8;
+    record.step[0]=record.step[1]=record.step[2]=1;
+    auto* parts=reinterpret_cast<MeshPart*>(data.data()+h.part_offset);
+    auto* lets=reinterpret_cast<Meshlet*>(data.data()+h.meshlet_offset);
+    auto* vertices=reinterpret_cast<CompactVertex12*>(data.data()+h.vertex_offset);
+    const unsigned xyz[8][3]={{0,0,0},{2,0,0},{0,2,2},{2,2,2},{3,3,4},{5,3,4},{3,5,0},{5,5,0}};
+    for(unsigned i=0;i<8;++i){auto& p=parts[i];p.first_meshlet=2*i;p.meshlet_count=2;
+        p.uv_bias[0]=float(i)*.125f;p.uv_bias[1]=-float(i)*.25f;
+        p.uv_scale[0]=(i+1)*.0625f;p.uv_scale[1]=(i+1)*.03125f;
+        if(version>=2){auto* pl=reinterpret_cast<MeshPartLod*>(data.data()+lod.part_lod_offset);pl[i]={i,1};
+            auto* cl=reinterpret_cast<MeshCluster*>(data.data()+lod.cluster_offset);cl[i].first_level=i;cl[i].level_count=1;
+            auto* lv=reinterpret_cast<MeshLevel*>(data.data()+lod.level_offset);lv[i].first_meshlet=2*i;lv[i].meshlet_count=2;}
+        for(unsigned m=0;m<2;++m){const unsigned li=2*i+m;auto& l=lets[li];l.first_vertex=version==3?i*16:li*8;
+            l.first_strip=li*(version==3?26:10);l.vertex_count=8;l.strip_count=2|(version==3?kIndexedMeshlet:0);l.strip_bytes=10;
+            std::uint8_t* s=data.data()+h.strip_offset+l.first_strip;
+            if(version==3){auto* offsets=reinterpret_cast<std::uint16_t*>(s);for(unsigned k=0;k<8;++k)offsets[k]=m*8+k;s+=16;}
+            const std::uint8_t strip[10]={4,0,1,2,3,4,4,5,6,7};std::memcpy(s,strip,10);
+            for(unsigned k=0;k<8;++k)vertices[li*8+k]={std::uint16_t(xyz[k][0]),std::uint16_t(xyz[k][1]),std::uint16_t(xyz[k][2]),
+                std::uint16_t(k*16),std::uint16_t(127-k*8),std::uint16_t(0x1000U*i+0x8123U+k*37U)};
+        }
+    }
+    return data;
+}
+static unsigned snapshot_mode;
+static void queue_case(unsigned id){
+    const bool extra=id>=200&&id<232,phase=id>=240&&id<256,repeat=id>=300&&id<316;
+    const unsigned kind=extra?(id-200)/2:phase?0:repeat?(id-300)/2:~0U;
+    const unsigned variant=id<200?id-100:id&1U;
+    const unsigned version=(variant&1U)?3:1;
+    unsigned shape=id<200?(variant/2)%8:repeat&&(kind&1)?3:0;
+    unsigned count=id<200?((variant/16)%2?48:8):extra&&kind==0?1:extra&&kind==1?48:8;
+    if(extra&&(kind==2||kind==3))count=3;
+    geometry_low_at=(id==164||id==165||(extra&&kind==10))?2:0;
+    if(extra&&kind==11)acquire_invalid_at=2,acquire_invalid_kind=1;
+    if(extra&&kind==12)acquire_invalid_at=2,acquire_invalid_kind=2;
+    if(extra&&kind==13)source_valid=false;
+    auto data=make_package(version);
+    auto& h=*reinterpret_cast<re4dc::room::MeshHeader*>(data.data());
+    auto* lets=reinterpret_cast<re4dc::room::Meshlet*>(data.data()+h.meshlet_offset);
+    auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(data.data()+h.vertex_offset);
+    if(extra&&(kind==8||kind==9)){
+        // The first small pick followed by larger picks exercises lazy-prime
+        // growth after a rejected pick, and retained prime state across parts.
+        auto& l=lets[0];
+        if(version==3)std::memmove(data.data()+h.strip_offset+l.first_strip+8,
+                                  data.data()+h.strip_offset+l.first_strip+16,5);
+        l.vertex_count=4;l.strip_bytes=5;
+        l.strip_count=1|(version==3?re4dc::room::kIndexedMeshlet:0);
+    }
+    std::uint32_t dedup_words[16]{};
+    std::uint8_t dedup_indices[32]{};
+    if(repeat)for(unsigned li=0;li<16;++li){
+        auto* v=vertices+li*8;
+        for(unsigned k=0;k<2;++k){v[k+6].x=v[k].x;v[k+6].y=v[k].y;v[k+6].z=v[k].z;dedup_indices[li*2+k]=k;}
+        // The second strip draws repeat vertices while its selected source
+        // range is only 0..3. This requires full gather before dedup::fill.
+        auto* s=data.data()+h.strip_offset+lets[li].first_strip+(version==3?16:0);
+        const std::uint8_t tail[5]={4,6,7,2,3};std::memcpy(s+5,tail,5);
+        dedup_words[li]=(2U<<24)|(li*2);
+    }
+    // All eight legal 4-byte allocation phases relative to a 32-byte line.
+    std::vector<std::uint8_t> aligned(data.size()+96,0x5a);
+    auto address=(reinterpret_cast<std::uintptr_t>(aligned.data())+31U)&~std::uintptr_t(31U);
+    if(phase)address+=4U*((id-240)/2);
+    auto* live=reinterpret_cast<std::uint8_t*>(address);std::memcpy(live,data.data(),data.size());
+    re4dc::room::MeshPackage package;
+    assert(package.adopt(live,unsigned(data.size()),true,true));const auto& cpkg=package;
+    dedup::pkg=&cpkg;dedup::lets=dedup_words;dedup::src=dedup_indices;
+    re4dc::vp::build_lut(lut);re4dc::room::CompactVertex12 gather[256];
+    // Inputs outside a selected interval start poisoned and later contain the
+    // preceding meshlet's bytes. Selected strips must never consume them.
+    std::memset(gather,0xa5,sizeof(gather));
+    unsigned group_count=(extra&&(kind==6||kind==7))?8:2;
+    std::uint16_t groups[16*8*8]{};
+    for(unsigned i=0;i<16;++i)for(unsigned q=0;q<group_count;++q){
+        auto* g=groups+(i*group_count+q)*8;
+        g[6]=q+1==group_count?10:5;g[7]=q+1==group_count&&!repeat?4|(7U<<8):0|(3U<<8);
+    }
+    if(extra&&(kind==8||kind==9))for(unsigned q=0;q<group_count;++q)groups[q*8+6]=5;
+    struct {const unsigned* lut;re4dc::room::CompactVertex12* gather;const std::uint8_t* sg;unsigned sg_groups;}
+        ps2w{::lut,extra&&kind==14?nullptr:gather,reinterpret_cast<const std::uint8_t*>(groups),group_count};
+    QueuePart part;part.cull=1;part.projection[1]=part.projection[3]=1;
+    part.viewport[2]=640;part.viewport[3]=480;
+    part.uv_offset[0]=snapshot_mode?float(variant%3)*.125f:0.0f;
+    part.uv_offset[1]=snapshot_mode?-float(variant%5)*.0625f:0.0f;
+    if(snapshot_mode>=2){part.uv_offset[0]=.9375f;part.uv_offset[1]=-.8125f;}
+    std::uint32_t pending_uv[2];std::memcpy(pending_uv,part.uv_offset,sizeof(pending_uv));
+    float expected_uv[48][2]{};
+    const float near=1,far=1000;const unsigned pass=0;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+    @CHUNK_PART@;
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts]{};MeshDraw::Pick cpk[kChunkPicks]{};
+    unsigned nctx=count,npk=0;piece::pkg=&cpkg;piece::table=piece_words;
+    for(unsigned j=0;j<count;++j){auto& x=cctx[j];x.index=j%8;x.cull=j%3;x.sky=j&1;x.marked=(j&1)!=0;
+        key_for(x.index,0,x.cull,x.key);x.first=npk;x.count=2;x.cull_far=1000;x.lod_scale=2;
+        if(snapshot_mode>=2){expected_uv[j][0]=j%7?float(int(j%7)-3)*.125f:-0.0f;
+            expected_uv[j][1]=float(int(j%5)-2)*.0625f;}
+        else std::memcpy(expected_uv[j],part.uv_offset,sizeof(expected_uv[j]));
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        std::memcpy(x.uv_offset,expected_uv[j],sizeof(x.uv_offset));
+#endif
+        x.mvq[0]=x.mvq[5]=x.mvq[10]=1;x.mvq[3]=-3+float(j%3)*.125f;x.mvq[7]=-3;
+        x.mvq[11]=shape==3?-2:shape==4?-1500:shape==5?100:-20;
+        if(shape==6)x.mvq[3]=2000;
+        if(shape==7&&(j%3==0))x.count=0;
+        if(extra){
+            if(kind==0||kind==1||kind==3||kind==7)x.count=1;
+            if(kind==2)x.count=j==1?0:1;
+            if(kind==4||kind==5)x.count=3;
+            if(kind==15)x.count=0;
+        }
+        for(unsigned m=0;m<x.count;++m){
+            auto& pk=cpk[npk++];pk={std::uint16_t(2*x.index+m%2),std::uint8_t(shape==1?1:shape==2?0:255),1,0,3,{0,0}};
+            if(extra){
+                if(kind==3&&j==1)pk.nr=0;
+                if((kind==4||kind==5)&&m==1)pk.nr=0;
+                if(kind==5||kind==6||kind==7){if(pk.nr)pk.nr=1;pk.gmask=std::uint8_t(1U<<(group_count-1));pk.lo=4;pk.hi=7;}
+                if((kind==8||kind==9)&&j==0&&m==0)pk.nr=kind==8?255:0;
+                if(kind==9&&j==0&&m==1)pk.nr=0;
+                if(kind==10)pk.nr=0;
+            }
+            if(repeat){
+                if(kind>=2){pk.nr=1;pk.gmask=2;pk.lo=0;pk.hi=3;}
+                if(kind>=4&&m==0)pk.nr=0;
+                if(kind>=6&&j%3==0){pk.nr=1;pk.gmask=1;pk.lo=0;pk.hi=3;}
+            }
+        }
+        if(id<200&&variant>=32)entries[x.index].package.texture.width=32;
+    }
+    prefetch_region(live,data.size(),1);prefetch_region(&cpkg,sizeof(cpkg),2);
+    prefetch_region(cpk,npk*sizeof(*cpk),3);prefetch_region(cctx,nctx*sizeof(*cctx),4);
+    prefetch_region(groups,sizeof(groups),5);prefetch_region(gather,sizeof(gather),6);
+    prefetch_region(dedup_words,sizeof(dedup_words),7);prefetch_region(dedup_indices,sizeof(dedup_indices),8);
+    re4dc_ps2_sky_header=7;
+    @CHUNK_FLUSH@;
+    int result=1;
+    if(snapshot_mode==3){
+        // Independent owner oracle: flush each row immediately with its live
+        // UV values. This path does not restore UV from the snapshot field.
+        ChunkPart saved[kChunkParts];std::memcpy(saved,cctx,sizeof(saved));const unsigned picks=npk;
+        for(unsigned j=0;j<count;++j){cctx[0]=saved[j];nctx=1;npk=picks;
+            std::memcpy(part.uv_offset,expected_uv[j],sizeof(expected_uv[j]));
+            result=chunk_flush();if(result<0)break;}
+        std::memcpy(part.uv_offset,pending_uv,sizeof(pending_uv));
+    }else result=chunk_flush();
+    assert(std::memcmp(part.uv_offset,pending_uv,sizeof(pending_uv))==0);
+    assert(!locked&&!direct_open);
+    if(geometry_low_at){assert(result<0&&c.aborts==1&&model_parts==1&&acquired==2);}
+    else if(!(extra&&(kind>=11&&kind<=14))){assert(result>0&&part.cull==1);assert(re4dc_ps2_sky_header==7&&nctx==0&&npk==0);}
+    returns.push_back(unsigned(result));queue_native=c.native;queue_fallback=c.fallback;queue_aborts=c.aborts;
+    queue_events.insert(queue_events.end(),{pending_uv[0],pending_uv[1]});
+    queue_events.insert(queue_events.end(),std::begin(scn_cen),std::end(scn_cen));
+    @REPORT_STATS@
+}

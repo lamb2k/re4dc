@@ -89,6 +89,19 @@ $(error SCENERY_SELECT_LEAN2 needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SELECT_LEAN2=1
 endif
+# SCENERY_EMIT_PREFETCH=1 (exact, render only): gather only selected indexed
+# corners, skip empty-pick gather/prime, and stage bounded next-pick RAM hints
+# across the queued run. No package layout, material or TA ordering change.
+SCENERY_EMIT_PREFETCH ?= 0
+ifneq ($(SCENERY_EMIT_PREFETCH),0)
+ifneq ($(SCENERY_EMIT_PREFETCH),1)
+$(error SCENERY_EMIT_PREFETCH must be 0 or 1)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_EMIT_PREFETCH needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_EMIT_PREFETCH=1
+endif
 # SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
 # are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
 # repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.

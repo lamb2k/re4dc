@@ -1,0 +1,739 @@
+{
+  "status": "PASS",
+  "baseline": "20df6734578cacc7033bb32a660d4b466a7cfbe9",
+  "scope": "Price bounded production gather, hint and empty-pick SH4 phases.\n\nThe full frozen native_static.cpp is compiled with the current Make-derived\npublic recipe. No FTRV, FSRRA, clipper or complete-emission timing is claimed.\nConstructor/material acquisition and package adoption are outside the traces.\nCycles are perfect-D-cache pipeline estimates, with warm/cold I-cache arms;\n32-byte demand line touches and PREF requests are distinct observations.\n",
+  "cases": 84,
+  "arms": 4,
+  "case_arm_executions": 336,
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "99ab25e2d2ead0fcfe490684d8c1ac7ea8767ab898bd075dca682275b3927081",
+    "port/dreamcast/tools/d367/world_emit_prefetch/emit_target.cpp.in": "531ec0c8774f997ee46587fa59a5e58a28df569899b9142eea9a05398495c070",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "8460fc023840e87f52ab97eac3b9d8b7192a7d22070219f08f1631e593149cc9",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/game/platform/include/scenery_select_lean2.inc": "9ed1d874a9fdc846568ffcb919e17c9cbc29d18dee629211cfb282f4d6ad1a18",
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "port/dreamcast/tools/d367/world_emit_prefetch/measure_target.py": "631d744218b97017c78fc1c64c8bd7d198b06aefa964ca4612ecacfd5dfc85f5",
+    "port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+    "port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+    "port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+    "port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e",
+    "port/dreamcast/tools/d367/world_emit_prefetch/build_profile.py": "9e6fd8de576bb4d43ff1276c9e0f825122c04e5ea9c46bdb55e1e6c2c32991fd",
+    "port/dreamcast/tools/d367/world_emit_prefetch/emit_target_line_visits.py": "7972690862a1bd82ff940f11a139f642003c1cc14f5ea2f9eb80772441564075"
+  },
+  "recipe": {
+    "path": "port/dreamcast/tools/d367/rr/recipe.conf",
+    "sha256": "0497cb9df772fb1074a18423bdc25f7e3760a191141bb0d5edc412e71388cb6a",
+    "current_ch2": [
+      "ROUTE_CH22=1",
+      "ROUTE_CH23=1",
+      "PS2_CH2_ENEMY=1",
+      "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+      "MOTION_BOUNDED_R11F=1",
+      "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+      "PS2_WORLD_SOURCE_OWNER=1",
+      "PS2_WORLD_SOURCE_TEX_PREP=1",
+      "AICA_STR_ENT_MAX=56",
+      "AICA_SPILL=1",
+      "NATIVE_MODEL_REGISTRY_FIRST=1",
+      "NATIVE_MODEL_REGISTRY_LOD=1",
+      "ROUTE_SOON_RETURN=1",
+      "MOVIE_AUDIO_PRIME=1",
+      "ROOM_LEFTOVER_FIT=1",
+      "PS2_WORLD_SOURCE_TEX_VQ=1",
+      "LEON_SKIN_SLOTS=2",
+      "LEON_HEADLESS=1",
+      "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019",
+      "LEON_CLOTH_DRAWN=1",
+      "HAZE_SPRITE_CUT=1",
+      "FX_MIST_PS2=1",
+      "PS2_HDR_SETS=128",
+      "ROUTE_CH21_FULL=1",
+      "RESET_MEM_FIX=1",
+      "GANADO_ROUTINE_BYTES=1",
+      "CLOTH_LIGHT_ABI_FIX=1",
+      "AICA_LAYOUT_RECOVER=1",
+      "PAUSE_NATIVE_PRESENTATION=1",
+      "CAST_MIPMAP=1",
+      "TEX_TWIDDLED_MIPMAP=1",
+      "TEX_PAL4_ALPHA=1",
+      "TEX_PAL4_MIPMAP=1",
+      "TEX_PAL8_ALPHA=1",
+      "TEX_PAL8_MIPMAP=1",
+      "WORLD_RECT21=1",
+      "TEX_MIP_DADJ=3",
+      "VRAM_ROOM_ARENA=0",
+      "EVD_ADMISSION_TXN=1",
+      "EVD_START_CLEANUP=1",
+      "EVD_START_ROLLBACK=1",
+      "EVD_DEBUG_READ_CLEANUP=1",
+      "EVD_EXEC_FAILURE_CLEANUP=1",
+      "EVD_READ_RELEASE_REFS=1",
+      "EVD_READ_ADMISSION_PREFLIGHT=1",
+      "EVD_MODULE_VALIDATE_FIRST=1",
+      "EVENT_MANAGER_STORAGE_FLAGS=1",
+      "EFFECT_ADMISSION_GUARD=1",
+      "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+      "EM_ADMISSION_DISP_FIX=1",
+      "RESET_RETIRE_BEFORE_HEAPS=1",
+      "MOTION_RETIRE_PREFLIGHT=1",
+      "SS_RESTORE_VALIDATE_FIRST=1",
+      "SS_ACTOR_LIFETIME=1",
+      "SS_MSG_FIELDS=1",
+      "SS_CERT_PARTNER_CAPACITY=1",
+      "PARTS_LINKED_FLAG=1",
+      "TEX_PAYLOAD_RETRY=1",
+      "PS2_WORLD_NONEMPTY_LOD=1",
+      "MOTION_CAPACITY=1",
+      "FX_STRIP21=1",
+      "GANADO_EVENT_KEEP_LOD=1",
+      "SS_DATA_LZ=1",
+      "CPU_BACKFACE=0",
+      "ACTOR_BACKFACE=0",
+      "PS2_WORLD_SOURCE_TEX_MIP=1",
+      "PS2_WORLD_ROOT_POSE=1",
+      "WATER_PS2_EXT=1",
+      "TRAP_FX=1",
+      "LIGHT_CUT_HOLD=1",
+      "FX_ROOM_SPILL_KB=24",
+      "DISC_DMA_WAIT_TIMEOUT=1",
+      "EM35_ROUTINE_BYTES=1",
+      "FX_LEVEL=3",
+      "FX_TRIM=1",
+      "SCENERY_SELECT_ONLY=1",
+      "SCENERY_REPLAY_LEAN=1",
+      "SCENERY_SUBMIT_BATCH=1"
+    ],
+    "public_asset_overrides": [
+      "PS2_LEON=0",
+      "LEON_HAND_PACK=0",
+      "PS2_GANADO=0",
+      "PS2_GANADO_LIT=0",
+      "GANADO_LOD=0",
+      "GANADO_EVENT_KEEP_LOD=0",
+      "ACTOR_PROBE_LIGHT=1",
+      "GANADO_LIT=0",
+      "NATIVE_MODEL_REGISTRY_DYING=0",
+      "LEON_HEADLESS=0",
+      "PS2_CH2_ENEMY=0",
+      "ACTOR_GANADO_PS2_STUMP=0"
+    ],
+    "profile_source_sha256": {
+      "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+      "port/dreamcast/tools/d367/test22/release-knobs.txt": "b67978e9d50cfae966d91bdd771e242ba12f4d899b539db0dbf6982e5e91a46c",
+      "port/dreamcast/tools/d367/rr/recipe.conf": "0497cb9df772fb1074a18423bdc25f7e3760a191141bb0d5edc412e71388cb6a",
+      "port/dreamcast/build-public.sh": "7eaba2006802a1dc5a10ff0602d316cc86b09f32535edfa66412ce2564ca0d9f",
+      "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+      "port/dreamcast/game/Makefile": "cf276a6322f5d4b6119674ea83ae766d0a95c77196af0208ffbe3e86ca5970c2",
+      "port/dreamcast/game/actor_ganado_ps2_stump.mk": "4e405949406531d8435bf7a292d9da8ccf1d3ea0d259c6f463e9e029827ffbf2",
+      "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+      "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+      "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+      "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+      "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+      "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+      "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+      "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+      "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+      "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+      "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+      "port/dreamcast/game/effects30.mk": "74b55a48b1edb02691667a723f49804c4f4e100f9422b60e858c93a4426e51b8",
+      "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+      "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+      "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+      "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+      "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+      "port/dreamcast/game/game30.mk": "592c5feee4c5e2818747c7d17f45dfdf3ae799df18c98a471c9ebc3c0fba00de",
+      "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+      "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+      "port/dreamcast/game/kos_cache_p2.mk": "9dce25aca16f361c9899f49807e81464e70588933b9f3aac7c1f4661f9e3da35",
+      "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+      "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+      "port/dreamcast/game/mendezfx.mk": "b0c6641416b8d8672fc5f2a7319c7ed208af4ed9a83276499a24e31280ccd3dd",
+      "port/dreamcast/game/native_model_registry.mk": "bb8f9338a6a29674c248d9103f0a73e19118ff1f95548e91599abf27b2583f46",
+      "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+      "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+      "port/dreamcast/game/ps2leon.mk": "afacaa37db731ab421916f9a84b1fddd71bb036c7a5ef9a7a0e536d652fdd916",
+      "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+      "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+      "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+      "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+      "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+      "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+      "port/dreamcast/game/scenery19.mk": "01ed444dd7e541a93cd3096a1106ec3023b40107249e35a68d53e4d3306d5ee3",
+      "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+      "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+      "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+      "port/dreamcast/game/t2exact.mk": "1e0e369e489ff81f3dc4f7cbd1839e89f6313fe6c5e097a891198a62d2a4c175",
+      "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+      "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+      "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+      "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+      "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+    },
+    "pvr_header_overlay": {
+      "source": "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source/kernel/arch/dreamcast/include/dc/pvr.h",
+      "source_sha256": "280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4",
+      "patched_sha256": "55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f",
+      "patches": [
+        {
+          "path": "port/dreamcast/patches/kos-804b319-manual-flip.patch",
+          "sha256": "c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df",
+          "applied_header_hunk_sha256": "70645175039038250cec56655841b85fa60c3cd00f7af4dbca26aa10662f4ee7",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-async-present.patch",
+          "sha256": "d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442",
+          "applied_header_hunk_sha256": "d3610193be03965021f8eea0ff60c1f086ab418056ab1fbce5d2f07c15fb79e6",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/release-profile/kos-overlay/dc/pvr.h\n"
+        },
+        {
+          "path": "port/dreamcast/patches/kos-804b319-vbuf-switch.patch",
+          "sha256": "52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7",
+          "applied_header_hunk_sha256": "9557be2aa8b7ba94240a505249573e2249f16ec86e6d1251909969d2ba417279",
+          "output": "patching file /workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/release-profile/kos-overlay/dc/pvr.h\npatch unexpectedly ends in middle of line\nHunk #1 succeeded at 1089 with fuzz 1.\n"
+        }
+      ],
+      "scope": "Only declarations patched; KOS source/library unchanged and link guards not run"
+    }
+  },
+  "toolchain": {
+    "version": "sh-elf-g++ (GCC) 15.2.0",
+    "files": {
+      "driver": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+        "sha256": "d3bb95f7a2e5cc5618a130bb0287db9e6892a788fd4a32487f3405f5e875d9f5"
+      },
+      "cc1plus": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus",
+        "sha256": "2a17943faa944b8e7e35c9843fb90af325629d9cd8adde0886447a0bb91dc6b9"
+      },
+      "as": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/sh-elf/bin/as",
+        "sha256": "77d631e0caac2e0411d179b1242b5351a3f3b6ae01351766c6a734bf4d3d7bfc"
+      },
+      "ld": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/sh-elf/bin/ld",
+        "sha256": "6f54933b617edafb74ecb0b4e1eee2f2462e7804070b0e3bcac190491dced694"
+      },
+      "libgcc.a": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/libgcc.a",
+        "sha256": "e5e0bfc2aa24ecb6450ebce7e43583fb5bf0d4f41d8cdd78542586f9fe4498b7"
+      },
+      "libc.a": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/sh-elf/lib/libc.a",
+        "sha256": "a26718e585bfa0a57e442cdea22f8c75d72833be820590d2e6ff50d8a0148fb3"
+      },
+      "libm.a": {
+        "path": "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/sh-elf/lib/libm.a",
+        "sha256": "0d75e80eadbfbba504945cac0fcacfbdac055f242480d3f05fb0ef61283a8414"
+      }
+    }
+  },
+  "raw_artifacts": {
+    "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/target-build.json": "9417a825104b510ea86402b9027778380631ee3a57632a1d9b6f6a758d5d2718",
+    "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/target-controls.json": "6f941bc81b2d7b84e21dd9f5c7a8a8fedeed9207fbe4c1068c13886a4c0d9b5c",
+    "/workspace/scratch/c4e1a2818fde/backface-tools/build5-demand-line-visits-final.json": "0fd593b75ef7e4007a78f76bd8f0fae39b23a2c60edfe809d04c3fbe64aa8c13",
+    "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/release-profile/emit-profile.json": "ff0c545396b0b3ef4946d5ff4b001e41256f44daaf633deb55046c788adbc69f"
+  },
+  "commands": [
+    {
+      "cwd": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch",
+      "argv": [
+        "python3",
+        "port/dreamcast/tools/d367/world_emit_prefetch/measure_target.py",
+        "--quick",
+        "--output",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02",
+        "--sh4-cxx",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/toolchain-root/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+        "--kos-root",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/kos-source",
+        "--sdk-root",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/cone-pr56-rooms-qualified/sdk"
+      ]
+    },
+    {
+      "cwd": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch",
+      "argv": [
+        "python3",
+        "port/dreamcast/tools/d367/world_emit_prefetch/measure_target.py",
+        "--build",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/target-build.json",
+        "--output",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01"
+      ]
+    },
+    {
+      "cwd": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch",
+      "argv": [
+        "python3",
+        "port/dreamcast/tools/d367/world_emit_prefetch/emit_target_line_visits.py",
+        "--build",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/target-build.json",
+        "--run",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/target-controls.json",
+        "--output",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-demand-line-visits-final.json"
+      ]
+    }
+  ],
+  "observed_return_edges": [
+    "re4dc_source_world_binding_valid",
+    "re4dc_model_result"
+  ],
+  "forbidden_edges": [
+    "re4dc_source_world_group_claimed",
+    "re4dc_source_world_binding_failed",
+    "re4dc_r11f_binding_valid",
+    "re4dc_r11f_binding_failed",
+    "re4dc_model_packet_reserve",
+    "re4dc_model_packet_begin",
+    "re4dc_model_packet_commit",
+    "re4dc_model_packet_abort",
+    "re4dc_model_direct_begin",
+    "re4dc_model_direct_end",
+    "re4dc_model_packet_streaming",
+    "re4dc_ps2_world_direct_begin",
+    "re4dc_ps2_world_direct_begin_batch",
+    "re4dc_ps2_world_direct_end_batch",
+    "re4dc_ps2_world_batch_close",
+    "re4dc_ui_frame",
+    "re4dc_pvs23_observe",
+    "re4dc_pvs23_commit",
+    "mat_load",
+    "re4dc_log",
+    "re4dc_missing",
+    "sq_fast_cpy"
+  ],
+  "target_arms": {
+    "e0-p0": {
+      "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/e0-p0.elf",
+      "elf_sha256": "1042d7a0043d8accacad9aefe0387c5d054d37ace0490720b8855eb8684618c6",
+      "object_sha256": "1e5e9b59b39727d7af2b3e38ea0ac452fa98e4271fc57405c0561a63f6a36ce5",
+      "sections": {
+        "executable_bytes": 13604,
+        "allocated_bytes": 161176,
+        "zero_fill_bytes": 146932
+      },
+      "relevant_stack_usage": [
+        {
+          "function": "const void* fixture_gather_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void fixture_prefetch_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+          "bytes": 128,
+          "kind": "static"
+        },
+        {
+          "function": "int fixture_emit_zero()",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    },
+    "e0-p1": {
+      "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/e0-p1.elf",
+      "elf_sha256": "d78567ed23c74cc4e095e01a779f7ed0b9b79f97844a01ab120f94970a7fc3d6",
+      "object_sha256": "e43921201ee2365132ca4522c52b892f3172d162facce1d4cd7616b13a7d41b5",
+      "sections": {
+        "executable_bytes": 13720,
+        "allocated_bytes": 161296,
+        "zero_fill_bytes": 146932
+      },
+      "relevant_stack_usage": [
+        {
+          "function": "const void* fixture_gather_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void fixture_prefetch_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+          "bytes": 128,
+          "kind": "static"
+        },
+        {
+          "function": "int fixture_emit_zero()",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    },
+    "e1-p0": {
+      "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/e1-p0.elf",
+      "elf_sha256": "03e8e0c2e1b73dd87a3b27dce648a99276d990fe934ac05011f311c49dec6521",
+      "object_sha256": "f76094d84e21ea17aa8425013a85032bb947e5f4699284c16e6928187b5da75f",
+      "sections": {
+        "executable_bytes": 14368,
+        "allocated_bytes": 161940,
+        "zero_fill_bytes": 146932
+      },
+      "relevant_stack_usage": [
+        {
+          "function": "const re4dc::room::CompactVertex12* {anonymous}::MeshDraw::chunk_corners(const re4dc::room::Meshlet&, const Pick&)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "static void {anonymous}::MeshDraw::chunk_prefetch_lines(const void*, unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void {anonymous}::MeshDraw::chunk_prefetch_payload(const Pick&)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "function": "const void* fixture_gather_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void fixture_prefetch_phase(unsigned int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int, const Pick*)",
+          "bytes": 140,
+          "kind": "static"
+        },
+        {
+          "function": "int fixture_emit_zero()",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    },
+    "e1-p1": {
+      "elf": "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-02/build/e1-p1.elf",
+      "elf_sha256": "03e8e0c2e1b73dd87a3b27dce648a99276d990fe934ac05011f311c49dec6521",
+      "object_sha256": "2bc1dcfae7f90e07f3d9d78c2e33337047b9139592a77023cf79ecd6fd47fb9e",
+      "sections": {
+        "executable_bytes": 14368,
+        "allocated_bytes": 161940,
+        "zero_fill_bytes": 146932
+      },
+      "relevant_stack_usage": [
+        {
+          "function": "const re4dc::room::CompactVertex12* {anonymous}::MeshDraw::chunk_corners(const re4dc::room::Meshlet&, const Pick&)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "static void {anonymous}::MeshDraw::chunk_prefetch_lines(const void*, unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void {anonymous}::MeshDraw::chunk_prefetch_payload(const Pick&)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "function": "const void* fixture_gather_phase(unsigned int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "void fixture_prefetch_phase(unsigned int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int, const Pick*)",
+          "bytes": 140,
+          "kind": "static"
+        },
+        {
+          "function": "int fixture_emit_zero()",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    }
+  },
+  "repeated_line_visits": {
+    "status": "PASS",
+    "scope": "Qualify repeated demand-line visits for the three reported gather rows.\n\nRe-execute the frozen target ELF, retain every actual data-access address and\nwidth, and prove each access stays in one 32-byte line. Only then is the sum of\nload/store accesses reported as line visits. PREF and cache misses are separate.\n",
+    "rows": [
+      {
+        "case": "gather-v16-n4-a0",
+        "arm": "e0-p0",
+        "demand_line_visits": 150,
+        "distinct_lines": 27,
+        "repeat_visits": 123,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          2,
+          4
+        ]
+      },
+      {
+        "case": "gather-v16-n4-a0",
+        "arm": "e1-p0",
+        "demand_line_visits": 59,
+        "distinct_lines": 18,
+        "repeat_visits": 41,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          1,
+          2,
+          4
+        ]
+      },
+      {
+        "case": "gather-v64-n32-a0",
+        "arm": "e0-p0",
+        "demand_line_visits": 534,
+        "distinct_lines": 66,
+        "repeat_visits": 468,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          2,
+          4
+        ]
+      },
+      {
+        "case": "gather-v64-n32-a0",
+        "arm": "e1-p0",
+        "demand_line_visits": 283,
+        "distinct_lines": 50,
+        "repeat_visits": 233,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          1,
+          2,
+          4
+        ]
+      },
+      {
+        "case": "gather-v128-n64-a0",
+        "arm": "e0-p0",
+        "demand_line_visits": 1046,
+        "distinct_lines": 118,
+        "repeat_visits": 928,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          2,
+          4
+        ]
+      },
+      {
+        "case": "gather-v128-n64-a0",
+        "arm": "e1-p0",
+        "demand_line_visits": 539,
+        "distinct_lines": 89,
+        "repeat_visits": 450,
+        "all_accesses_within_single_line": true,
+        "access_widths": [
+          1,
+          2,
+          4
+        ]
+      }
+    ],
+    "build_sha256": "9417a825104b510ea86402b9027778380631ee3a57632a1d9b6f6a758d5d2718",
+    "run_sha256": "6f941bc81b2d7b84e21dd9f5c7a8a8fedeed9207fbe4c1068c13886a4c0d9b5c",
+    "script_sha256": "7972690862a1bd82ff940f11a139f642003c1cc14f5ea2f9eb80772441564075"
+  },
+  "model_scope": {
+    "warm": "perfect I-cache and D-cache",
+    "cold": "initially cold 8 KiB I-cache, same exact dynamic instruction trace, synthetic ELF placement; D-cache remains perfect",
+    "bus": "no DMA or SQ cost; no credited RAM-PREF latency benefit",
+    "trace": "actual retired scalar instructions including delay slots; unsupported instructions/unmapped memory fail closed",
+    "payload_lines": "Each region uses actual addresses. Distinct lines in adjacent regions may overlap; do not sum region unions to infer total union.",
+    "repeated_lines": "Only the three address-qualified gather rows use access count as demand-line visits. Guard-dependent c8 segment unions are deliberately omitted.",
+    "complete_nonempty_emission": false,
+    "console_or_flycast_measurement": false
+  },
+  "frame_scope": {
+    "r101_parts": 87,
+    "r100_parts": 50,
+    "meshlets_per_part": "unknown",
+    "eligible_partial_fraction": "unknown",
+    "phase_only_formula_ms": "gather_cycles_saved_per_eligible_meshlet * eligible_meshlets_per_part * parts / 200000",
+    "illustrative_v64_n32_one_eligible_meshlet_per_part_ms": {
+      "r101": 0.34191,
+      "r100": 0.1965
+    },
+    "warning": "Phase-only budget illustration. Hints cost work on all affected nonempty picks, including nonqualifiers. Initial seeding, nonempty control/layout interactions and D-cache stalls are not fully priced. This is not a net frame-time prediction."
+  },
+  "memory_observer_controls": {
+    "status": "PASS",
+    "controls": [
+      "fetches excluded; scalar load/store retained",
+      "PC-relative literal classified as data",
+      "data read of current opcode word retained",
+      "delay slot attributed exactly once",
+      "double-register move counted as one 8-byte load",
+      "32-bit effective address wrap",
+      "store queues excluded from cached footprint",
+      "cached PREF counted separately from demand loads"
+    ]
+  },
+  "model_inputs": {
+    "e0-p0": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/model-e0-p0/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "e0-p1": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/model-e0-p1/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "e1-p0": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/model-e1-p0/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "e1-p1": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/c4e1a2818fde/backface-tools/build5-target-final-01/run/model-e1-p1/hwsim",
+        "/workspace/scratch/c4e1a2818fde/re4dc-world-emit-prefetch/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    }
+  },
+  "measurements": {
+    "columns": [
+      "instructions",
+      "warm_model_cycles",
+      "cold_icache_model_cycles",
+      "load_instructions",
+      "store_instructions",
+      "load_accesses",
+      "store_accesses",
+      "read_bytes",
+      "write_bytes",
+      "distinct_read_lines",
+      "distinct_write_lines",
+      "distinct_demand_lines",
+      "peak_stack_bytes",
+      "ram_pref_requests",
+      "distinct_ram_pref_lines"
+    ],
+    "payload_region_columns": [
+      "load_accesses",
+      "store_accesses",
+      "read_bytes",
+      "write_bytes",
+      "distinct_read_lines",
+      "distinct_write_lines",
+      "distinct_demand_lines"
+    ],
+    "scope": "Representative rows and four input alignment phases; all 84 cases x4 arms are in the hashed raw target-controls.json. No failed cases omitted.",
+    "representative_rows": [
+      {"name":"gather-v16-n4-a0","kind":"gather","package":{"vertices":16,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":6,"hi":9,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"570d79735a24f8e31d65a6dc2e0a1aa78a77c87625bcc322c7e935d7e888dfc8","arms":{"e0-p0":[312,445,533,101,49,101,49,330,196,21,7,27,4,0,0],"e0-p1":[312,445,533,101,49,101,49,330,196,21,7,27,4,0,0],"e1-p0":[136,159,260,45,14,45,14,141,56,16,3,18,12,0,0],"e1-p1":[136,159,260,45,14,45,14,141,56,16,3,18,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[48,0,192,0,7,0,7],"offsets_and_strips":[16,0,32,0,2,0,2],"gather_buffer":[0,48,0,192,0,6,6],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[48,0,192,0,7,0,7],"offsets_and_strips":[16,0,32,0,2,0,2],"gather_buffer":[0,48,0,192,0,6,6],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[12,0,48,0,3,0,3],"offsets_and_strips":[4,0,8,0,2,0,2],"gather_buffer":[0,12,0,48,0,2,2],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[12,0,48,0,3,0,3],"offsets_and_strips":[4,0,8,0,2,0,2],"gather_buffer":[0,12,0,48,0,2,2],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-v64-n4-a0","kind":"gather","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":30,"hi":33,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e0-p1":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e1-p0":[136,159,260,45,14,45,14,141,56,16,3,18,12,0,0],"e1-p1":[136,159,260,45,14,45,14,141,56,16,3,18,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[12,0,48,0,4,0,4],"offsets_and_strips":[4,0,8,0,1,0,1],"gather_buffer":[0,12,0,48,0,2,2],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[12,0,48,0,4,0,4],"offsets_and_strips":[4,0,8,0,1,0,1],"gather_buffer":[0,12,0,48,0,2,2],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-v64-n32-a0","kind":"gather","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":16,"hi":47,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e0-p1":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e1-p0":[584,859,960,185,98,185,98,561,392,38,13,50,12,0,0],"e1-p1":[584,859,960,185,98,185,98,561,392,38,13,50,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[96,0,384,0,24,0,24],"offsets_and_strips":[32,0,64,0,3,0,3],"gather_buffer":[0,96,0,384,0,12,12],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[96,0,384,0,24,0,24],"offsets_and_strips":[32,0,64,0,3,0,3],"gather_buffer":[0,96,0,384,0,12,12],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-v64-n64-a0","kind":"gather","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":0,"hi":63,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e0-p1":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e1-p0":[1096,1659,1760,345,194,345,194,1041,776,40,25,64,12,0,0],"e1-p1":[1096,1659,1760,345,194,345,194,1041,776,40,25,64,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-whole-v64","kind":"gather","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":255,"lo":0,"hi":0,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e0-p1":[1080,1645,1733,341,193,341,193,1098,772,42,25,66,4,0,0],"e1-p0":[1088,1651,1769,344,194,344,194,1105,776,40,25,64,12,0,0],"e1-p1":[1088,1651,1769,344,194,344,194,1105,776,40,25,64,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-plain-v64","kind":"gather","package":{"vertices":64,"indexed":false,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":16,"hi":31,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b55dfed9b5523db7c06ddd918c0d49e589dc0227d7e24a10179fe66383604134","arms":{"e0-p0":[39,32,112,14,0,14,0,50,0,10,0,10,0,0,0],"e0-p1":[39,32,112,14,0,14,0,50,0,10,0,10,0,0,0],"e1-p0":[45,37,117,16,2,16,2,58,8,10,1,10,12,0,0],"e1-p1":[45,37,117,16,2,16,2,58,8,10,1,10,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"gather-v128-n64-a0","kind":"gather","package":{"vertices":128,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":32,"hi":95,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"2bbdd68846aa80e8776838d69e5c9149f9ba5bcac582ae59490681fe60646843","arms":{"e0-p0":[2104,3245,3333,661,385,661,385,2122,1540,70,49,118,4,0,0],"e0-p1":[2104,3245,3333,661,385,661,385,2122,1540,70,49,118,4,0,0],"e1-p0":[1096,1659,1760,345,194,345,194,1041,776,65,25,89,12,0,0],"e1-p1":[1096,1659,1760,345,194,345,194,1041,776,65,25,89,12,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[384,0,1536,0,49,0,49],"offsets_and_strips":[128,0,256,0,9,0,9],"gather_buffer":[0,384,0,1536,0,48,48],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[384,0,1536,0,49,0,49],"offsets_and_strips":[128,0,256,0,9,0,9],"gather_buffer":[0,384,0,1536,0,48,48],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[192,0,768,0,49,0,49],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[192,0,768,0,49,0,49],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"empty-v64-i0-p64-c1","kind":"empty","package":{"vertices":64,"indexed":false,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":0,"lo":0,"hi":0,"gmask":1,"primed":64,"next_nr":0,"header_hint":0},"fixture_sha256":"b55dfed9b5523db7c06ddd918c0d49e589dc0227d7e24a10179fe66383604134","arms":{"e0-p0":[170,150,363,64,24,64,24,226,96,22,7,23,128,0,0],"e0-p1":[179,163,437,66,24,66,24,234,96,23,7,24,128,0,0],"e1-p0":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0],"e1-p1":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"empty-v64-i0-p64-c8","kind":"empty","package":{"vertices":64,"indexed":false,"meshlets":9,"alignment_padding":0},"configuration":{"count":8,"nr":0,"lo":0,"hi":0,"gmask":1,"primed":64,"next_nr":0,"header_hint":0},"fixture_sha256":"2990146077e450f5cbc398e3999f371a2ccca528695294e24688a7b31cd10b98","arms":{"e0-p0":[786,703,917,281,66,281,66,982,264,29,7,30,128,0,0],"e0-p1":[1138,1080,1375,388,66,388,66,1382,264,31,7,32,128,14,3],"e1-p0":[687,684,988,244,81,244,81,872,324,21,8,22,160,0,0],"e1-p1":[687,684,988,244,81,244,81,872,324,21,8,22,160,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"empty-v64-i1-p0-c1","kind":"empty","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":0,"lo":0,"hi":0,"gmask":1,"primed":0,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1632,1981,2246,465,348,465,348,1567,1392,51,97,141,128,0,0],"e0-p1":[1641,1994,2302,467,348,467,348,1575,1392,53,97,143,128,0,0],"e1-p0":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0],"e1-p1":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,128,0,512,0,64,64]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,128,0,512,0,64,64]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"empty-v64-i1-p64-c1","kind":"empty","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":0,"lo":0,"hi":0,"gmask":1,"primed":64,"next_nr":0,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1280,1762,2007,457,217,457,217,1540,868,50,31,75,128,0,0],"e0-p1":[1289,1775,2035,459,217,459,217,1548,868,52,31,77,128,0,0],"e1-p0":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0],"e1-p1":[155,138,392,55,25,55,25,200,100,19,7,20,140,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"empty-v64-i1-p64-c8","kind":"empty","package":{"vertices":64,"indexed":true,"meshlets":9,"alignment_padding":0},"configuration":{"count":8,"nr":0,"lo":0,"hi":0,"gmask":1,"primed":64,"next_nr":0,"header_hint":0},"fixture_sha256":"3be44228bcab5651f78e42aa4efb0a45794801c313efc3dd6cba69bd911c8e9b","arms":{"e0-p0":[9666,13599,13845,3425,1610,3425,1610,11494,6440,86,31,111,128,0,0],"e0-p1":[10039,13997,14278,3539,1610,3539,1610,11908,6440,89,31,114,128,14,8],"e1-p0":[687,684,988,244,81,244,81,872,324,21,8,22,160,0,0],"e1-p1":[687,684,988,244,81,244,81,872,324,21,8,22,160,0,0]},"payload_regions":{"e0-p0":{"vertex_pool":[1536,0,6144,0,25,0,25],"offsets_and_strips":[512,0,1024,0,34,0,34],"gather_buffer":[0,1536,0,6144,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[1536,0,6144,0,25,0,25],"offsets_and_strips":[512,0,1024,0,34,0,34],"gather_buffer":[0,1536,0,6144,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"hint-i0-n1-m1-h1","kind":"hint","package":{"vertices":64,"indexed":false,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":16,"hi":23,"gmask":1,"primed":0,"next_nr":0,"header_hint":1},"fixture_sha256":"b55dfed9b5523db7c06ddd918c0d49e589dc0227d7e24a10179fe66383604134","arms":{"e0-p0":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e0-p1":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e1-p0":[130,119,253,37,6,37,6,119,24,12,1,12,20,5,5],"e1-p1":[130,119,253,37,6,37,6,119,24,12,1,12,20,5,5]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"hint-i0-n255-m1-h1","kind":"hint","package":{"vertices":64,"indexed":false,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":255,"lo":16,"hi":23,"gmask":1,"primed":0,"next_nr":0,"header_hint":1},"fixture_sha256":"b55dfed9b5523db7c06ddd918c0d49e589dc0227d7e24a10179fe66383604134","arms":{"e0-p0":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e0-p1":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e1-p0":[123,115,252,34,6,34,6,116,24,12,1,12,20,5,5],"e1-p1":[123,115,252,34,6,34,6,116,24,12,1,12,20,5,5]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"hint-i1-n1-m1-h1","kind":"hint","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":1,"lo":16,"hi":23,"gmask":1,"primed":0,"next_nr":0,"header_hint":1},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e0-p1":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e1-p0":[148,141,315,41,7,41,7,133,28,13,1,13,20,5,5],"e1-p1":[148,141,315,41,7,41,7,133,28,13,1,13,20,5,5]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"hint-i1-n255-m1-h1","kind":"hint","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":255,"lo":16,"hi":23,"gmask":1,"primed":0,"next_nr":0,"header_hint":1},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e0-p1":[2,3,24,0,0,0,0,0,0,0,0,0,0,0,0],"e1-p0":[142,135,298,38,7,38,7,130,28,13,1,13,20,6,6],"e1-p1":[142,135,298,38,7,38,7,130,28,13,1,13,20,6,6]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"lookahead-i0","kind":"empty","package":{"vertices":64,"indexed":false,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":0,"lo":16,"hi":23,"gmask":1,"primed":64,"next_nr":1,"header_hint":0},"fixture_sha256":"b55dfed9b5523db7c06ddd918c0d49e589dc0227d7e24a10179fe66383604134","arms":{"e0-p0":[170,150,363,64,24,64,24,226,96,22,7,23,128,0,0],"e0-p1":[179,163,437,66,24,66,24,234,96,23,7,24,128,0,0],"e1-p0":[260,229,546,83,29,83,29,285,116,25,8,26,160,5,5],"e1-p1":[260,229,546,83,29,83,29,285,116,25,8,26,160,5,5]},"payload_regions":{"e0-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[0,0,0,0,0,0,0],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}},
+      {"name":"lookahead-i1","kind":"empty","package":{"vertices":64,"indexed":true,"meshlets":2,"alignment_padding":0},"configuration":{"count":1,"nr":0,"lo":16,"hi":23,"gmask":1,"primed":64,"next_nr":1,"header_hint":0},"fixture_sha256":"b93da18c7f114c0ebf3011f822caf1bff88801673ce10bff763a25c402bf62b1","arms":{"e0-p0":[1280,1762,2007,457,217,457,217,1540,868,50,31,75,128,0,0],"e0-p1":[1289,1775,2035,459,217,459,217,1548,868,52,31,77,128,0,0],"e1-p0":[279,250,607,87,30,87,30,299,120,26,8,27,160,6,6],"e1-p1":[279,250,607,87,30,87,30,299,120,26,8,27,160,6,6]},"payload_regions":{"e0-p0":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e0-p1":{"vertex_pool":[192,0,768,0,25,0,25],"offsets_and_strips":[64,0,128,0,5,0,5],"gather_buffer":[0,192,0,768,0,24,24],"projected_cache":[0,0,0,0,0,0,0]},"e1-p0":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]},"e1-p1":{"vertex_pool":[0,0,0,0,0,0,0],"offsets_and_strips":[1,0,2,0,1,0,1],"gather_buffer":[0,0,0,0,0,0,0],"projected_cache":[0,0,0,0,0,0,0]}}}
+    ],
+    "alignment_ranges": [
+      {"vertices":16,"selected":4,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[26,27],"payload_regions":{"vertex_pool":{"read_bytes":[192,192],"write_bytes":[0,0],"distinct_lines":[6,7]},"offsets_and_strips":{"read_bytes":[32,32],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[192,192],"distinct_lines":[6,6]}}},"e1-p0":{"total_distinct_lines":[17,19],"payload_regions":{"vertex_pool":{"read_bytes":[48,48],"write_bytes":[0,0],"distinct_lines":[3,5]},"offsets_and_strips":{"read_bytes":[8,8],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[48,48],"distinct_lines":[2,2]}}}}},
+      {"vertices":16,"selected":8,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[26,27],"payload_regions":{"vertex_pool":{"read_bytes":[192,192],"write_bytes":[0,0],"distinct_lines":[6,7]},"offsets_and_strips":{"read_bytes":[32,32],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[192,192],"distinct_lines":[6,6]}}},"e1-p0":{"total_distinct_lines":[21,22],"payload_regions":{"vertex_pool":{"read_bytes":[96,96],"write_bytes":[0,0],"distinct_lines":[4,6]},"offsets_and_strips":{"read_bytes":[16,16],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[96,96],"distinct_lines":[4,4]}}}}},
+      {"vertices":16,"selected":16,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[26,27],"payload_regions":{"vertex_pool":{"read_bytes":[192,192],"write_bytes":[0,0],"distinct_lines":[6,7]},"offsets_and_strips":{"read_bytes":[32,32],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[192,192],"distinct_lines":[6,6]}}},"e1-p0":{"total_distinct_lines":[24,25],"payload_regions":{"vertex_pool":{"read_bytes":[192,192],"write_bytes":[0,0],"distinct_lines":[6,7]},"offsets_and_strips":{"read_bytes":[32,32],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[192,192],"distinct_lines":[6,6]}}}}},
+      {"vertices":64,"selected":4,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[65,66],"payload_regions":{"vertex_pool":{"read_bytes":[768,768],"write_bytes":[0,0],"distinct_lines":[24,25]},"offsets_and_strips":{"read_bytes":[128,128],"write_bytes":[0,0],"distinct_lines":[4,5]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[768,768],"distinct_lines":[24,24]}}},"e1-p0":{"total_distinct_lines":[18,21],"payload_regions":{"vertex_pool":{"read_bytes":[48,48],"write_bytes":[0,0],"distinct_lines":[4,6]},"offsets_and_strips":{"read_bytes":[8,8],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[48,48],"distinct_lines":[2,2]}}}}},
+      {"vertices":64,"selected":32,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[65,66],"payload_regions":{"vertex_pool":{"read_bytes":[768,768],"write_bytes":[0,0],"distinct_lines":[24,25]},"offsets_and_strips":{"read_bytes":[128,128],"write_bytes":[0,0],"distinct_lines":[4,5]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[768,768],"distinct_lines":[24,24]}}},"e1-p0":{"total_distinct_lines":[49,50],"payload_regions":{"vertex_pool":{"read_bytes":[384,384],"write_bytes":[0,0],"distinct_lines":[24,24]},"offsets_and_strips":{"read_bytes":[64,64],"write_bytes":[0,0],"distinct_lines":[2,3]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[384,384],"distinct_lines":[12,12]}}}}},
+      {"vertices":64,"selected":64,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[65,66],"payload_regions":{"vertex_pool":{"read_bytes":[768,768],"write_bytes":[0,0],"distinct_lines":[24,25]},"offsets_and_strips":{"read_bytes":[128,128],"write_bytes":[0,0],"distinct_lines":[4,5]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[768,768],"distinct_lines":[24,24]}}},"e1-p0":{"total_distinct_lines":[63,64],"payload_regions":{"vertex_pool":{"read_bytes":[768,768],"write_bytes":[0,0],"distinct_lines":[24,25]},"offsets_and_strips":{"read_bytes":[128,128],"write_bytes":[0,0],"distinct_lines":[4,5]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[768,768],"distinct_lines":[24,24]}}}}},
+      {"vertices":128,"selected":4,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[117,118],"payload_regions":{"vertex_pool":{"read_bytes":[1536,1536],"write_bytes":[0,0],"distinct_lines":[48,49]},"offsets_and_strips":{"read_bytes":[256,256],"write_bytes":[0,0],"distinct_lines":[8,9]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[1536,1536],"distinct_lines":[48,48]}}},"e1-p0":{"total_distinct_lines":[18,21],"payload_regions":{"vertex_pool":{"read_bytes":[48,48],"write_bytes":[0,0],"distinct_lines":[4,6]},"offsets_and_strips":{"read_bytes":[8,8],"write_bytes":[0,0],"distinct_lines":[1,2]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[48,48],"distinct_lines":[2,2]}}}}},
+      {"vertices":128,"selected":64,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[117,118],"payload_regions":{"vertex_pool":{"read_bytes":[1536,1536],"write_bytes":[0,0],"distinct_lines":[48,49]},"offsets_and_strips":{"read_bytes":[256,256],"write_bytes":[0,0],"distinct_lines":[8,9]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[1536,1536],"distinct_lines":[48,48]}}},"e1-p0":{"total_distinct_lines":[87,89],"payload_regions":{"vertex_pool":{"read_bytes":[768,768],"write_bytes":[0,0],"distinct_lines":[48,49]},"offsets_and_strips":{"read_bytes":[128,128],"write_bytes":[0,0],"distinct_lines":[4,5]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[768,768],"distinct_lines":[24,24]}}}}},
+      {"vertices":128,"selected":128,"alignment_padding":[0,4,16,28],"arms":{"e0-p0":{"total_distinct_lines":[117,118],"payload_regions":{"vertex_pool":{"read_bytes":[1536,1536],"write_bytes":[0,0],"distinct_lines":[48,49]},"offsets_and_strips":{"read_bytes":[256,256],"write_bytes":[0,0],"distinct_lines":[8,9]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[1536,1536],"distinct_lines":[48,48]}}},"e1-p0":{"total_distinct_lines":[115,116],"payload_regions":{"vertex_pool":{"read_bytes":[1536,1536],"write_bytes":[0,0],"distinct_lines":[48,49]},"offsets_and_strips":{"read_bytes":[256,256],"write_bytes":[0,0],"distinct_lines":[8,9]},"gather_buffer":{"read_bytes":[0,0],"write_bytes":[1536,1536],"distinct_lines":[48,48]}}}}}
+    ]
+  }
+}

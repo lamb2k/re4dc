@@ -1,0 +1,359 @@
+{
+  "status": "PASS",
+  "base": "20df6734578cacc7033bb32a660d4b466a7cfbe9",
+  "scope": "Literal TA words, semantic accounting, SCN_CENSUS arrays and SQ lock boundaries match for supplied valid picks. Uses production emitter/gather/replay/material/clipper bodies, portable vertex transform, C SQ-walk edge and a two-FMAC portable DEDUP edge. No target-FP, game data, Flycast, console, timing or leak-check claim.",
+  "selection_scope": "SELECT_ONLY and SELECT_LEAN2 are composition labels in this emitter fixture, not executed selection algorithms; separate whole-TU build controls cover their actual compilation.",
+  "full": {
+    "command": "python3 port/dreamcast/tools/d367/world_emit_prefetch/check_geometry.py --output /workspace/scratch/c4e1a2818fde/backface-tools/build5-geometry-full02",
+    "existing_knobs": [
+      "SCENERY_SELECT_ONLY",
+      "SCENERY_SUBMIT_BATCH",
+      "SCENERY_REPLAY_LEAN",
+      "SCENERY_UV_SNAPSHOT",
+      "SCENERY_SELECT_LEAN2"
+    ],
+    "existing_knob_combinations": 32,
+    "pref_walk_values": [
+      0,
+      1
+    ],
+    "scn_census_values": [
+      0,
+      1
+    ],
+    "emit_prefetch_values": [
+      0,
+      1
+    ],
+    "configurations": 256,
+    "distinct_compiled_inputs": 48,
+    "comparisons": 74880,
+    "executed_process_cases": 31200,
+    "fixture_sha256": "dbe4963aeafae4997a8f7ad50bc9064d00a1442337a5fe7712ae41f033834c10",
+    "cases_per_context": 130,
+    "uv_modes": [
+      "zero",
+      "constant",
+      "dynamic per owner; snapshot bit preserved"
+    ],
+    "raw_receipt_sha256": "d6740f15f7ee09ccfee36e54ff80286aff56cd8699903fcb03efe43830437afe"
+  },
+  "sanitizers": {
+    "command": "ASAN_OPTIONS=detect_leaks=0 python3 port/dreamcast/tools/d367/world_emit_prefetch/check_geometry.py --output /workspace/scratch/c4e1a2818fde/backface-tools/build5-geometry-asan02 --smoke --sanitize",
+    "address_sanitizer": true,
+    "undefined_behavior_sanitizer": true,
+    "leak_detection": false,
+    "leak_detection_reason": "The sandbox blocks LeakSanitizer /proc task inspection; no leak result is claimed.",
+    "existing_knobs": "all five=1",
+    "pref_walk": 0,
+    "scn_census": 0,
+    "configurations": 2,
+    "comparisons": 390,
+    "executed_process_cases": 780,
+    "raw_receipt_sha256": "5b8ae6fc460ce0739a71e876a42d1631df03df8e34ea7055ea7039428ca1627a"
+  },
+  "negative_controls": {
+    "command": "python3 port/dreamcast/tools/d367/world_emit_prefetch/verify_guards.py --output /workspace/scratch/c4e1a2818fde/backface-tools/build5-geometry-negative02",
+    "controls": [
+      {
+        "mutation": "missing_dedup_fallback",
+        "case": 305,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_dedup_fallback",
+        "case": 309,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_dedup_fallback",
+        "case": 313,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "compacted_partial_gather",
+        "case": 211,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "compacted_partial_gather",
+        "case": 213,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "compacted_partial_gather",
+        "case": 215,
+        "positive_exit": 0,
+        "mutated_exit": 0,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_run_end",
+        "case": 200,
+        "positive_exit": 0,
+        "mutated_exit": -6,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_run_end",
+        "case": 201,
+        "positive_exit": 0,
+        "mutated_exit": -6,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_run_end",
+        "case": 202,
+        "positive_exit": 0,
+        "mutated_exit": -6,
+        "guard_failure_observed": true
+      },
+      {
+        "mutation": "missing_run_end",
+        "case": 203,
+        "positive_exit": 0,
+        "mutated_exit": -6,
+        "guard_failure_observed": true
+      }
+    ],
+    "raw_receipt_sha256": "8c13e1c5b2942abc7af85be21428da51ddc50ab3f0c6fa21b197265d57e53dfd"
+  },
+  "coverage": [
+    "plain v1 and indexed v3 packages",
+    "whole, partial and zero-group picks",
+    "selected intervals starting at zero and at a later slot",
+    "8-group sparse masks",
+    "single-pick and last-pick bounds",
+    "empty queued parts and rejected picks between visible ones",
+    "8/48-part drains",
+    "all eight 4-byte allocation phases modulo32",
+    "DEDUP repeats outside selected first-copy span",
+    "poisoned and stale unused gather slots",
+    "near/far/screen clipping and rejection",
+    "material,cull,sky and static/dynamic UV",
+    "scratch pressure, missing gather buffer, source-owner and r11f-owner failures"
+  ],
+  "intentional_work_counter_changes": [
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        0,
+        0,
+        8
+      ],
+      "case": 220
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        0,
+        0,
+        8
+      ],
+      "case": 221
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        47,
+        0,
+        8
+      ],
+      "case": 120
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        47,
+        0,
+        8
+      ],
+      "case": 121
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        47,
+        0,
+        8
+      ],
+      "case": 152
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        47,
+        0,
+        8
+      ],
+      "case": 153
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 104
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 105
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 136
+    },
+    {
+      "after": [
+        0,
+        0,
+        0
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 137
+    },
+    {
+      "after": [
+        6,
+        0,
+        8
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 218
+    },
+    {
+      "after": [
+        6,
+        0,
+        8
+      ],
+      "before": [
+        7,
+        0,
+        8
+      ],
+      "case": 219
+    }
+  ],
+  "work_counter_note": "Prime-reuse and final primed watermark describe omitted work and may decrease. They are reported separately; every TA, model accounting and census word remains identical.",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "99ab25e2d2ead0fcfe490684d8c1ac7ea8767ab898bd075dca682275b3927081",
+    "port/dreamcast/game/platform/native_ui.cpp": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+    "port/dreamcast/tools/d367/world_emit_prefetch/geometry.cpp.in": "db6d203079f5abfafe6e49a298cc244dbe11805f3defc60d6d65c31679394b9e",
+    "port/dreamcast/tools/d367/world_emit_prefetch/boundary.cpp.in": "e66103b9cc9474d55bae496bc2ca3ef65a68226182ddd3adb8d6330b74e7af27",
+    "port/dreamcast/tools/d367/world_emit_prefetch/check_geometry.py": "9b578b168cd639b4e99fe31feea2dd72118a02cb9611f52140be661f123c6e06",
+    "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+    "port/dreamcast/room/mesh_fastpath_sched.hpp": "dced065599a7fa28122a981fb3ef92e6da8f8e0c96e02f1cdc4b7093611f5120",
+    "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+    "port/dreamcast/room/instanced_mesh.hpp": "bf43408d054e448ff6052ac9c46ebc00b92a2495979c4555919a663724d2aff3",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+  },
+  "unchanged_production_body_sha256": {
+    "EMITTER": "46aa5072564923662ab91f6cd63b9d11d31bdd90df9f7c8714dc4368e024f456",
+    "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+    "CORNERS": "6dc88b8dbd6c67451f2714d8873e3199fbd9c2eb2d4fe55e470ad7f0137e61fa",
+    "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+    "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+    "STRIPS_LEAN": "5e445c6dc4e69a1ab1124fcb9c4c36ff6ab22eb8bb69b7931727bb4aecb92581",
+    "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+    "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+    "DD_WORD": "8e1b559bf51c37e1df309d1371111a73e64a319b92c6368263e4a7ff6397b375",
+    "DEDUP_TARGET_BODY": "143108a3e9374f046326b8e072a11096e5b21ef6994c041fa3a0aa82a9f77a95"
+  },
+  "extracted_sha256": {
+    "BATCH_HEADER": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "DIRECT_BEGIN": "e82470291bd27f6a304ea6359915e956bff8d0fafd29a3f2d024077dc51993d9",
+    "DIRECT_END": "54850be8ae9a3ac45bc3d745530d0b0937941f5e03e3a50d0c9155f873bc451d",
+    "PICK_DEFINITION": "1a77c26bb2e6a94ddb5539e2966cbda484da6bc6f9d1f4d780a9ee66cf3e2e73",
+    "EMITTER_END": "d5c9eb25651c2b21f169ad4a13c187959450156a77cb91ad2ec3ca2794d05d79",
+    "EMITTER_BIND": "b24a4060c80735b28117fc2ebcd07a41db2330f813f2992858ff2003b66cefd2",
+    "CHUNK_PART": "524a9b4606bb2c7a94fede08df3c70512ccf37150cd40e9d807cbd27572efcb1",
+    "CHUNK_FLUSH": "eea4b3012fe957b411549048a4dba45f73bf6480f37e26f9d4c5dd383408f67e",
+    "EMITTER": "46aa5072564923662ab91f6cd63b9d11d31bdd90df9f7c8714dc4368e024f456",
+    "BORROW_GATHER": "1be2499fc1d773a14f0b8d4c8aaf4d8c18b5a603522c7b48de82ca040e1c6bd6",
+    "CORNERS": "6dc88b8dbd6c67451f2714d8873e3199fbd9c2eb2d4fe55e470ad7f0137e61fa",
+    "BORROW": "a1b45785e70448419ccaa3a763aca782abb831e2bf7015689d3dbeec7312eb48",
+    "LEAN_FLUSH": "c3baa9b094011cbc53cb75e3db298b93bae65e20897d25b9d64fad5bf9a015ba",
+    "STRIPS_LEAN": "5e445c6dc4e69a1ab1124fcb9c4c36ff6ab22eb8bb69b7931727bb4aecb92581",
+    "ALPHA_LUT": "110edba6122304561529302889212ed2901c69e1cb30891016f631db9074cb54",
+    "LOAD_SCREEN": "a2b07b21fe5b4baaa8116e577fa991ec4c2d504990c515ab085390fa6eabc255",
+    "DD_WORD": "8e1b559bf51c37e1df309d1371111a73e64a319b92c6368263e4a7ff6397b375",
+    "EMIT_METHODS": "c4f2cf62ca9de1c6e5deacade6da04ac49faedc3b3ee88a4985271c7ddcdad34",
+    "DEDUP": "f7e8e2e03379879947333dde3c098791835c2f02aa9bf0f0ab5e28d006abce05",
+    "SHADE_COLOR": "049d0df5b56cc36d551f44905b61baf81652e58b348a4b64edfacfa525dc3266",
+    "INTERPOLATE_VERTEX": "73866200f52c44203895d59fd39d50499233b7c6b72b5c077842269647c4d3a9",
+    "CLIP_PROJECTED_TRIANGLE": "375b70506db66236a1b5ad9e326f5e27fe991bf0e5a89f15cc698614f662cea3",
+    "STATIC_STATS": "24526a78a1920e26cd9aa169244abf410de07b3149e61d5845b4872018929375",
+    "REPORT_STATS": "d2174d66ac961ddd5e699b0f69895a2850cb68e7bfc79e56b8a28688fce2d178",
+    "ROOT": "4d37147062171880debac9270168704908dc5dbaa49b4b80c18b2e125af15452"
+  }
+}
