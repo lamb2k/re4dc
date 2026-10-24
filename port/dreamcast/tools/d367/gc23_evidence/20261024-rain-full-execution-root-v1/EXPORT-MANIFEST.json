@@ -41,11 +41,16 @@
     "ROOT-SEAL.json": {
       "bytes": 2133,
       "sha256": "c0fad3879b7013a18c8acbee93673b38fd63c3b5722649ce02be3f5a13ae5e5a"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
     }
   },
   "grant_identity_only": {
     "bytes": 1031,
     "sha256": "6356514a34355cbd43edf8a64f5af5639f6a85fca7dd516dfbad3c84a0e39cb0"
   },
-  "created_utc": "2026-10-24T09:55:46.999451+00:00"
+  "created_utc": "2026-10-24T09:55:46.999451+00:00",
+  "transport_correction": "Predecessor b4d28fef normalized CRLF in two helpers. This successor disables Git text conversion and restores exact original bytes; predecessor preserved."
 }
