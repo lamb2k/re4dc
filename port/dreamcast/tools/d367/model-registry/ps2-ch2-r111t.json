@@ -1,0 +1,82 @@
+{
+ "registry": "ps2-ch2-r111t",
+ "about": "lane purge-cast24 (2026-10-24, GC purge): ps2-ch2-r111p + the PS2 bear traps trap-em2a-00 / trap-em2a-02 (descriptors as ps2-ch1-r105). r111 spawns em2a; without a trap descriptor the traps drew the GameCube em2a model on the source path (notdrawn-allow.tsv rows, no NMRS row). Cast dir = the ps2-ch2-r111p cast + ps2_cast.py regcast of the two trap conversions (atlases b8d5b0e6-ef7ef3c0 / 716538d1-87b872c9, the ps2lib cast/common bytes).",
+ "cast_dir": "/root/re4data/private/trap24-20261024/regcast-ch2ptrap",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em17: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bits 2 and 4); crow: the source GX lighting record and source cull, as ps2-crow",
+ "descriptors": [
+  {
+   "name": "ganado-em17-0cp",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17/em17_set.cpp Em17Set type 0xc + em10HeadSet / em10HandSet / em10SetAccesory (whood)",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261017r/ch2regen/ps2cast/conv-ch2/e17p-mask-head"
+   },
+   "pool": true,
+   "partial_sections": true
+  },
+  {
+   "name": "crow-folded",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,0): body BIN 5 + wing BIN 6"
+  },
+  {
+   "name": "crow-spread",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,1): body BIN 5 + wing BIN 7"
+  },
+  {
+   "name": "trap-em2a-00",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 0: modelInit(ARC 4, ARC 5)"
+  },
+  {
+   "name": "trap-em2a-02",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 2: modelInit(ARC 8, ARC 9)"
+  }
+ ],
+ "room_packages": {
+  "111": {
+   "descriptors": [
+    "crow-folded",
+    "crow-spread",
+    "ganado-em17-0cp",
+    "trap-em2a-00",
+    "trap-em2a-02"
+   ],
+   "evidence": "emleon01: r111 em17 types 0/1/3/12 (12 = 0xc: registry), crows; notdrawn20 s111 NMRS; em2a traps: notdrawn20 (u113 stills, c-r111 census warp)"
+  }
+ },
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/p2b-20261011/regcast-r108"
+ ]
+}

@@ -484,6 +484,15 @@ DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 # Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
 R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
 DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
+# GC purge (lane purge-cast24, 10-24): trap24 = the r111 / r113 registry packages + the PS2 bear traps trap-em2a-00 /
+# trap-em2a-02 (model-registry/ps2-ch2-r111t.json / ps2-ch2-r113t.json; descriptors as ps2-ch1-r105). Without a trap
+# descriptor the em2a traps drew the GameCube model on the source path (castgc/notdrawn-allow.tsv rows, now dropped).
+# Data only, no knob. Order: after ch2 and r111p (it replaces both packages). Atlases b8d5b0e6-ef7ef3c0 /
+# 716538d1-87b872c9 are already in the release tex.pak (no loose texture). 90,304 -> 115,456 B per package.
+# Private data /root/re4data/private/trap24-20261024 (RECIPE.txt, SHA256SUMS.txt; C: twin re4-assets-private/trap24-20261024).
+TRAP24D = os.environ.get('TRAP24D', '/root/re4data/private/trap24-20261024')
+DATA['trap24'] = {'dc/native/%s/registry.re4nmr' % _r: '%s/dc/native/%s/registry.re4nmr' % (TRAP24D, _r)
+                  for _r in ('r111', 'r113')}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')

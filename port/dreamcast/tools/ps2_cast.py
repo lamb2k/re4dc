@@ -191,9 +191,9 @@ PRESETS = {
     # Each is one modelInit(BIN, TPL) of its module's R0 init; lit (normals kept) like the source path draws them.
     # em2a_R0_Init: type 0 bear trap modelInit(ARC 4, ARC 5), type 1 (6, 7), type 2 (8, 9) (types 1 / 2 scale
     # parts 1 / 2 pos.z by hp at init: the wire / bomb models)
-    'trap-em2a-00': dict(archive='em2a', sections=[(4, 'body')], tpl=5, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+    'trap-em2a-00': dict(archive='em2a', sections=[(4, 'body')], tpl=5, rooms=['r100', 'r105', 'r106', 'r107', 'r10a', 'r111', 'r113'],
                          types=[0], category='registry', model_id=0x2a, lit=True),
-    'trap-em2a-02': dict(archive='em2a', sections=[(8, 'body')], tpl=9, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+    'trap-em2a-02': dict(archive='em2a', sections=[(8, 'body')], tpl=9, rooms=['r100', 'r105', 'r106', 'r107', 'r10a', 'r111', 'r113'],
                          types=[2], category='registry', model_id=0x2a, lit=True, shift=2),   # 4.2 m long: GC shift 2
     # em29_R0_Init: the bat, modelInit(ARC 4, ARC 5); 7 PS2 corners sit one texel past a GX_REPEAT image edge
     'bat-em29-00': dict(archive='em29', sections=[(4, 'body')], tpl=5, rooms=['r106', 'r10e'], types=[],
