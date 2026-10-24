@@ -1,4 +1,5 @@
 #include "include/gc_asset_audio.h"
+#include "include/gc_asset_movie_stream.h"
 #if RE4DC_GC_ASSET_GATE
 #include <atomic>
 #include <cstring>
@@ -145,5 +146,11 @@ void played(const AudioUse& use){
 void audio_test_records_lock(bool held){if(held)records.test_and_set();else records.clear();}
 void audio_test_before_publish(void (*callback)()){before_publish=callback;}
 #endif
+}
+extern "C" void re4dc_gcasset_movie_audio_ticket(unsigned* slot,unsigned* serial){
+    const auto ticket=re4dc_gcasset::audio_ticket();*slot=ticket.slot;*serial=ticket.serial;
+}
+extern "C" void re4dc_gcasset_movie_audio_submit(unsigned slot,unsigned serial,unsigned asset){
+    re4dc_gcasset::queued_checked({slot,serial},re4dc_gcasset::Movie,{asset});
 }
 #endif

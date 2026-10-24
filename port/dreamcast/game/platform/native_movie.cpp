@@ -911,6 +911,9 @@ int start(unsigned id,unsigned mask){
     m.pending=decode_next();
     if(!m.pending||!feed())return finish(RE4DC_MOVIE_ERROR);
     m.start=timer_us_gettime64();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_stream_arm(m.stream,m.asset_owner,m.asset.value);
+#endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation){
         if(!re4dc_movie_stream_cabin_start(m.stream,cabin_movie.generation))return finish(RE4DC_MOVIE_ERROR);

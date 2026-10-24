@@ -10,6 +10,74 @@ GAME = HERE.parents[2] / 'game'
 
 
 class RuntimeMovieTests(unittest.TestCase):
+    def test_actual_stream_command_observer_and_queue(self):
+        source = (GAME / 'platform/native_movie_stream.c').read_text()
+        observer = source[source.index('// GC_ASSET_MOVIE_STREAM_BEGIN'):source.index('// GC_ASSET_MOVIE_STREAM_END')]
+        fixture = r'''
+#include "gc_asset_movie_stream.h"
+#include "gc_asset_gate.h"
+#include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+#include <string>
+using namespace re4dc_gcasset;
+std::string logs;bool g2;
+extern "C" void re4dc_log(const char*fmt,...){assert(!g2);char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
+constexpr int SND_STREAM_MAX=4;constexpr unsigned AICA_RAM_START=4096,AICA_RAM_END=2*1024*1024,AICA_CMDSTR_CHANNEL_SIZE=96,AICA_CMD_CHAN=1,AICA_CH_CMD_START=1,AICA_CH_START_DELAY=2,AICA_CH_START_SYNC=4,AICA_SM_16BIT=0;
+using snd_stream_hnd_t=int;using snd_stream_callback_t=void*(*)(int,int,int*);
+struct aica_channel_t{unsigned cmd,base,type,length,loop,loopstart,loopend,freq;};
+struct aica_cmd_t{unsigned size,cmd,timestamp,cmd_id;aica_channel_t cmd_data[1];};
+struct strchan_t{int initted;unsigned channels,type,bitsize,frequency,buffer_size;int ch[2];unsigned spu_ram_sch[2];snd_stream_callback_t get_data;void*req_data;unsigned queueing;void*filters;};
+strchan_t streams[4];unsigned max_channels=2,submitted,reject_at;
+#define TAILQ_FIRST(x) (*(x))
+int snd_sh4_to_aica(void*,unsigned){assert(!g2);g2=true;++submitted;g2=false;return submitted==reject_at?-1:0;}
+#if RE4DC_CABIN_SOURCE
+int cabin_stream_command(void*p,unsigned n){return snd_sh4_to_aica(p,n);}
+#endif
+''' + observer + r'''
+void* callback(int,int,int*){return nullptr;}
+void commands(unsigned stop=3,bool corrupt=false){
+ aica_cmd_t command{};command.size=AICA_CMDSTR_CHANNEL_SIZE;command.cmd=AICA_CMD_CHAN;
+ auto& c=command.cmd_data[0];c.cmd=AICA_CH_CMD_START|AICA_CH_START_DELAY;c.type=AICA_SM_16BIT;c.length=16384;c.loop=1;c.loopend=16384;c.freq=32000;
+ for(unsigned i=0;i<stop;++i){command.cmd_id=i<2?unsigned(streams[0].ch[i]):((1u<<streams[0].ch[0])|(1u<<streams[0].ch[1]));
+  c.base=i<2?streams[0].spu_ram_sch[i]:0;if(i==2)c.cmd=AICA_CH_CMD_START|AICA_CH_START_SYNC;
+  if(corrupt && i==0)++c.base;
+  gcasset_movie_command(&command,AICA_CMDSTR_CHANNEL_SIZE);
+ }
+}
+unsigned rows(){unsigned count=0;std::size_t at=0;while((at=logs.find("GC-ASSET v=",at))!=std::string::npos){++at;++count;}return count;}
+void start(){submitted=0;gcasset_movie_start_begin(0,32000,1);}
+int main(){auto&s=streams[0];s.initted=1;s.channels=2;s.bitsize=16;s.frequency=32000;s.buffer_size=32768;s.ch[0]=3;s.ch[1]=4;s.spu_ram_sch[0]=4096;s.spu_ram_sch[1]=4096+32768;s.get_data=callback;
+ unsigned char bytes[]={1,2,3};CatalogRow row{"movie","00001",fingerprint(bytes,3),Unknown};assert(install(&row,1));auto token=bind_checked("movie","00001",row.digest);
+ begin(0x111,1,Required);re4dc_gcasset_movie_stream_arm(0,77,token.value);start();commands();gcasset_movie_start_end();assert(!rows());pump();end(1);
+ assert(rows()==1 && logs.find("consumer=movie")!=std::string::npos && logs.find("errors=0")!=std::string::npos);
+ // Failed API start emits no command, takes no ticket and produces no use.
+ logs.clear();begin(0x111,2,Required);start();gcasset_movie_start_end();end(2);assert(!rows() && logs.find("errors=0")!=std::string::npos);
+ // Every partial/rejected/malformed actual command sequence is terminal failure.
+ for(unsigned mode=0;mode<5;++mode){logs.clear();begin(0x111,3+mode,Required);re4dc_gcasset_movie_stream_arm(0,77,token.value);start();
+  if(mode==0)reject_at=2;
+  if(mode==1)re4dc_gcasset_movie_stream_cancel(0);
+  if(mode==2)re4dc_gcasset_movie_stream_arm(0,78,token.value); // source replacement during prefill
+  commands(mode==3?2:3,mode==4);gcasset_movie_start_end();pump();end(3);
+  assert(!rows() && logs.find("errors=0")==std::string::npos);reject_at=0;
+ }
+ // Retired catalog token cannot be resurrected by an accepted command sequence.
+ retire_catalog();assert(install(&row,1));logs.clear();begin(0x111,9,Required);re4dc_gcasset_movie_stream_arm(0,79,token.value);start();commands();gcasset_movie_start_end();pump();end(4);assert(!rows());
+ // Closing room admission between ticket and completion cannot relabel this use.
+ token=bind_checked("movie","00001",row.digest);logs.clear();begin(0x111,10,Required);re4dc_gcasset_movie_stream_arm(0,80,token.value);start();commands(1);end(5);
+ begin(0x113,11,Required);gcasset_movie_start_end();pump();end(6);assert(!rows());
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='gc-port23-movie-audio-', dir='/dev/shm') as temporary:
+            root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
+            for cabin in (0, 1):
+                subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+                                '-DRE4DC_GC_ASSET_GATE=1', f'-DRE4DC_CABIN_SOURCE={cabin}',
+                                '-I', str(GAME / 'platform/include'), str(root / 'fixture.cpp'),
+                                str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_audio.cpp'), '-o', str(executable)], check=True)
+                subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+
     def test_actual_full_container_capture_and_read_rejection(self):
         source = (GAME / 'platform/native_movie.cpp').read_text()
         start = source.index('    // One extra immutable container read')

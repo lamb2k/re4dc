@@ -17,6 +17,7 @@ endif
 PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_GATE=1
 PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_CATALOG_SHA256=\"$(GC_ASSET_CATALOG_SHA256)\"
 GAME_CPPFLAGS += -DRE4DC_GC_ASSET_GATE=1
+$(OBJDIR)/platform/native_movie_stream.o: KOS_CFLAGS += -DRE4DC_GC_ASSET_GATE=1
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_gate.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_members.o
 PLATFORM_OBJS += $(OBJDIR)/platform/gc_asset_disc.o

@@ -1,4 +1,5 @@
 #include "include/movie_world_arena.h"
+#include "include/gc_asset_movie_stream.h"
 #if RE4DC_MOVIE_WORLD_ARENA
 void re4dc_missing(const char*);
 #endif
@@ -58,7 +59,15 @@ static void re4dc_movie_sep_free(void* p) {
 static int cabin_stream_dma(void*, uintptr_t, size_t, int, spu_dma_callback_t, void*);
 static int cabin_stream_command(void*, uint32_t);
 #define spu_dma_transfer cabin_stream_dma
+#endif
+#if RE4DC_GC_ASSET_GATE
+#include <dc/sound/sound.h>
+static int gcasset_movie_command(void*,uint32_t);
+#define snd_sh4_to_aica gcasset_movie_command
+#elif RE4DC_CABIN_SOURCE
 #define snd_sh4_to_aica cabin_stream_command
+#endif
+#if RE4DC_CABIN_SOURCE || RE4DC_GC_ASSET_GATE
 #define snd_stream_start cabin_sdk_stream_start
 #define snd_stream_start_pcm8 cabin_sdk_stream_start_pcm8
 #define snd_stream_start_adpcm cabin_sdk_stream_start_adpcm
@@ -67,7 +76,7 @@ static int cabin_stream_command(void*, uint32_t);
 #define snd_stream_shutdown cabin_sdk_stream_shutdown
 #endif
 #include "snd_stream.c"
-#if RE4DC_CABIN_SOURCE
+#if RE4DC_CABIN_SOURCE || RE4DC_GC_ASSET_GATE
 #undef spu_dma_transfer
 #undef snd_sh4_to_aica
 #undef snd_stream_start
@@ -80,6 +89,87 @@ static int cabin_stream_command(void*, uint32_t);
 
 #undef free
 #undef aligned_alloc
+#if RE4DC_GC_ASSET_GATE
+// GC_ASSET_MOVIE_STREAM_BEGIN
+// These observers surround the unchanged SDK calls. No IO, hashing, logging,
+// allocation, command modification or G2 ownership is introduced here.
+typedef struct gcasset_movie_start {
+    unsigned owner,asset,slot,serial,commands,accepted;
+    int handle,active,failed,ch[2];uint32_t base[2],size;
+    snd_stream_callback_t callback;
+} gcasset_movie_start_t;
+static gcasset_movie_start_t gcasset_movie_start;
+static struct {int handle;unsigned owner,asset;} gcasset_movie_armed;
+static void gcasset_movie_start_end(void);
+void re4dc_gcasset_movie_stream_arm(int handle,unsigned owner,unsigned asset){
+    gcasset_movie_armed.handle=handle;gcasset_movie_armed.owner=owner;gcasset_movie_armed.asset=asset;
+}
+void re4dc_gcasset_movie_stream_cancel(int handle){
+    if(handle<0 || handle==gcasset_movie_armed.handle)gcasset_movie_armed.owner=0;
+    if(gcasset_movie_start.active && (handle<0 || handle==gcasset_movie_start.handle))gcasset_movie_start.failed=1;
+}
+static void gcasset_movie_start_begin(int handle,uint32_t frequency,int stereo){
+    if(gcasset_movie_start.active){gcasset_movie_start.failed=1;gcasset_movie_start_end();}
+    memset(&gcasset_movie_start,0,sizeof gcasset_movie_start);
+    gcasset_movie_start.handle=handle;gcasset_movie_start.active=1;
+    if(handle<0 || handle>=SND_STREAM_MAX){gcasset_movie_start.failed=1;return;}
+    const strchan_t* stream=&streams[handle];
+    gcasset_movie_start.owner=gcasset_movie_armed.owner;gcasset_movie_start.asset=gcasset_movie_armed.asset;
+    if(gcasset_movie_armed.handle!=handle || !gcasset_movie_start.owner || !stream->initted ||
+       frequency!=32000 || !stereo || max_channels!=2 || stream->buffer_size!=32768 ||
+       !stream->get_data || stream->req_data || stream->queueing || TAILQ_FIRST(&stream->filters))gcasset_movie_start.failed=1;
+    gcasset_movie_start.size=stream->buffer_size;gcasset_movie_start.callback=stream->get_data;
+    for(unsigned i=0;i<2;++i){gcasset_movie_start.ch[i]=stream->ch[i];gcasset_movie_start.base[i]=stream->spu_ram_sch[i];
+        if(stream->ch[i]<0 || stream->ch[i]>=32 || stream->spu_ram_sch[i]<AICA_RAM_START ||
+           stream->spu_ram_sch[i]>AICA_RAM_END-stream->buffer_size)gcasset_movie_start.failed=1;
+    }
+    if(stream->ch[0]==stream->ch[1] || stream->spu_ram_sch[1]!=stream->spu_ram_sch[0]+stream->buffer_size)gcasset_movie_start.failed=1;
+}
+static int gcasset_movie_command(void* packet,uint32_t bytes){
+    gcasset_movie_start_t* use=&gcasset_movie_start;
+    if(use->active){
+        const aica_cmd_t* command=(const aica_cmd_t*)packet;const aica_channel_t* channel=packet?(const aica_channel_t*)command->cmd_data:NULL;
+        const unsigned sequence=use->commands;
+        if(!sequence)re4dc_gcasset_movie_audio_ticket(&use->slot,&use->serial);
+        if(!packet || bytes!=AICA_CMDSTR_CHANNEL_SIZE || command->size!=bytes || command->cmd!=AICA_CMD_CHAN ||
+           command->timestamp || sequence>=3 || !use->owner || use->owner!=gcasset_movie_armed.owner ||
+           use->handle!=gcasset_movie_armed.handle || use->asset!=gcasset_movie_armed.asset ||
+           use->ch[0]<0 || use->ch[0]>=32 || use->ch[1]<0 || use->ch[1]>=32)use->failed=1;
+        else if(sequence<2){
+            if(command->cmd_id!=(unsigned)use->ch[sequence] || channel->cmd!=(AICA_CH_CMD_START|AICA_CH_START_DELAY) ||
+               channel->base!=use->base[sequence] || channel->type!=AICA_SM_16BIT || channel->length!=use->size/2 ||
+               !channel->loop || channel->loopstart || channel->loopend!=use->size/2 || channel->freq!=32000)use->failed=1;
+        }else if(command->cmd_id!=((1u<<use->ch[0])|(1u<<use->ch[1])) ||
+                 channel->cmd!=(AICA_CH_CMD_START|AICA_CH_START_SYNC))use->failed=1;
+        if(use->commands==~0u)use->failed=1;else ++use->commands;
+    }
+#if RE4DC_CABIN_SOURCE
+    const int result=cabin_stream_command(packet,bytes);
+#else
+    const int result=snd_sh4_to_aica(packet,bytes);
+#endif
+    if(use->active){if(result)use->failed=1;else ++use->accepted;}
+    return result;
+}
+static void gcasset_movie_start_end(void){
+    gcasset_movie_start_t* use=&gcasset_movie_start;
+    if(!use->active)return;
+    if(use->commands){
+        if(use->handle<0 || use->handle>=SND_STREAM_MAX)use->failed=1;
+        else{const strchan_t* stream=&streams[use->handle];
+            if(!stream->initted || stream->get_data!=use->callback || stream->req_data || stream->queueing ||
+               TAILQ_FIRST(&stream->filters) || stream->channels!=2 || stream->type!=AICA_SM_16BIT || stream->bitsize!=16 ||
+               stream->frequency!=32000 || stream->buffer_size!=use->size ||
+               stream->ch[0]!=use->ch[0] || stream->ch[1]!=use->ch[1] ||
+               stream->spu_ram_sch[0]!=use->base[0] || stream->spu_ram_sch[1]!=use->base[1])use->failed=1;
+        }
+        re4dc_gcasset_movie_audio_submit(use->slot,use->serial,
+            !use->failed && use->commands==3 && use->accepted==3?use->asset:0);
+    }
+    use->active=0;
+}
+// GC_ASSET_MOVIE_STREAM_END
+#endif
 #if RE4DC_CABIN_SOURCE
 // CABIN_STREAM_OBSERVER_BEGIN
 // The included SDK owns transfer scheduling. Its semaphore is released by the
@@ -102,21 +192,51 @@ static void cabin_stream_invalidate(snd_stream_hnd_t hnd) {
     }
 }
 void snd_stream_start(snd_stream_hnd_t hnd, uint32_t freq, int stereo) {
-    cabin_stream_invalidate(hnd); cabin_sdk_stream_start(hnd, freq, stereo);
+    cabin_stream_invalidate(hnd);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_begin(hnd,freq,stereo);
+#endif
+    cabin_sdk_stream_start(hnd, freq, stereo);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_end();
+#endif
 }
 void snd_stream_start_pcm8(snd_stream_hnd_t hnd, uint32_t freq, int stereo) {
-    cabin_stream_invalidate(hnd); cabin_sdk_stream_start_pcm8(hnd, freq, stereo);
+    cabin_stream_invalidate(hnd);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_begin(hnd,freq,stereo);
+#endif
+    cabin_sdk_stream_start_pcm8(hnd, freq, stereo);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_end();
+#endif
 }
 void snd_stream_start_adpcm(snd_stream_hnd_t hnd, uint32_t freq, int stereo) {
-    cabin_stream_invalidate(hnd); cabin_sdk_stream_start_adpcm(hnd, freq, stereo);
+    cabin_stream_invalidate(hnd);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_begin(hnd,freq,stereo);
+#endif
+    cabin_sdk_stream_start_adpcm(hnd, freq, stereo);
+#if RE4DC_GC_ASSET_GATE
+    gcasset_movie_start_end();
+#endif
 }
 void snd_stream_stop(snd_stream_hnd_t hnd) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_stream_cancel(hnd);
+#endif
     cabin_stream_invalidate(hnd); cabin_sdk_stream_stop(hnd);
 }
 void snd_stream_destroy(snd_stream_hnd_t hnd) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_stream_cancel(hnd);
+#endif
     cabin_stream_invalidate(hnd); cabin_sdk_stream_destroy(hnd);
 }
 void snd_stream_shutdown(void) {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_stream_cancel(-1);
+#endif
     cabin_stream_invalidate(-1); cabin_sdk_stream_shutdown();
 }
 
@@ -228,7 +348,15 @@ int re4dc_movie_stream_cabin_start(int hnd, unsigned generation) {
     }
     if(cabin_stream.base[1] != cabin_stream.base[0] + cabin_stream.size)cabin_stream.failed = 1;
     cabin_stream.started = timer_us_gettime64();
-    if(!cabin_stream.failed)cabin_sdk_stream_start(hnd, 32000, 1);
+    if(!cabin_stream.failed){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_movie_start_begin(hnd,32000,1);
+#endif
+        cabin_sdk_stream_start(hnd, 32000, 1);
+#if RE4DC_GC_ASSET_GATE
+        gcasset_movie_start_end();
+#endif
+    }
     cabin_stream.starting = 0;
     if(cabin_stream.commands != 3 || !cabin_stream_identity())cabin_stream.failed = 1;
     return !cabin_stream.failed;
@@ -319,6 +447,19 @@ invalid:
     return -1;
 }
 // CABIN_STREAM_OBSERVER_END
+#elif RE4DC_GC_ASSET_GATE
+void snd_stream_start(snd_stream_hnd_t hnd,uint32_t freq,int stereo){
+    gcasset_movie_start_begin(hnd,freq,stereo);cabin_sdk_stream_start(hnd,freq,stereo);gcasset_movie_start_end();
+}
+void snd_stream_start_pcm8(snd_stream_hnd_t hnd,uint32_t freq,int stereo){
+    gcasset_movie_start_begin(hnd,freq,stereo);cabin_sdk_stream_start_pcm8(hnd,freq,stereo);gcasset_movie_start_end();
+}
+void snd_stream_start_adpcm(snd_stream_hnd_t hnd,uint32_t freq,int stereo){
+    gcasset_movie_start_begin(hnd,freq,stereo);cabin_sdk_stream_start_adpcm(hnd,freq,stereo);gcasset_movie_start_end();
+}
+void snd_stream_stop(snd_stream_hnd_t hnd){re4dc_gcasset_movie_stream_cancel(hnd);cabin_sdk_stream_stop(hnd);}
+void snd_stream_destroy(snd_stream_hnd_t hnd){re4dc_gcasset_movie_stream_cancel(hnd);cabin_sdk_stream_destroy(hnd);}
+void snd_stream_shutdown(void){re4dc_gcasset_movie_stream_cancel(-1);cabin_sdk_stream_shutdown();}
 #endif
 
 #if RE4DC_MOVIE_WORLD_ARENA
