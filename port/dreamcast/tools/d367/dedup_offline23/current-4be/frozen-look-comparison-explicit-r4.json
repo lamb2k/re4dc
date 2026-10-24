@@ -1,0 +1,422 @@
+{
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "kind": "MATCHED_AUTHENTICATED_FROZEN_FRAME_PIXEL_COMPARISON",
+  "freeze_marker": "warp: frozen at tick 330",
+  "frame_semantics": "Source halts at top of tick330; compare the held last-presented frame, not an asserted rendered tick330. Only post-marker screenshots with nominal time>=ceil(marker)+1; all observed late framebuffers stable within each arm.",
+  "preflight_sha256": "5067341190d8de2806299fb01c8da27900442a05bc94d391d72c293b0792bc00",
+  "views": {
+    "cross": {
+      "arms": {
+        "off": {
+          "stop_matched_s": 27.7,
+          "elapsed_host_s": 34.8,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\cross-f330.txt",
+            "bytes": 119,
+            "sha256": "471149a5c1ff4752ae3128243556bc1fbba7196fc1dfe5e0b0f9031499e6c75f"
+          },
+          "log_sha256": "5d5ffbd69a02c02f444ae8c1c8aa2b63b14cc54e264379087b40f5be680da2a7",
+          "result_sha256": "b56b16aba2bf61dee7adcbbfd6223ce4cd5b6f2c89420677478d86473c112afb",
+          "bounded_sha256": "eebe5eeccbda6fbdf086cde8e15bcc923b3441c89b1fcc90bd9ffb7df607176c",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "5975107fafea959323545e6d642ac8fc89009197a952da427f6c67a3c2e5a735",
+          "limitfps_run_binding_sha256": "9121946c8cee76e1f13c8158057ed17bb8fdce63696fb953a0969fa90724c1f6",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0029",
+              "nominal_host_second": 29,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb0.png",
+                  "file_sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+                  "pixel_sha256": "6d65dcd01f6157df79b98f6ccfa9fb93b2198e869b92c5088917c2f8e1511896",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb1.png",
+                  "file_sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+                  "pixel_sha256": "eea15230386f619d4cd932f03bf8449f67f9ffa1fab73145e40337d363078508",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0032",
+              "nominal_host_second": 32,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0032\\frames\\fb0.png",
+                  "file_sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+                  "pixel_sha256": "6d65dcd01f6157df79b98f6ccfa9fb93b2198e869b92c5088917c2f8e1511896",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-off-explicit-limited-console-r4\\shots\\t0032\\frames\\fb1.png",
+                  "file_sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+                  "pixel_sha256": "eea15230386f619d4cd932f03bf8449f67f9ffa1fab73145e40337d363078508",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "on": {
+          "stop_matched_s": 28.2,
+          "elapsed_host_s": 35.4,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\cross-f330.txt",
+            "bytes": 119,
+            "sha256": "471149a5c1ff4752ae3128243556bc1fbba7196fc1dfe5e0b0f9031499e6c75f"
+          },
+          "log_sha256": "0c3a2670617f4da30b33300f9cab454429ade59803a06e20e9667e966cf26e06",
+          "result_sha256": "c2225b2313fc802ac28c9cb1f88bd07ec9fd5c04c8bcc74c8b3e690c774908e0",
+          "bounded_sha256": "3d4cb53c7e80e000c15b224043cd4d4bd5164f532eb24a8b745e7433cccbd5ab",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "6d7a7b18d513969ae3571cc3f8ca7c0cb67e34c79f2681bdd5c3c85a62135bb3",
+          "limitfps_run_binding_sha256": "7161b196787fbf5ca85697c742feec54687d45607b8a0f218752d6ab6071ef46",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-on-explicit-limited-console-r4\\shots\\t0032",
+              "nominal_host_second": 32,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-on-explicit-limited-console-r4\\shots\\t0032\\frames\\fb0.png",
+                  "file_sha256": "a90ba2fd6c7ca7ba24e1802da485e4b0c1dd3e91830c0902f2ea513585ac4985",
+                  "pixel_sha256": "6d65dcd01f6157df79b98f6ccfa9fb93b2198e869b92c5088917c2f8e1511896",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\cross-on-explicit-limited-console-r4\\shots\\t0032\\frames\\fb1.png",
+                  "file_sha256": "3b232c20784edd7673fb9c9799000a1da4089d1ef6df8076491a26c12dfac037",
+                  "pixel_sha256": "eea15230386f619d4cd932f03bf8449f67f9ffa1fab73145e40337d363078508",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "differences": {
+        "fb0": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        },
+        "fb1": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        }
+      },
+      "pixel_identical": true
+    },
+    "farm": {
+      "arms": {
+        "off": {
+          "stop_matched_s": 22.7,
+          "elapsed_host_s": 30.0,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\farm-f330.txt",
+            "bytes": 102,
+            "sha256": "72d2497a279ffe59736ab177ca8b1a039ae5cae0d01bf8bdb02928eec3cf3ce0"
+          },
+          "log_sha256": "752b898f7784adba46229e41874eb89735ab62c050427234a2d6c4686f459984",
+          "result_sha256": "a81c2390dd7580f7edf942f600d96abab9357177afdc3ec59debe1836fc75ecd",
+          "bounded_sha256": "a756b3793db793c108ce6077cef175bc9c8b52dcc02fbf3e9c9d2426d7028a50",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "651a9f8a324ed5f888f875a7a5c6f174e62df7f86a16ff885199a0d29b0bc3f0",
+          "limitfps_run_binding_sha256": "421f7bf8c2b9edca48f5ef7bc14d07065d3579c635125562b07200732a3e8a15",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0025",
+              "nominal_host_second": 25,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0025\\frames\\fb0.png",
+                  "file_sha256": "405c98b6980f5d824983b98984e691dc650c31d0f84a3deba9767b04b78d9062",
+                  "pixel_sha256": "7600c09e16799194c501854fbef29154e789d9964b5b5caf0fafb296cdbd3629",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0025\\frames\\fb1.png",
+                  "file_sha256": "ce7c185c0d1691953279333d9cb5b25650e9ba08205168b5fe9217644610e0df",
+                  "pixel_sha256": "be89e17d8f60cb5a1498cd54a2d51e961c248f721f31c6a61cde87613802ce77",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0029",
+              "nominal_host_second": 29,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb0.png",
+                  "file_sha256": "405c98b6980f5d824983b98984e691dc650c31d0f84a3deba9767b04b78d9062",
+                  "pixel_sha256": "7600c09e16799194c501854fbef29154e789d9964b5b5caf0fafb296cdbd3629",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb1.png",
+                  "file_sha256": "ce7c185c0d1691953279333d9cb5b25650e9ba08205168b5fe9217644610e0df",
+                  "pixel_sha256": "be89e17d8f60cb5a1498cd54a2d51e961c248f721f31c6a61cde87613802ce77",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "on": {
+          "stop_matched_s": 23.5,
+          "elapsed_host_s": 30.5,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\farm-f330.txt",
+            "bytes": 102,
+            "sha256": "72d2497a279ffe59736ab177ca8b1a039ae5cae0d01bf8bdb02928eec3cf3ce0"
+          },
+          "log_sha256": "069da580a81eaae099a1936146c9ddfba036d3cc59c6c6c99b720cb5ad54a7a9",
+          "result_sha256": "b76ebfd6fb9553d45c0eab4650722b82624c5a41f6ef85946de585fdb9df8f8d",
+          "bounded_sha256": "d83dbf44d11be6eedfd19bf8a435ea8c449077d5498b3c962af19fd8903e83cc",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "11fe55abdb881ee1a886b132a107812ad840fbd653ed840032a9ff78da2859d4",
+          "limitfps_run_binding_sha256": "24b4b95c2dfc1508f97715398274d8b41c8a2bbfe974382542379a219ed004ed",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0025",
+              "nominal_host_second": 25,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0025\\frames\\fb0.png",
+                  "file_sha256": "405c98b6980f5d824983b98984e691dc650c31d0f84a3deba9767b04b78d9062",
+                  "pixel_sha256": "7600c09e16799194c501854fbef29154e789d9964b5b5caf0fafb296cdbd3629",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0025\\frames\\fb1.png",
+                  "file_sha256": "ce7c185c0d1691953279333d9cb5b25650e9ba08205168b5fe9217644610e0df",
+                  "pixel_sha256": "be89e17d8f60cb5a1498cd54a2d51e961c248f721f31c6a61cde87613802ce77",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0029",
+              "nominal_host_second": 29,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0029\\frames\\fb0.png",
+                  "file_sha256": "405c98b6980f5d824983b98984e691dc650c31d0f84a3deba9767b04b78d9062",
+                  "pixel_sha256": "7600c09e16799194c501854fbef29154e789d9964b5b5caf0fafb296cdbd3629",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\farm-on-explicit-limited-console-r4\\shots\\t0029\\frames\\fb1.png",
+                  "file_sha256": "ce7c185c0d1691953279333d9cb5b25650e9ba08205168b5fe9217644610e0df",
+                  "pixel_sha256": "be89e17d8f60cb5a1498cd54a2d51e961c248f721f31c6a61cde87613802ce77",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "differences": {
+        "fb0": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        },
+        "fb1": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        }
+      },
+      "pixel_identical": true
+    },
+    "forest": {
+      "arms": {
+        "off": {
+          "stop_matched_s": 24.4,
+          "elapsed_host_s": 31.5,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\forest-f330.txt",
+            "bytes": 143,
+            "sha256": "de211b45f41bd2b565ebe7d4b938952c8f8d809da576f2bd0fa24d041c68947f"
+          },
+          "log_sha256": "4e76631440927075e3014a808a2e726b42b18fa60dc4aa93e6e77750d2e27bc7",
+          "result_sha256": "faa3854da65af571964036b6e000ed56cae1cbbf0620341437f97e1bde236dfa",
+          "bounded_sha256": "26eef21b44cc61bc7fdad1f6b920784600a2d266c7d51e250812ae644cae0eba",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "c84934b24be75668256316b40bdc93692344c90bfb6920bedab2ce3ce2b57350",
+          "limitfps_run_binding_sha256": "a0744f2676637b811b8d8d6370a60a0cc0b034753c2e8f1b83024b8b775ef6ea",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-off-explicit-limited-console-r4\\shots\\t0029",
+              "nominal_host_second": 29,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb0.png",
+                  "file_sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+                  "pixel_sha256": "621be15cbde473b25ca475a5d56369680eb0fd19802b9fd93a1fa722c7846114",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-off-explicit-limited-console-r4\\shots\\t0029\\frames\\fb1.png",
+                  "file_sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+                  "pixel_sha256": "6f04eeaa2a6989c6a6072e8e30161f48dfa3b4e3f75369c847bbb9f66fbc0493",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "on": {
+          "stop_matched_s": 25.0,
+          "elapsed_host_s": 32.1,
+          "fixture": {
+            "src": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\work\\lanes\\dedup-offline23-current-d5c\\port\\dreamcast\\tools\\d367\\dedup_offline23\\main\\forest-f330.txt",
+            "bytes": 143,
+            "sha256": "de211b45f41bd2b565ebe7d4b938952c8f8d809da576f2bd0fa24d041c68947f"
+          },
+          "log_sha256": "9313b67785fe7e58ee9a3a6bf84cd13739f2faffeb53618ca56428a3f63fc814",
+          "result_sha256": "abb11a949d0bd8c59eae6ab88101ffded54b5555bcff45b6a7d486fbd13dca93",
+          "bounded_sha256": "2841d17e623125ccb3603bfb2e141bfa82cb54d3ff3e219160e1515ea976a477",
+          "actual_fps_limited_config_sha256": "1bd32372b5ae76657caff6423dfeea3b0c1886ddd08a6f1ca711a595df54aa5e",
+          "limitfps_prelaunch_sha256": "afc654f807c82254c80c8be98f1a591e402f640056870196d1b6525d1e67ac17",
+          "limitfps_run_binding_sha256": "de966b6ddf1a964b28a3d5312378dc65c025cde38625aa4fcb3f6d70ea363369",
+          "post_freeze": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0026",
+              "nominal_host_second": 26,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0026\\frames\\fb0.png",
+                  "file_sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+                  "pixel_sha256": "621be15cbde473b25ca475a5d56369680eb0fd19802b9fd93a1fa722c7846114",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0026\\frames\\fb1.png",
+                  "file_sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+                  "pixel_sha256": "6f04eeaa2a6989c6a6072e8e30161f48dfa3b4e3f75369c847bbb9f66fbc0493",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0029",
+              "nominal_host_second": 29,
+              "frames": {
+                "fb0": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0029\\frames\\fb0.png",
+                  "file_sha256": "945a82e61b81c6f7e3b5187973323e496f4bf9c922109e92442d92418b47039c",
+                  "pixel_sha256": "621be15cbde473b25ca475a5d56369680eb0fd19802b9fd93a1fa722c7846114",
+                  "size": [
+                    640,
+                    480
+                  ]
+                },
+                "fb1": {
+                  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\forest-on-explicit-limited-console-r4\\shots\\t0029\\frames\\fb1.png",
+                  "file_sha256": "f88957797b1d9e5cdab4e3758624188cc5381465849eb898362fc2b55af5a338",
+                  "pixel_sha256": "6f04eeaa2a6989c6a6072e8e30161f48dfa3b4e3f75369c847bbb9f66fbc0493",
+                  "size": [
+                    640,
+                    480
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "differences": {
+        "fb0": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        },
+        "fb1": {
+          "changed_pixels": 0,
+          "max_channel_difference": 0,
+          "size": [
+            640,
+            480
+          ]
+        }
+      },
+      "pixel_identical": true
+    }
+  },
+  "all_identical": true,
+  "limits": "MODELLED Flycast FPS-limited still-only control, explicit root approval; exact source/fixture/programme/track/config identities; scoped visible comparison only, not all-frame actor/runtime-state equality; not arbitrary wall-time pair, motion/performance or physical-console acceptance."
+}

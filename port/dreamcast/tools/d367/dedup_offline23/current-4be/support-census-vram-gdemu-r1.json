@@ -1,0 +1,115 @@
+{
+  "status": "PASS_SCOPED_CURRENT_CENSUS_TEXTURE_VRAM_GDEMU",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "diagnostic_resolved_knobs_sha256": "3ff5c1ff0839b0cbf113d1bdff00780615c3d75b392d6257e60f49cb42a4dae4",
+  "diagnostic_elf_sha256": "db95eb4d2ce56b9270c2ca436a93dcdcf5e571c5707aab8891d9899e0b6c7963",
+  "rooms": {
+    "r100": {
+      "log_sha256": "aa17ce73674b4df2620ba8af30600d0366b6c6ce9803cc8c7487b4aee85e23a9",
+      "result_sha256": "5163055594caa95dc1821190e10c702957aa6c81d10086cda18d4906dbf786ca",
+      "bounded_sha256": "e4ba8bfacc946d98809d07bb10c2567aa769077b7fc8862c9c855accb3995b20",
+      "elapsed_host_s": 41.062,
+      "track03_sha256": "6bfab599365cadf8d45495056bcca1e0785b4f7347b240c0b4178702d29be182",
+      "vram_room_rows": 11,
+      "vram_gap_rows": 11,
+      "min_free": 175552,
+      "min_largest": 32768,
+      "zero_vram_fields": [
+        "refusals",
+        "guard",
+        "guard_p",
+        "nocontig",
+        "latched",
+        "absent",
+        "gc_fx",
+        "dropped",
+        "fx_dropped",
+        "tex_rej",
+        "snd_fail"
+      ],
+      "max_allocator_retries": 2,
+      "max_evicted": 11,
+      "texture_summary_rows": 24,
+      "dedup_rows": [
+        "SCNDEDUP3 room=100 meshlets=1967 repeats=14490 extra_heap=0 source_crc=fb35ea9c actual_crc=45783a9f"
+      ],
+      "leongc_report_sha256": "3798123b7a954d18e84d599706c214eaa3783cff4c03cb95d70339e8c353504b"
+    },
+    "r101": {
+      "log_sha256": "fae1a1dd4fd064aeedf53052265634c00800ea85cd96526d67f26c5602eca986",
+      "result_sha256": "161e012bef489a89175efda66d9ff854d2015fd45896549a64648c1ac563e9cc",
+      "bounded_sha256": "9d8688df2d27fac2a36d58b770b3d2ed0cb21759a98ade59f29c7c88bd1f0667",
+      "elapsed_host_s": 41.046,
+      "track03_sha256": "6bfab599365cadf8d45495056bcca1e0785b4f7347b240c0b4178702d29be182",
+      "vram_room_rows": 11,
+      "vram_gap_rows": 11,
+      "min_free": 172096,
+      "min_largest": 18432,
+      "zero_vram_fields": [
+        "refusals",
+        "guard",
+        "guard_p",
+        "nocontig",
+        "latched",
+        "absent",
+        "gc_fx",
+        "dropped",
+        "fx_dropped",
+        "tex_rej",
+        "snd_fail"
+      ],
+      "max_allocator_retries": 0,
+      "max_evicted": 0,
+      "texture_summary_rows": 37,
+      "dedup_rows": [
+        "SCNDEDUP3 room=101 meshlets=1830 repeats=10277 extra_heap=0 source_crc=b75c63d9 actual_crc=32c9492d"
+      ],
+      "leongc_report_sha256": "caa4c460bae6fee675b3c4d8fce5178bd0f54db8b75373284935799175c707dc"
+    },
+    "r103": {
+      "log_sha256": "dafdded69c7339637dc6f87c59e0d00f019a5c1ca5e5e0e173d70d7b56cbdebe",
+      "result_sha256": "2565621f52eec86323011f4b961d4301e439d434d77f1b1e21408d82982e0d07",
+      "bounded_sha256": "f87180520dc04942e5307a61261f3289d29e0fa54e89a6a3feea37a3f74834f1",
+      "elapsed_host_s": 41.078,
+      "track03_sha256": "6bfab599365cadf8d45495056bcca1e0785b4f7347b240c0b4178702d29be182",
+      "vram_room_rows": 10,
+      "vram_gap_rows": 10,
+      "min_free": 666560,
+      "min_largest": 598016,
+      "zero_vram_fields": [
+        "refusals",
+        "guard",
+        "guard_p",
+        "nocontig",
+        "latched",
+        "absent",
+        "gc_fx",
+        "dropped",
+        "fx_dropped",
+        "tex_rej",
+        "snd_fail"
+      ],
+      "max_allocator_retries": 0,
+      "max_evicted": 0,
+      "texture_summary_rows": 40,
+      "dedup_rows": [
+        "SCNDEDUP3 room=103 meshlets=1448 repeats=12915 extra_heap=0 source_crc=8d311165 actual_crc=b921b669"
+      ],
+      "leongc_report_sha256": "8fb57128f0e9a1c765074993399a9ddf4486725f8f175425657dc2b9e3d8877a"
+    }
+  },
+  "cast_gc_report_sha256": "0d6d0ac5eaf4f68c8e8f7a6ea46b424fadb014379336f45b380f0189a1eed88e",
+  "texchk_report_sha256": "c207008b03b7b24c0ea9266f77d2b0ed780043059600ae37dea172babfa2295a",
+  "gdemu": {
+    "log_sha256": "1c2263afae45a73e22624a94e31b734379c2f9c631bddf2f3bdbbd8038c29a0d",
+    "result_sha256": "7f7ffa8c0e88fc6809adb9d2747c457f4d02f8b432a41574eb09a88977f0d98d",
+    "bounded_sha256": "6a2056a6048582655576ed60060c50f832e9c7d6ba8e039f271e6bc03b87354e",
+    "elapsed_host_s": 14.593,
+    "track03_sha256": "ff2bbc48a70be375c0c32000776fef4164a870c79ce23395eebc3c8c0430038a",
+    "profile": "GDCONSOLE profile=gdemu cpb32=533 seek=20000 stat=2000 irq=4000 jitter=20000 early=1000/1000 chunk=32 seed=1",
+    "serial_sha256": "60f00c1cfcae00dc9c91e22e938f4e422f72a1dd5fec81e2a4ec79b21b9c959f",
+    "race_hit_rows": 21,
+    "endpoint": "phase=enter room=103"
+  },
+  "limits": "Actual enabled diagnostic capture and observed r100/r101/r103 consumers only; r103 em12 CROWD-SKIP0 not-drawn census row is not actor draw proof. r100 has allocator fragmentation retries (native_ui.cpp:3094,3595), explicitly reported, not zero-retry acceptance. No all-actor coverage, physical-console or performance acceptance."
+}

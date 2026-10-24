@@ -1,0 +1,37 @@
+{
+  "kind": "PRECHECK_CORRECTION_NOT_RETROACTIVE_PROOF",
+  "original_receipt": "cleanup-redundant-current-rawgdi-before.json",
+  "fuser_claim": "INVALID: CLI usage error was treated as no active handles; guard did not pass",
+  "host_control_probes": [
+    {
+      "argv": [
+        "fuser",
+        "-s",
+        "--",
+        "/dev/shm/tmpxxm1mgn3/open-control.bin"
+      ],
+      "rc": 1,
+      "stderr": "No process specification given\nUsage: fuser [-fIMuvw] [-a|-s] [-4|-6] [-c|-m|-n SPACE]\n             [-k [-i] [-SIGNAL]] NAME...\n       fuser -l\n       fuser -V\nShow which processes use the named files, sockets, or filesystems.\n\n  -a,--all              display unused files too\n  -i,--interactive     ",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "fuser",
+        "-s",
+        "/dev/shm/tmpxxm1mgn3/open-control.bin"
+      ],
+      "rc": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "removed_only": [
+    "/root/work/lanes/dedup-offline23-current-d5c-scratch/standard/off/gdemu/track03.bin",
+    "/root/work/lanes/dedup-offline23-current-d5c-scratch/standard/on/gdemu/track03.bin"
+  ],
+  "scope": "Only root-authorized redundant2files, resolved/fullsha/size recorded. IndependentNTFSmedia/ELFs/all14/originalassettrees verified and retained. Actual own guest launchers bind only thoseNTFSISO bases. No claim that posthoc probe establishes historical FD state.",
+  "C_free_now": 32458240000,
+  "no_other_deletion": true,
+  "no_shutdown_or_compact": true,
+  "QA_media": "Still unallocated; no stage"
+}

@@ -1,0 +1,138 @@
+{
+  "status": "PASS_CURRENT_48K_ALL8_BOUNDED_SCENES",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "programme": "/root/probe/lanes/route/out-fpdd23cur4be08e01diagW",
+  "elf_sha256": "db95eb4d2ce56b9270c2ca436a93dcdcf5e571c5707aab8891d9899e0b6c7963",
+  "knobs_sha256": "3ff5c1ff0839b0cbf113d1bdff00780615c3d75b392d6257e60f49cb42a4dae4",
+  "runs": {
+    "kos-fight-0": {
+      "minimum_headroom": 6208,
+      "held": 49152,
+      "fragmentation": 0,
+      "observed_guest_seconds": 45.89,
+      "endpoint": "warp: alert at room frame",
+      "log_sha256": "6ebcb37c50d26cac0c51259f260e5fdbba9d7e0120ecdfc7b710a41e38a705fc",
+      "result_sha256": "25d904f4f14453cbff76b4765507a3dce61960c79018d950dc2d1ef1e3e45f47",
+      "bounded_sha256": "f99ce322530cf5b6be317bacda2eb866995d1363d0017ffd6efb90f685560335",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-fight-0.txt",
+        "bytes": 770,
+        "sha256": "246778ae0af43bf62e1bb43098316187b0772781c70c75f87dbca52773bd4128"
+      }
+    },
+    "kos-fight-1": {
+      "minimum_headroom": 6112,
+      "held": 49152,
+      "fragmentation": 1,
+      "observed_guest_seconds": 45.843,
+      "endpoint": "warp: alert at room frame",
+      "log_sha256": "fab77e146a298c8ab052f0833fde49fff5e7a0e2370c69e88564ae5016af3af1",
+      "result_sha256": "706d85340adb4dec1fde0a7e373021fa25319b4e5a35043bfa04358102387aa6",
+      "bounded_sha256": "1b617015d5aaf1736e9f91168e19156f7b55653b7e1eae8eaada0d4c78d12ed9",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-fight-1.txt",
+        "bytes": 770,
+        "sha256": "e4220c13c7b4e6e7890ad5c5bf084ecac63e6c80016dad79856d6df9cf7e1a7b"
+      }
+    },
+    "kos-call-0": {
+      "minimum_headroom": 31448,
+      "held": 49152,
+      "fragmentation": 0,
+      "observed_guest_seconds": 45.875,
+      "endpoint": "subscreen backing: open",
+      "log_sha256": "9f41b506a6fab035dbb6140b3d4e2717867787e291025d90b2f50068eaa4e411",
+      "result_sha256": "c64e94618b290428cd8f7a97a42eb49e4d08eaa16f7cc25a86a0b8ea5f31816a",
+      "bounded_sha256": "168db02ce8d6ea2d04d6d0e7a6d692ba22ac7e075a9f87516be0bfae8dfcbb80",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-call-0.txt",
+        "bytes": 807,
+        "sha256": "a22ab79f2a3625882d239ab9d92574666b513672339fae615388cbed506552d0"
+      }
+    },
+    "kos-call-1": {
+      "minimum_headroom": 31360,
+      "held": 49152,
+      "fragmentation": 1,
+      "observed_guest_seconds": 45.86,
+      "endpoint": "subscreen backing: open",
+      "log_sha256": "10618a7c44193dfc6149b870b1f647bb7923bab12338859d770376b8e7769546",
+      "result_sha256": "c601f2177f771531d4baed518fa6b830851243de6e8c0cbaeb63ffc58853d35e",
+      "bounded_sha256": "9c2a27ce83b76c5d71941f91db1dd39b080a447520471eace22775171a06af83",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-call-1.txt",
+        "bytes": 807,
+        "sha256": "9bf2621ff30189392ca519f886266d211d6679039ac2c30db7d8e026fa55f44e"
+      }
+    },
+    "kos-leave100-0": {
+      "minimum_headroom": 6408,
+      "held": 49152,
+      "fragmentation": 0,
+      "observed_guest_seconds": 45.844,
+      "endpoint": "phase=enter room=100",
+      "log_sha256": "bc3439ecc6102426dddfe580afd821d0518add8506fe5043ce0d4202bae29ffa",
+      "result_sha256": "ec2a859e5af484680d1cd1c2f7033fb3681c02c0625c3e08b3a4d793ed840d4f",
+      "bounded_sha256": "b443726f5c22eb05a48b051b03164bc7ec5c491b81af5a913f2cc2971d3d9976",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-leave100-0.txt",
+        "bytes": 1125,
+        "sha256": "8953ea95683d4fb3be45d069694b2a7fce87f31b90c18ef5447acb83072bef3e"
+      }
+    },
+    "kos-leave100-1": {
+      "minimum_headroom": 6320,
+      "held": 49152,
+      "fragmentation": 1,
+      "observed_guest_seconds": 45.922,
+      "endpoint": "phase=enter room=100",
+      "log_sha256": "6a3d7ee09f8a4999c294d9a805be7e4554d67026a53df8a0137da43fef0e6250",
+      "result_sha256": "f79f2fada5973c520d810dc6619566692c435f99bcc4700aaa3badf592ef8287",
+      "bounded_sha256": "6d9fdad85aea3367f35c73bc0a78ac790d2677475a28218d7bfa60cdad9290a1",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-leave100-1.txt",
+        "bytes": 1125,
+        "sha256": "05ba01d98ff54801012575ad272918c82a78cefe7408b14015ae67df4f70c184"
+      }
+    },
+    "kos-leave103-0": {
+      "minimum_headroom": 6408,
+      "held": 49152,
+      "fragmentation": 0,
+      "observed_guest_seconds": 45.875,
+      "endpoint": "phase=enter room=103",
+      "log_sha256": "02cb5cd7214c2d8e59d8d2f338a268e3ba6a67b484bac28d7878c44409c3ed88",
+      "result_sha256": "6f0c181b845b1df8c3c766cacdf3550c1578deeb339b21d3e40fdf3c2c79a2e9",
+      "bounded_sha256": "c755e00cb046078c30e0c4e405875e9f6e25c2091998193af1573e43e2582c1d",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-leave103-0.txt",
+        "bytes": 1134,
+        "sha256": "1411df9c91bb73c5fe178bd9c52f6c7a90a35f128bea2f5b7d5b5552fe95b89f"
+      }
+    },
+    "kos-leave103-1": {
+      "minimum_headroom": 6320,
+      "held": 49152,
+      "fragmentation": 1,
+      "observed_guest_seconds": 46.125,
+      "endpoint": "phase=enter room=103",
+      "log_sha256": "809610c95ff0d202b34711db5680a7c1da3e1a2cb51bb07a18ab39b7589df20a",
+      "result_sha256": "28293025eb868316f5f89aad00be8ea8e517974d3ba31aa71bdbaf5c0439e647",
+      "bounded_sha256": "b379b6b4cd46d0398d9914da210e56ed027f2563cbb26e8660e296f062049d02",
+      "config_sha256": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "fixture": {
+        "src": "C:\\Flycast-Evidence\\re4-dreamcast\\dedup-offline23-20261023\\current-4be08e01\\fixtures\\kos-leave103-1.txt",
+        "bytes": 1134,
+        "sha256": "621ef86fda234d827b30afbc9f44a43d688e80f95073dd6e424eb00c745775b6"
+      }
+    }
+  },
+  "limits": "MODELLED console FP_NOLIMIT1, actual held/headroom/endpoints; no physical-hardware timing/memory or all-frame state equality claim."
+}

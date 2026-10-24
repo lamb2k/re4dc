@@ -1,0 +1,151 @@
+{
+  "status": "PASS_SCOPED_CURRENT_EVENT_DECISIONS",
+  "source": "4be08e0110592510e3630c01fa9f49b3ac2fed3d",
+  "reference_binding_sha256": "57047303778486307812da1764f208d6bcd9b764c3ff69924f583d4995842936",
+  "on_elf_sha256": "bae1fa3260ba0238382e3cbacb37d71514d6bf583af0885464e6bbc0cf0ab484",
+  "on_resolved_sha256": "e77a8fa3313a9d2e371c0ea0dd4420a242841b5e28f4c5d7109fdae4c069e483",
+  "scenes": {
+    "bell": {
+      "log_sha256": "cd281cb5ed6d74bd8de1ba86fb4448d6284bc55417e5fcc5b73a2c6b9725dac5",
+      "result_sha256": "6723294bf39739d5d397a680fdb63f7083b0b5c1e3740333c5326ce59a97e010",
+      "bounded_sha256": "68cfe96728504c7deb24fb47f2647edf0d66eaf33c79bed44df05377197998f1",
+      "elapsed_host_s": 39.64,
+      "track03_sha256": "310d899dfb91c365ba0057ee29ae8eed2203dc22068b6f0e1ab085937ec4875b",
+      "decision_report_sha256": "faa37d85f2598213cc99ab485fa35645d1c4833a9415cf97bfb98641139500b4",
+      "compared_ticks": 2866,
+      "ref_records": 2867,
+      "test_records": 2885,
+      "window": [
+        0,
+        2865
+      ],
+      "must_verdict": "MUST-IDENTICAL",
+      "drift": {
+        "player_max": 0.0,
+        "enemy_samples": 20841,
+        "enemy_max": 0.0,
+        "enemy_worst": null,
+        "slot_id_mismatches": 0
+      },
+      "movies": [
+        {
+          "terminal": "1",
+          "id": "10130",
+          "frames": "1331/1331",
+          "uploaded": "1318",
+          "presented": "1318",
+          "wall_us": "44524028",
+          "media_us": "44411033",
+          "underruns": "1",
+          "silence_bytes": "1620",
+          "heap_before": "2259360",
+          "heap_active": "1895168",
+          "staged": "363328"
+        }
+      ],
+      "moviearena_rows": []
+    },
+    "mendez": {
+      "log_sha256": "10fb8e00150e8ed2f54650a5c304e1c20b46b8d1288c70bbc21f177e991e9720",
+      "result_sha256": "c78f153993df2a7438e5926cf722144ace5d6a4fa3721be62fe0521efa81f36c",
+      "bounded_sha256": "a645052456a878ed9e4483cffb7f4bf1da91100c681c92f776dc4b2060413e51",
+      "elapsed_host_s": 43.188,
+      "track03_sha256": "310d899dfb91c365ba0057ee29ae8eed2203dc22068b6f0e1ab085937ec4875b",
+      "decision_report_sha256": "5c5307beb7eb25e61d556cab8c20da8c196aac370baeae606189305c43cd52bd",
+      "compared_ticks": 2692,
+      "ref_records": 2692,
+      "test_records": 2694,
+      "window": [
+        0,
+        2691
+      ],
+      "must_verdict": "MUST-IDENTICAL",
+      "drift": {
+        "player_max": 0.0,
+        "enemy_samples": 9608,
+        "enemy_max": 0.0,
+        "enemy_worst": null,
+        "slot_id_mismatches": 0
+      },
+      "movies": [
+        {
+          "terminal": "2",
+          "id": "11f00",
+          "frames": "2/1465",
+          "uploaded": "1",
+          "presented": "1",
+          "wall_us": "33110",
+          "media_us": "48882166",
+          "underruns": "1",
+          "silence_bytes": "1472",
+          "heap_before": "1620512",
+          "heap_active": "1256320",
+          "staged": "363328"
+        },
+        {
+          "terminal": "4",
+          "id": "1011f00",
+          "frames": "149/170",
+          "uploaded": "148",
+          "presented": "148",
+          "wall_us": "4955444",
+          "media_us": "5706000",
+          "underruns": "1",
+          "silence_bytes": "1472",
+          "heap_before": "1620512",
+          "heap_active": "1256320",
+          "staged": "363328"
+        },
+        {
+          "terminal": "1",
+          "id": "11f02",
+          "frames": "1067/1067",
+          "uploaded": "1067",
+          "presented": "1067",
+          "wall_us": "35695073",
+          "media_us": "35602233",
+          "underruns": "2",
+          "silence_bytes": "6160",
+          "heap_before": "1620512",
+          "heap_active": "1256320",
+          "staged": "363328"
+        },
+        {
+          "terminal": "1",
+          "id": "11f10",
+          "frames": "265/265",
+          "uploaded": "265",
+          "presented": "265",
+          "wall_us": "9176296",
+          "media_us": "8842166",
+          "underruns": "0",
+          "silence_bytes": "0",
+          "heap_before": "205792",
+          "heap_active": "205792",
+          "staged": "363328"
+        },
+        {
+          "terminal": "1",
+          "id": "11f11",
+          "frames": "321/321",
+          "uploaded": "321",
+          "presented": "321",
+          "wall_us": "11018709",
+          "media_us": "10710700",
+          "underruns": "1",
+          "silence_bytes": "1472",
+          "heap_before": "206080",
+          "heap_active": "206080",
+          "staged": "363328"
+        }
+      ],
+      "moviearena_rows": [
+        "MOVIEARENA borrow id=11f10 token=1 gen=1 base=0x8cd81f40 capacity=811264 budget=363360",
+        "MOVIEARENA return token=1 used=363360 slots=13 blocked=0 attempts=1 restored=1",
+        "MOVIEARENA borrow id=11f11 token=2 gen=1 base=0x8cd81f40 capacity=811264 budget=363360",
+        "MOVIEARENA return token=2 used=363360 slots=13 blocked=0 attempts=1 restored=1"
+      ]
+    }
+  },
+  "limits": "Reused qualified OFF reference captures authenticated by freshly linked current OFF main/all14 equality and source/data/fixture bindings. Actual common frame windows only; Mendez current trace has two additional records outside common window. Bell1331 decoded but1318 uploaded/presented (reference1313); do not claim complete movie uploads. Mendez fixture intentionally cancels/skips intro movies11f00/1011f00; required11f02/11f10/11f11 full and two world-loan restores pass. No physical-console or performance acceptance."
+}
