@@ -1,0 +1,6 @@
+import hashlib,json,pathlib
+here=pathlib.Path(__file__).parent;tree=pathlib.Path('/root/work/lanes/world-emit23-current-R');source=tree/'port/dreamcast/game/parts_bridge.cpp';profile=pathlib.Path('/root/probe/lanes/route/out-fpwe23R49adgW/resolved-knobs.txt');legacy=here.parent/'current49ad/RECEIPT.json'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+r={'source':'49ad20f9932d638ddb7becf5db6f86b92e0a76a2','parts_source':str(source),'parts_source_sha256':sha(source),'profile':str(profile),'profile_sha256':sha(profile),'legacy_receipt':str(legacy),'legacy_receipt_sha256':sha(legacy),'legacy_reader':str(here.parent/'current49ad/freeze330-observer.py'),'legacy_reader_sha256':sha(here.parent/'current49ad/freeze330-observer.py'),'manager_header':str(tree/'include/cManager.h'),'manager_header_sha256':sha(tree/'include/cManager.h'),'contract':'actual current source: native sparse Pool64+slot table, cEm pages2, cObj pages8; no sparse reader implemented or admitted'}
+assert r['legacy_receipt_sha256']=='d7026d14e8a096469eac12aed583767ce135b8ef3b0ab8a10c78c00428354835'
+(here/'BACKING-PROOF.json').write_text(json.dumps(r,indent=2)+'\n');print('proof',r['parts_source_sha256'])

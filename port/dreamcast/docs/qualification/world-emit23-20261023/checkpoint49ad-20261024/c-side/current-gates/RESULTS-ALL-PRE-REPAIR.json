@@ -1,0 +1,2889 @@
+{
+  "schema": 1,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "pre_repair": true,
+  "world_unit_complete": false,
+  "private_QA_pair_ready": false,
+  "classification": "Actual current49ad ON-arm Flycast regression evidence, not hardware/performance/visual-pixel acceptance",
+  "fresh_ON_captures": 24,
+  "strict_passes": 21,
+  "strict_failures": 3,
+  "actual_memory_metrics": {
+    "B": {
+      "h2_heap_before": 89824,
+      "kos0_min_headroom": 4640,
+      "kos0_margin_over4096": 544,
+      "kos1_min_headroom": 4552,
+      "kos1_margin_over4096": 456
+    },
+    "L": {
+      "h2_heap_before": 89824,
+      "kos0_min_headroom": 5344,
+      "kos0_margin_over4096": 1248,
+      "kos1_min_headroom": 5256,
+      "kos1_margin_over4096": 1160
+    },
+    "E": {
+      "h2_heap_before": 93920,
+      "kos0_min_headroom": 6144,
+      "kos0_margin_over4096": 2048,
+      "kos1_min_headroom": 6048,
+      "kos1_margin_over4096": 1952
+    }
+  },
+  "rows": [
+    {
+      "arm": "B",
+      "gate": "h2",
+      "profile": "g",
+      "unit_identity": "B-g",
+      "tag": "B-h2-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "full340": true,
+        "heap_before": 89824,
+        "matching_arena_return_restored": true
+      },
+      "elapsed_s": 36.2,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-h2-r1",
+      "digests": {
+        "current-gate-launch.json": "b362359cb4148c1db2b7df6bde54aed5f4cf19292cb26711357816451aa2925b",
+        "current-gate-result.json": "055a2ce2e35cb5caff86027e8ea9a5fd410cedcf746c372056bef872ade44b73",
+        "run-result.json": "a47fb01da4a57e28f73f20749fc9eab6357e3502e960817132b77746a1ccdea5",
+        "bounded-launch.json": "32cbe9881ef5583635620cc8793045443951280932f5add1d68cd2fbea40bb79",
+        "run-output.txt": "a37984e9efd15392c9b61a295463f81e474c45a9ae818b4cfedec870fd9ee9ee"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "kos0",
+      "profile": "c",
+      "unit_identity": "B-c",
+      "tag": "B-kos0-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "0"
+          ]
+        ],
+        "min_headroom": 4640,
+        "alert_reached": true
+      },
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-kos0-r1",
+      "digests": {
+        "current-gate-launch.json": "e5cbc19b68b6ec6112aee3be5063d17ba748c72b357006c38564165671df2177",
+        "current-gate-result.json": "15d38f394ae7bfbab551a9a7e65821b8adf896948acf96b7444a8771d84fd3db",
+        "run-result.json": "acbc9bbe804117f5158fd0d8c3edde98fed4f7aa064fa004fb17003607e81cff",
+        "bounded-launch.json": "cca4c63dc884af57b0451315e62cfaeeade152c49a356dfa51530f82b6561f46",
+        "run-output.txt": "ac5ba21ed8d88f5d4f196408ce70d29223ab819247313070c64dc23577ee0447"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "kos1",
+      "profile": "c",
+      "unit_identity": "B-c",
+      "tag": "B-kos1-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "1"
+          ]
+        ],
+        "min_headroom": 4552,
+        "alert_reached": true
+      },
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-kos1-r1",
+      "digests": {
+        "current-gate-launch.json": "5caf1ebcb30d3ec7184a2236dc16ab77da2f1b5b019e854dd3aa3fc50c3b3689",
+        "current-gate-result.json": "c06fbb5ec3bec71e9f6009d578c50b4d02dd46523b44e7932cab8dba9eab7ff7",
+        "run-result.json": "68f39adeeeedba5ae8f108411e18efcdbbd84e40d63671881d5f7883d8f44c4f",
+        "bounded-launch.json": "690665555f68a97ba3a8656b56551a23c451e793fc35c05f46551902c65a4481",
+        "run-output.txt": "f1a99f0cf64a4b0aa257029cde3c3430dfab7f41776891bc2e2201ce5643fd2d"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "gd1",
+      "profile": "g",
+      "unit_identity": "B-g",
+      "tag": "B-gd1-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "room103": true,
+        "bad_read": false,
+        "profile_gdemu_observed": true,
+        "emu_env": {
+          "RE4DC_GD_JITTER": "20000",
+          "RE4DC_GD_PROFILE": "gdemu",
+          "RE4DC_GD_SEED": "1"
+        }
+      },
+      "elapsed_s": 16.4,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-gd1-r1",
+      "digests": {
+        "current-gate-launch.json": "9190bdbc914688883f8e2acbb0fd35b117f188460e79802139d7da0ebdb127c2",
+        "current-gate-result.json": "5271b2786c7c32d8c33596b9b687a6c22797358831a0db37727a6132d9c8293c",
+        "run-result.json": "f9022b111c530ce67d627ae162255096fd598aa511bbd64be1701da7a9e033f7",
+        "bounded-launch.json": "49fd650f9f2ea89a0df9dbe39a55280e97e89ad9235a44fcc98f55ef6e5a814e",
+        "run-output.txt": "6ad8e14b2e86610b6498d5dd01b751353795fd659797e82c3bfb00f6fdcbb3ce"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "bench100",
+      "profile": "c",
+      "unit_identity": "B-c",
+      "tag": "B-bench100-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 46,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=2880 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3000 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3120 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3240 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3360 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3480 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3600 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3720 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "f1351f24c450bbaea9d21abf454b6cf7d52a759a6899362488b852107009d3a3"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "fe325d08123abd519f0bb452439b8ce91272a75e85132777da32a17b3d4efc69"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "90f1613fd04163d8282886e4395171592d9eab95ca8211dd497babf2906ea945"
+          }
+        }
+      },
+      "elapsed_s": 41.4,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bench100-r1",
+      "digests": {
+        "current-gate-launch.json": "2d1e0014224742783a3831f8b0c4aceebf221da2c3c52a4967e665571d20b406",
+        "current-gate-result.json": "c2d04df1b9b07af8e3c688744b31041590102cfa6146dd6635fd837812aadbc6",
+        "run-result.json": "60eb073357232019b0a468dc7b50747186075313a0ba807c7eb3d7cdf6e64b28",
+        "bounded-launch.json": "0582735ceb7e098f3bdf234ef37da5819031fbd718f70c3857cdf554e9c40b9f",
+        "run-output.txt": "9711674b315b9d6240e4879d44a079fa38afb3eb24aec94dc76321c2d11018a5"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "bench101",
+      "profile": "c",
+      "unit_identity": "B-c",
+      "tag": "B-bench101-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 52,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3360 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3480 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3600 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3720 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3840 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3960 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "43b5eb93ab4ef8049321529e6286059073018c94a384661005f7238828fdbf00"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "07c67265fe821b274e056ef5da7dac1345fac28274f6589db4e6ff0b9044f20e"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "4c5f8b2a4b9dbaf036e71a57f23c9c88eb6c1dbffeb5d7224d27fbfe868f4d6c"
+          }
+        }
+      },
+      "elapsed_s": 41.3,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bench101-r1",
+      "digests": {
+        "current-gate-launch.json": "675d89f60668cb1707322aadba6eb5a59aaf9934d6211bb413515393b48b805e",
+        "current-gate-result.json": "7f78fe2bd36ecf8432073d41d984ebfb140539e7ad5f044b1fddadf06f1879b7",
+        "run-result.json": "1d41019833634878683eca6a127a52431dcf5f8fecd8984c28ca7a334e9bf65c",
+        "bounded-launch.json": "8f712c351c338ec5595c14ea224536357762db812ce88c676d1fcfd681e765ea",
+        "run-output.txt": "38d8f1faa4bc683deb6fcc8577ef1e7cbfc72a1e06ce1f13cde9f9c21addb9b3"
+      }
+    },
+    {
+      "arm": "B",
+      "gate": "bell",
+      "profile": "t",
+      "unit_identity": "B-t",
+      "tag": "B-bell-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "89c2ceafea5dc7b9bd1428dabf753c99ab8d278bba1ebf9263b471c72606f2c4",
+          "reference_log_sha256": "3e3b33c573336a18c99dad8225309846b429f3dd31d8113dad097d8d4eabef8e"
+        }
+      },
+      "elapsed_s": 39.7,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bell-r1",
+      "digests": {
+        "current-gate-launch.json": "2f257d1e910ea70e40952b2fcc80e0fd375ce272edaff12f6d4020f8d92f3433",
+        "current-gate-result.json": "832765ac00db2402479fab1fe5ab9beafa825e4872a1f1e7a1db1f8cf6745948",
+        "run-result.json": "9aff9e5bee02902d457102304d92b7f870f5b684be8cbad001707931e96341a9",
+        "bounded-launch.json": "827114129304d28ae5c2efa428478b79cc54b95da092babf75d17922a21848bd",
+        "run-output.txt": "b37f2567aa0c31bacd182601f004bec7d6ac87522eb555d0a67ecdc7fe81e159"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2866,
+        "window": [
+          0,
+          2865
+        ],
+        "informational_sq": {
+          "differ": 0,
+          "first": null
+        },
+        "json_sha256": "20c847595a25a6296e4e597db7bef77e5455f420a2c8e55c546c0fc3371461dd",
+        "text_sha256": "89c2ceafea5dc7b9bd1428dabf753c99ab8d278bba1ebf9263b471c72606f2c4"
+      },
+      "route_decisions_pass": true
+    },
+    {
+      "arm": "B",
+      "gate": "mendez",
+      "profile": "t",
+      "unit_identity": "B-t",
+      "tag": "B-mendez-r1",
+      "strict_pass": false,
+      "critical": [
+        "native UI: package rejected: open failed",
+        "native UI: upload FAILED vram=0"
+      ],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "97c6be551af5b2db13ee5261b9838496acecd893ec74bf69323282bec7162642",
+          "reference_log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103"
+        }
+      },
+      "elapsed_s": 44.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-mendez-r1",
+      "digests": {
+        "current-gate-launch.json": "41a45bd36a778414938c0b43b373a140ee2862833b8c27751edc6dd62be435c1",
+        "current-gate-result.json": "ecc15c8ed85905bf2f1c45ec8fa31e20924d48ef345bd1b8b28e0fadb406d79f",
+        "run-result.json": "ee39cf616961011d26889dce9daf3c8c46f966f83f851484bd63f878352c558e",
+        "bounded-launch.json": "521195a214714bd061e9366adf5227df31d098afafbd82c3366f00291c42d43b",
+        "run-output.txt": "29245bc9e1491af3fde55a538544b70f42ce58decc728ea377c10d4c9438aa05"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2652,
+        "window": [
+          0,
+          2651
+        ],
+        "informational_sq": {
+          "differ": 41,
+          "first": 822
+        },
+        "json_sha256": "cddbc51aace146048d68437022617a8bc75b2194e5f21cd9889f90c754322d9e",
+        "text_sha256": "97c6be551af5b2db13ee5261b9838496acecd893ec74bf69323282bec7162642"
+      },
+      "route_decisions_pass": true,
+      "same_missing_pair_as_proved_R_reference": true,
+      "known_control_gap": true
+    },
+    {
+      "arm": "L",
+      "gate": "h2",
+      "profile": "g",
+      "unit_identity": "L-g",
+      "tag": "L-h2-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "full340": true,
+        "heap_before": 89824,
+        "matching_arena_return_restored": true
+      },
+      "elapsed_s": 33.6,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-h2-root-r1",
+      "digests": {
+        "current-gate-launch.json": "459a46ad8cac5a875a6995f82edfc5ab23af5c32879e6372dfc6f27bb7100b21",
+        "current-gate-result.json": "195eb0e552eea28fd07835d8daff87f85bd3d6faa98294ae7de93d3683894880",
+        "run-result.json": "f5f8b1ba709a61c9a4330ac5a464e134c97901c7b1747a4b193923e1affdde93",
+        "bounded-launch.json": "201253a90c4a79dee18e38c2c49b2ecac698251e7e3823e926640bc4a41cdb11",
+        "run-output.txt": "854fd8193f5bbcdb39b6e6c7edf3001cf2a888decbdced11f0fc551567905a74"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "kos0",
+      "profile": "c",
+      "unit_identity": "L-c",
+      "tag": "L-kos0-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "0"
+          ]
+        ],
+        "min_headroom": 5344,
+        "alert_reached": true
+      },
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-kos0-root-r1",
+      "digests": {
+        "current-gate-launch.json": "44b441a68f796213a980b5221b53338c72ef973eb7f6d0fb4208b9e6eeda9c75",
+        "current-gate-result.json": "37d1c11d0e7970bdddf450f19075ccd85d00ab47dd58e7f1be9993d11459c6f5",
+        "run-result.json": "45ccf5dc186dcb8246cef3b47daacb66bf5df6b21a57d3dbfc76494f0c63a2aa",
+        "bounded-launch.json": "9ec71f3b5a454c58354c1defd327c915f31671a0721862432cc8d9ac9e53f1c2",
+        "run-output.txt": "d549d0d58135553e5ea686e4b4dd6ab92d8a3d2074eae0e3bdb73abad4ae3cb1"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "kos1",
+      "profile": "c",
+      "unit_identity": "L-c",
+      "tag": "L-kos1-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "1"
+          ]
+        ],
+        "min_headroom": 5256,
+        "alert_reached": true
+      },
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-kos1-root-r1",
+      "digests": {
+        "current-gate-launch.json": "b67bed9362f6925566dedf65b0d527b14e9351b1c60d9c48bd2f2a5478bf01e7",
+        "current-gate-result.json": "5d13691195fe17d632a9ac353520bbeb80b97ac7db8c62174621aa88f55c9cb4",
+        "run-result.json": "9172e61dee574f3f131e103e0c3e7255890d7e1ddc30d4dac016cd1c282a5d2a",
+        "bounded-launch.json": "a9cf05b5f9336e3e12cd315500cc74421f07318866a00f5cbc03a1a26d1acdad",
+        "run-output.txt": "397c8afe093ec6c02ba4b474de0118f4234ec1ca7f9c5151604fc8ca5e537a6e"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "gd1",
+      "profile": "g",
+      "unit_identity": "L-g",
+      "tag": "L-gd1-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "room103": true,
+        "bad_read": false,
+        "profile_gdemu_observed": true,
+        "emu_env": {
+          "RE4DC_GD_JITTER": "20000",
+          "RE4DC_GD_PROFILE": "gdemu",
+          "RE4DC_GD_SEED": "1"
+        }
+      },
+      "elapsed_s": 16.4,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-gd1-root-r1",
+      "digests": {
+        "current-gate-launch.json": "8b89e5e9dc7c6bb7c49254e0f2a07bfb2a31f692c0213d126d82b7a2c99e1645",
+        "current-gate-result.json": "087a2bd030fed83cc015ccc4a74beadc0a2133ac917b4b92f05a7f7114f332ba",
+        "run-result.json": "4d79bc75432acb3b09c4f46cd677c8319f289ee101e57ab4a904478884aa9ca9",
+        "bounded-launch.json": "30535d970a4bbbaabd44826a7dd3ef9cc78d8586758a74a085f4e652dbc200ab",
+        "run-output.txt": "4507244a80d848ab91dc70d6fae5099ade976ad565c4f4fa1bd415fbc4f9debf"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "bench100",
+      "profile": "c",
+      "unit_identity": "L-c",
+      "tag": "L-bench100-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 60,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3960 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4320 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4440 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4560 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4680 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4800 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "340629887c2b055cf31d824d41ade5497c72b5d1b620323687cf762ae4b2b9ab"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "17dc836fa4f1cd61768f556a1669047d9e1389f666e6365b7daead9d107ca3f4"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "46b089fd209438ed4a700f734c3b0d5b082f6027d23394841b91f30985d1d1a8"
+          }
+        }
+      },
+      "elapsed_s": 41.3,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-bench100-root-r1",
+      "digests": {
+        "current-gate-launch.json": "24cdd1410d8dddc0e557fe8deebff4350725f5315912e0ff75584ec516e3cedc",
+        "current-gate-result.json": "2472dbac3e91076b3aaf4661659e2ade2c23ba225f185349d429c834c0102e88",
+        "run-result.json": "6320b4be76567a32b8b582079383496d5f1f4ac1cd9d0ddf1f1679cbe99badea",
+        "bounded-launch.json": "398b5fcd89de492387a65f25991a87d14abc36a2a13b73b5aa609fe5b254cd50",
+        "run-output.txt": "0d7487a943d790a55e66f7c05302fc02ca6ecd9a1d24759fc954288079a8ebbd"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "bench101",
+      "profile": "c",
+      "unit_identity": "L-c",
+      "tag": "L-bench101-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 56,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3720 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3840 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3960 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4320 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4440 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4560 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "5f8fe155bd9c6c82431aed87769e9fb63c474dd446c33b052681b793203a9f71"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "7312db3ef9344c048c6a31204f07d38330e9c67ee1bf077bd59b3ad309cc383b"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "321e6391ac0c3a25de8d0500fbd5a4dbce5a711afe05f76a6b002c1167aba3e4"
+          }
+        }
+      },
+      "elapsed_s": 41.3,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-bench101-root-r1",
+      "digests": {
+        "current-gate-launch.json": "dad68f624fd1a6edb826899fef7031ba91e0d1d15dbd489015a3d0d15e0f0492",
+        "current-gate-result.json": "26d4541807b7f9577fbcfb7521787663811940de57806e82298efa70146373b7",
+        "run-result.json": "009d7bf42e6a9154e84bd8641429dff2209478f16a617d9e859e769cf94a4e62",
+        "bounded-launch.json": "16a57e16006654e752b48867f608da84e10fe5d8ba2aa10bc5de1ab4ecff4fdc",
+        "run-output.txt": "675e21c2bc9a06b1d04f5980ab248b72b463351986379fa796b5bb8c87093b09"
+      }
+    },
+    {
+      "arm": "L",
+      "gate": "bell",
+      "profile": "t",
+      "unit_identity": "L-t",
+      "tag": "L-bell-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "9397fe7ae62b8278e87e652af6da3f5132ba1b569884ebbc196d07e1cf902b34",
+          "reference_log_sha256": "3e3b33c573336a18c99dad8225309846b429f3dd31d8113dad097d8d4eabef8e"
+        }
+      },
+      "elapsed_s": 40.8,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-bell-r1",
+      "digests": {
+        "current-gate-launch.json": "a0915b9b04e9efab1ffba4e108d3e19cc9a8d7a6a397eea6d6eff4389b80a69e",
+        "current-gate-result.json": "e60667632cadb5b92769a859e4e899610a5189ec4fac80753b3a35da9483690e",
+        "run-result.json": "6d2ccf3fb0a9dbea4df072c5856dc00a4666260c17919420fecfeb20f709a745",
+        "bounded-launch.json": "5e72399f0ca9785b8197b7553cb155a7c86d813685896f6d778d2b7bfc2d6833",
+        "run-output.txt": "f06f0c80ff530cbec7e86d3ca746e2d8e616e2994856aedd40cca5a190e89fab"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2866,
+        "window": [
+          0,
+          2865
+        ],
+        "informational_sq": {
+          "differ": 1,
+          "first": 2548
+        },
+        "json_sha256": "f6b5426111b6bfa3caec2205a434c8a21a864681980e61d5f0555f4cae3bf0af",
+        "text_sha256": "9397fe7ae62b8278e87e652af6da3f5132ba1b569884ebbc196d07e1cf902b34"
+      },
+      "route_decisions_pass": true
+    },
+    {
+      "arm": "L",
+      "gate": "mendez",
+      "profile": "t",
+      "unit_identity": "L-t",
+      "tag": "L-mendez-r1",
+      "strict_pass": false,
+      "critical": [
+        "native UI: package rejected: open failed",
+        "native UI: upload FAILED vram=0"
+      ],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "d552b1fccbec242f525f88d78aec31495acd3eeb6afa9dabf9887772302f2d2b",
+          "reference_log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103"
+        }
+      },
+      "elapsed_s": 46.2,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\L-mendez-r1",
+      "digests": {
+        "current-gate-launch.json": "8aa7c1b1473b3504d30bd5f7ee3496771b853abdaaeb45ccea6bc0a9aba7bfe7",
+        "current-gate-result.json": "25db1ef132ce0f64cc25b1072a239e83d4eee0bff5ec37e436b1e911314e162c",
+        "run-result.json": "5c79e12ff5e6d2d9a96f67703162e5cd109c906d1aef3e8a108550c442940782",
+        "bounded-launch.json": "246a34080709fbf766fa6c53fdfb1d9691b62e6764396f91eba6b8496aa66398",
+        "run-output.txt": "3ba530458134811a61d955f28de1624b13f9b08828fcb37027f65af77b3e5e19"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2638,
+        "window": [
+          0,
+          2637
+        ],
+        "informational_sq": {
+          "differ": 51,
+          "first": 822
+        },
+        "json_sha256": "5c5381a653fd921c6d9c7ece6ecdfb973854d409fb236a97341a1045af0f4538",
+        "text_sha256": "d552b1fccbec242f525f88d78aec31495acd3eeb6afa9dabf9887772302f2d2b"
+      },
+      "route_decisions_pass": true,
+      "same_missing_pair_as_proved_R_reference": true,
+      "known_control_gap": true
+    },
+    {
+      "arm": "E",
+      "gate": "h2",
+      "profile": "g",
+      "unit_identity": "E-g",
+      "tag": "E-h2-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "full340": true,
+        "heap_before": 93920,
+        "matching_arena_return_restored": true
+      },
+      "elapsed_s": 33.6,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-h2-root-r1",
+      "digests": {
+        "current-gate-launch.json": "b3f64d2f4a8e700ffddbab92826b796049e13eb8781a5e1ef1aaa4950b5c59ec",
+        "current-gate-result.json": "01fa85b15bb926bcf7ebfdce7763c9876e2ea8533afab5b6b35479b6b032903b",
+        "run-result.json": "75e131ea97eb525f1643512d371a1806ef303015346aea19cc00e35a602190e7",
+        "bounded-launch.json": "ae7662edfd123804ea094b5f0b3cb8dde77917a97fa77f86c558e2b284f79712",
+        "run-output.txt": "05f6374fbfde881c7ac08146331677b36900068052a7dfc33ed73ba7513cc486"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "kos0",
+      "profile": "c",
+      "unit_identity": "E-c",
+      "tag": "E-kos0-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "0"
+          ]
+        ],
+        "min_headroom": 6144,
+        "alert_reached": true
+      },
+      "elapsed_s": 46.0,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-kos0-root-r1",
+      "digests": {
+        "current-gate-launch.json": "3554eb89bed87fe20be895a163a2d71a6cfdc450c631bd2db4f80d248f4ee09e",
+        "current-gate-result.json": "5883c5af3074b69775f2e1e911d45c77494dce76421ec779a2529d1c8dc3c607",
+        "run-result.json": "839ecf33f1c2623ec5c083a77387bd272fa64788971bb92d6f0013577030b433",
+        "bounded-launch.json": "51c969ba6ac92e1c439163ece846579cdb87978fa65d24c8c37330b2b7127f9f",
+        "run-output.txt": "6a950e198d3fa4688fae23c33206001cd5b3a0268c31f866058db352276ce93d"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "kos1",
+      "profile": "c",
+      "unit_identity": "E-c",
+      "tag": "E-kos1-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "1"
+          ]
+        ],
+        "min_headroom": 6048,
+        "alert_reached": true
+      },
+      "elapsed_s": 45.9,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-kos1-root-r1",
+      "digests": {
+        "current-gate-launch.json": "a61aea13caffe2267d3ec282b875ded530c3ec96b77222fe960bca6ae148c3b5",
+        "current-gate-result.json": "c8cbdcfdd8e9f6a140506de4411241989bc4110d5b3ca3e7b2f619edb4b82be2",
+        "run-result.json": "9bec86b2220e15fa08d8b9b389a833f666539d2f169fb8d36c04ce625c23720c",
+        "bounded-launch.json": "c6a7a721faf3a1de7683ce0bd0394ade2014ede97d11e6abebcea2e7251fdcbf",
+        "run-output.txt": "e59dd4d15b01bef380abc6caf2eb87968e390e4fcc86fba3ac63898b11ebda5c"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "gd1",
+      "profile": "g",
+      "unit_identity": "E-g",
+      "tag": "E-gd1-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "room103": true,
+        "bad_read": false,
+        "profile_gdemu_observed": true,
+        "emu_env": {
+          "RE4DC_GD_JITTER": "20000",
+          "RE4DC_GD_PROFILE": "gdemu",
+          "RE4DC_GD_SEED": "1"
+        }
+      },
+      "elapsed_s": 17.4,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-gd1-root-r1",
+      "digests": {
+        "current-gate-launch.json": "9746453473419f244d51b7ba274010127cfb2cbb2aabf76813d23359b0fb39e6",
+        "current-gate-result.json": "a56186fd9cdd4d376d509545f2ef2baff9a7b54eb27d38d38404ce0e6f05ef83",
+        "run-result.json": "d3f084afb3c3ec94a1256120fe9da2efe0eb36adf583ac9ff20a3fa0354197d8",
+        "bounded-launch.json": "d7790050aa8c8f5f9441b72b398e4a8b61074e11e7d02836398251b08e035a3f",
+        "run-output.txt": "c932cea0a182a59faf9a6032b90cfeb0a7b207bb8f427c5b9e3d5062e6c1b5bc"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "bench100",
+      "profile": "c",
+      "unit_identity": "E-c",
+      "tag": "E-bench100-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 58,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3720 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3840 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3960 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4320 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4440 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4560 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "6cc06af5830434b4e96a722aa18c424bd480ce352ec96b9e8101023abb06e2a4"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "782501ec54df3885c478f1f0c656241007051fba2da0d9cf2ed9da8ebba839cb"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "2cf14d6a897a7b020f244c641cf29fc89ee47c76bd3be5e3e42737ea94f1fcf8"
+          }
+        }
+      },
+      "elapsed_s": 41.3,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-bench100-root-r1",
+      "digests": {
+        "current-gate-launch.json": "1dbde660ffdff607903e82018c445953cde5df2577c6fddbfffcab099e69b9b7",
+        "current-gate-result.json": "4faa300ba7fc7506462b714eb1be3f5e56515cc44aa65757ecc33554a528a7a7",
+        "run-result.json": "5fa63367ec8b2cc5973641abc683a2cb615467528970b0edc8049f4a5dcbdf10",
+        "bounded-launch.json": "ac76a92355d5f3a55d2bfbbc7c2b869496ec5b6dfa3bab622d002923f54effdd",
+        "run-output.txt": "032b87781ed85e549efd19fa247e3191e96047a1ab3e0d793941aac3ff09244a"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "bench101",
+      "profile": "c",
+      "unit_identity": "E-c",
+      "tag": "E-bench101-root-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 58,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3840 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3960 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4320 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4440 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4560 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4680 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "b9a068a87e5266d27cd44e3dc36238be0a74aaa3a5a285c003bc3910fa17ff78"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "3f882526d95794a2e563250005b66c483b36dcc89e89ff7e5c6278759d91b809"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "d822db6d9372e250129f24e3e84041be78463556dce238e8aa6e8ca9f0cb6e18"
+          }
+        }
+      },
+      "elapsed_s": 41.2,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-bench101-root-r1",
+      "digests": {
+        "current-gate-launch.json": "0448ee7f7372afdfc0a0c998c68698e6ab332a67cfab26a3421840d004060434",
+        "current-gate-result.json": "d2faa2318f26b2c58bea4a42722832d2d96cfc96ea672d07a6e4acd678105dbb",
+        "run-result.json": "bdb4b262b1d6e09fa0e1d15772fefc9f6aa333ab358805188a30c1ddbad750b3",
+        "bounded-launch.json": "db90f6fac28ff9c96f9f8ed77e50c53d14aa759e4af7d5788ec9f22c703cc6e7",
+        "run-output.txt": "a9705573b38cc917e9fee1811af47da8f6b17d2ac75e057ae60b0cbade5bc0e2"
+      }
+    },
+    {
+      "arm": "E",
+      "gate": "bell",
+      "profile": "t",
+      "unit_identity": "E-t",
+      "tag": "E-bell-r1",
+      "strict_pass": true,
+      "critical": [],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "40ca287bb456343c04673f800abc3cafbc05b9b2017c3d2b2070b5b86b6ba1a9",
+          "reference_log_sha256": "3e3b33c573336a18c99dad8225309846b429f3dd31d8113dad097d8d4eabef8e"
+        }
+      },
+      "elapsed_s": 39.2,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-bell-r1",
+      "digests": {
+        "current-gate-launch.json": "a3363e0f40fab88fca7ea8957c6f13709807c870a32bf9a607bca32fc0be2247",
+        "current-gate-result.json": "e78981010eb5444a7fc8004253cb6540cd5eae4d2f1f3c8b7c9dfcc69cadc00c",
+        "run-result.json": "a95fb48ef7f131af91509c6415eeacb27da5c161f2b1b3a6444f252a2ca5b172",
+        "bounded-launch.json": "1b1d6a931456987bfd20c559ba4a02c9fb5beb1c1955a6d0b819414d9a7eac48",
+        "run-output.txt": "acb792a193517b883bca399c72f949a74919de0f53957919cd41e3c8be7c7394"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2866,
+        "window": [
+          0,
+          2865
+        ],
+        "informational_sq": {
+          "differ": 0,
+          "first": null
+        },
+        "json_sha256": "ba78cdbd916c327f3e05a62f4a48079db32b73bc1ce14ef0b28d8c2a0f8324be",
+        "text_sha256": "40ca287bb456343c04673f800abc3cafbc05b9b2017c3d2b2070b5b86b6ba1a9"
+      },
+      "route_decisions_pass": true
+    },
+    {
+      "arm": "E",
+      "gate": "mendez",
+      "profile": "t",
+      "unit_identity": "E-t",
+      "tag": "E-mendez-r1",
+      "strict_pass": false,
+      "critical": [
+        "native UI: package rejected: open failed",
+        "native UI: upload FAILED vram=0"
+      ],
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "c7166f2e43f8a73d2256ffedaafa4b403fbbfaf1769e43ce774d58593dfc7c1d",
+          "reference_log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103"
+        }
+      },
+      "elapsed_s": 42.7,
+      "deadline_fired": false,
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\E-mendez-r1",
+      "digests": {
+        "current-gate-launch.json": "ada1eedd93ac6db18b2245dc5e04af81b1fa623f163093e37352d594adc899ff",
+        "current-gate-result.json": "bf39dd1c15ecd9b2fcf40f380b0f0d6113b7ae1e56d782a78c64bdb12dd6ff65",
+        "run-result.json": "82a5071ed4170d1244a9d37db0de5e6db7d4dd40b0ef27b3354a50652d5b9f54",
+        "bounded-launch.json": "4669e728c877ae09665cecd8b0ed975bb4de739a0f3751dd8feb9196b977de52",
+        "run-output.txt": "d9d87d55339e1badba8b39bd2c22147d093cb563826f07be0359058a9734851e"
+      },
+      "decision_comparison": {
+        "rc": 0,
+        "compared": 2681,
+        "window": [
+          0,
+          2680
+        ],
+        "informational_sq": {
+          "differ": 38,
+          "first": 930
+        },
+        "json_sha256": "8d9abc05ddfa10da5722d4859e4f1cf8db4a5cbc85de7abe74f2d0c8864ac722",
+        "text_sha256": "c7166f2e43f8a73d2256ffedaafa4b403fbbfaf1769e43ce774d58593dfc7c1d"
+      },
+      "route_decisions_pass": true,
+      "same_missing_pair_as_proved_R_reference": true,
+      "known_control_gap": true
+    }
+  ],
+  "unique_programme_profile_identities": {
+    "B-g": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "B",
+      "profile": "g",
+      "output": "/root/probe/lanes/route/out-fpwe23B49adgW",
+      "programme": {
+        "elf": {
+          "sha256": "60d0af6ae01a376c6828081040001224aa61b30dbb6dae38f901191bd7bd1db1",
+          "size": 28752584
+        },
+        "main": {
+          "sha256": "03bbfd28365bf837bd48d6f8ed869b5de70ae05fb0963ac18848bf9e5aa34fa4",
+          "size": 3405092
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "8dd540931445fa1c347056cfd3bc0a7775cf986689a0269a970267d16856ce4d",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "bef05e5df3e555123ff34b43d4399f577aa3359c1dde218c0c34f6ea170f6af4",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "1cb6ad0b1864a1bfed86c3cc37949574330b743ac87e53ff92e6d5512d9242d1",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "4c497567345a9961de61dbd9eb5f94417021e2f77025b5c5242d7646a4ee8ad2",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "ed92f906ed83a6c3217075399069a8a5e84bff421c10c66a826f9d820d25381f",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "f5e9203c757fcb0317baaeda4d6daa54464763a7e25b726cabdf75c945dd3621",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "b191ee72b191d682f0094379a6403267f038d803f48eb0aa407fea37a2e9a15e",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "e9aff9e3405e1de8c9e7ae32a591d8c92573a74fbc696bcb8e32ea3cdef3ce4f",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "b302208e28e2083d600555afe3ea2a0eb9a5c5a9fa82f9eac5081d99b62d9e9d",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "e777f7830b91ff814942530e8ba61f73cc19e32e3d64ac64c2bfb49431f6c4d1",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "d96948ffd9e61c09717a3a810be4b8ce7bf7ac234dddc880fe67714d443d5de8",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "dd746a677975479d83f9654a926ce746ad509e661217113697720bc89a08c158",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "ed2bdbc3b8dfe0538e2552a547da79be4d64c4bcbb6ce777d940e7ae5f55db23",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "ca6bf7bc8a7c0ff334a3b751fc34f26ce614334e0175305a762a7f5fe3402723",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3e9c80 0x3f9c84 0x3f9c80",
+      "resolved_knobs_sha256": "8e8458fd92be2527409b3318028162401206bcb4a1546723b29dac8095e492a5",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "a919520ce257fc34b4ebb341d4597a3b2e846f67a557541f0c7fe13043a5f4d5"
+    },
+    "B-c": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "B",
+      "profile": "c",
+      "output": "/root/probe/lanes/route/out-fpwe23B49adcW",
+      "programme": {
+        "elf": {
+          "sha256": "aa2566e285949a2058160022f75bb3d54f4d86777b496892ec860d8a11f12455",
+          "size": 28803168
+        },
+        "main": {
+          "sha256": "0357b3e2ff3692d8f611fbef77b8eadb2d330b09216db872a2b6868f2ddbe248",
+          "size": 3431876
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "4d2e7d65795f19066e4b020d28450a5befaed8069ac47ab3fcda793ba1eb881e",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "27e98cad69615e74bb081e93a43fd90d09114f2e27b6a706d912ed78af4a67b4",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "8aae30059f4bf0df74da77fa8d03bc9425fd9ee947e6d11ec051c09bd6d57857",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "14f0f6f968e51d5a3839e23a0ce92b75001a0a178248c53458388c209c4b2018",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "03a1e884905b6050e7923ec3a84723d07c1fc2ecdcffea62d569b000371c5c81",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "b7114c734fda0b57e3b103a775dbe37650f06a591f8acd546a927386b6608b46",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "398bae71a96f8c8d066e1f0d2f9a429324e61195ceb6def944dfa483214aef2c",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "fd15845438dc5966112e98aef13be23978a75c97c4c32310d0bbfd3d4777661d",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "1b750f8cb35b0be42e46fcd598590788c303be54d62a96570254660defedd9a1",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "4af2db28f5f28f533eb4c03b350d7c56356a8d1308e447b564aac5e35a366544",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "02dc8eae214c4cd8b8c8ee8d81a8e5b774ee6e6cf176e0e0a66f9285268bd692",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "2b8543938758d94436bbf8a47d85539dc79d6ab09c7042bd4ca234ab9f6fdcec",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "f3060568c4858ec6ab04753bf8b72cd5699931ce7eb611b0f8afbe986828d6f9",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "3cc136a01e18ed58e75ec192ad5f6f25660537eb368b55a2913c85480c90885c",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3f0520 0x400524 0x400520",
+      "resolved_knobs_sha256": "b8c9051b25ce27c04c257d54fb03fb31ff15732b6e639512f5e6c9cfa67fdd67",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "a919520ce257fc34b4ebb341d4597a3b2e846f67a557541f0c7fe13043a5f4d5"
+    },
+    "B-t": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "B",
+      "profile": "t",
+      "output": "/root/probe/lanes/route/out-we23B49adrT",
+      "programme": {
+        "elf": {
+          "sha256": "da9d6a2ab97bc0850e25b3ee3c3cd27d7f69ed24a39f824211033705cb5e1965",
+          "size": 28800320
+        },
+        "main": {
+          "sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+          "size": 3407568
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "204d5b33f7cdb0b99902180fcfee514527de8e94f83db0d1f3cba2e8331f2e45",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "4a0697d6e9719a0eed7c94e1fe87fc413277f0ed9c76d0915fe301a6e3395001",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "33d32ef714a89ce8420a597a8b85020f375b64955fcb9dfa6b46eab8fade3f72",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "0cb973d7d04b6cbaff486c0cebd5169201a11715917e88fe2a34e50fba7177c9",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "9ad7416905c420b1aa164e48e6ae0345e9fa612390c5a8a269bfeba6af763448",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "f055d020744ec5873fd4ff504014fc7efa73139b3f7167a69e93f02629656ddb",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "331d44b00b195ac105a2fc27f945692e4a760e7e3e15dc2bb7f155598fcc40fd",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "e7ecbc88bbf6991431951b493978bd101559fa66a1ba3c22ff9b5f980bc7e1b5",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "2d50c1a20e89b093d2c8a07ad6802f6fe6fe44d9239048743ea51a60b20cbebb",
+            "size": 134404
+          },
+          "st1_0.ovl": {
+            "sha256": "d2fbedaefe3b0e08eafd19d9d2afb45b127320efefd9ad94e38d7513f25148ae",
+            "size": 36340
+          },
+          "st1_1.ovl": {
+            "sha256": "3a7e506a9913926e7f7721dc41a518713426b23f8830a5fe1ae4af495acf975c",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "320de3dabfbf18b8c5e62009a5fc699986f14ba8f1b2185f3ddc783b3ee3860e",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "577fca98aff03def36dd5fc540ef715e573c78b37fbc854715612205fc82b20f",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "3b18409446607dae5ad7ec2ee9ce3386d3f7f506a35a5360e461de570295a096",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3ea620 0x3fa624 0x3fa620",
+      "resolved_knobs_sha256": "4e5f7f77c8d7f0f506e7015ad90b2c5c0919592d53a4b2561adf9fb974600b34",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+    },
+    "L-g": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "L",
+      "profile": "g",
+      "output": "/root/probe/lanes/route/out-fpwe23L49adgW",
+      "programme": {
+        "elf": {
+          "sha256": "3eb261a5ed44b8799b3035c2d45ec514c92127a6141f06e9d7debc5d85c24c5a",
+          "size": 28744816
+        },
+        "main": {
+          "sha256": "e9890407e435e400aed9f715b441e176108f0786fb0b1514c21ad002e87acc61",
+          "size": 3404356
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "24041761f1f21f4409bd6e7dbc414da260d03f3a8d31ce0b152db2aed2345b45",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "ca2964c353ba5ac378273e5cb04c4a024b62cd5a935d270a7673ed694f8822e3",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "509a9368bc9446f6ebf0af846924a8d094e50afe4d08f1e44bfd93a2cf29df0b",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "d4d71812d54076e799c9441520f0e65b4b840d359f5995474bf9b941089580e6",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "ce09a0753c46d1052cfc1841f78718617bc65eb6874705112df3eb6090227bb7",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "d7c80d5870a40110a2f330fcacb16c37973f1c8ba193fd3a8ceea2d8d4f1ae36",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "23179bfe63db898be784a517b2ce4b25e6c3f040b02f07edfc4b4577fc847c10",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "4e100d05023820f6c45475f7f4406633ea963ed27a88623534b1b48e2e868608",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "844a345a179f4dc017df79c8c225ac9e6e1c3f157ed0f710f9f33fd86e8800ca",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "7ab66ea8670e76125b730bb5372e5fc4e218e23fd20a399da6e4c913b0d826ce",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "78c69b3353a8f38b16ba09d03c5e5034f37a3842c141aac5a7a770ab92254ad7",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "9f533ea41e95519c9169dac9c95d7b8c36b7eb1d51d9c5f53079f85a8e7e36d8",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "c4db4d3e81ce824873f048e56d6caa51d5c56eb6ae18b6b3798e7e2d88d3c239",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "fa9b502ee25689047d7595c9890962d795bd66b993e94ea66372c0ffc17a8719",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3e99a0 0x3f99a4 0x3f99a0",
+      "resolved_knobs_sha256": "32dabf828325495ae0f6848abf5c448ac0674ec6b4eff32343423c6e74d527ff",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae"
+    },
+    "L-c": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "L",
+      "profile": "c",
+      "output": "/root/probe/lanes/route/out-fpwe23L49adcW",
+      "programme": {
+        "elf": {
+          "sha256": "cd60a1671b795ea5df87994aa77b27b96eb54f5bdd3c02e9279a635df04168f5",
+          "size": 28795436
+        },
+        "main": {
+          "sha256": "87f46dc6f0e44407171c38e1071371ece3ec195a95fc8fbeef620322a845b85a",
+          "size": 3431172
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "ca970637e8d9479eaefe9b1f231f8337f7d4fa78cda26f66ad5e35848d7e28fb",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "634de9499356597eecb290d77394f8c71df18a1e4358344d13f00a300a5dff1e",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "8e6e6a336f0a44b85e205cc0539e007fdb562c3d942e18e3ee8ad5cbece30d1e",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "67fca1f548d4f86ac39675e6996e04a8d2153de1ab39e111dbbb16fbc56bcd57",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "74fc81fb8d2329c47c3aa6bd4b28c01ff27ac8410a470097d1fc0a292d1c341a",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "c1045e7c7f7a1940b72229fd88820bee77ad180089ae3137402a4f28d8026a22",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "dd387ec85a70f1225561dde6d6f7c1dd5800badc4f8031b882b2223eaebc65e7",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "da65aa50c3dada8f0b5c78254934457aebab479a1a75b1fdf05ab898980252de",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "b10ab25be8ecb6dabe253f35f9aac1cca8b61c7aa217e8b1487ffe7cba5965d1",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "7ff8bcd7445762f90e195b0a65ee5f16741f1e45a20e0019d92483fa0f44f3a8",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "4ca73c5174f2e594bea5c394a51bc69cfaca10901662f967f8c937913b941ddb",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "43ff37353406bff91e416896f6b72359be5d697bdf941f1a1a13d4c33eedbe47",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "d48de9d59d5bee1cb6bdb3dca97f7928718bb5c91db8adbd67976780538b4e4e",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "5f4ace015843727465c34301beeac5f23c5cc234a73f3c732e815a7af7fd92d2",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3f0260 0x400264 0x400260",
+      "resolved_knobs_sha256": "28a7b985b38d38e54b003a022061d7e73f7bb856e7e66c33bf043dcf8018764a",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae"
+    },
+    "L-t": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "L",
+      "profile": "t",
+      "output": "/root/probe/lanes/route/out-we23L49adrT",
+      "programme": {
+        "elf": {
+          "sha256": "b488dcfa89255d742e5a81b4dcc7a3cfcd0412a3ddcfd03d760c8ba6dbe50fb5",
+          "size": 28792584
+        },
+        "main": {
+          "sha256": "fe83f400bae55a547182c4184f72169656b3156d7ec07afdf169d8325206d632",
+          "size": 3406864
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "0ba1773b33b416779a1bf6649a6266bb6ac8f2795372455223dc60c5cfaab5ec",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "d7e151aee41cd38d36ce8541b6ea0b7f36c80d9eea9098d7831e5b483aae99d2",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "926ae450e3e503308b79fba2cd2a300c79951d1624d52ff40cf7a75f8dd1a142",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "577d285a95978d29d47ecfa969d34a771b5742499754fe1c904f9f02f3554fb4",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "e5611d39c2b6177e8648cac441bc89cc37ae1aa5e7329d948a0b3916c040c7a2",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "5d5a01c6cf876f398c9acc63553303b7e7918aa256d3362fb72391f288629b48",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "691f44c036fde50891fbeb60269039191644b5e5d60dedde02db9cf4e436808e",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "6a7bc787e1538c7abbd8017e1c76239737bab8fded87099cdb28b889a65e80d6",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "233114a65cfbb710573cad14cfbe26e2a6b704eb50f127208178e9f479ade088",
+            "size": 134404
+          },
+          "st1_0.ovl": {
+            "sha256": "523567c6e78d55a2c8652fddfba798b0fbdd4fd7e90f147cf6731f039b5f61fb",
+            "size": 36340
+          },
+          "st1_1.ovl": {
+            "sha256": "6691a89c03a1bb991105c4dd06bdd99d38500f9e7a022f1f610896a9872b8c88",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "ae37bd39d76893ab8f5088eb6378c877d60270484780905f3114ef8605c8f51b",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "fda259a9fe79e329f024e9bb0eac04b25d12906f8e5b9a8e093a26fca2316c90",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "c3c2ee9200595d4dfe541939ec6d71d0a6b0643c92d1a49f12a9275afa037360",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3ea360 0x3fa364 0x3fa360",
+      "resolved_knobs_sha256": "a351393ea430545dea1b63583ef2d2d6a4b3977bfdb8ba820d926b8b68ba1f63",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+    },
+    "E-g": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "E",
+      "profile": "g",
+      "output": "/root/probe/lanes/route/out-fpwe23E49adgW",
+      "programme": {
+        "elf": {
+          "sha256": "6b1335018bb35fba9062a1a549eba8730f0e7bf0c0a7b7483d9acb54351c6546",
+          "size": 28727976
+        },
+        "main": {
+          "sha256": "e26670f6a6edaa47aec4fb2eef1eb4c63f2114c8b2d7ca4adc7bda0229fd7feb",
+          "size": 3403268
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "cc6f1964b88ebe6f8eb2fba39e759063385fa6a2449f0f5664c385e5433c9b12",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "72da7c06e13760c2c68b5fa892625b179884fddd6dc3de364f954e4117f1ac9e",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "fc32976c79805de7ce40e3ba7360efe6eefb29bb0721d3e0439063199b11d09a",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "b025562edd94d5c25791a14d54da2373dedacba094c16f75d4b8e7574450020e",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "aa0302a21371a22abc1b68cc7ddd500a9b483b04e73d5f62d19ae23ea78f4141",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "37858d01756dec0eab6bab29e875cf5b8360b1aa4b45d0273b062ca77e9946a9",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "2cc86974b54f70c31442ae10c0c1214d1bf967a16e8cad0fec25dbab2be75398",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "efdd8922688f3d9778bd9d2161296ba8036e06df89281e0d48e04e515eb698bd",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "427ffdfa64c0d1ad46d1ba78e4c15c60953318d37982f847c1178b6eeafc2519",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "d4fec7f353a57c6080009188c62c9e23bdfbed045644e4ebddaf968fb351cf50",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "015142ac380951b8a561fb3f86297193f84a2684c8ab9628652ca458d68cc873",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "e5049f8bec82f223731cf1d4390cfab2513be2ead83f3f73985246eef9ad8c56",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "fc2ab6b5d59f1304f681dbc84b9b8f5ee7eb197b56935c93abc396d9772a58cb",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "9e44b9cef6fcdc9a9ed45686c589aa8795efc1ed2b61169a3c14a104be5469a7",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3e9560 0x3f9564 0x3f9560",
+      "resolved_knobs_sha256": "f45768e8f0dbf92b569475ff901239cd7f1a30236833da2675eb88af62d59a9a",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae"
+    },
+    "E-c": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "E",
+      "profile": "c",
+      "output": "/root/probe/lanes/route/out-fpwe23E49adcW",
+      "programme": {
+        "elf": {
+          "sha256": "33c0cb5a11da6529d6a4ca143986b8563ad55c4e72526c06c2b8c5a43ccebacd",
+          "size": 28778568
+        },
+        "main": {
+          "sha256": "b60071e6036c08ad2d14210c825ffd76e4fc18e93152eb1dcfc179ebe38b50e5",
+          "size": 3430052
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "f19aad3e1c50f76be1fc1ea250b273f61dc7d22c560bde9098d711ef75bd3d6a",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "cd3952b9af4c87811395452724eacef5c2adf3c48baf0bcb54b00a8f062d0d05",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "c0c14c6e80753912e3351b5771e9df243005c7a356e169e99b6d3d51304ab39f",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "06eba775e372659b4e219eaf9a76e4addae2f476808e090db7933b44cc7e677f",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "6471291c37cfb91670a809d622508d28edd337696670640210d4a9174886af0e",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "960a95251f03a877ef90f60f4f70d30d5c217df01f6f33a19a085942f1dd240c",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "efd050b00402d148bbf24f13867a0c073e7b395ff6897c1df4f3ba49b8641fc2",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "9f0eb7612609e207ad430034c2f4b3094b244b623241a18dacc5132c15c9926e",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "18be031ff6438045169a7c7c3cbe94696a9363e86063dac0ed853e92d9e4d797",
+            "size": 134372
+          },
+          "st1_0.ovl": {
+            "sha256": "6cff7f4e06fca4da8d4e15f0c7a61575fadb4954ab165d90e1389df73daeb8e1",
+            "size": 36228
+          },
+          "st1_1.ovl": {
+            "sha256": "3fe6dde5c2d2e9aae03766bbc42600b66d9d5151b1455dc943d700262210f0d8",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "9c3e235769685ff2559a0a66e47f06a07eed6aabacfda603e6ad23dc9be839cf",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "3eccaa002d6ebaa14c562571543e4004a4bb043602f6694188677881333091bc",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "92d0b452c8a3515bd85b5ab404aafc357233695ab7ae573aa91f4983cec4432d",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3efe00 0x3ffe04 0x3ffe00",
+      "resolved_knobs_sha256": "050225166879284feb04070ac6404197f145884d8158c5d8053457f06d6646c0",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae"
+    },
+    "E-t": {
+      "schema": 1,
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "arm": "E",
+      "profile": "t",
+      "output": "/root/probe/lanes/route/out-we23E49adrT",
+      "programme": {
+        "elf": {
+          "sha256": "b5cec20f405d39644010d937020bbc41e3add9ad370c3021eafff867f9c05378",
+          "size": 28775712
+        },
+        "main": {
+          "sha256": "21a9729c71ff2475feeb38781c287e18c100284447667e2683f907bc17400fb2",
+          "size": 3405744
+        },
+        "overlays": {
+          "em22.ovl": {
+            "sha256": "0b1f467f8db74e06bb71c797e5994e271c8f4977d873650b7eee860ea928aa6c",
+            "size": 27236
+          },
+          "em2b.ovl": {
+            "sha256": "bf217163a80c2ee407954764fcd40fca4c7db386816591fb8af1589382bd811a",
+            "size": 67900
+          },
+          "em2f.ovl": {
+            "sha256": "963d7e7a760b4b546652b60a60a83ea7f7e9f1459b1d880be0515ab1becf1880",
+            "size": 16800
+          },
+          "em35.ovl": {
+            "sha256": "e4a173876df1886075d263c9771d4cc1f6b2df3b64d9079215b97bcebbb9447d",
+            "size": 52392
+          },
+          "em3b.ovl": {
+            "sha256": "264ad200522499cdaf3ee91430e2b488ae5d9ee8e208f42793dae1acb2bed207",
+            "size": 7568
+          },
+          "pl0f.ovl": {
+            "sha256": "678026be7d675c6dc3a5432f17c2a44b135cdfaec4be81cd1b3c84652f4a88a5",
+            "size": 45608
+          },
+          "pl11.ovl": {
+            "sha256": "4ae87bf3a8c7c0218efe32027563c05d46fc225c99b3bf50717c8ab5cf18ae56",
+            "size": 35592
+          },
+          "pl14.ovl": {
+            "sha256": "25ede4b6c6009cdcfc9f4d6381a36cfb1fbb62cccac0c5dd1fb61105c5896f6f",
+            "size": 18832
+          },
+          "sscrn.ovl": {
+            "sha256": "c908d53eae3daef0e5a58c1b8fa2e5d172e7523fde51246ac008199dd8391758",
+            "size": 134404
+          },
+          "st1_0.ovl": {
+            "sha256": "9a595154e6c8577dc799f0e24ca27ba0f6815bd91e1b371dc43dd9d434302bef",
+            "size": 36340
+          },
+          "st1_1.ovl": {
+            "sha256": "e9754df88f238dd551969c4e90dcea19adbf5c1341ddbb5c61ec034d78f3c927",
+            "size": 81572
+          },
+          "st1_2.ovl": {
+            "sha256": "54f4a00040fb21d479aaa9287097fe37f3c74989b89accbe74cf9528342f8150",
+            "size": 50076
+          },
+          "st1_3.ovl": {
+            "sha256": "edd5e04f41d11e89aeef23de02ebf76d29ddd65d163b967a1587adad203d1c14",
+            "size": 88748
+          },
+          "st2_0.ovl": {
+            "sha256": "f13511b3d4b857e2c03d35bec4dd95bccf7eb6f5b2d3f1e602ab8de63f23c311",
+            "size": 96788
+          }
+        }
+      },
+      "syms": "0x3e9f00 0x3f9f04 0x3f9f00",
+      "resolved_knobs_sha256": "b351fa2625414aec34d19910f4db026b5aab5336b5058756afc695fcc51c2e90",
+      "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+      "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+      "release_manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "script_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb"
+    }
+  },
+  "shared_asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+  "R_control_reuse_proofs": {
+    "R-c-5e4d.json": {
+      "sha256": "59bb65ec17d20a8d9e2c614aef05fa29edcbe0f674fd63b6cc1bbf9991f506f2",
+      "scope": "Programme/main+all14overlay byte equivalence and staged baseline assets only; individual capture must still pass exact gate/run identities",
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "profile": "c",
+      "eligible": true
+    },
+    "R-g-5e4d.json": {
+      "sha256": "ce9d7f750c0f11a66dfaa5b0b14b391a51e5428f4a60ad6c595e950edb7ac856",
+      "scope": "Programme/main+all14overlay byte equivalence and staged baseline assets only; individual capture must still pass exact gate/run identities",
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "profile": "g",
+      "eligible": true
+    },
+    "R-t-5e4d.json": {
+      "sha256": "d198214b188665428221d5a402cf6f05e7c6c1a0c8bee3ec157866c38a2d94f4",
+      "scope": "Programme/main+all14overlay byte equivalence and staged baseline assets only; individual capture must still pass exact gate/run identities",
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "profile": "t",
+      "eligible": true
+    }
+  },
+  "root_helper_scope_delta": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\root-helper\\source-delta.json",
+    "sha256": "b54c9451f1e4e10dd0729afe12b49ccf6463ab6366561e3041200d6a1686d836",
+    "record": {
+      "original_sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb",
+      "root_copy_sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae",
+      "only_change": "owned serialization lock filename worker.lock to root-worker.lock",
+      "shared_limits_unchanged": "stat3 then trace16 then exact-owned55s console",
+      "scopes": "root L/E oneguest, seed worker B oneguest, Dedup oneguest"
+    }
+  },
+  "common_UI_gap": {
+    "reference": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\decisions-mendez-on-r1\\run-output.txt",
+    "reference_log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103",
+    "cases": [
+      {
+        "arm": "B",
+        "tag": "B-mendez-r1",
+        "same_missing_pair": true,
+        "strict_pass": false,
+        "route_decisions_pass": true,
+        "log_sha256": "29245bc9e1491af3fde55a538544b70f42ce58decc728ea377c10d4c9438aa05"
+      },
+      {
+        "arm": "L",
+        "tag": "L-mendez-r1",
+        "same_missing_pair": true,
+        "strict_pass": false,
+        "route_decisions_pass": true,
+        "log_sha256": "3ba530458134811a61d955f28de1624b13f9b08828fcb37027f65af77b3e5e19"
+      },
+      {
+        "arm": "E",
+        "tag": "E-mendez-r1",
+        "same_missing_pair": true,
+        "strict_pass": false,
+        "route_decisions_pass": true,
+        "log_sha256": "d9d87d55339e1badba8b39bd2c22147d093cb563826f07be0359058a9734851e"
+      }
+    ],
+    "disposition": "Strict failures preserved; root owns private PS2-source recovery and future post-repair gates. No exceptions/allowlists/retries/assets or recipe enable."
+  },
+  "bounds": "Each worker at most one child, sharedstat3/trace16/exact55console; this worker ran L/E traces serially after root g/c ended.",
+  "B_seal_sha256": "be0796160dec68387371f0a8f79a33662a3da032de7288ea9a3263fb9a0e0d43",
+  "aggregate_generator_sha256": "8593629fff7f08ef919f5805c702cafba3bc4404c728837aa527f74ca5dfc705"
+}

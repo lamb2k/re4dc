@@ -1,0 +1,9 @@
+{
+  "base": "a5e972e44096410253ad93164b84d92e3c22655a",
+  "source": "7a3af776ff8c14070f96272cd48074e5895d0490",
+  "census_source": "f2b290b285116d0a440aa4557a09acdd7a29c20e",
+  "branch": "wip/world-emit23-qualify-20261023",
+  "recipe_changed": false,
+  "cloud_queue_touched": false,
+  "audit_four_knobs": "current recipe remains all0"
+}

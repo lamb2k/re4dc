@@ -1,0 +1,13 @@
+import collections,hashlib,importlib.util,json,pathlib
+root=pathlib.Path('/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776')
+p=pathlib.Path('/root/work/lanes/world-emit23-target-R/port/dreamcast/tools/d367/world_emit23/census.py')
+s=importlib.util.spec_from_file_location('census',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+out={'source':'7a3af776ff8c14070f96272cd48074e5895d0490','parser_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'claim':'one actual complete selected queue frame per scene, before dedup; no accepted-corner count or saved-vertex/speed claim','scenes':{}}
+for scene,room in [('b1',0x101),('s2',0x100)]:
+ c=root/'runtime-support'/f'R-n-{scene}-q1';text=(c/'run-output.txt').read_text(errors='replace');r=m.parse(text,room);t=r['totals'];picks=t['plain']+t['indexed'];v=t['pv']+t['iv'];parts=[p for f in r['flushes'] for p in f['parts']]
+ launch=json.loads((c/'bounded-launch.json').read_text());result=json.loads((c/'run-result.json').read_text());assert not launch['deadline_fired'] and launch['guest_observed_elapsed_s']<=55 and result['status']=='RUN_COMPLETE' and not result['errors']
+ assert f'warp: start room={room:x} next_room={room:x} ' in text
+ assert 'quality: titleExit mode=standard source=default features=00000001 lod_px=5' in text
+ out['scenes'][scene]={'frame':r['frame'],'room':room,'picks':picks,'totals':t,'full_selected_vertices':v,'queue_parts':len(parts),'distinct_placement_part':len({(p['placement'],p['part']) for p in parts}),'zero_pick_parts':sum(p['picks']==0 for p in parts),'flush_count':len(r['flushes']),'per_flush':[{'pass':f['pass'],'flush':f['flush'],'parts':len(f['parts']),'picks':f['picks'],'counts':f['counts']} for f in r['flushes']],'fractions':{'indexed_picks':t['indexed']/picks,'indexed_full_vertices':t['iv']/v,'nr0_picks':t['zero']/picks,'whole_picks':t['whole']/picks,'partial_picks':t['partial']/picks,'indexed_nr0_of_indexed_picks':t['iz']/t['indexed'] if t['indexed'] else 0,'indexed_nr0_vertices_of_indexed_full':t['zv']/t['iv'] if t['iv'] else 0,'indexed_nr0_vertices_of_all_full':t['zv']/v,'transform_input_span_of_all_full':t['span']/v},'log_sha256':hashlib.sha256((c/'run-output.txt').read_bytes()).hexdigest(),'launch':launch}
+ print(scene,'parts',len(parts),'picks',picks,'vertices',v,'totals',t,'fractions',out['scenes'][scene]['fractions'])
+(root/'runtime-support'/'census-summary.json').write_text(json.dumps(out,indent=2)+'\n')

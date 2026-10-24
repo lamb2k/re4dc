@@ -1,0 +1,545 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "elf": "/root/probe/lanes/route/out-fpwe23R49adgW/re4dc-game.elf",
+  "elf_sha256": "9f41e9b398984b1c3cdbed6d6910b032746aa6badc76dcfeda0a1fa739250e5d",
+  "symbols": {
+    "profile": {
+      "address": 2353136524,
+      "size": 428,
+      "storage": "b",
+      "name": "(anonymous namespace)::completed_render_profile"
+    },
+    "completed": {
+      "address": 2353136952,
+      "size": 192,
+      "storage": "b",
+      "name": "(anonymous namespace)::completed_frame"
+    },
+    "source_begin": {
+      "address": 2353136412,
+      "size": 112,
+      "storage": "b",
+      "name": "(anonymous namespace)::render_source_begin"
+    },
+    "pG": {
+      "address": 2351638684,
+      "size": 4,
+      "storage": "D",
+      "name": "pG"
+    },
+    "pPL": {
+      "address": 2352361536,
+      "size": 4,
+      "storage": "B",
+      "name": "pPL"
+    },
+    "EmMgr": {
+      "address": 2352360696,
+      "size": 56,
+      "storage": "B",
+      "name": "EmMgr"
+    },
+    "ObjMgr": {
+      "address": 2352469376,
+      "size": 56,
+      "storage": "B",
+      "name": "ObjMgr"
+    },
+    "pvr": {
+      "address": 2353249824,
+      "size": 520,
+      "storage": "B",
+      "name": "pvr_state"
+    },
+    "pending": {
+      "address": 2351781892,
+      "size": 4,
+      "storage": "d",
+      "name": "pvr_pending_decision"
+    },
+    "flip": {
+      "address": 2353250344,
+      "size": 1,
+      "storage": "b",
+      "name": "pvr_flip_allowed"
+    },
+    "manual": {
+      "address": 2353250345,
+      "size": 1,
+      "storage": "b",
+      "name": "pvr_manual_flip"
+    },
+    "viewport": {
+      "address": 2351673616,
+      "size": 24,
+      "storage": "D",
+      "name": "re4dc_gxf_viewport"
+    },
+    "projection": {
+      "address": 2352763388,
+      "size": 28,
+      "storage": "B",
+      "name": "re4dc_gxf_projection"
+    },
+    "entries": {
+      "address": 2351679968,
+      "size": 100352,
+      "storage": "d",
+      "name": "(anonymous namespace)::entries"
+    },
+    "loads": {
+      "address": 2353137316,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::loads"
+    },
+    "submitted": {
+      "address": 2353135336,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::present_submitted"
+    },
+    "resolved": {
+      "address": 2353135332,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::present_resolved"
+    },
+    "failures": {
+      "address": 2353135328,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::present_failures"
+    },
+    "steady_q": {
+      "address": 2353234920,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::q_n"
+    },
+    "steady_watch": {
+      "address": 2353234912,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::watch"
+    },
+    "ui_frame": {
+      "address": 2353137404,
+      "size": 4,
+      "storage": "b",
+      "name": "(anonymous namespace)::frame"
+    },
+    "frame_ready": {
+      "address": 2353137309,
+      "size": 1,
+      "storage": "b",
+      "name": "(anonymous namespace)::frame_ready"
+    },
+    "stream_scene": {
+      "address": 2353135307,
+      "size": 1,
+      "storage": "b",
+      "name": "(anonymous namespace)::stream_scene"
+    }
+  },
+  "types": {
+    "Snapshot": {
+      "size": 428,
+      "members": {
+        "sequence": 0,
+        "frame": 4,
+        "clock_valid": 8,
+        "clock_reads": 12,
+        "stage_us": 16,
+        "calls": 88,
+        "metrics": 160,
+        "source": 316
+      }
+    },
+    "Source": {
+      "size": 112,
+      "members": {
+        "tick": 0,
+        "system": 4,
+        "stop": 8,
+        "room": 12,
+        "room_flags": 16,
+        "status": 32,
+        "player": 48,
+        "camera": 72,
+        "motion_frame": 104,
+        "motion_state": 108
+      }
+    },
+    "Re4dcNativeFrameStats": {
+      "size": 192,
+      "members": {
+        "sequence": 0,
+        "frame": 4,
+        "work": 8,
+        "pvr_calls": 128,
+        "pvr_bytes": 132,
+        "header_hits": 136,
+        "header_builds": 140,
+        "plan_used": 144,
+        "plan_capacity": 148,
+        "queue_peak": 152,
+        "queue_drops": 156,
+        "texture_vram": 160,
+        "texture_peak": 164,
+        "native_slab": 168,
+        "source_heap_free": 172,
+        "render_wall_us": 176,
+        "present_wait_us": 180,
+        "present_requested": 184,
+        "aborted": 188
+      }
+    },
+    "GlobalWork": {
+      "size": 34432,
+      "members": {
+        "dev_mode": 0,
+        "shooting_mode": 4,
+        "save_no": 5,
+        "pad_6": 6,
+        "CardStatus": 8,
+        "pad_C": 12,
+        "card_serial": 16,
+        "pFont": 24,
+        "IsMessageInit": 28,
+        "vtx_buf_no": 36,
+        "next_point": 42,
+        "pad_2B": 43,
+        "NextPos": 44,
+        "NextY": 56,
+        "pStFnt": 60,
+        "pRoom": 64,
+        "pWep": 68,
+        "pArc": 72,
+        "pOption": 76,
+        "pPlayer": 80,
+        "System_flg": 84,
+        "Disp_flg": 88,
+        "game_start_time": 92,
+        "Debug_flg": 96,
+        "mot_speed": 112,
+        "Cam": 116,
+        "pad_16C": 364,
+        "Stop_flg": 368,
+        "Room_flg": 372,
+        "gxStage": 388,
+        "mtxPalette": 400,
+        "pad_3010": 12304,
+        "prim_base": 20240,
+        "prim_rate": 20244,
+        "prim_cnt": 20248,
+        "nPrim": 20252,
+        "RoomMes": 20256,
+        "pCamCore": 20260,
+        "pCamRoom": 20264,
+        "Rtp": 20268,
+        "pEmi": 20272,
+        "pOsd": 20276,
+        "AreaNo": 20280,
+        "pad_4F39": 20281,
+        "bell_pos": 20284,
+        "bell_stat": 20296,
+        "pad_4F49": 20297,
+        "quake_ofs": 20336,
+        "weapon_no_old": 20348,
+        "door_no": 20349,
+        "cdown_add_sec": 20350,
+        "save_data_start_addr": 20352,
+        "point": 20356,
+        "Game_level": 20360,
+        "x4F89": 20361,
+        "chapter": 20362,
+        "pad_4F8B": 20363,
+        "save_cnt": 20364,
+        "game_cnt": 20366,
+        "r_continue_cnt": 20368,
+        "snd_tbl_no": 20370,
+        "language": 20371,
+        "play_time": 20372,
+        "peseta": 20376,
+        "Part_old": 20386,
+        "em_list_no": 20387,
+        "pl_life": 20388,
+        "pl_life_max": 20390,
+        "ashley_life": 20392,
+        "ashley_life_max": 20394,
+        "pad_4FAC": 20396,
+        "weapon_lv_speed": 20404,
+        "weapon_lv_blt": 20405,
+        "pad_4FB6": 20406,
+        "pad_4FBC": 20412,
+        "pl_flag": 20414,
+        "sub_pos": 20416,
+        "sub_angle": 20428,
+        "pad_4FD0": 20432,
+        "Status_flg": 20492,
+        "em_dead": 20508,
+        "item_flags": 20892,
+        "Item_find_flg": 20924,
+        "Scenario_flg": 20928,
+        "door_flags_51C8": 20936,
+        "door_flags_51CC": 20940,
+        "door_flags_51D0": 20944,
+        "pad_51D4": 20948,
+        "door_unlock": 20956,
+        "Frame_cnt": 20964,
+        "save_free_work": 20968,
+        "Em_list": 21224,
+        "item_save": 29416,
+        "ope_x82E8": 33512,
+        "ope_ow_type": 33516,
+        "pad_82ED": 33517,
+        "ope_mdt_bits": 33520,
+        "ope_x82FC": 33532,
+        "ope_mdt_no": 33536,
+        "pad_8304": 33540,
+        "peseta_bak": 33580,
+        "shootingScore": 33584,
+        "c_continue_cnt": 33592,
+        "g_continue_cnt": 33594,
+        "c_kill_cnt": 33596,
+        "g_kill_cnt": 33600,
+        "c_hit_cnt": 33604,
+        "g_hit_cnt": 33608,
+        "c_shot_cnt": 33612,
+        "g_shot_cnt": 33616,
+        "game_mode": 33620,
+        "pad_8355": 33621,
+        "SaveKind": 33624,
+        "pad_835C": 33628,
+        "debug_mode": 34424,
+        "debug_disp": 34425,
+        "pad_867A": 34426
+      }
+    },
+    "Camera": {
+      "size": 248,
+      "members": {
+        "mat": 0,
+        "v_mat": 48,
+        "pad_60": 96,
+        "ProjMat": 100,
+        "param": 164,
+        "up": 196,
+        "Look": 208,
+        "Right": 220,
+        "pad_E8": 232,
+        "dist": 244
+      }
+    },
+    "Entry": {
+      "size": 224,
+      "members": {
+        "package": 0,
+        "key": 64,
+        "frame": 72,
+        "valid": 76,
+        "model_header": 96,
+        "model_header_key": 128,
+        "ui_header": 160,
+        "ui_header_key": 192
+      }
+    },
+    "Package": {
+      "size": 64,
+      "members": {
+        "streamed_": 0,
+        "base_": 4,
+        "file_": 8,
+        "data_": 12,
+        "size_": 16,
+        "header_": 20,
+        "pvr_textures_": 24,
+        "owns_texture_": 28,
+        "metadata_": 32,
+        "metadata_bytes_": 36,
+        "released_bytes_": 40,
+        "payload_released_": 44,
+        "upload_complete_": 45,
+        "inject_failure_after_": 48,
+        "vram_bytes_": 52,
+        "shared_textures_": 56,
+        "error_": 60
+      }
+    },
+    "pvr_state_t": {
+      "size": 520,
+      "members": {
+        "valid": 0,
+        "lists_enabled": 4,
+        "list_reg_mask": 8,
+        "dma_mode": 12,
+        "opb_size": 16,
+        "ram_target": 36,
+        "ta_target": 40,
+        "view_target": 44,
+        "list_reg_open": 48,
+        "lists_closed": 52,
+        "lists_transferred": 56,
+        "lists_dmaed": 60,
+        "dma_lock": 64,
+        "ta_checked_ready": 72,
+        "ta_busy": 76,
+        "render_busy": 80,
+        "render_completed": 84,
+        "dma_buffers": 88,
+        "ta_buffers": 216,
+        "frame_buffers": 312,
+        "texture_base": 328,
+        "w": 332,
+        "h": 336,
+        "tw": 340,
+        "th": 344,
+        "tsize_const": 348,
+        "zclip": 352,
+        "pclip_left": 356,
+        "pclip_right": 360,
+        "pclip_top": 364,
+        "pclip_bottom": 368,
+        "pclip_x": 372,
+        "pclip_y": 376,
+        "bg_color": 380,
+        "frame_last_time": 384,
+        "buf_start_time": 392,
+        "reg_start_time": 400,
+        "rnd_start_time": 408,
+        "frame_last_len": 416,
+        "buf_last_len": 424,
+        "reg_last_len": 432,
+        "rnd_last_len": 440,
+        "vbl_count": 448,
+        "frame_count": 452,
+        "vtx_buf_used": 456,
+        "vtx_buf_used_max": 460,
+        "vbl_handle": 464,
+        "fsaa": 468,
+        "vbuf_doublebuf": 472,
+        "next_to_texture": 476,
+        "curr_to_texture": 477,
+        "was_to_texture": 478,
+        "to_txr_rp": 480,
+        "next_to_txr_rp": 484,
+        "to_txr_w": 488,
+        "to_txr_h": 492,
+        "to_txr_stride_px": 496,
+        "next_to_txr_w": 500,
+        "next_to_txr_h": 504,
+        "next_to_txr_stride_px": 508,
+        "to_txr_addr": 512,
+        "next_to_txr_addr": 516
+      }
+    },
+    "cUnit": {
+      "size": 12,
+      "members": {
+        "_vptr.cUnit": 0,
+        "be_flag": 4,
+        "pNext": 8
+      }
+    },
+    "cCoord": {
+      "size": 244,
+      "members": {
+        "mat": 12,
+        "l_mat": 60,
+        "pParent": 108,
+        "world": 112,
+        "world_old": 124,
+        "world_old2": 136,
+        "pos": 148,
+        "ang": 160,
+        "scale": 172,
+        "r_scale": 184,
+        "prevMat": 196
+      }
+    },
+    "cManager<cEm>": {
+      "size": 52,
+      "members": {
+        "_vptr.cManager": 0,
+        "pArray": 4,
+        "nArray": 8,
+        "size": 12,
+        "flag": 16,
+        "pAlive": 20,
+        "pAlivePush": 24,
+        "pArrayPush": 28,
+        "nArrayPush": 32,
+        "maxAlive": 36,
+        "name": 40,
+        "warnDiv": 44,
+        "funcTbl": 48
+      }
+    },
+    "cManager<cObj>": {
+      "size": 52,
+      "members": {
+        "_vptr.cManager": 0,
+        "pArray": 4,
+        "nArray": 8,
+        "size": 12,
+        "flag": 16,
+        "pAlive": 20,
+        "pAlivePush": 24,
+        "pArrayPush": 28,
+        "nArrayPush": 32,
+        "maxAlive": 36,
+        "name": 40,
+        "warnDiv": 44,
+        "funcTbl": 48
+      }
+    }
+  },
+  "source_pins": {
+    "/root/work/lanes/world-emit23-current-R/src/game/main.cpp": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+    "/root/work/lanes/world-emit23-current-R/src/game/main_sub.cpp": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+    "/root/work/lanes/world-emit23-current-R/src/game/game.cpp": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/dbgwarp_bridge.cpp": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/ui_bridge.cpp": "18132b707f732a006f49d296ea53549e9a62e0cd22a625e6226c8ed53a178e29",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/pace_present.cpp": "63a4700e89ab4e63d32453f09842660e277df3c37ea6c0fac4a959fe7f3219f7",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_ui.cpp": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_actor.hpp": "0f5a1c001c5edb53e4ce9fc9d4a6ffabc0b09ca62d2fe42b3b51559ffb871585",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_actor.cpp": "a81ec8cc86aff47798b15c5580813d3c505462610a66b8263109b3040154120a",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_actor_fast.cpp": "3771b1dfd9024768597b01fa593e480e89abd78423060d42e1b4c183a0384f65",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/res_mode.cpp": "e2ed14ded62370481b738e584a978fa26981341eda85820fa613c9c05794564f",
+    "/root/work/lanes/world-emit23-current-R/include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "/root/work/lanes/world-emit23-current-R/include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "/root/work/lanes/world-emit23-current-R/include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+  },
+  "kos_pins": {
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/pvr/pvr_irq.c": "600ea63e42487c146049cb61da284968fc3c17d064bc718ad9923c12fe495a9c",
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/pvr/pvr_internal.h": "6666cb2eb4f1510d0ee55fc656e6c1ba1dfa3a5380f86135a30bb3d7fccf873e"
+  },
+  "dwarf_receipts": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/dwarf-compact.json": "7ce63ee17c128a31eed1c58a109afc85db2fe3e17a0b3b2705a6b796c01429ec",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/layout-research.json": "27a3b004e6b854a0b32662a4577a4b798b618333c2cdd91f12cc1c9137a17742"
+  },
+  "phase_contract": {
+    "freeze_tick": 330,
+    "live_begin_source_tick": 329,
+    "last_completed_source_tick": 328,
+    "proof": "Render_before/Render -> Frame_cnt++ -> TaskScheduler(gameMainLoop freeze) -> Render_done -> Render_swap. Refuse different observed relationship."
+  },
+  "unproven_completed_bindings": [
+    "completed actor count/identity/pose roster (ACTOR_STATS_LEAN1/ACTOR_LOG0 synthesize actor counters as zero; aggregate work cannot prove actor0)",
+    "completed viewport/projection/jitter paired with source/frame (live GXF globals overwritten by next Render_before)",
+    "completed texture/upload owner table and presented-buffer generation tied to that completed UI frame"
+  ],
+  "backends": {
+    "owned": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0"
+    },
+    "decoder": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/capture_ui_vram.py",
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    }
+  }
+}

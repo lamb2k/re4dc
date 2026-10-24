@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "base_current": "d5c1ceab9e06461462669b3ce1d28a379747a74a",
+  "prior_audit_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+  "release_root": "/root/work/lanes/stat-bytes23-takeover-scratch/release",
+  "manifest_sha256": "a424cdc4f68460b0d5ea8f591c44c62eefeab85b67941410bc996680dce41547",
+  "ip_sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c",
+  "recipe_sha256": "92e2322daecde3e50699bd28303d177379418d8c3ba3b76ab7260836777ae898",
+  "tools": {
+    "fullplay/fp_master.sh": "f1f341e94c29d50f64afa229ce305d9a60f50f4eafb3c7d9fe9a9c06844e457f",
+    "fullplay/fp_iso.py": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da",
+    "fullplay/fp_run.py": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747",
+    "trace_lock.sh": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+    "cast_gc.py": "140467f292890bc97c3f2626a6c60f63bbc47dba84a0114173c0c33bfdf68e80",
+    "castgc/allow.tsv": "df903c4e3e3a2bd1f1e5b77b9fd5d30bb6cf702932421e661c1e809a3e16a62f",
+    "castgc/notdrawn-allow.tsv": "85191b6c633efc6afbc25c77ce1d6910f96a64b502e739684503dcc00eb29129",
+    "mcheck/leongc_check.py": "354b55c670780635cc76afb481cce280a0ab2ba8cb3d653bef90148cf1301672",
+    "texchk/texchk.sh": "e2a51f08889dfc3b89993d77920f949276333ef7184c26424ef0fe518f383882",
+    "texchk/texchk.py": "36739ee02153cc0db63a4e17cdfe2ef2fa30edd52cab7ecc65853a7aa756fa0a",
+    "fullplay/segments/h2-warp.txt": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012",
+    "fullplay/segments/h2-pad.txt": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1",
+    "fullplay/segments/kos-fight-warp.txt": "45e525314b01b79f33553ddd91c20ad4cdd01f3039dc6766974d9b0e8ee1b090",
+    "fullplay/segments/door103-warp.txt": "9bf780d92568da79d30faaed0fbae3689cc5108cb38d622d668e81169d20b46f",
+    "fullplay/segments/bell-trg-warp.txt": "70089822a9c1983e98cda8cee726d003d5dbfb4365e47740bd8e697134da3188"
+  },
+  "host_tools": {
+    "stat-guest-slot.sh": "452123f936d4764244244f17d51d22299fdbd17eb0aada1de1991a4782d74549",
+    "census-bound-run.py": "e3f31e4a797b934543ac9e598a0e6350965533bdfe12299771200d11f183629c"
+  },
+  "fixtures": {
+    "b1.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+    "s2.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+    "mendez-bounded-warp.txt": "3a2744d800341d2d539596e63dc39a061c5da4e6cf5bbeb47bfa469cafe8e41e",
+    "mendez-bounded-pad.txt": "d5f6af787212d6f242adf1e881c37768f5bfdd7b52245a405e3cbbb94af8fb58"
+  },
+  "decision_cmp_sha256": "883d8b137ff60dbf6ea59ac29458aa923fcd0cc41f25fce6a8c18ad7a85a43fb",
+  "console_executable_sha256": "8e6c49871013c25b1a1c77c789167e3aaed8193e828adb7e2bbce9248d2add4a",
+  "parent_stage_sha256": "13459d3522e80304664a01d5659e38ba923d7cd2b8824f0764a253229832c80a"
+}

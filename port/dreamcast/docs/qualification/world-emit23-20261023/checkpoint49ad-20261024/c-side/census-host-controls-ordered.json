@@ -1,0 +1,44 @@
+{
+  "base": "a5e972e44096410253ad93164b84d92e3c22655a",
+  "source_sha256": "e6ca3be0462af9ac8e200ffc97b28593d4b22a403931b1f6ccd4266406918af6",
+  "header_sha256": "76f1679eab457c01139707776a8bec483ed0b6be390cb1403563132b92b1cdb7",
+  "checks": {
+    "replay0-batch0-prefetch0": "PASS",
+    "replay0-batch0-prefetch1": "PASS",
+    "replay0-batch1-prefetch0": "PASS",
+    "replay0-batch1-prefetch1": "PASS",
+    "replay1-batch0-prefetch0": "PASS",
+    "replay1-batch0-prefetch1": "PASS",
+    "replay1-batch1-prefetch0": "PASS",
+    "replay1-batch1-prefetch1": "PASS",
+    "actual-log-parser-and-five-negatives": "PASS",
+    "protocol-flush-after-frame-end": "REJECTED",
+    "protocol-flush-wrong-active-pass": "REJECTED",
+    "protocol-reverse-complete-records": "REJECTED",
+    "protocol-future-threshold": "REJECTED",
+    "protocol-zero-threshold": "REJECTED",
+    "protocol-out-of-range-threshold": "REJECTED",
+    "protocol-global-flush-id-reuse": "REJECTED",
+    "protocol-global-flush-id-gap": "REJECTED",
+    "protocol-duplicate-begin": "REJECTED",
+    "protocol-record-after-frame-end": "REJECTED",
+    "protocol-counts-before-part": "REJECTED",
+    "protocol-flush-end-before-counts": "REJECTED",
+    "actual-log-valid-multipass": "PASS",
+    "mutation-log-before-batch-close": "REJECTED",
+    "off-source-directive-None": {
+      "sha256": "6d787d97ce8662f53dc25d1bac9032d512f976474699c4127b2ee0bc6faa8359",
+      "result": "IDENTICAL"
+    },
+    "off-source-directive-0": {
+      "sha256": "6d787d97ce8662f53dc25d1bac9032d512f976474699c4127b2ee0bc6faa8359",
+      "result": "IDENTICAL"
+    },
+    "make-default-absent-zero": "IDENTICAL",
+    "make-invalid-values-and-dependency": "REJECTED"
+  },
+  "limits": [
+    "host/extracted diagnostic integration only",
+    "no SDK, complete emitter FP, linked image, guest or target memory qualification"
+  ]
+}

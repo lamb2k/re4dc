@@ -1,0 +1,22 @@
+{
+  "whole-last-flush-missing": {
+    "accepted": false,
+    "error": "missing flush block"
+  },
+  "flush-after-frame-end": {
+    "accepted": false,
+    "error": "missing flush block"
+  },
+  "flush-attributed-to-wrong-active-pass": {
+    "accepted": false,
+    "error": "mismatched FLUSH_BEGIN scope"
+  },
+  "future-threshold": {
+    "accepted": false,
+    "error": "invalid capture threshold/frame"
+  },
+  "counts-reordered-before-part": {
+    "accepted": false,
+    "error": "expected BEGIN"
+  }
+}

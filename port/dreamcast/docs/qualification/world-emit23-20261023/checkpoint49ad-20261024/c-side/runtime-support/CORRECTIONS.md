@@ -1,0 +1,3 @@
+# Runtime-support corrections
+
+2026-10-23: The current49ad V1 freeze330 observer assumed contiguous actor-manager backing. Current ENEMY_DEMAND1/OBJECT_DEMAND1 use native sparse Pool64/slot-table storage, so V1 is unsupported and must not be run on that recipe. The correction is `current49ad-sparse-correction/CORRECTION.md`; V2 implements authenticated refusal before process access, not a sparse reader. Current native snapshot/capture support is none. Prior sealed V1 files/receipts and7a timing/census evidence remain preserved. Strict completed actor/viewport pixel qualification remains unsupported.

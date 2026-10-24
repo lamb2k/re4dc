@@ -1,0 +1,77 @@
+{
+  "scope": "read-only comparison; no retry or gate weakening",
+  "rows": [
+    {
+      "role": "current-B",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-mendez-r1",
+      "events": [
+        {
+          "line_number": 16468,
+          "line": "native UI: package rejected: open failed",
+          "context": [
+            "native UI: overlay slab taken: 256x256 need=18432 uses=1",
+            "native texture VQ: bytes=18432 raw16=131072 free_vram=62272 allocation_delta=4294961152",
+            "native UI: upload ok vram=18432",
+            "native UI: bounded upload heap=137728->137728 metadata=144 staging=shared-16384 source_allocation=0 kos=76224->76064",
+            "native UI: load /cd/dc/tex/7/7d4e1e92-052bdc2e.re4tex 128x128 fmt=14",
+            "native UI: package rejected: open failed",
+            "native UI: upload FAILED vram=0",
+            "native UI: bounded upload heap=137728->137728 metadata=0 staging=shared-16384 source_allocation=0 kos=76064->76064",
+            "native UI: pair missing 7d4e1e92-052bdc2e color=43aff05a-cfb2b1a5 mask=572a97ee-75aeb071 128x128"
+          ]
+        },
+        {
+          "line_number": 16469,
+          "line": "native UI: upload FAILED vram=0",
+          "context": [
+            "native texture VQ: bytes=18432 raw16=131072 free_vram=62272 allocation_delta=4294961152",
+            "native UI: upload ok vram=18432",
+            "native UI: bounded upload heap=137728->137728 metadata=144 staging=shared-16384 source_allocation=0 kos=76224->76064",
+            "native UI: load /cd/dc/tex/7/7d4e1e92-052bdc2e.re4tex 128x128 fmt=14",
+            "native UI: package rejected: open failed",
+            "native UI: upload FAILED vram=0",
+            "native UI: bounded upload heap=137728->137728 metadata=0 staging=shared-16384 source_allocation=0 kos=76064->76064",
+            "native UI: pair missing 7d4e1e92-052bdc2e color=43aff05a-cfb2b1a5 mask=572a97ee-75aeb071 128x128",
+            "--DOORDEMO START!!"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "proved-R-control",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\audits23-takeover\\5e4de9a0\\decisions-mendez-on-r1",
+      "events": [
+        {
+          "line_number": 16467,
+          "line": "native UI: package rejected: open failed",
+          "context": [
+            "native UI: overlay slab taken: 256x256 need=18432 uses=1",
+            "native texture VQ: bytes=18432 raw16=131072 free_vram=62272 allocation_delta=4294961152",
+            "native UI: upload ok vram=18432",
+            "native UI: bounded upload heap=141824->141824 metadata=144 staging=shared-16384 source_allocation=0 kos=74688->74528",
+            "native UI: load /cd/dc/tex/7/7d4e1e92-052bdc2e.re4tex 128x128 fmt=14",
+            "native UI: package rejected: open failed",
+            "native UI: upload FAILED vram=0",
+            "native UI: bounded upload heap=141824->141824 metadata=0 staging=shared-16384 source_allocation=0 kos=74528->74528",
+            "native UI: pair missing 7d4e1e92-052bdc2e color=43aff05a-cfb2b1a5 mask=572a97ee-75aeb071 128x128"
+          ]
+        },
+        {
+          "line_number": 16468,
+          "line": "native UI: upload FAILED vram=0",
+          "context": [
+            "native texture VQ: bytes=18432 raw16=131072 free_vram=62272 allocation_delta=4294961152",
+            "native UI: upload ok vram=18432",
+            "native UI: bounded upload heap=141824->141824 metadata=144 staging=shared-16384 source_allocation=0 kos=74688->74528",
+            "native UI: load /cd/dc/tex/7/7d4e1e92-052bdc2e.re4tex 128x128 fmt=14",
+            "native UI: package rejected: open failed",
+            "native UI: upload FAILED vram=0",
+            "native UI: bounded upload heap=141824->141824 metadata=0 staging=shared-16384 source_allocation=0 kos=74528->74528",
+            "native UI: pair missing 7d4e1e92-052bdc2e color=43aff05a-cfb2b1a5 mask=572a97ee-75aeb071 128x128",
+            "--DOORDEMO START!!"
+          ]
+        }
+      ]
+    }
+  ]
+}

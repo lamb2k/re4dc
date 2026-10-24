@@ -1,0 +1,36 @@
+{
+  "whole-last-flush-missing": {
+    "accepted": true,
+    "flush_passes": [
+      0
+    ]
+  },
+  "flush-after-frame-end": {
+    "accepted": true,
+    "flush_passes": [
+      0,
+      0
+    ]
+  },
+  "flush-attributed-to-wrong-active-pass": {
+    "accepted": true,
+    "flush_passes": [
+      0,
+      1
+    ]
+  },
+  "future-threshold": {
+    "accepted": true,
+    "flush_passes": [
+      0,
+      0
+    ]
+  },
+  "counts-reordered-before-part": {
+    "accepted": true,
+    "flush_passes": [
+      0,
+      0
+    ]
+  }
+}

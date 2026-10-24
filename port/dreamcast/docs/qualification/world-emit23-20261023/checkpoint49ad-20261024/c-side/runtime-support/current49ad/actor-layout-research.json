@@ -1,0 +1,6461 @@
+[
+  {
+    "name": "cUnit",
+    "die": "0x161ba",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "36",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x161ba>",
+      "DW_AT_sibling": "<0x1631b>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x1634f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "36",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x12587>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "36",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x16335>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x275c0",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "3",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x275c0>",
+      "DW_AT_sibling": "<0x27701>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x2774a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x22315>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x27735>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x31e74",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x31e74>",
+      "DW_AT_sibling": "<0x31fd0>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3200e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2f218>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x31fef>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x377b1",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "4",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x377b1>",
+      "DW_AT_sibling": "<0x3790d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3794b>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x34c9d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3792c>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xa6b43",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xa6b43>",
+      "DW_AT_sibling": "<0xa6c9f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xa6cec>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xa438e>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xa6ccd>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xb52bd",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xb52bd>",
+      "DW_AT_sibling": "<0xb541d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xb56dd>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xb1763>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xb5422>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xce678",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "3",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xce678>",
+      "DW_AT_sibling": "<0xce7d4>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xce841>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xc9b6c>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xce827>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xedda6",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xedda6>",
+      "DW_AT_sibling": "<0xedf02>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xedf7a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xea5d1>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xedf5b>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xf4b08",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xf4b08>",
+      "DW_AT_sibling": "<0xf4c65>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xf56de>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xf0d2d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xf4c6a>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xfb0b3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xfb0b3>",
+      "DW_AT_sibling": "<0xfb213>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xfc0b8>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xf94b1>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xfb218>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1005da",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1005da>",
+      "DW_AT_sibling": "<0x100739>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x100849>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xfd890>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x10073e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x118e9f",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x118e9f>",
+      "DW_AT_sibling": "<0x118ffe>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x119edc>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x116efa>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x119003>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x11e7ef",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x11e7ef>",
+      "DW_AT_sibling": "<0x11e94b>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x120ab5>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x11c8f1>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x11e950>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x12815a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x12815a>",
+      "DW_AT_sibling": "<0x1282bc>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x12915e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x12337d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1282c1>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x136941",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x136941>",
+      "DW_AT_sibling": "<0x136aa1>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x13799a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x135013>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x136aa6>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x13b14b",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x13b14b>",
+      "DW_AT_sibling": "<0x13b2ae>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x13c1fd>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x139513>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x13b2b3>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x143544",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x143544>",
+      "DW_AT_sibling": "<0x1436a2>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x144711>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1414c6>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1436a7>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x148855",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x148855>",
+      "DW_AT_sibling": "<0x1489b8>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x14ba77>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x146637>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1489bd>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1584af",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1584af>",
+      "DW_AT_sibling": "<0x15860f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x15950a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1568ac>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x158614>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x15ca90",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x15ca90>",
+      "DW_AT_sibling": "<0x15cbec>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x15da9c>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x15b176>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x15cbf1>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x161d62",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x161d62>",
+      "DW_AT_sibling": "<0x161ec5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x16219d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x15f571>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x161eca>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x16a7eb",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x16a7eb>",
+      "DW_AT_sibling": "<0x16a94e>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x16c5c7>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x165105>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x16a953>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x176836",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x176836>",
+      "DW_AT_sibling": "<0x176995>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x177d9f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x174f09>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x17699a>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x180a57",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "17",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x180a57>",
+      "DW_AT_sibling": "<0x180bb3>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x180be7>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "17",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x17e3cb>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "17",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x180bcd>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1af9d9",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1af9d9>",
+      "DW_AT_sibling": "<0x1afb39>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x1afc10>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1ad735>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1afbf1>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1e0922",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "16",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1e0922>",
+      "DW_AT_sibling": "<0x1e0a7f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x1e13e5>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1de796>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1e0a84>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1e8728",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "3",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1e8728>",
+      "DW_AT_sibling": "<0x1e8887>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x1e8718>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1e2c35>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1e88df>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x1f2a33",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "31",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x1f2a33>",
+      "DW_AT_sibling": "<0x1f2b92>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x1f2a23>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "31",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x1eb137>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "31",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x1f2bb6>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x2036f5",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "16",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x2036f5>",
+      "DW_AT_sibling": "<0x203852>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x203886>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x200c16>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x20386c>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x20b37b",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "16",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x20b37b>",
+      "DW_AT_sibling": "<0x20b4d8>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x20b50c>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x208800>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x20b4f2>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x212f90",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x212f90>",
+      "DW_AT_sibling": "<0x2130ef>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x21312e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x20f457>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x21310e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x21b2b3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "18",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x21b2b3>",
+      "DW_AT_sibling": "<0x21b410>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x21b452>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "18",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x218639>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "18",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x21b415>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x229233",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x229233>",
+      "DW_AT_sibling": "<0x22938f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x22a725>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x21f81c>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x229394>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x23b469",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "6",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x23b469>",
+      "DW_AT_sibling": "<0x23b5c5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x23b5fe>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "6",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2376e9>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "6",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x23b5df>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x24111c",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "23",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x24111c>",
+      "DW_AT_sibling": "<0x241279>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x24129d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "23",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x23dd42>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "23",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x241288>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x265073",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "10",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x265073>",
+      "DW_AT_sibling": "<0x2651d0>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x265204>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "10",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x263949>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "10",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x2651ea>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x26f1b3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "6",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x26f1b3>",
+      "DW_AT_sibling": "<0x26f312>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x2735b4>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "6",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x266046>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "6",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x26f317>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x29c7c8",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x29c7c8>",
+      "DW_AT_sibling": "<0x29c926>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x29ca86>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x29549e>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x29cab2>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cModel",
+    "die": "0x2e43e2",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x9e57): cModel",
+      "DW_AT_byte_size": "800",
+      "DW_AT_decl_file": "3",
+      "DW_AT_decl_line": "404",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x2e7c59>",
+      "DW_AT_sibling": "<0x2e4e4b>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_inheritance",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e7b35>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e43f3>",
+          "DW_AT_data_member_location": "244",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "serial",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x6b679): serial",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "410",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e3876>",
+          "DW_AT_data_member_location": "248",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e4414>",
+          "DW_AT_data_member_location": "252",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "id",
+        "attrs": {
+          "DW_AT_name": "id",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "420",
+          "DW_AT_decl_column": "8",
+          "DW_AT_type": "<0x2e3858>",
+          "DW_AT_data_member_location": "256",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "type",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x83ba7): type",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "421",
+          "DW_AT_decl_column": "8",
+          "DW_AT_type": "<0x2e3858>",
+          "DW_AT_data_member_location": "257",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "nParts",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3a3db): nParts",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "422",
+          "DW_AT_decl_column": "8",
+          "DW_AT_type": "<0x2e3858>",
+          "DW_AT_data_member_location": "258",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "alpha_omit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x33e99): alpha_omit",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "423",
+          "DW_AT_decl_column": "8",
+          "DW_AT_type": "<0x2e3858>",
+          "DW_AT_data_member_location": "259",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "speed",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x28d3d): speed",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "424",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e38ed>",
+          "DW_AT_data_member_location": "260",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pos_old",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13d2e): pos_old",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "425",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e38ed>",
+          "DW_AT_data_member_location": "272",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "Wall_norm",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x34848): Wall_norm",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "426",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e38ed>",
+          "DW_AT_data_member_location": "284",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e446b>",
+          "DW_AT_data_member_location": "296",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e45bb>",
+          "DW_AT_data_member_location": "336",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "invisible_factor",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x9596): invisible_factor",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "463",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e389a>",
+          "DW_AT_data_member_location": "340",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "invisible_factor2",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x33ddf): invisible_factor2",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "464",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e389a>",
+          "DW_AT_data_member_location": "344",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pModelInfo",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x48427): pModelInfo",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "465",
+          "DW_AT_decl_column": "17",
+          "DW_AT_type": "<0x2e702f>",
+          "DW_AT_data_member_location": "348",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pShadowModelInfo",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x341d3): pShadowModelInfo",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "466",
+          "DW_AT_decl_column": "17",
+          "DW_AT_type": "<0x2e702f>",
+          "DW_AT_data_member_location": "352",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "LightInfo",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0xdc73): LightInfo",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "467",
+          "DW_AT_decl_column": "16",
+          "DW_AT_type": "<0x2e5507>",
+          "DW_AT_data_member_location": "356",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e45dc>",
+          "DW_AT_data_member_location": "472",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x2e4789>",
+          "DW_AT_data_member_location": "692",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x2e7c59",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x2e7c59>",
+      "DW_AT_sibling": "<0x2e7db5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x2e7e23>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2e3876>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x2e7e75>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x2fc9e2",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x2fc9e2>",
+      "DW_AT_sibling": "<0x2fcb41>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x2fcba4>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2f7419>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x2fcbc0>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3044d3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3044d3>",
+      "DW_AT_sibling": "<0x304638>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3047b5>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x2fff00>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x30463d>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x30afa9",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x30afa9>",
+      "DW_AT_sibling": "<0x30b10c>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x30b27e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x306294>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x30b111>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3150fb",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3150fb>",
+      "DW_AT_sibling": "<0x31523a>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x315263>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x310f6f>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x315249>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x319bc4",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x319bc4>",
+      "DW_AT_sibling": "<0x319d25>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x319d53>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x315ab4>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x319d34>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x31eca6",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x31eca6>",
+      "DW_AT_sibling": "<0x31ee06>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x31ee34>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x31a8e5>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x31ee15>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x327b48",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x327b48>",
+      "DW_AT_sibling": "<0x327cab>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x327e6d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x323101>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x327cb0>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x334894",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x334894>",
+      "DW_AT_sibling": "<0x3349f7>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x334bc4>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x32fb1b>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3349fc>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x33baa4",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x33baa4>",
+      "DW_AT_sibling": "<0x33bc09>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x33beac>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x336dbe>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x33bc0e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3444ab",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3444ab>",
+      "DW_AT_sibling": "<0x34460e>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x344a1d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x33dfe9>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x344613>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x34e440",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x34e440>",
+      "DW_AT_sibling": "<0x34e5a3>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x34e7ac>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x349788>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x34e5a8>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x354c4d",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x354c4d>",
+      "DW_AT_sibling": "<0x354db0>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x355091>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x34fec7>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x354db5>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x35c61b",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x35c61b>",
+      "DW_AT_sibling": "<0x35c77e>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x35cba6>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x356fc3>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x35c783>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x36504a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x36504a>",
+      "DW_AT_sibling": "<0x3651ab>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x36520e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x35ffe7>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3651ee>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x36fb0d",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x36fb0d>",
+      "DW_AT_sibling": "<0x36fc70>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3700e1>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x36ae4f>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x36fc75>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3775ea",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3775ea>",
+      "DW_AT_sibling": "<0x37774d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x377791>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x372850>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x377771>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x382d40",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x382d40>",
+      "DW_AT_sibling": "<0x382ea3>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x382ee7>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x37e04c>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x382ec7>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x387040",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x387040>",
+      "DW_AT_sibling": "<0x3871a0>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3871ce>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x383df8>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3871af>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x38db86",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x38db86>",
+      "DW_AT_sibling": "<0x38dce9>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x38e0f3>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3878c8>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x38dcee>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x398b97",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x398b97>",
+      "DW_AT_sibling": "<0x398cfa>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x398d2e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x39281e>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x398d0e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x39fce4",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x39fce4>",
+      "DW_AT_sibling": "<0x39fe47>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x39ffe5>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x39afe1>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x39fe4c>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3a7ff3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3a7ff3>",
+      "DW_AT_sibling": "<0x3a8156>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3a83f4>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3a1c95>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3a815b>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3b059d",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3b059d>",
+      "DW_AT_sibling": "<0x3b06fe>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3b0fdf>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3ab3e6>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3b0703>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3b9aa2",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3b9aa2>",
+      "DW_AT_sibling": "<0x3b9c06>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3baccf>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3b4173>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3b9c0b>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3c2c38",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3c2c38>",
+      "DW_AT_sibling": "<0x3c2d9b>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3c32f0>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3bdda5>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3c2da0>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3cc5e4",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3cc5e4>",
+      "DW_AT_sibling": "<0x3cc747>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3ccae2>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3c612d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3cc74c>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3d451a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3d451a>",
+      "DW_AT_sibling": "<0x3d467d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3d6554>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3cf8f7>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3d4682>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3f35c8",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3f35c8>",
+      "DW_AT_sibling": "<0x3f3727>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3f377f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3f0b79>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3f3760>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cPlayer",
+    "die": "0x3f9192",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x3bcef): cPlayer",
+      "DW_AT_byte_size": "3552",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "96",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3f9eeb>",
+      "DW_AT_sibling": "<0x3f9912>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_inheritance",
+        "name": "",
+        "attrs": {
+          "DW_AT_type": "<0x3f7d89>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x3f9eeb",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "23",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x3f9eeb>",
+      "DW_AT_sibling": "<0x3fa04f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x3fbb51>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "23",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x3f6708>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "23",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x3fa054>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x4117a3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "16",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x4117a3>",
+      "DW_AT_sibling": "<0x411902>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x411ba9>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x40f0aa>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x411907>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x416ca8",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "3",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x416ca8>",
+      "DW_AT_sibling": "<0x416e0d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x4187c8>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x412fda>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "3",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x416e12>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x43bfe9",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "25",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x43bfe9>",
+      "DW_AT_sibling": "<0x43c14c>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x43d6ee>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "25",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x437c35>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "25",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x43c151>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x463850",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x463850>",
+      "DW_AT_sibling": "<0x4639b0>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x465e52>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x45a4b6>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x4639b5>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x48ca4a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x48ca4a>",
+      "DW_AT_sibling": "<0x48cba9>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x48cc21>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x4874d3>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x48cc01>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x496f14",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "9",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x496f14>",
+      "DW_AT_sibling": "<0x497073>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x4970c7>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "9",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x4919ed>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "9",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x4970ac>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x50cf49",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "16",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x50cf49>",
+      "DW_AT_sibling": "<0x50d0ae>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x50cf39>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5083f2>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "16",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x50d0dd>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x535e23",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x535e23>",
+      "DW_AT_sibling": "<0x535f83>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5361eb>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5301b1>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x535f88>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x53d6cd",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x53d6cd>",
+      "DW_AT_sibling": "<0x53d82d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x53da18>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x537a61>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x53d832>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x547f51",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "4",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x547f51>",
+      "DW_AT_sibling": "<0x5480af>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5480dd>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x54404a>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5480be>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x54ad1f",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x54ad1f>",
+      "DW_AT_sibling": "<0x54ae81>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x54bc83>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x548b9c>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x54ae86>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5507d2",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5507d2>",
+      "DW_AT_sibling": "<0x550932>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x55178d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x54e6a5>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x550937>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x55594d",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x55594d>",
+      "DW_AT_sibling": "<0x555aad>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5568a9>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5538c4>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x555ab2>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5642fe",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5642fe>",
+      "DW_AT_sibling": "<0x56445f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x56523b>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x56107d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x564464>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x56b45a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x56b45a>",
+      "DW_AT_sibling": "<0x56b5b9>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x56b7c3>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x568af8>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x56b5be>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x570f2c",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x570f2c>",
+      "DW_AT_sibling": "<0x57108c>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x571ec8>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x56f6d9>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x571091>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x575d10",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x575d10>",
+      "DW_AT_sibling": "<0x575e72>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x576c4a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x573f85>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x575e77>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x57c9d0",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x57c9d0>",
+      "DW_AT_sibling": "<0x57cb33>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x57d946>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x57a118>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x57cb38>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5815ad",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5815ad>",
+      "DW_AT_sibling": "<0x58170d>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5824ba>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x57fa70>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x581712>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x58c0d3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x58c0d3>",
+      "DW_AT_sibling": "<0x58c236>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x58c887>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x584b23>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x58c23b>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x59eb3a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x59eb3a>",
+      "DW_AT_sibling": "<0x59ec99>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x59eecf>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5984a7>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x59ec9e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5ab559",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5ab559>",
+      "DW_AT_sibling": "<0x5ab6b8>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5ac592>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5a43cb>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5ab6bd>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5bc421",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5bc421>",
+      "DW_AT_sibling": "<0x5bc580>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5bd998>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5b5135>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5bc585>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5d284a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "4",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5d284a>",
+      "DW_AT_sibling": "<0x5d29aa>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5d29f8>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5d08de>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "4",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5d29de>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5d9b46",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5d9b46>",
+      "DW_AT_sibling": "<0x5d9ca7>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5daf9e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5d313f>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5d9cac>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5e2759",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5e2759>",
+      "DW_AT_sibling": "<0x5e28b5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5e3674>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5e0cb2>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5e28ba>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x5edb16",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x5edb16>",
+      "DW_AT_sibling": "<0x5edc75>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x5eed1f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5e6866>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x5edc7a>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x604eb1",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x604eb1>",
+      "DW_AT_sibling": "<0x605011>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x6051fc>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x5ff245>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x605016>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x60f93a",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x60f93a>",
+      "DW_AT_sibling": "<0x60fa96>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x60fac4>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x60badd>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x60faa5>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x61afe9",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x61afe9>",
+      "DW_AT_sibling": "<0x61b14c>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x61b3c2>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x614bdb>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x61b151>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x622eaf",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x622eaf>",
+      "DW_AT_sibling": "<0x62300f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x6231e3>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x61d24c>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x623014>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x62d3b3",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x62d3b3>",
+      "DW_AT_sibling": "<0x62d50f>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x62d53d>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x629556>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x62d51e>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x6339a4",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x6339a4>",
+      "DW_AT_sibling": "<0x633b04>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x633ce2>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x62dcfd>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x633b09>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x63df8c",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x63df8c>",
+      "DW_AT_sibling": "<0x63e0e8>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x63e116>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x63a12f>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x63e0f7>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x6474d8",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x6474d8>",
+      "DW_AT_sibling": "<0x647634>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x647662>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x643697>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x647643>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x655d81",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x655d81>",
+      "DW_AT_sibling": "<0x655ee3>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x655f4b>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x650132>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x655f2b>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x65a2c1",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x65a2c1>",
+      "DW_AT_sibling": "<0x65a3fd>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x65a436>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x6576d0>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x65a421>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x665788",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "11",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x665788>",
+      "DW_AT_sibling": "<0x6658e5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x665f46>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "11",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x65d320>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "11",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x6658ea>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x677e93",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x677e93>",
+      "DW_AT_sibling": "<0x677fcf>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x678008>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x6752a2>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x677ff3>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x699ae5",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x699ae5>",
+      "DW_AT_sibling": "<0x699c40>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x699e85>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x694419>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x699c45>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x6a4dba",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "10",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x6a4dba>",
+      "DW_AT_sibling": "<0x6a4f18>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x6a5bf3>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "10",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x69ba85>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "10",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x6a4f1d>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x6df394",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "9",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x6df394>",
+      "DW_AT_sibling": "<0x6df4f2>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x6df91f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "9",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x6d7ead>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "9",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x6df4f7>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x6e7116",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x6e7116>",
+      "DW_AT_sibling": "<0x6e7252>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x6e728b>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x6e4525>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x6e7276>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x7000be",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "30",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x7000be>",
+      "DW_AT_sibling": "<0x70021b>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x7003cf>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "30",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x6fa7a2>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "30",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x700220>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x7183e7",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x7183e7>",
+      "DW_AT_sibling": "<0x718523>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x71855c>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x7157f6>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x718547>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x727769",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x727769>",
+      "DW_AT_sibling": "<0x7278c4>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x727b09>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x72209d>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x7278c9>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x756599",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "41",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x756599>",
+      "DW_AT_sibling": "<0x7566f5>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x75690f>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "41",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x74e44a>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "41",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x7566fa>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x7997cc",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "5",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x7997cc>",
+      "DW_AT_sibling": "<0x799908>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x799941>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x796bdb>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "5",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x79992c>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x83d3f2",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "15",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x83d3f2>",
+      "DW_AT_sibling": "<0x83d54e>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x83d3de>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "15",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x83a16b>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "15",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x83d591>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0x871f69",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "2",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0x871f69>",
+      "DW_AT_sibling": "<0x8720cc>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0x875e2a>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0x86aaf3>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "2",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0x8720d1>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  },
+  {
+    "name": "cUnit",
+    "die": "0xa6b58d",
+    "attrs": {
+      "DW_AT_name": "(indirect string, offset: 0x78b9): cUnit",
+      "DW_AT_byte_size": "12",
+      "DW_AT_decl_file": "17",
+      "DW_AT_decl_line": "14",
+      "DW_AT_decl_column": "7",
+      "DW_AT_containing_type": "<0xa6b58d>",
+      "DW_AT_sibling": "<0xa6b6ea>"
+    },
+    "members": [
+      {
+        "tag": "DW_TAG_member",
+        "name": "_vptr.cUnit",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x78b3): _vptr.cUnit",
+          "DW_AT_type": "<0xa6b71e>",
+          "DW_AT_data_member_location": "0",
+          "DW_AT_artificial": "1",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "be_flag",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x13659): be_flag",
+          "DW_AT_decl_file": "17",
+          "DW_AT_decl_line": "16",
+          "DW_AT_decl_column": "9",
+          "DW_AT_type": "<0xa68792>",
+          "DW_AT_data_member_location": "4",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      },
+      {
+        "tag": "DW_TAG_member",
+        "name": "pNext",
+        "attrs": {
+          "DW_AT_name": "(indirect string, offset: 0x3e50e): pNext",
+          "DW_AT_decl_file": "17",
+          "DW_AT_decl_line": "17",
+          "DW_AT_decl_column": "12",
+          "DW_AT_type": "<0xa6b704>",
+          "DW_AT_data_member_location": "8",
+          "DW_AT_accessibility": "1\t(public)"
+        }
+      }
+    ]
+  }
+]

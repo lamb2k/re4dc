@@ -1,0 +1,2 @@
+# Preserve original C-side bytes and recognize original CRLF line endings.
+c-side/** -text whitespace=cr-at-eol

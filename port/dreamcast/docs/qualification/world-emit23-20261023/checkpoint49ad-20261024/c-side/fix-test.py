@@ -1,0 +1,4 @@
+from pathlib import Path
+r=Path('/root/work/lanes/world-emit23-census')
+p=r/'port/dreamcast/tools/d367/world_emit23/test_census.py';s=p.read_text().replace('import argparse, hashlib, json, os, re, subprocess, tempfile','import argparse, hashlib, json, os, re, resource, subprocess, tempfile').replace('    source=STATIC.read_text();checks={}','    resource.setrlimit(resource.RLIMIT_CORE,(0,0))\n    source=STATIC.read_text();checks={}').replace('"-DRE4DC_SCENERY_CHUNK=1","-DRE4DC_PS2_WORLD_MESH=1",','"-DRE4DC_SCENERY_CHUNK=1","-DRE4DC_PS2_WORLD_MESH=1","-DRE4DC_SCENERY_SELECT_ONLY=1",');p.write_text(s)
+p=r/'port/dreamcast/tools/d367/world_emit23/census.py';s=p.read_text().replace('        rows.append(row)','        if any(value<0 for key,value in row.items() if key not in ("kind","result")):raise ValueError("negative counter")\n        rows.append(row)');p.write_text(s)

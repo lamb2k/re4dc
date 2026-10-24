@@ -1,0 +1,22 @@
+{
+  "verdict": "CLEAR for bounded source review; actual current batch1/PVS0 recipe only",
+  "frozen_commit": "f2b290b285116d0a440aa4557a09acdd7a29c20e",
+  "original_requires_repair": "2adba133279d62d49416be99dbb9180df50e2846",
+  "ordered_parser_successor": "e00c5222fca18ccbb179d94939094a29b47ebe41",
+  "ram_mirror": "/dev/shm/world-emit23-review-gsRwtA",
+  "independent_host": "8 configurations +13 protocol negatives +valid multipass +5 prior negatives; lock mutation rejected; OFF source/make identical",
+  "reviewer_probes": "5 original false accepts now rejected",
+  "target_sdk_guest_run": false,
+  "profile": {
+    "SCENERY_SUBMIT_BATCH": 1,
+    "PS2_PVS": 0,
+    "selected_affine": "unapplied/unadmitted; combined identity not qualified"
+  },
+  "sha256": {
+    "REVIEW-CENSUS.md": "53d5c3aa3ce19f7434483e2adbaf582d169df95a62b215e2823b69835c232536",
+    "REVIEW-CENSUS-PROTOCOL.json": "752d309fa920cda823d2d970174fa9a7a4300efb0e6930e430305b2559b56757",
+    "REVIEW-CENSUS-HOST.log": "31814328fd36ffd9c2a5fbea0a91c11d8dd1c77b37573761d7669ab6adca1e3b",
+    "REVIEW-CENSUS-PROTOCOL-2ad.json": "e49cb97d7916180f012c27981954cca5c02fdebaf124ba592afe77efe0e1900d",
+    "REVIEW-CENSUS-HOST.json": "603de713c3e066280e45a28c79c8a38e6aaad972e9a0d175c2c3eab9195d2160"
+  }
+}

@@ -1,0 +1,839 @@
+{
+  "schema": "world-emit23-source-preservation-v1",
+  "created_utc": "2026-10-24T02:29:08.006349+00:00",
+  "base_source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "branch": "wip/world-emit23-evidence-tools-20261023",
+  "purpose": "Byte-preserving source/document archive only; no new qualification or execution",
+  "source_root": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23",
+  "seals": {
+    "runtime-support/RECEIPT.json": "9fd3ff6d801655ba46edaf75becd31b880a302b3ad84b54011e6df7e14540dee",
+    "runtime-support/current49ad/RECEIPT.json": "d7026d14e8a096469eac12aed583767ce135b8ef3b0ab8a10c78c00428354835",
+    "runtime-support/current49ad-sparse-correction/RECEIPT.json": "1fe3182b60cf52f4a1059c35a4b5e7f29323f0b609f78872d810baa0732aaa49",
+    "current-gates/current_gates.py": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb",
+    "current-gates/current_gates_root_v1.py": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae",
+    "current-gates/root-current-gates-v1.sh": "8cc570479a9dfad64ecda7fa9a9468c47d0124af3d9d3f7bce5f73eb22b5261d",
+    "runtime-support/CORRECTIONS.md": "4d64c55a588f4535a49de9c9f8e379728b37a0551cebef7e263262921bfcdab3",
+    "current-gates/RESULTS-ALL-PRE-REPAIR.json": "e5f0709cbaffbcc97fb594f3b77581585ac06fe2a35a261cbb3812a717600cf3",
+    "current-gates/HANDBACK-ALL-PRE-REPAIR.md": "c85d5d85f1ffde169e4f838da51aacf9dc7ab5db021191aae476c2c1e3fc01ed",
+    "current-gates/seal-all-pre-repair.py": "8593629fff7f08ef919f5805c702cafba3bc4404c728837aa527f74ca5dfc705"
+  },
+  "b_bundle_manifest": {
+    "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-gates-helper-b/SHA256SUMS",
+    "sha256": "be0796160dec68387371f0a8f79a33662a3da032de7288ea9a3263fb9a0e0d43"
+  },
+  "copied": [
+    {
+      "path": "c-side/PREFLIGHT.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/PREFLIGHT.md",
+      "bytes": 9951,
+      "sha256": "a350226c4ad77d41d1d833e73116c70bd9f9e5318f67d2467191d930074892a8",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/REVIEW-CENSUS-HOST.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/REVIEW-CENSUS-HOST.json",
+      "bytes": 2218,
+      "sha256": "603de713c3e066280e45a28c79c8a38e6aaad972e9a0d175c2c3eab9195d2160",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/REVIEW-CENSUS-PROTOCOL-2ad.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/REVIEW-CENSUS-PROTOCOL-2ad.json",
+      "bytes": 520,
+      "sha256": "e49cb97d7916180f012c27981954cca5c02fdebaf124ba592afe77efe0e1900d",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/REVIEW-CENSUS-PROTOCOL.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/REVIEW-CENSUS-PROTOCOL.json",
+      "bytes": 500,
+      "sha256": "752d309fa920cda823d2d970174fa9a7a4300efb0e6930e430305b2559b56757",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/REVIEW-CENSUS.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/REVIEW-CENSUS.json",
+      "bytes": 1291,
+      "sha256": "12faa560f4003af5b0d8d6abf3d271443ae23541d600dcdfe8abe2ebcca8f754",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/REVIEW-CENSUS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/REVIEW-CENSUS.md",
+      "bytes": 6292,
+      "sha256": "53d5c3aa3ce19f7434483e2adbaf582d169df95a62b215e2823b69835c232536",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/SOURCE-QUALIFICATION.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/SOURCE-QUALIFICATION.json",
+      "bytes": 337,
+      "sha256": "9bc459e0f836ecc727b6452d1af43a12125c5d52e583bf6f933e9db3102c09dd",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/apply-census.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/apply-census.py",
+      "bytes": 3720,
+      "sha256": "f7b5ede7392d95faef4bdfbce4d68ee655f39d10cd8f96bb3c006abea0184995",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-docs.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-docs.json",
+      "bytes": 5186,
+      "sha256": "ee6dab77fc1849d13f58de1ff2473e479f25c80ca302c44e242996715d613f41",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-files.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-files.json",
+      "bytes": 5509,
+      "sha256": "9fc7e8242ace7614a8f0af97935e72a631592db23b165b022d981af2743d508a",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-host-controls-final.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-host-controls-final.json",
+      "bytes": 2218,
+      "sha256": "603de713c3e066280e45a28c79c8a38e6aaad972e9a0d175c2c3eab9195d2160",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-host-controls-ordered.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-host-controls-ordered.json",
+      "bytes": 1859,
+      "sha256": "fb54482d1c1e7a76c978ad7edaa2c3c1e5bd04f3ccd7b82c5a105406950f7cd5",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-host-controls.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-host-controls.json",
+      "bytes": 1231,
+      "sha256": "f86e8aa6e8a0ea5b24c1ca95496ae8f164310db5c3c0ede23eb2e230ecb64e30",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-parser.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-parser.json",
+      "bytes": 4892,
+      "sha256": "7f10ed9c6788341ae8b447ebc561b16826c64f2e2300dae894ded237f5a50224",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/census-tests.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/census-tests.json",
+      "bytes": 12057,
+      "sha256": "929508cd661b5c4994f1607b7a5d7a3f5899d8b06c8367a2391b4a2be6d86bef",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/current-gates/B-MENDEZ-UI-ERROR-CONTROL.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/B-MENDEZ-UI-ERROR-CONTROL.json",
+      "bytes": 4151,
+      "sha256": "7d0860c27756e7a7ce01c52dd49437977b482a5c6e9862902ad4347706f0d5a0",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/HANDBACK-ALL-PRE-REPAIR.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/HANDBACK-ALL-PRE-REPAIR.md",
+      "bytes": 3203,
+      "sha256": "c85d5d85f1ffde169e4f838da51aacf9dc7ab5db021191aae476c2c1e3fc01ed",
+      "classification": "sealed-pre-repair-report",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/HANDBACK.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/HANDBACK.md",
+      "bytes": 4834,
+      "sha256": "9ce3e43eeed29ce474478092849bc226871a9d7d1a87f4492b760a4ebbd21e58",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/README.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/README.md",
+      "bytes": 5229,
+      "sha256": "5919d6b2010963a2e0f11ad60eb91d2ab1db969e133d6337f24f23a21d769d4f",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/RESULTS-ALL-PRE-REPAIR.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/RESULTS-ALL-PRE-REPAIR.json",
+      "bytes": 91142,
+      "sha256": "e5f0709cbaffbcc97fb594f3b77581585ac06fe2a35a261cbb3812a717600cf3",
+      "classification": "sealed-pre-repair-report",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/RESULTS.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/RESULTS.json",
+      "bytes": 17060,
+      "sha256": "4d8a63b537ed0cd79fca3ea8e846e33179fe44f1ec1e2e6e861a1fdb702f0699",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/UNIT-OPEN.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/UNIT-OPEN.md",
+      "bytes": 1197,
+      "sha256": "f0d92e83e55fa36fb035c6d9e5edf8ee72d36acbe7ce2c70affe18b9ab96e3d5",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/current-gates/current_gates.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/current_gates.py",
+      "bytes": 24383,
+      "sha256": "f8d81e3884ef7197834259fef72cb25152770d857ad697e8c325ddca438049bb",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/current_gates_root_v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/current_gates_root_v1.py",
+      "bytes": 24388,
+      "sha256": "1861ed9e055c6d6c2a356360257775a51b22800e22a1562d36d4f5c5c93515ae",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/pins.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/pins.json",
+      "bytes": 2950,
+      "sha256": "c6603f7ddb9f493f9bc0f92047b93e2604c4fd083d4c560f201900760290e61d",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/root-current-gates-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/root-current-gates-v1.sh",
+      "bytes": 1271,
+      "sha256": "8cc570479a9dfad64ecda7fa9a9468c47d0124af3d9d3f7bce5f73eb22b5261d",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/run-current.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/run-current.sh",
+      "bytes": 120,
+      "sha256": "b1fbc083a948465a731b7dd39405dc267508dd27763e126215486abdf5710c5a",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/seal-all-pre-repair.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/seal-all-pre-repair.py",
+      "bytes": 10259,
+      "sha256": "8593629fff7f08ef919f5805c702cafba3bc4404c728837aa527f74ca5dfc705",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/test_current_gates.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/test_current_gates.py",
+      "bytes": 8470,
+      "sha256": "25fc93d405d1ba63e8f663fc43b93e55ef54597f023d2555a009a4568fcbaabd",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/current-gates/versions/a919520ce257fc34b4ebb341d4597a3b2e846f67a557541f0c7fe13043a5f4d5.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/versions/a919520ce257fc34b4ebb341d4597a3b2e846f67a557541f0c7fe13043a5f4d5.py",
+      "bytes": 23040,
+      "sha256": "a919520ce257fc34b4ebb341d4597a3b2e846f67a557541f0c7fe13043a5f4d5",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/current-gates/versions/f4cd479522ac590add30096b43a9cf5d0ff40d713e39ccd0c01d84e77394bdf8.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/versions/f4cd479522ac590add30096b43a9cf5d0ff40d713e39ccd0c01d84e77394bdf8.py",
+      "bytes": 20860,
+      "sha256": "f4cd479522ac590add30096b43a9cf5d0ff40d713e39ccd0c01d84e77394bdf8",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/current-gates/versions/fe33afe7ebb4371225d04a3eb8a6644b11e558fcb14f9b3f2bb0851f5bebdd74.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/current-gates/versions/fe33afe7ebb4371225d04a3eb8a6644b11e558fcb14f9b3f2bb0851f5bebdd74.py",
+      "bytes": 24030,
+      "sha256": "fe33afe7ebb4371225d04a3eb8a6644b11e558fcb14f9b3f2bb0851f5bebdd74",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/fix-test.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fix-test.py",
+      "bytes": 880,
+      "sha256": "a358b00fa82ff572f94fdb769dc7c98c894b12f3b95bed3e809297d81db8d400",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/flush-count-repair.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/flush-count-repair.py",
+      "bytes": 2396,
+      "sha256": "08f2b35fd27af53940799abc5286d97157b98566ee726ade7379b85323329415",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/inspect-mendez-ui-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/inspect-mendez-ui-v1.py",
+      "bytes": 589,
+      "sha256": "21e68a479766cea31b1a3c70737cd203ea0c896ad908f79c08fdd020dd98ea53",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/inspect-preflight.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/inspect-preflight.py",
+      "bytes": 1686,
+      "sha256": "00081481df3a334501570094711d97458e1522708a7d13238ce3f9165034e47c",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/parser-doc-repair.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/parser-doc-repair.py",
+      "bytes": 1966,
+      "sha256": "a92aec80f5040b6d316f83d9b5847ef1612878768336a944de31805e511828b7",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/parser-repair.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/parser-repair.json",
+      "bytes": 5488,
+      "sha256": "74507db0b7f77ab46b0dd9f9b45abe540927eb9a5fbc5521d3128e6294cea04f",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/parser-test-repair.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/parser-test-repair.py",
+      "bytes": 2570,
+      "sha256": "fa8bb94162dee590ea4a422f8ebbb7ad0a942af83d4b45de504cf735b676b87f",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/preflight-pins.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/preflight-pins.json",
+      "bytes": 5331,
+      "sha256": "0fb348f0d4426d9b95a12d3829bd2e6f5a9c07c0a7327433974de835589de2c8",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/preflight_inventory.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/preflight_inventory.py",
+      "bytes": 2713,
+      "sha256": "3b788580b8abf28023627ebe8d682c44a8d1b0c478074ed007c9bdca5451c8eb",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/runtime-support/CENSUS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/CENSUS.md",
+      "bytes": 2902,
+      "sha256": "bba340c13b946e4d7471544e8e3d686ef32d314b565d03844b2757b40d369868",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/CORRECTIONS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/CORRECTIONS.md",
+      "bytes": 606,
+      "sha256": "4d64c55a588f4535a49de9c9f8e379728b37a0551cebef7e263262921bfcdab3",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/METER.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/METER.md",
+      "bytes": 3195,
+      "sha256": "2016f099f98cc905cecdd9a586fa0faf13cb4e6c255d0b42ed68debbea6f130f",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/PROTOCOL-EXCLUSIONS.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/PROTOCOL-EXCLUSIONS.md",
+      "bytes": 1106,
+      "sha256": "93e3bd040a0a3a888e386d29582f0540c775ce6fefe41f51d79ba75cbe8b3840",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/RECEIPT.json",
+      "bytes": 17347,
+      "sha256": "9fd3ff6d801655ba46edaf75becd31b880a302b3ad84b54011e6df7e14540dee",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/STILL-HANDOFF-RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/STILL-HANDOFF-RECEIPT.json",
+      "bytes": 916,
+      "sha256": "b4bd6fe17338cdb10a251b4e931a2269cad3b5948b9549ae5ccf902868b3c9cb",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/runtime-support/STILL-HANDOFF.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/STILL-HANDOFF.md",
+      "bytes": 8297,
+      "sha256": "f5778bf373dab54621e9f97748e08f1601b77d626b07d0c1e9a71bc9cdb0f058",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/runtime-support/analyse-census-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/analyse-census-v1.py",
+      "bytes": 2455,
+      "sha256": "dae6b488659181fbdab73cfa22c73e7aebf2cca6477302a211c5c4f4ea5e0ab5",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/analyse-meter-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/analyse-meter-v1.py",
+      "bytes": 5789,
+      "sha256": "b17ab98c3115d08d031bc6d4e9290aa3b50605e2864f453be3c8690daf7c0ce8",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/check-partial-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/check-partial-v1.py",
+      "bytes": 543,
+      "sha256": "48b7c631dd360a18d9cb900799f55bfded364ca7f02773402445262b3e392fb1",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/BACKING-PROOF.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/BACKING-PROOF.json",
+      "bytes": 1158,
+      "sha256": "d553ba15b401ed8a55424b5db2b6d2a057eedacda871b9c27367fdb10c267c55",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/CORRECTION.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/CORRECTION.md",
+      "bytes": 4426,
+      "sha256": "2c666d2b6f0788a82a93931bb505ef0677e634a6c061369a971536b1ab4fcecf",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/RECEIPT.json",
+      "bytes": 3441,
+      "sha256": "1fe3182b60cf52f4a1059c35a4b5e7f29323f0b609f78872d810baa0732aaa49",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/freeze330-observer-v2.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/freeze330-observer-v2.py",
+      "bytes": 3790,
+      "sha256": "c99826225a0c8e561d0be42c230bf19e2da9363358558d9801e4171ac1a2a0cc",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/prepare-backing-proof.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/prepare-backing-proof.py",
+      "bytes": 1194,
+      "sha256": "85527ad0b335af76d6af8e710c4e977a55434d3c8f66f21e5c1e979926500270",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/seal-correction.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/seal-correction.py",
+      "bytes": 1521,
+      "sha256": "bf75aca43a0e65cb59a25c0f829ceb17b80db4d26e8fc1cece8575124207f8b6",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad-sparse-correction/test-sparse-refusal.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad-sparse-correction/test-sparse-refusal.py",
+      "bytes": 6139,
+      "sha256": "60ad6a8710a57b7073e55441088f4a42d3a9174a6c579b9f40bc29ff86f9f003",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/RECEIPT.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/RECEIPT.json",
+      "bytes": 7888,
+      "sha256": "d7026d14e8a096469eac12aed583767ce135b8ef3b0ab8a10c78c00428354835",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/SOURCE-DESIGN.md",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/SOURCE-DESIGN.md",
+      "bytes": 7376,
+      "sha256": "c49b832fcbbd78adb7b9f55d103836a2b74eb0a4b5b948641c4fd17a8940e371",
+      "classification": "historical-report-or-document",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/actor-layout-research.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/actor-layout-research.json",
+      "bytes": 190414,
+      "sha256": "118de8245090caa7246d0e55e8efdfcc35ebfed32a1c345e47df8e61d3f8d00b",
+      "classification": "source-ABI-metadata",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/actor-layout-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/actor-layout-v1.py",
+      "bytes": 1591,
+      "sha256": "3b057727089d78094bb9ee2be7dc9f1fd1d03ab80674c5dc52575b60cab3fb84",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/compact-layout-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/compact-layout-v1.py",
+      "bytes": 2248,
+      "sha256": "76b6cd0c05fd70d430d0cf79bdde12853d36670775e1090ce5a53c0c344031ad",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/dwarf-compact.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/dwarf-compact.json",
+      "bytes": 252432,
+      "sha256": "7ce63ee17c128a31eed1c58a109afc85db2fe3e17a0b3b2705a6b796c01429ec",
+      "classification": "source-ABI-metadata",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/extract-layout-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/extract-layout-v1.py",
+      "bytes": 2679,
+      "sha256": "40035a718f58295d0c9f817db9832277ebcde23722d83b9617125aa346241dc1",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/freeze330-observer.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/freeze330-observer.py",
+      "bytes": 11780,
+      "sha256": "f1d2f20df2db49fde6b2a8b0d7106732a656e99d1ffa903826c2aa92220b4811",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/inspect-source-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/inspect-source-v1.sh",
+      "bytes": 515,
+      "sha256": "dc2311d60a3002d9a2716cb43f4573e4718d338f380b6f49440ee4af13e57f94",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/layout-research.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/layout-research.json",
+      "bytes": 40100,
+      "sha256": "27a3b004e6b854a0b32662a4577a4b798b618333c2cdd91f12cc1c9137a17742",
+      "classification": "source-ABI-metadata",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/observer-layout-R-g.json",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/observer-layout-R-g.json",
+      "bytes": 16063,
+      "sha256": "024d95fb8d09d734c6021b3eb0eafa27b544a6992e4fa7578e950cc19f64a3ea",
+      "classification": "source-ABI-metadata",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/prepare-observer-layout.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/prepare-observer-layout.py",
+      "bytes": 5530,
+      "sha256": "faf1c051c6aadb80d5e2ee0e957d555e95e4056db3895073f1cd03ae1cabf951",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/seal-observer-receipt.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/seal-observer-receipt.py",
+      "bytes": 1894,
+      "sha256": "a55dd200884362b6cc69fd0d78bd9c4fdf4346a2195d0d3300a02718f63a2abb",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/stream-layout-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/stream-layout-v1.py",
+      "bytes": 2908,
+      "sha256": "2e1064ea7cd634679daefae01dd6d0d4c8995487a7fd2f7327b85faff69c82b2",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/current49ad/test-observer.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/test-observer.py",
+      "bytes": 6874,
+      "sha256": "927d05302bc455c865382ee9b3c93eff38566e3ffb542d0cddbb780cb5b95a93",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/meter-replacements-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/meter-replacements-v1.sh",
+      "bytes": 738,
+      "sha256": "2d796dfef3b99974b1ee0b8f3097a8b6e8e48fca643bdeb1de2a332dc5098364",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/meter-sequence-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/meter-sequence-v1.sh",
+      "bytes": 276,
+      "sha256": "8108ca2f9cef8b1dd9214dcd18bfb071e82201c25883bbb586b68774b5bdd7bd",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/qualified-run-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/qualified-run-v1.sh",
+      "bytes": 2719,
+      "sha256": "439fa26f1287d658112ab1aacaa3ef4c022abebf2701f3d7f0a3bf32664630e8",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/qualified-run-v2.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/qualified-run-v2.sh",
+      "bytes": 2850,
+      "sha256": "ec4322f940a3c1c37d710f0cf098038ceb07cc67c44b84670c581c8b3c35849f",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/seal-receipt-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/seal-receipt-v1.py",
+      "bytes": 2266,
+      "sha256": "fb5dd86c2f3ec6faf81db227b6fa2cf60912b60ce6d82cb2ec9fa7c6ac94195f",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/runtime-support/still-source-inventory-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/still-source-inventory-v1.sh",
+      "bytes": 308,
+      "sha256": "3c1ad6de4cfb5b9a66ec78d7adfa0b226961d7e4bfaef5d6eb81aab9633fee4e",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/runtime-support/test-analysis-v1.py",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/test-analysis-v1.py",
+      "bytes": 2388,
+      "sha256": "52e4c34ef0175c55616cc7722b6c17b938c0f3aa23f895005035ba00fad6c7b2",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": true
+    },
+    {
+      "path": "c-side/takeover-baseline-knobs-inspect.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-baseline-knobs-inspect.sh",
+      "bytes": 227,
+      "sha256": "a9362eafa597fc5d453a4e66312697eb1bfb6900ba4c33ce04f8ad8e71d05f6c",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-build-current-chain-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-build-current-chain-v1.sh",
+      "bytes": 165,
+      "sha256": "2a67a1fc7c960572dfce40c0a78825796ee3d4c91cd6df042b3dea7c5fee8c25",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-build-current-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-build-current-v1.sh",
+      "bytes": 3526,
+      "sha256": "ff845fa7d0c1a8a860365469d5b0880724a3b69533da124d7c0f81b14ffe812c",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-build-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-build-v1.sh",
+      "bytes": 3416,
+      "sha256": "71443bec8f25c228c960a4645eddb662b2ad96e7625f037f00eacadbd7bb00f2",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-compose-current-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-compose-current-v1.sh",
+      "bytes": 1749,
+      "sha256": "45b0ab38c72c1ea209d67ae5069cedbcbecfe075a6451c07841ab464f271e522",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-integrate-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-integrate-v1.sh",
+      "bytes": 1058,
+      "sha256": "b060e60cd8cf34c583e7e1d06d64f07af88dacf1eef0e8fd6b9407dc9cb42d15",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-source-inspect.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-source-inspect.sh",
+      "bytes": 204,
+      "sha256": "fc12ca11398f5e229d5f6b4f45967e66c1784e21a71844cf35f4eee164010f16",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-stage-current-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-stage-current-v1.sh",
+      "bytes": 1769,
+      "sha256": "13459d3522e80304664a01d5659e38ba923d7cd2b8824f0764a253229832c80a",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    },
+    {
+      "path": "c-side/takeover-stage-v1.sh",
+      "origin": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/takeover-stage-v1.sh",
+      "bytes": 1667,
+      "sha256": "ffda7efda726f69d9e3e227f3415bc799f5aeaa9aeca09845dfa9c90d226f7a4",
+      "classification": "authored-helper-source",
+      "prior_sealed_hash_verified": false
+    }
+  ],
+  "fixtures_identity_only": [
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/b1.txt",
+      "bytes": 116,
+      "sha256": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "copied": false,
+      "reason": "private warp/body not published; identity metadata only"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f1.txt",
+      "bytes": 119,
+      "sha256": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981",
+      "copied": false,
+      "reason": "private warp/body not published; identity metadata only"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/f2.txt",
+      "bytes": 143,
+      "sha256": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3",
+      "copied": false,
+      "reason": "private warp/body not published; identity metadata only"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/fixtures/s2.txt",
+      "bytes": 127,
+      "sha256": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "copied": false,
+      "reason": "private warp/body not published; identity metadata only"
+    }
+  ],
+  "omitted": [
+    {
+      "path": "INBOX.md",
+      "reason": "excluded by source-only allowlist (live, raw output, fixture, or unsealed successor)"
+    },
+    {
+      "path": "REVIEW-CENSUS-HOST.log",
+      "reason": "raw log intentionally excluded"
+    },
+    {
+      "path": "STATUS.md",
+      "reason": "live status intentionally excluded"
+    },
+    {
+      "path": "current-gates/STATUS.md",
+      "reason": "live status intentionally excluded"
+    },
+    {
+      "path": "fixtures/b1.txt",
+      "reason": "private fixture body; hash-only inventory"
+    },
+    {
+      "path": "fixtures/f1.txt",
+      "reason": "private fixture body; hash-only inventory"
+    },
+    {
+      "path": "fixtures/f2.txt",
+      "reason": "private fixture body; hash-only inventory"
+    },
+    {
+      "path": "fixtures/s2.txt",
+      "reason": "private fixture body; hash-only inventory"
+    },
+    {
+      "path": "runtime-support/STATUS.md",
+      "reason": "live status intentionally excluded"
+    },
+    {
+      "path": "runtime-support/current49ad/HOST-CONTROLS.log",
+      "reason": "raw log intentionally excluded"
+    },
+    {
+      "path": "runtime-support/current49ad/nm-actors-phase.txt",
+      "reason": "excluded by source-only allowlist (live, raw output, fixture, or unsealed successor)"
+    },
+    {
+      "path": "runtime-support/current49ad/nm-present-upload.txt",
+      "reason": "excluded by source-only allowlist (live, raw output, fixture, or unsealed successor)"
+    },
+    {
+      "path": "runtime-support/current49ad/nm-selected.txt",
+      "reason": "excluded by source-only allowlist (live, raw output, fixture, or unsealed successor)"
+    },
+    {
+      "path": "runtime-support/current49ad-sparse-correction/HOST-CONTROLS.log",
+      "reason": "raw log intentionally excluded"
+    }
+  ],
+  "limitations": [
+    "7a runtime matrix is historical and cannot qualify 49ad.",
+    "Original B reports and selected sealed ALL-PRE-REPAIR aggregate are pre-repair:21 strict PASS/3 strict Mendez FAIL; world unit/private QA pair NOT READY.",
+    "V1 current49ad observer unsupported on native sparse backing and not accepted.",
+    "Sealed V2 is refusal only, before process/RAM/VRAM access, not a sparse reader or capture qualification.",
+    "No SDK, target, guest, build, staging, private asset or capture outputs included or run.",
+    "Missing-material repair 67474 is separate and excluded; no acceptance upgrade."
+  ],
+  "all_pre_repair_bundle_manifest": {
+    "origin": "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/49ad20f9/current-gates-all-pre-repair/SHA256SUMS",
+    "sha256": "91862c5ec94c99ca1882b702a967879d5882ae79cd75b9bb7ceb66cd01e4e530"
+  },
+  "selected_successor_added_utc": "2026-10-24T02:31:45.317696+00:00"
+}

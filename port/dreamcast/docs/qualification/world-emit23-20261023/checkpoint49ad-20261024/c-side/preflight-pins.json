@@ -1,0 +1,170 @@
+{
+  "source": "933936ea7f45ba81c09277a780ed00111407aa23",
+  "no_build_guest_stage": true,
+  "files": {
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "bytes": 383739,
+      "sha256": "30c25b2036b0126ada50601273b9f99c55bf4cb87f6ae5a95826075bd77ce7b0"
+    },
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": {
+      "bytes": 11801,
+      "sha256": "8460fc023840e87f52ab97eac3b9d8b7192a7d22070219f08f1631e593149cc9"
+    },
+    "port/dreamcast/game/scenery19.mk": {
+      "bytes": 10163,
+      "sha256": "236ddb4113a244a621cb76da2f3ae3b6d07eafcb94cf97d35035c58fbfc0a9dd"
+    },
+    "port/dreamcast/game/logiclod20.mk": {
+      "bytes": 3128,
+      "sha256": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969"
+    },
+    "port/dreamcast/tools/d367/rr/recipe.conf": {
+      "bytes": 9567,
+      "sha256": "0497cb9df772fb1074a18423bdc25f7e3760a191141bb0d5edc412e71388cb6a"
+    },
+    "port/dreamcast/tools/d367/fullplay/fp_run.py": {
+      "bytes": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    "port/dreamcast/tools/d367/trace_lock.sh": {
+      "bytes": 2169,
+      "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688"
+    }
+  },
+  "old_outputs": [
+    {
+      "label": "soN",
+      "present": true,
+      "knobs": {
+        "ACTOR_SETUP_LEAN": "0",
+        "ALIVE_CAP": "4",
+        "ARENA_FIT_KOS_BYTES": "262144",
+        "MESH_LOD_PX": "3",
+        "PC_SAMPLER": "0",
+        "PS2_WORLD_TRANSITION_OWNER": "0",
+        "QA_MENU": "1",
+        "R101_ALIVE_CAP": "4",
+        "SCENERY_FAR_LOD": "4",
+        "SCENERY_REPLAY_LEAN": "0",
+        "SCENERY_SELECT_LEAN2": "0",
+        "SCENERY_SELECT_ONLY": "0",
+        "SCENERY_SUBMIT_BATCH": "0",
+        "SCENERY_UV_SNAPSHOT": "0",
+        "SCN_CENSUS": "0",
+        "WORLD_METER": "1"
+      },
+      "discs": {
+        "b1": true,
+        "s2": true,
+        "f1": true,
+        "f2": true
+      },
+      "resolved_sha256": "d8cdd5054493131cad362a836bdfb01f64e93e2dca4781907167167936f98145",
+      "recorded_elf_sha256": "20c1936dca1e8785d2b15ee9b4f53676139ff246557a7e372cd54b648a49eac2"
+    },
+    {
+      "label": "soY",
+      "present": true,
+      "knobs": {
+        "ACTOR_SETUP_LEAN": "1",
+        "ALIVE_CAP": "4",
+        "ARENA_FIT_KOS_BYTES": "262144",
+        "MESH_LOD_PX": "3",
+        "PC_SAMPLER": "0",
+        "PS2_WORLD_TRANSITION_OWNER": "0",
+        "QA_MENU": "1",
+        "R101_ALIVE_CAP": "4",
+        "SCENERY_FAR_LOD": "4",
+        "SCENERY_REPLAY_LEAN": "1",
+        "SCENERY_SELECT_LEAN2": "0",
+        "SCENERY_SELECT_ONLY": "1",
+        "SCENERY_SUBMIT_BATCH": "1",
+        "SCENERY_UV_SNAPSHOT": "1",
+        "SCN_CENSUS": "0",
+        "WORLD_METER": "1"
+      },
+      "discs": {
+        "b1": true,
+        "s2": true,
+        "f1": true,
+        "f2": true
+      },
+      "resolved_sha256": "7dacdecb58821b3e63b5d9b0b62986a0369f8abd76e470f9b185f9d61a453e15",
+      "recorded_elf_sha256": "2e2971b54ef8f4866d02dec22ac7e67e2ad7ec1639802ecce2a840b30199a579"
+    },
+    {
+      "label": "soX",
+      "present": true,
+      "knobs": {
+        "ACTOR_SETUP_LEAN": "1",
+        "ALIVE_CAP": "4",
+        "ARENA_FIT_KOS_BYTES": "262144",
+        "MESH_LOD_PX": "3",
+        "PC_SAMPLER": "0",
+        "PS2_WORLD_TRANSITION_OWNER": "0",
+        "QA_MENU": "1",
+        "R101_ALIVE_CAP": "4",
+        "SCENERY_FAR_LOD": "4",
+        "SCENERY_REPLAY_LEAN": "1",
+        "SCENERY_SELECT_LEAN2": "1",
+        "SCENERY_SELECT_ONLY": "1",
+        "SCENERY_SUBMIT_BATCH": "1",
+        "SCENERY_UV_SNAPSHOT": "1",
+        "SCN_CENSUS": "0",
+        "WORLD_METER": "1"
+      },
+      "discs": {
+        "b1": true,
+        "s2": true,
+        "f1": true,
+        "f2": true
+      },
+      "resolved_sha256": "4eb05ef53c941e8520799e4cc083c0a9c899b66602dd9e9d68dc7119972203e0",
+      "recorded_elf_sha256": "bebaf958b095287a4c118cd79bce989f73f7c6d117637ee9d729569483ff4bae"
+    }
+  ],
+  "reusable_harness": {
+    "run1.sh": {
+      "bytes": 973,
+      "sha256": "2ef98143ff12cf8cda299998c61ebebbdcfdd11fff13906e124aa21bb647920e"
+    },
+    "runpair.sh": {
+      "bytes": 371,
+      "sha256": "126334370f06cdd3d89da0c45e8b1b13a89e49a5b401012de5fe6f7976ca3fe5"
+    },
+    "an.py": {
+      "bytes": 2087,
+      "sha256": "a6563d2fd2ab764357204e089b007f623ac056eba4a564dc41b0276d8074569c"
+    },
+    "pixm.py": {
+      "bytes": 762,
+      "sha256": "2ce8c0a4947d70f0cc6d8020b92602152bfba26aa42946bdaf9d8aff5eba3727"
+    },
+    "build.sh": {
+      "bytes": 3187,
+      "sha256": "27c6314d713fa380e1dbce49c6371df7f8baec207f3e561104354a9cc0efb543"
+    },
+    "scenes/b1.txt": {
+      "bytes": 116,
+      "sha256": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576"
+    },
+    "scenes/f1.txt": {
+      "bytes": 119,
+      "sha256": "f1dc379312ec21b2a0d3969dcb6efdacda7c09b3ee502eb1eb5de8df4c080981"
+    },
+    "scenes/f2.txt": {
+      "bytes": 143,
+      "sha256": "6d6be3796544f1dca1038fdc340cedb550897cc560480ef8164769897e9f3ff3"
+    },
+    "scenes/s2.txt": {
+      "bytes": 127,
+      "sha256": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa"
+    }
+  },
+  "old_tree": {
+    "head": "dc87c4658d65ba992d266e3cb1893ecd485da661",
+    "status": [
+      " M port/dreamcast/game/platform/native_static.cpp"
+    ]
+  }
+}

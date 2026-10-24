@@ -1,0 +1,617 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "scope": "actual current-profile Flycast console regression; no hardware/performance/recipe acceptance",
+  "completed": [
+    {
+      "arm": "B",
+      "gate": "bell",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bell-r1",
+      "pass": true,
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "89c2ceafea5dc7b9bd1428dabf753c99ab8d278bba1ebf9263b471c72606f2c4",
+          "reference_log_sha256": "3e3b33c573336a18c99dad8225309846b429f3dd31d8113dad097d8d4eabef8e"
+        }
+      },
+      "critical": [],
+      "elapsed_s": 39.7,
+      "deadline_fired": false,
+      "main_sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "b37f2567aa0c31bacd182601f004bec7d6ac87522eb555d0a67ecdc7fe81e159",
+      "result_sha256": "832765ac00db2402479fab1fe5ab9beafa825e4872a1f1e7a1db1f8cf6745948"
+    },
+    {
+      "arm": "B",
+      "gate": "bench100",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bench100-r1",
+      "pass": true,
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 46,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=2880 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3000 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3120 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3240 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3360 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3480 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3600 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3720 budget=2444544 used=2206790 free=269568 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "f1351f24c450bbaea9d21abf454b6cf7d52a759a6899362488b852107009d3a3"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "fe325d08123abd519f0bb452439b8ce91272a75e85132777da32a17b3d4efc69"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "90f1613fd04163d8282886e4395171592d9eab95ca8211dd497babf2906ea945"
+          }
+        }
+      },
+      "critical": [],
+      "elapsed_s": 41.4,
+      "deadline_fired": false,
+      "main_sha256": "0357b3e2ff3692d8f611fbef77b8eadb2d330b09216db872a2b6868f2ddbe248",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "9711674b315b9d6240e4879d44a079fa38afb3eb24aec94dc76321c2d11018a5",
+      "result_sha256": "c2d04df1b9b07af8e3c688744b31041590102cfa6146dd6635fd837812aadbc6"
+    },
+    {
+      "arm": "B",
+      "gate": "bench101",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-bench101-r1",
+      "pass": true,
+      "observed": {
+        "entry": true,
+        "nmrs_rows": 52,
+        "draw_rows": true,
+        "alive_census": true,
+        "memory_entry": true,
+        "vram": true,
+        "vram_counter_rows": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "memory_tail": [
+          "native UI VRAM: frame=3360 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3480 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3600 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3720 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3840 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=3960 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4080 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0",
+          "native UI VRAM: frame=4200 budget=2444544 used=2300654 free=174656 rejects=0 retries=0 evicted=0"
+        ],
+        "heap_check_bad": [],
+        "checks": {
+          "castgc": {
+            "rc": 0,
+            "sha256": "43b5eb93ab4ef8049321529e6286059073018c94a384661005f7238828fdbf00"
+          },
+          "leongc": {
+            "rc": 0,
+            "sha256": "07c67265fe821b274e056ef5da7dac1345fac28274f6589db4e6ff0b9044f20e"
+          },
+          "texchk": {
+            "rc": 0,
+            "sha256": "4c5f8b2a4b9dbaf036e71a57f23c9c88eb6c1dbffeb5d7224d27fbfe868f4d6c"
+          }
+        }
+      },
+      "critical": [],
+      "elapsed_s": 41.3,
+      "deadline_fired": false,
+      "main_sha256": "0357b3e2ff3692d8f611fbef77b8eadb2d330b09216db872a2b6868f2ddbe248",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "38d8f1faa4bc683deb6fcc8577ef1e7cbfc72a1e06ce1f13cde9f9c21addb9b3",
+      "result_sha256": "7f78fe2bd36ecf8432073d41d984ebfb140539e7ad5f044b1fddadf06f1879b7"
+    },
+    {
+      "arm": "B",
+      "gate": "gd1",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-gd1-r1",
+      "pass": true,
+      "observed": {
+        "room103": true,
+        "bad_read": false,
+        "profile_gdemu_observed": true,
+        "emu_env": {
+          "RE4DC_GD_JITTER": "20000",
+          "RE4DC_GD_PROFILE": "gdemu",
+          "RE4DC_GD_SEED": "1"
+        }
+      },
+      "critical": [],
+      "elapsed_s": 16.4,
+      "deadline_fired": false,
+      "main_sha256": "03bbfd28365bf837bd48d6f8ed869b5de70ae05fb0963ac18848bf9e5aa34fa4",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "6ad8e14b2e86610b6498d5dd01b751353795fd659797e82c3bfb00f6fdcbb3ce",
+      "result_sha256": "5271b2786c7c32d8c33596b9b687a6c22797358831a0db37727a6132d9c8293c"
+    },
+    {
+      "arm": "B",
+      "gate": "h2",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-h2-r1",
+      "pass": true,
+      "observed": {
+        "full340": true,
+        "heap_before": 89824,
+        "matching_arena_return_restored": true
+      },
+      "critical": [],
+      "elapsed_s": 36.2,
+      "deadline_fired": false,
+      "main_sha256": "03bbfd28365bf837bd48d6f8ed869b5de70ae05fb0963ac18848bf9e5aa34fa4",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "a37984e9efd15392c9b61a295463f81e474c45a9ae818b4cfedec870fd9ee9ee",
+      "result_sha256": "055a2ce2e35cb5caff86027e8ea9a5fd410cedcf746c372056bef872ade44b73"
+    },
+    {
+      "arm": "B",
+      "gate": "kos0",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-kos0-r1",
+      "pass": true,
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "0"
+          ]
+        ],
+        "min_headroom": 4640,
+        "alert_reached": true
+      },
+      "critical": [],
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "main_sha256": "0357b3e2ff3692d8f611fbef77b8eadb2d330b09216db872a2b6868f2ddbe248",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "ac5ba21ed8d88f5d4f196408ce70d29223ab819247313070c64dc23577ee0447",
+      "result_sha256": "15d38f394ae7bfbab551a9a7e65821b8adf896948acf96b7444a8771d84fd3db"
+    },
+    {
+      "arm": "B",
+      "gate": "kos1",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-kos1-r1",
+      "pass": true,
+      "observed": {
+        "squeeze_rows": [
+          [
+            "49152",
+            "49152",
+            "1"
+          ]
+        ],
+        "min_headroom": 4552,
+        "alert_reached": true
+      },
+      "critical": [],
+      "elapsed_s": 45.8,
+      "deadline_fired": false,
+      "main_sha256": "0357b3e2ff3692d8f611fbef77b8eadb2d330b09216db872a2b6868f2ddbe248",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "f1a99f0cf64a4b0aa257029cde3c3430dfab7f41776891bc2e2201ce5643fd2d",
+      "result_sha256": "c06fbb5ec3bec71e9f6009d578c50b4d02dd46523b44e7932cab8dba9eab7ff7"
+    },
+    {
+      "arm": "B",
+      "gate": "mendez",
+      "capture": "C:\\Flycast-Evidence\\re4-dreamcast\\world-emit23-takeover\\49ad20f9\\captures\\B-mendez-r1",
+      "pass": false,
+      "observed": {
+        "goal_stop": true,
+        "source_event_markers": true,
+        "comparison": {
+          "rc": 0,
+          "sha256": "97c6be551af5b2db13ee5261b9838496acecd893ec74bf69323282bec7162642",
+          "reference_log_sha256": "02133076bd19417e8c390ba2aed1f76788bff9c59749e7a38d03903d6b9cd103"
+        }
+      },
+      "critical": [
+        "native UI: package rejected: open failed",
+        "native UI: upload FAILED vram=0"
+      ],
+      "elapsed_s": 44.8,
+      "deadline_fired": false,
+      "main_sha256": "ab03d9d75d4e60e2dacdec6dbef3ac41fe15691784ab2281c238692a6d0425d9",
+      "overlays": 14,
+      "asset_manifest_sha256": "de1f410a4c2f6175a728ff50fee8a555db20b5fa76873733eab2659647617830",
+      "log_sha256": "29245bc9e1491af3fde55a538544b70f42ce58decc728ea377c10d4c9438aa05",
+      "result_sha256": "ecc15c8ed85905bf2f1c45ec8fa31e20924d48ef345bd1b8b28e0fadb406d79f"
+    }
+  ],
+  "strict_passes": 7,
+  "total_B": 8,
+  "known_control_gap": "B Mendez route/decision pass but stricttexture gate nonpass; same pair missing in byte-proven R control, verdict preserved",
+  "R_reuse_proofs": {
+    "R-c-5e4d": {
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "main": {
+        "sha256": "f9fc552725dae4f42702b1acb83903c0035fdd633383c264d2c48cc151254dcd",
+        "size": 3429348
+      },
+      "overlays": 14,
+      "old_track03_sha256": "930f5a22b7e3d0d66309201b4219f13b2ce4a3de0bdf72f6b5aab1d026566ace",
+      "eligible": true
+    },
+    "R-g-5e4d": {
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "main": {
+        "sha256": "e51c8903a17ddb5dbde303c05120e8b26b22ffc1b6b76edf98701008a6d5ea99",
+        "size": 3402532
+      },
+      "overlays": 14,
+      "old_track03_sha256": "d024bc2f6ac14a828a1e1835e3615f1926c95ddaaf130891be0028d199d08484",
+      "eligible": true
+    },
+    "R-t-5e4d": {
+      "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+      "old_source": "5e4de9a0262d3629c9833c959557de198b2e9f0c",
+      "main": {
+        "sha256": "5b80931e968e6a294c1c4576319b717499ca1ed9984a8d749e891d0bdfd84aa8",
+        "size": 3405008
+      },
+      "overlays": 14,
+      "old_track03_sha256": "5e36f5e71ab6819e8a26550ee6f7d706f0a3b0ee2fd712ffd8576c3483d68c2e",
+      "eligible": true
+    }
+  },
+  "guest_concurrency_limit": 1,
+  "SDK_edits_or_builds": false,
+  "L_E_owner": "root via separate worker-lock immutable copy; no L/E runs by this worker"
+}

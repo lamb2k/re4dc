@@ -1,0 +1,23 @@
+# Correction: native sparse manager backing is unsupported
+
+The sealed current49ad V1 observer has a concrete ownership defect: `actor_roster` treats manager.pArray as the first work object and requires every alive address to be an exact stride slot inside[pArray,pArray+nArray*stride). That is a contiguous-storage assumption. Current actual R-gW resolved ENEMY_DEMAND1/OBJECT_DEMAND1 make native manager.pArray point to a Pool header plus a slot-pointer table. Actual alive objects reside in separately allocated chunks. A valid sparse object can be outside the false contiguous extent. V1 must not be used on the current native backing.
+
+This is an observer defect, not evidence of game corruption or an empty actor population. The earlier host contiguous fixture did not exercise the actual native storage. Its passing synthetic controls do not qualify current manager reads. The sealed V1 files/receipt d7026d14e8a096469eac12aed583767ce135b8ef3b0ab8a10c78c00428354835 are preserved byte-for-byte. The current source-only verdict that strict completed actor/viewport pixel binding is unsupported remains valid.
+
+## Actual source contract
+
+The current49ad `parts_bridge.cpp` declares demand<cEm>=ENEMY_DEMAND and demand<cObj>=OBJECT_DEMAND. sparse() is demand<T> && !pArrayPush. array_alloc stores the Pool pointer in pArray. work_at returns pool()->slots()[no] when sparse, not pArray+stride*no. The target's existing WORKAT_INLINE static_assert requires Pool64 and slot table at+64. Actual prepareWork differs by type: cEm prepares two-slot pages; cObj prepares eight-slot pages, with final-page bounds. Retained/frozen/pushed storage adds further ownership conditions. The audits23 Em2-page reader cannot be reused as a cObj reader without authenticating that distinct contract.
+
+BACKING-PROOF.json pins the actual current source, resolved profile, manager header and sealed V1 reader/receipt. No target probe/build was run for this correction. The actual source excerpts Pool/Chunk/sparse/work_at and both prepareWork implementations are compiled and run only as a bounded host adapter in/dev/shm. Host pointer width is not claimed as the target ABI.
+
+## V2 supported scope
+
+`freeze330-observer-v2.py` is an authenticated preflight refusal gate. It implements no sparse reader. For the current recipe it returns exit3/status UNSUPPORTED_NATIVE_BACKING before importing the V1 reader, opening a process, reading RAM/VRAM, or starting a guest. Its receipt explicitly records observer_runtime_supportedfalse, strict_pixel_qualifiedfalse, process_openedfalse and guest_startedfalse. Unknown/missing/duplicated flags or changed source/profile/legacy pins reject. A caller cannot substitute flags0 to fall back to contiguous ownership; any other recipe requires separate qualification.
+
+Actual current native snapshot/capture support is therefore **none**. Supported work is source/ELF analysis, host fixtures and explicit preflight refusal. Neither a nonempty nor an empty native actor roster is authenticated by this helper. Do not run V1 directly as a workaround. A future enabled reader must authenticate sparse pool/slot/chunk ownership independently for both managers, including frozen/debug/pushed/backing lifetime, rather than change only the interval test.
+
+No SDK, guest, source/runtime edits, new historical-state instrumentation or pixels were performed. The old7a census/modelled timing evidence remains immutable and unrelated to this observer defect. Root reports another worker observed the unlimited-speed freeze watchdog overwrite fb0 while retained fb1 matched; that separate framebuffer observation does not fill completed actor/viewport/presentation/upload binding and is not upgraded to full pixel acceptance here.
+
+## Regression evidence
+
+The host runner pins and extracts actual allocator code, verifies sparse work_at selects a remote logical-slot pointer, distinguishes cObj8 from cEm2 and checks short final pages. A source-valid sparse witness exposes V1's false contiguous rejection. V2 current/one-demand/other-unqualified profile controls refuse before manager/process reads; modified source/profile/legacy pins refuse. The actual current-profile CLI returns unsupported3 with a new explicit refusal receipt. All compilation/execution artifacts stay in RAM. HOST-CONTROLS.log records the bounded source/host results; RECEIPT.json pins this correction separately without rewriting the old seals.

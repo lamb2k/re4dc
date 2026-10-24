@@ -1,0 +1,118 @@
+{
+  "source": "49ad20f9932d638ddb7becf5db6f86b92e0a76a2",
+  "elf": "/root/probe/lanes/route/out-fpwe23R49adgW/re4dc-game.elf",
+  "elf_sha256": "9f41e9b398984b1c3cdbed6d6910b032746aa6badc76dcfeda0a1fa739250e5d",
+  "sealed_utc": "2026-10-24T01:57:02.390256+00:00",
+  "claim": "source/ELF/host controls only; no SDK build/guest/image/runtime edits; strict pixel qualification unsupported by existing completed bindings",
+  "source_tree_clean": true,
+  "host_returncode": 0,
+  "files": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/actor-layout-research.json": {
+      "bytes": 190414,
+      "sha256": "118de8245090caa7246d0e55e8efdfcc35ebfed32a1c345e47df8e61d3f8d00b"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/actor-layout-v1.py": {
+      "bytes": 1591,
+      "sha256": "3b057727089d78094bb9ee2be7dc9f1fd1d03ab80674c5dc52575b60cab3fb84"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/compact-layout-v1.py": {
+      "bytes": 2248,
+      "sha256": "76b6cd0c05fd70d430d0cf79bdde12853d36670775e1090ce5a53c0c344031ad"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/dwarf-compact.json": {
+      "bytes": 252432,
+      "sha256": "7ce63ee17c128a31eed1c58a109afc85db2fe3e17a0b3b2705a6b796c01429ec"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/extract-layout-v1.py": {
+      "bytes": 2679,
+      "sha256": "40035a718f58295d0c9f817db9832277ebcde23722d83b9617125aa346241dc1"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/freeze330-observer.py": {
+      "bytes": 11780,
+      "sha256": "f1d2f20df2db49fde6b2a8b0d7106732a656e99d1ffa903826c2aa92220b4811"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/HOST-CONTROLS.log": {
+      "bytes": 576,
+      "sha256": "212fb3f2d92a3d8333f62e078d6ecbfbb4da0c5738e2de684e21e6230b06091e"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/inspect-source-v1.sh": {
+      "bytes": 515,
+      "sha256": "dc2311d60a3002d9a2716cb43f4573e4718d338f380b6f49440ee4af13e57f94"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/layout-research.json": {
+      "bytes": 40100,
+      "sha256": "27a3b004e6b854a0b32662a4577a4b798b618333c2cdd91f12cc1c9137a17742"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/nm-actors-phase.txt": {
+      "bytes": 408,
+      "sha256": "08d553f7fb12d45f0ee12d759cfdd25921fddde8d6665dea24f5e98f9fa87921"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/nm-present-upload.txt": {
+      "bytes": 3659,
+      "sha256": "bd0d2d6d5a41b8e72fe0ac9a5412a0e03d5318ad0c838a46b3208bb077d020c1"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/nm-selected.txt": {
+      "bytes": 2772,
+      "sha256": "f9869459b7d11750426d7ad32ee802a45cae8d84dc42826057115531081e42a7"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/observer-layout-R-g.json": {
+      "bytes": 16063,
+      "sha256": "024d95fb8d09d734c6021b3eb0eafa27b544a6992e4fa7578e950cc19f64a3ea"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/prepare-observer-layout.py": {
+      "bytes": 5530,
+      "sha256": "faf1c051c6aadb80d5e2ee0e957d555e95e4056db3895073f1cd03ae1cabf951"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/seal-observer-receipt.py": {
+      "bytes": 1894,
+      "sha256": "a55dd200884362b6cc69fd0d78bd9c4fdf4346a2195d0d3300a02718f63a2abb"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/SOURCE-DESIGN.md": {
+      "bytes": 7376,
+      "sha256": "c49b832fcbbd78adb7b9f55d103836a2b74eb0a4b5b948641c4fd17a8940e371"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/stream-layout-v1.py": {
+      "bytes": 2908,
+      "sha256": "2e1064ea7cd634679daefae01dd6d0d4c8995487a7fd2f7327b85faff69c82b2"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/current49ad/test-observer.py": {
+      "bytes": 6874,
+      "sha256": "927d05302bc455c865382ee9b3c93eff38566e3ffb542d0cddbb780cb5b95a93"
+    }
+  },
+  "source_pins": {
+    "/root/work/lanes/world-emit23-current-R/src/game/main.cpp": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+    "/root/work/lanes/world-emit23-current-R/src/game/main_sub.cpp": "67483158e94c5fb54d50bb6fd4cdc4a1988d3db073d9fdccbd573e77128cfc29",
+    "/root/work/lanes/world-emit23-current-R/src/game/game.cpp": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/dbgwarp_bridge.cpp": "06dcb69d8108c438ab577f6787ab3b468d2d4fed6cbe2e7c07e30873650b95a7",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/ui_bridge.cpp": "18132b707f732a006f49d296ea53549e9a62e0cd22a625e6226c8ed53a178e29",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/pace_present.cpp": "63a4700e89ab4e63d32453f09842660e277df3c37ea6c0fac4a959fe7f3219f7",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_ui.cpp": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/include/native_actor.hpp": "0f5a1c001c5edb53e4ce9fc9d4a6ffabc0b09ca62d2fe42b3b51559ffb871585",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_actor.cpp": "a81ec8cc86aff47798b15c5580813d3c505462610a66b8263109b3040154120a",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/native_actor_fast.cpp": "3771b1dfd9024768597b01fa593e480e89abd78423060d42e1b4c183a0384f65",
+    "/root/work/lanes/world-emit23-current-R/port/dreamcast/game/platform/res_mode.cpp": "e2ed14ded62370481b738e584a978fa26981341eda85820fa613c9c05794564f",
+    "/root/work/lanes/world-emit23-current-R/include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "/root/work/lanes/world-emit23-current-R/include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "/root/work/lanes/world-emit23-current-R/include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+  },
+  "kos_pins": {
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/pvr/pvr_irq.c": "600ea63e42487c146049cb61da284968fc3c17d064bc718ad9923c12fe495a9c",
+    "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/pvr/pvr_internal.h": "6666cb2eb4f1510d0ee55fc656e6c1ba1dfa3a5380f86135a30bb3d7fccf873e"
+  },
+  "backend_pins": {
+    "owned": {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/stat-bytes23/stat_owned_ram.py",
+      "sha256": "8bd179110988d1b808d8e353b182f921dc244fdae985a51995293ba570c136b0"
+    },
+    "decoder": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/d367-harness-par/capture_ui_vram.py",
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    }
+  },
+  "profile_sha256": "9cb937d783cc0474d0d51afb7eda41eb86fb2c46ab665fae3eaf9a9ff9d3bc14",
+  "stack_sha256": "e5c00eda3397a81df4a839dea81eb839e6a3e10dc856c7b89f455be260da2e1a",
+  "old7a_receipt_unchanged": "9fd3ff6d801655ba46edaf75becd31b880a302b3ad84b54011e6df7e14540dee"
+}

@@ -1,0 +1,1669 @@
+{
+  "elf": "/root/probe/lanes/route/out-fpwe23R49adgW/re4dc-game.elf",
+  "elf_sha256": "9f41e9b398984b1c3cdbed6d6910b032746aa6badc76dcfeda0a1fa739250e5d",
+  "types": [
+    {
+      "die": "0x98ec23",
+      "name": "Snapshot",
+      "size": "428",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x5df85): Snapshot",
+        "DW_AT_byte_size": "428",
+        "DW_AT_decl_file": "18",
+        "DW_AT_decl_line": "25",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0x98ec9b>"
+      },
+      "members": [
+        {
+          "name": "sequence",
+          "offset": "0",
+          "type_ref": "<0x9829df>",
+          "byte_size": null
+        },
+        {
+          "name": "frame",
+          "offset": "4",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "clock_valid",
+          "offset": "8",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "clock_reads",
+          "offset": "12",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "stage_us",
+          "offset": "16",
+          "type_ref": "<0x99365f>",
+          "byte_size": null
+        },
+        {
+          "name": "calls",
+          "offset": "88",
+          "type_ref": "<0x99365f>",
+          "byte_size": null
+        },
+        {
+          "name": "metrics",
+          "offset": "160",
+          "type_ref": "<0x99366f>",
+          "byte_size": null
+        },
+        {
+          "name": "source",
+          "offset": "316",
+          "type_ref": "<0x98eb8e>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0x98eb8e",
+      "name": "Source",
+      "size": "112",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x287af): Source",
+        "DW_AT_byte_size": "112",
+        "DW_AT_decl_file": "18",
+        "DW_AT_decl_line": "24",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0x98ec1e>"
+      },
+      "members": [
+        {
+          "name": "tick",
+          "offset": "0",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "system",
+          "offset": "4",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "stop",
+          "offset": "8",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "room",
+          "offset": "12",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "room_flags",
+          "offset": "16",
+          "type_ref": "<0x99364f>",
+          "byte_size": null
+        },
+        {
+          "name": "status",
+          "offset": "32",
+          "type_ref": "<0x99364f>",
+          "byte_size": null
+        },
+        {
+          "name": "player",
+          "offset": "48",
+          "type_ref": "<0x992b5a>",
+          "byte_size": null
+        },
+        {
+          "name": "camera",
+          "offset": "72",
+          "type_ref": "<0x992ac3>",
+          "byte_size": null
+        },
+        {
+          "name": "motion_frame",
+          "offset": "104",
+          "type_ref": "<0x9829bd>",
+          "byte_size": null
+        },
+        {
+          "name": "motion_state",
+          "offset": "108",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0x99346f",
+      "name": "Re4dcNativeFrameStats",
+      "size": "192",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x6e757): Re4dcNativeFrameStats",
+        "DW_AT_byte_size": "192",
+        "DW_AT_decl_file": "28",
+        "DW_AT_decl_line": "156",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0x993574>"
+      },
+      "members": [
+        {
+          "name": "sequence",
+          "offset": "0",
+          "type_ref": "<0x9829df>",
+          "byte_size": null
+        },
+        {
+          "name": "frame",
+          "offset": "4",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "work",
+          "offset": "8",
+          "type_ref": "<0x993265>",
+          "byte_size": null
+        },
+        {
+          "name": "pvr_calls",
+          "offset": "128",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "pvr_bytes",
+          "offset": "132",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "header_hits",
+          "offset": "136",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "header_builds",
+          "offset": "140",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "plan_used",
+          "offset": "144",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "plan_capacity",
+          "offset": "148",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "queue_peak",
+          "offset": "152",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "queue_drops",
+          "offset": "156",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "texture_vram",
+          "offset": "160",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "texture_peak",
+          "offset": "164",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "native_slab",
+          "offset": "168",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "source_heap_free",
+          "offset": "172",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "render_wall_us",
+          "offset": "176",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "present_wait_us",
+          "offset": "180",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "present_requested",
+          "offset": "184",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "aborted",
+          "offset": "188",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0xa7d40e",
+      "name": "GlobalWork",
+      "size": "34432",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x6eb1): GlobalWork",
+        "DW_AT_byte_size": "34432",
+        "DW_AT_decl_file": "7",
+        "DW_AT_decl_line": "84",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0xa7dc94>"
+      },
+      "members": [
+        {
+          "name": "dev_mode",
+          "offset": "0",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "shooting_mode",
+          "offset": "4",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "save_no",
+          "offset": "5",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_6",
+          "offset": "6",
+          "type_ref": "<0xa7dc94>",
+          "byte_size": null
+        },
+        {
+          "name": "CardStatus",
+          "offset": "8",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_C",
+          "offset": "12",
+          "type_ref": "<0xa7d10c>",
+          "byte_size": null
+        },
+        {
+          "name": "card_serial",
+          "offset": "16",
+          "type_ref": "<0xa7cf71>",
+          "byte_size": null
+        },
+        {
+          "name": "pFont",
+          "offset": "24",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "IsMessageInit",
+          "offset": "28",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "32",
+          "type_ref": "<0xa7d41b>",
+          "byte_size": null
+        },
+        {
+          "name": "vtx_buf_no",
+          "offset": "36",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "40",
+          "type_ref": "<0xa7d473>",
+          "byte_size": null
+        },
+        {
+          "name": "next_point",
+          "offset": "42",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_2B",
+          "offset": "43",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "NextPos",
+          "offset": "44",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "NextY",
+          "offset": "56",
+          "type_ref": "<0xa7cf7d>",
+          "byte_size": null
+        },
+        {
+          "name": "pStFnt",
+          "offset": "60",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pRoom",
+          "offset": "64",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pWep",
+          "offset": "68",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pArc",
+          "offset": "72",
+          "type_ref": "<0xa7dca6>",
+          "byte_size": null
+        },
+        {
+          "name": "pOption",
+          "offset": "76",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pPlayer",
+          "offset": "80",
+          "type_ref": "<0xa7dcab>",
+          "byte_size": null
+        },
+        {
+          "name": "System_flg",
+          "offset": "84",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "Disp_flg",
+          "offset": "88",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "game_start_time",
+          "offset": "92",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "Debug_flg",
+          "offset": "96",
+          "type_ref": "<0xa7dcb0>",
+          "byte_size": null
+        },
+        {
+          "name": "mot_speed",
+          "offset": "112",
+          "type_ref": "<0xa7cf7d>",
+          "byte_size": null
+        },
+        {
+          "name": "Cam",
+          "offset": "116",
+          "type_ref": "<0xa7d07e>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_16C",
+          "offset": "364",
+          "type_ref": "<0xa7d10c>",
+          "byte_size": null
+        },
+        {
+          "name": "Stop_flg",
+          "offset": "368",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "Room_flg",
+          "offset": "372",
+          "type_ref": "<0xa7dcb0>",
+          "byte_size": null
+        },
+        {
+          "name": "gxStage",
+          "offset": "388",
+          "type_ref": "<0xa7d355>",
+          "byte_size": null
+        },
+        {
+          "name": "mtxPalette",
+          "offset": "400",
+          "type_ref": "<0xa7dcc0>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_3010",
+          "offset": "12304",
+          "type_ref": "<0xa7dcdc>",
+          "byte_size": null
+        },
+        {
+          "name": "prim_base",
+          "offset": "20240",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "prim_rate",
+          "offset": "20244",
+          "type_ref": "<0xa7cf7d>",
+          "byte_size": null
+        },
+        {
+          "name": "prim_cnt",
+          "offset": "20248",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "nPrim",
+          "offset": "20252",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "RoomMes",
+          "offset": "20256",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pCamCore",
+          "offset": "20260",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pCamRoom",
+          "offset": "20264",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "Rtp",
+          "offset": "20268",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pEmi",
+          "offset": "20272",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "pOsd",
+          "offset": "20276",
+          "type_ref": "<0xa7dca4>",
+          "byte_size": null
+        },
+        {
+          "name": "AreaNo",
+          "offset": "20280",
+          "type_ref": "<0xa7cef2>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4F39",
+          "offset": "20281",
+          "type_ref": "<0xa7dced>",
+          "byte_size": null
+        },
+        {
+          "name": "bell_pos",
+          "offset": "20284",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "bell_stat",
+          "offset": "20296",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4F49",
+          "offset": "20297",
+          "type_ref": "<0xa7dcfd>",
+          "byte_size": null
+        },
+        {
+          "name": "quake_ofs",
+          "offset": "20336",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "weapon_no_old",
+          "offset": "20348",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "door_no",
+          "offset": "20349",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "cdown_add_sec",
+          "offset": "20350",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "save_data_start_addr",
+          "offset": "20352",
+          "type_ref": "<0xa7d10c>",
+          "byte_size": null
+        },
+        {
+          "name": "point",
+          "offset": "20356",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "Game_level",
+          "offset": "20360",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "x4F89",
+          "offset": "20361",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "chapter",
+          "offset": "20362",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4F8B",
+          "offset": "20363",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "save_cnt",
+          "offset": "20364",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "game_cnt",
+          "offset": "20366",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "r_continue_cnt",
+          "offset": "20368",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "snd_tbl_no",
+          "offset": "20370",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "language",
+          "offset": "20371",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "play_time",
+          "offset": "20372",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "peseta",
+          "offset": "20376",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "20380",
+          "type_ref": "<0xa7d4b1>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "20384",
+          "type_ref": "<0xa7d531>",
+          "byte_size": null
+        },
+        {
+          "name": "Part_old",
+          "offset": "20386",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "em_list_no",
+          "offset": "20387",
+          "type_ref": "<0xa7cef2>",
+          "byte_size": null
+        },
+        {
+          "name": "pl_life",
+          "offset": "20388",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "pl_life_max",
+          "offset": "20390",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "ashley_life",
+          "offset": "20392",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "ashley_life_max",
+          "offset": "20394",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4FAC",
+          "offset": "20396",
+          "type_ref": "<0xa7d10c>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "20400",
+          "type_ref": "<0xa7d56f>",
+          "byte_size": null
+        },
+        {
+          "name": "weapon_lv_speed",
+          "offset": "20404",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "weapon_lv_blt",
+          "offset": "20405",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4FB6",
+          "offset": "20406",
+          "type_ref": "<0xa7dc94>",
+          "byte_size": null
+        },
+        {
+          "name": "",
+          "offset": "20408",
+          "type_ref": "<0xa7d5c7>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4FBC",
+          "offset": "20412",
+          "type_ref": "<0xa7dc94>",
+          "byte_size": null
+        },
+        {
+          "name": "pl_flag",
+          "offset": "20414",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "sub_pos",
+          "offset": "20416",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "sub_angle",
+          "offset": "20428",
+          "type_ref": "<0xa7cf7d>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_4FD0",
+          "offset": "20432",
+          "type_ref": "<0xa7dd0d>",
+          "byte_size": null
+        },
+        {
+          "name": "Status_flg",
+          "offset": "20492",
+          "type_ref": "<0xa7dcb0>",
+          "byte_size": null
+        },
+        {
+          "name": "em_dead",
+          "offset": "20508",
+          "type_ref": "<0xa7dd1d>",
+          "byte_size": null
+        },
+        {
+          "name": "item_flags",
+          "offset": "20892",
+          "type_ref": "<0xa7dd33>",
+          "byte_size": null
+        },
+        {
+          "name": "Item_find_flg",
+          "offset": "20924",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "Scenario_flg",
+          "offset": "20928",
+          "type_ref": "<0xa7dd43>",
+          "byte_size": null
+        },
+        {
+          "name": "door_flags_51C8",
+          "offset": "20936",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "door_flags_51CC",
+          "offset": "20940",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "door_flags_51D0",
+          "offset": "20944",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_51D4",
+          "offset": "20948",
+          "type_ref": "<0xa7dd53>",
+          "byte_size": null
+        },
+        {
+          "name": "door_unlock",
+          "offset": "20956",
+          "type_ref": "<0xa7dd43>",
+          "byte_size": null
+        },
+        {
+          "name": "Frame_cnt",
+          "offset": "20964",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "save_free_work",
+          "offset": "20968",
+          "type_ref": "<0xa7dd63>",
+          "byte_size": null
+        },
+        {
+          "name": "Em_list",
+          "offset": "21224",
+          "type_ref": "<0xa7dd73>",
+          "byte_size": null
+        },
+        {
+          "name": "item_save",
+          "offset": "29416",
+          "type_ref": "<0xa7dd84>",
+          "byte_size": null
+        },
+        {
+          "name": "ope_x82E8",
+          "offset": "33512",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "ope_ow_type",
+          "offset": "33516",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_82ED",
+          "offset": "33517",
+          "type_ref": "<0xa7dced>",
+          "byte_size": null
+        },
+        {
+          "name": "ope_mdt_bits",
+          "offset": "33520",
+          "type_ref": "<0xa7dd94>",
+          "byte_size": null
+        },
+        {
+          "name": "ope_x82FC",
+          "offset": "33532",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "ope_mdt_no",
+          "offset": "33536",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_8304",
+          "offset": "33540",
+          "type_ref": "<0xa7dda4>",
+          "byte_size": null
+        },
+        {
+          "name": "peseta_bak",
+          "offset": "33580",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "shootingScore",
+          "offset": "33584",
+          "type_ref": "<0xa7ddb4>",
+          "byte_size": null
+        },
+        {
+          "name": "c_continue_cnt",
+          "offset": "33592",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "g_continue_cnt",
+          "offset": "33594",
+          "type_ref": "<0xa7cf46>",
+          "byte_size": null
+        },
+        {
+          "name": "c_kill_cnt",
+          "offset": "33596",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "g_kill_cnt",
+          "offset": "33600",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "c_hit_cnt",
+          "offset": "33604",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "g_hit_cnt",
+          "offset": "33608",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "c_shot_cnt",
+          "offset": "33612",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "g_shot_cnt",
+          "offset": "33616",
+          "type_ref": "<0xa7cf59>",
+          "byte_size": null
+        },
+        {
+          "name": "game_mode",
+          "offset": "33620",
+          "type_ref": "<0xa7cf36>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_8355",
+          "offset": "33621",
+          "type_ref": "<0xa7dced>",
+          "byte_size": null
+        },
+        {
+          "name": "SaveKind",
+          "offset": "33624",
+          "type_ref": "<0xa7cf1c>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_835C",
+          "offset": "33628",
+          "type_ref": "<0xa7ddc4>",
+          "byte_size": null
+        },
+        {
+          "name": "debug_mode",
+          "offset": "34424",
+          "type_ref": "<0xa7cef2>",
+          "byte_size": null
+        },
+        {
+          "name": "debug_disp",
+          "offset": "34425",
+          "type_ref": "<0xa7cef2>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_867A",
+          "offset": "34426",
+          "type_ref": "<0xa7ddd5>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0xa7d07e",
+      "name": "Camera",
+      "size": "248",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x14ac5): Camera",
+        "DW_AT_byte_size": "248",
+        "DW_AT_decl_file": "6",
+        "DW_AT_decl_line": "18",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0xa7d10c>"
+      },
+      "members": [
+        {
+          "name": "mat",
+          "offset": "0",
+          "type_ref": "<0xa7cfe5>",
+          "byte_size": null
+        },
+        {
+          "name": "v_mat",
+          "offset": "48",
+          "type_ref": "<0xa7cfe5>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_60",
+          "offset": "96",
+          "type_ref": "<0xa7d10c>",
+          "byte_size": null
+        },
+        {
+          "name": "ProjMat",
+          "offset": "100",
+          "type_ref": "<0xa7d01c>",
+          "byte_size": null
+        },
+        {
+          "name": "param",
+          "offset": "164",
+          "type_ref": "<0xa7d03e>",
+          "byte_size": null
+        },
+        {
+          "name": "up",
+          "offset": "196",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "Look",
+          "offset": "208",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "Right",
+          "offset": "220",
+          "type_ref": "<0xa7cfd4>",
+          "byte_size": null
+        },
+        {
+          "name": "pad_E8",
+          "offset": "232",
+          "type_ref": "<0xa7d11c>",
+          "byte_size": null
+        },
+        {
+          "name": "dist",
+          "offset": "244",
+          "type_ref": "<0xa7cf7d>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0x993c5d",
+      "name": "Entry",
+      "size": "224",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x3a1b2): Entry",
+        "DW_AT_byte_size": "224",
+        "DW_AT_alignment": "32",
+        "DW_AT_decl_file": "1",
+        "DW_AT_decl_line": "370",
+        "DW_AT_decl_column": "8",
+        "DW_AT_sibling": "<0x993cf1>"
+      },
+      "members": [
+        {
+          "name": "package",
+          "offset": "0",
+          "type_ref": "<0x98efaa>",
+          "byte_size": null
+        },
+        {
+          "name": "key",
+          "offset": "64",
+          "type_ref": "<0x99379a>",
+          "byte_size": null
+        },
+        {
+          "name": "frame",
+          "offset": "72",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "valid",
+          "offset": "76",
+          "type_ref": "<0x9840a6>",
+          "byte_size": null
+        },
+        {
+          "name": "model_header",
+          "offset": "96",
+          "type_ref": "<0x990dd0>",
+          "byte_size": null
+        },
+        {
+          "name": "model_header_key",
+          "offset": "128",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        },
+        {
+          "name": "ui_header",
+          "offset": "160",
+          "type_ref": "<0x990dd0>",
+          "byte_size": null
+        },
+        {
+          "name": "ui_header_key",
+          "offset": "192",
+          "type_ref": "<0x9829b6>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0xb853",
+      "name": "Package",
+      "size": "64",
+      "attrs": {
+        "DW_AT_name": "(indirect string, offset: 0x67506): Package",
+        "DW_AT_byte_size": "64",
+        "DW_AT_decl_file": "2",
+        "DW_AT_decl_line": "111",
+        "DW_AT_decl_column": "7",
+        "DW_AT_sibling": "<0xbc90>"
+      },
+      "members": [
+        {
+          "name": "streamed_",
+          "offset": "0",
+          "type_ref": "<0xb2e3>",
+          "byte_size": null
+        },
+        {
+          "name": "base_",
+          "offset": "4",
+          "type_ref": "<0xb0fe>",
+          "byte_size": null
+        },
+        {
+          "name": "file_",
+          "offset": "8",
+          "type_ref": "<0xb2b3>",
+          "byte_size": null
+        },
+        {
+          "name": "data_",
+          "offset": "12",
+          "type_ref": "<0xc02e>",
+          "byte_size": null
+        },
+        {
+          "name": "size_",
+          "offset": "16",
+          "type_ref": "<0xb4f1>",
+          "byte_size": null
+        },
+        {
+          "name": "header_",
+          "offset": "20",
+          "type_ref": "<0xc05b>",
+          "byte_size": null
+        },
+        {
+          "name": "pvr_textures_",
+          "offset": "24",
+          "type_ref": "<0xc060>",
+          "byte_size": null
+        },
+        {
+          "name": "owns_texture_",
+          "offset": "28",
+          "type_ref": "<0xc065>",
+          "byte_size": null
+        },
+        {
+          "name": "metadata_",
+          "offset": "32",
+          "type_ref": "<0xc06a>",
+          "byte_size": null
+        },
+        {
+          "name": "metadata_bytes_",
+          "offset": "36",
+          "type_ref": "<0xb4f1>",
+          "byte_size": null
+        },
+        {
+          "name": "released_bytes_",
+          "offset": "40",
+          "type_ref": "<0xb4f1>",
+          "byte_size": null
+        },
+        {
+          "name": "payload_released_",
+          "offset": "44",
+          "type_ref": "<0xb2e3>",
+          "byte_size": null
+        },
+        {
+          "name": "upload_complete_",
+          "offset": "45",
+          "type_ref": "<0xb2e3>",
+          "byte_size": null
+        },
+        {
+          "name": "inject_failure_after_",
+          "offset": "48",
+          "type_ref": "<0xb0fe>",
+          "byte_size": null
+        },
+        {
+          "name": "vram_bytes_",
+          "offset": "52",
+          "type_ref": "<0xb4f1>",
+          "byte_size": null
+        },
+        {
+          "name": "shared_textures_",
+          "offset": "56",
+          "type_ref": "<0xb0fe>",
+          "byte_size": null
+        },
+        {
+          "name": "error_",
+          "offset": "60",
+          "type_ref": "<0xb26f>",
+          "byte_size": null
+        }
+      ]
+    },
+    {
+      "die": "0x9056f7",
+      "name": "",
+      "size": "520",
+      "attrs": {
+        "DW_AT_byte_size": "520",
+        "DW_AT_decl_file": "29",
+        "DW_AT_decl_line": "142",
+        "DW_AT_decl_column": "16",
+        "DW_AT_linkage_name": "(indirect string, offset: 0x5fb41): 11pvr_state_t",
+        "DW_AT_sibling": "<0x905a26>"
+      },
+      "members": [
+        {
+          "name": "valid",
+          "offset": "0",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "lists_enabled",
+          "offset": "4",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "list_reg_mask",
+          "offset": "8",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "dma_mode",
+          "offset": "12",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "opb_size",
+          "offset": "16",
+          "type_ref": "<0x903f00>",
+          "byte_size": null
+        },
+        {
+          "name": "ram_target",
+          "offset": "36",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "ta_target",
+          "offset": "40",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "view_target",
+          "offset": "44",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "list_reg_open",
+          "offset": "48",
+          "type_ref": "<0x903308>",
+          "byte_size": null
+        },
+        {
+          "name": "lists_closed",
+          "offset": "52",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "lists_transferred",
+          "offset": "56",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "lists_dmaed",
+          "offset": "60",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "dma_lock",
+          "offset": "64",
+          "type_ref": "<0x902fa0>",
+          "byte_size": null
+        },
+        {
+          "name": "ta_checked_ready",
+          "offset": "72",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "ta_busy",
+          "offset": "76",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "render_busy",
+          "offset": "80",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "render_completed",
+          "offset": "84",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "dma_buffers",
+          "offset": "88",
+          "type_ref": "<0x905a26>",
+          "byte_size": null
+        },
+        {
+          "name": "ta_buffers",
+          "offset": "216",
+          "type_ref": "<0x905a36>",
+          "byte_size": null
+        },
+        {
+          "name": "frame_buffers",
+          "offset": "312",
+          "type_ref": "<0x905a46>",
+          "byte_size": null
+        },
+        {
+          "name": "texture_base",
+          "offset": "328",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "w",
+          "offset": "332",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "h",
+          "offset": "336",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "tw",
+          "offset": "340",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "th",
+          "offset": "344",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "tsize_const",
+          "offset": "348",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "zclip",
+          "offset": "352",
+          "type_ref": "<0x903257>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_left",
+          "offset": "356",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_right",
+          "offset": "360",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_top",
+          "offset": "364",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_bottom",
+          "offset": "368",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_x",
+          "offset": "372",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "pclip_y",
+          "offset": "376",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "bg_color",
+          "offset": "380",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "frame_last_time",
+          "offset": "384",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "buf_start_time",
+          "offset": "392",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "reg_start_time",
+          "offset": "400",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "rnd_start_time",
+          "offset": "408",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "frame_last_len",
+          "offset": "416",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "buf_last_len",
+          "offset": "424",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "reg_last_len",
+          "offset": "432",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "rnd_last_len",
+          "offset": "440",
+          "type_ref": "<0x902f60>",
+          "byte_size": null
+        },
+        {
+          "name": "vbl_count",
+          "offset": "448",
+          "type_ref": "<0x902f18>",
+          "byte_size": null
+        },
+        {
+          "name": "frame_count",
+          "offset": "452",
+          "type_ref": "<0x902f18>",
+          "byte_size": null
+        },
+        {
+          "name": "vtx_buf_used",
+          "offset": "456",
+          "type_ref": "<0x902f18>",
+          "byte_size": null
+        },
+        {
+          "name": "vtx_buf_used_max",
+          "offset": "460",
+          "type_ref": "<0x902f18>",
+          "byte_size": null
+        },
+        {
+          "name": "vbl_handle",
+          "offset": "464",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "fsaa",
+          "offset": "468",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "vbuf_doublebuf",
+          "offset": "472",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_texture",
+          "offset": "476",
+          "type_ref": "<0x902fb2>",
+          "byte_size": null
+        },
+        {
+          "name": "curr_to_texture",
+          "offset": "477",
+          "type_ref": "<0x902fb2>",
+          "byte_size": null
+        },
+        {
+          "name": "was_to_texture",
+          "offset": "478",
+          "type_ref": "<0x902fb2>",
+          "byte_size": null
+        },
+        {
+          "name": "to_txr_rp",
+          "offset": "480",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_txr_rp",
+          "offset": "484",
+          "type_ref": "<0x902f07>",
+          "byte_size": null
+        },
+        {
+          "name": "to_txr_w",
+          "offset": "488",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "to_txr_h",
+          "offset": "492",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "to_txr_stride_px",
+          "offset": "496",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_txr_w",
+          "offset": "500",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_txr_h",
+          "offset": "504",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_txr_stride_px",
+          "offset": "508",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "to_txr_addr",
+          "offset": "512",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        },
+        {
+          "name": "next_to_txr_addr",
+          "offset": "516",
+          "type_ref": "<0x902f4f>",
+          "byte_size": null
+        }
+      ]
+    }
+  ]
+}

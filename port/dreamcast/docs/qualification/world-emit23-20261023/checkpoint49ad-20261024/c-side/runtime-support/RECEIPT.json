@@ -1,0 +1,283 @@
+{
+  "source": "7a3af776ff8c14070f96272cd48074e5895d0490",
+  "sealed_utc": "2026-10-24T01:36:50.129013+00:00",
+  "scope": "bounded guest census and MODELLED PT matrix only; no SDK/source edits, no still/gates/physical-console speed claim",
+  "files": {
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/analyse-census-v1.py": {
+      "bytes": 2455,
+      "sha256": "dae6b488659181fbdab73cfa22c73e7aebf2cca6477302a211c5c4f4ea5e0ab5"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/analyse-meter-v1.py": {
+      "bytes": 5789,
+      "sha256": "b17ab98c3115d08d031bc6d4e9290aa3b50605e2864f453be3c8690daf7c0ce8"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/CENSUS.md": {
+      "bytes": 2902,
+      "sha256": "bba340c13b946e4d7471544e8e3d686ef32d314b565d03844b2757b40d369868"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/check-partial-v1.py": {
+      "bytes": 543,
+      "sha256": "48b7c631dd360a18d9cb900799f55bfded364ca7f02773402445262b3e392fb1"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/meter-replacements-v1.sh": {
+      "bytes": 738,
+      "sha256": "2d796dfef3b99974b1ee0b8f3097a8b6e8e48fca643bdeb1de2a332dc5098364"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/meter-sequence-v1.sh": {
+      "bytes": 276,
+      "sha256": "8108ca2f9cef8b1dd9214dcd18bfb071e82201c25883bbb586b68774b5bdd7bd"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/METER.md": {
+      "bytes": 3195,
+      "sha256": "2016f099f98cc905cecdd9a586fa0faf13cb4e6c255d0b42ed68debbea6f130f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/PROTOCOL-EXCLUSIONS.md": {
+      "bytes": 1106,
+      "sha256": "93e3bd040a0a3a888e386d29582f0540c775ce6fefe41f51d79ba75cbe8b3840"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/qualified-run-v1.sh": {
+      "bytes": 2719,
+      "sha256": "439fa26f1287d658112ab1aacaa3ef4c022abebf2701f3d7f0a3bf32664630e8"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/qualified-run-v2.sh": {
+      "bytes": 2850,
+      "sha256": "ec4322f940a3c1c37d710f0cf098038ceb07cc67c44b84670c581c8b3c35849f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/seal-receipt-v1.py": {
+      "bytes": 2266,
+      "sha256": "fb5dd86c2f3ec6faf81db227b6fa2cf60912b60ce6d82cb2ec9fa7c6ac94195f"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/STATUS.md": {
+      "bytes": 2255,
+      "sha256": "2ae0e72ee309fa6147aa708e18b8ee45852972006cb86d3426b4f26c50fa4c83"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/world-emit23/runtime-support/test-analysis-v1.py": {
+      "bytes": 2388,
+      "sha256": "52e4c34ef0175c55616cc7722b6c17b938c0f3aa23f895005035ba00fad6c7b2"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/runtime-support/census-summary.json": {
+      "bytes": 6267,
+      "sha256": "95cd0c2ed583a91777a9d5b76da5dba31035bc433a868b5e90d257bf44b9888e"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/runtime-support/meter-summary.json": {
+      "bytes": 35045,
+      "sha256": "ee8e6d81a22a71481e203acf72ddd135ede4fb1fcc010880b6487c8eb8163c7e"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-m-resolved-knobs.txt": {
+      "bytes": 204458,
+      "sha256": "4baf234209adae4b391c5ae3682eb72f8f8e4a9b7098599d932adaeecbddc32f"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-m-stack.txt": {
+      "bytes": 41,
+      "sha256": "384f2c998abff4f9cb7537c78dda433f6d54404485d91a1a30e3d7d7bec8bece"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-m-programmes.sha256": {
+      "bytes": 1767,
+      "sha256": "e5c8ff8f2e51ec0b554fdd7436b136174f62b3841961936ffdb724111008a85a"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-m-syms.txt": {
+      "bytes": 27,
+      "sha256": "62b302171828f1b948a23a1144ff718fb04f6f47e30c6a0b1556386d541e53ed"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-m-master.log": {
+      "bytes": 254,
+      "sha256": "cd5d2b9edb94f16c6a690726c2f01af5a99c727f61bddcaa55ef357bcb04f43c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-n-resolved-knobs.txt": {
+      "bytes": 204245,
+      "sha256": "d1026752971b9d65a834230af972d3b8ac3c00fcbad025be25a8f15b89e1e522"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-n-stack.txt": {
+      "bytes": 41,
+      "sha256": "384f2c998abff4f9cb7537c78dda433f6d54404485d91a1a30e3d7d7bec8bece"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-n-programmes.sha256": {
+      "bytes": 1767,
+      "sha256": "87cf9ac062d4a150683aaff68d942b4b14d66c81fa4c044796965c00b039cf24"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-n-syms.txt": {
+      "bytes": 27,
+      "sha256": "92b875b6ba1c9c553d0dfdc947a6e3cde856a06c4029414032730902818a6ff4"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/R-n-master.log": {
+      "bytes": 254,
+      "sha256": "27fbbe88e21355c8a1fdb29169d550e374a4fa859ccbe35d1f175b18b4ec9cc6"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/L-m-resolved-knobs.txt": {
+      "bytes": 204458,
+      "sha256": "f5d6876fbd7e2374034b2b36e23f5126f72bdb4f99d499e7d727839944db8dc2"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/L-m-stack.txt": {
+      "bytes": 41,
+      "sha256": "384f2c998abff4f9cb7537c78dda433f6d54404485d91a1a30e3d7d7bec8bece"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/L-m-programmes.sha256": {
+      "bytes": 1767,
+      "sha256": "c816d00c9b336e341839673c4f6301568b206855bd2e0df3b8c577cfc492d66d"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/L-m-syms.txt": {
+      "bytes": 27,
+      "sha256": "d78201a07b319d4dbfd1c9efbd83f0acdf690978daf3bde632d322f70d511a30"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/L-m-master.log": {
+      "bytes": 254,
+      "sha256": "1ab307eb9812dcfd47a8e06105eb9e59ce9bb67f0b2b22d1c8e1a3f94f68bd99"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/E-m-resolved-knobs.txt": {
+      "bytes": 204458,
+      "sha256": "b159c824b20b0d801aebed6928294535907f74ac05e2968d80981acd0d0ce931"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/E-m-stack.txt": {
+      "bytes": 41,
+      "sha256": "384f2c998abff4f9cb7537c78dda433f6d54404485d91a1a30e3d7d7bec8bece"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/E-m-programmes.sha256": {
+      "bytes": 1767,
+      "sha256": "9eccf73b30e1fba678cdb48883a8e11fc48052236140f1130e554130aee398c7"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/E-m-syms.txt": {
+      "bytes": 27,
+      "sha256": "d487df50e279fa0cefcd330876d9f5893dedcf6752820af2da3b539c0e8302e9"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/E-m-master.log": {
+      "bytes": 254,
+      "sha256": "ee3718163dcbb4f73519201d543fa3a95d12b94d11582d0ee97adda398f4932b"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/B-m-resolved-knobs.txt": {
+      "bytes": 204458,
+      "sha256": "4f80774d4f916c06e1d92e5144d5bc21514c923a8bb783277b567ec5a8994b0f"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/B-m-stack.txt": {
+      "bytes": 41,
+      "sha256": "384f2c998abff4f9cb7537c78dda433f6d54404485d91a1a30e3d7d7bec8bece"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/B-m-programmes.sha256": {
+      "bytes": 1767,
+      "sha256": "4c9dbbeadde0b2754c8a4543e512e8ead5def92fab6b6fc8122165b01940963a"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/B-m-syms.txt": {
+      "bytes": 27,
+      "sha256": "bef103170e498ff735325b0612e4851d60f268414416242fbc4586a9b13dfe9a"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/world-emit23-takeover/7a3af776/identities/B-m-master.log": {
+      "bytes": 254,
+      "sha256": "9197434b7b66b67fa799280f0935944fff4c3a213065c4687c535a4aa16218d0"
+    }
+  },
+  "accepted_caps": {
+    "R-n-b1-q1": {
+      "run-output.txt": "c6a4734881691203ce674e29665eae661328f1b73d7b2f7f9f571a7e234839ab",
+      "run-result.json": "68beff0ee842c08ad4f3c491e322309c0d70d01bf1866347a7e249b75a544df3",
+      "bounded-launch.json": "12ae56fddd0f5987e54e5f9e6ffade03a3c758761fc8315c0013a5ccd9d24f70",
+      "fixture-warp.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "syms.txt": "b97a3dd5d0b26692e7a0b1567d6b4a90e65683e8c85b2a60bf1e133b85ee6f18",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "85bf52e48cddb387c78d3863b949b6a3c6c844e193a4c2687b1975602bbc6bcb"
+    },
+    "R-n-s2-q1": {
+      "run-output.txt": "284aae863a6db4b6d9b035db934d863c5fbb9139ad26c42009bddabada5b1e4f",
+      "run-result.json": "499313395e442b97147cc6a492f6f847246984e973dcd5760f7908e9740a4cb3",
+      "bounded-launch.json": "68d67820d260af2ca3edc350ac33ca5a28130c4f6f8546494fc26d35b4a05c76",
+      "fixture-warp.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "syms.txt": "b97a3dd5d0b26692e7a0b1567d6b4a90e65683e8c85b2a60bf1e133b85ee6f18",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "fd2422659d4cf6faf0f9b30322c4bd1af4892e704cfcc15de6c52ffd71ec83f5"
+    },
+    "R-m-b1-q2": {
+      "run-output.txt": "e05f6656bafd5b5fe4d06da18a8731b4e759b4f36e329f3318eb61d0dab0d8ba",
+      "run-result.json": "633941323af400d97650ae59fe31b4990cfdc81024fd4ebe426b9adace4b0297",
+      "bounded-launch.json": "c413ce775dfc8483729fe99a261d3d3dc6b3f1982e6fac7c2cdf652edf6b650e",
+      "fixture-warp.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "syms.txt": "8e0c3041c96b6affb8de69795d3e57184f621abfc69dc4fbd9f5e9b6777baacc",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "d62ddb366f562f99733c1d0b4e0530b5883b2684ebb0a32e07fb377bdc0c55f0"
+    },
+    "L-m-b1-q2": {
+      "run-output.txt": "130fa31b8e2584dedb3e3818041ae3728eca8b71e7f8c6df82bb1e00b963924f",
+      "run-result.json": "635d2c8e4b1527289b252a8e084994f96b02d3b221c67036488a151510c3d69d",
+      "bounded-launch.json": "b19dc6f761243f56ca966cbee16737b021f0a345e209c044927b21550368e779",
+      "fixture-warp.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "syms.txt": "07bbeed5c2804d63d599f945a0a83eda5ac48367e253a7495a8635a2bfacdaec",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "9bd6ca5d3bfff7030fae1ea5836ae96fd14f8ac15298b0e3ece7cdd86ed76558"
+    },
+    "E-m-b1-q1": {
+      "run-output.txt": "70b2c1182dec7d1ac092d48b21598e22b20612db6c17e373467e66c924256db1",
+      "run-result.json": "9fc04f5e8ae68e39716fb5454dd8ee24578436c4ac5fa910f759e5700c06c740",
+      "bounded-launch.json": "8a99fee67bbc4037b10dd829e3e46eb72dd54f91faa62125163604016e11e579",
+      "fixture-warp.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "syms.txt": "46bf4f924754f253ab54acd0c8a1337ac054b85db47bea9cf110571c6362d07a",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "f0986d7e0c9cce79c7e5756b185c9cd3991986c48174d1fa0cc893c87b8ed4b7"
+    },
+    "B-m-b1-q1": {
+      "run-output.txt": "d1b149ab645faead9c8b1505ef2bfb903d38daacc826db049360926a42ad84bd",
+      "run-result.json": "eafd1d89af0b0d2f858889d29761d75ba903cb2c0f6d9b6c4575d08d12d2b234",
+      "bounded-launch.json": "a79feb2ab2f1c7ecaefdc26ca0271c818127914ba8554227377cf46bad6d68dc",
+      "fixture-warp.txt": "a13ad9859078ab6126ac20a15c2e8183925b55aff566d5ba4b9e61c60744e576",
+      "syms.txt": "6d420f1b736d19cb0a064a52ef75e6b2ca9c85b9e1ba161bf8cd45217626e949",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "93b4ff13465274865549f16603724e9e3a2e7fc146ba0fa255487ad49f58dc40"
+    },
+    "R-m-s2-q1": {
+      "run-output.txt": "cc94c128d1618f6046d105eaef1bb5b2baaf1d493d4d0149d7fb1fe840c0c9c4",
+      "run-result.json": "e0b66fdb6e3e75ed9c786113de55cacdc527f0a49fe4ce74998523841692214d",
+      "bounded-launch.json": "6ca4550ce520396491d69db41d2e07f5e3b49d7a33fab0dc267fd351ae3c4e03",
+      "fixture-warp.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "syms.txt": "8e0c3041c96b6affb8de69795d3e57184f621abfc69dc4fbd9f5e9b6777baacc",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "70039a353d94a35df1bf7a3bd1c1c72b3468e95a9e7208f04eea452b571b2404"
+    },
+    "L-m-s2-q1": {
+      "run-output.txt": "cedf04b7c307a7554b9e171e2faae42f59fa609957946b9da0ddb052f25a5947",
+      "run-result.json": "a839c37458ff9810fadc42f82d8e204897f34f531f4d18f06194a17f389bbc89",
+      "bounded-launch.json": "8f13c66af39bbeba26ed51a697b6bf3972ff5d267dd660ed39e0022c28389f8b",
+      "fixture-warp.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "syms.txt": "07bbeed5c2804d63d599f945a0a83eda5ac48367e253a7495a8635a2bfacdaec",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "ec5e00bc0ac7dbfdf4802718b46659fea171e461f39be63d87af66dddf67897c"
+    },
+    "E-m-s2-q1": {
+      "run-output.txt": "c1d3c7f3137eebf42216b8a4a33f57743046f36366b163c8842a25f1f786de5e",
+      "run-result.json": "5274f34b5fdc39521bc6898ab6b478f2dce235edf584e9b35091585454abd7d8",
+      "bounded-launch.json": "88c7cf8b0e375ea82a351767730a89ce26af1ad183b1a8e0826c260bb3729fcf",
+      "fixture-warp.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "syms.txt": "46bf4f924754f253ab54acd0c8a1337ac054b85db47bea9cf110571c6362d07a",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "bf2eb14a8b51ae1e900e4cc9ccec448f100cd3d717cb9694f52b48c583bf556e"
+    },
+    "B-m-s2-q1": {
+      "run-output.txt": "b605f370c2c2aeaeb8722f1a4fca6b7a5f50ede1cf8384a063560cd150013268",
+      "run-result.json": "ae9adff55e91ad484d5c5fb047146b17d8de333f154e6e09172dd3f23630a641",
+      "bounded-launch.json": "d506818ea7afda13593f8e6a1145385a2919c2a978e6b6abbc2e98bb469d8c67",
+      "fixture-warp.txt": "f42b1b717ae4e8d37b7823c6531315d4279f49f655485616989300e81c356caa",
+      "syms.txt": "6d420f1b736d19cb0a064a52ef75e6b2ca9c85b9e1ba161bf8cd45217626e949",
+      "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+      "emu.cfg": "b6b497205319ef98b8337d473f1bfe8389f22fb148c19129ce8bb8846f0bb161",
+      "read-log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "launch_receipt_sha256": "988cb294575fac4296030ab89b148f4f58623cdff579b5eb6f451bdbd157fc23"
+    }
+  },
+  "excluded_caps": [
+    "R-m-b1-q1",
+    "L-m-b1-q1"
+  ]
+}
