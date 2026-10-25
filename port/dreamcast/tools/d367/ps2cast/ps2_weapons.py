@@ -97,6 +97,28 @@ def le_span(d, i):
     return ofs + offs[i], ofs + end, tags[i]
 
 
+def fill_empty_parts(d):
+    """A part the PS2 mesh leaves without triangles keeps its GC header but gets one position-degenerate 0x90
+    triangle (record 0 three times) in its 32-byte list. An empty list is declined by the native actor path
+    (native_actor_fast.cpp parse(): count == 0) and falls to the generic draw, whose first opaque part
+    allocates the 128 KB retained preparation from room heap 4 (ui_bridge.cpp re4dc_model_retained_storage):
+    the Test 24 r100 s30 heap-4 shortfall. The triangle has zero area, so nothing is drawn."""
+    d = bytearray(d)
+    m = po.GcModel(bytes(d))
+    cur, filled = m.parts_off, 0
+    for k in range(m.nd):
+        size = struct.unpack_from('>I', d, cur + 0x18)[0]
+        body = cur + 0x20
+        if not any(d[body:body + size]):
+            need = 3 + 3 * m.stride
+            assert size >= need, ('empty part too small', k, size)
+            d[body] = 0x90
+            struct.pack_into('>H', d, body + 1, 3)
+            filled += 1
+        cur = body + size
+    return bytes(d), filled
+
+
 def bone_check(gc_bin, ps2_bin):
     gm = modelbin.parse(gc_bin)
     pm = pb.parse_bin(ps2_bin)
@@ -192,6 +214,7 @@ def convert(args):
             if slot.rstrip(b'\0') != gc_le.rstrip(b'\0') or len(slot) < len(gc_le.rstrip(b'\0')):
                 row.update(status='REFUSED', reason='disc slot is not le_mirror(GC BIN)'); failed.append(name); continue
             new, st = pi.convert_geometry(gb, pbn)
+            new, st['empty_parts_filled'] = fill_empty_parts(new)
             le = po.to_le(new, name)
             if len(le.rstrip(b'\0')) > len(slot):
                 row.update(status='REFUSED', reason='PS2 BIN %d B does not fit the %d B slot' % (len(le), len(slot)), stats=st); failed.append(name); continue
@@ -203,7 +226,7 @@ def convert(args):
             used.setdefault(tarc, set()).update(p['hdr'][0x0C] for p in drawn)
             pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
             row.update(status='PS2', slot_bytes=len(slot), gc_le_bytes=len(gc_le), out_bytes=len(le), out_sha256=sha(le), ps2_sha256=sha(pbn),
-                       stats=dict((k, st[k]) for k in ('gc_tris', 'ps2_tris', 'out_tris', 'no_tex_part', 'weight_mismatch', 'flipped', 'degenerate', 'appended_weights', 'shift_lowered')))
+                       stats=dict((k, st[k]) for k in ('gc_tris', 'ps2_tris', 'out_tris', 'no_tex_part', 'weight_mismatch', 'flipped', 'degenerate', 'appended_weights', 'shift_lowered', 'empty_parts_filled')))
             prov.append('\t'.join([w, 'BIN', '%s#%x' % (u['gc_rel'], arc), sha(gb), 'BIO4DAT.AFS/%s#%x' % (u['ps2_name'], arc), sha(pbn), '%s#%x (le_mirror)' % (u['rel'], arc), sha(le), 'geometry PS2, GC joints/parts kept']))
         for tarc, imgs in sorted(used.items()):
             gtag, gt = u['gc_entry'](tarc)
