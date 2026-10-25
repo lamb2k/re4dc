@@ -60,7 +60,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 | Fixed and checked in our tests; the problem was not console-only | 59 |
-| 🛠️ In progress | Being fixed now | 0 |
+| 🛠️ In progress | Being fixed now | 1 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
 | ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
@@ -80,6 +80,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🛠️ In progress: its weapon code was left out of the build; fixed in development, coming in Test 24. Until then, keep another weapon equipped | [#58](https://github.com/lamb2k/re4dc/issues/58) |
 | Mendez freezes after grabbing Leon (chapter 2-3 barn, r11f) | test 22 and earlier | 🟢 Fixed in test 23: his state word was read in the wrong byte order; the bear hug holds and the fight goes on | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |
 | Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🟢 Fixed in test 22: the paused world stays as it was and play resumes cleanly, in the Mendez fight too | [#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49) |

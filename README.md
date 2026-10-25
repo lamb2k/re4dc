@@ -175,6 +175,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
 - [ ] **Less scenery drawn when it can't be seen.**
 - [ ] **Mendez's PS2 model in the barn door animation** after his fight.
+- [ ] **The Blacktail can be equipped** without stopping the game ([#58](https://github.com/lamb2k/re4dc/issues/58)).
 
 ## What's new in Test 17.1
 
