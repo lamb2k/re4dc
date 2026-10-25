@@ -17,7 +17,7 @@ O=$X/relout-$ARM; rm -rf "${O:?}"; mkdir -p $O
 for f in re4dc-game.elf candidate.txt resolved-knobs.txt syms.txt end.txt; do cp --remove-destination "$REL/$f" "$O/$f"; done
 echo "$SHA" > $O/stack.txt
 rm -rf "/root/probe/lanes/route/out-fpwb25${ARM:?}W"
-C="QA_MENU=1 WARP_AFTER_RESET=1 WORLD_CENSUS24=1 WORLD_CENSUS24_WINDOW=300 SCENERY_N256=1"
+C="QA_MENU=1 WARP_AFTER_RESET=1 WORLD_CENSUS24=1 WORLD_CENSUS24_WINDOW=300 SCENERY_N256=1 ${EXTRA:-}"
 env FP_TREE=$TR FP_SKIP_IDENTITY=1 bash $TR/port/dreamcast/tools/d367/fullplay/fp_twin.sh $O wb25$ARM $C > $X/twin-$ARM.log 2>&1 || { tail -15 $X/twin-$ARM.log; git checkout -q --detach $BASE; exit 1; }
 grep -E "TWIN|built" $X/twin-$ARM.log | cut -c1-200
 git checkout -q --detach $BASE

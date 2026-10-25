@@ -34,6 +34,10 @@ def wrap(build):
         op = os.environ.get('WB_OP', 'none')
         if op == 'none':
             return meshes, placements, sources, parts_meta
+        if op == 'bake':
+            import ps2_room_ids, wb_bake
+            ids = ps2_room_ids.group_ids(os.environ['WB_OBJ'])
+            return wb_bake.bake(meshes, placements, sources, parts_meta, ids, float(os.environ['WB_CELL']))
         cx, cz, half = (float(x) for x in os.environ['WB_BOX'].split(','))
         sel = set(); inbox = {}
         for mi, p in placements:
