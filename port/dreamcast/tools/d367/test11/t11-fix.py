@@ -1220,6 +1220,12 @@ if os.path.isdir(PMASH25D):
     DATA['pmash25'] = {'em/pl11.drs': PMASH25D + '/em/pl11.drs'}
     DATA['pmash25'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMASH25D, _k) for _k in sorted(os.listdir(PMASH25D + '/dc/mot'))})
     DATA['pmash25']['remove'] = [_l.strip() for _l in open(PMASH25D + '/remove.txt') if _l.strip()]
+# pmr113-25 (same lane, 10-25): st1/r113.arc + st1/r113.dar with their FCV / SEQ motion from PS2 r113.dat (the same ten
+# one-frame Ganado poses as r103, plus two 316-frame clips, frame counts unchanged). Data only. After pmash25.
+# Store: re4-assets-private/pmr113-25-20261025.
+PMR113D = os.environ.get('PMR113D', '/root/re4data/private/pmr113-25-20261025')
+if os.path.isdir(PMR113D):
+    DATA['pmr113-25'] = {'st1/r113.%s' % _x: '%s/st1/r113.%s' % (PMR113D, _x) for _x in ('arc', 'dar')}
 
 
 if __name__ == '__main__':
