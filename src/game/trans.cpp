@@ -341,6 +341,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 extern "C" void re4dc_front_verify(int mode);  // model_bridge.cpp: 1 record, 2 compare, 0 off
 static int frontNativeOk(cModel* m);
 static void frontNativeRender(cModel* m, int dry);
+#if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
+extern "C" int re4dc_registry_owned(const cModel*);
+#endif
 #endif
 
 // Bit test as 0 / 1 (matching helper).
@@ -2903,6 +2906,11 @@ void ModelRender(cModel* m)
 #endif
 #if RE4DC_ACTOR_TRANSACTION
     if(re4dc_actor_transaction_candidate(m))frontNative=0;
+#endif
+#if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
+    // NATIVE_MODEL_REGISTRY_NO_GC_FRONT: a registry-owned actor the ledger did not nominate this frame (door demo start)
+    // is not drawn through the GameCube front path.
+    if(frontNative && re4dc_registry_owned(m))return;
 #endif
 
 #if RE4DC_FRONT_NATIVE < 2

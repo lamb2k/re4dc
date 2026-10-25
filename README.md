@@ -179,7 +179,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [x] **PS2 props in chapter 2:** breakable boxes and barrels, and the torches and window panes the PS2 removed are gone.
 - [x] **Leon's PS2 textures** on his jacket and his chapter 2 outfit.
 - [ ] **PS2 church candles.**
-- [ ] **Mendez's PS2 model in the barn door animation** after his fight.
+- [x] **Mendez's PS2 model in the barn door animation** after his fight.
 - [x] **The Blacktail can be equipped** without stopping the game ([#58](https://github.com/lamb2k/re4dc/issues/58)).
 
 Moved to Test 25: chapter 3-1 (the castle's first part) and less scenery drawn when it can't be seen.
