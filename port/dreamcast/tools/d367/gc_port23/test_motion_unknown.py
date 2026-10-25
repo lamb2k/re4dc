@@ -173,7 +173,8 @@ int main(){
         close=function(ui,'void gcasset_close_visit(');self.assertLess(close.index('gcasset_flush()'),close.index('re4dc_gcasset::end('))
         self.assertIn('motion_unknown_flush()',function(ui,'void gcasset_flush('))
         gate=(PLATFORM/'include/gc_asset_gate.h').read_text();self.assertIn('Required==0x3ff',gate)
-        self.assertIn('~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon)|(1U<<re4dc_gcasset::Motion))',ui)
+        # gc-catalog24b r8: Motion and Weapon are wired (members.cpp motion_use); only source geometry stays out.
+        self.assertIn('unsigned mask=re4dc_gcasset::Required&~(1U<<re4dc_gcasset::SourceGeometry);',ui)
 
     def leaf_fixture(self):
         ui=(PLATFORM/'native_ui.cpp').read_text()

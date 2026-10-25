@@ -427,15 +427,13 @@ void unresolved(Consumer consumer, const char* reason) {
 }
 void emitted(Consumer consumer, const char* kind, const char* id, const Digest& digest) {
     if(!active){re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return;}
-    if(consumer==Motion){unresolved(Motion,"motion-unwired");return;}
     emitted_checked(consumer,bind_checked(kind,id,digest));
 }
 void emitted_checked(Consumer consumer,CheckedAsset asset) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return; }
     if(unsigned(consumer)>=ConsumerCount) { ++errors;return; }
-    // No reviewed Motion producer receipt exists: fail before catalog IO,
-    // Seen or PS2 suppression. Its zero counter is not a zero-use assertion.
-    if(consumer==Motion){unresolved(Motion,"motion-unwired");return;}
+    // gc-catalog24b: Motion's producer is members.cpp motion_use/motion_flush
+    // (one "motion" row per FCV/SEQ clip key); it is judged like any consumer.
     ++emissions[consumer];checked(consumer);
     const unsigned index=asset.value&16383U;
     if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {

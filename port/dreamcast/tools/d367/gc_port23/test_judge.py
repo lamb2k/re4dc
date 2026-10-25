@@ -57,7 +57,8 @@ class JudgeTests(unittest.TestCase):
         del expected
         self.assertIn('GC-ASSET-ERROR v=2 why=texture-fingerprint',current)
         self.assertNotIn('GC-ASSET-ERROR v=1 ',current)
-        self.assertEqual(current.count(mask.replace('Weapon));','Weapon)|(1U<<re4dc_gcasset::Motion));')),1)
+        # gc-catalog24b r8: Weapon and Motion are wired; only source geometry stays out.
+        self.assertEqual(current.count('unsigned mask=re4dc_gcasset::Required&~(1U<<re4dc_gcasset::SourceGeometry);'),1)
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'protocol.json'
             for key,value in [('schema',1),('required','1ff'),('diagnostic_version',1),

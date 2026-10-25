@@ -123,9 +123,13 @@ int main(){
     begin(0x111,1,Required);emitted_checked(SourceGeometry,model);emitted_checked(Texture,ps2);emitted_checked(Texture,changed);
     const unsigned first_reads=reads;emitted_checked(Weapon,model);emitted_checked(EffectPicture,ps2);
     assert(reads==first_reads);
-    emitted_checked(Motion,ps2);emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
-    assert(reads==first_reads);end(1);assert(rows()==2);
-    assert(output.find("motion-unwired consumer=9")!=std::string::npos && output.find("motion=0")!=std::string::npos && output.find("errors=2")!=std::string::npos);
+    // gc-catalog24b r8: Motion is wired like any consumer. A seen row needs no
+    // read; a new motion identity binds (one catalog search) and is a row.
+    emitted_checked(Motion,ps2);assert(reads==first_reads);
+    emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
+    assert(reads>first_reads);end(1);assert(rows()==3);
+    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=0")!=std::string::npos);
+    assert(output.find("kind=motion id=not-admitted")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
     assert(output.find("source_geometry=1 texture=2 effect_picture=1 weapon=1")!=std::string::npos);
     // Room retirement resets observations, not the immutable disc epoch. A
     // persistent live owner may reuse its original token in the next room.

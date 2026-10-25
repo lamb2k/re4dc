@@ -5803,7 +5803,9 @@ enum GcAssetPhase { GcStartup,GcRoom,GcTransition };GcAssetPhase gcasset_phase;u
 constexpr unsigned gcasset_wired_mask(){
     // Specialized static/coarse payload bridges are not integrated yet. Keep
     // both affected consumer classes visibly incomplete, even in empty rooms.
-    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon)|(1U<<re4dc_gcasset::Motion));
+    // gc-catalog24b: Weapon (actor/static/model weapon producers) and Motion
+    // (every FCV lease + SEQ set) are wired; source geometry stays incomplete.
+    unsigned mask=re4dc_gcasset::Required&~(1U<<re4dc_gcasset::SourceGeometry);
 #if !RE4DC_NATIVE_MES
     mask&=~(1U<<re4dc_gcasset::Font); // legacy font consumer is not qualified
 #endif
@@ -5814,7 +5816,7 @@ void gcasset_flush(){
     re4dc_gcasset::motion_unknown_flush();
 #endif
     for(auto& entry:entries)gcasset_texture_flush(entry);
-    re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();
+    re4dc_gcasset::member_flush();re4dc_gcasset::motion_flush();re4dc_gcasset::payload_flush_all();
     re4dc_gcasset::bank_pump();re4dc_gcasset::pump();
 }
 void gcasset_startup(){
@@ -5830,7 +5832,7 @@ void gcasset_startup(){
 // Judge contract v2: the in-room checkpoint marks the render-side consumers
 // as close_visit does (audio consumers keep what their own flush reported).
 void gcasset_checkpoint(){
-    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Weapon,re4dc_gcasset::Ui,re4dc_gcasset::Movie,re4dc_gcasset::Motion})
         re4dc_gcasset::checked(consumer);
 #if RE4DC_NATIVE_MES
     re4dc_gcasset::checked(re4dc_gcasset::Font);
@@ -5838,10 +5840,10 @@ void gcasset_checkpoint(){
     re4dc_gcasset::checkpoint(frame);
 }
 void gcasset_close_visit(unsigned audio){
-    gcasset_flush();gcasset_packet_reset();
+    gcasset_flush();gcasset_packet_reset();re4dc_gcasset::motion_visit_reset();
     // The actual renderer observer/flush paths are source-extracted in tests.
     // Active sound coverage additionally requires the real audio_step flush.
-    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Weapon,re4dc_gcasset::Ui,re4dc_gcasset::Movie,re4dc_gcasset::Motion})
         re4dc_gcasset::checked(consumer);
 #if RE4DC_NATIVE_MES
     re4dc_gcasset::checked(re4dc_gcasset::Font);
@@ -6800,7 +6802,7 @@ extern "C" void re4dc_ui_end_frame(int present){
             static unsigned serial,frames;
             if(!gcasset_visit_live)return;
             if(serial!=gcasset_visit_serial){serial=gcasset_visit_serial;frames=0;}
-            ++frames;if(frames==120 || (frames>120 && !((frames-120)%600)))gcasset_checkpoint();
+            ++frames;if(frames==60 || (frames>60 && !((frames-60)%600)))gcasset_checkpoint();
         }
     } gcasset_frame_flush;
 #endif
