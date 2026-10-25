@@ -1169,6 +1169,18 @@ if os.path.isfile(T24PRUNED + '/tex.pak'):
     PAK_DERIVED['t24prune'] = T24PRUNED + '/pak-derived.json'
 # Mendez door-demo knob + data set: from lane fix-mendez-door24 (placeholder; not in Test 24 recipe yet).
 
+# nostd103 (lane t25-fixes 10-25, Test 25 item 2; coordinator: no GameCube assets wins): takes r103's Standard set off the
+# disc. Its index (4,280 B) is over the reader limit (native_static.cpp kStdText=4096) and was rejected on every disc
+# since 10-19, and accepting it would bring in GC-derived scenery (low/MAINSCENARIO, a LOD of the GC package) and 19
+# texlow pictures made from GC textures (shared with no other room). r103 keeps Original packages + the PS2 world; the
+# log line becomes "index.txt missing: Original packages". Remove-only: no store.
+DATA['nostd103'] = {'remove': ['dc/native/r103/low/%s' % f for f in ('index.txt', 'MAINSCENARIO.re4mesh', 'plan.json')] + [
+    'dc/texlow/%s/%s.re4tex' % (k[0], k) for k in (
+        '255f85b3-495d7d69 3628abf0-44e6d158 3a43023f-cf202672 570e2032-fcc53f7c 589a31e5-8ef2a5cd 5c900ef9-0eeea1a0 '
+        '6836912e-e089be7e 73aed70b-db3cc2dc 79faed7d-de7a1023 86c0121b-841ef8be 8c58ec0d-96eacb5f 9ec02924-b15bf85a '
+        'a3943bb1-eec75484 b2372831-53c12477 b52b2722-ad9a1eff c1eb66a7-93b9292b e831a98f-ace53a55 f47bd095-ec43c743 '
+        'fd3d8794-bb70f519').split()]}
+
 
 if __name__ == '__main__':
     main()
