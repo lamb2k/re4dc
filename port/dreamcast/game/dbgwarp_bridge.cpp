@@ -110,6 +110,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "sce_sys.h"
 #include "etc_model.h"
 #include "emdoor.h"
+#include "embox.h"
 #include "sscrn.h"
 #include "re4dc_platform.h"
 #include "geometry.h"
@@ -262,6 +263,7 @@ struct Warp {
     // the two infos the same way (ModInfoMgr.create + cModel::swapModelInfo) and leaves Hand_type alone: the routine's
     // own em10HandSet(em, 0) sees no change and keeps the pose (setHand does not touch Hand_type either).
     bool has_hand, hand_done;
+    u32 box_frame, box_dist; bool has_box, box_done;  // `boxbreak <frame> [dist]` (lane purge-props24 still rig)
     u32 bring;  // `bring <distance> [side]` (still pairs): the handpose / kill target is moved this far in front of Leon
     s32 bring_side;  // (and `side` to his right), facing him
     u32 hand_frame;
@@ -575,6 +577,13 @@ void load()
             wp.away_from = num(tok[1]);
             wp.away_to = num(tok[2]);
             for (int i = 0; i < 3; ++i) wp.away_pos[i] = (f32) strtod(tok[3 + i], nullptr);
+        } else if (!strcmp(k, "boxbreak") && n >= 2) {
+            // `boxbreak <frame> [dist]`: at that room frame the intact breakable box / barrel (cEmBox, etc ids 01 02 11
+            // 12 1e 1f 2d 2e 2f 3c) nearest Leon is put dist (default 1500) in front of him and broken (emBoxSetBreak
+            // kind 0: the shot break), so a still pair shows the break model and debris. Test rig only (DBG_WARP).
+            wp.has_box = true;
+            wp.box_frame = num(tok[1]);
+            wp.box_dist = n >= 3 ? num(tok[2]) : 1500;
         } else if (!strcmp(k, "handpose") && n >= 4) {
             wp.has_hand = true;
             wp.hand_frame = num(tok[1]);
@@ -1025,6 +1034,31 @@ void kill_poll()
         }
         re4dc_log("warp: etcdoor %d %s flag|=%08x at room frame %u\n", wp.etd_no, d ? "set" : "missing",
                   (unsigned) wp.etd_or, (unsigned) wp.room_frames);
+    }
+    if (wp.has_box && !wp.box_done && wp.room_frames >= wp.box_frame && pPL) {
+        static const u8 box_ids[] = {0x01, 0x02, 0x11, 0x12, 0x1E, 0x1F, 0x2D, 0x2E, 0x2F, 0x3C};
+        cEm* best = nullptr;
+        f32 best_d = 1e30f;
+        for (int no = 0; no < 0x40; ++no) {
+            for (unsigned k2 = 0; k2 < sizeof(box_ids); ++k2) {
+                cEm* e = nullptr;
+                if (getRoomEtc(no, box_ids[k2], &e, 0) != 1 || !e || e->hp <= 0) continue;
+                const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                if (d < best_d) { best_d = d; best = e; }
+            }
+        }
+        wp.box_done = true;
+        if (best) {
+            const f32 a = pPL->ang.y, d = (f32) wp.box_dist;
+            best->pos.x = pPL->pos.x + __builtin_sinf(a) * d;
+            best->pos.z = pPL->pos.z + __builtin_cosf(a) * d;
+            best->pos.y = pPL->pos.y;
+            emBoxSetBreak(static_cast<cEmBox*>(best), 0);
+            re4dc_log("warp: boxbreak m=%08x at room frame %u pos=%d,%d,%d\n", (unsigned) (uintptr_t) best,
+                      (unsigned) wp.room_frames, (int) best->pos.x, (int) best->pos.y, (int) best->pos.z);
+        } else {
+            re4dc_log("warp: boxbreak: no intact box in the room\n");
+        }
     }
     if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
         auto bring = [](cEm* e) {
