@@ -24,6 +24,7 @@ reported (GC-in-use count).
 usage:
   ps2_audio.py banks --tree DISCTREE --ps2 DIR --out OVERLAY [--files spec,...] [--json MAP] [--level gc|ps2] [--jobs N]
   ps2_audio.py streams --tree DISCTREE --ps2 DIR --out OVERLAY [--json MAP]
+  ps2_audio.py music --tree DISCTREE --ps2 DIR --out OVERLAY [--json MAP]  (PS2 songs into bio4midi.dat, ps2_music.py)
   ps2_audio.py afs --iso PS2ISO --out DIR [patterns]        (BIO4DAT.AFS entries, default *.snd *.adx)
   tools/d367/ps2snd24-regen.sh rebuilds the whole data set from a final disc in one command
 
@@ -792,6 +793,38 @@ def _blen(looplen, nch):
     return ab.STR_BLOCK * ((looplen // 2 + ab.STR_BLOCK - 1) // ab.STR_BLOCK) * nch
 
 
+def cmd_music(a):
+    """bgm/bio4midi.dat with the PS2 songs (ps2_music.py): every prebuilt entry NNN with a PS2 miNNN_a.snd is rebuilt in
+    place (same part sizes); others keep their GC data. Writes OUT/bgm/bio4midi.dat (same size)."""
+    import ps2_music
+    path, bases = ab.archive_bases(a.tree, 'bgm/bio4midi.dat#*')
+    d = bytearray(open(path, 'rb').read())
+    rep = []
+    for i, base in enumerate(bases):
+        src = os.path.join(a.ps2, 'mi%03d_a.snd' % i)
+        row = dict(entry=i)
+        if not os.path.exists(src):
+            row['ps2'] = None
+            row['why'] = 'no PS2 song'
+        else:
+            try:
+                row.update(ps2_music.convert_entry(d, base, open(src, 'rb').read()))
+                row['ps2'] = os.path.basename(src)
+            except (ValueError, KeyError) as e:
+                row['ps2'] = None
+                row['why'] = str(e)
+        rep.append(row)
+        print('  bio4midi #%-2d %s' % (i, row))
+    dst = os.path.join(a.out, 'bgm', 'bio4midi.dat')
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    with open(dst, 'wb') as f:
+        f.write(d)
+    print('music: %d of %d entries from PS2' % (sum(1 for r in rep if r['ps2']), len(rep)))
+    if a.json:
+        with open(a.json, 'w') as f:
+            json.dump(rep, f, indent=1)
+
+
 def cmd_afs(a):
     """Extract BIO4DAT.AFS entries matching the patterns from the PS2 ISO (isoinfo finds the AFS extent)."""
     import fnmatch
@@ -844,12 +877,17 @@ def main():
     s.add_argument('--jobs', type=int, default=4)
     s.add_argument('--min-xcorr', type=float, default=0.5)
     s.add_argument('--ps2-length', action='store_true')
+    mu = sub.add_parser('music')
+    mu.add_argument('--tree', required=True)
+    mu.add_argument('--ps2', required=True)
+    mu.add_argument('--out', required=True)
+    mu.add_argument('--json')
     x = sub.add_parser('afs')
     x.add_argument('--iso', required=True)
     x.add_argument('--out', required=True)
     x.add_argument('patterns', nargs='*', default=['*.snd', '*.adx'])
     a = ap.parse_args()
-    {'banks': cmd_banks, 'streams': cmd_streams, 'afs': cmd_afs}[a.cmd](a)
+    {'banks': cmd_banks, 'streams': cmd_streams, 'afs': cmd_afs, 'music': cmd_music}[a.cmd](a)
 
 
 if __name__ == '__main__':
