@@ -2623,6 +2623,14 @@ endif
 ifneq ($(TEX_USE_CENSUS),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=$(TEX_USE_CENSUS)
 endif
+# TEX_USE_CENSUS=2 (lane purge-cast24): + the per-key lines (platform/tex_use_keys.h, force-included; the call is a macro on
+# an existing line of native_ui.cpp, empty otherwise, so knob-off builds are byte-identical).
+ifeq ($(TEX_USE_CENSUS),2)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -include platform/tex_use_keys.h
+$(OBJDIR)/platform/native_ui.o: platform/tex_use_keys.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_TEX_USE_KEYS()='
+endif
 # CLOSED_PASS_KEEP=1 (needs PS2_WORLD_DRAW=1; native_ui.cpp, render only, default 0): a draw that asks for a PVR list
 # this scene already closed (an opaque or punch-through packet after the translucent list opened) stays in the open
 # list instead of halting ("native closed pass requested"; user r21o play 2026-10-03, r100 after pressing A). The TA

@@ -12,6 +12,21 @@
 #endif
 // ACTOR_GANADO_PS2_GRIP (lane purge-cast24 10-24): + the grip hands 451 / 456 (ps2_ganado_stump.py --grip): 11 geometries.
 #define RE4DC_GANADO_STUMP_IDS ((9u+2u*RE4DC_ACTOR_GANADO_PS2_GRIP)*RE4DC_ACTOR_GANADO_PS2_STUMP)
+// The grip knob's code sits in these macros (used on existing lines of coarse_actor_material.inc and
+// coarse_actor_owner_ganado.inc, so a knob-off build is byte-identical):
+//  RE4DC_GRIP_VARIANT_RUN(run): a grip hand planned from the variant package draws the appearance atlas (material 0),
+//    not the source hand material;
+//  RE4DC_GRIP_ORIGINAL_SKIP(role, bin): the grip hands 451 / 456 are package variants (the PS2 meshes), not the GC
+//    extra chunks.
+#if RE4DC_ACTOR_GANADO_PS2_GRIP
+#define RE4DC_GRIP_VARIANT_RUN(run) ((run).immutable_asset_id>=kRe4dcGanadoStumpAsset && \
+    (run).immutable_asset_id<kRe4dcGanadoStumpAsset+RE4DC_GANADO_STUMP_IDS)
+#define RE4DC_GRIP_ORIGINAL_SKIP(role, bin) \
+    if(((role)==2 || (role)==3) && bound && ganado_var::find(bound->appearance,(role),(bin))>=0)return nullptr;
+#else
+#define RE4DC_GRIP_VARIANT_RUN(run) false
+#define RE4DC_GRIP_ORIGINAL_SKIP(role, bin)
+#endif
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 // Fixed chunks 1..46 precede optional far chunks 47..66. The variants take the next nine IDs (package geometry k:
 // kRe4dcGanadoStumpAsset + k; k = appearance for the five stumps); the registry and player costume/hand IDs follow.
