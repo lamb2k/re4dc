@@ -17,7 +17,8 @@ kind/id/full-SHA256 rules of the runtime callers:
                as the runtime's archive table, recursively into members that
                parse as archives; id = first 20 digest bytes as hex
                (gc_asset_members.cpp entry/named/member_capture)
-               .drs files are walked from their body at 0x400 (drs.py layout)
+               .drs files are walked from their body at 0x400 (drs.py layout),
+               and every container's type-0 record bodies (.dar/.drs/.das)
   geometry     every dc/native/** file, whole file; id = first 20 digest
                bytes as hex (gc_asset_payloads.cpp capture)
 
@@ -176,6 +177,18 @@ def sound_banks(b):
         i = b.find(BANK_SIG, i + 32)
 
 
+def record_bodies(b):
+    """Type-0 records of a 0x400-byte container table (drs.py layout, little-endian on our disc)."""
+    o = 0x20
+    while o + 32 <= min(len(b), DRS_TABLE):
+        r = struct.unpack_from('<8I', b, o)
+        o += 32
+        if r[0] == 0xFFFFFFFF:
+            return
+        if r[0] == 0 and r[1] and r[3] + r[1] <= len(b):
+            yield r[3], b[r[3]:r[3] + r[1]]
+
+
 def texpak_members(b):
     if len(b) < 24 or b[:8] != b'RE4PAK1\0':
         raise ValueError('tex.pak header')
@@ -238,6 +251,12 @@ def collect(disc):
             if name.endswith('.drs') and len(b) > DRS_TABLE:
                 for payload in model_payloads(b[DRS_TABLE:]):
                     add('model', sha(payload)[:40], payload, rel + '#body')
+            # Record-table containers (.dar rooms, .drs, .das): every type-0
+            # record body is an archive the runtime adopts as loaded (r101.dar
+            # body at 0x4ccea0 = "native room identities archive=1745152").
+            for at, body in record_bodies(b):
+                for payload in model_payloads(body):
+                    add('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
     return rows
 
 
