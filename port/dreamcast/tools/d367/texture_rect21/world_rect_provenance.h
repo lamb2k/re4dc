@@ -33,11 +33,11 @@ constexpr bool n256_rows_match() {
            a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
            a.source_crc!=b.source_crc)return false;
         if(a.mesh_crc!=b.mesh_crc || a.mesh_bytes!=b.mesh_bytes){
-            if(a.room!=0x101U && a.room!=0x103U)return false;
+            if(a.room!=0x101U && a.room!=0x103U && a.room!=0x106U && a.room!=0x109U && a.room!=0x117U)return false;
             ++swapped;
         }
     }
-    return swapped==2U;
+    return swapped==5U;  // r101 r103 (n256w25) + r106 r109 r117 (n256x25)
 }
 static_assert(n256_rows_match());
 #else
