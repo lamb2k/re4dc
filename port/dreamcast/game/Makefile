@@ -929,6 +929,17 @@ endif
 MODULES += wep01 wep07 wep09 wep11 wep13 wep19
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
 endif
+# WEAPON_WEP04=1 (lane fix-blacktail24 2026-10-24, default 0: no effect): the Blacktail (item 0x27 / 0x28, weapon 4,
+# module 70, src/wep04) links statically like the other WEAPON_MODULES weapons. Without it the equip (SubScreenExit ->
+# weaponLoad -> DLL_Link) finds no module 70 entry and halts "DLL link/unlink failed" (Test 23).
+WEAPON_WEP04 ?= 0
+ifneq ($(WEAPON_WEP04),0)
+ifneq ($(WEAPON_WEP04),1)
+$(error WEAPON_WEP04 must be 0 or 1)
+endif
+MODULES += wep04
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_WEP04=1
+endif
 # EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
 # succeed; roll back only this attempt's bin references on admission failure.
 EVD_ADMISSION_TXN ?= 1
@@ -2640,7 +2651,7 @@ BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
 CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
