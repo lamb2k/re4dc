@@ -50,10 +50,22 @@ unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
     Re4dcIoScope io;
     if(fs_seek(source,offset,SEEK_SET)!=off_t(offset)){disc_failed();return 0;}
     if(disc_state.load()!=state)return 0;
-    const ssize_t count=fs_read(source,destination,bytes);
-    if(disc_state.load()!=state)return 0;
-    if(count<0 || unsigned(count)!=bytes){disc_failed();return 0;}
-    return unsigned(count);
+    // gc-catalog24b r8: the GD read writes a 32-byte aligned destination. A row
+    // read into a misaligned stack buffer came back 16 bytes shifted (r101/r103,
+    // row 1372: kind missing, the next row's kind at the end), so a misaligned
+    // destination goes through this aligned bounce (owned under disc_lock).
+    alignas(32) static unsigned char bounce[512];
+    auto* out=static_cast<unsigned char*>(destination);
+    for(unsigned done=0;done<bytes;){
+        const bool direct=!(reinterpret_cast<std::uintptr_t>(out+done)&31U);
+        const unsigned n=direct?bytes-done:(bytes-done<sizeof bounce?bytes-done:unsigned(sizeof bounce));
+        const ssize_t count=fs_read(source,direct?out+done:bounce,n);
+        if(disc_state.load()!=state)return 0;
+        if(count<0 || unsigned(count)!=n){disc_failed();return 0;}
+        if(!direct)std::memcpy(out+done,bounce,n);
+        done+=n;
+    }
+    return bytes;
 }
 // Whole-catalog sequential read at install through the shared 16 KiB storage
 // bounce (room_storage read_chunks): ~55 aligned reads instead of ~250.

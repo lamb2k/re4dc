@@ -48,7 +48,7 @@ bool index_read_row(CatalogReadAt read,void* context,unsigned epoch,unsigned row
 constexpr unsigned SparseKeys=256,SparseKeyBytes=16,BufferRows=32;
 unsigned char sparse_key[SparseKeys][SparseKeyBytes];
 unsigned sparse_blocks,sparse_block_rows;
-unsigned char block_buffer[BufferRows*112];
+alignas(32) unsigned char block_buffer[BufferRows*112];
 // kind NUL id NUL digest, first 16 bytes: memcmp order of prefixes is a monotone
 // (non-strict) image of index_compare order (strcmp compares unsigned bytes).
 void sparse_prefix(const char* kind,const char* id,const Digest& digest,unsigned char* out){
