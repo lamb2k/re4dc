@@ -226,15 +226,15 @@ void retire_catalog(){
 CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) {
     if(!catalog_ok || !token(kind,KindBytes) || !token(id,IdBytes))return {};
     const unsigned epoch=catalog_epoch,rows=catalog_rows;
-    // Result cache (8 x 104 B = 832 B BSS): repeated binds of the same identity
+    // Result cache (16 x 104 B = 1664 B BSS): repeated binds of the same identity
     // (sound key-ons pumped every event, movie/model rebinds) skip the disc search.
     // Tokens are epoch-tagged, so a retired/replaced catalog never hits.
     struct BindCache{char kind[16],id[48];Digest digest;unsigned value;};
-    static BindCache bind_cache[8];static unsigned bind_cache_next;   // gc-catalog24b r8: 16 -> 8 (KOS for Motion)
+    static BindCache bind_cache[16];static unsigned bind_cache_next;
     for(const auto& c:bind_cache)if(c.value && c.value>>14==epoch && !std::strcmp(c.kind,kind) && !std::strcmp(c.id,id) &&
         !std::memcmp(c.digest.bytes,digest.bytes,32))return {c.value};
     struct CacheStore{const char* k;const char* i;const Digest& d;
-        void operator()(CheckedAsset a)const{if(!a.value)return;auto& c=bind_cache[bind_cache_next++&7];
+        void operator()(CheckedAsset a)const{if(!a.value)return;auto& c=bind_cache[bind_cache_next++&15];
             std::strcpy(c.kind,k);std::strcpy(c.id,i);c.digest=d;c.value=a.value;}} store{kind,id,digest};
     const CheckedAsset result=[&]()->CheckedAsset{
     unsigned index=rows;AssetDescription row;

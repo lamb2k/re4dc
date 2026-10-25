@@ -10,7 +10,7 @@ namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
 namespace {
-constexpr unsigned ArchiveCount=16, MemberCount=240;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; 240 since r8 for Motion KOS)
+constexpr unsigned ArchiveCount=16, MemberCount=224;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; 224 since r8 for Motion KOS)
 struct Archive {
     const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
 } archives[ArchiveCount];
