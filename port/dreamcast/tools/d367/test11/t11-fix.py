@@ -1169,6 +1169,14 @@ if os.path.isfile(T24PRUNED + '/tex.pak'):
     PAK_DERIVED['t24prune'] = T24PRUNED + '/pak-derived.json'
 # Mendez door-demo knob + data set: from lane fix-mendez-door24 (placeholder; not in Test 24 recipe yet).
 
+# r103std25 (lane t25-fixes 10-25, Test 25 item 2): r103's Standard index (dc/native/r103/low/index.txt, 4,280 B) is over
+# the runtime reader limit (native_static.cpp kStdText=4096) and has been rejected since 10-19 ("larger than 4096 B:
+# Original packages"), in the release too. tools/d367/test25/std_compact.py rewrites only its float tokens (impostor
+# centres / half sizes, 0.1 source unit, trailing zeros dropped): 4,060 B, same records. Data only; it turns r103's
+# Standard assets on (a look item). Store /root/re4data/private/r103std25-20261025 (RECIPE.txt, SHA256SUMS).
+R103STD25 = os.environ.get('R103STD25', '/root/re4data/private/r103std25-20261025')
+DATA['r103std25'] = {'dc/native/r103/low/index.txt': R103STD25 + '/dc/native/r103/low/index.txt'}
+
 
 if __name__ == '__main__':
     main()
