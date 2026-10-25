@@ -1,8 +1,11 @@
 #include "include/gc_asset_gate.h"
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
-#include "../../room/room_storage.hpp"
 #include <kos/fs.h>
+#include <cstdint>
+#include <cstddef>
+// room/room_storage.hpp read_chunks (declared here so this unit builds from any directory)
+namespace re4dc::storage { bool read_chunks(file_t file,std::size_t bytes,bool (*consume)(const std::uint8_t*,std::size_t,void*),void* context); }
 #include <fcntl.h>
 #include <cstdio>
 #include <cstring>

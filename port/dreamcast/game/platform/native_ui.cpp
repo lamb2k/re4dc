@@ -1100,6 +1100,7 @@ pvr_ptr_t movie_texture; bool movie_picture; unsigned movie_width,movie_height;
 #if RE4DC_GC_ASSET_GATE
 struct GcAssetMovieProof {
     const void* texture=nullptr;unsigned width=0,height=0,owner=0,upload=0,uploading=0;re4dc_gcasset::CheckedAsset asset{};
+    bool pending=false;unsigned pending_uses=0;   // token bound at the movie's natural end
 } gcasset_movie;
 unsigned gcasset_movie_serial;
 void gcasset_movie_forget(){gcasset_movie={};}
@@ -10176,7 +10177,7 @@ extern "C" unsigned re4dc_gcasset_movie_bind(const void* texture,unsigned width,
        !width || !height || gcasset_movie_serial==~0U){
         re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-bind");return 0;
     }
-    gcasset_movie={texture,width,height,++gcasset_movie_serial,0,0,{asset}};
+    gcasset_movie={texture,width,height,++gcasset_movie_serial,0,0,{asset},asset==0,0};
     return gcasset_movie.owner;
 }
 extern "C" void re4dc_gcasset_movie_begin_upload(unsigned owner,const void* texture){
@@ -10195,6 +10196,19 @@ extern "C" void re4dc_gcasset_movie_uploaded(unsigned owner,const void* texture,
         gcasset_movie.upload=0;re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-upload-version");return;
     }
     gcasset_movie.upload=movie_upload_serial;
+}
+extern "C" void re4dc_gcasset_movie_resolved(unsigned owner,unsigned asset,int complete){
+    if(!owner || owner!=gcasset_movie.owner || !gcasset_movie.pending){
+        if(owner){re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-resolve-owner");}
+        return;
+    }
+    const unsigned uses=gcasset_movie.pending_uses;gcasset_movie.pending=false;gcasset_movie.pending_uses=0;
+    if(!complete || !asset){re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"movie-incomplete-hash");return;}
+    gcasset_movie.asset={asset};
+    // Pictures were shown (and audio started) under this owner: one emission each,
+    // the same verdict as per-picture emission (first room use logs once).
+    re4dc_gcasset::emitted_checked(re4dc_gcasset::Movie,gcasset_movie.asset);
+    if(uses)re4dc_gcasset::emitted_checked(re4dc_gcasset::Texture,gcasset_movie.asset);
 }
 // GC_ASSET_MOVIE_API_END
 #endif
@@ -10318,7 +10332,8 @@ void movie_draw(){
 #endif
 #if RE4DC_GC_ASSET_GATE
     }
-    if(asset_packet.accepted && verified){
+    if(asset_packet.accepted && verified && gcasset_movie.pending)++gcasset_movie.pending_uses;
+    else if(asset_packet.accepted && verified){
         re4dc_gcasset::emitted_checked(re4dc_gcasset::Movie,gcasset_movie.asset);
         re4dc_gcasset::emitted_checked(re4dc_gcasset::Texture,gcasset_movie.asset);
     }else re4dc_gcasset::unresolved(re4dc_gcasset::Movie,"unqualified-movie-picture");

@@ -356,6 +356,7 @@ AudioTicket audio_ticket() {
     queue_lock.clear(std::memory_order_release);return ticket;
 }
 void close_audio_admission() { queue_active.store(0);admission_handoff=false; }
+constexpr unsigned DeferredUse=4;   // after PendingSound StreamContainer=3
 static void enqueue(AudioTicket ticket, Consumer consumer, CheckedAsset asset,unsigned kind,const Digest* digest) {
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;return; }
     if(ticket.slot>=32 || !ticket.serial || tickets[ticket.slot].serial!=ticket.serial) {
@@ -377,6 +378,7 @@ void queued_pending(AudioTicket ticket,Consumer consumer,PendingSound kind,const
     if(unsigned(kind)<SoundMram || unsigned(kind)>StreamContainer){enqueue(ticket,consumer,{},0,nullptr);return;}
     enqueue(ticket,consumer,{},kind,&digest);
 }
+void queued_deferred(AudioTicket ticket){enqueue(ticket,Movie,{},DeferredUse,nullptr);}
 void pump() {
     for(;;) {
         if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;break; }
@@ -388,6 +390,8 @@ void pump() {
         const Queued q=queue[queue_head];queue_head=(queue_head+1)%32;queue_lock.clear(std::memory_order_release);
         if(!active || q.room!=room || q.visit!=visit) {
             if(active)++errors;else re4dc_log("GC-ASSET-ERROR v=2 why=audio-room-lifetime\n");
+        } else if(q.kind==DeferredUse){
+            // the owner emits (or reports unresolved) when it binds
         } else if(q.kind){
             char id[65];hex(q.digest,id);id[40]=0;
             const char* kind=q.kind==SoundMram?"sound-mram":q.kind==SoundAram?"sound-aram":"sound-stream";

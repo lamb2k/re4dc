@@ -78,35 +78,53 @@ int main(){auto&s=streams[0];s.initted=1;s.channels=2;s.bitsize=16;s.frequency=3
                                 str(GAME / 'platform/gc_asset_gate.cpp'), str(GAME / 'platform/gc_asset_audio.cpp'), '-o', str(executable)], check=True)
                 subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
 
-    def test_actual_full_container_capture_and_read_rejection(self):
+    def test_actual_streamed_container_digest_and_end_bind(self):
+        # gc-catalog24b (coordinator 10-24 option a): the container digest is built
+        # from the played bytes (header, zero padding, transport chunks, any tail at
+        # the natural end) and bound at the end; a skip leaves it unresolved.
         source = (GAME / 'platform/native_movie.cpp').read_text()
-        start = source.index('    // One extra immutable container read')
-        capture = source[start:source.index('#endif', start)]
+        start = source.index('    // gc-catalog24b (coordinator 10-24, option a)')
+        opening = source[start:source.index('#endif', start)]
+        hook = source.index('            if(m.gca_hashing)re4dc_gcasset::digest_update(m.gca_hash,m.readbuf,n);')
+        assert source.rfind('bool transport(', 0, hook) > source.rfind('\n}', 0, hook)   # inside transport()
+        fstart = source.index('    // Natural end: hash any transport tail')
+        finish = source[fstart:source.index('#endif', fstart)]
         fixture = r'''
 #include "gc_asset_gate.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include <sys/types.h>
-using namespace re4dc_gcasset;using file_t=int;constexpr int O_RDONLY=0;
-unsigned char file_bytes[1536];unsigned offset,opens,closes,reads,errors;bool io_owner,pin=true,short_read,bad_size,open_fail;
-struct Re4dcIoScope{Re4dcIoScope(){assert(!io_owner);io_owner=true;}~Re4dcIoScope(){io_owner=false;}};
-struct{unsigned id=1;const char*path="/cd/movie/test";CheckedAsset asset;}m;
-file_t fs_open(const char*,int){assert(io_owner);++opens;offset=0;return open_fail?-1:1;}
-off_t fs_total(file_t){assert(io_owner);return bad_size?1535:1536;}
-ssize_t fs_read(file_t,void*out,unsigned bytes){assert(io_owner);++reads;if(short_read)return 0;assert(offset+bytes<=1536);memcpy(out,file_bytes+offset,bytes);offset+=bytes;return bytes;}
-int fs_close(file_t){assert(io_owner);++closes;return 0;}
-namespace re4dc_gcasset{bool ensure_disc_catalog(){assert(!io_owner);return pin;}}
-extern "C" void re4dc_log(const char*,...){assert(!io_owner);++errors;}
-void capture(){const unsigned size=1536;
-''' + capture + r'''
+#include <cstdint>
+#include <vector>
+using namespace re4dc_gcasset;using file_t=int;
+enum{RE4DC_MOVIE_EOF=1,RE4DC_MOVIE_SKIP=2};
+std::vector<unsigned char> file;unsigned offset,resolved_owner,resolved_asset,resolutions;int resolved_complete;
+struct Re4dcIoScope{Re4dcIoScope(){} ~Re4dcIoScope(){}};
+struct{unsigned id=0x10003,asset_owner=5,transport_left=0;file_t file=1;CheckedAsset asset;DigestStream gca_hash;bool gca_hashing;}m;
+namespace re4dc{namespace storage{bool read_chunks(file_t,std::size_t n,bool(*sink)(const std::uint8_t*,std::size_t,void*),void* ctx){
+  while(n){const std::size_t k=n<16384?n:16384;if(offset+k>file.size())return false;sink(file.data()+offset,k,ctx);offset+=unsigned(k);n-=k;}return true;}}}
+extern "C" void re4dc_gcasset_movie_resolved(unsigned owner,unsigned asset,int complete){resolved_owner=owner;resolved_asset=asset;resolved_complete=complete;++resolutions;}
+extern "C" void re4dc_log(const char*,...){}
+namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
+void open_movie(const unsigned char* gca_head){
+''' + opening + r'''
 }
-int main(){for(unsigned i=0;i<1536;++i)file_bytes[i]=i%251;CatalogRow row{"movie","00001",fingerprint(file_bytes,1536),Unknown};assert(install(&row,1));
-capture();assert(m.asset.value && opens==1 && closes==1 && reads==3 && !errors);AssetDescription d{};assert(describe_checked(m.asset,&d) && !memcmp(d.digest.bytes,row.digest.bytes,32));
-short_read=true;capture();assert(!m.asset.value && errors==1 && closes==2);short_read=false;
-bad_size=true;capture();assert(!m.asset.value && errors==2 && closes==3);bad_size=false;
-open_fail=true;capture();assert(!m.asset.value && errors==3 && closes==3);open_fail=false;
-pin=false;capture();assert(!m.asset.value && opens==4); // no source attribution without a valid pinned catalog
+void play(unsigned chunks){   // transport(): every chunk read is hashed as read
+  for(unsigned i=0;i<chunks && m.transport_left;++i){unsigned n=m.transport_left<32768?m.transport_left:32768;
+    digest_update(m.gca_hash,file.data()+offset,n);offset+=n;m.transport_left-=n;}}
+void finish_movie(int status){
+''' + finish + r'''
+}
+int main(){file.assign(2048+100000,0);for(unsigned i=0;i<32;++i)file[i]=(unsigned char)(i+1);for(unsigned i=2048;i<file.size();++i)file[i]=(unsigned char)(i%251);
+ CatalogRow row{"movie","10003",fingerprint(file.data(),unsigned(file.size())),Unknown};assert(install(&row,1));
+ // natural end with a 1-chunk tail left unread by the decoder
+ offset=2048;m.transport_left=unsigned(file.size()-2048);open_movie(file.data());assert(m.gca_hashing);play(2);
+ finish_movie(RE4DC_MOVIE_EOF);assert(resolutions==1 && resolved_complete==1 && resolved_owner==5 && resolved_asset && resolved_asset==m.asset.value && !m.gca_hashing);
+ AssetDescription d{};assert(describe_checked(m.asset,&d) && !std::memcmp(d.digest.bytes,row.digest.bytes,32));
+ // skip: no tail read, no bind, resolved as incomplete
+ offset=2048;m.transport_left=unsigned(file.size()-2048);m.asset={};open_movie(file.data());play(1);const unsigned at=offset;
+ finish_movie(RE4DC_MOVIE_SKIP);assert(resolutions==2 && resolved_complete==0 && !m.asset.value && offset==at);
+ std::printf("streamed movie digest ok\n");
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-movie-file-', dir='/dev/shm') as temporary:
@@ -179,6 +197,13 @@ int main(){unsigned char payload[]={1,2,3};auto digest=fingerprint(payload,sizeo
  logs.clear();begin(0x111,7,Required);unsigned packet[16]{};packet[0]=0x80000008;packet[3]=0x2000/8;packet[8]=PVR_CMD_VERTEX_EOL;
  stream_send(packet,64);end(4);assert(!rows() && logs.find("unmapped-texture-address")!=std::string::npos);
  gcasset_movie_serial=~0U;assert(!re4dc_gcasset_movie_bind(movie_texture,288,192,asset.value));
+ // Pending token (bound at the movie end): verified pictures are held, then one emission at resolve.
+ gcasset_movie_serial=0;gcasset_movie_forget();auto pend=re4dc_gcasset_movie_bind(movie_texture,288,192,0);assert(pend && gcasset_movie.pending);
+ re4dc_gcasset_movie_begin_upload(pend,movie_texture);++movie_upload_serial;re4dc_gcasset_movie_uploaded(pend,movie_texture,288,192,0);
+ logs.clear();begin(0x111,8,Required);movie_draw();movie_draw();assert(gcasset_movie.pending_uses==2 && !rows());
+ re4dc_gcasset_movie_resolved(pend,asset.value,1);end(5);assert(rows()==1 && logs.find("consumer=movie")!=std::string::npos && logs.find("errors=0")!=std::string::npos);
+ gcasset_movie_forget();pend=re4dc_gcasset_movie_bind(movie_texture,288,192,0);logs.clear();begin(0x111,9,Required);
+ re4dc_gcasset_movie_resolved(pend,0,0);end(6);assert(!rows() && logs.find("movie-incomplete-hash")!=std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-movie-', dir='/dev/shm') as temporary:

@@ -226,7 +226,11 @@ def collect(disc):
         m = MOVIE.match(name)
         if m and low.startswith('dc/movie/'):
             mid = (int(m.group(1), 16) << 8) | int(m.group(2), 16) | (0x1000000 if m.group(3) else 0)
-            add('movie', '%05x' % mid, p.read_bytes(), rel)
+            data = p.read_bytes()
+            # native_movie.cpp hashes the played bytes and takes 32..2048 as zero
+            if len(data) >= 2048 and data[32:2048] != bytes(2016):
+                raise SystemExit('movie header padding not zero: ' + rel)
+            add('movie', '%05x' % mid, data, rel)
             continue
         if low == 'bgm/aica_str.dat':
             for k, data in stream_entries(p.read_bytes()):

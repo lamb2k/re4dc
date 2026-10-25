@@ -38,7 +38,9 @@ int fs_close(file_t){assert(io_depth==1);++closes;return 0;}
 off_t fs_total(file_t fd){assert(io_depth==1);return fd==1?catalog.size():texture.size();}
 off_t fs_seek(file_t fd,off_t at,int){assert(io_depth==1);offsets[fd]=unsigned(at);return at;}
 ssize_t fs_read(file_t fd,void* target,unsigned bytes){assert(io_depth==1);auto& source=fd==1?catalog:texture;unsigned& at=offsets[fd];if(short_read || at>source.size() || bytes>source.size()-at)return 0;memcpy(target,source.data()+at,bytes);at+=bytes;return bytes;}
-struct Key{unsigned crc,fnv;};struct Entry{CheckedAsset asset;Key key;};
+#include <cstdint>
+namespace re4dc{namespace storage{bool read_chunks(int f,std::size_t n,bool(*c)(const std::uint8_t*,std::size_t,void*),void* ctx){unsigned char b[1000];while(n){const unsigned k=n<1000?unsigned(n):1000u;if(fs_read(f,b,k)!=ssize_t(k))return false;if(!c(b,k,ctx))return false;n-=k;}return true;}}}
+struct Key{unsigned crc,fnv;};struct Pkg{file_t stream_file()const{return FILEHND_INVALID;}};struct Entry{CheckedAsset asset;Key key;Pkg package;};
 ''' + capture + r'''
 int main(){
     if(!std::strcmp(RE4DC_GC_ASSET_CATALOG_SHA256,"0")){
@@ -137,7 +139,7 @@ int main(){
     retire_catalog();assert(!describe_checked(current,&description));
     assert(install_index(read_at,&data,data.size(),pin));assert(!describe_checked(current,&description));
     // Neither an unknown record nor a failed install can supply a PS2 verdict.
-    for(unsigned i=0;i<8;++i){char id[16];snprintf(id,sizeof id,"sound-%u",i);
+    for(unsigned i=0;i<64;++i){char id[16];snprintf(id,sizeof id,"sound-%u",i);
         assert(bind_checked("sound",id,fingerprint(id,unsigned(strlen(id)))).value);}
     assert(!bind_checked("sound","overflow",fingerprint("x",1)).value);
     Digest badpin{};assert(!install_index(read_at,&data,data.size(),badpin));

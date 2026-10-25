@@ -47,6 +47,8 @@ ssize_t fs_read(int fd,void* p,unsigned n){assert(fd==live_fd);++reads;if(cursor
  if(hook==RetireDiscRead){hook=NoHook;retire_disc_catalog();assert(closes==0&&live_fd==fd);}
  if(hook==RetireCoreRead){hook=NoHook;retire_catalog();}
  return short_read?n-1:n;}
+#include <cstdint>
+namespace re4dc{namespace storage{bool read_chunks(int f,std::size_t n,bool(*c)(const std::uint8_t*,std::size_t,void*),void* ctx){unsigned char b[1000];while(n){const unsigned k=n<1000?unsigned(n):1000u;if(fs_read(f,b,k)!=ssize_t(k))return false;if(!c(b,k,ctx))return false;n-=k;}return true;}}}
 #include "gc_asset_disc.cpp"
 Digest digest(unsigned i){const unsigned char byte=17+i;return fingerprint(&byte,1);}
 CheckedAsset bind_a(){return bind_checked("geometry","a",digest(0));}
@@ -84,7 +86,7 @@ void core_case(unsigned phase,unsigned action,bool binding,bool describing){
 }
 int main(int argc,char**argv){assert(argc==2);const unsigned test=unsigned(std::stoi(argv[1]));
  if(test==35){disc_setup();const auto a=bind_a();other_digest=digest(1);begin(0x211,7,Required);logs.clear();hook=InterleaveBind;emitted_checked(SourceGeometry,a);end(1);assert(nested_failed&&logs.find("errors=3")!=std::string::npos&&logs.find("why=catalog-read consumer=0 room=0211 visit=7")!=std::string::npos);return 0;}
- if(test==36){replacement={"geometry","a",digest(0),PS2};assert(install(&replacement,1));begin(0x211,7,Required);logs.clear();for(unsigned i=0;i<8;++i){char id[8];snprintf(id,sizeof id,"id%u",i);assert(bind_checked("geometry",id,digest(i)).value);}io_depth=1;assert(!bind_checked("geometry","overflow",digest(9)).value);assert(logs.empty());io_depth=0;end(1);assert(logs.find("why=unknown-capacity consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);return 0;}
+ if(test==36){replacement={"geometry","a",digest(0),PS2};assert(install(&replacement,1));begin(0x211,7,Required);logs.clear();for(unsigned i=0;i<64;++i){char id[8];snprintf(id,sizeof id,"id%u",i);assert(bind_checked("geometry",id,digest(i+16)).value);}io_depth=1;assert(!bind_checked("geometry","overflow",digest(9)).value);assert(logs.empty());io_depth=0;end(1);assert(logs.find("why=unknown-capacity consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);return 0;}
  if(test>=30 && test<=34){
   if(test==34){Reader r;const auto pin=fingerprint(file.data(),file.size());assert(install_index(independent_read,&r,file.size(),pin));r.phase=4;r.action=1;assert(!bind_a().value);assert(logs.empty());Reader fresh;assert(install_index(independent_read,&fresh,file.size(),pin));pump();assert(logs.find("why=catalog-read consumer=0 unowned=1")!=std::string::npos);return 0;}
   disc_setup();const auto old=bind_a();begin(0x211,7,Required);logs.clear();hook=RetireDiscRead;AssetDescription d;assert(!describe_checked(old,&d));assert(!io_depth&&logs.empty());
