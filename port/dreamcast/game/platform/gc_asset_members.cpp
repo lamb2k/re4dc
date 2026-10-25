@@ -176,17 +176,17 @@ bool current(const Member& member) {
 struct Pre { unsigned offset,bytes;Digest digest; };
 Pre* pre[ArchiveCount];unsigned pre_count[ArchiveCount];
 void pre_free(unsigned owner){std::free(pre[owner]);pre[owner]=nullptr;pre_count[owner]=0;}
-template<class F> void container_bins(const unsigned char* tag,const Span& c,F&& f);
-bool container_tag(const unsigned char* tag);
 template<class F> void each_model(const Archive& owner,F&& f){
     unsigned count;if(!table(owner,count))return;
     const unsigned tags=16+count*4;
     for(unsigned i=0;i<count;++i){
         const auto* tag=owner.base+tags+4*i;
-        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && !container_tag(tag))continue;
+        // Container members (SMD/SHD/ITM/EFF) are not pre-hashed: their BINs are
+        // captured unmutated at calcModelAddr (member_capture hashes them then),
+        // and their pre tables would cost KOS heap (r101 core EFF: OOM at 10-25).
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3))continue;
         Span current;if(!entry(owner,i,current))continue;
         if(!std::memcmp(tag,"BIN",3)){f(current);continue;}
-        if(container_tag(tag)){container_bins(tag,current,f);continue;}
         if(current.bytes<32)continue;
         const unsigned n=word(current.base,0);if(n>4096)continue;
         unsigned cursor=32;
