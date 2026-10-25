@@ -1181,6 +1181,26 @@ DATA['nostd103'] = {'remove': ['dc/native/r103/low/%s' % f for f in ('index.txt'
         'a3943bb1-eec75484 b2372831-53c12477 b52b2722-ad9a1eff c1eb66a7-93b9292b e831a98f-ace53a55 f47bd095-ec43c743 '
         'fd3d8794-bb70f519').split()]}
 
+# pmrest25 (lane purge-motion25 10-25, GC asset purge: the last motion clips the round-8 census lists): em21 (dog), em23
+# (crow), em2a, pl01 and the room archives r100 / r103 / r106 / r11e with every FCV / SEQ member from the PS2 version
+# (BIO4DAT.AFS emNN.dat / pl01.dat / rNNN.dat; tools/d367/motion/ps2_motion_prepared.py rewrite --bare for room archives,
+# --map for r100's shifted PS2 order). em23 / em2a / r11e are byte-identical to the release (their clips already equal the
+# PS2 entries; staged so the motion store proves it). Data only. Built from the RR candidate tree of t15/int 9c2c83db:
+# LAST in the data line (after nostd103). Store: re4-assets-private/pmrest25-20261025 (RECIPE.txt, SHA256SUMS).
+PMREST25D = os.environ.get('PMREST25D', '/root/re4data/private/pmrest25-20261025')
+if os.path.isdir(PMREST25D):
+    DATA['pmrest25'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (PMREST25D, _e) for _e in ('em21', 'em23', 'em2a', 'pl01')}
+    DATA['pmrest25'].update({'st1/%s.arc' % _r: '%s/st1/%s.arc' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106', 'r11e')})
+# pmash25 (same lane): Ashley em/pl11.drs (the release's pl11-hot bounded archive) with its motion from PS2 pl11.dat, the
+# one new dc/mot key it streams, and the GC key no archive references any more off the disc (remove.txt). ONLY with
+# MOTION_PS2_PL11=1 (its pl11-hot profile row); a program without it refuses the archive. After pmrest25.
+# Store: re4-assets-private/pmash25-20261025.
+PMASH25D = os.environ.get('PMASH25D', '/root/re4data/private/pmash25-20261025')
+if os.path.isdir(PMASH25D):
+    DATA['pmash25'] = {'em/pl11.drs': PMASH25D + '/em/pl11.drs'}
+    DATA['pmash25'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMASH25D, _k) for _k in sorted(os.listdir(PMASH25D + '/dc/mot'))})
+    DATA['pmash25']['remove'] = [_l.strip() for _l in open(PMASH25D + '/remove.txt') if _l.strip()]
+
 
 if __name__ == '__main__':
     main()
