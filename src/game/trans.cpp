@@ -2909,8 +2909,8 @@ void ModelRender(cModel* m)
 #endif
 #if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
     // NATIVE_MODEL_REGISTRY_NO_GC_FRONT: a registry-owned actor the ledger did not nominate this frame (door demo start)
-    // is not drawn through the GameCube front path.
-    if(frontNative && re4dc_registry_owned(m))return;
+    // is not drawn through the GameCube front path; LEON_NO_GC_FRONT: neither is Leon (native_model_registry.mk).
+    if(frontNative && (re4dc_registry_owned(m) || (RE4DC_LEON_NO_GC_FRONT && m==(cModel*)pPL)))return;
 #endif
 
 #if RE4DC_FRONT_NATIVE < 2

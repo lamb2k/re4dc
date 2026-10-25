@@ -131,16 +131,6 @@
    "sha256": "0841eeefc0cafa4489c00472613f9cfc15e1093bd44634d0b150123099991219"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl0a.drs#body",
-   "id": "ef82164d62904ffcf1ddf68eb6fe6a4a536e1067",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "0100",
-   "sha256": "ef82164d62904ffcf1ddf68eb6fe6a4a536e106777787b511ff067f092e5f916"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=10733568&bytes=18576",
    "id": "13afc3c6-d074dc67",
    "kind": "texture",
