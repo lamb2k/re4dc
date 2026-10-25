@@ -1761,26 +1761,6 @@
    "sha256": "7ca77cae181aea0ff807689516d1d287f3d91febbf5478334bcbf68507c5d7d2"
   },
   {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "07d0afaac9d68f4d6894c1709796716f96895440",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "07d0afaac9d68f4d6894c1709796716f96895440db17e367c0da9e39f2d81185"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "14ee5874f3b55ddd015fbb12b31e701a4b28333f",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "14ee5874f3b55ddd015fbb12b31e701a4b28333fd89ef31360aa6b41d92f6fba"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
    "id": "17c2d1a1d1b48cdd66687e1781c869626218fa4b",
    "kind": "model",
@@ -1789,96 +1769,6 @@
    "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
    "room": "011e",
    "sha256": "17c2d1a1d1b48cdd66687e1781c869626218fa4b7948359ee92000933bd9f7e5"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "4e1a0b99052344fe25eb260ccf00de3ce106e169",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "4e1a0b99052344fe25eb260ccf00de3ce106e1692e97f6cab1fdbc3fd8c7912e"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "510de4d7dac799cbd34dd672cb7e481186cd7632",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "510de4d7dac799cbd34dd672cb7e481186cd76329efd850d43f5ba40051b1bc7"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "62397b0e304ec59c0d14ec9a2421e8ae96b20a36",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "62397b0e304ec59c0d14ec9a2421e8ae96b20a3699fa06680119f7f344272dbc"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "643ef2be53d734b23fd752bab4f3ee484e09fd1b",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "643ef2be53d734b23fd752bab4f3ee484e09fd1bf804c24971af7cd713bfec46"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "67808b0cc68c5455b1b625698f31d9a4c1395a17",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "67808b0cc68c5455b1b625698f31d9a4c1395a17494773007fdb13abdf3e57b9"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "6f9344b7373b678d1b5ff801309b430d107edd0f",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "6f9344b7373b678d1b5ff801309b430d107edd0f59e7a072097af85114260de7"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "7037b45505739df1a1be2707b589456e763e3743",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "7037b45505739df1a1be2707b589456e763e374319e039287a5f3ce4dd731476"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "8577777669f17e0767398687425dcfc26b0bc49a",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "8577777669f17e0767398687425dcfc26b0bc49a8c0cf27bcc1e2b67dfa3ceb7"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "8dc28a22589171fccd7ffdf7e8cd6cb8425c0130",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "8dc28a22589171fccd7ffdf7e8cd6cb8425c013060fe5e1686c1b933e0daff81"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
@@ -1891,26 +1781,6 @@
    "sha256": "9d447531e18f0ea917d5ce2ed93bc420bc238869c88004fc106c6bb071881f3b"
   },
   {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "afe8622f91491c8fa325b30c725b369f9e4aa5cd",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "afe8622f91491c8fa325b30c725b369f9e4aa5cdd2c6741774303e91e82578ef"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "b9bb3af45a817d884882edaee467f29f47374d90",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "b9bb3af45a817d884882edaee467f29f47374d90e2317fe315e8a4eccfebbf5d"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
    "id": "ddfc4b2176800c4897147e67d07379cf4f7bbbb7",
    "kind": "model",
@@ -1919,36 +1789,6 @@
    "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
    "room": "011e",
    "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "e7b927bca2125beeb5132914a26e7c7c1be21010",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "e7b927bca2125beeb5132914a26e7c7c1be21010bc03442cc61b7005c64f184f"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "f5519b19b7af623aea2e060febc07e13ae3c3734",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "f5519b19b7af623aea2e060febc07e13ae3c3734123d41a994cc0354e590f273"
-  },
-  {
-   "evidence": "C:\\Flycast-Evidence\\re4-dreamcast\\purge-props24\\cg2-r11e-hB and cg2-r11e-sB; payload = st1/r11e.dar record 2319232 ITM bin (catalog cat13 c753818a, compose-test24 candidate 29190a9c data)",
-   "id": "f7498e51b9353c3b8f7087c9cc467074d60e22b1",
-   "kind": "model",
-   "owner": "purge-props24",
-   "provenance": "gc",
-   "reason": "PS2 pickup pack costs 131 KB heap 4 in r11e",
-   "room": "011e",
-   "sha256": "f7498e51b9353c3b8f7087c9cc467074d60e22b16f1d3b254f8fcf666fe83c45"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
