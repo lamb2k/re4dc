@@ -14,7 +14,11 @@ Rules, in order, per row (source = disc path of the payload):
      (listed); otherwise authored, which is gc for a GameCube disc file or a GameCube picture key.
   3. a disc path no set stages: on the GameCube disc (debug disc 1 FST) -> gc (stager conversion of the GC
      file); a ps2-world.* file -> ps2; other dc/ outputs -> authored; else unknown.
-Runtime-harvest rows (fonts, layout) stay unknown."""
+Runtime-harvest rows (fonts, layout) stay unknown.
+Motion rows (kind=motion, one per FCV/SEQ clip key; gc-catalog24b round 8): only the PS2 motion stores (data sets
+named pm*: pmleon24b, pmgan24, pmwep24b) attribute motion, by their RECIPE; a key those stores' archives or dc/mot
+keys carry is ps2 wherever it sits; any other clip in a GameCube disc file is gc. The motion stores never
+attribute the other kinds staged in the same archive (models keep the previous set's provenance)."""
 import collections, csv, hashlib, importlib.util, io, json, os, re, sys
 from pathlib import Path
 
@@ -27,6 +31,27 @@ import build_catalog  # noqa: E402
 GC_ISO = '/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso'
 PS2 = re.compile(r'\bPS2\b|ps2|PCSX2|BIO4DAT|SLUS')
 sha = lambda b: hashlib.sha256(b).hexdigest()
+MOTION_SET = re.compile(r'^pm')
+
+
+def motion_keys(store):
+    """Clip keys a motion store's outputs carry (archives as staged + dc/mot key files)."""
+    keys = set()
+    root = Path(store.src)
+    root = root if root.is_dir() else root.parent
+    for f in root.rglob('*'):
+        if not f.is_file():
+            continue
+        if f.suffix == '.fcv' and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{8}', f.stem):
+            keys.add(f.stem); continue
+        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat'):
+            continue
+        b = f.read_bytes()
+        bodies = [b] + ([b[build_catalog.DRS_TABLE:]] if f.suffix == '.drs' and len(b) > build_catalog.DRS_TABLE else [])
+        bodies += [body for _at, body in build_catalog.record_bodies(b)]
+        for body in bodies:
+            keys.update(k for k, _ in build_catalog.motion_clips(body))
+    return keys
 
 
 def load_t11():
@@ -115,7 +140,7 @@ def main(catalog, recipe_conf, out_dir):
                 continue
             src = srcs if isinstance(srcs, str) else list(srcs)[-1]
             st = stores.setdefault((n, src), Store(n, src, lines))
-            overlay[k.lower()] = st
+            overlay.setdefault(k.lower(), []).append(st)
             if k.lower() == 'dc/tex.pak' and os.path.isfile(src):
                 packs.append(st)
     tex_owner, first_pack = {}, None
@@ -129,6 +154,11 @@ def main(catalog, recipe_conf, out_dir):
                 if prev.get(k) != h:
                     tex_owner[k] = st
         prev = cur
+    ps2_motion = {}
+    for st in stores.values():
+        if MOTION_SET.match(st.name) and st.level == 'ps2':
+            for k in motion_keys(st):
+                ps2_motion.setdefault(k, st)
     gc = GcIso(GC_ISO)
 
     def gc_file(path):
@@ -153,8 +183,20 @@ def main(catalog, recipe_conf, out_dir):
                 ev = 'tex.pak key unchanged since the oldest readable pack (%s)' % first_pack
         elif r['kind'] == 'texture' and r['id'].lower() in tex_loose and path.startswith('dc/tex'):
             prov, ev = tex_loose[r['id'].lower()].prov(r['sha256'], texture=True)
-        elif path in overlay:
-            prov, ev = overlay[path].prov(r['sha256'], gc_file(path))
+        elif r['kind'] == 'motion':
+            motion_sets = [st for st in overlay.get(path, []) if MOTION_SET.match(st.name)]
+            if motion_sets:
+                prov, ev = motion_sets[-1].prov(r['sha256'])
+                ev = 'motion ' + ev
+            elif r['id'] in ps2_motion:
+                prov, ev = 'ps2', 'motion key carried by PS2 motion set %s (%s)' % (ps2_motion[r['id']].name, ps2_motion[r['id']].why)
+            elif gc_file(path) is not None:
+                prov, ev = 'gc', 'GameCube motion: clip of GameCube disc file %s, no PS2 motion set stages it' % gc_file(path)
+            else:
+                ev = 'motion clip: no PS2 motion set, not on the GameCube disc'
+        elif [st for st in overlay.get(path, []) if not MOTION_SET.match(st.name)]:
+            st = [st for st in overlay[path] if not MOTION_SET.match(st.name)][-1]
+            prov, ev = st.prov(r['sha256'], gc_file(path))
         elif gc_file(path) is not None:
             prov, ev = 'gc', 'stager base: GameCube disc file %s' % gc_file(path)
         elif 'ps2-world.' in path:

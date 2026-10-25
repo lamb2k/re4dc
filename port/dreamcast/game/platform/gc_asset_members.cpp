@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstring>
 #include <cstdlib>
+#include <cstdio>
+#include <atomic>
 extern "C" void re4dc_log(const char*,...);
 namespace re4dc_gcasset {
 SourceUse source_use;
@@ -340,8 +342,106 @@ void member_flush() {
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void member_test_serial(unsigned value){serial=value;}
 #endif
+// gc-catalog24b (bit 9, Motion): one identity per FCV/SEQ clip key, the
+// "<crc32>-<fnv1a>" of the clip bytes as the disc holds them (the dc/mot key
+// naming). An MTC-keyed proxy FCV takes its MTC record's key; an inline FCV/SEQ
+// hashes its archive span, with the FCV's in-place relocated key table read
+// back as offsets. digest = sha256 of the 8-byte key {crc,fnv} (little endian).
+// Uses are latched (bounded) on the evaluating thread, emitted at the frame flush.
+namespace {
+constexpr unsigned MotionSeenCount=48,MotionPendingCount=48;
+struct MotionSeen{const unsigned char* data;unsigned generation;CheckedAsset asset;};
+MotionSeen motion_seen[MotionSeenCount];unsigned motion_seen_next;
+unsigned motion_pending[MotionPendingCount],motion_pending_count;
+enum MotionFault{MotionUnbound,MotionNested,MotionBind,MotionCapacity,MotionBusy,MotionFaults};
+unsigned motion_faults[MotionFaults];
+std::atomic_flag motion_lock=ATOMIC_FLAG_INIT;
+struct MotionKey{unsigned crc=0xffffffffU,fnv=2166136261U;
+    void add(unsigned char b){fnv=(fnv^b)*16777619U;crc^=b;for(int k=0;k<8;++k)crc=crc&1?(crc>>1)^0xEDB88320U:crc>>1;}};
+unsigned fcv_prefix(const unsigned char* p){const unsigned n=p[2];return ((3+3*n+3)&~3U)+4+4*n;}
+bool mtc_key(const Archive& a,unsigned count,unsigned offset,unsigned& crc,unsigned& fnv){
+    const unsigned tags=16+count*4;
+    for(unsigned i=0;i<count;++i)if(!std::memcmp(a.base+tags+4*i,"MTC",3)){
+        Span m;if(!entry(a,i,m) || m.bytes<32 || std::memcmp(m.base,"R4MOTBL",7))return false;
+        const unsigned rows=word(m.base,12),stride=word(m.base,16);
+        if(stride<20 || rows>(m.bytes-32)/stride)return false;
+        for(unsigned r=0;r<rows;++r){const unsigned char* e=m.base+32+r*stride;
+            if(word(e,0)==offset){crc=word(e,8);fnv=word(e,12);return true;}}
+        return false;
+    }
+    return false;
+}
+void motion_fault(MotionFault f){if(motion_faults[f]!=~0U)++motion_faults[f];}
+}
+void motion_use(const void* pointer) {
+    const auto* data=static_cast<const unsigned char*>(pointer);
+    if(!data)return;
+    if(motion_lock.test_and_set(std::memory_order_acquire)){motion_fault(MotionBusy);return;}
+    struct Release{~Release(){motion_lock.clear(std::memory_order_release);}} release;
+    unsigned owner=ArchiveCount;
+    for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && contains(archives[i].base,archives[i].bytes,data,1)){owner=i;break;}
+    CheckedAsset asset{};
+    const unsigned gen=owner<ArchiveCount?archives[owner].generation:0;
+    for(const auto& seen:motion_seen)if(seen.data==data && seen.generation==gen){
+        if(!seen.asset.value)return;          // a fault already counted for this clip pointer
+        if(checked_current(seen.asset)){asset=seen.asset;break;}
+    }
+    // Count each faulting clip pointer once (not once per evaluated frame).
+    auto fault=[&](MotionFault f){motion_fault(f);motion_seen[motion_seen_next++%MotionSeenCount]={data,gen,{}};};
+    if(!asset.value){
+        if(owner==ArchiveCount){fault(MotionUnbound);return;}
+        const Archive& a=archives[owner];unsigned count;if(!table(a,count)){fault(MotionUnbound);return;}
+        const unsigned tags=16+count*4;Span span;bool found=false,fcv=false;
+        for(unsigned i=0;i<count && !found;++i){
+            const auto* tag=a.base+tags+4*i;
+            if(std::memcmp(tag,"FCV",3) && std::memcmp(tag,"SEQ",3))continue;
+            Span s;if(entry(a,i,s) && s.base==data){span=s;found=true;fcv=!std::memcmp(tag,"FCV",3);}
+        }
+        if(!found){fault(MotionNested);return;}
+        MotionKey key;unsigned crc,fnv;
+        if(!(fcv && mtc_key(a,count,unsigned(data-a.base),crc,fnv))){
+            unsigned lo=0,hi=0;
+            if(fcv && span.bytes>=4){const unsigned head=fcv_prefix(data);
+                if(head<=span.bytes && 4*unsigned(data[2])<=head){lo=head-4*unsigned(data[2]);hi=head;}}
+            const auto base=unsigned(reinterpret_cast<std::uintptr_t>(data));
+            for(unsigned j=0;j<span.bytes;){
+                if(j>=lo && j<hi && !((j-lo)&3)){
+                    unsigned w=word(data,j);if(int(w)<0)w-=base;   // relocated in place by the source evaluator
+                    for(unsigned k=0;k<4;++k)key.add((unsigned char)(w>>(8*k)));
+                    j+=4;
+                } else key.add(data[j++]);
+            }
+            crc=~key.crc;fnv=key.fnv;
+        }
+        char id[24];std::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
+        unsigned char k8[8];std::memcpy(k8,&crc,4);std::memcpy(k8+4,&fnv,4);
+        asset=bind_checked("motion",id,fingerprint(k8,8));
+        if(!asset.value){fault(MotionBind);return;}
+        motion_seen[motion_seen_next++%MotionSeenCount]={data,a.generation,asset};
+    }
+    for(unsigned i=0;i<motion_pending_count;++i)if(motion_pending[i]==asset.value)return;
+    if(motion_pending_count==MotionPendingCount){motion_fault(MotionCapacity);return;}
+    motion_pending[motion_pending_count++]=asset.value;
+}
+void motion_flush() {
+    unsigned pending[MotionPendingCount],n=0,faults[MotionFaults];
+    if(motion_lock.test_and_set(std::memory_order_acquire))return;   // a use holds it: next flush
+    n=motion_pending_count;std::memcpy(pending,motion_pending,n*sizeof(unsigned));motion_pending_count=0;
+    std::memcpy(faults,motion_faults,sizeof faults);std::memset(motion_faults,0,sizeof motion_faults);
+    motion_lock.clear(std::memory_order_release);
+    static const char* const why[MotionFaults]={"motion-unbound","motion-nested","motion-catalog-bind","motion-capacity","motion-busy"};
+    for(unsigned f=0;f<MotionFaults;++f)for(unsigned c=0;c<faults[f];++c)unresolved(Motion,why[f]);
+    for(unsigned i=0;i<n;++i)emitted_checked(Motion,CheckedAsset{pending[i]});
+}
+// Visit boundary: a clip that faulted in the old visit is counted again in the new one.
+void motion_visit_reset() {
+    if(motion_lock.test_and_set(std::memory_order_acquire))return;
+    for(auto& seen:motion_seen)if(!seen.asset.value)seen.data=nullptr;
+    motion_lock.clear(std::memory_order_release);
+}
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
+extern "C" void re4dc_gcasset_motion_use(const void* data) { re4dc_gcasset::motion_use(data); }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
 // (before BlockCreate relocates their BINs), moved with pool compaction,
