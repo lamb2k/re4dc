@@ -130,18 +130,51 @@ extern "C" int re4dc_ps2_source_receipt_complete(unsigned native,unsigned genera
 }
 #endif
 extern "C" int re4dc_ps2_source_draw(unsigned generation) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorSourceDraw,re4dc::wc24::ErrorOwnerRejected,generation);
+#endif
+#endif
     unsigned current=0;const unsigned frame=re4dc_ui_frame();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(re4dc_source_world_group_claimed() && !re4dc_source_world_binding_valid()){
+        wc_result.why.first(re4dc::wc24::ErrorBindingLost,generation,frame);
+        re4dc_source_world_binding_failed();return -1;
+    }
+#else
     if(re4dc_source_world_group_claimed() && !re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
+#endif
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_ps2_source_package(&current)){wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,generation,current);return 0;}
+    if(current!=generation){wc_result.why.first(re4dc::wc24::ErrorOwnerRejected,generation,current);return 0;}
+#else
     if(!re4dc_ps2_source_package(&current) || current!=generation)return 0;
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=sourceWorldImageFrame==frame && sourceWorldImageGeneration==generation && sourceWorldImageResult>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(sourceWorldImageFrame==frame && !wc_result.complete)
+        wc_result.why.first(sourceWorldImageGeneration!=generation?re4dc::wc24::ErrorOwnerRejected:re4dc::wc24::ErrorReceiptIncomplete,
+            sourceWorldImageGeneration,uint32_t(sourceWorldImageResult));
+#endif
+#endif
     if(sourceWorldImageFrame==frame)return sourceWorldImageGeneration==generation?sourceWorldImageResult:0;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     const bool transition=re4dc_source_world_transition_owner(frame,generation)!=0;
     if(transition && sourceWorldLegacySeen && sourceWorldLegacyFrame==frame)return 0;
 #endif
     float view[12],projection[7],viewport[6];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_coarse_source_camera(view,projection,viewport)){
+        wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,frame,generation);return 0;
+    }
+#else
     if(!re4dc_coarse_source_camera(view,projection,viewport))return 0;
+#endif
     sourceWorldImageFrame=frame;sourceWorldImageGeneration=generation;
     re4dc_ps2_mesh_camera(view,projection,viewport);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -163,6 +196,13 @@ extern "C" int re4dc_ps2_source_draw(unsigned generation) {
     if(sourceWorldImageResult<0)re4dc_model_packet_abort();
     re4dc_log("PS2SOURCE_DRAW f=%u gen=%u result=%d native=%u fallback=%u abort=%u\n",
         frame,generation,sourceWorldImageResult,c.native,c.fallback,c.aborts);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=sourceWorldImageResult>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorReceiptIncomplete,uint32_t(sourceWorldImageResult),
+        (c.fallback?1U:0U)|(c.aborts?2U:0U));
+#endif
+#endif
     return sourceWorldImageResult;
 }
 extern "C" int re4dc_ps2_source_passes_complete() {

@@ -53,6 +53,10 @@ struct State {
     bool drawing = false;                 // re4dc_far_shell_draw holds pointers into block: a shortfall may not free it
 };
 State st;
+#if RE4DC_GC_ASSET_GATE
+// State is reset wholesale; this registered stable record must survive it.
+re4dc_gcasset::PayloadProof asset_proof;
+#endif
 // Residency policy (survives close()).
 struct Policy {
     unsigned room = ~0U;    // the room sync() last saw
@@ -67,11 +71,20 @@ bool yielded(unsigned room) {
     return false;
 }
 void close() {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    if(st.block)++wc24_generation;
+#endif
+#if RE4DC_GC_ASSET_GATE
+    if(asset_proof.owner)re4dc_gcasset::payload_invalidate(asset_proof,&st);
+#endif
     if (st.block) re4dc_static_free(st.block);
     st = State{};
 }
 void open(unsigned room) {
     close();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(asset_proof); // cold; close/shortfall itself never logs/hashes/reads catalog
+#endif
     char path[48];
     snprintf(path, sizeof(path), "/cd/dc/native/r%03x/far-shell.fsh", room);
     const int before = re4dc_static_heap_free();
@@ -134,6 +147,16 @@ void open(unsigned room) {
         st = State{};
     } else {
         st.bytes = size; st.room = room;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        ++wc24_generation;
+#endif
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::StaticManifest source;
+        re4dc_gcasset::static_manifest_begin(source,re4dc_gcasset::StaticShell,room,gcasset_static_profile(),st.block,size);
+        for(unsigned i=0;i<re4dc_gcasset::StaticRoleCount;++i)
+            re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::StaticRole(i),re4dc_gcasset::NotApplicable);
+        re4dc_gcasset::payload_capture_composite(asset_proof,&st,st.block,size,nullptr,0,source);
+#endif
     }
     re4dc_log("FARSHELL room=%03x open=%s bytes=%u groups=%u materials=%u vertices=%u heap=%d->%d\n", room, why ? why : "ok",
               size, st.h ? unsigned(st.h->groups) : 0U, st.h ? unsigned(st.h->materials) : 0U,
@@ -229,16 +252,47 @@ extern "C" float re4dc_far_shell_full(float cut) {
 }
 // After the PS2 world's opaque pass (native_ps2_world.cpp re4dc_ps2_world_draw): the shell between cut and full.
 extern "C" int re4dc_far_shell_draw(float cut, float full) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::Scope wc_phase(re4dc::wc24::FarOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorFarShell,re4dc::wc24::ErrorShellUnavailable,farshell::st.room,ps2w.room);
+#endif
+    wc_result.complete=far_shell_mode!=1; // an explicitly disabled shell is an option, not a failed draw
+    const unsigned wc_refused=farshell::st.refused;
+#endif
     using namespace farshell;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(far_shell_mode!=1)return 0;
+    if(!st.h || st.room!=ps2w.room){wc_result.why.first(re4dc::wc24::ErrorShellUnavailable,st.room,ps2w.room);return 0;}
+    if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,st.room);return 0;}
+#else
     if (far_shell_mode != 1 || !st.h || st.room != ps2w.room || !ps2w.camera) return 0;
+#endif
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(asset_proof,&st);
+#endif
     const float* P = ps2w.projection;
     const float* V = ps2w.viewport;
     const float* v = ps2w.view;
     float vw[12];
     for (unsigned k = 0; k < 12; ++k) vw[k] = v[k];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(P[0]!=0 || V[2]<=0 || V[3]<=0){
+        wc_result.why.first(re4dc::wc24::ErrorProjection,0,unsigned(P[0]!=0)|(unsigned(V[2]<=0)<<1)|(unsigned(V[3]<=0)<<2));return 0;
+    }
+#else
     if (P[0] != 0 || V[2] <= 0 || V[3] <= 0) return 0;
+#endif
     const float near = P[6] / (P[5] - 1);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc::render::is_finite(near) || near<=0 || !(full>cut)){
+        uint32_t bits;std::memcpy(&bits,&near,4);
+        wc_result.why.first(re4dc::wc24::ErrorDepth,bits,unsigned(!re4dc::render::is_finite(near))|(unsigned(near<=0)<<1)|(unsigned(!(full>cut))<<2));return 0;
+    }
+#else
     if (!re4dc::render::is_finite(near) || near <= 0 || !(full > cut)) return 0;
+#endif
     const float near_w = near * 1.01f;
     const float sx = V[2] * .5f * RE4DC_SCREEN_WF / V[2], sy = -V[3] * .5f * RE4DC_SCREEN_HF / V[3];
     const float ox = (V[0] + V[2] * .5f) * RE4DC_SCREEN_WF / V[2], oy = (V[1] + V[3] * .5f) * RE4DC_SCREEN_HF / V[3];
@@ -253,6 +307,9 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
     const float split = .5f * (cut + full);   // fine / coarse level split (version 2 files): 18.75 m at Short
     struct Busy { Busy() { st.drawing = true; } ~Busy() { st.drawing = false; } } busy;   // no shortfall free mid-draw
     for (unsigned gi = 0; gi < ng; ++gi) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Selection);
+#endif
         const Group& g = st.groups[gi];
         // depth range of the box (view space looks down -z): centre depth +- the half extents on |view z row| (the
         // same range as the 8 corners), then the frustum test to Full's far
@@ -278,15 +335,34 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
         if (!re4dc::render::group_visible(b, v, P, V, near, full, 0)) continue;
         const unsigned mat = g.material & 0x3fffU;
         if (mat != open_mat) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_phase.phase(re4dc::wc24::HeaderMaterial);
+#endif
             if (sq) { re4dc_model_direct_end(slots); sq = nullptr; }
             const Mat& m = st.mats[mat];
             const unsigned key[6] = {m.crc, m.fnv, m.w, m.h, 0U, 0U};
             open_mat = mat;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+            if(!re4dc_ps2_world_direct_begin(key,&out)){
+                wc_result.why.first(re4dc::wc24::ErrorShellBindRefusal,gi,mat);++st.refused;continue;
+            }
+#else
             if (!re4dc_ps2_world_direct_begin(key, &out)) { ++st.refused; continue; }
+#endif
             sq = out.sq; slots = 0; us = out.u_scale; vs = out.v_scale; ++st.headers;
         }
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        if(!sq || out.scratch_capacity<g.vcount){
+            wc_result.why.first(re4dc::wc24::ErrorShellScratchRefusal,out.scratch_capacity,g.vcount);++st.refused;continue;
+        }
+#else
         if (!sq || out.scratch_capacity < g.vcount) { ++st.refused; continue; }
+#endif
         ++drawn;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+        re4dc::wc24::count(re4dc::wc24::Transformed,g.vcount);
+#endif
         // transform once: screen x, y, 1/w (biased), u, v, argb; flags 0 = behind the near plane. One 3x4 per group maps
         // the group's i16 grid straight to (x', y', w) (view, projection, viewport, origin and scale folded in), so a
         // corner is 3 int->float, one ftrv and one divide; colours expand through a 2 x 256 table. Strips then copy the
@@ -344,11 +420,18 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
             o[7] = 0;
         }
         st.vtx += g.vcount;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Submit);
+        unsigned wc_strip_inputs=0;
+#endif
         const std::uint8_t* p = st.strips + g.first_strip;
         const std::uint8_t* const e = p + g.strip_bytes;
         const std::uint32_t* const b32 = reinterpret_cast<const std::uint32_t*>(buf);
         while (p < e) {
             const unsigned n = *p++;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs+=n;
+#endif
             unsigned ok = ~0U;
             for (unsigned k = 0; k < n; ++k) ok &= b32[8U * p[k]];   // flags word: 0 = behind the near plane
             if (ok) {
@@ -372,10 +455,19 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
                 ++st.strips_cut;
             p += n;
         }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::StripInputs,wc_strip_inputs);
+#endif
     }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_phase.phase(re4dc::wc24::Submit);
+#endif
     if (sq) re4dc_model_direct_end(slots);
     st.groups_drawn += drawn;
     ++st.shown;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=st.refused==wc_refused;
+#endif
     return 1;
 }
 // Once per frame from re4dc_ps2_mesh_log's caller (every 120 frames: the counters since the last line).

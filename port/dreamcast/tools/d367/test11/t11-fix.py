@@ -103,6 +103,7 @@ DATA['blackgc14'] = {k: v for k, v in DATA['blackgc'].items() if not k.startswit
 # the r117 Playing Manual 3 file being given after s00 (full-play t11a ch21; bisect c3/c6/c7/c8, 10-14).
 DATA['blackgc14p'] = {k: v for k, v in DATA['blackgc14'].items() if k != 'tex'}
 DATA['blackgc14p']['dc/tex.pak'] = '/root/probe/lanes-20261014/t11/data/tex-t11.pak'
+AFTER = []
 CLASH = [('blackps2', 'r10bcut'), ('blackps2', 'smx103'), ('blackgc', 'r10bcut'), ('blackgc', 'smx103'), ('blackps2', 'blackgc'),
          ('blackgc14', 'blackgc'), ('blackgc14', 'blackps2'), ('blackgc14', 'r10bcut'), ('blackgc14', 'smx103'),
          ('blackgc14p', 'leonhr'), ('blackgc14p', 'blackgc14'), ('blackgc14p', 'blackgc')]
@@ -483,10 +484,24 @@ DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 # Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
 R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
 DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
+# GC purge (lane purge-cast24, 10-24): trap24 = the r111 / r113 registry packages + the PS2 bear traps trap-em2a-00 /
+# trap-em2a-02 (model-registry/ps2-ch2-r111t.json / ps2-ch2-r113t.json; descriptors as ps2-ch1-r105). Without a trap
+# descriptor the em2a traps drew the GameCube model on the source path (castgc/notdrawn-allow.tsv rows, now dropped).
+# Data only, no knob. Order: after ch2 and r111p (it replaces both packages). Atlases b8d5b0e6-ef7ef3c0 /
+# 716538d1-87b872c9 are already in the release tex.pak (no loose texture). 90,304 -> 115,456 B per package.
+# Private data /root/re4data/private/trap24-20261024 (RECIPE.txt, SHA256SUMS.txt; C: twin re4-assets-private/trap24-20261024).
+TRAP24D = os.environ.get('TRAP24D', '/root/re4data/private/trap24-20261024')
+DATA['trap24'] = {'dc/native/%s/registry.re4nmr' % _r: '%s/dc/native/%s/registry.re4nmr' % (TRAP24D, _r)
+                  for _r in ('r111', 'r113')}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
 DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
+# grip24 (lane purge-cast24 10-24, GC purge): stump17's package + the PS2 grip hands 451 / 456 (ps2_ganado_stump.py --grip).
+# Only with ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=<GRIP24D> (the runtime header must match the package).
+# Order: after stump17 (it replaces the package). Private store /root/re4data/private/grip24-20261024 (RECIPE.txt).
+GRIP24D = os.environ.get('GRIP24D', '/root/re4data/private/grip24-20261024')
+DATA['grip24'] = {'dc/native/ganado/ganado_var.re4gv': GRIP24D + '/dc/native/ganado/ganado_var.re4gv'}
 PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261018')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
 # pak17-20261018: tex.pak is verified (52d9b001); loose-keys.txt and base.json were regenerated (no recorded sha) and
@@ -674,6 +689,33 @@ DATA['sg109'] = {'dc/native/r109/ps2-world.r4sg': SG109D + '/r109/ps2-world.r4sg
 DATA['boss18g50r'] = {k: v for k, v in DATA['boss18g50'].items() if k != 'tex'}
 G18HD = os.environ.get('G18HD', '/root/re4data/private/garr18-head-20261019')
 DATA['garr18h'] = {'em/pl00.drs': G18HD + '/pl00.drs', 'em/pl08.drs': G18HD + '/pl08.drs'}
+# pmleon24 (lane purge-motion24 10-24, GC asset purge, data only): garr18h's pl00 / pl08 with Leon's FCV/SEQ motion from the
+# PS2 BIO4DAT.AFS pl00.dat / pl08.dat (tools/d367/motion/ps2_motion.py leon): 84 members already PS2-identical, 5 replaced
+# in place (FCV 23 empty, SEQ 59 last key 1 frame earlier, FCV 87 / 101 / 117 PS2 re-keyed); offsets and all other bytes
+# kept. After garr18h. Gates: bell-trg / door103 / shoot101 trace pairs STRICT, Leon run + aim stills pixel-identical.
+# Private store copy: re4-assets-private/pmleon24-20261024.
+PMLEON24D = os.environ.get('PMLEON24D', '/root/re4data/private/pmleon24-20261024')
+if os.path.isdir(PMLEON24D):
+    DATA['pmleon24'] = {'em/pl00.drs': PMLEON24D + '/em/pl00.drs', 'em/pl08.drs': PMLEON24D + '/em/pl08.drs'}
+# pmleon24b (same lane, 10-24): REPLACES pmleon24, which edited the unread copy of the original body at 0x400; garr18h's
+# live body is the type-0 record at 0x21cde0, so pmleon24 changed no byte the game reads (hence its STRICT gates).
+# tools/d367/motion/ps2_motion_prepared.py rewrite + verify on garr18h's pl00 / pl08: the live body's FCV 23 / 87 / 101 /
+# 117 and SEQ 59 take the PS2 bytes. Use pmleon24b instead of pmleon24 (after garr18h). Store: re4-assets-private/pmleon24b-20261024.
+PMLEON24BD = os.environ.get('PMLEON24BD', '/root/re4data/private/pmleon24b-20261024')
+if os.path.isdir(PMLEON24BD):
+    DATA['pmleon24b'] = {'em/pl00.drs': PMLEON24BD + '/em/pl00.drs', 'em/pl08.drs': PMLEON24BD + '/em/pl08.drs'}
+    CLASH += [('pmleon24', 'pmleon24b')]
+# pmgan24 (lane purge-motion24 10-24, GC asset purge, data only): the chapter 1-2 Ganado archives (em12 em15 em13 em17
+# em11 em16, the release's prepared zr17 / zr17b / ch2 copies) with their FCV motion from PS2 BIO4DAT.AFS emNN.dat
+# (tools/d367/motion/ps2_motion_prepared.py rewrite + verify: bodies laid out again, MTC rebuilt with the PS2 key
+# identities, hot sets kept per slot), the 169 PS2 dc/mot keys they stream, and the 169 GC keys no archive references
+# any more taken off the disc (remove.txt). SEQ tables were already PS2-identical. After every set that stages those
+# archives (zr17, zr17b, ch2): last in the data line. Private store copy: re4-assets-private/pmgan24-20261024.
+PMGAN24D = os.environ.get('PMGAN24D', '/root/re4data/private/pmgan24-20261024')
+if os.path.isdir(PMGAN24D):
+    DATA['pmgan24'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (PMGAN24D, _e) for _e in ('em12', 'em15', 'em13', 'em17', 'em11', 'em16')}
+    DATA['pmgan24'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMGAN24D, _k) for _k in sorted(os.listdir(PMGAN24D + '/dc/mot'))})
+    DATA['pmgan24']['remove'] = [_l.strip() for _l in open(PMGAN24D + '/remove.txt') if _l.strip()]
 # Lane engine19 (10-19; ENGINE_PREVIEW, the enemy logic engine): rc19 = one room data file per room,
 # dc/native/<room>/room.r4rc (tools/enginebake/room_compile.py, R4RC v1 GRID + OCCL v2 wall-check occluders; MANIFEST.tsv
 # beside them). Read only by an ENGINE_PREVIEW=1 or ENEMY_VIS_CULL program; knob-off programs never open it. Private store
@@ -819,6 +861,10 @@ def main():
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
+    # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
+    for a_, b_ in AFTER:
+        if a_ in names:
+            assert b_ in names[:names.index(a_)], 'data set %s needs %s before it in --data' % (a_, b_)
     for nm in names:
         rm -= set(UNREMOVE.get(nm, ()))
         for k, v in DATA[nm].items():
@@ -907,6 +953,104 @@ FOL24D = os.environ.get('FOL24D', '/root/re4data/private/fol24-20261024')
 if os.path.isdir(FOL24D):
     DATA['fol24'] = {'dc/tex.pak': FOL24D + '/dc/tex.pak'}
     PAK_DERIVED['fol24'] = FOL24D + '/pak-derived.json'
+# props24 (lane purge-props24 10-24, GC purge: set objects): the ch2 rooms' non-breakable etc models and room BINs as PS2
+# geometry + PS2 pictures (purge24/gen24.sh = objs13's ps2_objects.py + ps2_objects_tex.py): r10d r10e r10f r111 r112 r113
+# r11c r11d r11e r11f r200; offline census GC 54 -> 5 (r10c BIN 0x1f extended weights, r10f et2900 / r11c BIN 0x1f PS2
+# placeholders, r113 / r11c et0c00 and r11f et1c00 absent from the PS2 ETM: PS2_ETS_MATCH=2 drops their entries).
+# dc/tex.pak = fol24's pack + 16 keys (pack_add.py). After fol24 (its tex.pak). Release line only (fol24 is not in KSETS).
+# props24p (after props24): + window panes et0000 / et2500 emptied (the PS2 model is a placeholder) in r100 r101 r105 r107
+# r111 r11c r11f and et0001's PS2 picture in r111 r11c r11f (the pane no longer shares it). Store: RECIPE.txt + SHA256SUMS.
+PROPS24D = os.environ.get('PROPS24D', '/root/re4data/private/props24-20261024')
+if os.path.isdir(PROPS24D):
+    DATA['props24'] = {'dc/tex.pak': PROPS24D + '/dc/tex.pak', 'st2/r200.dar': PROPS24D + '/st2/r200.dar'}
+    for _r in 'r10d r10e r10f r111 r112 r113 r11c r11d r11e r11f'.split():
+        DATA['props24']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24D, _r)
+    PAK_DERIVED['props24'] = PROPS24D + '/pak-derived.json'
+PROPS24PD = os.environ.get('PROPS24PD', '/root/re4data/private/props24p-20261024')
+if os.path.isdir(PROPS24PD):
+    DATA['props24p'] = {'dc/tex.pak': PROPS24PD + '/dc/tex.pak'}
+    for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
+        DATA['props24p']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24PD, _r)
+    PAK_DERIVED['props24p'] = PROPS24PD + '/pak-derived.json'
+# atlas24 (lane purge-props24 10-24, after props24p): r117 BIN 0x1f (the church chandelier) PS2 geometry + one PS2 atlas
+# picture (ps2_objects.ATLAS_OBJECTS: GC 256x256 <- PS2 images 0 / 1 / 3 packed 256x128). dc/tex.pak = props24p's + 2 keys.
+ATLAS24D = os.environ.get('ATLAS24D', '/root/re4data/private/atlas24-20261024')
+if os.path.isdir(ATLAS24D):
+    DATA['atlas24'] = {'dc/tex.pak': ATLAS24D + '/dc/tex.pak', 'st1/r117.dar': ATLAS24D + '/st1/r117.dar'}
+    PAK_DERIVED['atlas24'] = ATLAS24D + '/pak-derived.json'
+# props24b (same lane, after atlas24; r11e.dar breakables class only: the items class cost 131 KB of heap 4 there): the breakable boxes / barrels (et0100 et0200 et1100 et1200 et1e00 et1f00 et2d00
+# et2e00/01 et2f00/01 et3c00) PS2 geometry in every ch1-2 room; their picture is the debris effect model's TPL (already PS2
+# in ch1 via items12); the ch2 rooms also get the PS2 break debris and pickups (ps2_items.py over a lane lib). 28 st1 room
+# files + st2/r200.dar (list: the store's SHA256SUMS). dc/tex.pak = atlas24's + 22 keys.
+PROPS24BD = os.environ.get('PROPS24BD', '/root/re4data/private/props24b-20261024')
+if os.path.isdir(PROPS24BD):
+    DATA['props24b'] = {'dc/tex.pak': PROPS24BD + '/dc/tex.pak', 'st2/r200.dar': PROPS24BD + '/st2/r200.dar'}
+    for _f in sorted(os.listdir(PROPS24BD + '/st1')):
+        DATA['props24b']['st1/' + _f] = PROPS24BD + '/st1/' + _f
+    PAK_DERIVED['props24b'] = PROPS24BD + '/pak-derived.json'
+# props24l (same lane, after props24b): leftovers. r105 / r107 et0001 (window frame) picture to PS2 (its pane is emptied by
+# props24p), r11e room BIN 0x23 (falling rock) picture to PS2 (EFF#22 efm 0x20). dc/tex.pak = props24b's (keys already held).
+PROPS24LD = os.environ.get('PROPS24LD', '/root/re4data/private/props24l-20261024')
+if os.path.isdir(PROPS24LD):
+    DATA['props24l'] = {'dc/tex.pak': PROPS24LD + '/dc/tex.pak', 'st1/r105.dar': PROPS24LD + '/st1/r105.dar',
+                        'st1/r107.dar': PROPS24LD + '/st1/r107.dar', 'st1/r11e.dar': PROPS24LD + '/st1/r11e.dar'}
+    PAK_DERIVED['props24l'] = PROPS24LD + '/pak-derived.json'
+# props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
+PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
+if os.path.isdir(PROPS24XD):
+    DATA['props24x'] = {'dc/tex.pak': PROPS24XD + '/dc/tex.pak', 'st1/r10c.dar': PROPS24XD + '/st1/r10c.dar'}
+    PAK_DERIVED['props24x'] = PROPS24XD + '/pak-derived.json'
+# pui24 (lane purge-ui24 10-24, GC asset purge): fol24's tex.pak with the core HUD pictures as PS2 Core.dat pixels under
+# their GC keys (tools/d367/purgeui24/ps2_hud_pak.py; ammo lens, life sphere, gauge arcs / domes, name label, bullet,
+# partner icons, Ashley gauge, d-pad, the two UI_HUD_MASK composites): 14 packages, same sizes and formats. Data only, no
+# knob. After fol24; release line only (not KSETS). Private store copy: re4-assets-private/pui24-20261024.
+PUI24D = os.environ.get('PUI24D', '/root/re4data/private/pui24-20261024')
+if os.path.isdir(PUI24D):
+    DATA['pui24'] = {'dc/tex.pak': PUI24D + '/dc/tex.pak'}
+    PAK_DERIVED['pui24'] = PUI24D + '/pak-derived.json'
+# pfx24 (lane purge-fx24 10-24, GC asset purge): pui24's tex.pak with the r117 church candle flames (GC EFF 0x86, 16 x
+# 64x128 frames) as the PS2 r10e.dat EFF #7 0x86 flipbook (same 16 frames and size; PS2 r117.dat has no 0x86), PAL4
+# under the GC keys (tools/d367/purge-fx24/fx_cross_room.py pack). Data only; pair with FX_PS2_NONE_CUT=1 (its table no
+# longer cuts these keys in r117). After pui24. Private store copy: re4-assets-private/pfx24-20261024.
+PFX24D = os.environ.get('PFX24D', '/root/re4data/private/pfx24-20261024')
+if os.path.isdir(PFX24D):
+    DATA['pfx24'] = {'dc/tex.pak': PFX24D + '/dc/tex.pak'}
+    PAK_DERIVED['pfx24'] = PFX24D + '/pak-derived.json'
+# pui24s (lane purge-ui24 10-24, GC purge: sub screen + etc pictures): pfx24's tex.pak (chain fol24 -> pui24 -> pfx24 ->
+# pui24s, rebuilt 10-24 on pfx24 7a54e971) + 880 pictures of ss/Item ss/Cmn
+# ss/Eng, etc/*.tpl, etc/memcard.das and op/*.das as their PS2 twins' pictures under the GC keys (purgeui24/ps2_tpl_pak.py,
+# NCC-matched; same sizes and formats). Needs pfx24 before it (AFTER); pui24 and pfx24 stay in the line. Store: re4-assets-private/
+# pui24s-20261024 (on pfx24; the pui24-based pack eba16350 is retired).
+PUI24SD = os.environ.get('PUI24SD', '/root/re4data/private/pui24s-20261024')
+if os.path.isdir(PUI24SD):
+    DATA['pui24s'] = {'dc/tex.pak': PUI24SD + '/dc/tex.pak'}
+    PAK_DERIVED['pui24s'] = PUI24SD + '/pak-derived.json'
+    AFTER += [('pui24s', 'pfx24'), ('pfx24', 'pui24')]
+# pui24f (lane purge-ui24 10-24, GC purge: fonts): the English glyph sheets as PS2 glyphs. The PS2 USA build's only Latin
+# font is common_p.fnt, cell for cell the GC common_p layout (+ PS2 pad glyph rows the Dreamcast does not use), so
+# common_p.fnt and the per-stage *_p sheets (stage1/2, event1-3, sscrn) get the PS2 cells and width bytes in the GC
+# container (tools/d367/purgeui24/ps2_font.py; same sizes; le_mirror form, pipeline identity checked). No runtime change.
+# Independent of the tex.pak sets. Store: re4-assets-private/pui24f-20261024 (RECIPE.txt + SHA256SUMS + report.json).
+PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
+if os.path.isdir(PUI24FD):
+    DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
+# leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
+# (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
+# materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
+# sizes / formats (VQ), so VRAM and heap are unchanged. After fol24 (it replaces the pack). With props24 / pui24 (also fol24 packs) the
+# coordinator composes one pack: build_leonhair24.py takes any input pack (RECIPE.txt). Private store /root/re4data/private/leonhair24-20261024 (C: twin without the pack).
+LH24D = os.environ.get('LH24D', '/root/re4data/private/leonhair24-20261024')
+if os.path.isdir(LH24D):
+    DATA['leonhair24'] = {'dc/tex.pak': LH24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonhair24'] = LH24D + '/pak-derived.json'
+# leonatl24 (lane purge-cast24 10-24, GC purge; data only; user approved the pl00 look 10-25): leonhair24's pack with Leon's
+# atlases ec255e66-76812316 (pl00 jacket) and 7506e95f-68cf2211 (pl08) re-made from the PS2 pl00 / pl08 pictures through charbake
+# (cb_atlas_gc.py / atlas_ps2.py over PS2 sources, LVQ, headroom 2x): same keys, sizes, VQ formats (pl08 mipmapped), UVs.
+# After leonhair24; build_leonatl24.py takes any input pack. Private store /root/re4data/private/leonatl24-20261024 (RECIPE.txt).
+LA24D = os.environ.get('LA24D', '/root/re4data/private/leonatl24-20261024')
+if os.path.isdir(LA24D):
+    DATA['leonatl24'] = {'dc/tex.pak': LA24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonatl24'] = LA24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
@@ -914,6 +1058,12 @@ if os.path.isdir(FOL24D):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# res24g (lane purge-cast24 10-24, GC purge; data only): res22c without the 29 never-drawn GameCube player/enemy keys of
+# game/platform/preload_skip_gcidle.inc (61 records; r207 / r310 rows kept), with res22c's remap table. Ships with
+# PRELOAD_SKIP_GCIDLE=1. After res22c. Private store /root/re4data/private/res24g-20261024 (RECIPE.txt, sha256 6b5c2c7a).
+RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
+if os.path.isdir(RES24GD):
+    DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
@@ -930,6 +1080,94 @@ DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native
 R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
 DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
                       for x in ('re4mesh', 'r4pw', 'ids')}
+# ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
+# chapter 1 + r200 sound banks (etc/core.das, em/pl00 pl08 pl0f pl11, the weapon banks, the room .dar ROOM/FOOT banks,
+# the rooms' enemy banks, ss/cmn/title.snd, bgm/bio4midi.dat) and bgm/aica_str.dat with PS2 PCM written into the
+# prebuilt AIC1 images in place (tools/ps2_audio.py; map: same cue number on both versions -> GC sample / PS2 VAG).
+# 65 files (wep19 and em2a unchanged: no PS2 or no prebuilt bank), every one the size of the release file it replaces. Made from the RELEASE disc's final files (cand-590b8f5f),
+# so it must be the LAST set touching these paths (after objs13d, snd16, ch21r, ash21, ...); regenerate if a later set
+# changes one of them. RECIPE.txt and the maps (_map/) are in the store.
+PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-20261024')
+DATA['ps2snd24'] = {p: PS2SND24D + '/' + p for p in (
+    'bgm/aica_str.dat', 'bgm/bio4midi.dat', 'etc/core.das', 'ss/cmn/title.snd',
+    'em/em11.drs', 'em/em12.drs', 'em/em13.drs', 'em/em15.drs', 'em/em16.drs', 'em/em17.drs', 'em/em18.drs',
+    'em/em21.drs', 'em/em22.drs', 'em/em23.drs', 'em/em24.drs', 'em/em26.drs', 'em/em27.drs', 'em/em28.drs',
+    'em/em29.drs', 'em/em2b.drs', 'em/em2e.drs', 'em/em2f.drs', 'em/em35.drs',
+    'em/pl00.drs', 'em/pl08.drs', 'em/pl0f.drs', 'em/pl11.drs',
+    'em/wep01.drs', 'em/wep02.drs', 'em/wep07.drs', 'em/wep09.drs', 'em/wep11.drs', 'em/wep13.drs',
+    'em/wep20.drs', 'em/wep21.drs', 'em/wep24.drs',
+    'st2/r200.dar') + tuple('st1/%s.dar' % r for r in (
+    'r100', 'r101', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d',
+    'r10e', 'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f'))}
+# Lane purge-weapons24 (10-24, GC purge, coordinator decision C): wep24 = Leon's weapon archives with the PS2 weapon
+# models and pictures (tools/d367/ps2cast/ps2_weapons.py + ps2_items_tex.py). Each em/wepNN.drs is the release's own file
+# (image d28b3cfc, with its sound bank and compacted REL) with the drawn weapon BINs rebuilt from the PS2 wepNN.dat
+# in their GC slots (same offsets / sizes, GC joints and part headers) and the weapon TPL records rekeyed to the PS2
+# pictures (loose dc/tex packages). Motions, REL, sounds, Leon's hand BINs unchanged. 19 files, 48 BINs, 43 pictures;
+# wep05 (Broken Butterfly) stays GC (PS2 bone 1 rest differs by 15 mm). Last in the data line: it replaces any earlier
+# em/wepNN.drs. Private store copy: re4-assets-private/wep24b-20261025 (10-25: + fill_empty_parts, the Test 24 heap-4 fix; RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24D = os.environ.get('WEP24D', '/root/re4data/private/wep24b-20261025')
+DATA['wep24'] = {'em/wep%s.drs' % n: WEP24D + '/em/wep%s.drs' % n
+                 for n in ('01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17', '18',
+                           '20', '21', '24')}
+DATA['wep24']['tex'] = WEP24D + '/tex'
+# wep24ss (same lane, added scope 10-24): the sub screen's weapon models (inventory / examine, ss/cmn/ss_wepNN.dat,
+# Leon's ss_wep00..17) rewritten the same way (ps2_weapons.py convert-ss on the release's own files): 16 files, 30 BINs,
+# 26 pictures. Leon's hand BINs (attach 9 / 15) unchanged. Use WITH wep24: its tex/ holds only the 2 keys wep24 lacks.
+# GC left: ss_wep05 / em/wep05 (Broken Butterfly), tools/d367/ps2cast/weapons-gc-allow.tsv. Store copy:
+# re4-assets-private/wep24ssb-20261025 (10-25: + fill_empty_parts; RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ssb-20261025')
+DATA['wep24ss'] = {'ss/cmn/ss_wep%s.dat' % n: WEP24SSD + '/ss/cmn/ss_wep%s.dat' % n
+                   for n in ('00', '01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17')}
+DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
+# pmwep24 (lane purge-motion24 10-24, GC purge, data only): wep24's weapon archives with their FCV/SEQ motion from PS2
+# BIO4DAT.AFS wepNN.dat (tools/d367/motion/ps2_motion_prepared.py rewrite + verify, bodies laid out again; models, pictures,
+# REL and sound banks kept). Only the 10 archives whose motion changed (wep02 07 09 10 12 16 17 18 21 24); wep04
+# (Blacktail) is not converted (its own fix lane). Use WITH wep24, after it. Store: re4-assets-private/pmwep24-20261024.
+PMWEP24D = os.environ.get('PMWEP24D', '/root/re4data/private/pmwep24-20261024')
+if os.path.isdir(PMWEP24D):
+    DATA['pmwep24'] = {'em/' + _f: '%s/em/%s' % (PMWEP24D, _f) for _f in sorted(os.listdir(PMWEP24D + '/em'))}
+# pmwep24b (same lane, 10-25): pmwep24 re-derived on wep24b (empty PS2 weapon parts carry one zero-area triangle, so no
+# part falls to the 128 KB native_model preparation); its wep02 / wep12 BIN slots equal wep24b's byte for byte. Use WITH
+# wep24b, after it, instead of pmwep24. Store: re4-assets-private/pmwep24b-20261025.
+PMWEP24BD = os.environ.get('PMWEP24BD', '/root/re4data/private/pmwep24b-20261025')
+if os.path.isdir(PMWEP24BD):
+    DATA['pmwep24b'] = {'em/' + _f: '%s/em/%s' % (PMWEP24BD, _f) for _f in sorted(os.listdir(PMWEP24BD + '/em'))}
+    CLASH += [('pmwep24', 'pmwep24b')]
+# evdmv24 (lane purge-movies24 10-24, GC asset purge): takes the GameCube evd files of the movie-owned route events off
+# the disc (r100 s03 s20 s40 s41 s43 s44, r101 s00 s21 s30, r11f s01 s10, each with its .evq sidecar): 22 files,
+# 12,968,300 bytes. Their PS2 movies (dc/movie/*.seq) present the events; ONLY with EVD_MOVIE_NO_READ=1 (r100 / r101
+# no longer preload them; r11f reads none while its movies are on the disc). r100 s01 / s02 / s42 (no PS2 movie) and
+# r11c's PS2-size evd stay. Knob-off programs must not stage it (r101 would open a missing file). Remove-only: no store.
+DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
+    'r100s03', 'r100s20', 'r100s40', 'r100s41', 'r100s43', 'r100s44', 'r101s00', 'r101s21', 'r101s30',
+    'r11fs01', 'r11fs10') for x in ('', '.evq')]}
+
+
+# t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
+# output (tools/d367/vram/pak_chain.py: every set's own pak-derived.json delta, added keys + re-made keys, applied to the
+# running pack; no key is touched by two sets): mip22b 5bba464a -> fol24 35eba5c2 -> pui24 7fd3027f -> pfx24 7a54e971 ->
+# pui24s b21f13ed -> props24 200b3bab -> props24p 8666802e -> atlas24 f0e1544e -> props24b 0f85cab4 -> props24l
+# 0f85cab4 -> props24x 437fc79d -> leonhair24 1b26f579 -> leonatl24 5e0b72b8 (7341 keys) -> wep24 (pack_add of the
+# wep24 + wep24ss loose tex/ pictures, so pak17's drop-loose holds; NOTEX = the set stages no loose pictures). The stores' own packs forked
+# at fol24 (props24*, leonhair24) or pui24s; with T24PAK present every set stages its chain pack and chain sidecar
+# instead (room archives and other files unchanged). Store /root/re4data/private/t24pak-20261024 (RECIPE.txt, SHA256SUMS).
+T24PAKD = os.environ.get('T24PAKD', '/root/re4data/private/t24pak-20261024')
+if os.path.isdir(T24PAKD):
+    for _s in sorted(os.listdir(T24PAKD)):
+        if _s in DATA and os.path.isfile('%s/%s/dc/tex.pak' % (T24PAKD, _s)):
+            DATA[_s]['dc/tex.pak'] = '%s/%s/dc/tex.pak' % (T24PAKD, _s)
+            PAK_DERIVED[_s] = '%s/%s/pak-derived.json' % (T24PAKD, _s)
+        if _s in DATA and os.path.isfile('%s/%s/NOTEX' % (T24PAKD, _s)):
+            DATA[_s].pop('tex', None)   # its loose pictures are in the chain pack (wep24: pack_add of wep24 + wep24ss tex/)
+# t24prune (lane compose-test24 10-24, Test 24 disc fit): the composed line's tex.pak with its dead keys dropped
+# (vram/texpak_live.py <final tree> --write-pak, same package bytes for every live key). LAST in the data line; built from
+# the tree of everything before it, so rebuild it whenever an earlier set changes. pak-derived.json: base = leonatl24's chain pack.
+T24PRUNED = os.environ.get('T24PRUNED', '/root/re4data/private/t24prune-20261024')
+if os.path.isfile(T24PRUNED + '/tex.pak'):
+    DATA['t24prune'] = {'dc/tex.pak': T24PRUNED + '/tex.pak'}
+    PAK_DERIVED['t24prune'] = T24PRUNED + '/pak-derived.json'
+# Mendez door-demo knob + data set: from lane fix-mendez-door24 (placeholder; not in Test 24 recipe yet).
 
 
 if __name__ == '__main__':

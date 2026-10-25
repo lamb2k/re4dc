@@ -1,0 +1,272 @@
+// Source-extracted renderer annotation controls. Geometry, selection, PVR,
+// material binding and package ownership are controlled edges, not simulated.
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#define RE4DC_WORLD_CENSUS24_HOST 1
+#define RE4DC_WORLD_CENSUS24 1
+#define RE4DC_WORLD_CENSUS24_WINDOW 300
+#define RE4DC_MOVIE_WORLD_ARENA 1
+#define RE4DC_PS2_WORLD_TRANSITION_OWNER 1
+#define RE4DC_PS2_WORLD_R11F_OWNER 1
+#define RE4DC_BFC_SCOPE(...)
+#include "@DC@/game/platform/include/world_census24.h"
+
+static uint64_t now_us=1000;
+extern "C" uint64_t re4dc_wc24_test_clock(){return now_us;}
+extern "C" uintptr_t re4dc_wc24_test_thread(){return 1;}
+extern "C" void re4dc_wc24_test_log(const char*){}
+extern "C" void re4dc_wc24_identity(unsigned out[7]){std::memset(out,0,7*sizeof(unsigned));}
+namespace re4dc { namespace render { bool is_finite(float f){return std::isfinite(f);} } }
+using namespace re4dc::wc24;
+
+enum Edge { Movie,Binding,BindingFailed,Open,R11fClaim,R11fPass,ReadBegin,ReadEnd,
+    PassTail,GroupClaim,UiFrame,SourcePackage,Transition,CoarseCamera,SourceTail,
+    FlushTail,DirectBegin,DirectEnd,ShellGroup,EdgeCount };
+static unsigned edges[EdgeCount];
+struct FakeCounts { unsigned fallback=0,aborts=0; };
+struct FakeWorld { unsigned room=0x101,want=0x103; bool camera=true;
+    float view[12]{},projection[7]{},viewport[6]{}; FakeCounts count[3]; } ps2w;
+static bool movie_blocked,binding_ok,open_ok,r11f_claimed,group_claimed,source_package_ok,coarse_ok;
+static int r11f_result;
+static unsigned supplied_generation,ui_frame,pass_fallback,pass_aborts;
+bool ps2_movie_blocked(){++edges[Movie];return movie_blocked;}
+bool re4dc_ps2_mesh_movie_blocked(){return ps2_movie_blocked();}
+bool re4dc_source_world_binding_valid(){++edges[Binding];return binding_ok;}
+void re4dc_source_world_binding_failed(){++edges[BindingFailed];}
+bool ps2_open(){++edges[Open];return open_ok;}
+bool r11fNativeClaimed(){++edges[R11fClaim];return r11f_claimed;}
+int r11fNativePass(unsigned,float){++edges[R11fPass];return r11f_result;}
+bool re4dc_source_world_group_claimed(){++edges[GroupClaim];return group_claimed;}
+unsigned re4dc_ui_frame(){++edges[UiFrame];return ui_frame;}
+bool re4dc_ps2_source_package(unsigned* p){++edges[SourcePackage];*p=supplied_generation;return source_package_ok;}
+int re4dc_source_world_transition_owner(unsigned,unsigned){++edges[Transition];return 0;}
+bool re4dc_coarse_source_camera(float*,float*,float*){++edges[CoarseCamera];return coarse_ok;}
+struct MovieWorldRead { MovieWorldRead(){++edges[ReadBegin];} ~MovieWorldRead(){++edges[ReadEnd];} };
+static unsigned sourceWorldImageFrame,sourceWorldImageGeneration,sourceWorldLegacyFrame;
+static int sourceWorldImageResult;
+static bool sourceWorldLegacySeen;
+
+@PASS_HELPER@
+
+// Actual ps2_pass prefix and actual final completion predicate. The omitted
+// renderer body supplies only explicit fallback/abort scalar outcomes here.
+@PS2_PASS_PREFIX@
+    (void)zfar;
+    ++edges[PassTail];c.fallback=pass_fallback;c.aborts=pass_aborts;
+@PS2_PASS_TAIL@
+
+@MESH_CAMERA@
+@MESH_DRAW@
+
+// Actual source-owner guards through camera admission, then a controlled
+// success edge; no source traversal, packet emission or ownership claim.
+@SOURCE_PREFIX@
+    ++edges[SourceTail];wc_result.complete=true;return 1;
+}
+
+namespace re4dc { namespace room { namespace ps2 {
+@WORLD_HELPER@
+struct Deferred { bool pending=false;unsigned frame=77,flushed=0; } state;
+} } }
+// Actual deferred wrapper entry guards; the admitted PT/TR body is excluded.
+@FLUSH_PREFIX@
+    state.flushed=state.frame;state.pending=false;
+    (void)wc_receipt;++edges[FlushTail];wc_result.complete=true;
+}
+
+namespace farshell {
+struct Head {} head;
+struct Group { unsigned material=0,vcount=3; } fixture_groups[3];
+struct Mat { unsigned crc=1,fnv=2,w=64,h=64; } fixture_mats[2];
+struct State { Head* h=&head;unsigned room=0x101,refused=0,headers=0,groups_drawn=0,shown=0;
+    Mat* mats=fixture_mats; } st;
+}
+static int far_shell_mode=1;
+struct Re4dcModelDirect { uint32_t* sq=nullptr;unsigned scratch_capacity=0;float u_scale=1,v_scale=1; };
+static uint32_t dummy_sq[8];
+static unsigned shell_groups=2,shell_capacity=8,bind_fail_call=0,bind_calls=0;
+int re4dc_ps2_world_direct_begin(const unsigned*,Re4dcModelDirect* out){
+    ++edges[DirectBegin];++bind_calls;
+    if(bind_calls==bind_fail_call)return 0;
+    out->sq=dummy_sq;out->scratch_capacity=shell_capacity;return 1;
+}
+void re4dc_model_direct_end(unsigned){++edges[DirectEnd];}
+// Actual far-shell entry guards and material/scratch blocks. The loop's
+// groups and visibility are controlled inputs; geometry and TA writes absent.
+@SHELL_PREFIX@
+    (void)vw;
+    Re4dcModelDirect out{};uint32_t* sq=nullptr;
+    unsigned slots=0,open_mat=~0U,drawn=0;float us=1,vs=1;
+    for(unsigned gi=0;gi<shell_groups;++gi){
+@SHELL_SELECTION@
+        const auto& g=fixture_groups[gi];
+@SHELL_BIND_SCRATCH@
+        ++drawn;++edges[ShellGroup];
+        wc_phase.phase(Transform); // controlled non-geometry edge after real admission
+    }
+    (void)us;(void)vs;
+@SHELL_TAIL@
+
+enum Case {
+    CameraMovie,CameraSuccess,PassBinding,PassProjection,PassDepth,PassSuccess,PassFallback,PassAbort,
+    MeshMovie,MeshR11fFail,MeshR11fSuccess,MeshBinding,MeshInvalid,MeshCamera,MeshPackage,MeshSuccess,MeshProjection,
+    SourceBinding,SourcePackageMissing,SourceGeneration,SourceCachedGood,SourceCachedBad,SourceCamera,SourceSuccess,
+    FlushEmpty,FlushMovie,FlushStale,FlushAlready,FlushSuccess,
+    ShellOff,ShellMissing,ShellCamera,ShellProjection,ShellDepth,ShellBindFirst,ShellScratchHeader,ShellScratchSelection,ShellSuccess,
+    CaseCount
+};
+static const char* names[CaseCount]={
+    "camera-movie","camera-success","pass-binding","pass-projection","pass-depth","pass-success","pass-fallback","pass-abort",
+    "mesh-movie","mesh-r11f-fail","mesh-r11f-success","mesh-binding","mesh-invalid","mesh-camera","mesh-package","mesh-success","mesh-projection",
+    "source-binding","source-package","source-generation","source-cached-good","source-cached-bad","source-camera","source-success",
+    "flush-empty","flush-movie","flush-stale","flush-already","flush-success",
+    "shell-off","shell-missing","shell-camera","shell-projection","shell-depth","shell-bind-first","shell-scratch-header","shell-scratch-selection","shell-success"};
+
+static void setup(){
+    ps2w=FakeWorld{};ps2w.projection[5]=-1;ps2w.projection[6]=-2;ps2w.viewport[2]=640;ps2w.viewport[3]=480;
+    movie_blocked=false;binding_ok=open_ok=source_package_ok=coarse_ok=true;
+    r11f_claimed=group_claimed=false;r11f_result=1;supplied_generation=9;ui_frame=77;
+    pass_fallback=pass_aborts=0;sourceWorldImageFrame=0;sourceWorldImageGeneration=9;
+    sourceWorldImageResult=1;sourceWorldLegacySeen=false;sourceWorldLegacyFrame=0;
+    re4dc::room::ps2::state={};farshell::st=farshell::State{};far_shell_mode=1;
+    shell_groups=2;shell_capacity=8;bind_fail_call=bind_calls=0;
+    for(auto& g:farshell::fixture_groups)g=farshell::Group{};
+}
+static void bad_projection(){ps2w.projection[0]=1;ps2w.viewport[2]=-1;ps2w.viewport[3]=0;}
+static bool fails(unsigned c){
+    switch(c){case CameraSuccess:case PassSuccess:case MeshR11fSuccess:case MeshSuccess:
+    case SourceCachedGood:case SourceSuccess:case FlushEmpty:case FlushSuccess:case ShellOff:case ShellSuccess:return false;
+    default:return true;}
+}
+static int expected_return(unsigned c){
+    switch(c){case PassBinding:case MeshBinding:case SourceBinding:return -1;
+    case CameraSuccess:case PassSuccess:case MeshMovie:case MeshR11fSuccess:case MeshSuccess:
+    case SourceCachedGood:case SourceSuccess:case ShellBindFirst:case ShellScratchHeader:case ShellScratchSelection:case ShellSuccess:return 1;
+    default:return 0;}
+}
+static int invoke(unsigned c){
+    setup();
+    if(c<=CameraSuccess){
+        ps2w.camera=false;movie_blocked=c==CameraMovie;
+        float v[12],p[7],vp[6];for(unsigned i=0;i<12;++i)v[i]=float(i+10);
+        for(unsigned i=0;i<7;++i)p[i]=float(i+30);for(unsigned i=0;i<6;++i)vp[i]=float(i+50);
+        re4dc_ps2_mesh_camera(v,p,vp);
+        if(!movie_blocked)assert(!std::memcmp(v,ps2w.view,sizeof(v))&&!std::memcmp(p,ps2w.projection,sizeof(p))&&!std::memcmp(vp,ps2w.viewport,sizeof(vp)));
+        return ps2w.camera;
+    }
+    if(c<=PassAbort){
+        Scope path(NearTR,Other);
+        if(c==PassBinding)binding_ok=false;if(c==PassProjection)bad_projection();
+        if(c==PassDepth)ps2w.projection[6]=2;
+        if(c==PassFallback)pass_fallback=7;if(c==PassAbort){pass_fallback=7;pass_aborts=2;}
+        return ps2_pass(2,100);
+    }
+    if(c<=MeshProjection){
+        if(c==MeshMovie)movie_blocked=true;
+        if(c==MeshR11fFail||c==MeshR11fSuccess){r11f_claimed=true;r11f_result=c==MeshR11fSuccess?1:0;}
+        if(c==MeshBinding)binding_ok=false;if(c==MeshCamera)ps2w.camera=false;
+        if(c==MeshPackage)open_ok=false;if(c==MeshProjection)bad_projection();
+        return re4dc_ps2_mesh_draw(c==MeshInvalid?9:1,100);
+    }
+    if(c<=SourceSuccess){
+        if(c==SourceBinding){group_claimed=true;binding_ok=false;}
+        if(c==SourcePackageMissing){source_package_ok=false;supplied_generation=8;}
+        if(c==SourceGeneration)supplied_generation=8;
+        if(c==SourceCachedGood||c==SourceCachedBad){sourceWorldImageFrame=77;sourceWorldImageResult=c==SourceCachedGood?1:0;}
+        if(c==SourceCamera)coarse_ok=false;
+        return re4dc_ps2_source_draw(9);
+    }
+    if(c<=FlushSuccess){
+        auto& s=re4dc::room::ps2::state;s.pending=c!=FlushEmpty;
+        if(c==FlushMovie)movie_blocked=true;if(c==FlushStale)s.frame=66;if(c==FlushAlready)s.flushed=s.frame;
+        re4dc_ps2_world_flush();
+        if(c==FlushSuccess)assert(!s.pending&&s.flushed==77);
+        return 0;
+    }
+    if(c==ShellOff)far_shell_mode=0;if(c==ShellMissing)farshell::st.h=nullptr;
+    if(c==ShellCamera)ps2w.camera=false;if(c==ShellProjection)bad_projection();
+    if(c==ShellBindFirst)bind_fail_call=1;
+    if(c==ShellScratchHeader){shell_capacity=4;for(auto& g:farshell::fixture_groups)g.vcount=5;}
+    if(c==ShellScratchSelection){shell_groups=3;shell_capacity=4;farshell::fixture_groups[1].vcount=5;farshell::fixture_groups[2].material=1;bind_fail_call=2;}
+    return re4dc_far_shell_draw(10,c==ShellDepth?10:100);
+}
+#if RE4DC_WORLD_CENSUS24_ERRORS
+static uint32_t bits(float value){uint32_t result;std::memcpy(&result,&value,4);return result;}
+static void diagnostic(unsigned c,const Snapshot& original){
+    ErrorSnapshot s{};assert(errors_snapshot(&s));assert(s.total==original.errors&&s.spill==0&&s.wrapped==0);
+    if(!fails(c)){assert(s.used==0);return;}
+    assert(s.used==1&&s.bins[0].count==300&&s.bins[0].first_tick==0);
+    ErrorReason r=ErrorUnspecified;ErrorSite site=ErrorSiteUnspecified;unsigned path=1,phase=Other;uint32_t a=0,b=0;
+    switch(c){
+    case CameraMovie:r=ErrorMovieSuppressed;site=ErrorMeshCamera;a=0x101;break;
+    case PassBinding:r=ErrorBindingLost;site=ErrorPs2Pass;path=3;phase=Selection;a=2;break;
+    case PassProjection:r=ErrorProjection;site=ErrorPs2Pass;path=3;phase=Selection;a=2;b=7;break;
+    case PassDepth:r=ErrorDepth;site=ErrorPs2Pass;path=3;phase=Selection;a=bits(-1);b=bits(-2);break;
+    case PassFallback:r=ErrorPassIncomplete;site=ErrorPs2Pass;path=3;phase=Selection;a=7;break;
+    case PassAbort:r=ErrorPassAbort;site=ErrorPs2Pass;path=3;phase=Selection;a=7;b=2;break;
+    case MeshMovie:r=ErrorMovieSuppressed;site=ErrorMeshDraw;path=2;a=1;b=0x101;break;
+    case MeshR11fFail:r=ErrorReceiptIncomplete;site=ErrorMeshDraw;path=2;a=1;break;
+    case MeshBinding:r=ErrorBindingLost;site=ErrorMeshDraw;path=2;a=1;b=0x101;break;
+    case MeshInvalid:r=ErrorInvalidPass;site=ErrorMeshDraw;path=0;phase=0;a=9;break;
+    case MeshCamera:r=ErrorCameraUnavailable;site=ErrorMeshDraw;path=2;a=1;break;
+    case MeshPackage:r=ErrorPackageUnavailable;site=ErrorMeshDraw;path=2;a=0x101;b=0x103;break;
+    case MeshProjection:r=ErrorProjection;site=ErrorPs2Pass;path=2;phase=Selection;a=1;b=7;break;
+    case SourceBinding:r=ErrorBindingLost;site=ErrorSourceDraw;a=9;b=77;break;
+    case SourcePackageMissing:r=ErrorPackageUnavailable;site=ErrorSourceDraw;a=9;b=8;break;
+    case SourceGeneration:r=ErrorOwnerRejected;site=ErrorSourceDraw;a=9;b=8;break;
+    case SourceCachedBad:r=ErrorReceiptIncomplete;site=ErrorSourceDraw;a=9;break;
+    case SourceCamera:r=ErrorCameraUnavailable;site=ErrorSourceDraw;a=77;b=9;break;
+    case FlushMovie:r=ErrorMovieSuppressed;site=ErrorWorldFlush;path=2;break;
+    case FlushStale:r=ErrorDeferredStale;site=ErrorWorldFlush;path=2;a=66;b=77;break;
+    case FlushAlready:r=ErrorDeferredStale;site=ErrorWorldFlush;path=2;a=77;b=77;break;
+    case ShellMissing:r=ErrorShellUnavailable;site=ErrorFarShell;path=4;a=b=0x101;break;
+    case ShellCamera:r=ErrorCameraUnavailable;site=ErrorFarShell;path=4;a=0x101;break;
+    case ShellProjection:r=ErrorProjection;site=ErrorFarShell;path=4;b=7;break;
+    case ShellDepth:r=ErrorDepth;site=ErrorFarShell;path=4;a=bits(1);b=4;break;
+    case ShellBindFirst:r=ErrorShellBindRefusal;site=ErrorFarShell;path=4;phase=HeaderMaterial;break;
+    case ShellScratchHeader:r=ErrorShellScratchRefusal;site=ErrorFarShell;path=4;phase=HeaderMaterial;a=4;b=5;break;
+    case ShellScratchSelection:r=ErrorShellScratchRefusal;site=ErrorFarShell;path=4;phase=Selection;a=4;b=5;break;
+    default:assert(false);
+    }
+    const uint32_t key=uint32_t(r)|(uint32_t(site)<<8)|((path|(phase<<3))<<16);
+    assert(s.bins[0].key==key&&s.bins[0].detail0==a&&s.bins[0].detail1==b);
+}
+#endif
+
+// Hash declared scalar fields only; no object padding participates.
+static void mix(uint64_t& h,uint64_t n){for(unsigned i=0;i<8;++i){h=(h^(n&255))*1099511628211ULL;n>>=8;}}
+static uint64_t snapshot_hash(const Snapshot& s){
+    uint64_t h=1469598103934665603ULL;
+    mix(h,s.sequence);for(auto n:s.identity)mix(h,n);
+    mix(h,s.first_tick);mix(h,s.last_tick);mix(h,s.ticks);mix(h,s.draw_attempts);mix(h,s.drawn);mix(h,s.skipped);
+    mix(h,s.scenes);mix(h,s.present_requests);mix(h,s.discard_requests);mix(h,s.errors);mix(h,s.wall_us);mix(h,s.max_tick_us);
+    for(const auto& path:s.phase_us)for(auto n:path)mix(h,n);for(auto n:s.wait_us)mix(h,n);
+    for(const auto& path:s.counters)for(auto n:path)mix(h,n);mix(h,uint64_t(s.residual_us));
+    const auto& p=s.presentation;mix(h,p.vblanks);mix(h,p.flips);mix(h,p.render_starts);mix(h,p.render_dones);mix(h,p.intervals);
+    mix(h,p.gaps_over_two_fields);mix(h,p.max_fields);mix(h,p.discontinuities);mix(h,p.interval_us);mix(h,p.min_interval_us);mix(h,p.max_interval_us);
+    return h;
+}
+int main(){
+    std::printf("[");
+    for(unsigned c=0;c<CaseCount;++c){
+        reset();now_us=1000;std::memset(edges,0,sizeof(edges));int result_sum=0;
+        for(unsigned tick=0;tick<300;++tick){
+            begin_tick(tick,0x101);decision(true);
+            const int result=invoke(c);assert(result==expected_return(c));result_sum+=result;
+            scene_finished();decision_posted(true);end_tick();now_us+=100;
+        }
+        begin_tick(300,0x101);Snapshot s{};assert(snapshot(&s));
+        assert(s.errors==(fails(c)?300U:0U)&&s.drawn==300&&s.wall_us==30000);
+#if RE4DC_WORLD_CENSUS24_ERRORS
+        diagnostic(c,s);
+#endif
+        std::printf("%s{\"case\":\"%s\",\"errors\":%u,\"return_sum\":%d,\"snapshot\":\"%016llx\",\"edges\":[",
+            c?",":"",names[c],s.errors,result_sum,(unsigned long long)snapshot_hash(s));
+        for(unsigned k=0;k<EdgeCount;++k)std::printf("%s%u",k?",":"",edges[k]);
+        std::printf("]}");
+    }
+    std::printf("]\n");
+}

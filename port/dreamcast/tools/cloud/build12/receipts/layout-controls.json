@@ -1,0 +1,723 @@
+{
+  "format": "RE4DC_COMPACT_RECEIPT1",
+  "full_receipt": {
+    "path": "/tmp/b12-current-layout-pick-final/layout-controls.json",
+    "bytes": 26334,
+    "sha256": "e1e72378995a807260026ac9d9c7708a970da4f3fc2a0597a9c4ff34015f7b7c"
+  },
+  "encoding": "Lossless repeated-subtree interning; $ref names pool entries. Every original metric and command is retained.",
+  "value": {
+    "status": "PASS",
+    "scope": "Public exact-layout, sidecar, malformed-input and real builder OFF controls.",
+    "baseline": "057e00a248c9ed473d0b3377a0ce14b0b2f5186d",
+    "source_sha256": {
+      "port/dreamcast/tools/cloud/build12/check_layout.py": "2dda7b75cafc0861f26b717de5483dae3e36f53df096a15bebfb3956a604e447",
+      "port/dreamcast/tools/cloud/build12/fixtures.py": "cc3ce0827454582f87720c51355918c18b84fd1128f0ecc3ffc6d775a48ffd23",
+      "port/dreamcast/tools/scenery_data_variants.py": "5be5db92115a961524530cb19eb4ae27d7bf977762e13f778871ca1b29a56401",
+      "port/dreamcast/tools/ps2_world_r4im.py": "a5f4539879e261428ca0afbd980a7db439f4f29d51d48f4e65bf4c40cc43b16f",
+      "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+      "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96"
+    },
+    "unit_tests": 7,
+    "exact_corner_cases": 16,
+    "groups_cases": 18,
+    "capacity_controls": {
+      "meshlet_id": "Reject source count65537 and SDS1 expansion65536 to65537; valid boundary admission is checked by actual C++ reader.",
+      "picks": "Admit overlapping160 of161 reserved Picks; reject322 of161; reject source-valid SDS1 expansion selecting4 with reservation3."
+    },
+    "builders": {
+      "baseline": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/b12-current-layout-pick-final/builders/baseline/ps2_world_r4im.py",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+          "/tmp/b12-current-layout-pick-final/builders/baseline/ps2-world"
+        ],
+        "mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+        "policy_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+        "report": {
+          "$ref": "r0000"
+        },
+        "normalized_report_bytes_sha256": "3beab5803f0b48d1cf5465a8034551a2f458a2455198cf5a062e8364a84985a1"
+      },
+      "absent": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b12-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+          "/tmp/b12-current-layout-pick-final/builders/absent/ps2-world"
+        ],
+        "mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+        "policy_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+        "report": {
+          "$ref": "r0000"
+        },
+        "normalized_report_bytes_sha256": "3beab5803f0b48d1cf5465a8034551a2f458a2455198cf5a062e8364a84985a1"
+      },
+      "local-indexed": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b12-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+          "/tmp/b12-current-layout-pick-final/builders/local-indexed/ps2-world",
+          "--scenery-local-indexed"
+        ],
+        "mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+        "policy_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+        "report": {
+          "source": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "source_sha256": "516b01e94685adc1b8eb8128b7fc03b8c509d2172f1220196e95f880e164273f",
+          "inc_sha256": "9dbfa7370389ad9a896b2170f0e6314a4a5b9c046b9ec694c279fb4072b28d1b",
+          "args": {
+            "r4p": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+            "inc": "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+            "out": "<OUT>",
+            "lod_eps": "24,48,96,192,384",
+            "lod_min_gain": 0.4,
+            "lod_max_levels": 4,
+            "lod_floor": 2.0,
+            "lod_cluster": 20000.0,
+            "no_share": false,
+            "lod_uv_guard": null,
+            "strip_swaps": false,
+            "meshlet_vertices": 64,
+            "scenery_local_indexed": true
+          },
+          "meshes": 1,
+          "placements": 2,
+          "source_triangles": 4,
+          "re4mesh_bytes": 704,
+          "re4mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+          "r4pw_bytes": 168,
+          "r4pw_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+          "level0_triangles": 4,
+          "summary": {
+            "$ref": "r0002"
+          },
+          "layout_candidate": {
+            "variant": "local-indexed",
+            "marker": "SLI1",
+            "source_bytes": 704,
+            "source_crc": 3958362149,
+            "source_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+            "candidate_bytes": 704,
+            "candidate_crc": 3958362149,
+            "candidate_sha256": "512bf620e92478e972647983edbfe7fe6b8d3e510e4b98cb6b7731f6e13d8a14",
+            "source_meshlets": 2,
+            "candidate_meshlets": 2,
+            "split_children": 0,
+            "source_vertices": 8,
+            "candidate_vertices": 8,
+            "source_index_bytes": 10,
+            "candidate_index_bytes": 10,
+            "original_indexed_meshlets": 0,
+            "ordered_strip_corners": 8,
+            "resident_package_delta": 0,
+            "retained_gather_scratch_bytes": 3072,
+            "source_groups_bytes": 0,
+            "candidate_groups_bytes": 0,
+            "meshlet_remap": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "metadata_policy": {
+              "$ref": "r0003"
+            },
+            "path": "/tmp/b12-current-layout-pick-final/builders/local-indexed/ps2-sli1.re4mesh"
+          }
+        },
+        "normalized_report_bytes_sha256": "b32ac7e6f1b6e68d9e27c5b30bc9449ff9b91c5090b4376cf29f337008d0fe84"
+      },
+      "direct-strips": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b12-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+          "/tmp/b12-current-layout-pick-final/builders/direct-strips/ps2-world",
+          "--scenery-direct-strips"
+        ],
+        "mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+        "policy_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+        "report": {
+          "source": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+          "source_sha256": "516b01e94685adc1b8eb8128b7fc03b8c509d2172f1220196e95f880e164273f",
+          "inc_sha256": "9dbfa7370389ad9a896b2170f0e6314a4a5b9c046b9ec694c279fb4072b28d1b",
+          "args": {
+            "r4p": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+            "inc": "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+            "out": "<OUT>",
+            "lod_eps": "24,48,96,192,384",
+            "lod_min_gain": 0.4,
+            "lod_max_levels": 4,
+            "lod_floor": 2.0,
+            "lod_cluster": 20000.0,
+            "no_share": false,
+            "lod_uv_guard": null,
+            "strip_swaps": false,
+            "meshlet_vertices": 64,
+            "scenery_direct_strips": true
+          },
+          "meshes": 1,
+          "placements": 2,
+          "source_triangles": 4,
+          "re4mesh_bytes": 704,
+          "re4mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+          "r4pw_bytes": 168,
+          "r4pw_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+          "level0_triangles": 4,
+          "summary": {
+            "$ref": "r0002"
+          },
+          "layout_candidate": {
+            "variant": "direct-strips",
+            "marker": "SDS1",
+            "source_bytes": 704,
+            "source_crc": 3958362149,
+            "source_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+            "candidate_bytes": 704,
+            "candidate_crc": 3958362149,
+            "candidate_sha256": "e7e954dc4ce16c7f8b25a52347680b092b4a72d28d42358b792614bafcdcf12d",
+            "source_meshlets": 2,
+            "candidate_meshlets": 2,
+            "split_children": 0,
+            "source_vertices": 8,
+            "candidate_vertices": 8,
+            "source_index_bytes": 10,
+            "candidate_index_bytes": 10,
+            "original_indexed_meshlets": 0,
+            "ordered_strip_corners": 8,
+            "resident_package_delta": 0,
+            "retained_gather_scratch_bytes": 3072,
+            "source_groups_bytes": 0,
+            "candidate_groups_bytes": 0,
+            "meshlet_remap": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "metadata_policy": {
+              "$ref": "r0003"
+            },
+            "path": "/tmp/b12-current-layout-pick-final/builders/direct-strips/ps2-sds1.re4mesh"
+          }
+        },
+        "normalized_report_bytes_sha256": "a0622dd5a497d9bef031869df2c93fb10c8635145a06a0d118577c27a6baf721"
+      }
+    },
+    "fixtures": {
+      "compact": {
+        "local-indexed": {
+          "variant": "local-indexed",
+          "marker": "SLI1",
+          "source_bytes": 1248,
+          "source_crc": 3242147613,
+          "source_sha256": "dfd3832e2537bded90357d77154ef459a6afe63b72dcb3a1688fd3f5fab9e3dd",
+          "candidate_bytes": 1504,
+          "candidate_crc": 1737956646,
+          "candidate_sha256": "e27907326897461072e253818dd89ab28189559d621537279243efb9af7f7df6",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 24,
+          "candidate_vertices": 48,
+          "source_index_bytes": 120,
+          "candidate_index_bytes": 72,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 60,
+          "resident_package_delta": 256,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        },
+        "direct-strips": {
+          "variant": "direct-strips",
+          "marker": "SDS1",
+          "source_bytes": 1248,
+          "source_crc": 3242147613,
+          "source_sha256": "dfd3832e2537bded90357d77154ef459a6afe63b72dcb3a1688fd3f5fab9e3dd",
+          "candidate_bytes": 1664,
+          "candidate_crc": 119210363,
+          "candidate_sha256": "a0dc31df0c85d8437d44cdc7bb02db90348e1fc911c9d21b728d3c0b844ae48c",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 24,
+          "candidate_vertices": 60,
+          "source_index_bytes": 120,
+          "candidate_index_bytes": 72,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 60,
+          "resident_package_delta": 416,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        }
+      },
+      "reuse": {
+        "local-indexed": {
+          "variant": "local-indexed",
+          "marker": "SLI1",
+          "source_bytes": 5120,
+          "source_crc": 3149605980,
+          "source_sha256": "f2e11a233a162245debb77dedd96a72163f1eb6624fa5f47de5e01d4684574f8",
+          "candidate_bytes": 7040,
+          "candidate_crc": 4011450471,
+          "candidate_sha256": "1b106136a19b7e493382821e47677a1248372fda974829bb21df5e8efec4927e",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 192,
+          "candidate_vertices": 384,
+          "source_index_bytes": 1968,
+          "candidate_index_bytes": 1584,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 1572,
+          "resident_package_delta": 1920,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        },
+        "direct-strips": {
+          "variant": "direct-strips",
+          "marker": "SDS1",
+          "source_bytes": 5120,
+          "source_crc": 3149605980,
+          "source_sha256": "f2e11a233a162245debb77dedd96a72163f1eb6624fa5f47de5e01d4684574f8",
+          "candidate_bytes": 21472,
+          "candidate_crc": 3210801384,
+          "candidate_sha256": "70d8018fdda864f5baf9c694fde1b2365acdadacb7ea1cfb74893b1de4f881e3",
+          "source_meshlets": 6,
+          "candidate_meshlets": 12,
+          "split_children": 6,
+          "source_vertices": 192,
+          "candidate_vertices": 1572,
+          "source_index_bytes": 1968,
+          "candidate_index_bytes": 1584,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 1572,
+          "resident_package_delta": 16352,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 800,
+          "meshlet_remap": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        }
+      },
+      "limit": {
+        "local-indexed": {
+          "variant": "local-indexed",
+          "marker": "SLI1",
+          "source_bytes": 13152,
+          "source_crc": 3714287015,
+          "source_sha256": "4b8c7cf39d3c408087148228e7ec363047e800395ed337ad346d2d5f20bd8598",
+          "candidate_bytes": 20832,
+          "candidate_crc": 2411862161,
+          "candidate_sha256": "c895ad67a1de78322fbfdb97733c6b74cc9a8360777949f9d5e8293fde13a1d6",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 768,
+          "candidate_vertices": 1536,
+          "source_index_bytes": 3096,
+          "candidate_index_bytes": 1560,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 1548,
+          "resident_package_delta": 7680,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        },
+        "direct-strips": {
+          "variant": "direct-strips",
+          "marker": "SDS1",
+          "source_bytes": 13152,
+          "source_crc": 3714287015,
+          "source_sha256": "4b8c7cf39d3c408087148228e7ec363047e800395ed337ad346d2d5f20bd8598",
+          "candidate_bytes": 21152,
+          "candidate_crc": 3752366362,
+          "candidate_sha256": "07f25daa5bb5d27340a9fd3fd7e758e048ff30fc85e19009056da94259876930",
+          "source_meshlets": 6,
+          "candidate_meshlets": 12,
+          "split_children": 6,
+          "source_vertices": 768,
+          "candidate_vertices": 1548,
+          "source_index_bytes": 3096,
+          "candidate_index_bytes": 1560,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 1548,
+          "resident_package_delta": 8000,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 800,
+          "meshlet_remap": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              10,
+              2
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        }
+      },
+      "unused": {
+        "local-indexed": {
+          "variant": "local-indexed",
+          "marker": "SLI1",
+          "source_bytes": 1600,
+          "source_crc": 4261393128,
+          "source_sha256": "648e8bd9d20272e4c7837c373c0b49b65cbf63db1dc262d144330035ef697e55",
+          "candidate_bytes": 2080,
+          "candidate_crc": 2274301613,
+          "candidate_sha256": "ab8ced597c6855dd55c549f168407cf491a8b6cace7ce2f8a177d5d4e9d20365",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 48,
+          "candidate_vertices": 96,
+          "source_index_bytes": 168,
+          "candidate_index_bytes": 72,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 60,
+          "resident_package_delta": 480,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        },
+        "direct-strips": {
+          "variant": "direct-strips",
+          "marker": "SDS1",
+          "source_bytes": 1600,
+          "source_crc": 4261393128,
+          "source_sha256": "648e8bd9d20272e4c7837c373c0b49b65cbf63db1dc262d144330035ef697e55",
+          "candidate_bytes": 1664,
+          "candidate_crc": 817383991,
+          "candidate_sha256": "37384ce41c068aea3f75cd167e1f7474bb61d796a74c341347eba1ed507785d6",
+          "source_meshlets": 6,
+          "candidate_meshlets": 6,
+          "split_children": 0,
+          "source_vertices": 48,
+          "candidate_vertices": 60,
+          "source_index_bytes": 168,
+          "candidate_index_bytes": 72,
+          "original_indexed_meshlets": 3,
+          "ordered_strip_corners": 60,
+          "resident_package_delta": 64,
+          "retained_gather_scratch_bytes": 3072,
+          "source_groups_bytes": 416,
+          "candidate_groups_bytes": 416,
+          "meshlet_remap": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "metadata_policy": {
+            "$ref": "r0003"
+          }
+        }
+      }
+    },
+    "occlusion_identity": {
+      "readers": [
+        "game/platform/room_occl.c",
+        "game/platform/native_static.cpp::re4dc_ps2_world_intact",
+        "game/platform/native_static.cpp::re4dc_ps2_placements_intact"
+      ],
+      "runtime_inputs": "OCCL v2 policy CRC at byte12, independent slab/cell/list records, u16 source placement indices and live placement state; no R4IM meshlet/corner IDs.",
+      "preserved": "Exact ordered corner records at every LOD, mesh decode/UV tables, source part identities, LOD errors, material pass/cull, placement order/affines/IDs, parent bounds and supplied group selection bounds/membership.",
+      "proof_scope": "Existing unremapped-policy OCCL geometry/placement meaning is unchanged; no fresh occluder proof or source fingerprint is substituted.",
+      "excluded": "WORLD_RECT21 certificate remaps and mesh-bound PVS/interior/SCCN/SCPS/SDO3 metadata require separate qualification; candidate Make rejects these modes."
+    },
+    "limitations": "Synthetic layout/CLI/metadata proof only; actual renderer gate and target timing are separate."
+  },
+  "pool": {
+    "r0001": {
+      "r4p": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+      "inc": "/tmp/b12-current-layout-pick-final/builders/source/public.inc",
+      "out": "<OUT>",
+      "lod_eps": "24,48,96,192,384",
+      "lod_min_gain": 0.4,
+      "lod_max_levels": 4,
+      "lod_floor": 2.0,
+      "lod_cluster": 20000.0,
+      "no_share": false,
+      "lod_uv_guard": null,
+      "strip_swaps": false,
+      "meshlet_vertices": 64
+    },
+    "r0002": {
+      "package_bytes": 704,
+      "meshes": 1,
+      "parts": 2,
+      "meshlets": 2,
+      "vertices": 8,
+      "strip_bytes": 10,
+      "palette": 1,
+      "clusters": 2,
+      "levels": 4,
+      "substituted_parts": 0,
+      "replaced_bins": 0,
+      "floor_triangles": [
+        4,
+        4,
+        0
+      ],
+      "shared_vertices": [
+        0,
+        0
+      ],
+      "version": 2,
+      "mesh_classes": null,
+      "class_rules": null,
+      "level0_triangles": 4
+    },
+    "r0000": {
+      "source": "/tmp/b12-current-layout-pick-final/builders/source/public.r4p",
+      "source_sha256": "516b01e94685adc1b8eb8128b7fc03b8c509d2172f1220196e95f880e164273f",
+      "inc_sha256": "9dbfa7370389ad9a896b2170f0e6314a4a5b9c046b9ec694c279fb4072b28d1b",
+      "args": {
+        "$ref": "r0001"
+      },
+      "meshes": 1,
+      "placements": 2,
+      "source_triangles": 4,
+      "re4mesh_bytes": 704,
+      "re4mesh_sha256": "2a1fa8c443ebf34358618e70d761de1b9bd1fd61258c01d98af8d927d2a4540e",
+      "r4pw_bytes": 168,
+      "r4pw_sha256": "193a3fa161fd04e194836d905be51c708a44e29ec938da522178e82956617b42",
+      "level0_triangles": 4,
+      "summary": {
+        "$ref": "r0002"
+      }
+    },
+    "r0003": "R4PW unchanged; supplied R4SG mapped with original selection bounds; no other CRC metadata rebound"
+  }
+}

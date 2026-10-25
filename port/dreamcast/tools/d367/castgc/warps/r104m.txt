@@ -1,0 +1,16 @@
+# lane purge-cast24 (10-24, GC purge) CAST-GC census warp for the r104 merchant (em13 type 6, ESL emleon00 0x5E): set by
+# r104_execEvent20 after the s20 house event (AT area 0x12, action button, polygon around (-18000, 7000)). Leon stands in the
+# area and presses A; the merchant is then alive for the rest of the visit (<= 60 s).
+name cg-r104m
+room 0x104
+pos -18200 0 6800
+ang -1.3900
+rsf 0x104 1
+inv default
+god
+alivelog 60
+act 5 a 5
+act 20 a 5
+act 60 start 5 ev
+act 90 start 5 ev
+act 130 start 5 ev

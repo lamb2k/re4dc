@@ -31,6 +31,9 @@
 #include "re4dc_platform.h"
 #include <kos/timer.h>
 #include <string.h>
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "world_census24.h"
+#endif
 #if defined(RE4DC_PACE_PRECISE) && RE4DC_PACE_PRECISE
 #include <arch/irq.h>
 #include <dc/vblank.h>
@@ -352,6 +355,9 @@ extern "C" void __real_pvr_sync_stats(int event);
 extern "C" void __wrap_pvr_sync_stats(int event)
 {
     __real_pvr_sync_stats(event);                  // KOS's own statistics first, unchanged
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::pvr_event(unsigned(event));         // includes VBLANK=1 and PAGEFLIP=8
+#endif
     if (event < kSyncRegStart || event > kSyncRndDone) return;
     const auto irq = irq_disable();                // REGSTART comes from pvr_scene_begin (thread context)
     const unsigned long long t = timer_ns_gettime64();
@@ -858,6 +864,10 @@ extern "C" int re4dc_pace_end(void)
 #endif
         ++ticks;
         const u32 due = anchor + 2 * ticks;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        {
+        re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PaceWait);
+#endif
 #if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
         re4dc_tail_spin(0);
 #endif
@@ -865,6 +875,9 @@ extern "C" int re4dc_pace_end(void)
         }
 #if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
         re4dc_tail_spin(1);
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        }
 #endif
         waited = 1;
     }

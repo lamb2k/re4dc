@@ -1,0 +1,124 @@
+# Packed hand source and copy contract
+
+The actual hand runtime now has cold source/directory observers. This document
+separates tested boundaries from the pending closed-writer integration and
+independent review. No hand coverage or positive slot is claimed.
+
+Root approved one exact full hand-container source proof captured after a
+complete successful read at named startup. It must retain the exact original
+blob offset/count and real selected geometry/skin/UV/palette ranges through
+every CPU read, joined worker result, AICA cache write/readback and current slot
+generation. A filename, blob number, destination pointer or matching count is
+insufficient without the complete owned copy/lifetime chain.
+
+gc_asset_hand_copy.h has fixed eight-byte source/generation/blob tickets. A
+destination loses its positive source before overwrite. Complete success may
+publish only the expected current destination generation and same original
+source/blob. Failed/partial reads, stale source epochs, wrong blobs, overwritten
+destinations, invalidation and counter exhaustion cannot produce positives.
+Twenty-four blob values fit five token bits; generation is bounded to 27 bits
+and fails closed on exhaustion. The helper neither hashes, reads files/catalogs,
+logs, allocates nor waits. It does not itself prove a source read or copy.
+
+The current actual writer inventory in coarse_actor_leon_hands.inc is:
+
+- load_now/read_at writes a static CPU slot from a complete synchronous read;
+- job_main writes only its private job buffer; job_poll joins before using it,
+  then copies into a slot under LH when that side still wants the blob;
+- cache is the only AICA cell writer, under LH; load reads back into a slot;
+- yield holds LH, joins/frees the worker, invalidates cells and frees the AICA
+  allocation before movie/bank use; CPU slots survive;
+- directory publishes rows/blobs/sources once; controlled actor FE/LOD/bake
+  preparation may derive a new stream in the same slot after original capture.
+
+The actual pinned KOS implementations used by these calls are synchronous
+programmed 32-bit G2 loops, not the separate DMA API. spu_memread waits for prior
+FIFO writes before copying, then returns after the full CPU readback. The root
+provider paths and SHA256s are:
+
+- /root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/spu.c:
+  b5765c65041166105ca6c56ecfd52e968f023904f5f3c791006525e3174b73f2
+- /root/work/kos-re4dc-d367/kernel/arch/dreamcast/hardware/g2bus.c:
+  d4ae2e484f367dd84bd8e66b7dac888531b29a9e1d0bae6880f4c162b9186082
+
+Final provider selection still needs the target map. Closed source-buffer alias
+ownership, directory/source epoch, actual completion ordering, every invalidation
+and permitted in-place derivation remain integration/review obligations. Any
+unaccounted writer or copy must leave the slot unknown. No transformed-byte
+hash is required when the complete original-source/controlled-derivation proof
+holds. No 6.4 KiB snapshot, per-blob digest cache or new lent allocation is added.
+
+The next helper milestone adds safe startup registration of two stable child
+PayloadProof records (44 bytes each on SH4, not yet target measured). Registration
+alone has no positive serial. Silent invalidation precedes a slot overwrite;
+silent publication inherits only a still-live whole-source serial and current
+catalog epoch, with a fresh child serial. The source record must outlive both
+children. These fixed metadata operations never bind/read a catalog, hash, log,
+flush or allocate. They are not proof that an actual copy completed.
+
+Accepted uses of the same original source retain their coalesced bookkeeping
+when a slot is invalidated or republished. A changed source with pending uses
+fails explicitly rather than relabeling those uses. Saved child serials reject
+same-address reloads, invalid publication revokes any old positive, and source
+retirement or catalog replacement invalidates the child. The focused controls
+exercise those cases with the real core/helper and assert logging remains
+outside the simulated LH/SQ lock. Actual hand copy/derivation integration and
+source-handle/copy integration remains pending.
+
+The cold observer reads the complete package at named startup, using a separate
+diagnostic handle and the existing immutable mounted-CD source-epoch contract.
+Every added filesystem call has a bounded Re4dcIoScope; hashing, catalog binding
+and diagnostics run outside those calls and outside LH. The full SHA and exact
+header/directory prefix SHA are computed in the same streaming read, with
+512-byte scratch and two SHA states. A changed header between the initial
+header read and full read is rejected. Cost is one additional whole-file read
+plus the 32-byte header read, with no per-draw IO and no retained blob snapshot.
+
+After the actual loader validates its directory, a memory-only observer compares
+its header/counts. The cold room/equip return then hashes the retained header,
+rows, blobs and source records after releasing LH, and compares the exact prefix
+digest. This does not alter the loader's handles, seek positions, allocations,
+transfer decisions or publication behavior. Later runtime handles are covered
+only by the pinned immutable mounted source contract; mutable/replaced mounts
+must retire the catalog epoch. Pointer/path equality alone grants nothing.
+
+The current supported RETAIN=0 copy paths are now observed in the real owner:
+direct slot read, exact prefetch scratch borrow, issued AICA stores/readback,
+and joined worker with frozen allocation/data/thread/blob/offset/extent. Slots
+lose authority before every copy. Failed/partial direct reads remain unknown;
+wrong pending job metadata cannot publish. Job/cell records retire before free
+or AICA reuse. Same-slot hits retain only the same still-live source/copy proof.
+The immutable mounted-CD epoch covers the actual separate read handles; this
+does not add support for mutable media or silently treat a re-open as proof.
+
+Exact current blob arrays, padded spans, stream capacity and scalar counts are
+matched against the real selected chunk, then the two child proofs enter the
+existing accepted-use gateway. Deferred replay uses the saved child serial
+rather than re-selecting a current slot. RETAIN=1 remains explicitly unsupported.
+These hand uses currently acknowledge SourceGeometry; full Weapon consumer
+classification and complete SourceGeometry coverage remain separate open gates.
+
+The four approved existing actor preparation scopes now have memory-only hand
+observers: convert, both relod scopes and bake. Begin makes the exact bounded
+stream generation pending. Explicit completion restores its original child
+serial only if the source-copy generation and source catalog are still current;
+abort, unknown/nested/retired writes leave it revoked. Transient scratch output
+does not acquire permanent slot authority. No rendering algorithm, command,
+source choice, allocation or synchronization changes.
+
+Expected SH4 metadata totals 320 bytes: three proofs132, directorySHA/header/
+prefix/flags72, seven copy tickets56, two derivation states16, clock/AICA8,
+and frozen job context36. This is calculated layout, not target measurement.
+Each active derivation scope expects8 stack bytes. Cold full-prefix hashing
+uses512 scratch plus two104-byte SHA states, a transform's64-byte schedule and
+caller locals; actual peak stack/code/link costs remain unmeasured. No snapshot,
+resident catalog, per-blob digest cache or new runtime allocation was added.
+
+The full actual hand owner is executed in RAM against simulated filesystem,
+worker and G2 providers with real metadata/core. Controls cover direct/partial
+read, AICA readback, joined worker, mismatched job range, accepted use, old
+deferred generation, complete/aborted derivation and pre-free yield. Separate
+controls cover nested/reloaded/retired derivation and source-directory failures.
+OFF preprocessor tokens match the old hand owner, and native_actor_fast tokens
+match across four cone/LOD-limit variants with unchanged external includes.
+These are source/host controls, not target object/image/provider or guest proof.

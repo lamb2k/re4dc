@@ -2,6 +2,7 @@
 """Execute the exact read-only native_ui PVS prerequisite with cache/state stubs."""
 from pathlib import Path
 import tempfile
+import re
 from host_checks import GAME, compile_run
 
 
@@ -10,6 +11,10 @@ def main():
     start=text.index('extern "C" int re4dc_pvs23_opaque_ready(')
     end=text.index('\n}\n#endif',start)+2
     body=text[start:end]
+    texture_header=(GAME.parent/'room/texture_package.hpp').read_text()
+    constants='\n'.join(re.search(r'inline constexpr std::uint32_t '+name+r'\s*=[^;]+;',texture_header)[0]
+                        .replace('inline constexpr std::uint32_t','constexpr unsigned')
+                        for name in ('kRgb565','kAlpha','kBinaryAlpha','kMipmap','kTopDrop'))
     prefix=r'''
 #include <cassert>
 #include <cstdint>
@@ -21,7 +26,7 @@ PVR_DEPTHCMP_GEQUAL=6,PVR_DEPTHWRITE_ENABLE=1,PVR_BLEND_ONE=1,PVR_BLEND_ZERO=0,
 PVR_TXRENV_MODULATEALPHA=2,PVR_TXRALPHA_DISABLE=0,PVR_UVCLAMP_NONE=0,PVR_FOG_TABLE=1,PVR_FOG_DISABLE=0};
 struct Key {unsigned crc,fnv;bool operator==(const Key& b)const{return crc==b.crc && fnv==b.fnv;}};
 struct Texture {unsigned width=64,height=64,format=0,flags=0;};
-namespace re4dc::texture {constexpr unsigned kRgb565=0,kAlpha=1,kBinaryAlpha=2,kTopDrop=4;
+namespace re4dc::texture {@TEXTURE_CONSTANTS@
 unsigned pvr_format(const Texture& t){return t.format;}}
 struct Package {
  struct H {unsigned texture_count=1;} h;
@@ -64,6 +69,7 @@ struct Slot {unsigned mode=0,crc=0,fnv=0,size=0;const Entry* entry=nullptr;void*
 Slot ps2_hdr[kPs2HdrSets][2];
 #define RE4DC_PS2_HDR_ON true
 '''
+    prefix=prefix.replace('@TEXTURE_CONSTANTS@',constants)
     tests=r'''
 unsigned key[6]={11,22,64,64,0,2};
 void reset(){
@@ -98,7 +104,11 @@ int main(){
  reset();entries[0].package.address=nullptr;assert(!ready());
  reset();entries[0].package.t.width=128;assert(!ready());
  reset();entries[0].package.t.format=1;assert(!ready());
- for(unsigned flag=1;flag<=4;flag<<=1){reset();entries[0].package.t.flags=flag;assert(!ready());}
+ const unsigned forbidden[]={re4dc::texture::kAlpha,re4dc::texture::kBinaryAlpha,re4dc::texture::kTopDrop};
+ for(unsigned flag:forbidden){reset();entries[0].package.t.flags=flag;assert(!ready());}
+ reset();entries[0].package.t.flags=re4dc::texture::kMipmap;assert(ready());
+ reset();entries[0].package.t.flags=re4dc::texture::kMipmap|re4dc::texture::kAlpha;assert(!ready());
+ reset();entries[0].package.t.flags=re4dc::texture::kMipmap|re4dc::texture::kTopDrop;assert(!ready());
  reset();entries[1].valid=true;assert(!ready());
  reset();key[4]=1;assert(!ready());
  reset();key[5]=1;assert(!ready());

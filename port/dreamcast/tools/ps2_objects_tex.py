@@ -113,7 +113,7 @@ def room_bindings(room, gd):
             for b, what in re.findall(r'ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\),\s*(PL_ARC_PTR\([^)]*\))', t):
                 res.setdefault(int(b, 16), ('ext', what))
             for e, eid, b in re.findall(r'EspDataLoad\(\(u32\) ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\)[^;]*;\s*'
-                                         r'if \(EspGetEfmTplAddr\((0x[0-9A-Fa-f]+), &tpl\)[\s\S]{0,200}?'
+                                         r'if \(EspGetEfmTplAddr\((0x[0-9A-Fa-f]+), &tpl\)[\s\S]{0,1500}?'  # r11e: SetRock 1 KB after
                                          r'SetRock\(ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\), tpl', t):
                 res.setdefault(int(b, 16), ('efm', int(e, 16), int(eid, 0)))
         return res
@@ -379,6 +379,7 @@ def main():
             continue
         entry = dict(kind=o['kind'], name=o.get('name') or o.get('gc_arc'))
         own_tpl = None
+        atl = lay = None
         try:
             if o['kind'] == 'room BIN':
                 ga, pa = int(o['gc_arc'], 16), int(o['ps2_arc'], 16)
@@ -442,7 +443,11 @@ def main():
                 else:
                     raise ValueError('texture source unknown (binding %s)' % (b,))
             # GC image -> the PS2 image(s) of the triangles the converter put in parts sampling it
-            newbin, st = po.rebuild(gbin, ps2bin, tex_map=po.TEX_MAPS.get(str(entry['name']).lower()))
+            if o['kind'] == 'room BIN' and (room, ga) in po.ATLAS_OBJECTS:
+                # PS2 atlas (ps2_objects.ATLAS_OBJECTS, lane purge-props24): the same layout ps2_objects.py mapped the UVs to
+                atl, lay = po.room_atlas(gbin, ps2bin, ('TPL', ptpl_d[ptpl_o:]), po.ATLAS_OBJECTS[(room, ga)])
+                entry['atlas'] = lay
+            newbin, st = po.rebuild(gbin, ps2bin, tex_map=po.TEX_MAPS.get(str(entry['name']).lower()), atlas=atl)
             drawn = [q for q in po.GcModel(newbin).parts if q['tris']]
             pair_of = {}
             for q in drawn:
@@ -510,12 +515,27 @@ def main():
                 native = magic in (b'R4NREF\0\0', b'R4PREF\0\0')
                 if not native and (gfmt in (8, 9, 10) or rec & 3 or wr_size(gw, gh, gfmt) < 32):
                     raise ValueError('image %d: resident texels that cannot take a self-key record (fmt %d)' % (k, gfmt))
-                if len(gmap[k]) != 1:
-                    raise ValueError('GC image %d is sampled by triangles of PS2 images %s' % (k, sorted(gmap[k])))
-                d = next(iter(gmap[k]))
-                if d not in pimg or pimg[d][0] == 'error':
-                    raise ValueError('PS2 TPL image %d missing or undecodable: %s' % (d, pimg.get(d)))
-                w, h, rgba, il = pimg[d]
+                if lay and k == lay['gc_image']:
+                    if (gw, gh) != tuple(po.ATLAS_OBJECTS[(room, ga)]):
+                        raise ValueError('atlas: GC image %d is %dx%d, ATLAS_OBJECTS says %s' % (k, gw, gh, po.ATLAS_OBJECTS[(room, ga)]))
+                    W_, H_ = lay['size']
+                    canvas = np.zeros((H_, W_, 4), np.uint8)
+                    for pi, (x_, y_, w_, h_) in sorted((int(i), r) for i, r in lay['rects'].items()):
+                        if pi not in pimg or pimg[pi][0] == 'error':
+                            raise ValueError('atlas: PS2 TPL image %d missing or undecodable' % pi)
+                        sub, _, _ = orient(pimg[pi][2], None, pimg[pi][3] & 1)
+                        if sub.shape[:2] != (h_, w_):
+                            raise ValueError('atlas: PS2 image %d is %s, layout %dx%d' % (pi, sub.shape[:2], w_, h_))
+                        canvas[y_:y_ + h_, x_:x_ + w_] = sub
+                    d = min(int(i) for i in lay['rects'])
+                    w, h, rgba, il = W_, H_, canvas, 0
+                else:
+                    if len(gmap[k]) != 1:
+                        raise ValueError('GC image %d is sampled by triangles of PS2 images %s' % (k, sorted(gmap[k])))
+                    d = next(iter(gmap[k]))
+                    if d not in pimg or pimg[d][0] == 'error':
+                        raise ValueError('PS2 TPL image %d missing or undecodable: %s' % (d, pimg.get(d)))
+                    w, h, rgba, il = pimg[d]
                 # image-order check (tex_size_check.py reads it): the PS2 image the triangles use has another size than
                 # the GC image while another PS2 image of the same TPL has the GC size -> the PS2 TPL lists the images
                 # in another order; ps2_objects.TEX_MAPS must remap the model (r104 et1700, 10-15)

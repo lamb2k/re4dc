@@ -17,6 +17,9 @@
 #include <kos.h>
 #include <dc/vblank.h>
 #include <kos/timer.h>
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "world_census24.h"
+#endif
 
 #ifndef RE4DC_PACE_STEADY
 #define RE4DC_PACE_STEADY 0
@@ -124,6 +127,9 @@ void ensure_handler()
 void wait_until(unsigned max_n)
 {
     if (q_n <= max_n) return;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PaceWait);
+#endif
     const unsigned long long t0 = timer_us_gettime64();
     while (q_n > max_n) thd_pass();
     const unsigned long long d = timer_us_gettime64() - t0;
@@ -162,6 +168,9 @@ void re4dc_steady_ta_wait(void)
 {
 #if RE4DC_PACE_STEADY
     if (!re4dc_pace_steady_hold()) return;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::WaitScope wc24_wait(re4dc::wc24::PvrWait);
+#endif
     const unsigned long long t0 = timer_us_gettime64();
     pvr_wait_ready();
     const unsigned long long d = timer_us_gettime64() - t0;

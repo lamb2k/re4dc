@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "validation_base": "9b248c5b40a49e4c954ea834fdf665fdbbc314f0",
+  "publication_base": "fc53531852ed979394ff3aefb6fddbefcfa825fb",
+  "publication_tree": "41102ed7ecdd0460292c9faf9160ad1c343f9925",
+  "compare_url": "https://github.com/lamb2k/re4dc/compare/9b248c5b40a49e4c954ea834fdf665fdbbc314f0...fc53531852ed979394ff3aefb6fddbefcfa825fb",
+  "ahead_by": 1,
+  "commits": [
+    {
+      "sha": "fc53531852ed979394ff3aefb6fddbefcfa825fb",
+      "message": "KNOWN_ISSUES: link #57 (Mendez barn door animation, Test 23)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU"
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "port/dreamcast/docs/KNOWN_ISSUES.md",
+      "status": "modified",
+      "blob_sha": "cb6bc3703d3e3dd9bb5e90eca997e66a054a7552",
+      "additions": 1,
+      "deletions": 1,
+      "patch": "@@ -109,7 +109,7 @@ Not bugs: work that goes on from test to test.\n \n | Problem | Builds | Status | Report |\n | --- | --- | --- | --- |\n-| After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | ⏸️ Open, not blocking: a side effect of the routine byte-order fixes that let the fight finish; the PS2 model comes back in Test 24 | |\n+| After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | ⏸️ Open, not blocking: a side effect of the routine byte-order fixes that let the fight finish; the PS2 model comes back in Test 24 | [#57](https://github.com/lamb2k/re4dc/issues/57) |\n | River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |\n | Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |\n | The light in Mendez's barn flickers | test 22 and earlier | 🟢 Fixed in test 23 | [#55](https://github.com/lamb2k/re4dc/issues/55) |"
+    }
+  ],
+  "decision": "Only a known-issues documentation link changed. No measured source, Make input, compiler fixture or runtime input changed. Build tree derives from the newer publication tree and does not overwrite the changed documentation path; no test rerun is claimed."
+}

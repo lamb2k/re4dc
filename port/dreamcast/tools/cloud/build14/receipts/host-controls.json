@@ -1,0 +1,288 @@
+{
+  "format": "RE4DC_COMPACT_RECEIPT1",
+  "full_receipt": {
+    "path": "/tmp/b14-current-host-final/host-controls.json",
+    "bytes": 9164,
+    "sha256": "7f989ae7898aacf88ba281fc92887b21c2462e133bfcf370f13680746da41a3f"
+  },
+  "encoding": "Lossless repeated-subtree interning; $ref names pool entries. Every original metric and command is retained.",
+  "value": {
+    "status": "PASS",
+    "scope": "Build 14: actual observer/census, synthetic registers; no hardware qualification.",
+    "source_sha256": {
+      "port/dreamcast/game/world_census24.cpp": "20d4436cb48ab88b2a32b7a35aab7fb4cb9ced679223d4a4b01023dfaf55eefe",
+      "port/dreamcast/game/perf_phase_miss.cpp": "3a2752829ed570ea672e79babd9a3376a6df376df13401193c45c65d46ea7c0d",
+      "port/dreamcast/tools/cloud/build14/check_core.cpp": "25a3c75a6658cbdeebe8f68fc9b2527e04a6c5a43fc24f6b90da2491cffb2d60",
+      "port/dreamcast/game/platform/include/world_census24.h": "8ac6a608ffe4a4d1685a87dac666de40d211590420932ff075130595b3aa8c0d",
+      "port/dreamcast/game/platform/include/perf_phase_miss.h": "34c91fa99fd9da826285397bf4191d80d106f845862e44b1d3e3f3d91a4d2192",
+      "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+      "port/dreamcast/tools/cloud/build14/run_controls.py": "bf726ef6d1e75c318771f601164820e5878fb05b52c2c75d65b8294c75fe92ae"
+    },
+    "sanitized": true,
+    "commands": [
+      [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_EVENT=15",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/platform/include",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/world_census24.cpp",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        "-o",
+        "/tmp/b14-current-host-final/controls-15"
+      ],
+      [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-DRE4DC_WORLD_CENSUS24_HOST=1",
+        "-DRE4DC_WORLD_CENSUS24=1",
+        "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-DRE4DC_PERF_PHASE_MISS_EVENT=37",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/platform/include",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/world_census24.cpp",
+        {
+          "$ref": "r0000"
+        },
+        {
+          "$ref": "r0001"
+        },
+        "-o",
+        "/tmp/b14-current-host-final/controls-37"
+      ],
+      [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/tmp/b14-current-host-final/kos-count.cpp",
+        "-o",
+        "/tmp/b14-current-host-final/kos-count"
+      ]
+    ],
+    "cases": [
+      {
+        "event": 15,
+        "case": "partition",
+        "result": "PASS partition: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "pause-identity",
+        "result": "PASS pause-identity: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "skipped",
+        "result": "PASS skipped: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "continuity",
+        "result": "PASS continuity: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "accounting",
+        "result": "PASS accounting: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "wrap48",
+        "result": "PASS wrap48: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "lost-mode",
+        "result": "PASS lost-mode: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "lost-clock",
+        "result": "PASS lost-clock: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "lost-stop",
+        "result": "PASS lost-stop: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "busy",
+        "result": "PASS busy: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "busy-stopped",
+        "result": "PASS busy-stopped: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "invalid-high",
+        "result": "PASS invalid-high: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "invalid-reset",
+        "result": "PASS invalid-reset: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "invalid-clock",
+        "result": "PASS invalid-clock: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "no-contrast",
+        "result": "PASS no-contrast: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "allocation",
+        "result": "PASS allocation: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "census-fault",
+        "result": "PASS census-fault: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 15,
+        "case": "unrun",
+        "result": "PASS unrun: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "partition",
+        "result": "PASS partition: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "pause-identity",
+        "result": "PASS pause-identity: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "skipped",
+        "result": "PASS skipped: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "continuity",
+        "result": "PASS continuity: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "accounting",
+        "result": "PASS accounting: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "wrap48",
+        "result": "PASS wrap48: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "lost-mode",
+        "result": "PASS lost-mode: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "lost-clock",
+        "result": "PASS lost-clock: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "lost-stop",
+        "result": "PASS lost-stop: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "busy",
+        "result": "PASS busy: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "busy-stopped",
+        "result": "PASS busy-stopped: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "invalid-high",
+        "result": "PASS invalid-high: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "invalid-reset",
+        "result": "PASS invalid-reset: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "invalid-clock",
+        "result": "PASS invalid-clock: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "no-contrast",
+        "result": "PASS no-contrast: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "allocation",
+        "result": "PASS allocation: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "census-fault",
+        "result": "PASS census-fault: synthetic accounting only; no console event qualification"
+      },
+      {
+        "event": 37,
+        "case": "unrun",
+        "result": "PASS unrun: synthetic accounting only; no console event qualification"
+      }
+    ],
+    "case_count": 36,
+    "kos_read": {
+      "source": "/tmp/re4dc-sdk-20261024/kos/kernel/arch/dreamcast/kernel/perfctr.c",
+      "sha256": "7781d0473a5ee44f6c2db882edc4b0d49ed1b989cc82d2428ae1c0d1a275f27c",
+      "extracted_sha256": "ea1e7caaf5ccf05617cd696e98c137d4ae4725865b04e5b15187e559a7d97c85",
+      "controls": [
+        "stable high word",
+        "low32 rollover retries high-low-high"
+      ],
+      "hardware_proof": false
+    },
+    "limits": "Injected register responses and host memory accesses prove software accounting only. SIMULATED never becomes QUALIFIED. Actual console cache response is pending."
+  },
+  "pool": {
+    "r0000": "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/game/perf_phase_miss.cpp",
+    "r0001": "/workspace/scratch/794179ef02a4/work/re4dc-b14-current/port/dreamcast/tools/cloud/build14/check_core.cpp"
+  }
+}

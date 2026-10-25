@@ -69,8 +69,44 @@
 #if RE4DC_SCENERY_EMIT_PREFETCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
 #error SCENERY_EMIT_PREFETCH needs the direct PS2 scenery chunk path
 #endif
+#ifndef RE4DC_SCENERY_LOCAL_INDEXED
+#define RE4DC_SCENERY_LOCAL_INDEXED 0
+#endif
+#ifndef RE4DC_SCENERY_DIRECT_STRIPS
+#define RE4DC_SCENERY_DIRECT_STRIPS 0
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+#if (RE4DC_SCENERY_LOCAL_INDEXED != 0 && RE4DC_SCENERY_LOCAL_INDEXED != 1) || \
+    (RE4DC_SCENERY_DIRECT_STRIPS != 0 && RE4DC_SCENERY_DIRECT_STRIPS != 1) || \
+    (RE4DC_SCENERY_LOCAL_INDEXED && RE4DC_SCENERY_DIRECT_STRIPS)
+#error Select one Build 12 world data variant, value 1
+#endif
+#if !RE4DC_PS2_WORLD_ROOMS || !RE4DC_IO_ALIGNED || !RE4DC_SCENERY_CHUNK || \
+    !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || RE4DC_WORLD_VERT || RE4DC_SCENERY21_AB || \
+    RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE || RE4DC_PS2_PVS || RE4DC_PS2_INTERIOR_CULL || RE4DC_WORLD_RECT21
+#error Unsupported world data variant recipe
+#endif
+#include "../../room/scenery_data_variants.hpp"
+#endif
 #ifndef RE4DC_WORLD_RECT21
 #define RE4DC_WORLD_RECT21 0
+#endif
+#ifndef RE4DC_SCENERY_RECORD_SPLIT
+#define RE4DC_SCENERY_RECORD_SPLIT 0
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT != 0 && RE4DC_SCENERY_RECORD_SPLIT != 1
+#error SCENERY_RECORD_SPLIT must be 0 or 1
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+#error SCENERY_RECORD_SPLIT has not qualified Build12 payload/lineage composition
+#endif
+#if RE4DC_WORLD_VERT || RE4DC_SCENERY21_AB || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE || RE4DC_PS2_PVS || RE4DC_PS2_INTERIOR_CULL || RE4DC_WORLD_RECT21
+#error SCENERY_RECORD_SPLIT needs independent matched metadata controls
+#endif
+#define RE4DC_SCENERY_RECORD re4dc::record_split::Record
+#else
+#define RE4DC_SCENERY_RECORD re4dc::room::Meshlet
 #endif
 #if RE4DC_WORLD_RECT21
 #if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH
@@ -99,6 +135,36 @@
 // that object's creation serial; nothing else is registered. Packets, headers,
 // texture pins, pass selection and translucent deferral are the existing
 // native_ui frame owner's (re4dc_model_packet_*/re4dc_model_defer_part).
+// PVS_BATCH_COMPOSITION_GUARD
+#ifndef RE4DC_PS2_PVS_BATCH_COMPOSE
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 0
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE != 0 && RE4DC_PS2_PVS_BATCH_COMPOSE != 1
+#error PS2_PVS_BATCH_COMPOSE must be 0 or 1
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if (defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE != 0) || (defined(RE4DC_GC_ASSET_MOTION_UNKNOWN) && RE4DC_GC_ASSET_MOTION_UNKNOWN != 0)
+#error PS2_PVS_BATCH_COMPOSE does not yet qualify GC asset diagnostics
+#endif
+#if RE4DC_PS2_PVS != 1 || RE4DC_SCENERY_SUBMIT_BATCH != 1 || RE4DC_TA_DIRECT != 1 || RE4DC_PS2_WORLD_HDR_CACHE != 1 || RE4DC_PVR_STREAM != 1 || RE4DC_D349_RENDERER_STACK != 1 || RE4DC_PS2_WORLD_SOURCE_OWNER != 1 || RE4DC_PS2_WORLD_SOURCE_TEX_PREP != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified streaming source/direct path
+#endif
+#if !defined(RE4DC_PS2_PVS_DEFAULT) || RE4DC_PS2_PVS_DEFAULT != 0
+#error PS2_PVS_BATCH_COMPOSE needs explicit PS2_PVS_DEFAULT=0
+#endif
+#if RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD || RE4DC_PS2_WORLD_TRANSITION_OWNER || RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_SCENERY_PIECE_STATE || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_CONE || RE4DC_CPU_BACKFACE || RE4DC_TA_MATERIAL_DIAG || RE4DC_WORLD_HOLE_DIAG || RE4DC_PS2_WORLD_PREFLIGHT_DIAG
+#error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path
+#endif
+#if RE4DC_PS2_INTERIOR_CULL != 0 && RE4DC_PS2_INTERIOR_CULL != 1
+#error PS2_PVS_BATCH_COMPOSE does not qualify interior header-check mode
+#endif
+#endif
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+#if RE4DC_SCENERY_CHUNK != 1 || RE4DC_SCENERY_SELECT_ONLY != 1 || RE4DC_SCENERY_REPLAY_LEAN != 1 || RE4DC_MESH_DIRECT != 1 || RE4DC_MESH_FASTPATH != 1 || RE4DC_MESH_VP_SCHED != 1 || RE4DC_HW_LEAN != 1 || RE4DC_PS2_STRIP_GROUPS != 1 || RE4DC_PS2_WORLD_MESH != 1
+#error PS2_PVS_BATCH_COMPOSE needs the qualified static selection/replay path
+#endif
+#endif
+// PVS_BATCH_COMPOSITION_GUARD_END
 #include <kos.h>
 #include <fcntl.h>
 #include <malloc.h>
@@ -116,6 +182,13 @@ extern "C" void re4dc_pvs23_observe(unsigned,unsigned,unsigned,const void*,const
 extern "C" void re4dc_pvs23_commit(unsigned,unsigned,const unsigned*,const unsigned*);
 #endif
 #include "cache20.h"
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "include/world_census24.h"
+static unsigned wc24_generation; // native package and far-shell residency epoch
+#if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
+extern "C" int re4dc_view_dist_get(void);
+#endif
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 #include "include/pvs23_meter.hpp"
 extern "C" void re4dc_wm_corners(const std::uint8_t*,unsigned,unsigned);
@@ -129,6 +202,8 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "quality.h"
 #endif
 #include "native_model.h"
+#include "include/gc_asset_static.h"
+#include "include/gc_asset_static_source.inc"
 #if RE4DC_SCENERY_SUBMIT_BATCH
 #include "include/scenery_submit_batch.h"
 #endif
@@ -151,6 +226,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #endif
 #if RE4DC_NATIVE_MESH
 #include "../../room/instanced_mesh.hpp"
+#if RE4DC_SCENERY_RECORD_SPLIT
+#include "../../room/scenery_record_split.hpp"
+#endif
 #endif
 // COARSE_NO_STD_SCENERY (game30.mk; COARSE=1 with COARSE_WORLD only; default off): in the room the coarse
 // world draws (coarse.cpp re4dc_coarse_world_room: coarse_world.h kRoom) bind_mesh() neither opens nor binds
@@ -258,6 +336,9 @@ extern "C" void re4dc_bf_room_update(){
 #endif
 #if RE4DC_MESH_VP_SCHED
 #include "../../room/mesh_fastpath_sched.hpp"
+#endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+#include "../../room/scenery_direct_strips.hpp"
 #endif
 #endif
 #ifndef RE4DC_MESH_STRIP_LEAN
@@ -581,6 +662,46 @@ unsigned re4dc_blob_camera_frame=~0U;
 
 namespace {
 using re4dc::room::Package;
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_PS2_WORLD_MESH
+void gcasset_invalidate_world();
+#else
+void gcasset_invalidate_world(){}
+#endif
+void gcasset_static_policy(re4dc_gcasset::StaticManifest&,unsigned room);
+void gcasset_static_invalidate_all();
+// Borrowed only during a cold load. Movie/re-adopt calls omit this argument
+// and cannot reconstruct original sidecar identities from prepared storage.
+#define GCASSET_STATIC_ONLY_PARAM re4dc_gcasset::StaticManifest* gcmanifest=nullptr
+#define GCASSET_STATIC_PARAM ,GCASSET_STATIC_ONLY_PARAM
+#define GCASSET_STATIC_ARG ,&gcasset_source
+void gcasset_static_state(re4dc_gcasset::StaticManifest* m,re4dc_gcasset::StaticRole role,re4dc_gcasset::StaticState state){
+    if(m)re4dc_gcasset::static_manifest_note(*m,role,state);
+}
+void gcasset_static_bytes(re4dc_gcasset::StaticManifest* m,re4dc_gcasset::StaticRole role,const void* p,unsigned n,unsigned version=0,unsigned flags=0){
+    if(m)re4dc_gcasset::static_manifest_bytes(*m,role,p,n,version,flags);
+}
+#else
+#define GCASSET_STATIC_ONLY_PARAM
+#define GCASSET_STATIC_PARAM
+#define GCASSET_STATIC_ARG
+#endif
+#if RE4DC_GC_ASSET_GATE
+unsigned gcasset_static_profile(){
+    return 0x01000000U | (unsigned(RE4DC_SCENERY_ENCODING)&3U) |
+        ((RE4DC_MESH_LOD!=0)?4U:0U)
+#if defined(RE4DC_SCENERY_DEDUP)
+        | ((unsigned(RE4DC_SCENERY_DEDUP)&3U)<<4)
+#endif
+        ; // absent knob is the same mode0 as the existing preprocessor paths
+}
+void gcasset_static_ordinary_manifest(re4dc_gcasset::StaticManifest& source,re4dc_gcasset::StaticOwner owner,unsigned room,const void* data,unsigned bytes){
+    using namespace re4dc_gcasset;
+    static_manifest_begin(source,owner,room,gcasset_static_profile(),data,bytes);
+    for(unsigned i=0;i<StaticRoleCount;++i)if(i!=STD_INDEX && i!=PCL1_CELL)static_manifest_note(source,StaticRole(i),NotApplicable);
+    gcasset_static_policy(source,room);
+}
+#endif
 #if RE4DC_QUALITY_ASSETS
 // Standard asset set (D367_ASSET_PIPELINE.md s16). re4dc_std_room_enter() parses
 // native/<room>/low/index.txt once per room entry (Standard mode only) into these
@@ -601,6 +722,13 @@ struct StdRoom {
     unsigned char checked;                                // bit per mesh view: records verified at open
     unsigned ntex,ndrop,ncull,nimp,nptex,nimpt;
     StdTex tex[kStdTex]; StdKey drop[kStdDrop]; StdCull cull[kStdCull]; StdImp imp[kStdImp]; StdPtex ptex[kStdPtex]; StdImpt impt[kStdImpt];
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+    // gc-catalog24b: the room's index was looked up and not used: 1 missing
+    // (Absent), 2 oversized or rejected (Rejected). The room then draws Original
+    // packages exactly as with no index.
+    unsigned char gca_unused=0;
+#endif
 };
 StdRoom std_room;
 unsigned std_stats[6]; // culled draws, impostor records used, baked parts, low/ opens, tree quads, tree cluster ranges drawn
@@ -623,8 +751,22 @@ struct View {
     Binding* bindings=nullptr;
     re4dc::room::MaterialSourceKey keys[kMaxMaterials];
     unsigned room=0; bool attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 };
 View views[kViews];
+#if RE4DC_GC_ASSET_GATE && !RE4DC_NATIVE_MESH
+void gcasset_static_invalidate_all(){
+    for(auto& v:views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    gcasset_invalidate_world();
+}
+void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
+    (void)room;
+    re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::STD_INDEX,re4dc_gcasset::Disabled);
+    re4dc_gcasset::static_manifest_note(source,re4dc_gcasset::PCL1_CELL,re4dc_gcasset::Disabled);
+}
+#endif
 Re4dcStaticStats stats{};
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
 // SCN_CENSUS=1 (logiclod20.mk; test only): per meshlet drawn by meshlet(): visits, corners, corners of meshlets none of
@@ -779,6 +921,9 @@ bool std_check_view(unsigned view,const re4dc::room::MeshPackage& pk){
 }
 #endif
 void retire(View& v){
+#if RE4DC_GC_ASSET_GATE
+    if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
     v.package.close();
     if(v.storage){re4dc_static_free(v.storage);stats.package_bytes-=v.bytes;--stats.owners_open;}
     v.storage=nullptr;v.bytes=0;v.bindings=nullptr;v.attempted=false;v.room=0;
@@ -817,6 +962,9 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
     if(v.storage && v.room==room)return true;
     if(v.attempted && v.room==room)return false;
     retire(v);v.attempted=true;v.room=room;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(v.asset_proof); // cold, before read/adopt
+#endif
     char name[16],path[64];
     snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/%s.re4room",room>>8,room&255U,owner_name(index,name,sizeof(name)));
     const file_t file=fs_open(path,O_RDONLY);
@@ -845,6 +993,10 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
     fs_close(file);
     stats.heap_after=re4dc_static_heap_free();
     if(!storage){re4dc_log("native static: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    gcasset_static_ordinary_manifest(gcasset_source,re4dc_gcasset::StaticView,room,storage,size);
+#endif
     v.storage=storage;
     if(!v.package.adopt(storage,size) || !v.package.material_keys() ||
        v.package.header().material_count>kMaxMaterials){
@@ -853,6 +1005,9 @@ bool read_package(file_t f,unsigned char* storage,unsigned size,unsigned head){
         re4dc_static_free(storage);v.storage=nullptr;v.bytes=0;v.package.close();++stats.open_failures;return false;
     }
     const auto& b=v.package.header();
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_capture_composite(v.asset_proof,&v,storage,size,nullptr,0,gcasset_source);
+#endif
     for(unsigned m=0;m<b.material_count;++m)
         re4dc::room::material_source_key(v.package.materials()[m],v.keys[m]);
     v.bindings=reinterpret_cast<Binding*>(storage+package_bytes);
@@ -954,6 +1109,34 @@ namespace {
 bool scn21_arm_b(){return re4dc_bench_arm && re4dc_bench_arm()=='B';}
 #endif
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// Accumulate scalar fallback work locally; one integer-only census call on
+// every exit, including a capacity failure partway through a strip.
+struct Wc24Count {
+    re4dc::wc24::Counter counter; unsigned n=0;
+    explicit Wc24Count(re4dc::wc24::Counter c):counter(c){}
+    ~Wc24Count(){if(n)re4dc::wc24::count(counter,n);}
+};
+// A rejected/aborted native pass may leave legacy world work outside the
+// census scope. Keep that window visibly invalid instead of pricing a part.
+struct Wc24PassResult {
+    bool complete=false;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    re4dc::wc24::ErrorDetail why;
+    const unsigned* diag_fallback=nullptr;
+    const unsigned* diag_aborts=nullptr;
+    ~Wc24PassResult(){if(!complete){
+        if(why.context==UINT32_MAX && diag_fallback){
+            why.reason=*diag_aborts?re4dc::wc24::ErrorPassAbort:re4dc::wc24::ErrorPassIncomplete;
+            why.detail0=*diag_fallback;why.detail1=*diag_aborts;
+        }
+        why.report();
+    }}
+#else
+    ~Wc24PassResult(){if(!complete)re4dc::wc24::fault();}
+#endif
+};
+#endif
 struct Emitter {
     const Re4dcModelPart& p;
     float mv[12];  // package -> view: group bounds
@@ -1035,9 +1218,18 @@ struct Emitter {
 #else
     void end_direct(){if(sq){re4dc_model_direct_end(slots);sq=nullptr;}}
 #endif
-    void put(unsigned n){sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#define RE4DC_WC24_PUT_SCOPE() const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
+#else
+#define RE4DC_WC24_PUT_SCOPE()
+#endif
+    void put(unsigned n){RE4DC_WC24_PUT_SCOPE()sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#undef RE4DC_WC24_PUT_SCOPE
 #endif
     bool bind(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_header(re4dc::wc24::HeaderMaterial);
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
 #if RE4DC_SCENERY_SUBMIT_BATCH
         // Claimed transition groups may log from the validity walk itself.
@@ -1136,6 +1328,9 @@ struct Emitter {
         return true;
     }
     bool flush(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
+#endif
         if(!streaming || !used)return false;
         re4dc_model_packet_commit(used);submitted=true;used=0;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -1206,6 +1401,11 @@ struct Emitter {
     template<class Vertex,class Index>
     int strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
               const Index* index,unsigned count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Transform);
+        re4dc::wc24::count(re4dc::wc24::StripInputs,count);
+        Wc24Count wc_transformed(re4dc::wc24::Transformed);
+#endif
         input+=count-2;
         if(count<=limit){
             if(count>limit-used && !flush())return submitted?-1:0;
@@ -1213,6 +1413,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF; // RES_MODES: one load per strip, not per corner
             const bool ready=re4dc::render::prepare_direct_strip(dst+used,count,near,far,
                 [&](std::uint32_t local,re4dc::render::DirectStripVertex& out){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                    ++wc_transformed.n;
+#endif
                     out=re4dc::render::prepare_static_vertex(corner(base[index[local]]),batch,0.0f);
                     out.u=u(out.u);out.v=v(out.v);
                     if(!vertex_alpha)out.argb=(out.argb&0xffffffU)|alpha;
@@ -1220,6 +1423,9 @@ struct Emitter {
                     return true;
                 });
             stats.vertices+=count;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_phase.phase(re4dc::wc24::Submit);
+#endif
             if(ready){
                 if(outside)++stats.strips_culled;
 #if RE4DC_MESH_DIRECT
@@ -1237,6 +1443,10 @@ struct Emitter {
     template<class Vertex,class Index>
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
                    const Index* index,unsigned count){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_clip(re4dc::wc24::Clip);
+        Wc24Count wc_transformed(re4dc::wc24::Transformed);
+#endif
         ++stats.strips_clipped;
         float alphas[3]={float(alpha>>24)RE4DC_INV255,float(alpha>>24)RE4DC_INV255,float(alpha>>24)RE4DC_INV255};
 #if RE4DC_MESH_CLIP_LEAN && RE4DC_HW_LEAN && defined(__sh__)
@@ -1250,6 +1460,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF,half_w=RE4DC_SCREEN_HALF_WF,half_h=RE4DC_SCREEN_HALF_HF;
             unsigned all=0x3fU;
             for(unsigned i=0;i<count && all;++i){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                ++wc_transformed.n;
+#endif
                 const auto c=corner(base[index[i]]);
                 const float x=mvq[0]*c.x+mvq[1]*c.y+mvq[2]*c.z+mvq[3];
                 const float y=mvq[4]*c.x+mvq[5]*c.y+mvq[6]*c.z+mvq[7];
@@ -1291,6 +1504,9 @@ struct Emitter {
                 {const unsigned t=s2;s2=s1;s1=s0;s0=t;}
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 re4dc::render::RenderVertex& v=ring[s0];
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                ++wc_transformed.n;
+#endif
                 clip_vertex(c,batch,v);
                 ring_alpha[s0]=vertex_alpha?float(c.argb>>24)RE4DC_INV255:alphas[0];
                 is_packed[s0]=false;
@@ -1336,6 +1552,9 @@ struct Emitter {
 #endif
         if(count<=kClipOnce){
             re4dc::render::RenderVertex once[kClipOnce];float once_alpha[kClipOnce];
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_transformed.n+=count;
+#endif
             for(unsigned i=0;i<count;++i){
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 clip_vertex(c,batch,once[i]);
@@ -1359,6 +1578,9 @@ struct Emitter {
             re4dc::render::RenderVertex tri[3];
             const re4dc::render::StaticCorner corners[3]={corner(base[index[i-2+(i&1)]]),
                 corner(base[index[i-1-(i&1)]]),corner(base[index[i]])};
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_transformed.n+=3U;
+#endif
             for(unsigned k=0;k<3;++k){
                 clip_vertex(corners[k],batch,tri[k]);
                 if(vertex_alpha)alphas[k]=float(corners[k].argb>>24)RE4DC_INV255;
@@ -1445,15 +1667,29 @@ struct MeshView {
     const std::uint32_t* lut=nullptr; // ARGB1555 -> 8888 halves, same allocation
     re4dc::room::CompactVertex12* gather=nullptr; // v3: one meshlet's gathered corners, same allocation
     unsigned room=0; bool attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 #if RE4DC_SCENERY_ENCODING
     const std::uint32_t* vertex_colors=nullptr; // kColorOctVertex: each vertex's CLR0 (ARGB8888), read in place of the palette
 #endif
 };
 MeshView mesh_views[kMeshViews];
+#if RE4DC_GC_ASSET_GATE
+void gcasset_static_invalidate_all(){
+    for(auto& v:views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    for(auto& v:mesh_views)if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+    gcasset_invalidate_world();
+}
+#endif
 #if RE4DC_TREE_IMPOSTOR
 // This frame's impostor quads (screen x, y, 1/w per corner: TL, TR, BL, BR),
 // sent per atlas by re4dc_static_flush_impostors(). A retired view clears it.
-struct ImpostorQuad { const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3]; };
+struct ImpostorQuad { const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3];
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadQuadUse source;
+#endif
+};
 constexpr unsigned kImpostorQuads=48;
 ImpostorQuad impostor_queue[kImpostorQuads];
 unsigned impostor_count=0,impostor_frame=~0U,impostor_flushed=~0U;
@@ -1469,6 +1705,9 @@ constexpr unsigned kLutBytes=0;
 constexpr unsigned kGatherBytes=(256U*unsigned(sizeof(re4dc::room::CompactVertex12))+31U)&~31U;
 
 void retire(MeshView& v){
+#if RE4DC_GC_ASSET_GATE
+    if(v.asset_proof.owner)re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
 #if RE4DC_TREE_IMPOSTOR
     impostor_frame=~0U; // queued records may point into this view
 #endif
@@ -1484,6 +1723,9 @@ bool open(MeshView& v,unsigned index,unsigned room){
     if(v.storage && v.room==room)return true;
     if(v.attempted && v.room==room)return false;
     retire(v);v.attempted=true;v.room=room;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(v.asset_proof); // cold, before read/adopt
+#endif
     char name[16],path[64];
     if(index==kCommonView)snprintf(name,sizeof(name),"COMMON");
     else owner_name(index,name,sizeof(name));
@@ -1498,6 +1740,10 @@ bool open(MeshView& v,unsigned index,unsigned room){
     const unsigned size=unsigned(fs_total(file));
 #if RE4DC_QUALITY_ASSETS
     if(low && size!=std_room.mesh_bytes[view]){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_invalidate_all();
+        re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
         re4dc_log("quality assets: %s is %u B, index says %u: Original package\n",path,size,std_room.mesh_bytes[view]);
         fs_close(file);std_room.mesh_views&=~(1U<<view);v.attempted=false;return open(v,index,room);
     }
@@ -1527,6 +1773,10 @@ bool open(MeshView& v,unsigned index,unsigned room){
     fs_close(file);
     stats.heap_after=re4dc_static_heap_free();
     if(!storage){re4dc_log("native mesh: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    gcasset_static_ordinary_manifest(gcasset_source,re4dc_gcasset::StaticMesh,room,storage,size);
+#endif
 #if RE4DC_SCENERY_ENCODING
     if(!re4dc::room::adopt_by_encoding(v.package,storage,size,RE4DC_MESH_LOD!=0,&v.vertex_colors)){
 #else
@@ -1536,11 +1786,19 @@ bool open(MeshView& v,unsigned index,unsigned room){
         re4dc_static_free(storage);++stats.open_failures;
 #if RE4DC_QUALITY_ASSETS
         // A rejected Standard package: this owner opens its Original package instead.
-        if(low){std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
+        if(low){
+#if RE4DC_GC_ASSET_GATE
+            gcasset_static_invalidate_all();
+            re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+            std_room.mesh_views&=~(1U<<view);v.attempted=false;re4dc_log("quality assets: Original package for this owner\n");return open(v,index,room);}
 #endif
         return false;
     }
     v.storage=storage;v.bytes=package_bytes+table+kLutBytes+gather;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_capture_composite(v.asset_proof,&v,storage,size,nullptr,0,gcasset_source);
+#endif
 #if RE4DC_SCENERY_ENCODING
     {
         std::uint32_t encoding;std::memcpy(&encoding,storage+offsetof(re4dc::room::MeshHeader,reserved),4);
@@ -1554,7 +1812,12 @@ bool open(MeshView& v,unsigned index,unsigned room){
     if(std_room.active && std_room.room==room){
         if(!low || !std_check_view(view,v.package)){
             if(low)re4dc_log("quality assets: %s records do not match the package: records off for this room\n",path);
-            if(low){std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
+            if(low){
+#if RE4DC_GC_ASSET_GATE
+                gcasset_static_invalidate_all();
+                re4dc_gcasset::payload_invalidate(std_room.asset_proof,&std_room);
+#endif
+                std_room.ncull=std_room.nimp=std_room.nptex=std_room.nimpt=0;}
         }else std_room.checked|=1U<<view;
     }
 #endif
@@ -1688,6 +1951,14 @@ std::uint16_t pack1555(const float rgb[3],unsigned alpha){
 // relative lights stay as first seen - the labelled Dreamcast compromise.
 void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::MeshPart& part,
                 const Re4dcModelPart& p){
+#if RE4DC_GC_ASSET_GATE
+    // A first-light rewrite outlives this caller and later deferred lighting
+    // snapshots. Unknown derivation must revoke the stable owner as well as
+    // this draw's selected use; a later flag-free caller cannot promote it.
+    if(v.asset_proof.owner && (!re4dc_gcasset::source_use.serial || re4dc_gcasset::source_use.payload!=&v.asset_proof ||
+       re4dc_gcasset::source_use.serial!=v.asset_proof.serial))
+        re4dc_gcasset::payload_invalidate(v.asset_proof,&v);
+#endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
     const std::uint32_t* palette=v.package.palette();
     re4dc::render::PreparedSourceLights lights;
@@ -1857,6 +2128,9 @@ struct State {
 struct Data {
     void* block=nullptr;const Cell* cells=nullptr;const Portal* portals=nullptr;
     bool lent=false; unsigned loads=0,fails=0,lends=0;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
 } data;
 constexpr unsigned kFrBytes=kMaxFr*unsigned(sizeof(Frustum));
 // The eye from a 3x4 row-major view matrix: the inverse's translation.
@@ -1955,6 +2229,10 @@ inline int grid_hidden(const float* wq,const std::uint16_t lo[3],const std::uint
 State& trans_state();
 // Frees the cell block (both states inactive: nothing is culled until it is read again).
 inline unsigned unload(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();
+    if(data.asset_proof.owner)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);
+#endif
     if(!data.block)return 0;
     re4dc_static_free(data.block);
     data.block=nullptr;data.cells=nullptr;data.portals=nullptr;
@@ -1966,6 +2244,9 @@ inline unsigned unload(){
 inline bool load(){
     if(data.block)return true;
     if(!st.ok)return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(data.asset_proof); // safe cold reload
+#endif
     const int before=re4dc_static_heap_free();
     const char* why=nullptr;
     const file_t file=fs_open("/cd/dc/native/r100/interior.cell",O_RDONLY);
@@ -1991,6 +2272,11 @@ inline bool load(){
         re4dc_log("PCCULL cell file %s: not culling (heap4=%d)\n",why,before);
         return false;
     }
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();
+    const auto gcasset_digest=re4dc_gcasset::fingerprint(b,kPcFileBytes);
+    re4dc_gcasset::payload_capture_receipt(data.asset_proof,&data,gcasset_digest,kPcFileBytes);
+#endif
     data.block=b;data.cells=cells;data.portals=reinterpret_cast<const Portal*>(b+32+kPcCellCount*sizeof(Cell));
     st.fr=reinterpret_cast<Frustum*>(b+kPcFileBytes);trans_state().fr=reinterpret_cast<Frustum*>(b+kPcFileBytes+kFrBytes);
     ++data.loads;
@@ -2014,6 +2300,28 @@ unsigned owner_tests=0,owner_hid=0; // PS2_INTERIOR_ACTORS=2: owner-path Ganados
 #endif
 }
 #endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
+    using namespace re4dc_gcasset;
+#if RE4DC_QUALITY_ASSETS
+    if(!re4dc_quality_std_assets())static_manifest_note(source,STD_INDEX,Disabled);
+    else if(std_room.active && std_room.room==room)static_manifest_receipt(source,STD_INDEX,std_room.asset_proof,&std_room,1,StaticConsumedSpan);
+    else if(std_room.room==room && std_room.gca_unused)static_manifest_note(source,STD_INDEX,std_room.gca_unused==1?Absent:Rejected);
+    else static_manifest_note(source,STD_INDEX,Unproven);
+#else
+    static_manifest_note(source,STD_INDEX,Disabled);
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+    if(room!=pc::kPcRoom)static_manifest_note(source,PCL1_CELL,NotApplicable);
+    else if(pc::data.block)static_manifest_receipt(source,PCL1_CELL,pc::data.asset_proof,&pc::data,1);
+    // A null block also follows rejected/short/failed reads or an unqualified
+    // package. No durable original absence receipt exists for those cases.
+    else static_manifest_note(source,PCL1_CELL,Unproven);
+#else
+    (void)room;static_manifest_note(source,PCL1_CELL,Disabled);
+#endif
+}
 #endif
 #if RE4DC_PS2_WORLD_LEAN
 // PS2_WORLD_LEAN (game30.mk, render only, default 0; lane objs 2026-10-14, r101 world submit). Bits:
@@ -2394,7 +2702,11 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 }
 #endif
 struct MeshDraw : Emitter {
+#if RE4DC_SCENERY_RECORD_SPLIT
+    const re4dc::record_split::RecordView package; const re4dc::room::MeshPart& part;
+#else
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
+#endif
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
     re4dc::room::CompactVertex12* gather_pool; // mesh view's v3 gather buffer (nullptr: v1/v2)
 #if RE4DC_PS2_PVS
@@ -2449,7 +2761,12 @@ struct MeshDraw : Emitter {
         gathered=gather_pool;
         return gathered!=nullptr;
     }
-    const re4dc::room::CompactVertex12* corners(const re4dc::room::Meshlet& l){
+#if RE4DC_SCENERY_RECORD_SPLIT
+    template<class EmitRecord>
+    const re4dc::room::CompactVertex12* corners(const EmitRecord& l){
+#else
+    const re4dc::room::CompactVertex12* corners(const RE4DC_SCENERY_RECORD& l){
+#endif
         const auto* base=package.vertices()+l.first_vertex;
 #if RE4DC_SCENERY_DEDUP==3
         const unsigned rep=package.repeat_count(l);
@@ -2470,7 +2787,7 @@ struct MeshDraw : Emitter {
     // These getters follow corners(l), which refreshes the current meshlet's decoder
     // even for plain/indexed geometry. Reuse that context rather than decode it twice.
     // Modes 1/2 retain their external table word (src offset | repeats << 24).
-    std::uint32_t dd_word(const re4dc::room::Meshlet& l)const{
+    std::uint32_t dd_word(const RE4DC_SCENERY_RECORD& l)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;
         return (dd_count-dd_unique)<<24;
@@ -2485,14 +2802,14 @@ struct MeshDraw : Emitter {
         return dw>>24;
 #endif
     }
-    unsigned dd_unique_count(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+    unsigned dd_unique_count(const RE4DC_SCENERY_RECORD& l,std::uint32_t dw)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;(void)dw;return dd_unique;
 #else
         return l.vertex_count-(dw>>24);
 #endif
     }
-    const std::uint8_t* dd_source(const re4dc::room::Meshlet& l,std::uint32_t dw)const{
+    const std::uint8_t* dd_source(const RE4DC_SCENERY_RECORD& l,std::uint32_t dw)const{
 #if RE4DC_SCENERY_DEDUP==3
         (void)l;(void)dw;
         return reinterpret_cast<const std::uint8_t*>(dd_base+dd_unique);
@@ -2507,7 +2824,7 @@ struct MeshDraw : Emitter {
     pvr_vertex_t* cache=nullptr; std::uint8_t* outcodes=nullptr;
     re4dc::vp::Constants k{};
 #if RE4DC_PS2_PVS
-    void pvs_observed(const re4dc::room::Meshlet& l){
+    void pvs_observed(const RE4DC_SCENERY_RECORD& l){
 #if RE4DC_MESH_DIRECT
         if(ps2 && direct && sq && pvs_placement!=~0U)
             re4dc_pvs23_observe(pvs_placement,part_index,unsigned(&l-package.meshlets()),cache,
@@ -2567,12 +2884,65 @@ struct MeshDraw : Emitter {
         k.finish();
         return true;
     }
+#if RE4DC_SCENERY_DIRECT_STRIPS
+    // SDS1_DIRECT_BEGIN: reuse the ordinary material/SQ owner and transform
+    // arithmetic. Only the authenticated sequential payload, a full pick,
+    // a conservative inside bound and ordinary sized strips may bypass the
+    // transformed cache. Every refusal returns to the original path before
+    // emitting a corner. TA_HASH/back-face diagnostics retain that path too.
+    bool sequential_direct(const re4dc::room::Meshlet& l){
+#if !RE4DC_TA_HASH && !RE4DC_CPU_BACKFACE && RE4DC_MESH_VP_SCHED==1 && RE4DC_HW_LEAN
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+#endif
+        namespace data=re4dc::scenery_data;
+        if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)return false;
+        const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
+        const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+        if(re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far)!=re4dc::vp::kChecksNone)return false;
+        const auto source=data::payload(package,l);
+        const auto* end=source.strips+source.strip_bytes;
+        // The old path sends oversize strips through its clipper even inside.
+        // Keep that exact fallback and decide it before any irreversible SQ burst.
+        for(const auto* s=source.strips;s<end;){const unsigned n=*s++;if(n>limit)return false;s+=n;}
+        const auto* in=reinterpret_cast<const re4dc::vp::Vertex12*>(source.vertices);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        // Fused work has no separate cached-submit interval. Charge the whole
+        // transform/SQ loop here; output corners stay in direct-account once.
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
+        unsigned vertices=0,strips=0;
+        for(const auto* s=source.strips;s<end;){
+            const unsigned n=*s++;
+            sq=data::emit_direct_strip(sq,in+vertices,n,k);
+            vertices+=n;++strips;s+=n;
+        }
+        input+=vertices-2U*strips;output+=vertices-2U*strips;slots+=vertices;
+        stats.vertices+=vertices;stats.strips+=strips;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::Transformed,vertices);
+        re4dc::wc24::count(re4dc::wc24::StripInputs,vertices);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        re4dc_wm_corners(nullptr,vertices,0U); // the bound proves every transformed input inside
+#endif
+        return true;
+#else
+        (void)l;return false;
+#endif
+    }
+    // SDS1_DIRECT_END
+#endif
     // One visible meshlet: every vertex once through XMTRX, then each strip is
     // accepted (copied from the cache), culled (all corners outside one screen
     // edge) or handed to the unchanged clipper (a corner outside near/far),
     // the same three outcomes, in the same order, as Emitter::strip().
-    int meshlet(const re4dc::room::Meshlet& l,const re4dc::room::CompactBatch& batch){
+    int meshlet(const RE4DC_SCENERY_RECORD& l,const re4dc::room::CompactBatch& batch){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
         struct CenScope {
             const Emitter* e;unsigned n,s0,c0,o0,v0;
@@ -2583,11 +2953,17 @@ struct MeshDraw : Emitter {
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
 #endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+        if(sequential_direct(l))return 1;
+#endif
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
         // RE4DC_MESH_CLASSIFY=0 (default) saves ~1.5 KiB of image, i.e. KOS heap,
         // at ~8 cycles per vertex for outcodes in every meshlet.
         const unsigned checks=RE4DC_MESH_CLASSIFY?vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far):vp::kChecksAll;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         const auto* base=corners(l);
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
 #if RE4DC_MESH_PRIME_LAZY
@@ -2602,6 +2978,9 @@ struct MeshDraw : Emitter {
         // than near: every strip of the group would be culled after the transform), transforms only the corner
         // range of the groups left and walks only their strips (in stored order). All groups left: the whole path.
         if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::Scope wc_groups(re4dc::wc24::Selection);
+#endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*unsigned(&l-package.meshlets()));
             unsigned lo,hi,culled;std::uint16_t r0[8],r1[8];
 #if RE4DC_SG_SELECT_LEAN
@@ -2633,11 +3012,18 @@ struct MeshDraw : Emitter {
             if(culled){
                 lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
                 if(!nr){lean::st.sg_vskip+=l.vertex_count;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                    re4dc::wc24::count(re4dc::wc24::PickedEmpty);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
                     cen.n=0;
 #endif
                     return 1;}
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                wc_groups.phase(re4dc::wc24::Transform);
+                re4dc::wc24::count(re4dc::wc24::Transformed,vn);
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
                 cen.n=vn;
 #endif
@@ -2653,6 +3039,9 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
                 if(ps2)re4dc_wm_corners(outcodes+lo,vn,0x3fU);
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                wc_groups.phase(re4dc::wc24::Submit);
+#endif
                 const std::uint8_t* const sb=package.strip_begin(l);
                 for(unsigned i=0;i<nr;++i){
                     int result=1;
@@ -2662,6 +3051,20 @@ struct MeshDraw : Emitter {
                 return 1;
             }
         }
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        // Count the actual arithmetic input range. DEDUP's copied entries are
+        // prepared output but are not additional position transforms.
+        unsigned wc_vertices=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP==3
+        if(checks!=vp::kChecksAll)
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+#if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
+        if(checks==vp::kChecksAll)
+            if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+        re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
 #endif
 #if RE4DC_SCENERY_DEDUP==3
         if(const std::uint32_t dw=dd_word(l);dd_active(dw) && checks!=vp::kChecksAll){
@@ -2700,6 +3103,9 @@ struct MeshDraw : Emitter {
             re4dc_wm_corners(outcodes,count,checks==vp::kChecksNone?0U:checks==vp::kChecksScreen?0x0fU:0x3fU);
         }
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Submit);
+#endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
 #if RE4DC_MESH_STRIP_LEAN==2
         if(checks==vp::kChecksAll && sq)strip_lean_compare(l);
@@ -2721,6 +3127,9 @@ struct MeshDraw : Emitter {
 #endif
         while(s<end){
             const unsigned n=*s++;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             vp::StripCodes c{0,0};
             if(screen)c=vp::codes(outcodes,s,n);
@@ -2788,9 +3197,15 @@ struct MeshDraw : Emitter {
     const std::uint8_t* strips_bf(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                   const re4dc::room::CompactBatch& batch,int& result){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
         constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
         while(s<end){
             const unsigned n=*s++;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             const vp::StripCodes c=vp::codes(outcodes,s,n);
             if(c.all&depth){stats.vertices+=n;++stats.strips_culled;s+=n;continue;}
@@ -2811,6 +3226,9 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
     const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                      const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
+#endif
         for(;;){
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0,accepted_triangles=0;
@@ -2819,12 +3237,18 @@ struct MeshDraw : Emitter {
             // Keep the C reference's source-strip counters; slots track actual
             // SQ writes. lean_flush's output=slots-2*strips cannot be used here.
             const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=sum;
+#endif
             input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
             slots+=unsigned(q-qmark)/8U;output+=accepted_triangles;sq=q;
             // Actual emitted pieces are hashed by the common assembly trace
             // hook in diagnostic builds. Do not replay rejected original strips.
             if(s>=end){result=1;return nullptr;}
             const unsigned n=*s++; // unchanged depth-crossing / oversize clipper
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_strip_inputs.n+=n;
+#endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
             result=clip_strip(base,batch,s,n);
@@ -2836,6 +3260,9 @@ struct MeshDraw : Emitter {
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::StripInputs,sum);
+#endif
         input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
         slots+=v;output+=v-2U*emitted;sq=q;
     }
@@ -2868,6 +3295,9 @@ struct MeshDraw : Emitter {
             lean_flush(s,mark,q,qmark,culled,emitted);
             if(s>=end){result=1;return nullptr;}
             const unsigned n=*s++; // a strip for the clipper: meshlet()'s code
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::count(re4dc::wc24::StripInputs,n);
+#endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
             result=clip_strip(base,batch,s,n);
@@ -2883,7 +3313,7 @@ struct MeshDraw : Emitter {
     // culled / emitted counts, every written word, and the lean_flush() counter formulas against the
     // reference's per-strip sums. Meshlets with more strip bytes than the buffers hold are counted as
     // skipped.
-    void strip_lean_compare(const re4dc::room::Meshlet& l){
+    void strip_lean_compare(const RE4DC_SCENERY_RECORD& l){
         namespace vp=re4dc::vp;
         constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
         const std::uint8_t* s=package.strip_begin(l);
@@ -2921,11 +3351,14 @@ struct MeshDraw : Emitter {
 #endif
 #endif
     // One meshlet: 1 drawn or culled, 0 fallback allowed, -1 frame aborted.
-    int draw(const re4dc::room::Meshlet& l
+    int draw(const RE4DC_SCENERY_RECORD& l
 #if RE4DC_PS2_WORLD_LEAN
              ,bool known=false // PS2_WORLD_LEAN bit 2: the meshlet's cluster (or placement) is inside every plane
 #endif
             ){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
+#endif
 #if RE4DC_PS2_WORLD_LEAN
         if(known){
             ++lean::st.skipped;
@@ -2973,8 +3406,15 @@ struct MeshDraw : Emitter {
         }
 #endif
         ++stats.groups_visible;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(package.indexed(l)?re4dc::wc24::PickedIndexed:re4dc::wc24::PickedPlain);
+        wc_phase.phase(re4dc::wc24::Other);
+#endif
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
         ++stats.batches;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
 #if RE4DC_MESH_FASTPATH
         // A slab too small to lend the cache behaves like any other
@@ -3002,6 +3442,9 @@ struct MeshDraw : Emitter {
     // v2: cluster test, then the coarsest level within tolerance at the
     // cluster's nearest view depth (group_visible's support radius along z).
     int draw_clusters(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+#endif
         const auto& lod=package.part_lods()[part_index];
         const auto* clusters=package.clusters();const auto* levels=package.levels();
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
@@ -3052,7 +3495,11 @@ struct MeshDraw : Emitter {
 #endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
+#if RE4DC_SCENERY_RECORD_SPLIT
+            const auto lets=package.meshlets()+lv.first_meshlet;
+#else
             const auto* lets=package.meshlets()+lv.first_meshlet;
+#endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
 #if RE4DC_PS2_INTERIOR_CULL
                 if(pc_state<0){
@@ -3101,11 +3548,19 @@ struct MeshDraw : Emitter {
     }
     void prefetch_emit_header(const Pick& pk)const{
         // Meshlet has a 28-byte stride; only the first 16 bytes feed emission.
+#if RE4DC_SCENERY_RECORD_SPLIT
+        emit_prefetch_span(&package.emit(pk.let),16U);
+#else
         emit_prefetch_span(package.meshlets()+pk.let,16U);
+#endif
     }
     void prefetch_emit_payload(const Pick& pk)const{
         if(!pk.nr)return;
+#if RE4DC_SCENERY_RECORD_SPLIT
+        const auto& l=package.emit(pk.let);
+#else
         const auto& l=package.meshlets()[pk.let];
+#endif
         const auto* base=package.vertices()+l.first_vertex;
         const auto* raw=package.strips()+l.first_strip;
         if(package.indexed(l)){
@@ -3126,7 +3581,12 @@ struct MeshDraw : Emitter {
         if(pk.nr==0xffU)__builtin_prefetch(raw);
         else if(sg)__builtin_prefetch(sg+16U*sg_groups*pk.let);
     }
-    const re4dc::room::CompactVertex12* emit_corners(const re4dc::room::Meshlet& l,const Pick& pk){
+#if RE4DC_SCENERY_RECORD_SPLIT
+    template<class EmitRecord>
+    const re4dc::room::CompactVertex12* emit_corners(const EmitRecord& l,const Pick& pk){
+#else
+    const re4dc::room::CompactVertex12* emit_corners(const RE4DC_SCENERY_RECORD& l,const Pick& pk){
+#endif
         const auto* base=package.vertices()+l.first_vertex;
 #if RE4DC_SCENERY_DEDUP==3
         // Match corners(): refresh or clear the decoder before every early return.
@@ -3154,12 +3614,22 @@ struct MeshDraw : Emitter {
 #endif
     int emit_pick(const Pick& pk){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::Scope wc_phase(re4dc::wc24::Other);
+#endif
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
         ++stats.batches;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Transform);
+#endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_SCENERY_RECORD_SPLIT
+        const auto& l=package.emit(pk.let);
+#else
         const auto& l=package.meshlets()[pk.let];
+#endif
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
         struct CenScope {
             const Emitter* e;unsigned n,s0,c0,o0,v0;
@@ -3169,6 +3639,9 @@ struct MeshDraw : Emitter {
                 if(!es && cs)scn_cen[6]++;
             }
         } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
+#if RE4DC_SCENERY_DIRECT_STRIPS
+        if(pk.nr==0xffU && sequential_direct(l))return 1;
 #endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         const auto* base=emit_corners(l,pk);
@@ -3186,6 +3659,9 @@ struct MeshDraw : Emitter {
 #endif
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            re4dc::wc24::count(re4dc::wc24::Transformed,vn);
+#endif
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
             if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
@@ -3193,6 +3669,9 @@ struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_DEDUP
             if(const std::uint32_t dw=dd_word(l);dd_active(dw))
                 dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            wc_phase.phase(re4dc::wc24::Submit);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -3208,6 +3687,13 @@ struct MeshDraw : Emitter {
             }
             return 1;
         }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        unsigned wc_vertices=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP
+        if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
+#endif
+        re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
+#endif
 #if RE4DC_SCENERY_DEDUP
         if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
             const unsigned u=dd_unique_count(l,dw);
@@ -3224,6 +3710,9 @@ struct MeshDraw : Emitter {
 #endif
             re4dc_wm_corners(outcodes,count,0x3fU);
         }
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        wc_phase.phase(re4dc::wc24::Submit);
 #endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
@@ -3252,6 +3741,9 @@ struct MeshDraw : Emitter {
 #else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
+#endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         if(n>1U)prefetch_emit_header(pk[1]);
         else if(n && following)prefetch_emit_header(*following);
@@ -3275,7 +3767,11 @@ struct MeshDraw : Emitter {
 #elif defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
             // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
             if(i+1<n && RE4DC_C20_PREF_ON()){
+#if RE4DC_SCENERY_RECORD_SPLIT
+                const auto& nl=package.emit(pk[i+1].let);
+#else
                 const auto& nl=package.meshlets()[pk[i+1].let];
+#endif
                 RE4DC_C20_PREF(package.vertices()+nl.first_vertex);RE4DC_C20_PREF(package.strip_begin(nl));
             }
 #endif
@@ -3286,6 +3782,9 @@ struct MeshDraw : Emitter {
     }
 #endif
     int run(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+#endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
@@ -3311,7 +3810,11 @@ struct MeshDraw : Emitter {
         }else
 #endif
         {
+#if RE4DC_SCENERY_RECORD_SPLIT
+            const auto lets=package.meshlets()+part.first_meshlet;
+#else
             const auto* lets=package.meshlets()+part.first_meshlet;
+#endif
             for(unsigned i=0;i<part.meshlet_count;++i){
                 const int result=draw(lets[i]);
                 if(result<=0)return result;
@@ -3330,7 +3833,11 @@ struct MeshDraw : Emitter {
 // arrays uninitialized; their guards are false until chunk_select fills them.
 struct ScenerySelector {
     using Pick=MeshDraw::Pick;
+#if RE4DC_SCENERY_RECORD_SPLIT
+    const re4dc::record_split::RecordView package;
+#else
     const re4dc::room::MeshPackage& package;
+#endif
     const Re4dcModelPart& p;
     const float* mvq;
     float near,cull_far,lod_scale=0;
@@ -3354,7 +3861,11 @@ struct ScenerySelector {
     bool sg_lp_ok=false;
     lean::SgPlane sg_lp[5];
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    ScenerySelector(const Re4dcModelPart& source,re4dc::record_split::RecordView mesh,
+#else
     ScenerySelector(const Re4dcModelPart& source,const re4dc::room::MeshPackage& mesh,
+#endif
                     const float* matrix,float clip_near,float reject_far)
         :package(mesh),p(source),mvq(matrix),near(clip_near),cull_far(reject_far){}
 #include "include/scenery_chunk_select.inc"
@@ -3423,6 +3934,9 @@ extern "C" void re4dc_static_retire_all(){
 #endif
 }
 extern "C" const Re4dcStaticStats* re4dc_static_stats(){return &stats;}
+#if RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_room_parent_retire(){gcasset_static_invalidate_all();}
+#endif
 #if RE4DC_NO_STD_ANY
 // coarse.cpp re4dc_coarse_tick(), once per Trans(): 1 when this tick's image (drawn by the next Render()) is coarse.
 extern "C" void re4dc_std_scenery_tick(int coarse){
@@ -3435,17 +3949,35 @@ extern "C" void re4dc_std_scenery_tick(int coarse){
 // of the room opens. Original never reads the index (nor low/ or texlow/).
 extern "C" void re4dc_std_room_enter(unsigned room){
     StdRoom& r=std_room;
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_invalidate_all();re4dc_gcasset::payload_retire(r.asset_proof);
+#endif
     r.room=room;r.active=false;r.mesh_views=0;r.checked=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=0;
+#endif
     if(!re4dc_quality_std_assets())return;
     char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/low/index.txt",room>>8,room&255U);
     char* text=static_cast<char*>(std::malloc(kStdText));
     const int n=text?re4dc_fixture_read(path,text,kStdText):-1;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=n<=0?1:2;   // cleared once the index is accepted below
+#endif
     if(n<=0){re4dc_log("quality assets: %s missing: Original packages\n",path);std::free(text);return;}
     if(n>=int(kStdText)){re4dc_log("quality assets: %s larger than %u B: Original packages\n",path,kStdText);std::free(text);return;}
+#if RE4DC_GC_ASSET_GATE
+    // fixture_read is one bounded read: receipt its exact n-byte consumed span,
+    // never claim a full file or hash the tokenized/freed buffer later.
+    const auto gcasset_digest=re4dc_gcasset::fingerprint(text,unsigned(n));
+#endif
     text[n]=0;
     r.active=std_parse(text,room);
     std::free(text);
     if(!r.active){r.mesh_views=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;re4dc_log("quality assets: %s rejected: Original packages\n",path);return;}
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=0;
+    re4dc_gcasset::payload_capture_receipt(r.asset_proof,&r,gcasset_digest,unsigned(n));
+#endif
     re4dc_log("quality assets: %s mesh=%02x tex=%u drop=%u cull=%u imp=%u impt=%u ptex=%u\n",path,r.mesh_views,r.ntex,r.ndrop,r.ncull,r.nimp,r.nimpt,r.nptex);
 }
 // native_ui.cpp: texture keys Standard adds (texlow/), and the room keys it drops.
@@ -3481,6 +4013,9 @@ extern "C" void re4dc_static_flush_impostors(){
         Re4dcModelPacket packet{};
         const bool bound=re4dc_model_pt_begin(first->key_crc,first->key_fnv,first->atlas_w,first->atlas_h,int(fog),&packet)!=0;
         auto* out=static_cast<pvr_vertex_t*>(packet.vertices);unsigned used=0;
+#if RE4DC_GC_ASSET_GATE
+        re4dc_gcasset::PayloadQuadUse accepted[kImpostorQuads];unsigned accepted_count=0;
+#endif
         for(unsigned j=i;j<impostor_count;++j){
             ImpostorQuad& q=impostor_queue[j];
             const auto* r=q.record;
@@ -3497,9 +4032,17 @@ extern "C" void re4dc_static_flush_impostors(){
                 o.x=q.s[k][0];o.y=q.s[k][1];o.z=q.s[k][2];
                 o.u=(k&1)?u1:u0;o.v=(k&2)?v1:v0;o.argb=q.argb;o.oargb=0;
             }
+#if RE4DC_GC_ASSET_GATE
+            accepted[accepted_count++]=q.source;
+#endif
             used+=4;
         }
-        if(bound){re4dc_model_packet_commit(used);++impostor_stats[3];}
+        if(bound){
+#if RE4DC_GC_ASSET_GATE
+            const re4dc_gcasset::PayloadQuadBatch batch{accepted,accepted_count,out,used};
+            re4dc_gcasset::PayloadQuadScope selected(batch);
+#endif
+            re4dc_model_packet_commit(used);++impostor_stats[3];}
     }
     impostor_count=0;
 }
@@ -4167,6 +4710,9 @@ int mesh_impostor(MeshView& v,unsigned mesh_index,const re4dc::room::MeshPart& p
     impostor_queued=true;
     if(left==4 || right==4 || top==4 || bottom==4)return 1;
     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
+#if RE4DC_GC_ASSET_GATE
+    q.source={re4dc_gcasset::source_use.payload,re4dc_gcasset::source_use.serial,re4dc_gcasset::source_use.mask};
+#endif
     ++impostor_count;++impostor_stats[0];
     return 1;
 }
@@ -4207,6 +4753,9 @@ int tree_quad(MeshView& v,const re4dc::room::MeshRecord& mesh,StdImpt& t,const R
     }
     if(left==4 || right==4 || top==4 || bottom==4)return 1;
     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
+#if RE4DC_GC_ASSET_GATE
+    q.source={re4dc_gcasset::source_use.payload,re4dc_gcasset::source_use.serial,re4dc_gcasset::source_use.mask};
+#endif
     ++impostor_count;++impostor_stats[0];++std_stats[4];
     return 1;
 }
@@ -4221,6 +4770,9 @@ int mesh_submit(const Re4dcModelPart& p){
         return 0;
     }
     MeshView& v=e->common?mesh_views[kCommonView]:mesh_views[owner];
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
     if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}
     const auto& mesh=v.package.meshes()[e->mesh];
     const unsigned char* data=model_data(p);
@@ -4431,6 +4983,9 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
         return 0;
     }
     Binding& b=*at.binding;View& v=*at.view;
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
     if(b.frame!=frame){b.frame=frame;b.drawn=b.fallback=0;}
     const auto& header=v.package.header();
     unsigned material=header.material_count;
@@ -4503,11 +5058,18 @@ struct Ps2Head { char magic[4]; std::uint32_t version,placements,parts,meshes,cr
 static_assert(sizeof(Ps2Part)==16 && sizeof(Ps2Placement)==52 && sizeof(Ps2Head)==32);
 struct Ps2Counts { unsigned placements,culled,parts,native,fallback,aborts; float near,far,cull_far; };
 struct Ps2World {
+#if RE4DC_SCENERY_RECORD_SPLIT
+    re4dc::record_split::WorldPackage package;
+#else
     re4dc::room::MeshPackage package;
+#endif
     unsigned char* storage=nullptr; unsigned bytes=0;
     const Ps2Part* parts=nullptr; const Ps2Placement* placements=nullptr; unsigned nplacements=0;
     const std::uint32_t* lut=nullptr; re4dc::room::CompactVertex12* gather=nullptr;
     float view[12]{},projection[7]{},viewport[6]{}; bool camera=false,attempted=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::PayloadProof asset_proof;
+#endif
     Ps2Counts count[3]{};
 #if RE4DC_PS2_WORLD_ROOMS
     unsigned room=0,want=0x101; // package loaded / attempted for; the room re4dc_ps2_mesh_select asks for
@@ -4528,6 +5090,9 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if RE4DC_GC_ASSET_GATE
+void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
 unsigned r11fPackageGeneration=1,r11fSidecarCrc;
 void r11fPackageAdvance() {
@@ -4564,6 +5129,9 @@ bool ps2_movie_current(){
         re4dc_room4_cell_valid(ps2_movie.base,ps2_movie.capacity,gen);
 }
 void ps2_movie_unpublish(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -4801,6 +5369,9 @@ std::uint8_t moved_of[kIds];
 float delta[kMoved][12];
 unsigned binds=0,hidden=0,moved=0,overflow=0,logged_frame=0;
 void reset(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     if(block)re4dc_static_free(block);
 #if RE4DC_PS2_WORLD_PARTS
     if(slots)for(unsigned i=0;i<nslots;++i)if(slots[i].parts)re4dc_static_free(slots[i].parts);
@@ -4982,7 +5553,11 @@ unsigned char* block=nullptr; Head h{}; const Cell* cells=nullptr; const std::ui
 const std::uint16_t* base=nullptr; const std::uint16_t* poff=nullptr; // per placement (n+1) / per part: first instance
 const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U,last_on=~0U; float last_view[12]{}; int cur_cell=-1; float eye[3]={0,0,0};
 unsigned frames=0,active=0,pl_tested=0,pl_skipped=0,logged=~0U,bytes=0; const char* why="off";
-void close(){++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
+void close(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+    ++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
              cur_frame=~0U;cur_cell=-1;bytes=0;loaded_room=~0U;h={};why="off";}
 // The camera's world position from the world-to-view affine (rows): v = R w + t, so w = -R^-1 t.
 bool eye_of(const float* v,float e[3]){
@@ -4996,11 +5571,15 @@ bool eye_of(const float* v,float e[3]){
     e[0]=-(i00*t0+i01*t1+i02*t2);e[1]=-(i10*t0+i11*t1+i12*t2);e[2]=-(i20*t0+i21*t1+i22*t2);
     return re4dc::render::is_finite(e[0]) && re4dc::render::is_finite(e[1]) && re4dc::render::is_finite(e[2]);
 }
-void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uint32_t side_crc){
+void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uint32_t side_crc GCASSET_STATIC_PARAM){
     close();why="absent";
     char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.pvs",room);
     const file_t f=fs_open(path,O_RDONLY);
-    if(f==FILEHND_INVALID){re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
+    if(f==FILEHND_INVALID){
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::R4PV,re4dc_gcasset::Absent);
+#endif
+        re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
     const unsigned size=unsigned(fs_total(f));
     const unsigned np=ps2w.nplacements,nparts=ps2w.package.header().part_count;
     if(np>=65536U || nparts>=65536U){fs_close(f);why="instance capacity";return;}
@@ -5065,7 +5644,11 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
         }
     }
     if(why){if(b)re4dc_static_free(b);cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;}
-    else {block=b;bytes=size+extra;loaded_room=room;}
+    else {
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_bytes(gcmanifest,re4dc_gcasset::R4PV,b,size,h.version);
+#endif
+        block=b;bytes=size+extra;loaded_room=room;}
     re4dc_log("PS2PVS room=%03x file=%s bytes=%u cells=%ux%u with_set=%u sets=%u instances=%u cell_mm=%d heap=%d\n",room,why?why:"ok",
               size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),
               std::isfinite(h.cell) && h.cell>=0 && h.cell<2147483520.0f?int(h.cell):0,re4dc_static_heap_free());
@@ -5138,12 +5721,19 @@ struct Head { char magic[4]; std::uint32_t version,classifier,parts,r4pw_crc,bod
 static_assert(sizeof(Head)==24);
 static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
 static unsigned room=~0U,nparts=0,flat=0,carded=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
-static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+static void close(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+    if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
 // After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
 // The disc's sidecar index (dc/native/trclass.idx, tools/d367/tr_classify.py: "R4TI", u32 count, u16 room ids), read
 // once at the first world open, so a room without a sidecar costs no disc access at its entry (a door's wall-timed
 // load would otherwise shift, coordinator 10-17). No index = the policy is idle for the whole session.
 static std::uint16_t idx_rooms[128]; static unsigned idx_n=0; static int idx_state=0; // 0 unread, 1 ok, -1 none
+#if RE4DC_GC_ASSET_GATE
+static re4dc_gcasset::PayloadProof idx_asset_proof;
+#endif
 static bool listed(unsigned r){
     if(!idx_state){
         idx_state=-1;
@@ -5153,19 +5743,44 @@ static bool listed(unsigned r){
             const ssize_t got=fs_read(f,b,sizeof(b));fs_close(f);
             std::uint32_t n=0;
             if(got>=8 && !std::memcmp(b,"R4TI",4)){std::memcpy(&n,b+4,4);
-                if(n<=128 && got>=ssize_t(8+2*n)){std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
+                if(n<=128 && got>=ssize_t(8+2*n)){
+#if RE4DC_GC_ASSET_GATE
+                    // The existing single bounded read consumes got bytes;
+                    // it establishes no digest of an unread file suffix.
+                    if(got<=ssize_t(sizeof(b))){
+                        const auto digest=re4dc_gcasset::fingerprint(b,unsigned(got));
+                        re4dc_gcasset::payload_capture_receipt(idx_asset_proof,idx_rooms,digest,unsigned(got));
+                    }
+#endif
+                    std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
         }
         re4dc_log("trans: index %s rooms=%u\n",idx_state>0?"ok":"absent",idx_n);
     }
     for(unsigned i=0;i<idx_n;++i)if(idx_rooms[i]==r)return true;
     return false;
 }
-static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
+static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts GCASSET_STATIC_PARAM){
     close();
-    if(!listed(r)){re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
+#if RE4DC_GC_ASSET_GATE
+    const bool has_table=listed(r);
+    if(gcmanifest){
+        if(idx_state==1)re4dc_gcasset::static_manifest_receipt(*gcmanifest,re4dc_gcasset::R4TI_SELECTOR,idx_asset_proof,idx_rooms,1,re4dc_gcasset::StaticConsumedSpan);
+        else gcasset_static_state(gcmanifest,re4dc_gcasset::R4TI_SELECTOR,re4dc_gcasset::Unproven);
+    }
+    if(!has_table){
+#else
+    if(!listed(r)){
+#endif
+#if RE4DC_GC_ASSET_GATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,idx_state==1?re4dc_gcasset::Absent:re4dc_gcasset::Unproven);
+#endif
+        re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
     char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.r4tc",r);
     const file_t f=fs_open(path,O_RDONLY);
     const char* why=nullptr;
+#if RE4DC_GC_ASSET_GATE
+    if(f==FILEHND_INVALID)gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,re4dc_gcasset::Absent);
+#endif
     if(f==FILEHND_INVALID)why="no file";
     else{
         const unsigned size=unsigned(fs_total(f));
@@ -5180,8 +5795,18 @@ static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
             else if(ps2_crc32(block+sizeof(Head),parts)!=h.body_crc)why="crc";
         }
         fs_close(f);
-        if(!why){cls=block+sizeof(Head);room=r;nparts=parts;}
+        if(!why){
+#if RE4DC_GC_ASSET_GATE
+            gcasset_static_bytes(gcmanifest,re4dc_gcasset::R4TC,block,size,h.version);
+#endif
+            cls=block+sizeof(Head);room=r;nparts=parts;}
         else if(block){re4dc_static_free(block);block=nullptr;}
+#if RE4DC_GC_ASSET_GATE
+        // gc-catalog24b: present but rejected by its own checks (size, header,
+        // stale r4pw crc, body crc): none of it is used. Heap/read faults stay Unproven.
+        if(why && std::strcmp(why,"heap") && std::strcmp(why,"read"))
+            gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,re4dc_gcasset::Rejected);
+#endif
     }
     re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
               re4dc_static_heap_free());
@@ -5290,7 +5915,10 @@ static void note(unsigned pass,unsigned drawn){
 #if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
 // scenery21: the room file's SCCN / SCPS sections against this package (crc, bytes, counts; SCCN also needs the
 // package's strip groups). A missing or stale section leaves its knob's path off for the room (SCN21 log line says why).
-void scn21_open(){
+void scn21_open(GCASSET_STATIC_ONLY_PARAM){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     auto& pk=ps2w.package;const auto& h=pk.header();
     unsigned len=0,ver=0,fl=0;
 #if RE4DC_SCENERY21_AB
@@ -5302,13 +5930,22 @@ void scn21_open(){
         piece::pkg=nullptr;piece::table=nullptr;
 #endif
         re4dc_log("SCN21 room=%03x arm A or no sc21 package: off\n",ps2w.room);
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_SCENERY_CONE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Disabled);
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+        gcasset_static_state(gcmanifest,re4dc_gcasset::SCPS,re4dc_gcasset::Disabled);
+#endif
+#endif
         return;
     }
 #endif
 #if RE4DC_SCENERY_CONE
     {
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5318,6 +5955,10 @@ void scn21_open(){
             if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
                len<16U+256U+8U*w[2]*w[3])why="package";
         }
+#if RE4DC_GC_ASSET_GATE
+        if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Absent);
+        else if(!why && re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCCN,sec,len,ver,fl);
+#endif
         if(!why){cone::tab2=reinterpret_cast<const float*>(sec+16);cone::rec=sec+16+256;cone::pkg=&pk;}
         re4dc_log("SCN21 cone room=%03x %s groups=%u bytes=%u\n",ps2w.room,why?why:"on",unsigned(w[3]),len);
     }
@@ -5325,7 +5966,8 @@ void scn21_open(){
 #if RE4DC_SCENERY_PIECE_STATE
     {
         piece::pkg=nullptr;piece::table=nullptr;
-        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,nullptr));
+        const re4dc_room_header* source_header=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,&source_header));
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
@@ -5334,10 +5976,16 @@ void scn21_open(){
             if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
         }
         if(!why){
+#if RE4DC_GC_ASSET_GATE
+            if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
+#endif
             piece::table=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
             std::memset(piece::table,0,4U*w[2]);   // slot words are this program's: start empty at every open
             piece::pkg=&pk;
         }
+#if RE4DC_GC_ASSET_GATE
+        if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCPS,re4dc_gcasset::Absent);
+#endif
         re4dc_log("SCN21 piece room=%03x %s parts=%u\n",ps2w.room,why?why:"on",unsigned(w[2]));
     }
 #endif
@@ -5346,8 +5994,12 @@ void scn21_open(){
 #if RE4DC_SCENERY_DEDUP==3
 // SDO3 is already reordered in the alternate package. The existing package owns
 // all source bytes; there is no room section, mask, table allocation or reload reorder.
-void dedup_free(){} // no retained pointers, mask, generation state or allocation in mode3
-void dedup_open(){
+void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
+} // no retained pointers, mask, generation state or allocation in mode3
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     auto& pk=ps2w.package;
     if(!pk.offline_dedup())return;
     unsigned repeats=0;
@@ -5490,15 +6142,19 @@ unsigned run(re4dc::room::MeshPackage& pk,std::uint8_t* sg,unsigned groups,void*
 #if RE4DC_SCENERY_DEDUP==2
 // the room file's heap-4 block (room_file.c) holds the section: never freed here, valid until the room leave
 void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     dedup::block=nullptr;dedup::pkg=nullptr;dedup::lets=nullptr;dedup::src=nullptr;dedup::mask=nullptr;
     dedup::nlets=dedup::nsrc=dedup::bytes=0;
 }
-void dedup_open(){
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     dedup_free();
     auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
     const std::uint64_t t0=timer_us_gettime64();
     unsigned len=0,ver=0,fl=0;
-    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,nullptr));
+    const re4dc_room_header* source_header=nullptr;
+    const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCDD",&len,&ver,&fl,&source_header));
     const char* why=nullptr;unsigned nrep=0;
     if(!sec)why="no section";
 #if defined(RE4DC_SCENERY_DEDUP_LOADONLY) && RE4DC_SCENERY_DEDUP_LOADONLY
@@ -5518,21 +6174,30 @@ void dedup_open(){
         }
     }
     if(!why){
+#if RE4DC_GC_ASSET_GATE
+        if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCDD,sec,len,ver,fl);
+#endif
         dedup::block=const_cast<void*>(re4dc_room_file_block());dedup::bytes=len;
         dedup::run(pk,ps2w.sg_block?ps2w.sg_block+32:nullptr,ps2w.sg_groups,ps2w.gather,1);
         dedup::pkg=&pk;
     }
+#if RE4DC_GC_ASSET_GATE
+    if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCDD,re4dc_gcasset::Absent);
+#endif
     re4dc_log("SCNDEDUP room=%03x meshlets=%u repeats=%u bytes=%u %s load_us=%u heap=%d\n",ps2w.room,nl,nrep,len,
               why?why:"applied",unsigned(timer_us_gettime64()-t0),re4dc_static_heap_free());
 }
 #else
 void dedup_free(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
     if(dedup::block)re4dc_static_free(dedup::block);
     dedup::block=nullptr;dedup::pkg=nullptr;dedup::lets=nullptr;dedup::src=nullptr;dedup::nlets=dedup::nsrc=dedup::bytes=0;
 }
 #endif
 #if RE4DC_SCENERY_DEDUP!=2
-void dedup_open(){
+void dedup_open(GCASSET_STATIC_ONLY_PARAM){
     dedup_free();
     auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
     const std::uint64_t t0=timer_us_gettime64();
@@ -5550,6 +6215,41 @@ void dedup_open(){
 }
 #endif
 #endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+constexpr auto kSceneryVariant=RE4DC_SCENERY_LOCAL_INDEXED?
+    re4dc::scenery_data::Kind::LocalIndexed:re4dc::scenery_data::Kind::DirectStrips;
+bool scenery_variant_room(unsigned room){
+    // These consumers certify physical package layouts. Build 12 does not
+    // relax their ownership/movie contracts to admit a differently sized file.
+#if RE4DC_MOVIE_WORLD_ARENA
+    if(room==0x11f)return false;
+#if RE4DC_MOVIE_WORLD_ARENA_S30
+    if(room==0x100)return false;
+#endif
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+    if(room==0x11f)return false;
+#endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER
+    if(room==0x200)return false;
+#endif
+    (void)room;return true;
+}
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+bool record_split_room(unsigned room){
+#if RE4DC_MOVIE_WORLD_ARENA || RE4DC_PS2_WORLD_R11F_OWNER
+    if(room==0x11f)return false;
+#endif
+#if RE4DC_MOVIE_WORLD_ARENA && RE4DC_MOVIE_WORLD_ARENA_S30
+    if(room==0x100)return false;
+#endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER
+    if(room==0x200)return false;
+#endif
+    (void)room;return true;
+}
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -5564,6 +6264,9 @@ bool ps2_open(){
 #endif
     if(ps2w.attempted)return false;
     ps2w.attempted=true;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -5583,14 +6286,57 @@ bool ps2_open(){
         if(fm!=FILEHND_INVALID)ps2w.alt=true;
     }
     if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
-#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3
+#elif RE4DC_WORLD_VERT || RE4DC_SCENERY_DEDUP==3 || RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_SCENERY_RECORD_SPLIT
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
 #endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    unsigned variant_source_crc=0,variant_source_bytes=0;
+    bool variant_alternate=false,variant_source_ok=false;
+    if(!scenery_variant_room(ps2w.room)){
+        re4dc_log("SCNVAR room=%03x requested=%s admitted=base reason=pinned-owner-or-movie\n",
+            ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+    }else if(fm!=FILEHND_INVALID){
+        char vpath[48];snprintf(vpath,sizeof(vpath),"/cd/dc/native/r%03x/%s.re4mesh",ps2w.room,
+                               re4dc::scenery_data::stem(kSceneryVariant));
+        const file_t fv=fs_open(vpath,O_RDONLY);
+        if(fv!=FILEHND_INVALID){
+            alignas(32) re4dc::room::MeshHeader source{};
+            const auto bytes=fs_total(fm);
+            variant_source_ok=bytes>=112 && bytes<=UINT32_MAX &&
+                read_package(fm,reinterpret_cast<unsigned char*>(&source),sizeof(source),0) &&
+                re4dc::scenery_data::source_header(source,unsigned(bytes));
+            if(variant_source_ok){variant_source_crc=source.crc;variant_source_bytes=source.bytes;}
+            fs_close(fm);fm=fv;variant_alternate=true;
+        }else re4dc_log("SCNVAR room=%03x requested=%s admitted=base reason=alternate-absent\n",
+                       ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+    }
+#endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    unsigned split_source_crc=0,split_source_bytes=0;
+    bool split_alternate=false,split_source_ok=false;
+    if(!record_split_room(ps2w.room)){
+        re4dc_log("SCNSPLIT room=%03x admitted=base reason=pinned-owner-or-movie\n",ps2w.room);
+    }else if(fm!=FILEHND_INVALID){
+        char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world-split.re4mesh",ps2w.room);
+        const file_t alternate=fs_open(path,O_RDONLY);
+        if(alternate!=FILEHND_INVALID){
+            alignas(32) re4dc::room::MeshHeader source{};
+            const auto extent=fs_total(fm);
+            split_source_ok=extent>=112 && extent<=UINT32_MAX && read_package(fm,reinterpret_cast<unsigned char*>(&source),80U,0) &&
+                re4dc::record_split::source_header(source,unsigned(extent));
+            if(split_source_ok){split_source_crc=source.crc;split_source_bytes=source.bytes;}
+            fs_close(fm);fm=alternate;split_alternate=true;
+        }else re4dc_log("SCNSPLIT room=%03x admitted=base reason=alternate-absent\n",ps2w.room);
+    }
+#endif
 #if RE4DC_SCENERY_DEDUP==3
     // Bind alternate source CRC/extent to the freshly read standard file header.
     unsigned dd_base_crc=0,dd_base_bytes=0;bool dd_alternate=false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::Digest gcasset_base80{};
+#endif
     if(fm!=FILEHND_INVALID){
         char dpath[48];snprintf(dpath,sizeof(dpath),"/cd/dc/native/r%03x/ps2-dd3.re4mesh",ps2w.room);
         const file_t fd=fs_open(dpath,O_RDONLY);
@@ -5600,6 +6346,9 @@ bool ps2_open(){
             if(fs_total(fd)>=112 && fs_total(fd)<=base_bytes && read_package(fm,reinterpret_cast<unsigned char*>(head),80U,0) &&
                head[0]==0x4d493452U && head[1]==3U && head[2]==unsigned(base_bytes) && head[16]==re4dc::room::kColorArgb1555 && !head[17] && !head[18] && !head[19]){
                 dd_base_crc=head[3];dd_base_bytes=head[2];dd_alternate=true;fs_close(fm);fm=fd;
+#if RE4DC_GC_ASSET_GATE
+                gcasset_base80=re4dc_gcasset::fingerprint(head,80U);
+#endif
             }else{fs_close(fd);fs_seek(fm,0,SEEK_SET);}
         }
     }
@@ -5676,7 +6425,65 @@ bool ps2_open(){
         else if(dd_alternate && ps2_crc32(s+80,msize-80U)!=crc){why="offline crc";ok=false;}
     }
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+    if(ok){
+        re4dc::room::MeshHeader file{};
+        if(msize>=sizeof(file))std::memcpy(&file,s,sizeof(file));
+        if(split_alternate && (!split_source_ok || file.version!=4U || msize<112U)){
+            why="split source/header";ok=false;
+        }else if(!split_alternate && file.version==4U){why="split filename";ok=false;}
+        else if(split_alternate && ps2_crc32(s+80,msize-80U)!=file.crc){why="split crc";ok=false;}
+    }
+#endif
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::StaticManifest gcasset_source;
+    if(ok && msize<=mbytes && mbytes<=total && psize<=total-mbytes && total<=40U*1024*1024)
+        re4dc_gcasset::static_manifest_begin(gcasset_source,re4dc_gcasset::StaticWorld,ps2w.room,gcasset_static_profile(),s,msize);
+    using namespace re4dc_gcasset;
+#if !(RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS)
+    static_manifest_note(gcasset_source,R4ID,Disabled);
+#endif
+#if !defined(RE4DC_TRANS_POLICY)
+    static_manifest_note(gcasset_source,R4TC,Disabled);static_manifest_note(gcasset_source,R4TI_SELECTOR,Disabled);
+#endif
+#if !RE4DC_PS2_PVS
+    static_manifest_note(gcasset_source,R4PV,Disabled);
+#endif
+#if !RE4DC_PS2_STRIP_GROUPS
+    static_manifest_note(gcasset_source,R4SG,Disabled);
+#endif
+#if !RE4DC_SCENERY_CONE
+    static_manifest_note(gcasset_source,SCCN,Disabled);
+#endif
+#if !RE4DC_SCENERY_PIECE_STATE
+    static_manifest_note(gcasset_source,SCPS,Disabled);
+#endif
+#if RE4DC_SCENERY_DEDUP!=2
+    static_manifest_note(gcasset_source,SCDD,NotApplicable);
+#endif
+#if RE4DC_SCENERY_DEDUP==3
+    if(dd_alternate)static_manifest_note(gcasset_source,SDO3_BASE80,Accepted,80U,3,StaticConsumedSpan,&gcasset_base80);
+    else static_manifest_note(gcasset_source,SDO3_BASE80,NotApplicable);
+#else
+    static_manifest_note(gcasset_source,SDO3_BASE80,NotApplicable);
+#endif
+#endif
     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
+#if RE4DC_SCENERY_RECORD_SPLIT
+    if(ok && split_alternate && !ps2w.package.source_identity(split_source_crc,split_source_bytes)){
+        why="split source identity";ok=false;
+    }
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    if(ok){
+        if(variant_alternate){
+            if(!variant_source_ok)why="variant standard header";
+            else if(ps2_crc32(s+80,msize-80U)!=ps2w.package.header().crc)why="variant crc";
+            else why=re4dc::scenery_data::validate(ps2w.package,kSceneryVariant,variant_source_bytes,variant_source_crc);
+            if(why)ok=false;
+        }else if(ps2w.package.header().reserved[3]){why="variant filename";ok=false;}
+    }
+#endif
 #if RE4DC_PS2_OPEN_TRACE
     re4dc_log("PS2OPEN adopt ok=%d why=%s\n",int(ok),why?why:"-");
 #endif
@@ -5710,6 +6517,10 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+#if RE4DC_GC_ASSET_GATE
+    if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
+    else static_manifest_note(gcasset_source,R4PW,Unproven);
+#endif
     // Geometry/material policy identity is separate from the physical R4PW
     // checksum. Only the certified scoped17 lineage can reuse original baked
     // metadata; profiles, logs and movie lifetime fingerprints remain actual.
@@ -5775,6 +6586,9 @@ bool ps2_open(){
                 auto* sb=n?static_cast<dyn::Slot*>(re4dc_static_alloc(n*sizeof(dyn::Slot))):nullptr;
                 iwhy="no heap";
                 if(sb){
+#if RE4DC_GC_ASSET_GATE
+                    static_manifest_bytes(gcasset_source,R4ID,ib,isize,ih.version);
+#endif
                     unsigned k=0;
                     for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)dyn::slot_of[id]=std::uint8_t(k++);
                     std::memset(static_cast<void*>(sb),0,n*sizeof(dyn::Slot));
@@ -5783,6 +6597,10 @@ bool ps2_open(){
                 }
             }
         } else if(ib)iwhy="read";
+#if RE4DC_GC_ASSET_GATE
+        if(fi==FILEHND_INVALID)static_manifest_note(gcasset_source,R4ID,Absent);
+        else if(iwhy && !std::strcmp(iwhy,"header"))static_manifest_note(gcasset_source,R4ID,Rejected); // gc-catalog24b: present, not used
+#endif
         if(ib)re4dc_static_free(ib);
         re4dc_log("PS2DYN room=%03x ids=%s placements=%u unique=%u heap=%d\n",ps2w.room,iwhy?iwhy:"ok",dyn::nids,dyn::nslots,re4dc_static_heap_free());
     }
@@ -5800,7 +6618,7 @@ bool ps2_open(){
     }
 #endif
 #if defined(RE4DC_TRANS_POLICY)
-    trans::open(ps2w.room,policySourceCrc,h.parts);
+    trans::open(ps2w.room,policySourceCrc,h.parts GCASSET_STATIC_ARG);
 #if RE4DC_PS2_PASS_MASK
     trans::mask(ps2w.parts,ps2w.placements,h.placements);
 #endif
@@ -5810,9 +6628,9 @@ bool ps2_open(){
     // baked AREA/IDs/SG metadata which uses the provenance-mapped source CRC.
 #if RE4DC_SCENERY_DEDUP==3
     // SDO3 certifies this exact source package's bounds, placements, meshlets and strip geometry.
-    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc);
+    pvs::open(ps2w.room,ps2w.package.source_crc(),ps2w.package.source_bytes(),h.crc GCASSET_STATIC_ARG);
 #else
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc GCASSET_STATIC_ARG);
 #endif
 #endif
 #if RE4DC_MESH_FASTPATH
@@ -5851,6 +6669,13 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY_RECORD_SPLIT
+        if(ps2w.package.is_split())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world-split.r4sg",ps2w.room);
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+        if(re4dc::scenery_data::kind(ps2w.package)!=re4dc::scenery_data::Kind::None)
+            snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/%s.r4sg",ps2w.room,re4dc::scenery_data::stem(kSceneryVariant));
+#endif
 #if RE4DC_SCENERY_DEDUP==3
         if(ps2w.package.offline_dedup())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-dd3.r4sg",ps2w.room);
 #endif
@@ -5891,6 +6716,20 @@ bool ps2_open(){
 #if RE4DC_SCENERY_DEDUP==3
         if(!gwhy && ps2w.package.offline_dedup() && !ps2w.package.offline_groups(gb+32,gsize-32U,w[3]))gwhy="offline ranges";
 #endif
+#if RE4DC_SCENERY_RECORD_SPLIT
+        if(!gwhy && ps2w.package.is_split())gwhy=ps2w.package.group_error(gb+32,gsize-32U,w[3]);
+#endif
+#if RE4DC_GC_ASSET_GATE
+        if(fg==FILEHND_INVALID)static_manifest_note(gcasset_source,R4SG,Absent);
+        // gc-catalog24b: present but rejected by its own checks: none of it is used
+        else if(gwhy && std::strcmp(gwhy,"heap") && std::strcmp(gwhy,"read"))static_manifest_note(gcasset_source,R4SG,Rejected);
+        else if(!gwhy){
+#if RE4DC_WORLD_VERT
+            if(gsize<=galloc && galloc<=40U*1024*1024)
+#endif
+                static_manifest_bytes(gcasset_source,R4SG,gb,gsize,w[1]);
+        }
+#endif
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
 #if RE4DC_WORLD_VERT
@@ -5902,13 +6741,39 @@ bool ps2_open(){
     }
 #endif
 #if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
-    scn21_open();
+    scn21_open(
+#if RE4DC_GC_ASSET_GATE
+        &gcasset_source
+#endif
+    );
 #endif
 #if RE4DC_SCENERY_DEDUP
-    dedup_open();
+    dedup_open(
+#if RE4DC_GC_ASSET_GATE
+        &gcasset_source
+#endif
+    );
+#endif
+#if RE4DC_GC_ASSET_GATE
+    gcasset_static_policy(gcasset_source,ps2w.room);
+    // A skipped enabled reader or a rejected/short/failed read is explicit
+    // unproven data, never an inferred absence or geometry-only ancestry.
+    for(unsigned r=0;r<StaticRoleCount;++r)if(!(gcasset_source.seen&(1U<<r)))static_manifest_note(gcasset_source,StaticRole(r),Unproven);
+    payload_capture_composite(ps2w.asset_proof,&ps2w,s,msize,s+mbytes,psize,gcasset_source);
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
+#if RE4DC_SCENERY_RECORD_SPLIT
+    re4dc_log("SCNSPLIT room=%03x admitted=%s version=%u mesh_bytes=%u actual_crc=%08x source_crc=%08x source_bytes=%u emit_offset=%u bounds_offset=%u gather_reserved=%u\n",
+        ps2w.room,ps2w.package.is_split()?"v4":"base",mh.version,mh.bytes,mh.crc,
+        ps2w.package.is_split()?mh.reserved[2]:mh.crc,ps2w.package.is_split()?mh.reserved[3]:mh.bytes,
+        mh.meshlet_offset,ps2w.package.is_split()?mh.reserved[1]:0U,kGatherBytes);
+#endif
+#if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
+    re4dc_log("SCNVAR room=%03x requested=%s admitted=%s mesh_bytes=%u gather_reserved=%u actual_crc=%08x source_crc=%08x\n",
+        ps2w.room,re4dc::scenery_data::stem(kSceneryVariant),variant_alternate?re4dc::scenery_data::stem(kSceneryVariant):"base",
+        mh.bytes,kGatherBytes,mh.crc,re4dc::scenery_data::source_crc(ps2w.package));
+#endif
 #if RE4DC_FAR_SHELL
     farshell::pol.tried=false;
     farshell::sync();   // FAR_SHELL: the room's far shell, read with its world package only at View distance Short
@@ -5921,6 +6786,9 @@ bool ps2_open(){
 }
 #if RE4DC_MOVIE_WORLD_ARENA
 bool ps2_movie_reload(){
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world(); // mesh/R4PW alone cannot renew prepared sidecars
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
 #endif
@@ -6200,10 +7068,30 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorPs2Pass,re4dc::wc24::ErrorPassIncomplete,pass);
+#endif
+#endif
+#if RE4DC_GC_ASSET_GATE
+    GcStaticSourceScope gcasset_source_scope(ps2w.asset_proof,&ps2w);
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_source_world_binding_valid()){
+        wc_result.why.first(re4dc::wc24::ErrorBindingLost,pass);
+        re4dc_source_world_binding_failed();return -1;
+    }
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
+#endif
     auto& c=ps2w.count[pass];c={};
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.diag_fallback=&c.fallback;wc_result.diag_aborts=&c.aborts;
+#endif
 #if RE4DC_PS2_AREA_HIDE
     area::update();
 #endif
@@ -6215,9 +7103,23 @@ int ps2_pass(unsigned pass,float zfar){
     re4dc_ps2_sky_header=0;
 #endif
     const float* P=ps2w.projection;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0){
+        wc_result.why.first(re4dc::wc24::ErrorProjection,pass,
+            unsigned(P[0]!=0)|(unsigned(ps2w.viewport[2]<=0)<<1)|(unsigned(ps2w.viewport[3]<=0)<<2));return 0;
+    }
+#else
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)return 0;
+#endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){
+        uint32_t a,b;std::memcpy(&a,&near,4);std::memcpy(&b,&far,4);
+        wc_result.why.first(re4dc::wc24::ErrorDepth,a,b);return 0;
+    }
+#else
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)return 0;
+#endif
     float cull_far=far;
     if(zfar>near && zfar<cull_far)cull_far=zfar;
 #ifdef RE4DC_FAR_CAP
@@ -6388,6 +7290,9 @@ int ps2_pass(unsigned pass,float zfar){
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
     auto chunk_flush=[&]()->int{
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
+#endif
 #if RE4DC_SCENERY_REPLAY_LEAN
         if(!nctx){npk=0;return 1;}
 #endif
@@ -6488,7 +7393,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             e.end_direct();
 #if RE4DC_SCENERY_SUBMIT_BATCH
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+            // Logical completion/accounting precedes release. Only actual
+            // source witnesses drain; opaque_ready remains outside SQ.
+            if(result<=0 || e.pvs_pending[2])re4dc_ps2_world_batch_close(&submit_scope.batch);
+#else
             if(result<=0)re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
 #endif
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
@@ -6525,7 +7436,13 @@ int ps2_pass(unsigned pass,float zfar){
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
 #if RE4DC_PS2_PVS
+#if RE4DC_PS2_PVS_BATCH_COMPOSE
+        // Qualification mode ONLY: internal pvs::cur still authenticates source
+        // observation, but never supplies legacy target-hide/selector authority.
+        const std::uint8_t* const pvs_cur=nullptr;
+#else
         const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+#endif
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
@@ -6617,6 +7534,11 @@ int ps2_pass(unsigned pass,float zfar){
         float mv[12];concat(ps2w.view,pl.affine,mv);
 #endif
 #define RE4DC_PS2_AFFINE pl.affine
+#endif
+#if RE4DC_PS2_PVS
+        // A receipt must describe the immutable baked geometry actually selected.
+        // Capture this with mvq; fresh source state can change before queued replay.
+        const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #endif
 #if RE4DC_PS2_WORLD_LEAN
 #if RE4DC_SKY_ANY
@@ -6773,7 +7695,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                     x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                    x.placement=i;
+                    x.placement=pvs_source_placement;
 #endif
                     x.marked=marked;x.first=npk;
 #if RE4DC_SKY_ANY
@@ -6795,7 +7717,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
 #if RE4DC_PS2_PVS
-            d.pvs_placement=i;
+            d.pvs_placement=pvs_source_placement;
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
@@ -6833,7 +7755,7 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
 #if RE4DC_PS2_PVS
-                x.placement=i;
+                x.placement=pvs_source_placement;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
@@ -6946,6 +7868,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_WORLD_HOLE_DIAG
     whd::end_pass(pass,c.parts,re4dc_ui_frame(),ps2w.room);
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=!c.fallback;
+#endif
     return c.fallback?0:1;
 }
 }
@@ -7023,6 +7948,13 @@ extern "C" int re4dc_ps2_mesh_movie_return(unsigned token,int retiring){
 }
 #endif
 extern "C" void re4dc_ps2_mesh_camera(const float* view,const float* projection,const float* viewport){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshCamera,re4dc::wc24::ErrorMovieSuppressed,ps2w.room);
+#endif
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
 #endif
@@ -7030,6 +7962,9 @@ extern "C" void re4dc_ps2_mesh_camera(const float* view,const float* projection,
     std::memcpy(ps2w.projection,projection,sizeof(ps2w.projection));
     std::memcpy(ps2w.viewport,viewport,sizeof(ps2w.viewport));
     ps2w.camera=true;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=true;
+#endif
 }
 #if RE4DC_PS2_INTERIOR_CULL==2
 // =2: count the check colour (RGB565 magenta, any dither of green) in the displayed framebuffer: the image the PVR
@@ -7057,6 +7992,33 @@ void pc_scan(unsigned frame){
 #define RE4DC_FAR_SHELL_PART 2
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// Independent of WORLD_METER: enabling the census must not enable its QA
+// distance overrides or alter the renderer's existing selection policy.
+extern "C" void re4dc_wc24_identity(unsigned out[7]){
+#if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
+    out[0]=unsigned(re4dc_view_dist_get());
+#else
+    out[0]=~0U;
+#endif
+#if RE4DC_PS2_PVS
+    out[1]=re4dc_ps2_pvs_on;
+#else
+    out[1]=~0U;
+#endif
+#if RE4DC_FAR_SHELL
+    out[2]=unsigned(far_shell_mode);
+#else
+    out[2]=~0U;
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    out[3]=re4dc_qa_wopq_mm;out[4]=re4dc_qa_wxlu_mm;out[5]=re4dc_qa_wshell;
+#else
+    out[3]=out[4]=out[5]=0;
+#endif
+    out[6]=wc24_generation;
+}
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 // WORLD_METER (game30.mk; QA disc only; display / render only). Per tick: us and vertices of the PS2 world's opaque pass
@@ -7122,28 +8084,68 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
 }
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(pass<3U?static_cast<re4dc::wc24::Path>(pass):re4dc::wc24::PathCount,
+                                     re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshDraw,re4dc::wc24::ErrorPassIncomplete,pass,ps2w.room);
+#endif
+#endif
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices,pass);
     zfar=re4dc_wm_far(pass,zfar);
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(ps2_movie_blocked()){wc_result.why.first(re4dc::wc24::ErrorMovieSuppressed,pass,ps2w.room);return 1;}
+#else
     if(ps2_movie_blocked())return 1;
 #endif
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    if(r11fNativeClaimed()){
+        const int result=r11fNativePass(pass,zfar);
+        wc_result.complete=result>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorReceiptIncomplete,pass,uint32_t(result));
+#endif
+        return result;
+    }
+#else
     if(r11fNativeClaimed())return r11fNativePass(pass,zfar);
 #endif
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_source_world_binding_valid()){
+        wc_result.why.first(re4dc::wc24::ErrorBindingLost,pass,ps2w.room);
+        re4dc_source_world_binding_failed();return -1;
+    }
+#else
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
+#endif
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
     if(!pass)pc_scan(re4dc_ui_frame());
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
 #endif
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(pass>2){wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);return 0;}
+    if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);return 0;}
+    if(!ps2_open()){wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);return 0;}
+#else
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     MovieWorldRead read;
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // ps2_pass owns all of its early returns and the final fallback count.
+    wc_result.complete=true;
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     const int result=ps2_pass(pass,zfar);
@@ -7267,6 +8269,12 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    ++wc24_generation;
+#endif
+#if RE4DC_GC_ASSET_GATE
+    gcasset_invalidate_world();
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     ++wm_generation; // also invalidate a same-room package reload or teleport
 #endif
@@ -7478,8 +8486,21 @@ extern "C" void re4dc_source_world_diag_report(unsigned,const char*);
 #endif
 // re4dc_static_submit on a non-coarse image of a no-std room: once per image, the loaded package only (no I/O).
 extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
+    Wc24PassResult wc_result;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshSource,re4dc::wc24::ErrorMovieSuppressed,room);
+#endif
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return;
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    // Ownership arbitration and inventory/duplicate callbacks need not launch
+    // another world. Once this adapter must launch, package/camera failure is
+    // an incomplete world, even when ordinary source geometry can fall back.
+    wc_result.complete=true;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     if(room==0x11f && re4dc_r11f_legacy_blocked(re4dc_ui_frame()))return;
@@ -7502,6 +8523,12 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 #endif
     static unsigned last=~0U,images=0;
     const unsigned frame=re4dc_ui_frame();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=frame==last;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    wc_result.why.tag(re4dc::wc24::ErrorMeshSource,re4dc::wc24::ErrorPackageUnavailable,room,ps2w.room);
+#endif
+#endif
     (void)p; // an unbound scenery part carries no camera (world / view are the binding's): the game's
     if(frame==last || !ps2w.storage || ps2w.room!=room)return;
 #if RE4DC_PS2_WORLD_PREFLIGHT_DIAG
@@ -7515,7 +8542,13 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 #endif
     last=frame;
     float view[12],projection[7],viewport[6];
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!re4dc_coarse_source_camera(view,projection,viewport)){
+        wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,frame,room);return;
+    }
+#else
     if(!re4dc_coarse_source_camera(view,projection,viewport))return;
+#endif
     re4dc_ps2_mesh_camera(view,projection,viewport);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     re4dc_ps2_source_legacy_started(frame);
@@ -7524,6 +8557,12 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
     if(room==0x11f)r11fLegacyStamp(frame);
 #endif
     const int drawn=re4dc_ps2_world_source_draw();
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    wc_result.complete=drawn>0;
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+    if(!wc_result.complete)wc_result.why.first(re4dc::wc24::ErrorPassIncomplete,uint32_t(drawn),frame);
+#endif
+#endif
     if(++images<=8 || !(images%120))re4dc_log("PS2MESH source image frame=%u room=%03x drawn=%d images=%u\n",frame,room,drawn,images);
 }
 #endif

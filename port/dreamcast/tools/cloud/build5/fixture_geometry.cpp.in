@@ -16,6 +16,12 @@
 #define RE4DC_SCENERY_SCREEN_MEMO 1
 #define RE4DC_INV255 /255.0f
 #include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
+#if defined(RE4DC_SCENERY_RECORD_SPLIT) && RE4DC_SCENERY_RECORD_SPLIT
+#include "@ROOT@/port/dreamcast/room/scenery_record_split.hpp"
+#define RE4DC_SCENERY_RECORD re4dc::record_split::Record
+#else
+#define RE4DC_SCENERY_RECORD re4dc::room::Meshlet
+#endif
 #include "@ROOT@/port/dreamcast/room/mesh_fastpath.hpp"
 #include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
 #include "@ROOT@/port/dreamcast/room/pvr_geometry.hpp"

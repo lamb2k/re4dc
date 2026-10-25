@@ -26,6 +26,7 @@
 #include "native_ui.h"
 #include "native_io.h"
 #include "native_movie.h"
+#include "include/gc_asset_movie.h"
 #include "include/native_cabin.h"
 #include "../../room/room_storage.hpp"
 #if RE4DC_MOVIE_DISC_QUIET
@@ -118,6 +119,10 @@ constexpr unsigned MaxAllocs=10;
 constexpr unsigned MaxReserve=12;
 #endif
 struct Movie {
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset::CheckedAsset asset{};unsigned asset_owner=0;
+    re4dc_gcasset::DigestStream gca_hash{};bool gca_hashing=false;   // container digest built from the transport reads
+#endif
     unsigned id=0; char path[40]{};
     file_t file=-1; plm_buffer_t* input=nullptr; plm_video_t* decoder=nullptr;
     unsigned char *pcm=nullptr,*callback=nullptr,*readbuf=nullptr,*rows=nullptr;
@@ -440,6 +445,9 @@ bool transport(void* destination,unsigned bytes){
             ++m.reads;m.read_us+=dt;
 #endif
             if(!ok){MOVIE_WHY("read");return false;}
+#if RE4DC_GC_ASSET_GATE
+            if(m.gca_hashing)re4dc_gcasset::digest_update(m.gca_hash,m.readbuf,n);
+#endif
             m.transport_left-=n;m.read_at=0;m.read_used=n;
         }
         unsigned n=m.read_used-m.read_at;if(n>bytes)n=bytes;
@@ -479,9 +487,16 @@ void path_for(unsigned id,char* out,unsigned size){
     // Bit 24 (RE4DC_MOVIE_CANCEL_CLIP): the PS2 clip of the event's cancel cut, rRRRsEEc (r104s00c).
     snprintf(out,size,"/cd/dc/movie/r%03xs%02x%s.seq",(id>>8)&0xfff,id&0xff,(id&0x1000000)?"c":"");
 }
-bool header(file_t f,unsigned* video,unsigned* audio_bytes,unsigned* frames,unsigned* width=nullptr,unsigned* height=nullptr,bool* full=nullptr){
+bool header(file_t f,unsigned* video,unsigned* audio_bytes,unsigned* frames,unsigned* width=nullptr,unsigned* height=nullptr,bool* full=nullptr
+#if RE4DC_GC_ASSET_GATE
+            ,unsigned char* raw=nullptr
+#endif
+            ){
     unsigned char h[32];
     if(!re4dc::storage::read_exact(f,h,32))return false;
+#if RE4DC_GC_ASSET_GATE
+    if(raw)std::memcpy(raw,h,32);
+#endif
     const unsigned w=little(h+8),hh=little(h+12);
     // Macroblock sizes only (the PVR row load needs 32-byte rows); the 512x256
     // texture and the staging budget bound the rest.
@@ -514,6 +529,21 @@ int finish(int status){
     re4dc_log("route movie diag: id=%05x status=%d why=%s iter=%u reads=%u read_us=%llu" "\n",m.id,status,m.why?m.why:"-",m.iter,m.reads,m.read_us);
 #endif
     const unsigned presented=m.texture?re4dc_ui_movie_presented():0;
+#if RE4DC_GC_ASSET_GATE
+    // Natural end: hash any transport tail the decoder did not need (normally
+    // none), then bind and release the pending picture/audio uses.
+    if(m.gca_hashing){
+        m.gca_hashing=false;bool whole=status==RE4DC_MOVIE_EOF && m.file>=0;
+        if(whole && m.transport_left){Re4dcIoScope owner;
+            whole=re4dc::storage::read_chunks(m.file,m.transport_left,[](const std::uint8_t* p,std::size_t n,void* ctx){
+                re4dc_gcasset::digest_update(*static_cast<re4dc_gcasset::DigestStream*>(ctx),p,unsigned(n));return true;
+            },&m.gca_hash);
+            if(whole)m.transport_left=0;}
+        if(whole){const re4dc_gcasset::Digest digest=re4dc_gcasset::digest_finish(m.gca_hash);
+            char id[16];snprintf(id,sizeof id,"%05x",m.id);m.asset=re4dc_gcasset::bind_checked("movie",id,digest);}
+        re4dc_gcasset_movie_resolved(m.asset_owner,m.asset.value,whole?(status==RE4DC_MOVIE_EOF?1:0):0);
+    }
+#endif
     if(m.stream>=0){snd_stream_stop(m.stream);snd_stream_destroy(m.stream);m.stream=-1;}
     // Retire only a service this movie initialised, after its own stream is gone.
     if(m.owns_service&&re4dc_movie_stream_active()==0){snd_stream_shutdown();m.owns_service=false;}
@@ -611,6 +641,12 @@ bool open(unsigned id){
     // the movie (route_movie_bridge.cpp re4dc_far_shell_movie_restore); before heap_before.
     re4dc_far_shell_movie_release();
 #endif
+#if defined(RE4DC_GANADO_VAR_MOVIE_LEND) && RE4DC_GANADO_VAR_MOVIE_LEND
+    // ACTOR_GANADO_PS2_GRIP (compose-test24 10-24): armed Ganados keep the variant cell (22.6 KB grip hands) resident
+    // in r100, where the knob-off game read it only for a lost head; every route movie borrows it before heap_before
+    // (re4dc_ganado_var_return at retire; read again at the next variant plan).
+    if(const unsigned v=re4dc_ganado_var_lend())re4dc_log("GANADOVAR lent to a movie (%u B)\n",v);
+#endif
 #if RE4DC_MOVIE_BALLAST_TEST
     if(id==0x10030){m.ballast=re4dc_ui_stage_alloc(RE4DC_MOVIE_BALLAST_TEST);
         re4dc_log("route movie heap: test ballast %u B %s\n",(unsigned)RE4DC_MOVIE_BALLAST_TEST,m.ballast?"held":"FAILED");}
@@ -623,13 +659,33 @@ bool open(unsigned id){
     movie_state(0,(int)(id&0xffff));
     {Re4dcIoScope owner;m.file=fs_open(m.path,O_RDONLY);}
     if(m.file<0)return false;
+#if RE4DC_GC_ASSET_GATE
+    unsigned char gca_head[32];
+    {Re4dcIoScope owner;if(!header(m.file,&m.video_left,&m.audio_left,&m.expected_frames,&m.width,&m.height,&m.full,gca_head))return false;}
+#else
     {Re4dcIoScope owner;if(!header(m.file,&m.video_left,&m.audio_left,&m.expected_frames,&m.width,&m.height,&m.full))return false;}
+#endif
     m.audio_bytes=m.audio_left;
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation && (m.expected_frames!=(id==0x11c00?2296u:id==0x11c10?761u:526u) ||
        m.width!=288 || m.height!=192 || !m.full))return false;
 #endif
     auto size=fs_total(m.file);if(size<2048||size>40000000)return false;
+#if RE4DC_GC_ASSET_GATE
+    // gc-catalog24b (coordinator 10-24, option a): the whole-container SHA256 is
+    // built from the bytes the player reads (32-byte header, the 2016 zero bytes of
+    // the sector-padded header area, then every transport chunk) and bound at the
+    // natural end through the pending path: no read before the first picture. The
+    // padding is zero in every disc movie (build_catalog checks it).
+    m.asset={};m.gca_hashing=false;
+    if(re4dc_gcasset::ensure_disc_catalog()){
+        static const unsigned char zero[2016]={};
+        re4dc_gcasset::digest_begin(m.gca_hash);
+        re4dc_gcasset::digest_update(m.gca_hash,gca_head,32);
+        re4dc_gcasset::digest_update(m.gca_hash,zero,sizeof zero);
+        m.gca_hashing=true;
+    }
+#endif
     m.transport_left=size-2048;
     {Re4dcIoScope owner;if(fs_seek(m.file,2048,SEEK_SET)!=2048)return false;}
     const unsigned long long video_us=(unsigned long long)m.expected_frames*1001000ULL/30,audio_us=(unsigned long long)m.audio_bytes*1000000ULL/128000;
@@ -676,6 +732,9 @@ bool open(unsigned id){
     if(!re4dc_ui_movie_open(m.width,m.height))return false;
     m.texture=true;
     m.tex=re4dc_ui_movie_texture();
+#if RE4DC_GC_ASSET_GATE
+    m.asset_owner=re4dc_gcasset_movie_bind(m.tex,m.width,m.height,m.asset.value);
+#endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation)cabin_movie.ui_generation=re4dc_ui_movie_cabin_generation();
 #endif
@@ -825,7 +884,13 @@ plm_frame_t* decode_next(){
 // Upload picture `index` and submit it one field before its flip vblank.
 bool show(plm_frame_t* f,unsigned index,unsigned now,RouteMoviePictureTick tick,bool present){
     if(!re4dc_ui_movie_upload_begin())return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_begin_upload(m.asset_owner,m.tex);
+#endif
     if(!m.hw)convert_upload(f);else if(!yuv_upload(f))return false;
+#if RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_movie_uploaded(m.asset_owner,m.tex,m.width,m.height,m.asset.value);
+#endif
 #if RE4DC_ROUTE_MOVIE_TEXHASH
     if(m.tex)texhash(index);
 #endif
@@ -880,6 +945,10 @@ int start(unsigned id,unsigned mask){
     m.pending=decode_next();
     if(!m.pending||!feed())return finish(RE4DC_MOVIE_ERROR);
     m.start=timer_us_gettime64();
+#if RE4DC_GC_ASSET_GATE
+    // Pending container digest: the audio start completes its ticket as deferred.
+    re4dc_gcasset_movie_stream_arm(m.stream,m.asset_owner,m.gca_hashing?RE4DC_GCA_MOVIE_PENDING:m.asset.value);
+#endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation){
         if(!re4dc_movie_stream_cabin_start(m.stream,cabin_movie.generation))return finish(RE4DC_MOVIE_ERROR);

@@ -1,0 +1,105 @@
+// Test-only appendage to the actual full-TU selector fixture. Geometry is an
+// observed boundary; production selection, replay setup and record accessors
+// remain compiled. This fixture does not price transform/clip/TA work.
+#include <new>
+@CHUNK_PART@;
+extern "C" {
+ChunkPart fixture_contexts[48];
+MeshDraw::Pick fixture_replay_picks[320];
+unsigned fixture_replay_count,fixture_replay_total;
+unsigned fixture_replay_result[8];
+unsigned fixture_metadata_count;
+alignas(32) std::uint32_t fixture_metadata_words[320*4];
+}
+
+extern "C" void fixture_prepare_replay(unsigned count) {
+    fixture_replay_count=count;fixture_replay_total=0;
+    for(unsigned j=0;j<count;++j){
+        auto& x=fixture_contexts[j];
+        std::memcpy(x.mvq,fixture_input.mvq,sizeof(x.mvq));
+        x.key[0]=fixture_material_key[0];x.key[1]=fixture_material_key[1];
+        x.key[2]=fixture_material_key[2];x.key[3]=fixture_material_key[3];
+        x.key[4]=fixture_input.pass;x.key[5]=fixture_input.cull;
+        x.index=fixture_input.part_index;x.first=fixture_replay_total;
+        x.count=fixture_metadata_count;
+        x.cull=fixture_input.cull;x.marked=fixture_input.marked!=0;x.sky=fixture_input.sky;
+        x.cull_far=fixture_input.cull_far;x.lod_scale=fixture_input.lod_scale;
+#if RE4DC_SCENERY_UV_SNAPSHOT
+        x.uv_offset[0]=fixture_input.uv_offset[0];x.uv_offset[1]=fixture_input.uv_offset[1];
+#endif
+        for(unsigned k=0;k<x.count;++k)
+            fixture_replay_picks[fixture_replay_total++]=fixture_picks[k];
+    }
+    std::memset(fixture_replay_result,0,sizeof(fixture_replay_result));
+    fixture_part.cull=fixture_input.cull;
+#if RE4DC_SKY_ANY
+    re4dc_ps2_sky_header=7;
+#endif
+}
+
+extern "C" __attribute__((noinline)) int fixture_replay() {
+    auto& part=fixture_part;
+    const float near=fixture_input.near_distance,far=fixture_input.far_distance;
+    const unsigned pass=fixture_input.pass;
+    auto* cctx=fixture_contexts;auto* cpk=fixture_replay_picks;
+    unsigned nctx=fixture_replay_count,npk=fixture_replay_total;
+    const auto& cpkg=fixture_package;
+    struct {unsigned native=0,fallback=0,aborts=0;}c;
+@CHUNK_FLUSH@;
+    const int result=chunk_flush();
+    fixture_replay_result[0]=result;fixture_replay_result[1]=c.native;
+    fixture_replay_result[2]=c.fallback;fixture_replay_result[3]=c.aborts;
+    fixture_replay_result[4]=nctx;fixture_replay_result[5]=npk;
+    fixture_replay_result[6]=part.cull;
+#if RE4DC_SKY_ANY
+    fixture_replay_result[7]=re4dc_ps2_sky_header;
+#endif
+    return result;
+}
+
+// The observation boundary uses the established replay qualification layout.
+extern "C" const std::uintptr_t fixture_replay_layout[]={
+    1,sizeof(MeshDraw),sizeof(ChunkPart),
+    reinterpret_cast<std::uintptr_t>(&fixture_replay_count),0,
+    reinterpret_cast<std::uintptr_t>(fixture_replay_result),
+    offsetof(MeshDraw,mvq),offsetof(MeshDraw,used),offsetof(MeshDraw,input),
+    offsetof(MeshDraw,output),offsetof(MeshDraw,slots),offsetof(MeshDraw,sq),
+    offsetof(MeshDraw,bound),offsetof(MeshDraw,submitted),offsetof(MeshDraw,cache),
+    offsetof(MeshDraw,primed),offsetof(MeshDraw,palette),offsetof(MeshDraw,ps2),
+    offsetof(MeshDraw,vertex_alpha),offsetof(MeshDraw,c4444),offsetof(MeshDraw,alpha),
+    offsetof(MeshDraw,streaming),offsetof(MeshDraw,direct),offsetof(MeshDraw,lean_part),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_bias),
+    offsetof(MeshDraw,batch)+offsetof(re4dc::room::CompactBatch,uv_scale),
+    offsetof(MeshDraw,proj_bx),offsetof(MeshDraw,proj_by),offsetof(MeshDraw,clip),
+    sizeof(re4dc::render::ClipParameters),offsetof(MeshDraw,part_index),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),offsetof(Re4dcModelPart,cull),
+    offsetof(Re4dcModelPart,uv_offset),offsetof(MeshDraw,near),offsetof(MeshDraw,far)
+};
+
+// A deliberately bounded metadata-consumption probe, not the renderer. It
+// reads all 16 logical emit bytes through the production accessors and writes
+// the same four observation words in either arm. The report separates those
+// test-only stores/arithmetic from the package-region demand footprint. This
+// exposes dense and sparse selected-ID locality without claiming that every
+// production path demands every field, or that these cycles are emit time.
+extern "C" __attribute__((noinline)) void fixture_metadata_probe() {
+#if defined(RE4DC_SCENERY_RECORD_SPLIT) && RE4DC_SCENERY_RECORD_SPLIT
+    const auto view=fixture_package.view();
+#endif
+    for(unsigned i=0;i<fixture_metadata_count;++i){
+#if defined(RE4DC_SCENERY_RECORD_SPLIT) && RE4DC_SCENERY_RECORD_SPLIT
+        const auto& l=view.emit(fixture_picks[i].let);
+#else
+        const auto& l=fixture_package.meshlets()[fixture_picks[i].let];
+#endif
+        fixture_metadata_words[4*i]=l.first_vertex;
+        fixture_metadata_words[4*i+1]=l.first_strip;
+        fixture_metadata_words[4*i+2]=l.strip_bytes;
+        fixture_metadata_words[4*i+3]=unsigned(l.vertex_count)|(unsigned(l.strip_count)<<16);
+    }
+}
+
+extern "C" const std::uintptr_t fixture_metadata_layout[]={
+    reinterpret_cast<std::uintptr_t>(&fixture_metadata_count),
+    reinterpret_cast<std::uintptr_t>(fixture_metadata_words),sizeof(fixture_metadata_words)
+};

@@ -1,0 +1,66 @@
+// Isolated actual kernel paths. Material binding, source selection, PVR waits,
+// locking, fallback clipping and whole-frame work are deliberately outside.
+#include <cstddef>
+#include <cstdint>
+#include "@DC@/room/mesh_fastpath.hpp"
+#include "@DC@/room/mesh_fastpath_sched.hpp"
+#include "@DC@/room/mesh_strip_lean.hpp"
+#include "@DC@/room/scenery_direct_strips.hpp"
+extern "C" {
+float re4dc_screen_wf=640.0f,re4dc_screen_hf=480.0f;
+float re4dc_screen_half_wf=320.0f,re4dc_screen_half_hf=240.0f;
+}
+namespace vp=re4dc::vp;
+struct Inputs {
+    const vp::Vertex12 *pool,*local,*sequential;
+    const std::uint16_t* offsets;
+    const std::uint8_t* strips;
+    unsigned vertex_count,strip_bytes;
+    pvr_vertex_t* cache;
+    std::uint8_t* codes;
+    const vp::Constants* constants;
+    float bounds[6],matrix[12],projection[7],viewport[6];
+    unsigned prime,limit;
+};
+#define FIELD(n) unsigned(offsetof(Inputs,n))
+extern "C" const unsigned fixture_layout[]={sizeof(Inputs),sizeof(vp::Constants),
+    FIELD(pool),FIELD(local),FIELD(sequential),FIELD(offsets),FIELD(strips),FIELD(vertex_count),FIELD(strip_bytes),
+    FIELD(cache),FIELD(codes),FIELD(constants),FIELD(bounds),FIELD(matrix),FIELD(projection),FIELD(viewport),FIELD(prime),FIELD(limit)};
+#undef FIELD
+
+// Match the existing chunk walk's -O2 region. The real per-TU Make recipe is
+// otherwise unchanged (including FP flags and the actual KOS/SDK headers).
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+extern "C" unsigned fixture_cached(const Inputs* a){
+    const vp::Vertex12* input=a->local;
+    if(a->offsets){
+        auto* gathered=const_cast<vp::Vertex12*>(a->local);
+        // Exact record-copy operation of MeshDraw::corners, observed here
+        // independently of package admission and emitter object setup.
+        for(unsigned k=0;k<a->vertex_count;++k)gathered[k]=a->pool[a->offsets[k]];
+    }
+    if(a->prime)vp::prime(a->cache,a->vertex_count);
+    vp::transform_sched<vp::kChecksAll>(input,a->vertex_count,a->cache,a->codes,*a->constants);
+    auto* sq=reinterpret_cast<std::uint32_t*>(0xe0000000U);
+    unsigned culled=0,emitted=0;
+    const auto* end=a->strips+a->strip_bytes;
+    const auto* stop=vp::walk_lean(a->strips,end,a->codes,a->cache,a->limit,sq,culled,emitted);
+    if(stop!=end || culled)return ~0U; // only fully inside, ordinary strips in this fixture
+    return (reinterpret_cast<std::uintptr_t>(sq)-0xe0000000U)/32U;
+}
+extern "C" unsigned fixture_direct(const Inputs* a){
+    if(vp::classify(a->bounds,a->bounds+3,a->matrix,a->projection,a->viewport,
+                   a->constants->near_distance,a->constants->far_distance)!=vp::kChecksNone)return ~0U;
+    const auto* end=a->strips+a->strip_bytes;
+    for(const auto* s=a->strips;s<end;){const unsigned n=*s++;if(n>a->limit)return ~0U;s+=n;}
+    auto* sq=reinterpret_cast<std::uint32_t*>(0xe0000000U);
+    unsigned consumed=0;
+    for(const auto* s=a->strips;s<end;){
+        const unsigned n=*s++;
+        sq=re4dc::scenery_data::emit_direct_strip(sq,a->sequential+consumed,n,*a->constants);
+        consumed+=n;s+=n;
+    }
+    return consumed;
+}
+#pragma GCC pop_options

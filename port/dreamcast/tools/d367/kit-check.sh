@@ -52,7 +52,7 @@ step "2 knob file = release recipe"
 $RK check "$OUTR/candidate.txt" "$KF"
 
 step "3 Build-Assets zip"
-BA=$(ls "$PKG"/*-Build-Assets.zip); GD=$(ls "$PKG"/*-GDEMU.zip)
+BA=$(ls "$PKG"/*-Build-Assets.zip); GD=$(ls "$PKG"/*-GDEMU.zip | grep -v "/RE4DC-QA-")   # not the QA disc zip
 want=$(sed -n 's/^# assets-zip: //p' "$KF")
 [ "$(basename "$BA")" = "$want" ] || { echo "kit-check: package has $(basename "$BA"), the knob file names $want"; exit 1; }
 DS=$(sed -n 's/^# disc-sets: //p' "$KF")   # test 15 on: the disc data files carried in re4dc-assets/disc/

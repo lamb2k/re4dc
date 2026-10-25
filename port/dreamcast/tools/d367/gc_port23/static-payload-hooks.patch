@@ -1,0 +1,240 @@
+--- a/port/dreamcast/game/platform/native_static.cpp
++++ b/port/dreamcast/game/platform/native_static.cpp
+@@ -1,4 +1,18 @@
+ #include "../world_scratch.h"
++#include "include/gc_asset_payloads.h"
++#if RE4DC_GC_ASSET_GATE
++#define RE4DC_GCAP_FIELD re4dc_gcasset::PayloadProof asset_proof;
++#define RE4DC_GCAP_RETIRE(v) re4dc_gcasset::payload_retire((v).asset_proof)
++#define RE4DC_GCAP_CAPTURE(v,b,n,l,s) do{if(re4dc_gcasset::ensure_disc_catalog()) \
++    (void)re4dc_gcasset::payload_capture((v).asset_proof,&(v),b,n,l,s); \
++    else re4dc_gcasset::payload_retire((v).asset_proof);}while(0)
++#define RE4DC_GCAP_SCOPE(v,m,i) re4dc_gcasset::PayloadScope gcasset_payload_scope((v).asset_proof,&(v),m,i)
++#else
++#define RE4DC_GCAP_FIELD
++#define RE4DC_GCAP_RETIRE(...) ((void)0)
++#define RE4DC_GCAP_CAPTURE(...) ((void)0)
++#define RE4DC_GCAP_SCOPE(...) ((void)0)
++#endif
+ #include "include/bfc_class.h"
+ #include "include/movie_world_arena.h"
+ #include "include/native_cabin.h"
+@@ -618,6 +632,7 @@
+     float world[12];                    // placement the package was baked at
+ };
+ struct View {
++    RE4DC_GCAP_FIELD
+     Package package;
+     unsigned char* storage=nullptr; unsigned bytes=0;
+     Binding* bindings=nullptr;
+@@ -779,6 +794,7 @@
+ }
+ #endif
+ void retire(View& v){
++    RE4DC_GCAP_RETIRE(v);
+     v.package.close();
+     if(v.storage){re4dc_static_free(v.storage);stats.package_bytes-=v.bytes;--stats.owners_open;}
+     v.storage=nullptr;v.bytes=0;v.bindings=nullptr;v.attempted=false;v.room=0;
+@@ -845,11 +861,13 @@
+     fs_close(file);
+     stats.heap_after=re4dc_static_heap_free();
+     if(!storage){re4dc_log("native static: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
++    RE4DC_GCAP_CAPTURE(v,storage,size,nullptr,0);
+     v.storage=storage;
+     if(!v.package.adopt(storage,size) || !v.package.material_keys() ||
+        v.package.header().material_count>kMaxMaterials){
+         re4dc_log("native static: %s rejected: %s keyed=%d materials=%u\n",path,
+             v.package.error()?v.package.error():"layout",v.package.material_keys(),v.package.header().material_count);
++        RE4DC_GCAP_RETIRE(v);
+         re4dc_static_free(storage);v.storage=nullptr;v.bytes=0;v.package.close();++stats.open_failures;return false;
+     }
+     const auto& b=v.package.header();
+@@ -1424,6 +1442,7 @@
+ unsigned entries_for(unsigned meshes){unsigned n=kEntries;while(n<4U*meshes && n<kEntriesMax)n<<=1;return n;}
+ struct MeshEntry { const void* object; std::uint16_t mesh; std::uint8_t common,used; };
+ struct MeshView {
++    RE4DC_GCAP_FIELD
+     re4dc::room::MeshPackage package;
+     unsigned char* storage=nullptr; unsigned bytes=0;
+     MeshEntry* entries=nullptr; unsigned capacity=0; // owner views only
+@@ -1438,7 +1457,11 @@
+ #if RE4DC_TREE_IMPOSTOR
+ // This frame's impostor quads (screen x, y, 1/w per corner: TL, TR, BL, BR),
+ // sent per atlas by re4dc_static_flush_impostors(). A retired view clears it.
+-struct ImpostorQuad { const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3]; };
++struct ImpostorQuad {
++#if RE4DC_GC_ASSET_GATE
++    re4dc_gcasset::PayloadQuadUse asset_use{};
++#endif
++    const re4dc::room::MeshImpostor* record; std::uint32_t argb; std::uint16_t cell; std::uint8_t fog,pad; float s[4][3]; };
+ constexpr unsigned kImpostorQuads=48;
+ ImpostorQuad impostor_queue[kImpostorQuads];
+ unsigned impostor_count=0,impostor_frame=~0U,impostor_flushed=~0U;
+@@ -1454,6 +1477,7 @@
+ constexpr unsigned kGatherBytes=(256U*unsigned(sizeof(re4dc::room::CompactVertex12))+31U)&~31U;
+ 
+ void retire(MeshView& v){
++    RE4DC_GCAP_RETIRE(v);
+ #if RE4DC_TREE_IMPOSTOR
+     impostor_frame=~0U; // queued records may point into this view
+ #endif
+@@ -1512,12 +1536,14 @@
+     fs_close(file);
+     stats.heap_after=re4dc_static_heap_free();
+     if(!storage){re4dc_log("native mesh: %s not loaded (size=%u heap=%d)\n",path,size,stats.heap_before);return false;}
++    RE4DC_GCAP_CAPTURE(v,storage,size,nullptr,0);
+ #if RE4DC_SCENERY_ENCODING
+     if(!re4dc::room::adopt_by_encoding(v.package,storage,size,RE4DC_MESH_LOD!=0,&v.vertex_colors)){
+ #else
+     if(!v.package.adopt(storage,size,RE4DC_MESH_LOD!=0)){
+ #endif
+         re4dc_log("native mesh: %s rejected: %s\n",path,v.package.error());
++        RE4DC_GCAP_RETIRE(v);
+         re4dc_static_free(storage);++stats.open_failures;
+ #if RE4DC_QUALITY_ASSETS
+         // A rejected Standard package: this owner opens its Original package instead.
+@@ -3407,6 +3433,9 @@
+         Re4dcModelPacket packet{};
+         const bool bound=re4dc_model_pt_begin(first->key_crc,first->key_fnv,first->atlas_w,first->atlas_h,int(fog),&packet)!=0;
+         auto* out=static_cast<pvr_vertex_t*>(packet.vertices);unsigned used=0;
++#if RE4DC_GC_ASSET_GATE
++        re4dc_gcasset::PayloadQuadUse asset_uses[kImpostorQuads];unsigned asset_count=0;
++#endif
+         for(unsigned j=i;j<impostor_count;++j){
+             ImpostorQuad& q=impostor_queue[j];
+             const auto* r=q.record;
+@@ -3424,8 +3453,16 @@
+                 o.u=(k&1)?u1:u0;o.v=(k&2)?v1:v0;o.argb=q.argb;o.oargb=0;
+             }
+             used+=4;
+-        }
+-        if(bound){re4dc_model_packet_commit(used);++impostor_stats[3];}
++#if RE4DC_GC_ASSET_GATE
++            asset_uses[asset_count++]=q.asset_use;
++#endif
++        }
++        if(bound){
++#if RE4DC_GC_ASSET_GATE
++            const re4dc_gcasset::PayloadQuadBatch asset_batch{asset_uses,asset_count,packet.vertices,used};
++            re4dc_gcasset::PayloadQuadScope asset_scope(asset_batch);
++#endif
++            re4dc_model_packet_commit(used);++impostor_stats[3];}
+     }
+     impostor_count=0;
+ }
+@@ -4093,6 +4130,9 @@
+     impostor_queued=true;
+     if(left==4 || right==4 || top==4 || bottom==4)return 1;
+     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
++#if RE4DC_GC_ASSET_GATE
++    q.asset_use={&v.asset_proof,v.asset_proof.serial,re4dc_gcasset::source_use.mask?re4dc_gcasset::source_use.mask:1U<<re4dc_gcasset::SourceGeometry};
++#endif
+     ++impostor_count;++impostor_stats[0];
+     return 1;
+ }
+@@ -4133,6 +4173,9 @@
+     }
+     if(left==4 || right==4 || top==4 || bottom==4)return 1;
+     q.record=r;q.cell=std::uint16_t(cell);q.fog=p.source_key[2]?1:0;q.argb=impostor_color(v,mesh,*r);
++#if RE4DC_GC_ASSET_GATE
++    q.asset_use={&v.asset_proof,v.asset_proof.serial,re4dc_gcasset::source_use.mask?re4dc_gcasset::source_use.mask:1U<<re4dc_gcasset::SourceGeometry};
++#endif
+     ++impostor_count;++impostor_stats[0];++std_stats[4];
+     return 1;
+ }
+@@ -4148,6 +4191,7 @@
+     }
+     MeshView& v=e->common?mesh_views[kCommonView]:mesh_views[owner];
+     if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}
++    RE4DC_GCAP_SCOPE(v,p.model,p.info);
+     const auto& mesh=v.package.meshes()[e->mesh];
+     const unsigned char* data=model_data(p);
+     std::uint16_t vertices=0,parts=0;
+@@ -4357,6 +4401,7 @@
+         return 0;
+     }
+     Binding& b=*at.binding;View& v=*at.view;
++    RE4DC_GCAP_SCOPE(v,p.model,p.info);
+     if(b.frame!=frame){b.frame=frame;b.drawn=b.fallback=0;}
+     const auto& header=v.package.header();
+     unsigned material=header.material_count;
+@@ -4429,6 +4474,7 @@
+ static_assert(sizeof(Ps2Part)==16 && sizeof(Ps2Placement)==52 && sizeof(Ps2Head)==32);
+ struct Ps2Counts { unsigned placements,culled,parts,native,fallback,aborts; float near,far,cull_far; };
+ struct Ps2World {
++    RE4DC_GCAP_FIELD
+     re4dc::room::MeshPackage package;
+     unsigned char* storage=nullptr; unsigned bytes=0;
+     const Ps2Part* parts=nullptr; const Ps2Placement* placements=nullptr; unsigned nplacements=0;
+@@ -4486,6 +4532,7 @@
+ #if RE4DC_PS2_WORLD_R11F_OWNER
+     r11fPackageAdvance();
+ #endif
++    RE4DC_GCAP_RETIRE(ps2w);
+     ps2w.package.close();ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
+     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.camera=false;
+ #if RE4DC_PS2_PASS_MASK
+@@ -5559,6 +5606,7 @@
+     if(fm!=FILEHND_INVALID)fs_close(fm);
+     if(fp!=FILEHND_INVALID)fs_close(fp);
+     const char* why=ok?nullptr:s?"read":"missing or no heap";
++    if(ok){RE4DC_GCAP_CAPTURE(ps2w,s,msize,s+mbytes,psize);}
+     if(ok && !ps2w.package.adopt(s,msize,true,true)){why=ps2w.package.error();ok=false;}
+ #if RE4DC_PS2_OPEN_TRACE
+     re4dc_log("PS2OPEN adopt ok=%d why=%s\n",int(ok),why?why:"-");
+@@ -5588,6 +5636,7 @@
+     re4dc_log("PS2OPEN sidecar ok=%d why=%s\n",int(ok),why?why:"-");
+ #endif
+     if(!ok){
++        RE4DC_GCAP_RETIRE(ps2w);
+         ps2w.package.close();if(s)re4dc_static_free(s);ps2w.parts=nullptr;ps2w.placements=nullptr;
+         re4dc_log("PS2MESH open failed: %s mesh=%u sidecar=%u heap=%d\n",why?why:"?",msize,psize,before);
+         return false;
+@@ -5793,6 +5842,7 @@
+     const auto& files=ps2_movie_files;
+     const unsigned mb=(files.mesh+31u)&~31u,pb=(files.side+31u)&~31u;
+     if(!ps2_movie_layout(ps2w.room) || ps2w.room!=ps2w.want || mb+pb+kLutBytes+kGatherBytes!=ps2_movie.capacity)return false;
++    RE4DC_GCAP_RETIRE(ps2w);
+     Re4dcIoScope io;
+     char mesh_path[64],side_path[64];
+     snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
+@@ -5812,6 +5862,13 @@
+     if(!ok || !ps2_movie_current())return false;
+     if(ps2_crc32(data,files.mesh)!=files.mesh_crc || movie_world::fnv(data,files.mesh)!=files.mesh_fnv ||
+        ps2_crc32(data+mb,files.side)!=files.side_crc || movie_world::fnv(data+mb,files.side)!=files.side_fnv)return false;
++    RE4DC_GCAP_CAPTURE(ps2w,data,files.mesh,data+mb,files.side);
++#if RE4DC_GC_ASSET_GATE
++    struct GcAssetReloadProof {
++        bool committed=false;
++        ~GcAssetReloadProof(){if(!committed)RE4DC_GCAP_RETIRE(ps2w);}
++    } asset_reload;
++#endif
+     if(!ps2w.package.adopt(data,files.mesh,true,true))return false;
+     Ps2Head h{};std::memcpy(&h,data+mb,sizeof(h));
+     const auto& mh=ps2w.package.header();
+@@ -5859,6 +5916,9 @@
+     // Preserve ids, slots, source flags, object/serials, original rest matrices,
+     // part witnesses and ordering. Same UI frame can contain source S11 edits.
+     dyn::frame=~0u;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
++#endif
++#if RE4DC_GC_ASSET_GATE
++    asset_reload.committed=true;
+ #endif
+     return true;
+ }
+@@ -6056,6 +6116,7 @@
+ }
+ #endif
+ int ps2_pass(unsigned pass,float zfar){
++    RE4DC_GCAP_SCOPE(ps2w,nullptr,nullptr);
+ #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
+ #endif
+@@ -7157,6 +7218,7 @@
+ #if defined(RE4DC_TRANS_POLICY)
+     trans::close();
+ #endif
++    RE4DC_GCAP_RETIRE(ps2w);
+     ps2w.package.close();
+     if(ps2w.storage)re4dc_static_free(ps2w.storage);
+     ps2w.storage=nullptr;ps2w.bytes=0;ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;

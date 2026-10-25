@@ -29,6 +29,8 @@ triangle is oriented so its face normal agrees with its corner normals in the sa
                        already draws it): the GC copy keeps its header, joints and part headers with no triangles
                        (empty parts; one unused vertex so no array is empty). r101 BIN 0x20 = the burning stake
                        (SetObj00), PS2 SMD_016 / SMD_120.
+     --etm-empty et0000.bin,...  etc models whose PS2 model is a placeholder (window panes et0000 / et2500: one
+                       degenerate triangle): emptied like --world-owned (the PS2 draws nothing there; lane purge-props24).
      --etm-from et1000.bin=r109,...  an etc model absent from this room's PS2 ETM, taken from that room's PS2 ETM;
                        refused unless this room's GC model is byte-identical to that room's (the same object). r11a
                        et1000 (torch type 4) = r109's.
@@ -108,8 +110,11 @@ class GcModel:
         self.blend, self.flip = (u32(0x40), u32(0x44)) if self.version == 0x20030818 else (0, 0)
         if self.shape:
             raise ValueError('shape (morph) model: not converted')
-        if self.ext > 0xFF:
-            raise ValueError('extended weights: not converted')
+        # extended weights (r10c BIN 0x1f, 10-24): a palette of more than 255 entries. +0x2A holds the full count
+        # (+0x18 its low byte) and each record is 12 bytes: 3 u16 joint ids, u16 count, 4 u8 weights.
+        self.xw = self.ext > 0xFF
+        if self.xw:
+            self.nw = self.ext
         self.stride = 8 if self.flags & 0x80000000 else 6
         self.nstride = 4 if self.flags & 0x20000000 else 8
         self.scale = 1.0 / (1 << self.shift)
@@ -120,6 +125,12 @@ class GcModel:
             self.nrms = [struct.unpack_from('>3hH', d, self.nrm + 8 * i) for i in range(self.nn)]
         self.weights = []
         for i in range(self.nw):
+            if self.xw:
+                o = self.wgt + 12 * i
+                r = struct.unpack_from('>4H4B', d, o)
+                n = r[3]
+                self.weights.append((tuple(r[:n]), tuple(r[4:4 + n])))
+                continue
             o = self.wgt + 8 * i
             n = d[o + 3]
             self.weights.append((tuple(d[o:o + n]), tuple(d[o + 4:o + 4 + n])))
@@ -242,9 +253,54 @@ def gc_winding_sense(m):
 # without it the panels' PS2 triangles land in the 64x64 frame part and the PS2 pictures' sizes disagree with the GC
 # record, which hid the gate in the objs13 look check 10-15). Keyed by the etc model name.
 TEX_MAPS = {'et1700.bin': {0: 1, 1: 0}}
+# PS2 atlas (lane purge-props24 2026-10-24, coordinator-approved tool extension): objects whose one GC picture the PS2
+# split into several pictures (r117 BIN 0x1f: GC image 0 256x256 <- PS2 images 0 128x128, 1 128x16, 3 64x64). The PS2
+# pictures the model uses are packed into one atlas (atlas_for: deterministic grid fill inside the GC image size,
+# largest first), each PS2 triangle's UVs are mapped into its picture's rectangle, and ps2_objects_tex.py composes the
+# atlas picture from the same layout. (room, room-archive BIN index) -> the GC image size the atlas fills (checked
+# against the GC TPL header by ps2_objects_tex.py).
+ATLAS_OBJECTS = {('r117', 0x1f): (256, 256)}
 
 
-def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None):
+def atlas_for(ps2_tpl, off, used, gc_wh):
+    """-> {ps2 image: (x, y, w, h)}, (W, H): the atlas layout of PS2 TPL images `used` (sizes as the geometry samples
+    them: transposed when the entry's rotate flag is set) inside the GC image size gc_wh (step 8 texels)."""
+    sys.path.insert(0, str(HERE / 'd367' / 'test12fx'))
+    import ps2_tpl_decode as ptd  # noqa: E402
+    ents = ptd.parse_tpl(ps2_tpl[off:])['entries']
+    sizes = {}
+    for i in used:
+        h = ents[i]
+        w_, h_ = h['width'], h['height']
+        sizes[i] = (h_, w_) if h['interlace'] & 1 else (w_, h_)
+    gw, gh = gc_wh
+    occ = []
+    lay = {}
+    for i in sorted(sizes, key=lambda k: (-sizes[k][0] * sizes[k][1], k)):
+        w_, h_ = sizes[i]
+        spot = None
+        for y in range(0, gh - h_ + 1, 8):
+            for x in range(0, gw - w_ + 1, 8):
+                if all(x + w_ <= ox or ox + ow <= x or y + h_ <= oy or oy + oh <= y for ox, oy, ow, oh in occ):
+                    spot = (x, y); break
+            if spot:
+                break
+        if spot is None:
+            raise ValueError('atlas: PS2 images %s do not fit in %dx%d' % (sorted(sizes), gw, gh))
+        lay[i] = (spot[0], spot[1], w_, h_); occ.append(lay[i])
+    p2 = lambda n: 1 << max(3, (n - 1).bit_length())  # noqa: E731
+    W = p2(max(x + w_ for x, y, w_, h_ in lay.values())); H = p2(max(y + h_ for x, y, w_, h_ in lay.values()))
+    return lay, (W, H)
+
+
+def atlas_uv_map(lay, wh, gc_image):
+    """rebuild()'s atlas argument: {ps2 image: (gc image, u0, v0, su, sv)}."""
+    W, H = wh
+    return {i: (gc_image, x / W, y / H, w_ / W, h_ / H) for i, (x, y, w_, h_) in lay.items()}
+
+
+
+def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None, atlas=None):
     """-> (new big-endian GC BIN, stats). gc_tris_from: selftest geometry list instead of the PS2 BIN.
     allow_empty: a model with no triangle is written (world-owned objects); otherwise it is refused (a PS2 placeholder
     such as the window panes et0000 / et2500, one degenerate triangle, is never converted silently)."""
@@ -306,6 +362,11 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
             continue
         cen = tuple(sum(p[i] for p in P) / 3 for i in range(3))
         gtex = (tex_map or {}).get(tex, tex)
+        if atlas and tex in atlas:
+            g_, u0, v0, su, sv = atlas[tex]
+            gtex = g_
+            cs = [(p, n, (u0 + uv[0] * su, v0 + uv[1] * sv), w) for p, n, uv, w in cs]
+            stats['atlas_tris'] = stats.get('atlas_tris', 0) + 1
         ti, _ = grid.nearest(cen, lambda i: part_tex[cpart[i]] == gtex)
         if ti < 0:
             stats['no_tex_part'] += 1
@@ -357,7 +418,8 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
         verts.append((0, 0, 0, 0)); nrms.append((0, 0, 0, 0)); uvs.append((0, 0))
     if len(verts) > 0xFFFF or len(nrms) > 0xFFFF:
         raise ValueError('array too large')
-    if len(pal) > 0xFF:
+    xw = len(pal) > 0xFF   # extended weights form (12-byte records, full count at +0x2A)
+    if len(pal) > 0xFFFF or (xw and not m.xw):
         raise ValueError('weight palette exceeds 255 entries')
 
     # ---- write (source section order)
@@ -369,7 +431,10 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     out += bytes(al(len(out)) - len(out))
     nrm = len(out)
     for nk in nrms:
-        out += struct.pack('>3bB' if m.nstride == 4 else '>3hH', *nk)
+        if m.nstride == 4:   # the byte normal's 4th field is the weight index's low byte (extended weights: index & 0xFF)
+            out += struct.pack('>3bB', nk[0], nk[1], nk[2], nk[3] & 0xFF)
+        else:
+            out += struct.pack('>3hH', *nk)
     out += bytes(al(len(out)) - len(out))
     clr = 0
     if m.clr:
@@ -383,6 +448,9 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     wgt = len(out)
     for ids, vals in pal:
         n = len(ids)
+        if xw:
+            out += struct.pack('>4H4B', *(list(ids) + [0] * (3 - n) + [n] + list(vals) + [0] * (4 - n)))
+            continue
         out += bytes(list(ids) + [0] * (3 - n) + [n] + list(vals) + [0] * (4 - n))
     out += bytes(al(len(out)) - len(out))
     parts_off = len(out)
@@ -427,9 +495,9 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     # file tail beyond the last section in the source (kept as padding size)
     hdr_put = lambda o, fmt, v: struct.pack_into(fmt, out, o, v)
     hdr_put(0x0C, '>I', clr); hdr_put(0x10, '>I', tex); hdr_put(0x14, '>I', wgt)
-    out[0x18] = len(pal)
+    out[0x18] = len(pal) & 0xFF
     hdr_put(0x1C, '>I', parts_off)
-    if m.ext == m.nw:
+    if m.ext == m.nw or m.xw:
         hdr_put(0x2A, '>H', len(pal))
     hdr_put(0x30, '>I', vtx); hdr_put(0x34, '>I', nrm)
     hdr_put(0x38, '>H', len(verts)); hdr_put(0x3A, '>H', len(nrms))
@@ -437,9 +505,12 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
         hdr_put(0x40, '>I', tables.get('blend', 0)); hdr_put(0x44, '>I', tables.get('flip', 0))
     new = bytes(out)
     # parse back with the converter's reader (exactness of the written layout)
-    r = cc.parse_geometry(new)
+    if xw or m.xw:   # the lean converter has no extended-weights reader: parse back with GcModel (le_mirror's layout)
+        out_tris = sum(len(pt['tris']) for pt in GcModel(new).parts)
+    else:
+        out_tris = len(cc.parse_geometry(new)[9]) // 3
     stats['part_images'] = {str(k): [part_tex[k], sorted(v)] for k, v in sorted(part_ps2_tex.items())}
-    stats.update(out_tris=len(r[9]) // 3, out_vertices=len(verts), out_normals=len(nrms), out_uvs=len(uvs),
+    stats.update(out_tris=out_tris, out_vertices=len(verts), out_normals=len(nrms), out_uvs=len(uvs),
                  out_weights=len(pal), out_bytes=len(new), **stream_stats,
                  empty_parts=sum(1 for t in part_tris if not t))
     if stats['out_tris'] != sum(len(t) for t in part_tris):
@@ -565,6 +636,20 @@ def remap_native_tables(old, new, inner=None):
     return bytes(out), report
 
 
+def room_atlas(gbin, ps2bin, ps2_tpl_entry, gc_wh):
+    """-> (rebuild atlas map, layout report) for an ATLAS_OBJECTS room BIN: its PS2 TPL is the entry after the BIN."""
+    if not ps2_tpl_entry or ps2_tpl_entry[0] != 'TPL':
+        raise ValueError('atlas: the PS2 entry after the BIN is not a TPL')
+    m = GcModel(gbin)
+    gimgs = sorted({p['hdr'][0x0C] for p in m.parts if p['tris']})
+    if len(gimgs) != 1:
+        raise ValueError('atlas: the GC model samples images %s (one expected)' % gimgs)
+    pm = pb.parse_bin(ps2bin)
+    used = sorted({pm.materials[t]['diffuse'] for t, cs in pb.triangles(pm)})
+    lay, wh = atlas_for(ps2_tpl_entry[1], 0, used, gc_wh)
+    return atlas_uv_map(lay, wh, gimgs[0]), dict(gc_image=gimgs[0], size=list(wh), rects={str(k): list(v) for k, v in lay.items()})
+
+
 def room(args):
     from assetpipe.rooms import GcIso
     dar = Path(args.dar).read_bytes()
@@ -587,6 +672,7 @@ def room(args):
     pe = {i + 4: (t, b) for i, t, b in pb.dat_entries(pb.afs_read(args.ps2_iso, args.room + '.dat', pb.afs_index(args.ps2_iso)))}
     le = rs.tagged_entries(pay, '<')
     rep, report = {}, dict(room=args.room, dar_in=args.dar, dar_in_sha256=sha(dar), payload_in_bytes=len(pay), objects=[])
+    reconvert = {int(x, 16) for x in (args.reconvert or '').split(',') if x}
     for pair in [x for x in (args.pairs or '').split(',') if x]:
         ga, pa = (int(x, 16) for x in pair.split(':'))
         i = ga - 4
@@ -596,9 +682,14 @@ def room(args):
         gbin = gd[s:e]
         cur = pay[le[i][1]:le[i][2]]
         src_le = to_le(gbin, pair)
-        if cur.rstrip(b'\0') != src_le.rstrip(b'\0'):
+        if cur.rstrip(b'\0') != src_le.rstrip(b'\0') and ga not in reconvert:
             raise ValueError('pair %s: the payload BIN is not le_mirror(GC BIN); refusing to replace modified data' % pair)
-        new, st = rebuild(gbin, pe[pa][1])
+        atl = None
+        if (args.room, ga) in ATLAS_OBJECTS:
+            atl, lay = room_atlas(gbin, pe[pa][1], pe.get(pa + 1), ATLAS_OBJECTS[(args.room, ga)])
+        new, st = rebuild(gbin, pe[pa][1], atlas=atl)
+        if atl:
+            st['atlas'] = lay
         if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
             st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), skipped='PS2 not smaller')
             report['objects'].append(st)
@@ -650,6 +741,9 @@ def room(args):
                 raise ValueError('--etm-from %s: %s is in this room\'s PS2 ETM or absent in %s' % (spec, nm, src_room))
             pents[nm] = sp[nm]; ps2_from[nm] = src_room
         want = None if args.etm == 'all' else set(args.etm.split(','))
+        etm_empty = set(x for x in (args.etm_empty or '').split(',') if x)
+        if want is not None:
+            want |= etm_empty
         pieces = []
         if lents[-1][2] != len(lb) or lents[0][1] != 0x20:
             raise ValueError('ETM sub-files do not tile the entry')
@@ -663,7 +757,13 @@ def room(args):
                     src_le = to_le(gbin, nm)
                     if body[0x40:].rstrip(b'\0') != src_le.rstrip(b'\0'):
                         raise ValueError('ETM %s is not le_mirror(GC)' % nm)
-                    new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
+                    if nm in etm_empty:
+                        # --etm-empty: the PS2 model is a placeholder (no triangle): the GC copy keeps its header,
+                        # joints and part headers with no triangles, as --world-owned
+                        new, st = rebuild(gbin, None, lambda m: [], allow_empty=True)
+                        st['ps2'] = 'placeholder (emptied)'
+                    else:
+                        new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
                     if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
                         st.update(kind='etc', name=nm, skipped='PS2 not smaller')
                         report['objects'].append(st)
@@ -721,6 +821,8 @@ def main():
     a.add_argument('--dar', required=True); a.add_argument('--room', required=True); a.add_argument('--pairs')
     a.add_argument('--etm'); a.add_argument('--pad-to'); a.add_argument('--out', required=True); a.add_argument('--json')
     a.add_argument('--keep-larger', action='store_true'); a.add_argument('--world-owned'); a.add_argument('--etm-from')
+    a.add_argument('--reconvert', help='room BINs (hex,...) already converted in the input dar: rebuilt from the GC source again')
+    a.add_argument('--etm-empty', help='etc models (name,...) whose PS2 model is a placeholder: emptied (lane purge-props24)')
     a.add_argument('--uv-fold', action='store_true', help='converter v3: fold PS2 triangle UVs into [0, 1] (UV_FOLD)')
     a.add_argument('--gc-iso', default=GC_ISO); a.add_argument('--ps2-iso', default=PS2_ISO)
     args = ap.parse_args()

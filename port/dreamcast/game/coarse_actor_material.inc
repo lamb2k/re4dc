@@ -618,8 +618,8 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
             const auto* row=actor_current_role(m,p->info[role],p->appearance,role);
 #endif
             if(!row){out.error=Error::MissingOwnerProof;return out;}
-            const bool original=(role==2 && row->source_bin==451) ||
-                (role==3 && row->source_bin==456) || role==4;
+            const bool original=!RE4DC_GRIP_VARIANT_RUN(run) && ((role==2 && row->source_bin==451) ||
+                (role==3 && row->source_bin==456) || role==4);
             if(!original) {if(run.material!=0){out.error=Error::Material;return out;}continue;}
             Re4dcActorOwnedMaterial want{};
 #if RE4DC_ACTOR_PROOF_LEAN == 1

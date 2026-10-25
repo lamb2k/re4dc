@@ -2611,8 +2611,25 @@ ifneq ($(GANADO_ATLAS_DROP),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP) -DRE4DC_GANADO_ATLAS_DROP_ROOMS=$(GANADO_ATLAS_DROP_ROOMS)
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP)
 endif
+# PRELOAD_SKIP_GCIDLE=1 (render only, native_ui.cpp, default 0; lane purge-cast24): the entry preload passes skip the
+# never-drawn GameCube player/enemy archive pictures listed in platform/preload_skip_gcidle.inc (TEX_USE_CENSUS=2).
+PRELOAD_SKIP_GCIDLE ?= 0
+ifneq ($(PRELOAD_SKIP_GCIDLE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PRELOAD_SKIP_GCIDLE=1 -include platform/preload_skip_gcidle.h '-DRE4DC_GCIDLE_SKIP(c,f)=if(preload_gcidle(c,f))continue;'
+$(OBJDIR)/platform/native_ui.o: platform/preload_skip_gcidle.inc platform/preload_skip_gcidle.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_GCIDLE_SKIP(c,f)='
+endif
 ifneq ($(TEX_USE_CENSUS),0)
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=$(TEX_USE_CENSUS)
+endif
+# TEX_USE_CENSUS=2 (lane purge-cast24): + the per-key lines (platform/tex_use_keys.h, force-included; the call is a macro on
+# an existing line of native_ui.cpp, empty otherwise, so knob-off builds are byte-identical).
+ifeq ($(TEX_USE_CENSUS),2)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -include platform/tex_use_keys.h
+$(OBJDIR)/platform/native_ui.o: platform/tex_use_keys.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_TEX_USE_KEYS()='
 endif
 # CLOSED_PASS_KEEP=1 (needs PS2_WORLD_DRAW=1; native_ui.cpp, render only, default 0): a draw that asks for a PVR list
 # this scene already closed (an opaque or punch-through packet after the translucent list opened) stays in the open
@@ -3976,10 +3993,12 @@ endif
 # PS2_ETS_MATCH=1 (render + room objects, default 0; lane fix-r10d-speed23 2026-10-23): skip the etc-list entries the
 # PS2 room data dropped (EtcModel.cpp EtcModelListSet). r10d: GC lists 16 etc models, the PS2 r10d.dat ETS 13; the
 # three GC-only entries are the et1400 torches (cEmTorch, ids 2/4/5). No room script references them (R10dMain is empty).
+# PS2_ETS_MATCH=2 (lane purge-props24 2026-10-24, GC purge "drop what PS2 dropped"): the same for every chapter 1-2 room
+# (109 entries: torches et1400 / et0c00 / et3800 / et1c00, r11a et1000, r11f et0000 panes; table in EtcModel.cpp).
 PS2_ETS_MATCH ?= 0
-ifneq ($(filter-out 0 1,$(PS2_ETS_MATCH)),)
-$(error PS2_ETS_MATCH is 0 or 1)
+ifneq ($(filter-out 0 1 2,$(PS2_ETS_MATCH)),)
+$(error PS2_ETS_MATCH is 0, 1 or 2)
 endif
-ifeq ($(PS2_ETS_MATCH),1)
-$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=1
+ifneq ($(PS2_ETS_MATCH),0)
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
 endif

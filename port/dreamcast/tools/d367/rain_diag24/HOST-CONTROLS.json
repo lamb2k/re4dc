@@ -1,0 +1,131 @@
+{
+  "source_base": "bca44d58a1fa0a51fd87ba94deba8cba925c8998",
+  "scope": "actual extracted C++ host functions; no target ABI/opcode/cache/programme/guest proof",
+  "passed": [
+    {
+      "feature": 0,
+      "arm": "baseline",
+      "result": "PASS off leaves r10c unadmitted"
+    },
+    {
+      "feature": 0,
+      "arm": "new-DIAG0",
+      "result": "PASS off leaves r10c unadmitted"
+    },
+    {
+      "feature": 0,
+      "arm": "new-DIAG1",
+      "result": "PASS off leaves r10c unadmitted\nPASS actual diagnostic cold/warm/ABI/faultfreeze/causal/return/queue/stop controls"
+    },
+    {
+      "feature": 1,
+      "arm": "baseline",
+      "result": "PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night"
+    },
+    {
+      "feature": 1,
+      "arm": "new-DIAG0",
+      "result": "PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night"
+    },
+    {
+      "feature": 1,
+      "arm": "new-DIAG1",
+      "result": "PASS r10c signature/dispatcher/alloc/fade/frame+room/rebind/destruct/stop/consume/reused-night\nPASS actual diagnostic cold/warm/ABI/faultfreeze/causal/return/queue/stop controls"
+    }
+  ],
+  "night_parity": [
+    {
+      "feature": 0,
+      "bytes": 332968,
+      "sha256": "f2b379580c557860bd97f29d22cc49e0e2cb54bd43ccdc81b10c52ae01251f3b"
+    },
+    {
+      "feature": 1,
+      "bytes": 332968,
+      "sha256": "f2b379580c557860bd97f29d22cc49e0e2cb54bd43ccdc81b10c52ae01251f3b"
+    }
+  ],
+  "full_file_gate0_preprocess_comparisons": 52,
+  "make_guard_mutants_detected": [
+    "RAIN_DC",
+    "RAIN_PS2",
+    "D349_RENDERER_STACK",
+    "PVR_STREAM",
+    "NATIVE_LASER",
+    "EFFECT_SPRITES",
+    "strict-DIAG"
+  ],
+  "make_rejections": [
+    "flag=''",
+    "flag='2'",
+    "flag='-1'",
+    "flag='01'",
+    "flag='1 0'",
+    "flag='0 1'",
+    "flag='%'",
+    "flag='1%'",
+    "flag='yes'",
+    "RAIN_DC=0",
+    "RAIN_DC=1 0",
+    "RAIN_PS2=0",
+    "RAIN_PS2=1 0",
+    "D349_RENDERER_STACK=0",
+    "D349_RENDERER_STACK=1 0",
+    "PVR_STREAM=0",
+    "PVR_STREAM=1 0",
+    "NATIVE_LASER=0",
+    "NATIVE_LASER=1 0",
+    "EFFECT_SPRITES=0",
+    "EFFECT_SPRITES=1 0"
+  ],
+  "native_only_compile_rejections": 2,
+  "compiling_source_mutants_defeated": [
+    "no-cold-writeback",
+    "warm-ABI0-thaw",
+    "no-open-ABI-freeze",
+    "no-terminal-final-publication",
+    "u16-wrap",
+    "generation-wrap",
+    "aggregate-wrap",
+    "retain-native-valid-on-events",
+    "requested-as-return",
+    "return-ABA-ignore-sequence",
+    "return-ignore-callback-generation",
+    "return-ignore-actual-frame",
+    "return-ignore-queue-frame",
+    "return-ignore-alpha",
+    "return-ignore-stop",
+    "return-ignore-indoor",
+    "return-ignore-signature",
+    "return-ignore-count-and-signature",
+    "bind-ignore-signature",
+    "bind-ignore-generation",
+    "bind-retain-nested-cause",
+    "setter-no-invalidation",
+    "room-no-invalidation",
+    "callback-no-observation",
+    "queue-no-observation",
+    "discard-consumed-queue-context"
+  ],
+  "source_pins": {
+    "src/game/filter06.cpp": "60364736a8d2935b1f49cc4bbf73915757e78e03e0333fcde57adfaa88ea6dd0",
+    "src/game/espgen44.cpp": "6f2bab97dc6b8a8fb508c3ee159f2e553dab061a44ee3791e248eaca227a6cea",
+    "port/dreamcast/game/effects30.mk": "66386156f0ccf987665b30e9ecae8e7257087ba41af2b747049b0bcfa22d7d3f",
+    "src/game/filter.cpp": "ff7fe4a958e6ffdbb84eb4352b9a882ca7fcb1f8f8113dc6f738543b00251d27",
+    "src/game/main.cpp": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35",
+    "src/game/trans.cpp": "a83e4235dff43faa39ae46118ca644316a6c1733eaf75c2e726426205e29f91a",
+    "src/game/espgen.cpp": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+    "src/game/espgen10.cpp": "5f2d991b2839505a66d4f3e4b0b6489da15293bf3c91f6d1d6028ce653920ef2",
+    "port/dreamcast/game/platform/gx_stub.cpp": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+    "port/dreamcast/game/platform/native_ui.cpp": "607fc67cd72f5c6acc2a7a1c2aecf651b78c2ca9e847c562171f820f9f12ea4a",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136"
+  },
+  "storage": {
+    "record_bytes": 128,
+    "alignment": 32,
+    "possible_alignment_padding_max": 31,
+    "planned_native_key_bytes": 32,
+    "heap_bytes": 0,
+    "target_stack_codegen_proven": false
+  }
+}

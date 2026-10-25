@@ -15,8 +15,16 @@
     }
     // Picks appended at out (room for part.meshlet_count); returns how many.
     __attribute__((noinline)) unsigned chunk_select(Pick* out){
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
+        unsigned wc_indexed=0,wc_plain=0,wc_empty=0;
+#endif
         const auto& lod=package.part_lods()[part_index];
+#if RE4DC_SCENERY_RECORD_SPLIT
+        const auto* clusters=package.clusters();const auto* levels=package.levels();
+#else
         const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
+#endif
         const bool groups=sg && lean_am;
         unsigned np=0;
 #if RE4DC_SCENERY_CONE
@@ -69,9 +77,17 @@
             const auto& lv=levels[cl.first_level+level];
             for(unsigned i=0;i<lv.meshlet_count;++i){
                 const unsigned li=lv.first_meshlet+i;
+#if RE4DC_SCENERY_RECORD_SPLIT
+                const auto& l=package.bounds(li); // emit metadata is requested only when needed
+#else
                 const auto& l=all[li];
+#endif
 #if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+#if RE4DC_SCENERY_RECORD_SPLIT
+                if(li+1U<package.header().meshlet_count && RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&package.bounds(li+1U));
+#else
                 if(RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&all[li+1]);   // PREF_WALK: the next meshlet header (bounds)
+#endif
 #endif
                 unsigned mask=0;
                 if(cin==2)++lean::st.skipped;
@@ -115,7 +131,11 @@
                         if(culled){
                             const unsigned nr=selected>>28,glo=(selected>>8)&255U,ghi=(selected>>16)&255U;
                             lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+#if RE4DC_SCENERY_RECORD_SPLIT
+                            lean::st.sg_vskip+=nr?package.emit(li).vertex_count-(ghi-glo+1U):package.emit(li).vertex_count;
+#else
                             lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+#endif
                             pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(selected);
                             pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                         }
@@ -127,7 +147,11 @@
                     ++lean::st.sg_tests;
                     if(culled){
                         lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+#if RE4DC_SCENERY_RECORD_SPLIT
+                        lean::st.sg_vskip+=nr?package.emit(li).vertex_count-(ghi-glo+1U):package.emit(li).vertex_count;
+#else
                         lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+#endif
                         // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
                         // is the next one sg_select returned
                         unsigned bits=0,prev=0,j=0;
@@ -160,7 +184,11 @@
                     ++lean::st.sg_tests;
                     if(culled){
                         lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+#if RE4DC_SCENERY_RECORD_SPLIT
+                        lean::st.sg_vskip+=nr?package.emit(li).vertex_count-(ghi-glo+1U):package.emit(li).vertex_count;
+#else
                         lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+#endif
                         // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
                         // is the next one sg_select returned
                         unsigned bits=0,prev=0,j=0;
@@ -197,7 +225,11 @@
                     if(rej){
                         keep&=~rej;
                         unsigned nr=0,vlo=255,vhi=0;
+#if RE4DC_SCENERY_RECORD_SPLIT
+                        const unsigned was=pk.nr==0xffU?package.emit(li).vertex_count:unsigned(pk.hi-pk.lo+1U);
+#else
                         const unsigned was=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo+1U);
+#endif
                         for(unsigned q=0;q<sg_groups;++q)if((keep>>q)&1U){
                             ++nr;const unsigned v0=g[8*q+7]&255U,v1=g[8*q+7]>>8;
                             if(v0<vlo)vlo=v0;
@@ -210,7 +242,22 @@
                     }
                 }
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                // Only retained picks: a cone rejection above removes its
+                // provisional record. nr==0 still owns a replay/setup pick.
+#if RE4DC_SCENERY_RECORD_SPLIT
+                if(package.indexed(package.emit(li)))++wc_indexed;else ++wc_plain;
+#else
+                if(package.indexed(l))++wc_indexed;else ++wc_plain;
+#endif
+                if(!pk.nr)++wc_empty;
+#endif
             }
         }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::count(re4dc::wc24::PickedIndexed,wc_indexed);
+        re4dc::wc24::count(re4dc::wc24::PickedPlain,wc_plain);
+        re4dc::wc24::count(re4dc::wc24::PickedEmpty,wc_empty);
+#endif
         return np;
     }

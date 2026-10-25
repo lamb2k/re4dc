@@ -6,11 +6,11 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 23, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): PS2 river
-  water, trap explosions, Mendez no longer freezes, and no hang on slow disc reads.
+- **Current build:** Test 24, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): PS2
+  weapons, HUD, inventory, animation, sounds and chapter 2 props, and the Blacktail can be equipped.
 - **Playable:** New Game to the end of chapter 2-3, at the castle gate (r200).
 - **Testers:** the release also has a **QA build for testers** with teleports and a Diagnostics page.
-- **Next:** Test 24, see [Coming soon: Test 24](../../README.md#coming-soon-test-24).
+- **Next:** Test 25, see [Coming soon: Test 25](../../README.md#coming-soon-test-25).
 - **Runs on:** a real Dreamcast with GDEMU, or Flycast.
 - **Problems:** see [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and report new ones with the
   [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).

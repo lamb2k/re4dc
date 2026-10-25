@@ -30,6 +30,29 @@ endif
 # mutex across compatible resident parts within one synchronous chunk replay.
 # Every part still sends its own header and starts at the original SQ address.
 # No texture load, pass transition or source-task boundary retains the mutex.
+# Private qualification only: emit every target while observing real PVS source
+# receipts through production batching. Fine candidate dispatch is a later unit.
+PS2_PVS_BATCH_COMPOSE ?= 0
+ifneq ($(PS2_PVS_BATCH_COMPOSE),0)
+ifneq ($(PS2_PVS_BATCH_COMPOSE),1)
+$(error PS2_PVS_BATCH_COMPOSE must be 0 or 1)
+endif
+PVSBC_REQUIRE_ONE := PS2_PVS SCENERY_SUBMIT_BATCH SCENERY_CHUNK SCENERY_SELECT_ONLY SCENERY_REPLAY_LEAN TA_DIRECT MESH_DIRECT PS2_WORLD_MESH PS2_WORLD_HDR_CACHE PS2_STRIP_GROUPS MESH_FASTPATH MESH_VP_SCHED HW_LEAN PVR_STREAM D349_RENDERER_STACK PS2_WORLD_SOURCE_OWNER PS2_WORLD_SOURCE_TEX_PREP
+ifneq ($(strip $(foreach v,$(PVSBC_REQUIRE_ONE),$(if $(filter 1,$($(v))),,bad))),)
+$(error PS2_PVS_BATCH_COMPOSE needs the qualified PVS/direct/chunk/lean/source preparation path at 1)
+endif
+ifneq ($(PS2_PVS_DEFAULT),0)
+$(error PS2_PVS_BATCH_COMPOSE needs PS2_PVS_DEFAULT=0)
+endif
+ifneq ($(filter-out 0,$(WORLD_SCRATCH) $(TA_GUARD) $(PS2_WORLD_TRANSITION_OWNER) $(PS2_WORLD_R11F_OWNER) $(SCENERY_PIECE_STATE) $(SCENERY_DEDUP) $(SCENERY_CONE) $(CPU_BACKFACE) $(TA_MATERIAL_DIAG) $(WORLD_HOLE_DIAG) $(PS2_WORLD_PREFLIGHT_DIAG) $(GC_ASSET_GATE) $(GC_ASSET_MOTION_UNKNOWN)),)
+$(error PS2_PVS_BATCH_COMPOSE has an unqualified owner, scratch or diagnostic path)
+endif
+ifneq ($(filter-out 0 1,$(PS2_INTERIOR_CULL)),)
+$(error PS2_PVS_BATCH_COMPOSE does not qualify interior header-check mode)
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS_BATCH_COMPOSE=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS_DEFAULT=0
+endif
 SCENERY_SUBMIT_BATCH ?= 0
 ifneq ($(SCENERY_SUBMIT_BATCH),0)
 ifneq ($(SCENERY_SUBMIT_BATCH),1)
@@ -41,8 +64,14 @@ endif
 ifneq ($(TA_DIRECT)$(MESH_DIRECT)$(PS2_WORLD_MESH)$(PS2_WORLD_HDR_CACHE),1111)
 $(error SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1)
 endif
+ifeq ($(PS2_PVS_BATCH_COMPOSE),0)
 ifneq ($(filter-out 0,$(PS2_PVS) $(WORLD_SCRATCH) $(TA_GUARD)),)
 $(error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD)
+endif
+else
+ifneq ($(filter-out 0,$(WORLD_SCRATCH) $(TA_GUARD)),)
+$(error SCENERY_SUBMIT_BATCH does not qualify WORLD_SCRATCH or TA_GUARD)
+endif
 endif
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SUBMIT_BATCH=1
 endif

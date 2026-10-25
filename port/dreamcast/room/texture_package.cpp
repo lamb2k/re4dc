@@ -54,6 +54,9 @@ extern "C" void re4dc_pvr_vram_fence();
 #endif
 
 namespace re4dc::texture {
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+UploadObserver upload_observer{};
+#endif
 namespace {
 #if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
 // TEX_META_EVICT=1 (lane vram12 D5): a streamed package takes one KOS allocation instead of three. Its texture
@@ -438,6 +441,11 @@ bool Package::open_streamed(const char* path) {
     if(!RE4DC_PKG_READ(metadata_+sizeof(h),metadata_bytes_-sizeof(h),sizeof(h))) {
         error_="streamed descriptor read failed";close();return false;
     }
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    // The exact bytes read from the member: header + descriptors, before any
+    // in-RAM descriptor edit (GANADO_ATLAS_DROP).
+    if(upload_observer.bytes)upload_observer.bytes(upload_observer.context,this,0,metadata_,metadata_bytes_);
+#endif
     data_=metadata_;streamed_=true;
     if(!validate()) return false;
     for(unsigned i=0;i<header_->texture_count;++i) {
@@ -1068,15 +1076,36 @@ bool Package::upload() {
 #endif
         if(streamed_) {
             auto* target=static_cast<std::uint8_t*>(pvr_textures_[index]);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+            // Gate: the payload chunks are reported with their member offset;
+            // gap() first lets the gate cover bytes no upload reads (padding).
+            if(upload_observer.gap)upload_observer.gap(upload_observer.context,this,file_,
+#if RE4DC_TEX_PACK
+                base_,
+#else
+                0U,
+#endif
+                texture.data_offset);
+            struct Sink { std::uint8_t* dst; std::uint32_t offset; const Package* package; } sink{target,texture.data_offset,this};
+#endif
 #if RE4DC_TEX_PACK
             if(fs_seek(file_,static_cast<off_t>(base_+texture.data_offset),SEEK_SET)!=static_cast<off_t>(base_+texture.data_offset) ||
 #else
             if(fs_seek(file_,texture.data_offset,SEEK_SET)!=static_cast<off_t>(texture.data_offset) ||
 #endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+               !storage::read_chunks(file_,texture.data_size,[](const std::uint8_t* src,std::size_t n,void* ctx) {
+                   auto& s=*static_cast<Sink*>(ctx);
+                   upload_native(src,s.dst,n);s.dst+=n;
+                   if(upload_observer.bytes)upload_observer.bytes(upload_observer.context,s.package,s.offset,src,n);
+                   s.offset+=static_cast<std::uint32_t>(n);return true;
+               },&sink)) {
+#else
                !storage::read_chunks(file_,texture.data_size,[](const std::uint8_t* src,std::size_t n,void* ctx) {
                    auto*& dst=*static_cast<std::uint8_t**>(ctx);
                    upload_native(src,dst,n);dst+=n;return true;
                },&target)) {
+#endif
                 error_="streamed texture upload read failed";return false;
             }
         } else if(texture.payload == kPayloadLinear) {
@@ -1096,6 +1125,16 @@ bool Package::upload() {
         error_ = "PVR palette banks exhausted";
         return false;
     }
+#endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    // The member tail no payload read covered (the gate reads it, then finishes).
+    if(streamed_ && upload_observer.gap)upload_observer.gap(upload_observer.context,this,file_,
+#if RE4DC_TEX_PACK
+        base_,
+#else
+        0U,
+#endif
+        static_cast<std::uint32_t>(size_));
 #endif
     upload_complete_ = true;
     error_ = nullptr;

@@ -76,6 +76,19 @@ endif
 $(OBJDIR)/mod/em35/src/em35/em35.o: GAME_CPPFLAGS += -DRE4DC_EM35_ROUTINE_BYTES=1
 endif
 
+# EVD_MOVIE_NO_READ=1 (lane purge-movies24 2026-10-24, GC asset purge; default 0 = image unchanged; needs
+# ROUTE_MOVIES=1): a route event whose PS2 movie is on the disc (re4dc_movie_available) no longer preloads or
+# ARAM-loads its GameCube evd. r100 s03/s20/s30/s40/s41/s43/s44 and r101 s00/s21/s30 (r11c and r11f already read
+# none while their movies own the events). The movie path never read the evd; only the source preloads did. Pairs
+# with data set evdmv24 (the GC evd files off the disc).
+EVD_MOVIE_NO_READ ?= 0
+ifneq ($(EVD_MOVIE_NO_READ),0)
+ifneq ($(EVD_MOVIE_NO_READ),1)
+$(error EVD_MOVIE_NO_READ must be 0 or 1)
+endif
+$(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_EVD_MOVIE_NO_READ=1
+endif
+
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
 EM_ADMISSION_DISP_FIX ?= 1
@@ -915,6 +928,17 @@ $(error WEAPON_MODULES must be 0 or 1)
 endif
 MODULES += wep01 wep07 wep09 wep11 wep13 wep19
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
+endif
+# WEAPON_WEP04=1 (lane fix-blacktail24 2026-10-24, default 0: no effect): the Blacktail (item 0x27 / 0x28, weapon 4,
+# module 70, src/wep04) links statically like the other WEAPON_MODULES weapons. Without it the equip (SubScreenExit ->
+# weaponLoad -> DLL_Link) finds no module 70 entry and halts "DLL link/unlink failed" (Test 23).
+WEAPON_WEP04 ?= 0
+ifneq ($(WEAPON_WEP04),0)
+ifneq ($(WEAPON_WEP04),1)
+$(error WEAPON_WEP04 must be 0 or 1)
+endif
+MODULES += wep04
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_WEP04=1
 endif
 # EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
 # succeed; roll back only this attempt's bin references on admission failure.
@@ -2627,7 +2651,7 @@ BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
 CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
@@ -3418,6 +3442,8 @@ include vmu_context.mk
 include t2exact.mk
 # Lane scenery19 (SCENERY_CHUNK; default off: no effect).
 include scenery19.mk
+include scenery_data_variants.mk
+include scenery_record_split.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
@@ -3459,3 +3485,10 @@ include worldscratch.mk
 
 # Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
 include kos_cache_p2.mk
+
+# World programme Gate 0, diagnostic only; default 0.
+include world_census24.mk
+include world_census24_errors.mk
+include perf_phase_miss.mk
+# GC-ASSET diagnostics: default 0, no linked object/flags when off.
+include gc_asset_gate.mk

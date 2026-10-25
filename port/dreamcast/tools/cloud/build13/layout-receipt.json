@@ -1,0 +1,1862 @@
+{
+  "schema": "re4dc.build13.layout-controls.v1",
+  "base": "9b248c5b40a49e4c954ea834fdf665fdbbc314f0",
+  "fixture": {
+    "wrapper": "/tmp/b13-current-layout/source/public-world.r4p",
+    "inc": "/tmp/b13-current-layout/source/public-world.inc",
+    "positions": 720,
+    "source_corner_records": 3762,
+    "source_triangles": 2508,
+    "placements": 2,
+    "parts": 3,
+    "grid": [
+      20,
+      12
+    ]
+  },
+  "off_identity": {
+    "base": "9b248c5b40a49e4c954ea834fdf665fdbbc314f0",
+    "compared": [
+      "absent",
+      "explicit0",
+      "explicit64"
+    ],
+    "output_hashes": {
+      ".re4mesh": "36c24884a3ff65cac39270bd251f78c6902833521733580bf69d99c6041c5828",
+      ".r4pw": "0c86fe60a98cc3f82119bb459a5ff6e5c15c1493792a5cdd3cc6cadc0d09f57c",
+      ".json": "45cebfa6fb2d497db6c022e8f28ed17076844a3fb369abd00653c87ff27ac579"
+    },
+    "ordinary_json_args_identity": true,
+    "build12_existing_flags": [
+      {
+        "flag": "--scenery-local-indexed",
+        "output_hashes": {
+          "off-identity.re4mesh": "36c24884a3ff65cac39270bd251f78c6902833521733580bf69d99c6041c5828",
+          "off-identity.r4pw": "0c86fe60a98cc3f82119bb459a5ff6e5c15c1493792a5cdd3cc6cadc0d09f57c",
+          "off-identity.json": "c0c0e5379f45939a152b6661395e1e3967c6e48eb2cdd9f3aab6b72313610080",
+          "ps2-sli1.re4mesh": "443d8e846f3f7923940e81433c6fd418cf76f249edc0dcecfe93f126220ddd44"
+        },
+        "absent_and_explicit0_identity": true
+      },
+      {
+        "flag": "--scenery-direct-strips",
+        "output_hashes": {
+          "off-identity.re4mesh": "36c24884a3ff65cac39270bd251f78c6902833521733580bf69d99c6041c5828",
+          "off-identity.r4pw": "0c86fe60a98cc3f82119bb459a5ff6e5c15c1493792a5cdd3cc6cadc0d09f57c",
+          "off-identity.json": "e8023dfaa8ee74c1cf8af3eb08ca06b4c6611803dc9f101348c4d5602d1ff83d",
+          "ps2-sds1.re4mesh": "5fe2e4667b980f2ad8d39ac19dbce7ac15073a748c11cbae3fcadf28e4ae29b7"
+        },
+        "absent_and_explicit0_identity": true
+      }
+    ],
+    "build12_composition_early_refusals": [
+      {
+        "flag": "--scenery-local-indexed",
+        "diagnostic": "SCENERY_RECORD_SPLIT cannot be composed with Build12 local-indexed/direct-strips; a new lineage format is required",
+        "no_source_read_or_output": true
+      },
+      {
+        "flag": "--scenery-direct-strips",
+        "diagnostic": "SCENERY_RECORD_SPLIT cannot be composed with Build12 local-indexed/direct-strips; a new lineage format is required",
+        "no_source_read_or_output": true
+      }
+    ],
+    "commands": [
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/b13-current-layout/baseline-exporter.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8"
+        ],
+        "host_wall_seconds": 0.3108437060000142,
+        "host_process_peak_rss_kib": 14336,
+        "log": "/tmp/b13-current-layout/off-base.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8"
+        ],
+        "host_wall_seconds": 0.15382528000191087,
+        "host_process_peak_rss_kib": 14336,
+        "log": "/tmp/b13-current-layout/off-absent.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-record-split",
+          "0"
+        ],
+        "host_wall_seconds": 0.15349486700142734,
+        "host_process_peak_rss_kib": 14336,
+        "log": "/tmp/b13-current-layout/off-explicit0.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--meshlet-vertices",
+          "64"
+        ],
+        "host_wall_seconds": 0.16277554099360714,
+        "host_process_peak_rss_kib": 14336,
+        "log": "/tmp/b13-current-layout/off-explicit64.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/b13-current-layout/baseline-exporter.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-local-indexed"
+        ],
+        "host_wall_seconds": 0.15678292800294003,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-base-ps2-sli1.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-local-indexed"
+        ],
+        "host_wall_seconds": 0.1625622290011961,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-current-ps2-sli1.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-local-indexed",
+          "--scenery-record-split",
+          "0"
+        ],
+        "host_wall_seconds": 0.16527227799815591,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-current-ps2-sli1-zero.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/b13-current-layout/baseline-exporter.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-direct-strips"
+        ],
+        "host_wall_seconds": 0.1567556340014562,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-base-ps2-sds1.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-direct-strips"
+        ],
+        "host_wall_seconds": 0.16727234699646942,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-current-ps2-sds1.log"
+      },
+      {
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+          "/tmp/b13-current-layout/source/public-world.r4p",
+          "/tmp/b13-current-layout/source/public-world.inc",
+          "/tmp/b13-current-layout/off-identity",
+          "--lod-floor",
+          "0",
+          "--lod-eps",
+          "24,96,384",
+          "--lod-min-gain",
+          "0.8",
+          "--scenery-direct-strips",
+          "--scenery-record-split",
+          "0"
+        ],
+        "host_wall_seconds": 0.16138936299830675,
+        "host_process_peak_rss_kib": 14592,
+        "log": "/tmp/b13-current-layout/off-current-ps2-sds1-zero.log"
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "limit": 32,
+      "ordinary": "/tmp/b13-current-layout/32/ps2-world.re4mesh",
+      "split": "/tmp/b13-current-layout/32/ps2-world-split.re4mesh",
+      "policy": "/tmp/b13-current-layout/32/ps2-world.r4pw",
+      "ordinary_groups": "/tmp/b13-current-layout/32/ps2-world.r4sg",
+      "split_groups": "/tmp/b13-current-layout/32/ps2-world-split.r4sg",
+      "r4sg_record_offset": 32,
+      "r4sg_record_bytes": 16,
+      "r4sg_group_count": 4,
+      "ordinary_emit_offset": 352,
+      "ordinary_emit_stride": 28,
+      "split_emit_offset": 352,
+      "split_emit_stride": 16,
+      "split_bounds_offset": 1568,
+      "split_bounds_stride": 12,
+      "meshlet_count": 75,
+      "part_count": 3,
+      "mesh_count": 1,
+      "file_hashes": {
+        "ps2-world-split.re4mesh": "4946e341c3359bd996d6cf1b936dc656d60cf1ba3b26ac7fe7ef75b7c20a8c9d",
+        "ps2-world.re4mesh": "38b4ec517b5f066843f72cc95923dced7ec4e9564932aebc656c42d21307a7da"
+      },
+      "metrics": {
+        "mesh_count": 1,
+        "part_count": 3,
+        "placement_count": 2,
+        "resident_mesh_bytes": 21312,
+        "split_resident_mesh_bytes": 21344,
+        "split_record_padding_delta": 32,
+        "stored_vertex_records": 1386,
+        "stored_vertex_bytes": 16632,
+        "repeated_stored_records_within_parts": 666,
+        "ordinary_aos_table_bytes": 2100,
+        "split_emit_table_bytes": 1200,
+        "split_bounds_table_bytes": 900,
+        "all_lods": {
+          "meshlets": 75,
+          "meshlet_setup_calls": 75,
+          "strip_headers": 95,
+          "submitted_corners": 1554,
+          "transformed_local_vertices": 1514,
+          "referenced_pool_records": 1386,
+          "repeated_transform_references": 128,
+          "indexed_meshlets": 9,
+          "pool_offset_bytes": 256,
+          "triangles_including_degenerate": 1364
+        },
+        "asset_lod0": {
+          "meshlets": 66,
+          "meshlet_setup_calls": 66,
+          "strip_headers": 66,
+          "submitted_corners": 1386,
+          "transformed_local_vertices": 1386,
+          "referenced_pool_records": 1386,
+          "repeated_transform_references": 0,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 1254
+        },
+        "synthetic_frame_lod0": {
+          "meshlets": 132,
+          "meshlet_setup_calls": 132,
+          "strip_headers": 132,
+          "submitted_corners": 2772,
+          "transformed_local_vertices": 2772,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 2508,
+          "placement_visits": 2,
+          "part_visits": 6,
+          "polygon_header_upper_bound": 6,
+          "assumption": "all fixture placements/parts/LOD0 meshlets visible; no clipping; header upper bound only"
+        },
+        "metadata_demand_lines": {
+          "dense_all": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 66,
+              "per_record_line_sum": 104,
+              "records": 75,
+              "architectural_bytes": 1200
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 38,
+              "per_record_line_sum": 75,
+              "records": 75,
+              "architectural_bytes": 1200
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 66,
+              "per_record_line_sum": 131,
+              "records": 75,
+              "architectural_bytes": 2100
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 29,
+              "per_record_line_sum": 94,
+              "records": 75,
+              "architectural_bytes": 900
+            },
+            "split_emit_and_bounds_union": 67
+          },
+          "sparse_every_fourth": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 19,
+              "per_record_line_sum": 19,
+              "records": 19,
+              "architectural_bytes": 304
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 19,
+              "per_record_line_sum": 19,
+              "records": 19,
+              "architectural_bytes": 304
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 28,
+              "per_record_line_sum": 28,
+              "records": 19,
+              "architectural_bytes": 532
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 19,
+              "per_record_line_sum": 19,
+              "records": 19,
+              "architectural_bytes": 228
+            },
+            "split_emit_and_bounds_union": 38
+          },
+          "lod0_selected": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 59,
+              "per_record_line_sum": 92,
+              "records": 66,
+              "architectural_bytes": 1056
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 34,
+              "per_record_line_sum": 66,
+              "records": 66,
+              "architectural_bytes": 1056
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 61,
+              "per_record_line_sum": 118,
+              "records": 66,
+              "architectural_bytes": 1848
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 27,
+              "per_record_line_sum": 84,
+              "records": 66,
+              "architectural_bytes": 792
+            },
+            "split_emit_and_bounds_union": 61
+          }
+        }
+      },
+      "geometry_vs_256": [
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 0,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 0,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 0,
+          "triangles": 10,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 0,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 1,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 1,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 1,
+          "triangles": 12,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 1,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 2,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "translucent order changed: NOT QUALIFIED"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 2,
+          "triangles": 19,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 2,
+          "triangles": 13,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 2,
+          "triangles": 4,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        }
+      ],
+      "restart_delta_vs_256": {
+        "additional_strips": 33,
+        "additional_corners": 66,
+        "two_repeat_corners_per_restart": true
+      }
+    },
+    {
+      "limit": 64,
+      "ordinary": "/tmp/b13-current-layout/64/ps2-world.re4mesh",
+      "split": "/tmp/b13-current-layout/64/ps2-world-split.re4mesh",
+      "policy": "/tmp/b13-current-layout/64/ps2-world.r4pw",
+      "ordinary_groups": "/tmp/b13-current-layout/64/ps2-world.r4sg",
+      "split_groups": "/tmp/b13-current-layout/64/ps2-world-split.r4sg",
+      "r4sg_record_offset": 32,
+      "r4sg_record_bytes": 16,
+      "r4sg_group_count": 4,
+      "ordinary_emit_offset": 352,
+      "ordinary_emit_stride": 28,
+      "split_emit_offset": 352,
+      "split_emit_stride": 16,
+      "split_bounds_offset": 800,
+      "split_bounds_stride": 12,
+      "meshlet_count": 27,
+      "part_count": 3,
+      "mesh_count": 1,
+      "file_hashes": {
+        "ps2-world-split.re4mesh": "d6777ade70a55ccfb34bda2c896e58e169970f7c0ecfbbba0c91928cfed94a37",
+        "ps2-world.re4mesh": "36c24884a3ff65cac39270bd251f78c6902833521733580bf69d99c6041c5828"
+      },
+      "metrics": {
+        "mesh_count": 1,
+        "part_count": 3,
+        "placement_count": 2,
+        "resident_mesh_bytes": 15488,
+        "split_resident_mesh_bytes": 15520,
+        "split_record_padding_delta": 32,
+        "stored_vertex_records": 1020,
+        "stored_vertex_bytes": 12240,
+        "repeated_stored_records_within_parts": 300,
+        "ordinary_aos_table_bytes": 756,
+        "split_emit_table_bytes": 432,
+        "split_bounds_table_bytes": 324,
+        "all_lods": {
+          "meshlets": 27,
+          "meshlet_setup_calls": 27,
+          "strip_headers": 62,
+          "submitted_corners": 1488,
+          "transformed_local_vertices": 1148,
+          "referenced_pool_records": 1020,
+          "repeated_transform_references": 128,
+          "indexed_meshlets": 9,
+          "pool_offset_bytes": 256,
+          "triangles_including_degenerate": 1364
+        },
+        "asset_lod0": {
+          "meshlets": 18,
+          "meshlet_setup_calls": 18,
+          "strip_headers": 33,
+          "submitted_corners": 1320,
+          "transformed_local_vertices": 1020,
+          "referenced_pool_records": 1020,
+          "repeated_transform_references": 0,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 1254
+        },
+        "synthetic_frame_lod0": {
+          "meshlets": 36,
+          "meshlet_setup_calls": 36,
+          "strip_headers": 66,
+          "submitted_corners": 2640,
+          "transformed_local_vertices": 2040,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 2508,
+          "placement_visits": 2,
+          "part_visits": 6,
+          "polygon_header_upper_bound": 6,
+          "assumption": "all fixture placements/parts/LOD0 meshlets visible; no clipping; header upper bound only"
+        },
+        "metadata_demand_lines": {
+          "dense_all": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 24,
+              "per_record_line_sum": 38,
+              "records": 27,
+              "architectural_bytes": 432
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 14,
+              "per_record_line_sum": 27,
+              "records": 27,
+              "architectural_bytes": 432
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 24,
+              "per_record_line_sum": 47,
+              "records": 27,
+              "architectural_bytes": 756
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 11,
+              "per_record_line_sum": 34,
+              "records": 27,
+              "architectural_bytes": 324
+            },
+            "split_emit_and_bounds_union": 25
+          },
+          "sparse_every_fourth": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 7,
+              "per_record_line_sum": 7,
+              "records": 7,
+              "architectural_bytes": 112
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 7,
+              "per_record_line_sum": 7,
+              "records": 7,
+              "architectural_bytes": 112
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 10,
+              "per_record_line_sum": 10,
+              "records": 7,
+              "architectural_bytes": 196
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 7,
+              "per_record_line_sum": 7,
+              "records": 7,
+              "architectural_bytes": 84
+            },
+            "split_emit_and_bounds_union": 14
+          },
+          "lod0_selected": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 17,
+              "per_record_line_sum": 26,
+              "records": 18,
+              "architectural_bytes": 288
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 10,
+              "per_record_line_sum": 18,
+              "records": 18,
+              "architectural_bytes": 288
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 19,
+              "per_record_line_sum": 34,
+              "records": 18,
+              "architectural_bytes": 504
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 9,
+              "per_record_line_sum": 24,
+              "records": 18,
+              "architectural_bytes": 216
+            },
+            "split_emit_and_bounds_union": 19
+          }
+        }
+      },
+      "geometry_vs_256": [
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 0,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 0,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 0,
+          "triangles": 10,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 0,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 1,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 1,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 1,
+          "triangles": 12,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 1,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 2,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "translucent order changed: NOT QUALIFIED"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 2,
+          "triangles": 19,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 2,
+          "triangles": 13,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 2,
+          "triangles": 4,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        }
+      ],
+      "restart_delta_vs_256": {
+        "additional_strips": 0,
+        "additional_corners": 0,
+        "two_repeat_corners_per_restart": true
+      }
+    },
+    {
+      "limit": 128,
+      "ordinary": "/tmp/b13-current-layout/128/ps2-world.re4mesh",
+      "split": "/tmp/b13-current-layout/128/ps2-world-split.re4mesh",
+      "policy": "/tmp/b13-current-layout/128/ps2-world.r4pw",
+      "ordinary_groups": "/tmp/b13-current-layout/128/ps2-world.r4sg",
+      "split_groups": "/tmp/b13-current-layout/128/ps2-world-split.r4sg",
+      "r4sg_record_offset": 32,
+      "r4sg_record_bytes": 16,
+      "r4sg_group_count": 4,
+      "ordinary_emit_offset": 352,
+      "ordinary_emit_stride": 28,
+      "split_emit_offset": 352,
+      "split_emit_stride": 16,
+      "split_bounds_offset": 640,
+      "split_bounds_stride": 12,
+      "meshlet_count": 18,
+      "part_count": 3,
+      "mesh_count": 1,
+      "file_hashes": {
+        "ps2-world-split.re4mesh": "93ea86e0e4de745da16fbe2f8d763284e708c337c0b242d4038f35f27b0f2814",
+        "ps2-world.re4mesh": "5efe2621d9ccbdc15059913a71830ee92d75440085e77c263b29f39d2e3ea60a"
+      },
+      "metrics": {
+        "mesh_count": 1,
+        "part_count": 3,
+        "placement_count": 2,
+        "resident_mesh_bytes": 13056,
+        "split_resident_mesh_bytes": 13056,
+        "split_record_padding_delta": 0,
+        "stored_vertex_records": 840,
+        "stored_vertex_bytes": 10080,
+        "repeated_stored_records_within_parts": 120,
+        "ordinary_aos_table_bytes": 504,
+        "split_emit_table_bytes": 288,
+        "split_bounds_table_bytes": 216,
+        "all_lods": {
+          "meshlets": 18,
+          "meshlet_setup_calls": 18,
+          "strip_headers": 62,
+          "submitted_corners": 1488,
+          "transformed_local_vertices": 968,
+          "referenced_pool_records": 840,
+          "repeated_transform_references": 128,
+          "indexed_meshlets": 9,
+          "pool_offset_bytes": 256,
+          "triangles_including_degenerate": 1364
+        },
+        "asset_lod0": {
+          "meshlets": 9,
+          "meshlet_setup_calls": 9,
+          "strip_headers": 33,
+          "submitted_corners": 1320,
+          "transformed_local_vertices": 840,
+          "referenced_pool_records": 840,
+          "repeated_transform_references": 0,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 1254
+        },
+        "synthetic_frame_lod0": {
+          "meshlets": 18,
+          "meshlet_setup_calls": 18,
+          "strip_headers": 66,
+          "submitted_corners": 2640,
+          "transformed_local_vertices": 1680,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 2508,
+          "placement_visits": 2,
+          "part_visits": 6,
+          "polygon_header_upper_bound": 6,
+          "assumption": "all fixture placements/parts/LOD0 meshlets visible; no clipping; header upper bound only"
+        },
+        "metadata_demand_lines": {
+          "dense_all": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 16,
+              "per_record_line_sum": 25,
+              "records": 18,
+              "architectural_bytes": 288
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 9,
+              "per_record_line_sum": 18,
+              "records": 18,
+              "architectural_bytes": 288
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 16,
+              "per_record_line_sum": 31,
+              "records": 18,
+              "architectural_bytes": 504
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 7,
+              "per_record_line_sum": 22,
+              "records": 18,
+              "architectural_bytes": 216
+            },
+            "split_emit_and_bounds_union": 16
+          },
+          "sparse_every_fourth": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 5,
+              "per_record_line_sum": 5,
+              "records": 5,
+              "architectural_bytes": 80
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 5,
+              "per_record_line_sum": 5,
+              "records": 5,
+              "architectural_bytes": 80
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 7,
+              "per_record_line_sum": 7,
+              "records": 5,
+              "architectural_bytes": 140
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 5,
+              "per_record_line_sum": 5,
+              "records": 5,
+              "architectural_bytes": 60
+            },
+            "split_emit_and_bounds_union": 10
+          },
+          "lod0_selected": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 9,
+              "per_record_line_sum": 11,
+              "records": 9,
+              "architectural_bytes": 144
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 6,
+              "per_record_line_sum": 9,
+              "records": 9,
+              "architectural_bytes": 144
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 10,
+              "per_record_line_sum": 15,
+              "records": 9,
+              "architectural_bytes": 252
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 6,
+              "per_record_line_sum": 11,
+              "records": 9,
+              "architectural_bytes": 108
+            },
+            "split_emit_and_bounds_union": 12
+          }
+        }
+      },
+      "geometry_vs_256": [
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 0,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 0,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 0,
+          "triangles": 10,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 0,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 1,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "order changed: visual/order acceptance required"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 1,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 1,
+          "triangles": 12,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 1,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 2,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": false,
+          "ordered_oriented_triangles": false,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "translucent order changed: NOT QUALIFIED"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 2,
+          "triangles": 19,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 2,
+          "triangles": 13,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 2,
+          "triangles": 4,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        }
+      ],
+      "restart_delta_vs_256": {
+        "additional_strips": 0,
+        "additional_corners": 0,
+        "two_repeat_corners_per_restart": true
+      }
+    },
+    {
+      "limit": 256,
+      "ordinary": "/tmp/b13-current-layout/256/ps2-world.re4mesh",
+      "split": "/tmp/b13-current-layout/256/ps2-world-split.re4mesh",
+      "policy": "/tmp/b13-current-layout/256/ps2-world.r4pw",
+      "ordinary_groups": "/tmp/b13-current-layout/256/ps2-world.r4sg",
+      "split_groups": "/tmp/b13-current-layout/256/ps2-world-split.r4sg",
+      "r4sg_record_offset": 32,
+      "r4sg_record_bytes": 16,
+      "r4sg_group_count": 4,
+      "ordinary_emit_offset": 352,
+      "ordinary_emit_stride": 28,
+      "split_emit_offset": 352,
+      "split_emit_stride": 16,
+      "split_bounds_offset": 544,
+      "split_bounds_stride": 12,
+      "meshlet_count": 12,
+      "part_count": 3,
+      "mesh_count": 1,
+      "file_hashes": {
+        "ps2-world-split.re4mesh": "1a62e2886f0a2bc282a9cc81f9ac23330d6d4e60077fd3e027d4e6121bd037b4",
+        "ps2-world.re4mesh": "f86e6e4cc1ae9de00a015e74a12826eae6b3f58d488b15d1d5c3f9dbc62d4e8b"
+      },
+      "metrics": {
+        "mesh_count": 1,
+        "part_count": 3,
+        "placement_count": 2,
+        "resident_mesh_bytes": 11456,
+        "split_resident_mesh_bytes": 11456,
+        "split_record_padding_delta": 0,
+        "stored_vertex_records": 720,
+        "stored_vertex_bytes": 8640,
+        "repeated_stored_records_within_parts": 0,
+        "ordinary_aos_table_bytes": 336,
+        "split_emit_table_bytes": 192,
+        "split_bounds_table_bytes": 144,
+        "all_lods": {
+          "meshlets": 12,
+          "meshlet_setup_calls": 12,
+          "strip_headers": 62,
+          "submitted_corners": 1488,
+          "transformed_local_vertices": 848,
+          "referenced_pool_records": 720,
+          "repeated_transform_references": 128,
+          "indexed_meshlets": 9,
+          "pool_offset_bytes": 256,
+          "triangles_including_degenerate": 1364
+        },
+        "asset_lod0": {
+          "meshlets": 3,
+          "meshlet_setup_calls": 3,
+          "strip_headers": 33,
+          "submitted_corners": 1320,
+          "transformed_local_vertices": 720,
+          "referenced_pool_records": 720,
+          "repeated_transform_references": 0,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 1254
+        },
+        "synthetic_frame_lod0": {
+          "meshlets": 6,
+          "meshlet_setup_calls": 6,
+          "strip_headers": 66,
+          "submitted_corners": 2640,
+          "transformed_local_vertices": 1440,
+          "indexed_meshlets": 0,
+          "pool_offset_bytes": 0,
+          "triangles_including_degenerate": 2508,
+          "placement_visits": 2,
+          "part_visits": 6,
+          "polygon_header_upper_bound": 6,
+          "assumption": "all fixture placements/parts/LOD0 meshlets visible; no clipping; header upper bound only"
+        },
+        "metadata_demand_lines": {
+          "dense_all": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 11,
+              "per_record_line_sum": 18,
+              "records": 12,
+              "architectural_bytes": 192
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 6,
+              "per_record_line_sum": 12,
+              "records": 12,
+              "architectural_bytes": 192
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 11,
+              "per_record_line_sum": 21,
+              "records": 12,
+              "architectural_bytes": 336
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 5,
+              "per_record_line_sum": 15,
+              "records": 12,
+              "architectural_bytes": 144
+            },
+            "split_emit_and_bounds_union": 11
+          },
+          "sparse_every_fourth": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 48
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 48
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 4,
+              "per_record_line_sum": 4,
+              "records": 3,
+              "architectural_bytes": 84
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 36
+            },
+            "split_emit_and_bounds_union": 6
+          },
+          "lod0_selected": {
+            "aos_emit_prefix": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 48
+            },
+            "split_emit": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 48
+            },
+            "aos_full_record": {
+              "architectural_32B_line_union": 4,
+              "per_record_line_sum": 4,
+              "records": 3,
+              "architectural_bytes": 84
+            },
+            "split_bounds": {
+              "architectural_32B_line_union": 3,
+              "per_record_line_sum": 3,
+              "records": 3,
+              "architectural_bytes": 36
+            },
+            "split_emit_and_bounds_union": 6
+          }
+        }
+      },
+      "geometry_vs_256": [
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 0,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 0,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 0,
+          "triangles": 10,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 0,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 0,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 1,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 1,
+          "triangles": 20,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 1,
+          "triangles": 12,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 1,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 1,
+          "triangles": 6,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 0,
+          "pass_": 2,
+          "triangles": 418,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 1,
+          "pass_": 2,
+          "triangles": 19,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 2,
+          "pass_": 2,
+          "triangles": 13,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        },
+        {
+          "part": 2,
+          "cluster": 0,
+          "lod": 3,
+          "pass_": 2,
+          "triangles": 4,
+          "degenerates": 0,
+          "degenerates_reference": 0,
+          "ordered_exact_corners": true,
+          "ordered_oriented_triangles": true,
+          "oriented_triangle_multiset": true,
+          "order_qualification": "identical"
+        }
+      ],
+      "restart_delta_vs_256": {
+        "additional_strips": 0,
+        "additional_corners": 0,
+        "two_repeat_corners_per_restart": true
+      }
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "body CRC",
+      "diagnostic": "R4IM size/CRC"
+    },
+    {
+      "case": "global meshlet 65537",
+      "diagnostic": "mesh/part/global meshlet count (Pick.let is uint16)"
+    },
+    {
+      "case": "Build12 SDS1 lineage words",
+      "diagnostic": "unsupported reserved extension (Build12/SDS1/SDO3 cannot be composed)"
+    },
+    {
+      "case": "Build12 SDO3 marker",
+      "diagnostic": "unsupported reserved extension (Build12/SDS1/SDO3 cannot be composed)"
+    },
+    {
+      "case": "appended runtime extension",
+      "diagnostic": "unsupported appended runtime tables"
+    },
+    {
+      "case": "unknown trailing extension",
+      "diagnostic": "unsupported trailing data/padding"
+    },
+    {
+      "case": "nonprelit encoding",
+      "diagnostic": "only prelit world encoding is supported"
+    },
+    {
+      "case": "nonzero part state",
+      "diagnostic": "part state/UV"
+    },
+    {
+      "case": "bad source owner",
+      "diagnostic": "not a PS2 world source owner"
+    },
+    {
+      "case": "meshlet 257 vertices",
+      "diagnostic": "meshlet capacity"
+    },
+    {
+      "case": "bad local strip reference",
+      "diagnostic": "strip local reference"
+    },
+    {
+      "case": "stale R4PW",
+      "diagnostic": "R4PW reserved/CRC"
+    },
+    {
+      "case": "stale R4SG",
+      "diagnostic": "stale R4SG binding"
+    },
+    {
+      "case": "truncated R4SG",
+      "diagnostic": "R4SG size/CRC"
+    },
+    {
+      "case": "R4SG bounds do not enclose",
+      "diagnostic": "R4SG does not enclose referenced corners"
+    },
+    {
+      "case": "nonadjacent split bounds",
+      "diagnostic": "noncanonical emit/bounds adjacency"
+    },
+    {
+      "case": "v4 cannot be input to converter",
+      "diagnostic": "unsupported R4IM version (Build12 composition is not supported)"
+    },
+    {
+      "case": "wrong split lineage",
+      "diagnostic": "split source lineage mismatch"
+    },
+    {
+      "case": "unsupported physical proof sibling",
+      "diagnostic": "unsupported sibling sidecar: unknown.r4pvs"
+    },
+    {
+      "case": "overlapping cluster selected Pick overflow",
+      "diagnostic": "part selected Pick capacity"
+    },
+    {
+      "case": "indexed conservative part-pool base overlap",
+      "diagnostic": "part pool overlap"
+    }
+  ],
+  "plain_v2_supported": true,
+  "established_preserve_order_r4sg_identity": true,
+  "production_post_group_standalone_identity": true,
+  "nonsequential_index_control": {
+    "path": "/tmp/b13-current-layout/nonsequential.re4mesh",
+    "swapped_meshlets": [
+      0,
+      1
+    ],
+    "source_sha256": "3b535fdaea8693e10e0ae6cc200fe306b682749f7609a24319378c8545729812",
+    "candidate_sha256": "1ca6d379f6d9fbfdc0c01e26c92c5b1788c445d48ca1cfe0b2d04bdde399f0ef",
+    "raw_index_section_identity": true,
+    "exact_per_meshlet_triangle_order": true,
+    "private_admission_claim": false
+  },
+  "restart_primitive_controls": [
+    {
+      "limit": 32,
+      "original_corners": 401,
+      "strips": 14,
+      "corners": 427,
+      "exact_ordered_triangles": true
+    },
+    {
+      "limit": 64,
+      "original_corners": 401,
+      "strips": 8,
+      "corners": 415,
+      "exact_ordered_triangles": true
+    },
+    {
+      "limit": 128,
+      "original_corners": 401,
+      "strips": 4,
+      "corners": 407,
+      "exact_ordered_triangles": true
+    },
+    {
+      "limit": 256,
+      "original_corners": 401,
+      "strips": 2,
+      "corners": 403,
+      "exact_ordered_triangles": true
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+        "/tmp/b13-current-layout/source/public-world.r4p",
+        "/tmp/b13-current-layout/source/public-world.inc",
+        "/tmp/b13-current-layout/32/ps2-world",
+        "--lod-floor",
+        "0",
+        "--lod-eps",
+        "24,96,384",
+        "--lod-min-gain",
+        "0.8",
+        "--meshlet-vertices",
+        "32",
+        "--scenery-record-split",
+        "1"
+      ],
+      "host_wall_seconds": 0.17806739500520052,
+      "host_process_peak_rss_kib": 15872,
+      "log": "/tmp/b13-current-layout/32/export.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+        "/tmp/b13-current-layout/source/public-world.r4p",
+        "/tmp/b13-current-layout/source/public-world.inc",
+        "/tmp/b13-current-layout/64/ps2-world",
+        "--lod-floor",
+        "0",
+        "--lod-eps",
+        "24,96,384",
+        "--lod-min-gain",
+        "0.8",
+        "--meshlet-vertices",
+        "64",
+        "--scenery-record-split",
+        "1"
+      ],
+      "host_wall_seconds": 0.17931942799623357,
+      "host_process_peak_rss_kib": 17180,
+      "log": "/tmp/b13-current-layout/64/export.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+        "/tmp/b13-current-layout/source/public-world.r4p",
+        "/tmp/b13-current-layout/source/public-world.inc",
+        "/tmp/b13-current-layout/128/ps2-world",
+        "--lod-floor",
+        "0",
+        "--lod-eps",
+        "24,96,384",
+        "--lod-min-gain",
+        "0.8",
+        "--meshlet-vertices",
+        "128",
+        "--scenery-record-split",
+        "1"
+      ],
+      "host_wall_seconds": 0.17013544899964472,
+      "host_process_peak_rss_kib": 17692,
+      "log": "/tmp/b13-current-layout/128/export.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+        "/tmp/b13-current-layout/source/public-world.r4p",
+        "/tmp/b13-current-layout/source/public-world.inc",
+        "/tmp/b13-current-layout/256/ps2-world",
+        "--lod-floor",
+        "0",
+        "--lod-eps",
+        "24,96,384",
+        "--lod-min-gain",
+        "0.8",
+        "--meshlet-vertices",
+        "256",
+        "--scenery-record-split",
+        "1"
+      ],
+      "host_wall_seconds": 0.16973855799733428,
+      "host_process_peak_rss_kib": 18332,
+      "log": "/tmp/b13-current-layout/256/export.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_strip_groups.py",
+        "/tmp/b13-current-layout/64/ps2-world.re4mesh",
+        "/tmp/b13-current-layout/64/ps2-world.r4pw",
+        "/tmp/b13-current-layout/post-group/world.re4mesh",
+        "/tmp/b13-current-layout/post-group/world.r4sg"
+      ],
+      "host_wall_seconds": 0.05529491299967049,
+      "host_process_peak_rss_kib": 20124,
+      "log": "/tmp/b13-current-layout/post-group/group.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/scenery_record_split.py",
+        "/tmp/b13-current-layout/post-group/world.re4mesh",
+        "/tmp/b13-current-layout/post-group/world.r4pw",
+        "/tmp/b13-current-layout/post-group/world-split"
+      ],
+      "host_wall_seconds": 0.06303322999883676,
+      "host_process_peak_rss_kib": 20124,
+      "log": "/tmp/b13-current-layout/post-group/split.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/tools/ps2_world_r4im.py",
+        "/tmp/b13-current-layout/source/public-world.r4p",
+        "/tmp/b13-current-layout/source/public-world.inc",
+        "/tmp/b13-current-layout/plain/ps2-world",
+        "--lod-floor",
+        "0",
+        "--lod-eps",
+        "24,96,384",
+        "--lod-min-gain",
+        "0.8",
+        "--no-share",
+        "--scenery-record-split",
+        "1"
+      ],
+      "host_wall_seconds": 0.16117412700259592,
+      "host_process_peak_rss_kib": 20124,
+      "log": "/tmp/b13-current-layout/plain/export.log"
+    }
+  ],
+  "source_admission_compile": {
+    "argv": [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-I/workspace/scratch/794179ef02a4/work/re4dc-b13-current/port/dreamcast/room",
+      "-I/tmp/b13-current-layout",
+      "/tmp/b13-current-layout/source-admission.cpp",
+      "-o",
+      "/tmp/b13-current-layout/source-admission"
+    ],
+    "host_wall_seconds": 1.0473589250032092,
+    "host_process_peak_rss_kib": 80380,
+    "log": "/tmp/b13-current-layout/source-admission-compile.log"
+  },
+  "source_admission": {
+    "argv": [
+      "/tmp/b13-current-layout/source-admission",
+      "/tmp/b13-current-layout/source/public-world.r4p",
+      "/tmp/b13-current-layout/32/ps2-world.re4mesh",
+      "/tmp/b13-current-layout/64/ps2-world.re4mesh",
+      "/tmp/b13-current-layout/128/ps2-world.re4mesh",
+      "/tmp/b13-current-layout/256/ps2-world.re4mesh",
+      "/tmp/b13-current-layout/plain/ps2-world.re4mesh",
+      "/tmp/b13-current-layout/nonsequential.re4mesh"
+    ],
+    "host_wall_seconds": 0.004132055000809487,
+    "host_process_peak_rss_kib": 20124,
+    "log": "/tmp/b13-current-layout/source-admission.log"
+  },
+  "runtime_performance_claim": false,
+  "limitations": [
+    "Public synthetic geometry; no r101 or private assets tested.",
+    "Meshlet size can change ordering; per-LOD order results are explicit.",
+    "32B demand-line counts are architectural unions, not misses or timings.",
+    "Host wall/RSS values describe conversion only, not SH4 performance.",
+    "Known private proof sidecars and Build12 composition are not rebound."
+  ],
+  "tool_source_sha256": {
+    "port/dreamcast/tools/cloud/build13/layout_controls.py": "7196ad1a550b95c87e183c01788895abf396668e7dec26396b629ff855254b46",
+    "port/dreamcast/tools/cloud/build13/source_fixture.py": "086e82ba650842e7e2cb734c03995321c8131dc17bff3a44b6e1ed052b21efe6",
+    "port/dreamcast/tools/scenery_record_split.py": "16b2a07bfeca3660e5be750405c0b86d626e17f9fcb2443ee87676fcf23d8de6",
+    "port/dreamcast/tools/ps2_world_r4im.py": "59faff9eb9c326b5456d71fca3a0c46ccc658013c35ccab42d96d4069bf67d1d"
+  }
+}

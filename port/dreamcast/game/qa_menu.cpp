@@ -18,6 +18,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+#include "world_census24.h"
+#define QA_CENSUS_ROW A_CENSUS,
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+#include "platform/include/perf_phase_miss.h"
+#endif
+#else
+#define QA_CENSUS_ROW
+#endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
 #include "world_scratch.h"
 #endif
@@ -292,6 +301,13 @@ void snap_diag() {
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
     a = scratch_rows(a); // separate completed arm/window, not the restored mode's live FPS
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    {
+        char row[256];
+        if (re4dc::wc24::summary(row, sizeof(row)) > 0) a = addf(a, "%s\n", row);
+        else a = addf(a, "WORLD CENSUS: collecting first complete drawn-frame window\n");
+    }
+#endif
     unsigned v[3];
     if (re4dc_qa_speed && re4dc_qa_speed(v)) a = addf(a, "fps=%u.%u speed=%u cpu=%u\n", v[0] / 10, v[0] % 10, v[1], v[2]);
     else a = addf(a, "fps=NA\n");
@@ -444,8 +460,63 @@ void draw_diag(const Fb& fb) {
     fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, "X: QR SNAPSHOT (PHOTO IT)   B: BACK");
 }
 
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+// The game is paused here. Read only the sealed census, wrapping all its rows
+// rather than truncating the counters at the framebuffer's right edge.
+unsigned census_page_rows(const Fb& fb) {
+    return fb.h > 92 ? unsigned((fb.h - 76) / 16) : 1U;
+}
+unsigned census_rows(const Fb& fb, unsigned first, bool paint) {
+    unsigned cols = fb.w > 60 ? unsigned((fb.w - 60) / 6) : 1U;
+    if (cols > 100) cols = 100;
+    const unsigned limit = first + census_page_rows(fb);
+    unsigned row = 0;
+    const unsigned n = re4dc::wc24::line_count();
+    for (unsigned i = 0; i < n; ++i) {
+        char line[256];
+        if (re4dc::wc24::format_line(i, line, sizeof(line)) <= 0) continue;
+        const unsigned length = unsigned(strlen(line));
+        for (unsigned offset = 0; offset < length; offset += cols, ++row) {
+            if (!paint || row < first || row >= limit) continue;
+            char part[101];
+            const unsigned take = length - offset < cols ? length - offset : cols;
+            memcpy(part, line + offset, take); part[take] = 0;
+            fb_text(fb, 30, 40 + int(row - first) * 16, 1, 2, kCyan, part);
+        }
+    }
+    if (!row && paint)
+        fb_text(fb, 30, 40, 1, 2, kYellow, "COLLECTING THE FIRST COMPLETE DRAWN-FRAME WINDOW");
+    return row;
+}
+unsigned census_pages(const Fb& fb) {
+    const unsigned n = census_rows(fb, 0, false), rows = census_page_rows(fb);
+    return n ? (n + rows - 1) / rows : 1U;
+}
+void draw_census(const Fb& fb, unsigned page) {
+    const unsigned pages = census_pages(fb);
+    page %= pages;
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
+    fb_fill(fb, 20, 8, fb.w - 40, 22, kRed);
+    char title[96];
+    snprintf(title, sizeof(title), fb.w < 480 ? "WORLD CENSUS - PAUSED %u/%u" :
+             "WORLD CENSUS - SEALED WINDOW (GAME PAUSED) %u/%u", page + 1, pages);
+    fb_center(fb, 12, 1, 2, kWhite, title);
+    census_rows(fb, page * census_page_rows(fb), true);
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, "A/RIGHT: NEXT LEFT: PREV X: PMU CONTROLS B: BACK");
+#else
+    fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, fb.w < 480 ? "A/RIGHT: NEXT LEFT: PREV B: BACK" :
+            "A/RIGHT: NEXT PAGE   LEFT: PREVIOUS   B: BACK");
+#endif
+}
+#endif
+
 // ---------------------------------------------------------------- menu
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR, M_CENSUS };
+#else
 enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
+#endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
 #define QA_WS_ROW A_WSCR,
 #define QA_WS_ENUM , A_WSCR
@@ -457,15 +528,23 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     , A_PVS
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    , A_CENSUS
+#endif
     QA_WS_ENUM
 };
 struct Menu {
     bool boot;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    int screen, sel[6], chap, qr_page, census_page;
+    int items[18], nitems;
+#else
     int screen, sel[5], chap, qr_page;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     int items[16], nitems;
 #else
     int items[12], nitems;
+#endif
 #endif
 };
 const char* onoff(unsigned bit) { return (g_flags & bit) ? "ON" : "OFF"; }
@@ -482,6 +561,9 @@ void item_text(int a, char* out, unsigned n) {
     case A_SPEED: snprintf(out, n, "SPEED DISPLAY: %s", speed_name()); break;
     case A_TITLE: snprintf(out, n, "QUIT TO THE TITLE SCREEN"); break;
     case A_DIAG: snprintf(out, n, "DIAGNOSTICS"); break;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    case A_CENSUS: snprintf(out, n, "WORLD CENSUS (LAST COMPLETE WINDOW)"); break;
+#endif
     case A_SHORE: snprintf(out, n, "LAKE SHORE VIEW: %s", &re4dc_qa_shore_far_mm && re4dc_qa_shore_far_mm ? "30 M" : "45 M"); break;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
@@ -511,6 +593,9 @@ void draw(const Fb& fb, const Menu& m) {
     re4dc_log("qa: screen %d fb=%08lx,%08lx\n", m.screen, ptr, ptr);
 }
 void draw_screen(const Fb& fb, const Menu& m) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    if (m.screen == M_CENSUS) { draw_census(fb, unsigned(m.census_page)); return; }
+#endif
     if (m.screen == M_DIAG) { draw_diag(fb); return; }
     if (m.screen == M_QR) { draw_qr(fb, m.qr_page); return; }
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
@@ -590,10 +675,26 @@ int run(Menu& m, bool boot) {
         int& s = m.sel[m.screen];
         if ((press & CONT_DPAD_UP) && n) { s = (s + n - 1) % n; dirty = true; }
         if ((press & CONT_DPAD_DOWN) && n) { s = (s + 1) % n; dirty = true; }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        if (m.screen == M_CENSUS) {
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+            if (press & CONT_X) { re4dc::ppm14::run_controls(); dirty = true; }
+#endif
+            const int pages = int(census_pages(fb));
+            if (press & (CONT_A | CONT_DPAD_RIGHT | CONT_DPAD_DOWN)) {
+                m.census_page = (m.census_page + 1) % pages; dirty = true;
+            } else if (press & (CONT_DPAD_LEFT | CONT_DPAD_UP)) {
+                m.census_page = (m.census_page + pages - 1) % pages; dirty = true;
+            }
+        }
+#endif
         if (press & CONT_B) {
             dirty = true;
             if (m.screen == M_PRE) m.screen = M_CHAP;
             else if (m.screen == M_QR) m.screen = M_DIAG;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+            else if (m.screen == M_CENSUS) m.screen = M_MAIN;
+#endif
             else if (m.screen == M_CHAP || m.screen == M_DIAG) m.screen = M_MAIN;
             else if (!boot) return A_RESUME;
         }
@@ -622,6 +723,9 @@ int run(Menu& m, bool boot) {
                     for (int k = 0; k < 4 && (re4dc_quality_speed() & 2) == was; ++k) re4dc_speed_cycle();
                 }
                 else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+                else if (a == A_CENSUS) { m.census_page = 0; m.screen = M_CENSUS; }
+#endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
                 else if (a == A_WSCR) {   // live arm, this boot only: A -> B -> C -> A
@@ -681,12 +785,15 @@ void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset) {
 // Harness (`qa_menu` / `qa_diag` warp lines): the menu drawn once, the Diagnostics page and its QR pages held for
 // hold_ms each (captures), then a teleport to /cd/dc/qa/<file> (file empty: resume).
 int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::pause();
+#endif
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
                          A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -700,6 +807,15 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
         draw(fb_displayed(), m);
         re4dc_log("qa: auto diagnostics (%d bytes, %d QR pages)\n", g_diag_len, qr_pages());
         for (unsigned t = 0; t < hold_ms; t += 16) spin_us(16000);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        const unsigned pages = census_pages(fb_displayed());
+        for (unsigned pg = 0; pg < pages; ++pg) {
+            m.screen = M_CENSUS; m.census_page = int(pg);
+            draw(fb_displayed(), m);
+            re4dc_log("qa: auto world census page %u/%u\n", pg + 1, pages);
+            for (unsigned t = 0; t < hold_ms; t += 16) spin_us(16000);
+        }
+#endif
         for (int pg = 0; pg < qr_pages(); ++pg) {
             m.screen = M_QR; m.qr_page = pg;
             draw(fb_displayed(), m);
@@ -710,6 +826,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     re4dc_world_meter_resume(); // captures keep the sealed snapshot; all exits reset the next interval
 #endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::resume();
+#endif
     if (!file || !file[0]) return 0;
     snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
     re4dc_log("qa: auto teleport %s\n", g_path);
@@ -719,14 +838,17 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 
 // In-game menu (the warp rig's poll, frame loop stopped). 0 resume, 1 teleport (*path), 2 title, 3 refill health.
 int re4dc_qa_menu(const char** path) {
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::pause();
+#endif
     static Menu m;
     m.boot = false;
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
                          A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -738,6 +860,9 @@ int re4dc_qa_menu(const char** path) {
     wait_release();
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     re4dc_world_meter_resume(); // exclude paused-menu wall time from the next window
+#endif
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+    re4dc::wc24::resume();
 #endif
     re4dc_log("qa: menu closed (%d)\n", a);
     if (a == -1) { *path = g_path; return 1; }

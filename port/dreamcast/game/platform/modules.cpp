@@ -152,6 +152,9 @@ MODULE(wep11)
 MODULE(wep13)
 MODULE(wep19)
 #endif
+#if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
+MODULE(wep04)
+#endif
 #if RE4DC_SUBSCREEN && !RE4DC_SUBSCREEN_OVL
 MODULE(Sscrn)
 #endif
@@ -312,6 +315,9 @@ static const Re4dcModule g_modules[] = {
     MODULE(52, wep11), // WEAPON_MODULES: TMP (+ the stock archive wep20)
     MODULE(59, wep13), // WEAPON_MODULES: rocket launcher
     MODULE(53, wep19), // WEAPON_MODULES: hand / incendiary / flash grenades
+#endif
+#if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
+    MODULE(70, wep04), // WEAPON_WEP04: Blacktail
 #endif
 #if RE4DC_SUBSCREEN_OVL
     {71, "Sscrn", 0, 0, 0, 0, 0, 0, 0},  // sub screen overlay (entry points set per load)
