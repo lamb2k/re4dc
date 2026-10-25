@@ -46,8 +46,12 @@ The PS2 look and sound in place of the GameCube's, still up to the castle gate. 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 25.
 
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [ ] **Less scenery drawn when it can't be seen.**
+- [x] **Faster scenery in the village square and the farm:** the world is drawn in bigger pieces.
 - [ ] **The farm's PS2 world layout.**
+- [x] **Hanging cloth, flags and fabric** are drawn ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- [x] **Leon's flashlight** lights the ground in the night areas ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- [x] **Faster merchant hideout** in the cave: simpler back shelves.
+- [x] **PS2 animations** for the last enemies and characters that still used GameCube ones.
 
 ## What's new in Test 23
 
