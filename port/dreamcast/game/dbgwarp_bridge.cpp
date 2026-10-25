@@ -49,6 +49,8 @@
 //   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
 //   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
 //   bring <distance> [side] (the handpose / kill target moved that far in front of Leon, side to his right: still pairs) |
+//   setem <room frame> <esl index> [chkDead, default 1] (once: the setEm(index, -1, 0, 1, 1) work, as r104_execEvent20 sets the merchant 0x5E; census and
+//   still pairs of event-spawned characters without the event or its sub screen) |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
@@ -264,6 +266,10 @@ struct Warp {
     // own em10HandSet(em, 0) sees no change and keeps the pose (setHand does not touch Hand_type either).
     bool has_hand, hand_done;
     u32 box_frame, box_dist; bool has_box, box_done;  // `boxbreak <frame> [dist]` (lane purge-props24 still rig)
+    bool has_setem, setem_done;
+    u32 setem_frame;
+    s16 setem_no;
+    int setem_chkdead;
     u32 bring;  // `bring <distance> [side]` (still pairs): the handpose / kill target is moved this far in front of Leon
     s32 bring_side;  // (and `side` to his right), facing him
     u32 hand_frame;
@@ -589,6 +595,11 @@ void load()
             wp.hand_frame = num(tok[1]);
             wp.hand_type = (int) num(tok[2]);
             wp.hand_id = (int) num(tok[3]);
+        } else if (!strcmp(k, "setem") && n >= 3) {
+            wp.has_setem = true;
+            wp.setem_frame = num(tok[1]);
+            wp.setem_no = (s16) num(tok[2]);
+            wp.setem_chkdead = n >= 4 ? (int) num(tok[3]) : 1;
         } else if (!strcmp(k, "bring") && n >= 2) {
             wp.bring = num(tok[1]);
             wp.bring_side = n >= 3 ? (s32) strtol(tok[2], nullptr, 0) : 0;
@@ -1061,6 +1072,22 @@ void kill_poll()
         } else {
             re4dc_log("warp: boxbreak: no intact box in the room\n");
         }
+    }
+    if (wp.has_setem && !wp.setem_done && wp.room_frames >= wp.setem_frame && pPL) {
+        wp.setem_done = true;
+        // setEm lives in the stage modules only (gen_modules.py), so its body (st/em_wrap.cpp cEmWrap::setEm) runs here
+        // on the image's em_set functions: an entry already set is fetched, else created, then marked alive.
+        const int listok = checkListId(wp.setem_no);
+        cEm* e = GetEmPtrFromList(wp.setem_no);
+        if (!e) {
+            e = EmSetFromList2(wp.setem_no, wp.setem_chkdead);
+            if (e == errEm) e = nullptr;
+        }
+        if (e) EmListSetAlive(wp.setem_no, 1);
+        re4dc_log("warp: setem 0x%x -> m=%08x at room frame %u list=%d id=%02x type=%d room=%04x be_flag=%02x listok=%d nArray=%u\n", (unsigned) wp.setem_no,
+                  (unsigned) (uintptr_t) e, (unsigned) wp.room_frames, (int) pG->em_list_no, (unsigned) EM_LIST(wp.setem_no)->id,
+                  (int) EM_LIST(wp.setem_no)->type, (unsigned) EM_LIST(wp.setem_no)->room,
+                  (unsigned) EM_LIST(wp.setem_no)->be_flag, listok, (unsigned) EmMgr.nArray);
     }
     if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
         auto bring = [](cEm* e) {

@@ -1043,8 +1043,9 @@ LH24D = os.environ.get('LH24D', '/root/re4data/private/leonhair24-20261024')
 if os.path.isdir(LH24D):
     DATA['leonhair24'] = {'dc/tex.pak': LH24D + '/dc/tex.pak'}
     PAK_DERIVED['leonhair24'] = LH24D + '/pak-derived.json'
-# leonatl24 (lane purge-cast24 10-24, GC purge; data only): leonhair24's pack with Leon's main atlas ec255e66-76812316 re-made
-# from the PS2 pl00 pictures through charbake (cb_atlas_gc.py over PS2 sources, LVQ, headroom 2x): same key, size, VQ, UVs.
+# leonatl24 (lane purge-cast24 10-24, GC purge; data only; user approved the pl00 look 10-25): leonhair24's pack with Leon's
+# atlases ec255e66-76812316 (pl00 jacket) and 7506e95f-68cf2211 (pl08) re-made from the PS2 pl00 / pl08 pictures through charbake
+# (cb_atlas_gc.py / atlas_ps2.py over PS2 sources, LVQ, headroom 2x): same keys, sizes, VQ formats (pl08 mipmapped), UVs.
 # After leonhair24; build_leonatl24.py takes any input pack. Private store /root/re4data/private/leonatl24-20261024 (RECIPE.txt).
 LA24D = os.environ.get('LA24D', '/root/re4data/private/leonatl24-20261024')
 if os.path.isdir(LA24D):
