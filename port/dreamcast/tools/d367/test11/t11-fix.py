@@ -1279,6 +1279,18 @@ DATA['n256x25'] = {'dc/native/r106/ps2-world.re4mesh': N256X25D + '/dc/native/r1
                    'dc/native/r109/ps2-world.r4sg': N256X25D + '/dc/native/r109/ps2-world.r4sg',
                    'dc/native/r117/ps2-world.re4mesh': N256X25D + '/dc/native/r117/ps2-world.re4mesh'}
 
+# n256z25 (lane world-blender25 10-25): r111 / r119 worlds at 256-vertex meshlets (ps2_room_r4im.py from their recorded
+# recipes: ch2regen-20261018 worlds/t-fed4122a/r111-ps2 and corpus-uvg r119-ps2-uvg, both reproducing the shipped 64 mesh
+# byte-identically) plus strip groups (ps2_strip_groups.py --preserve-order, as sg109) for r111 / r119 / r117 / r106, each
+# r4sg bound to its room's certified policy source crc. Without strip groups 256 alone made r119 slower (+2.7 ms). Census
+# (Flycast WORLD_CENSUS24, castgc warps, world ms per drawn tick): r111 15.60 -> 13.60, r119 14.80 -> 14.20, r117 (n256x25)
+# 14.21 -> 13.33, r106 (n256x25) 12.20 -> 11.29. R4PW / ids / r4tc unchanged. Needs SCENERY_N256=1 and goes after n256x25
+# in the data line; release line only, never KSETS. Store: re4-assets-private/n256z25-20261025.
+N256Z25D = os.environ.get('N256Z25D', '/root/re4data/private/n256z25-20261025')
+DATA['n256z25'] = {'dc/native/%s/ps2-world.%s' % (r, x): N256Z25D + '/dc/native/%s/ps2-world.%s' % (r, x)
+                   for r in ('r111', 'r119') for x in ('re4mesh', 'r4sg')}
+DATA['n256z25'].update({'dc/native/%s/ps2-world.r4sg' % r: N256Z25D + '/dc/native/%s/ps2-world.r4sg' % r
+                        for r in ('r106', 'r117')})
 
 if __name__ == '__main__':
     main()
