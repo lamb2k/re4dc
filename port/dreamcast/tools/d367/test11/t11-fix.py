@@ -934,6 +934,22 @@ if os.path.isdir(PROPS24PD):
     for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
         DATA['props24p']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (PROPS24PD, _r)
     PAK_DERIVED['props24p'] = PROPS24PD + '/pak-derived.json'
+# atlas24 (lane purge-props24 10-24, after props24p): r117 BIN 0x1f (the church chandelier) PS2 geometry + one PS2 atlas
+# picture (ps2_objects.ATLAS_OBJECTS: GC 256x256 <- PS2 images 0 / 1 / 3 packed 256x128). dc/tex.pak = props24p's + 2 keys.
+ATLAS24D = os.environ.get('ATLAS24D', '/root/re4data/private/atlas24-20261024')
+if os.path.isdir(ATLAS24D):
+    DATA['atlas24'] = {'dc/tex.pak': ATLAS24D + '/dc/tex.pak', 'st1/r117.dar': ATLAS24D + '/st1/r117.dar'}
+    PAK_DERIVED['atlas24'] = ATLAS24D + '/pak-derived.json'
+# props24b (same lane, after atlas24): the breakable boxes / barrels (et0100 et0200 et1100 et1200 et1e00 et1f00 et2d00
+# et2e00/01 et2f00/01 et3c00) PS2 geometry in every ch1-2 room; their picture is the debris effect model's TPL (already PS2
+# in ch1 via items12); the ch2 rooms also get the PS2 break debris and pickups (ps2_items.py over a lane lib). 28 st1 room
+# files + st2/r200.dar (list: the store's SHA256SUMS). dc/tex.pak = atlas24's + 22 keys.
+PROPS24BD = os.environ.get('PROPS24BD', '/root/re4data/private/props24b-20261024')
+if os.path.isdir(PROPS24BD):
+    DATA['props24b'] = {'dc/tex.pak': PROPS24BD + '/dc/tex.pak', 'st2/r200.dar': PROPS24BD + '/st2/r200.dar'}
+    for _f in sorted(os.listdir(PROPS24BD + '/st1')):
+        DATA['props24b']['st1/' + _f] = PROPS24BD + '/st1/' + _f
+    PAK_DERIVED['props24b'] = PROPS24BD + '/pak-derived.json'
 # pui24 (lane purge-ui24 10-24, GC asset purge): fol24's tex.pak with the core HUD pictures as PS2 Core.dat pixels under
 # their GC keys (tools/d367/purgeui24/ps2_hud_pak.py; ammo lens, life sphere, gauge arcs / domes, name label, bullet,
 # partner icons, Ashley gauge, d-pad, the two UI_HUD_MASK composites): 14 packages, same sizes and formats. Data only, no
