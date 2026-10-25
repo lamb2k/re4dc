@@ -75,8 +75,8 @@ fi
 if grep -qE '(^| )ACTOR_GANADO_PS2_STUMP_DIR=' <<<"$RECIPE" &&
    [ ! -f "$ASSETS/ps2stump/ganado_ps2_stump_runtime.h" ]; then
   RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^ACTOR_GANADO_PS2_STUMP_DIR=' | tr '\n' ' ')
-  PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }ACTOR_GANADO_PS2_STUMP=0"
-  echo "build-public: no PS2 stump header in $ASSETS: ACTOR_GANADO_PS2_STUMP=0 (GameCube stump / hand poses; see CONTRIBUTING-PORT.md)"
+  PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }ACTOR_GANADO_PS2_STUMP=0 ACTOR_GANADO_PS2_GRIP=0"
+  echo "build-public: no PS2 stump header in $ASSETS: ACTOR_GANADO_PS2_STUMP=0 ACTOR_GANADO_PS2_GRIP=0 (GameCube stump / hand poses; see CONTRIBUTING-PORT.md)"
 fi
 
 # Test 18 on: Leon after his head comes off (LEON_HEADLESS) compiles in the PS2 neck header ASSETS/ps2leonhead/ps2leon_neck.h
