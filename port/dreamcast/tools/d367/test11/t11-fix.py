@@ -1105,8 +1105,8 @@ DATA['ps2snd24'] = {p: PS2SND24D + '/' + p for p in (
 # in their GC slots (same offsets / sizes, GC joints and part headers) and the weapon TPL records rekeyed to the PS2
 # pictures (loose dc/tex packages). Motions, REL, sounds, Leon's hand BINs unchanged. 19 files, 48 BINs, 43 pictures;
 # wep05 (Broken Butterfly) stays GC (PS2 bone 1 rest differs by 15 mm). Last in the data line: it replaces any earlier
-# em/wepNN.drs. Private store copy: re4-assets-private/wep24-20261024 (RECIPE.txt, SHA256SUMS, provenance.tsv).
-WEP24D = os.environ.get('WEP24D', '/root/re4data/private/wep24-20261024')
+# em/wepNN.drs. Private store copy: re4-assets-private/wep24b-20261025 (10-25: + fill_empty_parts, the Test 24 heap-4 fix; RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24D = os.environ.get('WEP24D', '/root/re4data/private/wep24b-20261025')
 DATA['wep24'] = {'em/wep%s.drs' % n: WEP24D + '/em/wep%s.drs' % n
                  for n in ('01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17', '18',
                            '20', '21', '24')}
@@ -1115,8 +1115,8 @@ DATA['wep24']['tex'] = WEP24D + '/tex'
 # Leon's ss_wep00..17) rewritten the same way (ps2_weapons.py convert-ss on the release's own files): 16 files, 30 BINs,
 # 26 pictures. Leon's hand BINs (attach 9 / 15) unchanged. Use WITH wep24: its tex/ holds only the 2 keys wep24 lacks.
 # GC left: ss_wep05 / em/wep05 (Broken Butterfly), tools/d367/ps2cast/weapons-gc-allow.tsv. Store copy:
-# re4-assets-private/wep24ss-20261024 (RECIPE.txt, SHA256SUMS, provenance.tsv).
-WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ss-20261024')
+# re4-assets-private/wep24ssb-20261025 (10-25: + fill_empty_parts; RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ssb-20261025')
 DATA['wep24ss'] = {'ss/cmn/ss_wep%s.dat' % n: WEP24SSD + '/ss/cmn/ss_wep%s.dat' % n
                    for n in ('00', '01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17')}
 DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
@@ -1127,6 +1127,13 @@ DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
 PMWEP24D = os.environ.get('PMWEP24D', '/root/re4data/private/pmwep24-20261024')
 if os.path.isdir(PMWEP24D):
     DATA['pmwep24'] = {'em/' + _f: '%s/em/%s' % (PMWEP24D, _f) for _f in sorted(os.listdir(PMWEP24D + '/em'))}
+# pmwep24b (same lane, 10-25): pmwep24 re-derived on wep24b (empty PS2 weapon parts carry one zero-area triangle, so no
+# part falls to the 128 KB native_model preparation); its wep02 / wep12 BIN slots equal wep24b's byte for byte. Use WITH
+# wep24b, after it, instead of pmwep24. Store: re4-assets-private/pmwep24b-20261025.
+PMWEP24BD = os.environ.get('PMWEP24BD', '/root/re4data/private/pmwep24b-20261025')
+if os.path.isdir(PMWEP24BD):
+    DATA['pmwep24b'] = {'em/' + _f: '%s/em/%s' % (PMWEP24BD, _f) for _f in sorted(os.listdir(PMWEP24BD + '/em'))}
+    CLASH += [('pmwep24', 'pmwep24b')]
 # evdmv24 (lane purge-movies24 10-24, GC asset purge): takes the GameCube evd files of the movie-owned route events off
 # the disc (r100 s03 s20 s40 s41 s43 s44, r101 s00 s21 s30, r11f s01 s10, each with its .evq sidecar): 22 files,
 # 12,968,300 bytes. Their PS2 movies (dc/movie/*.seq) present the events; ONLY with EVD_MOVIE_NO_READ=1 (r100 / r101
