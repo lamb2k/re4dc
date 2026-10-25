@@ -201,6 +201,8 @@ bool install_index_stream(CatalogStream stream,void* stream_context,CatalogReadA
     std::sort(parse.tex,parse.tex+parse.texn,tex_less);
     if(parse.tex && parse.texn){void* shrunk=std::realloc(parse.tex,parse.texn*sizeof(TexEntry));if(shrunk)parse.tex=static_cast<TexEntry*>(shrunk);}
     tex_table=parse.tex;tex_count=parse.texn;parse.tex=nullptr;
+    if(tex_table && !desc_ring)desc_ring=static_cast<DescEntry*>(std::calloc(DescRing,sizeof(DescEntry)));
+    if(desc_ring)for(unsigned i=0;i<DescRing;++i)desc_ring[i].value=0;
     catalog_ok=true;return true;
 }
 unsigned catalog_generation(){return catalog_ok?catalog_epoch:0;}
@@ -227,8 +229,9 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     unsigned index=rows;AssetDescription row;
     if(catalog_read) {
         unsigned found=rows;
-        const SparseResult result=tex_table && !std::strcmp(kind,"texture")?tex_find(id,digest,epoch,found):
-            sparse_find(kind,id,digest,epoch,found);
+        const bool tex=tex_table && !std::strcmp(kind,"texture");
+        const SparseResult result=tex?tex_find(id,digest,epoch,found,row):sparse_find(kind,id,digest,epoch,found);
+        if(tex && result==SparseFound)desc_store(epoch<<14|found,row);
         if(!catalog_ok || !index_generation(epoch))return {};
         if(result==SparseFault){catalog_fault(CatalogRead);return {};}
         if(result==SparseFound)index=found;
@@ -273,7 +276,7 @@ bool describe_checked(CheckedAsset asset,AssetDescription* out) {
     if(!checked_current(asset))return false;
     const unsigned epoch=catalog_epoch,rows=catalog_rows,index=asset.value&16383U;
     AssetDescription row{};
-    if(index<rows){if(!index_row(index,row))return false;}
+    if(index<rows){if(!desc_find(asset.value,row) && !index_row(index,row))return false;}
     else {
         if(index-rows>=unknown_count)return false;
         row=unknown_assets[index-rows];

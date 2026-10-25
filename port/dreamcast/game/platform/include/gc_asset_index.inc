@@ -69,13 +69,27 @@ static_assert(sizeof(TexEntry)==6,"packed texture entry");
 TexEntry* tex_table;unsigned tex_count;
 void tex_table_free(){std::free(tex_table);tex_table=nullptr;tex_count=0;}
 bool tex_less(const TexEntry& a,const TexEntry& b){const int o=std::memcmp(a.prefix,b.prefix,4);return o?o<0:a.row<b.row;}
-SparseResult tex_find(const char* id,const Digest& digest,unsigned epoch,unsigned& index){
+// Description ring (gate-ON only, 128 x 104 B = 13 KB with the table): the row a
+// texture bind just confirmed, so that texture's first room use (describe) reads
+// no record again. Token-tagged; a miss reads the row as before.
+struct DescEntry{unsigned value;AssetDescription row;};
+constexpr unsigned DescRing=128;
+DescEntry* desc_ring;unsigned desc_next;
+bool desc_find(unsigned value,AssetDescription& out){
+    if(desc_ring)for(unsigned i=0;i<DescRing;++i)if(desc_ring[i].value==value){out=desc_ring[i].row;return true;}
+    return false;
+}
+void desc_store(unsigned value,const AssetDescription& row){
+    if(!desc_ring)return;
+    auto& d=desc_ring[desc_next++%DescRing];d.value=value;d.row=row;
+}
+SparseResult tex_find(const char* id,const Digest& digest,unsigned epoch,unsigned& index,AssetDescription& found){
     unsigned l=0,u=tex_count;
     while(l<u){const unsigned m=(l+u)/2;if(std::memcmp(tex_table[m].prefix,digest.bytes,4)<0)l=m+1;else u=m;}
     for(;l<tex_count && !std::memcmp(tex_table[l].prefix,digest.bytes,4);++l){
         AssetDescription row;
         if(!index_read_row(catalog_read,catalog_context,epoch,catalog_rows,catalog_bytes,tex_table[l].row,row))return SparseFault;
-        if(!index_compare(row,"texture",id,digest)){index=tex_table[l].row;return SparseFound;}
+        if(!index_compare(row,"texture",id,digest)){index=tex_table[l].row;found=row;return SparseFound;}
     }
     return SparseAbsent;
 }
