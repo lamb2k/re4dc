@@ -300,7 +300,7 @@ def atlas_uv_map(lay, wh, gc_image):
 
 
 
-def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None, atlas=None):
+def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None, atlas=None, pos_offset=None):
     """-> (new big-endian GC BIN, stats). gc_tris_from: selftest geometry list instead of the PS2 BIN.
     allow_empty: a model with no triangle is written (world-owned objects); otherwise it is refused (a PS2 placeholder
     such as the window panes et0000 / et2500, one degenerate triangle, is never converted silently)."""
@@ -329,6 +329,8 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
         ptex = [x['diffuse'] for x in pm.materials]
         ps2 = []
         for t, cs in pb.triangles(pm):
+            if pos_offset:   # gc-audit25: model-space shift fitting a PS2 mesh to the GC skeleton (ps2_weapons fit)
+                cs = [dict(c, p=tuple(a + b for a, b in zip(c['p'], pos_offset))) for c in cs]
             ps2.append((ptex[t], [(c['p'], c['n'], c['uv'], tuple(c['w'])) for c in cs]))
     else:
         ps2 = gc_tris_from(m)

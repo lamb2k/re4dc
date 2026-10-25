@@ -20,6 +20,14 @@ $(error GC_ASSET_PROF=1 requires GC_ASSET_GATE=1)
 endif
 PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_PROF=1
 endif
+# GC_ASSET_SRC=1 (requires GC_ASSET_GATE=1): log each payload capture's digest prefix, entry point and caller (GC-ASSET-SRC). Diagnostic.
+GC_ASSET_SRC ?= 0
+ifneq ($(GC_ASSET_SRC),0)
+ifneq ($(GC_ASSET_SRC)$(GC_ASSET_GATE),11)
+$(error GC_ASSET_SRC=1 requires GC_ASSET_GATE=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_SRC=1
+endif
 # GC_ASSET_HARVEST=1: offline catalog harvest build (logs catalog misses, no quarantine). Not a gate run.
 GC_ASSET_HARVEST ?= 0
 ifneq ($(GC_ASSET_HARVEST),0)

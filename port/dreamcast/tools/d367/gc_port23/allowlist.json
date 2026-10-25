@@ -11,514 +11,124 @@
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "755e1575-fea9d26b",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0100",
    "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "755e1575-fea9d26b",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0101",
    "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "755e1575-fea9d26b",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0103",
    "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "755e1575-fea9d26b",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "011f",
    "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "803499f2-4b0a27a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0100",
    "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "803499f2-4b0a27a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0101",
    "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "803499f2-4b0a27a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0103",
    "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "803499f2-4b0a27a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "011f",
    "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "3acc7fea-7110b4a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0100",
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "3acc7fea-7110b4a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0101",
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "3acc7fea-7110b4a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "0103",
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
   },
   {
-   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
    "id": "3acc7fea-7110b4a8",
    "kind": "texture",
    "owner": "coordinator",
    "provenance": "unknown",
-   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
    "room": "011f",
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "02ba2348a775ba8a04c00281d9e69643130b4962",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "02ba2348a775ba8a04c00281d9e69643130b49623a9d4c999183f5d150720a1c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "0e226bf6b5cbb9edf6d2bd217bd1c47b41e43525",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "0e226bf6b5cbb9edf6d2bd217bd1c47b41e4352527d1bb43f484f1e9652d4530"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "0f1ba41893adadbf1b36a1667d09578a8ff30333",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "0f1ba41893adadbf1b36a1667d09578a8ff3033394989ed6eb75a26d21bdf3c1"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "14dc935f89467a5e649cd6062824e772eb4350c1",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "14dc935f89467a5e649cd6062824e772eb4350c1822c8c82c1bbfce55bc34259"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "1b50b6da772ccb0ea0c0bf98ff5dd2ba13feb22e",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "1b50b6da772ccb0ea0c0bf98ff5dd2ba13feb22e69c526be0727ad0f00d28fca"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "212bdf56b732f965e2af43c3ed4ad66fda99cb37",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "212bdf56b732f965e2af43c3ed4ad66fda99cb3798658c257eeb4eaa56e30b6c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2969c1f9aae09ac227134df15a96d2243f77a990",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "2969c1f9aae09ac227134df15a96d2243f77a9904cdc6b0b010278f3dd659e72"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2c997e09e6f89588ecf9af61222d6581e6d0c13c",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "2c997e09e6f89588ecf9af61222d6581e6d0c13c290fb5152f89cae94451d8e9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2cb0c93874180d17abc11f5dcdd4e38b1932a53d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "2cb0c93874180d17abc11f5dcdd4e38b1932a53d92c0c31bd101b87b25741ad3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2f963d102f803f1cf9d90983ad632544c816a7e9",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "2f963d102f803f1cf9d90983ad632544c816a7e980d13463126a117f7c5c9abf"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "31f336f994f5df2d04ff3b1be8d1d748ec20d34b",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "31f336f994f5df2d04ff3b1be8d1d748ec20d34b2140b7e384ed284bc663c8fe"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "41b3377b60619719483ec66be29a6bf734ef7670",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "41b3377b60619719483ec66be29a6bf734ef76702d1ec09fa18c61bde2fbde5c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "441f1808b9676ade224fddeb1fbddd2c9f77d241",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "441f1808b9676ade224fddeb1fbddd2c9f77d241cf956eba141370153a886148"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "4967b22b1dbdbd680745bf71276e467847d10239",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "4967b22b1dbdbd680745bf71276e467847d10239818f15e99a4d64460469db52"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "49fd18fb08aceb823c23fadf29096fe55a663c2b",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "49fd18fb08aceb823c23fadf29096fe55a663c2bf489c9c3268ebd78d8cc73f9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "4b090e5645c97054be92dc829633c826855d1f80",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "4b090e5645c97054be92dc829633c826855d1f80f70a1beecc1239567fa14f32"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "5080e1f0104991454716b01d95c1a6d96dd9332a",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "5080e1f0104991454716b01d95c1a6d96dd9332a7cdd84a9ec2efbe8d0734d52"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "54fd6bc64801a57243ffadc45c80f6c9ff64008f",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "54fd6bc64801a57243ffadc45c80f6c9ff64008fb3f7315a0f68b21d5a8bf24e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "70182ddfed4eda6d22708b1d5f0a541d29a8cf5d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "70182ddfed4eda6d22708b1d5f0a541d29a8cf5d0be8e0dc1f7fcb9c6313dd7b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "7413c90b50bad3fb16d01039cacb7550757a5ca4",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "7413c90b50bad3fb16d01039cacb7550757a5ca4e45448583e4742dafa4753c3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "7e8e4fe0f18d5956b9bf046d0a44f34301e36db7",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "7e8e4fe0f18d5956b9bf046d0a44f34301e36db77a3ab1c913163270b1f07866"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "849adc36f7507325e3c1878eb7ac3a017563e88d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "849adc36f7507325e3c1878eb7ac3a017563e88d4e836989a28c6b208ff33479"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "8ba9ab1fc93bd3751fe0ada8755b99af2fdde221",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "8ba9ab1fc93bd3751fe0ada8755b99af2fdde2219f232c08ef9d028c58ab06c9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "9204a10563117ebbdbb7d14454737b15826a1529",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "9204a10563117ebbdbb7d14454737b15826a152939cf39039bdd10ef205d507e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "a0c594d7fcb7313be18927771a67c5445db18b32",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "a0c594d7fcb7313be18927771a67c5445db18b32c54e6697c90ac74862f77f65"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "a1684fd77d7ca06f3f4d8b10deb7908769178339",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "a1684fd77d7ca06f3f4d8b10deb7908769178339a62138d57993082fac226666"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "a5a087638b80187403e577410a2fa35d268ac05a",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "a5a087638b80187403e577410a2fa35d268ac05a1ec2dc1442fd1a802e49ec55"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "ba1b589047e4cd3e096e5636c1d6c4390a4ae30c",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "ba1b589047e4cd3e096e5636c1d6c4390a4ae30ca14ef6fb24a8e5c849660fe9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "ba9969ae3f176e8e8d257b4bf40ed634d9851fbe",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "ba9969ae3f176e8e8d257b4bf40ed634d9851fbe1b594f4f0fd56dadf406a89b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "c4da62eca0bcec0fba5cff9606b788b154ec2587",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "c4da62eca0bcec0fba5cff9606b788b154ec25870ea65f33ca6cf0d8baead69b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "c5a6f8779ffd01941806d2537f9fd03740a42a55",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "c5a6f8779ffd01941806d2537f9fd03740a42a551d36da76bc0af6bda36df6b4"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "c7b6f67aaad7aec29e235e37f3a6450be7e4a612",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "c7b6f67aaad7aec29e235e37f3a6450be7e4a6120dc6b8ffefa15d717aaf49c9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "d4c41ddbdc739ed73091876738ba40ba75238b0d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "d4c41ddbdc739ed73091876738ba40ba75238b0ddd9f4e0f4175daf07857e4ca"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "dbb5e6bc0421002dc5244b45997310822e440029",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "dbb5e6bc0421002dc5244b45997310822e4400297c77d6a6c3ceb6bdf7d51de6"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "e88f7036aac849bd898d96685a38e0d50c3ce6c2",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "e88f7036aac849bd898d96685a38e0d50c3ce6c271e1ea865942a4bb8f08effd"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "edbc9b64ef87dccbd1698243da5c17124a653c2e",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "edbc9b64ef87dccbd1698243da5c17124a653c2e60af14e9e2821b3a39a2d14a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "ef5e4d26ed42109647eab41d4feec2dbcfe23a42",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "ef5e4d26ed42109647eab41d4feec2dbcfe23a425cee349dacb2f0e0f6295853"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "f938dbff6c8df89b1d7fd6ea1b16223f469eebdf",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "f938dbff6c8df89b1d7fd6ea1b16223f469eebdfcac44202e6bae5b824e69734"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "fc91fbb3b19a544b2f7bff8bb1b7c7b24e07db87",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "fc91fbb3b19a544b2f7bff8bb1b7c7b24e07db87a775c3c603a778ac3332f2c3"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime-harvest:harvest-log=hv-r100/run-output.txt",
@@ -541,36 +151,6 @@
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r100/ps2-world.re4mesh",
-   "id": "130bac7969255f0bf31d5f9226cee21a33415103",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "0100",
-   "sha256": "130bac7969255f0bf31d5f9226cee21a33415103f044f0fdc7dda3607ffc89bb"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r100/registry.re4nmr",
-   "id": "a9c124b1505a2731054518dded109808449da714",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "0100",
-   "sha256": "a9c124b1505a2731054518dded109808449da714026e69b3a23c7d7df4081d6d"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime-harvest:harvest-log=hw-r100/run-output.txt",
-   "id": "0a27dc4e85385b707f77cee63e4d17be62217308",
-   "kind": "layout",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0100",
-   "sha256": "0a27dc4e85385b707f77cee63e4d17be622173086ee5a082b33e4da8edd79bb5"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl0a.drs#body",
    "id": "ef82164d62904ffcf1ddf68eb6fe6a4a536e1067",
    "kind": "model",
@@ -579,26 +159,6 @@
    "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
    "room": "0100",
    "sha256": "ef82164d62904ffcf1ddf68eb6fe6a4a536e106777787b511ff067f092e5f916"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/movie/r100s03.seq",
-   "id": "10003",
-   "kind": "movie",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "movie with no data-set provenance (unknown)",
-   "room": "0100",
-   "sha256": "e1e29dd1502e28018dec0d3eeb6b1fd39032969cabbaf43b0ce480dca6ee70d3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/movie/r100s20.seq",
-   "id": "10020",
-   "kind": "movie",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "movie with no data-set provenance (unknown)",
-   "room": "0100",
-   "sha256": "7a9d92f9c65e3c68b4ec576f9265a39540b499be72540234b49504472d83b88c"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=2232320&bytes=18576",
@@ -611,26 +171,6 @@
    "sha256": "4c16b67e392cd443e49a0f1202327de31ccc978024ac497253336f9762087482"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
-   "id": "0565aab7-d85a337b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "9d9f8f934d8ac1c9554e3542c7d1566cd00748b3b6b36032a9ca52605a74ccc0"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=4847616&bytes=2224",
-   "id": "081f8d23-eb74132a",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "2f4d2f3973e56d997140437c5b86afd14b41bad6edcbb1dd63b0f86efcb8fa63"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=5081088&bytes=18576",
    "id": "08e78837-67772ef6",
    "kind": "texture",
@@ -639,26 +179,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "bcf1b1969100d3777007ae739c826d8a5d88b4ed1e7cd7724c238241b5ab22d0"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=7512064&bytes=3216",
-   "id": "0dd74bb1-fa881a8e",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "2a755fb481e05ccb755220dfbde4f8018423c1b310dfb0665818201810164ea9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=9046016&bytes=2224",
-   "id": "1121557b-d9305fc6",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "9fd37bb9eca3f9a4a4b6644f5bc8401e2b1539645dd0d04bd21e18c8527ac809"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=10733568&bytes=18576",
@@ -679,26 +199,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "3143ed404bd3160451883ce5c890ced5c04a2c00423af4cbc65ee65c60d9628f"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=12124160&bytes=2224",
-   "id": "169437df-19b169e9",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "83b1c5e85969ebf6876ff18d2c942b1f703047ee2c7172b334eb6f508f315786"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=15491072&bytes=688",
-   "id": "19147fb2-4525346a",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "a6f847accd76d117aba80d77608550661c5aa08ea0e60495ff07568e796b655e"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=18626560&bytes=10384",
@@ -811,16 +311,6 @@
    "sha256": "82c7d4f1f9c617d1f416d61cd877e194733aa1fe539e1e2e8367ffe0e1b34e47"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=41132032&bytes=2224",
-   "id": "4749e6a1-eeb2f04b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "4b6c4e2f49a67abf516bbe72dfa4a3ea2ab28000e6e2f6e5483e7ac8b58d29c2"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=41719808&bytes=6288",
    "id": "48369d01-cf9063bd",
    "kind": "texture",
@@ -829,16 +319,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "5a528164fc09edc776ea6997f6b4b3c1674a2c3457c5c588be8f8bcddddb71d1"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=43067392&bytes=2224",
-   "id": "4b5e03a0-255915e3",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "965fc26d528f2608dd5f37501895bdb758ed3b7ff8597dbd624b0b33c94186de"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=43079680&bytes=18576",
@@ -881,16 +361,6 @@
    "sha256": "0a6ff005b400574e03bcc68b6848841e277d0e8f7f6458c79562b18abf005953"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=47919104&bytes=4240",
-   "id": "524e7ddd-8022eccd",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "319d0208b46fa6e4cb30ddb32b5a8a6943d670e1846efce488aba60a4e98cce0"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=48594944&bytes=18576",
    "id": "540e6582-93ab49e4",
    "kind": "texture",
@@ -911,16 +381,6 @@
    "sha256": "084bf054722146734d98567a322cb8b1c923ed851b76822daf6247411eda7644"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=51521536&bytes=2224",
-   "id": "5889803d-d2ef2224",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "017081cdefdce91cb92d03d49fd90abdff51c48dc0f7d74242503087a60553c2"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=51525632&bytes=4240",
    "id": "58921a54-929e60e3",
    "kind": "texture",
@@ -929,26 +389,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "6a5b128553b7fba4ad274673c0e18a3ba4a9439d839c985fdcece089ba5676cf"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=51673088&bytes=2224",
-   "id": "58f7a3d2-ecda12ab",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "a427d0945c902dc7c751ff1155eba58d6d1168b352554d2ae56d4795b9886ff1"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=52660224&bytes=2224",
-   "id": "5a17cfeb-150c150d",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "b8a6ad53c76a0a5aff57f52253b6eab42f173d134ac06bf8190dfd072eaef925"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=53270528&bytes=18576",
@@ -969,26 +409,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "5d214c7e7379d7810fc22685bdbbd7c3e68e669df7aa0130e5e8528580fc50c7"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=56434688&bytes=2224",
-   "id": "619b332a-266926d1",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "d2e1ee01d4f7431fc038f84bb4dc82d0aeb9052d05340358bc84efa9adec290a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=56825856&bytes=2224",
-   "id": "62fc9be4-bbf2062e",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "0b2dade2646a4095bf466e766c60786b14db7370c774a45c5c59ddfc0fa31e10"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=58030080&bytes=18576",
@@ -1041,16 +461,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=73687040&bytes=2224",
-   "id": "810be826-0b838361",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "44f81c45d364c3033d315e5dd7bed284bc8787dc4efb47e3524bae0aa7c8bc29"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=77031424&bytes=6288",
    "id": "878b23c0-e7038833",
    "kind": "texture",
@@ -1061,36 +471,6 @@
    "sha256": "5b9cc4aedf2733d36d757d1521bda83a4dc5d4c7fb6e5ef8f87ca95bf1b2686c"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=79302656&bytes=2224",
-   "id": "8d6cd4cf-764d2628",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "fefa83df16a8fad40643d5bfd42849a3995e54c4f7f5b56c8d7704a38a9c8b85"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=85133312&bytes=2224",
-   "id": "981712d7-852799ac",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "8a3b63d3e77227b67e4da79f04ba359dd1fd11d5a551ad743c54f8ddac37f569"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=86595584&bytes=2224",
-   "id": "99175f07-3df4e8bd",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "bb5db1a2fb54c7397e8a4ff61f7fe7fdd28203f3791be8d671c937bec879737c"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=88270848&bytes=18576",
    "id": "9bcfefbd-d81c6b31",
    "kind": "texture",
@@ -1099,96 +479,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "d0d7dda5fdf16790c2b90d5bd7fa13ad63de8d9fb1838a1b1e14ffd3113e9409"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=92551168&bytes=4240",
-   "id": "9fa490e7-7ff08f59",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "92aa8ce27403bc545dc907f5bcecd2521ae458fe572b745aaf23b8dc347f69da"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=96163840&bytes=2224",
-   "id": "a55a2d5f-2b91884f",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "b7417a69a360813d0b5948cfaed13d23b42a25c84dc60260d303e94e7667e0cc"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=96307200&bytes=4240",
-   "id": "a5e6908e-40b0910d",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "249c77b8d7cdefa12725cb6066f6a8f26859e53d9e39f92aa0e9567208072603"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=102311936&bytes=2224",
-   "id": "b3096d90-b7018ccc",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "c1187005443e1d4b11d0d294ace4a3afed4e8748e61c5eb0d9cda325b3be6087"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=102666240&bytes=2224",
-   "id": "b43877d8-063ddda4",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "1f18fbb0863c2c83368965bc21432f24e43f516698d53c7549c1ccc8034aba6b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=103424000&bytes=4240",
-   "id": "b5267efe-cf7ecc20",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "0a7f7ebfa9e6cd726020045ed7ec02f037b14bcd7917b3dfd6e198fda9bbfe98"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=106641408&bytes=2224",
-   "id": "bb6baefd-f80c8642",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "f1f844e9399d7cb3462b8dbdce749cf779cec760bd5c126ae14f5010ef326cee"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=109629440&bytes=688",
-   "id": "bf17fc06-c975b3a7",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "cfde84e9bd54dc71e4caf784d05ba214bc5f63ecf6595e379044426f95fe329a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=109844480&bytes=4240",
-   "id": "bfe3a8cf-762074fc",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "554dc0e42a910f210b690cfd27e16759277352ba70d86705d0bc65124a57fc69"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=116434944&bytes=4240",
@@ -1211,26 +501,6 @@
    "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=120033280&bytes=8368",
-   "id": "d2d2fa44-6148feb3",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "69e7755d6bc49baa4655a91cd7843ab89562d976f2b5bc7dffcc51a2ffacc0ce"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=120043520&bytes=4240",
-   "id": "d2d3bd7a-c6199e82",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "7c3850961f98d6abbaf4ce8bec974e440292c9212339d2ce1d90c379697a64ea"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=125306880&bytes=6288",
    "id": "dc363980-b5147ee2",
    "kind": "texture",
@@ -1249,26 +519,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "09a6d79751bbb02e059bc38a6db5e9e7f837ae0ad3e319bb6ea63bdb669cf393"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=126175232&bytes=4240",
-   "id": "de34a280-ac16cce2",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "8861d1d3cc6fa27364d0b012e2653d23293a8961c800feb5f6aa92eae3a5b30e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=128315392&bytes=688",
-   "id": "e312c840-7fdaab55",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "4a27ccdda90219eeea17c4e326313f03e1ebcc3939b644bc2bd008610ed8acd5"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=128370688&bytes=3216",
@@ -1301,76 +551,6 @@
    "sha256": "0007def069119ff397473c08af7622a0b824707440934656631fef85d1dda514"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=136949760&bytes=3216",
-   "id": "f70f95f4-fadfe151",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "8ab2d97fc8ea355e9147b23990d63071d1647f34a2f82520c10443bf3032be3d"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=137000960&bytes=4240",
-   "id": "f7204aab-cce044ba",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "4741dc22d6e8002d46c370f06ce65363a22100ee10676ca7af213931ea357342"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=137144320&bytes=2224",
-   "id": "f77efad4-77302afb",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "5675249de9144fea3ce18059494612e6b88b51f4b4acd278a7b64cb53aac1e1d"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "212bdf56b732f965e2af43c3ed4ad66fda99cb37",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0101",
-   "sha256": "212bdf56b732f965e2af43c3ed4ad66fda99cb3798658c257eeb4eaa56e30b6c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "54fd6bc64801a57243ffadc45c80f6c9ff64008f",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0101",
-   "sha256": "54fd6bc64801a57243ffadc45c80f6c9ff64008fb3f7315a0f68b21d5a8bf24e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "8ba9ab1fc93bd3751fe0ada8755b99af2fdde221",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0101",
-   "sha256": "8ba9ab1fc93bd3751fe0ada8755b99af2fdde2219f232c08ef9d028c58ab06c9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "c5a6f8779ffd01941806d2537f9fd03740a42a55",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0101",
-   "sha256": "c5a6f8779ffd01941806d2537f9fd03740a42a551d36da76bc0af6bda36df6b4"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime-harvest:harvest-log=hv-r100/run-output.txt",
    "id": "0841eeefc0cafa4489c00472613f9cfc15e1093b",
    "kind": "font-palette",
@@ -1391,36 +571,6 @@
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r101/ps2-world.re4mesh",
-   "id": "500d17dac6279aa1ca71c8698ac31292cb2d3452",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "0101",
-   "sha256": "500d17dac6279aa1ca71c8698ac31292cb2d3452befacfbef2d25069f9f7bff3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "21522958cae737031d7bebbf2a4fcf3a432ec5ca",
-   "kind": "layout",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0101",
-   "sha256": "21522958cae737031d7bebbf2a4fcf3a432ec5cabe417fbb0b9ed9f20a6c41bc"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
-   "id": "0565aab7-d85a337b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "9d9f8f934d8ac1c9554e3542c7d1566cd00748b3b6b36032a9ca52605a74ccc0"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=4616192&bytes=1168",
    "id": "076e860e-52b615a0",
    "kind": "texture",
@@ -1429,16 +579,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0101",
    "sha256": "1f469e42baac5f7ae169759e0481e9e576ad89ede1cc5c51f4535468c24141f5"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=7512064&bytes=3216",
-   "id": "0dd74bb1-fa881a8e",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "2a755fb481e05ccb755220dfbde4f8018423c1b310dfb0665818201810164ea9"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=44421120&bytes=10384",
@@ -1459,26 +599,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0101",
    "sha256": "6a5b128553b7fba4ad274673c0e18a3ba4a9439d839c985fdcece089ba5676cf"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=54466560&bytes=3216",
-   "id": "5dc73fa0-ddb9303b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "1f9490372230650fd0965c0e41e1833ace00178be939a27a68fb131d2adc7216"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=57020416&bytes=6288",
-   "id": "63a500b1-c326b4a6",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "3c8d3e80d75342fdb6bc3f13201688ecb673b7fadd9b513d4976c0743e61cb06"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=57880576&bytes=89574",
@@ -1511,86 +631,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=70410240&bytes=4240",
-   "id": "7c26c65d-a08dc2be",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "887bd7d169714c16ca11d6cae4f75b8e2b8a15804aa0de6fd0ed97dbcc779640"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=77264896&bytes=2448",
-   "id": "87c795fe-7b1a4cc1",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "7dbe01c7e40bfcbf43331e152d139d861f2eed0a9d827dd9eda128f1b261f380"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=83283968&bytes=4240",
-   "id": "95218767-f2007a86",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "87d63a098439f94a7b7a5737e5e9c3fd0912ef00ca7119f843b31a2a83da20e5"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=103424000&bytes=4240",
-   "id": "b5267efe-cf7ecc20",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "0a7f7ebfa9e6cd726020045ed7ec02f037b14bcd7917b3dfd6e198fda9bbfe98"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=109629440&bytes=688",
-   "id": "bf17fc06-c975b3a7",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "cfde84e9bd54dc71e4caf784d05ba214bc5f63ecf6595e379044426f95fe329a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=110798848&bytes=10384",
-   "id": "c1bcca73-cb4ef2a0",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "825c2ac525aaa8c538161608b7b983978f446100c0f16bf21685ceb8a1c22fa2"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117299200&bytes=3216",
-   "id": "ce65484d-e7348571",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "93fad0d4eb51b5081119123e8665f633f6381758063981c77891ed0426d37c88"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117751808&bytes=6288",
-   "id": "cf9faa5f-d4a93f00",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "f34b058292a019a1d829d1964d99d6b0ed31d13c137939a7a703cdf539803225"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192",
    "id": "d17e9c56-fa23c229",
    "kind": "texture",
@@ -1601,46 +641,6 @@
    "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119291904&bytes=2224",
-   "id": "d1af2bb4-6b55a719",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "1188861a0437f987aeebed4c326f4c716ac0b08a5f2753e4d9aee55ee8180e3f"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=127526912&bytes=6288",
-   "id": "e0dddf1f-5b9bbff6",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "5dd2a61096d59e518705bb7e51fd7f7f591960a2a025f7417e5e228dbb3de3de"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=136374272&bytes=2704",
-   "id": "f5f0e6a9-42c4201a",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "32d832942bb06b30b8ca3b5efcd1792185dc662f4927ef9131554892695c58db"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=136419328&bytes=10384",
-   "id": "f60c0cef-d0565847",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "b1bae03ad40fc9e2bb1f736d178284132d3c58bed7038d0a94542bd528f3e086"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
    "id": "017fb4f65643a4b71a356c066b1ddfb3223e7568",
    "kind": "geometry",
@@ -1649,36 +649,6 @@
    "reason": "payload with no data-set provenance (unknown)",
    "room": "0103",
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r103/ps2-world.re4mesh",
-   "id": "96d2382299065c6ab48f7696a88e37de7020fd0a",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "0103",
-   "sha256": "96d2382299065c6ab48f7696a88e37de7020fd0a21e37507d4bb87a0a739fdd3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "0aa3c3fa63ff7391a03ace1c6c0dfdb140447afd",
-   "kind": "layout",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "0103",
-   "sha256": "0aa3c3fa63ff7391a03ace1c6c0dfdb140447afd1a7eff87024f5e52dfe00ede"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
-   "id": "0565aab7-d85a337b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0103",
-   "sha256": "9d9f8f934d8ac1c9554e3542c7d1566cd00748b3b6b36032a9ca52605a74ccc0"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=44421120&bytes=10384",
@@ -1711,16 +681,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=114044928&bytes=6288",
-   "id": "c8d0db2f-3126bc5d",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0103",
-   "sha256": "f74c7df2cbd2dcb18c024df9744346b4e3d9c4b668672ec1f48236ace650efa8"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
    "id": "017fb4f65643a4b71a356c066b1ddfb3223e7568",
    "kind": "geometry",
@@ -1729,36 +689,6 @@
    "reason": "payload with no data-set provenance (unknown)",
    "room": "011e",
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r11e/ps2-world.re4mesh",
-   "id": "57121bd37925bbba2e3a09d2f7a1213a54111227",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "011e",
-   "sha256": "57121bd37925bbba2e3a09d2f7a1213a5411122788afed93420ff1960d244c90"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r11e/partner.re4nmr",
-   "id": "bb3143d4d0a50122c14cde7505c65e972aba8fc5",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "011e",
-   "sha256": "bb3143d4d0a50122c14cde7505c65e972aba8fc51605b4a37519cd6bdcca2342"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "7ca77cae181aea0ff807689516d1d287f3d91feb",
-   "kind": "layout",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "011e",
-   "sha256": "7ca77cae181aea0ff807689516d1d287f3d91febbf5478334bcbf68507c5d7d2"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
@@ -1789,16 +719,6 @@
    "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
    "room": "011e",
    "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
-   "id": "0565aab7-d85a337b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011e",
-   "sha256": "9d9f8f934d8ac1c9554e3542c7d1566cd00748b3b6b36032a9ca52605a74ccc0"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=4616192&bytes=1168",
@@ -1831,16 +751,6 @@
    "sha256": "429506df70938956892859c959511bc9589a6efd8be99cb31aa99ecea11c17fd"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=50391040&bytes=8336",
-   "id": "56d70169-8a2e5214",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011e",
-   "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=69455872&bytes=1168",
    "id": "79d3fc0f-e9580b27",
    "kind": "texture",
@@ -1861,16 +771,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=107061248&bytes=8336",
-   "id": "bc5bb46e-c514110b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011e",
-   "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
    "id": "017fb4f65643a4b71a356c066b1ddfb3223e7568",
    "kind": "geometry",
@@ -1879,36 +779,6 @@
    "reason": "payload with no data-set provenance (unknown)",
    "room": "011f",
    "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r11f/partner.re4nmr",
-   "id": "dc60058faf7b5bb82c86330f40f77c642c13dc8e",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "011f",
-   "sha256": "dc60058faf7b5bb82c86330f40f77c642c13dc8ece07a99a20fa09275a7ae8d7"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/native/r11f/ps2-world.re4mesh",
-   "id": "ef5e84ae75aab525e0b7919118212d1d4f52192e",
-   "kind": "geometry",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "payload with no data-set provenance (unknown)",
-   "room": "011f",
-   "sha256": "ef5e84ae75aab525e0b7919118212d1d4f52192ef982ba832b5204dbad5c2fab"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "915a9e360e4ef4c7e92943b7af1c7687c7e7aae0",
-   "kind": "layout",
-   "owner": "purge-ui24",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "room": "011f",
-   "sha256": "915a9e360e4ef4c7e92943b7af1c7687c7e7aae0e71967c45ecea5dc5a058cf8"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
@@ -1941,26 +811,6 @@
    "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=3362816&bytes=688",
-   "id": "0565aab7-d85a337b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "9d9f8f934d8ac1c9554e3542c7d1566cd00748b3b6b36032a9ca52605a74ccc0"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=17276928&bytes=10384",
-   "id": "1d8b6b36-a88bc17a",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "f89a34d4ebf0fad6016139eb931388441184494a8058e05ad7b6cdb732cb5f13"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
    "id": "2c9c252a-51c59944",
    "kind": "texture",
@@ -1979,16 +829,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011f",
    "sha256": "429506df70938956892859c959511bc9589a6efd8be99cb31aa99ecea11c17fd"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=50391040&bytes=8336",
-   "id": "56d70169-8a2e5214",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=69455872&bytes=1168",
@@ -2019,316 +859,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011f",
    "sha256": "1fd18f3bb05378913562e62818924f5387c71d49bb4b4b37fa35ea13e545025e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=107061248&bytes=8336",
-   "id": "bc5bb46e-c514110b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=135610368&bytes=10384",
-   "id": "f417e94d-46e00253",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "56560803077738a2c085640b7ab8acf6e8904c0a6706dacf2443e3d69e94c2a6"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime-harvest:harvest-log=hv-r100/run-output.txt",
-   "id": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "0f1ba41893adadbf1b36a1667d09578a8ff30333",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "0f1ba41893adadbf1b36a1667d09578a8ff3033394989ed6eb75a26d21bdf3c1"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "0f2d4ebffbb8b9711451f759bb0c9e5aff0c5d5d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "0f2d4ebffbb8b9711451f759bb0c9e5aff0c5d5d37a4f56271a37db2e451d870"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "14dc935f89467a5e649cd6062824e772eb4350c1",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "14dc935f89467a5e649cd6062824e772eb4350c1822c8c82c1bbfce55bc34259"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2969c1f9aae09ac227134df15a96d2243f77a990",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "2969c1f9aae09ac227134df15a96d2243f77a9904cdc6b0b010278f3dd659e72"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2c997e09e6f89588ecf9af61222d6581e6d0c13c",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "2c997e09e6f89588ecf9af61222d6581e6d0c13c290fb5152f89cae94451d8e9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2cb0c93874180d17abc11f5dcdd4e38b1932a53d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "2cb0c93874180d17abc11f5dcdd4e38b1932a53d92c0c31bd101b87b25741ad3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2f4e34eebb1ef377f19382b6734b6dd58181cb7e",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "2f4e34eebb1ef377f19382b6734b6dd58181cb7e3559a6cdd5abbb8d8c47ec35"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "2f963d102f803f1cf9d90983ad632544c816a7e9",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "2f963d102f803f1cf9d90983ad632544c816a7e980d13463126a117f7c5c9abf"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "41b3377b60619719483ec66be29a6bf734ef7670",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "41b3377b60619719483ec66be29a6bf734ef76702d1ec09fa18c61bde2fbde5c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "49fd18fb08aceb823c23fadf29096fe55a663c2b",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "49fd18fb08aceb823c23fadf29096fe55a663c2bf489c9c3268ebd78d8cc73f9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "4b090e5645c97054be92dc829633c826855d1f80",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "4b090e5645c97054be92dc829633c826855d1f80f70a1beecc1239567fa14f32"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "4fec889f46e4f646897186aed74d153ac4c34a45",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "4fec889f46e4f646897186aed74d153ac4c34a459f39ab3c68d35c7f399fee43"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "6a5b028d69d3c4075c4eeeca04e1b814eb3157b8",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "6a5b028d69d3c4075c4eeeca04e1b814eb3157b861d60f4a3c5d641ddcfb30e0"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "70182ddfed4eda6d22708b1d5f0a541d29a8cf5d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "70182ddfed4eda6d22708b1d5f0a541d29a8cf5d0be8e0dc1f7fcb9c6313dd7b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "7413c90b50bad3fb16d01039cacb7550757a5ca4",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "7413c90b50bad3fb16d01039cacb7550757a5ca4e45448583e4742dafa4753c3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "7e8e4fe0f18d5956b9bf046d0a44f34301e36db7",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "7e8e4fe0f18d5956b9bf046d0a44f34301e36db77a3ab1c913163270b1f07866"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "849adc36f7507325e3c1878eb7ac3a017563e88d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "849adc36f7507325e3c1878eb7ac3a017563e88d4e836989a28c6b208ff33479"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "9204a10563117ebbdbb7d14454737b15826a1529",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "9204a10563117ebbdbb7d14454737b15826a152939cf39039bdd10ef205d507e"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "a0c594d7fcb7313be18927771a67c5445db18b32",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "a0c594d7fcb7313be18927771a67c5445db18b32c54e6697c90ac74862f77f65"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "a1684fd77d7ca06f3f4d8b10deb7908769178339",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "a1684fd77d7ca06f3f4d8b10deb7908769178339a62138d57993082fac226666"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "ba1b589047e4cd3e096e5636c1d6c4390a4ae30c",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "ba1b589047e4cd3e096e5636c1d6c4390a4ae30ca14ef6fb24a8e5c849660fe9"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "d4c41ddbdc739ed73091876738ba40ba75238b0d",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "d4c41ddbdc739ed73091876738ba40ba75238b0ddd9f4e0f4175daf07857e4ca"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "dbb5e6bc0421002dc5244b45997310822e440029",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "dbb5e6bc0421002dc5244b45997310822e4400297c77d6a6c3ceb6bdf7d51de6"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "e88f7036aac849bd898d96685a38e0d50c3ce6c2",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "e88f7036aac849bd898d96685a38e0d50c3ce6c271e1ea865942a4bb8f08effd"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "edbc9b64ef87dccbd1698243da5c17124a653c2e",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "edbc9b64ef87dccbd1698243da5c17124a653c2e60af14e9e2821b3a39a2d14a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "f938dbff6c8df89b1d7fd6ea1b16223f469eebdf",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "f938dbff6c8df89b1d7fd6ea1b16223f469eebdfcac44202e6bae5b824e69734"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "fc91fbb3b19a544b2f7bff8bb1b7c7b24e07db87",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "fc91fbb3b19a544b2f7bff8bb1b7c7b24e07db87a775c3c603a778ac3332f2c3"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
-   "id": "fe283e1f25c161c9135cf32f599bb59873577aaf",
-   "kind": "font-glyph",
-   "owner": "purge-ui24",
-   "phase": "startup",
-   "provenance": "unknown",
-   "reason": "runtime-harvested font/layout payload, provenance unknown",
-   "sha256": "fe283e1f25c161c9135cf32f599bb59873577aafec1cc74e85a88ba816cec7ae"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime-harvest:harvest-log=hv-r100/run-output.txt",

@@ -32,12 +32,22 @@ bool prepare_owner(PayloadProof& proof,const void* owner,const void* base,unsign
     if(payload_serial>=0xfffffffeU){unresolved(SourceGeometry,"payload-serial-exhausted");return false;}
     return true;
 }
+#if defined(RE4DC_GC_ASSET_SRC) && RE4DC_GC_ASSET_SRC
+extern "C" void re4dc_log(const char*,...);
+static const void* gca_src_ra;static const char* gca_src_tag="none";
+#define GCA_SRC_ENTER(t) do{gca_src_tag=(t);gca_src_ra=__builtin_return_address(0);}while(0)
+#define GCA_SRC_LOG(k,d) re4dc_log("GC-ASSET-SRC kind=%s id=%02x%02x%02x%02x entry=%s ra=%08x\n",(k),(d).bytes[0],(d).bytes[1],(d).bytes[2],(d).bytes[3],gca_src_tag,(unsigned)(std::uintptr_t)gca_src_ra)
+#else
+#define GCA_SRC_ENTER(t) do{}while(0)
+#define GCA_SRC_LOG(k,d) do{}while(0)
+#endif
 CheckedAsset capture(const char* kind,const void* data,unsigned bytes){
-    const Digest digest=fingerprint(data,bytes);constexpr char hex[]="0123456789abcdef";char id[41];
+    const Digest digest=fingerprint(data,bytes);GCA_SRC_LOG(kind,digest);constexpr char hex[]="0123456789abcdef";char id[41];
     for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
     return bind_checked(kind,id,digest);
 }
 CheckedAsset capture_digest(const Digest& digest,const char* kind="geometry"){
+    GCA_SRC_LOG(kind,digest);
     constexpr char hex[]="0123456789abcdef";char id[41];
     for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
     return bind_checked(kind,id,digest);
@@ -108,6 +118,7 @@ bool static_manifest_seal(const StaticManifest& manifest,Digest& digest){
     digest=fingerprint(p,sizeof manifest.data);return manifest_digest(digest.bytes);
 }
 bool payload_capture_composite(PayloadProof& proof,const void* owner,const void* base,unsigned bytes,const void* layout,unsigned layout_bytes,const StaticManifest& manifest){
+    GCA_SRC_ENTER("payload_capture_composite");
     Digest composite{};
     const auto at=reinterpret_cast<std::uintptr_t>(base),side=reinterpret_cast<std::uintptr_t>(layout);
     if(!owner || !base || base!=manifest.geometry_base || !bytes || bytes!=manifest.geometry_bytes || bytes>~std::uintptr_t(0)-at ||
@@ -135,6 +146,7 @@ void payload_invalidate(PayloadProof& proof,const void* owner){
     if(!proof.registered || !owner || proof.owner!=owner)payload_faults|=1U<<SourceGeometry;
 }
 bool payload_capture_receipt(PayloadProof& proof,const void* owner,const Digest& digest,unsigned bytes){
+    GCA_SRC_ENTER("payload_capture_receipt");
     if(!bytes || bytes>40U*1024*1024){payload_retire(proof);unresolved(SourceGeometry,"receipt-bounds");return false;}
     if(!payload_capture_digest(proof,owner,digest))return false;
     proof.bytes=bytes;return true;
@@ -146,6 +158,7 @@ bool static_manifest_receipt(StaticManifest& manifest,StaticRole role,const Payl
     return static_manifest_note(manifest,role,Accepted,proof.bytes,version,flags,&description.digest);
 }
 bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsigned bytes,const void* layout,unsigned layout_bytes){
+    GCA_SRC_ENTER("payload_capture");
     if(!owner || !base || !bytes || bool(layout)!=bool(layout_bytes)){payload_retire(proof);unresolved(SourceGeometry,"payload-bounds");return false;}
     if(proof.owner){
         if(proof.owner==owner && proof.base==base && proof.bytes==bytes && proof.layout==layout && proof.layout_bytes==layout_bytes)return true;
@@ -158,6 +171,7 @@ bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsi
     proof.asset=asset;proof.layout_asset=side;proof.serial=++payload_serial;return true;
 }
 bool payload_capture_fragments(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count){
+    GCA_SRC_ENTER("payload_capture_fragments");
     // Stable compiled source owner only, before preparation. Reloaded packages
     // must use the bounded contiguous capture/retire protocol instead.
     if(!owner || !spans || !count || count>48 || proof.owner){
@@ -197,6 +211,7 @@ bool payload_capture_fragments(PayloadProof& proof,const void* owner,const Paylo
     return payload_capture_digest(proof,owner,digest);
 }
 bool payload_capture_digest(PayloadProof& proof,const void* owner,const Digest& digest){
+    GCA_SRC_ENTER("payload_capture_digest");
     if(!owner || proof.owner){payload_retire(proof);unresolved(SourceGeometry,"digest-owner");return false;}
     for(auto* old=payloads;old;old=old->next)if(old!=&proof && old->owner==owner){payload_retire(*old);unresolved(SourceGeometry,"digest-owner-overlap");return false;}
     if(!proof.registered){if(payload_count==128){unresolved(SourceGeometry,"payload-owner-capacity");return false;}

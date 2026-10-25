@@ -135,6 +135,33 @@ def bone_check(gc_bin, ps2_bin):
     return True, 'match (%d bones)' % len(g)
 
 
+def skeleton_fit(gc_bin, ps2_bin):
+    """gc-audit25 (10-25): the PS2 mesh fitted to the GC skeleton. When the bone tables differ only by ONE translation
+    d shared by every child of the root (ids, parents and every deeper rest translation within BONE_TOL), the PS2 model
+    is the GC model moved by d in model space (wep05 Broken Butterfly: d = (-14.97, -4.42, 8.32)). Moving every PS2
+    vertex by -d puts it on the GC skeleton exactly. -> (offset or None, why)."""
+    gm = modelbin.parse(gc_bin)
+    pm = pb.parse_bin(ps2_bin)
+    g = [(p.attach, p.parent, p.pos) for p in gm.parts]
+    p = [(b['id'], b['parent'], b['pos']) for b in pm.bones]
+    if len(g) != len(p) or any(a[0] != b[0] or a[1] != b[1] for a, b in zip(g, p)):
+        return None, 'bone ids / parents differ'
+    root = g[0][0]
+    d = None
+    for a, b in zip(g, p):
+        dt = tuple(y - x for x, y in zip(a[2], b[2]))
+        if a[1] == root and a[1] >= 0:
+            d = d or dt
+            if max(abs(x - y) for x, y in zip(d, dt)) > BONE_TOL:
+                return None, 'root children move by different translations'
+        elif max(abs(x) for x in dt) > BONE_TOL:
+            return None, 'bone %d rest differs below the root children' % a[0]
+    if not d:
+        return None, 'no root child'
+    off = tuple(-x for x in d)
+    return off, 'fit: PS2 mesh moved by (%.3f, %.3f, %.3f) onto the GC skeleton' % off
+
+
 def em_units(args, src):
     """Leon's weapon archives em/wepNN.drs (DRS body; archive numbers = entry index + 4)."""
     for w in (args.weapons.split(',') if args.weapons else sorted(WEAPON_PAIRS)):
@@ -205,6 +232,11 @@ def convert(args):
                 failed.append(name); continue
             pbn = pe[arc][1]
             ok, why = bone_check(gb, pbn)
+            off = None
+            if not ok and getattr(args, 'fit_skeleton', False):
+                off, fwhy = skeleton_fit(gb, pbn)
+                if off:
+                    ok, why = True, why + '; ' + fwhy
             row['bones'] = why
             if not ok:
                 row.update(status='REFUSED', reason=why); failed.append(name); continue
@@ -213,7 +245,7 @@ def convert(args):
             slot = bytes(base[s:e])
             if slot.rstrip(b'\0') != gc_le.rstrip(b'\0') or len(slot) < len(gc_le.rstrip(b'\0')):
                 row.update(status='REFUSED', reason='disc slot is not le_mirror(GC BIN)'); failed.append(name); continue
-            new, st = pi.convert_geometry(gb, pbn)
+            new, st = pi.convert_geometry(gb, pbn, pos_offset=off)
             new, st['empty_parts_filled'] = fill_empty_parts(new)
             le = po.to_le(new, name)
             if len(le.rstrip(b'\0')) > len(slot):
@@ -298,6 +330,8 @@ def main():
         c.add_argument('--base', required=True)
         c.add_argument('--out', required=True)
         c.add_argument('--weapons')
+        c.add_argument('--fit-skeleton', action='store_true',
+                       help='fit a PS2 mesh whose root children are uniformly translated onto the GC skeleton (wep05)')
     a = ap.parse_args()
     sys.exit(convert(a))
 

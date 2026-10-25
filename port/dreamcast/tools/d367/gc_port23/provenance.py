@@ -121,6 +121,27 @@ class Store:
         return self.level, 'set=%s %s' % (self.name, self.why)
 
 
+REVIEWED = Path(__file__).resolve().parent / 'provenance-reviewed.tsv'
+
+
+def load_reviewed(path=REVIEWED):
+    """Reviewed exact-bytes provenance (lane gc-audit25 10-25): payloads no data-set store attributes (stager base
+    files, the oldest readable tex.pak, runtime harvests, sets with no RECIPE) whose bytes were traced to a PS2
+    source. A row maps (kind, output_sha256) -> ps2; it never matches other bytes, so a changed payload falls back
+    to the rules below. Columns: kind, id, output_sha256, ps2_sha256 (the PS2 source member's bytes), ps2_source,
+    evidence (tab separated, '#' comment lines)."""
+    out = {}
+    if not path.is_file():
+        return out
+    lines = [l for l in path.read_text().splitlines() if l.strip() and not l.startswith('#')]
+    for r in csv.DictReader(lines, delimiter='\t'):
+        o, p = (r.get('output_sha256') or '').strip(), (r.get('ps2_sha256') or '').strip()
+        if not re.fullmatch(r'[0-9a-f]{64}', o) or not re.fullmatch(r'[0-9a-f]{64}', p):
+            raise ValueError('provenance-reviewed.tsv: bad sha row %r' % r)
+        out[(r['kind'], o)] = ('ps2', 'reviewed exact bytes: %s (%s)' % (r['ps2_source'], r['evidence']))
+    return out
+
+
 def main(catalog, recipe_conf, out_dir):
     mod, lines = load_t11()
     conf = Path(recipe_conf).read_text()
@@ -170,12 +191,16 @@ def main(catalog, recipe_conf, out_dir):
             hit = gc.find(path[:-4] + '.das')
         return hit
     rows = json.loads(Path(catalog).read_text())['entries']
+    reviewed = load_reviewed()
     proofs, unknown, counts = [], [], collections.Counter()
     for r in rows:
         src = r['source']
         path = src.split('#')[0].lower()
         prov, ev = 'unknown', ''
-        if src.startswith('runtime-harvest:'):
+        rv = reviewed.get((r['kind'], r['sha256']))
+        if rv:
+            prov, ev = rv
+        elif src.startswith('runtime-harvest:'):
             ev = 'runtime harvest'
         elif r['kind'] == 'texture' and path == 'dc/tex.pak':
             st = tex_owner.get(r['id'].lower())

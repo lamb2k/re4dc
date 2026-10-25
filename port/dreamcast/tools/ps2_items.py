@@ -269,12 +269,12 @@ def halve_shift(gc):
     return bytes(d)
 
 
-def convert_geometry(gc, ps2):
+def convert_geometry(gc, ps2, pos_offset=None):
     shifted = 0
     src = gc
     while True:
         try:
-            new, st = po.rebuild(src, ps2)
+            new, st = po.rebuild(src, ps2, pos_offset=pos_offset)
             break
         except ValueError as ex:
             if 'outside the s16 range' not in str(ex) or shifted >= 2:
