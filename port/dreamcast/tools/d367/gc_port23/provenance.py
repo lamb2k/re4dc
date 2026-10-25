@@ -124,7 +124,10 @@ class Store:
 def main(catalog, recipe_conf, out_dir):
     mod, lines = load_t11()
     conf = Path(recipe_conf).read_text()
-    data = re.search(r'^DATA="([^"]*)"', conf, re.M).group(1)
+    # Every DATA= line in order, with "$DATA" expanded (a recipe appends sets: DATA="$DATA,pmgan24,...").
+    data = ''
+    for m in re.finditer(r'^DATA="([^"]*)"', conf, re.M):
+        data = m.group(1).replace('${DATA}', data).replace('$DATA', data)
     names = [n for n in (mod.T17_DATA + ',' + data).split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
     for n in names:
