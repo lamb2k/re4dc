@@ -4343,7 +4343,7 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
 #endif
 #if RE4DC_QUALITY_ASSETS
-        if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue;
+        if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue; RE4DC_GCIDLE_SKIP(crc,fnv)
 #endif
         const Key key{crc,fnv};
         bool known=false;

@@ -1043,6 +1043,13 @@ LH24D = os.environ.get('LH24D', '/root/re4data/private/leonhair24-20261024')
 if os.path.isdir(LH24D):
     DATA['leonhair24'] = {'dc/tex.pak': LH24D + '/dc/tex.pak'}
     PAK_DERIVED['leonhair24'] = LH24D + '/pak-derived.json'
+# leonatl24 (lane purge-cast24 10-24, GC purge; data only): leonhair24's pack with Leon's main atlas ec255e66-76812316 re-made
+# from the PS2 pl00 pictures through charbake (cb_atlas_gc.py over PS2 sources, LVQ, headroom 2x): same key, size, VQ, UVs.
+# After leonhair24; build_leonatl24.py takes any input pack. Private store /root/re4data/private/leonatl24-20261024 (RECIPE.txt).
+LA24D = os.environ.get('LA24D', '/root/re4data/private/leonatl24-20261024')
+if os.path.isdir(LA24D):
+    DATA['leonatl24'] = {'dc/tex.pak': LA24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonatl24'] = LA24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
@@ -1050,6 +1057,12 @@ if os.path.isdir(LH24D):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# res24g (lane purge-cast24 10-24, GC purge; data only): res22c without the 29 never-drawn GameCube player/enemy keys of
+# game/platform/preload_skip_gcidle.inc (61 records; r207 / r310 rows kept), with res22c's remap table. Ships with
+# PRELOAD_SKIP_GCIDLE=1. After res22c. Private store /root/re4data/private/res24g-20261024 (RECIPE.txt, sha256 6b5c2c7a).
+RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
+if os.path.isdir(RES24GD):
+    DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw

@@ -2611,6 +2611,15 @@ ifneq ($(GANADO_ATLAS_DROP),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP) -DRE4DC_GANADO_ATLAS_DROP_ROOMS=$(GANADO_ATLAS_DROP_ROOMS)
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP)
 endif
+# PRELOAD_SKIP_GCIDLE=1 (render only, native_ui.cpp, default 0; lane purge-cast24): the entry preload passes skip the
+# never-drawn GameCube player/enemy archive pictures listed in platform/preload_skip_gcidle.inc (TEX_USE_CENSUS=2).
+PRELOAD_SKIP_GCIDLE ?= 0
+ifneq ($(PRELOAD_SKIP_GCIDLE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PRELOAD_SKIP_GCIDLE=1 -include platform/preload_skip_gcidle.h '-DRE4DC_GCIDLE_SKIP(c,f)=if(preload_gcidle(c,f))continue;'
+$(OBJDIR)/platform/native_ui.o: platform/preload_skip_gcidle.inc platform/preload_skip_gcidle.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_GCIDLE_SKIP(c,f)='
+endif
 ifneq ($(TEX_USE_CENSUS),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=$(TEX_USE_CENSUS)
 endif
