@@ -613,7 +613,7 @@ static bool gca_probe_once(const char* why,const void* a,const void* c){
 #define GCA_PROBE(...) do{}while(0)
 #endif
 const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
-extern C unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
+extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
 re4dc_gcasset::SourceUse gcasset_model_pending;
 __attribute__((noinline)) void gcasset_model_prepare(const Re4dcModelPart* p) {
     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
