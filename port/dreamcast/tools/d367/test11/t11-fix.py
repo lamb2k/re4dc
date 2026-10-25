@@ -103,6 +103,7 @@ DATA['blackgc14'] = {k: v for k, v in DATA['blackgc'].items() if not k.startswit
 # the r117 Playing Manual 3 file being given after s00 (full-play t11a ch21; bisect c3/c6/c7/c8, 10-14).
 DATA['blackgc14p'] = {k: v for k, v in DATA['blackgc14'].items() if k != 'tex'}
 DATA['blackgc14p']['dc/tex.pak'] = '/root/probe/lanes-20261014/t11/data/tex-t11.pak'
+AFTER = []
 CLASH = [('blackps2', 'r10bcut'), ('blackps2', 'smx103'), ('blackgc', 'r10bcut'), ('blackgc', 'smx103'), ('blackps2', 'blackgc'),
          ('blackgc14', 'blackgc'), ('blackgc14', 'blackps2'), ('blackgc14', 'r10bcut'), ('blackgc14', 'smx103'),
          ('blackgc14p', 'leonhr'), ('blackgc14p', 'blackgc14'), ('blackgc14p', 'blackgc')]
@@ -846,6 +847,10 @@ def main():
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
+    # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
+    for a_, b_ in AFTER:
+        if a_ in names:
+            assert b_ in names[:names.index(a_)], 'data set %s needs %s before it in --data' % (a_, b_)
     for nm in names:
         rm -= set(UNREMOVE.get(nm, ()))
         for k, v in DATA[nm].items():
@@ -969,15 +974,16 @@ PFX24D = os.environ.get('PFX24D', '/root/re4data/private/pfx24-20261024')
 if os.path.isdir(PFX24D):
     DATA['pfx24'] = {'dc/tex.pak': PFX24D + '/dc/tex.pak'}
     PAK_DERIVED['pfx24'] = PFX24D + '/pak-derived.json'
-# pui24s (lane purge-ui24 10-24, GC purge: sub screen + etc pictures): pui24's tex.pak + 865 pictures of ss/Item ss/Cmn
+# pui24s (lane purge-ui24 10-24, GC purge: sub screen + etc pictures): pfx24's tex.pak (chain fol24 -> pui24 -> pfx24 ->
+# pui24s, rebuilt 10-24 on pfx24 7a54e971) + 880 pictures of ss/Item ss/Cmn
 # ss/Eng, etc/*.tpl, etc/memcard.das and op/*.das as their PS2 twins' pictures under the GC keys (purgeui24/ps2_tpl_pak.py,
-# NCC-matched; same sizes and formats). Replaces pui24 in the data line (it contains it). Store: re4-assets-private/
-# pui24s-20261024.
+# NCC-matched; same sizes and formats). Needs pfx24 before it (AFTER); pui24 and pfx24 stay in the line. Store: re4-assets-private/
+# pui24s-20261024 (on pfx24; the pui24-based pack eba16350 is retired).
 PUI24SD = os.environ.get('PUI24SD', '/root/re4data/private/pui24s-20261024')
 if os.path.isdir(PUI24SD):
     DATA['pui24s'] = {'dc/tex.pak': PUI24SD + '/dc/tex.pak'}
     PAK_DERIVED['pui24s'] = PUI24SD + '/pak-derived.json'
-    CLASH += [('pui24s', 'pui24')]
+    AFTER += [('pui24s', 'pfx24'), ('pfx24', 'pui24')]
 # pui24f (lane purge-ui24 10-24, GC purge: fonts): the English glyph sheets as PS2 glyphs. The PS2 USA build's only Latin
 # font is common_p.fnt, cell for cell the GC common_p layout (+ PS2 pad glyph rows the Dreamcast does not use), so
 # common_p.fnt and the per-stage *_p sheets (stage1/2, event1-3, sscrn) get the PS2 cells and width bytes in the GC
