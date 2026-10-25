@@ -413,7 +413,7 @@ void motion_use(const void* pointer) {
             }
             crc=~key.crc;fnv=key.fnv;
         }
-        char id[24];std::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
+        char id[24];::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
         unsigned char k8[8];std::memcpy(k8,&crc,4);std::memcpy(k8+4,&fnv,4);
         asset=bind_checked("motion",id,fingerprint(k8,8));
         if(!asset.value){fault(MotionBind);return;}
