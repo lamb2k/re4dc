@@ -1048,6 +1048,13 @@ if os.path.isdir(PUI24SD):
 PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
 if os.path.isdir(PUI24FD):
     DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
+# fontps2x25 (lane gc-audit25 10-25, no GameCube assets: fonts): common_p.fnt as the exact PS2 sheet (PS2 4-bit indices
+# and the PS2 CLUT as the TLUT, PS2 width bytes) instead of pui24f's nearest-entry re-encode into the GameCube palette.
+# Use after pui24f. Visible (palette): look call before a recipe. Store re4-assets-private/fontps2x25-20261025 (RECIPE.txt).
+FONTPS2XD = os.environ.get('FONTPS2XD', '/root/re4data/private/fontps2x25-20261025')
+if os.path.isdir(FONTPS2XD):
+    DATA['fontps2x25'] = {'font/common_p.fnt': FONTPS2XD + '/font/common_p.fnt'}
+    AFTER += [('fontps2x25', 'pui24f')]
 # leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
 # (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
 # materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
@@ -1143,6 +1150,7 @@ if os.path.isdir(WEP05FITD):
     DATA['wep05fit25'] = {'em/wep05.drs': WEP05FITD + '/em/wep05.drs',
                           'ss/cmn/ss_wep05.dat': WEP05FITD + '/ss/cmn/ss_wep05.dat',
                           'tex': WEP05FITD + '/tex'}
+    AFTER += [('wep05fit25', 'wep24'), ('wep05fit25', 'wep24ss')]
 # pmwep24 (lane purge-motion24 10-24, GC purge, data only): wep24's weapon archives with their FCV/SEQ motion from PS2
 # BIO4DAT.AFS wepNN.dat (tools/d367/motion/ps2_motion_prepared.py rewrite + verify, bodies laid out again; models, pictures,
 # REL and sound banks kept). Only the 10 archives whose motion changed (wep02 07 09 10 12 16 17 18 21 24); wep04
