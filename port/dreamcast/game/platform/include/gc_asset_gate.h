@@ -102,6 +102,7 @@ void pump();
 void checked(Consumer);
 void unresolved(Consumer, const char* reason);
 void end(unsigned frame);
+void checkpoint(unsigned frame);
 #if defined(RE4DC_GC_ASSET_TEST)
 void test_queue_lock(bool held);
 void test_max_counters();

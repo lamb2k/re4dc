@@ -18,16 +18,30 @@ ROOM = re.compile(r'^[0-9a-f]{4}$')
 HERE = Path(__file__).resolve().parent
 
 
+BASE_PROTOCOL = dict(schema=2, gate='GC-ASSET', diagnostic_version=PROTOCOL_VERSION,
+                     required=f'{REQUIRED:03x}', consumers=list(CONSUMERS),
+                     motion_coverage='unwired; zero counter is not a zero-use assertion',
+                     motion_identity_kind='motion', legacy_diagnostic_versions_rejected=[1],
+                     catalog_format_schema=1, reviewed_allowlist_schema=1)
+CONTRACT = 2   # judge contract v2 (gc-catalog24b, coordinator 10-24): CKPT, wired mask, errors per kind
+
+
 def read_protocol(path=HERE / 'protocol.json'):
+    """Strict manifest: the v2 diagnostic fields exactly, plus the contract-v2 keys.
+
+    Returns (sha256, {ruled-out error kind: one-line reason})."""
     raw = Path(path).read_bytes()
-    expected = dict(schema=2, gate='GC-ASSET', diagnostic_version=PROTOCOL_VERSION,
-                    required=f'{REQUIRED:03x}', consumers=list(CONSUMERS),
-                    motion_coverage='unwired; zero counter is not a zero-use assertion',
-                    motion_identity_kind='motion', legacy_diagnostic_versions_rejected=[1],
-                    catalog_format_schema=1, reviewed_allowlist_schema=1)
-    if json.loads(raw) != expected:
+    doc = json.loads(raw)
+    extra = {'judge_contract', 'checkpoint', 'error_kinds_out_of_scope'}
+    if {k: v for k, v in doc.items() if k not in extra} != BASE_PROTOCOL or set(doc) != set(BASE_PROTOCOL) | extra:
         raise ValueError('current GC-ASSET protocol manifest differs from strict v2 contract')
-    return hashlib.sha256(raw).hexdigest()
+    if doc['judge_contract'] != CONTRACT or not isinstance(doc['checkpoint'], str):
+        raise ValueError('GC-ASSET protocol manifest is not judge contract v2')
+    ruled = doc['error_kinds_out_of_scope']
+    if not isinstance(ruled, dict) or any(not TOKEN.fullmatch(k) or not isinstance(v, str) or not v.strip() or '\n' in v
+                                          for k, v in ruled.items()):
+        raise ValueError('ruled-out error kinds need a token and a one-line reason each')
+    return hashlib.sha256(raw).hexdigest(), ruled
 
 
 def scope_name(row):
@@ -99,26 +113,36 @@ def fields(line, prefix):
     return values
 
 
-def judge(logs, allowlist, requested):
-    protocol_sha = read_protocol()
+def judge(logs, allowlist, requested, protocol=None):
+    protocol_sha, ruled = read_protocol(protocol or HERE / 'protocol.json')
     failures = []
     visits = {}
     observed = set()
+    out_of_scope = {}
     for name, content in logs:
         active = None
         file_visits = 0
         startup_visits = 0
         last_visit = 0
         previous_scope = None
+        ekinds = {}
         for number, line in enumerate(content.splitlines(), 1):
             if 'GC-ASSET' not in line:
                 continue
             location = f'{name}:{number}'
             try:
                 if 'GC-ASSET-ERROR' in line:
+                    why = re.search(r'\bwhy=([^\s]+)', line)
+                    why = why.group(1) if why else 'missing-why'
+                    if why in ruled:
+                        out_of_scope[why] = out_of_scope.get(why, 0) + 1
+                        continue
                     raise ValueError('runtime diagnostic error: ' + line.strip())
-                prefix = next((p for p in ('GC-ASSET-BEGIN ', 'GC-ASSET-COUNTS ', 'GC-ASSET-END ', 'GC-ASSET ') if p in line), None)
+                prefix = next((p for p in ('GC-ASSET-BEGIN ', 'GC-ASSET-COUNTS ', 'GC-ASSET-END ', 'GC-ASSET-CKPT ', 'GC-ASSET-EKIND ', 'GC-ASSET ')
+                               if p in line), None)
                 if not prefix:
+                    if 'GC-ASSET-PROF' in line or 'GC-ASSET-PROBE' in line or 'GC-ASSET-NOTE' in line:
+                        continue
                     raise ValueError('unrecognized GC-ASSET diagnostic')
                 r = fields(line, prefix)
                 scope = scope_name(r)
@@ -147,13 +171,16 @@ def judge(logs, allowlist, requested):
                         raise ValueError('game room requires preceding completed transition coverage')
                     last_visit = key[2]
                     required = {'v', location_field, 'visit', 'wired', 'required', 'catalog', 'catalog_ok', *transition}
-                    if set(r) != required or int(r['wired'], 16) != REQUIRED or int(r['required'], 16) != REQUIRED:
-                        raise ValueError('missing diagnostic consumer wiring')
+                    if set(r) != required or int(r['required'], 16) != REQUIRED or int(r['wired'], 16) & ~REQUIRED:
+                        raise ValueError('diagnostic consumer wiring fields differ from schema')
                     if r['catalog_ok'] != '1' or not r['catalog'].isdigit():
                         raise ValueError('invalid provenance catalog')
-                    visits[key] = {'rows': set(), 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None, 'ended': False, 'scope': scope, 'transition': transition}
+                    visits[key] = {'rows': set(), 'prov': {}, 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None,
+                                   'ended': False, 'checkpoints': 0, 'scope': scope, 'transition': transition,
+                                   'wired': int(r['wired'], 16), 'errors': {}}
                     file_visits += 1
                     active = key
+                    ekinds = {}
                     if not scope.startswith('@'):
                         observed.add(scope)
                 elif prefix == 'GC-ASSET ':
@@ -173,6 +200,7 @@ def judge(logs, allowlist, requested):
                     if asset in visits[key]['rows']:
                         raise ValueError('duplicate asset row in room visit')
                     visits[key]['rows'].add(asset)
+                    visits[key]['prov'][r['provenance']] = visits[key]['prov'].get(r['provenance'], 0) + 1
                     visits[key]['first_consumers'][r['consumer']] += 1
                     if asset not in allowlist:
                         raise ValueError('unreviewed draw/play asset: ' + str(asset))
@@ -182,50 +210,84 @@ def judge(logs, allowlist, requested):
                     if set(r) != {'v', location_field, 'visit', *CONSUMERS}:
                         raise ValueError('consumer counter fields differ from schema')
                     visits[key]['counts'] = {c: int(r[c]) for c in CONSUMERS}
-                else:
+                elif prefix == 'GC-ASSET-EKIND ':
                     if active != key:
-                        raise ValueError('end checkpoint without matching begin')
+                        raise ValueError('error kind outside its room visit')
+                    if set(r) != {'v', location_field, 'visit', 'at', 'why', 'count'} or r['at'] not in ('ckpt', 'end') \
+                            or not TOKEN.fullmatch(r['why']) or not r['count'].isdigit():
+                        raise ValueError('error kind fields differ from schema')
+                    if r['why'] in ekinds:
+                        raise ValueError('duplicate error kind in one checkpoint')
+                    ekinds[r['why']] = int(r['count'])
+                else:
+                    end = prefix == 'GC-ASSET-END '
+                    if active != key:
+                        raise ValueError('checkpoint without matching begin')
                     required = {'v', location_field, 'visit', 'frame', 'wired', 'checked', 'required', 'unique', 'overflow', 'errors', 'catalog_ok'}
                     if set(r) != required:
-                        raise ValueError('end checkpoint fields differ from schema')
-                    if any(int(r[k], 16) != REQUIRED for k in ('wired', 'checked', 'required')):
-                        raise ValueError('incomplete per-room consumer coverage')
-                    if int(r['overflow']) or int(r['errors']) or r['catalog_ok'] != '1':
-                        raise ValueError('runtime overflow/error/catalog failure')
-                    if int(r['unique']) != len(visits[key]['rows']):
+                        raise ValueError('checkpoint fields differ from schema')
+                    visit = visits[key]
+                    wired, checked = int(r['wired'], 16), int(r['checked'], 16)
+                    if int(r['required'], 16) != REQUIRED or wired != visit['wired'] or checked & ~wired:
+                        raise ValueError('checkpoint consumer mask differs from the visit wiring')
+                    if int(r['overflow']) or r['catalog_ok'] != '1':
+                        raise ValueError('runtime overflow/catalog failure')
+                    if sum(ekinds.values()) != int(r['errors']):
+                        raise ValueError('error kinds do not add up to the checkpoint error count')
+                    visit['errors'] = dict(ekinds)
+                    bad = sorted(k for k in ekinds if k not in ruled)
+                    ekinds = {}
+                    if int(r['unique']) != len(visit['rows']):
                         raise ValueError('asset summary does not match emitted rows')
-                    counts = visits[key]['counts']
-                    if counts is None:
-                        raise ValueError('missing consumer counter checkpoint')
-                    if sum(counts.values()) < len(visits[key]['rows']):
-                        raise ValueError('consumer emission counts cannot explain asset rows')
-                    if any(counts[c] < visits[key]['first_consumers'][c] for c in CONSUMERS):
-                        raise ValueError('per-consumer count cannot explain its logged first-use rows')
-                    if any(not 0 <= counts[c] <= 0xffffffff for c in CONSUMERS) or not 0 <= int(r['frame']) <= 0xffffffff:
+                    if any(not 0 <= int(r[k]) <= 0xffffffff for k in ('frame', 'errors', 'unique')):
                         raise ValueError('counter/frame outside unsigned 32-bit range')
-                    visits[key]['ended'] = True
-                    previous_scope = scope
-                    active = None
+                    visit['checkpoints'] += 1
+                    if end:
+                        counts = visit['counts']
+                        if counts is None:
+                            raise ValueError('missing consumer counter checkpoint')
+                        if sum(counts.values()) < len(visit['rows']):
+                            raise ValueError('consumer emission counts cannot explain asset rows')
+                        if any(counts[c] < visit['first_consumers'][c] for c in CONSUMERS):
+                            raise ValueError('per-consumer count cannot explain its logged first-use rows')
+                        if any(not 0 <= counts[c] <= 0xffffffff for c in CONSUMERS):
+                            raise ValueError('counter outside unsigned 32-bit range')
+                        visit['ended'] = True
+                        previous_scope = scope
+                        active = None
+                    if bad:
+                        raise ValueError('error kinds in scope: ' + ','.join('%s=%d' % (k, visit['errors'][k]) for k in bad))
             except (ValueError, KeyError, TypeError) as error:
                 failures.append(f'{location}: {error}')
-        if active is not None:
-            failures.append(f'{name}: missing end checkpoint for {active[1]} visit {active[2]}')
         if not file_visits:
             failures.append(f'{name}: missing diagnostic room coverage')
         if startup_visits != 1:
             failures.append(f'{name}: missing named startup diagnostic coverage')
     if not visits:
-        failures.append('no complete diagnostic room visits; missing diagnostic coverage is not a pass')
+        failures.append('no diagnostic room visits; missing diagnostic coverage is not a pass')
     if not observed:
         failures.append('no diagnostic game rooms; startup alone is not route coverage')
     for room in sorted(set(requested) - observed):
         failures.append(f'{room}: requested room has no diagnostic coverage')
     for key, visit in visits.items():
-        if not visit['ended']:
-            failures.append(f'{key[1]} visit {key[2]}: no valid final checkpoint')
-    return {'schema': 2, 'protocol_version': PROTOCOL_VERSION, 'gate': 'GC-ASSET',
+        if not visit['checkpoints']:
+            failures.append(f'{key[1]} visit {key[2]}: no checkpoint (CKPT or END)')
+    rooms = {}
+    for key, visit in visits.items():
+        if key[1].startswith('@'):
+            continue
+        row = rooms.setdefault(key[1], {'visits': 0, 'rows': {}, 'errors': {}, 'covered': [], 'not_covered': []})
+        row['visits'] += 1
+        for prov, n in visit['prov'].items():
+            row['rows'][prov] = row['rows'].get(prov, 0) + n
+        for k, n in visit['errors'].items():
+            row['errors'][k] = row['errors'].get(k, 0) + n
+        row['covered'] = [c for i, c in enumerate(CONSUMERS) if visit['wired'] >> i & 1]
+        row['not_covered'] = [c for i, c in enumerate(CONSUMERS) if not visit['wired'] >> i & 1]
+    return {'schema': 2, 'protocol_version': PROTOCOL_VERSION, 'judge_contract': CONTRACT, 'gate': 'GC-ASSET',
             'protocol_sha256': protocol_sha, 'required': f'{REQUIRED:03x}', 'consumers': list(CONSUMERS), 'pass': not failures,
-            'rooms': sorted(observed), 'visits': len(visits),
+            'rooms': sorted(observed), 'visits': len(visits), 'per_room': rooms,
+            'out_of_scope_errors': {k: {'lines': n, 'reason': ruled[k]} for k, n in sorted(out_of_scope.items())},
             'allowed_used': len(set().union(*(v['rows'] for v in visits.values()))) if visits else 0,
             'failures': failures}
 

@@ -89,14 +89,38 @@ bool named(const Span& etm,const void* data,Span& result) {
     }
     return found;
 }
+// gc-catalog24b: SMD scroll-model containers (include/scroll.h cSmd): the BINs
+// at BinTblOfs + table[i] (cSmd::getBinPtr). Table length = first offset / 4;
+// bin i ends at the next offset, the last at TplTblOfs (else the entry end).
+// build_catalog.py smd_bins is the same rule.
+template<class F> void smd_bins(const Span& smd,F&& f){
+    if(smd.bytes<16)return;
+    const unsigned bt=word(smd.base,4),tt=word(smd.base,8);
+    if(bt<16 || bt>smd.bytes-4 || (bt&3))return;
+    const unsigned room=smd.bytes-bt,first=word(smd.base,bt);
+    if(first<4 || (first&3) || first>room)return;
+    const unsigned n=first/4;if(n>4096)return;
+    const unsigned limit=tt>bt && tt<=smd.bytes?tt-bt:room;
+    for(unsigned i=0;i<n;++i){
+        const unsigned o=word(smd.base,bt+4*i),next=i+1<n?word(smd.base,bt+4*(i+1)):limit;
+        if(o<first || next<=o || next>limit)return;
+        if(next-o>=64)f(Span{smd.base+bt+o,nullptr,next-o,0});
+    }
+}
 bool find(const Archive& owner,const void* data,Span& result) {
     unsigned count;if(!table(owner,count) || !contains(owner.base,owner.bytes,data,1))return false;
     const unsigned tags=16+count*4;bool found=false;
     for(unsigned i=0;i<count;++i) {
         const auto* tag=owner.base+tags+4*i;
-        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3))continue;
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && std::memcmp(tag,"SMD",3))continue;
         Span current;if(!entry(owner,i,current))return false;
         if(!contains(current.base,current.bytes,data,1))continue;
+        if(!std::memcmp(tag,"SMD",3)) {
+            bool hit=false;Span child;
+            smd_bins(current,[&](const Span& s){if(!hit && contains(s.base,s.bytes,data,1)){child=s;hit=true;}});
+            if(!hit)return false;
+            current=child;
+        }
         if(!std::memcmp(tag,"ETM",3)) { Span child;if(!named(current,data,child))return false;current=child; }
         if(found)return false;
         result=current;found=true;
@@ -115,14 +139,16 @@ bool current(const Member& member) {
 struct Pre { unsigned offset,bytes;Digest digest; };
 Pre* pre[ArchiveCount];unsigned pre_count[ArchiveCount];
 void pre_free(unsigned owner){std::free(pre[owner]);pre[owner]=nullptr;pre_count[owner]=0;}
+template<class F> void smd_bins(const Span& smd,F&& f);
 template<class F> void each_model(const Archive& owner,F&& f){
     unsigned count;if(!table(owner,count))return;
     const unsigned tags=16+count*4;
     for(unsigned i=0;i<count;++i){
         const auto* tag=owner.base+tags+4*i;
-        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3))continue;
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && std::memcmp(tag,"SMD",3))continue;
         Span current;if(!entry(owner,i,current))continue;
         if(!std::memcmp(tag,"BIN",3)){f(current);continue;}
+        if(!std::memcmp(tag,"SMD",3)){smd_bins(current,f);continue;}
         if(current.bytes<32)continue;
         const unsigned n=word(current.base,0);if(n>4096)continue;
         unsigned cursor=32;
@@ -180,6 +206,13 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,
     Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient,family};unsigned count;
     if(!table(candidate,count)) { unresolved(SourceGeometry,"member-directory");return false; }
     archives[free]=candidate;pre_hash(free);return true;
+}
+void member_move(const void* owner,void* base) {
+    for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner) {
+        member_flush();
+        for(auto& member:members)if(member.base && member.owner==i)member={};
+        archives[i].base=static_cast<unsigned char*>(base);archives[i].generation=++generation;return;
+    }
 }
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
@@ -272,4 +305,12 @@ void member_test_serial(unsigned value){serial=value;}
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
+// block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
+// (before BlockCreate relocates their BINs), moved with pool compaction,
+// retired where the block's draw owner is unbound.
+extern "C" void re4dc_gcasset_block_adopt(const void* owner,void* archive,unsigned bytes) {
+    if(re4dc_gcasset::ensure_disc_catalog())re4dc_gcasset::member_adopt(owner,archive,bytes,true);
+}
+extern "C" void re4dc_gcasset_block_move(const void* owner,void* base) { re4dc_gcasset::member_move(owner,base); }
+extern "C" void re4dc_gcasset_block_retire(const void* owner) { re4dc_gcasset::member_retire(owner); }
 #endif

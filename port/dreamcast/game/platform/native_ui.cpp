@@ -5820,6 +5820,16 @@ void gcasset_startup(){
 #endif
     gcasset_visit_live=true;re4dc_gcasset_audio_admission(1);
 }
+// Judge contract v2: the in-room checkpoint marks the render-side consumers
+// as close_visit does (audio consumers keep what their own flush reported).
+void gcasset_checkpoint(){
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+        re4dc_gcasset::checked(consumer);
+#if RE4DC_NATIVE_MES
+    re4dc_gcasset::checked(re4dc_gcasset::Font);
+#endif
+    re4dc_gcasset::checkpoint(frame);
+}
 void gcasset_close_visit(unsigned audio){
     gcasset_flush();gcasset_packet_reset();
     // The actual renderer observer/flush paths are source-extracted in tests.
@@ -5834,6 +5844,8 @@ void gcasset_close_visit(unsigned audio){
     re4dc_gcasset::end(frame);gcasset_visit_live=false;
 }
 }
+// fixture end (W11 fixture / warp script done): one more checkpoint.
+extern "C" void re4dc_gcasset_fixture_end(){if(gcasset_visit_live){gcasset_flush();gcasset_checkpoint();}}
 extern "C" void re4dc_gcasset_finish(){
     const unsigned audio=re4dc_gcasset_audio_admission(0);
     if(gcasset_visit_live)gcasset_close_visit(audio);else re4dc_gcasset::pump();
@@ -6774,7 +6786,7 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){gcasset_flush();}
+        ~GcAssetFrameFlush(){gcasset_flush();if(gcasset_visit_live && frame && !(frame%600))gcasset_checkpoint();}
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH
@@ -8846,13 +8858,25 @@ void grade_packet(unsigned char* out,std::uint32_t argb){
         v[k].u=v[k].v=0;v[k].argb=argb;v[k].oargb=0;
     }
 }
+#if RE4DC_GC_ASSET_GATE
+extern pvr_ptr_t osd_vram;
+#endif
 void grade_send(unsigned char* packet,unsigned bytes){
 #if RE4DC_WORLD_AUTOSORT
     if(world_autosort)for(unsigned off=0;off<bytes;off+=kGradeBytes){
         auto* v=reinterpret_cast<pvr_vertex_t*>(packet+off+sizeof(pvr_poly_hdr_t));
         const float layer=overlay_depth();for(unsigned i=0;i<4;++i)v[i].z=layer;}
 #endif
+#if RE4DC_GC_ASSET_GATE
+    // gc-catalog24b: the look/preset label is KOS BIOS-font text rendered at run
+    // time into osd_vram (osd_texture), not a disc asset: a generated packet.
+    GcAssetGeneratedPacket asset_packet{packet,bytes,unsigned(reinterpret_cast<std::uintptr_t>(osd_vram))&0x007fffffU,re4dc_gcasset::Ui,true};
+    {GcAssetGeneratedScope asset_scope(asset_packet);
+#endif
     stream_send(packet,bytes);
+#if RE4DC_GC_ASSET_GATE
+    }
+#endif
 }
 // The preset label: the BIOS font (bfont, 12x24, as the crash screen) rendered into a 512x32 RGB565 texture when
 // the text changes (32 KiB of VRAM, allocated on first use; no label if that fails), drawn as one quad in the top

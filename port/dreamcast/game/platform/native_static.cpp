@@ -724,6 +724,10 @@ struct StdRoom {
     StdTex tex[kStdTex]; StdKey drop[kStdDrop]; StdCull cull[kStdCull]; StdImp imp[kStdImp]; StdPtex ptex[kStdPtex]; StdImpt impt[kStdImpt];
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::PayloadProof asset_proof;
+    // gc-catalog24b: the room's index was looked up and not used (missing,
+    // oversized or rejected): the room draws Original packages exactly as with
+    // no index, so the STD role is Absent for the composite, not Unproven.
+    bool gca_unused=false;
 #endif
 };
 StdRoom std_room;
@@ -2303,6 +2307,7 @@ void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
 #if RE4DC_QUALITY_ASSETS
     if(!re4dc_quality_std_assets())static_manifest_note(source,STD_INDEX,Disabled);
     else if(std_room.active && std_room.room==room)static_manifest_receipt(source,STD_INDEX,std_room.asset_proof,&std_room,1,StaticConsumedSpan);
+    else if(std_room.room==room && std_room.gca_unused)static_manifest_note(source,STD_INDEX,Absent);
     else static_manifest_note(source,STD_INDEX,Unproven);
 #else
     static_manifest_note(source,STD_INDEX,Disabled);
@@ -3948,10 +3953,16 @@ extern "C" void re4dc_std_room_enter(unsigned room){
     gcasset_static_invalidate_all();re4dc_gcasset::payload_retire(r.asset_proof);
 #endif
     r.room=room;r.active=false;r.mesh_views=0;r.checked=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=false;
+#endif
     if(!re4dc_quality_std_assets())return;
     char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/low/index.txt",room>>8,room&255U);
     char* text=static_cast<char*>(std::malloc(kStdText));
     const int n=text?re4dc_fixture_read(path,text,kStdText):-1;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=true;   // cleared once the index is accepted below
+#endif
     if(n<=0){re4dc_log("quality assets: %s missing: Original packages\n",path);std::free(text);return;}
     if(n>=int(kStdText)){re4dc_log("quality assets: %s larger than %u B: Original packages\n",path,kStdText);std::free(text);return;}
 #if RE4DC_GC_ASSET_GATE
@@ -3964,6 +3975,7 @@ extern "C" void re4dc_std_room_enter(unsigned room){
     std::free(text);
     if(!r.active){r.mesh_views=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;re4dc_log("quality assets: %s rejected: Original packages\n",path);return;}
 #if RE4DC_GC_ASSET_GATE
+    r.gca_unused=false;
     re4dc_gcasset::payload_capture_receipt(r.asset_proof,&r,gcasset_digest,unsigned(n));
 #endif
     re4dc_log("quality assets: %s mesh=%02x tex=%u drop=%u cull=%u imp=%u impt=%u ptex=%u\n",path,r.mesh_views,r.ntex,r.ndrop,r.ncull,r.nimp,r.nimpt,r.nptex);

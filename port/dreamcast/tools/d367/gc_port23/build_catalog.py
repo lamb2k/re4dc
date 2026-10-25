@@ -118,6 +118,29 @@ def etm_members(b):
     return out
 
 
+def smd_bins(span):
+    """gc_asset_members.cpp smd_bins: the BINs of a cSmd scroll-model container."""
+    if len(span) < 16:
+        return
+    bt, tt = word(span, 4), word(span, 8)
+    if bt < 16 or bt > len(span) - 4 or bt & 3:
+        return
+    room, first = len(span) - bt, word(span, bt)
+    if first < 4 or first & 3 or first > room:
+        return
+    n = first // 4
+    if n > 4096:
+        return
+    limit = tt - bt if bt < tt <= len(span) else room
+    for i in range(n):
+        o = word(span, bt + 4 * i)
+        nxt = word(span, bt + 4 * (i + 1)) if i + 1 < n else limit
+        if o < first or nxt <= o or nxt > limit:
+            return
+        if nxt - o >= 64:
+            yield span[bt + o:bt + nxt]
+
+
 def model_payloads(b, depth=0):
     for _index, tag, start, end in archive_spans(b):
         span = b[start:end]
@@ -128,6 +151,8 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
+        elif tag[:3] == b'SMD':
+            yield from smd_bins(span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)
 
