@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ps2_tpl_pak.py --gc-root DIR --ps2-dir DIR --pak base/tex.pak --out DIR [--glob 'ss/*/*.tpl' ...] [--min-ncc 0.9] [--margin 0.03] [--dry]
+"""ps2_tpl_pak.py --gc-root DIR --ps2-dir DIR --pak base/tex.pak --out DIR [--glob 'ss/*/*.tpl' ...] [--min-ncc 0.97] [--max-mae 30] [--margin 0.03] [--dry]
 (lane purge-ui24, 2026-10-24; GC asset purge: sub screen ss/*, etc/*.tpl, op/*.das, etc/memcard.das)
 
 Pictures of GameCube UI files become their PS2 twins' pictures, "PS2 pixels under the GC key" (no runtime change; same
@@ -7,7 +7,8 @@ as ps2_hud_pak.py). File pairs by name: the PS2 BIO4DAT.AFS member with the GC f
 .dat: op01.das -> op01.dat, memcard.das -> memcard.dat). Every GC TPL image in the file whose identity key is in the base
 pack is matched to the most similar PS2 TPL picture of the twin: normalised cross-correlation of 24x24 premultiplied
 luma + alpha signatures, aspect ratios within 2x; it is replaced when the best NCC is >= --min-ncc and either beats the
-runner-up by --margin or is the picture at the same index (equal-order files). The replacement is
+runner-up by --margin or is the picture at the same index (equal-order files), and the mean absolute RGBA difference
+is <= --max-mae (low-contrast dark pictures correlate on noise). The replacement is
 the PS2 picture resampled to the GC picture's size (model and screen UVs address the whole picture), packaged by the
 texture prep and encoded like the base package (VQ when the base is VQ; a palettised base package is reported and left,
 since a 16-bit replacement would grow VRAM). Outputs as ps2_hud_pak.py: dc/tex.pak, pak-derived.json, report.json.
@@ -96,8 +97,9 @@ def main():
     ap.add_argument('--pak', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--glob', action='append')
-    ap.add_argument('--min-ncc', type=float, default=0.9)
+    ap.add_argument('--min-ncc', type=float, default=0.97)
     ap.add_argument('--margin', type=float, default=0.03)
+    ap.add_argument('--max-mae', type=float, default=30.0, help='also bound the whole-picture RGBA difference (dark pictures)')
     ap.add_argument('--skip-keys', help='file of keys owned elsewhere (e.g. the HUD set)')
     ap.add_argument('--pvrtex', default=vq.PVRTEX)
     ap.add_argument('--dry', action='store_true')
@@ -151,7 +153,9 @@ def main():
                 r = hp.premul_resize(rgba(pim['width'], pim['height'], pim['rgba']), (gim.width, gim.height))
                 row.update(ps2_index=j, ps2_size=[pim['width'], pim['height']], ncc=round(score, 3),
                            second=round(second, 3), mae=round(mae(r, gimg), 2))
-                if score < a.min_ncc or (score - second < a.margin and j != k_i):
+                # a runner-up that is the same picture (PS2 files repeat pictures) is no ambiguity
+                twin = len(cand) > 1 and ncc(psig[j], psig[cand[1][1]]) >= 0.995
+                if score < a.min_ncc or row['mae'] > a.max_mae or (score - second < a.margin and j != k_i and not twin):
                     row['note'] = 'no unique PS2 picture (ncc %.2f, second %.2f)' % (score, second); rows.append(row); continue
                 if a.dry:
                     row['note'] = 'dry'; rows.append(row); continue

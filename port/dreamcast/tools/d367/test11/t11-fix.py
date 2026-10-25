@@ -961,6 +961,15 @@ PFX24D = os.environ.get('PFX24D', '/root/re4data/private/pfx24-20261024')
 if os.path.isdir(PFX24D):
     DATA['pfx24'] = {'dc/tex.pak': PFX24D + '/dc/tex.pak'}
     PAK_DERIVED['pfx24'] = PFX24D + '/pak-derived.json'
+# pui24s (lane purge-ui24 10-24, GC purge: sub screen + etc pictures): pui24's tex.pak + 865 pictures of ss/Item ss/Cmn
+# ss/Eng, etc/*.tpl, etc/memcard.das and op/*.das as their PS2 twins' pictures under the GC keys (purgeui24/ps2_tpl_pak.py,
+# NCC-matched; same sizes and formats). Replaces pui24 in the data line (it contains it). Store: re4-assets-private/
+# pui24s-20261024.
+PUI24SD = os.environ.get('PUI24SD', '/root/re4data/private/pui24s-20261024')
+if os.path.isdir(PUI24SD):
+    DATA['pui24s'] = {'dc/tex.pak': PUI24SD + '/dc/tex.pak'}
+    PAK_DERIVED['pui24s'] = PUI24SD + '/pak-derived.json'
+    CLASH += [('pui24s', 'pui24')]
 # pui24f (lane purge-ui24 10-24, GC purge: fonts): the English glyph sheets as PS2 glyphs. The PS2 USA build's only Latin
 # font is common_p.fnt, cell for cell the GC common_p layout (+ PS2 pad glyph rows the Dreamcast does not use), so
 # common_p.fnt and the per-stage *_p sheets (stage1/2, event1-3, sscrn) get the PS2 cells and width bytes in the GC

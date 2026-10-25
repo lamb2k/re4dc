@@ -58,16 +58,48 @@ def parse(b, base=0):
         if d + w * hh * bpp // 8 > len(b):
             raise ValueError('pixels outside the file')
         px = []
+        layout = 'linear'
         if bpp == 8:
+            raw = b[d:d + w * hh]
+            if w % 16 == 0 and hh % 16 == 0:
+                sw = unswizzle8(raw, w, hh)
+                if roughness(sw, w, hh) < 0.7 * roughness(raw, w, hh):
+                    raw, layout = sw, 'psmct32-swizzled'
             for i in range(w * hh):
-                px.append(pal[b[d + i]])
+                px.append(pal[raw[i]])
         else:
             for i in range(w * hh // 2):
                 v = b[d + i]
                 px.append(pal[v & 15])
                 px.append(pal[v >> 4])
-        out.append(dict(width=w, height=hh, fmt=fmt, bpp=bpp, rgba=px, index=k))
+        out.append(dict(width=w, height=hh, fmt=fmt, bpp=bpp, rgba=px, index=k, layout=layout))
     return out
+
+
+def unswizzle8(buf, w, h):
+    """PSMT8 texels written to GS memory as PSMCT32 (the fast upload some RE4 PS2 pictures use), back to linear order
+    (the standard PS2 8-bit unswizzle)."""
+    out = bytearray(w * h)
+    for y in range(h):
+        for x in range(w):
+            block = (y & ~0xF) * w + (x & ~0xF) * 2
+            swap = (((y + 2) >> 2) & 1) * 4
+            py = (((y & ~3) >> 1) + (y & 1)) & 7
+            col = py * w * 2 + ((x + swap) & 7) * 4
+            byte = ((y >> 1) & 1) + ((x >> 2) & 2)
+            out[y * w + x] = buf[block + col + byte]
+    return bytes(out)
+
+
+def roughness(idx, w, h):
+    """Mean absolute horizontal + vertical index step (swizzled data reads as noise)."""
+    s = 0
+    for y in range(h - 1):
+        r = y * w
+        for x in range(w - 1):
+            v = idx[r + x]
+            s += abs(v - idx[r + x + 1]) + abs(v - idx[r + w + x])
+    return s / max(1, (w - 1) * (h - 1))
 
 
 def find_all(b):
