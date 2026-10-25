@@ -8,6 +8,7 @@ import json
 import struct
 
 from package import PW_HEAD, crc, require, sha
+import provenance
 
 REGISTRY = {
     'ps2-world.ids': ('R4ID v1', 'supported: inherited source IDs, current policy CRC'),
@@ -43,7 +44,9 @@ def inventory(folder):
 def regenerate(name, data, doc, mesh, side, files=None):
     """Validate actual old bindings and rebuild fields using unchanged records."""
     mh = struct.unpack_from('<4s19I', mesh)
-    ph = PW_HEAD.unpack_from(side)
+    ph = list(PW_HEAD.unpack_from(side))
+    # Bind to the runtime's policy source CRC (certified rekeyed worlds keep their original policy CRC).
+    ph[5] = provenance.policy_crc(mesh, side)[0]
     if name == 'ps2-world.ids':
         require(len(data) >= 16 and len(data) % 32 == 0, 'R4ID size')
         magic, version, count, bound = struct.unpack_from('<4s3I', data)
