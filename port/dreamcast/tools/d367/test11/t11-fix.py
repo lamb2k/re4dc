@@ -1009,6 +1009,14 @@ PL08N25D = os.environ.get('PL08N25D', '/root/re4data/private/pl08n25-20261025')
 if os.path.isdir(PL08N25D):
     DATA['pl08n25'] = {'dc/tex.pak': PL08N25D + '/dc/tex.pak'}
     PAK_DERIVED['pl08n25'] = PL08N25D + '/pak-derived.json'
+# gvar25 (lane cast-ps2-25 10-25, no-GameCube-assets rule): the variant (source-path) Ganados' 9 GameCube VQ textures
+# re-keyed to their PS2 em16.dat / em17.dat pictures; same keys, sizes, RGB565 VQ format and flags. dc/tex.pak =
+# cand-cb094d99's pack + these 9 keys, so it goes after every other tex.pak set (src/gvar_build.py rebuilds it from the
+# final pack). The GC variant geometry stays until heap 4 frees 24 KB. Store RECIPE.txt + SHA256SUMS.txt.
+GVAR25D = os.environ.get('GVAR25D', '/root/re4data/private/gvar25-20261025')
+if os.path.isdir(GVAR25D):
+    DATA['gvar25'] = {'dc/tex.pak': GVAR25D + '/dc/tex.pak'}
+    PAK_DERIVED['gvar25'] = GVAR25D + '/pak-derived.json'
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):

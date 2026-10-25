@@ -141,26 +141,6 @@
    "sha256": "ef82164d62904ffcf1ddf68eb6fe6a4a536e106777787b511ff067f092e5f916"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=2232320&bytes=18576",
-   "id": "034bb1e9-ac6489af",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "4c16b67e392cd443e49a0f1202327de31ccc978024ac497253336f9762087482"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=5081088&bytes=18576",
-   "id": "08e78837-67772ef6",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "bcf1b1969100d3777007ae739c826d8a5d88b4ed1e7cd7724c238241b5ab22d0"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=10733568&bytes=18576",
    "id": "13afc3c6-d074dc67",
    "kind": "texture",
@@ -301,16 +281,6 @@
    "sha256": "5a528164fc09edc776ea6997f6b4b3c1674a2c3457c5c588be8f8bcddddb71d1"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=43079680&bytes=18576",
-   "id": "4b857314-f2e005c0",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "b85ce3a28f91896efcc154af4022d9742d21b0392521a734da760e7d9bb47f10"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=43153408&bytes=34960",
    "id": "4b8a904e-bbc564e2",
    "kind": "texture",
@@ -329,16 +299,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "429506df70938956892859c959511bc9589a6efd8be99cb31aa99ecea11c17fd"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=47267840&bytes=18576",
-   "id": "514fea1b-0568f385",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "0a6ff005b400574e03bcc68b6848841e277d0e8f7f6458c79562b18abf005953"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=48594944&bytes=18576",
@@ -369,36 +329,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "6a5b128553b7fba4ad274673c0e18a3ba4a9439d839c985fdcece089ba5676cf"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=53270528&bytes=18576",
-   "id": "5bbf6c15-b2247777",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "9129c07314718ab7633aa4dcd82ff1066484f853d02f0d5e45059f0745cdaf5f"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=55404544&bytes=3216",
-   "id": "5f581c94-016de731",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "5d214c7e7379d7810fc22685bdbbd7c3e68e669df7aa0130e5e8528580fc50c7"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=58030080&bytes=18576",
-   "id": "65f9e9a9-5869bf3b",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "8715f77026a5aef7be89bbfd085be0a49394b7f127a8ce68b60d3fd0e6312e1f"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=60020736&bytes=400",
@@ -449,16 +379,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "5b9cc4aedf2733d36d757d1521bda83a4dc5d4c7fb6e5ef8f87ca95bf1b2686c"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=88270848&bytes=18576",
-   "id": "9bcfefbd-d81c6b31",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "d0d7dda5fdf16790c2b90d5bd7fa13ad63de8d9fb1838a1b1e14ffd3113e9409"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=116434944&bytes=4240",
