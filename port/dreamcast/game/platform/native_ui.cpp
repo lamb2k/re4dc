@@ -600,8 +600,21 @@ struct GcAssetGeneratedScope {
     ~GcAssetGeneratedScope(){gcasset_generated_packet=previous;gcasset_packet_consumer=old_consumer;}
 };
 GcAssetPacketState gcasset_packet_states[5];
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+// Probe (diagnostic): first 32 distinct (why, address, caller) per run.
+static bool gca_probe_once(const char* why,const void* a,const void* c){
+    static const void* seen[32][3];static unsigned n;
+    for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
+    if(n>=32)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
+}
+#define GCA_PROBE(why,a,c,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " __VA_ARGS__);}while(0)
+#else
+#define GCA_PROBE(...) do{}while(0)
+#endif
+const void* gcasset_probe_part;const void* gcasset_probe_caller;
 re4dc_gcasset::SourceUse gcasset_model_pending;
-void gcasset_model_prepare(const Re4dcModelPart* p) {
+__attribute__((noinline)) void gcasset_model_prepare(const Re4dcModelPart* p) {
+    gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::motion_prepare();
 #endif
@@ -615,7 +628,9 @@ void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
     if(re4dc_gcasset::payload_quads_accept(vertices,count))return;
     const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
     if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
-    else re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);
+    else{
+        if(!gcasset_model_pending.serial)GCA_PROBE("unbound-model",gcasset_probe_part,gcasset_probe_caller,"model=%p\n",re4dc_gcasset::source_use.model);
+        re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);}
 }
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
     if(state.continuation)re4dc_gcasset::unresolved(re4dc_gcasset::Texture,"incomplete-packet-continuation");
@@ -640,7 +655,8 @@ void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4d
             auto* generated=gcasset_generated_packet;
             if(!matches && generated && generated->verified && generated->packet==packet && generated->bytes==bytes &&
                 generated->address==state.address && generated->consumer==consumer)generated->accepted=true;
-            else re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");
+            else{GCA_PROBE("unmapped-texture",(const void*)(std::uintptr_t)state.address,__builtin_return_address(0),"consumer=%u list=%u gen=%u\n",unsigned(consumer),list,generated?1u:0u);
+                re4dc_gcasset::unresolved(consumer,matches?"ambiguous-texture-address":"unmapped-texture-address");}
         }
     }
 }

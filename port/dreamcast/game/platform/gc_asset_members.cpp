@@ -184,14 +184,25 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+// Probe (diagnostic): first 32 distinct (why, address, caller) per run.
+static inline bool gca_probe_once(const char* why,const void* a,const void* c){
+    static const void* seen[32][3];static unsigned n;
+    for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
+    if(n>=32)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
+}
+#define GCA_PROBE(why,a,c,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " __VA_ARGS__);}while(0)
+#else
+#define GCA_PROBE(...) do{}while(0)
+#endif
 bool member_capture(const void* data) {
     for(const auto& member:members)if(current(member) && contains(member.base,member.bytes,data,1))return true;
     unsigned owner=ArchiveCount;Span span;
     for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && contains(archives[i].base,archives[i].bytes,data,1)) {
-        if(owner!=ArchiveCount || !find(archives[i],data,span)) { unresolved(SourceGeometry,"member-span");return false; }
+        if(owner!=ArchiveCount || !find(archives[i],data,span)) { GCA_PROBE("member-span",data,__builtin_return_address(0),"arch=%p bytes=%u\n",archives[i].base,archives[i].bytes);unresolved(SourceGeometry,"member-span");return false; }
         owner=i;
     }
-    if(owner==ArchiveCount) { unresolved(SourceGeometry,"member-unbound");return false; }
+    if(owner==ArchiveCount) { GCA_PROBE("member-unbound",data,__builtin_return_address(0),"\n");unresolved(SourceGeometry,"member-unbound");return false; }
     if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial>=0xfffffffeU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
     for(auto& member:members)if(!member.base) {
         Digest digest;const bool adopted=pre_digest(owner,span,digest);
