@@ -49,6 +49,14 @@ class BuildCatalogTests(unittest.TestCase):
         (disc / 'bgm/aica_str.dat').write_bytes(b'AIS1stream')
         self.bin = b'B' * 80
         (disc / 'st1/r100_00.dat').write_bytes(archive([(b'BIN', self.bin), (b'TPL', b'T' * 32)]))
+        # em/*.drs: 0x400-byte record table, then the archive body (drs.py)
+        (disc / 'em').mkdir()
+        self.drs_bin = b'D' * 96
+        (disc / 'em/wep02.drs').write_bytes(b'\x83' * 0x20 + b'\0' * (0x400 - 0x20) + archive([(b'BIN', self.drs_bin)]))
+        # every dc/native file is whole-file geometry
+        (disc / 'dc/native/r100/low').mkdir(parents=True)
+        self.native = b'cell index\n'
+        (disc / 'dc/native/r100/low/index.txt').write_bytes(self.native)
         manifest = {p.relative_to(disc).as_posix(): {'size': p.stat().st_size}
                     for p in disc.rglob('*') if p.is_file()}
         mpath = root / 'manifest.json'
@@ -78,6 +86,8 @@ class BuildCatalogTests(unittest.TestCase):
             self.assertIn(('sound-stream', 'aica-str-dat'), keys)
             digest = hashlib.sha256(self.bin)
             self.assertIn(('model', digest.hexdigest()[:40]), keys)
+            self.assertIn(('model', hashlib.sha256(self.drs_bin).hexdigest()[:40]), keys)
+            self.assertIn(('geometry', hashlib.sha256(self.native).hexdigest()[:40]), keys)
             self.assertTrue(all(r['provenance'] == 'unknown' for r in rows))
             _rows2, blob2 = self.run_build(root, root / 'o2')
             self.assertEqual(blob, blob2)
@@ -121,7 +131,7 @@ class BuildCatalogTests(unittest.TestCase):
             rows = json.loads((root / 'o' / 'catalog.json').read_text())['entries']
             hit = [r for r in rows if r['kind'] == 'font-glyph']
             self.assertEqual([(r['id'], r['provenance']) for r in hit], [(glyph[:40], 'unknown')])
-            self.assertFalse([r for r in rows if r['kind'] == 'geometry'])
+            self.assertFalse([r for r in rows if r['kind'] == 'geometry' and r['sha256'] == geo])  # harvest never adds geometry
             with self.assertRaises(SystemExit):
                 build_catalog.main(['--disc-dir', str(disc), '--manifest', str(mpath), '--manifest-sha256', msha,
                                     '--harvest', str(tsv), '--harvest-sha256', '0' * 64, '--out-dir', str(root / 'o2')])

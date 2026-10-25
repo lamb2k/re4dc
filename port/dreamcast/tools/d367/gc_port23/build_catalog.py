@@ -15,8 +15,9 @@ kind/id/full-SHA256 rules of the runtime callers:
                as the runtime's archive table, recursively into members that
                parse as archives; id = first 20 digest bytes as hex
                (gc_asset_members.cpp entry/named/member_capture)
-  geometry     dc/native/*/registry.re4nmr and the pl08 pack, whole file; id =
-               first 20 digest bytes as hex (gc_asset_payloads.cpp capture)
+               .drs files are walked from their body at 0x400 (drs.py layout)
+  geometry     every dc/native/** file, whole file; id = first 20 digest
+               bytes as hex (gc_asset_payloads.cpp capture)
 
 Not derivable from the disc (runtime-built bytes): font-glyph/font-palette
 cells, sound-mram/sound-aram bank parts (no current bank_begin caller), layout
@@ -39,6 +40,7 @@ import catalog_index  # noqa: E402
 
 TEX = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
+DRS_TABLE = 0x400
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
 HARVEST_KINDS = ('font-glyph', 'font-palette', 'sound-mram', 'sound-aram', 'layout')
 HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
@@ -165,14 +167,23 @@ def collect(disc):
         if low == 'bgm/aica_str.dat':
             add('sound-stream', 'aica-str-dat', p.read_bytes(), rel)
             continue
-        if low.startswith('dc/native/') and (name == 'registry.re4nmr' or 'pl08' in low):
+        if low.startswith('dc/native/'):
+            # Whole-file geometry: every dc/native payload a capture hashes as
+            # loaded (registry/partner .re4nmr, pl08 .re4cp, hands .re4hp,
+            # cells, low/index.txt, trclass.idx); harvest r100/r101/r11f/h2.
             b = p.read_bytes()
             add('geometry', sha(b)[:40], b, rel)
-            continue
+            if name == 'registry.re4nmr' or 'pl08' in low:
+                continue
         if p.stat().st_size >= 16:
             b = p.read_bytes()
             for payload in model_payloads(b):
                 add('model', sha(payload)[:40], payload, rel)
+            # em/*.drs: the runtime adopts the body after the 0x400-byte record
+            # table (drs.py), not the file start (em12/wepNN harvest misses).
+            if name.endswith('.drs') and len(b) > DRS_TABLE:
+                for payload in model_payloads(b[DRS_TABLE:]):
+                    add('model', sha(payload)[:40], payload, rel + '#body')
     return rows
 
 
