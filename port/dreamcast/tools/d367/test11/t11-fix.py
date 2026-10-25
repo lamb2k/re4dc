@@ -1090,6 +1090,13 @@ DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
 PMWEP24D = os.environ.get('PMWEP24D', '/root/re4data/private/pmwep24-20261024')
 if os.path.isdir(PMWEP24D):
     DATA['pmwep24'] = {'em/' + _f: '%s/em/%s' % (PMWEP24D, _f) for _f in sorted(os.listdir(PMWEP24D + '/em'))}
+# pmwep24b (same lane, 10-25): pmwep24 re-derived on wep24b (empty PS2 weapon parts carry one zero-area triangle, so no
+# part falls to the 128 KB native_model preparation); its wep02 / wep12 BIN slots equal wep24b's byte for byte. Use WITH
+# wep24b, after it, instead of pmwep24. Store: re4-assets-private/pmwep24b-20261025.
+PMWEP24BD = os.environ.get('PMWEP24BD', '/root/re4data/private/pmwep24b-20261025')
+if os.path.isdir(PMWEP24BD):
+    DATA['pmwep24b'] = {'em/' + _f: '%s/em/%s' % (PMWEP24BD, _f) for _f in sorted(os.listdir(PMWEP24BD + '/em'))}
+    CLASH += [('pmwep24', 'pmwep24b')]
 # evdmv24 (lane purge-movies24 10-24, GC asset purge): takes the GameCube evd files of the movie-owned route events off
 # the disc (r100 s03 s20 s40 s41 s43 s44, r101 s00 s21 s30, r11f s01 s10, each with its .evq sidecar): 22 files,
 # 12,968,300 bytes. Their PS2 movies (dc/movie/*.seq) present the events; ONLY with EVD_MOVIE_NO_READ=1 (r100 / r101
