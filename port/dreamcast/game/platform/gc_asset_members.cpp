@@ -204,7 +204,7 @@ bool member_capture(const void* data) {
         if(owner!=ArchiveCount || !find(archives[i],data,span)) { 
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
             {unsigned cnt=0;char tg[5]="----";unsigned eo=0,eb=0;if(table(archives[i],cnt))for(unsigned k=0;k<cnt;++k){Span sp;if(entry(archives[i],k,sp)&&contains(sp.base,sp.bytes,data,1)){std::memcpy(tg,archives[i].base+16+cnt*4+4*k,4);eo=unsigned(sp.base-archives[i].base);eb=sp.bytes;break;}}
-             for(char& ch:tg)if(ch<32||ch>126)ch='.';
+             for(unsigned q=0;q<4;++q)if(tg[q]<32||tg[q]>126)tg[q]='.';
              GCA_PROBE("member-span",data,__builtin_return_address(0),"arch=%p bytes=%u tag=%s entry_off=%u entry_bytes=%u data_off=%u owner_family=%u\n",archives[i].base,archives[i].bytes,tg,eo,eb,unsigned(static_cast<const unsigned char*>(data)-archives[i].base),unsigned(archives[i].family));}
 #endif
 unresolved(SourceGeometry,"member-span");return false; }
