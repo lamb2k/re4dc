@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <cstdlib>
+extern "C" void re4dc_log(const char*,...);
 namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
@@ -139,7 +140,8 @@ void pre_hash(unsigned owner){
     pre_free(owner);
     const Archive& a=archives[owner];unsigned n=0;
     each_model(a,[&](const Span&){++n;});
-    if(!n || !(pre[owner]=static_cast<Pre*>(std::malloc(n*sizeof(Pre)))))return;
+    if(!n)return;
+    if(!(pre[owner]=static_cast<Pre*>(std::malloc(n*sizeof(Pre))))){unresolved(SourceGeometry,"member-prehash-alloc");return;}
     each_model(a,[&](const Span& s){
         if(pre_count[owner]<n)pre[owner][pre_count[owner]++]={unsigned(s.base-a.base),s.bytes,fingerprint(s.base,s.bytes)};
     });
@@ -192,7 +194,12 @@ bool member_capture(const void* data) {
     if(owner==ArchiveCount) { unresolved(SourceGeometry,"member-unbound");return false; }
     if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial>=0xfffffffeU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
     for(auto& member:members)if(!member.base) {
-        Digest digest;if(!pre_digest(owner,span,digest))digest=fingerprint(span.base,span.bytes);   // adopt-time bytes first
+        Digest digest;const bool adopted=pre_digest(owner,span,digest);
+        if(!adopted)digest=fingerprint(span.base,span.bytes);   // adopt-time bytes first
+#if defined(RE4DC_GC_ASSET_HARVEST) && RE4DC_GC_ASSET_HARVEST
+        re4dc_log("GC-ASSET-NOTE member adopted=%u archive_bytes=%u offset=%u bytes=%u\n",adopted?1U:0U,
+            archives[owner].bytes,unsigned(span.base-archives[owner].base),span.bytes);
+#endif
         constexpr char hex[]="0123456789abcdef";char id[41];
         for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
         const CheckedAsset asset=bind_checked("model",id,digest);
