@@ -44,13 +44,25 @@ bool gcasset_actor_bound(const re4dc_gcasset::PayloadProof& proof,const Chunk& c
 }
 }
 namespace {
+// gc-catalog24b: an actor part no reviewed replacement package/copy covers
+// draws its original BIN. When that BIN is a captured model member, the part is
+// accepted on the member, so the drawn GameCube (or unknown) model is reported
+// as itself: never blessed, never unbound.
+re4dc_gcasset::SourceUse gcasset_actor_member_use(const Re4dcModelPart* part,unsigned mask){
+    using namespace re4dc_gcasset;
+    if(!part)return {};
+    const void* data=nullptr;ModelMember member;
+    if(re4dc_gcasset_model_identity(part->model,part->info,&data)==0xffffffffU || !member_lookup(data,&member) || !member.serial)return {};
+    if(!mask)mask=gcasset_actor_consumer_mask(*part);
+    return mask?SourceUse{member.serial,mask,part->model,part->info,nullptr}:SourceUse{};
+}
 re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part,const Re4dcActorSource* source,bool classify){
     using namespace re4dc_gcasset;
     if(!part || !source)return {};
     // These reads are not among the selected package's proven five ranges.
     // Never let a package/BIN token bless an external vertex color source.
     if((part->alpha_state&256) || (part->lighting &&
-       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return {};
+       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return classify?gcasset_actor_member_use(part,0):SourceUse{};
     PayloadProof* selected=nullptr;bool ambiguous=false;
     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
@@ -87,6 +99,7 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
     }
 #endif
     // Other hand owners remain unqualified, never the caller BIN.
+    if(!selected && !ambiguous && classify)return gcasset_actor_member_use(part,0);
     if(!selected || ambiguous)return {};
     const unsigned mask=classify?gcasset_actor_consumer_mask(*part):1U<<SourceGeometry;
     if(!mask)return {};
@@ -116,7 +129,8 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
     const unsigned mask=saved.serial!=0xffffffffU?saved.mask:
         (previous && previous->model==part->model && previous->info==part->info && previous->mask?
             previous->mask:gcasset_actor_consumer_mask(*part));
-    const SourceUse unknown{0,mask,part->model,part->info,nullptr};
+    const SourceUse member=saved.serial==0xffffffffU?gcasset_actor_member_use(part,mask):SourceUse{};
+    const SourceUse unknown=member.serial?member:SourceUse{0,mask,part->model,part->info,nullptr};
     if(saved.serial!=0xffffffffU && !saved.payload)return unknown;
     Re4dcActorSource source{};
     if(!re4dc_actor_model_source(part->info,&source))return unknown;
