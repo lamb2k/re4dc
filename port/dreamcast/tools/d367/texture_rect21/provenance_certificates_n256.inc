@@ -1,6 +1,32 @@
-// SCENERY_N256=1 (lane scenery-cut25, 10-25): the r101 / r103 PS2 worlds re-exported with meshlets of up to 256 vertices
-// (shipped: 64; data set n256w25). Same R4PW file (bytes, physical crc, fnv), placements, parts and meshes as the rows of
-// provenance_certificates.inc; only the package crc and bytes differ, so the policy source crc (and with it R4ID, R4TC and
-// the area-hide tables) is the certified one.
+// GENERATED (lane scenery-cut25 gen_inc.py) from provenance_certificates.inc for SCENERY_N256=1: the same 27 rows,
+// with the r101 / r103 package crc + bytes of the 256-vertex meshlet re-exports (data set n256w25). Same R4PW file
+// (bytes, physical crc, fnv), placements, parts, meshes and policy source crc, so R4ID / R4TC / area-hide binding holds.
+// Same row count as the base table: no static growth (r100 s30 heap 4). world_rect_provenance.h checks every other
+// field against the base table at compile time.
+{0x100U,19612U,283U,304U,179U,0x25d5daafU,0x195a20beU,0xfb35ea9cU,1537920U,0x14118acdU},
 {0x101U,17100U,223U,342U,204U,0x7f878babU,0xddb50572U,0x4ec31f36U,1223744U,0x68100b21U},
+{0x102U,4412U,43U,134U,37U,0xcf4936c0U,0xe7f813caU,0xa4ccc78dU,395968U,0xf6dd4f73U},
 {0x103U,11272U,134U,267U,134U,0xf0535d9dU,0xc12c5f80U,0x11b076c6U,1031104U,0x2af23d86U},
+{0x104U,18668U,291U,219U,154U,0x949b5eebU,0x7d3b2439U,0xc0b2ba77U,648096U,0x67c9e00dU},
+{0x105U,18028U,243U,335U,149U,0x0be510c4U,0xfcb530ddU,0x1faef923U,752448U,0xf36cd861U},
+{0x106U,10768U,156U,164U,100U,0xcb390044U,0x1dcf6d68U,0xf83e310bU,991712U,0x7e3620c7U},
+{0x107U,7420U,71U,231U,69U,0xd646c826U,0xb7662b60U,0x9188dec1U,898400U,0x43dc8ff9U},
+{0x108U,11392U,148U,229U,137U,0xb686d942U,0xe80e6812U,0xa544e751U,912480U,0x57b061deU},
+{0x109U,7324U,95U,147U,95U,0x177cae56U,0x29e8aaf0U,0xd2e244fcU,933152U,0x5d07de5bU},
+{0x10aU,17840U,228U,372U,201U,0x3ddff556U,0x5d045083U,0x426e1473U,733824U,0x08628fb4U},
+{0x10bU,9800U,126U,201U,93U,0x2f52def8U,0xa6b1270aU,0x4418e37dU,696416U,0xf6fe3234U},
+{0x10cU,16252U,215U,315U,157U,0x85c2145dU,0x4aacc27aU,0xfecc142eU,806176U,0x07147887U},
+{0x10dU,16448U,228U,285U,204U,0x29375ab8U,0xd28e2317U,0x2f9ceafeU,793216U,0x4b53ab38U},
+{0x10eU,9644U,127U,188U,127U,0x2e002438U,0x13dd0f5fU,0xceb62feaU,883360U,0xf79fde0cU},
+{0x10fU,13284U,161U,305U,115U,0xd06c7ba3U,0xec1f86c0U,0x607a33f6U,948896U,0x0ec63c50U},
+{0x111U,15572U,205U,305U,169U,0xcb94e80cU,0x74371845U,0x8bb0d931U,1135328U,0xb3f71e55U},
+{0x112U,4496U,44U,136U,38U,0x29a38d6aU,0x64ed2869U,0x877f12e0U,392704U,0x136c676bU},
+{0x113U,10952U,130U,260U,130U,0x5649caedU,0xf17bd20aU,0xff937c7bU,986560U,0xcd5f7542U},
+{0x117U,18664U,238U,391U,229U,0x93f6693eU,0x13a14b2cU,0xbf2316fcU,848640U,0xad796091U},
+{0x118U,12076U,159U,236U,145U,0x75a368b3U,0x2b7b11a0U,0x10b39ab1U,923552U,0xbffe54c2U},
+{0x119U,7420U,95U,153U,95U,0xa79895c4U,0xd52dfbbfU,0x1349cce3U,1058272U,0xfb5072f8U},
+{0x11aU,18664U,242U,378U,215U,0xc842ec5aU,0x59e3a364U,0x8a86797aU,741888U,0x710d8d10U},
+{0x11bU,10836U,137U,230U,104U,0x8a59e48cU,0xd8084c56U,0x52c455f0U,769824U,0xce36dda5U},
+{0x11cU,9232U,108U,224U,108U,0x7972d28fU,0x40cfb3ceU,0x59bf2bbbU,977792U,0x9abe7af5U},
+{0x11dU,15340U,199U,310U,177U,0x30d1fcddU,0x9aac4a04U,0xb0a6bd21U,775360U,0x09d8aafaU},
+{0x11eU,18172U,239U,357U,197U,0x29e68d7cU,0x2378c078U,0xa2ac8acbU,704864U,0xddaeb760U},

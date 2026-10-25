@@ -15,17 +15,37 @@ struct Certificate {
     unsigned mesh_bytes;
     std::uint32_t source_crc;
 };
+#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
+// SCENERY_N256=1 (scenery-cut25): the same 27 rows with the r101 / r103 package crc + bytes of the 256-vertex meshlet
+// re-exports (data set n256w25). Swapped, not added: no static growth (the r100 s30 heap-4 floor).
+inline constexpr Certificate certificates_base[] = {
+#include "provenance_certificates.inc"
+};
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_n256.inc"
+};
+static_assert(sizeof(certificates)==sizeof(certificates_base));
+constexpr bool n256_rows_match() {
+    unsigned swapped=0;
+    for(unsigned i=0;i<sizeof(certificates)/sizeof(certificates[0]);++i){
+        const auto& a=certificates_base[i];const auto& b=certificates[i];
+        if(a.room!=b.room || a.world_bytes!=b.world_bytes || a.placements!=b.placements || a.parts!=b.parts ||
+           a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
+           a.source_crc!=b.source_crc)return false;
+        if(a.mesh_crc!=b.mesh_crc || a.mesh_bytes!=b.mesh_bytes){
+            if(a.room!=0x101U && a.room!=0x103U)return false;
+            ++swapped;
+        }
+    }
+    return swapped==2U;
+}
+static_assert(n256_rows_match());
+#else
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
-#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
-#include "provenance_certificates_n256.inc"
-#endif
 };
-#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
-static_assert(sizeof(certificates)/sizeof(certificates[0])==29U);
-#else
-static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
 #endif
+static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);
