@@ -5801,6 +5801,12 @@ static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts GCASSET_STATIC
 #endif
             cls=block+sizeof(Head);room=r;nparts=parts;}
         else if(block){re4dc_static_free(block);block=nullptr;}
+#if RE4DC_GC_ASSET_GATE
+        // gc-catalog24b: present but rejected by its own checks (size, header,
+        // stale r4pw crc, body crc): none of it is used. Heap/read faults stay Unproven.
+        if(why && std::strcmp(why,"heap") && std::strcmp(why,"read"))
+            gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,re4dc_gcasset::Rejected);
+#endif
     }
     re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
               re4dc_static_heap_free());
