@@ -566,6 +566,19 @@ endif
 ifeq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
 GAME_CPPFLAGS += -DRE4DC_NMR_NO_GC_FRONT=1
 endif
+# LEON_NO_GC_FRONT=1 (lane cast-ps2-25 2026-10-25; default 0; render only; needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1):
+#   the same rule for Leon (pPL). On r100's first frames after the s20 movie the source ledger is not active
+#   (re4dc_actor_transaction_identity 0), so Leon was not a transaction candidate and trans.cpp ModelRender drew him GC
+#   through frontNativeRender (GC-ASSET r100: his weapon hand BIN ef82164d). Those frames draw no Leon. The macro is
+#   always defined (0 / 1) so the check sits on an existing source line: knob off, the image is unchanged.
+LEON_NO_GC_FRONT ?= 0
+ifeq ($(filter $(LEON_NO_GC_FRONT),0 1),)
+$(error LEON_NO_GC_FRONT must be 0 or 1)
+endif
+ifeq ($(LEON_NO_GC_FRONT)$(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),10)
+$(error LEON_NO_GC_FRONT=1 needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT)
 # NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
 #   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
 #   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
