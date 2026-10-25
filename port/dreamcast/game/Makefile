@@ -76,6 +76,19 @@ endif
 $(OBJDIR)/mod/em35/src/em35/em35.o: GAME_CPPFLAGS += -DRE4DC_EM35_ROUTINE_BYTES=1
 endif
 
+# EVD_MOVIE_NO_READ=1 (lane purge-movies24 2026-10-24, GC asset purge; default 0 = image unchanged; needs
+# ROUTE_MOVIES=1): a route event whose PS2 movie is on the disc (re4dc_movie_available) no longer preloads or
+# ARAM-loads its GameCube evd. r100 s03/s20/s30/s40/s41/s43/s44 and r101 s00/s21/s30 (r11c and r11f already read
+# none while their movies own the events). The movie path never read the evd; only the source preloads did. Pairs
+# with data set evdmv24 (the GC evd files off the disc).
+EVD_MOVIE_NO_READ ?= 0
+ifneq ($(EVD_MOVIE_NO_READ),0)
+ifneq ($(EVD_MOVIE_NO_READ),1)
+$(error EVD_MOVIE_NO_READ must be 0 or 1)
+endif
+$(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_EVD_MOVIE_NO_READ=1
+endif
+
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
 EM_ADMISSION_DISP_FIX ?= 1

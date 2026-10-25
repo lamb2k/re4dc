@@ -145,6 +145,31 @@ static u32 r101EventReserve(int slot, unsigned id, u32 evdSize)
 #define R101_EVENT_RESERVE(slot, id, size) (size)
 #define R101_MOVIE_OWNS(slot) 0
 #endif
+#if R101_ROUTE_MOVIES && RE4DC_EVD_MOVIE_NO_READ
+// EVD_MOVIE_NO_READ (GC asset purge 24): an event whose PS2 movie is on the disc gets no evd data unit at all (no
+// ARAM load, no GameCube file opened); every source use of the unit below is guarded. The reservation is then 0,
+// as R101_EVENT_RESERVE already releases it for a movie-owned event.
+static cDataUnit* r101EvdUnit(int slot, unsigned id, const char* name)
+{
+    if (re4dc_movie_available(id)) {
+        r101MovieOwns[slot] = 1;
+        OSReport("route movie %05x: owns event, evd %s not read\n", id, name);
+        return 0;
+    }
+    return DC.setData(EvtMgr.NameChange((char*) name));
+}
+#define R101_EVD_UNIT(slot, id, name) r101EvdUnit((slot), (id), (name))
+#define R101_IF(u) if (u)
+#define R101_HAS(u) (u) &&
+#define R101_SIZE(u) ((u) ? (u)->m_size : 0u)
+#define R101_TOO_BIG(u, size) (!(u) || (u)->m_size > (size))
+#else
+#define R101_EVD_UNIT(slot, id, name) DC.setData(EvtMgr.NameChange(name))
+#define R101_IF(u)
+#define R101_HAS(u)
+#define R101_SIZE(u) ((u)->m_size)
+#define R101_TOO_BIG(u, size) ((u)->m_size > (size))
+#endif
 #if R101_ROUTE_MOVIES
 // r101_Event20's per-frame hook: cut 0xA frame 0x20 breaks window 0. PS2
 // r101s21.evd camera cuts put cut 10 at picture 603, so the hook is 635.
@@ -263,22 +288,22 @@ void R101Init()
         if (RsfCheck(G_ROOM_ID, 6) == 0) {
             SceExec(0x12, (TaskFunc) r101_checkFindPlayer, 0, 0, SCE_PRIO_DEF_2, 0);
             SceAtDataSet_exec(0x13, SCE_LEVEL10, 0, (TaskFunc) r101_callGanadoVoice, 0, 1);
-            PSet(r101_work->evt00, DC.setData(EvtMgr.NameChange("evd/r101s00.evd")));
-            r101_work->evt00->setCommand(CMND_ARAM_LOAD, 0, 0);
-            EmReadSearch(0x26, 0, R101_EVENT_RESERVE(0, 0x10100, r101_work->evt00->m_size));
+            PSet(r101_work->evt00, R101_EVD_UNIT(0, 0x10100, "evd/r101s00.evd"));
+            R101_IF(r101_work->evt00) r101_work->evt00->setCommand(CMND_ARAM_LOAD, 0, 0);
+            EmReadSearch(0x26, 0, R101_EVENT_RESERVE(0, 0x10100, R101_SIZE(r101_work->evt00)));
             SceAtDataSet_exec(7, SCE_LEVEL10, 0, (TaskFunc) r101_Event00, 0, 1);
         } else {
             SceExec(0x12, (TaskFunc) r101_checkEmNum, 0, 0, SCE_PRIO_DEF_2, 0);
             SceAtDataSet_exec(0, SCE_LEVEL10, 0, (TaskFunc) r101_DoorDontOpen100, 0, 1);
             SceAtDataSet_exec(2, SCE_LEVEL10, 0, (TaskFunc) r101_DoorDontOpen103, 0, 1);
         }
-        PSet(r101_work->evt30, DC.setData(EvtMgr.NameChange("evd/r101s30.evd")));
+        PSet(r101_work->evt30, R101_EVD_UNIT(2, 0x10130, "evd/r101s30.evd"));
         if (RsfCheck(G_ROOM_ID, 8) == 0) {
-            PSet(r101_work->evt21, DC.setData(EvtMgr.NameChange("evd/r101s21.evd")));
-            r101_work->evt21->setCommand(CMND_ARAM_LOAD, 0, 0);
+            PSet(r101_work->evt21, R101_EVD_UNIT(1, 0x10121, "evd/r101s21.evd"));
+            R101_IF(r101_work->evt21) r101_work->evt21->setCommand(CMND_ARAM_LOAD, 0, 0);
             {
-                u32 s21 = R101_EVENT_RESERVE(1, 0x10121, r101_work->evt21->m_size);
-                u32 s30 = R101_EVENT_RESERVE(2, 0x10130, r101_work->evt30->m_size);
+                u32 s21 = R101_EVENT_RESERVE(1, 0x10121, R101_SIZE(r101_work->evt21));
+                u32 s30 = R101_EVENT_RESERVE(2, 0x10130, R101_SIZE(r101_work->evt30));
 
                 if (s21 > s30) {
                     EmReadSearch(0x15, 0, s21);
@@ -784,11 +809,11 @@ static void r101_Event30()
     BitOn(pG->door_flags_51CC, 0x20);
     if (RsfCheck(G_ROOM_ID, 8) == 0) {
         SceAtSetEnable(8, 0);
-        r101_work->evt21->setCommand(CMND_DEL_DATA, 0, 0);
+        R101_IF(r101_work->evt21) r101_work->evt21->setCommand(CMND_DEL_DATA, 0, 0);
     }
-    r101_work->evt30->setCommand(CMND_ARAM_LOAD, 0, 0);
+    R101_IF(r101_work->evt30) r101_work->evt30->setCommand(CMND_ARAM_LOAD, 0, 0);
     SceSleep(60);
-    while (r101_work->evt30->isLoadOk() == 0) {
+    R101_IF(r101_work->evt30) while (r101_work->evt30->isLoadOk() == 0) {
         if (r101_work->evt30->m_err != 0) {
             fail = 1;
             break;
@@ -805,7 +830,7 @@ static void r101_Event30()
     SceSleep(2);
     m = SearchEmModule(0x15);
     if (fail != 1) {
-        if (r101_work->evt30->m_size > m->size && !R101_MOVIE_OWNS(2)) {
+        if (R101_TOO_BIG(r101_work->evt30, m->size) && !R101_MOVIE_OWNS(2)) {
             // COMPILER-DIFF: frame layout -- codeless use that keeps the 8-byte slot allocated
             // (an unreferenced aggregate gets no slot; the original's use is not in the bytes).
             asm("" : "=m"(unused));
@@ -815,7 +840,7 @@ static void r101_Event30()
             InitModule(m);
 #if R101_ROUTE_MOVIES
             int movie = RouteMoviePlay(0x10130, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R101S30_Func, 0);
-            if (movie == RE4DC_MOVIE_UNHANDLED && R101_MOVIE_OWNS(2) && r101_work->evt30->m_size > m->size) {
+            if (movie == RE4DC_MOVIE_UNHANDLED && R101_MOVIE_OWNS(2) && R101_TOO_BIG(r101_work->evt30, m->size)) {
                 // Media vanished after room entry: no buffer holds the evd (source error path).
                 pLog->err(0, 0, "r101_Event30 exec error");
             } else if (movie == RE4DC_MOVIE_UNHANDLED)
@@ -832,7 +857,7 @@ static void r101_Event30()
         }
     }
     BitOn(pG->Room_flg[0], 0x20000000);
-    r101_work->evt30->setCommand(CMND_DEL_DATA, 0, 0);
+    R101_IF(r101_work->evt30) r101_work->evt30->setCommand(CMND_DEL_DATA, 0, 0);
     SceEventEnd(0);
     SceAtDataReset(0);
     SceAtDataReset(2);
@@ -962,7 +987,7 @@ static void r101_Event20()
     SceEventStart(0);
     pG->System_flg |= 0x400;
     SndRoomStrStop(3);
-    if (r101_work->evt21->waitLoadOk() == 0) {
+    if (R101_HAS(r101_work->evt21) r101_work->evt21->waitLoadOk() == 0) {
         fail = 1;
     }
     if (getRoomEtcRack(0xF, &rack, 1)) {
@@ -988,7 +1013,7 @@ static void r101_Event20()
     } else
 #endif
     if (fail != 1) {
-        if (r101_work->evt21->m_size > m->size) {
+        if (R101_TOO_BIG(r101_work->evt21, m->size)) {
             pLog->err(0, 0, "r101_Event20 exec error");
         } else {
             MemorySwap(m->pArc, (u32) r101_work->evt21->m_addr, r101_work->evt21->m_size);
@@ -1013,7 +1038,7 @@ static void r101_Event20()
             MemorySwap(m->pArc, (u32) r101_work->evt21->m_addr, r101_work->evt21->m_size);
         }
     }
-    r101_work->evt21->setCommand(CMND_DEL_DATA, 0, 0);
+    R101_IF(r101_work->evt21) r101_work->evt21->setCommand(CMND_DEL_DATA, 0, 0);
 #if defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x02)
     // PS2_ENEMY_ROOMS r101 (PS2 st1_1 0x4ee0..0x4ff4): the dog 0x34 and entry 0x4F are removed (cEmWrap setPtr +
     // destroy: the list entry is cleared either way), and the house event sends 9 Ganados, not 0x3E / 0x44.
@@ -1325,7 +1350,7 @@ extern "C" void r101_FindPlayer()
     BitOff(pG->door_flags_51CC, 0x200);
     BitOff(pG->door_flags_51CC, 0x20);
     SceAtSetEnable(7, 0);
-    r101_work->evt00->setCommand(CMND_DEL_DATA, 0, 0);
+    R101_IF(r101_work->evt00) r101_work->evt00->setCommand(CMND_DEL_DATA, 0, 0);
 #if !R101_PS2_TRIO
     R101_SEND(0x22);
     R101_SEND(0x23);
@@ -1390,12 +1415,12 @@ static void r101_Event00()
         r101_setEmSuspend(1);
 #if R101_ROUTE_MOVIES
         if (RouteMoviePlay(0x10100, ROUTE_MOVIE_SND_EVENT, 0, 0) != RE4DC_MOVIE_UNHANDLED) {
-        } else if (R101_MOVIE_OWNS(0) && r101_work->evt00->m_size > SearchEmModule(0x26)->size) {
+        } else if (R101_MOVIE_OWNS(0) && R101_TOO_BIG(r101_work->evt00, SearchEmModule(0x26)->size)) {
             // Media vanished after room entry: no buffer holds the evd (as r101_Event30's guard).
             pLog->err(0, 0, "r101_Event00 exec error");
         } else
 #endif
-        if (r101_work->evt00->waitLoadOk() == 1) {
+        if (R101_HAS(r101_work->evt00) r101_work->evt00->waitLoadOk() == 1) {
             ReadModule* m;
 
             pG->System_flg |= 0x400;
@@ -1408,7 +1433,7 @@ static void r101_Event00()
             }
             MemorySwap(m->pArc, (u32) r101_work->evt00->m_addr, r101_work->evt00->m_size);
         }
-        r101_work->evt00->setCommand(CMND_DEL_DATA, 0, 0);
+        R101_IF(r101_work->evt00) r101_work->evt00->setCommand(CMND_DEL_DATA, 0, 0);
         r101_setEmSuspend(0);
         SceEventEnd(0);
     }
