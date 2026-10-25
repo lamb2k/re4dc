@@ -28,6 +28,9 @@ void re4dc_motion_movie_finish(int retiring);
 unsigned re4dc_motion_movie_restore();
 #endif
 }
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_motion_use(const void* clip); // GC-ASSET Motion (bit 9), gate-ON builds only
+#endif
 // Leased tables are local to the evaluation; source work retains its resident
 // proxy table even during evaluation. Pin release retains the cache entry.
 class Re4dcMotionLease {
@@ -38,6 +41,9 @@ public:
     Re4dcMotionLease(const void* header, unsigned** destination, unsigned* restore)
         : destination_(destination), saved_(restore), token_(0) {
         unsigned* table=nullptr;
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_motion_use(header);
+#endif
         token_=re4dc_motion_acquire(header,&table);
         if(token_) *destination_=table;
     }

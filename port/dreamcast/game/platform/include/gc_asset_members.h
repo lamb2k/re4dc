@@ -14,6 +14,7 @@ struct ModelMember {
 // Duplicate adoption of the same current view does not rehash relocated bytes.
 bool member_adopt(const void* owner, void* archive, unsigned bytes, bool transient,OwnerFamily family=OtherOwner);
 void member_retire(const void* owner);
+void member_move(const void* owner,void* base);
 void member_retire_transient();
 // Called once before calcModelAddr changes source offsets. Never hashes a
 // pointer until a live, bounded complete BIN member has been located.
@@ -25,6 +26,10 @@ bool member_contains(unsigned serial,const void* data,unsigned bytes);
 // Flush at an unlocked frame/retirement boundary, never inside an emitter.
 void member_accept(unsigned serial,unsigned consumer_mask);
 void member_flush();
+// Motion (bit 9): latch a played FCV/SEQ clip (source evaluator thread); flush emits.
+void motion_use(const void* clip);
+void motion_flush();
+void motion_visit_reset();
 #if defined(RE4DC_GC_ASSET_TEST) && RE4DC_GC_ASSET_TEST
 void member_test_serial(unsigned);
 #endif

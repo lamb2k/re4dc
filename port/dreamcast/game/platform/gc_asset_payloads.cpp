@@ -2,6 +2,7 @@
 #include "include/gc_asset_static.h"
 #if RE4DC_GC_ASSET_GATE
 #include <cstdint>
+extern "C" void re4dc_log(const char*,...);
 namespace re4dc_gcasset {
 namespace {
 PayloadProof* payloads;unsigned payload_count,payload_serial,payload_faults;
@@ -60,7 +61,8 @@ bool manifest_row(const unsigned char* row,unsigned role){
     if(manifest_word(row)!=role+1)return false;
     const unsigned state=manifest_word(row+4),bytes=manifest_word(row+8);
     if(state==Accepted)return bytes && manifest_digest(row+20) && (role!=SDO3_BASE80 || bytes==80);
-    return state<=Absent && !bytes && !manifest_digest(row+20);
+    // gc-catalog24b: Rejected = the reader looked and used none of the file (sealed, no bytes)
+    return state<=Rejected && !bytes && !manifest_digest(row+20);
 }
 }
 bool static_manifest_begin(StaticManifest& manifest,StaticOwner owner,unsigned room,unsigned profile,const void* base,unsigned bytes){
@@ -112,6 +114,12 @@ bool payload_capture_composite(PayloadProof& proof,const void* owner,const void*
        bool(layout)!=bool(layout_bytes) || (layout && layout_bytes>~std::uintptr_t(0)-side) ||
        (manifest_word(manifest.data+12)==StaticWorld && !layout) ||
        (layout && manifest_word(manifest.data+64+8)!=layout_bytes) || !static_manifest_seal(manifest,composite)){
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+        {Digest probe{};re4dc_log("GC-ASSET-PROBE why=composite owner=%u base=%u bytes=%u/%u layout=%u/%u world=%u role1_bytes=%u seal=%u\n",
+            owner?1u:0u,base==manifest.geometry_base?1u:0u,bytes,manifest.geometry_bytes,layout?1u:0u,layout_bytes,
+            manifest_word(manifest.data+12)==StaticWorld?1u:0u,manifest_word(manifest.data+64+8),static_manifest_seal(manifest,probe)?1u:0u);
+         for(unsigned i=0;i<StaticRoleCount;++i)re4dc_log("GC-ASSET-PROBE why=composite-role role=%u state=%u\n",i,manifest_word(manifest.data+64+i*52+4));}
+#endif
         payload_retire(proof);unresolved(SourceGeometry,"composite-incomplete");return false;
     }
     if(proof.owner){payload_retire(proof);unresolved(SourceGeometry,"composite-without-retire");return false;}
@@ -234,10 +242,24 @@ void payload_retire(PayloadProof& proof){
     flush(proof);proof.owner=proof.base=proof.layout=nullptr;proof.bytes=proof.layout_bytes=0;
     proof.asset={};proof.layout_asset={};proof.serial=proof.uses=0;
 }
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+extern "C" void re4dc_log(const char*,...);
+// Probe (diagnostic): first 32 distinct (why, address, caller) per run.
+static inline bool gca_probe_once(const char* why,const void* a,const void* c){
+    static const void* seen[24][3];static unsigned n;
+    for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
+    if(n>=24){return false;}
+    seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
+}
+#define GCA_PROBE(why,a,c,fmt,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " fmt,why,a,c,##__VA_ARGS__);}while(0)
+#else
+#define GCA_PROBE(...) do{}while(0)
+#endif
 void payload_accept(PayloadProof* proof,unsigned serial,unsigned mask){
     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
     if(!proof || !serial || !proof->owner || proof->serial!=serial || !mask || (mask&~allowed) ||
        (proof->layout && !proof->layout_bytes && !payload_copy_current(*proof))){
+        GCA_PROBE("unbound-payload",proof,__builtin_return_address(0),"serial=%u pserial=%u owner=%p layout=%p mask=%x\n",serial,proof?proof->serial:0u,proof?proof->owner:nullptr,proof?proof->layout:nullptr,mask);
         payload_faults|=(mask&allowed)?mask&allowed:1U<<SourceGeometry;return;
     }
     proof->uses|=mask;

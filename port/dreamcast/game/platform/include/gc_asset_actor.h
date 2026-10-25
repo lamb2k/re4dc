@@ -33,7 +33,11 @@ struct ActorSourceScope {
     void accepted(){
         const bool current=source_use.serial==selected.serial && source_use.mask==selected.mask &&
             source_use.payload==selected.payload && source_use.model==selected.model && source_use.info==selected.info;
-        payload_accept(current?selected.payload:nullptr,current?selected.serial:0,selected.mask?selected.mask:1U<<SourceGeometry);
+        const unsigned mask=selected.mask?selected.mask:1U<<SourceGeometry;
+        // gc-catalog24b: an actor part selected through a model member (no payload
+        // proof) is accepted on its member, as gcasset_model_accept does.
+        if(current && !selected.payload)member_accept(selected.serial,mask);
+        else payload_accept(current?selected.payload:nullptr,current?selected.serial:0,mask);
     }
 };
 struct ActorMainSourceScope {

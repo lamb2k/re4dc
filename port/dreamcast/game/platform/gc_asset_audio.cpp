@@ -151,6 +151,7 @@ extern "C" void re4dc_gcasset_movie_audio_ticket(unsigned* slot,unsigned* serial
     const auto ticket=re4dc_gcasset::audio_ticket();*slot=ticket.slot;*serial=ticket.serial;
 }
 extern "C" void re4dc_gcasset_movie_audio_submit(unsigned slot,unsigned serial,unsigned asset){
-    re4dc_gcasset::queued_checked({slot,serial},re4dc_gcasset::Movie,{asset});
+    if(asset==RE4DC_GCA_MOVIE_PENDING)re4dc_gcasset::queued_deferred({slot,serial});   // released by movie_resolved
+    else re4dc_gcasset::queued_checked({slot,serial},re4dc_gcasset::Movie,{asset});
 }
 #endif

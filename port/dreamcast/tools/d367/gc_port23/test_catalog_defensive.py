@@ -47,6 +47,8 @@ ssize_t fs_read(int fd,void* p,unsigned n){assert(fd==live_fd);++reads;if(cursor
  if(hook==RetireDiscRead){hook=NoHook;retire_disc_catalog();assert(closes==0&&live_fd==fd);}
  if(hook==RetireCoreRead){hook=NoHook;retire_catalog();}
  return short_read?n-1:n;}
+#include <cstdint>
+namespace re4dc{namespace storage{bool read_chunks(int f,std::size_t n,bool(*c)(const std::uint8_t*,std::size_t,void*),void* ctx){unsigned char b[1000];while(n){const unsigned k=n<1000?unsigned(n):1000u;if(fs_read(f,b,k)!=ssize_t(k))return false;if(!c(b,k,ctx))return false;n-=k;}return true;}}}
 #include "gc_asset_disc.cpp"
 Digest digest(unsigned i){const unsigned char byte=17+i;return fingerprint(&byte,1);}
 CheckedAsset bind_a(){return bind_checked("geometry","a",digest(0));}
@@ -63,7 +65,8 @@ CatalogRow replacement;Reader nested_reader;
 unsigned independent_read(void* opaque,unsigned off,void* dst,unsigned n){
  auto& r=*static_cast<Reader*>(opaque);if(off>file.size()||n>file.size()-off)return 0;
  memcpy(dst,file.data()+off,n);
- const bool trigger=(r.phase==1&&off==0&&n==file.size())||(r.phase==2&&off==0&&n==128)||(r.phase==3&&off==128&&n==112)||(r.phase==4&&n==112);
+ // Streamed install reads 3584-byte blocks (32 rows); binds/describes read single 112-byte rows.
+ const bool trigger=(r.phase==1&&off==0&&n==3584)||(r.phase==2&&off==3584&&n==3584)||(r.phase==3&&off>3584&&off+n==file.size())||(r.phase==4&&n==112);
  if(r.action&&trigger){const unsigned action=r.action;r.action=0;r.fired=true;retire_catalog();
   if(action==2)assert(install(&replacement,1));
   if(action==3){nested_reader={};const auto pin=fingerprint(file.data(),file.size());assert(install_index(independent_read,&nested_reader,file.size(),pin));}
@@ -75,7 +78,7 @@ void core_case(unsigned phase,unsigned action,bool binding,bool describing){
  const auto pin=fingerprint(file.data(),file.size());
  if(binding||describing){assert(install_index(independent_read,&r,file.size(),pin));const auto old=bind_a();assert(old.value);
   r.phase=4;r.action=action;
-  if(binding){const auto result=bind_a();assert(r.fired&&!result.value);}
+  if(binding){const auto result=bind_checked("geometry","b",digest(1));assert(r.fired&&!result.value);} // uncached identity: a row-wise bind read
   if(describing){AssetDescription desc;memset(&desc,0xff,sizeof desc);assert(!describe_checked(old,&desc));assert(r.fired&&!desc.kind[0]&&!desc.id[0]);}
   assert(!checked_current(old));
  }else{r.phase=phase;r.action=action;assert(!install_index(independent_read,&r,file.size(),pin));assert(r.fired);}
@@ -84,7 +87,7 @@ void core_case(unsigned phase,unsigned action,bool binding,bool describing){
 }
 int main(int argc,char**argv){assert(argc==2);const unsigned test=unsigned(std::stoi(argv[1]));
  if(test==35){disc_setup();const auto a=bind_a();other_digest=digest(1);begin(0x211,7,Required);logs.clear();hook=InterleaveBind;emitted_checked(SourceGeometry,a);end(1);assert(nested_failed&&logs.find("errors=3")!=std::string::npos&&logs.find("why=catalog-read consumer=0 room=0211 visit=7")!=std::string::npos);return 0;}
- if(test==36){replacement={"geometry","a",digest(0),PS2};assert(install(&replacement,1));begin(0x211,7,Required);logs.clear();for(unsigned i=0;i<8;++i){char id[8];snprintf(id,sizeof id,"id%u",i);assert(bind_checked("geometry",id,digest(i)).value);}io_depth=1;assert(!bind_checked("geometry","overflow",digest(9)).value);assert(logs.empty());io_depth=0;end(1);assert(logs.find("why=unknown-capacity consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);return 0;}
+ if(test==36){replacement={"geometry","a",digest(0),PS2};assert(install(&replacement,1));begin(0x211,7,Required);logs.clear();for(unsigned i=0;i<64;++i){char id[8];snprintf(id,sizeof id,"id%u",i);assert(bind_checked("geometry",id,digest(i+16)).value);}io_depth=1;assert(!bind_checked("geometry","overflow",digest(9)).value);assert(logs.empty());io_depth=0;end(1);assert(logs.find("why=unknown-capacity consumer=0 room=0211 visit=7")!=std::string::npos&&logs.find("errors=1")!=std::string::npos);return 0;}
  if(test>=30 && test<=34){
   if(test==34){Reader r;const auto pin=fingerprint(file.data(),file.size());assert(install_index(independent_read,&r,file.size(),pin));r.phase=4;r.action=1;assert(!bind_a().value);assert(logs.empty());Reader fresh;assert(install_index(independent_read,&fresh,file.size(),pin));pump();assert(logs.find("why=catalog-read consumer=0 unowned=1")!=std::string::npos);return 0;}
   disc_setup();const auto old=bind_a();begin(0x211,7,Required);logs.clear();hook=RetireDiscRead;AssetDescription d;assert(!describe_checked(old,&d));assert(!io_depth&&logs.empty());
@@ -121,7 +124,8 @@ class DefensiveCatalogTests(unittest.TestCase):
         cls.work = Path(cls.scratch.name)
         (cls.work / 'kos').mkdir()
         (cls.work / 'kos/fs.h').write_text('#pragma once\n#include <sys/types.h>\nusing file_t=int;\nconstexpr int FILEHND_INVALID=-1;\nint fs_open(const char*,int);int fs_close(int);off_t fs_total(int);off_t fs_seek(int,off_t,int);ssize_t fs_read(int,void*,unsigned);\n')
-        rows = [{'kind': 'geometry', 'id': chr(97+i), 'sha256': hashlib.sha256(bytes([17+i])).hexdigest(), 'provenance': 'gc' if not i else 'ps2', 'evidence': 'synthetic reviewed fixture'} for i in range(3)]
+        # 70 rows: the streamed install reads three blocks (0, 3584, 7168).
+        rows = [{'kind': 'geometry', 'id': chr(97+i) if i < 26 else 'r%02d' % i, 'sha256': hashlib.sha256(bytes([17+i])).hexdigest(), 'provenance': 'gc' if not i else 'ps2', 'evidence': 'synthetic reviewed fixture'} for i in range(70)]
         blob, cls.pin = build(rows)
         cls.fixture = FIXTURE.replace('@FILE@', ','.join(str(x) for x in blob))
         cls.exe = cls.compile('current')
@@ -172,15 +176,18 @@ class DefensiveCatalogTests(unittest.TestCase):
     def test_old_and_mutated_bodies_are_caught(self):
         gate=(PLATFORM/'gc_asset_gate.cpp').read_text();index=(PLATFORM/'include/gc_asset_index.inc').read_text();disc=(PLATFORM/'gc_asset_disc.cpp').read_text()
         mutations=[('unowned_cursor',None,None,disc.replace('if(!guard.held){disc_failed();return 0;}','if(!guard.held){}'),1),
-                   ('callback_epoch',gate.replace('if(active || !index_generation(epoch))return false;','if(active)return false;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,20),
-                   ('bind_global_epoch',gate.replace('if(!catalog_ok || !index_generation(epoch))return {};','if(!catalog_ok)return {};').replace('return {epoch<<14|index};','return {catalog_epoch<<14|index};').replace('const unsigned epoch=catalog_epoch,rows=catalog_rows;','const unsigned epoch=catalog_epoch,rows=catalog_rows;(void)epoch;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,15),
+                   ('callback_epoch',gate.replace('if(active || !index_generation(epoch))return false;','if(active)return false;').replace('if(!parse.complete(expected) || !index_generation(epoch))return false;','if(!parse.complete(expected))return false;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,20),
+                   ('bind_global_epoch',gate.replace('if(!catalog_ok || !index_generation(epoch))return {};','if(!catalog_ok)return {};').replace('return {epoch<<14|index};','return {catalog_epoch<<14|index};').replace('const unsigned epoch=catalog_epoch,rows=catalog_rows;','const unsigned epoch=catalog_epoch,rows=catalog_rows;(void)epoch;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,16),
                    ('busy_retire_reopens',None,None,disc.replace('if(!guard.held)return; // exact busy fd stays retained; no deferred auto-close','if(!guard.held){disc_state.store(FreshInstall);return;}'),7),
                    ('unsafe_busy_close',None,None,disc.replace('if(!guard.held)return; // exact busy fd stays retained; no deferred auto-close','if(!guard.held){} // mutant closes an owned reader'),2)]
         # Whole old gate/index ensures the reproduced late-description false
         # green remains a negative, in addition to individual new guard mutants.
         old_gate=subprocess.check_output(['git','-C',str(ROOT.parent.parent),'show',BASE+':port/dreamcast/game/platform/gc_asset_gate.cpp'],text=True)
         old_index=subprocess.check_output(['git','-C',str(ROOT.parent.parent),'show',BASE+':port/dreamcast/game/platform/include/gc_asset_index.inc'],text=True)
-        mutations.append(('old_epoch_bodies',old_gate,old_index,None,4))
+        # gc-catalog24b: the BASE bodies predate the streamed install and the atomic
+        # disc state this fixture drives, so they no longer compile against it; the
+        # per-guard mutants above (callback_epoch, bind_global_epoch) carry that check.
+        del old_gate,old_index
         mutations.append(('retire_formats_inside_io',gate.replace('if(active)catalog_fault(CatalogRetired);','if(active)unresolved(SourceGeometry,"catalog-retired-during-room");'),None,None,30))
         mutations.append(('replacement_drops_pending_fault',None,index.replace('catalog_ok=false;catalog=nullptr;','catalog_faults=0;catalog_ok=false;catalog=nullptr;'),None,34))
         mutations.append(('begin_drops_pending_fault',gate.replace('if(!handoff)queue_active.store(0);','catalog_faults=0;if(!handoff)queue_active.store(0);'),None,None,32))

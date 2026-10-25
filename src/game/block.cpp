@@ -32,6 +32,11 @@ void* GetDataExt(void* arc, const char* tag, int no);   // game/read.cpp
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 extern "C" void re4dc_model_bind_draw_owner(const void*,void*,unsigned,unsigned);
 extern "C" void re4dc_model_unbind_draw_owner(const void*);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_block_adopt(const void*,void*,unsigned);
+extern "C" void re4dc_gcasset_block_move(const void*,void*);
+extern "C" void re4dc_gcasset_block_retire(const void*);
+#endif
 #endif
 
 cBlock Block;
@@ -573,6 +578,9 @@ int cBlockUnit::checkBlockLoadToMram()
         break;
     case 2:
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_block_adopt(this,pData->m_addr,pData->m_size);
+#endif
         re4dc_model_bind_draw_owner(this,pData->m_addr,pData->m_size,1);
 #endif
         BlockCreate(no, (cSmd*) GetDataExt(pData->m_addr, "SMD", 0));
@@ -601,6 +609,9 @@ int cBlockUnit::checkBlockLoadToAramSet()
         ret = 1;
     case 2:
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_block_retire(this);
+#endif
         re4dc_model_unbind_draw_owner(this);
 #endif
         pData->setCommand(CMND_ARAM_LOAD, 0, arg);
@@ -646,6 +657,9 @@ int cBlockUnit::checkBlockDelete()
     case 2:
     case 4:
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_block_retire(this);
+#endif
         re4dc_model_unbind_draw_owner(this);
 #endif
         pData->setClear();
@@ -681,6 +695,9 @@ void cBlockUnit::moveBlockData(void* dst)
     re4dc_model_unbind_draw_owner(this);
 #endif
     memcpy(dst, pData->m_addr, pData->m_size);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_block_move(this, dst);
+#endif
     ofs = (int) dst - (int) pData->m_addr;
     pData->m_addr = dst;
     DCFlushRange(dst, pData->m_size);

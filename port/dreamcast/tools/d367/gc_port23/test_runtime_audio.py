@@ -9,33 +9,42 @@ GAME = HERE.parents[2] / 'game'
 
 
 class RuntimeAudioTests(unittest.TestCase):
-    def test_actual_stream_full_container_capture_and_bounds(self):
+    def test_actual_stream_entry_capture_and_bounds(self):
+        # gc-catalog24b (coordinator 10-24 option a): one identity per AIS1 entry,
+        # hashed at its first open: record + intro groups + loop groups.
         source = (GAME / 'platform/audio_aica.cpp').read_text()
-        capture = function(source, '{\n        // str_main owns this descriptor')
+        start = source.index('re4dc_gcasset::Digest g_strEntDigest[kStrEntMax];')
+        entry = source[start:source.index('#endif\nbool str_index_load()', start)]
         fixture = r'''
 #include "gc_asset_audio.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
+#include <vector>
 #include <sys/types.h>
-using file_t=int;file_t g_strFile=1;
-unsigned opens,closes,reads,success,failures;bool huge;unsigned offset;
-unsigned char file_bytes[4096];re4dc_gcasset::Digest received;
-file_t fs_open(const char*,int){++opens;return 1;}off_t fs_total(file_t){return huge?0x20000000:4096;}
-off_t fs_seek(file_t,off_t target,int whence){if(whence==SEEK_CUR){assert(target==0);return offset;}assert(whence==SEEK_SET);offset=unsigned(target);return offset;}
-ssize_t fs_read(file_t,void* out,unsigned bytes){++reads;assert(offset+bytes<=4096);memcpy(out,file_bytes+offset,bytes);offset+=bytes;return bytes;}
-int fs_close(file_t){++closes;return 0;}
+using u8=unsigned char;using u32=unsigned;using file_t=int;file_t g_strFile=1;u32 g_strCacheOfs;
+struct StrEnt { u32 sbb_ofs, rate, flags, nch, a_samples, b_samples, a_ofs, b_ofs; };
+const int kStrEntMax=4;StrEnt g_strEnt[kStrEntMax];
+unsigned reads,success,failures;unsigned offset;
+unsigned char file_bytes[65536];re4dc_gcasset::Digest received;
+off_t fs_seek(file_t,off_t target,int whence){assert(whence==SEEK_SET);if(target>65536)return -1;offset=unsigned(target);return offset;}
+ssize_t fs_read(file_t,void* out,unsigned bytes){++reads;if(offset+bytes>65536)return 0;memcpy(out,file_bytes+offset,bytes);offset+=bytes;return bytes;}
 extern "C" void re4dc_log(const char*,...){}
 namespace re4dc_gcasset{void stream_source(const Digest& d){++success;received=d;}void stream_source_failed(){++failures;}}
-bool capture()
-''' + '{\n' + capture + '\nreturn true;\n}' + r'''
-int main(){for(unsigned i=0;i<4096;++i)file_bytes[i]=i%251;offset=2048;
-capture();assert(opens==0 && closes==0 && reads==8 && success==1 && !failures && offset==2048);
-assert(!memcmp(received.bytes,re4dc_gcasset::fingerprint(file_bytes,4096).bytes,32));
-huge=true;capture();assert(opens==0 && closes==0 && reads==8 && success==1 && failures==1 && offset==2048);
+''' + entry + r'''
+int main(){for(unsigned i=0;i<sizeof file_bytes;++i)file_bytes[i]=u8(i%251);
+ g_strEnt[0]={0x10,32000,1,2,4096,8192,4096,12288};   // intro 1 group, loop 2 groups of 4096 B
+ std::vector<u8> want((const u8*)&g_strEnt[0],(const u8*)&g_strEnt[0]+32);
+ want.insert(want.end(),file_bytes+4096,file_bytes+8192);want.insert(want.end(),file_bytes+12288,file_bytes+20480);
+ gcasset_stream_entry(&g_strEnt[0]);
+ assert(success==1 && !failures && !memcmp(received.bytes,re4dc_gcasset::fingerprint(want.data(),unsigned(want.size())).bytes,32));
+ const unsigned r=reads;gcasset_stream_entry(&g_strEnt[0]);assert(success==2 && reads==r);   // hashed once
+ g_strEnt[1]={0x20,32000,0,1,4096,0,70000,0};gcasset_stream_entry(&g_strEnt[1]);assert(failures==1 && success==2);
+ gcasset_stream_entry(&g_strEnt[1]);assert(failures==2 && reads==r);   // a failed entry is not re-read
+ std::printf("stream entry identity ok\n");
 }
 '''
-        with tempfile.TemporaryDirectory(prefix='gc-port23-stream-file-', dir='/dev/shm') as temporary:
+        with tempfile.TemporaryDirectory(prefix='gc-port23-stream-entry-', dir='/dev/shm') as temporary:
             root = Path(temporary);(root / 'fixture.cpp').write_text(fixture);executable = root / 'fixture'
             subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
                             '-DRE4DC_GC_ASSET_GATE=1', '-I', str(GAME / 'platform/include'),

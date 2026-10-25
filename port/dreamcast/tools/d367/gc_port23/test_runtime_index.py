@@ -38,7 +38,9 @@ int fs_close(file_t){assert(io_depth==1);++closes;return 0;}
 off_t fs_total(file_t fd){assert(io_depth==1);return fd==1?catalog.size():texture.size();}
 off_t fs_seek(file_t fd,off_t at,int){assert(io_depth==1);offsets[fd]=unsigned(at);return at;}
 ssize_t fs_read(file_t fd,void* target,unsigned bytes){assert(io_depth==1);auto& source=fd==1?catalog:texture;unsigned& at=offsets[fd];if(short_read || at>source.size() || bytes>source.size()-at)return 0;memcpy(target,source.data()+at,bytes);at+=bytes;return bytes;}
-struct Key{unsigned crc,fnv;};struct Entry{CheckedAsset asset;Key key;};
+#include <cstdint>
+namespace re4dc{namespace storage{bool read_chunks(int f,std::size_t n,bool(*c)(const std::uint8_t*,std::size_t,void*),void* ctx){unsigned char b[1000];while(n){const unsigned k=n<1000?unsigned(n):1000u;if(fs_read(f,b,k)!=ssize_t(k))return false;if(!c(b,k,ctx))return false;n-=k;}return true;}}}
+struct Key{unsigned crc,fnv;};struct Pkg{file_t stream_file()const{return FILEHND_INVALID;}};struct Entry{CheckedAsset asset;Key key;Pkg package;};
 ''' + capture + r'''
 int main(){
     if(!std::strcmp(RE4DC_GC_ASSET_CATALOG_SHA256,"0")){
@@ -121,9 +123,13 @@ int main(){
     begin(0x111,1,Required);emitted_checked(SourceGeometry,model);emitted_checked(Texture,ps2);emitted_checked(Texture,changed);
     const unsigned first_reads=reads;emitted_checked(Weapon,model);emitted_checked(EffectPicture,ps2);
     assert(reads==first_reads);
-    emitted_checked(Motion,ps2);emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
-    assert(reads==first_reads);end(1);assert(rows()==2);
-    assert(output.find("motion-unwired consumer=9")!=std::string::npos && output.find("motion=0")!=std::string::npos && output.find("errors=2")!=std::string::npos);
+    // gc-catalog24b r8: Motion is wired like any consumer. A seen row needs no
+    // read; a new motion identity binds (one catalog search) and is a row.
+    emitted_checked(Motion,ps2);assert(reads==first_reads);
+    emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
+    assert(reads>first_reads);end(1);assert(rows()==3);
+    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=0")!=std::string::npos);
+    assert(output.find("kind=motion id=not-admitted")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
     assert(output.find("source_geometry=1 texture=2 effect_picture=1 weapon=1")!=std::string::npos);
     // Room retirement resets observations, not the immutable disc epoch. A
     // persistent live owner may reuse its original token in the next room.
@@ -137,7 +143,7 @@ int main(){
     retire_catalog();assert(!describe_checked(current,&description));
     assert(install_index(read_at,&data,data.size(),pin));assert(!describe_checked(current,&description));
     // Neither an unknown record nor a failed install can supply a PS2 verdict.
-    for(unsigned i=0;i<8;++i){char id[16];snprintf(id,sizeof id,"sound-%u",i);
+    for(unsigned i=0;i<64;++i){char id[16];snprintf(id,sizeof id,"sound-%u",i);
         assert(bind_checked("sound",id,fingerprint(id,unsigned(strlen(id)))).value);}
     assert(!bind_checked("sound","overflow",fingerprint("x",1)).value);
     Digest badpin{};assert(!install_index(read_at,&data,data.size(),badpin));

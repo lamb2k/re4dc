@@ -34,6 +34,7 @@ Provenance is 'unknown' for every row unless --proofs supplies an exact
 (kind,id,sha256) row with provenance and evidence. This is a DIAGNOSTIC catalog:
 it formats reviewed input; it never proves origin and is never a gate pass.
 """
+import zlib
 import argparse
 import hashlib
 import json
@@ -118,6 +119,67 @@ def etm_members(b):
     return out
 
 
+def table_bins(c, tbl, idx0, n, limit):
+    """gc_asset_members.cpp table_bins: BINs of a model offset table."""
+    if tbl > len(c) or n > 4096 or idx0 + 4 * n > len(c) - tbl or limit > len(c) - tbl:
+        return
+    lo = idx0 + 4 * n
+    offs = [word(c, tbl + idx0 + 4 * i) for i in range(n)]
+    seen = set()
+    for o in offs:
+        if o < lo or o >= limit or o in seen:
+            continue
+        seen.add(o)
+        end = min([q for q in offs if o < q < limit] + [limit])
+        if end - o >= 64:
+            yield c[tbl + o:tbl + end]
+
+
+def container_bins(tag, c):
+    """gc_asset_members.cpp container_bins: SMD / SHD / ITM model containers."""
+    if len(c) < 16:
+        return
+    if tag[:3] in (b'SMD', b'SHD'):
+        t = word(c, 4)
+        if t < 16 or t > len(c) - 4 or t & 3:
+            return
+        first = word(c, t)
+        if first < 4 or first & 3:
+            return
+        limit = len(c) - t
+        if tag[:3] == b'SMD':
+            tt = word(c, 8)
+            if t < tt <= len(c):
+                limit = tt - t
+        yield from table_bins(c, t, 0, first // 4, limit)
+    elif tag[:3] == b'EFF':
+        if len(c) < 0x30 or word(c, 0) != 0xB:
+            return
+        t = word(c, 0x2c)
+        if t < 0x30 or t > len(c) - 4 or t & 3:
+            return
+        n = word(c, t)
+        if n > 4096 or 4 + 4 * n > len(c) - t:
+            return
+        starts = [t + word(c, t + 4 + 4 * j) for j in range(n)]
+        for e in starts:
+            if e < t or e > len(c) - 20:
+                continue
+            m = e + word(c, e + 4)
+            if m < e + 20 or m >= len(c):
+                continue
+            ends = [e + word(c, e + 4 * k) for k in range(2, 5) if word(c, e + 4 * k) and m < e + word(c, e + 4 * k) < len(c)]
+            ends += [q for q in starts if m < q < len(c)]
+            end = min(ends + [len(c)])
+            if end - m >= 64:
+                yield c[m:end]
+    elif tag[:3] == b'ITM':
+        ob, ot = word(c, 8), word(c, 12)
+        if ob < 16 or ob > len(c) - 4 or ob & 3:
+            return
+        yield from table_bins(c, ob, 4, word(c, ob), ot - ob if ob < ot <= len(c) else len(c) - ob)
+
+
 def model_payloads(b, depth=0):
     for _index, tag, start, end in archive_spans(b):
         span = b[start:end]
@@ -128,6 +190,8 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
+        elif tag[:3] in (b'SMD', b'SHD', b'ITM', b'EFF'):
+            yield from container_bins(tag, span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)
 
@@ -175,6 +239,36 @@ def sound_banks(b):
                         if len(d) >= 96 and word(d, 0) == 0x31434941 and word(d, 8) <= len(d) - 96:
                             yield 'sound-aram', d[:96 + word(d, 8)], i
         i = b.find(BANK_SIG, i + 32)
+
+
+def fnv1a(b):
+    h = 2166136261
+    for x in b:
+        h = ((h ^ x) * 16777619) & 0xffffffff
+    return h
+
+
+def motion_clips(b):
+    """Port of gc_asset_members.cpp motion_use: (key, 8-byte {crc,fnv}) per top-level FCV/SEQ entry.
+    An FCV with an MTC (R4MOTBL) row takes that row's key (its body is the dc/mot key file); any other
+    FCV/SEQ hashes its archive span as the disc holds it (zlib CRC-32, FNV-1a 32)."""
+    spans = archive_spans(b)
+    mtc = {}
+    for _i, tag, s, e in spans:
+        if tag[:3] == b'MTC' and e - s >= 32 and b[s:s + 7] == b'R4MOTBL':
+            rows, stride = word(b, s + 12), word(b, s + 16)
+            if stride >= 20 and rows <= (e - s - 32) // stride:
+                for r in range(rows):
+                    at = s + 32 + r * stride
+                    mtc[word(b, at)] = (word(b, at + 8), word(b, at + 12))
+    for _i, tag, s, e in spans:
+        if tag[:3] not in (b'FCV', b'SEQ'):
+            continue
+        if tag[:3] == b'FCV' and s in mtc:
+            crc, fnv = mtc[s]
+        else:
+            crc, fnv = zlib.crc32(b[s:e]) & 0xffffffff, fnv1a(b[s:e])
+        yield '%08x-%08x' % (crc, fnv), struct.pack('<II', crc, fnv)
 
 
 def record_bodies(b):
@@ -226,7 +320,11 @@ def collect(disc):
         m = MOVIE.match(name)
         if m and low.startswith('dc/movie/'):
             mid = (int(m.group(1), 16) << 8) | int(m.group(2), 16) | (0x1000000 if m.group(3) else 0)
-            add('movie', '%05x' % mid, p.read_bytes(), rel)
+            data = p.read_bytes()
+            # native_movie.cpp hashes the played bytes and takes 32..2048 as zero
+            if len(data) >= 2048 and data[32:2048] != bytes(2016):
+                raise SystemExit('movie header padding not zero: ' + rel)
+            add('movie', '%05x' % mid, data, rel)
             continue
         if low == 'bgm/aica_str.dat':
             for k, data in stream_entries(p.read_bytes()):
@@ -246,17 +344,23 @@ def collect(disc):
                 add(kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
             for payload in model_payloads(b):
                 add('model', sha(payload)[:40], payload, rel)
+            for ident, k8 in motion_clips(b):
+                add('motion', ident, k8, rel)
             # em/*.drs: the runtime adopts the body after the 0x400-byte record
             # table (drs.py), not the file start (em12/wepNN harvest misses).
             if name.endswith('.drs') and len(b) > DRS_TABLE:
                 for payload in model_payloads(b[DRS_TABLE:]):
                     add('model', sha(payload)[:40], payload, rel + '#body')
+                for ident, k8 in motion_clips(b[DRS_TABLE:]):
+                    add('motion', ident, k8, rel + '#body')
             # Record-table containers (.dar rooms, .drs, .das): every type-0
             # record body is an archive the runtime adopts as loaded (r101.dar
             # body at 0x4ccea0 = "native room identities archive=1745152").
             for at, body in record_bodies(b):
                 for payload in model_payloads(body):
                     add('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
+                for ident, k8 in motion_clips(body):
+                    add('motion', ident, k8, '%s#record=%d' % (rel, at))
     return rows
 
 

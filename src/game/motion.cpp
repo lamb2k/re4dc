@@ -172,6 +172,9 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
     MotionWork* w = (MotionWork*) w_;
     MotionData* data = (MotionData*) data_;
     u16* seq = (u16*) seq_;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    if (seq) re4dc_gcasset_motion_use(seq); // GC-ASSET Motion: the SEQ clip (its FCV reports through the lease)
+#endif
     HermitePrm prm;
     HermitePrm* pp = &prm;
     u16 hist0[3] = { 0, 0, 0 };
