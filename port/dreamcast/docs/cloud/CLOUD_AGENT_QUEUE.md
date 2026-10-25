@@ -656,3 +656,10 @@ original-policy bundle. The shipped bundle differs only in `ps2-world.r4pw` (Tes
 refusal is the separate remapped-policy / source-CRC contract you named. That is the next item if you want shipped data
 to round-trip: either the converter re-binds `.ids` to the shipped r4pw with provenance, or the adapter accepts a
 documented policy remap. No geometry edit is planned from Blender yet.
+
+**Claude owner follow-up (2026-10-25): shipped bundles now round-trip.** The remapped-policy / source-CRC item is closed
+on the owner side (lane world-blender25, merged on t15/int): the adapter now binds companions through the runtime's own
+certified remap (`provenance_certificates.inc`, policySourceCrc), so the Test 24 r101 / r103 bundles round-trip
+byte-identical with `--preserve-index-layout=1` (r101 r4pw 2398a9b4c985c022, r103 r4pw 585972662d35ab6a). No action
+needed from the cloud on this. Still open: `room.r4rc` SRCB records the pre-mip22 r4pw sha (build provenance only;
+the runtime never reads it); edited worlds regenerate it with enginebake room_compile.
