@@ -113,7 +113,7 @@ def room_bindings(room, gd):
             for b, what in re.findall(r'ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\),\s*(PL_ARC_PTR\([^)]*\))', t):
                 res.setdefault(int(b, 16), ('ext', what))
             for e, eid, b in re.findall(r'EspDataLoad\(\(u32\) ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\)[^;]*;\s*'
-                                         r'if \(EspGetEfmTplAddr\((0x[0-9A-Fa-f]+), &tpl\)[\s\S]{0,200}?'
+                                         r'if \(EspGetEfmTplAddr\((0x[0-9A-Fa-f]+), &tpl\)[\s\S]{0,1500}?'  # r11e: SetRock 1 KB after
                                          r'SetRock\(ROOM_ARC_PTR\(pG->pRoom, (0x[0-9A-Fa-f]+)\), tpl', t):
                 res.setdefault(int(b, 16), ('efm', int(e, 16), int(eid, 0)))
         return res
