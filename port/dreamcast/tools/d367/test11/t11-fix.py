@@ -682,6 +682,17 @@ DATA['garr18h'] = {'em/pl00.drs': G18HD + '/pl00.drs', 'em/pl08.drs': G18HD + '/
 PMLEON24D = os.environ.get('PMLEON24D', '/root/re4data/private/pmleon24-20261024')
 if os.path.isdir(PMLEON24D):
     DATA['pmleon24'] = {'em/pl00.drs': PMLEON24D + '/em/pl00.drs', 'em/pl08.drs': PMLEON24D + '/em/pl08.drs'}
+# pmgan24 (lane purge-motion24 10-24, GC asset purge, data only): the chapter 1-2 Ganado archives (em12 em15 em13 em17
+# em11 em16, the release's prepared zr17 / zr17b / ch2 copies) with their FCV motion from PS2 BIO4DAT.AFS emNN.dat
+# (tools/d367/motion/ps2_motion_prepared.py rewrite + verify: bodies laid out again, MTC rebuilt with the PS2 key
+# identities, hot sets kept per slot), the 169 PS2 dc/mot keys they stream, and the 169 GC keys no archive references
+# any more taken off the disc (remove.txt). SEQ tables were already PS2-identical. After every set that stages those
+# archives (zr17, zr17b, ch2): last in the data line. Private store copy: re4-assets-private/pmgan24-20261024.
+PMGAN24D = os.environ.get('PMGAN24D', '/root/re4data/private/pmgan24-20261024')
+if os.path.isdir(PMGAN24D):
+    DATA['pmgan24'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (PMGAN24D, _e) for _e in ('em12', 'em15', 'em13', 'em17', 'em11', 'em16')}
+    DATA['pmgan24'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMGAN24D, _k) for _k in sorted(os.listdir(PMGAN24D + '/dc/mot'))})
+    DATA['pmgan24']['remove'] = [_l.strip() for _l in open(PMGAN24D + '/remove.txt') if _l.strip()]
 # Lane engine19 (10-19; ENGINE_PREVIEW, the enemy logic engine): rc19 = one room data file per room,
 # dc/native/<room>/room.r4rc (tools/enginebake/room_compile.py, R4RC v1 GRID + OCCL v2 wall-check occluders; MANIFEST.tsv
 # beside them). Read only by an ENGINE_PREVIEW=1 or ENEMY_VIS_CULL program; knob-off programs never open it. Private store
