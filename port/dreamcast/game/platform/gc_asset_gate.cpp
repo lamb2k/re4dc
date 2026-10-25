@@ -254,6 +254,9 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
         if(i==unknown_count) {
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+            re4dc_log("GC-ASSET-PROF quarantine n=%u kind=%s id=%s\n",unknown_count,kind,id);
+#endif
             if(unknown_count==UnknownLimit){++overflow;catalog_fault(CatalogCapacity);return {};}
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
