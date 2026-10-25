@@ -682,6 +682,14 @@ DATA['garr18h'] = {'em/pl00.drs': G18HD + '/pl00.drs', 'em/pl08.drs': G18HD + '/
 PMLEON24D = os.environ.get('PMLEON24D', '/root/re4data/private/pmleon24-20261024')
 if os.path.isdir(PMLEON24D):
     DATA['pmleon24'] = {'em/pl00.drs': PMLEON24D + '/em/pl00.drs', 'em/pl08.drs': PMLEON24D + '/em/pl08.drs'}
+# pmleon24b (same lane, 10-24): REPLACES pmleon24, which edited the unread copy of the original body at 0x400; garr18h's
+# live body is the type-0 record at 0x21cde0, so pmleon24 changed no byte the game reads (hence its STRICT gates).
+# tools/d367/motion/ps2_motion_prepared.py rewrite + verify on garr18h's pl00 / pl08: the live body's FCV 23 / 87 / 101 /
+# 117 and SEQ 59 take the PS2 bytes. Use pmleon24b instead of pmleon24 (after garr18h). Store: re4-assets-private/pmleon24b-20261024.
+PMLEON24BD = os.environ.get('PMLEON24BD', '/root/re4data/private/pmleon24b-20261024')
+if os.path.isdir(PMLEON24BD):
+    DATA['pmleon24b'] = {'em/pl00.drs': PMLEON24BD + '/em/pl00.drs', 'em/pl08.drs': PMLEON24BD + '/em/pl08.drs'}
+    CLASH += [('pmleon24', 'pmleon24b')]
 # pmgan24 (lane purge-motion24 10-24, GC asset purge, data only): the chapter 1-2 Ganado archives (em12 em15 em13 em17
 # em11 em16, the release's prepared zr17 / zr17b / ch2 copies) with their FCV motion from PS2 BIO4DAT.AFS emNN.dat
 # (tools/d367/motion/ps2_motion_prepared.py rewrite + verify: bodies laid out again, MTC rebuilt with the PS2 key
@@ -1024,6 +1032,13 @@ WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ss-20261024')
 DATA['wep24ss'] = {'ss/cmn/ss_wep%s.dat' % n: WEP24SSD + '/ss/cmn/ss_wep%s.dat' % n
                    for n in ('00', '01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17')}
 DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
+# pmwep24 (lane purge-motion24 10-24, GC purge, data only): wep24's weapon archives with their FCV/SEQ motion from PS2
+# BIO4DAT.AFS wepNN.dat (tools/d367/motion/ps2_motion_prepared.py rewrite + verify, bodies laid out again; models, pictures,
+# REL and sound banks kept). Only the 10 archives whose motion changed (wep02 07 09 10 12 16 17 18 21 24); wep04
+# (Blacktail) is not converted (its own fix lane). Use WITH wep24, after it. Store: re4-assets-private/pmwep24-20261024.
+PMWEP24D = os.environ.get('PMWEP24D', '/root/re4data/private/pmwep24-20261024')
+if os.path.isdir(PMWEP24D):
+    DATA['pmwep24'] = {'em/' + _f: '%s/em/%s' % (PMWEP24D, _f) for _f in sorted(os.listdir(PMWEP24D + '/em'))}
 # evdmv24 (lane purge-movies24 10-24, GC asset purge): takes the GameCube evd files of the movie-owned route events off
 # the disc (r100 s03 s20 s40 s41 s43 s44, r101 s00 s21 s30, r11f s01 s10, each with its .evq sidecar): 22 files,
 # 12,968,300 bytes. Their PS2 movies (dc/movie/*.seq) present the events; ONLY with EVD_MOVIE_NO_READ=1 (r100 / r101
