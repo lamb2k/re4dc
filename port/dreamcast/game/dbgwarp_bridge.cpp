@@ -579,11 +579,11 @@ void load()
             for (int i = 0; i < 3; ++i) wp.away_pos[i] = (f32) strtod(tok[3 + i], nullptr);
         } else if (!strcmp(k, "boxbreak") && n >= 2) {
             // `boxbreak <frame> [dist]`: at that room frame the intact breakable box / barrel (cEmBox, etc ids 01 02 11
-            // 12 1e 1f 2d 2e 2f 3c) nearest Leon is put dist (default 1500) in front of him and broken (emBoxSetBreak
+            // 12 1e 1f 2d 2e 2f 3c) nearest Leon is broken where it stands (or put dist in front of him first) (emBoxSetBreak
             // kind 0: the shot break), so a still pair shows the break model and debris. Test rig only (DBG_WARP).
             wp.has_box = true;
             wp.box_frame = num(tok[1]);
-            wp.box_dist = n >= 3 ? num(tok[2]) : 1500;
+            wp.box_dist = n >= 3 ? num(tok[2]) : 0;
         } else if (!strcmp(k, "handpose") && n >= 4) {
             wp.has_hand = true;
             wp.hand_frame = num(tok[1]);
@@ -1049,10 +1049,12 @@ void kill_poll()
         }
         wp.box_done = true;
         if (best) {
-            const f32 a = pPL->ang.y, d = (f32) wp.box_dist;
-            best->pos.x = pPL->pos.x + __builtin_sinf(a) * d;
-            best->pos.z = pPL->pos.z + __builtin_cosf(a) * d;
-            best->pos.y = pPL->pos.y;
+            if (wp.box_dist) {  // dist 0: break it where it stands
+                const f32 a = pPL->ang.y, d = (f32) wp.box_dist;
+                best->pos.x = pPL->pos.x + __builtin_sinf(a) * d;
+                best->pos.z = pPL->pos.z + __builtin_cosf(a) * d;
+                best->pos.y = pPL->pos.y;
+            }
             emBoxSetBreak(static_cast<cEmBox*>(best), 0);
             re4dc_log("warp: boxbreak m=%08x at room frame %u pos=%d,%d,%d\n", (unsigned) (uintptr_t) best,
                       (unsigned) wp.room_frames, (int) best->pos.x, (int) best->pos.y, (int) best->pos.z);
