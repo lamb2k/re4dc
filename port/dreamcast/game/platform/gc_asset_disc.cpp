@@ -103,7 +103,7 @@ bool ensure_disc_catalog(){
         if(disc_state.load()!=Installing)return false;
         if(disc_catalog==FILEHND_INVALID){disc_failed();unresolved(SourceGeometry,"catalog-file-missing");return false;}
     }
-    if(bytes<128 || bytes>128+16376*112 || !install_index_stream(disc_stream,nullptr,disc_read,nullptr,unsigned(bytes),expected)){
+    if(bytes<128 || bytes>128+16320*112 || !install_index_stream(disc_stream,nullptr,disc_read,nullptr,unsigned(bytes),expected)){
         // Retain the exact fd, even after failure. Never close a busy reader or
         // silently retry/reopen; explicit safe-owner retirement is required.
         if(disc_state.load()==Installing)disc_failed();

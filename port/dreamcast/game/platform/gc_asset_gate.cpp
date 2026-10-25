@@ -9,7 +9,7 @@
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
 namespace {
-constexpr unsigned CatalogLimit=16376,KindBytes=16,IdBytes=48,UnknownLimit=8;
+constexpr unsigned CatalogLimit=16320,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^14 token index
 #include "include/gc_asset_sha.inc"
 unsigned char seen[2048];
 AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epoch;
@@ -257,7 +257,10 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
             re4dc_log("GC-ASSET-PROF quarantine n=%u kind=%s id=%s\n",unknown_count,kind,id);
 #endif
-            if(unknown_count==UnknownLimit){++overflow;catalog_fault(CatalogCapacity);return {};}
+            if(unknown_count==UnknownLimit){
+                ++overflow;catalog_fault(CatalogCapacity);   // counted (END overflow=) and logged, never silent
+                re4dc_log("GC-ASSET-ERROR v=2 why=unknown-overflow kind=%s id=%s\n",kind,id);return {};
+            }
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
         }

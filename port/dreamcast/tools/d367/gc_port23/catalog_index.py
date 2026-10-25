@@ -5,7 +5,7 @@ import struct
 MAGIC = b'GCIDX001'
 HEADER = struct.Struct('<8s4I104s')
 RECORD = struct.Struct('<16s48s32sB15s')
-MAX_RECORDS = 16376  # eight remaining compact-token indices are unknown quarantine
+MAX_RECORDS = 16320  # 64 remaining compact-token indices are unknown quarantine
 ORIGINS = {'unknown': 0, 'gc': 1, 'ps2': 2, 'authored': 3}
 
 

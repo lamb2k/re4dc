@@ -2,6 +2,7 @@
 #if RE4DC_GC_ASSET_GATE
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
 namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
@@ -106,10 +107,52 @@ bool current(const Member& member) {
         archives[member.owner].generation==member.generation &&
         contains(archives[member.owner].base,archives[member.owner].bytes,member.base,member.bytes);
 }
+// gc-catalog24b (coordinator 10-24, option iii): every BIN member (direct or an
+// ETM .bin) is hashed at adopt, before relocation/fixup, from the archive bytes as
+// loaded; member_capture binds that digest. One KOS block per archive, 36 B per
+// model member, freed at revoke. Same span rules as find()/named().
+struct Pre { unsigned offset,bytes;Digest digest; };
+Pre* pre[ArchiveCount];unsigned pre_count[ArchiveCount];
+void pre_free(unsigned owner){std::free(pre[owner]);pre[owner]=nullptr;pre_count[owner]=0;}
+template<class F> void each_model(const Archive& owner,F&& f){
+    unsigned count;if(!table(owner,count))return;
+    const unsigned tags=16+count*4;
+    for(unsigned i=0;i<count;++i){
+        const auto* tag=owner.base+tags+4*i;
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3))continue;
+        Span current;if(!entry(owner,i,current))continue;
+        if(!std::memcmp(tag,"BIN",3)){f(current);continue;}
+        if(current.bytes<32)continue;
+        const unsigned n=word(current.base,0);if(n>4096)continue;
+        unsigned cursor=32;
+        for(unsigned k=0;k<n;++k){
+            if(cursor>current.bytes || current.bytes-cursor<64)break;
+            const unsigned bytes=word(current.base,cursor);
+            const char* name=reinterpret_cast<const char*>(current.base+cursor+32);
+            if(bytes<64 || bytes>current.bytes-cursor || !valid_name(name))break;
+            if(bin_name(name))f(Span{current.base+cursor+64,name,bytes-64,0});
+            cursor+=bytes;
+        }
+    }
+}
+void pre_hash(unsigned owner){
+    pre_free(owner);
+    const Archive& a=archives[owner];unsigned n=0;
+    each_model(a,[&](const Span&){++n;});
+    if(!n || !(pre[owner]=static_cast<Pre*>(std::malloc(n*sizeof(Pre)))))return;
+    each_model(a,[&](const Span& s){
+        if(pre_count[owner]<n)pre[owner][pre_count[owner]++]={unsigned(s.base-a.base),s.bytes,fingerprint(s.base,s.bytes)};
+    });
+}
+bool pre_digest(unsigned owner,const Span& span,Digest& out){
+    const unsigned offset=unsigned(span.base-archives[owner].base);
+    for(unsigned i=0;i<pre_count[owner];++i)if(pre[owner][i].offset==offset && pre[owner][i].bytes==span.bytes){out=pre[owner][i].digest;return true;}
+    return false;
+}
 void revoke(unsigned owner) {
     member_flush();
     for(auto& member:members)if(member.base && member.owner==owner)member={};
-    archives[owner]={};
+    archives[owner]={};pre_free(owner);
 }
 }
 bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family) {
@@ -134,7 +177,7 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,
     if(free==ArchiveCount) { unresolved(SourceGeometry,"member-owner-capacity");return false; }
     Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient,family};unsigned count;
     if(!table(candidate,count)) { unresolved(SourceGeometry,"member-directory");return false; }
-    archives[free]=candidate;return true;
+    archives[free]=candidate;pre_hash(free);return true;
 }
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
@@ -149,7 +192,8 @@ bool member_capture(const void* data) {
     if(owner==ArchiveCount) { unresolved(SourceGeometry,"member-unbound");return false; }
     if(span.bytes<64 || !contains(span.base,span.bytes,data,64) || serial>=0xfffffffeU) { unresolved(SourceGeometry,"member-model-bounds");return false; }
     for(auto& member:members)if(!member.base) {
-        const Digest digest=fingerprint(span.base,span.bytes);constexpr char hex[]="0123456789abcdef";char id[41];
+        Digest digest;if(!pre_digest(owner,span,digest))digest=fingerprint(span.base,span.bytes);   // adopt-time bytes first
+        constexpr char hex[]="0123456789abcdef";char id[41];
         for(unsigned i=0;i<20;++i){id[2*i]=hex[digest.bytes[i]>>4];id[2*i+1]=hex[digest.bytes[i]&15];}id[40]=0;
         const CheckedAsset asset=bind_checked("model",id,digest);
         if(!asset.value){unresolved(SourceGeometry,"member-catalog-bind");return false;}

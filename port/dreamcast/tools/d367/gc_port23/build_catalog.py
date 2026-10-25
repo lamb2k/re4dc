@@ -21,8 +21,12 @@ kind/id/full-SHA256 rules of the runtime callers:
   geometry     every dc/native/** file, whole file; id = first 20 digest
                bytes as hex (gc_asset_payloads.cpp capture)
 
+  sound-mram/aram  record type 1 / 2 of every 32-aligned sound-bank container
+               (.dar, .drs, bio4midi.dat); a prebuilt AIC1 ARAM part also as its
+               96-byte header + image (gc_asset_audio.cpp bank_piece)
+
 Not derivable from the disc (runtime-built bytes): font-glyph/font-palette
-cells, sound-mram/sound-aram bank parts (no current bank_begin caller), layout
+cells (converted at load), layout
 sidecars. Those binds stay explicit unknown quarantine at runtime.
 
 Provenance is 'unknown' for every row unless --proofs supplies an exact
@@ -44,7 +48,7 @@ TEX = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
 DRS_TABLE = 0x400
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
-HARVEST_KINDS = ('font-glyph', 'font-palette', 'sound-mram', 'sound-aram', 'layout')
+HARVEST_KINDS = ('font-glyph', 'font-palette', 'layout')   # sound banks are disc rows (sound_banks)
 HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
 
 
@@ -141,6 +145,37 @@ def stream_entries(b):
         yield k, data
 
 
+BANK_SIG = b'\xca\xb6\xbe ' * 2   # half-width "ﾊｶｾ " sound-bank container signature (drs.py)
+
+
+def sound_banks(b):
+    """Every 32-aligned sound-bank container in a file (.dar rooms, .drs enemies/players,
+    bio4midi.dat): record type 1 = MRAM part, type 2 = ARAM part (gc_asset_audio.cpp bank_piece:
+    a prebuilt AIC1 ARAM part is hashed as its 96-byte header + image only)."""
+    i = b.find(BANK_SIG)
+    while i >= 0:
+        if i % 32 == 0:
+            o, recs = i + 0x20, []
+            while o + 32 <= min(len(b), i + 0x400):
+                r = struct.unpack_from('<8I', b, o)
+                o += 32
+                if r[0] == 0xFFFFFFFF:
+                    break
+                recs.append(r)
+            else:
+                recs = []
+            for r in recs:
+                if r[0] in (1, 2) and r[1] and i + r[3] + r[1] <= len(b):
+                    d = b[i + r[3]:i + r[3] + r[1]]
+                    if r[0] == 1:
+                        yield 'sound-mram', d, i
+                    else:
+                        yield 'sound-aram', d, i
+                        if len(d) >= 96 and word(d, 0) == 0x31434941 and word(d, 8) <= len(d) - 96:
+                            yield 'sound-aram', d[:96 + word(d, 8)], i
+        i = b.find(BANK_SIG, i + 32)
+
+
 def texpak_members(b):
     if len(b) < 24 or b[:8] != b'RE4PAK1\0':
         raise ValueError('tex.pak header')
@@ -194,6 +229,8 @@ def collect(disc):
                 continue
         if p.stat().st_size >= 16:
             b = p.read_bytes()
+            for kind, data, at in sound_banks(b):
+                add(kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
             for payload in model_payloads(b):
                 add('model', sha(payload)[:40], payload, rel)
             # em/*.drs: the runtime adopts the body after the 0x400-byte record
