@@ -1617,6 +1617,47 @@ const u32* g_strMissShd;
 u32 g_strMovieGen = 0xFFFFFFFFu;   // the stream generation whose wait was logged
 #endif
 
+#if RE4DC_GC_ASSET_GATE
+// gc-catalog24b (coordinator 10-24 option a): one sound-stream identity per AIS1
+// entry, hashed only for entries that play, at their first open, on str_main
+// (owner of g_strFile) before the claim. Digest = SHA256 of the 32-byte entry
+// record, then its intro region [a_ofs, a_ofs + ceil(a_samples/2/2048)*nch*2048)
+// and, when b_samples, the loop region likewise (exactly the groups str_fill
+// reads). build_catalog.py computes the same rows offline. str_cache seeks before
+// every read, so moving the file position here is safe.
+re4dc_gcasset::Digest g_strEntDigest[kStrEntMax];
+u8 g_strEntHashed[kStrEntMax];   // 0 not yet, 1 bound, 2 failed
+u8 g_strHashBuf[4096] __attribute__((aligned(32)));
+bool gcasset_stream_region(re4dc_gcasset::DigestStream& d, u32 ofs, u32 bytes)
+{
+    if (fs_seek(g_strFile, ofs, SEEK_SET) != (off_t) ofs) return false;
+    while (bytes) {
+        const u32 n = bytes < sizeof g_strHashBuf ? bytes : (u32) sizeof g_strHashBuf;
+        if (fs_read(g_strFile, g_strHashBuf, n) != (ssize_t) n) return false;
+        re4dc_gcasset::digest_update(d, g_strHashBuf, n);
+        bytes -= n;
+    }
+    return true;
+}
+void gcasset_stream_entry(const StrEnt* e)
+{
+    const unsigned k = unsigned(e - g_strEnt);
+    if (k >= (unsigned) kStrEntMax) { re4dc_gcasset::stream_source_failed(); return; }
+    if (!g_strEntHashed[k]) {
+        re4dc_gcasset::DigestStream d;
+        re4dc_gcasset::digest_begin(d);
+        re4dc_gcasset::digest_update(d, e, sizeof(StrEnt));
+        const u32 grp = e->nch * 2048u;
+        bool ok = gcasset_stream_region(d, e->a_ofs, (e->a_samples / 2 + 2047) / 2048 * grp);
+        if (ok && e->b_samples) ok = gcasset_stream_region(d, e->b_ofs, (e->b_samples / 2 + 2047) / 2048 * grp);
+        g_strCacheOfs = 0xFFFFFFFFu;   // defensive: the stream cache refills from a fresh seek
+        if (ok) g_strEntDigest[k] = re4dc_gcasset::digest_finish(d);
+        g_strEntHashed[k] = ok ? 1 : 2;
+    }
+    if (g_strEntHashed[k] == 1) re4dc_gcasset::stream_source(g_strEntDigest[k]);
+    else re4dc_gcasset::stream_source_failed();
+}
+#endif
 bool str_index_load()
 {
     g_strFile = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
@@ -1643,31 +1684,10 @@ bool str_index_load()
     }
 #endif
     g_strEntN = h[1];
-    memcpy(g_strEnt, h + 4, g_strEntN * sizeof(StrEnt));
 #if RE4DC_GC_ASSET_GATE
-    // Conservative whole-container proof: AIS1 metadata + all intro/loop
-    // payloads stay one immutable source identity. This adds one full file
-    // read in diagnostic builds, before any ring claim or audio lock.
-    {
-        // str_main owns this descriptor and has not yet entered str_scan.
-        // Reuse it: a second ISO handle consumes KOS memory throughout the hash.
-        const auto asset_resume=fs_seek(g_strFile,0,SEEK_CUR);
-        const auto asset_bytes=fs_total(g_strFile);
-        re4dc_gcasset::Digest digest{};
-        const auto read=[](void* context,void* target,unsigned bytes)->unsigned {
-            const ssize_t count=fs_read(*static_cast<const file_t*>(context),target,bytes);return count<0?0:unsigned(count);
-        };
-        const bool bound=asset_resume>=0 && asset_bytes>0 && asset_bytes<=0x1fffffff &&
-            fs_seek(g_strFile,0,SEEK_SET)==0 &&
-            re4dc_gcasset::fingerprint_read(digest,read,&g_strFile,unsigned(asset_bytes));
-        if(asset_resume>=0 && fs_seek(g_strFile,asset_resume,SEEK_SET)!=asset_resume){
-            re4dc_gcasset::stream_source_failed();
-            re4dc_log("aica: diagnostic stream position restore failed, disc streams stay silent\n");
-            fs_close(g_strFile);g_strFile=-1;return false;
-        }
-        if(bound)re4dc_gcasset::stream_source(digest);else re4dc_gcasset::stream_source_failed();
-    }
+    memset(g_strEntHashed, 0, sizeof g_strEntHashed);   // a (re)loaded index hashes its entries again
 #endif
+    memcpy(g_strEnt, h + 4, g_strEntN * sizeof(StrEnt));
     for (u32 i = 0; i < g_strEntN; i++) {
         const StrEnt& e = g_strEnt[i];
         re4dc_log("aica: stream %u:%u sbb=%06x %u Hz ch=%u intro=%u loop=%u samples\n", (unsigned) (e.flags >> 8 & 255),
@@ -1714,6 +1734,9 @@ void str_scan()
             }
             continue;
         }
+#if RE4DC_GC_ASSET_GATE
+        gcasset_stream_entry(e);   // first open of this entry: hash its record + payload, publish its identity
+#endif
         mutex_lock(&g_lock);   // the driver frees voices inside the audio step
 #if RE4DC_CABIN_SOURCE
         const Re4dcStrWorkView& live = Snd_str_work[i];

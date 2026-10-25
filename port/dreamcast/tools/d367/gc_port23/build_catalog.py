@@ -10,17 +10,24 @@ kind/id/full-SHA256 rules of the runtime callers:
                (native_ui.cpp gcasset_texture_fingerprint)
   movie        dc/movie/rRRRsEE[c].seq; id "%05x" of the movie id, whole file
                (native_movie.cpp path_for / bind_checked("movie"))
-  sound-stream bgm/aica_str.dat whole file; id "aica-str-dat" (audio_aica.cpp)
+  sound-stream one row per bgm/aica_str.dat AIS1 entry: SHA256 of its 32-byte
+               record + intro groups + loop groups; id = first 20 digest bytes
+               as hex (audio_aica.cpp gcasset_stream_entry)
   model        BIN members (direct or inside an ETM) of every file that parses
                as the runtime's archive table, recursively into members that
                parse as archives; id = first 20 digest bytes as hex
                (gc_asset_members.cpp entry/named/member_capture)
-               .drs files are walked from their body at 0x400 (drs.py layout)
+               .drs files are walked from their body at 0x400 (drs.py layout),
+               and every container's type-0 record bodies (.dar/.drs/.das)
   geometry     every dc/native/** file, whole file; id = first 20 digest
                bytes as hex (gc_asset_payloads.cpp capture)
 
+  sound-mram/aram  record type 1 / 2 of every 32-aligned sound-bank container
+               (.dar, .drs, bio4midi.dat); a prebuilt AIC1 ARAM part also as its
+               96-byte header + image (gc_asset_audio.cpp bank_piece)
+
 Not derivable from the disc (runtime-built bytes): font-glyph/font-palette
-cells, sound-mram/sound-aram bank parts (no current bank_begin caller), layout
+cells (converted at load), layout
 sidecars. Those binds stay explicit unknown quarantine at runtime.
 
 Provenance is 'unknown' for every row unless --proofs supplies an exact
@@ -42,7 +49,7 @@ TEX = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
 DRS_TABLE = 0x400
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
-HARVEST_KINDS = ('font-glyph', 'font-palette', 'sound-mram', 'sound-aram', 'layout')
+HARVEST_KINDS = ('font-glyph', 'font-palette', 'layout')   # sound banks are disc rows (sound_banks)
 HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
 
 
@@ -125,6 +132,63 @@ def model_payloads(b, depth=0):
             yield from model_payloads(span, depth + 1)
 
 
+def stream_entries(b):
+    """AIS1 entries as audio_aica.cpp hashes them: record, then the groups str_fill reads."""
+    if len(b) < 16 or word(b, 0) != 0x31534941:
+        raise ValueError('aica_str.dat header')
+    for k in range(word(b, 4)):
+        rec = b[16 + 32 * k:48 + 32 * k]
+        _sbb, _rate, _flags, nch, a_samples, b_samples, a_ofs, b_ofs = struct.unpack('<8I', rec)
+        grp = nch * 2048
+        data = rec + b[a_ofs:a_ofs + (a_samples // 2 + 2047) // 2048 * grp]
+        if b_samples:
+            data += b[b_ofs:b_ofs + (b_samples // 2 + 2047) // 2048 * grp]
+        yield k, data
+
+
+BANK_SIG = b'\xca\xb6\xbe ' * 2   # half-width "ﾊｶｾ " sound-bank container signature (drs.py)
+
+
+def sound_banks(b):
+    """Every 32-aligned sound-bank container in a file (.dar rooms, .drs enemies/players,
+    bio4midi.dat): record type 1 = MRAM part, type 2 = ARAM part (gc_asset_audio.cpp bank_piece:
+    a prebuilt AIC1 ARAM part is hashed as its 96-byte header + image only)."""
+    i = b.find(BANK_SIG)
+    while i >= 0:
+        if i % 32 == 0:
+            o, recs = i + 0x20, []
+            while o + 32 <= min(len(b), i + 0x400):
+                r = struct.unpack_from('<8I', b, o)
+                o += 32
+                if r[0] == 0xFFFFFFFF:
+                    break
+                recs.append(r)
+            else:
+                recs = []
+            for r in recs:
+                if r[0] in (1, 2) and r[1] and i + r[3] + r[1] <= len(b):
+                    d = b[i + r[3]:i + r[3] + r[1]]
+                    if r[0] == 1:
+                        yield 'sound-mram', d, i
+                    else:
+                        yield 'sound-aram', d, i
+                        if len(d) >= 96 and word(d, 0) == 0x31434941 and word(d, 8) <= len(d) - 96:
+                            yield 'sound-aram', d[:96 + word(d, 8)], i
+        i = b.find(BANK_SIG, i + 32)
+
+
+def record_bodies(b):
+    """Type-0 records of a 0x400-byte container table (drs.py layout, little-endian on our disc)."""
+    o = 0x20
+    while o + 32 <= min(len(b), DRS_TABLE):
+        r = struct.unpack_from('<8I', b, o)
+        o += 32
+        if r[0] == 0xFFFFFFFF:
+            return
+        if r[0] == 0 and r[1] and r[3] + r[1] <= len(b):
+            yield r[3], b[r[3]:r[3] + r[1]]
+
+
 def texpak_members(b):
     if len(b) < 24 or b[:8] != b'RE4PAK1\0':
         raise ValueError('tex.pak header')
@@ -165,7 +229,8 @@ def collect(disc):
             add('movie', '%05x' % mid, p.read_bytes(), rel)
             continue
         if low == 'bgm/aica_str.dat':
-            add('sound-stream', 'aica-str-dat', p.read_bytes(), rel)
+            for k, data in stream_entries(p.read_bytes()):
+                add('sound-stream', sha(data)[:40], data, '%s#entry=%d' % (rel, k))
             continue
         if low.startswith('dc/native/'):
             # Whole-file geometry: every dc/native payload a capture hashes as
@@ -177,6 +242,8 @@ def collect(disc):
                 continue
         if p.stat().st_size >= 16:
             b = p.read_bytes()
+            for kind, data, at in sound_banks(b):
+                add(kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
             for payload in model_payloads(b):
                 add('model', sha(payload)[:40], payload, rel)
             # em/*.drs: the runtime adopts the body after the 0x400-byte record
@@ -184,6 +251,12 @@ def collect(disc):
             if name.endswith('.drs') and len(b) > DRS_TABLE:
                 for payload in model_payloads(b[DRS_TABLE:]):
                     add('model', sha(payload)[:40], payload, rel + '#body')
+            # Record-table containers (.dar rooms, .drs, .das): every type-0
+            # record body is an archive the runtime adopts as loaded (r101.dar
+            # body at 0x4ccea0 = "native room identities archive=1745152").
+            for at, body in record_bodies(b):
+                for payload in model_payloads(body):
+                    add('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
     return rows
 
 

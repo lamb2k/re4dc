@@ -91,7 +91,7 @@ void bank_pump(){
     const unsigned generation=stream.generation.load();const bool ready=generation && stream.bound.load()!=generation;
     Digest digest{};if(ready)digest=stream.digest;records.clear(std::memory_order_release);
     if(ready){
-        const CheckedAsset asset=bind_checked("sound-stream","aica-str-dat",digest);
+        const CheckedAsset asset=bind("sound-stream",digest);
         if(records.test_and_set(std::memory_order_acquire)){faults.fetch_add(1);return;}
         if(stream.generation.load()==generation){stream.asset.store(asset.value);stream.bound.store(generation,std::memory_order_release);}
         records.clear(std::memory_order_release);

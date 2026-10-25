@@ -1,0 +1,135 @@
+{
+ "entries": [
+  {
+   "evidence": "harvest hv-h2/run-output.txt; build_catalog disc walk (catalog ddc2d0a8) has no contiguous source; remove when pmgan24/wep24 PS2 replacements reach the recipe",
+   "id": "017fb4f65643a4b71a356c066b1ddfb3223e7568",
+   "kind": "geometry",
+   "owner": "gc-catalog24b",
+   "phase": "startup",
+   "provenance": "unknown",
+   "reason": "bytes changed after load (post-load fixup), no contiguous disc source",
+   "sha256": "017fb4f65643a4b71a356c066b1ddfb3223e75682711136c49bd7abc41550252"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0100",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0101",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0103",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "011f",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0100",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0101",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0103",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "011f",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0100",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0101",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "0103",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "Dreamcast pad labels, no PS2 equivalent",
+   "room": "011f",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  }
+ ],
+ "schema": 1
+}

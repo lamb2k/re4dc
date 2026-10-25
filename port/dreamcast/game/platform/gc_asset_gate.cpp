@@ -9,7 +9,7 @@
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
 namespace {
-constexpr unsigned CatalogLimit=16376,KindBytes=16,IdBytes=48,UnknownLimit=8;
+constexpr unsigned CatalogLimit=16320,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^14 token index
 #include "include/gc_asset_sha.inc"
 unsigned char seen[2048];
 AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epoch;
@@ -254,7 +254,13 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         unsigned i=0;
         for(;i<unknown_count;++i)if(!index_compare(unknown_assets[i],kind,id,digest))break;
         if(i==unknown_count) {
-            if(unknown_count==UnknownLimit){++overflow;catalog_fault(CatalogCapacity);return {};}
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+            re4dc_log("GC-ASSET-PROF quarantine n=%u kind=%s id=%s\n",unknown_count,kind,id);
+#endif
+            if(unknown_count==UnknownLimit){
+                ++overflow;catalog_fault(CatalogCapacity);   // counted (END overflow=) and logged, never silent
+                re4dc_log("GC-ASSET-ERROR v=2 why=unknown-overflow kind=%s id=%s\n",kind,id);return {};
+            }
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
         }
@@ -385,7 +391,7 @@ void pump() {
         } else if(q.kind){
             char id[65];hex(q.digest,id);id[40]=0;
             const char* kind=q.kind==SoundMram?"sound-mram":q.kind==SoundAram?"sound-aram":"sound-stream";
-            emitted(q.consumer,kind,q.kind==StreamContainer?"aica-str-dat":id,q.digest);
+            emitted(q.consumer,kind,id,q.digest);   // sound-stream: one row per AIS1 entry, id = digest prefix
         } else emitted_checked(q.consumer,q.asset);
     }
     const unsigned faults=queue_faults.exchange(0);

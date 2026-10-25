@@ -642,10 +642,15 @@ bool open(unsigned id){
         re4dc_gcasset::Digest digest{};bool captured=false;
         {
             Re4dcIoScope owner;const file_t file=fs_open(m.path,O_RDONLY);
-            const auto read=[](void* context,void* destination,unsigned bytes)->unsigned {
-                const ssize_t got=fs_read(*static_cast<const file_t*>(context),destination,bytes);return got<0?0:unsigned(got);
-            };
-            captured=file>=0 && fs_total(file)==size && re4dc_gcasset::fingerprint_read(digest,read,const_cast<file_t*>(&file),unsigned(size));
+            // gc-catalog24b: the same whole-container SHA256 through the shared 16 KiB
+            // storage reads (room_storage read_chunks), not 512-byte reads: ~32x fewer
+            // disc requests before playback (h2 r100s30 hit the 30 s frame watchdog).
+            re4dc_gcasset::DigestStream stream;re4dc_gcasset::digest_begin(stream);
+            captured=file>=0 && fs_total(file)==size &&
+                re4dc::storage::read_chunks(file,std::size_t(size),[](const std::uint8_t* p,std::size_t n,void* ctx){
+                    re4dc_gcasset::digest_update(*static_cast<re4dc_gcasset::DigestStream*>(ctx),p,unsigned(n));return true;
+                },&stream);
+            if(captured)digest=re4dc_gcasset::digest_finish(stream);
             if(file>=0)fs_close(file);
         }
         if(captured){char id[16];snprintf(id,sizeof id,"%05x",m.id);m.asset=re4dc_gcasset::bind_checked("movie",id,digest);}

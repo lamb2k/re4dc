@@ -59,11 +59,12 @@ int main(){
     // uses saved immutable digests, never reads mutable/relocated MRAM tables.
     assert(install(catalog,2));logs.clear();begin(0x111,9,Required);play(0,bank_generation(0));end(1);assert(rows()==0);
     assert(logs.find("catalog-token")!=std::string::npos);
-    // Whole-container stream proof is still exact bytes, never the filename.
+    // Per-entry stream proof (record + payload groups) is exact bytes, never the filename.
     const Digest container=fingerprint("AIS1 metadata + intro + loop",28);
     stream_source(container);const unsigned stream_gen=stream_generation();
     logs.clear();begin(0x111,10,Required);sq_held=true;const auto stream_use=stream_ticket(stream_gen);played(stream_use);sq_held=false;pump();end(1);
-    assert(rows()==1 && logs.find("kind=sound-stream id=aica-str-dat")!=std::string::npos);
+    {char id[41];for(unsigned i=0;i<20;++i)std::snprintf(id+2*i,3,"%02x",unsigned(container.bytes[i]));
+     assert(rows()==1 && logs.find(std::string("kind=sound-stream id=")+id)!=std::string::npos);}  // per-entry id = digest prefix
     assert(logs.find("sound_stream=1")!=std::string::npos);
     bank_pump();
     stream_source(fingerprint("changed source",14));bank_pump();

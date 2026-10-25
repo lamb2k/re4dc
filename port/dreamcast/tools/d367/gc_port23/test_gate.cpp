@@ -56,10 +56,11 @@ int main() {
     output.clear();
     assert(install(catalog,2)); // resets the bounded unknown quarantine
     begin(0x111,4,Required);
-    for(unsigned i=0;i<9;++i) {
+    for(unsigned i=0;i<65;++i) {
         char id[40];snprintf(id,sizeof id,"model-%u",i);emitted(SourceGeometry,"model",id,gc);
     }
-    end(1);assert(output.find("unique=8 overflow=1")!=std::string::npos);
+    end(1);assert(output.find("unique=64 overflow=1")!=std::string::npos);
+    assert(output.find("why=unknown-overflow kind=model id=model-64")!=std::string::npos);   // logged, never silent
     assert(!install(catalog,0xffffffffU)); // invalid table count must be rejected before walking
     assert(install(catalog,2));
     output.clear();begin(0x111,5,Required);
@@ -74,7 +75,7 @@ int main() {
     assert(output.find("errors=2")!=std::string::npos); // lock contention cannot print errors=0
     output.clear();queued(audio_ticket(),SoundBank,"sample","core:1",gc);pump();
     assert(output.find("GC-ASSET-ERROR")!=std::string::npos); // after END stays an explicit error
-    output.clear();const unsigned old_catalog_rows=test_catalog_rows(16376);begin(0xffffffffU,0xffffffffU,0xffffffffU);test_catalog_rows(old_catalog_rows);
+    output.clear();const unsigned old_catalog_rows=test_catalog_rows(16320);begin(0xffffffffU,0xffffffffU,0xffffffffU);test_catalog_rows(old_catalog_rows);
     test_max_counters();
     emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);
     test_max_counters();
@@ -127,7 +128,7 @@ int main() {
     begin_transition_handoff(11,Required,0x111,RoomRetire);pump();end(11);
     // Maximum-width transition BEGIN, ASSET, COUNTS and END use production formatter.
     assert(install(catalog,2));output.clear();begin(0x111,0xfffffffeU,Required);assert(handoff_audio_admission(0,0xffffffffU));end(1);
-    test_catalog_rows(16376);begin_transition_handoff(0xffffffffU,0xffffffffU,0xffffffffU,RoomRetire);test_catalog_rows(2);test_max_counters();
+    test_catalog_rows(16320);begin_transition_handoff(0xffffffffU,0xffffffffU,0xffffffffU,RoomRetire);test_catalog_rows(2);test_max_counters();
     emitted(SourceGeometry,"abcdefghijklmno","abcdefghijklmnopqrstuvwxyz012345678901234567890",gc);test_max_counters();end(0xffffffffU);
     // Even an already-seen PS2 geometry token cannot certify Motion.
     CatalogRow own_sources[]={{"geometry","mesh",ps2,PS2},{"motion","pose",gc,GameCube}};
