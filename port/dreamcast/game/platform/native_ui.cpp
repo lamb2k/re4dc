@@ -7456,9 +7456,15 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 #if RE4DC_TA_DIRECT
     if(direct_open){re4dc_missing("native direct part nested");return 0;}
     Re4dcModelPacket packet{};
+#if RE4DC_GC_ASSET_GATE && defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    const void* gcasset_direct_caller=__builtin_return_address(0);
+#endif
     // Same qualification, texture bind, pass selection and header as the
     // packet path; the header lands in the slab, then goes out by store queue.
     if(!re4dc_model_packet_begin(p,&packet))return 0;
+#if RE4DC_GC_ASSET_GATE && defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    gcasset_probe_outer=gcasset_direct_caller;
+#endif
     if(!stream_scene)stream_open();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
