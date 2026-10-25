@@ -50,19 +50,22 @@ unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
     Re4dcIoScope io;
     if(fs_seek(source,offset,SEEK_SET)!=off_t(offset)){disc_failed();return 0;}
     if(disc_state.load()!=state)return 0;
-    // gc-catalog24b r8: the GD read writes a 32-byte aligned destination. A row
-    // read into a misaligned stack buffer came back 16 bytes shifted (r101/r103,
-    // row 1372: kind missing, the next row's kind at the end), so a misaligned
-    // destination goes through this aligned bounce (owned under disc_lock).
-    alignas(32) static unsigned char bounce[512];
+    // gc-catalog24b r8: never let a row read take KOS iso9660's stream path.
+    // That path runs for a 32-byte aligned destination at a 32-byte file
+    // offset and keeps per-fd stream state that another GD user can leave
+    // behind: r101/r103 row 1372 came back 16 bytes shifted (kind missing, the
+    // next row's kind at the end) when the stack buffer happened to be aligned.
+    // A deliberately misaligned bounce keeps every catalog read on the sector
+    // cache path (bdread + copy), which is exact. Owned under disc_lock.
+    alignas(32) static unsigned char bounce_store[512+4];
+    unsigned char* const bounce=bounce_store+4;   // 4 mod 32: never stream-eligible
     auto* out=static_cast<unsigned char*>(destination);
     for(unsigned done=0;done<bytes;){
-        const bool direct=!(reinterpret_cast<std::uintptr_t>(out+done)&31U);
-        const unsigned n=direct?bytes-done:(bytes-done<sizeof bounce?bytes-done:unsigned(sizeof bounce));
-        const ssize_t count=fs_read(source,direct?out+done:bounce,n);
+        const unsigned n=bytes-done<512U?bytes-done:512U;
+        const ssize_t count=fs_read(source,bounce,n);
         if(disc_state.load()!=state)return 0;
         if(count<0 || unsigned(count)!=n){disc_failed();return 0;}
-        if(!direct)std::memcpy(out+done,bounce,n);
+        std::memcpy(out+done,bounce,n);
         done+=n;
     }
     return bytes;
