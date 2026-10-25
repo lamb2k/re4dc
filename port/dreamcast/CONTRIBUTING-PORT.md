@@ -247,8 +247,8 @@ STRICT, except the approximations marked below):
 * **Texture pipeline** (render only): `CAST_MIPMAP TEX_TWIDDLED_MIPMAP TEX_PAL4_ALPHA TEX_PAL4_MIPMAP TEX_PAL8_ALPHA
   TEX_PAL8_MIPMAP WORLD_RECT21` (mip chains, rectangle textures, scoped world texture keys; the key tables are in the
   source, `tools/d367/texture_rect21/`), `TEX_MIP_DADJ=3` (mip D adjust 0.75). `VRAM_ROOM_ARENA=1` (core textures
-  from the top of texture memory, room textures from the bottom; on from Test 23) and `FOLIAGE_MIP24=1`
-  (Test 23: coverage-preserving mip chains for 169 foliage and cut-out pictures, data set `fol24` after `mip22b`). They read
+  from the top of texture memory, room textures from the bottom) and `FOLIAGE_MIP24=1`
+  (coverage-preserving mip chains for 169 foliage and cut-out pictures, data set `fol24` after `mip22b`). They read
   disc data sets `mip22`, `mip22b` (r11c palette fix) and `res22c` (resident lists with the HUD digits and muzzle flash) (mip22 private store `mip22-20261022`: `dc/tex.pak` with the mip chains, the 27 rekeyed worlds'
   `ps2-world.r4pw`, `dc/resident.bin`). It is on the release disc; a program built with these knobs needs that disc data,
   and a knob-off program must not read it (mip22 is not in the knob-off disc sets).
