@@ -995,6 +995,20 @@ if os.path.isdir(PROPS24LD):
     DATA['props24l'] = {'dc/tex.pak': PROPS24LD + '/dc/tex.pak', 'st1/r105.dar': PROPS24LD + '/st1/r105.dar',
                         'st1/r107.dar': PROPS24LD + '/st1/r107.dar', 'st1/r11e.dar': PROPS24LD + '/st1/r11e.dar'}
     PAK_DERIVED['props24l'] = PROPS24LD + '/pak-derived.json'
+# pick25 (lane purge-pics25 10-25): r11e.dar = props24l's + the PS2 pickups (ps2_items.py pack --classes items: the 18
+# r11e ITM ids; their pictures are already in the release tex.pak). Goes with MODEL_PREP_SKIP_R11E=1 (the model
+# preparation cache would take 131,072 B of heap 4 there). Order: after props24l. Store RECIPE.txt + SHA256SUMS.txt.
+PICK25D = os.environ.get('PICK25D', '/root/re4data/private/pick25-20261025')
+if os.path.isdir(PICK25D):
+    DATA['pick25'] = {'st1/r11e.dar': PICK25D + '/st1/r11e.dar'}
+# pl08n25 (lane purge-pics25 10-25, user pick N): Leon's pl08 atlas 7506e95f-68cf2211 with its two GameCube tiles (15f7e18c
+# shirt, 878b23c0 sleeves) re-indexed to the nearest PS2 pl08 pictures in leonatl24's VQ codebook; every other texel is
+# identical. dc/tex.pak = cand-bc9585e8's pack + this atlas, so it goes after every other tex.pak set of the line
+# (src/build_pl08n25.py rebuilds it from any pack whose pl08 atlas is leonatl24's). Store RECIPE.txt + SHA256SUMS.txt.
+PL08N25D = os.environ.get('PL08N25D', '/root/re4data/private/pl08n25-20261025')
+if os.path.isdir(PL08N25D):
+    DATA['pl08n25'] = {'dc/tex.pak': PL08N25D + '/dc/tex.pak'}
+    PAK_DERIVED['pl08n25'] = PL08N25D + '/pak-derived.json'
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
