@@ -185,13 +185,14 @@ void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(a
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+extern "C" void re4dc_log(const char*,...);
 // Probe (diagnostic): first 32 distinct (why, address, caller) per run.
 static inline bool gca_probe_once(const char* why,const void* a,const void* c){
     static const void* seen[32][3];static unsigned n;
     for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
     if(n>=32)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
 }
-#define GCA_PROBE(why,a,c,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " __VA_ARGS__);}while(0)
+#define GCA_PROBE(why,a,c,fmt,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " fmt,why,a,c,##__VA_ARGS__);}while(0)
 #else
 #define GCA_PROBE(...) do{}while(0)
 #endif

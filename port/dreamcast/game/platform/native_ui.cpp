@@ -607,7 +607,7 @@ static bool gca_probe_once(const char* why,const void* a,const void* c){
     for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
     if(n>=32)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
 }
-#define GCA_PROBE(why,a,c,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " __VA_ARGS__);}while(0)
+#define GCA_PROBE(why,a,c,fmt,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " fmt,why,a,c,##__VA_ARGS__);}while(0)
 #else
 #define GCA_PROBE(...) do{}while(0)
 #endif
