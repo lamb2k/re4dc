@@ -981,6 +981,11 @@ if os.path.isdir(PROPS24LD):
     DATA['props24l'] = {'dc/tex.pak': PROPS24LD + '/dc/tex.pak', 'st1/r105.dar': PROPS24LD + '/st1/r105.dar',
                         'st1/r107.dar': PROPS24LD + '/st1/r107.dar', 'st1/r11e.dar': PROPS24LD + '/st1/r11e.dar'}
     PAK_DERIVED['props24l'] = PROPS24LD + '/pak-derived.json'
+# props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
+PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
+if os.path.isdir(PROPS24XD):
+    DATA['props24x'] = {'dc/tex.pak': PROPS24XD + '/dc/tex.pak', 'st1/r10c.dar': PROPS24XD + '/st1/r10c.dar'}
+    PAK_DERIVED['props24x'] = PROPS24XD + '/pak-derived.json'
 # pui24 (lane purge-ui24 10-24, GC asset purge): fol24's tex.pak with the core HUD pictures as PS2 Core.dat pixels under
 # their GC keys (tools/d367/purgeui24/ps2_hud_pak.py; ammo lens, life sphere, gauge arcs / domes, name label, bullet,
 # partner icons, Ashley gauge, d-pad, the two UI_HUD_MASK composites): 14 packages, same sizes and formats. Data only, no

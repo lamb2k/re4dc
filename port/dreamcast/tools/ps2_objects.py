@@ -110,8 +110,11 @@ class GcModel:
         self.blend, self.flip = (u32(0x40), u32(0x44)) if self.version == 0x20030818 else (0, 0)
         if self.shape:
             raise ValueError('shape (morph) model: not converted')
-        if self.ext > 0xFF:
-            raise ValueError('extended weights: not converted')
+        # extended weights (r10c BIN 0x1f, 10-24): a palette of more than 255 entries. +0x2A holds the full count
+        # (+0x18 its low byte) and each record is 12 bytes: 3 u16 joint ids, u16 count, 4 u8 weights.
+        self.xw = self.ext > 0xFF
+        if self.xw:
+            self.nw = self.ext
         self.stride = 8 if self.flags & 0x80000000 else 6
         self.nstride = 4 if self.flags & 0x20000000 else 8
         self.scale = 1.0 / (1 << self.shift)
@@ -122,6 +125,12 @@ class GcModel:
             self.nrms = [struct.unpack_from('>3hH', d, self.nrm + 8 * i) for i in range(self.nn)]
         self.weights = []
         for i in range(self.nw):
+            if self.xw:
+                o = self.wgt + 12 * i
+                r = struct.unpack_from('>4H4B', d, o)
+                n = r[3]
+                self.weights.append((tuple(r[:n]), tuple(r[4:4 + n])))
+                continue
             o = self.wgt + 8 * i
             n = d[o + 3]
             self.weights.append((tuple(d[o:o + n]), tuple(d[o + 4:o + 4 + n])))
@@ -409,7 +418,8 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
         verts.append((0, 0, 0, 0)); nrms.append((0, 0, 0, 0)); uvs.append((0, 0))
     if len(verts) > 0xFFFF or len(nrms) > 0xFFFF:
         raise ValueError('array too large')
-    if len(pal) > 0xFF:
+    xw = len(pal) > 0xFF   # extended weights form (12-byte records, full count at +0x2A)
+    if len(pal) > 0xFFFF or (xw and not m.xw):
         raise ValueError('weight palette exceeds 255 entries')
 
     # ---- write (source section order)
@@ -421,7 +431,10 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     out += bytes(al(len(out)) - len(out))
     nrm = len(out)
     for nk in nrms:
-        out += struct.pack('>3bB' if m.nstride == 4 else '>3hH', *nk)
+        if m.nstride == 4:   # the byte normal's 4th field is the weight index's low byte (extended weights: index & 0xFF)
+            out += struct.pack('>3bB', nk[0], nk[1], nk[2], nk[3] & 0xFF)
+        else:
+            out += struct.pack('>3hH', *nk)
     out += bytes(al(len(out)) - len(out))
     clr = 0
     if m.clr:
@@ -435,6 +448,9 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     wgt = len(out)
     for ids, vals in pal:
         n = len(ids)
+        if xw:
+            out += struct.pack('>4H4B', *(list(ids) + [0] * (3 - n) + [n] + list(vals) + [0] * (4 - n)))
+            continue
         out += bytes(list(ids) + [0] * (3 - n) + [n] + list(vals) + [0] * (4 - n))
     out += bytes(al(len(out)) - len(out))
     parts_off = len(out)
@@ -479,9 +495,9 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     # file tail beyond the last section in the source (kept as padding size)
     hdr_put = lambda o, fmt, v: struct.pack_into(fmt, out, o, v)
     hdr_put(0x0C, '>I', clr); hdr_put(0x10, '>I', tex); hdr_put(0x14, '>I', wgt)
-    out[0x18] = len(pal)
+    out[0x18] = len(pal) & 0xFF
     hdr_put(0x1C, '>I', parts_off)
-    if m.ext == m.nw:
+    if m.ext == m.nw or m.xw:
         hdr_put(0x2A, '>H', len(pal))
     hdr_put(0x30, '>I', vtx); hdr_put(0x34, '>I', nrm)
     hdr_put(0x38, '>H', len(verts)); hdr_put(0x3A, '>H', len(nrms))
@@ -489,9 +505,12 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
         hdr_put(0x40, '>I', tables.get('blend', 0)); hdr_put(0x44, '>I', tables.get('flip', 0))
     new = bytes(out)
     # parse back with the converter's reader (exactness of the written layout)
-    r = cc.parse_geometry(new)
+    if xw or m.xw:   # the lean converter has no extended-weights reader: parse back with GcModel (le_mirror's layout)
+        out_tris = sum(len(pt['tris']) for pt in GcModel(new).parts)
+    else:
+        out_tris = len(cc.parse_geometry(new)[9]) // 3
     stats['part_images'] = {str(k): [part_tex[k], sorted(v)] for k, v in sorted(part_ps2_tex.items())}
-    stats.update(out_tris=len(r[9]) // 3, out_vertices=len(verts), out_normals=len(nrms), out_uvs=len(uvs),
+    stats.update(out_tris=out_tris, out_vertices=len(verts), out_normals=len(nrms), out_uvs=len(uvs),
                  out_weights=len(pal), out_bytes=len(new), **stream_stats,
                  empty_parts=sum(1 for t in part_tris if not t))
     if stats['out_tris'] != sum(len(t) for t in part_tris):
