@@ -46,7 +46,10 @@ class BuildCatalogTests(unittest.TestCase):
         (disc / 'dc/tex/r100/0000abcd-00001234.re4tex').write_bytes(b'RE4DCTX\0loose')
         (disc / 'dc/movie/r101s30.seq').write_bytes(b'movie' * 10)
         (disc / 'dc/movie/r104s00c.seq').write_bytes(b'clip' * 10)
-        (disc / 'bgm/aica_str.dat').write_bytes(b'AIS1stream')
+        # AIS1: one mono entry, intro = one 2048-byte group at 2048 (aica_str.dat layout)
+        rec = struct.pack('<8I', 0x123, 22050, 0, 1, 4096, 0, 2048, 0)
+        self.stream_entry = rec + b'S' * 2048
+        (disc / 'bgm/aica_str.dat').write_bytes((struct.pack('<4I', 0x31534941, 1, 0, 0) + rec).ljust(2048, b'\0') + b'S' * 2048 + b'tail')
         self.bin = b'B' * 80
         (disc / 'st1/r100_00.dat').write_bytes(archive([(b'BIN', self.bin), (b'TPL', b'T' * 32)]))
         # em/*.drs: 0x400-byte record table, then the archive body (drs.py)
@@ -83,7 +86,7 @@ class BuildCatalogTests(unittest.TestCase):
             self.assertIn(('texture', '0000abcd-00001234'), keys)
             self.assertIn(('movie', '10130'), keys)
             self.assertIn(('movie', '1010400'), keys)
-            self.assertIn(('sound-stream', 'aica-str-dat'), keys)
+            self.assertIn(('sound-stream', hashlib.sha256(self.stream_entry).hexdigest()[:40]), keys)
             digest = hashlib.sha256(self.bin)
             self.assertIn(('model', digest.hexdigest()[:40]), keys)
             self.assertIn(('model', hashlib.sha256(self.drs_bin).hexdigest()[:40]), keys)

@@ -10,7 +10,9 @@ kind/id/full-SHA256 rules of the runtime callers:
                (native_ui.cpp gcasset_texture_fingerprint)
   movie        dc/movie/rRRRsEE[c].seq; id "%05x" of the movie id, whole file
                (native_movie.cpp path_for / bind_checked("movie"))
-  sound-stream bgm/aica_str.dat whole file; id "aica-str-dat" (audio_aica.cpp)
+  sound-stream one row per bgm/aica_str.dat AIS1 entry: SHA256 of its 32-byte
+               record + intro groups + loop groups; id = first 20 digest bytes
+               as hex (audio_aica.cpp gcasset_stream_entry)
   model        BIN members (direct or inside an ETM) of every file that parses
                as the runtime's archive table, recursively into members that
                parse as archives; id = first 20 digest bytes as hex
@@ -125,6 +127,20 @@ def model_payloads(b, depth=0):
             yield from model_payloads(span, depth + 1)
 
 
+def stream_entries(b):
+    """AIS1 entries as audio_aica.cpp hashes them: record, then the groups str_fill reads."""
+    if len(b) < 16 or word(b, 0) != 0x31534941:
+        raise ValueError('aica_str.dat header')
+    for k in range(word(b, 4)):
+        rec = b[16 + 32 * k:48 + 32 * k]
+        _sbb, _rate, _flags, nch, a_samples, b_samples, a_ofs, b_ofs = struct.unpack('<8I', rec)
+        grp = nch * 2048
+        data = rec + b[a_ofs:a_ofs + (a_samples // 2 + 2047) // 2048 * grp]
+        if b_samples:
+            data += b[b_ofs:b_ofs + (b_samples // 2 + 2047) // 2048 * grp]
+        yield k, data
+
+
 def texpak_members(b):
     if len(b) < 24 or b[:8] != b'RE4PAK1\0':
         raise ValueError('tex.pak header')
@@ -165,7 +181,8 @@ def collect(disc):
             add('movie', '%05x' % mid, p.read_bytes(), rel)
             continue
         if low == 'bgm/aica_str.dat':
-            add('sound-stream', 'aica-str-dat', p.read_bytes(), rel)
+            for k, data in stream_entries(p.read_bytes()):
+                add('sound-stream', sha(data)[:40], data, '%s#entry=%d' % (rel, k))
             continue
         if low.startswith('dc/native/'):
             # Whole-file geometry: every dc/native payload a capture hashes as

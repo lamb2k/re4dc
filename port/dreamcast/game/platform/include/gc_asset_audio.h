@@ -9,7 +9,7 @@ void bank_piece(const void* owner,unsigned part,unsigned offset,const void*,unsi
 void bank_end(const void* owner,unsigned part);
 unsigned bank_generation(unsigned bank);
 void bank_pump(); // main-thread unlocked boundary; may read pinned catalog
-void stream_source(const Digest&); // complete immutable AIS1 container, reader outside locks
+void stream_source(const Digest&); // one AIS1 entry (record + payload), hashed at its first open, outside locks
 void stream_source_failed();
 unsigned stream_generation();
 struct AudioUse {AudioTicket tickets[2]{};CheckedAsset assets[2]{};Digest pending[2]{};unsigned kinds[2]{};unsigned count=0;Consumer consumer=SoundBank;};

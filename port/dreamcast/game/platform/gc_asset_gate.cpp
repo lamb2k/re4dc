@@ -385,7 +385,7 @@ void pump() {
         } else if(q.kind){
             char id[65];hex(q.digest,id);id[40]=0;
             const char* kind=q.kind==SoundMram?"sound-mram":q.kind==SoundAram?"sound-aram":"sound-stream";
-            emitted(q.consumer,kind,q.kind==StreamContainer?"aica-str-dat":id,q.digest);
+            emitted(q.consumer,kind,id,q.digest);   // sound-stream: one row per AIS1 entry, id = digest prefix
         } else emitted_checked(q.consumer,q.asset);
     }
     const unsigned faults=queue_faults.exchange(0);
