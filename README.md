@@ -7,8 +7,47 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 23](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 24](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 24
+
+The PS2 look and sound in place of the GameCube's, still up to the castle gate. Full details are in the
+[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **PS2 weapons and HUD.** Leon's guns come from the PS2, in his hands and in the inventory, with the PS2 HUD.
+
+  ![Leon aiming, with the HUD: Test 23 left, Test 24 right](docs/images/releases/test-24/weapon-hud.jpg)
+  <br>Aiming in the village. Left Test 23, right Test 24. Flycast capture.
+- **PS2 inventory screens and English fonts.**
+
+  ![The inventory: Test 23 left, Test 24 right](docs/images/releases/test-24/inventory.jpg)
+  <br>The inventory. Left Test 23, right Test 24. Flycast capture.
+- **Leon's PS2 textures** on his jacket and his chapter 2 outfit.
+
+  ![Leon from behind: Test 23 left, Test 24 right](docs/images/releases/test-24/leon-back.jpg)
+  <br>Leon in the village. Left Test 23, right Test 24. Flycast capture.
+- **PS2 animation** for Leon, the Ganados and the weapons.
+- **PS2 sounds and music** in chapter 1.
+- **PS2 props in chapter 2.** Breakable boxes and barrels, and the torches and window panes the PS2 removed are gone.
+
+  ![A dam room with torches: Test 23 left, Test 24 right](docs/images/releases/test-24/torch-room.jpg)
+  <br>A room past the dam. Left Test 23, right Test 24. Flycast capture.
+- **PS2 church candles.**
+
+  ![The church candles: Test 23 left, Test 24 right](docs/images/releases/test-24/church-candles.jpg)
+  <br>The church. Left Test 23, right Test 24. Flycast capture.
+- **Fixed:** Mendez has his PS2 model in the barn door animation ([#57](https://github.com/lamb2k/re4dc/issues/57)),
+  and the Blacktail can be equipped ([#58](https://github.com/lamb2k/re4dc/issues/58)).
+- **Under the hood:** the GameCube cutscene files no longer load, and about 13 MB came off the disc.
+
+## Coming soon: Test 25
+
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 25.
+
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
+- [ ] **Less scenery drawn when it can't be seen.**
+- [ ] **The farm's PS2 world layout.**
 
 ## What's new in Test 23
 
@@ -167,22 +206,6 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
   soon as you pass its button prompt, as in the original game.
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
-
-## Coming soon: Test 24
-
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 24.
-
-- [x] **PS2 weapons:** Leon's guns, in his hands and in the inventory.
-- [x] **PS2 HUD, inventory screens and fonts.**
-- [x] **PS2 animation** for Leon, the Ganados and the weapons.
-- [x] **PS2 sounds and music** in chapter 1.
-- [x] **PS2 props in chapter 2:** breakable boxes and barrels, and the torches and window panes the PS2 removed are gone.
-- [x] **Leon's PS2 textures** on his jacket and his chapter 2 outfit.
-- [ ] **PS2 church candles.**
-- [x] **Mendez's PS2 model in the barn door animation** after his fight.
-- [x] **The Blacktail can be equipped** without stopping the game ([#58](https://github.com/lamb2k/re4dc/issues/58)).
-
-Moved to Test 25: chapter 3-1 (the castle's first part) and less scenery drawn when it can't be seen.
 
 ## What's new in Test 17.1
 

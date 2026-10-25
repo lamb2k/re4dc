@@ -20,7 +20,7 @@ set -euo pipefail
 PORT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # The current test release. At each test release, point this at the new test's knob file (one line).
-RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test23/release-knobs.txt}
+RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test24/release-knobs.txt}
 
 OUT=${OUT:-$PORT/out-public}
 OBJDIR=${OBJDIR:-$OUT/obj}
