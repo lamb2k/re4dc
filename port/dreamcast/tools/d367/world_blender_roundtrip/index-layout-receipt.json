@@ -1,0 +1,3577 @@
+{
+  "baseline_commit": "9c2c83dba00ba219fbb135503aa508975fe4855c",
+  "baseline_source": {
+    "archive_sha256": "fbe1e6c1fb38f82216ee915fda03b4b6fd80d8243d0744c845b8a6b7cfdc5409",
+    "baseline_commit": "9c2c83dba00ba219fbb135503aa508975fe4855c",
+    "command": [
+      "git",
+      "archive",
+      "9c2c83dba00ba219fbb135503aa508975fe4855c",
+      "port/dreamcast/tools",
+      "port/dreamcast/room"
+    ],
+    "entries": 5102,
+    "scope": "Original tracked public tools/room code, no private fixture or saved blend"
+  },
+  "blender": {
+    "archive_sha256": "8d3be07d2bc412b502c6bfe3cfe3e22195a4164076867da987ce148d73c27946",
+    "archive_url": "https://download.blender.org/release/Blender4.4/blender-4.4.3-linux-x64.tar.xz",
+    "build_hash": "802179c51ccc",
+    "executable_sha256": "2de8d1e2d358e52f88ecb18a31439a4f12da5858c82218e91fa8b4e6cdb365f6",
+    "pre_post_identity": true,
+    "version": "4.4.3"
+  },
+  "blender_layout_controls": {
+    "process": {
+      "command": [
+        "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+        "--background",
+        "--factory-startup",
+        "--disable-autoexec",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_index_layout_controls.py",
+        "--",
+        "--source",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+        "--other-source",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+        "--blend",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+        "--report",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/layout-blender-mutations.json"
+      ],
+      "elapsed_seconds": 0.841794,
+      "exit_code": 0,
+      "log_sha256": "9f65bed0bf0cf882df2402a7e3c70d35dabe16b95a4f586a9b28643de383dd62",
+      "peak_resident_kib": 281164,
+      "system_seconds": 0.523046,
+      "user_seconds": 1.113911
+    },
+    "receipt": {
+      "blender_version": [
+        4,
+        4,
+        3
+      ],
+      "build_hash": "802179c51ccc",
+      "layout_controls": 14,
+      "layout_negative_controls": [
+        {
+          "control": "layout-missing",
+          "reason": "scene: R4IM.identity property r4_aux",
+          "rejected": true
+        },
+        {
+          "control": "layout-extent",
+          "reason": "scene: R4IM.identity property r4_aux",
+          "rejected": true
+        },
+        {
+          "control": "layout-extent-negative",
+          "reason": "scene: R4IM.identity property r4_aux",
+          "rejected": true
+        },
+        {
+          "control": "layout-extent-type",
+          "reason": "scene: R4IM.identity property r4_aux",
+          "rejected": true
+        },
+        {
+          "control": "layout-extra-field",
+          "reason": "scene: R4IM.identity property r4_aux",
+          "rejected": true
+        },
+        {
+          "control": "schema-old-mode",
+          "reason": "scene: R4IM.identity property r4_schema",
+          "rejected": true
+        },
+        {
+          "control": "schema-missing",
+          "reason": "scene: R4IM.identity custom-property inventory",
+          "rejected": true
+        },
+        {
+          "control": "first-strip",
+          "reason": "scene: draw.000001.000000 property r4_record",
+          "rejected": true
+        },
+        {
+          "control": "strip-byte-count",
+          "reason": "scene: draw.000001.000000 property r4_record",
+          "rejected": true
+        },
+        {
+          "control": "strip-command-order",
+          "reason": "scene: draw.000001.000000 property r4_commands",
+          "rejected": true
+        },
+        {
+          "control": "strip-command-index",
+          "reason": "scene: draw.000001.000000 property r4_commands",
+          "rejected": true
+        },
+        {
+          "control": "indexed-pool",
+          "reason": "scene: draw.000001.000001 property r4_commands",
+          "rejected": true
+        },
+        {
+          "control": "source-hash",
+          "reason": "scene: R4IM.identity property r4_sources",
+          "rejected": true
+        },
+        {
+          "control": "different-valid-independent-source",
+          "reason": "scene: R4IM.identity property r4_sources",
+          "rejected": true
+        }
+      ],
+      "original_on_mode_controls": {
+        "blender_version": [
+          4,
+          4,
+          3
+        ],
+        "build_hash": "802179c51ccc",
+        "controls": 43,
+        "negative_controls": [
+          {
+            "control": "position",
+            "reason": "scene: draw.000001.000000 position",
+            "rejected": true
+          },
+          {
+            "control": "coarse-LOD-position",
+            "reason": "scene: draw.000001.000001 position",
+            "rejected": true
+          },
+          {
+            "control": "shared-placement-copy",
+            "reason": "scene: draw.000002.000000 position",
+            "rejected": true
+          },
+          {
+            "control": "UV",
+            "reason": "scene: draw.000001.000000 UV",
+            "rejected": true
+          },
+          {
+            "control": "prelit-color",
+            "reason": "scene: draw.000001.000000 prelit color",
+            "rejected": true
+          },
+          {
+            "control": "quantized-position",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "quantized-UV",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "quantized-color",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "source-vertex-id",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "triangle-winding",
+            "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+            "rejected": true
+          },
+          {
+            "control": "smooth-normal",
+            "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+            "rejected": true
+          },
+          {
+            "control": "extra-UV-layer",
+            "reason": "scene: draw.000001.000000 UV/color layers",
+            "rejected": true
+          },
+          {
+            "control": "extra-point-attribute",
+            "reason": "scene: draw.000001.000000 attribute inventory",
+            "rejected": true
+          },
+          {
+            "control": "shape-key",
+            "reason": "scene: draw.000001.000000 shape keys/animation/library/properties",
+            "rejected": true
+          },
+          {
+            "control": "modifier",
+            "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+            "rejected": true
+          },
+          {
+            "control": "object-transform",
+            "reason": "scene: draw.000001.000000 object transform",
+            "rejected": true
+          },
+          {
+            "control": "object-parent",
+            "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+            "rejected": true
+          },
+          {
+            "control": "object-addition",
+            "reason": "scene: collection inventory",
+            "rejected": true
+          },
+          {
+            "control": "object-deletion",
+            "reason": "scene: missing draw.000001.000000",
+            "rejected": true
+          },
+          {
+            "control": "object-rename",
+            "reason": "scene: missing draw.000001.000000",
+            "rejected": true
+          },
+          {
+            "control": "mesh-source-id",
+            "reason": "scene: mesh.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "part-source-offset",
+            "reason": "scene: part.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "cluster-bounds",
+            "reason": "scene: cluster.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "LOD-error",
+            "reason": "scene: level.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "strip-command",
+            "reason": "scene: draw.000001.000000 property r4_commands",
+            "rejected": true
+          },
+          {
+            "control": "placement-affine-metadata",
+            "reason": "scene: placement.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "placement-affine-basis",
+            "reason": "scene: placement.000001 affine basis",
+            "rejected": true
+          },
+          {
+            "control": "placement-source-id",
+            "reason": "scene: placement.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "pass",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "cull",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "texture-key",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "material-node-strength",
+            "reason": "scene: material.000000 emission strength",
+            "rejected": true
+          },
+          {
+            "control": "material-node-link",
+            "reason": "scene: material.000000 links",
+            "rejected": true
+          },
+          {
+            "control": "material-property",
+            "reason": "scene: material.000000 culling preview",
+            "rejected": true
+          },
+          {
+            "control": "material-scalar-setting",
+            "reason": "scene: material.000000 material/node/socket settings",
+            "rejected": true
+          },
+          {
+            "control": "material-assignment",
+            "reason": "scene: draw.000001.000000 material assignment",
+            "rejected": true
+          },
+          {
+            "control": "material-addition",
+            "reason": "scene: material inventory",
+            "rejected": true
+          },
+          {
+            "control": "animation",
+            "reason": "scene: image/node-group/action additions",
+            "rejected": true
+          },
+          {
+            "control": "LOD-visibility",
+            "reason": "scene: draw.000001.000001 visibility",
+            "rejected": true
+          },
+          {
+            "control": "palette",
+            "reason": "scene: R4IM.identity property r4_aux",
+            "rejected": true
+          },
+          {
+            "control": "class",
+            "reason": "scene: R4IM.identity property r4_aux",
+            "rejected": true
+          },
+          {
+            "control": "source-hash",
+            "reason": "scene: R4IM.identity property r4_sources",
+            "rejected": true
+          },
+          {
+            "control": "scene-unit",
+            "reason": "scene: units",
+            "rejected": true
+          }
+        ],
+        "restored_identity": true
+      },
+      "restored_identity": true,
+      "scope": "Actual saved/reopened bpy scenes; no private asset or appearance acceptance",
+      "status": "PASS_PUBLIC_BPY_ONLY",
+      "total_controls": 57
+    }
+  },
+  "canonical_suites": [
+    {
+      "baseline_decode_process": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-old-doc.json"
+        ],
+        "elapsed_seconds": 0.042796,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.011274,
+        "user_seconds": 0.031152
+      },
+      "baseline_import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-baseline.blend"
+        ],
+        "elapsed_seconds": 0.440057,
+        "exit_code": 0,
+        "log_sha256": "33aa2220fd0bac3a082984258b833c15a95132f42d9b478251d86f7825c0d624",
+        "peak_resident_kib": 286908,
+        "system_seconds": 0.062768,
+        "user_seconds": 0.414851
+      },
+      "current_import_export_arms": [
+        {
+          "blend_bytes": 511290,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-absent.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-output-absent"
+            ],
+            "elapsed_seconds": 0.439359,
+            "exit_code": 0,
+            "log_sha256": "c1ed044337eb29897fa28fcadde3b81aa3e050e7abe7acbcf44d77cc329004ff",
+            "peak_resident_kib": 270044,
+            "system_seconds": 0.102917,
+            "user_seconds": 0.360637
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-absent.blend"
+            ],
+            "elapsed_seconds": 0.496286,
+            "exit_code": 0,
+            "log_sha256": "02d34d592d1da17e71910bbbf961fd0ebee11bbf08a75df93e96430ba926d174",
+            "peak_resident_kib": 291444,
+            "system_seconds": 0.061357,
+            "user_seconds": 0.471932
+          },
+          "mode": "absent"
+        },
+        {
+          "blend_bytes": 511290,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-0.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-output-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.406366,
+            "exit_code": 0,
+            "log_sha256": "5f8b9d88a6d625406f2ebedde26167ca8936fc8b52c72b9f989578517be6d1d5",
+            "peak_resident_kib": 272072,
+            "system_seconds": 0.048085,
+            "user_seconds": 0.386456
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-0.blend",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.47185,
+            "exit_code": 0,
+            "log_sha256": "e37a336666228e43f57cba1ed0d4c0ba121f71b857220da74eb8f89c251f13e8",
+            "peak_resident_kib": 281784,
+            "system_seconds": 0.106762,
+            "user_seconds": 0.403664
+          },
+          "mode": "0"
+        },
+        {
+          "blend_bytes": 511337,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-output-1",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.401703,
+            "exit_code": 0,
+            "log_sha256": "4b837e31d466b2b249cc2d550aa9b2574b70a451e3d7010d1ed0fba90717acbf",
+            "peak_resident_kib": 268584,
+            "system_seconds": 0.073712,
+            "user_seconds": 0.346627
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.551565,
+            "exit_code": 0,
+            "log_sha256": "27e6842bb0de5c3f9b43041f04a7314c9205cdffc9cea286fed2f1c2d615115c",
+            "peak_resident_kib": 288384,
+            "system_seconds": 0.103252,
+            "user_seconds": 0.479051
+          },
+          "mode": "1"
+        }
+      ],
+      "decoded_document_controls": [
+        {
+          "complete_document_identity": true,
+          "document_sha256": "58d67b4f37e4979cb8eb354202f965e0bfdfeec80d8a9e53531eab0f46da6539",
+          "mode": "absent"
+        },
+        {
+          "complete_document_identity": true,
+          "document_sha256": "58d67b4f37e4979cb8eb354202f965e0bfdfeec80d8a9e53531eab0f46da6539",
+          "mode": 0
+        }
+      ],
+      "files": {
+        "far-shell.fsh": {
+          "bytes": 152,
+          "sha256": "23f8aed979f3a6cc6741e2d2b46ac7866d30e0165e0228dfddd737ec82734d42"
+        },
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 585,
+          "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+        },
+        "room.r4rc": {
+          "bytes": 1680,
+          "sha256": "75bf6dee1c16b9b65ecdfe32a38eba3ba0d2c35298d2145f3745e48f1665551f"
+        }
+      },
+      "input_bytes": 4501,
+      "name": "complete_v2",
+      "old_blend_current_exports": [
+        {
+          "full_bundle_identity": true,
+          "mode": "absent",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-old-blend-current-absent"
+            ],
+            "elapsed_seconds": 0.398056,
+            "exit_code": 0,
+            "log_sha256": "9b72d7639ea16f2e5336292b30e2a3b3e0e045482879fa30a55c6d4ac493e4e1",
+            "peak_resident_kib": 272272,
+            "system_seconds": 0.099929,
+            "user_seconds": 0.329229
+          }
+        },
+        {
+          "full_bundle_identity": true,
+          "mode": "0",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-old-blend-current-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.410291,
+            "exit_code": 0,
+            "log_sha256": "9b72d7639ea16f2e5336292b30e2a3b3e0e045482879fa30a55c6d4ac493e4e1",
+            "peak_resident_kib": 261672,
+            "system_seconds": 0.058156,
+            "user_seconds": 0.36723
+          }
+        }
+      ]
+    },
+    {
+      "baseline_decode_process": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-old-doc.json"
+        ],
+        "elapsed_seconds": 0.03325,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.0,
+        "user_seconds": 0.032936
+      },
+      "baseline_import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-baseline.blend"
+        ],
+        "elapsed_seconds": 0.462605,
+        "exit_code": 0,
+        "log_sha256": "cecf2e40b317ee7192274d938f1bb11244bc6492fc1109532c27dff7c002fc7d",
+        "peak_resident_kib": 285568,
+        "system_seconds": 0.08515,
+        "user_seconds": 0.406436
+      },
+      "current_import_export_arms": [
+        {
+          "blend_bytes": 511290,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-absent.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-output-absent"
+            ],
+            "elapsed_seconds": 0.383643,
+            "exit_code": 0,
+            "log_sha256": "06c7f137eea8984e7eb063042b45f67f0ac84400fcb9a1c7c03c91bf4136e6d2",
+            "peak_resident_kib": 279892,
+            "system_seconds": 0.04741,
+            "user_seconds": 0.368034
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-absent.blend"
+            ],
+            "elapsed_seconds": 0.444641,
+            "exit_code": 0,
+            "log_sha256": "bff6b6c42bba7560438770320be94d8f5940d2a5a873030c5741661f4c1e53f6",
+            "peak_resident_kib": 278196,
+            "system_seconds": 0.055659,
+            "user_seconds": 0.418408
+          },
+          "mode": "absent"
+        },
+        {
+          "blend_bytes": 511290,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-0.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-output-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.385205,
+            "exit_code": 0,
+            "log_sha256": "7310e4044b29f02d962f114fe951d2e6674602049beee02554c82e3da19f048a",
+            "peak_resident_kib": 268624,
+            "system_seconds": 0.044743,
+            "user_seconds": 0.365457
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-0.blend",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.45866,
+            "exit_code": 0,
+            "log_sha256": "c46c9fd9a74753f2e0ca1cbffbb821971f1ce5a64fed215efcd247f508e384fa",
+            "peak_resident_kib": 283832,
+            "system_seconds": 0.057417,
+            "user_seconds": 0.429975
+          },
+          "mode": "0"
+        },
+        {
+          "blend_bytes": 511337,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-1.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-output-1",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.330193,
+            "exit_code": 0,
+            "log_sha256": "8bed43444006520430c60df041de38fae58f0965890952d5b01422101812d851",
+            "peak_resident_kib": 272156,
+            "system_seconds": 0.059319,
+            "user_seconds": 0.293216
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-1.blend",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.433469,
+            "exit_code": 0,
+            "log_sha256": "2684d53d73e33f0417af5e2120c944b43afaf44b71ac27ed1f0c8348cc49db36",
+            "peak_resident_kib": 279200,
+            "system_seconds": 0.097223,
+            "user_seconds": 0.368702
+          },
+          "mode": "1"
+        }
+      ],
+      "decoded_document_controls": [
+        {
+          "complete_document_identity": true,
+          "document_sha256": "58d67b4f37e4979cb8eb354202f965e0bfdfeec80d8a9e53531eab0f46da6539",
+          "mode": "absent"
+        },
+        {
+          "complete_document_identity": true,
+          "document_sha256": "58d67b4f37e4979cb8eb354202f965e0bfdfeec80d8a9e53531eab0f46da6539",
+          "mode": 0
+        }
+      ],
+      "files": {
+        "far-shell.fsh": {
+          "bytes": 152,
+          "sha256": "2d9ae463510ca3ce69732bd85b8558eb3967ac02882d1acadc37c6fd8ea03bc0"
+        },
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 585,
+          "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+        },
+        "room.r4rc": {
+          "bytes": 1648,
+          "sha256": "9b295c07e43c0b2d2e7e63b40dd2fc5b035877aeb6dcb80d5dd214fb6afef36d"
+        }
+      },
+      "input_bytes": 4469,
+      "name": "legacy_v1",
+      "old_blend_current_exports": [
+        {
+          "full_bundle_identity": true,
+          "mode": "absent",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-old-blend-current-absent"
+            ],
+            "elapsed_seconds": 0.391013,
+            "exit_code": 0,
+            "log_sha256": "1c65135e374c904d35782ea4ba8d60c7dc1a0646dd9445e3419c75cb54de2e75",
+            "peak_resident_kib": 278172,
+            "system_seconds": 0.084643,
+            "user_seconds": 0.340266
+          }
+        },
+        {
+          "full_bundle_identity": true,
+          "mode": "0",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/legacy_v1-old-blend-current-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.369768,
+            "exit_code": 0,
+            "log_sha256": "1c65135e374c904d35782ea4ba8d60c7dc1a0646dd9445e3419c75cb54de2e75",
+            "peak_resident_kib": 266488,
+            "system_seconds": 0.039351,
+            "user_seconds": 0.349988
+          }
+        }
+      ]
+    },
+    {
+      "baseline_decode_process": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-old-doc.json"
+        ],
+        "elapsed_seconds": 0.028012,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.00394,
+        "user_seconds": 0.023874
+      },
+      "baseline_import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-baseline.blend"
+        ],
+        "elapsed_seconds": 0.396985,
+        "exit_code": 0,
+        "log_sha256": "245d480715142b040cd1d7a9e075eaf7f883e29a936bc33ab9e3b4a0143b66b7",
+        "peak_resident_kib": 267036,
+        "system_seconds": 0.071327,
+        "user_seconds": 0.343287
+      },
+      "current_import_export_arms": [
+        {
+          "blend_bytes": 413431,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-absent.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-output-absent"
+            ],
+            "elapsed_seconds": 0.331607,
+            "exit_code": 0,
+            "log_sha256": "cce41a93f26e98175d8c7a7084b9e0d1e5d5f2c2509dd3ef41e80ccc53d46cbc",
+            "peak_resident_kib": 269856,
+            "system_seconds": 0.063504,
+            "user_seconds": 0.293271
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-absent.blend"
+            ],
+            "elapsed_seconds": 0.429219,
+            "exit_code": 0,
+            "log_sha256": "cce31f3b4656aa23c71c38f0c75ab86a2191307707b513127ac2e1c998f4f2a8",
+            "peak_resident_kib": 269344,
+            "system_seconds": 0.067999,
+            "user_seconds": 0.386965
+          },
+          "mode": "absent"
+        },
+        {
+          "blend_bytes": 413431,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-0.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-output-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.326926,
+            "exit_code": 0,
+            "log_sha256": "c01e1f005681c389dd69e38a6501be39d4641aa32137aee4b6d975f77320f311",
+            "peak_resident_kib": 258468,
+            "system_seconds": 0.035349,
+            "user_seconds": 0.305317
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-0.blend",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.390311,
+            "exit_code": 0,
+            "log_sha256": "14069deaa2baf0de8bf70db4638de8b15f8d2942edbd2d5eb39319b2de4c7ead",
+            "peak_resident_kib": 271516,
+            "system_seconds": 0.033848,
+            "user_seconds": 0.377459
+          },
+          "mode": "0"
+        },
+        {
+          "blend_bytes": 413478,
+          "export_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-1.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-output-1",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.337463,
+            "exit_code": 0,
+            "log_sha256": "d2ffab0fd634d2447d2de6b30e783589bd3ee83f522e2d9095524d925feea01b",
+            "peak_resident_kib": 264312,
+            "system_seconds": 0.030931,
+            "user_seconds": 0.3232
+          },
+          "full_bundle_identity": true,
+          "import_process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "import",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-1.blend",
+              "--preserve-index-layout",
+              "1"
+            ],
+            "elapsed_seconds": 0.373954,
+            "exit_code": 0,
+            "log_sha256": "1e3fa23f07dc16f3c7f2d6897a39b8cc27f4775912786557c92b4605e834751f",
+            "peak_resident_kib": 270264,
+            "system_seconds": 0.065696,
+            "user_seconds": 0.328286
+          },
+          "mode": "1"
+        }
+      ],
+      "decoded_document_controls": [
+        {
+          "complete_document_identity": true,
+          "document_sha256": "9ec216e27170db1faf0d3d588cb8e67fbf1c188dad3cc098d2251491db487f8b",
+          "mode": "absent"
+        },
+        {
+          "complete_document_identity": true,
+          "document_sha256": "9ec216e27170db1faf0d3d588cb8e67fbf1c188dad3cc098d2251491db487f8b",
+          "mode": 0
+        }
+      ],
+      "files": {
+        "ps2-world.r4pw": {
+          "bytes": 100,
+          "sha256": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 896,
+          "sha256": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+        }
+      },
+      "input_bytes": 996,
+      "name": "existing_converter",
+      "old_blend_current_exports": [
+        {
+          "full_bundle_identity": true,
+          "mode": "absent",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-old-blend-current-absent"
+            ],
+            "elapsed_seconds": 0.349826,
+            "exit_code": 0,
+            "log_sha256": "721dcfd617f8c7cb54ee70921585ee0bf3b5605252b65250f837df8a232a78b2",
+            "peak_resident_kib": 258352,
+            "system_seconds": 0.060066,
+            "user_seconds": 0.305485
+          }
+        },
+        {
+          "full_bundle_identity": true,
+          "mode": "0",
+          "process": {
+            "command": [
+              "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+              "--background",
+              "--factory-startup",
+              "--disable-autoexec",
+              "--python-exit-code",
+              "1",
+              "--python",
+              "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+              "--",
+              "export",
+              "--source",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-input",
+              "--blend",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-baseline.blend",
+              "--out",
+              "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/existing_converter-old-blend-current-0",
+              "--preserve-index-layout",
+              "0"
+            ],
+            "elapsed_seconds": 0.348696,
+            "exit_code": 0,
+            "log_sha256": "721dcfd617f8c7cb54ee70921585ee0bf3b5605252b65250f837df8a232a78b2",
+            "peak_resident_kib": 262312,
+            "system_seconds": 0.070012,
+            "user_seconds": 0.292949
+          }
+        }
+      ]
+    }
+  ],
+  "cli_negative_control_count": 27,
+  "cli_negative_controls": [
+    {
+      "name": "append_plain-default-import-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-refused-absent.blend"
+        ],
+        "elapsed_seconds": 0.351948,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 259616,
+        "system_seconds": 0.046925,
+        "user_seconds": 0.309531
+      }
+    },
+    {
+      "name": "append_plain-default-import-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-refused-0.blend",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.388526,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 259432,
+        "system_seconds": 0.065836,
+        "user_seconds": 0.332821
+      }
+    },
+    {
+      "name": "append_plain-default-export-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-refused-export-absent"
+        ],
+        "elapsed_seconds": 0.324688,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 257692,
+        "system_seconds": 0.051674,
+        "user_seconds": 0.281997
+      }
+    },
+    {
+      "name": "append_plain-default-export-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-refused-export-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.315586,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 260536,
+        "system_seconds": 0.036861,
+        "user_seconds": 0.286185
+      }
+    },
+    {
+      "name": "append_indexed-default-import-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-refused-absent.blend"
+        ],
+        "elapsed_seconds": 0.347539,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258996,
+        "system_seconds": 0.036341,
+        "user_seconds": 0.320257
+      }
+    },
+    {
+      "name": "append_indexed-default-import-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-refused-0.blend",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.319882,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258084,
+        "system_seconds": 0.040023,
+        "user_seconds": 0.287104
+      }
+    },
+    {
+      "name": "append_indexed-default-export-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-refused-export-absent"
+        ],
+        "elapsed_seconds": 0.337153,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 256660,
+        "system_seconds": 0.067762,
+        "user_seconds": 0.276819
+      }
+    },
+    {
+      "name": "append_indexed-default-export-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-refused-export-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.310527,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 255636,
+        "system_seconds": 0.038709,
+        "user_seconds": 0.27896
+      }
+    },
+    {
+      "name": "append_strip_groups-default-import-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-refused-absent.blend"
+        ],
+        "elapsed_seconds": 0.32263,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258308,
+        "system_seconds": 0.061134,
+        "user_seconds": 0.268591
+      }
+    },
+    {
+      "name": "append_strip_groups-default-import-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-refused-0.blend",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.318705,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 260588,
+        "system_seconds": 0.062096,
+        "user_seconds": 0.259696
+      }
+    },
+    {
+      "name": "append_strip_groups-default-export-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-refused-export-absent"
+        ],
+        "elapsed_seconds": 0.337143,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258628,
+        "system_seconds": 0.044863,
+        "user_seconds": 0.295784
+      }
+    },
+    {
+      "name": "append_strip_groups-default-export-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-refused-export-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.345745,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 262068,
+        "system_seconds": 0.063046,
+        "user_seconds": 0.288103
+      }
+    },
+    {
+      "name": "reordered_spans-default-import-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-refused-absent.blend"
+        ],
+        "elapsed_seconds": 0.308809,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 256968,
+        "system_seconds": 0.05936,
+        "user_seconds": 0.255005
+      }
+    },
+    {
+      "name": "reordered_spans-default-import-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-refused-0.blend",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.31056,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 256112,
+        "system_seconds": 0.04532,
+        "user_seconds": 0.273979
+      }
+    },
+    {
+      "name": "reordered_spans-default-export-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-refused-export-absent"
+        ],
+        "elapsed_seconds": 0.367985,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258664,
+        "system_seconds": 0.065052,
+        "user_seconds": 0.309476
+      }
+    },
+    {
+      "name": "reordered_spans-default-export-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-refused-export-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.327122,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 254712,
+        "system_seconds": 0.071136,
+        "user_seconds": 0.262584
+      }
+    },
+    {
+      "name": "zero_gaps-default-import-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-refused-absent.blend"
+        ],
+        "elapsed_seconds": 0.353832,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 255900,
+        "system_seconds": 0.072967,
+        "user_seconds": 0.286885
+      }
+    },
+    {
+      "name": "zero_gaps-default-import-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-refused-0.blend",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.348329,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 257452,
+        "system_seconds": 0.054997,
+        "user_seconds": 0.298582
+      }
+    },
+    {
+      "name": "zero_gaps-default-export-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-refused-export-absent"
+        ],
+        "elapsed_seconds": 0.356879,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 258192,
+        "system_seconds": 0.049803,
+        "user_seconds": 0.311598
+      }
+    },
+    {
+      "name": "zero_gaps-default-export-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-refused-export-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.362897,
+        "exit_code": 1,
+        "expected_rejection": "noncanonical index placement",
+        "log_sha256": "1278bbe805757af265d97204de582df53ab9f98815b78d08f9b67e4932ad47c8",
+        "peak_resident_kib": 257740,
+        "system_seconds": 0.05188,
+        "user_seconds": 0.316303
+      }
+    },
+    {
+      "name": "invalid-option-import",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/invalid-option.blend",
+          "--preserve-index-layout",
+          "2"
+        ],
+        "elapsed_seconds": 0.36817,
+        "exit_code": 2,
+        "expected_rejection": "invalid choice: 2",
+        "log_sha256": "67258da44984c8fa60f0336df59c190a786d337f73168a730c035d6aa1e4c74f",
+        "peak_resident_kib": 257112,
+        "system_seconds": 0.060194,
+        "user_seconds": 0.31475
+      }
+    },
+    {
+      "name": "invalid-option-export",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/invalid-option-output",
+          "--preserve-index-layout",
+          "2"
+        ],
+        "elapsed_seconds": 0.39469,
+        "exit_code": 2,
+        "expected_rejection": "invalid choice: 2",
+        "log_sha256": "67258da44984c8fa60f0336df59c190a786d337f73168a730c035d6aa1e4c74f",
+        "peak_resident_kib": 254580,
+        "system_seconds": 0.045668,
+        "user_seconds": 0.352112
+      }
+    },
+    {
+      "name": "mode-mismatch-1-to-absent",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/mode-mismatch-1-to-absent"
+        ],
+        "elapsed_seconds": 0.378725,
+        "exit_code": 1,
+        "expected_rejection": "property r4_schema",
+        "log_sha256": "87f2869908d3d1b523de851c1b5549d240c3402d0cce4b5597d2a7f9a4aeb43e",
+        "peak_resident_kib": 275092,
+        "system_seconds": 0.08663,
+        "user_seconds": 0.325189
+      }
+    },
+    {
+      "name": "mode-mismatch-1-to-0",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/mode-mismatch-1-to-0",
+          "--preserve-index-layout",
+          "0"
+        ],
+        "elapsed_seconds": 0.379785,
+        "exit_code": 1,
+        "expected_rejection": "property r4_schema",
+        "log_sha256": "87f2869908d3d1b523de851c1b5549d240c3402d0cce4b5597d2a7f9a4aeb43e",
+        "peak_resident_kib": 272396,
+        "system_seconds": 0.074956,
+        "user_seconds": 0.329718
+      }
+    },
+    {
+      "name": "mode-mismatch-0-to-1",
+      "no_destination_created": true,
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-0.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/mode-mismatch-0-to-1",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.403607,
+        "exit_code": 1,
+        "expected_rejection": "property r4_schema",
+        "log_sha256": "6d539eb0e739f8d5c67dfed04001f220f748180b745f8d7db27446c59bcdf7fa",
+        "peak_resident_kib": 276188,
+        "system_seconds": 0.07805,
+        "user_seconds": 0.353566
+      }
+    },
+    {
+      "existing_destination_unchanged": true,
+      "name": "no-overwrite-blend",
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.364006,
+        "exit_code": 1,
+        "expected_rejection": "refuse to overwrite blend",
+        "log_sha256": "f68dc90a6d7872fa412a432fc5e074636f22b19498b6eb6b4c970d568a26f234",
+        "peak_resident_kib": 258140,
+        "system_seconds": 0.079715,
+        "user_seconds": 0.290706
+      }
+    },
+    {
+      "existing_destination_unchanged": true,
+      "name": "no-overwrite-output",
+      "process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-1.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/complete_v2-output-1",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.379989,
+        "exit_code": 1,
+        "expected_rejection": "new output directory required",
+        "log_sha256": "f9fc4d3f6b00dc982bb65e4e04629c0c4b7854b21568468053db46b2b7bdf98f",
+        "peak_resident_kib": 258356,
+        "system_seconds": 0.043603,
+        "user_seconds": 0.342611
+      }
+    }
+  ],
+  "host_layout_controls": {
+    "errors": 0,
+    "failures": 0,
+    "private_r101_admission": false,
+    "process": {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/test_index_layout.py",
+        "--report",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/layout-host.json"
+      ],
+      "elapsed_seconds": 0.20403,
+      "exit_code": 0,
+      "log_sha256": "efabf5fb3be770d1e1ca9fbd4f2163e0770a616ed9d0db1bf528bfebcf378559",
+      "peak_resident_kib": 30980,
+      "system_seconds": 0.035848,
+      "user_seconds": 0.995051
+    },
+    "runtime_timing_claim": false,
+    "status": "PASS_PUBLIC_HOST_ONLY",
+    "subcases": 61,
+    "test_methods": 21
+  },
+  "host_platform": {
+    "machine": "x86_64",
+    "python": "3.12.14",
+    "system": "Linux",
+    "timing_scope": "Measured host process wall/user/system and peak KiB RSS; not Dreamcast performance"
+  },
+  "index_layout_suites": [
+    {
+      "baseline_probe": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-old-doc.json"
+        ],
+        "elapsed_seconds": 0.026089,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.0,
+        "user_seconds": 0.025891
+      },
+      "baseline_refusal": "noncanonical index placement",
+      "blend_bytes": 652137,
+      "complete_bundle_identity": true,
+      "counts": {
+        "clusters": 6,
+        "levels": 12,
+        "meshes": 4,
+        "meshlets": 12,
+        "parts": 6,
+        "placements": 6,
+        "vertices": 30
+      },
+      "export_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-output",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.371871,
+        "exit_code": 0,
+        "log_sha256": "8d88d135ae310ffa7e54858644a5887da7cfa731fb5bff65282c0801166aa372",
+        "peak_resident_kib": 279236,
+        "system_seconds": 0.067615,
+        "user_seconds": 0.329572
+      },
+      "files": {
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "cedb836679f079c8c42e3e018831ec011bd4f56fa0b0ff8e151485bf6dacd41a"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "0b00559508a0d0b4895bf0cbb9ab103051e2a0093dbd14300e32666aaf40dfbf"
+        },
+        "ps2-world.json": {
+          "bytes": 642,
+          "sha256": "01b799dace8df5cc44f445959d814c8626052c7264f82c464ac35fa212190a2e"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "bbf4c28434ed2f0a9f0a50f3c8a246aced5bb419cca7739d0b55075e37bc29d4"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "74ca8896e185d2d624733fd9138007d9b01f825e4049d17327142965c8eb6903"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 440,
+          "sha256": "035642dddd9c461bbbbdb96bb1abe91e00fccd42571935585828f2c75b922157"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 800,
+          "sha256": "c72c98d3caba870050c9458e1e82f8075b0526d96a6c36ca33c9c3f2c3bf2b4c"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 32,
+          "sha256": "24b5f0213bf9760050648edfbbed8847c2b9d1141c9eed72b408ae004144bb9c"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1984,
+          "sha256": "cd5752b8f5e9a6dfc84b78cae768c5ead1cb6c19f45a681ee049da1eafba2ad1"
+        }
+      },
+      "fixture_build_seconds": 0.001146,
+      "import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_plain.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.469015,
+        "exit_code": 0,
+        "log_sha256": "097fe5074e14e805befb2df2a88c2e70710a53ccbaa4f00c9e4cf71b0dd23eb0",
+        "peak_resident_kib": 292484,
+        "system_seconds": 0.115377,
+        "user_seconds": 0.391705
+      },
+      "index_layout": {
+        "index_bytes": 134
+      },
+      "input_bytes": 4118,
+      "name": "append_plain",
+      "output_bytes": 4118
+    },
+    {
+      "baseline_probe": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-old-doc.json"
+        ],
+        "elapsed_seconds": 0.027009,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.0,
+        "user_seconds": 0.026761
+      },
+      "baseline_refusal": "noncanonical index placement",
+      "blend_bytes": 652459,
+      "complete_bundle_identity": true,
+      "counts": {
+        "clusters": 6,
+        "levels": 12,
+        "meshes": 4,
+        "meshlets": 12,
+        "parts": 6,
+        "placements": 6,
+        "vertices": 30
+      },
+      "export_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-output",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.353828,
+        "exit_code": 0,
+        "log_sha256": "70d1b5bb0e14785926db3ee613f3610c66dc5d2937f7650aa679d80bfeef448a",
+        "peak_resident_kib": 283264,
+        "system_seconds": 0.048101,
+        "user_seconds": 0.325866
+      },
+      "files": {
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "ff6a45ea2876dc2b241027af44a1ffff5f0031dc2d0d17d21a3aa8687a1b71eb"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "0b00559508a0d0b4895bf0cbb9ab103051e2a0093dbd14300e32666aaf40dfbf"
+        },
+        "ps2-world.json": {
+          "bytes": 642,
+          "sha256": "d643a31c3d51d46ef894e650addbf05fe499e7b4fd96f61b354821c5ff3dbe7e"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "3127cc1b528b733a634d394309e027abd2505c70895a25c5def56285b38eac4a"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "e9df8b9f8d1438bfa6e66a1141d667421b823b71741d8aae27fb08a5b08fac66"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 440,
+          "sha256": "035642dddd9c461bbbbdb96bb1abe91e00fccd42571935585828f2c75b922157"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 800,
+          "sha256": "869de5407980dc1dc8cac7a110a93ee47b87f45226fc2331b850597b3040743f"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 32,
+          "sha256": "24b5f0213bf9760050648edfbbed8847c2b9d1141c9eed72b408ae004144bb9c"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1984,
+          "sha256": "ecee8b4d32b8980c3543d5ccca757134fa4796a328f82ca14111eefc91a2f439"
+        }
+      },
+      "fixture_build_seconds": 0.000848,
+      "import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_indexed.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.399362,
+        "exit_code": 0,
+        "log_sha256": "1095ebdd3ce7e19b908aeee0771afe053e65a956822e79d146bb8fbac74bc3bc",
+        "peak_resident_kib": 291796,
+        "system_seconds": 0.052509,
+        "user_seconds": 0.37642
+      },
+      "index_layout": {
+        "index_bytes": 148
+      },
+      "input_bytes": 4118,
+      "name": "append_indexed",
+      "output_bytes": 4118
+    },
+    {
+      "baseline_probe": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-old-doc.json"
+        ],
+        "elapsed_seconds": 0.026662,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.007577,
+        "user_seconds": 0.018893
+      },
+      "baseline_refusal": "noncanonical index placement",
+      "blend_bytes": 793120,
+      "complete_bundle_identity": true,
+      "counts": {
+        "clusters": 9,
+        "levels": 18,
+        "meshes": 6,
+        "meshlets": 18,
+        "parts": 9,
+        "placements": 9,
+        "vertices": 45
+      },
+      "export_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-output",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.359373,
+        "exit_code": 0,
+        "log_sha256": "728c2bef175e2e635c3c4c65e3cf9c955daa995530b64cb045bf169b41fb09a1",
+        "peak_resident_kib": 279968,
+        "system_seconds": 0.067612,
+        "user_seconds": 0.305727
+      },
+      "files": {
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "5b22ab0d38bd42a9967d839204ce6133bab4171e4f8d77367e988dbc9d3008ef"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "8ff9989d1441c3abb80d909127b8459fadf0569f319849b758d8b7f797a473fb"
+        },
+        "ps2-world.json": {
+          "bytes": 642,
+          "sha256": "6041d9b7f288b09d343d43b1854d08d03945a39565cc1e3f40c8c29caad73338"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "b553466653790951a8e2f51076efafe8d9f7ebd01b421f0a6a401dc8567220e6"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "c2b9067d08d2f62016c302dbf910e601349e0c0170b3ff2b5b48c1f5f42cc1ff"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 644,
+          "sha256": "7666444848845ded5711cb9e5479286fac5d838cf457e088bde8027dd31c8669"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 1184,
+          "sha256": "94622ee0ebd1ca2e73c677c1b9793ffdc11fb85f49a0265b654735ed5a1c548f"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 36,
+          "sha256": "6dab8438b66c0fb820b11942aa1b5e2c778200450e549bf278b74792ed4613f9"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 2784,
+          "sha256": "f79525b1ea3be3ef73f12e2d881e93f588a187179b706870ae85ac4f70cdc09f"
+        }
+      },
+      "fixture_build_seconds": 0.026066,
+      "import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/append_strip_groups.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.417348,
+        "exit_code": 0,
+        "log_sha256": "974934cd0901f84e83dcc6b6f5c152c22edcc299fa1874886d680cd70b8dbf63",
+        "peak_resident_kib": 293320,
+        "system_seconds": 0.086772,
+        "user_seconds": 0.368177
+      },
+      "index_layout": {
+        "index_bytes": 202
+      },
+      "input_bytes": 5510,
+      "name": "append_strip_groups",
+      "output_bytes": 5510
+    },
+    {
+      "baseline_probe": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-old-doc.json"
+        ],
+        "elapsed_seconds": 0.029524,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.007017,
+        "user_seconds": 0.022308
+      },
+      "baseline_refusal": "noncanonical index placement",
+      "blend_bytes": 511175,
+      "complete_bundle_identity": true,
+      "counts": {
+        "clusters": 3,
+        "levels": 6,
+        "meshes": 2,
+        "meshlets": 6,
+        "parts": 3,
+        "placements": 3,
+        "vertices": 15
+      },
+      "export_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-output",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.322922,
+        "exit_code": 0,
+        "log_sha256": "8b4b33b32e06a35c56bd395910dae8f74567db7adeac0505523749e7f14c5c96",
+        "peak_resident_kib": 267960,
+        "system_seconds": 0.085709,
+        "user_seconds": 0.259263
+      },
+      "files": {
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "3a09cd40c1c9f4b02b24526dbadd67415757ff58239ddbf8e8de3237ee1af241"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 642,
+          "sha256": "d95680c48e193c4fc1db8ceb5e802b4c2b942635c8d07ae896159d6da966eef8"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "c3d4c16b4f5e99c5553c3c4cba700359d3378ff66c99f04d3dba0ed6ddb29c13"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "1d916a98037f5514b9016c5f1f37086e71c0fc02105424ad54fdc11434b7d1c4"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "bf0629bf2c5ab48bf84032ac79a64f2e4cff7d2f34aa9cc71a5f4b8f14b01706"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "a8ca49595fc65500158bd72edeff43411199d7d4ffa079e448f0a11d215e9fdb"
+        }
+      },
+      "fixture_build_seconds": 0.000479,
+      "import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/reordered_spans.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.416898,
+        "exit_code": 0,
+        "log_sha256": "8a69e8aa01e2732c00e31a8907d4dcdd7f45dcac2bf8d96cc426017facc5ea56",
+        "peak_resident_kib": 275912,
+        "system_seconds": 0.05343,
+        "user_seconds": 0.398051
+      },
+      "index_layout": {
+        "index_bytes": 66
+      },
+      "input_bytes": 2726,
+      "name": "reordered_spans",
+      "output_bytes": 2726
+    },
+    {
+      "baseline_probe": {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-decode.py",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/baseline-source/port/dreamcast/tools/d367/world_blender_roundtrip",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-old-doc.json"
+        ],
+        "elapsed_seconds": 0.027836,
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "peak_resident_kib": 30980,
+        "system_seconds": 0.004029,
+        "user_seconds": 0.023501
+      },
+      "baseline_refusal": "noncanonical index placement",
+      "blend_bytes": 511175,
+      "complete_bundle_identity": true,
+      "counts": {
+        "clusters": 3,
+        "levels": 6,
+        "meshes": 2,
+        "meshlets": 6,
+        "parts": 3,
+        "placements": 3,
+        "vertices": 15
+      },
+      "export_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "export",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps.blend",
+          "--out",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-output",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.337139,
+        "exit_code": 0,
+        "log_sha256": "e4b6074a5832d75e5c61e777694dc1fe71685d3ec14389dffbc6f74c9fd8e582",
+        "peak_resident_kib": 270052,
+        "system_seconds": 0.076667,
+        "user_seconds": 0.287118
+      },
+      "files": {
+        "interior.cell": {
+          "bytes": 60,
+          "sha256": "39d81f84c49abcf8d827f07336205c3c5e7518a1a104440778b67bec428d023a"
+        },
+        "ps2-world.ids": {
+          "bytes": 32,
+          "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+        },
+        "ps2-world.json": {
+          "bytes": 642,
+          "sha256": "6dab1a7857a7c4572362513f6ea0447716b51a81829ecd435817056752ae8f5a"
+        },
+        "ps2-world.occl": {
+          "bytes": 32,
+          "sha256": "48273ad41ba41c64a2999fb4b1b775a5f0cceaa3a58bb00722594ca8387a71b7"
+        },
+        "ps2-world.pvs": {
+          "bytes": 96,
+          "sha256": "26e469812460fc87750df447f44c97a5923e8f06b7606a2076782f44d140ce0a"
+        },
+        "ps2-world.r4pw": {
+          "bytes": 236,
+          "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+        },
+        "ps2-world.r4sg": {
+          "bytes": 416,
+          "sha256": "f27c84f696cfeac6e1a4033b47678d7ccde34516be8176320880990dbc6b1fed"
+        },
+        "ps2-world.r4tc": {
+          "bytes": 28,
+          "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+        },
+        "ps2-world.re4mesh": {
+          "bytes": 1184,
+          "sha256": "fdb6a140b797c1fa5c9e7233405de6ab0b3118f75c4379133b4fe7adcb78ffba"
+        }
+      },
+      "fixture_build_seconds": 0.000498,
+      "import_process": {
+        "command": [
+          "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+          "--background",
+          "--factory-startup",
+          "--disable-autoexec",
+          "--python-exit-code",
+          "1",
+          "--python",
+          "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+          "--",
+          "import",
+          "--source",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps-input",
+          "--blend",
+          "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/zero_gaps.blend",
+          "--preserve-index-layout",
+          "1"
+        ],
+        "elapsed_seconds": 0.422073,
+        "exit_code": 0,
+        "log_sha256": "c48c2223d324cf82949e96b1d9e3461cc433523f68f86e18bedf3ac8d834ceac",
+        "peak_resident_kib": 284020,
+        "system_seconds": 0.07609,
+        "user_seconds": 0.378085
+      },
+      "index_layout": {
+        "index_bytes": 77
+      },
+      "input_bytes": 2726,
+      "name": "zero_gaps",
+      "output_bytes": 2726
+    }
+  ],
+  "limits": [
+    "No private r101 admission or full-room Blender scale claim.",
+    "No geometry/look/STRICT/PVS/lost-part or console qualification.",
+    "Unknown formats, nonzero holes and overlapping index spans still refuse.",
+    "Policy provenance and remapped-policy companion handling are separate contracts."
+  ],
+  "original_gate": {
+    "process": {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/794179ef02a4/work/re4dc-blender-layout-20261025/port/dreamcast/tools/d367/world_blender_roundtrip/validate.py",
+        "--blender",
+        "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64/blender",
+        "--archive",
+        "/tmp/re4dc-blender-validation-20261025/blender-4.4.3-linux-x64.tar.xz",
+        "--work",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/original-gate",
+        "--receipt",
+        "/tmp/re4dc-blender-validation-20261025/index-layout-gate-first/original-gate-receipt.json",
+        "--baseline",
+        "9c2c83dba00ba219fbb135503aa508975fe4855c"
+      ],
+      "elapsed_seconds": 4.9795,
+      "exit_code": 0,
+      "log_sha256": "f944d346f6543650951010a5f35519d15b3c7b3939280196bd134fdf81a75a5f",
+      "peak_resident_kib": 283888,
+      "system_seconds": 1.059469,
+      "user_seconds": 4.710004
+    },
+    "receipt": {
+      "absent_tool_off_identity": {
+        "baseline_commit": "9c2c83dba00ba219fbb135503aa508975fe4855c",
+        "baseline_fixture_hashes": {
+          "ps2-world.r4pw": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88",
+          "ps2-world.re4mesh": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+        },
+        "builder_integration": "absent: explicit standalone tools only",
+        "current_fixture_hashes": {
+          "ps2-world.r4pw": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88",
+          "ps2-world.re4mesh": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+        },
+        "existing_dependencies_byte_identical": {
+          "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+          "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+          "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+          "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+          "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+          "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+          "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+          "port/dreamcast/tools/ps2_world_r4im.py": "59faff9eb9c326b5456d71fca3a0c46ccc658013c35ccab42d96d4069bf67d1d"
+        }
+      },
+      "base_commit": "9c2c83dba00ba219fbb135503aa508975fe4855c",
+      "blender": {
+        "archive_sha256": "8d3be07d2bc412b502c6bfe3cfe3e22195a4164076867da987ce148d73c27946",
+        "archive_url": "https://download.blender.org/release/Blender4.4/blender-4.4.3-linux-x64.tar.xz",
+        "build_hash": "802179c51ccc",
+        "executable_sha256": "2de8d1e2d358e52f88ecb18a31439a4f12da5858c82218e91fa8b4e6cdb365f6",
+        "pre_post_executable_identity": true,
+        "release_manifest_url": "https://download.blender.org/release/Blender4.4/blender-4.4.3.sha256",
+        "version": "4.4.3"
+      },
+      "blender_mutations": {
+        "blender_version": [
+          4,
+          4,
+          3
+        ],
+        "build_hash": "802179c51ccc",
+        "controls": 43,
+        "negative_controls": [
+          {
+            "control": "position",
+            "reason": "scene: draw.000001.000000 position",
+            "rejected": true
+          },
+          {
+            "control": "coarse-LOD-position",
+            "reason": "scene: draw.000001.000001 position",
+            "rejected": true
+          },
+          {
+            "control": "shared-placement-copy",
+            "reason": "scene: draw.000002.000000 position",
+            "rejected": true
+          },
+          {
+            "control": "UV",
+            "reason": "scene: draw.000001.000000 UV",
+            "rejected": true
+          },
+          {
+            "control": "prelit-color",
+            "reason": "scene: draw.000001.000000 prelit color",
+            "rejected": true
+          },
+          {
+            "control": "quantized-position",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "quantized-UV",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "quantized-color",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "source-vertex-id",
+            "reason": "scene: draw.000001.000000 raw quantization/source vertex",
+            "rejected": true
+          },
+          {
+            "control": "triangle-winding",
+            "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+            "rejected": true
+          },
+          {
+            "control": "smooth-normal",
+            "reason": "scene: draw.000001.000000 triangle winding/order/material/smoothing",
+            "rejected": true
+          },
+          {
+            "control": "extra-UV-layer",
+            "reason": "scene: draw.000001.000000 UV/color layers",
+            "rejected": true
+          },
+          {
+            "control": "extra-point-attribute",
+            "reason": "scene: draw.000001.000000 attribute inventory",
+            "rejected": true
+          },
+          {
+            "control": "shape-key",
+            "reason": "scene: draw.000001.000000 shape keys/animation/library/properties",
+            "rejected": true
+          },
+          {
+            "control": "modifier",
+            "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+            "rejected": true
+          },
+          {
+            "control": "object-transform",
+            "reason": "scene: draw.000001.000000 object transform",
+            "rejected": true
+          },
+          {
+            "control": "object-parent",
+            "reason": "scene: draw.000001.000000 type/parent/modifier/constraint/animation",
+            "rejected": true
+          },
+          {
+            "control": "object-addition",
+            "reason": "scene: collection inventory",
+            "rejected": true
+          },
+          {
+            "control": "object-deletion",
+            "reason": "scene: missing draw.000001.000000",
+            "rejected": true
+          },
+          {
+            "control": "object-rename",
+            "reason": "scene: missing draw.000001.000000",
+            "rejected": true
+          },
+          {
+            "control": "mesh-source-id",
+            "reason": "scene: mesh.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "part-source-offset",
+            "reason": "scene: part.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "cluster-bounds",
+            "reason": "scene: cluster.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "LOD-error",
+            "reason": "scene: level.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "strip-command",
+            "reason": "scene: draw.000001.000000 property r4_commands",
+            "rejected": true
+          },
+          {
+            "control": "placement-affine-metadata",
+            "reason": "scene: placement.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "placement-affine-basis",
+            "reason": "scene: placement.000001 affine basis",
+            "rejected": true
+          },
+          {
+            "control": "placement-source-id",
+            "reason": "scene: placement.000001 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "pass",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "cull",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "texture-key",
+            "reason": "scene: material.000000 property r4_record",
+            "rejected": true
+          },
+          {
+            "control": "material-node-strength",
+            "reason": "scene: material.000000 emission strength",
+            "rejected": true
+          },
+          {
+            "control": "material-node-link",
+            "reason": "scene: material.000000 links",
+            "rejected": true
+          },
+          {
+            "control": "material-property",
+            "reason": "scene: material.000000 culling preview",
+            "rejected": true
+          },
+          {
+            "control": "material-scalar-setting",
+            "reason": "scene: material.000000 material/node/socket settings",
+            "rejected": true
+          },
+          {
+            "control": "material-assignment",
+            "reason": "scene: draw.000001.000000 material assignment",
+            "rejected": true
+          },
+          {
+            "control": "material-addition",
+            "reason": "scene: material inventory",
+            "rejected": true
+          },
+          {
+            "control": "animation",
+            "reason": "scene: image/node-group/action additions",
+            "rejected": true
+          },
+          {
+            "control": "LOD-visibility",
+            "reason": "scene: draw.000001.000001 visibility",
+            "rejected": true
+          },
+          {
+            "control": "palette",
+            "reason": "scene: R4IM.identity property r4_aux",
+            "rejected": true
+          },
+          {
+            "control": "class",
+            "reason": "scene: R4IM.identity property r4_aux",
+            "rejected": true
+          },
+          {
+            "control": "source-hash",
+            "reason": "scene: R4IM.identity property r4_sources",
+            "rejected": true
+          },
+          {
+            "control": "scene-unit",
+            "reason": "scene: units",
+            "rejected": true
+          }
+        ],
+        "process": {
+          "elapsed_seconds": 0.676957,
+          "exit_code": 0,
+          "log_sha256": "00bd9bb9123b595d0dcd9c282b821ac580bab112de0dd916a478fd7d956266b3",
+          "peak_resident_kib": 283888,
+          "system_seconds": 0.509988,
+          "user_seconds": 0.79812
+        },
+        "restored_identity": true
+      },
+      "blender_roundtrips": [
+        {
+          "blend_bytes": 511290,
+          "counts": {
+            "clusters": 3,
+            "levels": 6,
+            "meshes": 2,
+            "meshlets": 6,
+            "parts": 3,
+            "placements": 3,
+            "vertices": 15
+          },
+          "export_process": {
+            "elapsed_seconds": 0.350452,
+            "exit_code": 0,
+            "log_sha256": "b14adae65575c1f95dc635a5c2716881ae99ac51175617a8063e39b221dd4627",
+            "peak_resident_kib": 277128,
+            "system_seconds": 0.05591,
+            "user_seconds": 0.325329
+          },
+          "files": {
+            "far-shell.fsh": {
+              "bytes": 152,
+              "sha256": "23f8aed979f3a6cc6741e2d2b46ac7866d30e0165e0228dfddd737ec82734d42"
+            },
+            "interior.cell": {
+              "bytes": 60,
+              "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+            },
+            "ps2-world.ids": {
+              "bytes": 32,
+              "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+            },
+            "ps2-world.json": {
+              "bytes": 585,
+              "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+            },
+            "ps2-world.occl": {
+              "bytes": 32,
+              "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+            },
+            "ps2-world.pvs": {
+              "bytes": 96,
+              "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+            },
+            "ps2-world.r4pw": {
+              "bytes": 236,
+              "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+            },
+            "ps2-world.r4sg": {
+              "bytes": 416,
+              "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+            },
+            "ps2-world.r4tc": {
+              "bytes": 28,
+              "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+            },
+            "ps2-world.re4mesh": {
+              "bytes": 1184,
+              "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+            },
+            "room.r4rc": {
+              "bytes": 1680,
+              "sha256": "75bf6dee1c16b9b65ecdfe32a38eba3ba0d2c35298d2145f3745e48f1665551f"
+            }
+          },
+          "fixture_build_seconds": 0.004799,
+          "identity": true,
+          "import_process": {
+            "elapsed_seconds": 0.476826,
+            "exit_code": 0,
+            "log_sha256": "c28c09292eb6e6306853c638fd9f1a50369bc02e13c985415d9af31994461689",
+            "peak_resident_kib": 275428,
+            "system_seconds": 0.055102,
+            "user_seconds": 0.445462
+          },
+          "input_bytes": 4501,
+          "name": "complete_v2",
+          "output_bytes": 4501
+        },
+        {
+          "blend_bytes": 511290,
+          "counts": {
+            "clusters": 3,
+            "levels": 6,
+            "meshes": 2,
+            "meshlets": 6,
+            "parts": 3,
+            "placements": 3,
+            "vertices": 15
+          },
+          "export_process": {
+            "elapsed_seconds": 0.356469,
+            "exit_code": 0,
+            "log_sha256": "282194f620fceb39943d968d09d2498d3b54cca396efc2e144a6aa5b652444d2",
+            "peak_resident_kib": 275872,
+            "system_seconds": 0.067454,
+            "user_seconds": 0.311534
+          },
+          "files": {
+            "far-shell.fsh": {
+              "bytes": 152,
+              "sha256": "2d9ae463510ca3ce69732bd85b8558eb3967ac02882d1acadc37c6fd8ea03bc0"
+            },
+            "interior.cell": {
+              "bytes": 60,
+              "sha256": "fefd778d16f417f8ad7e86dc78eaf614a2a8e4b28697423cbf7920f6280a8d4b"
+            },
+            "ps2-world.ids": {
+              "bytes": 32,
+              "sha256": "d1f66396aab4450b344b9858f47763180d7dc53a851408fa37f286e806954678"
+            },
+            "ps2-world.json": {
+              "bytes": 585,
+              "sha256": "cbc8730a87e724f407872cb7c78d2f7d21d8d2f049650c8c4d12e8f56023ca0d"
+            },
+            "ps2-world.occl": {
+              "bytes": 32,
+              "sha256": "96f8d05641d172fc54881e0207c0130002b7be06c57657104bba47a8304d2400"
+            },
+            "ps2-world.pvs": {
+              "bytes": 96,
+              "sha256": "6e616b3cb31c1315077df2d48cda1a871d66d9998aa058756bea875910679314"
+            },
+            "ps2-world.r4pw": {
+              "bytes": 236,
+              "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+            },
+            "ps2-world.r4sg": {
+              "bytes": 416,
+              "sha256": "65ab1bcc441a6c9ddc1b0bdfa7458fbe4569e9807186a8a09e4bf87435ae1fa2"
+            },
+            "ps2-world.r4tc": {
+              "bytes": 28,
+              "sha256": "2e525b2efa6df612a46ed0f588107796e578f461a2afc9973fb38d2023218fce"
+            },
+            "ps2-world.re4mesh": {
+              "bytes": 1184,
+              "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+            },
+            "room.r4rc": {
+              "bytes": 1648,
+              "sha256": "9b295c07e43c0b2d2e7e63b40dd2fc5b035877aeb6dcb80d5dd214fb6afef36d"
+            }
+          },
+          "fixture_build_seconds": 0.002101,
+          "identity": true,
+          "import_process": {
+            "elapsed_seconds": 0.44047,
+            "exit_code": 0,
+            "log_sha256": "a9def11d16584494bd1165c5e9167f6f2081482cb2c160d74d74cf4154b34761",
+            "peak_resident_kib": 283592,
+            "system_seconds": 0.047982,
+            "user_seconds": 0.434708
+          },
+          "input_bytes": 4469,
+          "name": "legacy_v1",
+          "output_bytes": 4469
+        },
+        {
+          "blend_bytes": 413431,
+          "counts": {
+            "clusters": 1,
+            "levels": 3,
+            "meshes": 1,
+            "meshlets": 2,
+            "parts": 1,
+            "placements": 1,
+            "vertices": 25
+          },
+          "export_process": {
+            "elapsed_seconds": 0.362633,
+            "exit_code": 0,
+            "log_sha256": "b980f4c49a1069ff4ec9cbf4f2f15e2b2f9d46b44b2282a6e795e29ba325871a",
+            "peak_resident_kib": 264500,
+            "system_seconds": 0.052816,
+            "user_seconds": 0.327389
+          },
+          "files": {
+            "ps2-world.r4pw": {
+              "bytes": 100,
+              "sha256": "05296dae19e3e601ff9142750bad4eaf91d38823d869e3f9e63cf8a79dee5c88"
+            },
+            "ps2-world.re4mesh": {
+              "bytes": 896,
+              "sha256": "3072b3258dabaed69e9c49aab4842f6ccabd5c2613b01fdd24a60b396e8e6980"
+            }
+          },
+          "fixture_build_seconds": 0.002207,
+          "identity": true,
+          "import_process": {
+            "elapsed_seconds": 0.449139,
+            "exit_code": 0,
+            "log_sha256": "1a6c5802695639ac6a21ed38fc2a2d9a69ba47b7b71ef72349da16c27c2fda86",
+            "peak_resident_kib": 273192,
+            "system_seconds": 0.028212,
+            "user_seconds": 0.439995
+          },
+          "input_bytes": 996,
+          "name": "existing_converter",
+          "output_bytes": 996
+        }
+      ],
+      "build": 11,
+      "companion_registry": {
+        "far-shell.fsh": [
+          "FSH1 v1/v2",
+          "supported: independent far-shell representation, identity-only"
+        ],
+        "interior.cell": [
+          "PCL1",
+          "supported: identity-only inherited portal proof/constants"
+        ],
+        "ps2-world.ids": [
+          "R4ID v1",
+          "supported: inherited source IDs, current policy CRC"
+        ],
+        "ps2-world.json": [
+          "ps2_world_r4im report",
+          "supported: actual output hashes verified; source provenance inherited"
+        ],
+        "ps2-world.occl": [
+          "R4OC v1",
+          "supported: identity-only inherited occluder proof"
+        ],
+        "ps2-world.pvs": [
+          "R4PV v1",
+          "supported: identity-only inherited proof; no PVS23 certificate issued"
+        ],
+        "ps2-world.r4sg": [
+          "R4SG v1",
+          "supported: regenerate existing consecutive strip-group bounds"
+        ],
+        "ps2-world.r4tc": [
+          "R4TC v1/classifier1",
+          "supported: inherited classes, both CRCs"
+        ],
+        "ps2-world.re4mesh.dd3": [
+          "SDO3",
+          "unsupported: alternate lineage/dedup representation"
+        ],
+        "ps2-world.re4mesh.sds1": [
+          "SDS1",
+          "unsupported: Build12 direct-strip representation"
+        ],
+        "room.r4rc": [
+          "R4RC v1",
+          "supported: explicit SRCB/GRID/VIS/OCCL/SCNK/SCDD/SCCN/SCPS registry"
+        ]
+      },
+      "host_controls": {
+        "process": {
+          "elapsed_seconds": 0.075517,
+          "exit_code": 0,
+          "log_sha256": "504c8e6756400e42b339ba57220c75a961fa18dfa3de38640e9260b16c718cac",
+          "peak_resident_kib": 18924,
+          "system_seconds": 0.013835,
+          "user_seconds": 0.061243
+        },
+        "test_methods": 11
+      },
+      "host_platform": {
+        "machine": "x86_64",
+        "python": "3.12.14",
+        "system": "Linux",
+        "timing_scope": "host wall/user/system including process startup; RSS is per child peak KiB"
+      },
+      "performance_claim": "None. Host conversion measurements are not Dreamcast timing; no real r101 assets or captures used.",
+      "proof_scope": "Known proof records are structurally checked and byte-identical. Existing geometric proofs, external SAT/source provenance and compiled guards are inherited, not certified. Unknown formats fail closed.",
+      "runtime_delta": {
+        "architectural_32byte_lines": 0,
+        "basis": "No runtime/build integration changes; every accepted output file is byte-identical.",
+        "executable_bytes": 0,
+        "loads": 0,
+        "main_ram_bytes": 0,
+        "modeled_world_cpu_frame_delta_ms": 0.0,
+        "sh4_cycles": 0,
+        "static_stack_bytes": 0,
+        "stores": 0,
+        "vram_bytes": 0
+      },
+      "runtime_host_admission": {
+        "compile": {
+          "elapsed_seconds": 0.428436,
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "peak_resident_kib": 72544,
+          "system_seconds": 0.040269,
+          "user_seconds": 0.387921
+        },
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+        "execution": {
+          "elapsed_seconds": 0.002633,
+          "exit_code": 0,
+          "log_sha256": "1928cc0fec8475c72ba1a1f1a9dfdacccef1f9bfaf4f9457f4e2947ff52920f4",
+          "peak_resident_kib": 19052,
+          "system_seconds": 0.002454,
+          "user_seconds": 0.0
+        },
+        "fixture_sha256": "188735eb08c2cb9ac3b14850360b63e2afe9b977fc3c5d71db023290dc348b88",
+        "scope": "actual current MeshPackage::adopt(..., true, true) on host; file_t/FILEHND_INVALID declarations stubbed because no KOS filesystem function is called; no SH4 timing"
+      },
+      "source_sha256": {
+        "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+        "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+        "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+        "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+        "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+        "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py": "e388c66f612a37a53783de1c22ba705a32f22ad5cd4c222159301077a23d5607",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/blender_controls.py": "60816463da8ad64d13211af0555fc5933b15a854bc31b62f85d94df90317850e",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/blender_index_layout_controls.py": "8e5bc239d15d0b854cc2b5f6b9687089b18f8a8f817517790e1891e9794ab4ca",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/fixtures.py": "3abad324ab613832dc63df7e455019c5e3dfa3fc21c3fecfb852762949807622",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/index_layout_fixtures.py": "cb963df06b727a7786c6d7454d8055c886c13542024e0b42881459797576561e",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/package.py": "975d69e7b012c7dd81f89f7fb2b0f44bb76faa22fd8def5dac896de0d0eef501",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/proof_identity.py": "82a3e27cc4fe8c39753ae10bae039206bc659f0d5778c27abd196a710eeb624c",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/sidecars.py": "149b1c5fd4bb4f91e537bd3169f5e8ebd1d10b982a05433f0c6e7346eafd5d61",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/test_identity.py": "b572cd961a6c589f7cf27490e29548236c8f65a64099bc11057603cfc318776f",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/test_index_layout.py": "f6f6dc7d1294d0079e70cf1575e8a72ae99f40c2b6802a77c175658401b2d414",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/validate.py": "d75a639f82b11f70f76d1ec7d9798aab34b0a3fbbda5e72d9e92fc4ade6638ac",
+        "port/dreamcast/tools/d367/world_blender_roundtrip/validate_index_layout.py": "a290f135ab4fd5a87e364c5befbed05d023c71486adcd6032c798e28f8dd7997",
+        "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+        "port/dreamcast/tools/ps2_world_r4im.py": "59faff9eb9c326b5456d71fca3a0c46ccc658013c35ccab42d96d4069bf67d1d"
+      },
+      "status": "PASS identity foundation; no geometry or performance acceptance"
+    }
+  },
+  "runtime_build_source_identity": {
+    "baseline_commit": "9c2c83dba00ba219fbb135503aa508975fe4855c",
+    "basis": "All tracked paths outside the explicit tool directory and cloud Markdown reports match baseline; no runtime, build or default pipeline integration. No target rebuild is claimed.",
+    "changed_tracked_paths": [
+      "port/dreamcast/tools/d367/world_blender_roundtrip/README.md",
+      "port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py",
+      "port/dreamcast/tools/d367/world_blender_roundtrip/package.py"
+    ],
+    "existing_dependencies_byte_identical": {
+      "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+      "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+      "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+      "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+      "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+      "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+      "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+      "port/dreamcast/tools/ps2_strip_groups.py": "c89c4700b98dc4cb572f2c916df6058a749d900aed388c44a1d3dcc606b5efd6",
+      "port/dreamcast/tools/ps2_world_append.py": "57fbf818184be41570db39c783ccaf3953ffc9e1a7e068078b323442da356507",
+      "port/dreamcast/tools/ps2_world_r4im.py": "59faff9eb9c326b5456d71fca3a0c46ccc658013c35ccab42d96d4069bf67d1d"
+    },
+    "only_tool_and_report_paths_changed": true
+  },
+  "runtime_delta": {
+    "MODELLED_whole_frame_delta_ms": 0.0,
+    "basis": "Architectural deduction from unchanged runtime/build inputs and byte-identical accepted packages. No target rebuild, opcode run or performance measurement is claimed.",
+    "cold_i_cycles": 0,
+    "demanded_32byte_lines": 0,
+    "executable_bytes": 0,
+    "loads": 0,
+    "main_ram_bytes": 0,
+    "static_stack_bytes": 0,
+    "stores": 0,
+    "vram_bytes": 0,
+    "warm_i_cycles": 0
+  },
+  "runtime_host_admission": {
+    "compile": {
+      "elapsed_seconds": 0.500375,
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "peak_resident_kib": 72684,
+      "system_seconds": 0.065207,
+      "user_seconds": 0.43475
+    },
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "complete_exported_meshes": 14,
+    "execution": {
+      "elapsed_seconds": 0.002262,
+      "exit_code": 0,
+      "log_sha256": "d6d588410dfd8e184c2b7884e2698d26bfe32c6be085f35d3917882962274b56",
+      "peak_resident_kib": 30980,
+      "system_seconds": 0.001884,
+      "user_seconds": 0.0
+    },
+    "fixture_sha256": "188735eb08c2cb9ac3b14850360b63e2afe9b977fc3c5d71db023290dc348b88",
+    "scope": "actual current MeshPackage::adopt(..., true, true) on host; file_t/FILEHND_INVALID declarations stubbed because no KOS filesystem function is called; no SH4 timing"
+  },
+  "source_and_input_pre_post_identity": true,
+  "source_sha256": {
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+    "port/dreamcast/tools/assetpipe/r4im.py": "25e5a8a1e4ecc30ae318d5bb27e0edd96182fd83aaf61c34440557ba23e3c286",
+    "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+    "port/dreamcast/tools/d367/scenery19/scdd_compile.py": "93a11dd92800c7df0ba850e63ca664c1088cad49efc13bb47dbb59bffcdab923",
+    "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py": "e388c66f612a37a53783de1c22ba705a32f22ad5cd4c222159301077a23d5607",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/blender_controls.py": "60816463da8ad64d13211af0555fc5933b15a854bc31b62f85d94df90317850e",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/blender_index_layout_controls.py": "8e5bc239d15d0b854cc2b5f6b9687089b18f8a8f817517790e1891e9794ab4ca",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/fixtures.py": "3abad324ab613832dc63df7e455019c5e3dfa3fc21c3fecfb852762949807622",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/index_layout_fixtures.py": "cb963df06b727a7786c6d7454d8055c886c13542024e0b42881459797576561e",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/package.py": "975d69e7b012c7dd81f89f7fb2b0f44bb76faa22fd8def5dac896de0d0eef501",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/proof_identity.py": "82a3e27cc4fe8c39753ae10bae039206bc659f0d5778c27abd196a710eeb624c",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/sidecars.py": "149b1c5fd4bb4f91e537bd3169f5e8ebd1d10b982a05433f0c6e7346eafd5d61",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/test_identity.py": "b572cd961a6c589f7cf27490e29548236c8f65a64099bc11057603cfc318776f",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/test_index_layout.py": "f6f6dc7d1294d0079e70cf1575e8a72ae99f40c2b6802a77c175658401b2d414",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/validate.py": "d75a639f82b11f70f76d1ec7d9798aab34b0a3fbbda5e72d9e92fc4ade6638ac",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/validate_index_layout.py": "a290f135ab4fd5a87e364c5befbed05d023c71486adcd6032c798e28f8dd7997",
+    "port/dreamcast/tools/mesh_lod.py": "79dd72d3615833269ddd1f9950a602ef498f96b0475d3b3e2fd3aecb67e535e2",
+    "port/dreamcast/tools/ps2_strip_groups.py": "c89c4700b98dc4cb572f2c916df6058a749d900aed388c44a1d3dcc606b5efd6",
+    "port/dreamcast/tools/ps2_world_append.py": "57fbf818184be41570db39c783ccaf3953ffc9e1a7e068078b323442da356507",
+    "port/dreamcast/tools/ps2_world_r4im.py": "59faff9eb9c326b5456d71fca3a0c46ccc658013c35ccab42d96d4069bf67d1d"
+  },
+  "status": "PASS_PUBLIC_INDEX_LAYOUT_IDENTITY_ONLY"
+}

@@ -591,3 +591,45 @@ So the normal opaque and punch-through passes refuse at selection when the re-ke
 run without `WORLD_RECT21`, and the draw / flush rows are their follow-on. Transformed inputs fall from 11,328 to
 3,260 per window. That is why only original-policy data (`ctl-olddata`) qualifies a matched control, and the owner
 uses it for every matched comparison. Evidence: `C:\Flycast-Evidence\re4-dreamcast\world2ms\wpc-err-1024`.
+
+### 2026-10-25: Build 11 index-layout follow-up (`codex/world-blender-index-layout-20261025`)
+
+Validation/publication base `9c2c83db`. The
+[report](WORLD_BLENDER_INDEX_LAYOUT_FIX_20261025.md) and
+[receipt](../../tools/d367/world_blender_roundtrip/index-layout-receipt.json)
+record `PASS_PUBLIC_INDEX_LAYOUT_IDENTITY_ONLY`. This fixes a reproduced cause
+of the owner's `noncanonical index placement` refusal without canonicalizing
+the world or changing runtime code.
+
+- The actual public append writer pads a 66-byte synthetic index table with
+  two zero bytes before an appended plain meshlet at offset 68. The old codec
+  rejects it. The actual strip-group pass preserves that padding.
+- New explicit `--preserve-index-layout [0|1]`, default 0, is required on both
+  Blender import and export. It rebuilds disjoint typed pool/strip spans at
+  their original offsets and preserves the original table extent. Only zero
+  gaps are allowed. Overlaps, aliases, nonzero unknown bytes and unsupported
+  extensions remain refused. No raw index blob is copied through the scene.
+- Absent/zero preserve the original schema, complete decoded documents,
+  successful package bytes and original layout refusals. Independent source
+  hashes, the enabled scene schema, layout fields, meshlet records and geometry
+  are all validated before export. Companion bindings and proof rules are
+  unchanged.
+- The original 3 round trips / 43 scene controls / 11 host methods still pass.
+  New evidence: 5 real noncanonical Blender round trips; 9 canonical mode
+  round trips; 6 exports of baseline blends; 21 host methods / 61 subcases;
+  27 CLI refusal controls; 57 enabled-mode scene controls; 14 current exports
+  accepted by the actual runtime reader in a host fixture. Complete bundle
+  bytes, source files and pinned Blender executable remain unchanged.
+
+Target delta: 0 warm/cold-I cycles, loads/stores, demanded 32-byte lines,
+executable/stack/RAM/VRAM bytes; **MODELLED whole-frame delta 0 ms**. These are
+identity/scope deductions because runtime/build inputs and accepted package
+bytes are unchanged, not new console measurements or a world speedup.
+
+Owner next check: run the README's enabled import/export pair on the complete
+qualified original-policy r101 bundle, retain every companion, and report
+full-file hashes, runtime admission, import/export time and peak RSS. This
+adapter does not resolve the separate remapped-policy/source-CRC contract or
+claim a private r101 PASS. Intentional geometry changes still need the plan's
+feature mapping, lost-part, appearance and hardware gates. Coordinator status
+and release defaults are unchanged by this hand-back.

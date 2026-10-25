@@ -1,8 +1,9 @@
 """Strict, tools-only identity codec for the existing prelit R4IM v3 + R4PW v1.
 
 Record definitions and alignment come from convert_room_bins, not a new runtime
-format. Only its canonical, non-extended layout is accepted. Unknown extension
-tables must acquire a validator before this tool may carry them through.
+format. The default accepts only the canonical, non-extended layout. Explicit
+index-layout preservation also accepts disjoint command spans at their original
+offsets, with zero-only gaps. Unknown extensions still require their own adapter.
 """
 from copy import deepcopy
 import hashlib
@@ -21,6 +22,7 @@ PW_PART = struct.Struct('<IIHHBBBB')
 PW_PLACE = struct.Struct('<HH12f')
 U32 = struct.Struct('<I')
 SCHEMA = 're4dc.blender.identity/1'
+INDEX_LAYOUT_SCHEMA = 're4dc.blender.identity-index-layout/1'
 
 
 def require(ok, why):
@@ -66,8 +68,62 @@ def pack_rows(fmt, records):
     return b''.join(fmt.pack(*r) for r in records)
 
 
-def serialize_mesh(doc):
-    """Regenerate every record, strip command, section offset, padding and CRC."""
+def serialize_index_layout(doc):
+    """Rebuild disjoint typed command spans; never retain an opaque index blob.
+
+    ps2_world_append aligns concatenated index tables to four bytes. The runtime
+    also permits disjoint spans in a different order from meshlet records. Both
+    are representable using existing first_strip offsets and one table extent.
+    Unclaimed bytes are regenerated as zeros and checked against the source by
+    decode's complete-file comparison. Aliased/overlapping command data is not
+    part of this adapter (the sharing writer uses the separately rejected SDO3).
+    """
+    require(doc.get('schema') == INDEX_LAYOUT_SCHEMA, 'index layout schema')
+    layout = doc.get('index_layout')
+    require(isinstance(layout, dict) and set(layout) == {'index_bytes'},
+            'index layout fields')
+    size = layout['index_bytes']
+    require(type(size) is int and 0 <= size <= 0xffffffff, 'index layout extent')
+    require(len(doc['meshlets']) == len(doc['commands']), 'index command count')
+    spans = []
+    for ji, (rec, command) in enumerate(zip(doc['meshlets'], doc['commands'])):
+        indexed = bool(rec[4] & 0x8000)
+        start = rec[1]
+        require(type(start) is int and 0 <= start <= size and
+                (not indexed or start % 2 == 0), 'index span offset/alignment')
+        require(0 < rec[3] <= 256, 'index span vertex count')
+        require(set(command) == {'pool', 'strips'}, 'index command fields')
+        require(len(command['pool']) == rec[3], 'pool length')
+        data = bytearray()
+        if indexed:
+            data.extend(struct.pack('<%dH' % rec[3], *command['pool']))
+        else:
+            require(command['pool'] == list(range(rec[3])), 'plain pool identity')
+        strip_start = len(data)
+        for strip in command['strips']:
+            require(3 <= len(strip) <= 255 and
+                    all(type(v) is int and 0 <= v < rec[3] for v in strip),
+                    'index strip command')
+            data.append(len(strip)); data.extend(strip)
+        require(len(data)-strip_start == rec[2] and
+                len(command['strips']) == (rec[4] & 0x7fff), 'strip length/count')
+        require(len(data) <= size-start, 'index span extent')
+        # Empty plain meshlets occupy no bytes, so cannot alias a byte span.
+        if data:
+            spans.append((start, start+len(data), ji, data))
+    spans.sort(key=lambda span: (span[0], span[1], span[2]))
+    end = 0
+    for start, stop, ji, data in spans:
+        require(start >= end, 'overlapping index command spans at meshlet %d' % ji)
+        end = stop
+    index = bytearray(size)
+    for start, stop, ji, data in spans:
+        index[start:stop] = data
+    return index
+
+
+def serialize_canonical_index(doc):
+    """The original default path, including its placement rejection semantics."""
     index = bytearray()
     for rec, command in zip(doc['meshlets'], doc['commands']):
         indexed = bool(rec[4] & 0x8000)
@@ -84,6 +140,15 @@ def serialize_mesh(doc):
             index.append(len(strip)); index.extend(strip)
         require(len(index)-start == rec[2] and len(command['strips']) == (rec[4] & 0x7fff),
                 'strip length/count')
+    return index
+
+
+def serialize_mesh(doc):
+    """Regenerate every record, strip command, section offset, padding and CRC."""
+    if 'index_layout' in doc or doc.get('schema') == INDEX_LAYOUT_SCHEMA:
+        index = serialize_index_layout(doc)
+    else:
+        index = serialize_canonical_index(doc)
     payloads = [('mesh', pack_rows(crb.MESH, doc['meshes'])),
                 ('part', pack_rows(crb.PART, doc['parts'])),
                 ('meshlet', pack_rows(crb.MESHLET, doc['meshlets'])),
@@ -147,7 +212,9 @@ def triangles(doc, ji):
     return [list(t) for s in doc['commands'][ji]['strips'] for t in crb.strip_triangles(s)]
 
 
-def decode(mesh, policy):
+def decode(mesh, policy, preserve_index_layout=False):
+    require(type(preserve_index_layout) in (bool, int) and preserve_index_layout in (0, 1),
+            'preserve_index_layout must be 0 or 1')
     require(len(mesh) >= 112, 'short R4IM')
     h = crb.HEADER.unpack_from(mesh)
     require(h[:2] == (b'R4IM', 3) and h[2] == len(mesh), 'R4IM v3 identity/size')
@@ -155,7 +222,7 @@ def decode(mesh, policy):
     require(h[16:] == (2, 0, 0, 0), 'unsupported R4IM color/extension (SDO3/SDS1 included)')
     lh = crb.LOD_HEADER.unpack_from(mesh, 80)
     require(lh[7] == 0, 'unsupported appended runtime tables (impostors/textures)')
-    d = dict(schema=SCHEMA,
+    d = dict(schema=INDEX_LAYOUT_SCHEMA if preserve_index_layout else SCHEMA,
         meshes=rows(mesh,h[10],h[4],crb.MESH,'meshes'),
         parts=rows(mesh,h[11],h[5],crb.PART,'parts'),
         meshlets=rows(mesh,h[12],h[6],crb.MESHLET,'meshlets'),
@@ -167,6 +234,8 @@ def decode(mesh, policy):
         classes=list(mesh[lh[5]:lh[5]+h[4]]) if lh[5] else None,
         rules=rows(mesh,lh[6],8,crb.CLASS_RULE,'class rules') if lh[6] else None,
         commands=[])
+    if preserve_index_layout:
+        d['index_layout'] = {'index_bytes': h[8]}
     require(1 <= len(d['palette']) <= 16, 'palette count')
     if d['classes'] is not None:
         require(len(d['classes']) == h[4] and all(x < 8 for x in d['classes']), 'class codes')
@@ -208,6 +277,9 @@ def decode(mesh, policy):
         require(len(strips) == flags & 0x7fff, 'strip count')
         require(all(a <= b for a,b in zip(m[5:8],m[8:11])), 'meshlet bounds')
         d['commands'].append(dict(pool=pool,strips=strips))
+    if preserve_index_layout:
+        require(bytes(serialize_index_layout(d)) == indices,
+                'nonzero unclaimed index bytes')
     ownership = owners(d)
     used, previous = set(), 0
     for pi,p in enumerate(d['parts']):

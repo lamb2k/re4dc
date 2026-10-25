@@ -184,12 +184,19 @@ def placement_points(place):
     return [scene_xyz(transform(v,place)) for v in ((0,0,0),(1000,0,0),(0,1000,0),(0,0,1000))]
 
 
+def scene_aux(doc):
+    keys = ('palette','classes','rules','part_lods')
+    if 'index_layout' in doc:
+        keys += ('index_layout',)
+    return {k:doc[k] for k in keys}
+
+
 def build_scene(bpy,doc,files):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene=bpy.context.scene; scene.name=ROOT
     scene.unit_settings.system='METRIC'; scene.unit_settings.scale_length=1.0
-    scene['r4_schema']=codec.SCHEMA; scene['r4_sources']=js(sidecars.hashes(files))
-    scene['r4_aux']=js({k:doc[k] for k in ('palette','classes','rules','part_lods')})
+    scene['r4_schema']=doc['schema']; scene['r4_sources']=js(sidecars.hashes(files))
+    scene['r4_aux']=js(scene_aux(doc))
     collection=bpy.data.collections.new(ROOT); scene.collection.children.link(collection)
     for table,kind in (('meshes','mesh'),('parts','part'),('clusters','cluster'),('levels','level')):
         for i,record in enumerate(doc[table]):
@@ -223,8 +230,8 @@ def build_scene(bpy,doc,files):
 def validate_scene(bpy,doc,files):
     scene=bpy.context.scene
     check(len(bpy.data.scenes)==1 and scene.name==ROOT,'scene inventory')
-    properties(scene,dict(r4_schema=codec.SCHEMA,r4_sources=js(sidecars.hashes(files)),
-        r4_aux=js({k:doc[k] for k in ('palette','classes','rules','part_lods')})))
+    properties(scene,dict(r4_schema=doc['schema'],r4_sources=js(sidecars.hashes(files)),
+        r4_aux=js(scene_aux(doc))))
     check(scene.unit_settings.system=='METRIC' and scene.unit_settings.scale_length==1.0,'units')
     check(len(bpy.data.collections)==1 and list(scene.collection.objects)==[],'collection inventory')
     collection=bpy.data.collections.get(ROOT)
@@ -298,9 +305,9 @@ def validate_scene(bpy,doc,files):
     return out
 
 
-def load_bundle(folder):
+def load_bundle(folder, preserve_index_layout=False):
     files=sidecars.inventory(folder)
-    doc=codec.decode(files['ps2-world.re4mesh'],files['ps2-world.r4pw'])
+    doc=codec.decode(files['ps2-world.re4mesh'],files['ps2-world.r4pw'],preserve_index_layout)
     sidecars.rebuild(files,doc,codec.serialize_mesh(doc),codec.serialize_policy(doc))
     return doc,files
 
@@ -313,8 +320,10 @@ def main():
     ap.add_argument('--source',required=True,type=Path)
     ap.add_argument('--blend',required=True,type=Path)
     ap.add_argument('--out',type=Path)
+    ap.add_argument('--preserve-index-layout',type=int,choices=(0,1),nargs='?',const=1,default=0,
+                    help='preserve disjoint index spans and zero gaps; default 0, required on both import and export')
     args=ap.parse_args(sys.argv[sys.argv.index('--')+1:])
-    doc,files=load_bundle(args.source)
+    doc,files=load_bundle(args.source,args.preserve_index_layout)
     if args.action=='import':
         check(not args.blend.exists(),'refuse to overwrite blend')
         build_scene(bpy,doc,files)
