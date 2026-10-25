@@ -10,7 +10,8 @@ Rules, in order, per row (source = disc path of the payload):
      the oldest readable pack are unattributed (unknown). Loose dc/tex*/ keys: the last set staging that key.
   2. a disc path staged by a data set: the set's store. provenance.tsv (a converter's member table) decides
      by output sha256 (ps2 when the row names a PS2 member, else gc); otherwise the store RECIPE (or, with no
-     RECIPE, the t11-fix comment block above the set): PS2 sources -> ps2, else authored.
+     RECIPE: PS2 sources -> ps2; a set with no RECIPE whose t11-fix comments name a PS2 source -> unknown
+     (listed); otherwise authored, which is gc for a GameCube disc file or a GameCube picture key.
   3. a disc path no set stages: on the GameCube disc (debug disc 1 FST) -> gc (stager conversion of the GC
      file); a ps2-world.* file -> ps2; other dc/ outputs -> authored; else unknown.
 Runtime-harvest rows (fonts, layout) stay unknown."""
@@ -37,14 +38,18 @@ def load_t11():
 
 
 def comment_for(lines, name):
+    """The comment block above the set's definition plus every comment line naming the set."""
     pat = re.compile(r"DATA\[['\"]%s['\"]\]\s*=|['\"]%s['\"]\s*:\s*\{" % (re.escape(name), re.escape(name)))
+    word = re.compile(r'(?<![\w-])%s(?![\w-])' % re.escape(name))
+    out = [l for l in lines if l.lstrip().startswith('#') and word.search(l)]
     for i, line in enumerate(lines):
         if pat.search(line):
-            j, out = i - 1, []
+            j = i - 1
             while j >= 0 and lines[j].lstrip().startswith('#'):
                 out.append(lines[j]); j -= 1
-            return '\n'.join(reversed(out)) + '\n' + line
-    return ''
+            out.append(line)
+            break
+    return '\n'.join(out)
 
 
 def store_files(src):
@@ -74,7 +79,12 @@ class Store:
             text, self.why = recipe.read_text(errors='replace'), 'recipe=%s' % recipe
         else:
             text, self.why = comment_for(lines, name), 't11-fix comment of %s' % name
-        self.level = 'ps2' if PS2.search(text) else 'authored'
+        # Only a store RECIPE (or provenance.tsv) proves ps2: a comment that names a
+        # PS2 source leaves the set unknown (listed), never ps2 (which hides rows).
+        if PS2.search(text):
+            self.level = 'ps2' if recipe else 'unknown'
+        else:
+            self.level = 'authored'
 
     def prov(self, digest, gc_file=None, texture=False):
         if digest in self.tsv:
