@@ -17,6 +17,10 @@ import csv, sys
 from pathlib import Path
 
 
+# Rows converted from a PS2 file other than the room's own (fx_cross_room.py PAIRS, coordinator 10-24): not cut.
+CROSS_ROOM = {('r117', 'st1/r117.arc#7:0x86')}   # church candle flames <- PS2 r10e.dat EFF #7 0x86 (data set pfx24)
+
+
 def room_id(name):
     return int(name[1:], 16) if name.startswith('r') and len(name) == 4 else None
 
@@ -25,7 +29,7 @@ def main(libroot, out):
     lib = Path(libroot)
     rows = [r for r in csv.reader(open(lib / 'INDEX.tsv', encoding='utf-8'), delimiter='\t')
             if r and r[0] == 'effects-tex']
-    none = {(r[1], r[2]): r[3] == 'NONE' for r in rows}
+    none = {(r[1], r[2]): r[3] == 'NONE' and (r[1], r[2]) not in CROSS_ROOM for r in rows}
     per_room, per_key = {}, {}
     for r in list(csv.reader(open(lib / 'effects-tex/KEYS.tsv', encoding='utf-8'), delimiter='\t'))[1:]:
         key, folder, gid = r[0], r[1], r[2]
