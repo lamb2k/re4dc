@@ -1,0 +1,11 @@
+# lane purge-cast24 (10-24, GC purge) CAST-GC census warp for the r117 zealots (em11 type 7, ESL emleon01 0x50 / 0x51 at
+# (2000, -1030, -1220) / (-1600, -1030, -1180)): Ashley found (Item_find_flg 0x00100000, Part 0), so R117Init sets them;
+# Leon at the r118 door arrival facing them (<= 60 s).
+name cg-r117z
+room 0x117
+pos 169 -1000 6073
+ang 2.9220
+find 0x00100000
+inv default
+god
+alivelog 150

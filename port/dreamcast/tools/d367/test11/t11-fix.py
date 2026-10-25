@@ -484,10 +484,24 @@ DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 # Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
 R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
 DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
+# GC purge (lane purge-cast24, 10-24): trap24 = the r111 / r113 registry packages + the PS2 bear traps trap-em2a-00 /
+# trap-em2a-02 (model-registry/ps2-ch2-r111t.json / ps2-ch2-r113t.json; descriptors as ps2-ch1-r105). Without a trap
+# descriptor the em2a traps drew the GameCube model on the source path (castgc/notdrawn-allow.tsv rows, now dropped).
+# Data only, no knob. Order: after ch2 and r111p (it replaces both packages). Atlases b8d5b0e6-ef7ef3c0 /
+# 716538d1-87b872c9 are already in the release tex.pak (no loose texture). 90,304 -> 115,456 B per package.
+# Private data /root/re4data/private/trap24-20261024 (RECIPE.txt, SHA256SUMS.txt; C: twin re4-assets-private/trap24-20261024).
+TRAP24D = os.environ.get('TRAP24D', '/root/re4data/private/trap24-20261024')
+DATA['trap24'] = {'dc/native/%s/registry.re4nmr' % _r: '%s/dc/native/%s/registry.re4nmr' % (TRAP24D, _r)
+                  for _r in ('r111', 'r113')}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
 DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
+# grip24 (lane purge-cast24 10-24, GC purge): stump17's package + the PS2 grip hands 451 / 456 (ps2_ganado_stump.py --grip).
+# Only with ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=<GRIP24D> (the runtime header must match the package).
+# Order: after stump17 (it replaces the package). Private store /root/re4data/private/grip24-20261024 (RECIPE.txt).
+GRIP24D = os.environ.get('GRIP24D', '/root/re4data/private/grip24-20261024')
+DATA['grip24'] = {'dc/native/ganado/ganado_var.re4gv': GRIP24D + '/dc/native/ganado/ganado_var.re4gv'}
 PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261018')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
 # pak17-20261018: tex.pak is verified (52d9b001); loose-keys.txt and base.json were regenerated (no recorded sha) and
@@ -1020,6 +1034,23 @@ if os.path.isdir(PUI24SD):
 PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
 if os.path.isdir(PUI24FD):
     DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
+# leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
+# (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
+# materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
+# sizes / formats (VQ), so VRAM and heap are unchanged. After fol24 (it replaces the pack). With props24 / pui24 (also fol24 packs) the
+# coordinator composes one pack: build_leonhair24.py takes any input pack (RECIPE.txt). Private store /root/re4data/private/leonhair24-20261024 (C: twin without the pack).
+LH24D = os.environ.get('LH24D', '/root/re4data/private/leonhair24-20261024')
+if os.path.isdir(LH24D):
+    DATA['leonhair24'] = {'dc/tex.pak': LH24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonhair24'] = LH24D + '/pak-derived.json'
+# leonatl24 (lane purge-cast24 10-24, GC purge; data only; user approved the pl00 look 10-25): leonhair24's pack with Leon's
+# atlases ec255e66-76812316 (pl00 jacket) and 7506e95f-68cf2211 (pl08) re-made from the PS2 pl00 / pl08 pictures through charbake
+# (cb_atlas_gc.py / atlas_ps2.py over PS2 sources, LVQ, headroom 2x): same keys, sizes, VQ formats (pl08 mipmapped), UVs.
+# After leonhair24; build_leonatl24.py takes any input pack. Private store /root/re4data/private/leonatl24-20261024 (RECIPE.txt).
+LA24D = os.environ.get('LA24D', '/root/re4data/private/leonatl24-20261024')
+if os.path.isdir(LA24D):
+    DATA['leonatl24'] = {'dc/tex.pak': LA24D + '/dc/tex.pak'}
+    PAK_DERIVED['leonatl24'] = LA24D + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
@@ -1027,6 +1058,12 @@ if os.path.isdir(PUI24FD):
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
+# res24g (lane purge-cast24 10-24, GC purge; data only): res22c without the 29 never-drawn GameCube player/enemy keys of
+# game/platform/preload_skip_gcidle.inc (61 records; r207 / r310 rows kept), with res22c's remap table. Ships with
+# PRELOAD_SKIP_GCIDLE=1. After res22c. Private store /root/re4data/private/res24g-20261024 (RECIPE.txt, sha256 6b5c2c7a).
+RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
+if os.path.isdir(RES24GD):
+    DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw

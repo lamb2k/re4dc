@@ -106,6 +106,13 @@ PRESETS = {
     'ganado-em15-04-h2': _ganado('em15', 0x1e0, ['r101'], [0x04], hands=(0x1c2, 0x1c7)),
     'ganado-em15-0b-h1': _ganado('em15', 0x1c9, ['r101'], [0x0b], hands=(0x1c1, 0x1c6)),
     'ganado-em15-0b-h2': _ganado('em15', 0x1c9, ['r101'], [0x0b], hands=(0x1c2, 0x1c7)),
+    # lane purge-cast24 (10-24, GC purge): the grip hands em10HandSet selects for a held weapon / torch (mot[9] /
+    # mot[14] = 0x1c3 / 0x1c8, BIN 451 / 456: r108 r118 r11a), which drew the GameCube geometry (ganado_extra).
+    'ganado-em12-01-h3': dict(archive='em12', sections=[(0x1d8, 'body'), (0x1da, 'head'), (0x1c3, 'right-hand'), (0x1c8, 'left-hand')], tpl=0x1d9, rooms=['r108', 'r118', 'r11a'], types=[1], category='human'),
+    'ganado-em15-00-h3': _ganado('em15', 0x1bc, ['r108', 'r118', 'r11a'], [0x00], hands=(0x1c3, 0x1c8)),
+    'ganado-em15-03-h3': _ganado('em15', 0x1dc, ['r108', 'r118', 'r11a'], [0x03], hands=(0x1c3, 0x1c8)),
+    'ganado-em15-04-h3': _ganado('em15', 0x1e0, ['r108', 'r118', 'r11a'], [0x04], hands=(0x1c3, 0x1c8)),
+    'ganado-em15-0b-h3': _ganado('em15', 0x1c9, ['r108', 'r118', 'r11a'], [0x0b], hands=(0x1c3, 0x1c8)),
     # non-Ganado models for NATIVE_MODEL_REGISTRY packs (ps2_cast.py regcast; lane ps2cast-all): src/em2b em2b.cpp
     # type 0 (TYPE_A) modelInit(ARC 5, ARC 7) + ModInfoMgr.create(ARC 6, ARC 7): body + head, one 64-bone skeleton
     'gigante-em2b-00': dict(archive='em2b', sections=[(5, 'body'), (6, 'head')], tpl=7, rooms=['r119'], types=[0],
@@ -191,9 +198,9 @@ PRESETS = {
     # Each is one modelInit(BIN, TPL) of its module's R0 init; lit (normals kept) like the source path draws them.
     # em2a_R0_Init: type 0 bear trap modelInit(ARC 4, ARC 5), type 1 (6, 7), type 2 (8, 9) (types 1 / 2 scale
     # parts 1 / 2 pos.z by hp at init: the wire / bomb models)
-    'trap-em2a-00': dict(archive='em2a', sections=[(4, 'body')], tpl=5, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+    'trap-em2a-00': dict(archive='em2a', sections=[(4, 'body')], tpl=5, rooms=['r100', 'r105', 'r106', 'r107', 'r10a', 'r111', 'r113'],
                          types=[0], category='registry', model_id=0x2a, lit=True),
-    'trap-em2a-02': dict(archive='em2a', sections=[(8, 'body')], tpl=9, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+    'trap-em2a-02': dict(archive='em2a', sections=[(8, 'body')], tpl=9, rooms=['r100', 'r105', 'r106', 'r107', 'r10a', 'r111', 'r113'],
                          types=[2], category='registry', model_id=0x2a, lit=True, shift=2),   # 4.2 m long: GC shift 2
     # em29_R0_Init: the bat, modelInit(ARC 4, ARC 5); 7 PS2 corners sit one texel past a GX_REPEAT image edge
     'bat-em29-00': dict(archive='em29', sections=[(4, 'body')], tpl=5, rooms=['r106', 'r10e'], types=[],
