@@ -552,6 +552,20 @@ $(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
 endif
+# NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1 (lane fix-mendez-door24 2026-10-24; default 0; render only; needs
+#   NATIVE_MODEL_REGISTRY=1): an actor the registry owns (a live registry binding: earlier frames drew it from its PS2
+#   package) never falls back to the GameCube FRONT_NATIVE path. On a frame where the source ledger has not prepared it
+#   (re4dc_actor_transaction_identity 0: the frame the door demo starts, the stopped game ran no emTrans) the actor
+#   nominated nothing, so trans.cpp ModelRender drew it GC through frontNativeRender. r11f after the Mendez fight: em35's
+#   GC material pair 7d4e1e92-052bdc2e (purged from tex.pak), TEXCHK FAIL at the area 00 door. That frame now draws
+#   nothing for the actor (it is the first frame of the door fade). Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_NO_GC_FRONT ?= 0
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),0 1),)
+$(error NATIVE_MODEL_REGISTRY_NO_GC_FRONT must be 0 or 1)
+endif
+ifeq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
+GAME_CPPFLAGS += -DRE4DC_NMR_NO_GC_FRONT=1
+endif
 # NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
 #   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
 #   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
