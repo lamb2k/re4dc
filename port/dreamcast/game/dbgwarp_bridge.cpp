@@ -122,6 +122,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <stdlib.h>
 #include <arch/timer.h>
 #include <kos/thread.h>
+#include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
 extern volatile int vsync_cnt;   // main.cpp: presentation heartbeat, also used by the source hang detector
@@ -1078,16 +1079,26 @@ void kill_poll()
         // setEm lives in the stage modules only (gen_modules.py), so its body (st/em_wrap.cpp cEmWrap::setEm) runs here
         // on the image's em_set functions: an entry already set is fetched, else created, then marked alive.
         const int listok = checkListId(wp.setem_no);
+        void* const rd = EmReadSearch(EM_LIST(wp.setem_no)->id, nullptr, 0);   // the read-table entry cEmMgr::construct needs
         cEm* e = GetEmPtrFromList(wp.setem_no);
         if (!e) {
             e = EmSetFromList2(wp.setem_no, wp.setem_chkdead);
             if (e == errEm) e = nullptr;
         }
         if (e) EmListSetAlive(wp.setem_no, 1);
-        re4dc_log("warp: setem 0x%x -> m=%08x at room frame %u list=%d id=%02x type=%d room=%04x be_flag=%02x listok=%d nArray=%u\n", (unsigned) wp.setem_no,
+        if (e) re4dc_log("warp: setem pos=%d,%d,%d\n", (int) e->pos.x, (int) e->pos.y, (int) e->pos.z);
+        if (!e) {   // which room entries hold the alive cap's slots (a `dead` line can leave them out for a still)
+            for (int i = 0; i < 0x100; ++i) {
+                const EmListData* q = EM_LIST(i);
+                if (q->id && q->room == EM_LIST(wp.setem_no)->room && i != wp.setem_no)
+                    re4dc_log("warp: setem room entry 0x%02x id=%02x be_flag=%02x\n", i, (unsigned) q->id, (unsigned) q->be_flag);
+            }
+        }
+        re4dc_log("warp: setem 0x%x -> m=%08x at room frame %u list=%d id=%02x type=%d room=%04x be_flag=%02x listok=%d nArray=%u read=%08x dbg2=%08x stage=%d room_no=%d\n", (unsigned) wp.setem_no,
                   (unsigned) (uintptr_t) e, (unsigned) wp.room_frames, (int) pG->em_list_no, (unsigned) EM_LIST(wp.setem_no)->id,
                   (int) EM_LIST(wp.setem_no)->type, (unsigned) EM_LIST(wp.setem_no)->room,
-                  (unsigned) EM_LIST(wp.setem_no)->be_flag, listok, (unsigned) EmMgr.nArray);
+                  (unsigned) EM_LIST(wp.setem_no)->be_flag, listok, (unsigned) EmMgr.nArray,
+                  (unsigned) (uintptr_t) rd, (unsigned) pG->Debug_flg[2], (int) pG->stage_no, (int) pG->room_no);
     }
     if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
         auto bring = [](cEm* e) {

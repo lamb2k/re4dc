@@ -3,11 +3,17 @@
 # sub screen; rsf 22 marks the event done so the area does not fire. Leon faces the merchant's spot (<= 60 s).
 name cg-r104s
 room 0x104
-pos -18200 0 6800
-ang -1.3900
+pos -11843 0 12672
+ang 0.5000
 rsf 0x104 1
 rsf 0x104 22
 inv default
 god
 alivelog 60
-setem 150 0x5E 0
+# The alive cap counts em13 (0x10..0x20) and r104's 4 villagers (also em13) fill it, so the spawn is held: the warp kills
+# them first (kill / killrep), then the merchant takes a freed slot.
+kill 0x13 60 0x104
+killrep 5 20
+setem 300 0x5E 0
+goto 310 -12258 0 12013 0.5000
+freeze 520
