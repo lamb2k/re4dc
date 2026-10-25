@@ -6721,6 +6721,8 @@ bool ps2_open(){
 #endif
 #if RE4DC_GC_ASSET_GATE
         if(fg==FILEHND_INVALID)static_manifest_note(gcasset_source,R4SG,Absent);
+        // gc-catalog24b: present but rejected by its own checks: none of it is used
+        else if(gwhy && std::strcmp(gwhy,"heap") && std::strcmp(gwhy,"read"))static_manifest_note(gcasset_source,R4SG,Rejected);
         else if(!gwhy){
 #if RE4DC_WORLD_VERT
             if(gsize<=galloc && galloc<=40U*1024*1024)

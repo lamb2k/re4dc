@@ -612,7 +612,7 @@ static bool gca_probe_once(const char* why,const void* a,const void* c){
 #else
 #define GCA_PROBE(...) do{}while(0)
 #endif
-const void* gcasset_probe_part;const void* gcasset_probe_caller;
+const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
 re4dc_gcasset::SourceUse gcasset_model_pending;
 __attribute__((noinline)) void gcasset_model_prepare(const Re4dcModelPart* p) {
     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
@@ -630,7 +630,7 @@ void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
     const unsigned mask=gcasset_model_pending.mask?gcasset_model_pending.mask:1U<<re4dc_gcasset::SourceGeometry;
     if(gcasset_model_pending.payload)re4dc_gcasset::payload_accept(gcasset_model_pending.payload,gcasset_model_pending.serial,mask);
     else{
-        if(!gcasset_model_pending.serial)GCA_PROBE("unbound-model",gcasset_probe_part,gcasset_probe_caller,"model=%p\n",re4dc_gcasset::source_use.model);
+        if(!gcasset_model_pending.serial)GCA_PROBE("unbound-model",gcasset_probe_part,gcasset_probe_outer,"model=%p inner=%p\n",re4dc_gcasset::source_use.model,gcasset_probe_caller);
         re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);}
 }
 void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
@@ -7123,6 +7123,9 @@ extern "C" void re4dc_model_texture(const unsigned* key){model_texture=key;}
 namespace { const Re4dcModelPacket* model_reserved=nullptr; }
 #endif
 extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
+#if RE4DC_GC_ASSET_GATE && defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+    gcasset_probe_outer=__builtin_return_address(0);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=2;
 #endif
