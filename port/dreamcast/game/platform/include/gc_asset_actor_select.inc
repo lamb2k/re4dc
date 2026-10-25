@@ -131,7 +131,9 @@ extern "C" re4dc_gcasset::SourceUse re4dc_gcasset_actor_main_select(const Re4dcM
             previous->mask:gcasset_actor_consumer_mask(*part));
     const SourceUse member=saved.serial==0xffffffffU?gcasset_actor_member_use(part,mask):SourceUse{};
     const SourceUse unknown=member.serial?member:SourceUse{0,mask,part->model,part->info,nullptr};
-    if(saved.serial!=0xffffffffU && !saved.payload)return unknown;
+    // gc-catalog24b: a replay of a member-accepted draw keeps its member serial
+    // (re-validated by member_accept against the live member table).
+    if(saved.serial!=0xffffffffU && !saved.payload)return saved.serial?SourceUse{saved.serial,mask,part->model,part->info,nullptr}:unknown;
     Re4dcActorSource source{};
     if(!re4dc_actor_model_source(part->info,&source))return unknown;
     // Array-less parts consume the authenticated source via the existing lazy

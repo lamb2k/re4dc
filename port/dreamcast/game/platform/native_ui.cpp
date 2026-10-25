@@ -635,7 +635,7 @@ void gcasset_model_accept(const void* vertices=nullptr,unsigned count=0) {
         if(!gcasset_model_pending.serial){
             const auto* part=static_cast<const Re4dcModelPart*>(gcasset_probe_part);const void* data=nullptr;
             const unsigned identity=part?re4dc_gcasset_model_identity(part->model,part->info,&data):0xffffffffU;
-            GCA_PROBE("unbound-model",gcasset_probe_part,gcasset_probe_outer,"model=%p identity=%08x data=%p\n",re4dc_gcasset::source_use.model,identity,data);
+            GCA_PROBE("unbound-model",gcasset_probe_part,gcasset_probe_outer,"model=%p identity=%08x data=%p replay=%08x mask=%x\n",re4dc_gcasset::source_use.model,identity,data,re4dc_gcasset::replay_use.serial,re4dc_gcasset::source_use.mask);
         }
 #endif
         re4dc_gcasset::member_accept(gcasset_model_pending.serial,mask);}
