@@ -4,14 +4,18 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 24, 2026.
+**Last updated:** October 25, 2026.
 
-**Current build: Test 23** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): PS2 river water,
-trap explosions, Mendez no longer freezes (#55), steady barn lights, no hang on slow disc reads (#28), mipmaps on
-bushes and cut-outs, fewer see-through effects, faster inventory and a better El Gigante up close. A QA build for
-testers is the second download.
+**Current build: Test 24** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): PS2 weapons, HUD,
+inventory screens and fonts, PS2 animation for Leon, the Ganados and the weapons, PS2 sounds and music in chapter 1,
+PS2 props in chapter 2, Leon's PS2 textures, the PS2 church candles, Mendez's PS2 model in the barn door animation
+(#57) and the Blacktail can be equipped (#58). A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 23:** PS2 river water, trap explosions, Mendez no longer freezes (#55), steady barn lights, no hang on slow
+disc reads (#28), mipmaps on bushes and cut-outs, fewer see-through effects, faster inventory and a better El Gigante
+up close.
 
 - **Test 22:** smoother distant textures (mipmaps), no disc read when you shoot, no stutter at in-game events, faster
 inventory opening, lake trees fixed, trail effects back, and fixes for the dam crash (#52), memory after a reset (#26),
@@ -59,10 +63,10 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 | Fixed and checked in our tests; the problem was not console-only | 59 |
-| 🛠️ In progress | Being fixed now | 1 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 | Fixed and checked in our tests; the problem was not console-only | 61 |
+| 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 16 |
+| ⏸️ Open | Known, not yet worked on | 15 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -80,7 +84,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🛠️ In progress: its weapon code was left out of the build; fixed in development, coming in Test 24. Until then, keep another weapon equipped | [#58](https://github.com/lamb2k/re4dc/issues/58) |
+| Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🟢 Fixed in test 24: its weapon code is in the build again | [#58](https://github.com/lamb2k/re4dc/issues/58) |
 | Mendez freezes after grabbing Leon (chapter 2-3 barn, r11f) | test 22 and earlier | 🟢 Fixed in test 23: his state word was read in the wrong byte order; the bear hug holds and the fight goes on | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |
 | Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🟢 Fixed in test 22: the paused world stays as it was and play resumes cleanly, in the Mendez fight too | [#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49) |
@@ -110,7 +114,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | ⏸️ Open, not blocking: a side effect of the routine byte-order fixes that let the fight finish; the PS2 model comes back in Test 24 | [#57](https://github.com/lamb2k/re4dc/issues/57) |
+| After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | 🟢 Fixed in test 24: the animation draws Mendez with his PS2 model | [#57](https://github.com/lamb2k/re4dc/issues/57) |
 | River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | The light in Mendez's barn flickers | test 22 and earlier | 🟢 Fixed in test 23 | [#55](https://github.com/lamb2k/re4dc/issues/55) |
