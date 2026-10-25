@@ -7,5 +7,5 @@ BRK=et0100.bin,et0200.bin,et1100.bin,et1200.bin,et1e00.bin,et1f00.bin,et2d00.bin
 cd $T
 python3 ps2_objects.py room --dar ${IN:-$S/candp/tree/$sd/$r.dar} --room $r --etm $BRK --keep-larger --out $O/$r-g.dar --json $O/$r-g.json | grep -v "^etc  *et[0-9a-f]*\.bin *tris None" || true
 if [ "${PACK:-1}" = 1 ]; then
-python3 ps2_items.py pack --dar $O/$r-g.dar --room $r --lib $S/lib --out $O/$r-t.dar --json $O/$r-t.json --classes items,breakables 2>&1 | tail -2
+python3 ps2_items.py pack --dar $O/$r-g.dar --room $r --lib $S/lib --out $O/$r-t.dar --json $O/$r-t.json --classes ${CLASSES:-items,breakables} 2>&1 | tail -2
 else cp $O/$r-g.dar $O/$r-t.dar; fi

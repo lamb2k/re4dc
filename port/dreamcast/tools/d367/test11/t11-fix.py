@@ -959,7 +959,7 @@ ATLAS24D = os.environ.get('ATLAS24D', '/root/re4data/private/atlas24-20261024')
 if os.path.isdir(ATLAS24D):
     DATA['atlas24'] = {'dc/tex.pak': ATLAS24D + '/dc/tex.pak', 'st1/r117.dar': ATLAS24D + '/st1/r117.dar'}
     PAK_DERIVED['atlas24'] = ATLAS24D + '/pak-derived.json'
-# props24b (same lane, after atlas24): the breakable boxes / barrels (et0100 et0200 et1100 et1200 et1e00 et1f00 et2d00
+# props24b (same lane, after atlas24; r11e.dar breakables class only: the items class cost 131 KB of heap 4 there): the breakable boxes / barrels (et0100 et0200 et1100 et1200 et1e00 et1f00 et2d00
 # et2e00/01 et2f00/01 et3c00) PS2 geometry in every ch1-2 room; their picture is the debris effect model's TPL (already PS2
 # in ch1 via items12); the ch2 rooms also get the PS2 break debris and pickups (ps2_items.py over a lane lib). 28 st1 room
 # files + st2/r200.dar (list: the store's SHA256SUMS). dc/tex.pak = atlas24's + 22 keys.
