@@ -487,10 +487,16 @@ void path_for(unsigned id,char* out,unsigned size){
     // Bit 24 (RE4DC_MOVIE_CANCEL_CLIP): the PS2 clip of the event's cancel cut, rRRRsEEc (r104s00c).
     snprintf(out,size,"/cd/dc/movie/r%03xs%02x%s.seq",(id>>8)&0xfff,id&0xff,(id&0x1000000)?"c":"");
 }
-bool header(file_t f,unsigned* video,unsigned* audio_bytes,unsigned* frames,unsigned* width=nullptr,unsigned* height=nullptr,bool* full=nullptr,unsigned char* raw=nullptr){
+bool header(file_t f,unsigned* video,unsigned* audio_bytes,unsigned* frames,unsigned* width=nullptr,unsigned* height=nullptr,bool* full=nullptr
+#if RE4DC_GC_ASSET_GATE
+            ,unsigned char* raw=nullptr
+#endif
+            ){
     unsigned char h[32];
     if(!re4dc::storage::read_exact(f,h,32))return false;
+#if RE4DC_GC_ASSET_GATE
     if(raw)std::memcpy(raw,h,32);
+#endif
     const unsigned w=little(h+8),hh=little(h+12);
     // Macroblock sizes only (the PVR row load needs 32-byte rows); the 512x256
     // texture and the staging budget bound the rest.
