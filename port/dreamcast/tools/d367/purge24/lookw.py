@@ -9,7 +9,7 @@ T = '/root/work/lanes/purge-props24/port/dreamcast/tools'
 sys.path[:0] = [T, T + '/../../../tools']
 import room_smd as rs  # noqa
 FX = sys.argv[1]
-D = 2200
+D = 1500
 for spec in sys.argv[2:]:
     room, ids = spec.split(':')
     want = {int(x[2:4], 16) for x in ids.split(',')}
