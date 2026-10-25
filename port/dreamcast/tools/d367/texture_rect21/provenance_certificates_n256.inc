@@ -1,7 +1,8 @@
 // GENERATED (lane scenery-cut25 gen_inc.py) from provenance_certificates.inc for SCENERY_N256=1: the same 27 rows,
 // with the r101 / r103 package crc + bytes of the 256-vertex meshlet re-exports (data set n256w25), and (lane
 // world-blender25 10-25) r106 / r109 / r117 (data set n256x25: ps2_room_r4im.py --meshlet-vertices 256 from each
-// room's recorded blackps2 recipe, which reproduces the shipped 64 mesh byte-identically; r109 + its sg109 strip groups). Same R4PW file
+// room's recorded blackps2 recipe, which reproduces the shipped 64 mesh byte-identically; r109 + its sg109 strip groups),
+// and r111 / r119 (data set n256z25: their recorded ch2regen / corpus-uvg recipes, 64 byte-identical to shipped). Same R4PW file
 // (bytes, physical crc, fnv), placements, parts, meshes and policy source crc, so R4ID / R4TC / area-hide binding holds.
 // Same row count as the base table: no static growth (r100 s30 heap 4). world_rect_provenance.h checks every other
 // field against the base table at compile time.
@@ -21,12 +22,12 @@
 {0x10dU,16448U,228U,285U,204U,0x29375ab8U,0xd28e2317U,0x2f9ceafeU,793216U,0x4b53ab38U},
 {0x10eU,9644U,127U,188U,127U,0x2e002438U,0x13dd0f5fU,0xceb62feaU,883360U,0xf79fde0cU},
 {0x10fU,13284U,161U,305U,115U,0xd06c7ba3U,0xec1f86c0U,0x607a33f6U,948896U,0x0ec63c50U},
-{0x111U,15572U,205U,305U,169U,0xcb94e80cU,0x74371845U,0x8bb0d931U,1135328U,0xb3f71e55U},
+{0x111U,15572U,205U,305U,169U,0xcb94e80cU,0x74371845U,0xdcde47a0U,1091936U,0xb3f71e55U},
 {0x112U,4496U,44U,136U,38U,0x29a38d6aU,0x64ed2869U,0x877f12e0U,392704U,0x136c676bU},
 {0x113U,10952U,130U,260U,130U,0x5649caedU,0xf17bd20aU,0xff937c7bU,986560U,0xcd5f7542U},
 {0x117U,18664U,238U,391U,229U,0x93f6693eU,0x13a14b2cU,0x020d1172U,811776U,0xad796091U},
 {0x118U,12076U,159U,236U,145U,0x75a368b3U,0x2b7b11a0U,0x10b39ab1U,923552U,0xbffe54c2U},
-{0x119U,7420U,95U,153U,95U,0xa79895c4U,0xd52dfbbfU,0x1349cce3U,1058272U,0xfb5072f8U},
+{0x119U,7420U,95U,153U,95U,0xa79895c4U,0xd52dfbbfU,0x36355c7fU,1007264U,0xfb5072f8U},
 {0x11aU,18664U,242U,378U,215U,0xc842ec5aU,0x59e3a364U,0x8a86797aU,741888U,0x710d8d10U},
 {0x11bU,10836U,137U,230U,104U,0x8a59e48cU,0xd8084c56U,0x52c455f0U,769824U,0xce36dda5U},
 {0x11cU,9232U,108U,224U,108U,0x7972d28fU,0x40cfb3ceU,0x59bf2bbbU,977792U,0x9abe7af5U},
