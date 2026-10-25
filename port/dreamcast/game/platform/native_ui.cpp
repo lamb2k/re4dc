@@ -4368,7 +4368,7 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
 #endif
 #if RE4DC_QUALITY_ASSETS
-        if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue;
+        if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue; RE4DC_GCIDLE_SKIP(crc,fnv)
 #endif
         const Key key{crc,fnv};
         bool known=false;
@@ -6521,7 +6521,7 @@ static void ui_order_flush(){
 #endif
 extern "C" void re4dc_ui_present(){
     RE4DC_PROFILE_SCOPE(UiDrain);
-    if(!frame_ready)return;
+    if(!frame_ready)return; RE4DC_TEX_USE_KEYS()
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     // A missing source drain must discard a provisional image before the
     // ordinary deferred-queue assertion can treat it as a presentable scene.

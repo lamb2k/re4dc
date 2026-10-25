@@ -45,6 +45,10 @@ APPS = [  # app, appearance, stump BIN, TPL, stump preset, hand preset stem, arc
 ]
 HANDS = [(2, 449, 'h1'), (2, 450, 'h2'), (3, 454, 'h1'), (3, 455, 'h2')]  # role, BIN, preset suffix
 HAND_ARCHIVES = ('em12', 'em13', 'em15', 'em16', 'em17')
+# --grip (lane purge-cast24 10-24, GC purge; ACTOR_GANADO_PS2_GRIP): the grip hands em10HandSet selects for a held weapon /
+# torch (BIN 451 / 456, mot[9] / mot[14]), which otherwise draw the GameCube geometry (ganado_extra). Appended after the
+# nine stump17 geometries, so the package without --grip is byte-identical to stump17's.
+GRIP_HANDS = [(2, 451, 'h3'), (3, 456, 'h3')]
 # Reviewed 10-17 (lane stump17): GC BIN sha256 prefix, normalized load digest, native header sha256 prefix, triangles,
 # palettes. Hands: the native header differs per preset (other roles), so the chunk digest is pinned instead.
 REVIEWED_STUMP = {
@@ -59,6 +63,9 @@ REVIEWED_HAND = {
     450: ('2d144319f4c74120', [5888, 3608060527, 2496883440], 97, 2),
     454: ('1ea733068edc17e2', [5952, 1963098602, 1580596659], 97, 2),
     455: ('e2100862a42f15c7', [5952, 4022166836, 2700100576], 97, 2),
+    # lane purge-cast24 (10-24): the grip hands (one PS2 mesh of 101 triangles each, identical in all five conversions)
+    451: ('b2dc2451d5f2a9e1', [5888, 3446078520, 2841889831], 101, 2),
+    456: ('561ea79403e407cd', [5952, 3566550875, 4284573839], 101, 2),
 }
 # em13 / em15 pins of the appearance-2 host test (tests/test_actor_ganado_ps2_stump.py, Codex 10-13).
 PINS = {
@@ -120,7 +127,7 @@ def chunk_of(conv, role, normal_atlas_root, appearance, key):
     return c, v, native
 
 
-def generate(inputs, converted, cast_header, normal_atlas_root, out, write_public):
+def generate(inputs, converted, cast_header, normal_atlas_root, out, write_public, grip=False):
     tree = Path(__file__).resolve().parents[4]
     archive, parse_tpl, le_mirror = mr.archive_facts(str(tree))
     arcs = {}
@@ -152,7 +159,7 @@ def generate(inputs, converted, cast_header, normal_atlas_root, out, write_publi
                 h['rest_ps2_to_gc_surface_mm']['max'] == 0.0 and h['rest_gc_to_ps2_surface_mm']['max'] == 0.0,
                 f'{preset}: the PS2 stump is not the GC stump exactly')
         geoms.append(dict(role=1, bin=b, apps=1 << app, chunk=c, source=preset))
-    for role, b, suffix in HANDS:
+    for role, b, suffix in HANDS + (GRIP_HANDS if grip else []):
         gc_sha, normalized, tris, pals = REVIEWED_HAND[b]
         f = None
         for name in HAND_ARCHIVES:
@@ -189,7 +196,8 @@ def generate(inputs, converted, cast_header, normal_atlas_root, out, write_publi
     pkg = head + b''.join(recs)
     pkg += b'\0' * (data_off - len(pkg)) + bytes(blob)
     require(len(pkg) == total, 'package layout')
-    text = public_facts(facts)
+    # the grip BINs' source facts are already in the image (ganado_extra rows), so the public include stays stump17's
+    text = public_facts(facts[:len(facts) - (len(GRIP_HANDS) if grip else 0)])
     pub = tree / PUBLIC
     if write_public:
         pub.write_text(text)
@@ -240,5 +248,6 @@ if __name__ == '__main__':
     p.add_argument('--normal-atlas-root', type=Path, required=True, help='cast5 dir: <appearance>/texture/<key>.re4tex')
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--write-public', action='store_true')
+    p.add_argument('--grip', action='store_true', help='append the grip hands 451 / 456 (ACTOR_GANADO_PS2_GRIP)')
     a = p.parse_args()
-    generate(a.inputs, a.converted, a.cast_header, a.normal_atlas_root, a.out, a.write_public)
+    generate(a.inputs, a.converted, a.cast_header, a.normal_atlas_root, a.out, a.write_public, a.grip)

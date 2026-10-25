@@ -1,4 +1,3 @@
 # NOT-DRAWN allowlist (cast_gc.py --not-drawn): room or *<TAB>enemy id hex<TAB>reason<TAB>owner. Reviewed by the coordinator.
 # r106 em12 row dropped (lane fix18 #8): the in-view test (alivelist /vN) never sees it in view, so it is not judged.
-r113	2a	bear traps (em2a type 0) are drawn: Flycast still notdrawn20-20261020/u113 shows them at 4 m. r113 package has no trap descriptor, so they draw on the source path without reaching the census transaction (no NMRS row); the alivelist in-view test has no far plane either	notdrawn20
-r111	2a	bear traps: same draw path as r113 em2a (no trap descriptor in the r111 package, no NMRS row); seen in view only since the c-r111 census warp (10-20); r111 itself not stilled yet	notdrawn20
+# r111 / r113 em2a rows dropped (lane purge-cast24, 10-24): the trap24 packages carry the PS2 trap descriptors (NMRS rows).

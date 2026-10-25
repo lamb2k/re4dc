@@ -641,6 +641,12 @@ bool open(unsigned id){
     // the movie (route_movie_bridge.cpp re4dc_far_shell_movie_restore); before heap_before.
     re4dc_far_shell_movie_release();
 #endif
+#if defined(RE4DC_GANADO_VAR_MOVIE_LEND) && RE4DC_GANADO_VAR_MOVIE_LEND
+    // ACTOR_GANADO_PS2_GRIP (compose-test24 10-24): armed Ganados keep the variant cell (22.6 KB grip hands) resident
+    // in r100, where the knob-off game read it only for a lost head; every route movie borrows it before heap_before
+    // (re4dc_ganado_var_return at retire; read again at the next variant plan).
+    if(const unsigned v=re4dc_ganado_var_lend())re4dc_log("GANADOVAR lent to a movie (%u B)\n",v);
+#endif
 #if RE4DC_MOVIE_BALLAST_TEST
     if(id==0x10030){m.ballast=re4dc_ui_stage_alloc(RE4DC_MOVIE_BALLAST_TEST);
         re4dc_log("route movie heap: test ballast %u B %s\n",(unsigned)RE4DC_MOVIE_BALLAST_TEST,m.ballast?"held":"FAILED");}

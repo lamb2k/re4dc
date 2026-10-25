@@ -2611,8 +2611,25 @@ ifneq ($(GANADO_ATLAS_DROP),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP) -DRE4DC_GANADO_ATLAS_DROP_ROOMS=$(GANADO_ATLAS_DROP_ROOMS)
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP)
 endif
+# PRELOAD_SKIP_GCIDLE=1 (render only, native_ui.cpp, default 0; lane purge-cast24): the entry preload passes skip the
+# never-drawn GameCube player/enemy archive pictures listed in platform/preload_skip_gcidle.inc (TEX_USE_CENSUS=2).
+PRELOAD_SKIP_GCIDLE ?= 0
+ifneq ($(PRELOAD_SKIP_GCIDLE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PRELOAD_SKIP_GCIDLE=1 -include platform/preload_skip_gcidle.h '-DRE4DC_GCIDLE_SKIP(c,f)=if(preload_gcidle(c,f))continue;'
+$(OBJDIR)/platform/native_ui.o: platform/preload_skip_gcidle.inc platform/preload_skip_gcidle.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_GCIDLE_SKIP(c,f)='
+endif
 ifneq ($(TEX_USE_CENSUS),0)
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=$(TEX_USE_CENSUS)
+endif
+# TEX_USE_CENSUS=2 (lane purge-cast24): + the per-key lines (platform/tex_use_keys.h, force-included; the call is a macro on
+# an existing line of native_ui.cpp, empty otherwise, so knob-off builds are byte-identical).
+ifeq ($(TEX_USE_CENSUS),2)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -include platform/tex_use_keys.h
+$(OBJDIR)/platform/native_ui.o: platform/tex_use_keys.h
+else
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += '-DRE4DC_TEX_USE_KEYS()='
 endif
 # CLOSED_PASS_KEEP=1 (needs PS2_WORLD_DRAW=1; native_ui.cpp, render only, default 0): a draw that asks for a PVR list
 # this scene already closed (an opaque or punch-through packet after the translucent list opened) stays in the open
