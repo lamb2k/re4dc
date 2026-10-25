@@ -1,0 +1,4 @@
+output_sha256	ps2_sha256	key	ps2_source	evidence
+9f12ebfdc87e685e5386f6ebf3bb28549a03591509c47ababf691b9801ca8ead	4cf1a5727158e19126675e42f365ada84d2736aa0f0fee07f61974cd75389872	6596bca3-f2f292f2	PS2 rNNN.dat itm19 tpl0+tpl1 (re4-assets-private ps2lib items/tex, INDEX.tsv)	v101 full-codebook VQ of the PS2 picture; pak17 member sha = ps2lib file sha
+e77c712ccb57f7d7dc1a5333778379ce0134fb9e23a5d10cf933611c5b00ac63	be009f62e7b6b48eee82cbf4d3d9757ef8be1eba5c1e718932a6ed9935958d51	f52df17e-83f5bb15	PS2 rNNN.dat itm06 tpl0+tpl1 (re4-assets-private ps2lib items/tex, INDEX.tsv)	v101 full-codebook VQ of the PS2 picture; pak17 member sha = ps2lib file sha
+7179cd723867a1bbfe5e6e8ab49c98b3c6351b53ef1e875886e1a8d940e9f005	084715289015736774c537e2efbf60c2c920ff7ae36d3c4c87678547a3409149	6da8c35b-a936da0c	PS2 Core.dat core1_efm25 tpl0+tpl1 (re4-assets-private ps2lib breakables/tex, INDEX.tsv)	v101 full-codebook VQ of the PS2 picture; pak17 member sha = ps2lib file sha
