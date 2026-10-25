@@ -1180,6 +1180,24 @@ DATA['nostd103'] = {'remove': ['dc/native/r103/low/%s' % f for f in ('index.txt'
         '6836912e-e089be7e 73aed70b-db3cc2dc 79faed7d-de7a1023 86c0121b-841ef8be 8c58ec0d-96eacb5f 9ec02924-b15bf85a '
         'a3943bb1-eec75484 b2372831-53c12477 b52b2722-ad9a1eff c1eb66a7-93b9292b e831a98f-ace53a55 f47bd095-ec43c743 '
         'fd3d8794-bb70f519').split()]}
+# nostd25 (lane purge-pics25 10-25, Test 25, no GameCube assets; nostd103's pattern for r100 / r101): takes the r100 and
+# r101 Standard sets off the disc. Both indexes were accepted, but every record in them (mesh views, cull, imp / impt
+# tree impostors, ptex) keys off the GC scenery packages (MAINSCENARIO, r100 FILE_0x / COMMON), which the PS2 world
+# replaces: SOURCE_OBJECTS scenery_skipped 184 (r100) / 209 (r101), so nothing draws them. What still ran was the room
+# preload of the index's texlow pictures (GC-derived impostor atlases and part textures): r100 7, r101 21, the last 28
+# files of dc/texlow (shared with no other room). The rooms log "index.txt missing: Original packages". Remove-only.
+DATA['nostd25'] = {'remove': ['dc/native/%s/low/%s' % (_r, f) for _r, fs in (
+    ('r100', 'COMMON FILE_00 FILE_01 FILE_02 FILE_03 FILE_04 MAINSCENARIO'),
+    ('r101', 'MAINSCENARIO')) for f in ['%s.re4mesh' % m for m in fs.split()] + ['index.txt', 'plan.json']] + [
+    'dc/texlow/%s/%s.re4tex' % (k[0], k) for k in (
+        # r100
+        '20554644-9100e6e3 31188b11-c17ef9b4 4163e909-11fb0185 4db31258-f3377366 b2ccaaa3-79ec5b06 dd2c1c57-26585c5a '
+        'fc58c9a8-e7a08670 '
+        # r101
+        '0cefe1fe-65cb497f 0f22c146-e845149f 2d5a9317-0e1e1a1e 33fcc410-c215ac41 43d869dc-e6de0e9e 4a31369a-f0dd9700 '
+        '5119ab6b-af6cf246 5bb6cc3f-11d151a0 5e1f34ef-bc16c9e3 82f78534-df80de25 875b4430-5428fac4 a024d424-eebb15d6 '
+        'af040e00-9c2ae0f5 b0810ada-e2994a70 b4b6940a-0b0c01cb c63541b7-937b388d ceb4070a-b81f5b19 d5558c72-9668d80d '
+        'ea4b493a-dcd2aec4 eaaf4961-556f130e fc9c61df-f5aa959f').split()]}
 
 
 if __name__ == '__main__':
