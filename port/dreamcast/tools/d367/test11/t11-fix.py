@@ -1220,6 +1220,14 @@ if os.path.isdir(PMASH25D):
     DATA['pmash25'] = {'em/pl11.drs': PMASH25D + '/em/pl11.drs'}
     DATA['pmash25'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMASH25D, _k) for _k in sorted(os.listdir(PMASH25D + '/dc/mot'))})
     DATA['pmash25']['remove'] = [_l.strip() for _l in open(PMASH25D + '/remove.txt') if _l.strip()]
+# n256w25 (lane scenery-cut25 10-25, Test 25 "less scenery drawn"): the r101 / r103 PS2 worlds re-exported with meshlets of up
+# to 256 vertices (shipped 64): r101 by the hook -> append -> strip-groups chain, r103 by ps2_room_r4im.py
+# --meshlet-vertices 256 (both reproduce the shipped 64 files byte-identically at 64). R4PW / ids / r4tc unchanged. Needs
+# SCENERY_N256=1 (the two packages' rect21 certificates); release line only, never KSETS. Store: re4-assets-private/n256w25-20261025.
+N256W25D = os.environ.get('N256W25D', '/root/re4data/private/n256w25-20261025')
+DATA['n256w25'] = {'dc/native/r101/ps2-world.re4mesh': N256W25D + '/dc/native/r101/ps2-world.re4mesh',
+                   'dc/native/r101/ps2-world.r4sg': N256W25D + '/dc/native/r101/ps2-world.r4sg',
+                   'dc/native/r103/ps2-world.re4mesh': N256W25D + '/dc/native/r103/ps2-world.re4mesh'}
 
 
 if __name__ == '__main__':
