@@ -51,8 +51,13 @@ class JudgeTests(unittest.TestCase):
         # New standalone Motion diagnostics do not alter this historical v2
         # protocol boundary. Strip ONLY exact approved guarded insertions;
         # ungated/bad-guard/dropped-mask mutants are tested separately.
-        from test_motion_unknown import project_ui_motion0
-        self.assertEqual(project_ui_motion0(current),expected)
+        # Contract v2 (gc-catalog24b): native_ui.cpp now carries many other landed
+        # changes, so check the two protocol facts directly instead of a whole-file
+        # projection: the v2 literal and the wired mask that excludes Motion.
+        del expected
+        self.assertIn('GC-ASSET-ERROR v=2 why=texture-fingerprint',current)
+        self.assertNotIn('GC-ASSET-ERROR v=1 ',current)
+        self.assertEqual(current.count(mask.replace('Weapon));','Weapon)|(1U<<re4dc_gcasset::Motion));')),1)
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'protocol.json'
             for key,value in [('schema',1),('required','1ff'),('diagnostic_version',1),
@@ -67,8 +72,10 @@ class JudgeTests(unittest.TestCase):
         result = j.judge([('legacy',legacy)],allow,['0111'])
         self.assertFalse(result['pass']);self.assertEqual(result['schema'],2)
         self.assertTrue(any('historical' in failure for failure in result['failures']))
-        for missing in (full.replace('wired=3ff','wired=1ff').replace('checked=3ff','checked=1ff'),
-                        full.replace(' motion=0',''),
+        # Contract v2: Motion unwired (bit 9 off) is not covered, not a failure.
+        unwired=j.judge([('unwired-motion',full.replace('wired=3ff','wired=1ff').replace('checked=3ff','checked=1ff'))],allow,['0111'])
+        self.assertTrue(unwired['pass'],unwired);self.assertIn('motion',unwired['per_room']['0111']['not_covered'])
+        for missing in (full.replace(' motion=0',''),
                         full.replace('motion=0','motion=4294967296')):
             self.assertFalse(j.judge([('missing-motion',missing)],allow,['0111'])['pass'])
 
@@ -167,7 +174,11 @@ class JudgeTests(unittest.TestCase):
         self.check('\n'.join((EVENT, END)), False)
 
     def test_incomplete_wiring_and_runtime_coverage_fail(self):
-        self.check('\n'.join((BEGIN.replace('wired=3ff', 'wired=1fe'), EVENT, END)), False)
+        # Contract v2: an unwired bit is reported as not covered, not a failure...
+        partial='\n'.join((BEGIN.replace('wired=3ff', 'wired=1fe'), EVENT, END.replace('checked=3ff','checked=1fe').replace('wired=3ff','wired=1fe')))
+        result=self.check(partial,True)
+        self.assertIn('source_geometry',result['per_room']['0111']['not_covered'])
+        # ...but a wired bit that was not checked still fails.
         self.check('\n'.join((BEGIN, EVENT, END.replace('checked=3ff', 'checked=1fe'))), False)
 
     def test_missing_requested_room_fails(self):

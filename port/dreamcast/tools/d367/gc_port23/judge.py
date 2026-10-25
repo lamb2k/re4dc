@@ -246,6 +246,8 @@ def judge(logs, allowlist, requested, protocol=None):
                         counts = visit['counts']
                         if counts is None:
                             raise ValueError('missing consumer counter checkpoint')
+                        if wired & ~checked:
+                            raise ValueError('wired consumer never checked by room end')
                         if sum(counts.values()) < len(visit['rows']):
                             raise ValueError('consumer emission counts cannot explain asset rows')
                         if any(counts[c] < visit['first_consumers'][c] for c in CONSUMERS):

@@ -243,8 +243,10 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         const bool tex=tex_table && !std::strcmp(kind,"texture");
         const SparseResult result=tex?tex_find(id,digest,epoch,found,row):sparse_find(kind,id,digest,epoch,found);
         if(tex && result==SparseFound)desc_store(epoch<<14|found,row);
-        if(!catalog_ok || !index_generation(epoch))return {};
+        // A failed row read is a catalog-read fault even when a callback retired
+        // the catalog during it (deferred, attributed at the next flush).
         if(result==SparseFault){catalog_fault(CatalogRead);return {};}
+        if(!catalog_ok || !index_generation(epoch))return {};
         if(result==SparseFound)index=found;
         (void)row;
     } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
@@ -269,8 +271,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
             re4dc_log("GC-ASSET-PROF quarantine n=%u kind=%s id=%s\n",unknown_count,kind,id);
 #endif
             if(unknown_count==UnknownLimit){
-                ++overflow;catalog_fault(CatalogCapacity);   // counted (END overflow=) and logged, never silent
-                re4dc_log("GC-ASSET-ERROR v=2 why=unknown-overflow kind=%s id=%s\n",kind,id);return {};
+                ++overflow;catalog_fault(CatalogCapacity);return {};   // counted (END overflow=), logged at the next flush (never inside I/O)
             }
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
