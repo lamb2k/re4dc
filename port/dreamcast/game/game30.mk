@@ -3749,6 +3749,20 @@ endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_BOUNDED_R11F=1
 endif
 
+# MOTION_PS2_PL11=1 (lane purge-motion25 2026-10-25, default 0 = the previous image): admit the pl11-hot profile of
+# the PS2-motion Ashley archive (data set pmash25: em/pl11.drs with its FCV/SEQ from PS2 pl11.dat, same 61 MTC rows,
+# same 411,744-byte body). Only adds one exact-source row to native_motion_r11f_profiles.inc; needs MOTION_BOUNDED_R11F=1.
+MOTION_PS2_PL11 ?= 0
+ifeq ($(filter $(MOTION_PS2_PL11),0 1),)
+$(error MOTION_PS2_PL11 must be 0 or 1)
+endif
+ifeq ($(MOTION_PS2_PL11),1)
+ifneq ($(MOTION_BOUNDED_R11F),1)
+$(error MOTION_PS2_PL11 needs MOTION_BOUNDED_R11F=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PS2_PL11=1
+endif
+
 # SH4_APPROX_RENDER=1 / SH4_APPROX_LOGIC=1 (lane approx 2026-10-15; NOT bit-exact; default 0 = the previous image). The
 # contributor Bruceleeto measured two SH4ZAM approximations as gains on his fork (github.com/Bruceleeto/re4dc
 # dreamcast-port): 8e769a9dd8, MTXConcat as an XMTRX load of b's rows plus one FTRV per row of a, and fe2aed7945,
