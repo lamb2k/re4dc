@@ -151,6 +151,27 @@ def container_bins(tag, c):
             if t < tt <= len(c):
                 limit = tt - t
         yield from table_bins(c, t, 0, first // 4, limit)
+    elif tag[:3] == b'EFF':
+        if len(c) < 0x30 or word(c, 0) != 0xB:
+            return
+        t = word(c, 0x2c)
+        if t < 0x30 or t > len(c) - 4 or t & 3:
+            return
+        n = word(c, t)
+        if n > 4096 or 4 + 4 * n > len(c) - t:
+            return
+        starts = [t + word(c, t + 4 + 4 * j) for j in range(n)]
+        for e in starts:
+            if e < t or e > len(c) - 20:
+                continue
+            m = e + word(c, e + 4)
+            if m < e + 20 or m >= len(c):
+                continue
+            ends = [e + word(c, e + 4 * k) for k in range(2, 5) if word(c, e + 4 * k) and m < e + word(c, e + 4 * k) < len(c)]
+            ends += [q for q in starts if m < q < len(c)]
+            end = min(ends + [len(c)])
+            if end - m >= 64:
+                yield c[m:end]
     elif tag[:3] == b'ITM':
         ob, ot = word(c, 8), word(c, 12)
         if ob < 16 or ob > len(c) - 4 or ob & 3:
@@ -168,7 +189,7 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
-        elif tag[:3] in (b'SMD', b'SHD', b'ITM'):
+        elif tag[:3] in (b'SMD', b'SHD', b'ITM', b'EFF'):
             yield from container_bins(tag, span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)

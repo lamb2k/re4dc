@@ -118,13 +118,32 @@ template<class F> void container_bins(const unsigned char* tag,const Span& c,F&&
         unsigned limit=c.bytes-t;
         if(!std::memcmp(tag,"SMD",3)){const unsigned tt=word(c.base,8);if(tt>t && tt<=c.bytes)limit=tt-t;}
         table_bins(c,t,0,first/4,limit,f);
+    }else if(!std::memcmp(tag,"EFF",3)){
+        // eff_sys.cpp EffData v0xB: ofsEfm (0x2C) = {num, ofs[]} of EffEfmEnt
+        // {x0, ofsModel, ofsTpl, ofsMot, ofsX} (entry-relative). The model ends at
+        // the entry's next non-zero section offset, else the next entry / the end.
+        if(c.bytes<0x30 || word(c.base,0)!=0xB)return;
+        const unsigned t=word(c.base,0x2c);
+        if(t<0x30 || t>c.bytes-4 || (t&3))return;
+        const unsigned n=word(c.base,t);
+        if(n>4096 || 4+4*n>c.bytes-t)return;
+        for(unsigned i=0;i<n;++i){
+            const unsigned e=t+word(c.base,t+4+4*i);
+            if(e<t || e>c.bytes-20)continue;
+            const unsigned m=e+word(c.base,e+4);
+            if(m<e+20 || m>=c.bytes)continue;
+            unsigned end=c.bytes;
+            for(unsigned k=2;k<5;++k){const unsigned o=word(c.base,e+4*k);if(o && e+o>m && e+o<end)end=e+o;}
+            for(unsigned j=0;j<n;++j){const unsigned q=t+word(c.base,t+4+4*j);if(q>m && q<end)end=q;}
+            if(end-m>=64)f(Span{c.base+m,nullptr,end-m,0});
+        }
     }else if(!std::memcmp(tag,"ITM",3)){
         const unsigned ob=word(c.base,8),ot=word(c.base,12);
         if(ob<16 || ob>c.bytes-4 || (ob&3))return;
         table_bins(c,ob,4,word(c.base,ob),ot>ob && ot<=c.bytes?ot-ob:c.bytes-ob,f);
     }
 }
-bool container_tag(const unsigned char* tag){return !std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3) || !std::memcmp(tag,"ITM",3);}
+bool container_tag(const unsigned char* tag){return !std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3) || !std::memcmp(tag,"ITM",3) || !std::memcmp(tag,"EFF",3);}
 bool find(const Archive& owner,const void* data,Span& result) {
     unsigned count;if(!table(owner,count) || !contains(owner.base,owner.bytes,data,1))return false;
     const unsigned tags=16+count*4;bool found=false;
