@@ -246,9 +246,9 @@ void payload_retire(PayloadProof& proof){
 extern "C" void re4dc_log(const char*,...);
 // Probe (diagnostic): first 32 distinct (why, address, caller) per run.
 static inline bool gca_probe_once(const char* why,const void* a,const void* c){
-    static const void* seen[96][3];static unsigned n;
+    static const void* seen[24][3];static unsigned n;
     for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
-    if(n>=96){return false;}
+    if(n>=24){return false;}
     seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
 }
 #define GCA_PROBE(why,a,c,fmt,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " fmt,why,a,c,##__VA_ARGS__);}while(0)
