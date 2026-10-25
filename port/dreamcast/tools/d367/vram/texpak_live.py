@@ -17,9 +17,9 @@ must be live, else exit 1 (the recall gate of this model). --write-pak: DIR/tex.
 (texpack.build + verify, same package bytes). Output: DIR/live.tsv (key, bytes, reasons), DIR/SUMMARY.txt.
 Never applied by this tool: the coordinator stages DIR/tex.pak as the last data set of the final line, then TEXCHK
 over all rooms (incl. the castle)."""
-import argparse, collections, os, re, struct, sys, zlib
+import argparse, array, collections, os, re, struct, sys, zlib
 from pathlib import Path
-import numpy as np
+assert array.array('I').itemsize == 4
 HERE = Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[2])); sys.path.insert(0, str(HERE.parents[1]))
 import texpack                     # noqa: E402
@@ -38,18 +38,20 @@ def pak_index(blob):
             for i in range(count)}
 
 
-def scan_pairs(b, keys64_le, keys64_be):
+def scan_pairs(b, keys, by_crc):
     """pak keys whose (crc, fnv) words sit at a 4-byte boundary, LE or BE"""
     n = len(b) // 4 * 4
     if n < 8:
         return set()
     out = set()
-    for dt, ks in (('<u4', keys64_le), ('>u4', keys64_be)):
-        w = np.frombuffer(b[:n], dtype=dt).astype(np.uint64)
-        v = w[:-1] | (w[1:] << np.uint64(32))
-        hit = np.isin(v, ks)
-        for x in np.unique(v[hit]):
-            x = int(x); out.add((x & 0xffffffff, x >> 32))
+    for swap in (False, True):
+        w = array.array('I'); w.frombytes(b[:n])
+        if swap:
+            w.byteswap()
+        last = len(w) - 1
+        for i in (i for i, x in enumerate(w) if x in by_crc):
+            if i < last and (w[i], w[i + 1]) in keys:
+                out.add((w[i], w[i + 1]))
     return out
 
 
@@ -91,18 +93,18 @@ def main(argv=None):
     blob = (o.tree / 'dc' / 'tex.pak').read_bytes()
     idx = pak_index(blob)
     keys = set(idx)
-    le = np.array(sorted({k[0] | (k[1] << 32) for k in keys}), dtype=np.uint64)
+    by_crc = {k[0] for k in keys}
     why = collections.defaultdict(set)
     nfiles = 0
     for p in sorted(o.tree.rglob('*')):
         if not p.is_file():
             continue
         rel = p.relative_to(o.tree).as_posix()
-        if rel == 'dc/tex.pak' or rel.startswith('dc/tex/'):
-            continue
+        if rel == 'dc/tex.pak' or rel.startswith(('dc/tex/', 'dc/movie/', 'bgm/')):
+            continue   # loose packages are keys themselves; movies and music streams carry no texture data
         b = p.read_bytes(); nfiles += 1
         found = set()
-        for k in scan_pairs(b, le, le):
+        for k in scan_pairs(b, keys, by_crc):
             why[k].add('scan:' + rel); found.add(k)
         for k in records(b):
             found.add(k)
@@ -147,7 +149,7 @@ def main(argv=None):
                                                       (': ' + ' '.join('%08x-%08x' % k for k in missed[:20])) if missed else '')]
     if o.write_pak:
         pk = {k: blob[idx[k][0]:idx[k][0] + idx[k][1]] for k in live}
-        out = texpack.build(pk); texpack.verify(out)
+        out = texpack.build(pk)[0]; texpack.verify(out)
         (o.out / 'tex.pak').write_bytes(out)
         lines.append('tex.pak %d -> %d bytes' % (len(blob), len(out)))
     (o.out / 'SUMMARY.txt').write_text('\n'.join(lines) + '\n')
