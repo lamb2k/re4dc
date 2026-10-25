@@ -6802,7 +6802,7 @@ extern "C" void re4dc_ui_end_frame(int present){
             static unsigned serial,frames;
             if(!gcasset_visit_live)return;
             if(serial!=gcasset_visit_serial){serial=gcasset_visit_serial;frames=0;}
-            ++frames;if(frames==120 || (frames>120 && !((frames-120)%600)))gcasset_checkpoint();
+            ++frames;if(frames==60 || (frames>60 && !((frames-60)%600)))gcasset_checkpoint();
         }
     } gcasset_frame_flush;
 #endif

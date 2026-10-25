@@ -10,7 +10,7 @@ namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
 namespace {
-constexpr unsigned ArchiveCount=16, MemberCount=256;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128)
+constexpr unsigned ArchiveCount=16, MemberCount=240;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; 240 since r8 for Motion KOS)
 struct Archive {
     const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
 } archives[ArchiveCount];
@@ -353,7 +353,7 @@ namespace {
 // current visit (bound + latched, or its fault counted). A clip is hashed and bound
 // once per visit, never per evaluated frame. 16 x 68 B; pointers outside any
 // adopted archive or not at an FCV/SEQ entry go to a 16-slot fault ring.
-constexpr unsigned MotionPendingCount=48,MotionDoneEntries=512,MotionFaultRing=16;
+constexpr unsigned MotionPendingCount=32,MotionDoneEntries=512,MotionFaultRing=8;
 struct MotionDone{unsigned generation;unsigned char bits[MotionDoneEntries/8];};
 MotionDone motion_done[ArchiveCount];
 const void* motion_fault_ring[MotionFaultRing];unsigned motion_fault_next;
