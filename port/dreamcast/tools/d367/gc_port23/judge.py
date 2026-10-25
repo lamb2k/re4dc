@@ -228,7 +228,7 @@ def judge(logs, allowlist, requested, protocol=None):
                         raise ValueError('checkpoint fields differ from schema')
                     visit = visits[key]
                     wired, checked = int(r['wired'], 16), int(r['checked'], 16)
-                    if int(r['required'], 16) != REQUIRED or wired != visit['wired'] or checked & ~wired:
+                    if int(r['required'], 16) != REQUIRED or wired != visit['wired'] or checked & ~REQUIRED:
                         raise ValueError('checkpoint consumer mask differs from the visit wiring')
                     if int(r['overflow']) or r['catalog_ok'] != '1':
                         raise ValueError('runtime overflow/catalog failure')

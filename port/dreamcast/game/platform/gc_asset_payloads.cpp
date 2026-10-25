@@ -61,7 +61,8 @@ bool manifest_row(const unsigned char* row,unsigned role){
     if(manifest_word(row)!=role+1)return false;
     const unsigned state=manifest_word(row+4),bytes=manifest_word(row+8);
     if(state==Accepted)return bytes && manifest_digest(row+20) && (role!=SDO3_BASE80 || bytes==80);
-    return state<=Absent && !bytes && !manifest_digest(row+20);
+    // gc-catalog24b: Rejected = the reader looked and used none of the file (sealed, no bytes)
+    return state<=Rejected && !bytes && !manifest_digest(row+20);
 }
 }
 bool static_manifest_begin(StaticManifest& manifest,StaticOwner owner,unsigned room,unsigned profile,const void* base,unsigned bytes){

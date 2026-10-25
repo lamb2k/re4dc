@@ -8,7 +8,7 @@ namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
 namespace {
-constexpr unsigned ArchiveCount=16, MemberCount=128;
+constexpr unsigned ArchiveCount=16, MemberCount=320;   // gc-catalog24b: SMD/SHD/ITM members (was 128)
 struct Archive {
     const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
 } archives[ArchiveCount];
@@ -89,35 +89,53 @@ bool named(const Span& etm,const void* data,Span& result) {
     }
     return found;
 }
-// gc-catalog24b: SMD scroll-model containers (include/scroll.h cSmd): the BINs
-// at BinTblOfs + table[i] (cSmd::getBinPtr). Table length = first offset / 4;
-// bin i ends at the next offset, the last at TplTblOfs (else the entry end).
-// build_catalog.py smd_bins is the same rule.
-template<class F> void smd_bins(const Span& smd,F&& f){
-    if(smd.bytes<16)return;
-    const unsigned bt=word(smd.base,4),tt=word(smd.base,8);
-    if(bt<16 || bt>smd.bytes-4 || (bt&3))return;
-    const unsigned room=smd.bytes-bt,first=word(smd.base,bt);
-    if(first<4 || (first&3) || first>room)return;
-    const unsigned n=first/4;if(n>4096)return;
-    const unsigned limit=tt>bt && tt<=smd.bytes?tt-bt:room;
+// gc-catalog24b: model offset-table containers. SMD (include/scroll.h cSmd,
+// getBinPtr), SHD (shadow.h ShdHeader, ofsTbl relative to itself) and ITM
+// (item_model.cpp ItemModelPack, bin table {num, ofs[]}). A BIN starts at
+// table + ofs[i] and ends at the next larger table offset (else the limit:
+// the next table or the entry end). Unused slots (outside the table's data)
+// are skipped. build_catalog.py table_bins is the same rule.
+template<class F> void table_bins(const Span& c,unsigned tbl,unsigned idx0,unsigned n,unsigned limit,F&& f){
+    if(tbl>c.bytes || n>4096 || idx0+4*n>c.bytes-tbl || limit>c.bytes-tbl)return;
+    const unsigned lo=idx0+4*n;
     for(unsigned i=0;i<n;++i){
-        const unsigned o=word(smd.base,bt+4*i),next=i+1<n?word(smd.base,bt+4*(i+1)):limit;
-        if(o<first || next<=o || next>limit)return;
-        if(next-o>=64)f(Span{smd.base+bt+o,nullptr,next-o,0});
+        const unsigned o=word(c.base,tbl+idx0+4*i);
+        if(o<lo || o>=limit)continue;
+        bool dup=false;for(unsigned j=0;j<i && !dup;++j)dup=word(c.base,tbl+idx0+4*j)==o;
+        if(dup)continue;
+        unsigned end=limit;
+        for(unsigned j=0;j<n;++j){const unsigned q=word(c.base,tbl+idx0+4*j);if(q>o && q<end)end=q;}
+        if(end-o>=64)f(Span{c.base+tbl+o,nullptr,end-o,0});
     }
 }
+template<class F> void container_bins(const unsigned char* tag,const Span& c,F&& f){
+    if(c.bytes<16)return;
+    if(!std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3)){
+        const unsigned t=word(c.base,4);
+        if(t<16 || t>c.bytes-4 || (t&3))return;
+        const unsigned first=word(c.base,t);
+        if(first<4 || (first&3))return;
+        unsigned limit=c.bytes-t;
+        if(!std::memcmp(tag,"SMD",3)){const unsigned tt=word(c.base,8);if(tt>t && tt<=c.bytes)limit=tt-t;}
+        table_bins(c,t,0,first/4,limit,f);
+    }else if(!std::memcmp(tag,"ITM",3)){
+        const unsigned ob=word(c.base,8),ot=word(c.base,12);
+        if(ob<16 || ob>c.bytes-4 || (ob&3))return;
+        table_bins(c,ob,4,word(c.base,ob),ot>ob && ot<=c.bytes?ot-ob:c.bytes-ob,f);
+    }
+}
+bool container_tag(const unsigned char* tag){return !std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3) || !std::memcmp(tag,"ITM",3);}
 bool find(const Archive& owner,const void* data,Span& result) {
     unsigned count;if(!table(owner,count) || !contains(owner.base,owner.bytes,data,1))return false;
     const unsigned tags=16+count*4;bool found=false;
     for(unsigned i=0;i<count;++i) {
         const auto* tag=owner.base+tags+4*i;
-        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && std::memcmp(tag,"SMD",3))continue;
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && !container_tag(tag))continue;
         Span current;if(!entry(owner,i,current))return false;
         if(!contains(current.base,current.bytes,data,1))continue;
-        if(!std::memcmp(tag,"SMD",3)) {
+        if(container_tag(tag)) {
             bool hit=false;Span child;
-            smd_bins(current,[&](const Span& s){if(!hit && contains(s.base,s.bytes,data,1)){child=s;hit=true;}});
+            container_bins(tag,current,[&](const Span& s){if(!hit && contains(s.base,s.bytes,data,1)){child=s;hit=true;}});
             if(!hit)return false;
             current=child;
         }
@@ -139,16 +157,17 @@ bool current(const Member& member) {
 struct Pre { unsigned offset,bytes;Digest digest; };
 Pre* pre[ArchiveCount];unsigned pre_count[ArchiveCount];
 void pre_free(unsigned owner){std::free(pre[owner]);pre[owner]=nullptr;pre_count[owner]=0;}
-template<class F> void smd_bins(const Span& smd,F&& f);
+template<class F> void container_bins(const unsigned char* tag,const Span& c,F&& f);
+bool container_tag(const unsigned char* tag);
 template<class F> void each_model(const Archive& owner,F&& f){
     unsigned count;if(!table(owner,count))return;
     const unsigned tags=16+count*4;
     for(unsigned i=0;i<count;++i){
         const auto* tag=owner.base+tags+4*i;
-        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && std::memcmp(tag,"SMD",3))continue;
+        if(std::memcmp(tag,"BIN",3) && std::memcmp(tag,"ETM",3) && !container_tag(tag))continue;
         Span current;if(!entry(owner,i,current))continue;
         if(!std::memcmp(tag,"BIN",3)){f(current);continue;}
-        if(!std::memcmp(tag,"SMD",3)){smd_bins(current,f);continue;}
+        if(container_tag(tag)){container_bins(tag,current,f);continue;}
         if(current.bytes<32)continue;
         const unsigned n=word(current.base,0);if(n>4096)continue;
         unsigned cursor=32;

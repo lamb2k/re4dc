@@ -6786,7 +6786,14 @@ extern "C" void re4dc_ui_present(){
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
     struct GcAssetFrameFlush {
-        ~GcAssetFrameFlush(){gcasset_flush();if(gcasset_visit_live && frame && !(frame%600))gcasset_checkpoint();}
+        ~GcAssetFrameFlush(){
+            gcasset_flush();
+            // every 600 frames of the open visit (judge contract v2)
+            static unsigned serial,frames;
+            if(!gcasset_visit_live)return;
+            if(serial!=gcasset_visit_serial){serial=gcasset_visit_serial;frames=0;}
+            if(!(++frames%600))gcasset_checkpoint();
+        }
     } gcasset_frame_flush;
 #endif
 #if RE4DC_WORLD_SCRATCH

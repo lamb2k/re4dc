@@ -118,27 +118,44 @@ def etm_members(b):
     return out
 
 
-def smd_bins(span):
-    """gc_asset_members.cpp smd_bins: the BINs of a cSmd scroll-model container."""
-    if len(span) < 16:
+def table_bins(c, tbl, idx0, n, limit):
+    """gc_asset_members.cpp table_bins: BINs of a model offset table."""
+    if tbl > len(c) or n > 4096 or idx0 + 4 * n > len(c) - tbl or limit > len(c) - tbl:
         return
-    bt, tt = word(span, 4), word(span, 8)
-    if bt < 16 or bt > len(span) - 4 or bt & 3:
+    lo = idx0 + 4 * n
+    offs = [word(c, tbl + idx0 + 4 * i) for i in range(n)]
+    seen = set()
+    for o in offs:
+        if o < lo or o >= limit or o in seen:
+            continue
+        seen.add(o)
+        end = min([q for q in offs if o < q < limit] + [limit])
+        if end - o >= 64:
+            yield c[tbl + o:tbl + end]
+
+
+def container_bins(tag, c):
+    """gc_asset_members.cpp container_bins: SMD / SHD / ITM model containers."""
+    if len(c) < 16:
         return
-    room, first = len(span) - bt, word(span, bt)
-    if first < 4 or first & 3 or first > room:
-        return
-    n = first // 4
-    if n > 4096:
-        return
-    limit = tt - bt if bt < tt <= len(span) else room
-    for i in range(n):
-        o = word(span, bt + 4 * i)
-        nxt = word(span, bt + 4 * (i + 1)) if i + 1 < n else limit
-        if o < first or nxt <= o or nxt > limit:
+    if tag[:3] in (b'SMD', b'SHD'):
+        t = word(c, 4)
+        if t < 16 or t > len(c) - 4 or t & 3:
             return
-        if nxt - o >= 64:
-            yield span[bt + o:bt + nxt]
+        first = word(c, t)
+        if first < 4 or first & 3:
+            return
+        limit = len(c) - t
+        if tag[:3] == b'SMD':
+            tt = word(c, 8)
+            if t < tt <= len(c):
+                limit = tt - t
+        yield from table_bins(c, t, 0, first // 4, limit)
+    elif tag[:3] == b'ITM':
+        ob, ot = word(c, 8), word(c, 12)
+        if ob < 16 or ob > len(c) - 4 or ob & 3:
+            return
+        yield from table_bins(c, ob, 4, word(c, ob), ot - ob if ob < ot <= len(c) else len(c) - ob)
 
 
 def model_payloads(b, depth=0):
@@ -151,8 +168,8 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
-        elif tag[:3] == b'SMD':
-            yield from smd_bins(span)
+        elif tag[:3] in (b'SMD', b'SHD', b'ITM'):
+            yield from container_bins(tag, span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)
 
