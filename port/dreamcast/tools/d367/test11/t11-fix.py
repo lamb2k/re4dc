@@ -1266,6 +1266,19 @@ PMR113D = os.environ.get('PMR113D', '/root/re4data/private/pmr113-25-20261025')
 if os.path.isdir(PMR113D):
     DATA['pmr113-25'] = {'st1/r113.%s' % _x: '%s/st1/r113.%s' % (PMR113D, _x) for _x in ('arc', 'dar')}
 
+# n256x25 (lane world-blender25 10-25, Test 25 bang for buck after n256w25): the three chapter 1 worlds with the most world
+# ms after r101 in the census ranking (Flycast WORLD_CENSUS24, ctl twin: r109 16.4, r117 15.1, r106 12.9 ms per drawn tick)
+# re-exported at 256-vertex meshlets by ps2_room_r4im.py from each room's recorded blackps2 recipe (64 reproduces the
+# shipped mesh byte-identically). r109 also gets its sg109 strip groups regenerated (ps2_strip_groups.py --preserve-order;
+# 64 reproduces sg109 byte-identically). R4PW / ids / r4tc unchanged. Needs SCENERY_N256=1 (swapped certificate rows);
+# goes with n256w25 and after sg109 in the data line; release line only, never KSETS. Store:
+# re4-assets-private/n256x25-20261025.
+N256X25D = os.environ.get('N256X25D', '/root/re4data/private/n256x25-20261025')
+DATA['n256x25'] = {'dc/native/r106/ps2-world.re4mesh': N256X25D + '/dc/native/r106/ps2-world.re4mesh',
+                   'dc/native/r109/ps2-world.re4mesh': N256X25D + '/dc/native/r109/ps2-world.re4mesh',
+                   'dc/native/r109/ps2-world.r4sg': N256X25D + '/dc/native/r109/ps2-world.r4sg',
+                   'dc/native/r117/ps2-world.re4mesh': N256X25D + '/dc/native/r117/ps2-world.re4mesh'}
+
 
 if __name__ == '__main__':
     main()
