@@ -184,8 +184,6 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 
 Moved to Test 25: chapter 3-1 (the castle's first part) and less scenery drawn when it can't be seen.
 
-Moved to Test 25: chapter 3-1 (the castle's first part) and less scenery drawn when it can't be seen.
-
 ## What's new in Test 17.1
 
 A hotfix of Test 17.
