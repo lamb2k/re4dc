@@ -3,10 +3,29 @@
   "gate": "GC-ASSET",
   "diagnostic_version": 2,
   "required": "3ff",
-  "consumers": ["source_geometry", "texture", "effect_picture", "weapon", "font", "ui", "sound_bank", "sound_stream", "movie", "motion"],
+  "consumers": [
+    "source_geometry",
+    "texture",
+    "effect_picture",
+    "weapon",
+    "font",
+    "ui",
+    "sound_bank",
+    "sound_stream",
+    "movie",
+    "motion"
+  ],
   "motion_coverage": "unwired; zero counter is not a zero-use assertion",
   "motion_identity_kind": "motion",
-  "legacy_diagnostic_versions_rejected": [1],
+  "legacy_diagnostic_versions_rejected": [
+    1
+  ],
   "catalog_format_schema": 1,
-  "reviewed_allowlist_schema": 1
+  "reviewed_allowlist_schema": 1,
+  "judge_contract": 2,
+  "checkpoint": "GC-ASSET-CKPT (END fields) every 600 frames while a visit is open, END on leaving the room; a visit is judged on its last checkpoint; unwired consumer bits are reported per room as not covered",
+  "error_kinds_out_of_scope": {
+    "motion-unknown-accepted-records": "Motion (bit 9) is not wired yet: accepted unknown motion records are reported separately (GC-MOTION-UNKNOWN) until the motion bit is wired",
+    "motion-unwired": "Motion (bit 9) has no reviewed producer receipt yet; reported as not covered"
+  }
 }

@@ -18,6 +18,17 @@ const CatalogRow* catalog;
 unsigned catalog_rows, room, visit, wired, checked_mask, used, overflow, errors;
 char scope_text[24];
 unsigned emissions[ConsumerCount];
+// gc-catalog24b judge contract v2: errors counted per kind (the unresolved
+// reason). Errors raised without a reason are reported as kind "internal".
+constexpr unsigned ErrorKinds=16;
+const char* error_kind[ErrorKinds];unsigned error_count[ErrorKinds],error_kinds_lost;
+void error_kind_note(const char* why){
+    for(unsigned i=0;i<ErrorKinds;++i){
+        if(!error_kind[i]){error_kind[i]=why;error_count[i]=1;return;}
+        if(error_kind[i]==why || !std::strcmp(error_kind[i],why)){++error_count[i];return;}
+    }
+    ++error_kinds_lost;
+}
 unsigned catalog_faults; // bounded reason/owned-or-unowned bits; never a row cache
 bool active,catalog_ok;
 struct Queued { Consumer consumer; CheckedAsset asset;unsigned kind;Digest digest;unsigned room, visit; };
@@ -232,8 +243,10 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         const bool tex=tex_table && !std::strcmp(kind,"texture");
         const SparseResult result=tex?tex_find(id,digest,epoch,found,row):sparse_find(kind,id,digest,epoch,found);
         if(tex && result==SparseFound)desc_store(epoch<<14|found,row);
-        if(!catalog_ok || !index_generation(epoch))return {};
+        // A failed row read is a catalog-read fault even when a callback retired
+        // the catalog during it (deferred, attributed at the next flush).
         if(result==SparseFault){catalog_fault(CatalogRead);return {};}
+        if(!catalog_ok || !index_generation(epoch))return {};
         if(result==SparseFound)index=found;
         (void)row;
     } else for(unsigned i=0;i<rows;++i)if(!std::strcmp(catalog[i].kind,kind) && !std::strcmp(catalog[i].id,id) &&
@@ -258,8 +271,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
             re4dc_log("GC-ASSET-PROF quarantine n=%u kind=%s id=%s\n",unknown_count,kind,id);
 #endif
             if(unknown_count==UnknownLimit){
-                ++overflow;catalog_fault(CatalogCapacity);   // counted (END overflow=) and logged, never silent
-                re4dc_log("GC-ASSET-ERROR v=2 why=unknown-overflow kind=%s id=%s\n",kind,id);return {};
+                ++overflow;catalog_fault(CatalogCapacity);return {};   // counted (END overflow=), logged at the next flush (never inside I/O)
             }
             auto& unknown=unknown_assets[unknown_count++];unknown={};
             std::strcpy(unknown.kind,kind);std::strcpy(unknown.id,id);unknown.digest=digest;unknown.provenance=Unknown;
@@ -296,6 +308,7 @@ static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit
     if(active) { ++errors;end(0); }
     catalog_fault_flush(); // before old visit/scope fields can be reset
     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
+    for(unsigned i=0;i<ErrorKinds;++i){error_kind[i]=nullptr;error_count[i]=0;}error_kinds_lost=0;
     std::memset(emissions,0,sizeof emissions);active=true;
     std::memset(seen,0,sizeof seen);
     errors=queue_faults.exchange(0);
@@ -356,6 +369,7 @@ AudioTicket audio_ticket() {
     queue_lock.clear(std::memory_order_release);return ticket;
 }
 void close_audio_admission() { queue_active.store(0);admission_handoff=false; }
+constexpr unsigned DeferredUse=4;   // after PendingSound StreamContainer=3
 static void enqueue(AudioTicket ticket, Consumer consumer, CheckedAsset asset,unsigned kind,const Digest* digest) {
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;return; }
     if(ticket.slot>=32 || !ticket.serial || tickets[ticket.slot].serial!=ticket.serial) {
@@ -377,6 +391,7 @@ void queued_pending(AudioTicket ticket,Consumer consumer,PendingSound kind,const
     if(unsigned(kind)<SoundMram || unsigned(kind)>StreamContainer){enqueue(ticket,consumer,{},0,nullptr);return;}
     enqueue(ticket,consumer,{},kind,&digest);
 }
+void queued_deferred(AudioTicket ticket){enqueue(ticket,Movie,{},DeferredUse,nullptr);}
 void pump() {
     for(;;) {
         if(queue_lock.test_and_set(std::memory_order_acquire)) { ++queue_faults;break; }
@@ -388,6 +403,8 @@ void pump() {
         const Queued q=queue[queue_head];queue_head=(queue_head+1)%32;queue_lock.clear(std::memory_order_release);
         if(!active || q.room!=room || q.visit!=visit) {
             if(active)++errors;else re4dc_log("GC-ASSET-ERROR v=2 why=audio-room-lifetime\n");
+        } else if(q.kind==DeferredUse){
+            // the owner emits (or reports unresolved) when it binds
         } else if(q.kind){
             char id[65];hex(q.digest,id);id[40]=0;
             const char* kind=q.kind==SoundMram?"sound-mram":q.kind==SoundAram?"sound-aram":"sound-stream";
@@ -405,7 +422,7 @@ void checked(Consumer consumer) {
     checked_mask |= 1U << consumer;
 }
 void unresolved(Consumer consumer, const char* reason) {
-    if(active)++errors;
+    if(active){++errors;error_kind_note(reason?reason:"missing-identity");}
     re4dc_log("GC-ASSET-ERROR v=2 why=%s consumer=%u\n",reason?reason:"missing-identity",unsigned(consumer));
 }
 void emitted(Consumer consumer, const char* kind, const char* id, const Digest& digest) {
@@ -433,6 +450,29 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     re4dc_log("GC-ASSET v=2 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
         scope_text,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);
 }
+namespace {
+// One GC-ASSET-EKIND row per error kind, then the CKPT/END row (same fields).
+void print_checkpoint(const char* tag,unsigned frame){
+    unsigned named=0;
+    for(unsigned i=0;i<ErrorKinds && error_kind[i];++i){
+        named+=error_count[i];
+        re4dc_log("GC-ASSET-EKIND v=2 %s visit=%u at=%s why=%s count=%u\n",scope_text,visit,tag,error_kind[i],error_count[i]);
+    }
+    if(error_kinds_lost)re4dc_log("GC-ASSET-EKIND v=2 %s visit=%u at=%s why=kinds-overflow count=%u\n",scope_text,visit,tag,error_kinds_lost);
+    named+=error_kinds_lost;
+    if(errors>named)re4dc_log("GC-ASSET-EKIND v=2 %s visit=%u at=%s why=internal count=%u\n",scope_text,visit,tag,errors-named);
+    re4dc_log("GC-ASSET-%s v=2 %s visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
+        tag[0]=='c'?"CKPT":"END",scope_text,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
+}
+}
+// Periodic in-room checkpoint (judge contract v2): the visit so far, without
+// closing it, so a run that never leaves the room is still judged.
+void checkpoint(unsigned frame) {
+    if(!active)return;
+    pump();
+    errors+=queue_faults.exchange(0);
+    print_checkpoint("ckpt",frame);
+}
 void end(unsigned frame) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=2 why=no-room-end\n");return; }
     if(!admission_handoff)queue_active.store(0);
@@ -451,8 +491,7 @@ void end(unsigned frame) {
     re4dc_log("GC-ASSET-COUNTS v=2 %s visit=%u source_geometry=%u texture=%u effect_picture=%u weapon=%u font=%u ui=%u sound_bank=%u sound_stream=%u movie=%u motion=%u\n",
         scope_text,visit,
         emissions[0],emissions[1],emissions[2],emissions[3],emissions[4],emissions[5],emissions[6],emissions[7],emissions[8],emissions[9]);
-    re4dc_log("GC-ASSET-END v=2 %s visit=%u frame=%u wired=%03x checked=%03x required=%03x unique=%u overflow=%u errors=%u catalog_ok=%u\n",
-        scope_text,visit,frame,wired,checked_mask,Required,used,overflow,errors,unsigned(catalog_ok));
+    print_checkpoint("end",frame);
     active=false;
 }
 #if defined(RE4DC_GC_ASSET_TEST)

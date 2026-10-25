@@ -14,6 +14,7 @@ struct ModelMember {
 // Duplicate adoption of the same current view does not rehash relocated bytes.
 bool member_adopt(const void* owner, void* archive, unsigned bytes, bool transient,OwnerFamily family=OtherOwner);
 void member_retire(const void* owner);
+void member_move(const void* owner,void* base);
 void member_retire_transient();
 // Called once before calcModelAddr changes source offsets. Never hashes a
 // pointer until a live, bounded complete BIN member has been located.

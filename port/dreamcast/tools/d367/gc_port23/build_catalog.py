@@ -118,6 +118,67 @@ def etm_members(b):
     return out
 
 
+def table_bins(c, tbl, idx0, n, limit):
+    """gc_asset_members.cpp table_bins: BINs of a model offset table."""
+    if tbl > len(c) or n > 4096 or idx0 + 4 * n > len(c) - tbl or limit > len(c) - tbl:
+        return
+    lo = idx0 + 4 * n
+    offs = [word(c, tbl + idx0 + 4 * i) for i in range(n)]
+    seen = set()
+    for o in offs:
+        if o < lo or o >= limit or o in seen:
+            continue
+        seen.add(o)
+        end = min([q for q in offs if o < q < limit] + [limit])
+        if end - o >= 64:
+            yield c[tbl + o:tbl + end]
+
+
+def container_bins(tag, c):
+    """gc_asset_members.cpp container_bins: SMD / SHD / ITM model containers."""
+    if len(c) < 16:
+        return
+    if tag[:3] in (b'SMD', b'SHD'):
+        t = word(c, 4)
+        if t < 16 or t > len(c) - 4 or t & 3:
+            return
+        first = word(c, t)
+        if first < 4 or first & 3:
+            return
+        limit = len(c) - t
+        if tag[:3] == b'SMD':
+            tt = word(c, 8)
+            if t < tt <= len(c):
+                limit = tt - t
+        yield from table_bins(c, t, 0, first // 4, limit)
+    elif tag[:3] == b'EFF':
+        if len(c) < 0x30 or word(c, 0) != 0xB:
+            return
+        t = word(c, 0x2c)
+        if t < 0x30 or t > len(c) - 4 or t & 3:
+            return
+        n = word(c, t)
+        if n > 4096 or 4 + 4 * n > len(c) - t:
+            return
+        starts = [t + word(c, t + 4 + 4 * j) for j in range(n)]
+        for e in starts:
+            if e < t or e > len(c) - 20:
+                continue
+            m = e + word(c, e + 4)
+            if m < e + 20 or m >= len(c):
+                continue
+            ends = [e + word(c, e + 4 * k) for k in range(2, 5) if word(c, e + 4 * k) and m < e + word(c, e + 4 * k) < len(c)]
+            ends += [q for q in starts if m < q < len(c)]
+            end = min(ends + [len(c)])
+            if end - m >= 64:
+                yield c[m:end]
+    elif tag[:3] == b'ITM':
+        ob, ot = word(c, 8), word(c, 12)
+        if ob < 16 or ob > len(c) - 4 or ob & 3:
+            return
+        yield from table_bins(c, ob, 4, word(c, ob), ot - ob if ob < ot <= len(c) else len(c) - ob)
+
+
 def model_payloads(b, depth=0):
     for _index, tag, start, end in archive_spans(b):
         span = b[start:end]
@@ -128,6 +189,8 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
+        elif tag[:3] in (b'SMD', b'SHD', b'ITM', b'EFF'):
+            yield from container_bins(tag, span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)
 
@@ -226,7 +289,11 @@ def collect(disc):
         m = MOVIE.match(name)
         if m and low.startswith('dc/movie/'):
             mid = (int(m.group(1), 16) << 8) | int(m.group(2), 16) | (0x1000000 if m.group(3) else 0)
-            add('movie', '%05x' % mid, p.read_bytes(), rel)
+            data = p.read_bytes()
+            # native_movie.cpp hashes the played bytes and takes 32..2048 as zero
+            if len(data) >= 2048 and data[32:2048] != bytes(2016):
+                raise SystemExit('movie header padding not zero: ' + rel)
+            add('movie', '%05x' % mid, data, rel)
             continue
         if low == 'bgm/aica_str.dat':
             for k, data in stream_entries(p.read_bytes()):

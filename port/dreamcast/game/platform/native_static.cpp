@@ -724,6 +724,10 @@ struct StdRoom {
     StdTex tex[kStdTex]; StdKey drop[kStdDrop]; StdCull cull[kStdCull]; StdImp imp[kStdImp]; StdPtex ptex[kStdPtex]; StdImpt impt[kStdImpt];
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::PayloadProof asset_proof;
+    // gc-catalog24b: the room's index was looked up and not used: 1 missing
+    // (Absent), 2 oversized or rejected (Rejected). The room then draws Original
+    // packages exactly as with no index.
+    unsigned char gca_unused=0;
 #endif
 };
 StdRoom std_room;
@@ -2303,6 +2307,7 @@ void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
 #if RE4DC_QUALITY_ASSETS
     if(!re4dc_quality_std_assets())static_manifest_note(source,STD_INDEX,Disabled);
     else if(std_room.active && std_room.room==room)static_manifest_receipt(source,STD_INDEX,std_room.asset_proof,&std_room,1,StaticConsumedSpan);
+    else if(std_room.room==room && std_room.gca_unused)static_manifest_note(source,STD_INDEX,std_room.gca_unused==1?Absent:Rejected);
     else static_manifest_note(source,STD_INDEX,Unproven);
 #else
     static_manifest_note(source,STD_INDEX,Disabled);
@@ -3948,10 +3953,16 @@ extern "C" void re4dc_std_room_enter(unsigned room){
     gcasset_static_invalidate_all();re4dc_gcasset::payload_retire(r.asset_proof);
 #endif
     r.room=room;r.active=false;r.mesh_views=0;r.checked=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=0;
+#endif
     if(!re4dc_quality_std_assets())return;
     char path[64];snprintf(path,sizeof(path),"/cd/dc/native/r%x%02x/low/index.txt",room>>8,room&255U);
     char* text=static_cast<char*>(std::malloc(kStdText));
     const int n=text?re4dc_fixture_read(path,text,kStdText):-1;
+#if RE4DC_GC_ASSET_GATE
+    r.gca_unused=n<=0?1:2;   // cleared once the index is accepted below
+#endif
     if(n<=0){re4dc_log("quality assets: %s missing: Original packages\n",path);std::free(text);return;}
     if(n>=int(kStdText)){re4dc_log("quality assets: %s larger than %u B: Original packages\n",path,kStdText);std::free(text);return;}
 #if RE4DC_GC_ASSET_GATE
@@ -3964,6 +3975,7 @@ extern "C" void re4dc_std_room_enter(unsigned room){
     std::free(text);
     if(!r.active){r.mesh_views=0;r.ntex=r.ndrop=r.ncull=r.nimp=r.nptex=r.nimpt=0;re4dc_log("quality assets: %s rejected: Original packages\n",path);return;}
 #if RE4DC_GC_ASSET_GATE
+    r.gca_unused=0;
     re4dc_gcasset::payload_capture_receipt(r.asset_proof,&r,gcasset_digest,unsigned(n));
 #endif
     re4dc_log("quality assets: %s mesh=%02x tex=%u drop=%u cull=%u imp=%u impt=%u ptex=%u\n",path,r.mesh_views,r.ntex,r.ndrop,r.ncull,r.nimp,r.nimpt,r.nptex);
@@ -5789,6 +5801,12 @@ static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts GCASSET_STATIC
 #endif
             cls=block+sizeof(Head);room=r;nparts=parts;}
         else if(block){re4dc_static_free(block);block=nullptr;}
+#if RE4DC_GC_ASSET_GATE
+        // gc-catalog24b: present but rejected by its own checks (size, header,
+        // stale r4pw crc, body crc): none of it is used. Heap/read faults stay Unproven.
+        if(why && std::strcmp(why,"heap") && std::strcmp(why,"read"))
+            gcasset_static_state(gcmanifest,re4dc_gcasset::R4TC,re4dc_gcasset::Rejected);
+#endif
     }
     re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
               re4dc_static_heap_free());
@@ -6581,6 +6599,7 @@ bool ps2_open(){
         } else if(ib)iwhy="read";
 #if RE4DC_GC_ASSET_GATE
         if(fi==FILEHND_INVALID)static_manifest_note(gcasset_source,R4ID,Absent);
+        else if(iwhy && !std::strcmp(iwhy,"header"))static_manifest_note(gcasset_source,R4ID,Rejected); // gc-catalog24b: present, not used
 #endif
         if(ib)re4dc_static_free(ib);
         re4dc_log("PS2DYN room=%03x ids=%s placements=%u unique=%u heap=%d\n",ps2w.room,iwhy?iwhy:"ok",dyn::nids,dyn::nslots,re4dc_static_heap_free());
@@ -6702,6 +6721,8 @@ bool ps2_open(){
 #endif
 #if RE4DC_GC_ASSET_GATE
         if(fg==FILEHND_INVALID)static_manifest_note(gcasset_source,R4SG,Absent);
+        // gc-catalog24b: present but rejected by its own checks: none of it is used
+        else if(gwhy && std::strcmp(gwhy,"heap") && std::strcmp(gwhy,"read"))static_manifest_note(gcasset_source,R4SG,Rejected);
         else if(!gwhy){
 #if RE4DC_WORLD_VERT
             if(gsize<=galloc && galloc<=40U*1024*1024)
