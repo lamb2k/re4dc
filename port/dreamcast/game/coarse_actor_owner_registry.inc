@@ -1081,6 +1081,15 @@ extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
 // runtime descriptor (contract entries such as the crow have none) leaves the FRONT_NATIVE fast return so its OT
 // callbacks reach commonModelTrans and the transaction. Id and part count only nominate (another model class can
 // share an id: r103 has a 4-part id 0x21 model besides the 32-bone dog); admission is the proofs above.
+#if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
+// NATIVE_MODEL_REGISTRY_NO_GC_FRONT (native_model_registry.mk): 1 while a registry binding owns this model (same address
+// and serial), i.e. the registry drew it on an earlier frame; trans.cpp then never draws it through frontNativeRender.
+extern "C" int re4dc_registry_owned(const cModel* m) {
+    if(!m || !registry_id(m->id))return 0;
+    for(const auto& e:registry_bindings)if(e.owner==m && e.serial==m->serial)return 1;
+    return 0;
+}
+#endif
 extern "C" int re4dc_registry_candidate(const cModel* m) {
     if(!registry_id(m->id))return 0;
     for(unsigned d=0;d<registry.descriptor_count;++d)
