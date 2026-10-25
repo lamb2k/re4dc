@@ -43,7 +43,9 @@ rm -rf "${R:?}/pkgtree"
 # zip: tracks + newest qa*/README-package.txt + SHA256SUMS.txt
 QR=$(bash "$BIN/rr-newest.sh" 'qa[^/]*' README-package.txt "$R/README.lf")
 echo "QA README: $QR"
-tr -d '\r' < "$R/README.lf" | sed 's/$/\r/' > "$R/README.txt"
+# TN_PLACEHOLDER in the README = the test name this zip is packaged with (rr.sh package <tag> <N>)
+tr -d '\r' < "$R/README.lf" | sed "s/TN_PLACEHOLDER/$TN/g" | sed 's/$/\r/' > "$R/README.txt"
+! grep -q PLACEHOLDER "$R/README.txt" || { echo "QA README: unfilled placeholder"; exit 1; }
 (cd "$R/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > "$R/SHA256SUMS.txt"
 Z=RE4DC-QA-Test$TN-$S8-$(date +%Y%m%d)-GDEMU.zip
 if [ "$ZD" = - ]; then ZP=$R/$Z; else mkdir -p "$ZD"; ZP=$ZD/$Z; fi
