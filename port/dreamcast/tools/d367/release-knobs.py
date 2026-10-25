@@ -95,7 +95,8 @@ def private_dirs(knobs, bundle):
         k, v = kv.split('=', 1)
         if k in PRIVATE:
             pre = '%s/%s' % (ZIP_ROOT, PRIVATE[k])
-            seen[pre] = seen.get(pre, set()) | {(k, Path(v).resolve())}
+            # a repeated knob keeps only its last value (make takes the last one)
+            seen[pre] = {x for x in seen.get(pre, set()) if x[0] != k} | {(k, Path(v).resolve())}
             dirs = [d for d in dirs if d[0] != pre]
             dirs.append((pre, Path(v)))
     for pre, kd in seen.items():
