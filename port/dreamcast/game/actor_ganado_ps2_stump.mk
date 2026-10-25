@@ -27,6 +27,8 @@ endif
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_GANADO_PS2_STUMP=1
 ifeq ($(ACTOR_GANADO_PS2_GRIP),1)
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_GANADO_PS2_GRIP=1
+# compose-test24 (10-24, s30 heap 4): every route movie borrows the variant cell before heap_before (native_movie.cpp).
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_VAR_MOVIE_LEND=1
 endif
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -I$(ACTOR_GANADO_PS2_STUMP_DIR)
 $(OBJDIR)/coarse_ganado.o: $(ACTOR_GANADO_PS2_STUMP_DIR)/ganado_ps2_stump_runtime.h
