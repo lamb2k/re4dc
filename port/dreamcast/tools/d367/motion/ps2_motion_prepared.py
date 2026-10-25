@@ -12,7 +12,9 @@ record points at a little-endian body at the end of the file:
           (empty, over the 32 KiB slot) stay whole
   tables  ESQ (R4ESQTBL: effect records, archive offsets), NTR (R4NTBL: texture payload/header/TPL archive offsets),
           MTC (R4MOTBL v2: per clip resident offset, bytes, crc, fnv, hot flag), each with a CRC-32 and the archive size
-  REL     the 64-byte static module descriptor (rel = its offset)
+  REL     the 64-byte static module descriptor or a whole REL (rel = its offset; 0 = none), moved intact
+Also plain / texture-prepared archives (Leon pl00 / pl08, the weapons): no MTC (every FCV stays whole), optional NTR /
+ESQ, the body anywhere in the container (records after it, e.g. the sound bank, move with the size change).
 rewrite: every FCV / SEQ member gets the PS2 entry of the same slot (BIO4DAT.AFS emNN.dat; PS2 FCV = the host image,
 PS2 SEQ = one u32 per key). The body is laid out again: members keep their order, FCV prefixes take the PS2 joint
 count, every archive offset (body table, rel, ESQ / NTR / MTC rows, table archive-size words) is remapped, MTC rows are
@@ -28,6 +30,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, '..', '..'))
 import ps2_bin  # noqa: E402
+import le_mirror as mirror  # noqa: E402
 from ps2_motion import ps2_fcv_host, ps2_seq_host, host_len  # noqa: E402
 
 MAX_CLIP = 32768
@@ -57,13 +60,14 @@ def key_of(b):
 class Prepared:
     def __init__(self, d):
         self.d = d
-        size, base = struct.unpack_from('<I4xI', d, 32 + 4)
-        assert U32(d, 32) == 0 and base + size == len(d), 'type-0 body must end the container'
+        # the live body is the container's one type-0 record (le_mirror.native_payload_slot); a prepared file may keep
+        # the original body at 0x400 as unread bytes, so never assume the body sits at 0x400
+        self.slot = mirror.native_payload_slot(d)
+        size, base = struct.unpack_from('<I4xI', d, self.slot + 4)
         self.base, self.size = base, size
         b = self.b = d[base:base + size]
         n, rel = struct.unpack_from('<2I', b)
         self.n, self.rel = n, rel
-        assert len(b) - rel == 64, 'expected the 64-byte static REL descriptor'
         self.offs = list(struct.unpack_from('<%dI' % n, b, 16))
         self.tags = [bytes(b[16 + 4 * n + 4 * i:20 + 4 * n + 4 * i]) for i in range(n)]
         self.first = min(o for o in self.offs if o)
@@ -71,16 +75,19 @@ class Prepared:
         for t in (b'ESQ\0', b'NTR\0', b'MTC\0'):
             if t in self.tags:
                 self.tab[t] = self.offs[self.tags.index(t)]
-        self.boundary = min(self.tab.values())
+        tail = rel or len(b)
+        self.boundary = min(list(self.tab.values()) + [tail])
         order = sorted(self.tab, key=self.tab.get)
-        assert self.tags[n - len(order):] == order and order[-1] == b'MTC\0', self.tags[-3:]
-        self.tspan = {t: (self.tab[t], ([self.tab[u] for u in order[k + 1:]] + [rel])[0]) for k, t in enumerate(order)}
+        assert self.tags[n - len(order):] == order, self.tags[-3:]
+        self.tspan = {t: (self.tab[t], ([self.tab[u] for u in order[k + 1:]] + [tail])[0]) for k, t in enumerate(order)}
         self.starts = sorted(set(o for o in self.offs if self.first <= o < self.boundary))
         self.ends = self.starts[1:] + [self.boundary]
-        mo = self.tab[b'MTC\0']
-        assert b[mo:mo + 8] == b'R4MOTBL\0' and U32(b, mo + 8) == 2
-        cnt = U32(b, mo + 12)
         self.mtc = {}
+        mo = self.tab.get(b'MTC\0')
+        cnt = 0
+        if mo is not None:
+            assert b[mo:mo + 8] == b'R4MOTBL\0' and U32(b, mo + 8) == 2
+            cnt = U32(b, mo + 12)
         for k in range(cnt):
             off, sz, crc, fnv, hot = struct.unpack_from('<5I', b, mo + 32 + 20 * k)
             self.mtc[off] = dict(bytes=sz, crc=crc, fnv=fnv, hot=hot, key='%08x-%08x' % (crc, fnv))
@@ -179,8 +186,8 @@ def rewrite(a):
         return starts_new[k] + (x - s)
     # tables: same sizes, rows remapped
     tb = {t: bytearray(P.b[a_:b_]) for t, (a_, b_) in P.tspan.items()}
-    esq, ntr, mtc = tb.get(b'ESQ\0'), tb.get(b'NTR\0'), tb[b'MTC\0']
-    rel_desc = P.b[P.rel:]
+    esq, ntr, mtc = tb.get(b'ESQ\0'), tb.get(b'NTR\0'), tb.get(b'MTC\0')
+    rel_desc = P.b[P.rel:] if P.rel else P.b[P.boundary + sum(len(v) for v in tb.values()):]
     final = boundary_new + sum(len(v) for v in tb.values()) + len(rel_desc)
     for t, stride, fields in ((esq, 12, (0,)), (ntr, 12, (0, 4, 8))):
         if t is None:
@@ -197,23 +204,33 @@ def rewrite(a):
     if ntr is not None:
         struct.pack_into('<I', ntr, 28, final)
     rows = [(starts_new[k], r) for k, (_, _, _, r) in enumerate(new_members) if r]
-    cap = (len(mtc) - 32) // 20
-    if len(rows) > cap:
-        raise SystemExit('MTC table has room for %d rows, need %d' % (cap, len(rows)))
-    tbl = b''.join(struct.pack('<5I', o, r['bytes'], r['crc'], r['fnv'], r['hot']) for o, r in rows)
-    mtc[32:] = tbl + bytes(len(mtc) - 32 - len(tbl))
-    struct.pack_into('<I', mtc, 12, len(rows))
-    struct.pack_into('<I', mtc, 20, zlib.crc32(tbl) & 0xffffffff)
-    struct.pack_into('<I', mtc, 24, final)
+    if mtc is not None:
+        cap = (len(mtc) - 32) // 20
+        if len(rows) > cap:
+            raise SystemExit('MTC table has room for %d rows, need %d' % (cap, len(rows)))
+        tbl = b''.join(struct.pack('<5I', o, r['bytes'], r['crc'], r['fnv'], r['hot']) for o, r in rows)
+        mtc[32:] = tbl + bytes(len(mtc) - 32 - len(tbl))
+        struct.pack_into('<I', mtc, 12, len(rows))
+        struct.pack_into('<I', mtc, 20, zlib.crc32(tbl) & 0xffffffff)
+        struct.pack_into('<I', mtc, 24, final)
     for t in sorted(tb, key=P.tab.get):
         out += tb[t]
     out += rel_desc
     assert len(out) == final
-    struct.pack_into('<I', out, 4, final - 64)
+    if P.rel:
+        struct.pack_into('<I', out, 4, mapped(P.rel))
     for i, o in enumerate(P.offs):
-        struct.pack_into('<I', out, 16 + 4 * i, mapped(o))
-    cont = bytearray(src[:P.base]) + out
-    struct.pack_into('<I', cont, 32 + 4, len(out))
+        struct.pack_into('<I', out, 16 + 4 * i, mapped(o) if o else 0)
+    # the container: bytes before the body as they are; anything after it (the sound bank) moves by the size change
+    delta = len(out) - P.size
+    cont = bytearray(src[:P.base]) + out + src[P.base + P.size:]
+    struct.pack_into('<I', cont, P.slot + 4, len(out))
+    for pos in range(32, 0x400, 32):
+        kind, _sz, _dst, off = struct.unpack_from('<4I', cont, pos)
+        if kind == 0xFFFFFFFF:
+            break
+        if pos != P.slot and off >= P.base + P.size:
+            struct.pack_into('<I', cont, pos + 12, off + delta)
     os.makedirs(os.path.join(a.outdir, 'em'), exist_ok=True)
     os.makedirs(os.path.join(a.outdir, 'dc', 'mot'), exist_ok=True)
     name = os.path.basename(a.payload)
@@ -250,7 +267,16 @@ def verify(a):
     bad = []
     nb, ob = new.b, old.b
     assert new.n == old.n and new.tags == old.tags
-    assert new.d[:36] + new.d[40:old.base] == old.d[:36] + old.d[40:old.base], 'container head changed (beyond the body size word)'
+    assert new.base == old.base and new.d[0x400:old.base] == old.d[0x400:old.base], 'container bytes before the body changed'
+    assert new.d[new.base + new.size:] == old.d[old.base + old.size:], 'container bytes after the body changed'
+    for pos in range(32, 0x400, 32):  # record table: only the body size and the offsets after it move
+        ro, rn = struct.unpack_from('<4I', old.d, pos), struct.unpack_from('<4I', new.d, pos)
+        want = (ro[0], new.size if pos == old.slot else ro[1], ro[2],
+                ro[3] + (new.size - old.size if pos != old.slot and ro[3] >= old.base + old.size else 0))
+        if rn != want and ro[0] != 0xFFFFFFFF:
+            raise SystemExit('record at %#x: %s, expected %s' % (pos, rn, want))
+        if ro[0] == 0xFFFFFFFF:
+            break
     ok = dict(fcv_streamed=0, fcv_whole=0, seq=0, other=0)
     for i in range(new.n):
         t = new.tags[i]
@@ -301,16 +327,19 @@ def verify(a):
                 x, y = U32(nb, no_ + 32 + stride * r + f), U32(ob, oo_ + 32 + stride * r + f)
                 if nb[x:x + 32] != ob[y:y + 32]:
                     bad.append('%s row %d field %d points elsewhere' % (t, r, f))
-    mo = new.tab[b'MTC\0']
-    if zlib.crc32(nb[mo + 32:mo + 32 + 20 * U32(nb, mo + 12)]) & 0xffffffff != U32(nb, mo + 20):
+    mo = new.tab.get(b'MTC\0')
+    if mo is not None and zlib.crc32(nb[mo + 32:mo + 32 + 20 * U32(nb, mo + 12)]) & 0xffffffff != U32(nb, mo + 20):
         bad.append('MTC crc')
     for t in (b'ESQ\0', b'MTC\0'):
         if t in new.tab and U32(nb, new.tab[t] + 24) != len(nb):
             bad.append('%s archive size' % t)
     if b'NTR\0' in new.tab and U32(nb, new.tab[b'NTR\0'] + 28) != len(nb):
         bad.append('NTR archive size')
-    if nb[new.rel:] != ob[old.rel:]:
-        bad.append('REL descriptor changed')
+    if bool(new.rel) != bool(old.rel) or (old.rel and nb[new.rel:] != ob[old.rel:]):
+        bad.append('REL changed')
+    # report (not a failure): an unread copy of the original body before the live one still holds GC motion
+    if old.base > 0x400 and old.d[0x400:0x404] == old.b[:4]:
+        ok['unread_original_body_bytes'] = old.base - 0x400
     hot_old = {tuple(old.slots_at(o)) for o, r in old.mtc.items() if r['hot']}
     hot_new = {tuple(new.slots_at(o)) for o, r in new.mtc.items() if r['hot']}
     if hot_old != hot_new:

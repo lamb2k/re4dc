@@ -68,8 +68,16 @@ def ps2_fcv_host(d):
     """The PS2 FCV entry as the port's host image (== the entry itself, proved)."""
     if d[2] == 0:
         return d  # empty motion (maxFrame, no joints): read as such by both layouts
-    m = fcv.parse(fcv_le_to_be(d))
-    if fcv.serialise(m, '<') != d:
+    n = d[2]
+    so = (3 + 3 * n + 3) & ~3
+    size = struct.unpack_from('<I', d, so)[0]
+    chk = d
+    if size not in (0, len(d)):
+        # PS2 wep10: the size word (0x19a0) is 32 B short of the entry its key blocks fill (0x19c0). The game never
+        # reads the word (MotionSetCore skips it); validate the layout with the entry size, ship the PS2 bytes as they are.
+        chk = d[:so] + struct.pack('<I', len(d)) + d[so + 4:]
+    m = fcv.parse(fcv_le_to_be(chk))
+    if fcv.serialise(m, '<') != chk:
         raise ValueError('PS2 FCV does not round-trip through the codec')
     return d
 
