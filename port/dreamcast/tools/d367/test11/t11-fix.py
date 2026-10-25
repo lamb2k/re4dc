@@ -1199,6 +1199,15 @@ DATA['nostd25'] = {'remove': ['dc/native/%s/low/%s' % (_r, f) for _r, fs in (
         'af040e00-9c2ae0f5 b0810ada-e2994a70 b4b6940a-0b0c01cb c63541b7-937b388d ceb4070a-b81f5b19 d5558c72-9668d80d '
         'ea4b493a-dcd2aec4 eaaf4961-556f130e fc9c61df-f5aa959f').split()]}
 
+# n256w25 (lane scenery-cut25 10-25, Test 25 "less scenery drawn"): the r101 / r103 PS2 worlds re-exported with meshlets of up
+# to 256 vertices (shipped 64): r101 by the hook -> append -> strip-groups chain, r103 by ps2_room_r4im.py
+# --meshlet-vertices 256 (both reproduce the shipped 64 files byte-identically at 64). R4PW / ids / r4tc unchanged. Needs
+# SCENERY_N256=1 (the two packages' rect21 certificates); release line only, never KSETS. Store: re4-assets-private/n256w25-20261025.
+N256W25D = os.environ.get('N256W25D', '/root/re4data/private/n256w25-20261025')
+DATA['n256w25'] = {'dc/native/r101/ps2-world.re4mesh': N256W25D + '/dc/native/r101/ps2-world.re4mesh',
+                   'dc/native/r101/ps2-world.r4sg': N256W25D + '/dc/native/r101/ps2-world.r4sg',
+                   'dc/native/r103/ps2-world.re4mesh': N256W25D + '/dc/native/r103/ps2-world.re4mesh'}
+
 
 if __name__ == '__main__':
     main()

@@ -17,8 +17,15 @@ struct Certificate {
 };
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
+#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
+#include "provenance_certificates_n256.inc"
+#endif
 };
+#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
+static_assert(sizeof(certificates)/sizeof(certificates[0])==29U);
+#else
 static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
+#endif
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);
