@@ -1141,7 +1141,8 @@ DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
 # output (tools/d367/vram/pak_chain.py: every set's own pak-derived.json delta, added keys + re-made keys, applied to the
 # running pack; no key is touched by two sets): mip22b 5bba464a -> fol24 35eba5c2 -> pui24 7fd3027f -> pfx24 7a54e971 ->
 # pui24s b21f13ed -> props24 200b3bab -> props24p 8666802e -> atlas24 f0e1544e -> props24b 0f85cab4 -> props24l
-# 0f85cab4 -> props24x 437fc79d -> leonhair24 1b26f579 -> leonatl24 5e0b72b8 (7341 keys). The stores' own packs forked
+# 0f85cab4 -> props24x 437fc79d -> leonhair24 1b26f579 -> leonatl24 5e0b72b8 (7341 keys) -> wep24 (pack_add of the
+# wep24 + wep24ss loose tex/ pictures, so pak17's drop-loose holds; NOTEX = the set stages no loose pictures). The stores' own packs forked
 # at fol24 (props24*, leonhair24) or pui24s; with T24PAK present every set stages its chain pack and chain sidecar
 # instead (room archives and other files unchanged). Store /root/re4data/private/t24pak-20261024 (RECIPE.txt, SHA256SUMS).
 T24PAKD = os.environ.get('T24PAKD', '/root/re4data/private/t24pak-20261024')
@@ -1150,6 +1151,8 @@ if os.path.isdir(T24PAKD):
         if _s in DATA and os.path.isfile('%s/%s/dc/tex.pak' % (T24PAKD, _s)):
             DATA[_s]['dc/tex.pak'] = '%s/%s/dc/tex.pak' % (T24PAKD, _s)
             PAK_DERIVED[_s] = '%s/%s/pak-derived.json' % (T24PAKD, _s)
+        if _s in DATA and os.path.isfile('%s/%s/NOTEX' % (T24PAKD, _s)):
+            DATA[_s].pop('tex', None)   # its loose pictures are in the chain pack (wep24: pack_add of wep24 + wep24ss tex/)
 # t24prune (lane compose-test24 10-24, Test 24 disc fit): the composed line's tex.pak with its dead keys dropped
 # (vram/texpak_live.py <final tree> --write-pak, same package bytes for every live key). LAST in the data line; built from
 # the tree of everything before it, so rebuild it whenever an earlier set changes. pak-derived.json: base = leonatl24's chain pack.
