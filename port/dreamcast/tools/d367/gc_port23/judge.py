@@ -20,7 +20,7 @@ HERE = Path(__file__).resolve().parent
 
 BASE_PROTOCOL = dict(schema=2, gate='GC-ASSET', diagnostic_version=PROTOCOL_VERSION,
                      required=f'{REQUIRED:03x}', consumers=list(CONSUMERS),
-                     motion_coverage='unwired; zero counter is not a zero-use assertion',
+                     motion_coverage='wired (gc-catalog24b): one kind=motion row per FCV/SEQ clip key <crc32>-<fnv1a>, sha256 = sha256 of the 8-byte little-endian {crc,fnv}',
                      motion_identity_kind='motion', legacy_diagnostic_versions_rejected=[1],
                      catalog_format_schema=1, reviewed_allowlist_schema=1)
 CONTRACT = 2   # judge contract v2 (gc-catalog24b, coordinator 10-24): CKPT, wired mask, errors per kind

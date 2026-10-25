@@ -62,7 +62,8 @@ void mutex_unlock(int*){assert(mutex_held);mutex_held=false;++unlocks;}
 unsigned frame=10,resets;struct Entry{bool pending=false;};Entry entries[1];CheckedAsset asset;bool inject_audio;
 void gcasset_texture_flush(Entry&e){assert(!mutex_held);if(e.pending){emitted_checked(Texture,asset);e.pending=false;}}
 void gcasset_packet_reset(){assert(!mutex_held);++resets;}
-namespace re4dc_gcasset{void member_flush(){assert(!mutex_held);}void payload_flush_all(){assert(!mutex_held);}void bank_pump(){assert(!mutex_held);if(inject_audio){inject_audio=false;mutex_lock(&g_lock);queued_checked(audio_ticket(),SoundBank,asset);mutex_unlock(&g_lock);}}bool ensure_disc_catalog(){assert(!mutex_held);return true;}}
+namespace re4dc_gcasset{void motion_flush();void motion_visit_reset();}
+namespace re4dc_gcasset{void member_flush(){assert(!mutex_held);}void motion_flush(){assert(!mutex_held);}void motion_visit_reset(){assert(!mutex_held);}void payload_flush_all(){assert(!mutex_held);}void bank_pump(){assert(!mutex_held);if(inject_audio){inject_audio=false;mutex_lock(&g_lock);queued_checked(audio_ticket(),SoundBank,asset);mutex_unlock(&g_lock);}}bool ensure_disc_catalog(){assert(!mutex_held);return true;}}
 ''' + lifecycle + r'''
 struct Global{unsigned stage_no=1,room_no=0x11,room_id=0x111;}global;Global*pG=&global;
 unsigned room_frames;bool steady_logged,heap_live=true,movie_can_retire=true;unsigned cache_enters,cache_leaves;
@@ -81,8 +82,8 @@ mutex_unlock(&g_lock);}
 int main(){unsigned char bytes[]={1,2,3};CatalogRow row{"texture","title",fingerprint(bytes,3),Unknown};assert(install(&row,1));asset=bind_checked("texture","title",row.digest);
  gcasset_startup();assert(gcasset_visit_live && actor_starts==1 && logs.find("phase=startup visit=1")!=std::string::npos);
  entries[0].pending=true;audio_step_checkpoint();inject_audio=true;re4dc_gcasset_retire();
- assert(logs.find("phase=startup visit=1 kind=texture")!=std::string::npos && logs.find("checked=1f6")!=std::string::npos);
- assert(logs.find("wired=1f6")!=std::string::npos); // static geometry/weapon coverage is deliberately unfinished
+ assert(logs.find("phase=startup visit=1 kind=texture")!=std::string::npos && logs.find("checked=3fe")!=std::string::npos);
+ assert(logs.find("wired=3fe")!=std::string::npos); // gc-catalog24b r8: Weapon + Motion wired; static geometry still unfinished
  assert(gcasset_phase==GcTransition && gcasset_visit_serial==2);
  unsigned old_resets=resets;re4dc_gcasset_retire();assert(resets==old_resets); // successful repeated retirement is idempotent
  assert(logs.find("phase=transition visit=2 kind=texture")!=std::string::npos && logs.find("consumer=sound_bank")!=std::string::npos);
@@ -92,7 +93,7 @@ int main(){unsigned char bytes[]={1,2,3};CatalogRow row{"texture","title",finger
  entries[0].pending=true;audio_step_checkpoint();re4dc_room_leave();assert(gcasset_phase==GcTransition && gcasset_visit_serial==4 && logs.find("room=0111 visit=3 kind=texture")!=std::string::npos);
  assert(logs.find("from_room=0111 transition_reason=room-retire")!=std::string::npos);
  assert(cache_enters==1 && cache_leaves==1); // audit leave remains after its original refusal guards
- logs.clear();audio_step_checkpoint();re4dc_gcasset_room_enter(0x113);re4dc_gcasset_finish();assert(logs.find("checked=136")!=std::string::npos); // missing actual audio flush is not checked
+ logs.clear();audio_step_checkpoint();re4dc_gcasset_room_enter(0x113);re4dc_gcasset_finish();assert(logs.find("checked=33e")!=std::string::npos); // missing actual audio flush is not checked
  logs.clear();re4dc_gcasset_room_enter(0x117);re4dc_gcasset_room_enter(0x118);assert(logs.find("room-enter-without-transition")!=std::string::npos);re4dc_gcasset_finish();
  gcasset_visit_serial=~0U;logs.clear();re4dc_gcasset_room_enter(0x119);assert(!gcasset_visit_live && logs.find("visit-serial-exhausted")!=std::string::npos);
  assert(locks==unlocks && !mutex_held);
