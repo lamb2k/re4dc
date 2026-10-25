@@ -22,6 +22,11 @@ bool payload_capture(PayloadProof&,const void* owner,const void* base,unsigned b
 // No span table is retained.
 struct PayloadSpan {const void* data;unsigned bytes;};
 bool payload_capture_fragments(PayloadProof&,const void* owner,const PayloadSpan*,unsigned count);
+// Two identities from one compiled owner: spans (the drawn data) is the proof's
+// asset; side (data of another origin consumed with it) is its layout_asset, so
+// each is judged on its own row and both are emitted on every use.
+bool payload_capture_fragments_split(PayloadProof&,const void* owner,const PayloadSpan* spans,unsigned count,
+                                     const PayloadSpan* side,unsigned side_count);
 // Safe load boundary only: digest must come from a complete successful read
 // of this exact owned source. The caller separately proves every accepted
 // copy/range/lifetime; this creates no positive pointer-range authority.

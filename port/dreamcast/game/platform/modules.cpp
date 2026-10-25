@@ -155,6 +155,9 @@ MODULE(wep19)
 #if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
 MODULE(wep04)
 #endif
+#if defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05
+MODULE(wep05)
+#endif
 #if RE4DC_SUBSCREEN && !RE4DC_SUBSCREEN_OVL
 MODULE(Sscrn)
 #endif
@@ -318,6 +321,9 @@ static const Re4dcModule g_modules[] = {
 #endif
 #if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
     MODULE(70, wep04), // WEAPON_WEP04: Blacktail
+#endif
+#if defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05
+    MODULE(67, wep05), // WEAPON_WEP05: weapon 5 (item 0x29)
 #endif
 #if RE4DC_SUBSCREEN_OVL
     {71, "Sscrn", 0, 0, 0, 0, 0, 0, 0},  // sub screen overlay (entry points set per load)

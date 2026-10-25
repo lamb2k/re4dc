@@ -170,13 +170,9 @@ bool payload_capture(PayloadProof& proof,const void* owner,const void* base,unsi
     proof.owner=owner;proof.base=base;proof.bytes=bytes;proof.layout=layout;proof.layout_bytes=layout_bytes;
     proof.asset=asset;proof.layout_asset=side;proof.serial=++payload_serial;return true;
 }
-bool payload_capture_fragments(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count){
-    GCA_SRC_ENTER("payload_capture_fragments");
-    // Stable compiled source owner only, before preparation. Reloaded packages
-    // must use the bounded contiguous capture/retire protocol instead.
-    if(!owner || !spans || !count || count>48 || proof.owner){
-        payload_retire(proof);unresolved(SourceGeometry,"fragment-owner");return false;
-    }
+namespace {
+// Versioned, length-framed digest of a borrowed span sequence (GCFRAG01).
+bool fragments_digest(const PayloadSpan* spans,unsigned count,Digest& digest){
     unsigned bytes=16+4*count;
     for(unsigned i=0;i<count;++i){
         const auto base=reinterpret_cast<std::uintptr_t>(spans[i].data);
@@ -207,8 +203,33 @@ bool payload_capture_fragments(PayloadProof& proof,const void* owner,const Paylo
         }
     } reader{spans,count};
     for(unsigned k=0;k<4;++k)reader.word[8+k]=count>>(8*k);
-    Digest digest{};if(!fingerprint_read(digest,Reader::read,&reader,bytes))return false;
+    return fingerprint_read(digest,Reader::read,&reader,bytes);
+}
+}
+bool payload_capture_fragments(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count){
+    GCA_SRC_ENTER("payload_capture_fragments");
+    // Stable compiled source owner only, before preparation. Reloaded packages
+    // must use the bounded contiguous capture/retire protocol instead.
+    if(!owner || !spans || !count || count>48 || proof.owner){
+        payload_retire(proof);unresolved(SourceGeometry,"fragment-owner");return false;
+    }
+    Digest digest{};if(!fragments_digest(spans,count,digest))return false;
     return payload_capture_digest(proof,owner,digest);
+}
+bool payload_capture_fragments_split(PayloadProof& proof,const void* owner,const PayloadSpan* spans,unsigned count,
+                                     const PayloadSpan* side,unsigned side_count){
+    GCA_SRC_ENTER("payload_capture_fragments_split");
+    if(!owner || !spans || !count || count>48 || !side || !side_count || side_count>48 || proof.owner){
+        payload_retire(proof);unresolved(SourceGeometry,"fragment-owner");return false;
+    }
+    Digest digest{},side_digest{};
+    if(!fragments_digest(spans,count,digest) || !fragments_digest(side,side_count,side_digest))return false;
+    if(!payload_capture_digest(proof,owner,digest))return false;
+    // The second identity rides as the proof's side asset: flush emits it with
+    // every use of the first (no layout pointer, layout_asset set).
+    const CheckedAsset second=capture_digest(side_digest);
+    if(!second.value){payload_retire(proof);unresolved(SourceGeometry,"payload-catalog-bind");return false;}
+    proof.layout_asset=second;return true;
 }
 bool payload_capture_digest(PayloadProof& proof,const void* owner,const Digest& digest){
     GCA_SRC_ENTER("payload_capture_digest");
