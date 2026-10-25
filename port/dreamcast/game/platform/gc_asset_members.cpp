@@ -357,7 +357,8 @@ constexpr unsigned MotionPendingCount=32,MotionDoneEntries=512,MotionFaultRing=8
 struct MotionDone{unsigned generation;unsigned char bits[MotionDoneEntries/8];};
 MotionDone motion_done[ArchiveCount];
 const void* motion_fault_ring[MotionFaultRing];unsigned motion_fault_next;
-unsigned motion_pending[MotionPendingCount],motion_pending_count;
+struct MotionPending{unsigned crc,fnv;};
+MotionPending motion_pending[MotionPendingCount];unsigned motion_pending_count;
 enum MotionFault{MotionUnbound,MotionNested,MotionBind,MotionCapacity,MotionBusy,MotionFaults};
 unsigned motion_faults[MotionFaults];
 std::atomic_flag motion_lock=ATOMIC_FLAG_INIT;
@@ -420,21 +421,25 @@ void motion_use(const void* pointer) {
         }
         crc=~key.crc;fnv=key.fnv;
     }
-    char id[24];::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
-    unsigned char k8[8];std::memcpy(k8,&crc,4);std::memcpy(k8+4,&fnv,4);
-    const CheckedAsset asset=bind_checked("motion",id,fingerprint(k8,8));
-    if(!asset.value){motion_fault(MotionBind);return;}
-    motion_pending[motion_pending_count++]=asset.value;
+    // The catalog bind happens at the flush, on the catalog owner's thread.
+    for(unsigned i=0;i<motion_pending_count;++i)if(motion_pending[i].crc==crc && motion_pending[i].fnv==fnv)return;
+    motion_pending[motion_pending_count++]={crc,fnv};
 }
 void motion_flush() {
-    unsigned pending[MotionPendingCount],n=0,faults[MotionFaults];
+    MotionPending pending[MotionPendingCount];unsigned n=0,faults[MotionFaults];
     if(motion_lock.test_and_set(std::memory_order_acquire))return;   // a use holds it: next flush
-    n=motion_pending_count;std::memcpy(pending,motion_pending,n*sizeof(unsigned));motion_pending_count=0;
+    n=motion_pending_count;std::memcpy(pending,motion_pending,n*sizeof(MotionPending));motion_pending_count=0;
     std::memcpy(faults,motion_faults,sizeof faults);std::memset(motion_faults,0,sizeof motion_faults);
     motion_lock.clear(std::memory_order_release);
     static const char* const why[MotionFaults]={"motion-unbound","motion-nested","motion-catalog-bind","motion-capacity","motion-busy"};
     for(unsigned f=0;f<MotionFaults;++f)for(unsigned c=0;c<faults[f];++c)unresolved(Motion,why[f]);
-    for(unsigned i=0;i<n;++i)emitted_checked(Motion,CheckedAsset{pending[i]});
+    for(unsigned i=0;i<n;++i){
+        char id[24];::snprintf(id,sizeof id,"%08x-%08x",pending[i].crc,pending[i].fnv);
+        unsigned char k8[8];std::memcpy(k8,&pending[i].crc,4);std::memcpy(k8+4,&pending[i].fnv,4);
+        const CheckedAsset asset=bind_checked("motion",id,fingerprint(k8,8));
+        if(!asset.value){unresolved(Motion,why[MotionBind]);continue;}
+        emitted_checked(Motion,asset);
+    }
 }
 // Visit boundary: every clip is reported again in the new visit.
 void motion_visit_reset() {
