@@ -961,6 +961,14 @@ PFX24D = os.environ.get('PFX24D', '/root/re4data/private/pfx24-20261024')
 if os.path.isdir(PFX24D):
     DATA['pfx24'] = {'dc/tex.pak': PFX24D + '/dc/tex.pak'}
     PAK_DERIVED['pfx24'] = PFX24D + '/pak-derived.json'
+# pui24f (lane purge-ui24 10-24, GC purge: fonts): the English glyph sheets as PS2 glyphs. The PS2 USA build's only Latin
+# font is common_p.fnt, cell for cell the GC common_p layout (+ PS2 pad glyph rows the Dreamcast does not use), so
+# common_p.fnt and the per-stage *_p sheets (stage1/2, event1-3, sscrn) get the PS2 cells and width bytes in the GC
+# container (tools/d367/purgeui24/ps2_font.py; same sizes; le_mirror form, pipeline identity checked). No runtime change.
+# Independent of the tex.pak sets. Store: re4-assets-private/pui24f-20261024 (RECIPE.txt + SHA256SUMS + report.json).
+PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
+if os.path.isdir(PUI24FD):
+    DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap

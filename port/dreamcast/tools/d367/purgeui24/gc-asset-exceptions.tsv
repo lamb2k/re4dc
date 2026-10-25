@@ -1,0 +1,4 @@
+key	source	what	reason	owner	decided
+755e1575-fea9d26b	etc/core.das 0x1c8e60#0 (59x51 C4)	HUD shoulder button L	Dreamcast pad label; the PS2 picture says L1 (PS2 pad), no PS2 equivalent	coordinator	2026-10-24
+803499f2-4b0a27a8	etc/core.das 0x1c87e0#0 (59x48 C4)	HUD shoulder button R	Dreamcast pad label; the PS2 picture says R1 (PS2 pad), no PS2 equivalent	coordinator	2026-10-24
+3acc7fea-7110b4a8	etc/core.das 0x1e7100#0 (36x36 C4)	HUD button B	Dreamcast pad label; no PS2 equivalent	coordinator	2026-10-24
