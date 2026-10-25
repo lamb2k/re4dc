@@ -570,13 +570,17 @@ endif
 #   the same rule for Leon (pPL). On r100's first frames after the s20 movie the source ledger is not active
 #   (re4dc_actor_transaction_identity 0), so Leon was not a transaction candidate and trans.cpp ModelRender drew him GC
 #   through frontNativeRender (GC-ASSET r100: his weapon hand BIN ef82164d). Those frames draw no Leon. The macro is
-#   always defined (0 / 1) so the check sits on an existing source line: knob off, the image is unchanged.
+#   always defined (0 / 1 / 2) so the check sits on an existing source line: knob off, the image is unchanged.
+# LEON_NO_GC_FRONT=2 (round 4): Leon's PS2 owner also plans without the source ledger (source_actor_owner_hooks.inc):
+#   on images with no coarse ledger (those r100 frames) the player draws PS2, not nothing. The =1 guard stays.
 LEON_NO_GC_FRONT ?= 0
-ifeq ($(filter $(LEON_NO_GC_FRONT),0 1),)
-$(error LEON_NO_GC_FRONT must be 0 or 1)
+ifeq ($(filter $(LEON_NO_GC_FRONT),0 1 2),)
+$(error LEON_NO_GC_FRONT must be 0, 1 or 2)
 endif
-ifeq ($(LEON_NO_GC_FRONT)$(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),10)
-$(error LEON_NO_GC_FRONT=1 needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)
+ifneq ($(LEON_NO_GC_FRONT),0)
+ifneq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
+$(error LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT) needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)
+endif
 endif
 GAME_CPPFLAGS += -DRE4DC_LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT)
 # NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
