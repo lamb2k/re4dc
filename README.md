@@ -172,10 +172,17 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 24.
 
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [ ] **Less scenery drawn when it can't be seen.**
+- [x] **PS2 weapons:** Leon's guns, in his hands and in the inventory.
+- [x] **PS2 HUD, inventory screens and fonts.**
+- [x] **PS2 animation** for Leon, the Ganados and the weapons.
+- [x] **PS2 sounds and music** in chapter 1.
+- [x] **PS2 props in chapter 2:** breakable boxes and barrels, and the torches and window panes the PS2 removed are gone.
+- [x] **Leon's PS2 textures** on his jacket and his chapter 2 outfit.
+- [ ] **PS2 church candles.**
 - [ ] **Mendez's PS2 model in the barn door animation** after his fight.
-- [ ] **The Blacktail can be equipped** without stopping the game ([#58](https://github.com/lamb2k/re4dc/issues/58)).
+- [x] **The Blacktail can be equipped** without stopping the game ([#58](https://github.com/lamb2k/re4dc/issues/58)).
+
+Moved to Test 25: chapter 3-1 (the castle's first part) and less scenery drawn when it can't be seen.
 
 ## What's new in Test 17.1
 
