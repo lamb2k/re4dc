@@ -1131,16 +1131,6 @@
    "sha256": "3a71ec21dc3bb3a21da1d4b7d5bd79748ae582a5e4a9a74f917c054530c33824"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=61786112&bytes=3216",
-   "id": "6da8c35b-a936da0c",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0100",
-   "sha256": "7179cd723867a1bbfe5e6e8ab49c98b3c6351b53ef1e875886e1a8d940e9f005"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=65658880&bytes=10384",
    "id": "73dd55d6-dbcc3375",
    "kind": "texture",
@@ -1329,16 +1319,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0100",
    "sha256": "0cbcb8a3be70263b721a922c9092f327d4b13a884e9dffd2d70a65fe2d8cbcc2"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r100 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117446656&bytes=4240",
-   "id": "cf2208cd-a6bfb2ef",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0100",
-   "sha256": "0523098aa1bbd727655fc1d7cc5916561dc408847dc95ebbcd30560d825e1812"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192",
@@ -1721,16 +1701,6 @@
    "sha256": "93fad0d4eb51b5081119123e8665f633f6381758063981c77891ed0426d37c88"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117446656&bytes=4240",
-   "id": "cf2208cd-a6bfb2ef",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0101",
-   "sha256": "0523098aa1bbd727655fc1d7cc5916561dc408847dc95ebbcd30560d825e1812"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117751808&bytes=6288",
    "id": "cf9faa5f-d4a93f00",
    "kind": "texture",
@@ -1941,16 +1911,6 @@
    "sha256": "429506df70938956892859c959511bc9589a6efd8be99cb31aa99ecea11c17fd"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=57718784&bytes=3216",
-   "id": "6596bca3-f2f292f2",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0103",
-   "sha256": "9f12ebfdc87e685e5386f6ebf3bb28549a03591509c47ababf691b9801ca8ead"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=69455872&bytes=1168",
    "id": "79d3fc0f-e9580b27",
    "kind": "texture",
@@ -1979,26 +1939,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "0103",
    "sha256": "f74c7df2cbd2dcb18c024df9744346b4e3d9c4b668672ec1f48236ace650efa8"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117446656&bytes=4240",
-   "id": "cf2208cd-a6bfb2ef",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0103",
-   "sha256": "0523098aa1bbd727655fc1d7cc5916561dc408847dc95ebbcd30560d825e1812"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r103 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=136222720&bytes=3216",
-   "id": "f52df17e-83f5bb15",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "0103",
-   "sha256": "e77c712ccb57f7d7dc1a5333778379ce0134fb9e23a5d10cf933611c5b00ac63"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
@@ -2331,16 +2271,6 @@
    "sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=61786112&bytes=3216",
-   "id": "6da8c35b-a936da0c",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "011e",
-   "sha256": "7179cd723867a1bbfe5e6e8ab49c98b3c6351b53ef1e875886e1a8d940e9f005"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=69455872&bytes=1168",
    "id": "79d3fc0f-e9580b27",
    "kind": "texture",
@@ -2369,16 +2299,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011e",
    "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117446656&bytes=4240",
-   "id": "cf2208cd-a6bfb2ef",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "011e",
-   "sha256": "0523098aa1bbd727655fc1d7cc5916561dc408847dc95ebbcd30560d825e1812"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=runtime",
@@ -2551,16 +2471,6 @@
    "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=35997696&bytes=10384",
-   "id": "3eadb835-4cb60bab",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "011f",
-   "sha256": "c8eb318cb5a6e9b3398b4637a10b963f618eb8b968653d3e654d6f5d437bf522"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=44421120&bytes=10384",
    "id": "4e996a00-773be2ae",
    "kind": "texture",
@@ -2601,16 +2511,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=96131072&bytes=6288",
-   "id": "a543895f-b41f9f46",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "011f",
-   "sha256": "717544819c52d9c59666c62bdce41b847a3cc1970bc29c3dac8186a23cffc7ce"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=102592512&bytes=4240",
    "id": "b3c2a412-d219779c",
    "kind": "texture",
@@ -2629,16 +2529,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011f",
    "sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=117446656&bytes=4240",
-   "id": "cf2208cd-a6bfb2ef",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "gc",
-   "reason": "GameCube picture key in tex.pak, no PS2 replacement attributed by the data sets",
-   "room": "011f",
-   "sha256": "0523098aa1bbd727655fc1d7cc5916561dc408847dc95ebbcd30560d825e1812"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=135610368&bytes=10384",
