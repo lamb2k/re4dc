@@ -1191,6 +1191,8 @@ PMREST25D = os.environ.get('PMREST25D', '/root/re4data/private/pmrest25-20261025
 if os.path.isdir(PMREST25D):
     DATA['pmrest25'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (PMREST25D, _e) for _e in ('em21', 'em23', 'em2a', 'pl01')}
     DATA['pmrest25'].update({'st1/%s.arc' % _r: '%s/st1/%s.arc' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106', 'r11e')})
+    # the room archive the game reads is the .dar's type-0 record (the .arc copies are staged for consistency)
+    DATA['pmrest25'].update({'st1/%s.dar' % _r: '%s/st1/%s.dar' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106')})
 # pmash25 (same lane): Ashley em/pl11.drs (the release's pl11-hot bounded archive) with its motion from PS2 pl11.dat, the
 # one new dc/mot key it streams, and the GC key no archive references any more off the disc (remove.txt). ONLY with
 # MOTION_PS2_PL11=1 (its pl11-hot profile row); a program without it refuses the archive. After pmrest25.
