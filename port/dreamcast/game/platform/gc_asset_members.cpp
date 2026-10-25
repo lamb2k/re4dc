@@ -349,9 +349,14 @@ void member_test_serial(unsigned value){serial=value;}
 // back as offsets. digest = sha256 of the 8-byte key {crc,fnv} (little endian).
 // Uses are latched (bounded) on the evaluating thread, emitted at the frame flush.
 namespace {
-constexpr unsigned MotionSeenCount=48,MotionPendingCount=48;
-struct MotionSeen{const unsigned char* data;unsigned generation;CheckedAsset asset;};
-MotionSeen motion_seen[MotionSeenCount];unsigned motion_seen_next;
+// Per adopted archive, one bit per directory entry: this clip was handled in the
+// current visit (bound + latched, or its fault counted). A clip is hashed and bound
+// once per visit, never per evaluated frame. 16 x 68 B; pointers outside any
+// adopted archive or not at an FCV/SEQ entry go to a 16-slot fault ring.
+constexpr unsigned MotionPendingCount=48,MotionDoneEntries=512,MotionFaultRing=16;
+struct MotionDone{unsigned generation;unsigned char bits[MotionDoneEntries/8];};
+MotionDone motion_done[ArchiveCount];
+const void* motion_fault_ring[MotionFaultRing];unsigned motion_fault_next;
 unsigned motion_pending[MotionPendingCount],motion_pending_count;
 enum MotionFault{MotionUnbound,MotionNested,MotionBind,MotionCapacity,MotionBusy,MotionFaults};
 unsigned motion_faults[MotionFaults];
@@ -372,6 +377,10 @@ bool mtc_key(const Archive& a,unsigned count,unsigned offset,unsigned& crc,unsig
     return false;
 }
 void motion_fault(MotionFault f){if(motion_faults[f]!=~0U)++motion_faults[f];}
+bool motion_pointer_fault(const void* data,MotionFault f){   // counted once per pointer per visit
+    for(const void* q:motion_fault_ring)if(q==data)return true;
+    motion_fault_ring[motion_fault_next++%MotionFaultRing]=data;motion_fault(f);return true;
+}
 }
 void motion_use(const void* pointer) {
     const auto* data=static_cast<const unsigned char*>(pointer);
@@ -380,47 +389,41 @@ void motion_use(const void* pointer) {
     struct Release{~Release(){motion_lock.clear(std::memory_order_release);}} release;
     unsigned owner=ArchiveCount;
     for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && contains(archives[i].base,archives[i].bytes,data,1)){owner=i;break;}
-    CheckedAsset asset{};
-    const unsigned gen=owner<ArchiveCount?archives[owner].generation:0;
-    for(const auto& seen:motion_seen)if(seen.data==data && seen.generation==gen){
-        if(!seen.asset.value)return;          // a fault already counted for this clip pointer
-        if(checked_current(seen.asset)){asset=seen.asset;break;}
+    if(owner==ArchiveCount){motion_pointer_fault(data,MotionUnbound);return;}
+    const Archive& a=archives[owner];unsigned count;
+    if(!table(a,count)){motion_pointer_fault(data,MotionUnbound);return;}
+    const unsigned offset=unsigned(data-a.base),tags=16+count*4;unsigned index=count;bool fcv=false;
+    for(unsigned i=0;i<count;++i)if(word(a.base,16+4*i)==offset){
+        const auto* tag=a.base+tags+4*i;
+        if(!std::memcmp(tag,"FCV",3) || !std::memcmp(tag,"SEQ",3)){index=i;fcv=!std::memcmp(tag,"FCV",3);break;}
     }
-    // Count each faulting clip pointer once (not once per evaluated frame).
-    auto fault=[&](MotionFault f){motion_fault(f);motion_seen[motion_seen_next++%MotionSeenCount]={data,gen,{}};};
-    if(!asset.value){
-        if(owner==ArchiveCount){fault(MotionUnbound);return;}
-        const Archive& a=archives[owner];unsigned count;if(!table(a,count)){fault(MotionUnbound);return;}
-        const unsigned tags=16+count*4;Span span;bool found=false,fcv=false;
-        for(unsigned i=0;i<count && !found;++i){
-            const auto* tag=a.base+tags+4*i;
-            if(std::memcmp(tag,"FCV",3) && std::memcmp(tag,"SEQ",3))continue;
-            Span s;if(entry(a,i,s) && s.base==data){span=s;found=true;fcv=!std::memcmp(tag,"FCV",3);}
+    if(index==count){motion_pointer_fault(data,MotionNested);return;}
+    auto& done=motion_done[owner];
+    if(done.generation!=a.generation){done.generation=a.generation;std::memset(done.bits,0,sizeof done.bits);}
+    const bool tracked=index<MotionDoneEntries;
+    if(tracked && (done.bits[index/8]>>(index%8)&1))return;
+    if(motion_pending_count==MotionPendingCount){motion_fault(MotionCapacity);return;}   // retried at a later use
+    if(tracked)done.bits[index/8]|=1U<<(index%8);
+    Span span;if(!entry(a,index,span)){motion_fault(MotionNested);return;}
+    unsigned crc,fnv;
+    if(!(fcv && mtc_key(a,count,offset,crc,fnv))){
+        MotionKey key;unsigned lo=0,hi=0;
+        if(fcv && span.bytes>=4){const unsigned head=fcv_prefix(data);
+            if(head<=span.bytes && 4*unsigned(data[2])<=head){lo=head-4*unsigned(data[2]);hi=head;}}
+        const auto base=unsigned(reinterpret_cast<std::uintptr_t>(data));
+        for(unsigned j=0;j<span.bytes;){
+            if(j>=lo && j<hi && !((j-lo)&3)){
+                unsigned w=word(data,j);if(int(w)<0)w-=base;   // relocated in place by the source evaluator
+                for(unsigned k=0;k<4;++k)key.add((unsigned char)(w>>(8*k)));
+                j+=4;
+            } else key.add(data[j++]);
         }
-        if(!found){fault(MotionNested);return;}
-        MotionKey key;unsigned crc,fnv;
-        if(!(fcv && mtc_key(a,count,unsigned(data-a.base),crc,fnv))){
-            unsigned lo=0,hi=0;
-            if(fcv && span.bytes>=4){const unsigned head=fcv_prefix(data);
-                if(head<=span.bytes && 4*unsigned(data[2])<=head){lo=head-4*unsigned(data[2]);hi=head;}}
-            const auto base=unsigned(reinterpret_cast<std::uintptr_t>(data));
-            for(unsigned j=0;j<span.bytes;){
-                if(j>=lo && j<hi && !((j-lo)&3)){
-                    unsigned w=word(data,j);if(int(w)<0)w-=base;   // relocated in place by the source evaluator
-                    for(unsigned k=0;k<4;++k)key.add((unsigned char)(w>>(8*k)));
-                    j+=4;
-                } else key.add(data[j++]);
-            }
-            crc=~key.crc;fnv=key.fnv;
-        }
-        char id[24];::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
-        unsigned char k8[8];std::memcpy(k8,&crc,4);std::memcpy(k8+4,&fnv,4);
-        asset=bind_checked("motion",id,fingerprint(k8,8));
-        if(!asset.value){fault(MotionBind);return;}
-        motion_seen[motion_seen_next++%MotionSeenCount]={data,a.generation,asset};
+        crc=~key.crc;fnv=key.fnv;
     }
-    for(unsigned i=0;i<motion_pending_count;++i)if(motion_pending[i]==asset.value)return;
-    if(motion_pending_count==MotionPendingCount){motion_fault(MotionCapacity);return;}
+    char id[24];::snprintf(id,sizeof id,"%08x-%08x",crc,fnv);
+    unsigned char k8[8];std::memcpy(k8,&crc,4);std::memcpy(k8+4,&fnv,4);
+    const CheckedAsset asset=bind_checked("motion",id,fingerprint(k8,8));
+    if(!asset.value){motion_fault(MotionBind);return;}
     motion_pending[motion_pending_count++]=asset.value;
 }
 void motion_flush() {
@@ -433,10 +436,11 @@ void motion_flush() {
     for(unsigned f=0;f<MotionFaults;++f)for(unsigned c=0;c<faults[f];++c)unresolved(Motion,why[f]);
     for(unsigned i=0;i<n;++i)emitted_checked(Motion,CheckedAsset{pending[i]});
 }
-// Visit boundary: a clip that faulted in the old visit is counted again in the new one.
+// Visit boundary: every clip is reported again in the new visit.
 void motion_visit_reset() {
     if(motion_lock.test_and_set(std::memory_order_acquire))return;
-    for(auto& seen:motion_seen)if(!seen.asset.value)seen.data=nullptr;
+    for(auto& d:motion_done)d.generation=0;
+    for(auto& q:motion_fault_ring)q=nullptr;
     motion_lock.clear(std::memory_order_release);
 }
 }
