@@ -879,6 +879,11 @@ extern "C" void* re4dc_model_retained_storage(unsigned* bytes){
     if(preparation_lent){++lent_requests;return nullptr;}   // the movie holds it; no attempt is latched
 #endif
     if(!preparation_owner || MemGetCurrentHeap()!=4 || !memCheckHeapActive(4))return nullptr;
+#if defined(RE4DC_MODEL_PREP_SKIP_R11E) && RE4DC_MODEL_PREP_SKIP_R11E
+    // MODEL_PREP_SKIP_R11E (game30.mk): r11e (El Gigante) keeps its 128 KB of heap 4 for the PS2 pickup pack; models
+    // prepare without the retained cache there (acquire_batch tolerates a null cache).
+    if(pG && ((unsigned(pG->stage_no)<<8)|pG->room_no)==0x11eU)return nullptr;
+#endif
     if(!preparation_attempted){
         preparation_attempted=true;
 #if RE4DC_NATIVE_STATIC

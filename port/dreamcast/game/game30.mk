@@ -240,6 +240,12 @@ MOVIE_HEAP_EVICT ?= 0
 #   failed (terminal=3) when the PCM and callback pieces split the lent model-cache hole and the second luma plane met
 #   219,520 B free in holes of at most 47,808 B. Same pieces, same bytes; only the request order changes.
 #   MOVIE_BALLAST_TEST=<bytes> (test only, default 0): holds that much heap 4 from r100 s30's open to its end (margin probe).
+# MODEL_PREP_SKIP_R11E=1 (lane purge-pics25 10-25, default 0; ui_bridge.cpp): no retained model preparation cache
+# (131,072 B of heap 4) in r11e, so its PS2 pickup pack fits heap 4 as before. Render only; models re-prepare per frame.
+MODEL_PREP_SKIP_R11E ?= 0
+ifneq ($(MODEL_PREP_SKIP_R11E),0)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MODEL_PREP_SKIP_R11E=1
+endif
 MOVIE_LOAN_TEST ?= 0
 MOVIE_STAGE_ORDER ?= 0
 MOVIE_BALLAST_TEST ?= 0
