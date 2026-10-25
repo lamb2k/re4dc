@@ -641,36 +641,6 @@
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "17c2d1a1d1b48cdd66687e1781c869626218fa4b",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011e",
-   "sha256": "17c2d1a1d1b48cdd66687e1781c869626218fa4b7948359ee92000933bd9f7e5"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "9d447531e18f0ea917d5ce2ed93bc420bc238869",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011e",
-   "sha256": "9d447531e18f0ea917d5ce2ed93bc420bc238869c88004fc106c6bb071881f3b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "ddfc4b2176800c4897147e67d07379cf4f7bbbb7",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011e",
-   "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
-  },
-  {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=4616192&bytes=1168",
    "id": "076e860e-52b615a0",
    "kind": "texture",
@@ -719,36 +689,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011e",
    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "17c2d1a1d1b48cdd66687e1781c869626218fa4b",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011f",
-   "sha256": "17c2d1a1d1b48cdd66687e1781c869626218fa4b7948359ee92000933bd9f7e5"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "9d447531e18f0ea917d5ce2ed93bc420bc238869",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011f",
-   "sha256": "9d447531e18f0ea917d5ce2ed93bc420bc238869c88004fc106c6bb071881f3b"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
-   "id": "ddfc4b2176800c4897147e67d07379cf4f7bbbb7",
-   "kind": "model",
-   "owner": "purge-cast24",
-   "provenance": "gc",
-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
-   "room": "011f",
-   "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
