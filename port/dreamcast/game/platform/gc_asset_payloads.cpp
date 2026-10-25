@@ -112,6 +112,12 @@ bool payload_capture_composite(PayloadProof& proof,const void* owner,const void*
        bool(layout)!=bool(layout_bytes) || (layout && layout_bytes>~std::uintptr_t(0)-side) ||
        (manifest_word(manifest.data+12)==StaticWorld && !layout) ||
        (layout && manifest_word(manifest.data+64+8)!=layout_bytes) || !static_manifest_seal(manifest,composite)){
+#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
+        {Digest probe{};re4dc_log("GC-ASSET-PROBE why=composite owner=%u base=%u bytes=%u/%u layout=%u/%u world=%u role1_bytes=%u seal=%u\n",
+            owner?1u:0u,base==manifest.geometry_base?1u:0u,bytes,manifest.geometry_bytes,layout?1u:0u,layout_bytes,
+            manifest_word(manifest.data+12)==StaticWorld?1u:0u,manifest_word(manifest.data+64+8),static_manifest_seal(manifest,probe)?1u:0u);
+         for(unsigned i=0;i<StaticRoleCount;++i)re4dc_log("GC-ASSET-PROBE why=composite-role role=%u state=%u\n",i,manifest_word(manifest.data+64+i*52+4));}
+#endif
         payload_retire(proof);unresolved(SourceGeometry,"composite-incomplete");return false;
     }
     if(proof.owner){payload_retire(proof);unresolved(SourceGeometry,"composite-without-retire");return false;}
@@ -238,9 +244,9 @@ void payload_retire(PayloadProof& proof){
 extern "C" void re4dc_log(const char*,...);
 // Probe (diagnostic): first 32 distinct (why, address, caller) per run.
 static inline bool gca_probe_once(const char* why,const void* a,const void* c){
-    static const void* seen[32][3];static unsigned n;
+    static const void* seen[96][3];static unsigned n;
     for(unsigned i=0;i<n;++i)if(seen[i][0]==why && seen[i][1]==a && seen[i][2]==c)return false;
-    if(n>=32)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
+    if(n>=96)return false;seen[n][0]=why;seen[n][1]=a;seen[n][2]=c;++n;return true;
 }
 #define GCA_PROBE(why,a,c,fmt,...) do{if(gca_probe_once(why,a,c))re4dc_log("GC-ASSET-PROBE why=%s addr=%p caller=%p " fmt,why,a,c,##__VA_ARGS__);}while(0)
 #else
