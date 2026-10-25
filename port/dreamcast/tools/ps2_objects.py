@@ -244,9 +244,54 @@ def gc_winding_sense(m):
 # without it the panels' PS2 triangles land in the 64x64 frame part and the PS2 pictures' sizes disagree with the GC
 # record, which hid the gate in the objs13 look check 10-15). Keyed by the etc model name.
 TEX_MAPS = {'et1700.bin': {0: 1, 1: 0}}
+# PS2 atlas (lane purge-props24 2026-10-24, coordinator-approved tool extension): objects whose one GC picture the PS2
+# split into several pictures (r117 BIN 0x1f: GC image 0 256x256 <- PS2 images 0 128x128, 1 128x16, 3 64x64). The PS2
+# pictures the model uses are packed into one atlas (atlas_for: deterministic grid fill inside the GC image size,
+# largest first), each PS2 triangle's UVs are mapped into its picture's rectangle, and ps2_objects_tex.py composes the
+# atlas picture from the same layout. (room, room-archive BIN index) -> the GC image size the atlas fills (checked
+# against the GC TPL header by ps2_objects_tex.py).
+ATLAS_OBJECTS = {('r117', 0x1f): (256, 256)}
 
 
-def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None):
+def atlas_for(ps2_tpl, off, used, gc_wh):
+    """-> {ps2 image: (x, y, w, h)}, (W, H): the atlas layout of PS2 TPL images `used` (sizes as the geometry samples
+    them: transposed when the entry's rotate flag is set) inside the GC image size gc_wh (step 8 texels)."""
+    sys.path.insert(0, str(HERE / 'd367' / 'test12fx'))
+    import ps2_tpl_decode as ptd  # noqa: E402
+    ents = ptd.parse_tpl(ps2_tpl[off:])['entries']
+    sizes = {}
+    for i in used:
+        h = ents[i]
+        w_, h_ = h['width'], h['height']
+        sizes[i] = (h_, w_) if h['interlace'] & 1 else (w_, h_)
+    gw, gh = gc_wh
+    occ = []
+    lay = {}
+    for i in sorted(sizes, key=lambda k: (-sizes[k][0] * sizes[k][1], k)):
+        w_, h_ = sizes[i]
+        spot = None
+        for y in range(0, gh - h_ + 1, 8):
+            for x in range(0, gw - w_ + 1, 8):
+                if all(x + w_ <= ox or ox + ow <= x or y + h_ <= oy or oy + oh <= y for ox, oy, ow, oh in occ):
+                    spot = (x, y); break
+            if spot:
+                break
+        if spot is None:
+            raise ValueError('atlas: PS2 images %s do not fit in %dx%d' % (sorted(sizes), gw, gh))
+        lay[i] = (spot[0], spot[1], w_, h_); occ.append(lay[i])
+    p2 = lambda n: 1 << max(3, (n - 1).bit_length())  # noqa: E731
+    W = p2(max(x + w_ for x, y, w_, h_ in lay.values())); H = p2(max(y + h_ for x, y, w_, h_ in lay.values()))
+    return lay, (W, H)
+
+
+def atlas_uv_map(lay, wh, gc_image):
+    """rebuild()'s atlas argument: {ps2 image: (gc image, u0, v0, su, sv)}."""
+    W, H = wh
+    return {i: (gc_image, x / W, y / H, w_ / W, h_ / H) for i, (x, y, w_, h_) in lay.items()}
+
+
+
+def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=None, atlas=None):
     """-> (new big-endian GC BIN, stats). gc_tris_from: selftest geometry list instead of the PS2 BIN.
     allow_empty: a model with no triangle is written (world-owned objects); otherwise it is refused (a PS2 placeholder
     such as the window panes et0000 / et2500, one degenerate triangle, is never converted silently)."""
@@ -308,6 +353,11 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
             continue
         cen = tuple(sum(p[i] for p in P) / 3 for i in range(3))
         gtex = (tex_map or {}).get(tex, tex)
+        if atlas and tex in atlas:
+            g_, u0, v0, su, sv = atlas[tex]
+            gtex = g_
+            cs = [(p, n, (u0 + uv[0] * su, v0 + uv[1] * sv), w) for p, n, uv, w in cs]
+            stats['atlas_tris'] = stats.get('atlas_tris', 0) + 1
         ti, _ = grid.nearest(cen, lambda i: part_tex[cpart[i]] == gtex)
         if ti < 0:
             stats['no_tex_part'] += 1
@@ -567,6 +617,20 @@ def remap_native_tables(old, new, inner=None):
     return bytes(out), report
 
 
+def room_atlas(gbin, ps2bin, ps2_tpl_entry, gc_wh):
+    """-> (rebuild atlas map, layout report) for an ATLAS_OBJECTS room BIN: its PS2 TPL is the entry after the BIN."""
+    if not ps2_tpl_entry or ps2_tpl_entry[0] != 'TPL':
+        raise ValueError('atlas: the PS2 entry after the BIN is not a TPL')
+    m = GcModel(gbin)
+    gimgs = sorted({p['hdr'][0x0C] for p in m.parts if p['tris']})
+    if len(gimgs) != 1:
+        raise ValueError('atlas: the GC model samples images %s (one expected)' % gimgs)
+    pm = pb.parse_bin(ps2bin)
+    used = sorted({pm.materials[t]['diffuse'] for t, cs in pb.triangles(pm)})
+    lay, wh = atlas_for(ps2_tpl_entry[1], 0, used, gc_wh)
+    return atlas_uv_map(lay, wh, gimgs[0]), dict(gc_image=gimgs[0], size=list(wh), rects={str(k): list(v) for k, v in lay.items()})
+
+
 def room(args):
     from assetpipe.rooms import GcIso
     dar = Path(args.dar).read_bytes()
@@ -589,6 +653,7 @@ def room(args):
     pe = {i + 4: (t, b) for i, t, b in pb.dat_entries(pb.afs_read(args.ps2_iso, args.room + '.dat', pb.afs_index(args.ps2_iso)))}
     le = rs.tagged_entries(pay, '<')
     rep, report = {}, dict(room=args.room, dar_in=args.dar, dar_in_sha256=sha(dar), payload_in_bytes=len(pay), objects=[])
+    reconvert = {int(x, 16) for x in (args.reconvert or '').split(',') if x}
     for pair in [x for x in (args.pairs or '').split(',') if x]:
         ga, pa = (int(x, 16) for x in pair.split(':'))
         i = ga - 4
@@ -598,9 +663,14 @@ def room(args):
         gbin = gd[s:e]
         cur = pay[le[i][1]:le[i][2]]
         src_le = to_le(gbin, pair)
-        if cur.rstrip(b'\0') != src_le.rstrip(b'\0'):
+        if cur.rstrip(b'\0') != src_le.rstrip(b'\0') and ga not in reconvert:
             raise ValueError('pair %s: the payload BIN is not le_mirror(GC BIN); refusing to replace modified data' % pair)
-        new, st = rebuild(gbin, pe[pa][1])
+        atl = None
+        if (args.room, ga) in ATLAS_OBJECTS:
+            atl, lay = room_atlas(gbin, pe[pa][1], pe.get(pa + 1), ATLAS_OBJECTS[(args.room, ga)])
+        new, st = rebuild(gbin, pe[pa][1], atlas=atl)
+        if atl:
+            st['atlas'] = lay
         if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
             st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), skipped='PS2 not smaller')
             report['objects'].append(st)
@@ -732,6 +802,7 @@ def main():
     a.add_argument('--dar', required=True); a.add_argument('--room', required=True); a.add_argument('--pairs')
     a.add_argument('--etm'); a.add_argument('--pad-to'); a.add_argument('--out', required=True); a.add_argument('--json')
     a.add_argument('--keep-larger', action='store_true'); a.add_argument('--world-owned'); a.add_argument('--etm-from')
+    a.add_argument('--reconvert', help='room BINs (hex,...) already converted in the input dar: rebuilt from the GC source again')
     a.add_argument('--etm-empty', help='etc models (name,...) whose PS2 model is a placeholder: emptied (lane purge-props24)')
     a.add_argument('--uv-fold', action='store_true', help='converter v3: fold PS2 triangle UVs into [0, 1] (UV_FOLD)')
     a.add_argument('--gc-iso', default=GC_ISO); a.add_argument('--ps2-iso', default=PS2_ISO)
