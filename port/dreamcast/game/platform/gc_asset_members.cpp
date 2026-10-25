@@ -10,7 +10,7 @@ namespace re4dc_gcasset {
 SourceUse source_use;
 ReplayUse replay_use;
 namespace {
-constexpr unsigned ArchiveCount=16, MemberCount=224;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; 224 since r8 for Motion KOS)
+constexpr unsigned ArchiveCount=16, MemberCount=256;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; r11e needs 256)
 struct Archive {
     const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
 } archives[ArchiveCount];
@@ -351,9 +351,9 @@ void member_test_serial(unsigned value){serial=value;}
 namespace {
 // Per adopted archive, one bit per directory entry: this clip was handled in the
 // current visit (bound + latched, or its fault counted). A clip is hashed and bound
-// once per visit, never per evaluated frame. 16 x 68 B; pointers outside any
+// once per visit, never per evaluated frame. 16 x 52 B; pointers outside any
 // adopted archive or not at an FCV/SEQ entry go to a 16-slot fault ring.
-constexpr unsigned MotionPendingCount=32,MotionDoneEntries=512,MotionFaultRing=8;
+constexpr unsigned MotionPendingCount=16,MotionDoneEntries=384,MotionFaultRing=8;   // em12: 347 entries
 struct MotionDone{unsigned generation;unsigned char bits[MotionDoneEntries/8];};
 MotionDone motion_done[ArchiveCount];
 const void* motion_fault_ring[MotionFaultRing];unsigned motion_fault_next;
@@ -378,6 +378,7 @@ bool mtc_key(const Archive& a,unsigned count,unsigned offset,unsigned& crc,unsig
     return false;
 }
 void motion_fault(MotionFault f){if(motion_faults[f]!=~0U)++motion_faults[f];}
+const void* motion_generated;   // cam_ctrl.cpp CameraMotionBuffer: a generated FCV, not a disc clip
 bool motion_pointer_fault(const void* data,MotionFault f){   // counted once per pointer per visit
     for(const void* q:motion_fault_ring)if(q==data)return true;
     motion_fault_ring[motion_fault_next++%MotionFaultRing]=data;motion_fault(f);return true;
@@ -385,7 +386,7 @@ bool motion_pointer_fault(const void* data,MotionFault f){   // counted once per
 }
 void motion_use(const void* pointer) {
     const auto* data=static_cast<const unsigned char*>(pointer);
-    if(!data)return;
+    if(!data || data==motion_generated)return;
     if(motion_lock.test_and_set(std::memory_order_acquire)){motion_fault(MotionBusy);return;}
     struct Release{~Release(){motion_lock.clear(std::memory_order_release);}} release;
     unsigned owner=ArchiveCount;
@@ -451,6 +452,7 @@ void motion_visit_reset() {
 }
 extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::member_capture(data); }
 extern "C" void re4dc_gcasset_motion_use(const void* data) { re4dc_gcasset::motion_use(data); }
+extern "C" void re4dc_gcasset_motion_generated(const void* data) { re4dc_gcasset::motion_generated=data; }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
 // (before BlockCreate relocates their BINs), moved with pool compaction,

@@ -56,12 +56,12 @@ unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
     // behind: r101/r103 row 1372 came back 16 bytes shifted (kind missing, the
     // next row's kind at the end) when the stack buffer happened to be aligned.
     // A deliberately misaligned bounce keeps every catalog read on the sector
-    // cache path (bdread + copy), which is exact. Owned under disc_lock.
-    alignas(32) static unsigned char bounce_store[512+4];
-    unsigned char* const bounce=bounce_store+4;   // 4 mod 32: never stream-eligible
+    // cache path (bdread + copy), which is exact.
+    unsigned char bounce_store[112+36];   // stack: one row per fs_read, no static KOS cost
+    unsigned char* const bounce=bounce_store+((36U-(unsigned(reinterpret_cast<std::uintptr_t>(bounce_store))&31U))&31U)+4;   // 8 mod 32
     auto* out=static_cast<unsigned char*>(destination);
     for(unsigned done=0;done<bytes;){
-        const unsigned n=bytes-done<512U?bytes-done:512U;
+        const unsigned n=bytes-done<112U?bytes-done:112U;
         const ssize_t count=fs_read(source,bounce,n);
         if(disc_state.load()!=state)return 0;
         if(count<0 || unsigned(count)!=n){disc_failed();return 0;}

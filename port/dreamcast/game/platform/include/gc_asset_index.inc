@@ -73,7 +73,7 @@ bool tex_less(const TexEntry& a,const TexEntry& b){const int o=std::memcmp(a.pre
 // texture bind just confirmed, so that texture's first room use (describe) reads
 // no record again. Token-tagged; a miss reads the row as before.
 struct DescEntry{unsigned value;AssetDescription row;};
-constexpr unsigned DescRing=32;   // gc-catalog24b: 128 -> 32 (KOS: gate-ON r101 room load OOM at 10-25)
+constexpr unsigned DescRing=16;   // gc-catalog24b: 128 -> 32 -> 16 (KOS: gate-ON r101 room load OOM; r8 Motion)
 DescEntry* desc_ring;unsigned desc_next;
 bool desc_find(unsigned value,AssetDescription& out){
     if(desc_ring)for(unsigned i=0;i<DescRing;++i)if(desc_ring[i].value==value){out=desc_ring[i].row;return true;}
