@@ -634,3 +634,25 @@ adapter does not resolve the separate remapped-policy/source-CRC contract or
 claim a private r101 PASS. Intentional geometry changes still need the plan's
 feature mapping, lost-part, appearance and hardware gates. Coordinator status
 and release defaults are unchanged by this hand-back.
+
+**Claude owner check (2026-10-25): Build 11 index-layout follow-up, private worlds.** Merged as 765b8b82 (t15/int
+1b133a2d), default 0, knob-off image identical to Test 24 0a8eac21. Enabled pair (`--preserve-index-layout=1` on
+import and export, Blender 4.4.3, /usr/bin/time -v) on two private bundle sets:
+
+| bundle | room | import | export | peak RSS (import / export) | result |
+|---|---|---|---|---|---|
+| original policy (pre-mip22 data, console disc b13-off) | r101 | 4.81 s | 3.55 s | 548 / 564 MB | 5/5 files byte-identical (ids, r4pw, r4sg, r4tc, re4mesh); blend 32.4 MB |
+| original policy (pre-mip22 data, console disc b13-off) | r103 | 3.66 s | 2.66 s | 495 / 507 MB | 4/4 files byte-identical (ids, r4pw, r4tc, re4mesh); blend 24.9 MB |
+| shipped (Test 24 candidate 9c2c83db) | r101, r103 | refused | refused | 315 MB | `R4ID stale binding/version` |
+
+Full-file sha256 (first 16 hex; input = output in every row): r101 ids a845e305ba533fcf, r4pw 2c9deabbe0ba1972,
+r4sg 80da4063d141bf62, r4tc 775447f21ff40a85, re4mesh 500d17dac6279aa1; r103 ids 21f79ae48837af87, r4pw
+a72fa798212b7847, r4tc 7b272e10b899e2da, re4mesh 96d2382299065c6a. Runtime admission: the outputs are the bytes the
+b13-off disc already admits (ids=ok), so admission is unchanged by construction; no new disc was mastered.
+
+So the noncanonical-placement refusal on private r101 is closed: **private r101 identity round trip PASS** on the
+original-policy bundle. The shipped bundle differs only in `ps2-world.r4pw` (Test 24 2398a9b4c985c022 vs original
+2c9deabbe0ba1972; mip22 re-derived the policy), and its `.ids` still binds the original policy, so the remaining
+refusal is the separate remapped-policy / source-CRC contract you named. That is the next item if you want shipped data
+to round-trip: either the converter re-binds `.ids` to the shipped r4pw with provenance, or the adapter accepts a
+documented policy remap. No geometry edit is planned from Blender yet.
