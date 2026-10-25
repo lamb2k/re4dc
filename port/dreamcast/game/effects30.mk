@@ -247,6 +247,17 @@ $(error FX_PS2_NONE_CUT is 0 or 1 and needs FX_PS2_PACK=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_PS2_NONE_CUT=1
 endif
+# FX_NONE_CUT_PACK=1 (lane heap-margin25 2026-10-25, default 0: no effect; needs FX_PS2_NONE_CUT=1): the same cut table
+#                    packed (platform/fx_none_cut_pack.inc from fx_none_cut.inc by tools/d367/purge-fx24/fx_none_cut_pack.py,
+#                    which proves every (room, key) answer equal): each key once, rows as one-byte key indices per room, the
+#                    per-entry decision in one u16. Same cuts, same log lines; the image (and so r100 s30 heap 4) ~4 KB smaller.
+FX_NONE_CUT_PACK ?= 0
+ifneq ($(FX_NONE_CUT_PACK),0)
+ifneq ($(FX_NONE_CUT_PACK)$(FX_PS2_NONE_CUT),11)
+$(error FX_NONE_CUT_PACK is 0 or 1 and needs FX_PS2_NONE_CUT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_NONE_CUT_PACK=1
+endif
 # ITEMS_CENSUS=1 (lane items 2026-10-14; diagnostic, test builds only, default 0; log only): "itemcen:" lines, the
 #                    ModelData signature of every item model (cItmSys::DataLoad) and effect model (EspDataLoad) the game
 #                    registers; tools/d367/items_census.py counts the GameCube fallbacks against the PS2 library.
