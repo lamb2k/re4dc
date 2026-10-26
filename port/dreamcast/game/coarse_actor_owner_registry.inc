@@ -25,6 +25,9 @@
 #if RE4DC_NMR_SLOTS && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #error PS2_ASHLEY (RE4DC_NMR_SLOTS, draw-slot descriptors) needs NATIVE_MODEL_REGISTRY_PACK=1
 #endif
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+extern "C" unsigned re4dc_ganado_lod_level();  // coarse_ganado_lod.inc (GANADO_LOD=1): the level loaded now, ~0u none
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
 namespace nmr {
 struct Weight { unsigned char bone[3], count; float value[3]; };
@@ -59,6 +62,9 @@ struct Descriptor { char name[16]; unsigned appearance, model_id, bones, section
 #endif
 #if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
     unsigned lod_of;  // NATIVE_MODEL_REGISTRY_LOD: 0, or a gameplay level of descriptor lod_of - 1 (word 44 bit 25)
+#endif
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+    unsigned lod_level;  // NMR_POOL_LOD: a numbered pool level (word 44 bits 26..29, GANADO_LOD level order); 0 = none
 #endif
 };
 constexpr unsigned appearance_first=0x200u;
@@ -471,6 +477,24 @@ bool registry_skeleton(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc)
 unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+    // NMR_POOL_LOD (lane lod26b): a pool Ganado follows the level the cast Ganados draw now (GANADO_LOD level_cur:
+    // its own event rule and GANADO_EVENT_KEEP_LOD apply): the numbered pool level with the highest number not above
+    // it, else the full descriptor. One knob (GANADO_LOD_LEVEL) covers every Ganado.
+    if(registry.descriptors[full].pool) {
+        unsigned want=re4dc_ganado_lod_level();
+        if(want==~0u)want=0;
+        unsigned best=full,best_level=0;
+        cModelInfo* probe[8]{};unsigned char psec[8]{};
+        for(unsigned l=0;l<registry.descriptor_count;++l) {
+            const auto& ld=registry.descriptors[l];
+            if(ld.lod_of!=full+1u || !ld.pool || !ld.lod_level || ld.lod_level>want || ld.lod_level<=best_level)continue;
+            if(!re4dc_actor_pool_bindings(m,ld.appearance,ld.sections,probe,psec,count))continue;
+            best=l;best_level=ld.lod_level;
+        }
+        return best;
+    }
+#endif
     if(pG && (pG->Status_flg[1]&0x10000000u))return full;
 #if defined(RE4DC_NMR_GRAB_FULL) && RE4DC_NMR_GRAB_FULL
     // NATIVE_MODEL_REGISTRY_GRAB_FULL: the player's custom damage routine (SetPlDamage: routine 4) that this actor

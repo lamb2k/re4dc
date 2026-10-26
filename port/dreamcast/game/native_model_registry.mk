@@ -552,6 +552,23 @@ $(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
 endif
+# NMR_POOL_LOD=1 (lane lod26b 2026-10-26; default 0: no code; render only; needs NATIVE_MODEL_REGISTRY_LOD=1 and
+#   GANADO_LOD=1): numbered gameplay levels of POOL descriptors (the chapter 2 registry Ganados em16 / em17). Package
+#   word 44 bits 26..29 = the level's number in the GANADO_LOD order (2 g70, 3 g50); model_registry.py spec
+#   "lod_level" with "lod_of" (the level repeats its full descriptor's pool sections in order, body / head reduced by
+#   glod_rung.py). registry_lod_want draws, for a pool Ganado, the numbered level with the highest number not above the
+#   level the cast Ganados draw now (re4dc_ganado_lod_level: GANADO_LOD_LEVEL, its event rule, GANADO_EVENT_KEEP_LOD),
+#   else the full descriptor: one knob for every Ganado. An image without the knob refuses a numbered level package.
+NMR_POOL_LOD ?= 0
+ifeq ($(filter $(NMR_POOL_LOD),0 1),)
+$(error NMR_POOL_LOD must be 0 or 1)
+endif
+ifeq ($(NMR_POOL_LOD),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_LOD)$(GANADO_LOD),11)
+$(error NMR_POOL_LOD=1 needs NATIVE_MODEL_REGISTRY_LOD=1 GANADO_LOD=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_POOL_LOD=1
+endif
 # NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1 (lane fix-mendez-door24 2026-10-24; default 0; render only; needs
 #   NATIVE_MODEL_REGISTRY=1): an actor the registry owns (a live registry binding: earlier frames drew it from its PS2
 #   package) never falls back to the GameCube FRONT_NATIVE path. On a frame where the source ledger has not prepared it
