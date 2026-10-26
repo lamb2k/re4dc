@@ -1,0 +1,108 @@
+{
+ "comment": "PS2_INTERIOR_CELLS cell for the r101 siege house (s21; lane interior-cells26 2026-10-26). Boxes from survey.py ray maps of the n256w25 package and the Flycast house-siege camera (eye 3603,1765,-9382). Eye boxes are rough; the =2 magenta scan is the proof. Dynamic placements never occlude.",
+ "room": 257,
+ "package": {
+  "mesh": "ps2-world.re4mesh",
+  "sidecar": "ps2-world.r4pw",
+  "mesh_sha256": "e6d3ac1dc4d860b92cedb61c07265ca2cec883adafd697b98e0ae96ad80289e2",
+  "sidecar_sha256": "2398a9b4c985c0227b98b17b22db12c6e6e5f3fe686546940812bab769d2ea3d"
+ },
+ "exclude_dynamic": true,
+ "occluder_box": [
+  [
+   -3300,
+   -1700,
+   -19700
+  ],
+  [
+   10600,
+   8300,
+   -4600
+  ]
+ ],
+ "outer": [
+  [
+   -1800,
+   -200,
+   -18200
+  ],
+  [
+   9100,
+   6800,
+   -6100
+  ]
+ ],
+ "eye_boxes": [
+  [
+   [
+    -700,
+    200,
+    -17300
+   ],
+   [
+    6700,
+    2800,
+    -6700
+   ]
+  ],
+  [
+   [
+    6700,
+    200,
+    -12500
+   ],
+   [
+    8600,
+    2800,
+    -6700
+   ]
+  ],
+  [
+   [
+    -1200,
+    3300,
+    -17600
+   ],
+   [
+    4700,
+    5000,
+    -6400
+   ]
+  ]
+ ],
+ "hull": [
+  [
+   [
+    -1300,
+    -200,
+    -18200
+   ],
+   [
+    9100,
+    3100,
+    -6100
+   ]
+  ],
+  [
+   [
+    -1800,
+    3100,
+    -18200
+   ],
+   [
+    5200,
+    6800,
+    -6100
+   ]
+  ]
+ ],
+ "near_max": 150,
+ "subcell_size": 1500,
+ "camera_step": 350,
+ "target_step": 150,
+ "exit_cell": 100,
+ "dilate_cells": 2,
+ "margin": 200,
+ "edge_step": 40,
+ "edge_eps": 2.0
+}

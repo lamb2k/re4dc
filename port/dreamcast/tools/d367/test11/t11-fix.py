@@ -1464,5 +1464,22 @@ N256E26D = os.environ.get('N256E26D', '/root/re4data/private/n256e26-20261026')
 DATA['n256e26'] = {'dc/native/%s/%s' % (r, f): N256E26D + '/dc/native/%s/%s' % (r, f)
     for r in ('r118', 'r107', 'r113', 'r11b') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 
+# n256r100 (lane world-n256all 10-26, landed by interior-cells26): r100 at 256-vertex meshlets (mesh crc 45c5e14e,
+# 1,461,184 B; r4sg bound to source crc 14118acd; fresh room.r4rc). The occluder triangles are bit-identical to the 64
+# package, so the interior cell keeps its 170 sub-cells / 1,186 portals (icells26 carries it for this package). Pairs
+# with the r100 row of texture_rect21/provenance_certificates_n256.inc. Needs SCENERY_N256=1; release line only.
+N256R100D = os.environ.get('N256R100D', '/root/re4data/private/n256r100-20261026')
+DATA['n256r100'] = {'dc/native/r100/%s' % f: N256R100D + '/dc/native/r100/%s' % f
+    for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# icells26 (lane interior-cells26 10-26): PS2_INTERIOR_CELLS=1 per-room interior cells (PCL2, build_cell.py emit --pcl2 /
+# cell_file.py): r100 house (n256r100 package), r101 siege house (n256w25), r11c siege cabin (n256b26). Each file carries
+# its package's mesh / sidecar CRC and bytes; a stale one is refused at load (cull off for that room). Needs
+# PS2_INTERIOR_CELLS=1 (the r100 file is PCL2: a knob-off program refuses it). After n256r100. Store:
+# re4-assets-private/icells26-20261026.
+ICELLS26D = os.environ.get('ICELLS26D', '/root/re4data/private/icells26-20261026')
+DATA['icells26'] = {'dc/native/%s/interior.cell' % r: ICELLS26D + '/dc/native/%s/interior.cell' % r
+    for r in ('r100', 'r101', 'r11c')}
+
 if __name__ == '__main__':
     main()

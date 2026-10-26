@@ -110,11 +110,45 @@ def pcl1_to_pcl2(cell1, inc, out, mesh_crc=None, sidecar_crc=None, mesh_bytes=No
     print(f'{out}: PCL2 room {room:x}, {len(cells)} cells, {len(portals)} portals, {len(data)} B')
 
 
+
+def unpack2(data):
+    assert data[:4] == MAGIC2
+    room, mc, sc, mb, nc, np_, total = struct.unpack_from('<7I', data, 4)
+    near = struct.unpack_from('<f', data, 32)[0]; nh = struct.unpack_from('<I', data, 36)[0]
+    assert total == len(data)
+    hs = [struct.unpack_from('<6f2HI', data, 64 + 32 * k) for k in range(nh)]
+    off = 64 + 32 * nh
+    cells = [struct.unpack_from('<6f2H', data, off + 28 * i) for i in range(nc)]
+    off += 28 * nc
+    portals = [struct.unpack_from('<I5f', data, off + 24 * i) for i in range(np_)]
+    houses = []
+    for h in hs:
+        cs = cells[h[6]:h[6] + h[7]]
+        p0 = min(c[6] for c in cs); p1 = max(c[6] + c[7] for c in cs)
+        houses.append((list(h[:6]), [(c[0:3], c[3:6], c[6] - p0, c[7]) for c in cs], portals[p0:p1]))
+    return (room, mc, sc, mb, near), houses
+
+
+def merge2(out, *ins):
+    """Join single-room PCL2 files (same package) into one file with one house each."""
+    key, houses = None, []
+    for f in ins:
+        k, hs = unpack2(Path(f).read_bytes())
+        assert key is None or k[:4] == key[:4], f'{f}: another package'
+        key = k if key is None else (k[:4] + (max(key[4], k[4]),))
+        houses += hs
+    data = pack2(*key[:4], key[4], houses)
+    Path(out).write_bytes(data)
+    print(f'{out}: PCL2 room {key[0]:x}, {len(houses)} houses, {len(data)} B')
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 5 and sys.argv[1] == 'from-inc':
         from_inc(*sys.argv[2:])
     elif len(sys.argv) in (5, 8) and sys.argv[1] == 'to-pcl2':   # to-pcl2 <pcl1 .cell> <.inc> <out> [mesh sidecar bytes]
         extra = [int(x, 0) for x in sys.argv[5:]] if len(sys.argv) == 8 else []
         pcl1_to_pcl2(*sys.argv[2:5], *extra)
+    elif len(sys.argv) >= 4 and sys.argv[1] == 'merge2':   # merge2 <out> <in.cell>...
+        merge2(*sys.argv[2:])
     else:
         sys.exit(__doc__)
