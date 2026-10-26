@@ -1042,6 +1042,13 @@ PMCODEC305D = os.environ.get('PMCODEC305D', '/root/re4data/private/pmcodec305-20
 if os.path.isdir(PMCODEC305D):
     DATA['pmcodec305'] = {'ss/cmn/ss_oc305.dat': PMCODEC305D + '/ss/cmn/ss_oc305.dat'}
     AFTER += [('pmcodec305', 'pmcodec25')]
+# pics25c (same lane, 10-25, no-GameCube-assets rule): 12 GC tex.pak pictures (r100 room / event, em3b, em10, pl00, r103 fx)
+# re-keyed to their PS2 twins (same name, size, format, flags; texels = the PS2 picture, signature NCC 1.0). Last tex.pak set.
+PICS25CD = os.environ.get('PICS25CD', '/root/re4data/private/pics25c-20261025')
+if os.path.isdir(PICS25CD):
+    DATA['pics25c'] = {'dc/tex.pak': PICS25CD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25c'] = PICS25CD + '/pak-derived.json'
+    AFTER += [('pics25c', 'codec25')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
