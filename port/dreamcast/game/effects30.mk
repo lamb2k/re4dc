@@ -342,6 +342,23 @@ ifneq ($(FX_TRIM),1)
 $(error FX_TRIM_LOG=1 needs FX_TRIM=1)
 endif
 endif
+# R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
+# PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
+# frame, effect pool and live room generation. Successful replacement still suppresses the
+# copies. Ordinary sprite/texture/queue limits remain. No room-wide or texture-wide exemption.
+R117_FX_QUALIFIED_FALLBACK ?= 0
+ifneq ($(words $(R117_FX_QUALIFIED_FALLBACK)),1)
+$(error R117_FX_QUALIFIED_FALLBACK is 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(R117_FX_QUALIFIED_FALLBACK)),)
+$(error R117_FX_QUALIFIED_FALLBACK is 0 or 1)
+endif
+ifeq ($(R117_FX_QUALIFIED_FALLBACK),1)
+ifneq ($(FX_TRIM)$(PS2_FX_ADDITIONS),11)
+$(error R117_FX_QUALIFIED_FALLBACK needs FX_TRIM=1 and PS2_FX_ADDITIONS=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_R117_FX_QUALIFIED_FALLBACK=1
+endif
 # FX_FLIPBOOK=N (test 12 fx lane, render only, default 0): an effect flipbook (a TPL of >= FX_FLIPBOOK_MIN pictures: the
 #                    r101 pyre fire, smoke) draws every Nth picture only (picture p - p % N), so N times fewer distinct
 #                    textures and the animation's working set can fit VRAM (benchmark-r101: the fire's ~90 pictures

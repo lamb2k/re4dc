@@ -76,6 +76,13 @@ extern f32 ZFAR;
 #if RE4DC_PS2_FX_ADDITIONS && (!RE4DC_PS2_FX_POPULATION || !RE4DC_ESP_SPRITE_FAST || !RE4DC_COARSE_FX_SPRITES)
 #error PS2_FX_ADDITIONS needs PS2_FX_POPULATION, ESP_SPRITE_FAST and COARSE_FX_SPRITES
 #endif
+#if defined(RE4DC_R117_FX_QUALIFIED_FALLBACK) && RE4DC_R117_FX_QUALIFIED_FALLBACK && \
+    defined(RE4DC_GAME) && !defined(__PPC__)
+#if !RE4DC_FX_TRIM || !RE4DC_PS2_FX_ADDITIONS
+#error R117_FX_QUALIFIED_FALLBACK needs FX_TRIM and PS2_FX_ADDITIONS
+#endif
+#define RE4DC_R117_FX_FALLBACK 1
+#endif
 #ifndef RE4DC_PS2_FX_COMMON_HAZE
 #define RE4DC_PS2_FX_COMMON_HAZE 0
 #endif
@@ -1118,6 +1125,9 @@ u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
 static u32 s_esp_setup_trim_frame = ~0U, s_esp_setup_ess_frame = ~0U;
 #endif
 // 1: not drawn under Essential.
+#if defined(RE4DC_R117_FX_FALLBACK)
+static int Ps2fxPuzzleFallback(const cEsp* esp);
+#endif
 static int FxEssentialCut(const cEsp* esp, int screen)
 {
 #if defined(RE4DC_ESP_ESSENTIAL_EARLY)
@@ -1135,6 +1145,9 @@ static int FxEssentialCut(const cEsp* esp, int screen)
     if (owner == 0x03) return 0;                                   // Leon: muzzle flash, his blood, his grenades
     if (esp->m_Id == 0x0e || esp->m_Id == 0x15 || esp->m_Id == 0x48) return 1;   // glows, haze, mist sheets
     if (screen) return 0;
+#if defined(RE4DC_R117_FX_FALLBACK)
+    if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
     const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
     const int room = owner == 0x01 || owner == 0xD0;
     if (c == ESS_KEEP) return 0;
@@ -1160,6 +1173,9 @@ static int FxEssentialSetupCut(const cEsp* esp, int screen)
 #endif
     if (screen) return 0;
     if (!s_ess_class[0x00]) return 0; // the first eligible late call initializes it
+#if defined(RE4DC_R117_FX_FALLBACK)
+    if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
     const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
     if (c == ESS_KEEP) return 0;
     const int cut = c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 :
@@ -2186,6 +2202,11 @@ static Ps2fxPuzzleGroup s_puzzle[3];
 static u32 s_puzzle_frame;
 static u8* s_puzzle_pool;
 static unsigned s_puzzle_active;
+#if defined(RE4DC_R117_FX_FALLBACK)
+// A refused, complete colour group may use its exact GC copies for this image.
+// Reuse the replacement's identity/frame/pool; retain no extra source pointers.
+static unsigned s_puzzle_failed, s_puzzle_generation;
+#endif
 static const f32 kPuzzleX[3]={0.0f,13.888923645019531f,0.0f};
 static const f32 kPuzzleY[3]={-280.0f,-279.1667175292969f,-248.0f};
 class cPs2fxEsp0a : public cEsp { public: u8 type,base_alpha; };
@@ -2209,8 +2230,31 @@ static ps2fx::TrailIdentity Ps2fxPuzzleIdentity(const cEsp* e,unsigned color)
     value.parent=(u32)e->parent;value.model=(u32)e->m_pMod;value.serial=e->m_Guid_pMod;
     return value;
 }
+#if defined(RE4DC_R117_FX_FALLBACK)
+static int Ps2fxPuzzleSourceMatches(const cEsp* e,unsigned colors)
+{
+    if(!pG || G_ROOM_ID!=0x117 || !(re4dc_ps2fx&PS2FX_STREAK) || !colors ||
+       s_puzzle_frame!=(u32)pG->Frame_cnt || !g_pEspSys || s_puzzle_pool!=g_pEspSys->pEspBuf || e->m_Id!=0) return 0;
+    const int color=Ps2fxPuzzleColour(e);
+    if(color<0 || !(colors&(1U<<color)) ||
+       !(Ps2fxPuzzleIdentity(e,color)==s_puzzle[color].evidence.identity)) return 0;
+    return e->m_Tool_flg==(color==1?0x8000U:0x8400U) && e->m_Life_max==(color==1?0:1) &&
+           e->m_Speed.x==0.0f && e->m_Speed.y==0.0f && e->m_Speed.z==0.0f && e->m_Size_plus==0.0f;
+}
+static int Ps2fxPuzzleFallback(const cEsp* e)
+{
+    // Successful replacement remains authoritative, including empty/cull-only
+    // batches. Unrelated owner-1/0xff sprites receive no exemption.
+    if(!s_puzzle_generation || !Ps2fxPuzzleSourceMatches(e,s_puzzle_failed&~s_puzzle_active)) return 0;
+    unsigned generation=0,cells,bytes,stale,refused;
+    return re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused) && generation==s_puzzle_generation;
+}
+#endif
 static int Ps2fxPuzzleSuppress(cEsp* e)
 {
+#if defined(RE4DC_R117_FX_FALLBACK)
+    return Ps2fxPuzzleSourceMatches(e,s_puzzle_active);
+#else
     if(G_ROOM_ID!=0x117 || !(re4dc_ps2fx&PS2FX_STREAK) || !s_puzzle_active ||
        s_puzzle_frame!=(u32)pG->Frame_cnt || !g_pEspSys || s_puzzle_pool!=g_pEspSys->pEspBuf || e->m_Id!=0) return 0;
     const int color=Ps2fxPuzzleColour(e);
@@ -2220,6 +2264,7 @@ static int Ps2fxPuzzleSuppress(cEsp* e)
     // retain tool 0x8000/life0. Matching starts/parent/call isolate these sources.
     return e->m_Tool_flg==(color==1?0x8000U:0x8400U) && e->m_Life_max==(color==1?0:1) &&
            e->m_Speed.x==0.0f && e->m_Speed.y==0.0f && e->m_Speed.z==0.0f && e->m_Size_plus==0.0f;
+#endif
 }
 extern "C" int ESP_IsActive(cEsp*);
 static int Ps2fxPuzzleVisible(cEsp* e)
@@ -2234,6 +2279,9 @@ static void Ps2fxPuzzleDraw()
     static unsigned last_active,last_issues;static int reported;
     s_puzzle_active=0;s_puzzle_frame=(u32)pG->Frame_cnt;
     s_puzzle_pool=g_pEspSys?g_pEspSys->pEspBuf:NULL;
+#if defined(RE4DC_R117_FX_FALLBACK)
+    s_puzzle_failed=0;
+#endif
     if(G_ROOM_ID!=0x117 || !(re4dc_ps2fx&PS2FX_STREAK)) { reported=0;return; }
     unsigned issues=0,submitted=0,candidates=0;
     for(unsigned c=0;c<3;++c) { s_puzzle[c].evidence.clear(c==1?50:1);s_puzzle[c].anchor=NULL; }
@@ -2325,7 +2373,14 @@ static void Ps2fxPuzzleDraw()
         unsigned draws=0;
         if(re4dc_effect_stage1_batch(s_stage1_sprites,count,1,&draws)){
             s_puzzle_active|=1U<<color;submitted+=draws;
+#if defined(RE4DC_R117_FX_FALLBACK)
+        }else{
+            if(count)s_puzzle_failed|=1U<<color;
+            issues|=0x100U<<color;
+        }
+#else
         }else issues|=0x100U<<color;
+#endif
     }
     if(!reported || last_active!=s_puzzle_active || last_issues!=issues) {
         re4dc_log("PS2FXPUZZLE f=%u active=%x source=%u/%u/%u points=%u candidates=%u submitted=%u issues=%x\n",
@@ -2344,6 +2399,9 @@ static Ps2fxStage1Pending s_stage1_pending={};
 static void Ps2fxStage1Prepare()
 {
     s_puzzle_active=0;s_stage1_pending={};
+#if defined(RE4DC_R117_FX_FALLBACK)
+    s_puzzle_failed=0;s_puzzle_generation=0;
+#endif
     if(!pG || !g_pEspSys || !g_pEspSys->pEspBuf || g_pEspSys->nEsp>2048 ||
        nEspgen>512 || (nEspgen && !EspgenArray) ||
        (G_ROOM_ID!=0x117 && G_ROOM_ID!=0x118 && G_ROOM_ID!=0x11c))return;
@@ -2389,6 +2447,9 @@ extern "C" void re4dc_ps2_fx_stage1_render(int coarse,int skipping)
        ticket.generators!=EspgenArray || ticket.generator_count!=nEspgen)return;
     unsigned generation=0,cells,bytes,stale,refused;
     if(!re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused) || generation!=ticket.generation)return;
+#if defined(RE4DC_R117_FX_FALLBACK)
+    s_puzzle_generation=generation;
+#endif
     Ps2fxAdditionsDraw();Ps2fxPuzzleDraw();
 }
 #endif
