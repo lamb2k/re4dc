@@ -406,15 +406,15 @@ static u8* dvdBorrow;
 static int dvdBorrowHeap = -1, dvdBorrowHandle = -1;
 static unsigned dvdBorrowTakes, dvdBorrowSkips;
 static OSHeapDescriptor* dvdHeapDesc(int h) { return (OSHeapDescriptor*) ((re4dc_mem.heap + 0x1FU) & ~0x1FU) + h; }
-// The live heap whose largest free cell holds the block with DVD_BORROW_SPARE left over (heap 4 first: the room heap;
-// at boot / title, before heap 4 exists, whichever game heap is up). -1: none.
+// The live heap whose largest free cell holds the block with DVD_BORROW_SPARE left over (boot / title only:
+// once heap 4 exists, no borrow). -1: none.
 static int dvdBorrowPick(s32 size)
 {
     int best = -1; s32 best_free = 0;
     for (int i = 0; i < MEM_HEAP_NUM; ++i) {
         const int k = i == 0 ? 4 : i == 4 ? 0 : i;
         if (Heap[k].handle < 0 || !memCheckHeapActive(k)) continue;
-        if (k != 4 && best < 0 && Heap[4].handle >= 0 && memCheckHeapActive(4)) break;   // heap 4 up: room loads borrow only from it
+        if (k == 4) break;   // heap 4 up: room loads read in 64 KB pieces (a heap-4 borrow fragments it: s30 -7 KB)
         s32 big = 0;
         for (OSHeapCell* c = dvdHeapDesc(Heap[k].handle)->free; c; c = c->next) if (c->size > big) big = c->size;
         if (big >= size + (s32) RE4DC_DVD_BORROW_SPARE && big > best_free) {
