@@ -36,7 +36,7 @@ template<class D,class S> inline bool load_cells(D& data,S& st,S& tst,unsigned f
     const int before=re4dc_static_heap_free();
     const char* why=nullptr;
     char path[40];
-    std::snprintf(path,sizeof(path),"/cd/dc/native/r%03x/interior.cell",live_room&0xfffU);
+    ::snprintf(path,sizeof(path),"/cd/dc/native/r%03x/interior.cell",live_room&0xfffU);
     const file_t file=fs_open(path,O_RDONLY);
     unsigned char* b=nullptr;
     std::uint32_t w[16]={0};
