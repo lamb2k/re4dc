@@ -1892,6 +1892,18 @@ $(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_DISC_PIO_FALLBACK=1 -I$(CURDI
 $(OBJDIR)/platform/dvd_read_safe.o: platform/disc_pio_fallback.h platform/disc_pio_native.inc
 $(OBJDIR)/src/game/snd.o: platform/disc_stream_table_check.h
 endif
+# CACHE_COHERENT_DMA=1 (lane fix-r100-props26 2026-10-26, default 0 = image unchanged): operand-cache maintenance on
+# disc reads. cdrom_read_toc fills a 32-byte aligned private TOC (purged before, invalidated after the call); a
+# dvd_read_safe DMA read invalidates its whole destination after it lands (the fast path only invalidated before the
+# DMA, so a line refetched while the GD DMA ran stayed stale), and a late landing invalidates instead of purging.
+# Found under flycast-console's SH-4 cache model (RE4DC_CONSOLE_DYNAREC=no), where T24 lost its TOC at boot.
+CACHE_COHERENT_DMA ?= 0
+ifneq ($(filter $(CACHE_COHERENT_DMA),0 1),$(CACHE_COHERENT_DMA))
+$(error CACHE_COHERENT_DMA must be 0 or 1)
+endif
+ifeq ($(CACHE_COHERENT_DMA),1)
+$(OBJDIR)/platform/gdrom_mount.o $(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_COHERENT_DMA=1
+endif
 # DISC_DMA_WAIT_TIMEOUT=1 (issue #28 DreamShell, lane fix-dreamshell23 2026-10-23, default 0 = image unchanged; needs
 # KOS_DISC_FIX=1): KOS waited on a GD DMA completion with no limit (sector reads and stream requests), so a loader that
 # never completes a DMA (DreamShell's ISO loader, first read bgm/bio4str.hed) hung the boot before DISC_READ_FALLBACK=3's
