@@ -1298,6 +1298,17 @@ if os.path.isdir(WEP26ED):
                       'dc/tex.pak': WEP26ED + '/dc/tex.pak'}
     PAK_DERIVED['wep26e'] = WEP26ED + '/pak-derived.json'
     AFTER += [('wep26e', 'dcglyph26'), ('wep26e', 'wep26g')]
+# gcl26p (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack with 6 pictures
+# as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes and formats kept, no package grows): the Ganado EFF
+# pictures of every emNN archive 03d1e9a5 / 195b4634 / 41e0ece4 <- PS2 em12.dat TPL images 5 / 6 / 32; core.das entry 25
+# 89f1808c <- PS2 core.dat image 288, c703f665 <- image 306 (transposed: PS2 rotate flag); 2ea4d2ec (r101, loaded with the
+# grenade; no GC disc twin: its package matches PS2 core.dat TPL 0xd2140 image 0 at NCC 1.000) <- that picture. Made from
+# the final pack, so it stages after every tex.pak set (last: wep26e). Store: re4-assets-private/gcl26p-20261026.
+GCL26PD = os.environ.get('GCL26PD', '/root/re4data/private/gcl26p-20261026')
+if os.path.isdir(GCL26PD):
+    DATA['gcl26p'] = {'dc/tex.pak': GCL26PD + '/dc/tex.pak'}
+    PAK_DERIVED['gcl26p'] = GCL26PD + '/pak-derived.json'
+    AFTER += [('gcl26p', 'wep26e')]
 # snd26w (same lane): em/wep19.drs = pmwep26's file with its one sound-bank sample re-encoded in place from PS2 audio
 # (ps2_audio.py banks; PS2 wep19.snd is a stub, the sound is r11d.snd block 6 VAG 25; frozen AICA layout, same size).
 # After pmwep26. Store: re4-assets-private/snd26w-20261026.
