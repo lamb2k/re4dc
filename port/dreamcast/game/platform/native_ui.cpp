@@ -16,6 +16,13 @@
 #define RE4DC_GCA_RETIRE(...) ((void)0)
 #endif
 #include "../world_scratch.h"
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+#if !RE4DC_NATIVE_STATIC || !RE4DC_EFFECT_SPRITES || !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM || !RE4DC_FX_ROOM_SPILL_KB
+#error FX_R200_ENTRY_CAP requires native static, effect sprites, the renderer stack, PVR stream and a room spill
+#endif
+#include "include/fx_r200_entry_cap.h"
+extern "C" unsigned re4dc_room_id_now();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "include/world_census24.h"
 namespace {
@@ -1082,6 +1089,13 @@ SourceLighting restore_lighting(const DeferredLighting* stored){
 DeferredPart* deferred_first=nullptr;DeferredPart* deferred_last=nullptr;
 unsigned deferred_top=sizeof(frame_storage),deferred_peak=0,deferred_count=0,deferred_drops=0;
 unsigned char* deferred_spill=nullptr;unsigned deferred_spill_top=0,deferred_spill_capacity=0;
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+// FX_R200_TAIL_STATE_BEGIN (one cursor per existing deferred-queue lifetime).
+re4dc::fx_r200::Tail fx_r200_tail;
+bool fx_r200_tail_select(unsigned required,unsigned char*& storage,unsigned*& top);
+void fx_r200_tail_reset();
+// FX_R200_TAIL_STATE_END
+#endif
 bool draining_parts=false,source_draws_finished=false;
 pvr_list_t draining_list=PVR_LIST_TR_POLY;
 #if RE4DC_ACTOR_TRANSACTION_DIAG
@@ -1100,6 +1114,9 @@ void reset_deferred(){
 #endif
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
     actor_fade_queue_reset();
+#endif
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+    fx_r200_tail_reset();
 #endif
     deferred_spill=nullptr;deferred_spill_top=deferred_spill_capacity=0;deferred_light_sets=nullptr;deferred_basis=nullptr;deferred_lights=nullptr;deferred_first=deferred_last=nullptr;deferred_top=sizeof(frame_storage);deferred_count=0;}
 pvr_list_t select_model_pass(const Re4dcModelPart* p){
@@ -8453,8 +8470,14 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+            if(!deferred_spill || required>deferred_spill_top){
+                if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+            }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
             if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
             storage=deferred_spill;top=&deferred_spill_top;
+#endif
         }
         *top-=required;
         auto* node=new(storage+*top) DeferredPart{};node->lighting=kFxOctTag;
@@ -8494,8 +8517,14 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+            if(!deferred_spill || required>deferred_spill_top){
+                if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+            }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
             if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
             storage=deferred_spill;top=&deferred_spill_top;
+#endif
         }
         *top-=required;
         auto* node=new(storage+*top) DeferredPart{};node->lighting=kOctTag;
@@ -8520,8 +8549,14 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         // The spill tail holds only model snapshots and sprites (no UI lane): no margin.
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+        if(!deferred_spill || required>deferred_spill_top){
+            if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+        }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
         if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
         storage=deferred_spill;top=&deferred_spill_top;
+#endif
     }
     *top-=required;
 #if defined(RE4DC_ESP_SETUP_BATCH)
@@ -8598,8 +8633,14 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+        if(!deferred_spill || required>deferred_spill_top){
+            if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+        }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
         if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
         storage=deferred_spill;top=&deferred_spill_top;
+#endif
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};node->lighting=kLineTag;
     std::memcpy(storage+*top+kSpriteNode,packet,kLinePacket);
@@ -10037,6 +10078,51 @@ extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
     *bytes=model_packets?kModelDeferredSpillBytes:0;
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
 }
+
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+// FX_R200_TAIL_ADAPTER_BEGIN
+namespace {
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+unsigned fx_r200_attempts,fx_r200_grants,fx_r200_refused,fx_r200_reasons,fx_r200_frames,fx_r200_peak;
+#endif
+bool fx_r200_tail_select(unsigned required,unsigned char*& storage,unsigned*& top){
+    re4dc::fx_r200::Context c{};
+    c.room=re4dc_room_id_now();
+    if(c.room==0x200U){
+        unsigned cells,bytes,stale,refused;
+        c.room_live=re4dc_room4_state(&c.generation,&cells,&bytes,&stale,&refused)!=0;
+        c.room_cell=fxroomspill::cell;c.room_generation=fxroomspill::generation;
+        c.room_bytes=RE4DC_FX_ROOM_SPILL_KB*1024U;
+        c.spill=deferred_spill;c.spill_top=deferred_spill_top;c.spill_bytes=deferred_spill_capacity;
+        c.tail=model_packets?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
+        c.tail_bytes=model_packets?kModelDeferredSpillBytes:0;
+    }
+    const auto result=fx_r200_tail.select(c,required,storage,top);
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+    if(c.room==0x200U || fx_r200_tail.data){
+        ++fx_r200_attempts;
+        if(result==re4dc::fx_r200::Result::Accepted)++fx_r200_grants;
+        else{++fx_r200_refused;fx_r200_reasons|=1U<<unsigned(result);}
+    }
+#endif
+    return result==re4dc::fx_r200::Result::Accepted;
+}
+void fx_r200_tail_reset(){
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+    if(fx_r200_attempts){
+        const unsigned used=fx_r200_tail.data?re4dc::fx_r200::kTailBytes-fx_r200_tail.top:0;
+        fx_r200_peak=std::max(fx_r200_peak,used);++fx_r200_frames;
+        if(fx_r200_frames<=96 || !(frame%120))
+            re4dc_log("FQDIAG r200_tail frame=%u room=%03x used=%u/%u grants=%u refused=%u reasons=%03x peak=%u queues=%u\n",
+                frame,re4dc_room_id_now(),used,re4dc::fx_r200::kTailBytes,fx_r200_grants,fx_r200_refused,fx_r200_reasons,fx_r200_peak,fx_r200_frames);
+        fx_r200_attempts=fx_r200_grants=fx_r200_refused=fx_r200_reasons=0;
+    }
+#endif
+    fx_r200_tail.reset();
+}
+} // namespace
+// FX_R200_TAIL_ADAPTER_END
+#endif
 
 #if RE4DC_MOVIE_WORLD_ARENA || RE4DC_CABIN_SOURCE
 #if RE4DC_CABIN_SOURCE

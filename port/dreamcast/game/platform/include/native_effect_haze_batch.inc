@@ -67,11 +67,20 @@ extern "C" int re4dc_effect_haze_batch(Re4dcEffectSprite* sprites,unsigned count
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         // Borrow an already-existing spill tail only; the candidate adds no allocator.
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+        if(!deferred_spill || required>deferred_spill_top){
+            if(!fx_r200_tail_select(required,storage,top)){
+                ++fx_dropped;return !deferred_spill?haze_batch_refuse(22,count,0,required):
+                    haze_batch_refuse(23,count,deferred_spill_top,required);
+            }
+        }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
         if(!deferred_spill || required>deferred_spill_top){
             ++fx_dropped;return !deferred_spill?haze_batch_refuse(22,count,0,required):
                 haze_batch_refuse(23,count,deferred_spill_top,required);
         }
         storage=deferred_spill;top=&deferred_spill_top;
+#endif
     }
     const Re4dcUiImage& image=sprites[0].image;
     if(!image.pixels)return haze_batch_refuse(24,count,0,1);
