@@ -105,6 +105,13 @@ for prof in ('loader', 'standard'):
     if t:   # t16-package.sh stops on any disc_lint violation, so a finished package step means both passed
         add('disc_lint ' + prof, 'package' in srt and srt['package'][3] == 0, t[-1][:120])
 
+# MEMBER-CENSUS (lane fix-r100-props26 10-26): rr-cycle.sh bases() diffs the candidate tree against the last published
+# release member by member; an unclaimed difference (a set that undid or dropped another set's work) fails.
+mc = rd(W / 'member-census.txt').strip().splitlines()
+if mc:
+    add('MEMBER-CENSUS', mc[-1].startswith('MEMBER-CENSUS PASS') or 'skipped' in mc[-1],
+        '; '.join([l for l in mc if l.startswith('UNCLAIMED')][:8] + [mc[-1]])[:600])
+
 extra = {}
 if build_ok and jobs:
     bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')

@@ -135,6 +135,13 @@ bases() {
   for x in g c; do
     bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fprr${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
   done   # one at a time: each base peaks ~2 GB on C: (ext4 vhdx + disc cache)
+  # MEMBER-CENSUS (lane fix-r100-props26 10-26): every file / room-archive member / tex.pak key that differs from the
+  # last published release tree ($MC_REF_TREE, recipe.conf) must be claimed by a row of $MC_CLAIMS (rr/member_census.py).
+  if [ -n "${MC_REF_TREE:-}" ] && [ -d "$MC_REF_TREE" ]; then
+    python3 "$TA/port/dreamcast/tools/d367/rr/member_census.py" "$MC_REF_TREE" "$W/rel/tree" \
+      "$TA/port/dreamcast/tools/d367/rr/${MC_CLAIMS:-member-claims.tsv}" --json "$W/member-census.json" > "$W/member-census.txt" 2>&1 || true
+    tail -n 1 "$W/member-census.txt"
+  else echo "MEMBER-CENSUS skipped: no reference tree (MC_REF_TREE=${MC_REF_TREE:-})" > "$W/member-census.txt"; fi
   tail -qn 1 "$W"/master-*.txt | cut -c1-200; rm -rf "${W:?}/rel/tree"; return $rc
 }
 jobs_quick() { bash "$BIN/rr-jobs.sh" quick "$W" "$TA" "$S7" "$EVU" "$EVW"; }
