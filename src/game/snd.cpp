@@ -120,6 +120,13 @@ static void* reverb_mem_alloc(u32 size)
 #if defined(RE4DC_DISC_READ_FALLBACK) && RE4DC_DISC_READ_FALLBACK >= 2
 extern "C" void re4dc_disc_note(int level, const char* fmt, ...);  // platform/dvd_read_safe.cpp: the boot log
 #endif
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+#include "disc_stream_table_check.h"
+extern "C" void re4dc_disc_pio_validation_begin(void);
+extern "C" void re4dc_disc_pio_validation_reject(void);
+extern "C" void re4dc_disc_pio_validation_end(void);
+#endif
+#line 90 SND_FILE
 void SndInit()
 {
     int len;
@@ -134,6 +141,11 @@ void SndInit()
     memclr_asm(pSndRaw, sizeof(SndWork));
 
 #line 120 SND_FILE
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    re4dc_disc_pio_validation_begin();
+    len = 0;  // a failed read must not leave an indeterminate validation length
+#endif
+#line 120 SND_FILE
     r = DvdRead(0, (void*) SND_DATA_TOP, 0, 0, 0, 0x11, __FILE__, __LINE__);
     str_flag = Dvd.ReadCheck(r, &len, 0, 0) > 0;
 #if defined(RE4DC_DISC_READ_FALLBACK) && RE4DC_DISC_READ_FALLBACK
@@ -141,6 +153,11 @@ void SndInit()
     // offsets here and Snd_str_blk_init faulted. Check both block headers; read the file once more (the disc reader
     // has switched to PIO by then); if it is still bad, run without streamed sound instead of faulting.
     {
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+        auto ok = [](const u8* d, int n) -> bool {
+            return re4dc::disc_pio::stream_table_valid(d, n, __alignof__(SND_RIT));
+        };
+#else
         auto ok = [](const u8* d, int n) -> bool {
             for (int b = 0; b < 2; b++) {
                 const u32 o = ((const u32*) d)[b];
@@ -152,18 +169,30 @@ void SndInit()
             }
             return true;
         };
+#endif
+#line 137 SND_FILE
 #if RE4DC_DISC_READ_FALLBACK >= 2
         if (ok((const u8*) SND_DATA_TOP, len)) re4dc_disc_note(1, "snd: stream table ok (%d bytes)", len);
         else re4dc_disc_note(3, "snd: stream table bad (%d bytes), read again", len);
 #endif
         if (!ok((const u8*) SND_DATA_TOP, len)) {
             re4dc_log("SND: stream table (file 0, %d bytes) is not valid; reading it again\n", len);
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+            // The transport has completed and released G1. Force PIO through
+            // the whole reread and discard cached partial sectors, not handles.
+            re4dc_disc_pio_validation_reject();
+            len = 0;
+#endif
+#line 144 SND_FILE
             r = DvdRead(0, (void*) SND_DATA_TOP, 0, 0, 0, 0x11, __FILE__, __LINE__);
             str_flag = Dvd.ReadCheck(r, &len, 0, 0) > 0;
 #if RE4DC_DISC_READ_FALLBACK >= 2
             if (ok((const u8*) SND_DATA_TOP, len)) re4dc_disc_note(1, "snd: stream table ok on the 2nd read");
 #endif
             if (!ok((const u8*) SND_DATA_TOP, len)) {
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+                re4dc_disc_pio_validation_end();
+#endif
                 static u32 s_no_str[64];
                 re4dc_log("SND: stream table still not valid (%d bytes): streamed music and speech are off\n", len);
 #if RE4DC_DISC_READ_FALLBACK >= 2
@@ -180,6 +209,10 @@ void SndInit()
         }
     }
 #endif
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    re4dc_disc_pio_validation_end();
+#endif
+#line 166 SND_FILE
     adr = SND_DATA_TOP + ALIGN32(len);
     for (i = 0; i < 2; i++) {
         SndMem.str_file[i] = (SndStrFile*) (SND_DATA_TOP + ((u32*) SND_DATA_TOP)[i]);

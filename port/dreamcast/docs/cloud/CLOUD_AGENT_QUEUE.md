@@ -707,3 +707,55 @@ certified remap (`provenance_certificates.inc`, policySourceCrc), so the Test 24
 byte-identical with `--preserve-index-layout=1` (r101 r4pw 2398a9b4c985c022, r103 r4pw 585972662d35ab6a). No action
 needed from the cloud on this. Still open: `room.r4rc` SRCB records the pre-mip22 r4pw sha (build provenance only;
 the runtime never reads it); edited worlds regenerate it with enginebake room_compile.
+
+### 2026-10-26: Build 17 disc PIO recovery (`codex/disc-pio-fallback-20261026`)
+
+Base `ab31de24` (`origin/t15/int`), refreshed from `714589f6` before final
+qualification. Candidate `DISC_PIO_FALLBACK=1`, default 0;
+release recipe unchanged. The
+[report](BUILD17_DISC_PIO_FALLBACK_20261026.md) and committed host/target/cost
+receipts record same-sector PIO retry, owned DMA retirement, two consecutive
+failures latching session PIO, and whole-file sound-table validation/retry
+with ISO data-cache invalidation. Streams are refused from startup under this
+option so untimed KOS stream waits cannot trap recovery. Command/landing
+polls retain their separate existing spin budgets.
+
+Source correction: KOS `[reaper]` is its terminated-thread cleanup worker;
+its idle semaphore wait is not evidence of an outstanding disc request.
+The new data path installs no KOS DMA completion waiter or stream callback.
+It does not claim to interrupt a BIOS syscall that never returns.
+
+Synthetic result: 73 host cases PASS, including actual native adapter,
+wrappers, Snd retry and ISO helper; 54 portable cases also pass ASan/UBSan.
+Pinned SH4 compiler: 24 complete preprocessed/object byte-identity checks
+PASS for absent/0 across fallback2 and recipe3+meter, with debug records
+consistently omitted; both enabled profiles compile and the new hooks resolve
+in relocatable links. Five invalid compositions are rejected. Nineteen
+compiled-controller/state/validator cycle and traffic cases pass. No complete
+game ELF, private data, real-loader, console, or full-image PASS is claimed.
+
+New policy state is 8 B; no heap-4 or KOS heap allocation. The report separates
+native object/stack sizes, warm/cold-I cycles, loads/stores/32-byte demand
+lines and unpriced firmware/cache/device work. **MODELLED** ten successful
+DMA controller fixtures per 200 MHz frame cost 0.01020 ms warm, excluding
+I/O; a real whole-frame delta is unmeasured. PIO rates are explicitly assumed
+scenarios: versus 2 MiB/s DMA, 1 MiB/s PIO adds 0.5 s/MiB and 0.5 MiB/s PIO
+adds 1.5 s/MiB, before failure timeout/command costs. These are not console
+measurements.
+
+**Open questions / owner runs:**
+
+1. Which exact DreamShell/IDE loader build, sector format and DMA/Async
+   combinations reproduce #28? Run this candidate with known-good table
+   bytes/hash and retain switch reasons, retirement state and later PIO
+   behavior; also run healthy GDEMU/Flycast and full off-image identity.
+2. What are matched settled PIO versus DMA read rates, door blocked/wall/CPU
+   times and sustained movie/audio behavior? Use `DISC_READ_METER` and
+   `DOOR_PROBE` in both diagnostic arms; separate the initial timeout/retry
+   from steady PIO and count physical retry traffic separately.
+3. Does the enabled no-stream path pass room/save/load/s30 logic and memory
+   gates on hardware? If the BIOS call itself never returns or GDST cannot
+   be retired, return that captured failure rather than treating the synthetic
+   driver proof as loader acceptance.
+
+Coordinator status and release enablement remain for Claude.

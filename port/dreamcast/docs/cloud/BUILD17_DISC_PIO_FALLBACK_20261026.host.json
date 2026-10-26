@@ -1,0 +1,771 @@
+{
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "generated_utc": "2026-10-26T15:07:13.233890+00:00",
+  "imported_source_sha256": {
+    "disc_pio_test_helpers.inc": "b943f202f4d28e49bd9088d2716aac75d8e4ff4e5d7f814920f1153cf32d3b4f",
+    "disc_pio_test_iso.inc": "f51a8a94a3da5e5cf6ab56ad9c706323534c3c308efb614bbc1f049a1702a5e8",
+    "disc_pio_test_snd.inc": "fb676c8751939a4848a828061ef30219fc87d0b08c75edbef9c3c4d46c02e365",
+    "disc_pio_test_wrappers.inc": "5a9d181757c7494e77d9ae6eefcd8cfdfbdbc80cdeca58f97861022af9445afa"
+  },
+  "limitations": [
+    "No game data, console, emulator, real drive, or DreamShell firmware is used.",
+    "The native adapter runs with fake BIOS, semaphore, timer and MMIO; shared mapped aliases do not model SH4 cache coherence.",
+    "The first Snd file-read region and added KOS helper are executed; the complete game and complete KOS filesystem are not host-emulated.",
+    "Sanitizers cover the portable controller/validator; fixed SH4-address native mappings run separately without ASan shadow memory.",
+    "LeakSanitizer is disabled because the sandbox does not permit its /proc task inspection; AddressSanitizer and UndefinedBehaviorSanitizer remain enabled.",
+    "Host wall times and fake device deadlines are not Dreamcast cycles, disc throughput, or a measured PIO read-rate cost.",
+    "Target build, exact option-off object identity and real-loader tests require the separate build/owner gates."
+  ],
+  "native_run": {
+    "assertions": 112498,
+    "cases": [
+      {
+        "group": "controller",
+        "name": "normal_dma_has_one_owner_and_no_switch",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_2",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_5",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "command_done_waits_for_dma_engine_and_buffer",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "late_old_completion_cannot_write_into_reused_buffer",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "two_dma_failures_latch_and_pio_does_not_clear",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "successful_dma_breaks_consecutive_streak",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "media_change_is_not_dma_failure_3",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "media_change_is_not_dma_failure_4",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "pio_failure_is_bounded_and_not_retried_recursively",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "explicit_pio_and_two_byte_alignment_do_not_count",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "submission_refusal_has_deadline_and_same_sector_pio",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "reset_restores_2048_before_retry_0",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "reset_restores_2048_before_retry_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_0",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_2",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_3",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "invalid_requests_do_not_acquire_or_touch_buffers",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "ownership_timeout_never_submits",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "two_corrupt_dma_windows_latch_session_pio",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "accepted_window_clears_only_at_end",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "transport_fault_and_bad_pio_are_not_counted_twice",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "explicit_pio_semantic_failure_has_no_dma_streak",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "valid_two_block_file",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_-1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_0",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_2",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_3",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_4",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_5",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_6",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_7",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_8",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_9",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_10",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_11",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "null_and_zero_alignment",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_0",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_2",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_3",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_4",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_5",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_6",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_7",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_8",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_9",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_10",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_11",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_12",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unaligned_host_buffer_uses_memcpy_reads",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_dma_physical_address_marker_cache_and_ack",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_drop_completion_retries_identical_sector_geometry",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_never_treats_streaming_as_completion",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_not_found_still_requires_landed_data",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_done_status_does_not_release_live_dma",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_command_and_landing_use_distinct_spin_budgets",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_session_switch_logs_once_per_failure",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_reset_sector_mode_type_32",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_reset_sector_mode_type_16",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_unsafe_retirement_is_fatal_0",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_unsafe_retirement_is_fatal_1",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_unsafe_retirement_is_fatal_2",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_two_byte_aligned_buffer_uses_pio",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "adapter_lock_timeout_is_fatal_without_submission",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "actual_wrappers_refuse_every_stream_entrypoint",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "actual_snd_retry_discards_corrupt_cached_tail",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "actual_snd_retry_survives_intervening_read",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "actual_snd_failed_pio_retry_disables_streamed_sound",
+        "status": "PASS"
+      },
+      {
+        "group": "native",
+        "name": "actual_snd_valid_first_read_has_no_retry_or_switch",
+        "status": "PASS"
+      }
+    ],
+    "failed": 0,
+    "groups": {
+      "controller": 21,
+      "native": 19,
+      "semantic": 4,
+      "validator": 29
+    },
+    "passed": 73
+  },
+  "result": "PASS",
+  "sanitized_run": {
+    "assertions": 17612,
+    "cases": [
+      {
+        "group": "controller",
+        "name": "normal_dma_has_one_owner_and_no_switch",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_2",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "same_sectors_retry_fault_5",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "command_done_waits_for_dma_engine_and_buffer",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "late_old_completion_cannot_write_into_reused_buffer",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "two_dma_failures_latch_and_pio_does_not_clear",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "successful_dma_breaks_consecutive_streak",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "media_change_is_not_dma_failure_3",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "media_change_is_not_dma_failure_4",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "pio_failure_is_bounded_and_not_retried_recursively",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "explicit_pio_and_two_byte_alignment_do_not_count",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "submission_refusal_has_deadline_and_same_sector_pio",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "reset_restores_2048_before_retry_0",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "reset_restores_2048_before_retry_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_0",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_1",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_2",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "unsafe_retirement_poison_blocks_reuse_3",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "invalid_requests_do_not_acquire_or_touch_buffers",
+        "status": "PASS"
+      },
+      {
+        "group": "controller",
+        "name": "ownership_timeout_never_submits",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "two_corrupt_dma_windows_latch_session_pio",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "accepted_window_clears_only_at_end",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "transport_fault_and_bad_pio_are_not_counted_twice",
+        "status": "PASS"
+      },
+      {
+        "group": "semantic",
+        "name": "explicit_pio_semantic_failure_has_no_dma_streak",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "valid_two_block_file",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_-1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_0",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_2",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_3",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_4",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_5",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_6",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_7",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_8",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_9",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_10",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "short_length_11",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "null_and_zero_alignment",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_0",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_1",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_2",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_3",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_4",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_5",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_6",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_7",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_8",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_9",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_10",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_11",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unsafe_header_12",
+        "status": "PASS"
+      },
+      {
+        "group": "validator",
+        "name": "unaligned_host_buffer_uses_memcpy_reads",
+        "status": "PASS"
+      }
+    ],
+    "failed": 0,
+    "groups": {
+      "controller": 21,
+      "semantic": 4,
+      "validator": 29
+    },
+    "passed": 54
+  },
+  "schema": "re4dc-build17-host-gate-v1",
+  "scope": "Synthetic production-controller, actual native adapter/wrappers/Snd first-read region and added KOS cache helper",
+  "source_sha256": {
+    "port/dreamcast/game/Makefile": "1449d154b0c52c63d58eab239a0fa4b643ef61bac63b2c52bcef79def5332ca6",
+    "port/dreamcast/game/platform/disc_pio_fallback.h": "fb2885857850d4a87ec283866ecb45cf75191b7171a034cbd3664fe196b1065c",
+    "port/dreamcast/game/platform/disc_pio_native.inc": "5082648289a09d340bb0d9e49a3c38105918518082c04e2411b9ad5b83ed2d1d",
+    "port/dreamcast/game/platform/disc_stream_table_check.h": "4b37098560e576048adbd2960dff5ec30d80fed5fd009c29c2e864dcaff20927",
+    "port/dreamcast/game/platform/dvd_read_safe.cpp": "daa590ce91331012f9065fc05f8de59f727bb38b7bb7d16d36297cc6b72bee46",
+    "port/dreamcast/patches/kos-804b319-iso-pio-retry.patch": "974898894941d6a835f9ef3358637c31272c11bd1af53b91bbc50a6be418ad25",
+    "port/dreamcast/tests/disc_pio_fallback_test.cpp": "54d84f89c020d92606038921cef3339a2cd364b22c210b9841f9d3793b8096c6",
+    "port/dreamcast/tests/test_disc_pio_fallback.py": "5366da560eb6a550cbf8773f972fae3ea4e4ab3850761bd92f085897627861d7",
+    "src/game/snd.cpp": "167efb0371ed44a262ca8f47fa27779e43034f7ea4dd5f1647906c1ad36e0a57"
+  },
+  "steps": [
+    {
+      "argv": [
+        "g++",
+        "--version"
+      ],
+      "host_wall_seconds": 0.001762,
+      "label": "host compiler version",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-disc-pio-fallback-20261026/port/dreamcast/game/platform",
+        "-I/tmp/re4dc-disc-pio-m2rzh7f4",
+        "/workspace/scratch/794179ef02a4/work/re4dc-disc-pio-fallback-20261026/port/dreamcast/tests/disc_pio_fallback_test.cpp",
+        "-O2",
+        "-o",
+        "/tmp/re4dc-disc-pio-m2rzh7f4/native"
+      ],
+      "host_wall_seconds": 2.539561,
+      "label": "compile production adapter with fake device",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-disc-pio-m2rzh7f4/native"
+      ],
+      "host_wall_seconds": 0.003763,
+      "label": "run controller, native adapter and integration",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tcontroller\tnormal_dma_has_one_owner_and_no_switch\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_1\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_2\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_5\tPASS\nCASE\tcontroller\tcommand_done_waits_for_dma_engine_and_buffer\tPASS\nCASE\tcontroller\tlate_old_completion_cannot_write_into_reused_buffer\tPASS\nCASE\tcontroller\ttwo_dma_failures_latch_and_pio_does_not_clear\tPASS\nCASE\tcontroller\tsuccessful_dma_breaks_consecutive_streak\tPASS\nCASE\tcontroller\tmedia_change_is_not_dma_failure_3\tPASS\nCASE\tcontroller\tmedia_change_is_not_dma_failure_4\tPASS\nCASE\tcontroller\tpio_failure_is_bounded_and_not_retried_recursively\tPASS\nCASE\tcontroller\texplicit_pio_and_two_byte_alignment_do_not_count\tPASS\nCASE\tcontroller\tsubmission_refusal_has_deadline_and_same_sector_pio\tPASS\nCASE\tcontroller\treset_restores_2048_before_retry_0\tPASS\nCASE\tcontroller\treset_restores_2048_before_retry_1\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_0\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_1\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_2\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_3\tPASS\nCASE\tcontroller\tinvalid_requests_do_not_acquire_or_touch_buffers\tPASS\nCASE\tcontroller\townership_timeout_never_submits\tPASS\nCASE\tsemantic\ttwo_corrupt_dma_windows_latch_session_pio\tPASS\nCASE\tsemantic\taccepted_window_clears_only_at_end\tPASS\nCASE\tsemantic\ttransport_fault_and_bad_pio_are_not_counted_twice\tPASS\nCASE\tsemantic\texplicit_pio_semantic_failure_has_no_dma_streak\tPASS\nCASE\tvalidator\tvalid_two_block_file\tPASS\nCASE\tvalidator\tshort_length_-1\tPASS\nCASE\tvalidator\tshort_length_0\tPASS\nCASE\tvalidator\tshort_length_1\tPASS\nCASE\tvalidator\tshort_length_2\tPASS\nCASE\tvalidator\tshort_length_3\tPASS\nCASE\tvalidator\tshort_length_4\tPASS\nCASE\tvalidator\tshort_length_5\tPASS\nCASE\tvalidator\tshort_length_6\tPASS\nCASE\tvalidator\tshort_length_7\tPASS\nCASE\tvalidator\tshort_length_8\tPASS\nCASE\tvalidator\tshort_length_9\tPASS\nCASE\tvalidator\tshort_length_10\tPASS\nCASE\tvalidator\tshort_length_11\tPASS\nCASE\tvalidator\tnull_and_zero_alignment\tPASS\nCASE\tvalidator\tunsafe_header_0\tPASS\nCASE\tvalidator\tunsafe_header_1\tPASS\nCASE\tvalidator\tunsafe_header_2\tPASS\nCASE\tvalidator\tunsafe_header_3\tPASS\nCASE\tvalidator\tunsafe_header_4\tPASS\nCASE\tvalidator\tunsafe_header_5\tPASS\nCASE\tvalidator\tunsafe_header_6\tPASS\nCASE\tvalidator\tunsafe_header_7\tPASS\nCASE\tvalidator\tunsafe_header_8\tPASS\nCASE\tvalidator\tunsafe_header_9\tPASS\nCASE\tvalidator\tunsafe_header_10\tPASS\nCASE\tvalidator\tunsafe_header_11\tPASS\nCASE\tvalidator\tunsafe_header_12\tPASS\nCASE\tvalidator\tunaligned_host_buffer_uses_memcpy_reads\tPASS\nCASE\tnative\tadapter_dma_physical_address_marker_cache_and_ack\tPASS\nCASE\tnative\tadapter_drop_completion_retries_identical_sector_geometry\tPASS\nCASE\tnative\tadapter_never_treats_streaming_as_completion\tPASS\nCASE\tnative\tadapter_not_found_still_requires_landed_data\tPASS\nCASE\tnative\tadapter_done_status_does_not_release_live_dma\tPASS\nCASE\tnative\tadapter_command_and_landing_use_distinct_spin_budgets\tPASS\nCASE\tnative\tadapter_session_switch_logs_once_per_failure\tPASS\nCASE\tnative\tadapter_reset_sector_mode_type_32\tPASS\nCASE\tnative\tadapter_reset_sector_mode_type_16\tPASS\nCASE\tnative\tadapter_unsafe_retirement_is_fatal_0\tPASS\nCASE\tnative\tadapter_unsafe_retirement_is_fatal_1\tPASS\nCASE\tnative\tadapter_unsafe_retirement_is_fatal_2\tPASS\nCASE\tnative\tadapter_two_byte_aligned_buffer_uses_pio\tPASS\nCASE\tnative\tadapter_lock_timeout_is_fatal_without_submission\tPASS\nCASE\tnative\tactual_wrappers_refuse_every_stream_entrypoint\tPASS\nCASE\tnative\tactual_snd_retry_discards_corrupt_cached_tail\tPASS\nCASE\tnative\tactual_snd_retry_survives_intervening_read\tPASS\nCASE\tnative\tactual_snd_failed_pio_retry_disables_streamed_sound\tPASS\nCASE\tnative\tactual_snd_valid_first_read_has_no_retry_or_switch\tPASS\nTOTAL\tpassed=73\tfailed=0\tassertions=112498\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-disc-pio-fallback-20261026/port/dreamcast/game/platform",
+        "-I/tmp/re4dc-disc-pio-m2rzh7f4",
+        "/workspace/scratch/794179ef02a4/work/re4dc-disc-pio-fallback-20261026/port/dreamcast/tests/disc_pio_fallback_test.cpp",
+        "-DRE4DC_TEST_PORTABLE_ONLY",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-no-pie",
+        "-o",
+        "/tmp/re4dc-disc-pio-m2rzh7f4/sanitized"
+      ],
+      "host_wall_seconds": 4.119469,
+      "label": "compile portable ASan/UBSan gate",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-disc-pio-m2rzh7f4/sanitized"
+      ],
+      "host_wall_seconds": 0.007675,
+      "label": "run portable ASan/UBSan gate",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tcontroller\tnormal_dma_has_one_owner_and_no_switch\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_1\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_2\tPASS\nCASE\tcontroller\tsame_sectors_retry_fault_5\tPASS\nCASE\tcontroller\tcommand_done_waits_for_dma_engine_and_buffer\tPASS\nCASE\tcontroller\tlate_old_completion_cannot_write_into_reused_buffer\tPASS\nCASE\tcontroller\ttwo_dma_failures_latch_and_pio_does_not_clear\tPASS\nCASE\tcontroller\tsuccessful_dma_breaks_consecutive_streak\tPASS\nCASE\tcontroller\tmedia_change_is_not_dma_failure_3\tPASS\nCASE\tcontroller\tmedia_change_is_not_dma_failure_4\tPASS\nCASE\tcontroller\tpio_failure_is_bounded_and_not_retried_recursively\tPASS\nCASE\tcontroller\texplicit_pio_and_two_byte_alignment_do_not_count\tPASS\nCASE\tcontroller\tsubmission_refusal_has_deadline_and_same_sector_pio\tPASS\nCASE\tcontroller\treset_restores_2048_before_retry_0\tPASS\nCASE\tcontroller\treset_restores_2048_before_retry_1\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_0\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_1\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_2\tPASS\nCASE\tcontroller\tunsafe_retirement_poison_blocks_reuse_3\tPASS\nCASE\tcontroller\tinvalid_requests_do_not_acquire_or_touch_buffers\tPASS\nCASE\tcontroller\townership_timeout_never_submits\tPASS\nCASE\tsemantic\ttwo_corrupt_dma_windows_latch_session_pio\tPASS\nCASE\tsemantic\taccepted_window_clears_only_at_end\tPASS\nCASE\tsemantic\ttransport_fault_and_bad_pio_are_not_counted_twice\tPASS\nCASE\tsemantic\texplicit_pio_semantic_failure_has_no_dma_streak\tPASS\nCASE\tvalidator\tvalid_two_block_file\tPASS\nCASE\tvalidator\tshort_length_-1\tPASS\nCASE\tvalidator\tshort_length_0\tPASS\nCASE\tvalidator\tshort_length_1\tPASS\nCASE\tvalidator\tshort_length_2\tPASS\nCASE\tvalidator\tshort_length_3\tPASS\nCASE\tvalidator\tshort_length_4\tPASS\nCASE\tvalidator\tshort_length_5\tPASS\nCASE\tvalidator\tshort_length_6\tPASS\nCASE\tvalidator\tshort_length_7\tPASS\nCASE\tvalidator\tshort_length_8\tPASS\nCASE\tvalidator\tshort_length_9\tPASS\nCASE\tvalidator\tshort_length_10\tPASS\nCASE\tvalidator\tshort_length_11\tPASS\nCASE\tvalidator\tnull_and_zero_alignment\tPASS\nCASE\tvalidator\tunsafe_header_0\tPASS\nCASE\tvalidator\tunsafe_header_1\tPASS\nCASE\tvalidator\tunsafe_header_2\tPASS\nCASE\tvalidator\tunsafe_header_3\tPASS\nCASE\tvalidator\tunsafe_header_4\tPASS\nCASE\tvalidator\tunsafe_header_5\tPASS\nCASE\tvalidator\tunsafe_header_6\tPASS\nCASE\tvalidator\tunsafe_header_7\tPASS\nCASE\tvalidator\tunsafe_header_8\tPASS\nCASE\tvalidator\tunsafe_header_9\tPASS\nCASE\tvalidator\tunsafe_header_10\tPASS\nCASE\tvalidator\tunsafe_header_11\tPASS\nCASE\tvalidator\tunsafe_header_12\tPASS\nCASE\tvalidator\tunaligned_host_buffer_uses_memcpy_reads\tPASS\nTOTAL\tpassed=54\tfailed=0\tassertions=17612\n"
+    }
+  ]
+}
