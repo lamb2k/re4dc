@@ -1389,5 +1389,13 @@ N256B26D = os.environ.get('N256B26D', '/root/re4data/private/n256b26-20261026')
 DATA['n256b26'] = {'dc/native/%s/%s' % (r, f): N256B26D + '/dc/native/%s/%s' % (r, f)
     for r in ('r108', 'r11e', 'r11c', 'r11f') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 
+# n256c26 (lane world-n256all 10-26, batch 3): r10a / r11a / r112 / r104 the same way as n256a26 (recipes: blackps2 r10a /
+# r11a / r104, ch2regen t-fed4122a r112; 64 byte-identical to shipped). Census (Flycast WORLD_CENSUS24, world ms per drawn
+# tick): r10a 6.81 -> 6.23, r11a 6.72 -> 6.29, r112 5.70 -> 4.53, r104 5.63 -> 5.23. Needs SCENERY_N256=1; after n256b26;
+# release line only, never KSETS. Store: re4-assets-private/n256c26-20261026.
+N256C26D = os.environ.get('N256C26D', '/root/re4data/private/n256c26-20261026')
+DATA['n256c26'] = {'dc/native/%s/%s' % (r, f): N256C26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10a', 'r11a', 'r112', 'r104') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
 if __name__ == '__main__':
     main()
