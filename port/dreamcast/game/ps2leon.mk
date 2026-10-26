@@ -67,6 +67,20 @@ $(error LEON_PS2_RIG needs PS2_LEON=1 (a rig arm in PS2_LEON_DIR))
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_PS2_RIG=1
 endif
+# LEON_PS2_PORTRAIT_HAIR=1 (lane cast-ps2-25, 2026-10-26; default 0: no effect; render only; needs LEON_PS2_RIG=1):
+#              the radio-call portrait draws Leon's PS2 hair (the arm's chunk 7 + hair run on the PS2 rig, skinned with
+#              the portrait's own bones) in place of the GameCube hair info (em/pl00.drs entry 5) on the source path
+#              (model_bridge.cpp re4dc_draw_model_part -> coarse_actor.cpp re4dc_portrait_hair).
+LEON_PS2_PORTRAIT_HAIR ?= 0
+ifeq ($(filter $(LEON_PS2_PORTRAIT_HAIR),0 1),)
+$(error LEON_PS2_PORTRAIT_HAIR must be 0 or 1)
+endif
+ifeq ($(LEON_PS2_PORTRAIT_HAIR),1)
+ifneq ($(LEON_PS2_RIG),1)
+$(error LEON_PS2_PORTRAIT_HAIR needs LEON_PS2_RIG=1)
+endif
+$(OBJDIR)/coarse_actor.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_PS2_PORTRAIT_HAIR=1
+endif
 # LEON_LOD=1 (lane leonlod, 2026-10-15; default 0: no effect; render only; needs PS2_LEON=1 LEON_HAND_PACK=1): Leon's
 #              render mesh rungs from one disc package, dc/native/pl00/leon_lod.re4lp (tools/d367/leonlod/lod_pack.py
 #              pack; LEON_LOD_PACK names the host copy the image header is derived from). Roles 0-4 / 7 and the hair run

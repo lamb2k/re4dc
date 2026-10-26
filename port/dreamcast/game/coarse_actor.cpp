@@ -447,6 +447,64 @@ extern "C" int re4dc_coarse_leon(cModel* m) {
 }
 
 #include "coarse_actor_owner_leon.inc"
+#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
+// LEON_PS2_PORTRAIT_HAIR (ps2leon.mk): the radio-call portrait (a 119-part Leon model with five infos the owner path
+// does not take) draws its hair with the PS2 hair (the arm's chunk 7 + hair run, PS2 pl00 weights on the LEON_PS2_RIG
+// bones) instead of the GameCube hair info, which the source path would draw. Palettes: the portrait's own bone
+// matrices, the bind of LEON_PS2_RIG (RE4DC_LEON_BIND_ROW). Material, lighting, projection and modelview are the
+// source's for that info (*src). Called for every display-list part of an info: the first part of a frame draws the
+// whole run, the others are consumed.
+namespace {
+const void* portrait_hair_info;unsigned portrait_hair_frame=~0u,portrait_hair_drawn,portrait_hair_declined;
+alignas(32) float portrait_palette[RE4DC_LEON_HAIR_PALETTES][12];
+}
+extern "C" int re4dc_portrait_hair(const void* model,const void* info_ptr,const Re4dcModelPart* src) {
+    auto* m=(const cModel*)model;auto* info=(const cModelInfo*)info_ptr;
+    if(!m || !info || !src || m->id || m->nParts!=119 || !m->pList || !m->pParts || (m->be_flag&0x4000))return 0;
+    const ModelData* d=info->pData;if(!d || !d->vtxOrig)return 0;
+    const auto& s=leon4k::signatures[7];
+    const unsigned n=d->weight_ext_num>255?d->weight_ext_num:d->weight_palette_num;
+    if(d->nVtx!=s.positions || d->nNrm!=s.normals || n!=s.palette || fingerprint(d->vtxOrig)!=s.vertex_hash)return 0;
+    const unsigned frame=unsigned(pG->Frame_cnt);
+    if(portrait_hair_info==info && portrait_hair_frame==frame)return 1;  // a later part of the run already drawn
+    const auto& c=leon4k::chunks[7];
+    if(!c.positions || c.palette_count!=RE4DC_LEON_HAIR_PALETTES || leon_hair_runs::run_count!=1)return 0;
+    cParts* bones[119];cParts* part=m->pList;
+    for(unsigned i=0;i<119;++i){if(!part)return 0;bones[i]=part;part=part->pList;}
+    Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
+    for(unsigned j=0;j<c.palette_count;++j){
+        const auto& w=c.weights[j];float* out=portrait_palette[j];
+        for(unsigned k=0;k<12;++k)out[k]=0;
+        for(unsigned k=0;k<w.count;++k){
+            const unsigned b=w.bone[k];if(b>=119)return 0;
+            Mtx rel,skin;PSMTXConcat(inv,bones[b]->mat,rel);
+            PSMTXConcat(rel,*reinterpret_cast<const Mtx*>(RE4DC_LEON_BIND_ROW(b,bones[b])),skin);
+            for(unsigned col=0;col<4;++col)for(unsigned row=0;row<3;++row)out[col*3+row]+=skin[row][col]*w.value[k];
+        }
+        for(unsigned k=0;k<12;++k)if(!coarse_finite(out[k]))return 0;
+    }
+    portrait_hair_info=info;portrait_hair_frame=frame;  // from here on the GC info's parts are consumed this frame
+    if(!re4dc_actor_skin_register(frame,&c,nullptr,&portrait_palette[0][0],c.palette_count)){++portrait_hair_declined;return 1;}
+    const auto& run=leon_hair_runs::runs[0];
+    Re4dcModelPart p=*src;
+    p.info=&c;p.part=&c;p.positions=nullptr;p.normals=nullptr;p.colors=nullptr;
+    p.position_count=c.position_count;p.normal_count=c.normal_count;p.position_stride=6;p.normal_stride=6;p.normal_shift=14;
+    p.shift=4;p.stream=run.stream;p.stream_bytes=run.bytes;p.uv=leon_hair_runs::uv;p.uv_offset[0]=p.uv_offset[1]=0;
+    p.static_geometry=0;p.cull=0;p.flags=0;  // the arm stream layout (as the coarse path: u16 indices, 1.15 UVs)
+    // The owner path's hair material (coarse_actor_owner_leon.inc): colour pair 0 with its same-UV I4 mask, repeat.
+    p.image=hair_colours[0];p.mask=hair_mask;p.mask_ref=0;p.mask_same_uv=1;p.material_flags=4;p.blend=0;p.wrap_s=p.wrap_t=1;
+#if defined(RE4DC_LEON_LIGHT_HEADROOM) && RE4DC_LEON_LIGHT_HEADROOM
+    // LEON_LIGHT_HEADROOM: the hair colour images are 2x like Leon's; the source halves its own draws of them in
+    // re4dc_model_submit, which this submit bypasses: the same x0.5 here (and its "already halved" marker).
+    re4dc::render::SourceLighting half;
+    if(p.lighting && p.lighting->normal_matrix[7]!=1.0e30f){half=*p.lighting;half.tev_scale*=0.5f;half.normal_matrix[7]=1.0e30f;p.lighting=&half;}
+#endif
+    if(re4dc_actor_submit(&p))++portrait_hair_drawn;else ++portrait_hair_declined;
+    if(portrait_hair_drawn+portrait_hair_declined<=3 || (portrait_hair_drawn+portrait_hair_declined)%300==0)
+        re4dc_log("LEON_PS2_PORTRAIT_HAIR f=%u drawn=%u declined=%u tris=%u\n",frame,portrait_hair_drawn,portrait_hair_declined,run.triangles);
+    return 1;
+}
+#endif
 #if RE4DC_ACTOR_TEX_PREP
 // Read the already-published costume only. No sync, load, plan, bind or lease.
 extern "C" int re4dc_player_tex_current(unsigned generation) {
