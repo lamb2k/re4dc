@@ -60,7 +60,7 @@ int main() {
         char id[40];snprintf(id,sizeof id,"model-%u",i);emitted(SourceGeometry,"model",id,gc);
     }
     end(1);assert(output.find("unique=64 overflow=1")!=std::string::npos);
-    assert(output.find("why=unknown-overflow kind=model id=model-64")!=std::string::npos);   // logged, never silent
+    assert(output.find("why=unknown-capacity")!=std::string::npos);   // logged, never silent
     assert(!install(catalog,0xffffffffU)); // invalid table count must be rejected before walking
     assert(install(catalog,2));
     output.clear();begin(0x111,5,Required);

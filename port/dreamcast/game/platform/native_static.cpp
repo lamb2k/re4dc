@@ -5092,6 +5092,40 @@ struct Ps2World {
 } ps2w;
 #if RE4DC_GC_ASSET_GATE
 void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
+// cast-ps2-25 r16 item 5: the world's sealed manifest as captured at open (gate builds only). A route movie lends the
+// interior cell (pc::unload invalidates the world proof) or the whole package (movie arena); when the same bytes come
+// back (the cell's digest equal to the one the manifest sealed, the package at the same storage, crc/fnv checked by the
+// reload) the world proof is captured again from this manifest instead of faulting every later draw.
+struct GcWorldSeal {
+    re4dc_gcasset::StaticManifest manifest; const unsigned char* base=nullptr; unsigned bytes=0,layout_bytes=0;
+    const unsigned char* layout=nullptr; re4dc_gcasset::Digest cell{}; bool cell_sealed=false,have=false;
+} gcasset_world_seal;
+bool gcasset_world_cell_digest(re4dc_gcasset::Digest& d){
+#if RE4DC_PS2_INTERIOR_CULL
+    re4dc_gcasset::AssetDescription desc;
+    if(!pc::data.block || pc::data.asset_proof.owner!=&pc::data || !pc::data.asset_proof.serial ||
+       !re4dc_gcasset::describe_checked(pc::data.asset_proof.asset,&desc))return false;
+    d=desc.digest;return true;
+#else
+    (void)d;return false;
+#endif
+}
+void gcasset_world_seal_keep(const re4dc_gcasset::StaticManifest& m,const unsigned char* s,unsigned msize,const unsigned char* layout,unsigned psize){
+    auto& k=gcasset_world_seal;
+    k.have=ps2w.asset_proof.owner==&ps2w && ps2w.asset_proof.serial;
+    k.manifest=m;k.base=s;k.bytes=msize;k.layout=layout;k.layout_bytes=psize;
+    k.cell_sealed=gcasset_world_cell_digest(k.cell);
+}
+void gcasset_world_reseal(){
+    auto& k=gcasset_world_seal;
+    if(!k.have || !ps2w.storage || ps2w.storage!=k.base || (ps2w.asset_proof.owner==&ps2w && ps2w.asset_proof.serial))return;
+    if(k.cell_sealed){
+        re4dc_gcasset::Digest now{};
+        if(!gcasset_world_cell_digest(now) || std::memcmp(now.bytes,k.cell.bytes,sizeof now.bytes))return; // stays unproven
+    }
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+    re4dc_gcasset::payload_capture_composite(ps2w.asset_proof,&ps2w,k.base,k.bytes,k.layout,k.layout_bytes,k.manifest);
+}
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
 unsigned r11fPackageGeneration=1,r11fSidecarCrc;
@@ -6265,7 +6299,7 @@ bool ps2_open(){
     if(ps2w.attempted)return false;
     ps2w.attempted=true;
 #if RE4DC_GC_ASSET_GATE
-    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);gcasset_world_seal.have=false;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
@@ -6760,6 +6794,7 @@ bool ps2_open(){
     // unproven data, never an inferred absence or geometry-only ancestry.
     for(unsigned r=0;r<StaticRoleCount;++r)if(!(gcasset_source.seen&(1U<<r)))static_manifest_note(gcasset_source,StaticRole(r),Unproven);
     payload_capture_composite(ps2w.asset_proof,&ps2w,s,msize,s+mbytes,psize,gcasset_source);
+    gcasset_world_seal_keep(gcasset_source,s,msize,s+mbytes,psize);
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
@@ -7941,6 +7976,9 @@ extern "C" int re4dc_ps2_mesh_movie_return(unsigned token,int retiring){
         restored=ps2_movie_reload();
         if(!restored)ps2_movie_unpublish();
     }
+#if RE4DC_GC_ASSET_GATE
+    if(restored)gcasset_world_reseal();
+#endif
     const bool ok=ps2_movie.restored(token,ps2_movie_current(),restored);
     re4dc_log("MOVIEARENA return token=%u used=%u slots=%u blocked=%u attempts=%u restored=%u\n",
         token,used,slots,blocked,attempt,unsigned(ok));
@@ -8169,6 +8207,9 @@ extern "C" void re4dc_ps2_interior_movie_restore(){
     if(!pc::data.lent)return;
     pc::data.lent=false;
     if(pc::st.ok)pc::load();
+#if RE4DC_GC_ASSET_GATE
+    gcasset_world_reseal();
+#endif
 }
 // The cell's test for any world box, e.g. an actor's (lane iv's CROWD_INVIS_SKIP could call it after the game's own
 // view test): 1 when this frame's cell hides the box. 0 unless the PS2 world's pass 0 set the cell up in this same

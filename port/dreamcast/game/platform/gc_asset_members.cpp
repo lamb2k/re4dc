@@ -223,6 +223,17 @@ void revoke(unsigned owner) {
     archives[owner]={};pre_free(owner);
 }
 }
+// cast-ps2-25 r16 item 5: sub screen parking (member_park / member_unpark below).
+namespace {
+struct Parked { Archive archive;Pre* pre;unsigned count,slot; } parked[ArchiveCount];
+unsigned parked_count;
+std::uintptr_t parked_lo;unsigned parked_bytes;
+bool in_area(std::uintptr_t lo,unsigned bytes,const Archive& a){
+    const auto b=reinterpret_cast<std::uintptr_t>(a.base);return lo<=b ? b-lo<bytes : lo-b<a.bytes;
+}
+// A parked slot keeps its members (owner index): no other archive takes it until unpark.
+bool slot_parked(unsigned i){for(unsigned k=0;k<parked_count;++k)if(parked[k].slot==i)return true;return false;}
+}
 bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family) {
     if(!owner || !archive || bytes<16 || generation==0xffffffffU) { unresolved(SourceGeometry,"member-adopt");return false; }
     unsigned free=ArchiveCount;
@@ -234,7 +245,7 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,
             }
             revoke(i);free=i;break;
         }
-        if(!archives[i].owner && free==ArchiveCount)free=i;
+        if(!archives[i].owner && free==ArchiveCount && !slot_parked(i))free=i;
     }
     bool conflict=false;
     for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner) {
@@ -257,6 +268,31 @@ void member_move(const void* owner,void* base) {
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
+// cast-ps2-25 r16 item 5: the sub screen swaps the room's bytes out of its area while it is open (sscrn_bridge.cpp).
+// Archives in that area are parked (adopt-time member digests and captured members kept; nothing binds against
+// them while parked, so the screen's own data never resolves to a room archive); the close puts them back in the
+// same slots with the same generation once the area's bytes are restored byte-identical (hash checked by the bridge).
+void member_park(const void* area,unsigned bytes) {
+    const auto lo=reinterpret_cast<std::uintptr_t>(area);parked_lo=lo;parked_bytes=bytes;
+    for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner) {
+        if(!in_area(lo,bytes,archives[i]))continue;
+        if(parked_count==ArchiveCount){revoke(i);unresolved(SourceGeometry,"member-park-capacity");continue;}
+        member_flush();   // members stay: not current while parked, current again at unpark (same generation)
+        parked[parked_count++]={archives[i],pre[i],pre_count[i],i};
+        archives[i]={};pre[i]=nullptr;pre_count[i]=0;
+    }
+}
+void member_unpark() {
+    // The screen's own archives (codec ss_term / ss_ocNNN, adopted by ss_term.cpp) end with the screen.
+    for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && in_area(parked_lo,parked_bytes,archives[i]))revoke(i);
+    for(unsigned k=0;k<parked_count;++k) {
+        auto& p=parked[k];
+        if(archives[p.slot].owner){std::free(p.pre);unresolved(SourceGeometry,"member-unpark-slot");continue;}
+        archives[p.slot]=p.archive;
+        pre[p.slot]=p.pre;pre_count[p.slot]=p.count;
+    }
+    parked_count=0;
+}
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 extern "C" void re4dc_log(const char*,...);
 // Probe (diagnostic): first 32 distinct (why, address, caller) per run.
@@ -454,6 +490,8 @@ extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::m
 extern "C" void re4dc_gcasset_motion_use(const void* data) { re4dc_gcasset::motion_use(data); }
 extern "C" void re4dc_gcasset_motion_generated(const void* data) { re4dc_gcasset::motion_generated=data; }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
+extern "C" void re4dc_gcasset_member_park(const void* area,unsigned bytes) { re4dc_gcasset::member_park(area,bytes); }
+extern "C" void re4dc_gcasset_member_unpark() { re4dc_gcasset::member_unpark(); }
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
 // (before BlockCreate relocates their BINs), moved with pool compaction,
 // retired where the block's draw owner is unbound.
