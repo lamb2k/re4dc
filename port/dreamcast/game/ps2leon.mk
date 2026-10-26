@@ -50,6 +50,23 @@ $(OBJDIR)/coarse_actor.o: $(PS2_LEON_DIR)/ps2leon_pl08_pack_identity.inc
 endif
 $(OBJDIR)/coarse_actor.o: $(PS2_LEON_DIR)/ps2leon_runtime.h $(PS2_LEON_DIR)/ps2leon_hair_runs.h
 endif
+# LEON_PS2_RIG=1 (lane cast-ps2-25, 2026-10-26; default 0: no effect; render only; needs PS2_LEON=1 and a rig arm in
+#              PS2_LEON_DIR: build_arm_a.py --rig + pack_arm.py, whose header carries leon4k::rig_ps2): Leon on the PS2
+#              pl00 rig. Body, head, face and hands bind with the PS2 skeleton rests (the arm bind table); every PS2
+#              section keeps its own weights (no GameCube re-weighting of the jacket / hair); the PS2 jacket (69-75)
+#              and hair (64-68) bones are driven by the game's GameCube cloth / hair simulation (code): their weights
+#              sit on the simulated bones (build_arm_a.py RIG_MAP), which bind with the game's own matrices.
+#              Animation and game state are untouched.
+LEON_PS2_RIG ?= 0
+ifeq ($(filter $(LEON_PS2_RIG),0 1),)
+$(error LEON_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(LEON_PS2_RIG),1)
+ifneq ($(PS2_LEON),1)
+$(error LEON_PS2_RIG needs PS2_LEON=1 (a rig arm in PS2_LEON_DIR))
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_PS2_RIG=1
+endif
 # LEON_LOD=1 (lane leonlod, 2026-10-15; default 0: no effect; render only; needs PS2_LEON=1 LEON_HAND_PACK=1): Leon's
 #              render mesh rungs from one disc package, dc/native/pl00/leon_lod.re4lp (tools/d367/leonlod/lod_pack.py
 #              pack; LEON_LOD_PACK names the host copy the image header is derived from). Roles 0-4 / 7 and the hair run
