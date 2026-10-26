@@ -1,0 +1,9 @@
+name castle31-ce-r204-chapter-event005
+room 0x204
+jp 0
+chapter 6
+status 3 0x04000000
+pos -989.3632 0 -41378.0762
+ang 3.14159265359
+alivelog 30
+dump

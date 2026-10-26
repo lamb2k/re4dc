@@ -22,9 +22,10 @@ FLOOR = 15 * 1024**3
 CAPTURE_LIMIT = 768 * 1024**2
 TRACKS = ('disc.gdi', 'track01.bin', 'track01.iso', 'track02.raw', 'track03.bin', 'track03.iso')
 # Flycast default keyboard map (SDL scancodes via the window's WM_KEYDOWN scan code): set-1 scan code, extended
-KEYS = dict(a=(0x2D, 0), b=(0x2E, 0), x=(0x1F, 0), y=(0x20, 0), start=(0x1C, 0),
+KEYS = dict(f5=(0x3F, 0), su=(0x17, 0), sd=(0x25, 0), sl=(0x24, 0), sr=(0x26, 0), lt=(0x21, 0), rt=(0x2F, 0),
+            a=(0x2D, 0), b=(0x2E, 0), x=(0x1F, 0), y=(0x20, 0), start=(0x1C, 0),
             up=(0x48, 1), down=(0x50, 1), left=(0x4B, 1), right=(0x4D, 1))
-VK = dict(a=0x58, b=0x43, x=0x53, y=0x44, start=0x0D, up=0x26, down=0x28, left=0x25, right=0x27)
+VK = dict(f5=0x74, su=0x49, sd=0x4B, sl=0x4A, sr=0x4C, lt=0x46, rt=0x56, a=0x58, b=0x43, x=0x53, y=0x44, start=0x0D, up=0x26, down=0x28, left=0x25, right=0x27)
 
 # RE4DC_EMU=console (opt-in): run flycast-console (GD-ROM/GDEMU DMA timing + optional SH-4 cache model) instead of the
 # harness flycast.exe. CRASH REPRO ONLY, never timing. RE4DC_GD_* pass through the environment; RE4DC_CONSOLE_DYNAREC=no
@@ -100,8 +101,14 @@ def main():
     ap.add_argument('--align', action='store_true',
                     help='hwmodel Flycast (HW_FLYCAST), interpreter + HWTRACE_ALIGN=1: misaligned guest accesses '
                          '(an address error on a Dreamcast, performed silently by Flycast) go to hwtrace.log')
+    # Savestate chaining (lane castle31 10-26, opt-in; both off = the run is unchanged). A state bundle is a directory:
+    # disc.state (Flycast's own savestate of disc.gdi, slot 0), vmu_A1.bin and state.json (the image key: track03 sha256
+    # of the base and the syms of its program). --state-in refuses a bundle of another image.
+    ap.add_argument('--state-in', help='restore this state bundle at boot (Dreamcast.AutoLoadState)')
+    ap.add_argument('--state-out', help='close Flycast cleanly at the end and save a state bundle here (AutoSaveState)')
     a = ap.parse_args()
     assert 30 <= a.seconds <= 4000
+    assert not (a.state_in or a.state_out) or a.base, '--state-in / --state-out need --base (the image key)'
     cap = Path(a.cap)
     maxfc = int(os.environ.get('RE4DC_MAX_FLYCASTS', '10'))
     cap.mkdir(parents=True, exist_ok=False)
@@ -147,6 +154,17 @@ def main():
     assert a.vmu or (cap / 'data' / 'T0000_vmu_save_A1.bin').exists(), 'harness template %s has no data/T0000_vmu_save_A1.bin' % TEMPLATE
     if a.vmu:
         shutil.copyfile(a.vmu, cap / 'data' / 'T0000_vmu_save_A1.bin')
+    state_key = None
+    if a.state_in or a.state_out:
+        state_key = dict(track03_sha256=linked['track03_sha256'], syms=a.syms.split()[:3])
+    if a.state_in:
+        sb = Path(a.state_in); sk = json.loads((sb / 'state.json').read_text())
+        assert sk['track03_sha256'] == state_key['track03_sha256'] and sk['syms'] == state_key['syms'], \
+            'state %s belongs to another image (%s / %s)' % (sb, sk['track03_sha256'][:16], ' '.join(sk['syms']))
+        sd = cap / sk.get('state_file', 'data/disc.state'); sd.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(sb / 'disc.state', sd)
+        if not a.vmu:
+            shutil.copyfile(sb / 'vmu_A1.bin', cap / 'data' / 'T0000_vmu_save_A1.bin')
     syms = a.syms.split()[:3]
     assert len(syms) == 3, syms
     (cap / 'syms.txt').write_text(' '.join(syms) + '\n')
@@ -171,6 +189,21 @@ def main():
         env = dict(os.environ, HWTRACE_DIR=str(cap), HWTRACE_ALIGN='1')
     if os.environ.get('RE4DC_EMU', '') == 'console' and os.environ.get('RE4DC_CONSOLE_DYNAREC', 'yes') == 'no':
         cfg = cfg.replace('[config]\n', '[config]\nDynarec.Enabled = no\n', 1)
+    if a.state_in:
+        cfg = cfg.replace('[config]\n', '[config]\nDreamcast.AutoLoadState = yes\nDreamcast.SavestateSlot = 0\n', 1)
+    if a.state_out:
+        # This capture's own keyboard map: Flycast's defaults (analog I/J/K/L = su/sl/sd/sr, triggers F/V) plus the
+        # quick save (btn_quick_save) on F5, which fp_run posts to its own window at the end (never global input).
+        if not a.state_in:
+            cfg = cfg.replace('[config]\n', '[config]\nDreamcast.SavestateSlot = 0\n', 1)
+        binds = [(27, 'btn_a'), (6, 'btn_b'), (22, 'btn_x'), (7, 'btn_y'), (40, 'btn_start'), (82, 'btn_dpad1_up'),
+                 (81, 'btn_dpad1_down'), (80, 'btn_dpad1_left'), (79, 'btn_dpad1_right'), (9, 'btn_trigger_left'),
+                 (25, 'btn_trigger_right'), (12, 'btn_analog_up'), (14, 'btn_analog_down'), (13, 'btn_analog_left'),
+                 (15, 'btn_analog_right'), (43, 'btn_menu'), (62, 'btn_quick_save')]
+        (cap / 'mappings').mkdir(exist_ok=True)
+        (cap / 'mappings' / 'SDL_Keyboard.cfg').write_text(
+            '[digital]\n' + ''.join('bind%d = %d:%s\n' % (i, k, n) for i, (k, n) in enumerate(binds)) +
+            '\n[emulator]\nmapping_name = Keyboard\nversion = 3\n')
     (cap / 'emu.cfg').write_text(cfg)
     steps = []
     if a.keys:
@@ -258,6 +291,26 @@ def main():
     except Exception as exc:
         rep['status'] = 'RUN_FAILED'; rep['errors'].append(dict(kind='run', error=str(exc)))
     finally:
+        if a.state_out and proc is not None and proc.poll() is None:
+            # Quick save (F5 in this capture's own keyboard map, posted to its own window), then wait for the file.
+            before = {q: q.stat().st_mtime for q in cap.rglob('*.state')}
+            press(proc.pid, ['f5'], 0.2)
+            st, t1 = None, time.monotonic()
+            while time.monotonic() - t1 < 30 and st is None:
+                time.sleep(1)
+                for q in cap.rglob('*.state'):
+                    if before.get(q) != q.stat().st_mtime and time.time() - q.stat().st_mtime > 1.5:
+                        st = q
+            if st is not None:
+                ob = Path(a.state_out); ob.mkdir(parents=True, exist_ok=False)
+                shutil.copyfile(st, ob / 'disc.state')
+                shutil.copyfile(cap / 'data' / 'T0000_vmu_save_A1.bin', ob / 'vmu_A1.bin')
+                (ob / 'state.json').write_text(json.dumps(dict(state_key, run=a.name, state_file=str(st.relative_to(cap)),
+                                                               state_sha256=sha(ob / 'disc.state'), saved_utc=now()),
+                                                          indent=1) + '\n')
+                rep['state_out'] = str(ob)
+            else:
+                rep['errors'].append(dict(kind='state', error='no savestate file within 30 s of the quick save'))
         for c in (reader, proc):
             if c is not None and c.poll() is None:
                 c.terminate()

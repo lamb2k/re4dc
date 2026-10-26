@@ -1,0 +1,4 @@
+name castle31-save-r103
+room 0x103
+inv default
+god

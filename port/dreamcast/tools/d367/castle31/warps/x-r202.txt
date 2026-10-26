@@ -1,0 +1,16 @@
+name castle31-door-202
+room 0x202
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 200
+goto 120 20352 8999 -59037 0 sub
+act 200 a 10
+act 260 a 10
+act 320 a 10
+entry 2
+alivelog 60
+census 200

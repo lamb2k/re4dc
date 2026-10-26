@@ -1,0 +1,12 @@
+name castle31-ce-r201-switch-wave002
+room 0x201
+jp 0
+chapter 6
+status 3 0x04000000
+rsf 0x201 0
+pos 33900 -2000 -40000
+ang 1.57079632679
+act 120 a 10
+goto 240 16188.0103 1970 -30606.2778 1.57079632679 sub
+alivelog 30
+dump

@@ -1,0 +1,20 @@
+name castle31-door-207
+room 0x207
+jp 0
+act_clock source
+chapter 6
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 200
+act 300 a 6
+act 340 a 6
+act 380 a 6
+act 420 b 6
+goto 200 -10631 4155 -10953 0 sub
+act 700 a 10
+act 760 a 10
+entry 2
+alivelog 60
+census 200

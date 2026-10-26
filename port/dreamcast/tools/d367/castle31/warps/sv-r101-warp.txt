@@ -1,0 +1,4 @@
+name castle31-save-r101
+room 0x101
+inv default
+god
