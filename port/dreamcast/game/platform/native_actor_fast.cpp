@@ -5332,6 +5332,32 @@ extern "C" void re4dc_actor_materialize(const Re4dcModelPart* p) {
 #endif
 }
 
+#if defined(RE4DC_ACTOR_REPLAY_SKIN) && RE4DC_ACTOR_REPLAY_SKIN
+// ACTOR_REPLAY_SKIN (crowd.mk): a part whose info's lazily skinned palette this frame was already materialized for the
+// generic path (a queued / replayed part, e.g. h2's translucent room model drawn after the codec screen) declines
+// here: lazy_skin needs an unmaterialized entry and the part's own arrays have no entry of their own. Re-register the
+// same palette for the info's current arrays (the ordinary non-lazy registration Trans() makes), so the skinned
+// frame takes the part. Ordinary entries only (an owned entry never switches back to source data); 1 = *p now
+// carries the arrays and the entry exists.
+extern "C" int re4dc_actor_skin_rearm(Re4dcModelPart* p) {
+    if (!p || !p->info) return 0;
+    const SkinEntry* e =
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+        find_ordinary_skin(p->info, nullptr);
+    if (find_owned_skin(p->info)) return 0;
+#else
+        find_skin(p->info, nullptr);
+#endif
+    if (!e || !e->materialized || !e->palette || !e->entries) return 0;
+#if RE4DC_ACTOR_TRANSACTION && !RE4DC_ACTOR_SKIN_OWNER_POOL
+    if (owned_skins[unsigned(e - skins)].serial) return 0;
+#endif
+    const float* palette = e->palette; const unsigned entries = e->entries;
+    if (!p->positions && !re4dc_actor_model_buffers(p)) return 0;
+    if (const SkinEntry* own = find_skin(p->info, p->positions)) return !own->materialized && own->palette == palette;
+    return re4dc_actor_skin_register(skin_frame, p->info, p->positions, palette, entries);
+}
+#endif
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
 extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p) {
     if (!p || p->positions) return 1;
@@ -5614,6 +5640,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     // Diagnostic A/B only: cObj00 room objects (id 0, ot 0, one part) are not drawn.
     if (part && re4dc_actor_census_key(part->model) == 0x00010000U) { re4dc_model_result(0, 0, 0); return 1; }
 #endif
+#endif
+#if defined(RE4DC_ACTOR_REPLAY_SKIN) && RE4DC_ACTOR_REPLAY_SKIN
+    // ACTOR_REPLAY_SKIN: a GX list of padding only (no primitive; the converter rejects it: no strips) draws nothing
+    // on any path. Consumed here as drawn-nothing, so the generic walker does not accept it (h2: the room model's
+    // empty 32-byte lists replayed after the codec screen took the generic path, which carries no member proof, and
+    // the re-registered palette of their info was then materialized for the generic walker).
+    if (part && part->stream && part->stream_bytes >= 32 && part->stream_bytes <= 256 && ram(part->stream, part->stream_bytes)) {
+        unsigned any = 0;
+        for (unsigned i = 0; i < part->stream_bytes; ++i) any |= part->stream[i];
+        if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
+    }
 #endif
     if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
