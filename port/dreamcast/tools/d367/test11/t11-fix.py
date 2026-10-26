@@ -1111,6 +1111,15 @@ if os.path.isdir(FXP26D):
     DATA['fxp26'] = {'dc/tex.pak': FXP26D + '/dc/tex.pak'}
     PAK_DERIVED['fxp26'] = FXP26D + '/pak-derived.json'
     AFTER += [('fxp26', 'pfx26')]
+# fxc26 (lane cast-ps2-25 10-26, GC asset purge: the r106 census row ef2f7909): fxp26's tex.pak with the 15 frames of GC
+# etc/core.das EFF #25 id 0x27 (seven-segment digits 0-9 M : . - X, 16x24) as PS2 Core.dat EFF entry 25 id 0x27 (16x32,
+# same frames), PAL4 under the GC keys (tools/d367/castps2-26/fx_core_id.py = fx_ps2_pack.convert_set; fx_ps2_pack lib
+# converts only core EFF #1). Needs FX_PS2_PACK=1 (cover flags). After fxp26. Store: re4-assets-private/fxc26-20261026.
+FXC26D = os.environ.get('FXC26D', '/root/re4data/private/fxc26-20261026')
+if os.path.isdir(FXC26D):
+    DATA['fxc26'] = {'dc/tex.pak': FXC26D + '/dc/tex.pak'}
+    PAK_DERIVED['fxc26'] = FXC26D + '/pak-derived.json'
+    AFTER += [('fxc26', 'fxp26')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
@@ -1352,6 +1361,12 @@ if os.path.isdir(PMREST25D):
     DATA['pmrest25'].update({'st1/%s.arc' % _r: '%s/st1/%s.arc' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106', 'r11e')})
     # the room archive the game reads is the .dar's type-0 record (the .arc copies are staged for consistency)
     DATA['pmrest25'].update({'st1/%s.dar' % _r: '%s/st1/%s.dar' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106')})
+# pmem29-26 (lane cast-ps2-25 10-26, GC asset purge: the r106 census motion rows of em/em29.drs): em29.drs whose 18 FCV
+# clips and SEQ are byte-identical to PS2 em29.dat (ps2_motion_prepared.py rewrite: 0 changed, VERIFY PASS); staged so the
+# motion store proves them PS2. Data only, unchanged bytes. Store: re4-assets-private/pmem29-26-20261026.
+PMEM29D = os.environ.get('PMEM29D', '/root/re4data/private/pmem29-26-20261026')
+if os.path.isdir(PMEM29D):
+    DATA['pmem29-26'] = {'em/em29.drs': PMEM29D + '/em/em29.drs'}
 # pmash25 (same lane): Ashley em/pl11.drs (the release's pl11-hot bounded archive) with its motion from PS2 pl11.dat, the
 # one new dc/mot key it streams, and the GC key no archive references any more off the disc (remove.txt). ONLY with
 # MOTION_PS2_PL11=1 (its pl11-hot profile row); a program without it refuses the archive. After pmrest25.
