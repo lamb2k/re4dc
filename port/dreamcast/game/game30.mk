@@ -4022,3 +4022,10 @@ endif
 ifneq ($(PS2_ETS_MATCH),0)
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
 endif
+# PS2_TORCH_FLAME=1 (render, default 0; lane purge-audit26 2026-10-26; needs PS2_ETS_MATCH=2): the torches that table
+# drops keep their flame at the etc-list position with no model (PS2 draws the body in the world SMD and the flame from
+# its room EFF SST sets; our GC room EFF has no such records). Proofs: tools/d367/rr/drop-proofs.tsv.
+PS2_TORCH_FLAME ?= 0
+ifneq ($(PS2_TORCH_FLAME),0)
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_TORCH_FLAME=$(PS2_TORCH_FLAME)
+endif

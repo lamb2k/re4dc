@@ -68,6 +68,7 @@ struct EtcAmbRgb {
 
 extern "C" {
 void EspDataLoad(void* data, int a, int b);    // game/eff_sys.cpp
+void EstSet(int a, int b, Vec* pos, Vec* rot, int c, int d, int e, int f, u32 g, void* h);   // game/est.cpp
 cObj* SetLadder(void* bin, void* tpl, Vec* pos, Vec* rot, int no);   // game/obj13.cpp
 int strcmp(const char* a, const char* b);
 
@@ -516,6 +517,57 @@ static int ps2_ets_dropped(u32 room, u32 id, u32 no)
     }
     return 0;
 }
+
+#if defined(RE4DC_PS2_TORCH_FLAME) && RE4DC_PS2_TORCH_FLAME
+// PS2_TORCH_FLAME (lane purge-audit26 2026-10-26): PS2 did not drop the chapter 1-2 torches, it moved them. Each GC torch
+// position has a PS2 scenario SMD placement (the body, drawn by the PS2 world) and a fire record in a PS2 room EFF SST
+// set that the effect-area table (EAR) starts (eff_sys.cpp EffSetAreaState). Our room EFF / EAR are the GC ones, so with
+// the etc entry skipped the flame was lost. This lights the torch's flame est (parameter 0) at the etc-list position with
+// no model: the body stays the PS2 world's, the torch is not breakable (as on PS2). Evidence: rr/drop-proofs.tsv.
+// Rows without a PS2 flame record at the spot stay dark: r11e et1400 slots 10 and 12.
+static int ps2_torch_flame_skip(u32 room, u32 id, u32 no)
+{
+    return room == 0x11e && id == 0x14 && (no == 0x0A || no == 0x0C);
+}
+
+static void ps2_torch_flame(EtcSetData* d)
+{
+    const char* eff;
+    int owner;
+    void* arc;
+    void* data;
+
+    switch (d->id) {
+    case 0x14:
+        eff = "et14.eff";
+        owner = 0x68;
+        break;
+    case 0x0C:
+        eff = "et0c.eff";
+        owner = 0x60;
+        break;
+    case 0x38:
+        eff = "et38.eff";
+        owner = 0x8C;
+        break;
+    case 0x1C:
+        eff = "et1c.eff";
+        owner = 0x70;
+        break;
+    default:
+        return;
+    }
+    if (ps2_torch_flame_skip(pG->room_id, d->id, d->no) || !EtcGetDasAddr(d->id, &arc)) {
+        return;
+    }
+    data = GetEtcAddr(arc, eff);
+    if (data == 0) {
+        return;
+    }
+    EspDataLoad(data, owner, 0);
+    EstSet(0, -1, &d->pos, &d->ang, owner, 0, 0, 0, 0, 0);
+}
+#endif
 #endif
 
 // Creates every record of the room's etc list (EtcModelSet) and remembers the highest slot.
@@ -539,6 +591,9 @@ int EtcModelListSet(EtcList* list)
 #else
         // =2 (lane purge-props24 2026-10-24): every chapter 1-2 room; see ps2_ets_dropped.
         if (ps2_ets_dropped(pG->room_id, d[i].id, d[i].no)) {
+#if defined(RE4DC_PS2_TORCH_FLAME) && RE4DC_PS2_TORCH_FLAME
+            ps2_torch_flame(&d[i]);
+#endif
             continue;
         }
 #endif
