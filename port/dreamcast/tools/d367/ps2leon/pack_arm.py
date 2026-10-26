@@ -205,6 +205,18 @@ def main():
     head = tmp.read_text()
     ref = TODAY_RUNTIME.read_text()
     tail = ref[ref.index('struct SourceSignature'):].rsplit('}', 1)[0]
+    if any(b.get('source') for b in mesh['bones']):
+        # --rig mesh (build_arm_a.py --rig): the bind table from the mesh's own (PS2 pl00) rests, not today's GC table;
+        # the GC cloth / hair range is identity (LEON_PS2_RIG=1 reads the game's bind for those bones).
+        import numpy as np
+        rows = []
+        for b in mesh['bones']:
+            inv = np.linalg.inv(np.asarray(b['rest'], float))[:3].reshape(12)
+            rows.append('{' + ','.join(float(np.float32(v)).hex() + 'f' for v in inv) + '}')
+        i0 = tail.index('static const float bind[119][12] = {')
+        i1 = tail.index('};', i0) + 2
+        tail = tail[:i0] + 'static const float bind[119][12] = {\n' + ',\n'.join(rows) + '};' + tail[i1:]
+        tail += '\nstatic constexpr unsigned rig_ps2=1; // LEON_PS2_RIG: bind rows 64-109 identity, the game binds those\n'
     nrep = json.loads((native / 'native-report.json').read_text())
     pals = {c['info']: c['palettes'] for c in nrep['chunks']}
     assert sorted(pals) == list(range(8))

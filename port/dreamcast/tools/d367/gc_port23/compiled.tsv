@@ -1,3 +1,5 @@
 # Payloads compiled into the program (no disc file), read by build_catalog.py --compiled: kind, id, sha256, evidence.
 # Provenance comes from provenance-reviewed.tsv like any other row.
 geometry	890085edb9a03c566671f65ae4c3a8b078dbe391	890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784	PS2 Leon mesh arrays compiled into the program (gc_asset_actor_compiled.inc payload_capture_fragments_split, PS2_LEON=1)
+geometry	1e9cea4a4b626ee8a039264bb7d5b9917d659094	1e9cea4a4b626ee8a039264bb7d5b9917d6590941666f2210bc42b2a2659a37b	PS2 Leon mesh arrays on the PS2 rig compiled into the program (gc_asset_actor_compiled.inc, PS2_LEON=1 LEON_PS2_RIG=1)
+geometry	ca50780bcb1fb41b24767cbae9a4faa7e9e36876	ca50780bcb1fb41b24767cbae9a4faa7e9e36876c53b242b224c8306522d6f6e	PS2 Leon skeleton half on the PS2 rig: leon4k::bind + chunk source_info (gc_asset_actor_compiled.inc side spans, PS2_LEON=1 LEON_PS2_RIG=1)

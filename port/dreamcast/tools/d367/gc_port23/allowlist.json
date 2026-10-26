@@ -139,56 +139,6 @@
    "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
    "room": "0101",
    "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
-   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "GameCube skeleton data for the PS2 Leon mesh",
-   "room": "0100",
-   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
-   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "GameCube skeleton data for the PS2 Leon mesh",
-   "room": "0101",
-   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
-   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "GameCube skeleton data for the PS2 Leon mesh",
-   "room": "0103",
-   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
-   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "GameCube skeleton data for the PS2 Leon mesh",
-   "room": "011e",
-   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
-   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "GameCube skeleton data for the PS2 Leon mesh",
-   "room": "011f",
-   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
   }
  ],
  "schema": 1

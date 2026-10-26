@@ -34,6 +34,17 @@
 #else
 #include "leon4k_runtime.h" // private generated asset, outside the repository
 #endif
+#if defined(RE4DC_LEON_PS2_RIG) && RE4DC_LEON_PS2_RIG
+// ps2leon.mk LEON_PS2_RIG=1: the PS2 rig. Bones 0-63 / 110-118 bind with the arm's table (the PS2 pl00 skeleton's
+// rests, pack_arm.py from build_arm_a.py --rig); the GameCube cloth / hair bones 64-109 are the game's simulation
+// (code): their bind is the game's own lt_inv_mat, and the PS2 jacket / hair weights sit on them (RIG_MAP).
+static_assert(leon4k::rig_ps2==1,"LEON_PS2_RIG=1 needs a rig arm (build_arm_a.py --rig, pack_arm.py)");
+#define RE4DC_LEON_RIG_SIM(i) ((unsigned)(i)-64u<46u)
+#define RE4DC_LEON_BIND_ROW(b,part) (RE4DC_LEON_RIG_SIM(b)?&(part)->lt_inv_mat[0][0]:&leon4k::bind[b][0])
+#else
+#define RE4DC_LEON_RIG_SIM(i) false
+#define RE4DC_LEON_BIND_ROW(b,part) (&(part)->lt_inv_mat[0][0])
+#endif
 // Leon's draw-order type (also without PS2_LEON: the owner paths and actor_tex_prep use it since 5094849d): the source draws him at ot_type 7, and at 0 in scripted rides (r10b boat, crowd.mk
 // LEON_HAND_POSES=1 admits both so the boat ride keeps the PS2 body; default: 7 only, as before).
 #if defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
@@ -200,7 +211,7 @@ bool bind_source(cModel* m) {
         for(unsigned i=0;i<119;++i){
             if(!p)return false;parts[i]=p;
             for(unsigned j=0;j<12;++j)
-                if(__builtin_fabsf((&p->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f)return false;
+                if(!RE4DC_LEON_RIG_SIM(i) && __builtin_fabsf((&p->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f)return false;
             p=p->pList;
         }
         if(p)return false;
@@ -321,7 +332,7 @@ extern "C" int re4dc_coarse_leon(cModel* m) {
         alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
         for(unsigned u=0;u<skin_used;++u){
             const unsigned b=skin_bone[u];
-            skin_jobs[u]={&parts[b]->mat[0][0],&parts[b]->lt_inv_mat[0][0],bone_T[b]};
+            skin_jobs[u]={&parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,parts[b]),bone_T[b]};
         }
         re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
     }
