@@ -802,6 +802,14 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // the generic path below then runs unchanged.
 #if RE4DC_MODEL_STREAM_FIX && RE4DC_NATIVE_ACTOR_FAST
     if(p && (!p->static_geometry || re4dc_actor_stream_encoded(p->stream,p->stream_bytes)) && re4dc_actor_submit(p)){PP_PATH(2);return;}
+#if defined(RE4DC_ACTOR_REPLAY_SKIN) && RE4DC_ACTOR_REPLAY_SKIN
+    // ACTOR_REPLAY_SKIN: a skinned part whose palette was already materialized this frame: the same palette again
+    // for its arrays, then the actor path (native_actor_fast.cpp re4dc_actor_skin_rearm).
+    if(p && !p->static_geometry){
+        Re4dcModelPart rearmed=*p;
+        if(re4dc_actor_skin_rearm(&rearmed) && re4dc_actor_submit(&rearmed)){PP_PATH(2);return;}
+    }
+#endif
 #else
     if(p && !p->static_geometry && re4dc_actor_submit(p))return;
 #endif

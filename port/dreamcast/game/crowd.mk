@@ -791,3 +791,16 @@ $(error STATIC_OBJ_BAKE needs PS2_PLACE_GATE=1)
 endif
 $(OBJDIR)/src/game/trans.o $(OBJDIR)/model_bridge.o $(OBJDIR)/model_asset_bridge.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_STATIC_OBJ_BAKE=1
 endif
+
+# ACTOR_REPLAY_SKIN=1 (lane cast-ps2-25, 2026-10-26; default 0: no effect; render only; needs NATIVE_ACTOR_FAST,
+#              MODEL_STREAM_FIX and NATIVE_ACTOR_SKIN_LAZY): a skinned part declined by the actor path because its
+#              info's lazy palette was already materialized this frame (h2: the translucent room model replayed after
+#              the codec screen) gets that palette registered for its arrays and goes through the actor path instead
+#              of the generic GX walker (which, by the GC-ASSET rule, carries no member proof).
+ACTOR_REPLAY_SKIN ?= 0
+ifeq ($(filter $(ACTOR_REPLAY_SKIN),0 1),)
+$(error ACTOR_REPLAY_SKIN must be 0 or 1)
+endif
+ifeq ($(ACTOR_REPLAY_SKIN),1)
+$(OBJDIR)/platform/native_model.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_REPLAY_SKIN=1
+endif

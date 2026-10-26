@@ -103,6 +103,8 @@ void re4dc_actor_materialize(const Re4dcModelPart* p);
 int re4dc_actor_materialize_lazy(Re4dcModelPart* p);
 // model_bridge.cpp: p->positions/normals from the info current pPosBuf/pNrmBuf.
 int re4dc_actor_model_buffers(Re4dcModelPart* p);
+// ACTOR_REPLAY_SKIN: re-register a materialized lazy palette for the part's arrays (native_actor_fast.cpp).
+int re4dc_actor_skin_rearm(Re4dcModelPart* p);
 }
 
 // COARSE_ONE_SUBMIT (game30.mk; render only; native_actor_fast.cpp): the coarse adapters' chunks of one actor in
