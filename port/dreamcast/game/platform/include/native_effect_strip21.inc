@@ -86,8 +86,14 @@ extern "C" int re4dc_effect_quad(const Re4dcEffectQuad* q){
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+        if(!deferred_spill || required>deferred_spill_top){
+            if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+        }else{storage=deferred_spill;top=&deferred_spill_top;}
+#else
         if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
         storage=deferred_spill;top=&deferred_spill_top;
+#endif
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};
     node->lighting=kEffectQuad21Tag;node->changed[0]=bytes;
@@ -203,8 +209,14 @@ extern "C" int re4dc_effect_mesh21(const Re4dcEffectMesh21* m){
         unsigned char* storage=frame_storage;unsigned* tp=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+            if(!deferred_spill || required>deferred_spill_top){
+                if(!fx_r200_tail_select(required,storage,tp)){++fx_dropped;++cloth21_drop;RE4DC_FQ_DROP(true,required);continue;}
+            }else{storage=deferred_spill;tp=&deferred_spill_top;}
+#else
             if(!deferred_spill || required>deferred_spill_top){++fx_dropped;++cloth21_drop;RE4DC_FQ_DROP(true,required);continue;}
             storage=deferred_spill;tp=&deferred_spill_top;
+#endif
         }
         *tp-=required;auto* node=new(storage+*tp) DeferredPart{};
         node->lighting=kEffectQuad21Tag;node->changed[0]=bytes;

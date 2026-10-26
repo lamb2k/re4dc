@@ -818,3 +818,40 @@ for the first contributor sample. The owner performs the still/deformation,
 runtime admission, logic, memory and console gates before adopting any asset.
 This guide changes no release asset or quality setting; status remains for
 the coordinator.
+
+### 2026-10-26: Build 18 hand-back (`codex/fx-r200-entry-cap-20261026`)
+
+Base `74154cae`, refreshed from `ab31de24` after the 17/19/20 merges and
+portrait-hair update. The [report](BUILD18_FX_R200_ENTRY_CAP_20261026.md)
+identifies the `fx_dropped` refusing sites as byte admission in the CPU
+deferred FIFO. Esp pool refusal, the 64-sprite cap and texture misses have
+different counters. Laser/cloth-row accounting remains unchanged.
+
+`FX_R200_ENTRY_CAP=1`, default 0, reuses the first 8 KiB of the existing
+model-slab tail only when a successful, current-generation, distinct room
+spill cannot fit an r200 effect submission. It adds **0 heap-4 / KOS heap
+allocation**; it preserves the primary reserves, cap, packet generation,
+FIFO order and existing retirement. The current 24 KiB room cell plus that
+tail provide 32 KiB spill payload. It cannot help a refused room allocation
+whose fallback already uses the tail. The report and receipts separately
+price static code/state, stack and synthetic admission cycles/traffic.
+No recipe or coordinator status is changed.
+
+1. Please supply the newer run behind “24 KiB didn't cover it,” with exact
+   executable/knob hashes and `fx room spill` allocation status. The public
+   Test 20/22 failures precede the October 23 introduction (`a8546da0`) and
+   recipe enable (`eb1fe953`); those old counts do not prove the current room
+   cell failed. The recipe comment's recorded 8 + 14.8 KiB need also warrants
+   a current baseline before adopting additional capacity.
+2. On the exact r10f → r200 entrance/truck sequence, which counter rises on
+   the current recipe: `fx_dropped`, `fx_capped`, `fx_missing` or `espd_refuse`?
+   Retain `FRAME_QUEUE_DIAG`, `FX_QUEUE_LOG`, `ESP_POOL_DIAG`, world/model-drop
+   and heap evidence. If the cell succeeds, compare the candidate's bounded
+   `FQDIAG r200_tail` bytes/reasons with the baseline, plus packet-type demand,
+   transparency/order, source logic and frame timing. Restoring dropped draws
+   adds rendering work; it is not an FPS optimization claim.
+3. Please run reset, room leave/reentry, save/load, source-draw end, frame-skip
+   and sub-screen/movie gates, and the full s30 memory/cutscene gate. The
+   existing static allocator protects 81,920 B, below the requested 98,000 B
+   floor; this build does not change that policy. Verify the actual floor
+   even with zero new arena allocation and retain final linked-image sizes.
