@@ -153,7 +153,7 @@ if build_ok and jobs:
     # GC-ASSET gate (cast-ps2-25 10-26): gca-* jobs on the gate-ON twin, gc_port23/judge.py against allowlist.json (the
     # last good candidate's allowlist is the shrink-only baseline) and unwired-baseline.json. RR_GCA_MODE=report (the
     # default until the coordinator flips it to gate) reports a failure as KNOWN.
-    gl = [EVU / n / 'run-output.txt' for n in ('gca-title', 'gca-h2', 'gca-r100', 'gca-r101', 'gca-r103', 'gca-r11e', 'gca-r11f')]
+    gl = [EVU / n / 'run-output.txt' for n in ('gca-title', 'gca-h2', 'gca-r100', 'gca-r101', 'gca-r103', 'gca-r11e', 'gca-r11f', 'gca-grenade')]
     if any(p.exists() for p in gl) or 'gca' in srt:
         G = D367 / 'gc_port23'
         lgs = dict(l.split('=', 1) for l in rd(RR_HOME / 'state/last-good').splitlines() if '=' in l)
@@ -169,7 +169,7 @@ if build_ok and jobs:
         try:
             j = json.loads(jj.read_text())
         except (OSError, ValueError):
-            j = {'pass': False, 'failures': ['gca prep or jobs did not run (%d/7 logs)' % sum(p.exists() for p in gl)]}
+            j = {'pass': False, 'failures': ['gca prep or jobs did not run (%d/%d logs)' % (sum(p.exists() for p in gl), len(gl))]}
         nc = j.get('not_covered_errors') or {}
         detail = 'rows used %s (allowlist %d); not covered: %s' % (
             j.get('allowed_used', '?'), len(json.loads(rd(G / 'allowlist.json') or '[]') if rd(G / 'allowlist.json').lstrip().startswith('[') else
