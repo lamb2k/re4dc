@@ -1304,10 +1304,10 @@ if os.path.isdir(PMSS26D):
     AFTER += [('pmss26', 'wep26g'), ('pmss26', 'wep24ss')]
 # hand26 (same lane, round 3): Leon's last GameCube hand BINs as PS2 geometry (ps2_weapons.py --hands): em/wep19.drs 0x7
 # (grenade hand; its new LEON_HAND_PACK key added to leon_hands_pl00.re4hp on the same PS2 blob 15, hands_pack.py addkey)
-# and ss/cmn/ss_wep13.dat BIN 0 (sub screen hand). After snd26w (wep19.drs) and pmss26 (ss_wep13.dat): it rewrites their files.
+# and ss/cmn/ss_wep13.dat / ss_wep19.dat BIN 0 (sub screen hands). After snd26w (wep19.drs) and pmss26 (ss_wep13.dat): it rewrites their files.
 HAND26D = os.environ.get('HAND26D', '/root/re4data/private/hand26-20261026')
 if os.path.isdir(HAND26D):
-    DATA['hand26'] = {'em/wep19.drs': HAND26D + '/em/wep19.drs', 'ss/cmn/ss_wep13.dat': HAND26D + '/ss/cmn/ss_wep13.dat',
+    DATA['hand26'] = {'em/wep19.drs': HAND26D + '/em/wep19.drs', 'ss/cmn/ss_wep13.dat': HAND26D + '/ss/cmn/ss_wep13.dat', 'ss/cmn/ss_wep19.dat': HAND26D + '/ss/cmn/ss_wep19.dat',
                       'dc/native/pl00/leon_hands_pl00.re4hp': HAND26D + '/dc/native/pl00/leon_hands_pl00.re4hp'}
     AFTER += [('hand26', 'snd26w'), ('hand26', 'pmss26')]
 # leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc

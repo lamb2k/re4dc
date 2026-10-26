@@ -23,7 +23,10 @@ Byte-following (wep19-26, coordinator 10-26): a set staging a whole file is cred
 it changed. A member already present, byte for byte, in the previous set's copy of that file (motion sets included) is
 not that set's work: the row walks back to the set that first carried those bytes, and to the stager base rules
 (rule 3) when no set changed it. The first set staging a file has no earlier copy to compare and still gets the whole
-file; provenance-report.json lists those cases (whole_file_credit)."""
+file; provenance-report.json lists those cases (whole_file_credit). A copy that does not carry the row's bytes at all
+(a store kept in a form the stager converts further) proves nothing: that set keeps the credit, as before.
+Opt-in (PROVENANCE_FOLLOW_BYTES=1): on the 10-26 recipe it moves 126 model / 28 sound rows from ps2 to gc and ~110
+rows to unknown in other lanes' rooms (em11-em17 Ganado archives, st1 objects), so turning it on is a gate decision."""
 import collections, csv, hashlib, importlib.util, io, json, os, re, sys
 from pathlib import Path
 
@@ -145,6 +148,7 @@ class Store:
         return self.level, 'set=%s %s' % (self.name, self.why)
 
 
+FOLLOW_BYTES = os.environ.get('PROVENANCE_FOLLOW_BYTES') == '1'
 _DIGESTS = {}
 
 
@@ -175,8 +179,8 @@ def follow_bytes(sets, path, digest):
         if digest in st.tsv:
             return st, False
         own = file_digests(st.src, path)
-        if own is not None and digest not in own:
-            continue          # a later set's bytes (not in this copy)
+        if own is None or digest not in own:
+            return st, False  # this copy is not in the staged form: no proof either way, the set keeps the credit
         prev = file_digests(sets[i - 1].src, path) if i else None
         if prev is not None and digest in prev:
             continue          # unchanged by this set: an earlier copy already carried these bytes
@@ -300,12 +304,15 @@ def main(catalog, recipe_conf, out_dir):
                 prov, ev = 'gc', 'GameCube motion: clip of GameCube disc file %s, no PS2 motion set stages it' % gc_file(path)
             else:
                 ev = 'motion clip: no PS2 motion set, not on the GameCube disc'
-        elif follow_bytes(overlay.get(path, []), path, r['sha256'])[0] is not None:
+        elif FOLLOW_BYTES and follow_bytes(overlay.get(path, []), path, r['sha256'])[0] is not None:
             st, whole = follow_bytes(overlay[path], path, r['sha256'])
             prov, ev = st.prov(r['sha256'], gc_file(path))
             if whole and r['sha256'] not in st.tsv:
                 whole_file[(st.name, path, prov)] += 1
                 ev += ' (first copy of the file: whole-file credit)'
+        elif not FOLLOW_BYTES and [st for st in overlay.get(path, []) if not MOTION_SET.match(st.name)]:
+            st = [st for st in overlay[path] if not MOTION_SET.match(st.name)][-1]
+            prov, ev = st.prov(r['sha256'], gc_file(path))
         elif gc_file(path) is not None:
             prov, ev = 'gc', 'stager base: GameCube disc file %s' % gc_file(path)
         elif 'ps2-world.' in path:
