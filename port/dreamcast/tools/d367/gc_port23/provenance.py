@@ -162,6 +162,11 @@ def main(catalog, recipe_conf, out_dir):
                         for f in Path(src).rglob('*.re4tex'):
                             tex_loose[f.stem.lower()] = st
                 continue
+            if k == 'graft':   # member-level graft (t11-fix.py graft_all): the set owns those archives' grafted members
+                for gdest, (gsrc, _members) in srcs.items():
+                    st = stores.setdefault((n, gsrc), Store(n, gsrc, lines))
+                    overlay.setdefault(gdest.lower(), []).append(st)
+                continue
             src = srcs if isinstance(srcs, str) else list(srcs)[-1]
             st = stores.setdefault((n, src), Store(n, src, lines))
             overlay.setdefault(k.lower(), []).append(st)

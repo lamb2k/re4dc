@@ -839,6 +839,30 @@ def lostpart_gate(k, v, rec):
     rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
 
 
+def graft_all(grafts, r, out, rec):
+    """GRAFT (lane fix-r100-props26 10-26): a set's {'graft': {dest: (source .dar, [ETM sub-file names])}} copies only
+    those members, byte for byte, into the archive ALL sets composed (r[dest] after the last set), so its place in DATA
+    no longer matters and no later set is undone. tools/d367/graft/dar_graft.py proves member identity for every other
+    member (NTR / ESQ rebased only); a failed proof stops the fixture. Output beside OUT.json in graft/."""
+    if not grafts:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'graft'))
+    import dar_graft
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, src, members in grafts:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('graft %s: no composed %s' % (nm, dest), cur)
+        comp, sb = Path(cur).read_bytes(), Path(src).read_bytes()
+        res, rep = dar_graft.graft(comp, sb, members)
+        bad = dar_graft.verify(comp, res, members, sb)
+        assert not bad, ('graft %s %s: member identity' % (nm, dest), bad)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        Path(o).write_bytes(res)
+        r[dest] = o
+        rec.append('%s graft %s %s onto %s -> %s' % (nm, dest, '+'.join(members), sha(cur), sha(o)))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -859,6 +883,7 @@ def main():
     rm = set(d.get('remove', []))
     rec = []
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
+    grafts = []
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
@@ -876,6 +901,11 @@ def main():
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
                 continue
+            if k == 'graft':   # member-level grafts, applied after every set (graft_all)
+                for dest, (src, members) in v.items():
+                    assert os.path.exists(src), (nm, dest, src)
+                    grafts.append((nm, dest, src, list(members)))
+                continue
             if k == 'remove':   # paths the set takes off the disc (nostd20)
                 for p_ in v:
                     r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
@@ -889,6 +919,7 @@ def main():
             assert os.path.exists(v), (nm, k, v)
             lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
+    graft_all(grafts, r, out, rec)
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
@@ -1296,10 +1327,14 @@ DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
 # image 0 restored byte-identical to Test 23, member by member on the Test 24 archives, in r100 r101 r105 r107 r111 r11c
 # r11f (PS2 draws no intact pane). tools/d367/windows26/gen26.sh reproduces it. Last of the st1 .dar sets.
 WINDOWS26D = os.environ.get('WINDOWS26D', '/root/re4data/private/windows26-20261026')
+# Since 10-26 (lane fix-r100-props26) it is a GRAFT, not a whole-archive copy: the store's archives were rebuilt from the
+# Test 24 tree, so copying them threw away later sets (pmrest25's r100 motions) and changed sound banks / models (GC-ASSET
+# 3 -> 37). Only the pane members are copied, onto the archive every set composed (see 'graft' below).
 if os.path.isdir(WINDOWS26D):
-    DATA['windows26'] = {}
+    DATA['windows26'] = {'graft': {}}
     for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
-        DATA['windows26']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (WINDOWS26D, _r)
+        _m = ['et0000.bin'] + (['et2500.bin'] if _r in ('r101', 'r105', 'r111') else []) +              (['et0000.tpl'] if _r in ('r105', 'r107', 'r111', 'r11c', 'r11f') else [])
+        DATA['windows26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (WINDOWS26D, _r), _m)
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
