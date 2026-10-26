@@ -14,6 +14,9 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+extern "C" void re4dc_halt(const char*, int);
+#endif
 
 struct Re4dcMemLayout re4dc_mem;
 
@@ -207,10 +210,10 @@ void re4dc_log_raw(const char* data, unsigned long len)
     irq_restore(irq);
 #endif
 #if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
-    // LOG_CRASH_TEST=N (test arm only): a misaligned store after the N-th log append, so the crash screen's log rows
-    // can be checked on a play image (LOG_PLAY_KB).
+    // LOG_CRASH_TEST=N (test arm only): halt to the crash screen after the N-th log append, so its log rows can be
+    // checked on a play image (LOG_PLAY_KB). (A misaligned store does not fault under Flycast.)
     static unsigned long calls;
-    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) *(volatile unsigned long*) 0x8c000002 = 1;
+    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
 #endif
 }
 
