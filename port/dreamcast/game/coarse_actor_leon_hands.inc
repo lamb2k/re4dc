@@ -35,7 +35,10 @@
 #include <kos/mutex.h>
 extern "C" void* re4dc_motion_alloc(unsigned);
 extern "C" void re4dc_motion_free(void*);
-extern "C" unsigned char re4dc_dvd_buff[0x20000];
+#ifndef RE4DC_DVD_BUFF_BYTES
+#define RE4DC_DVD_BUFF_BYTES 0x20000   // DVD_BUFF_KB (Makefile): the staging area size
+#endif
+extern "C" unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES];
 #pragma GCC push_options
 #pragma GCC optimize("Os")  // cold loader code: size, not speed (image bytes are heap 4)
 namespace leon_hand_pack {
@@ -83,14 +86,14 @@ bool read_at(unsigned offset,void* to,unsigned bytes) {
 bool directory() {
     if(dir_state)return dir_state==1;
     dir_state=2;
-    unsigned char* b=re4dc_dvd_buff+0x10000;  // DVD_BUFF2: used only inside synchronous DVD swaps (src/game/dvd.cpp)
+    unsigned char* b=re4dc_dvd_buff+RE4DC_DVD_BUFF_BYTES/2;  // DVD_BUFF2: used only inside synchronous DVD swaps (src/game/dvd.cpp)
     unsigned h[8]{};
     unsigned bad=1;
     if(read_at(0,h,32) && h[0]==kMagic && (h[1]&0xffffu)==kVersion && h[3]==kSlotBytes[0] && h[4]==kSlotBytes[1]) {
         nrows=h[1]>>16;nblobs=h[2]&0xffffu;nsrcs=h[2]>>16;file_bytes=h[6];
         const unsigned dir=h[5],ro=32,bo=ro+nrows*12,so=bo+nblobs*24;
         bad=2;
-        if(nrows<=kRows && nblobs>=2 && nblobs<=kBlobs && nsrcs<=kSources && dir<=0x10000 && so+nsrcs*4<=dir && read_at(0,b,dir)) {
+        if(nrows<=kRows && nblobs>=2 && nblobs<=kBlobs && nsrcs<=kSources && dir<=RE4DC_DVD_BUFF_BYTES/2 && so+nsrcs*4<=dir && read_at(0,b,dir)) {
             std::memcpy(rows,b+ro,nrows*12);std::memcpy(blobs,b+bo,nblobs*24);std::memcpy(srcs,b+so,nsrcs*4);
             bad=(blobs[0].role!=5 || blobs[1].role!=6 || !(blobs[0].flags&blobs[1].flags&1))?3:0;
             for(unsigned i=0;i<nblobs;++i){const Blob& x=blobs[i];
@@ -162,7 +165,8 @@ void prefetch(int b,bool hint=false) {
 void prefetch(int b) {
     if(b<0 || unsigned(b)>=nblobs || cell_of(b)>=0 || !cells())return;
 #endif
-    unsigned char* t=re4dc_dvd_buff+0x10000;
+    unsigned char* t=re4dc_dvd_buff+RE4DC_DVD_BUFF_BYTES/2;
+    static_assert(kSlotBytes[0]<=RE4DC_DVD_BUFF_BYTES/2 && kSlotBytes[1]<=RE4DC_DVD_BUFF_BYTES/2,"LHPACK blob bounce exceeds DVD_BUFF2");
 #if RE4DC_GC_ASSET_GATE
     gcasset_hand_scratch={};const auto gcasset_read=gcasset_hand_read_begin(b);
 #endif
