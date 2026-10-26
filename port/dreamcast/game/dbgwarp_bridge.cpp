@@ -122,6 +122,9 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <stdio.h>
 #include <stdlib.h>
 #include <arch/timer.h>
+
+// `god`: read by LifeDownSet2 (src/game/em_sub.cpp, RE4DC_WARP_GOD_HOOK, warp builds only): no damage to the player.
+extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; }
 #include <kos/thread.h>
 #include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
@@ -330,6 +333,8 @@ struct Warp {
     int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
     u16 stock_room;  // `stock`: logs the merchant stock and tune table once per room entry (castle31 shop check)
     bool stock;
+    bool ashley;              // `ashley` (castle31 chain): no Mission Failed from Ashley; every suppressed cause logged
+    u16 ashley_carry;         // frames she has been carried (Status_flg[1] bit16)
     u16 ammo_keep, ammo_wep;  // `ammo` in observe runs (castle31 chain): most rounds seen loaded in the equipped weapon
     u32 pl_period;   // `plpos N`: Leon's position, angle and life every N room frames (castle31 no-warp segments)
     u32 stock_sum;
@@ -657,6 +662,9 @@ void load()
             if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
             if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "ashley")) {
+            wp.ashley = true;
+            re4dc_warp_ashley = 1;
         } else if (!strcmp(k, "plpos") && n >= 2) {
             wp.pl_period = num(tok[1]);
         } else if (!strcmp(k, "stock")) {
@@ -667,6 +675,7 @@ void load()
             wp.ammo = true;
         } else if (!strcmp(k, "god")) {
             wp.god = true;
+            re4dc_warp_god = 1;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
         } else if (!strcmp(k, "bell108") && n >= 2) {
             wp.b108_frame = num(tok[1]);
@@ -999,9 +1008,77 @@ void alive_log_poll()
 // `god` / `ammo` (existing warp lines) also in observe runs (no room override: the castle31 no-warp chain), via
 // plpos_poll. Life back to max (a hit still lands: knockback, grabs and scripted
 // deaths run as in play); the equipped weapon's loaded count back to the most seen for that weapon.
+// `ashley`: the Mission Failed causes of the partner, suppressed before they fire and each logged
+// (warp: ashley-fail frame/room/cause): carried (held 150 frames = 5 s, Leon had his chance to shoot the carrier: the
+// nearest enemy's life goes to 0 via one hit through its damage path, so its own death drops her, logged warp: ashley-free, not a real kill), hp (life under a
+// quarter: refilled), other (a death demo started anyway while Leon's life is up: not suppressed, reported as a bug).
+static void ashley_poll()
+{
+    if (!wp.ashley || !pG || !pSubEm) return;
+    if (pG->Status_flg[1] & 0x10000) {
+        if (++wp.ashley_carry >= 150) {
+            cEm* best = nullptr;
+            float bd = 0;
+            for (u32 i = 0; i < EmMgr.nArray; i++) {
+                cEm* em = (cEm*) EmMgr.workAt(i);
+                if (!em || SceCheckEmAlive(em) != 1 || (em->id & 0xff) >= 0x40) continue;
+                const float dx = em->pos.x - pSubEm->pos.x, dz = em->pos.z - pSubEm->pos.z, d = dx * dx + dz * dz;
+                if (!best || d < bd) { best = em; bd = d; }
+            }
+            re4dc_log("warp: ashley-fail frame %u room %x cause carried carrier %02x pos %d %d %d\n",
+                      (unsigned) wp.room_frames, (unsigned) pG->room_id, best ? (unsigned) best->id & 0xff : 0u,
+                      best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0);
+            if (best) {  // coordinator 10-26 option (a): the carrier's life to 0, its own death/release runs
+                // hp 0 alone leaves her carried (the carrier never runs its damage check): hp 1 plus one handgun hit
+                // through its own damage path (the `kill` rig's cDmgInfo::set), so its death and her release run as in play.
+                if (!(best->dmg.m_Flag & 1)) {
+                    best->hp = 1;
+                    Vec c = best->pos;
+                    YARARE_INFO* part = emSphereAtCk(best, &c, &c, 5000.0f, 1, 5000.0f);
+                    if (!part) part = &best->hitInfo;
+                    Vec from = pPL ? pPL->pos : best->pos;
+                    best->dmg.set(0, 10, 1, &from, part->rad, part);
+                }
+                re4dc_log("warp: ashley-free frame %u room %x carrier %02x (not a real kill)\n", (unsigned) wp.room_frames,
+                          (unsigned) pG->room_id, (unsigned) best->id & 0xff);
+            }
+            wp.ashley_carry = 0;
+        }
+    } else {
+        wp.ashley_carry = 0;
+    }
+    static unsigned saves_seen;
+    if (re4dc_warp_ashley_saves != saves_seen) {  // LifeDownSet2 kept her at 1 point (a one-frame lethal hit)
+        saves_seen = re4dc_warp_ashley_saves;
+        re4dc_log("warp: ashley-fail frame %u room %x cause hp lethal-hit saves %u\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, saves_seen);
+    }
+    if (pG->ashley_life_max && (s16) pG->ashley_life < (s16) (pG->ashley_life_max / 4)) {
+        re4dc_log("warp: ashley-fail frame %u room %x cause hp life %d\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, (int) (s16) pG->ashley_life);
+        pG->ashley_life = pG->ashley_life_max;
+    }
+    static bool demo_logged;
+    if ((pG->Status_flg[0] & 0x100000) && !demo_logged) {
+        demo_logged = true;
+        re4dc_log("warp: ashley-fail frame %u room %x cause other (death demo started: pl_life %d ashley_life %d status1 %08x)\n",
+                  (unsigned) wp.room_frames, (unsigned) pG->room_id, (int) (s16) pG->pl_life, (int) (s16) pG->ashley_life,
+                  (unsigned) pG->Status_flg[1]);
+    }
+}
+
 static void god_ammo_poll()
 {
     if (!pG) return;
+    ashley_poll();
+    // `god` masks pl_life only: a death routine entered anyway (one-frame kill, grab kill, fall) is reported, not hidden.
+    static bool god_fail_logged;
+    if (wp.god && pPL && pPL->r_no_0 == 2 && !god_fail_logged) {
+        god_fail_logged = true;
+        re4dc_log("warp: god-fail frame %u room %x cause pl-dead rno %u/%u/%u life %d\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1, (unsigned) pPL->r_no_2,
+                  (int) (s16) pG->pl_life);
+    }
     if (wp.god && pG->pl_life_max && pG->pl_life < pG->pl_life_max) pG->pl_life = pG->pl_life_max;
     ItemWork* w = wp.ammo ? ItemMgr.pArm : nullptr;
     if (!w) return;
@@ -1056,10 +1133,16 @@ void plpos_poll()
         const float dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
         if (!best || d < bd) { best = em; bd = d; }
     }
-    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d em %d %d %d %02x n %d\n", (unsigned) pG->room_id,
+    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d em %d %d %d %02x n %d rno %u/%u/%u\n", (unsigned) pG->room_id,
               (unsigned) wp.room_frames, (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f),
               (int) pG->pl_life, best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0,
-              best ? (unsigned) best->id & 0xff : 0u, live);
+              best ? (unsigned) best->id & 0xff : 0u, live, (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1,
+              (unsigned) pPL->r_no_2);
+    if (pSubEm)
+        re4dc_log("warp: ash room %x frame %u pos %d %d %d life %d st1 %08x rno %u/%u/%u\n", (unsigned) pG->room_id,
+                  (unsigned) wp.room_frames, (int) pSubEm->pos.x, (int) pSubEm->pos.y, (int) pSubEm->pos.z,
+                  (int) (s16) pG->ashley_life, (unsigned) pG->Status_flg[1], (unsigned) pSubEm->r_no_0,
+                  (unsigned) pSubEm->r_no_1, (unsigned) pSubEm->r_no_2);
 }
 
 void native_alive_poll()
