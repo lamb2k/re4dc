@@ -14,7 +14,7 @@ FPD=$WT/fullplay
 wpath() { echo "\\\\wsl.localhost\\Ubuntu-24.04$(echo "$1" | tr / '\\')"; }
 for x in g c; do cp "$ROUTE/out-fprr${S7}${x}W/syms.txt" "$J/syms-$x.txt"; done
 cp "$ROUTE/out-rr${S7}rP/syms.txt" "$J/syms-rel.txt"
-ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
+ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10d r10e r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
 job() { # job <slots> <name> <script body>
   printf '%s %s\n' "$1" "$2" >> "$J/list.txt"
   { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
