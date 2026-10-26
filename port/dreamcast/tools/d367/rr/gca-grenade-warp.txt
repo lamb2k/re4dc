@@ -1,6 +1,6 @@
 # gca-grenade (lane wep19-26 2026-10-26): GC-ASSET grenade step, <= 60 s. r101 square (castgc r101 position), god;
-# equip and throw the hand grenade (item 0x01, weapon 0x13), incendiary (0x02, 0x16) and flash (0x0E, 0x17): R aims
-# (0x0020), R+A (0x0120) throws. Then the rocket launcher (0x35, weapon 0x0D) is equipped and aimed (no shot).
+# equip and throw the hand grenade (item 0x01, weapon 0x13), incendiary (0x02, 0x16), flash (0x0E, 0x17) and the egg
+# (0x08, 0x19): R aims (0x0020), R+A (0x0120) throws. Then the rocket launcher (0x35, weapon 0x0D) is equipped and aimed.
 name gca-grenade
 room 0x101
 pos -7914 0 -254
@@ -10,14 +10,17 @@ inv default
 god
 alert 30
 arm 60 0x01
-act 200 0x0020 60
-act 230 0x0120 10
-arm 400 0x02
-act 520 0x0020 60
-act 550 0x0120 10
-arm 700 0x0E
-act 820 0x0020 60
-act 850 0x0120 10
-arm 1000 0x35
+act 170 0x0020 50
+act 200 0x0120 10
+arm 330 0x02
+act 420 0x0020 50
+act 450 0x0120 10
+arm 580 0x0E
+act 670 0x0020 50
+act 700 0x0120 10
+arm 820 0x08
+act 900 0x0020 50
+act 930 0x0120 10
+arm 1040 0x35
 act 1100 0x0020 60
 alivelog 150
