@@ -998,8 +998,21 @@ void alive_log_poll()
 void plpos_poll()
 {
     if (!wp.pl_period || !pG || !pPL || wp.room_frames % wp.pl_period) return;
-    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
-              (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f), (int) pG->pl_life);
+    // castle31 steer.py: also the nearest live enemy (any id, position + id) and the live count. A read, no logic state.
+    cEm* best = nullptr;
+    float bd = 0;
+    int live = 0;
+    for (u32 i = 0; i < EmMgr.nArray; i++) {
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (!em || SceCheckEmAlive(em) != 1 || (em->id & 0xff) >= 0x40) continue;  // creatures only (0x4x+ = props)
+        ++live;
+        const float dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+        if (!best || d < bd) { best = em; bd = d; }
+    }
+    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d em %d %d %d %02x n %d\n", (unsigned) pG->room_id,
+              (unsigned) wp.room_frames, (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f),
+              (int) pG->pl_life, best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0,
+              best ? (unsigned) best->id & 0xff : 0u, live);
 }
 
 void native_alive_poll()

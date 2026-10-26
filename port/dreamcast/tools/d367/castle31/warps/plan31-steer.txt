@@ -1,0 +1,184 @@
+resume
+# r200 -> r202 (proven s02)
+goto 81646 -56542 500
+goto 83000 -63000 400
+goto 82800 -65450 300
+goto 76200 -65450 400 12
+goto 74100 -66800 400 8
+goto 74100 -68700 400 8
+goto 80500 -68700 400 10
+goto 91300 -68700 400 15
+face 93000 -68791
+hold su 1.5
+press a 0.3
+room 202 15
+# r202 (navplan) -> r207 door
+autofight 3000
+run 1
+goto 2708 -2708 500
+goto 6908 -6608 500
+goto 8108 -6608 500
+goto 10808 -9308 500
+goto 12608 -15458 500
+goto 17108 -19808 500
+goto 20858 -19808 500
+goto 22358 -20558 400
+goto 23708 -21308 400
+goto 24908 -22658 400
+goto 25808 -24158 400
+goto 26258 -25658 400
+goto 26408 -27158 400
+goto 26408 -28658 400
+goto 26108 -29108 400
+goto 25600 -33600 400
+goto 21158 -34058 500
+goto -3291 -34058 500
+goto -5691 -34208 500
+goto -5991 -34658 400
+goto -5991 -36158 400
+goto -5991 -38108 400
+goto -5241 -38858 400
+goto -3741 -39308 400
+goto -2241 -39458 400
+goto -741 -39608 400
+goto -291 -39608 400
+# r202 crank (area 2) -> cannon (area 4) -> door
+@crank
+goto 4208 -35858 500
+goto 3908 -27608 500
+goto 5408 -27008 500
+goto 11408 -26108 500
+goto 12908 -26108 400
+goto 14408 -26108 400
+goto 15008 -25958 400
+goto 19400 -22100 400
+face 19616 -21000
+press a 0.3
+wait 2
+@mash
+mash a 14
+wait 3
+@cannon
+goto 21000 -23300 350 10
+goto 21250 -24150 250 8
+face 21324 -25200
+press a 0.3
+wait 1
+press a 0.3
+wait 15
+@door207
+goto 15008 -25958 500
+goto 14408 -26408 500
+goto 12908 -26708 400
+goto 11408 -27008 400
+goto 6008 -27008 500
+goto 4508 -27008 400
+goto 3908 -27608 400
+goto 4208 -35858 500
+goto 12908 -49958 500
+goto 17258 -53858 500
+goto 19058 -54008 500
+goto 20408 -58208 500
+face 20352 -60000
+hold su 1.0
+press a 0.3
+room 207 20
+@r207
+wait 4
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+press a 0.2
+wait 2
+@r207walk
+goto 700 -3500 400
+goto 848 -7300 300
+face 848 -9000
+@swordA
+press a 0.3
+wait 3
+@swordAok
+press a 0.3
+wait 5
+goto -112 -3387 500
+goto -712 -3237 500
+goto -1462 -3387 500
+goto -1612 -3987 400
+goto -1612 -5487 400
+goto -2362 -6237 400
+goto -2962 -6987 400
+goto -2962 -7737 400
+goto -3112 -8487 400
+goto -3112 -9987 400
+goto -3262 -10587 400
+goto -3562 -10737 400
+goto -9112 -10887 500
+goto -9900 -10887 300
+face -12000 -10874
+@swordB
+press a 0.3
+wait 3
+@swordBok
+press a 0.3
+wait 5
+@fixB
+fight 15 4000
+goto -9800 -10850 300 6
+face -12000 -10874
+press a 0.3
+wait 3
+press a 0.3
+wait 4
+@fixBwalk
+dismiss
+goto -9112 -10887 500
+goto -3562 -10737 400
+goto -3262 -10587 400
+goto -3112 -9987 400
+goto -3112 -8487 400
+goto -2962 -7737 400
+goto -2962 -6987 400
+goto -2362 -6237 400
+goto -1612 -5487 400
+goto -1612 -3987 400
+goto -1462 -3387 400
+goto -712 -3237 400
+goto -112 -3387 400
+goto 700 -3500 400
+goto 848 -7300 300
+face 848 -9000
+@takeA
+press a 0.3
+wait 3
+press a 0.3
+wait 4
+dismiss
+goto 848 -7300 300
+face 848 -9000
+@yardA
+press a 0.3
+wait 4
+end
