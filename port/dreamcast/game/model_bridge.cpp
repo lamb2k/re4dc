@@ -879,6 +879,9 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 extern "C" unsigned re4dc_stream_model_bytes_now();
 extern "C" unsigned long long re4dc_otp_now_us();
 #endif
+#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
+extern "C" int re4dc_portrait_hair(const void*,const void*,const Re4dcModelPart*);
+#endif
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
     if(!RE4DC_MODEL_DIAG() || pass)return;
@@ -947,6 +950,9 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
         p.serial=m->serial;p.world=&m->mat[0][0];p.view=&pG->Cam.v_mat[0][0];
         p.source_key[0]=part->texId;p.source_key[1]=(part->flags&4)?part->alphaTex:0xff;
     }
+#endif
+#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
+    if(re4dc_portrait_hair(m,info,&p))return;  // coarse_actor.cpp: the PS2 hair for the portrait GameCube hair info
 #endif
 #if RE4DC_FRONT_NATIVE>=2
     if(front_verify_part(&p))return;  // native replay: compared, not drawn
