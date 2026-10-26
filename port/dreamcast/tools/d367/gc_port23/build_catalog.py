@@ -26,6 +26,11 @@ kind/id/full-SHA256 rules of the runtime callers:
                (.dar, .drs, bio4midi.dat); a prebuilt AIC1 ARAM part also as its
                96-byte header + image (gc_asset_audio.cpp bank_piece)
 
+  compiled     payloads compiled into the program (no disc file): --compiled TSV
+               (compiled.tsv: kind, id, sha256, evidence), e.g. the PS2 Leon
+               mesh arrays (gc_asset_actor_compiled.inc); without a row their
+               runtime bind fails with payload-catalog-bind
+
 Not derivable from the disc (runtime-built bytes): font-glyph/font-palette
 cells (converted at load), layout
 sidecars. Those binds stay explicit unknown quarantine at runtime.
@@ -51,6 +56,7 @@ MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
 DRS_TABLE = 0x400
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
 HARVEST_KINDS = ('font-glyph', 'font-palette', 'layout')   # sound banks are disc rows (sound_banks)
+COMPILED_KINDS = ('geometry',)   # program-compiled payloads (gc_asset_payloads.cpp payload_capture_fragments*)
 HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
 
 
@@ -409,6 +415,7 @@ def main(argv=None):
     ap.add_argument('--proofs-sha256')
     ap.add_argument('--harvest', type=Path, help='reviewed harvest TSV (extract-harvest output)')
     ap.add_argument('--harvest-sha256')
+    ap.add_argument('--compiled', type=Path, help='reviewed compiled-payload TSV (kind, id, sha256, evidence)')
     ap.add_argument('--out-dir', required=True, type=Path)
     if argv is None:
         argv = sys.argv[1:]
@@ -448,6 +455,14 @@ def main(argv=None):
         for (kind, ident, digest), evidence in read_harvest(hraw).items():
             rows.setdefault((kind, ident, digest), dict(kind=kind, id=ident, sha256=digest,
                             source='runtime-harvest:' + evidence))
+    if a.compiled:
+        for n, line in enumerate(a.compiled.read_text().splitlines(), 1):
+            if not line.strip() or line.startswith('#') or line.startswith('kind\t'):
+                continue
+            kind, ident, digest, evidence = line.split('\t')
+            if kind not in COMPILED_KINDS or not re.fullmatch(r'[0-9a-f]{64}', digest) or digest[:40] != ident or not evidence.strip():
+                sys.exit('invalid compiled row %d' % n)
+            rows.setdefault((kind, ident, digest), dict(kind=kind, id=ident, sha256=digest, source='compiled:' + evidence))
     if not set(proofs) <= set(rows):
         sys.exit('proof row matches no disc payload')
     out = []

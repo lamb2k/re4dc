@@ -56,6 +56,15 @@ for r in $(census_rooms); do
   job 1 cg-$r "$(run cg-$r c c 60 --warp "\"\$EVW\\fixtures\\cg-$r.txt\"")"
 done
 echo "$(census_rooms)" > "$W/census-rooms.txt"
+# GC-ASSET gate (cast-ps2-25 10-26): h2 + the gate rooms on the gate-ON twin's base a (rr-gca.sh), judged by rr-judge.py
+if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW/syms.txt" ]; then
+  cp "$ROUTE/out-fprr${S7}aW/syms.txt" "$J/syms-a.txt"
+  job 1 gca-h2 "$(run gca-h2 a a 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
+  for r in r100 r101 r103 r11e r11f; do
+    tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
+    job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+  done
+fi
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fprr${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"

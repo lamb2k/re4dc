@@ -137,6 +137,34 @@ if build_ok and jobs:
             g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
             add('GDEMU race ' + n, bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
     # census
+    # GC-ASSET gate (cast-ps2-25 10-26): gca-* jobs on the gate-ON twin, gc_port23/judge.py against allowlist.json (the
+    # last good candidate's allowlist is the shrink-only baseline) and unwired-baseline.json. RR_GCA_MODE=report (the
+    # default until the coordinator flips it to gate) reports a failure as KNOWN.
+    gl = [EVU / n / 'run-output.txt' for n in ('gca-h2', 'gca-r100', 'gca-r101', 'gca-r103', 'gca-r11e', 'gca-r11f')]
+    if any(p.exists() for p in gl) or 'gca' in srt:
+        G = D367 / 'gc_port23'
+        lgs = dict(l.split('=', 1) for l in rd(RR_HOME / 'state/last-good').splitlines() if '=' in l)
+        base = W / 'gca-allow-base.json'
+        b = subprocess.run(['git', '-C', str(T), 'show', '%s:port/dreamcast/tools/d367/gc_port23/allowlist.json' % lgs.get('sha', 'HEAD')],
+                           capture_output=True, text=True)
+        base.write_text(b.stdout if b.returncode == 0 and b.stdout.strip() else rd(G / 'allowlist.json'))
+        jj = W / 'gca-judge.json'
+        if all(p.exists() for p in gl):
+            subprocess.run(['python3', str(G / 'judge.py'), *map(str, gl), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(base),
+                            '--unwired-baseline', str(G / 'unwired-baseline.json'), '--room', '0100', '--room', '0101', '--room', '0103',
+                            '--room', '011e', '--room', '011f', '--json', str(jj)], capture_output=True, text=True)
+        try:
+            j = json.loads(jj.read_text())
+        except (OSError, ValueError):
+            j = {'pass': False, 'failures': ['gca prep or jobs did not run (%d/6 logs)' % sum(p.exists() for p in gl)]}
+        nc = j.get('not_covered_errors') or {}
+        detail = 'rows used %s (allowlist %d); not covered: %s' % (
+            j.get('allowed_used', '?'), len(json.loads(rd(G / 'allowlist.json') or '[]') if rd(G / 'allowlist.json').lstrip().startswith('[') else
+                                            next(v for v in json.loads(rd(G / 'allowlist.json')).values() if isinstance(v, list))),
+            '; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items()))) for r, c in sorted(nc.items())) or 'none')
+        if not j.get('pass'):
+            detail += ' | ' + ' / '.join(j.get('failures', [])[:3])
+        add('GC-ASSET gate', bool(j.get('pass')), detail[:600], knownrow=os.environ.get('RR_GCA_MODE', 'report') == 'report')
     rooms = rd(W / 'census-rooms.txt').split()
     logs = [EVU / ('cg-' + r) / 'run-output.txt' for r in rooms if (EVU / ('cg-' + r) / 'run-output.txt').exists()]
     if rooms:
