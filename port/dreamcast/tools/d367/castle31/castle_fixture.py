@@ -5,7 +5,7 @@ Writes WORKDIR/castle-fixture.json for discsets/mkdisc2.py: the castle content o
 - every CASTLETREE file the Disc 1 tree lacks is added;
 - castle-owned files win where both have them: room files named r2xx, the stream file (castle entries), Ashley pl01.drs,
   the castle resident.bin;
-- dc/tex.pak = ch5found/pakunion.py(castle pack wins ties, smaller payload on differing keys) so the release keys ride along;
+- dc/tex.pak = pak_keep.py: Disc 1's pack unchanged (its winner on every shared key) + the castle-only keys;
 - every other shared file keeps the Disc 1 (newer) copy."""
 import json, os, re, subprocess, sys
 
@@ -32,8 +32,8 @@ for k in sorted(C):
     if k not in A or OWN.search(k):
         rep[k] = os.path.join(ct, k)
 pak = os.path.join(work, 'tex.pak')
-subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'ch5found', 'pakunion.py'), pak,
-                       os.path.join(ct, 'dc/tex.pak'), os.path.join(d1, 'dc/tex.pak')])
+subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak,
+                       os.path.join(d1, 'dc/tex.pak'), os.path.join(ct, 'dc/tex.pak')])
 rep['dc/tex.pak'] = pak
 import struct
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)

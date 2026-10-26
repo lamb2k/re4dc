@@ -330,6 +330,7 @@ struct Warp {
     int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
     u16 stock_room;  // `stock`: logs the merchant stock and tune table once per room entry (castle31 shop check)
     bool stock;
+    u32 pl_period;   // `plpos N`: Leon's position, angle and life every N room frames (castle31 no-warp segments)
     u32 stock_sum;
     bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
@@ -655,6 +656,8 @@ void load()
             if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
             if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "plpos") && n >= 2) {
+            wp.pl_period = num(tok[1]);
         } else if (!strcmp(k, "stock")) {
             wp.stock = true; wp.stock_room = 0xFFFF;
         } else if (!strcmp(k, "money") && n >= 2) {
@@ -992,6 +995,13 @@ void alive_log_poll()
     }
 }
 
+void plpos_poll()
+{
+    if (!wp.pl_period || !pG || !pPL || wp.room_frames % wp.pl_period) return;
+    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
+              (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f), (int) pG->pl_life);
+}
+
 void native_alive_poll()
 {
     // Never inspect EmMgr while the title, load, room jump or teardown owns it.
@@ -1000,6 +1010,7 @@ void native_alive_poll()
         pG->room_id != wp.observe_room || pG->Rno0 != 3 || pG->Rno1 != 0) return;
     ++wp.room_frames;
     alive_log_poll();
+    plpos_poll();
 }
 
 void kill_poll()
@@ -1391,6 +1402,7 @@ void god_alert_poll()
         wp.money = 0;
     }
     stock_poll();
+    plpos_poll();
     if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
         ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {

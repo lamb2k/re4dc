@@ -184,6 +184,17 @@ Do not use that disc for normal play: the script presses buttons at fixed times.
 
 **GDEMU:** copy the four files into a new numbered folder on the SD card.
 
+**Scripted runs from a savestate (maintainers):** `tools/d367/fullplay/fp_run.py` can start a run where another
+one stopped, so a long route splits into short segments.
+
+- `--state-out DIR` saves a quick state (F5 on the run's own window) at the end of the run. DIR gets
+  `disc.state`, the VMU image and `state.json`, which records the disc's track03 SHA-256 and the symbols.
+- `--state-in DIR` starts from that state. It refuses a state made from a different disc image.
+- Both flags are opt-in. A run without them is byte-identical to before.
+- `--keys FILE` drives the stick with I/J/K/L (`su sd sl sr`) and the triggers with F/V (`lt rt`). The run
+  writes its own key map whenever `--keys` or `--state-out` is used; the D-pad arrows do not move Leon.
+- The warp file is read only at boot, so a restored state keeps the warp settings it was saved with.
+
 ## 5. Speed display
 
 The release program starts with the speed display off. Hold R and press START to show it on screen: drawn

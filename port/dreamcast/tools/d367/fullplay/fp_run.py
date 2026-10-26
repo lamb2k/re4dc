@@ -191,7 +191,7 @@ def main():
         cfg = cfg.replace('[config]\n', '[config]\nDynarec.Enabled = no\n', 1)
     if a.state_in:
         cfg = cfg.replace('[config]\n', '[config]\nDreamcast.AutoLoadState = yes\nDreamcast.SavestateSlot = 0\n', 1)
-    if a.state_out:
+    if a.state_out or a.keys:  # --keys needs this map too: the stock map drives no analog (Leon only aims)
         # This capture's own keyboard map: Flycast's defaults (analog I/J/K/L = su/sl/sd/sr, triggers F/V) plus the
         # quick save (btn_quick_save) on F5, which fp_run posts to its own window at the end (never global input).
         if not a.state_in:
