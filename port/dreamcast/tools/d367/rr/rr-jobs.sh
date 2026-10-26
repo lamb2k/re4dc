@@ -60,6 +60,14 @@ echo "$(census_rooms)" > "$W/census-rooms.txt"
 if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW/syms.txt" ]; then
   cp "$ROUTE/out-fprr${S7}aW/syms.txt" "$J/syms-a.txt"
   job 1 gca-h2 "$(run gca-h2 a a 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
+  # gca-title (castle-ps2-26 10-26): the other gca jobs warp in at frame ~171 and never draw the title or the save screen,
+  # so @startup was judged empty. Power-on through the title, its menus and the load / card screens (castle31's gca-load
+  # pad), stock boot; the VMU (RR_GCA_TITLE_VMU, default castle31's ch2-3 end save) lists save slots for the save pictures.
+  V=${RR_GCA_TITLE_VMU:-/mnt/c/Flycast-Evidence/re4-dreamcast/castle31/vmu/handoff-ch23end-A1.bin}
+  VA=; if [ -s "$V" ]; then VW="C:/${V#/mnt/c/}"; VW=${VW//\//\\}; VA="--vmu '$VW'"; fi
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-warp.txt" > "$EVU/fixtures/gca-title-warp.txt"
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-pad.txt" > "$EVU/fixtures/gca-title-pad.txt"
+  job 1 gca-title "$(run gca-title a a 60 --warp "\"\$EVW\\fixtures\\gca-title-warp.txt\"" --pad "\"\$EVW\\fixtures\\gca-title-pad.txt\"" $VA)"
   for r in r100 r101 r103 r11e r11f; do
     tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
     job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"

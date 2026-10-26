@@ -1,0 +1,25 @@
+key	gc_file	ps2_member	ps2_index	rotate	what
+6612256b-eb307d8c	ss/Eng/title.dat	title.dat	11	0	title LICENSED BY NINTENDO (387x20) <- PS2 256x16
+9c5c3f8b-109bf4ee	ss/Eng/title.dat	title.dat	26	0	title Dolby Pro Logic II (252x75) <- PS2 128x64 transposed
+0794af13-b88e0a76	ss/Eng/title.dat	title.dat	33	0	title registered mark (28x28) <- PS2 16x16
+777c7283-040dec5e	ss/Eng/title.dat	title.dat	35	0	title "4" knife logo (251x389) <- PS2 256x128 squashed
+609b19c8-75e5d6a2	ss/Eng/title.dat	title.dat	37	0	title resident evil (480x117) <- PS2 256x64
+71ad285d-b1a92589	ss/Eng/title.dat	title.dat	38	0+onblack	title resident evil blur (480x130) <- PS2 256x128
+8054fc15-1978c2cf	ss/Eng/title.dat	title.dat	50	0	title WARNING notice crisp (528x132) <- PS2 512x128
+b854d832-6406ed9f	ss/Eng/title.dat	title.dat	46	0	title WARNING notice blur (528x132) <- PS2 512x128
+d3d31422-db895acb	ss/Eng/title.dat	title.dat	47	0	title Sofdec logo blur (180x196) <- PS2 128x128
+d61fc062-37b9fc9d	ss/Eng/title.dat	title.dat	71	0+crop:0,0,256,160+ink	title Sofdec logo (171x184) <- PS2 Sofdec/ADX splash 512x256, Sofdec part, ink to alpha
+8d460946-528df205	ss/Eng/title.dat	title.dat	51	0	title Dolby Pro Logic II (260x86) <- PS2 256x64
+d1a6bcc9-22987d98	ss/Eng/title.dat	title.dat	65	0	title "4" white logo (318x537) <- PS2 512x256 squashed
+1b12861e-07592b05	ss/Eng/title.dat	title.dat	68	0	title LOAD (57x14) <- PS2 32x16
+ffa04e9c-6c50f664	ss/Cmn/save_e.dat	save_e.dat	29	0	save Chapter End (118x24) <- PS2 64x16
+bf07eb47-e27965c8	ss/Cmn/save_e.dat	save_e.dat	30	0	save Typewriter (106x23) <- PS2 64x16
+cce10609-630d140d	ss/Cmn/save_e.dat	save_e.dat	41	0	save Corrupt Data (122x24) <- PS2 64x16
+a3f7c405-2b331966	ss/Cmn/save_e.dat	save_e.dat	42	0	save Cleared Game (122x22) <- PS2 64x16
+08c726af-530b3ab2	ss/Cmn/save_e.dat	save_e.dat	44	0	save Final Chapter (132x25) <- PS2 128x16
+a6c9fe91-a635726c	ss/Cmn/save_e.dat	save_e.dat	45	0	save NEW ROUND (96x18) <- PS2 64x16
+7c4f357a-0fb1bf34	ss/Cmn/save_e.dat	save_e.dat	25	transpose	save frame latch (86x150) <- PS2 128x64 transposed
+b363dd20-79c95eb2	ss/Cmn/save_e.dat	save_e.dat	24	transpose	save frame handle (71x134) <- PS2 128x64 transposed
+2b19e82f-169ea5d5	ss/Cmn/save_e.dat	save_e.dat	23	90	save frame bar (42x245) <- PS2 128x32 turned
+3d5269eb-f15fef1e	ss/Cmn/save_e.dat	save_e.dat	31	0	save white dash (13x10) <- PS2 8x8
+59842d03-801cada7	ss/Cmn/save_e.dat	result.dat	13	0	pill bar (16x24; also result/omk/id22c) <- PS2 result.dat 16x16

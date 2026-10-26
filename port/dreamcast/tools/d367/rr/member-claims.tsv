@@ -24,4 +24,4 @@ st1/r11e.dar:0x0d ITM	pick25	r11e PS2 pickups
 ss/cmn/*:changed	pics25c,pics25d,pics25e,pics25f	PS2 sub screen pictures
 ss/eng/*:changed	pics25e,pics25f	PS2 sub screen pictures (English)
 font/*:changed	fontps2x25	PS2 fonts
-dc/tex.pak:~*	pl08n25,gvar25,codec25,pics25c-f,pada25	re-derived pack chain (size / format of a picture)
+dc/tex.pak:~*	pl08n25,gvar25,codec25,pics25c-f,pada25,pui26	re-derived pack chain (size / format of a picture)

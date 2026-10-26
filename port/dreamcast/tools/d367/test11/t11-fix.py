@@ -1085,6 +1085,15 @@ if os.path.isdir(PICS25FD):
     DATA['pics25f'] = {'dc/tex.pak': PICS25FD + '/dc/tex.pak'}
     PAK_DERIVED['pics25f'] = PICS25FD + '/pak-derived.json'
     AFTER += [('pics25f', 'pics25e')]
+# pui26 (lane castle-ps2-26 10-26, GC asset purge): the 24 title + save screen pictures purge-ui24's matcher left (no
+# unique PS2 match: ss/eng/title.dat logos/notices, ss/cmn/save_*.dat labels + frame parts, the result.dat pill) re-made
+# from the PS2 BIO4DAT ss members by a reviewed hand map (purgeui24/ps2_ui_map_pak.py + ps2_ui_map.tsv; PS2 pixels under
+# the GC keys, base package size/format kept). They were the @startup "unknown" GC-ASSET rows. After pics25f.
+PUI26D = os.environ.get('PUI26D', '/root/re4data/private/pui26-20261026')
+if os.path.isdir(PUI26D):
+    DATA['pui26'] = {'dc/tex.pak': PUI26D + '/dc/tex.pak'}
+    PAK_DERIVED['pui26'] = PUI26D + '/pak-derived.json'
+    AFTER += [('pui26', 'pics25f')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
