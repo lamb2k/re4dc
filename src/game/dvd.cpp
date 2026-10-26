@@ -414,6 +414,7 @@ static int dvdBorrowPick(s32 size)
     for (int i = 0; i < MEM_HEAP_NUM; ++i) {
         const int k = i == 0 ? 4 : i == 4 ? 0 : i;
         if (Heap[k].handle < 0 || !memCheckHeapActive(k)) continue;
+        if (k != 4 && best < 0 && Heap[4].handle >= 0 && memCheckHeapActive(4)) break;   // heap 4 up: room loads borrow only from it
         s32 big = 0;
         for (OSHeapCell* c = dvdHeapDesc(Heap[k].handle)->free; c; c = c->next) if (c->size > big) big = c->size;
         if (big >= size + (s32) RE4DC_DVD_BORROW_SPARE && big > best_free) {
