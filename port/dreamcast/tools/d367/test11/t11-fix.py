@@ -1368,5 +1368,17 @@ DATA['n256z25'] = {'dc/native/%s/ps2-world.%s' % (r, x): N256Z25D + '/dc/native/
 DATA['n256z25'].update({'dc/native/%s/ps2-world.r4sg' % r: N256Z25D + '/dc/native/%s/ps2-world.r4sg' % r
                         for r in ('r106', 'r117')})
 
+# n256a26 (lane world-n256all 10-26, user "covering all rooms for consistency starting with the most expensive"): r10b /
+# r11d / r102 / r105 worlds at 256-vertex meshlets (ps2_room_r4im.py from each room's recorded recipe: blackps2 for r10b /
+# r102 / r105, ch2regen t-fed4122a for r11d; each reproduces the shipped 64 mesh byte-identically), strip groups
+# (ps2_strip_groups.py --preserve-order, bound to the certified policy source crc) and the room file with its SCDD section
+# rebuilt for the new mesh (scenery19/scdd_compile.py over the shipped room.r4rc). Census (Flycast WORLD_CENSUS24, castgc
+# warps, world ms per drawn tick): r10b 11.81 -> 10.80, r11d 10.62 -> 9.83, r102 10.02 -> 8.70, r105 9.11 -> 8.20. R4PW /
+# ids / r4tc unchanged; TEXCHK 0, PS2DYN ids=ok, trans classes=ok. Needs SCENERY_N256=1; after n256z25 in the data line;
+# release line only, never KSETS. Store: re4-assets-private/n256a26-20261026.
+N256A26D = os.environ.get('N256A26D', '/root/re4data/private/n256a26-20261026')
+DATA['n256a26'] = {'dc/native/%s/%s' % (r, f): N256A26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10b', 'r11d', 'r102', 'r105') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
 if __name__ == '__main__':
     main()
