@@ -113,6 +113,65 @@ def graft_digests(dar, members):
         if n in members:
             body = etm[a + 0x40:z]
             out |= {hashlib.sha256(body).hexdigest(), hashlib.sha256(body.rstrip(b'\0')).hexdigest()}
+    # whole tagged entries ("0x20 BIN", lane props-ps2-26: room-archive models grafted as entries)
+    for i, (t, a, z) in enumerate(_rs.tagged_entries(pay, '<')):
+        if '%#04x %s' % (i + 4, t.rstrip(b'\0').decode('latin1')) in members:
+            body = pay[a:z]
+            out |= {hashlib.sha256(body).hexdigest(), hashlib.sha256(body.rstrip(b'\0')).hexdigest()}
+    return out
+
+
+GC_MODEL_CACHE = Path(os.environ.get('GC_MODEL_DIGESTS', '/root/rr/state/gc-model-digests.json'))
+
+
+def gc_model_digests(gc):
+    """Blind-spot fix (lane props-ps2-26 10-26): sha256 of every GameCube room model in its native form (le_mirror of
+    each room-archive BIN entry and each ETM etc model, with and without its zero tail and 32-byte padding), over every
+    room of the GameCube disc. A model row whose bytes are one of these is GameCube data whoever owns the archive: a
+    set that stages a whole archive (and says PS2 in its RECIPE) no longer hides the GC models it carries unchanged.
+    Cached by ISO size + mtime."""
+    import struct as _st
+    sys.path[:0] = [str(Path(__file__).resolve().parent.parent.parent)]
+    import room_smd as _rs
+    import ps2_objects as _po
+    st = os.stat(GC_ISO)
+    key = '%s:%d:%d:%s' % (GC_ISO, st.st_size, int(st.st_mtime), sha(Path(_po.__file__).read_bytes())[:16])
+    try:
+        c = json.loads(GC_MODEL_CACHE.read_text())
+        if c.get('key') == key:
+            return {k: v for k, v in c['digests'].items()}
+    except Exception:
+        pass
+    out = {}
+
+    def add(le, label):
+        for v in (le, le.rstrip(b'\0'), le + bytes(_po.al(len(le)) - len(le))):
+            out.setdefault(sha(v), label)
+    for room, k in gc.rooms():
+        try:
+            gd = gc.read(k)
+            if gd[:32] == _rs.CONTAINER_MAGIC:
+                gd = _rs.decode_das(gd)
+            ents = _rs.tagged_entries(gd, '>')
+        except Exception:
+            continue
+        for i, (t, a, z) in enumerate(ents):
+            t = t.rstrip(b'\0')
+            try:
+                if t == b'BIN':
+                    add(_po.to_le(gd[a:z], hex(i + 4)), '%s %#04x BIN' % (room, i + 4))
+                elif t == b'ETM':
+                    eb = gd[a:z]
+                    for n, s, e in _po.etm_entries(eb, '>'):
+                        if n.lower().endswith('.bin'):
+                            add(_po.to_le(eb[s + 0x40:e], n), '%s ETM/%s' % (room, n))
+            except Exception:
+                continue
+    try:
+        GC_MODEL_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        GC_MODEL_CACHE.write_text(json.dumps(dict(key=key, digests=out)))
+    except OSError:
+        pass
     return out
 
 
@@ -270,6 +329,7 @@ def main(catalog, recipe_conf, out_dir):
         return hit
     rows = json.loads(Path(catalog).read_text())['entries']
     reviewed = load_reviewed()
+    gc_models = gc_model_digests(gc)
     proofs, unknown, counts = [], [], collections.Counter()
     whole_file = collections.Counter()
     for r in rows:
@@ -279,6 +339,9 @@ def main(catalog, recipe_conf, out_dir):
         rv = reviewed.get((r['kind'], r['sha256']))
         if rv:
             prov, ev = rv
+        elif r['kind'] == 'model' and r['sha256'] in gc_models:
+            # member bytes, not archive ownership (lane props-ps2-26 10-26): the row IS a GameCube room model
+            prov, ev = 'gc', 'member bytes = le_mirror(GameCube %s)' % gc_models[r['sha256']]
         elif r['sha256'] in grafted:
             st = grafted[r['sha256']]
             prov, ev = st.tsv.get(r['sha256'], 'gc'), 'grafted member of set %s (%s)' % (st.name, st.src)
