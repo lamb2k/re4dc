@@ -65,6 +65,14 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW
     job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
   done
 fi
+# cache model (fix-r100-props26 10-26): flycast-console interpreter with the SH-4 operand/instruction cache model and the
+# GDEMU disc profile, warped into r100/r101/r103 on the gate twin. Judged by rr-judge.py CACHE-MODEL: the room is entered,
+# with no "File not found" and no "memory failed" (T24 lost its TOC and every /cd open under this model at boot).
+for r in r100 r101 r103; do
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/cm-$r.txt"
+  job 1 cm-$r "export RE4DC_EMU=console RE4DC_CONSOLE_DYNAREC=no RE4DC_GD_PROFILE=gdemu RE4DC_GD_JITTER=20000 RE4DC_GD_SEED=1
+$(run cm-$r g g 240 --warp "\"\$EVW\\fixtures\\cm-$r.txt\"")"
+done
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fprr${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"

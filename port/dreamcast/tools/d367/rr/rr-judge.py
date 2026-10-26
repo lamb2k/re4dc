@@ -143,6 +143,15 @@ if build_ok and jobs:
             lg = rd(J / (n + '.log'))
             g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
             add('GDEMU race ' + n, bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
+    # cache model (fix-r100-props26 10-26): room entered, no file-not-found, no memory failure
+    for n, _, _, rc in jobs:
+        if n.startswith('cm-'):
+            lg = rd(EVU / n / 'run-output.txt').replace('\0', '')
+            room = n[3:]
+            entered = re.search(r'phase=enter room=' + room[1:], lg) is not None
+            nf, mf = lg.count('File not found'), lg.count('memory failed')
+            add('CACHE-MODEL ' + room, entered and nf == 0 and mf == 0,
+                'entered=%d file_not_found=%d memory_failed=%d' % (entered, nf, mf))
     # census
     # GC-ASSET gate (cast-ps2-25 10-26): gca-* jobs on the gate-ON twin, gc_port23/judge.py against allowlist.json (the
     # last good candidate's allowlist is the shrink-only baseline) and unwired-baseline.json. RR_GCA_MODE=report (the
