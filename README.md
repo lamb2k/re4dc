@@ -7,7 +7,9 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 24](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+> **Test 24 is pulled for now.** It is missing scenery in the first area (a door, house windows, a house). Download **[Test 23](https://github.com/lamb2k/re4dc/releases/tag/test-d5b678df-20261024)** until the fix ships.
+
+**[Download Test 23](https://github.com/lamb2k/re4dc/releases/tag/test-d5b678df-20261024)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
 
 ## What's new in Test 24

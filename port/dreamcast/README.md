@@ -6,7 +6,7 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 24, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): PS2
+- **Current build:** Test 23 ([download](https://github.com/lamb2k/re4dc/releases/tag/test-d5b678df-20261024)); Test 24 is pulled while we fix missing scenery in the first area. Test 24 was: PS2
   weapons, HUD, inventory, animation, sounds and chapter 2 props, and the Blacktail can be equipped.
 - **Playable:** New Game to the end of chapter 2-3, at the castle gate (r200).
 - **Testers:** the release also has a **QA build for testers** with teleports and a Diagnostics page.

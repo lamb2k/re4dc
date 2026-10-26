@@ -6,7 +6,7 @@ please name the build, real console or emulator, and where in the game it happen
 
 **Last updated:** October 25, 2026.
 
-**Current build: Test 24** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): PS2 weapons, HUD,
+**Current build: Test 23** ([download](https://github.com/lamb2k/re4dc/releases/tag/test-d5b678df-20261024)). **Test 24 is pulled**: the first area is missing a door, house windows, a house and the explosives in the tree. Test 24 was PS2 weapons, HUD,
 inventory screens and fonts, PS2 animation for Leon, the Ganados and the weapons, PS2 sounds and music in chapter 1,
 PS2 props in chapter 2, Leon's PS2 textures, the PS2 church candles, Mendez's PS2 model in the barn door animation
 (#57) and the Blacktail can be equipped (#58). A QA build for testers is the second download.
