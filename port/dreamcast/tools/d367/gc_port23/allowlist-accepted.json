@@ -181,6 +181,26 @@
    "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [r100 static composite with the pane drawn; replaces the pre-windows26 unbound-accepted-model row]",
    "room": "0100",
    "sha256": "7e7c5a5c0c2236a9462b4617f2cc4af4947ca0c9ee6d7f1a46e65d9d8bdcb2df"
+  },
+  {
+   "evidence": "props-ps2-26 private rr 1026-1648-e10b0c73 gca-r11e:3111 / gca-r11f:2035; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "360e94ae7d07d2d2eddab943c6c14ecc9f8cf091",
+   "kind": "layout",
+   "owner": "props-ps2-26",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11e (ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "011e",
+   "sha256": "360e94ae7d07d2d2eddab943c6c14ecc9f8cf091d8a2d3219abaf650e763a6d4"
+  },
+  {
+   "evidence": "props-ps2-26 private rr 1026-1648-e10b0c73 gca-r11e:3111 / gca-r11f:2035; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "3157380ad1cd13e74aef335b21cb63c03330cbb2",
+   "kind": "layout",
+   "owner": "props-ps2-26",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11f (ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "011f",
+   "sha256": "3157380ad1cd13e74aef335b21cb63c03330cbb29b9f8d3fecee87d50551e746"
   }
  ]
 }
