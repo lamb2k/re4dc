@@ -27,6 +27,8 @@ dvd.cpp FileTbl) names em/wepNN.das (weapon-map.json in the lane evidence).
       and report.json. Exit 1 when a requested weapon has a refused BIN.
   ps2_weapons.py convert-ss --base <dir with the release's ss/cmn/ss_wepNN.dat> --out <dir> [--weapons ss_wep02,...]
       the same for the sub screen's weapon models (inventory / examine): <out>/files/ss/cmn/ss_wepNN.dat.
+  ps2_weapons.py convert-pl --base <dir with the release's em/plNN.drs> --out <dir> [--weapons pl00,pl08]
+      the same for the weapon models in Leon's own archives (PLAYER_PAIRS: grenades, eggs, rocket launcher, rocket).
 """
 import argparse
 import hashlib
@@ -174,6 +176,30 @@ def em_units(args, src):
                    span=lambda base, arc: le_span(base, arc - 4), pairs=WEAPON_PAIRS[w])
 
 
+# wep19-26 (2026-10-26): weapon models that live in Leon's own archive (em/pl00.drs, and pl08 for the no-jacket
+# costume), drawn by the weapon code from PL_ARC_PTR(pG->pPlayer, ...): BIN arc -> the TPL arcs it is drawn with.
+#   0x6A grenade body with 0x6B hand / 0x6D incendiary / 0x6F flash (wep19.cpp cObjHandGre::init, objSubWep.cpp thrown)
+#   0x7D egg with 0x7E / 0x7F / 0x80 (same call sites, weapon numbers 0x19 / 0x1F / 0x20)
+#   0x70 with 0x71 (objRocket.cpp 38 launcher, wep28.cpp 256 / SetMine)   0x76 with 0x75 (objRocket.cpp 226 rocket)
+#   (0x77 / 0x78 is the radio, sscrn.cpp 1116: not a weapon)
+PLAYER_PAIRS = {
+    'pl00': {0x6A: (0x6B, 0x6D, 0x6F), 0x7D: (0x7E, 0x7F, 0x80), 0x70: 0x71, 0x76: 0x75},
+    'pl08': {0x6A: (0x6B, 0x6D, 0x6F), 0x7D: (0x7E, 0x7F, 0x80), 0x70: 0x71, 0x76: 0x75},
+}
+
+
+def pl_units(args, src):
+    """Weapon models in Leon's archives em/plNN.drs (PLAYER_PAIRS; archive numbers = entry index + 4)."""
+    for w in (args.weapons.split(',') if args.weapons else sorted(PLAYER_PAIRS)):
+        gcd = src.gc_file('em/%s.drs' % w)
+        ps2d = src.ps2_file('%s.dat' % w)
+        g = drs.Drs(gcd)
+        yield dict(w=w, rel='em/%s.drs' % w, gc_rel='em/%s.drs' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
+                   base=Path(args.base) / ('%s.drs' % w), gc_entry=lambda arc, g=g: g.entries[arc - 4],
+                   pe={i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)},
+                   span=lambda base, arc: le_span(base, arc - 4), pairs=PLAYER_PAIRS[w])
+
+
 def ss_units(args, src):
     """The sub screen's weapon models ss/cmn/ss_wepNN.dat (inventory / examine views; tagged archive, entry index =
     SS_ARC number). The weapon BINs are the ones whose root part attaches to 0 (the others, attach 9 / 15, are Leon's
@@ -193,9 +219,11 @@ def ss_units(args, src):
         pairs = {}
         for i, (t, b) in enumerate(ge):
             if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
-                if len(tpls) != 1:
+                if len(tpls) > 1:
                     raise ValueError('%s: %d TPL entries' % (w, len(tpls)))
-                pairs[i] = tpls[0]
+                # wep19-26: ss_wep13 / ss_wep19 carry no TPL (the model samples a picture the sub screen loads
+                # elsewhere): geometry only (pictures follow their own owner)
+                pairs[i] = tpls[0] if tpls else ()
         if not pairs:
             continue
 
@@ -212,7 +240,7 @@ def convert(args):
     src = pi.Sources()
     manifest, prov, report, failed = [], [], {}, []
     prov.append('\t'.join(['weapon', 'kind', 'gc_member', 'gc_sha256', 'ps2_member', 'ps2_sha256', 'output', 'output_sha256', 'note']))
-    for u in (ss_units if args.cmd == 'convert-ss' else em_units)(args, src):
+    for u in {'convert-ss': ss_units, 'convert-pl': pl_units}.get(args.cmd, em_units)(args, src):
         w, gcd, ps2d, pe = u['w'], u['gcd'], u['ps2d'], u['pe']
         base_path = u['base']
         base = bytearray(base_path.read_bytes())
@@ -225,7 +253,8 @@ def convert(args):
         for arc, tarc in sorted(u['pairs'].items()):
             name = '%s_bin%02x' % (w, arc)
             gtag, gb = u['gc_entry'](arc)
-            row = dict(arc=hex(arc), tpl=hex(tarc), name=name, gc_sha256=sha(gb))
+            tarcs = tarc if isinstance(tarc, tuple) else (tarc,)   # one BIN drawn with several TPLs (convert-pl)
+            row = dict(arc=hex(arc), tpl=' '.join(hex(t) for t in tarcs), name=name, gc_sha256=sha(gb))
             rep['bins'].append(row)
             if gtag.rstrip(b'\0') != b'BIN' or arc not in pe or pe[arc][0] != 'BIN':
                 row.update(status='REFUSED', reason='no BIN pair (GC %s, PS2 %s)' % (gtag, pe.get(arc, ('-',))[0]))
@@ -255,8 +284,9 @@ def convert(args):
             (wd / (name + '.bin')).write_bytes(le)
             m = po.GcModel(new)
             drawn = [p for p in m.parts if p['tris']]
-            used.setdefault(tarc, set()).update(p['hdr'][0x0C] for p in drawn)
-            pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
+            for tarc in tarcs:
+                used.setdefault(tarc, set()).update(p['hdr'][0x0C] for p in drawn)
+                pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
             row.update(status='PS2', slot_bytes=len(slot), gc_le_bytes=len(gc_le), out_bytes=len(le), out_sha256=sha(le), ps2_sha256=sha(pbn),
                        stats=dict((k, st[k]) for k in ('gc_tris', 'ps2_tris', 'out_tris', 'no_tex_part', 'weight_mismatch', 'flipped', 'degenerate', 'appended_weights', 'shift_lowered', 'empty_parts_filled')))
             prov.append('\t'.join([w, 'BIN', '%s#%x' % (u['gc_rel'], arc), sha(gb), 'BIO4DAT.AFS/%s#%x' % (u['ps2_name'], arc), sha(pbn), '%s#%x (le_mirror)' % (u['rel'], arc), sha(le), 'geometry PS2, GC joints/parts kept']))
@@ -314,18 +344,45 @@ def convert(args):
         print('%s: bins %s pictures %s %s' % (w, ' '.join('%s=%s' % (r['arc'], r['status']) for r in rep['bins']),
                                               sum(len(p.get('swaps', [])) for p in rep['pictures']), 'changed' if rep['changed'] else 'UNCHANGED'))
     # ps2_items_tex.py reads <lib>/<class>/manifest.json and the PNGs under <lib>/<class>/<room>/
+    (out / 'weapons').mkdir(parents=True, exist_ok=True)
     (out / 'weapons' / 'manifest.json').write_text(json.dumps(dict(tool=TOOL_VERSION, assets=manifest), indent=1))
     (out / 'provenance.tsv').write_text('\n'.join(prov) + '\n')
     (out / 'report.json').write_text(json.dumps(report, indent=1))
+    bad = self_check(report)
+    if bad:
+        print('SELF-CHECK FAILED:', '; '.join(bad))
     if failed:
         print('REFUSED:', ' '.join(failed))
-    return 1 if failed else 0
+    return 1 if failed or bad else 0
+
+
+# wep19-26 (10-26): the Dreamcast steps every converted weapon BIN must have taken. Pictures: ps2_items_tex.py
+# encodes VQ (or twiddled 16-bit only when VQ is not smaller) and checks its own output; geometry stripping and LOD
+# levels are built by the native actor path at load (native_actor_fast.cpp: strips + relod), not offline.
+STEPS = ('degenerate', 'empty_parts_filled')
+
+
+def self_check(report):
+    bad = []
+    for w, rep in report.items():
+        for r in rep['bins']:
+            if r.get('status') != 'PS2':
+                continue
+            if r['out_bytes'] > r['slot_bytes']:
+                bad.append('%s %s: output %d B larger than the %d B slot it replaces' % (w, r['arc'], r['out_bytes'], r['slot_bytes']))
+            miss = [k for k in STEPS if k not in r.get('stats', {})]
+            if miss:
+                bad.append('%s %s: reduction step(s) skipped: %s' % (w, r['arc'], ','.join(miss)))
+            st = r.get('stats', {})
+            if st.get('out_tris', 0) > st.get('ps2_tris', 0):
+                bad.append('%s %s: %d triangles out of %d PS2 source' % (w, r['arc'], st['out_tris'], st['ps2_tris']))
+    return bad
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
-    for nm in ('convert', 'convert-ss'):
+    for nm in ('convert', 'convert-ss', 'convert-pl'):
         c = sp.add_parser(nm)
         c.add_argument('--base', required=True)
         c.add_argument('--out', required=True)
