@@ -97,7 +97,7 @@ class Steer:
         for m in PL.finditer(new):
             g = m.groups()
             self.pl = dict(room=g[0], frame=int(g[1]), x=int(g[2]), y=int(g[3]), z=int(g[4]), ang=int(g[5]) / 1000.0,
-                           life=int(g[6]), ex=int(g[7] or 0), ez=int(g[9] or 0), eid=g[10], n=int(g[11] or 0))
+                           life=int(g[6]), ex=int(g[7] or 0), ey=int(g[8] or 0), ez=int(g[9] or 0), eid=g[10], n=int(g[11] or 0))
             self.pl_t = time.monotonic()
             if not self.rep['rooms'] or self.rep['rooms'][-1] != g[0]:
                 self.rep['rooms'].append(g[0]); self.log('room %s' % g[0])
@@ -122,7 +122,7 @@ class Steer:
             pl = self.pl
             if not pl or time.monotonic() - self.pl_t > 1.0:
                 self.keys([]); time.sleep(0.05); continue
-            if self.autofight and pl['n'] and math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z']) < self.autofight:
+            if self.autofight and pl['n'] and abs(pl['ey'] - pl['y']) < 1500 and math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z']) < self.autofight:
                 self.log('autofight: %s at %d' % (self.fight(30, self.autofight * 1.5),
                                                   math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z'])))
                 best, best_t = None, time.monotonic(); continue
@@ -166,7 +166,7 @@ class Steer:
             if not pl['n']:
                 break
             dx, dz = pl['ex'] - pl['x'], pl['ez'] - pl['z']; d = math.hypot(dx, dz)
-            if d > rng:
+            if d > rng or abs(pl['ey'] - pl['y']) >= 1500:  # no vertical aim: same floor only
                 break
             err = wrap(math.atan2(dx, dz) - pl['ang'])
             k = ['rt']
