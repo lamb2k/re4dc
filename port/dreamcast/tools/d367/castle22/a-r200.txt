@@ -1,0 +1,18 @@
+squeeze 49152 0
+name castle22-r200-door
+room 0x200
+chapter 6
+pos -94 9 -196
+ang 1.4270
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 200
+dump
+goto 300 90900 15871 -68800 1.41 sub
+act 330 fwd 40
+act 380 a 10
+act 420 a 10
+entry 2
+alivelog 60

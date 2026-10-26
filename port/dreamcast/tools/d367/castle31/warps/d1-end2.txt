@@ -1,0 +1,9 @@
+name castle31-d1-ch23end-direct
+# r200 (chapter 2-3 state) straight to the area 4 trigger (s00, SceSetChapterEnd 2-3), then save and the Disc 2 hold
+room 0x200
+pos 13288 500 549
+ang 1.4270
+status 3 0x04000000
+inv default
+god
+goto 60 75905 9841 1303 sub

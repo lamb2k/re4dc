@@ -1,0 +1,17 @@
+squeeze 49152 0
+name castle31-r202-waves
+room 0x202
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+alivelog 30
+census 200
+dump
+kill 0x11 900 0x202 1
+goto 1500 20361 9000 -58061 1.57 sub
+act 1700 a 10
+act 1750 a 10
+entry 1
+alivelog 60
