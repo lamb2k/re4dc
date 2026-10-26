@@ -1,0 +1,20 @@
+name bench-r100-house
+# Public benchmark disc (BENCHMARK=1, bench.mk), scene 2 = /cd/dc/bench2.txt: benchmark-r100house (lane crowd12,
+# 2026-10-14) unchanged up to its window: the indoor CPU-bound scene (console r22g 10-05 "pre-jump, inside"). Leon inside
+# the first house at the back window (room frame 1000), the village alerted at room frame 1010, god, no jump: the
+# Ganados close in on the house. Settle to room frame 1100, measure 1100..1599 (500 ticks, 16.7 s of game time; the
+# stack check scene measured 1100..2000).
+room 0x100
+pos -82910 860 -38480
+ang -0.1293
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+act_clock source
+god
+act 30 fwd 150
+kill 0x12 400 0x100
+goto 620 -84000 860 -38475 -1.5708
+goto 1000 -84950 860 -32280 -1.5708
+alert 1010
+alivelog 150

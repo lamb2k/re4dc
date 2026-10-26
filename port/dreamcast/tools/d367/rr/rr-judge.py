@@ -112,6 +112,13 @@ if mc:
     add('MEMBER-CENSUS', mc[-1].startswith('MEMBER-CENSUS PASS') or 'skipped' in mc[-1],
         '; '.join([l for l in mc if l.startswith('UNCLAIMED')][:8] + [mc[-1]])[:600])
 
+# MOTION-KEYS (lane cast-ps2-25 10-26): rr-cycle.sh bases() runs motion/mot_refs.py over the candidate tree: a dc/mot key
+# a live MTC table names but the disc lacks (or the fixture removes) halts the game on first use ("motion key read").
+mk = rd(W / 'motion-keys.txt').strip().splitlines()
+if mk:
+    add('MOTION-KEYS', mk[-1].startswith('MOTION-KEYS PASS'),
+        '; '.join([l for l in mk if not l.startswith(('MOTION-KEYS PASS', 'MOTION-KEYS note'))][:8] + [mk[-1]])[:600])
+
 # EFFECT-CENSUS (lane fix-r100-props26 10-26): per-room effect-set counts against Test 23; an unclaimed drop fails.
 ec = rd(W / 'effect-census.txt').strip().splitlines()
 if ec:
@@ -240,6 +247,13 @@ if build_ok and jobs:
                 halts.append(n)
         add('VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
         add('census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
+    # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
+    sg = EVU / 'siege-r100' / 'run-output.txt'
+    if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
+        so = sg.read_text(errors='replace').replace('\x00', '') if sg.exists() else ''
+        sb = sorted(set(m.group(0)[:80] for m in re.finditer(r'(HALT|FAULT|RE4DC MISSING|Out of memory)[^\n]*', so)))
+        add('siege r100 HALT/FAULT/MISSING 0', bool(so) and 'warp: placed room=100' in so and not sb,
+            ('no log' if not so else ('not placed' if 'warp: placed room=100' not in so else ('none' if not sb else '; '.join(sb[:4])))))
     for n, _, _, rc in jobs:
         if n.startswith('cap-'):
             o = runlog(n)

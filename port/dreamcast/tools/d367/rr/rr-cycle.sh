@@ -147,6 +147,11 @@ bases() {
       "$TA/port/dreamcast/tools/d367/rr/${MC_CLAIMS:-member-claims.tsv}" --json "$W/member-census.json" > "$W/member-census.txt" 2>&1 || true
     tail -n 1 "$W/member-census.txt"
   else echo "MEMBER-CENSUS skipped: no reference tree (MC_REF_TREE=${MC_REF_TREE:-})" > "$W/member-census.txt"; fi
+  # MOTION-KEYS (lane cast-ps2-25 10-26): every dc/mot key a live MTC table of the candidate tree names exists in its dc/mot,
+  # and the release fixture's remove list hits none of them (Test 25 r100 house siege: missing motion key halt).
+  python3 "$TA/port/dreamcast/tools/d367/motion/mot_refs.py" "$W/rel/tree" --fixture "$W/pkg/fix/pkg-rr${S7}rP.json" \
+    --json "$W/motion-keys.json" > "$W/motion-keys.txt" 2>&1 || true
+  tail -n 1 "$W/motion-keys.txt"
   # EFFECT-CENSUS (lane fix-r100-props26 10-26): per route room, the effect sets (EFF sequences / paths / models /
   # pictures, ETS placements, ETM models) may not drop below the reference ($EC_REF_TREE, Test 23) unless $EC_CLAIMS claims it.
   if [ -n "${EC_REF_TREE:-}" ] && [ -d "$EC_REF_TREE" ]; then
