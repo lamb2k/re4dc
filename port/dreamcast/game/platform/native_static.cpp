@@ -3319,6 +3319,9 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_STREAM
+            if(!base)base=stream_gather();   // backface26: the owed gather before a clip strip, as strips_lean
+#endif
             result=clip_strip(base,batch,s,n);
             if(result<=0)return nullptr;
             s+=n;

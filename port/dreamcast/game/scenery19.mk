@@ -117,8 +117,10 @@ endif
 ifneq ($(SCENERY_CHUNK)$(SCENERY_REPLAY_LEAN)$(MESH_VP_SCHED)$(HW_LEAN),1111)
 $(error SCENERY_STREAM needs SCENERY_CHUNK=1 SCENERY_REPLAY_LEAN=1 MESH_VP_SCHED=1 HW_LEAN=1)
 endif
-ifneq ($(filter-out 0,$(SCENERY_EMIT_PREFETCH) $(SCENERY_RECORD_SPLIT) $(SCENERY_DIRECT_STRIPS) $(PS2_PVS) $(CPU_BACKFACE) $(TA_HASH)),)
-$(error SCENERY_STREAM does not qualify SCENERY_EMIT_PREFETCH, SCENERY_RECORD_SPLIT, SCENERY_DIRECT_STRIPS, PS2_PVS, CPU_BACKFACE or TA_HASH)
+# CPU_BACKFACE=2 (lane backface26, 2026-10-26, the BACKFACE_ROOMS release line): strips_bf_sq gathers an indexed pick's
+#   corners before its first clip strip, as strips_lean does. CPU_BACKFACE=1 (the C walk) stays unqualified.
+ifneq ($(filter-out 0,$(SCENERY_EMIT_PREFETCH) $(SCENERY_RECORD_SPLIT) $(SCENERY_DIRECT_STRIPS) $(PS2_PVS) $(filter-out 2,$(CPU_BACKFACE)) $(TA_HASH)),)
+$(error SCENERY_STREAM does not qualify SCENERY_EMIT_PREFETCH, SCENERY_RECORD_SPLIT, SCENERY_DIRECT_STRIPS, PS2_PVS, CPU_BACKFACE=1 or TA_HASH)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_STREAM=1
 ifneq ($(filter-out 0,$(SCENERY_STREAM_CHECK)),)
