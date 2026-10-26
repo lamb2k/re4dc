@@ -124,7 +124,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <arch/timer.h>
 
 // `god`: read by LifeDownSet2 (src/game/em_sub.cpp, RE4DC_WARP_GOD_HOOK, warp builds only): no damage to the player.
-extern "C" { int re4dc_warp_god; }
+extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; }
 #include <kos/thread.h>
 #include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
@@ -664,6 +664,7 @@ void load()
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
         } else if (!strcmp(k, "ashley")) {
             wp.ashley = true;
+            re4dc_warp_ashley = 1;
         } else if (!strcmp(k, "plpos") && n >= 2) {
             wp.pl_period = num(tok[1]);
         } else if (!strcmp(k, "stock")) {
@@ -1008,8 +1009,8 @@ void alive_log_poll()
 // plpos_poll. Life back to max (a hit still lands: knockback, grabs and scripted
 // deaths run as in play); the equipped weapon's loaded count back to the most seen for that weapon.
 // `ashley`: the Mission Failed causes of the partner, suppressed before they fire and each logged
-// (warp: ashley-fail frame/room/cause): carried (held 150 frames = 5 s, Leon had his chance to shoot the carrier: freed by
-// clearing the carried bit, em10_R1_TakeAway's own "player freed her" path; carrier id/pos logged), hp (life under a
+// (warp: ashley-fail frame/room/cause): carried (held 150 frames = 5 s, Leon had his chance to shoot the carrier: the
+// nearest enemy's life goes to 0 via one hit through its damage path, so its own death drops her, logged warp: ashley-free, not a real kill), hp (life under a
 // quarter: refilled), other (a death demo started anyway while Leon's life is up: not suppressed, reported as a bug).
 static void ashley_poll()
 {
@@ -1027,11 +1028,30 @@ static void ashley_poll()
             re4dc_log("warp: ashley-fail frame %u room %x cause carried carrier %02x pos %d %d %d\n",
                       (unsigned) wp.room_frames, (unsigned) pG->room_id, best ? (unsigned) best->id & 0xff : 0u,
                       best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0);
-            pG->Status_flg[1] &= ~0x10000u;
+            if (best) {  // coordinator 10-26 option (a): the carrier's life to 0, its own death/release runs
+                // hp 0 alone leaves her carried (the carrier never runs its damage check): hp 1 plus one handgun hit
+                // through its own damage path (the `kill` rig's cDmgInfo::set), so its death and her release run as in play.
+                if (!(best->dmg.m_Flag & 1)) {
+                    best->hp = 1;
+                    Vec c = best->pos;
+                    YARARE_INFO* part = emSphereAtCk(best, &c, &c, 5000.0f, 1, 5000.0f);
+                    if (!part) part = &best->hitInfo;
+                    Vec from = pPL ? pPL->pos : best->pos;
+                    best->dmg.set(0, 10, 1, &from, part->rad, part);
+                }
+                re4dc_log("warp: ashley-free frame %u room %x carrier %02x (not a real kill)\n", (unsigned) wp.room_frames,
+                          (unsigned) pG->room_id, (unsigned) best->id & 0xff);
+            }
             wp.ashley_carry = 0;
         }
     } else {
         wp.ashley_carry = 0;
+    }
+    static unsigned saves_seen;
+    if (re4dc_warp_ashley_saves != saves_seen) {  // LifeDownSet2 kept her at 1 point (a one-frame lethal hit)
+        saves_seen = re4dc_warp_ashley_saves;
+        re4dc_log("warp: ashley-fail frame %u room %x cause hp lethal-hit saves %u\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, saves_seen);
     }
     if (pG->ashley_life_max && (s16) pG->ashley_life < (s16) (pG->ashley_life_max / 4)) {
         re4dc_log("warp: ashley-fail frame %u room %x cause hp life %d\n", (unsigned) wp.room_frames,

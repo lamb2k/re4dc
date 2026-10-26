@@ -13,6 +13,7 @@ is (sin a, cos a) in x/z), life, the nearest live enemy and the live count. Plan
     goto X Z [tol] [timeout]      tank-steer to (X, Z) in the current room (tol default 700 units)
     face X Z                      turn on the spot toward (X, Z)
     run 0|1                       from now on, run (hold B) on straight legs longer than 1.5 m
+    rescue 0|1                    a goto first chases Ashley's carrier (off when the warp `ashley` line frees her)
     autofight R                   from now on, a goto stops to fight when a creature is within R (0 = off)
     room R [timeout]            wait until the plpos room is R (hex) -- after walking through a door
     log REGEX [timeout]           wait until REGEX appears in new log text
@@ -271,6 +272,8 @@ class Steer:
         if start:  # --from LABEL: start at the `@LABEL` line (settings lines before it still apply)
             i0 = plan.index('@' + start)
             for l in plan[:i0]:
+                if l.startswith('rescue '):
+                    self.rescue_on = int(l.split()[1])
                 if l.startswith('autofight '):
                     self.autofight = float(l.split()[1])
                 if l.startswith('run '):
@@ -293,6 +296,8 @@ class Steer:
                     i0 = min(cand)[1]
             self.log('resume at line %d: %s' % (i0, plan[i0] if i0 < len(plan) else '-'))
             for l in plan[1:i0]:
+                if l.startswith('rescue '):
+                    self.rescue_on = int(l.split()[1])
                 if l.startswith('autofight '):
                     self.autofight = float(l.split()[1])
                 if l.startswith('run '):
@@ -307,6 +312,8 @@ class Steer:
                 r = self.goto(int(t[1]), int(t[2]), *(float(v) for v in t[3:5]))
             elif c == 'autofight':
                 self.autofight = float(t[1]); r = 'ok'
+            elif c == 'rescue':
+                self.rescue_on = int(t[1]); r = 'ok'
             elif c == 'run':
                 self.running = int(t[1]); r = 'ok'
             elif c == 'face':
