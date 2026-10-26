@@ -6,7 +6,8 @@ included.
 
   em_eff_pics.py <base tex.pak> <out dir> --pair <GC file> <PS2 file> <key>[:<ps2 image>] ... [--pair ...]
 
-GC file: a GameCube disc file (a .das is decoded with room_smd.decode_das); PS2 file: its BIO4DAT.AFS twin. Each key is
+GC file: a GameCube disc file (a .das is decoded with room_smd.decode_das), or '-' (the key has no GC disc picture:
+the base package's own pixels are the reference); PS2 file: its BIO4DAT.AFS twin. Each key is
 a GC TPL picture of the GC file; its PS2 picture is the given PS2 TPL image index, or else the unique best match
 (normalised cross-correlation of the 24x24 signatures at the GC size, as stored or transposed for the PS2 rotate flag,
 >= 0.97 and 0.03 ahead of the next picture, as ps2_tpl_pak.py); '<index>t' names a transposed one.
@@ -16,7 +17,8 @@ ARGB4444 twiddled, cover marker of the whole picture). Keys, sizes and formats s
 Outputs dc/tex.pak, pak-derived.json, report.json (the purge sets' layout).
 
 Used for: the Ganado archives' EFF pictures (every emNN: 03d1e9a5 <- PS2 TPL image 5, 195b4634 <- 6, 41e0ece4 <- 32;
-NCC 0.990 / 0.995 / 0.998) and the core.das entry-25 pictures (89f1808c <- PS2 core.dat image 288, c703f665 <- image 306 transposed)."""
+NCC 0.990 / 0.995 / 0.998) and the core.das entry-25 pictures (89f1808c <- PS2 core.dat image 288, c703f665 <- image 306 transposed) and 2ea4d2ec (r101 grenade-time
+picture with no GC disc twin: the package itself matches PS2 core.dat TPL 0xd2140 image 0, NCC 1.000)."""
 import hashlib, json, os, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -47,10 +49,44 @@ def ps2_image(q, transpose):
     return im.transpose(Image.TRANSPOSE) if transpose else im
 
 
+def package_image(blob):
+    """RGBA picture of a single-texture native package (VQ or twiddled 16-bit), padded size."""
+    import struct
+    import vq_native_ui as V
+    tpl = P.tpl
+    _, w, h, fmt, do, ds, _flags, payload, _ = tpl.TEXTURE.unpack_from(blob, tpl.HEADER.unpack_from(blob)[5])
+    if payload == tpl.PAYLOAD_VQ:
+        cb = struct.unpack_from('<1024H', blob, do)
+        idx = blob[do + 2048:do + ds]
+        order = tpl.twiddle_16bpp(list(range((w // 2) * (h // 2))), w // 2, h // 2)
+        lin = [0] * len(order)
+        for t, i in enumerate(order):
+            lin[i] = idx[t]
+        px = [None] * (w * h)
+        for by in range(h // 2):
+            for bx in range(w // 2):
+                c = lin[by * (w // 2) + bx]
+                for k, (dx, dy) in enumerate(((0, 0), (0, 1), (1, 0), (1, 1))):
+                    px[(2 * by + dy) * w + 2 * bx + dx] = V.expand(cb[4 * c + k], fmt)
+    else:
+        px = [V.expand(v, fmt) for v in V.detwiddle(struct.unpack_from('<%dH' % (w * h), blob, do), w, h)]
+    img = Image.new('RGBA', (w, h))
+    img.putdata(px)
+    return img
+
+
+class Ref:
+    """The GC reference picture: a GC TPL image, or (GC file '-') the base package's own pixels (a key with no GC disc
+    picture, e.g. 2ea4d2ec)."""
+    def __init__(self, gim=None, img=None):
+        self.img = img if img is not None else P.rgba(gim.width, gim.height, P.tpl.decode_image(gim))
+        self.width, self.height = self.img.size
+
+
 def match(gim, pims):
     """(PS2 image index, transposed, NCC): the unique best PS2 picture as stored or transposed (the PS2 rotate flag:
     the renderer swaps U and V), compared at the GC picture's size."""
-    gs = P.signature(P.rgba(gim.width, gim.height, P.tpl.decode_image(gim)))
+    gs = P.signature(gim.img)
     cand = sorted(((P.ncc(gs, P.signature(P.hp.premul_resize(ps2_image(q, t), (gim.width, gim.height)))), j, t)
                    for j, q in enumerate(pims) for t in (False, True)), reverse=True)
     best = cand[0]
@@ -76,11 +112,12 @@ def main():
     pkgs = P.read_pak(base)
     rows, done = [], []
     for gcf, ps2f, keys in pairs:
-        gims = gc_pictures(gcf)
+        gims = gc_pictures(gcf) if gcf != '-' else {}
         pims = [im for _o, ims in P.ps2_tpl.find_all(open(ps2f, 'rb').read()) for im in ims]
         for spec in keys:
             key, _, pi = spec.partition(':')
-            gim = gims[key]
+            kt = tuple(int(x, 16) for x in key.split('-'))
+            gim = Ref(gims[key]) if gcf != '-' else Ref(img=package_image(pkgs[kt]))
             if pi:
                 tr, pi, score = pi.endswith('t'), int(pi.rstrip('t')), None
             else:
@@ -97,7 +134,7 @@ def main():
             img = P.hp.premul_resize(ps2_image(q, tr), (tw, th))
             px = list(img.getdata())
             if score is None:
-                score = P.ncc(P.signature(P.rgba(gim.width, gim.height, P.tpl.decode_image(gim))), P.signature(img))
+                score = P.ncc(P.signature(gim.img), P.signature(img))
             if fmt == P.tpl.FORMAT_PAL4_ARGB4444:
                 weights = {}
                 for c in px:
