@@ -707,3 +707,36 @@ certified remap (`provenance_certificates.inc`, policySourceCrc), so the Test 24
 byte-identical with `--preserve-index-layout=1` (r101 r4pw 2398a9b4c985c022, r103 r4pw 585972662d35ab6a). No action
 needed from the cloud on this. Still open: `room.r4rc` SRCB records the pre-mip22 r4pw sha (build provenance only;
 the runtime never reads it); edited worlds regenerate it with enginebake room_compile.
+
+### 2026-10-26: Build 19 artist contribution guide (`codex/contributing-art-20261026`)
+
+Base `714589f6` (`origin/t15/int`). Added
+[CONTRIBUTING-ART.md](../CONTRIBUTING-ART.md) and linked it from the root
+`CONTRIBUTING.md`. The guide covers the PS2-only source rule and private asset
+handling, joint/weight/material/animation contracts, the actual Ganado
+reduction/packing chain, and the world identity tool's pinned Blender 4.4.3 and
+`--preserve-index-layout` option. It distinguishes identity-only world export
+from character editing, and identifies private packing dependencies and the
+separate Blender 5.2 bind-pose preview. It does not promise a general character
+FBX importer or approve historical GameCube/hybrid asset choices.
+
+Issue #51, the current tool sources, packer contracts and actor admission
+checks were read. The guide asks for a full PS2/native versus candidate still
+pair with the same pose/camera/light, a current-reduced comparison, animation
+poses, the actual selected appearance/package/level and draw/memory costs.
+All new relative links were checked and `git diff --check` passes. Only these
+three Markdown files change; no runtime/build/default/asset input changes and
+no synthetic execution or private visual PASS is claimed.
+
+Docs-only delta: 0 warm/cold-I cycles, loads/stores, demanded 32-byte lines,
+code/stack/heap-4/RAM/VRAM bytes; **MODELLED whole-frame delta 0 ms**. This is a
+source-scope deduction, not a target rebuild or measurement. No new knob is
+needed for a documentation-only build.
+
+**Question / owner next check:** which named appearance, package hash and
+selected level reproduce the #51 complaint? Confirm those identities from a
+local run, then provide the matched full-PS2/current-reduced comparison setup
+for the first contributor sample. The owner performs the still/deformation,
+runtime admission, logic, memory and console gates before adopting any asset.
+This guide changes no release asset or quality setting; status remains for
+the coordinator.
