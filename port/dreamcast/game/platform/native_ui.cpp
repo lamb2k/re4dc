@@ -3469,6 +3469,10 @@ unsigned vram_nocontig,vram_guard_pressure;
 constexpr unsigned kVramCounters=15;
 struct VramRoom { unsigned room=~0U,since,min_free,min_largest,peak_pinned,base[kVramCounters]; };
 VramRoom vroom;
+#if defined(RE4DC_HEAP4_ROOM_LOG) && RE4DC_HEAP4_ROOM_LOG
+extern "C" int re4dc_static_heap_free();   // ui_bridge.cpp: heap 4 free bytes (-1 inactive)
+int heap4_min=0x7fffffff,heap4_max=-1;     // HEAP4_ROOM_LOG: this visit's lowest / highest heap 4 free bytes
+#endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
 unsigned char gcfx_seen[kTextureCount]; Key gcfx_keys[64]; unsigned gcfx_n,vram_gcfx;
 void vram_room_gcfx(const Entry& e){   // re4dc_effect_sprite: an effect texture without the PS2 cover flag
@@ -3548,6 +3552,10 @@ void vram_room_sample(const char* at){
     re4dc_log("vram room: r=%03x at=%s f=%u frames=%u pinned=%u dynamic=%u other=%u free=%u largest=%u min_free=%u min_largest=%u peak_pinned=%u loads=%u evicted=%u retries=%u\n",
         vroom.room,at,frame,frame-vroom.since,pinned,dynamic,alloc>pinned+dynamic?alloc-pinned-dynamic:0U,free_bytes,largest,
         vroom.min_free,vroom.min_largest,vroom.peak_pinned,c[11],c[12],c[13]);
+#if defined(RE4DC_HEAP4_ROOM_LOG) && RE4DC_HEAP4_ROOM_LOG
+    re4dc_log("heap4 room: r=%03x at=%s f=%u frames=%u free=%d min_free=%d max_free=%d\n",vroom.room,at,frame,frame-vroom.since,
+        re4dc_static_heap_free(),heap4_min,heap4_max);
+#endif
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
     const int gc=int(c[5]);
 #else
@@ -3570,6 +3578,9 @@ void vram_room_track(){
     if(s.room!=vroom.room){
         if(vroom.room!=~0U)vram_room_sample("exit");
         vroom.room=s.room;vroom.since=frame;vroom.min_free=vroom.min_largest=~0U;vroom.peak_pinned=0;
+#if defined(RE4DC_HEAP4_ROOM_LOG) && RE4DC_HEAP4_ROOM_LOG
+        heap4_min=0x7fffffff;heap4_max=-1;
+#endif
         vram_room_counters(vroom.base);
 #if defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
         for(auto& b:gcfx_seen)b=0;
@@ -3578,6 +3589,9 @@ void vram_room_track(){
     }
     const unsigned free_bytes=(unsigned)pvr_mem_available();
     if(free_bytes<vroom.min_free)vroom.min_free=free_bytes;
+#if defined(RE4DC_HEAP4_ROOM_LOG) && RE4DC_HEAP4_ROOM_LOG
+    if(const int h=re4dc_static_heap_free();h>=0){if(h<heap4_min)heap4_min=h;if(h>heap4_max)heap4_max=h;}
+#endif
 }
 void vram_room_frame(){
     OVLG("frame");

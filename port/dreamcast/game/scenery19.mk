@@ -125,6 +125,19 @@ ifneq ($(filter-out 0,$(SCENERY_STREAM_CHECK)),)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_STREAM_CHECK=1
 endif
 endif
+# HEAP4_ROOM_LOG=1 (lane scenery-rewrite25, diagnostic, log only; needs VRAM_ROOM_LOG=1): heap 4's lowest free bytes per
+# room visit (re4dc_static_heap_free() sampled every frame beside the VRAM room minima) as "heap4 room:" lines at
+# each VRAM room sample, for the per-room strip-group heap check (tools/d367/scenery25/sg8_rooms.py).
+HEAP4_ROOM_LOG ?= 0
+ifneq ($(filter-out 0 1,$(HEAP4_ROOM_LOG)),)
+$(error HEAP4_ROOM_LOG must be 0 or 1)
+endif
+ifeq ($(HEAP4_ROOM_LOG),1)
+ifneq ($(VRAM_ROOM_LOG),1)
+$(error HEAP4_ROOM_LOG=1 needs VRAM_ROOM_LOG=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HEAP4_ROOM_LOG=1
+endif
 # SCENERY_SELECT_LEAN2=1 (exact, render only): read packed meshlet bounds
 # directly and share each crossed plane across its groups, returning final picks.
 SCENERY_SELECT_LEAN2 ?= 0
