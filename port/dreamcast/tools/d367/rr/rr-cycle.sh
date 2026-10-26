@@ -144,6 +144,8 @@ flycasts() {
   "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "$evg" "${RR_JOBS:-12}"
 }
 judge() { python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN"; }
+# GC-ASSET gate (cast-ps2-25 10-26): catalog from the recipe + gate-ON twin + base a (rr-gca.sh); RR_GCA=0 skips it
+gca() { bash "$BIN/rr-gca.sh" "$W" "$TA" "$S7" "$EVU"; }
 
 trace_arms() { # full tier: the recipe's trace arm (A) and the reference recipe's (B), then their bases
   local rc=0
@@ -179,6 +181,7 @@ else
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }
   [ $ok = 1 ] && { step package package || ok=0; }
   [ $ok = 1 ] && { step bases bases || ok=0; }
+  if [ $ok = 1 ] && [ "${RR_GCA:-1}" != 0 ]; then step gca gca || echo "gca prep failed: the GC-ASSET check reports it"; fi
 fi
 if [ $ok = 1 ]; then
   if [ "$TIER" = full ]; then step jobs jobs_full || ok=0; else step jobs jobs_quick || ok=0; fi
