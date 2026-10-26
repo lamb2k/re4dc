@@ -1266,6 +1266,14 @@ if os.path.isdir(PMWEP24BD):
 DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
     'r100s03', 'r100s20', 'r100s40', 'r100s41', 'r100s43', 'r100s44', 'r101s00', 'r101s21', 'r101s30',
     'r11fs01', 'r11fs10') for x in ('', '.evq')]}
+# windows26 (lane windows26 10-26, user: windows must show glass and bars): the GC et0000/et2500 panes and et0000.tpl
+# image 0 restored byte-identical to Test 23, member by member on the Test 24 archives, in r100 r101 r105 r107 r111 r11c
+# r11f (PS2 draws no intact pane). tools/d367/windows26/gen26.sh reproduces it. Last of the st1 .dar sets.
+WINDOWS26D = os.environ.get('WINDOWS26D', '/root/re4data/private/windows26-20261026')
+if os.path.isdir(WINDOWS26D):
+    DATA['windows26'] = {}
+    for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
+        DATA['windows26']['st1/%s.dar' % _r] = '%s/st1/%s.dar' % (WINDOWS26D, _r)
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
