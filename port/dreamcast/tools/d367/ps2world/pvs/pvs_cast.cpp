@@ -126,7 +126,7 @@ static float ground(float x, float z, float ytop) {
         if (n.count) {
             for (uint32_t i = n.left; i < n.left + n.count; ++i) {
                 const Tri& t = T[order[i]];
-                if (!(t.flags & 1)) continue;
+                if (!(t.flags & 5)) continue; // ground: occluders, or any opaque triangle (prep bit 2)
                 float th = hit(t, o, d);
                 if (th < 0) continue;
                 any = true; lowest = std::min(lowest, ytop - th);
