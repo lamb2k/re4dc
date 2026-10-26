@@ -51,6 +51,10 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 14 | PERF_PHASE_MISS (phase miss counter) | landed 630d00ef (merge of 5a4d2cc0), default 0; knob-off image identical to Test 23 d28b3cfc |
 | 15 | WORLD_CENSUS24_ERRORS + world policy provenance recovery (world-policy-census-fix) | landed 1250754a (merge of 54c1b417), default 0; far_shell.inc conflict with I-001 resolved keeping both; knob-off image identical to Test 23 d28b3cfc |
 | 16 | Blender world index layout preserved (`--preserve-index-layout`, Build 11 follow-up, tools only) | landed 765b8b82 (merge of 20d234c1), default 0; knob-off image identical to Test 24 0a8eac21; owner r101 enabled pair next |
+| 17 | #28 DreamShell disc PIO fallback (`DISC_PIO_FALLBACK`) | queued |
+| 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | queued |
+| 19 | #51 artist contribution guide (docs) | queued |
+| 20 | #32 r100 shading code-history review (docs) | queued |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -152,6 +156,46 @@ Plan section "Compare local indexed data with direct strips".
 - Diagnostic only; default off.
 
 **Order:** 10 first. 11 and 12 can run in parallel after it, then 13 and 14.
+
+## GitHub issue triage builds (added 2026-10-26)
+
+Code and docs only, from public GitHub issues on lamb2k/re4dc. Same ground rules: one branch and one commit per build, default-off knobs, identity when off. You have no game data or console, so prove code builds on synthetic cases and say what the local owner must run. Don't post on GitHub; Claude replies there.
+
+| Build | What | State |
+|---|---|---|
+| 17 | #28 DreamShell: PIO read fallback when disc DMA stalls or returns bad data | queued |
+| 18 | #41 castle gate (r200): effect sprites dropped on entry | queued |
+| 19 | #51 artist contribution guide (docs) | queued |
+| 20 | #32 r100 unlit area: shading code-history review (docs) | queued |
+
+### Build 17: disc PIO fallback (`DISC_PIO_FALLBACK`)
+**Why:** on a DreamShell + IDE-mod console the game stays on a black screen. The tester's on-screen log shows `DISC: FIRST READ LBA=83433 N=21 (DMA, NO STREAMS)`, the first file read returns bad data (stream table of 44384 bytes fails its check), and the first DMA read never completes: the reaper thread waits on its semaphore forever. GDEMU and Flycast don't show it. `DISC_DMA_WAIT_TIMEOUT=1` is already in the recipe but only bounds one wait.
+**Do:**
+- Find every disc read path (the KOS cdrom/g1 layer, our DMA reaper, the stream table load).
+- On a DMA wait timeout or a failed first-read check, retire the DMA request cleanly (no leaked semaphore or reaper state), then re-read the same sectors by PIO. After N failures in a row (say 2), switch the session to PIO for good.
+- Log one line per switch (`DISC: DMA->PIO after <reason>`), never per read.
+- Report the read-rate cost of PIO in plain numbers, so we know what DreamShell players lose in door and movie loads.
+- Synthetic proof: a fake driver that drops completion or corrupts a buffer reaches the PIO path and loads the correct bytes.
+
+### Build 18: r200 effect drops on entry (`FX_R200_ENTRY_CAP`)
+**Why:** entering the castle gate (r200), 803-827 effect sprites are skipped over about a second (`fx_dropped` 0 → ~800, frames ~1028-1628, Tests 20 and 22). Play is not affected. `FX_ROOM_SPILL_KB=24` (a lazy heap-4 queue cell for overflowing rooms) shipped from Test 19 and didn't cover it. Likely the per-frame see-through (translucent) list fills while the truck scene runs.
+**Do:**
+- Find which list or pool refuses: the per-frame translucent list, the effect queue, or the Esp sprite pool. Show the refusing site and its limit.
+- Propose the cheapest fix: a larger list only during that scene, a spill like FX_ROOM_SPILL, or merging/culling sprites that cover the same pixels (an approximation is fine, under its own switch).
+- Report the bytes it costs (heap 4 is tight; s30 floor 98,000 B) and where they come from.
+
+### Build 19: artist contribution guide (docs only)
+**Why:** #51: a tester offers Blender and model-reduction help, and the reduced Ganados (g70) look too far from the original.
+**Do:** write `port/dreamcast/docs/CONTRIBUTING-ART.md`:
+- what a compatible model package is (joint/weight identities, material roles, animation contracts) and why an arbitrary FBX round trip isn't one;
+- the Blender tools we ship (world round trip, `--preserve-index-layout`) and the pinned Blender version;
+- how to submit a sample: same pose, camera and lighting as the full PS2 model, a still pair, and what we check (silhouette, face, hands, neck/wrist joins, UV seams, deformation);
+- the rule that every asset comes from the PS2 version, and that contributors supply their own game data (no game files in the repo or PRs).
+Plain words, short sections. Link it from CONTRIBUTING.md.
+
+### Build 20: r100 unlit area history (docs only)
+**Why:** #32 (Test 14, real console): the place where villagers first throw a rock (r100, outside the house) draws unlit, as flat colour.
+**Do:** from git history, list every change to r100 lighting and shading: light sets, LIGHT_CUT_HOLD, the actor probe light, PS2 prelit colours in the world, `PS2_WORLD_*` knobs, fog/mist. For each: commit, knob, what it changes, and whether it could make that area flat. End with the two or three most likely causes and the run the local owner should do to confirm each. Write it as `port/dreamcast/docs/cloud/R100-SHADING-HISTORY.md`.
 
 ## Open questions back to Claude
 
