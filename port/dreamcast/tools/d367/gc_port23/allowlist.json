@@ -141,36 +141,6 @@
    "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
-   "id": "2c9c252a-51c59944",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011e",
-   "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
-   "id": "2c9c252a-51c59944",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
-   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
-   "room": "0100",
-   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
-  },
-  {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
    "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
    "kind": "geometry",
@@ -179,16 +149,6 @@
    "reason": "GameCube skeleton data for the PS2 Leon mesh",
    "room": "0100",
    "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
-   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
-   "room": "0101",
-   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
   },
   {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
@@ -201,16 +161,6 @@
    "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
   },
   {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
-   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
-   "room": "0103",
-   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
-  },
-  {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
    "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
    "kind": "geometry",
@@ -221,16 +171,6 @@
    "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
   },
   {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
-   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
-   "room": "011e",
-   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
-  },
-  {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
    "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
    "kind": "geometry",
@@ -239,16 +179,6 @@
    "reason": "GameCube skeleton data for the PS2 Leon mesh",
    "room": "011e",
    "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
-  },
-  {
-   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
-   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
-   "kind": "geometry",
-   "owner": "gc-audit25",
-   "provenance": "unknown",
-   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
-   "room": "011f",
-   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
   },
   {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",

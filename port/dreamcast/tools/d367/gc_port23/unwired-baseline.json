@@ -1,0 +1,12 @@
+{
+ "note": "GC-ASSET not-covered errors (consumer wired bit clear), per room and consumer/why, judge.py --unwired-baseline. May only shrink (coordinator 10-26). Measured cast-ps2-25 r16 on cand-ea02cb33 + pics25f, gate twin cp25gt, h2 + r100 r101 r103 r11e r11f.",
+ "rooms": {
+  "0100": {
+   "source_geometry/member-span": 1,
+   "source_geometry/member-unbound": 5,
+   "source_geometry/unbound-accepted-model": 207,
+   "source_geometry/unbound-accepted-payload": 972
+  }
+ },
+ "schema": 1
+}

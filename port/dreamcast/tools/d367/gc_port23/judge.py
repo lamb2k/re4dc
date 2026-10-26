@@ -137,6 +137,13 @@ def judge(logs, allowlist, requested, protocol=None):
                     if why in ruled:
                         out_of_scope[why] = out_of_scope.get(why, 0) + 1
                         continue
+                    # coordinator 10-26 (cast-ps2-25 r16): an error on a consumer whose wired bit is clear is "not
+                    # covered" (counted per class and room, held to UNWIRED_BASELINE); on a wired consumer it fails.
+                    consumer = re.search(r'\bconsumer=(\d+)\b', line)
+                    if active is not None and consumer and int(consumer.group(1)) < len(CONSUMERS) \
+                            and not visits[active]['wired'] >> int(consumer.group(1)) & 1:
+                        visits[active]['unwired'][why] = CONSUMERS[int(consumer.group(1))]
+                        continue
                     raise ValueError('runtime diagnostic error: ' + line.strip())
                 prefix = next((p for p in ('GC-ASSET-BEGIN ', 'GC-ASSET-COUNTS ', 'GC-ASSET-END ', 'GC-ASSET-CKPT ', 'GC-ASSET-EKIND ', 'GC-ASSET ')
                                if p in line), None)
@@ -177,7 +184,7 @@ def judge(logs, allowlist, requested, protocol=None):
                         raise ValueError('invalid provenance catalog')
                     visits[key] = {'rows': set(), 'prov': {}, 'first_consumers': {c: 0 for c in CONSUMERS}, 'counts': None,
                                    'ended': False, 'checkpoints': 0, 'scope': scope, 'transition': transition,
-                                   'wired': int(r['wired'], 16), 'errors': {}}
+                                   'wired': int(r['wired'], 16), 'errors': {}, 'unwired': {}}
                     file_visits += 1
                     active = key
                     ekinds = {}
@@ -235,7 +242,7 @@ def judge(logs, allowlist, requested, protocol=None):
                     if sum(ekinds.values()) != int(r['errors']):
                         raise ValueError('error kinds do not add up to the checkpoint error count')
                     visit['errors'] = dict(ekinds)
-                    bad = sorted(k for k in ekinds if k not in ruled)
+                    bad = sorted(k for k in ekinds if k not in ruled and k not in visit['unwired'])
                     ekinds = {}
                     if int(r['unique']) != len(visit['rows']):
                         raise ValueError('asset summary does not match emitted rows')
@@ -275,7 +282,12 @@ def judge(logs, allowlist, requested, protocol=None):
         if not visit['checkpoints']:
             failures.append(f'{key[1]} visit {key[2]}: no checkpoint (CKPT or END)')
     rooms = {}
+    unwired = {}
     for key, visit in visits.items():
+        for k, n in visit['errors'].items():
+            if k in visit['unwired']:
+                cls = '%s/%s' % (visit['unwired'][k], k)
+                unwired.setdefault(key[1], {})[cls] = unwired.setdefault(key[1], {}).get(cls, 0) + n
         if key[1].startswith('@'):
             continue
         row = rooms.setdefault(key[1], {'visits': 0, 'rows': {}, 'errors': {}, 'covered': [], 'not_covered': []})
@@ -291,6 +303,7 @@ def judge(logs, allowlist, requested, protocol=None):
             'rooms': sorted(observed), 'visits': len(visits), 'per_room': rooms,
             'out_of_scope_errors': {k: {'lines': n, 'reason': ruled[k]} for k, n in sorted(out_of_scope.items())},
             'allowed_used': len(set().union(*(v['rows'] for v in visits.values()))) if visits else 0,
+            'not_covered_errors': unwired,
             'failures': failures}
 
 
@@ -301,6 +314,8 @@ def main():
     parser.add_argument('--baseline', type=Path, required=True,
                         help='last accepted allowlist; current entries must be its subset (not an original ceiling)')
     parser.add_argument('--room', action='append', default=[], help='required room, e.g. 0111')
+    parser.add_argument('--unwired-baseline', type=Path, default=HERE / 'unwired-baseline.json',
+                        help='per room, per consumer/why: the most not-covered errors allowed (may only shrink)')
     parser.add_argument('--json', type=Path)
     args = parser.parse_args()
     try:
@@ -308,6 +323,14 @@ def main():
         if any(not ROOM.fullmatch(r) for r in args.room):
             raise ValueError('--room must contain four lowercase hexadecimal digits')
         result = judge([(str(p), p.read_text(encoding='utf-8', errors='replace')) for p in args.logs], allow, args.room)
+        if 'not_covered_errors' in result:
+            base = json.loads(Path(args.unwired_baseline).read_text())['rooms']
+            for room, classes in sorted(result['not_covered_errors'].items()):
+                for cls, n in sorted(classes.items()):
+                    limit = base.get(room, {}).get(cls, 0)
+                    if n > limit:
+                        result['failures'].append('%s: not-covered errors %s = %d above the baseline %d' % (room, cls, n, limit))
+            result['pass'] = not result['failures']
     except (ValueError, OSError, TypeError, KeyError) as error:
         result = {'schema': 2, 'protocol_version': PROTOCOL_VERSION, 'gate': 'GC-ASSET', 'pass': False, 'failures': [str(error)]}
     output = json.dumps(result, indent=2) + '\n'

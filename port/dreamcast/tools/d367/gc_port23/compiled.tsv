@@ -1,0 +1,3 @@
+# Payloads compiled into the program (no disc file), read by build_catalog.py --compiled: kind, id, sha256, evidence.
+# Provenance comes from provenance-reviewed.tsv like any other row.
+geometry	890085edb9a03c566671f65ae4c3a8b078dbe391	890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784	PS2 Leon mesh arrays compiled into the program (gc_asset_actor_compiled.inc payload_capture_fragments_split, PS2_LEON=1)
