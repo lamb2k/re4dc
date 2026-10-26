@@ -55,6 +55,23 @@ static void mount_fs_track(cd_toc_t* toc)
 }
 #endif
 
+#if defined(RE4DC_CACHE_COHERENT_DMA) && RE4DC_CACHE_COHERENT_DMA
+// CACHE_COHERENT_DMA: the TOC lands in a 32-byte aligned private copy whose lines are purged before and invalidated
+// after the call, so no stale operand-cache line of the caller's stack buffer is read back.
+static int coherent_read_toc(cd_toc_t* toc, bool hd)
+{
+    static union { cd_toc_t t; char pad[(sizeof(cd_toc_t) + 31) & ~31u]; } u __attribute__((aligned(32)));
+    dcache_purge_range((uintptr_t) &u, sizeof u);
+    const int rv = __real_cdrom_read_toc(&u.t, hd);
+    dcache_inval_range((uintptr_t) &u, sizeof u);
+    *toc = u.t;
+    return rv;
+}
+#define READ_TOC coherent_read_toc
+#else
+#define READ_TOC __real_cdrom_read_toc
+#endif
+
 extern "C" int __wrap_cdrom_read_toc(cd_toc_t* toc, bool high_density)
 {
     if (!high_density) {
@@ -62,7 +79,7 @@ extern "C" int __wrap_cdrom_read_toc(cd_toc_t* toc, bool high_density)
         // fs_iso9660 calls this right after cdrom_reinit(); a busy status read
         // is retried a few times before falling back to the original request.
         for (int tries = 0; tries < 4 && cdrom_get_status(&status, &type) < 0; tries++) type = -1;
-        if (type == CD_GDROM && __real_cdrom_read_toc(toc, true) == 0) {
+        if (type == CD_GDROM && READ_TOC(toc, true) == 0) {
 #if defined(RE4DC_DISC_COMPAT) && RE4DC_DISC_COMPAT
             mount_fs_track(toc);
 #endif
@@ -78,5 +95,5 @@ extern "C" int __wrap_cdrom_read_toc(cd_toc_t* toc, bool high_density)
             }
         }
     }
-    return __real_cdrom_read_toc(toc, high_density);
+    return READ_TOC(toc, high_density);
 }

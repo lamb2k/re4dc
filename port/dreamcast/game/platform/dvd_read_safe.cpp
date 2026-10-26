@@ -836,9 +836,14 @@ bool landed(void* buf, size_t size, const char* what, uint32_t lba)
         if (marker_gone(buf, size)) {
             ++g_late;
             // line by line: dcache_purge_range of >= 39 KB would pull in KOS's 16 KB static purge-all buffer
+#if defined(RE4DC_CACHE_COHERENT_DMA) && RE4DC_CACHE_COHERENT_DMA
+            // the destination is 32-byte aligned and whole lines (aligned32): drop, never write back over the DMA
+            if (cached(buf)) dcache_inval_range((uintptr_t) buf, size);
+#else
             if (cached(buf))
                 for (uintptr_t a = (uintptr_t) buf & ~(uintptr_t) 31; a < (uintptr_t) buf + size; a += 32)
                     arch_dcache_purge_line((void*) a);
+#endif
             re4dc_disc_note(2, "disc: %s landed late (%u ms) lba=%u", what, (unsigned) (ms() - t0), (unsigned) lba);
             return true;
         }
@@ -911,6 +916,9 @@ int read_dma(void* buf, uint32_t lba, size_t cnt, const char* what)
         re4dc_disc_note(3, "disc: %s lba=%u n=%u did not land", what, (unsigned) lba, (unsigned) cnt);
         return ERR_SYS;
     }
+#if defined(RE4DC_CACHE_COHERENT_DMA) && RE4DC_CACHE_COHERENT_DMA
+    if (cached(buf)) dcache_inval_range((uintptr_t) buf, size);  // lines refetched while the DMA ran
+#endif
     return ERR_OK;
 }
 
