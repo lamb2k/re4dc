@@ -235,6 +235,32 @@ def ss_units(args, src):
                    pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs)
 
 
+def relayout_grow(d, grow, w):
+    """wep19-26: the DRS body laid out again with the grown BIN slots (grow: absolute slot start -> new bytes), by
+    motion/ps2_motion_prepared.py relayout (every archive offset, table row and container record after the body
+    remapped). Checked: same entry count / tags, every other member byte-identical, each grown slot = its BIN."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('ps2_motion_prepared', HERE.parent / 'motion' / 'ps2_motion_prepared.py')
+    pmp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pmp)
+    P = pmp.Prepared(d)
+    rel = {s - P.base: b for s, b in grow.items()}
+    assert set(rel) <= set(P.starts), (w, 'grown slot is not a member start')
+    members = [(s, e, rel.get(s, P.b[s:e]), None if s in rel else P.mtc.get(s)) for s, e in zip(P.starts, P.ends)]
+    cont, _, _ = pmp.relayout(d, P, members)
+    Q = pmp.Prepared(bytes(cont))
+    assert Q.n == P.n and Q.tags == P.tags, (w, 'entry table changed')
+    assert bool(Q.rel) == bool(P.rel) and (not P.rel or Q.b[Q.rel:] == P.b[P.rel:]), (w, 'REL changed')
+    for i in range(P.n):
+        if not P.offs[i] or P.tags[i] in (b'ESQ\0', b'NTR\0', b'MTC\0', b'\0\0\0\0'):
+            continue
+        want = rel.get(P.offs[i], P.member(P.offs[i]) if P.offs[i] in P.starts else None)
+        got = Q.member(Q.offs[i]) if Q.offs[i] in Q.starts else None
+        assert want is None or got == want, (w, 'entry %d moved wrongly' % i)
+    assert cont[Q.base + Q.size:] == d[P.base + P.size:], (w, 'bytes after the body changed')
+    return bytes(cont)
+
+
 def convert(args):
     out = Path(args.out)
     src = pi.Sources()
@@ -250,6 +276,7 @@ def convert(args):
         rep = dict(weapon=w, file=u['rel'], base=str(base_path), base_sha256=sha(bytes(base)), gc_sha256=sha(gcd), ps2_dat_sha256=sha(ps2d), bins=[], pictures=[])
         used = {}  # tpl arc -> set of images
         pairs = {}
+        grow = {}  # absolute slot start -> new BIN bytes (--relayout)
         for arc, tarc in sorted(u['pairs'].items()):
             name = '%s_bin%02x' % (w, arc)
             gtag, gb = u['gc_entry'](arc)
@@ -277,10 +304,19 @@ def convert(args):
             new, st = pi.convert_geometry(gb, pbn, pos_offset=off)
             new, st['empty_parts_filled'] = fill_empty_parts(new)
             le = po.to_le(new, name)
-            if len(le.rstrip(b'\0')) > len(slot):
+            if len(le.rstrip(b'\0')) > len(slot) and not getattr(args, 'relayout', False):
                 row.update(status='REFUSED', reason='PS2 BIN %d B does not fit the %d B slot' % (len(le), len(slot)), stats=st); failed.append(name); continue
-            le = le[:len(slot)] if len(le) > len(slot) else le
-            base[s:e] = le + bytes(len(slot) - len(le))
+            if len(le.rstrip(b'\0')) > len(slot):
+                # --relayout (wep19-26): the slot grows to the BIN (32-byte rounded) when the body is laid out again
+                # below (motion/ps2_motion_prepared.py relayout); the old slot keeps its bytes until then
+                le = le.rstrip(b'\0')
+                le = le + bytes(-len(le) % 32)
+                grow[s] = le
+                row['grown_from'] = len(slot)
+                slot = bytes(len(le))
+            else:
+                le = le[:len(slot)] if len(le) > len(slot) else le
+                base[s:e] = le + bytes(len(slot) - len(le))
             (wd / (name + '.bin')).write_bytes(le)
             m = po.GcModel(new)
             drawn = [p for p in m.parts if p['tris']]
@@ -335,6 +371,9 @@ def convert(args):
             rep['pictures'].append(dict(tpl=hex(tarc), used=sorted(imgs), swaps=written, kept=kept, pairs=pair_list))
             if written:
                 manifest.append(dict(room=w, name=tname, swaps=written, pairs=[]))
+        if grow:
+            base = bytearray(relayout_grow(bytes(base), grow, w))
+            rep['relayout'] = {hex(k): len(v) for k, v in grow.items()}
         dst = out / 'files' / u['rel']
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_bytes(bytes(base))
@@ -389,6 +428,8 @@ def main():
         c.add_argument('--weapons')
         c.add_argument('--fit-skeleton', action='store_true',
                        help='fit a PS2 mesh whose root children are uniformly translated onto the GC skeleton (wep05)')
+        c.add_argument('--relayout', action='store_true',
+                       help='a PS2 BIN larger than its slot grows the slot: the archive body is laid out again (egg 0x7D)')
     a = ap.parse_args()
     sys.exit(convert(a))
 
