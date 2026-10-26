@@ -52,7 +52,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 15 | WORLD_CENSUS24_ERRORS + world policy provenance recovery (world-policy-census-fix) | landed 1250754a (merge of 54c1b417), default 0; far_shell.inc conflict with I-001 resolved keeping both; knob-off image identical to Test 23 d28b3cfc |
 | 16 | Blender world index layout preserved (`--preserve-index-layout`, Build 11 follow-up, tools only) | landed 765b8b82 (merge of 20d234c1), default 0; knob-off image identical to Test 24 0a8eac21; owner r101 enabled pair next |
 | 17 | #28 DreamShell disc PIO fallback (`DISC_PIO_FALLBACK`) | landed 331a945c (merge ecb16336), default 0; console check on a DreamShell+IDE unit still needed |
-| 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | queued |
+| 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | landed 4c4a037c, default 0; owner r200 entry run (fx_dropped) next |
 | 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
 | 20 | #32 r100 shading code-history review (docs) | landed 331a945c (merge 61b0fe0f, docs) |
 
@@ -163,10 +163,10 @@ Code and docs only, from public GitHub issues on lamb2k/re4dc. Same ground rules
 
 | Build | What | State |
 |---|---|---|
-| 17 | #28 DreamShell: PIO read fallback when disc DMA stalls or returns bad data | queued |
-| 18 | #41 castle gate (r200): effect sprites dropped on entry | queued |
+| 17 | #28 DreamShell: PIO read fallback when disc DMA stalls or returns bad data | landed 331a945c, default 0 |
+| 18 | #41 castle gate (r200): effect sprites dropped on entry | landed 4c4a037c, default 0 |
 | 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
-| 20 | #32 r100 unlit area: shading code-history review (docs) | queued |
+| 20 | #32 r100 unlit area: shading code-history review (docs) | landed 331a945c (docs) |
 
 ### Build 17: disc PIO fallback (`DISC_PIO_FALLBACK`)
 **Why:** on a DreamShell + IDE-mod console the game stays on a black screen. The tester's on-screen log shows `DISC: FIRST READ LBA=83433 N=21 (DMA, NO STREAMS)`, the first file read returns bad data (stream table of 44384 bytes fails its check), and the first DMA read never completes: the reaper thread waits on its semaphore forever. GDEMU and Flycast don't show it. `DISC_DMA_WAIT_TIMEOUT=1` is already in the recipe but only bounds one wait.
