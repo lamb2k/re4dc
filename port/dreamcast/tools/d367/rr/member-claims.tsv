@@ -74,3 +74,7 @@ st1/r10f.dar:0x23 BIN*	props26	PS2 room object reduced to at most the GC model
 dc/native/r1*/ps2-world.re4mesh:changed	wsg26	256-vertex worlds with corners renumbered in strip-group order (same bytes; WORLD_SG26)
 dc/native/r1*/ps2-world.r4sg:*	wsg26	spatial strip groups of the 256-vertex worlds (r103 gains its first)
 dc/native/r100/interior.cell:changed	wsg26	r100 house cell rebound to the wsg26 r100 mesh crc (cells unchanged)
+dc/native/r11d/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r108/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r111/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r113/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
