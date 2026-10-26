@@ -51,10 +51,10 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 14 | PERF_PHASE_MISS (phase miss counter) | landed 630d00ef (merge of 5a4d2cc0), default 0; knob-off image identical to Test 23 d28b3cfc |
 | 15 | WORLD_CENSUS24_ERRORS + world policy provenance recovery (world-policy-census-fix) | landed 1250754a (merge of 54c1b417), default 0; far_shell.inc conflict with I-001 resolved keeping both; knob-off image identical to Test 23 d28b3cfc |
 | 16 | Blender world index layout preserved (`--preserve-index-layout`, Build 11 follow-up, tools only) | landed 765b8b82 (merge of 20d234c1), default 0; knob-off image identical to Test 24 0a8eac21; owner r101 enabled pair next |
-| 17 | #28 DreamShell disc PIO fallback (`DISC_PIO_FALLBACK`) | queued |
+| 17 | #28 DreamShell disc PIO fallback (`DISC_PIO_FALLBACK`) | landed 331a945c (merge ecb16336), default 0; console check on a DreamShell+IDE unit still needed |
 | 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | queued |
-| 19 | #51 artist contribution guide (docs) | queued |
-| 20 | #32 r100 shading code-history review (docs) | queued |
+| 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
+| 20 | #32 r100 shading code-history review (docs) | landed 331a945c (merge 61b0fe0f, docs) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -165,7 +165,7 @@ Code and docs only, from public GitHub issues on lamb2k/re4dc. Same ground rules
 |---|---|---|
 | 17 | #28 DreamShell: PIO read fallback when disc DMA stalls or returns bad data | queued |
 | 18 | #41 castle gate (r200): effect sprites dropped on entry | queued |
-| 19 | #51 artist contribution guide (docs) | queued |
+| 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
 | 20 | #32 r100 unlit area: shading code-history review (docs) | queued |
 
 ### Build 17: disc PIO fallback (`DISC_PIO_FALLBACK`)
