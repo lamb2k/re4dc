@@ -1032,6 +1032,15 @@ if os.path.isdir(PROPS24LD):
 PICK25D = os.environ.get('PICK25D', '/root/re4data/private/pick25-20261025')
 if os.path.isdir(PICK25D):
     DATA['pick25'] = {'st1/r11e.dar': PICK25D + '/st1/r11e.dar'}
+# pfire26 (lane purge-audit26 10-26): the PS2 torch flames. A GRAFT (graft26): each torch room's ETM et14.eff (unread:
+# PS2_ETS_MATCH=2 drops every et1400) is replaced by the PS2 rNNN.dat EFF fire SST sets (texture-less EFF;
+# tools/d367/purge-audit26/pfire26.py), onto the archive every set composed; dar_graft rebases NTR / ESQ and proves every
+# other member byte-identical. Needs PS2_FIRE_SST=1. 13 rooms. Store RECIPE.txt + SHA256SUMS.
+PFIRE26D = os.environ.get('PFIRE26D', '/root/re4data/private/pfire26-20261026')
+if os.path.isdir(PFIRE26D):
+    DATA['pfire26'] = {'graft': {'st2/r200.dar': (PFIRE26D + '/st2/r200.dar', ['et14.eff'])}}
+    for _r in 'r10c r10d r10e r10f r111 r113 r118 r11a r11b r11c r11d r11e'.split():
+        DATA['pfire26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (PFIRE26D, _r), ['et14.eff'])
 # pl08n25 (lane purge-pics25 10-25, user pick N): Leon's pl08 atlas 7506e95f-68cf2211 with its two GameCube tiles (15f7e18c
 # shirt, 878b23c0 sleeves) re-indexed to the nearest PS2 pl08 pictures in leonatl24's VQ codebook; every other texel is
 # identical. dc/tex.pak = cand-bc9585e8's pack + this atlas, so it goes after every other tex.pak set of the line

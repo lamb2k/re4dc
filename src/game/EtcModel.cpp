@@ -511,6 +511,33 @@ static int ps2_ets_dropped(u32 room, u32 id, u32 no)
 }
 #endif
 
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+// PS2_FIRE_SST (lane purge-audit26 2026-10-26; needs PS2_ETS_MATCH=2 and data set pfire26): PS2 moved the chapter 1-2
+// torches out of the etc list; their flames are SST sets of the PS2 room EFF. pfire26 puts those sets (PS2 records,
+// texture-less EFF) in the room ETM's et14.eff, which no dropped torch reads any more; eff_sys.cpp re4dc_pfire_load
+// registers it under the torch owner 0x68 and starts it as the room does its own sets.
+extern "C" int re4dc_pfire_load(void* data);
+static void ps2_fire_sst()
+{
+    void* arc;
+    void* data;
+    u32 k;
+
+    for (k = 0; k < sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]); k++) {
+        if (g_ps2_ets_drop[k].room == pG->room_id && g_ps2_ets_drop[k].id == 0x14) {
+            break;
+        }
+    }
+    if (k == sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]) || !EtcGetDasAddr(0x14, &arc)) {
+        return;
+    }
+    data = GetEtcAddr(arc, "et14.eff");
+    if (data != 0) {
+        re4dc_pfire_load(data);
+    }
+}
+#endif
+
 // Creates every record of the room's etc list (EtcModelSet) and remembers the highest slot.
 int EtcModelListSet(EtcList* list)
 {
@@ -520,6 +547,9 @@ int EtcModelListSet(EtcList* list)
     if (pG->Debug_flg[3] & 0x800) {
         return 0;
     }
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+    ps2_fire_sst();
+#endif
     d = list->data;
     for (i = 0; i < list->num; i++) {
 #if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH

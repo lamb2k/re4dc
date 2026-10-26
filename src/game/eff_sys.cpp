@@ -319,6 +319,9 @@ void EspInit()
 // effect data (owner 0) and the subscreen data (owner 0xD1) from the main archive, and requests
 // a 200-frame generator pre-run (g_nLoop) so ambient effects are already settled on the first
 // frame.
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+static int s_pfire_on;   // PS2_FIRE_SST: a pfire26 file is registered this room (re4dc_pfire_load)
+#endif
 void EspRoomInit()
 {
     cEspSystem* p;
@@ -354,6 +357,9 @@ void EspRoomInit()
     PSMTXIdentity(g_EffParentWorld.mat);
     sys->SstSetFlag = 0xFFFFFFFF;
     sys->CoreKindTop = 0x45;
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+    s_pfire_on = 0;
+#endif
     sys->pEspBuf = NULL;
     tw = sys->Esp_tex_tbl;
     for (i = 0; i < 0x100; i++) {
@@ -1199,6 +1205,43 @@ int EffGetAreaState(int no)
 // Turns effect area `no` on or off when its state changes: on starts the room's sst `no` with
 // Core_kind no + 0xC, off deletes every esp / espgen / efm of that kind. Called by EffAreaUpdate
 // as the player crosses area boundaries.
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+// PS2_FIRE_SST (lane purge-audit26 2026-10-26): a pfire26 torch fire file (EtcModel.cpp ps2_fire_sst): the PS2 room
+// EFF's fire SST sets, texture-less (their records sample core / room texture ids). Recognised by its empty texture
+// and est tables; registered under the torch owner 0x68 (free: every et1400 of these rooms is dropped) and started
+// as the room starts its own sets (game.cpp SstSet(1, 0xFFFF, 1, 0, 0x2F, 1), without the 200-frame pre-run); an
+// area-bound set starts with its area (EffSetAreaState). One "pfire:" log line per room.
+#define RE4DC_PFIRE_OWNER 0x68
+extern "C" void re4dc_log(const char* fmt, ...);
+extern "C" int re4dc_pfire_load(void* data)
+{
+    EffData* d = (EffData*) data;
+    u32 tex;
+    u32 est;
+    u32 sst;
+
+    s_pfire_on = 0;
+    if (d->version != 0xB) {
+        return 0;
+    }
+    tex = ((EffIdTbl*) ((u8*) d + d->ofsTexId))->num;
+    est = ((EffIdTbl*) ((u8*) d + d->ofsEstList))->num;
+    sst = ((EffIdTbl*) ((u8*) d + d->ofsSstList))->num;
+    if (tex != 0 || est != 0 || sst == 0 || g_pEspSys->ownerCnt[RE4DC_PFIRE_OWNER] != 0) {
+        re4dc_log("pfire: room=%03x not a pfire file or owner busy (tex %u est %u sst %u)\n", (unsigned) pG->room_id,
+                  (unsigned) tex, (unsigned) est, (unsigned) sst);
+        return 0;
+    }
+    if (!EspDataLoad((u32) data, RE4DC_PFIRE_OWNER, 0)) {
+        return 0;
+    }
+    s_pfire_on = 1;
+    SstSet(RE4DC_PFIRE_OWNER, 0xFFFF, 1, 0, 0x2F, 0);
+    re4dc_log("pfire: room=%03x sets=%u\n", (unsigned) pG->room_id, (unsigned) sst);
+    return 1;
+}
+#endif
+
 void EffSetAreaState(int no, int on)
 {
     if (GetAreaState(no) == on) {
@@ -1206,6 +1249,11 @@ void EffSetAreaState(int no, int on)
     }
     if (on != 0) {
         SstSet(1, (u16) no, no + 0xC, 0, 0x2F, 0);
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+        if (s_pfire_on) {
+            SstSet(RE4DC_PFIRE_OWNER, (u16) no, no + 0xC, 0, 0x2F, 0);
+        }
+#endif
     } else {
         u8 kind = no + 0xC;
         EffectEspDelete(0, kind, 0, NULL);
