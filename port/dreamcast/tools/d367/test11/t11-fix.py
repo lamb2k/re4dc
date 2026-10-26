@@ -773,6 +773,13 @@ if os.path.isdir(SC21D):
     DATA['sc21'] = {'dc/native/%s/%s' % (r, f): '%s/%s/%s' % (SC21D, r, f)
                     for r in sorted(os.listdir(SC21D)) if os.path.isdir('%s/%s' % (SC21D, r))
                     for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+# scps25 (lane scenery-rewrite25 10-26, SCENERY_PIECE_STATE on the n256 worlds): every PS2 world room's room.r4rc as
+# the Test 24/25 line disc ships it (rr cand-6740ba6f) plus the SCPS section for the package it ships with
+# (tools/d367/scenery25/scps_add.py); no package changes. Last in the data line.
+SCPS25D = os.environ.get('SCPS25D', '/root/re4data/private/scps25-20261026')
+if os.path.isdir(SCPS25D):
+    DATA['scps25'] = {'dc/native/%s/room.r4rc' % r: '%s/%s/room.r4rc' % (SCPS25D, r)
+                      for r in sorted(os.listdir(SCPS25D)) if os.path.isdir('%s/%s' % (SCPS25D, r))}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
