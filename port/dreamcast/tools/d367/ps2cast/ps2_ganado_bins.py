@@ -80,12 +80,14 @@ def build(a):
     # its size, NTR rows rebased, ESQ / MTC rows may not point into it)
     for arc, (le, row) in sorted(big.items()):
         ok = False
+        allt = [x for x in range(4, P.count + 4) if P.tags[x - 4]]
+        k = allt.index(arc)
         for width in range(1, 9):
-            for lo in range(arc - width, arc + 1):
-                hi = lo + width
-                tagged = [x for x in range(lo, hi + 1) if 0 <= x - 4 < P.count and P.tags[x - 4]]
-                if arc not in tagged or tagged[0] != lo or tagged[-1] != hi:
+            for s in range(max(0, k - width), k + 1):
+                tagged = allt[s:s + width + 1]
+                if arc not in tagged or len(tagged) != width + 1:
                     continue
+                lo, hi = tagged[0], tagged[-1]
                 bins = {x: (done[x],) for x in tagged if x in done}
                 bins[arc] = (le,)
                 save = (bytes(P.body), list(P.offs), pa.SPAN)

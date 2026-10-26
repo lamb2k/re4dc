@@ -1298,6 +1298,20 @@ if os.path.isdir(WEP26ED):
                       'dc/tex.pak': WEP26ED + '/dc/tex.pak'}
     PAK_DERIVED['wep26e'] = WEP26ED + '/pak-derived.json'
     AFTER += [('wep26e', 'dcglyph26'), ('wep26e', 'wep26g')]
+# gcl26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): what PROVENANCE_FOLLOW_BYTES=1 showed the
+# whole-file credit hid. em/em11..em17.drs = the release's final archives with every GameCube BIN member that has a PS2
+# BIN at the same ARC rebuilt with the PS2 geometry (ps2cast/ps2_ganado_bins.py: GC header / joints / part headers kept,
+# PS2 positions, normals, UVs and triangles; in place, or a small window re-laid out; archive size and every other member
+# unchanged); dc/tex.pak = the final pack with the Ganado EFF pictures 03d1e9a5 / 195b4634 / 41e0ece4 and the core.das
+# entry-25 pictures 89f1808c / c703f665 as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes and formats kept).
+# Made from the FINAL disc files (ps2cast/gcl26-regen.sh), so it stages after every set writing these paths; regenerate
+# it when one of them changes. Store: re4-assets-private/gcl26-20261026 (RECIPE.txt, SHA256SUMS.txt, report/).
+GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
+if os.path.isdir(GCL26D):
+    DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
+    DATA['gcl26']['dc/tex.pak'] = GCL26D + '/dc/tex.pak'
+    PAK_DERIVED['gcl26'] = GCL26D + '/pak-derived.json'
+    AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
 # snd26w (same lane): em/wep19.drs = pmwep26's file with its one sound-bank sample re-encoded in place from PS2 audio
 # (ps2_audio.py banks; PS2 wep19.snd is a stub, the sound is r11d.snd block 6 VAG 25; frozen AICA layout, same size).
 # After pmwep26. Store: re4-assets-private/snd26w-20261026.
