@@ -430,9 +430,9 @@ static void* dvdBorrowTop(int heap, u32 need)
     const s32 size = (s32) (((need + 0x1FU) & ~0x1FU) + 0x20U);
     OSHeapCell* best = 0;
     for (OSHeapCell* c = d->free; c; c = c->next) {
-        if (c->size >= size + (s32) RE4DC_DVD_BORROW_SPARE) best = c;
+        if (c->size >= size) best = c;
     }
-    if (best == 0) return 0;
+    if (best == 0 || best->size - size < 0x40) return 0;   // never take a whole cell
     best->size -= size;
     OSHeapCell* cell = (OSHeapCell*) ((u8*) best + best->size);
     cell->size = size;
