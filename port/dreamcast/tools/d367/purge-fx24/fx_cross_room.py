@@ -10,7 +10,7 @@ a room only with its own .dat, so this takes the picture from r10e (coordinator 
 fx_ps2_pack.convert_set (PAL4 ARGB4444, one 16-colour palette per id, cover flags), packed under the GC keys.
 Writes <out>/dc/tex.pak, pak-derived.json (base/out sha256, changed keys), report.json.
 """
-import hashlib, json, sys
+import hashlib, json, os, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / 'vram'))
@@ -20,8 +20,15 @@ import fx_ps2_pack as F  # noqa: E402
 import fx_ps2_sheet as SH  # noqa: E402
 from assetpipe.rooms import GcIso  # noqa: E402
 
-PAIRS = [('r117', 'st1/r117.das', 0x86, 'r10e.dat', 7)]
-WORK = Path('/root/work/lanes/purge-fx24-scratch/xroom')
+# (room, GC room file, GC EFF id, PS2 member, PS2 EFF entry[, PS2 EFF id when it differs from the GC id])
+# r202 (lane castle-ps2-26 10-26): the castle candle flames, GC EFF 0x85 (8 x 64x128 frames, st2/r202 EFF #7 tpl1); the
+# PS2 r202.dat EFF #7 has no textures (the PS2 castle rooms' EFFs are empty; BIO4DAT scan), the same candle flipbook as
+# r117 -> PS2 r10e.dat EFF #7 0x86.
+PAIRS = [('r117', 'st1/r117.das', 0x86, 'r10e.dat', 7),
+         ('r202', 'st2/r202.das', 0x85, 'r10e.dat', 7, 0x86)]
+if os.environ.get('FXX_ROOMS'):
+    PAIRS = [p for p in PAIRS if p[0] in os.environ['FXX_ROOMS'].split(',')]
+WORK = Path(os.environ.get('FXX_WORK', '/root/work/lanes/purge-fx24-scratch/xroom'))
 
 
 def gc_side(iso, rel, gid):
@@ -37,8 +44,9 @@ def gc_side(iso, rel, gid):
     raise SystemExit('GC %s has no EFF id %#x' % (rel, gid))
 
 
-def ps2_side(dat, ent):
-    b = Path(dat).read_bytes()
+def ps2_side(dat, ent, pname=None):
+    """dat: the PS2 member file, or a folder holding it (pname)."""
+    b = (Path(dat) / pname if Path(dat).is_dir() else Path(dat)).read_bytes()
     t, o, e = F.dat_entries(b)[ent]
     return F.ps2_eff_textures(b[o:e])
 
@@ -46,9 +54,9 @@ def ps2_side(dat, ent):
 def check(iso, dat, out):
     from PIL import Image
     rep = {}
-    for room, rel, gid, pname, ent in PAIRS:
+    for room, rel, gid, pname, ent, *pid in PAIRS:
         ctx, ids, tpls, gp = gc_side(iso, rel, gid)
-        pp = ps2_side(dat, ent).get(gid)
+        pp = ps2_side(dat, ent, pname).get(pid[0] if pid else gid)
         rep[room] = dict(gc_ctx=ctx, gc_frames=len(gp), gc_size=sorted({(w, h) for _, w, h, _ in gp}),
                          gc_keys=[k for k, _, _, _ in gp], ps2=pname, ps2_frames=len(pp or []),
                          ps2_size=sorted({(q[0], q[1]) for q in pp if q}) if pp else None)
@@ -60,7 +68,7 @@ def check(iso, dat, out):
         for i, q in enumerate(pp or []):
             if q:
                 sheet.paste(SH.tile(q[0], q[1], q[2]), (128 * i, 128))
-        sheet.save(out)
+        sheet.save(out if len(PAIRS) == 1 else str(out).replace('.png', '-%s.png' % room))
     return rep
 
 
@@ -68,9 +76,11 @@ def pack(iso, dat, src, outdir):
     out = Path(outdir)
     pkdir = WORK / 'pkg'
     rows, changed = [], {}
-    for room, rel, gid, pname, ent in PAIRS:
+    for room, rel, gid, pname, ent, *pid in PAIRS:
         ctx, ids, tpls, gp = gc_side(iso, rel, gid)
-        ps2 = ps2_side(dat, ent)
+        ps2 = ps2_side(dat, ent, pname)
+        if pid:
+            ps2 = {gid: ps2[pid[0]]}
         r = F.convert_set(ctx, [gid], {'%s/tpl0' % ctx: tpls['%s/tpl%d' % (ctx, ids.index(gid))]}, ps2,
                           '%s:%d' % (pname, ent), pkdir, {})
         rows += [dict(r_, room=room) for r_ in r]

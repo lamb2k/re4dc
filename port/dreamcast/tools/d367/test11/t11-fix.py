@@ -1094,6 +1094,14 @@ if os.path.isdir(PUI26D):
     DATA['pui26'] = {'dc/tex.pak': PUI26D + '/dc/tex.pak'}
     PAK_DERIVED['pui26'] = PUI26D + '/pak-derived.json'
     AFTER += [('pui26', 'pics25f')]
+# pfx26 (lane castle-ps2-26 10-26, GC asset purge): the r202 castle candle flames (GC st2/r202 EFF #7 0x85, 16 x 64x128)
+# as the PS2 r10e.dat EFF #7 0x86 flipbook (the PS2 castle .dat EFFs carry no textures), purge-fx24/fx_cross_room.py
+# FXX_ROOMS=r202 pack on pui26's pack. After pui26.
+PFX26D = os.environ.get('PFX26D', '/root/re4data/private/pfx26-20261026')
+if os.path.isdir(PFX26D):
+    DATA['pfx26'] = {'dc/tex.pak': PFX26D + '/dc/tex.pak'}
+    PAK_DERIVED['pfx26'] = PFX26D + '/pak-derived.json'
+    AFTER += [('pfx26', 'pui26')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
