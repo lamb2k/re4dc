@@ -34,13 +34,13 @@ constexpr bool n256_rows_match() {
            a.source_crc!=b.source_crc)return false;
         if(a.mesh_crc!=b.mesh_crc || a.mesh_bytes!=b.mesh_bytes){
             if(a.room!=0x101U && a.room!=0x102U && a.room!=0x103U && a.room!=0x104U && a.room!=0x105U && a.room!=0x106U &&
-               a.room!=0x108U && a.room!=0x109U && a.room!=0x10aU && a.room!=0x10bU && a.room!=0x10cU && a.room!=0x10fU &&
-               a.room!=0x111U && a.room!=0x112U && a.room!=0x117U && a.room!=0x119U && a.room!=0x11aU && a.room!=0x11cU &&
-               a.room!=0x11dU && a.room!=0x11eU)return false;
+               a.room!=0x107U && a.room!=0x108U && a.room!=0x109U && a.room!=0x10aU && a.room!=0x10bU && a.room!=0x10cU &&
+               a.room!=0x10fU && a.room!=0x111U && a.room!=0x112U && a.room!=0x113U && a.room!=0x117U && a.room!=0x118U &&
+               a.room!=0x119U && a.room!=0x11aU && a.room!=0x11bU && a.room!=0x11cU && a.room!=0x11dU && a.room!=0x11eU)return false;
             ++swapped;
         }
     }
-    return swapped==20U;  // n256w25 + n256x25 + n256z25 + world-n256all: r101 r102 r103 r104 r105 r106 r108 r109 r10a r10b r10c r10f r111 r112 r117 r119 r11a r11c r11d r11e
+    return swapped==24U;  // n256w25 + n256x25 + n256z25 + world-n256all: r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e
 }
 static_assert(n256_rows_match());
 #else
