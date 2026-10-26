@@ -1380,5 +1380,14 @@ N256A26D = os.environ.get('N256A26D', '/root/re4data/private/n256a26-20261026')
 DATA['n256a26'] = {'dc/native/%s/%s' % (r, f): N256A26D + '/dc/native/%s/%s' % (r, f)
     for r in ('r10b', 'r11d', 'r102', 'r105') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 
+# n256b26 (lane world-n256all 10-26, batch 2): r108 / r11e / r11c / r11f the same way as n256a26 (recipes: blackps2 r108,
+# ch2regen t-fed4122a r11e / r11c / r11f; 64 byte-identical to shipped). r11f has no rect21 certificate row: its policy
+# binds the actual R4PW crc, so its strip groups bind that and no row is swapped. Census (Flycast WORLD_CENSUS24, world ms
+# per drawn tick): r108 8.94 -> 8.03, r11e 8.78 -> 8.04, r11c 8.02 -> 7.03, r11f 7.11 -> 6.47. Needs SCENERY_N256=1; after
+# n256a26; release line only, never KSETS. Store: re4-assets-private/n256b26-20261026.
+N256B26D = os.environ.get('N256B26D', '/root/re4data/private/n256b26-20261026')
+DATA['n256b26'] = {'dc/native/%s/%s' % (r, f): N256B26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r108', 'r11e', 'r11c', 'r11f') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
 if __name__ == '__main__':
     main()
