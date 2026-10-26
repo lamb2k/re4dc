@@ -2727,7 +2727,7 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 #endif
 #if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
 unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses compared, mismatches
-unsigned stream_cen[6]; unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
+unsigned stream_cen[6]; unsigned stream_sz[2][6]; unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
 #endif
 struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_RECORD_SPLIT
@@ -2813,7 +2813,17 @@ struct MeshDraw : Emitter {
     // references them is culled: depth all&3 or screen all&0x3c). stream_cen: 0 transformed, 1 unused, 2 strips,
     // 3 culled strips, 4 culled strips' corners, 5 picks whose strips are all culled.
     std::uint8_t cen_use[256];unsigned cen_lo=0,cen_n=0,cen_kept=0;
-    void cen_begin(unsigned lo,unsigned n){cen_lo=lo;cen_n=n;cen_kept=0;__builtin_memset(cen_use,0,sizeof cen_use);stream_cen[0]+=n;}
+    void cen_begin(unsigned lo,unsigned n){cen_lo=lo;cen_n=n;cen_kept=0;__builtin_memset(cen_use,0,sizeof cen_use);stream_cen[0]+=n;
+        // M3 sizing: the pick's screen extent (largest side of its transformed corners' box, depth-valid corners), in
+        // buckets <1 <2 <4 <8 <16 >=16 px: stream_sz[0] picks, [1] corners transformed
+        float x0=1e9f,y0=1e9f,x1=-1e9f,y1=-1e9f;
+        for(unsigned i=lo;i<lo+n;++i)if(!(outcodes[i]&3U)){
+            const float x=cache[i].x,y=cache[i].y;x0=x<x0?x:x0;x1=x>x1?x:x1;y0=y<y0?y:y0;y1=y>y1?y:y1;}
+        const float e=x1-x0>y1-y0?x1-x0:y1-y0;
+        const unsigned b=x1<x0?5U:e<1.f?0U:e<2.f?1U:e<4.f?2U:e<16.f?3U:e<64.f?4U:5U;
+        if(x1<x0)++stream_cen[5];   // (reused) picks with no depth-valid corner
+        static unsigned shown;if(shown<4 && x1>=x0){++shown;re4dc_log("SCNSTREAM sample e=%d x0=%d y0=%d n=%u\n",int(e),int(x0),int(y0),n);}
+        ++stream_sz[0][b];stream_sz[1][b]+=n;}
     void cen_strips(const std::uint8_t* s,const std::uint8_t* end){
         while(s<end){
             const unsigned n=*s++;
@@ -7375,6 +7385,9 @@ int ps2_pass(unsigned pass,float zfar){
                       stream_ck[2],stream_ls[0],stream_ls[1]);}
         if(f==logged)re4dc_log("SCNSTREAM census transformed=%u unused=%u strips=%u culled=%u culled_corners=%u allculled_picks=%u\n",
                       stream_cen[0],stream_cen[1],stream_cen[2],stream_cen[3],stream_cen[4],stream_cen[5]);
+        if(f==logged)re4dc_log("SCNSTREAM size picks=%u,%u,%u,%u,%u,%u corners=%u,%u,%u,%u,%u,%u\n",
+                      stream_sz[0][0],stream_sz[0][1],stream_sz[0][2],stream_sz[0][3],stream_sz[0][4],stream_sz[0][5],
+                      stream_sz[1][0],stream_sz[1][1],stream_sz[1][2],stream_sz[1][3],stream_sz[1][4],stream_sz[1][5]);
     }
 #endif
 #if RE4DC_SCENERY_CONE
