@@ -11,6 +11,12 @@ $(error GC_ASSET_MOTION_UNKNOWN requires GC_ASSET_GATE=1)
 endif
 endif
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/gc_asset_motion_unknown.o,$(PLATFORM_OBJS))
+# GC_ASSET_CATALOG_PIN_FILE=<file> (gate-ON twins): read the catalog pin from tools/d367/gc_port23/make_catalog.sh output
+# (<out>/gc-assets.pin) instead of passing GC_ASSET_CATALOG_SHA256. Empty by default: no effect.
+GC_ASSET_CATALOG_PIN_FILE ?=
+ifneq ($(GC_ASSET_CATALOG_PIN_FILE),)
+GC_ASSET_CATALOG_SHA256 := $(strip $(shell cat $(GC_ASSET_CATALOG_PIN_FILE)))
+endif
 GC_ASSET_CATALOG_SHA256 ?= 0
 # GC_ASSET_PROF=1 (requires GC_ASSET_GATE=1): log texture fingerprint / catalog read time (GC-ASSET-PROF). Diagnostic.
 GC_ASSET_PROF ?= 0

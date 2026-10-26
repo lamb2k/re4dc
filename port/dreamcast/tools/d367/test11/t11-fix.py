@@ -1077,6 +1077,14 @@ if os.path.isdir(PICS25ED):
     DATA['pics25e'] = {'dc/tex.pak': PICS25ED + '/dc/tex.pak'}
     PAK_DERIVED['pics25e'] = PICS25ED + '/pak-derived.json'
     AFTER += [('pics25e', 'pada25b')]
+# pics25f (same lane, round 16): the last two unattributed tex.pak keys to PS2 texels: 64712c31 (r100 tyre) <- PS2
+# r100.dat@40d2a0#8; 2c9c252a (Ashley hair-mask pair) <- the castle21 PS2 Ashley pair (ps2_mask_runs over the PS2 pl01
+# ashley01 atlas). After pics25e.
+PICS25FD = os.environ.get('PICS25FD', '/root/re4data/private/pics25f-20261026')
+if os.path.isdir(PICS25FD):
+    DATA['pics25f'] = {'dc/tex.pak': PICS25FD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25f'] = PICS25FD + '/pak-derived.json'
+    AFTER += [('pics25f', 'pics25e')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
