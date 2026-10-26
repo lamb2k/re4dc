@@ -104,6 +104,8 @@ s.want=1;s.ch[0]=s.ch[1]=-1;reject=true;flush(s);assert(!phase && !starts && s.s
 #include <string>
 using namespace re4dc_gcasset;
 std::string logs;unsigned char DVD_BUFF[128];unsigned copied;
+#define DVD_STAGE DVD_BUFF
+#define DVD_BORROW_GIVE() ((void) 0)
 extern "C" void re4dc_log(const char* fmt,...){char text[256];va_list ap;va_start(ap,fmt);vsnprintf(text,sizeof text,fmt,ap);va_end(ap);logs+=text;}
 void OSReport(const char*){}
 using u32=unsigned;

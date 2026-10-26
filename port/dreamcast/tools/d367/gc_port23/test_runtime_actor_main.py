@@ -18,7 +18,7 @@ class ActorMainTests(unittest.TestCase):
         guard = model[model.index('#if RE4DC_GC_ASSET_GATE\n    // An actor decline'):]
         guard = guard[:guard.index('#endif')+len('#endif')]
         ui = (GAME / 'platform/native_ui.cpp').read_text()
-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
         commit = function(ui, 'extern "C" void re4dc_model_packet_commit(')
         marker = ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION')
         start = ui.index('#if RE4DC_TA_DIRECT', marker)
@@ -81,7 +81,9 @@ int main(){unsigned char bin[128]={},foreign[64]={};unsigned one=1,offset=32;mem
         self.compile_run(fixture, direct=True)
         for label, old, new in [
             ('blanket raw BIN', 'source_use={0,mask,p->model,p->info};', 'source_use={member.serial,mask,p->model,p->info};'),
-            ('restore positive replay', 'replay_use.payload?re4dc_gcasset::replay_use.serial:0', 'replay_use.serial'),
+            # 'restore positive replay' retired (cast-ps2-25 r17): since gc-catalog24b a member-selected actor part is
+            # accepted on its member, and a replay keeps it only when that member holds the drawn BIN
+            # (test_runtime_hooks test_raw_replay_is_explicitly_unqualified covers the relabel case).
             ('leaked fallback proof', 're4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};', ''),
         ]:
             with self.subTest(mutant=label):
@@ -112,9 +114,10 @@ Re4dcActorSource src{};
 extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){*out=src;return 1;}
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 1;}
-struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
-struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};
+struct RegistryView{unsigned geometry_count=1,chunk_count=0;Chunk* chunks=nullptr;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
 ''' + selection + r'''
+const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
 SourceUse gcasset_model_pending;
 ''' + function(ui, 'void gcasset_model_prepare(') + '\n' + function(ui, 'void gcasset_model_accept(') + r'''
 int main(){unsigned char bytes[512]={71},alien[64]={19};const auto digest=fingerprint(bytes,sizeof bytes);char id[41];for(unsigned i=0;i<20;++i)sprintf(id+2*i,"%02x",digest.bytes[i]);CatalogRow row{"geometry",id,digest,PS2};assert(install(&row,1));
@@ -133,7 +136,8 @@ int main(){unsigned char bytes[512]={71},alien[64]={19};const auto digest=finger
         for label, old, new in [
             ('external UV', 'gcasset_actor_inside(proof,c.uv,uv_bytes)', '(uv_bytes>0)'),
             ('external weights', 'gcasset_actor_inside(proof,c.weights,c.palette_count*16)', '(c.palette_count>0)'),
-            ('external colors', color, '(void)part;'),
+            # 'external colors' retired (cast-ps2-25 r17): an equivalent mutant now; the per-vertex colour refusal
+            # also runs in gc_asset_actor_select.inc (classify path), so dropping this copy changes no verdict.
             ('foreign shape arrays', 'if(!part->positions || (part->positions==source.positions', 'if(true || (part->positions==source.positions'),
         ]:
             with self.subTest(mutant=label):
@@ -177,8 +181,8 @@ extern "C" int re4dc_actor_model_source(const void*,Re4dcActorSource*out){assert
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**data){*data=nullptr;return 0x00100000U;}
 unsigned weapon_role=1;
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return weapon_role;}
-struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
-struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};
+struct RegistryView{unsigned geometry_count=1,chunk_count=0;Chunk* chunks=nullptr;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
 ''' + selection + r'''
 struct Frame{const void*info=nullptr;unsigned frame=~0U;float modelview[12]{},projection[7]{},viewport[6]{};};
 constexpr unsigned kFrames=4;Frame frames[kFrames];unsigned frame_victim,frame_serial=1;
@@ -186,6 +190,7 @@ constexpr unsigned kFrames=4;Frame frames[kFrames];unsigned frame_victim,frame_s
 bool same_words(const float*a,const float*b,unsigned n){return !memcmp(a,b,n*4);}
 struct SkinEntry{};struct OneScreen{};
 ''' + prepare + '\n' + one + r'''
+const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
 SourceUse gcasset_model_pending;
 ''' + function(ui, 'void gcasset_model_prepare(') + '\n' + function(ui, 'void gcasset_model_accept(') + r'''
 struct Stats{unsigned parts=0,declined=0,handled=0,deferred=0,culled_parts=0;}stats;

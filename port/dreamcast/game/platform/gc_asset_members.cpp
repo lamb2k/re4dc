@@ -495,6 +495,8 @@ extern "C" void re4dc_gcasset_member_unpark() { re4dc_gcasset::member_unpark(); 
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
 // (before BlockCreate relocates their BINs), moved with pool compaction,
 // retired where the block's draw owner is unbound.
+// gc_asset_disc.cpp (KOS fs) defines the real one in the game; host builds of this unit without it adopt nothing.
+namespace re4dc_gcasset { __attribute__((weak)) bool ensure_disc_catalog() { return false; } }
 extern "C" void re4dc_gcasset_block_adopt(const void* owner,void* archive,unsigned bytes) {
     if(re4dc_gcasset::ensure_disc_catalog())re4dc_gcasset::member_adopt(owner,archive,bytes,true);
 }

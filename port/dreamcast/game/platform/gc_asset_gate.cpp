@@ -12,6 +12,7 @@ namespace {
 constexpr unsigned CatalogLimit=16320,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^14 token index
 #include "include/gc_asset_sha.inc"
 unsigned char seen[2048];
+unsigned char motion_row[2048];   // cast-ps2-25 r17: the seen row is a "motion" row (kind check per consumer)
 AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epoch;
 CatalogReadAt catalog_read;void* catalog_context;unsigned catalog_bytes;
 const CatalogRow* catalog;
@@ -310,7 +311,7 @@ static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit
     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
     for(unsigned i=0;i<ErrorKinds;++i){error_kind[i]=nullptr;error_count[i]=0;}error_kinds_lost=0;
     std::memset(emissions,0,sizeof emissions);active=true;
-    std::memset(seen,0,sizeof seen);
+    std::memset(seen,0,sizeof seen);std::memset(motion_row,0,sizeof motion_row);
     errors=queue_faults.exchange(0);
     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++errors;queue_active.store(0); }
     else {
@@ -439,10 +440,19 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {
         unresolved(consumer,"catalog-token");return;
     }
-    if(seen[index/8]&(1U<<(index%8)))return;
+    // A token counts only for its own kind: a motion row only for Motion, any other row never for Motion
+    // (cast-ps2-25 r17: a PS2 geometry token must not certify a clip).
+    const unsigned bit=1U<<(index%8);
+    if(seen[index/8]&bit){
+        if(bool(motion_row[index/8]&bit)!=(consumer==Motion))unresolved(consumer,"kind-mismatch");
+        return;
+    }
     AssetDescription row;
     if(!describe_checked(asset,&row)){unresolved(consumer,"catalog-read");return;}
-    seen[index/8]|=1U<<(index%8);
+    seen[index/8]|=bit;
+    const bool motion=!std::strcmp(row.kind,"motion");
+    if(motion)motion_row[index/8]|=bit;
+    if(motion!=(consumer==Motion)){unresolved(consumer,"kind-mismatch");return;}
     if(row.provenance==PS2 || row.provenance==Authored)return;
     ++used;char sha[65];hex(row.digest,sha);
     re4dc_log("GC-ASSET v=2 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",

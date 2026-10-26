@@ -31,6 +31,7 @@ unsigned identity=0x01230000U,role=1,resolutions;
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**out){assert(!sq);++resolutions;*out=nullptr;return identity;}
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return role;}
 '''+scope+r'''
+const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
 SourceUse gcasset_model_pending;
 '''+function(ui,'void gcasset_model_prepare(')+'\n'+function(ui,'void gcasset_model_accept(')+r'''
 PayloadProof proof,receipt;int owner,index_owner,wrong;
@@ -83,6 +84,7 @@ using namespace re4dc_gcasset;
 bool sq;std::string logs;
 extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char out[256];va_list ap;va_start(ap,fmt);vsnprintf(out,sizeof out,fmt,ap);va_end(ap);logs+=out;}
 struct Re4dcModelPart{const void*model;const void*info;};
+const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
 SourceUse gcasset_model_pending;
 '''+function(ui,'void gcasset_model_prepare(')+'\n'+function(ui,'void gcasset_model_accept(')+r'''
 PayloadProof proof,view,copy;
