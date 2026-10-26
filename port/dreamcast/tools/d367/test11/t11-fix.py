@@ -1298,6 +1298,16 @@ if os.path.isdir(WEP26ED):
                       'dc/tex.pak': WEP26ED + '/dc/tex.pak'}
     PAK_DERIVED['wep26e'] = WEP26ED + '/pak-derived.json'
     AFTER += [('wep26e', 'dcglyph26'), ('wep26e', 'wep26g')]
+# gcl26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): what PROVENANCE_FOLLOW_BYTES=1 showed the
+# whole-file credit hid. em/em11..em17.drs = the release's final archives with every GameCube BIN member that has a PS2
+# BIN at the same ARC rebuilt with the PS2 geometry (ps2cast/ps2_ganado_bins.py: GC header / joints / part headers kept,
+# PS2 positions, normals, UVs and triangles; in place, or a small window re-laid out; archive size and every other member
+# unchanged). The pictures are set gcl26p. Made from the FINAL disc files (ps2cast/gcl26-regen.sh), so it stages after
+# every set writing these paths; regenerate it when one of them changes. Store: re4-assets-private/gcl26-20261026.
+GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
+if os.path.isdir(GCL26D):
+    DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
+    AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
 # gcl26p (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack with 6 pictures
 # as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes and formats kept, no package grows): the Ganado EFF
 # pictures of every emNN archive 03d1e9a5 / 195b4634 / 41e0ece4 <- PS2 em12.dat TPL images 5 / 6 / 32; core.das entry 25
