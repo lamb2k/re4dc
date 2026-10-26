@@ -121,104 +121,24 @@
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=25737216&bytes=10384",
-   "id": "279052e0-b695f91f",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "ebc27efb5a02c371914316c0e2c56415f99ff106997a949160c65bdf7f5079fa"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28934144&bytes=3216",
-   "id": "2e6a0903-9fe7dbb0",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "98aeb7c358084c1927188e2ecdb0026f7f34137bc9864254e48879bb8a6de13f"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=41719808&bytes=6288",
-   "id": "48369d01-cf9063bd",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "5a528164fc09edc776ea6997f6b4b3c1674a2c3457c5c588be8f8bcddddb71d1"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=60020736&bytes=400",
-   "id": "6adc2e7d-9646e5b8",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "3a71ec21dc3bb3a21da1d4b7d5bd79748ae582a5e4a9a74f917c054530c33824"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
    "id": "d17e9c56-fa23c229",
    "kind": "texture",
    "owner": "cast-ps2-25",
    "provenance": "gc",
-   "reason": "Dreamcast A pad label: our recolour of the GC A glyph to the Dreamcast A colour (set pada25, from the kept B label 3acc7fea); no PS2 equivalent (PS2 pad glyphs)",
+   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
    "room": "0100",
-   "sha256": "1ff520eb74bed53b4fa62e0d552fcccc4aad0fe28c80ebb3aef06dd809f89fe2"
+   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=125306880&bytes=6288",
-   "id": "dc363980-b5147ee2",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "1de9aa5378386cf78ffb757ec0a515638911fff6bcf0b549cdf23115d8f530e6"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=128370688&bytes=3216",
-   "id": "e35f8167-71a2d7e8",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "14f47d51a448336bd5a9c480a1f4c4b27d67f716ca15614297710b1aefd812ff"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=132032512&bytes=89574",
-   "id": "ebed7ba6-2ca7490f",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0100",
-   "sha256": "d18e1c300f90dc9327998a5805dd0eb144899760b840facf6a246bbbdac65760"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=57880576&bytes=89574",
-   "id": "65c6fe5a-2593694e",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "0101",
-   "sha256": "f2a6680b3d4000c854b083ee523d6bccbf026d50d2ccf8a093855e71c8738d56"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
    "id": "d17e9c56-fa23c229",
    "kind": "texture",
    "owner": "cast-ps2-25",
    "provenance": "gc",
-   "reason": "Dreamcast A pad label: our recolour of the GC A glyph to the Dreamcast A colour (set pada25, from the kept B label 3acc7fea); no PS2 equivalent (PS2 pad glyphs)",
+   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
    "room": "0101",
-   "sha256": "1ff520eb74bed53b4fa62e0d552fcccc4aad0fe28c80ebb3aef06dd809f89fe2"
+   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
   },
   {
    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
@@ -239,16 +159,6 @@
    "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
    "room": "011f",
    "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=102592512&bytes=4240",
-   "id": "b3c2a412-d219779c",
-   "kind": "texture",
-   "owner": "gc-catalog24b",
-   "provenance": "unknown",
-   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
-   "room": "011f",
-   "sha256": "1fd18f3bb05378913562e62818924f5387c71d49bb4b4b37fa35ea13e545025e"
   },
   {
    "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",

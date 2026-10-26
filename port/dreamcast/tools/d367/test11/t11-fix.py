@@ -1063,6 +1063,20 @@ if os.path.isdir(PADA25D):
     DATA['pada25'] = {'dc/tex.pak': PADA25D + '/dc/tex.pak'}
     PAK_DERIVED['pada25'] = PADA25D + '/pak-derived.json'
     AFTER += [('pada25', 'pics25d')]
+# pada25b (same lane, round 15): the A pad-label key d17e9c56 = our own Dreamcast pad-label art (an A drawn on our B label
+# 3acc7fea), replacing pada25's recolour. After pada25.
+PADA25BD = os.environ.get('PADA25BD', '/root/re4data/private/pada25b-20261025')
+if os.path.isdir(PADA25BD):
+    DATA['pada25b'] = {'dc/tex.pak': PADA25BD + '/dc/tex.pak'}
+    PAK_DERIVED['pada25b'] = PADA25BD + '/pak-derived.json'
+    AFTER += [('pada25b', 'pada25')]
+# pics25e (same lane, round 15): 7 DC keys to PS2 pictures: six colour+mask pair packages (r100 events s03 / s20 / s40,
+# ss_oc101 radio-call hair) and the r11f foliage b3c2a412. After pada25b.
+PICS25ED = os.environ.get('PICS25ED', '/root/re4data/private/pics25e-20261025')
+if os.path.isdir(PICS25ED):
+    DATA['pics25e'] = {'dc/tex.pak': PICS25ED + '/dc/tex.pak'}
+    PAK_DERIVED['pics25e'] = PICS25ED + '/pak-derived.json'
+    AFTER += [('pics25e', 'pada25b')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
