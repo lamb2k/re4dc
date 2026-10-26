@@ -82,6 +82,7 @@ def main():
     ap.add_argument('room'); ap.add_argument('x0', type=float); ap.add_argument('z0', type=float)
     ap.add_argument('y0', type=float); ap.add_argument('x1', type=float); ap.add_argument('z1', type=float)
     ap.add_argument('--cell', type=float, default=150.0); ap.add_argument('--png')
+    ap.add_argument('--gy', type=float, help='goal floor height (default: the nearest floor in x/z)')
     a = ap.parse_args()
     floors, walls = parse(sat_bytes(a.room))
     if a.png:  # top-down map: floors shaded by height, walls red, start/goal marked; grid labels every 5 m
@@ -146,7 +147,7 @@ def main():
                     if best is None or d < best[0]:
                         best = (d, (i + di, j + dj, fy))
         return best[1]
-    s = node_near(a.x0, a.z0, a.y0); g = node_near(a.x1, a.z1)
+    s = node_near(a.x0, a.z0, a.y0); g = node_near(a.x1, a.z1, a.gy)
     pos = lambda n: (x0 + n[0] * C, z0 + n[1] * C)
     openq = [(0, 0, s)]; came = {s: None}; cost = {s: 0}
     while openq:

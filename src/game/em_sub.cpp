@@ -2022,6 +2022,13 @@ int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
         rate = (f32) dmg;
     }
     if (em->id == 0) {
+#if defined(RE4DC_WARP_GOD_HOOK) && RE4DC_WARP_GOD_HOOK
+        // Warp builds only (dbgwarp.mk): the `god` line (castle31 no-warp chain) takes no damage off the player.
+        extern int re4dc_warp_god;
+        if (re4dc_warp_god) {
+            return (s16) pG->pl_life;
+        }
+#endif
         if ((s16) pG->pl_life <= 0) {
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
             deathTracePlayer("life.early_dead", dmg, rnd, flag, -1, death_caller);

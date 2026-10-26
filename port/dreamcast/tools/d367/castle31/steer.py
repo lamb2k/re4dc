@@ -27,7 +27,7 @@ is (sin a, cos a) in x/z), life, the nearest live enemy and the live count. Plan
     @LABEL                        a place `--from LABEL` can start from
 Writes <cap>/steer.log (actions) and <cap>/steer.json (rooms, peak Ganados alive, kills seen, stalls).
 """
-import argparse, ctypes, json, math, re, sys, time
+import argparse, ctypes, json, math, re, subprocess, sys, time
 from ctypes import wintypes as W
 from pathlib import Path
 
@@ -38,6 +38,7 @@ KEYS = dict(su=(0x17, 0x49), sd=(0x25, 0x4B), sl=(0x24, 0x4A), sr=(0x26, 0x4C), 
 PL = re.compile(r'warp: pl room (\w+) frame (\d+) pos (-?\d+) (-?\d+) (-?\d+) ang (-?\d+) life (-?\d+)'
                 r'(?: em (-?\d+) (-?\d+) (-?\d+) (\w+) n (\d+))?')
 ALIVE = re.compile(r'warp: alive (\d+) room (\w+)')
+ASH = re.compile(r'warp: ash room \w+ frame \d+ pos (-?\d+) (-?\d+) (-?\d+) life (-?\d+) st1 ([0-9a-f]+)')
 
 
 def windows_of(pid):
@@ -66,6 +67,10 @@ class Steer:
         self.last_alive = None
         self.autofight = 0
         self.running = 0
+        self.ash = None
+        self.rescue_on = 1   # `rescue 0|1`: a goto first chases and shoots Ashley's carrier (real play)
+        self.rescues = 0
+        self.maps = None     # --maps DIR: rXXX.sat per room for rescue routes (navplan.py beside this file)
 
     def log(self, s):
         self.logf.write('%.1f %s\n' % (time.monotonic(), s)); self.logf.flush()
@@ -102,6 +107,9 @@ class Steer:
             if not self.rep['rooms'] or self.rep['rooms'][-1] != g[0]:
                 self.rep['rooms'].append(g[0]); self.log('room %s' % g[0])
             self.rep['live_peak'] = max(self.rep['live_peak'], self.pl['n'])
+        for m in ASH.finditer(new):
+            g = m.groups()
+            self.ash = dict(x=int(g[0]), y=int(g[1]), z=int(g[2]), life=int(g[3]), carried=bool(int(g[4], 16) & 0x10000))
         for m in ALIVE.finditer(new):
             a = int(m.group(1))
             self.rep['alive_peak'] = max(self.rep['alive_peak'], a)
@@ -116,12 +124,15 @@ class Steer:
             self.poll(); time.sleep(0.05)
 
     def goto(self, x, z, tol=700, timeout=20):
-        t0 = time.monotonic(); best = None; best_t = t0
+        t0 = time.monotonic(); best = None; best_t = t0; retries = 0
         while time.monotonic() - t0 < timeout:
             self.poll()
             pl = self.pl
             if not pl or time.monotonic() - self.pl_t > 1.0:
                 self.keys([]); time.sleep(0.05); continue
+            if self.rescue_on and self.ash and self.ash['carried']:
+                self.log('rescue: %s' % self.rescue())
+                best, best_t = None, time.monotonic(); continue
             if self.autofight and pl['n'] and abs(pl['ey'] - pl['y']) < 1500 and math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z']) < self.autofight:
                 self.log('autofight: %s at %d' % (self.fight(30, self.autofight * 1.5),
                                                   math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z'])))
@@ -132,6 +143,10 @@ class Steer:
             if best is None or d < best - 200:
                 best, best_t = d, time.monotonic()
             elif time.monotonic() - best_t > 4:
+                if retries < 2:  # back off and try again (a body, Ashley or a stagger in the way)
+                    retries += 1
+                    self.keys(['sd']); self.sleep(0.6); self.keys([]); self.sleep(0.3)
+                    best, best_t = None, time.monotonic(); continue
                 self.keys([]); self.rep['stalls'].append(dict(goto=[x, z], at=[pl['x'], pl['z']], d=int(d)))
                 return 'stall %d' % d
             err = wrap(math.atan2(dx, dz) - pl['ang'])
@@ -156,6 +171,53 @@ class Steer:
                 self.keys([]); return 'ok'
             self.keys(['sl' if err > 0 else 'sr']); time.sleep(0.03)
         self.keys([]); return 'timeout'
+
+    def navroute(self, pl, a):
+        sat = Path(self.maps) / ('r%s.sat' % pl['room'].lower())
+        if not sat.exists():
+            return []
+        try:
+            out = subprocess.run([sys.executable, str(Path(__file__).with_name('navplan.py')), str(sat), str(pl['x']),
+                                  str(pl['z']), str(pl['y']), str(a['x']), str(a['z']), '--gy', str(a['y']), '--cell', '300'],
+                                 capture_output=True, text=True, timeout=40, creationflags=0x08000000).stdout
+        except subprocess.TimeoutExpired:
+            return []
+        r = [tuple(int(v) for v in l.split()[1:3]) for l in out.splitlines() if l.startswith('goto ')]
+        self.log('rescue route %d points' % len(r))
+        return r
+
+    def rescue(self, secs=30):
+        """Ashley carried off: run at her; within 4 m face her (the carrier holds her on the shoulder) and shoot."""
+        t0 = time.monotonic(); shots = 0; last = 0
+        self.rescues += 1
+        while time.monotonic() - t0 < secs:
+            self.poll(); pl, a = self.pl, self.ash
+            if not pl or not a or time.monotonic() - self.pl_t > 1.0:
+                self.keys([]); time.sleep(0.05); continue
+            if not a['carried']:
+                break
+            dx, dz = a['x'] - pl['x'], a['z'] - pl['z']; d = math.hypot(dx, dz)
+            err = wrap(math.atan2(dx, dz) - pl['ang'])
+            if (d > 4000 or abs(a['y'] - pl['y']) > 1500) and self.maps:
+                # another floor or far: a walk route to her from navplan (the room's .sat in --maps), re-planned every 6 s
+                if time.monotonic() - getattr(self, 'route_t', 0) > 6:
+                    self.route_t = time.monotonic(); self.route = self.navroute(pl, a)
+                wp = next(((x, z) for x, z in (self.route or []) if math.hypot(x - pl['x'], z - pl['z']) > 600), None)
+                if wp:
+                    err = wrap(math.atan2(wp[0] - pl['x'], wp[1] - pl['z']) - pl['ang'])
+                    self.route = self.route[self.route.index(wp):]
+            if d > 4000 or abs(a['y'] - pl['y']) > 1500:
+                k = ['sl' if err > 0 else 'sr'] if abs(err) > 0.15 else []
+                if abs(err) < 0.7:
+                    k += ['su', 'b']
+                self.keys(k); time.sleep(0.05); continue
+            k = ['rt'] + ([('sl' if err > 0 else 'sr')] if abs(err) > 0.08 else [])
+            self.keys(k)
+            if abs(err) <= 0.12 and time.monotonic() - last > 0.6:
+                self.post('a', False); time.sleep(0.08); self.post('a', True); shots += 1; last = time.monotonic()
+            time.sleep(0.05)
+        self.keys([])
+        return 'rescue shots %d carried %s' % (shots, bool(self.ash and self.ash['carried']))
 
     def fight(self, secs=40, rng=9000):
         t0 = time.monotonic(); shots = 0; last_shot = 0
@@ -273,7 +335,8 @@ class Steer:
             elif c == 'mash':  # mash KEY SECS: tap every 0.12 s (cranks, struggle prompts)
                 t1 = time.monotonic() + float(t[2])
                 while time.monotonic() < t1:
-                    self.post(t[1], False); self.sleep(0.05); self.post(t[1], True); self.sleep(0.07)
+                    dn = float(t[3]) if len(t) > 3 else 0.05; up = float(t[4]) if len(t) > 4 else 0.07
+                    self.post(t[1], False); self.sleep(dn); self.post(t[1], True); self.sleep(up)
                 r = 'ok'
             elif c == 'hold':
                 self.keys(t[1].split('+')); self.sleep(float(t[2])); self.keys([]); r = 'ok'
@@ -303,6 +366,7 @@ def main():
     ap.add_argument('--cap', required=True); ap.add_argument('--plan', required=True)
     ap.add_argument('--wait-pid', type=float, default=90)
     ap.add_argument('--from', dest='start', help='start at the plan line @LABEL instead of `resume`')
+    ap.add_argument('--maps', help='directory of rXXX.sat files (room collision) for rescue routes')
     a = ap.parse_args()
     cap = Path(a.cap); t0 = time.monotonic()
     while not (cap / 'flycast.pid').exists() or not (cap / 'run-output.txt').exists():
@@ -316,6 +380,7 @@ def main():
     if not hw:
         print('steer: refusing: Flycast pid %d has no window' % pid); sys.exit(2)
     s = Steer(cap, pid, hw)
+    s.maps = a.maps
     s.log('start pid %d windows %d plan %s' % (pid, len(hw), a.plan))
     try:
         s.run(Path(a.plan).read_text().splitlines(), a.start)
