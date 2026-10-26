@@ -169,7 +169,11 @@ volatile unsigned long re4dc_stage;      // last platform stage reached (re4dc_s
 // say how long it is: "LGSZ", its complement, the size (read_log.py reads them; written with the first log byte).
 struct Re4dcLogRing { unsigned long magic, nmagic, size, pad[5]; char buf[RE4DC_LOG_SIZE]; };
 extern "C" { Re4dcLogRing re4dc_logring __attribute__((aligned(32))); }
-asm(".global _re4dc_logbuf\n\t.set _re4dc_logbuf, _re4dc_logring+32");
+#define RE4DC_LOG_STR2(x) #x
+#define RE4DC_LOG_STR(x) RE4DC_LOG_STR2(x)
+// a sized object symbol, so sh-elf-nm -S lists it like the plain array (route-build.sh syms.txt)
+asm(".global _re4dc_logbuf\n\t.type _re4dc_logbuf, @object\n\t.set _re4dc_logbuf, _re4dc_logring+32\n\t"
+    ".size _re4dc_logbuf, 65536-" RE4DC_LOG_STR(RE4DC_LOG_TRIM));
 #define re4dc_logbuf re4dc_logring.buf
 #else
 char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
