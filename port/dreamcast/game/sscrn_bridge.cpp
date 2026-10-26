@@ -636,6 +636,10 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
 #if defined(RE4DC_TRACE_SS_MASK) && RE4DC_TRACE_SS_MASK
     { extern void re4dc_logic_trace_ss_mask(int); re4dc_logic_trace_ss_mask(1); }
 #endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    // GC-ASSET (gate builds only): the room archives in the area are parked while the screen owns it.
+    { extern void re4dc_gcasset_member_park(const void*, unsigned); re4dc_gcasset_member_park(wk->pBuf, kSsAramSize); }
+#endif
 #line 499
     swapped = true;
     area_lo = lo;
@@ -794,6 +798,10 @@ extern "C" void re4dc_subscreen_swap_close(SubScreenWork* wk)
 #if RE4DC_SS_CLOSE_POISON >= 2
     re4dc_poison_dead_stack("close");
 #endif
+#endif
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    // GC-ASSET (gate builds only): the area's room bytes are back (hashed above); its parked archives return.
+    if (h == open_hash) { extern void re4dc_gcasset_member_unpark(); re4dc_gcasset_member_unpark(); }
 #endif
 #line 578
     swapped = false;

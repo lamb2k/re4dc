@@ -16,6 +16,9 @@ bool member_adopt(const void* owner, void* archive, unsigned bytes, bool transie
 void member_retire(const void* owner);
 void member_move(const void* owner,void* base);
 void member_retire_transient();
+// Sub screen swap: park the archives inside [area, area+bytes) while it is open, put them back at close.
+void member_park(const void* area,unsigned bytes);
+void member_unpark();
 // Called once before calcModelAddr changes source offsets. Never hashes a
 // pointer until a live, bounded complete BIN member has been located.
 bool member_capture(const void* data);

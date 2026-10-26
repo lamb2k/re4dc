@@ -1,11 +1,8 @@
 {
- "note": "GC-ASSET not-covered errors (consumer wired bit clear), per room and consumer/why, judge.py --unwired-baseline. May only shrink (coordinator 10-26). Measured cast-ps2-25 r16 on cand-ea02cb33 + pics25f, gate twin cp25gt, h2 + r100 r101 r103 r11e r11f.",
+ "note": "GC-ASSET not-covered errors (consumer wired bit clear), per room and consumer/why, judge.py --unwired-baseline. May only shrink (coordinator 10-26). Measured cast-ps2-25 r16 item 5 on cand-ea02cb33 + pics25f, gate twin cp25g6 (world reseal, sub screen park, codec archives adopted), h2 + r100 r101 r103 r11e r11f: only h2 keeps 2 (a room model replayed after the codec screen, also present before item 5).",
  "rooms": {
   "0100": {
-   "source_geometry/member-span": 1,
-   "source_geometry/member-unbound": 5,
-   "source_geometry/unbound-accepted-model": 207,
-   "source_geometry/unbound-accepted-payload": 972
+   "source_geometry/unbound-accepted-model": 2
   }
  },
  "schema": 1
