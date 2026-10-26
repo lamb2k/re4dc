@@ -326,6 +326,7 @@ struct Warp {
     u16 late_room;
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
+    int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
     bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
     u8 face_mode;
@@ -650,6 +651,8 @@ void load()
             if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
             if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "money") && n >= 2) {
+            wp.money = num(tok[1]);
         } else if (!strcmp(k, "ammo")) {
             wp.ammo = true;
         } else if (!strcmp(k, "god")) {
@@ -1349,10 +1352,16 @@ void face_poll()
 }   // namespace (closed for the C symbol below)
 // bell108: requests for r108's bell task (src/st1/r108.cpp r108_initChurchBell, DBG_WARP builds), one per shot
 extern "C" { int re4dc_bell108_req = 0; }
+int addMoney(int n);   // src/game/item.cpp
 namespace {
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
+    if (wp.money > 0 && pG) {
+        const int have = addMoney(wp.money);
+        re4dc_log("warp: money +%d -> %d\n", wp.money, have);
+        wp.money = 0;
+    }
     if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
         ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
