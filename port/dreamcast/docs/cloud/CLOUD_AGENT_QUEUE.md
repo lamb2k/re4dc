@@ -201,6 +201,33 @@ Plain words, short sections. Link it from CONTRIBUTING.md.
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
 
+### 2026-10-26: Build 20 hand-back — r100 shading history (`codex/r100-shading-history-20261026`)
+
+Docs only, based on `714589f6`. The
+[history and owner run plan](R100-SHADING-HISTORY.md) traces source light sets,
+the first-draw GC bake, PS2 prelit colours, the dedicated r100 SMX/TR4 data,
+actor probes/shadows, fog/grade/mist, and world pass/visibility changes. It
+distinguishes the original Test 14 report from later recipe changes and cites
+commits plus issue #32's October 22 correction. No runtime, recipe, default,
+or data change; target heap-4, traffic, cycles and frame-time deltas are zero
+by docs-only scope, with no console result claimed.
+
+1. What exact program/asset manifest produced the reporter's **older** image,
+   and can we have the precise r100 position, camera/cut and tick for both
+   images? The original report names Test 14, but does not identify the older
+   build. Please record the live look, view-distance and foliage choices too.
+2. Do the affected trees/ground include any of r100's 155 TR4 overlay faces?
+   Please run the matched complete SMX-only versus SMX+TR4 bundle comparison
+   in the report, with correct cells/IDs/textures and unchanged other settings.
+   A less-dark result could be correct alpha replacing previously opaque
+   patches; missing submitted parts would instead identify a draw fault.
+3. Can the actual old/Test-14/current r100 package and referenced texture hashes
+   be compared, then the documented fog/M3 checks run at that same view?
+   `blackps2w` and `bake13` exclude r100; the October 1 alternative r100 bake
+   was review-only. `LIGHT_CUT_HOLD` postdates the report and defaults to r11f;
+   actor probes do not relight the stored PS2 world colours. Those exclusions
+   should prevent an unrelated lighting change from being proposed as the fix.
+
 ### 2026-10-23: Build 5 hand-back (`codex/scenery-emit-prefetch-20261023`)
 
 Candidate: `SCENERY_EMIT_PREFETCH=1`, default 0. Base `dc87c465`.
