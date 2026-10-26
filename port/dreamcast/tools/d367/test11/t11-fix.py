@@ -1028,6 +1028,20 @@ if os.path.isdir(CODEC25D):
     DATA['codec25'].update({'ss/cmn/' + _f: CODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(CODEC25D + '/ss/cmn'))})
     PAK_DERIVED['codec25'] = CODEC25D + '/pak-derived.json'
     AFTER += [('codec25', 'gvar25')]
+# pmcodec25 (same lane, 10-25, animation counts as asset): provenance-only motion store for the codec files: the codec25
+# ss files unchanged, whose FCV entries are already the PS2 bytes (119 of 121; the DC FCV layout is the PS2 / GC one).
+# ss_oc305.dat (its entries 8 / 9 are GC clips the PS2 revised) is left out; pmcodec305 stages it. After codec25.
+PMCODEC25D = os.environ.get('PMCODEC25D', '/root/re4data/private/pmcodec25-20261025')
+if os.path.isdir(PMCODEC25D):
+    DATA['pmcodec25'] = {'ss/eng/ss_term.dat': PMCODEC25D + '/ss/eng/ss_term.dat'}
+    DATA['pmcodec25'].update({'ss/cmn/' + _f: PMCODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(PMCODEC25D + '/ss/cmn'))})
+    AFTER += [('pmcodec25', 'codec25')]
+# pmcodec305 (same lane): ss_oc305.dat with FCV entries 8 / 9 swapped to the PS2 clips (86,976 -> 86,784 B, 6,656 -> 6,752 B).
+# Not in the recipe until a fixture reaches the ss_oc305 radio call; ships with that chapter's checks. After pmcodec25.
+PMCODEC305D = os.environ.get('PMCODEC305D', '/root/re4data/private/pmcodec305-20261025')
+if os.path.isdir(PMCODEC305D):
+    DATA['pmcodec305'] = {'ss/cmn/ss_oc305.dat': PMCODEC305D + '/ss/cmn/ss_oc305.dat'}
+    AFTER += [('pmcodec305', 'pmcodec25')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
