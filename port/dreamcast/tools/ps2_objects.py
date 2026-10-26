@@ -31,6 +31,12 @@ triangle is oriented so its face normal agrees with its corner normals in the sa
                        (SetObj00), PS2 SMD_016 / SMD_120.
      --etm-empty et0000.bin,...  etc models whose PS2 model is a placeholder (window panes et0000 / et2500: one
                        degenerate triangle): emptied like --world-owned (the PS2 draws nothing there; lane purge-props24).
+     --etm-restore-gc et0000.bin,...  the reverse for an already emptied payload: the model goes back to le_mirror(GC)
+                       (needs --etm). Window panes: PS2 draws no intact pane, the user requires glass and bars
+                       (2026-10-26, lane windows26; GC-ASSET allowlist).
+     --etm-member-from et0000.tpl=<dar>,...  an ETM sub-file copied byte for byte from another native dar (same size
+                       only; needs --etm): the pane's colour record back to the GC package key where a PS2 picture
+                       replaced it (r105 / r107 / r111 / r11c / r11f; r100's record is the source).
      --etm-from et1000.bin=r109,...  an etc model absent from this room's PS2 ETM, taken from that room's PS2 ETM;
                        refused unless this room's GC model is byte-identical to that room's (the same object). r11a
                        et1000 (torch type 4) = r109's.
@@ -744,6 +750,21 @@ def room(args):
             pents[nm] = sp[nm]; ps2_from[nm] = src_room
         want = None if args.etm == 'all' else set(args.etm.split(','))
         etm_empty = set(x for x in (args.etm_empty or '').split(',') if x)
+        etm_restore = set(x for x in (args.etm_restore_gc or '').split(',') if x)
+        etm_member_from = {}
+        for spec in [x for x in (args.etm_member_from or '').split(',') if x]:
+            mnm, mdar = spec.split('=', 1)
+            md = Path(mdar).read_bytes()
+            mk, msz, _, moff = struct.unpack_from('<4I', md, 0x20)
+            mpay = md[moff:moff + msz]
+            mle = rs.tagged_entries(mpay, '<')
+            mb = next(mpay[a:z] for t, a, z in mle if t.rstrip(b'\0') == b'ETM')
+            hit = [mb[a:z] for n2, a, z in etm_entries(mb, '<') if n2 == mnm]
+            if len(hit) != 1:
+                raise ValueError('--etm-member-from %s: not one %s in that ETM' % (spec, mnm))
+            etm_member_from[mnm] = hit[0]
+        if etm_empty & etm_restore:
+            raise ValueError('--etm-empty and --etm-restore-gc name the same model')
         if want is not None:
             want |= etm_empty
         pieces = []
@@ -753,7 +774,35 @@ def room(args):
             if nm != lnm:
                 raise ValueError('ETM order differs')
             body = bytes(lb[ls:le_])
-            if nm.lower().endswith('.bin') and nm in pents and (want is None or nm in want):
+            if nm in etm_member_from:
+                # --etm-member-from et0000.tpl=<dar>: this ETM sub-file taken byte for byte from another native dar's
+                # ETM (the same object's packaged record); refused unless the sizes match (no payload offset moves).
+                src_body = etm_member_from[nm]
+                if len(src_body) != len(body):
+                    raise ValueError('--etm-member-from %s: %d bytes here, %d in the source' % (nm, len(body), len(src_body)))
+                report['objects'].append(dict(kind='etc', name=nm, member_from=args.etm_member_from, le_bytes_before=len(body),
+                                              le_bytes_after=len(src_body), same=src_body == body))
+                body = src_body
+            elif nm in etm_restore:
+                # --etm-restore-gc (lane windows26 2026-10-26): put the GC model back where an earlier pass emptied it.
+                # PS2 draws no intact window pane (et0000 / et2500: one degenerate triangle; the PS2 Et00_init loads
+                # it exactly as GC does), but the user requires glass and bars (10-26), so the GC pane returns
+                # (GC-ASSET allowlist row). Accepted inputs: the emptied model (--etm-empty output) or the GC model.
+                gbin = gb[s + 0x40:e]
+                src_le = to_le(gbin, nm)
+                emptied = to_le(rebuild(gbin, None, lambda m: [], allow_empty=True)[0], nm)
+                cur = body[0x40:].rstrip(b'\0')
+                if cur not in (src_le.rstrip(b'\0'), emptied.rstrip(b'\0')):
+                    raise ValueError('--etm-restore-gc %s: the payload model is neither le_mirror(GC) nor its emptied form' % nm)
+                h = bytearray(body[:0x40])
+                size = al(0x40 + len(src_le))
+                struct.pack_into('<I', h, 0, size if struct.unpack_from('<I', h, 0)[0] else 0)
+                nb = bytes(h) + src_le + bytes(size - 0x40 - len(src_le))
+                report['objects'].append(dict(kind='etc', name=nm, restored='GC', le_bytes_before=len(body),
+                                              le_bytes_after=len(nb),
+                                              was='emptied' if cur == emptied.rstrip(b'\0') else 'GC'))
+                body = nb
+            elif nm.lower().endswith('.bin') and nm in pents and (want is None or nm in want):
                 gbin = gb[s + 0x40:e]
                 try:
                     src_le = to_le(gbin, nm)
@@ -824,6 +873,8 @@ def main():
     a.add_argument('--etm'); a.add_argument('--pad-to'); a.add_argument('--out', required=True); a.add_argument('--json')
     a.add_argument('--keep-larger', action='store_true'); a.add_argument('--world-owned'); a.add_argument('--etm-from')
     a.add_argument('--reconvert', help='room BINs (hex,...) already converted in the input dar: rebuilt from the GC source again')
+    a.add_argument('--etm-member-from', help='ETM sub-files (name=<native dar>,...) copied byte for byte from that dar (same size only)')
+    a.add_argument('--etm-restore-gc', help='etc models (name,...) put back as le_mirror(GC) where emptied (window panes, lane windows26)')
     a.add_argument('--etm-empty', help='etc models (name,...) whose PS2 model is a placeholder: emptied (lane purge-props24)')
     a.add_argument('--uv-fold', action='store_true', help='converter v3: fold PS2 triangle UVs into [0, 1] (UV_FOLD)')
     a.add_argument('--gc-iso', default=GC_ISO); a.add_argument('--ps2-iso', default=PS2_ISO)
