@@ -5248,6 +5248,8 @@ bool ps2_movie_layout(unsigned room){
        ps2w.package.header().bytes==1488192)
         return f.mesh==1488192 && f.side==19612 && ps2_movie.capacity==1512928;
 #endif
+    // n256r100 (SCENERY_N256, 256-vertex meshlets): the same sidecar, LUT and gather after a 1,461,184 B mesh.
+    if(room==0x100 && f.mesh==1461184)return f.side==19612 && ps2_movie.capacity==1461184U+(1562656U-1537920U);
     if(room==0x100)return f.mesh==1537920 && f.side==19612 && ps2_movie.capacity==1562656;
 #endif
     return false;
