@@ -63,3 +63,4 @@ st1/r1[01][0-9a-f].dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire S
 st2/r200.dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (purge-audit26)
 st[12]/r[12][01][0-9a-f].dar:0x* ESQ	pfire26	rebased after the ETM size change
 st[12]/r[12][01][0-9a-f].dar:0x* NTR	pfire26	rebased after the ETM size change
+dc/native/pl00/leon_hands_pl00.re4hp:changed	hand26	Leon hands pack rebuilt from the PS2 hand BINs (wep19-26, 0a944f36)
