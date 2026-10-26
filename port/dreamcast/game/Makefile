@@ -2936,6 +2936,7 @@ ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
 $(error TEX_FINAL_REFUSAL_LOG=1 needs VRAM_PAGES=1 UI_VRAM=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_FINAL_REFUSAL_LOG=1
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_TEX_FINAL_REFUSAL_LOG=1   # defines re4dc_room_id_now (build-d3)
 endif
 # VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
 # class 2 allocations use best fit below a47f2000 instead of top placement. The
