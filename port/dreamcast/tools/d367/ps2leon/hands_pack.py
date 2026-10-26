@@ -5,6 +5,7 @@ package that the game reads into a small fixed cache, instead of 100 KB of hand 
   hands_pack.py pack <ps2leon_runtime.h> <hands dir> <inventory.json> <out.re4hp> [--report out.json]
   hands_pack.py derive <ps2leon_runtime.h> <out header>
   hands_pack.py show <package.re4hp>
+  hands_pack.py addkey <in.re4hp> <out.re4hp> <role> <positions> <normals> <palette> <vertex_hash> <blob>
 
 pack: the arm's standard hands (roles 5 / 6 of ps2leon_runtime.h: i5_* / i6_*) plus every pose of build_hands.py's
 ps2leon_hands.h (its report-hands.json gives each pose's GC sources), in one file:
@@ -23,6 +24,10 @@ The home poses (prefetched at room load and kept): pl00 arc 0x12 (right, the emp
 derive: ps2leon_runtime.h without the standard hands' arrays (i5_* / i6_*): rows 5 / 6 of leon4k::chunks keep their
 counts with null arrays; the game points them at its hand slots (coarse_actor_leon_hands.inc). The image then holds
 no hand geometry; the hands come from the package.
+
+addkey (wep19-26, 2026-10-26): one more row (GC runtime key -> an existing blob), for a hand BIN whose bytes were
+converted to PS2 geometry (ps2cast/ps2_weapons.py --hands): its runtime key changes, the drawn blob does not. The
+directory grows by one row, every blob offset moves by the directory growth, blob bytes and sources are kept.
 
 Pure Python (no numpy): runs at build time in WSL and on the Windows host.
 """
@@ -206,6 +211,36 @@ def derive(runtime_h, out):
     print('derive: %s %d -> %d bytes' % (out, n0, len(t)))
 
 
+def addkey(src, out, role, pc, nc, pal, vh, blob):
+    d = Path(src).read_bytes()
+    m, v, nr, nb, ns, cr, cl, db, fb, h = struct.unpack_from('<IHHHHIIIII', d, 0)
+    assert m == MAGIC and v == VERSION and fb == len(d) and h == fnv(d[32:]), 'bad package'
+    o = 32
+    rows = [struct.unpack_from('<BBHHHI', d, o + 12 * i) for i in range(nr)]
+    o += 12 * nr
+    blobs = [list(struct.unpack_from('<BBHHHH5HHH', d, o + 24 * i)) for i in range(nb)]
+    o += 24 * nb
+    srcs = d[o:o + 4 * ns]
+    data = d[db:]
+    key = (role, pc, nc, pal, vh)
+    assert all((r[0],) + r[2:] != key for r in rows), 'key already present'
+    assert 0 <= blob < nb and blobs[blob][0] == role, ('blob is not on this side', blob, role)
+    rows.append((role, blob, pc, nc, pal, vh))
+    assert len(rows) <= CAPS['rows'], len(rows)
+    ndb = a32(32 + 12 * len(rows) + 24 * nb + 4 * ns)
+    body = b''.join(struct.pack('<BBHHHI', *r) for r in rows)
+    for b in blobs:
+        off = (b[-1] << 5) - db + ndb
+        assert off % 32 == 0 and off >> 5 < 65536
+        body += struct.pack('<BBHHHH5HHH', *(b[:-1] + [off >> 5]))
+    body += srcs
+    body += b'\0' * (ndb - 32 - len(body))
+    body += data
+    hdr = struct.pack('<IHHHHIIIII', MAGIC, VERSION, len(rows), nb, ns, cr, cl, ndb, 32 + len(body), fnv(body))
+    Path(out).write_bytes(hdr + body)
+    print('addkey: rows %d -> %d, directory %d -> %d, %d -> %d bytes' % (nr, len(rows), db, ndb, len(d), 32 + len(body)))
+
+
 def show(path):
     d = Path(path).read_bytes()
     m, v, nr, nb, ns, cr, cl, db, fb, h = struct.unpack_from('<IHHHHIIIII', d, 0)
@@ -229,6 +264,8 @@ if __name__ == '__main__':
         pack(a[1], a[2], a[3], a[4], rp)
     elif a and a[0] == 'derive':
         derive(a[1], a[2])
+    elif a and a[0] == 'addkey':
+        addkey(a[1], a[2], *(int(x, 0) for x in a[3:9]))
     elif a and a[0] == 'show':
         show(a[1])
     else:

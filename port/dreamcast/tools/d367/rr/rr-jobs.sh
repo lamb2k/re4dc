@@ -81,7 +81,12 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW
   # + its three pictures), the wep19 module and its motion were never judged. r101: equip, aim and throw the hand,
   # incendiary and flash grenades (warp `arm` + `act`), then the rocket launcher.
   tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-grenade-warp.txt" > "$EVU/fixtures/gca-grenade.txt"
-  job 1 gca-grenade "$(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"")"
+  # Two runs of <= 60 s each in one job (user rule: every Flycast check <= 60 s): the gate twin boots slowly (room frame
+  # 40 at ~53 s wall, ~250 room frames a minute), so gca-grenade-boot runs to the r101 room entry and saves a state
+  # bundle (fp_run.py --state-out, castle31 m3), and gca-grenade resumes it (--state-in) for the whole equip / throw
+  # schedule. The bundle is keyed to this image (track03 sha256 + syms): a state of another build is refused. Only
+  # gca-grenade is judged (the boot run is gca-r101's path).
+  job 1 gca-grenade "$(run gca-grenade-boot a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --stop "'phase=enter room=101'" --grace 2 --state-out "\"\$EVW\\gca-grenade-state\"") && $(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --state-in "\"\$EVW\\gca-grenade-state\"")"
 fi
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fprr${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"

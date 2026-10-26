@@ -300,6 +300,33 @@ def texpak_members(b):
         yield '%08x-%08x' % (crc, fnv), b[off:off + size], off, size
 
 
+def member_rows(rel, b):
+    """The archive members of one disc file (sound banks, models, motion clips, DRS body, record bodies) as
+    (kind, id, bytes, source) rows; collect() and provenance.py (wep19-26 byte-following) share it."""
+    name = rel.rsplit('/', 1)[-1].lower()
+    for kind, data, at in sound_banks(b):
+        yield (kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
+    for payload in model_payloads(b):
+        yield ('model', sha(payload)[:40], payload, rel)
+    for ident, k8 in motion_clips(b):
+        yield ('motion', ident, k8, rel)
+    # em/*.drs: the runtime adopts the body after the 0x400-byte record
+    # table (drs.py), not the file start (em12/wepNN harvest misses).
+    if name.endswith('.drs') and len(b) > DRS_TABLE:
+        for payload in model_payloads(b[DRS_TABLE:]):
+            yield ('model', sha(payload)[:40], payload, rel + '#body')
+        for ident, k8 in motion_clips(b[DRS_TABLE:]):
+            yield ('motion', ident, k8, rel + '#body')
+    # Record-table containers (.dar rooms, .drs, .das): every type-0
+    # record body is an archive the runtime adopts as loaded (r101.dar
+    # body at 0x4ccea0 = "native room identities archive=1745152").
+    for at, body in record_bodies(b):
+        for payload in model_payloads(body):
+            yield ('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
+        for ident, k8 in motion_clips(body):
+            yield ('motion', ident, k8, '%s#record=%d' % (rel, at))
+
+
 def collect(disc):
     rows = {}
 
@@ -345,28 +372,8 @@ def collect(disc):
             if name == 'registry.re4nmr' or 'pl08' in low:
                 continue
         if p.stat().st_size >= 16:
-            b = p.read_bytes()
-            for kind, data, at in sound_banks(b):
-                add(kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
-            for payload in model_payloads(b):
-                add('model', sha(payload)[:40], payload, rel)
-            for ident, k8 in motion_clips(b):
-                add('motion', ident, k8, rel)
-            # em/*.drs: the runtime adopts the body after the 0x400-byte record
-            # table (drs.py), not the file start (em12/wepNN harvest misses).
-            if name.endswith('.drs') and len(b) > DRS_TABLE:
-                for payload in model_payloads(b[DRS_TABLE:]):
-                    add('model', sha(payload)[:40], payload, rel + '#body')
-                for ident, k8 in motion_clips(b[DRS_TABLE:]):
-                    add('motion', ident, k8, rel + '#body')
-            # Record-table containers (.dar rooms, .drs, .das): every type-0
-            # record body is an archive the runtime adopts as loaded (r101.dar
-            # body at 0x4ccea0 = "native room identities archive=1745152").
-            for at, body in record_bodies(b):
-                for payload in model_payloads(body):
-                    add('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
-                for ident, k8 in motion_clips(body):
-                    add('motion', ident, k8, '%s#record=%d' % (rel, at))
+            for kind, ident, data, source in member_rows(rel, p.read_bytes()):
+                add(kind, ident, data, source)
     return rows
 
 

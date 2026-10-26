@@ -432,14 +432,30 @@ def ps2_sources(spec, ps2dir):
         c = []
     else:
         c = [b + '.snd']
+        # wep19-26 (10-26): a PS2 bank that is only a stub (every part type 0xFFFFFFFE, sndType 8 arg 0x3d: no bank of
+        # its own; wep16 / wep19 / wep27 / wep30 / wep41 / wep42) plays its sounds from the resident or room banks
+        # (PS2 wep19's grenade sound is in the room banks' block 6, e.g. r105.snd VAG 23, 1.806 s like the GC sample):
+        # match the GC samples by sound against Leon's, the core and every chapter-1 room bank (r1*.snd)
+        f = os.path.join(ps2dir, c[0])
+        if os.path.exists(f) and is_stub(open(f, 'rb').read()):
+            c = ['pl00.snd', 'core.snd'] + sorted(x for x in os.listdir(ps2dir) if x.startswith('r1') and x.endswith('.snd'))
+            STUB_SPECS.add(spec)
     return [os.path.join(ps2dir, x) for x in c if os.path.exists(os.path.join(ps2dir, x))]
 
 
-def map_block(d, t, mo, ms, smp, pbs, gfeat):
+STUB_SPECS = set()   # specs whose PS2 bank is a stub: matched by sound against every block of the resident banks
+
+
+def is_stub(d):
+    parts = snd_parts(d)
+    return bool(parts) and all(e[0] == 0xFFFFFFFE for e in parts)
+
+
+def map_block(d, t, mo, ms, smp, pbs, gfeat, cross=False):
     """{GC sample: (block no, vagi, score, how)}: by cue first (the same cue numbers on both versions: GC SIT k and
     PS2 SE row k resolve to a GC sample and a PS2 VAG; majority vote over the cues of a sample), then by sound
     (envelope + duration) for samples no cue reaches, among the PS2 VAGs no cue claimed."""
-    gcues = gc_cue_samples(d, t, mo, ms) if t not in (3, 4) else []
+    gcues = gc_cue_samples(d, t, mo, ms) if t not in (3, 4) and not cross else []   # cross: other banks' cue numbers mean other sounds
     votes = {}
     for bi, pb in enumerate(pbs):
         pcues = ps2_cue_vags(pb)
@@ -501,8 +517,9 @@ def convert_spec(args):
             for (rate, length, sh, p, nb, loop) in smp:
                 n = (length + (1 << sh) - 1) >> sh
                 gfeat.append(features(ab.yamaha_decode(bytes(d[p:p + nb]), n), rate >> sh))
-            pbs = pblocks.get(t, []) if t not in (3, 4) else [pb for v in pblocks.values() for pb in v]
-            got = map_block(bytes(d), t, mo, ms, smp, pbs, gfeat) if pbs else {}
+            cross = spec in STUB_SPECS
+            pbs = pblocks.get(t, []) if t not in (3, 4) and not cross else [pb for v in pblocks.values() for pb in v]
+            got = map_block(bytes(d), t, mo, ms, smp, pbs, gfeat, cross) if pbs else {}
             rows = []
             for si, (rate, length, sh, p, nb, loop) in enumerate(smp):
                 row = dict(i=si, rate=rate, len=length, dur=round(length / rate, 3))

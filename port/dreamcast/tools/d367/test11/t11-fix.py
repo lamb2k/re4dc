@@ -1279,6 +1279,37 @@ if os.path.isdir(DCGLYPH26D):
     DATA['dcglyph26'] = {'dc/tex.pak': DCGLYPH26D + '/dc/tex.pak', 'font/common_p.fnt': DCGLYPH26D + '/font/common_p.fnt'}
     PAK_DERIVED['dcglyph26'] = DCGLYPH26D + '/pak-derived.json'
     AFTER += [('dcglyph26', 'wep26g'), ('dcglyph26', 'fontps2x25')]
+# wep26e (lane wep19-26 10-26, coordinator: the egg PS2, no allowlist row): wep26g's em/pl00.drs + pl08.drs with the egg
+# BIN 0x7D PS2 as well (PS2 BIN 2272 B > 2240 B slot: ps2_weapons.py convert-pl --relayout lays the body out again; every
+# other member byte-identical to wep26g's) and its 3 PS2 pictures (TPL 0x7E-0x80, VQ). dc/tex.pak = dcglyph26's pack + 3
+# keys (pak-derived.json). After dcglyph26 (the chain end). Store: re4-assets-private/wep26e-20261026.
+WEP26ED = os.environ.get('WEP26ED', '/root/re4data/private/wep26e-20261026')
+if os.path.isdir(WEP26ED):
+    DATA['wep26e'] = {'em/pl00.drs': WEP26ED + '/em/pl00.drs', 'em/pl08.drs': WEP26ED + '/em/pl08.drs',
+                      'dc/tex.pak': WEP26ED + '/dc/tex.pak'}
+    PAK_DERIVED['wep26e'] = WEP26ED + '/pak-derived.json'
+    AFTER += [('wep26e', 'dcglyph26'), ('wep26e', 'wep26g')]
+# snd26w (same lane): em/wep19.drs = pmwep26's file with its one sound-bank sample re-encoded in place from PS2 audio
+# (ps2_audio.py banks; PS2 wep19.snd is a stub, the sound is r11d.snd block 6 VAG 25; frozen AICA layout, same size).
+# After pmwep26. Store: re4-assets-private/snd26w-20261026.
+SND26WD = os.environ.get('SND26WD', '/root/re4data/private/snd26w-20261026')
+if os.path.isdir(SND26WD):
+    DATA['snd26w'] = {'em/wep19.drs': SND26WD + '/em/wep19.drs'}
+    AFTER += [('snd26w', 'pmwep26')]
+# pmss26 (same lane): ss/cmn/ss_wep00 / 05 / 13 / 19.dat with PS2 motion (ps2_motion_prepared.py rewrite --bare + verify;
+# every clip already PS2-identical, same bytes; staged so GC-ASSET provenance attributes them). After wep26g / wep24ss.
+PMSS26D = os.environ.get('PMSS26D', '/root/re4data/private/pmss26-20261026')
+if os.path.isdir(PMSS26D):
+    DATA['pmss26'] = {'ss/cmn/' + _f: '%s/ss/cmn/%s' % (PMSS26D, _f) for _f in sorted(os.listdir(PMSS26D + '/ss/cmn'))}
+    AFTER += [('pmss26', 'wep26g'), ('pmss26', 'wep24ss')]
+# hand26 (same lane, round 3): Leon's last GameCube hand BINs as PS2 geometry (ps2_weapons.py --hands): em/wep19.drs 0x7
+# (grenade hand; its new LEON_HAND_PACK key added to leon_hands_pl00.re4hp on the same PS2 blob 15, hands_pack.py addkey)
+# and ss/cmn/ss_wep13.dat / ss_wep19.dat BIN 0 (sub screen hands). After snd26w (wep19.drs) and pmss26 (ss_wep13.dat): it rewrites their files.
+HAND26D = os.environ.get('HAND26D', '/root/re4data/private/hand26-20261026')
+if os.path.isdir(HAND26D):
+    DATA['hand26'] = {'em/wep19.drs': HAND26D + '/em/wep19.drs', 'ss/cmn/ss_wep13.dat': HAND26D + '/ss/cmn/ss_wep13.dat', 'ss/cmn/ss_wep19.dat': HAND26D + '/ss/cmn/ss_wep19.dat',
+                      'dc/native/pl00/leon_hands_pl00.re4hp': HAND26D + '/dc/native/pl00/leon_hands_pl00.re4hp'}
+    AFTER += [('hand26', 'snd26w'), ('hand26', 'pmss26')]
 # leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
 # (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
 # materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
