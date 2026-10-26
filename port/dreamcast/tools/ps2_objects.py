@@ -23,7 +23,12 @@ triangle is oriented so its face normal agrees with its corner normals in the sa
                  [--json report.json] [--gc-iso ISO] [--ps2-iso ISO]
      replaces the payload's BIN entries (GC arc : PS2 arc, archive indices as the game numbers them) and/or ETM
      BINs (paired by name) with le_mirror-converted rebuilt BINs; every other byte of the payload is kept.
-     --keep-larger     also convert an object whose PS2 mesh is not smaller (PS2 assets are the target; lane objs,
+     Since 2026-10-26 (lane props-ps2-26) every PS2 object is reduced in the convert step (mesh_lod, UV guard; see
+     LOD) and self-checked (self_check: no more triangles and no more bytes than the GC model, reduction step run); an
+     object that fails is skipped and listed. The report's 'graft' block is the deliverable (--graft-json): a member
+     set for t11-fix.py {'graft': ...}, never a whole-.dar replacement.
+     --keep-larger --keep-larger-reason "..."   (refused without a reason) ship an object that fails the self-check.
+     History of --keep-larger: also convert an object whose PS2 mesh is not smaller (PS2 assets are the target; lane objs,
                        2026-10-14). Without it such an object keeps its GC geometry (the 10-11 dars).
      --world-owned 20,...  GC room BINs the PS2 version draws as part of its scenario SMD (so the PS2 world package
                        already draws it): the GC copy keeps its header, joints and part headers with no triangles
@@ -87,6 +92,96 @@ def fold_uv(cs):
     if not shift[0] and not shift[1]:
         return cs, False, outside
     return [(p, n, (uv[0] - shift[0], uv[1] - shift[1]), w) for p, n, uv, w in cs], True, outside
+
+
+# Dreamcast reduction inside the convert step (lane props-ps2-26 2026-10-26, coordinator scope: "fix the converter
+# itself"). On by default (--no-lod is test-only): the PS2 triangles go through mesh_lod's quadric simplifier with the
+# UV guard (LOD_UV_GUARD, as the world packages' --lod-uv-guard) before part assignment and strip building. Target:
+# no more triangles than the GC model it replaces; the geometric error is capped at LOD_MAX_ERR of the model's bounds
+# diagonal, so a reduction that would need more stops there (and the self-check refuses the object: it stays listed for
+# review, never shipped larger). Vertices on a material / bone-weight seam are locked (no texture or skin tear).
+LOD = True
+LOD_UV_GUARD = 0.02
+LOD_MAX_ERR = 0.04
+LOD_STEPS = 24
+# When the reduced mesh still has more bytes than the GC model (PS2 UV seams split vertices), the room pass retries
+# with a lower triangle target (fit_rebuild): LOD_SCALE x GC triangles, down this ladder, then gives up (listed).
+LOD_SCALE = 1.0
+LOD_LADDER = (1.0, 0.9, 0.8, 0.7, 0.6, 0.5)
+
+
+def lod_reduce(ps2, gc_tris):
+    """[(tex, [(p, n, uv, w)] * 3)] -> (reduced list, report). Always reports (the self-check needs the step recorded)."""
+    import mesh_lod as ml
+    gc_tris = int(gc_tris * LOD_SCALE)
+    rep = dict(step='mesh_lod', uv_guard=LOD_UV_GUARD, target=gc_tris, scale=LOD_SCALE, tris_in=len(ps2),
+               tris_out=len(ps2), error=0.0)
+    if len(ps2) <= gc_tris:
+        rep['note'] = 'already at or below the GC count'
+        return ps2, rep
+    pts = [c[0] for t, cs in ps2 for c in cs]
+    lo = [min(p[a] for p in pts) for a in range(3)]
+    hi = [max(p[a] for p in pts) for a in range(3)]
+    diag = math.sqrt(sum((hi[a] - lo[a]) ** 2 for a in range(3))) or 1.0
+    ids, where, seam, tris = {}, {}, {}, []
+    for tex, cs in ps2:
+        vs = []
+        for p, n, uv, w in cs:
+            v = where.setdefault(p, len(where))
+            ids[v] = p
+            seam.setdefault(v, set()).add((tex, w))
+            vs.append(v)
+        if len(set(vs)) < 3:
+            continue
+        tris.append((tuple(vs), tuple((uv, n, (tex, w)) for p, n, uv, w in cs)))
+    locked = [v for v, s in seam.items() if len(s) > 1]
+    old = ml.UV_GUARD
+    ml.UV_GUARD = LOD_UV_GUARD
+    try:
+        s = ml.Simplifier(ids, tris, locked)
+        cur = tris
+        for k in range(1, LOD_STEPS + 1):
+            s.run_to(diag * LOD_MAX_ERR * k / LOD_STEPS)
+            cur = s.triangles()
+            rep['error'] = round(s.error / diag, 5)
+            if len(cur) <= gc_tris:
+                break
+    finally:
+        ml.UV_GUARD = old
+    out = [(a[0][2][0], [(ids[v], a[j][1], a[j][0], a[j][2][1]) for j, v in enumerate(vs)]) for vs, a in cur]
+    rep['tris_out'] = len(out)
+    return out, rep
+
+
+class SizeCheckError(ValueError):
+    pass
+
+
+def fit_rebuild(args, before, size_of, *a, **kw):
+    """rebuild() down the LOD_LADDER until size_gate passes -> (new, st, why). why is None when it fits."""
+    global LOD_SCALE
+    why = None
+    try:
+        for sc in (LOD_LADDER if LOD else (1.0,)):
+            LOD_SCALE = sc
+            new, st = rebuild(*a, **kw)
+            why = size_gate(args, st, before, size_of(new))
+            if not why:
+                break
+    finally:
+        LOD_SCALE = 1.0
+    return new, st, why
+
+
+def self_check(st, before_bytes=None, after_bytes=None):
+    """(d) of the 10-26 scope: a converted object may not be larger than what it replaces (triangles; bytes when known)
+    and must have run the reduction step. Raises SizeCheckError."""
+    if 'lod' not in st:
+        raise SizeCheckError('reduction step skipped')
+    if st['gc_tris'] and st['out_tris'] > st['gc_tris']:
+        raise SizeCheckError('PS2 %d triangles > GC %d after reduction' % (st['out_tris'], st['gc_tris']))
+    if before_bytes is not None and after_bytes is not None and after_bytes > before_bytes:
+        raise SizeCheckError('output %d bytes > source %d' % (after_bytes, before_bytes))
 
 
 def al(n, a=32):
@@ -210,20 +305,26 @@ class Grid:
         self.pts, self.cell, self.g = pts, cell, {}
         for i, p in enumerate(pts):
             self.g.setdefault(self.key(p), []).append(i)
+        ks = list(self.g) or [(0, 0, 0)]
+        self.lo = [min(k[a] for k in ks) for a in range(3)]
+        self.hi = [max(k[a] for k in ks) for a in range(3)]
 
     def key(self, p):
         c = self.cell
         return (int(math.floor(p[0] / c)), int(math.floor(p[1] / c)), int(math.floor(p[2] / c)))
 
     def nearest(self, p, ok=None):
+        # Same cells in the same order as the original full-cube scan (results identical), but only each ring's
+        # shell is enumerated and rings past the occupied cells stop (props-ps2-26: a filtered query that matched
+        # nothing scanned ~17M empty cells).
         kx, ky, kz = self.key(p)
         best, bi = None, -1
-        for r in range(0, 64):
+        rmax = max(abs(kx - self.lo[0]), abs(kx - self.hi[0]), abs(ky - self.lo[1]), abs(ky - self.hi[1]),
+                   abs(kz - self.lo[2]), abs(kz - self.hi[2]))
+        for r in range(0, min(64, rmax + 1)):
             for dx in range(-r, r + 1):
                 for dy in range(-r, r + 1):
-                    for dz in range(-r, r + 1):
-                        if max(abs(dx), abs(dy), abs(dz)) != r:
-                            continue
+                    for dz in (range(-r, r + 1) if abs(dx) == r or abs(dy) == r else ((-r, r) if r else (0,))):
                         for i in self.g.get((kx + dx, ky + dy, kz + dz), ()):
                             if ok is not None and not ok(i):
                                 continue
@@ -343,6 +444,8 @@ def rebuild(gc_bytes, ps2_bytes, gc_tris_from=None, allow_empty=False, tex_map=N
     stats = dict(gc_tris=sum(len(p['tris']) for p in m.parts), ps2_tris=len(ps2), gc_parts=m.nd,
                  gc_vertices=m.nv, gc_normals=m.nn, gc_bytes=len(gc_bytes), no_tex_part=0, flipped=0,
                  weight_mismatch=0, degenerate=0, appended_weights=0, uv_folded=0, uv_outside=0)
+    if LOD and gc_tris_from is None and ps2:
+        ps2, stats['lod'] = lod_reduce(ps2, stats['gc_tris'])
 
     pal = list(m.weights)
     pal_index = {w: i for i, w in reversed(list(enumerate(pal)))}
@@ -658,7 +761,23 @@ def room_atlas(gbin, ps2bin, ps2_tpl_entry, gc_wh):
     return atlas_uv_map(lay, wh, gimgs[0]), dict(gc_image=gimgs[0], size=list(wh), rects={str(k): list(v) for k, v in lay.items()})
 
 
+def size_gate(args, st, before, after):
+    """-> None (ship it) or the skip reason. --keep-larger needs --keep-larger-reason (scope (a), 10-26) and still
+    records the self-check failure in the report."""
+    try:
+        self_check(st, before, after)
+    except SizeCheckError as ex:
+        if args.keep_larger:
+            st['keep_larger'] = dict(reason=args.keep_larger_reason, check=str(ex))
+            return None
+        return 'self-check: %s' % ex
+    return None
+
+
 def room(args):
+    if args.keep_larger and not (args.keep_larger_reason or '').strip():
+        raise SystemExit('--keep-larger is refused without --keep-larger-reason "<why this object may ship larger>"')
+    reconvert_etm = set(x for x in (args.reconvert_etm or '').split(',') if x)
     from assetpipe.rooms import GcIso
     dar = Path(args.dar).read_bytes()
     kind, size, dest, off = struct.unpack_from('<4I', dar, 0x20)
@@ -695,14 +814,15 @@ def room(args):
         atl = None
         if (args.room, ga) in ATLAS_OBJECTS:
             atl, lay = room_atlas(gbin, pe[pa][1], pe.get(pa + 1), ATLAS_OBJECTS[(args.room, ga)])
-        new, st = rebuild(gbin, pe[pa][1], atlas=atl)
+        new, st, why = fit_rebuild(args, len(to_le(gbin, pair)), lambda b: len(to_le(b, pair)), gbin, pe[pa][1], atlas=atl)
         if atl:
             st['atlas'] = lay
-        if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
-            st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), skipped='PS2 not smaller')
+        if why:
+            st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), skipped=why)
             report['objects'].append(st)
             continue
         rep[i] = to_le(new, pair)
+        report.setdefault('graft_members', []).append('%#04x BIN' % ga)
         st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), le_bytes_before=len(cur), le_bytes_after=len(rep[i]))
         report['objects'].append(st)
     for x in [x for x in (args.world_owned or '').split(',') if x]:
@@ -806,7 +926,7 @@ def room(args):
                 gbin = gb[s + 0x40:e]
                 try:
                     src_le = to_le(gbin, nm)
-                    if body[0x40:].rstrip(b'\0') != src_le.rstrip(b'\0'):
+                    if body[0x40:].rstrip(b'\0') != src_le.rstrip(b'\0') and nm not in reconvert_etm:
                         raise ValueError('ETM %s is not le_mirror(GC)' % nm)
                     if nm in etm_empty:
                         # --etm-empty: the PS2 model is a placeholder (no triangle): the GC copy keeps its header,
@@ -814,16 +934,19 @@ def room(args):
                         new, st = rebuild(gbin, None, lambda m: [], allow_empty=True)
                         st['ps2'] = 'placeholder (emptied)'
                     else:
-                        new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
-                    if st['out_tris'] >= st['gc_tris'] and not args.keep_larger:
-                        st.update(kind='etc', name=nm, skipped='PS2 not smaller')
+                        new, st, _ = fit_rebuild(args, al(0x40 + len(src_le)), lambda b: al(0x40 + len(to_le(b, nm))),
+                                                 gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
+                    nl = to_le(new, nm)
+                    h = bytearray(body[:0x40])
+                    size = al(0x40 + len(nl))
+                    struct.pack_into('<I', h, 0, size if struct.unpack_from('<I', h, 0)[0] else 0)
+                    nb = bytes(h) + nl + bytes(size - 0x40 - len(nl))
+                    why = None if nm in etm_empty else size_gate(args, st, al(0x40 + len(src_le)), len(nb))
+                    if why:
+                        st.update(kind='etc', name=nm, skipped=why)
                         report['objects'].append(st)
                     else:
-                        nl = to_le(new, nm)
-                        h = bytearray(body[:0x40])
-                        size = al(0x40 + len(nl))
-                        struct.pack_into('<I', h, 0, size if struct.unpack_from('<I', h, 0)[0] else 0)
-                        nb = bytes(h) + nl + bytes(size - 0x40 - len(nl))
+                        report.setdefault('graft_members', []).append(nm)
                         st.update(kind='etc', name=nm, le_bytes_before=len(body), le_bytes_after=len(nb))
                         if nm in ps2_from:
                             st['ps2_from'] = ps2_from[nm] + '.dat:ETM/' + nm
@@ -855,8 +978,14 @@ def room(args):
     Path(args.out).write_bytes(bytes(out))
     report.update(payload_out_bytes=len(newpay), payload_saved=len(pay) - len(newpay), dar_out=args.out,
                   dar_out_sha256=sha(bytes(out)), tool_sha256=sha(Path(__file__).read_bytes()))
+    report['graft'] = {'dest': 'st1/%s.dar' % args.room if args.room != 'r200' else 'st2/r200.dar',
+                       'source': args.out, 'members': report.get('graft_members', [])}
     if args.json:
         Path(args.json).write_text(json.dumps(report, indent=1))
+    if args.graft_json:
+        # scope (c): the deliverable is a graft member set (t11-fix.py {'graft': {dest: (source, members)}}); the
+        # written .dar is only the member source, never staged whole.
+        Path(args.graft_json).write_text(json.dumps(report['graft'], indent=1))
     for o in report['objects']:
         print('%-10s %-14s tris %s -> %s  bytes %s -> %s %s' % (o.get('kind'), o.get('name', o.get('gc_arc', '')), o.get('gc_tris'),
               o.get('out_tris'), o.get('le_bytes_before'), o.get('le_bytes_after'), o.get('skipped', '')))
@@ -871,7 +1000,11 @@ def main():
     a = sp.add_parser('room')
     a.add_argument('--dar', required=True); a.add_argument('--room', required=True); a.add_argument('--pairs')
     a.add_argument('--etm'); a.add_argument('--pad-to'); a.add_argument('--out', required=True); a.add_argument('--json')
-    a.add_argument('--keep-larger', action='store_true'); a.add_argument('--world-owned'); a.add_argument('--etm-from')
+    a.add_argument('--keep-larger', action='store_true', help='refused without --keep-larger-reason (10-26)')
+    a.add_argument('--keep-larger-reason'); a.add_argument('--graft-json', help='write the graft member set here')
+    a.add_argument('--reconvert-etm', help='ETM models (name,...) already converted in the input: rebuilt from GC + PS2 again')
+    a.add_argument('--no-lod', action='store_true', help='test only: skip the mesh_lod step (the self-check then refuses)')
+    a.add_argument('--world-owned'); a.add_argument('--etm-from')
     a.add_argument('--reconvert', help='room BINs (hex,...) already converted in the input dar: rebuilt from the GC source again')
     a.add_argument('--etm-member-from', help='ETM sub-files (name=<native dar>,...) copied byte for byte from that dar (same size only)')
     a.add_argument('--etm-restore-gc', help='etc models (name,...) put back as le_mirror(GC) where emptied (window panes, lane windows26)')
@@ -891,8 +1024,9 @@ def main():
         to_le(new)
         print(json.dumps(st))
     else:
-        global UV_FOLD
+        global UV_FOLD, LOD
         UV_FOLD = args.uv_fold
+        LOD = not args.no_lod
         room(args)
 
 

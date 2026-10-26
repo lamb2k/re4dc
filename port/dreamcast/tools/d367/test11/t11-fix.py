@@ -1066,6 +1066,15 @@ if os.path.isdir(PFIRE26D):
     DATA['pfire26'] = {'graft': {'st2/r200.dar': (PFIRE26D + '/st2/r200.dar', ['et14.eff'])}}
     for _r in 'r10c r10d r10e r10f r111 r113 r118 r11a r11b r11c r11d r11e'.split():
         DATA['pfire26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (PFIRE26D, _r), ['et14.eff'])
+# props26 (lane props-ps2-26 10-26, user: room props still GameCube / unreduced): the 27 room objects earlier sets shipped
+# as PS2 meshes LARGER than the GC model (--keep-larger: racks et0400/et0500, frames et0700, doors et0d00/et1600/et1700/
+# et2b00, r106 BIN 0x34, r10f BIN 0x23) reconverted with ps2_objects.py v4 (mesh_lod + UV guard in the convert step,
+# strips, uv-fold, self-check: no more triangles / bytes than GC). A GRAFT of those members only (store graft.json),
+# so it composes with pfire26 (et14.eff) and windows26 (panes) in the same archives. Pictures unchanged. Data only.
+PROPS26D = os.environ.get('PROPS26D', '/root/re4data/private/props26-20261026')
+if os.path.isfile(PROPS26D + '/graft.json'):
+    DATA['props26'] = {'graft': {_d: ('%s/%s' % (PROPS26D, _d), _m)
+                                 for _d, _m in json.load(open(PROPS26D + '/graft.json')).items()}}
 # pl08n25 (lane purge-pics25 10-25, user pick N): Leon's pl08 atlas 7506e95f-68cf2211 with its two GameCube tiles (15f7e18c
 # shirt, 878b23c0 sleeves) re-indexed to the nearest PS2 pl08 pictures in leonatl24's VQ codebook; every other texel is
 # identical. dc/tex.pak = cand-bc9585e8's pack + this atlas, so it goes after every other tex.pak set of the line

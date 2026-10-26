@@ -64,3 +64,9 @@ st2/r200.dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (p
 st[12]/r[12][01][0-9a-f].dar:0x* ESQ	pfire26	rebased after the ETM size change
 st[12]/r[12][01][0-9a-f].dar:0x* NTR	pfire26	rebased after the ETM size change
 dc/native/pl00/leon_hands_pl00.re4hp:changed	hand26	Leon hands pack rebuilt from the PS2 hand BINs (wep19-26, 0a944f36)
+# props26 (lane props-ps2-26 2026-10-26): room objects shipped larger than GC (keep-larger) reconverted, reduced (graft members)
+st1/r1*.dar:ETM/et0[4579d]00.bin*	props26	PS2 racks / frames / doors reduced (mesh_lod + UV guard) to at most the GC model
+st1/r1*.dar:ETM/et1[67]00.bin*	props26	PS2 doors reduced to at most the GC model
+st1/r1*.dar:ETM/et2b00.bin*	props26	PS2 door reduced to at most the GC model
+st1/r106.dar:0x34 BIN*	props26	PS2 room object reduced to at most the GC model
+st1/r10f.dar:0x23 BIN*	props26	PS2 room object reduced to at most the GC model
