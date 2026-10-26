@@ -49,6 +49,7 @@ goto 3908 -27608 500
 goto 5408 -27008 500
 goto 11408 -26108 500
 goto 12908 -26108 400
+@crank2
 goto 14408 -26108 400
 goto 15008 -25958 400
 goto 19400 -22100 400
@@ -73,6 +74,7 @@ goto 12908 -26708 400
 goto 11408 -27008 400
 goto 6008 -27008 500
 goto 4508 -27008 400
+@back
 goto 3908 -27608 400
 goto 4208 -35858 500
 goto 12908 -49958 500
@@ -113,16 +115,55 @@ press a 0.2
 wait 2
 press a 0.2
 wait 2
+@clear207
+press x 0.3
+wait 1.5
+autofight 6000
+goto -112 -3387 500
+goto -712 -3237 500
+goto -1462 -3387 500
+goto -1612 -3987 400
+goto -1612 -5487 400
+goto -2362 -6237 400
+goto -2962 -6987 400
+goto -2962 -7737 400
+goto -3112 -8487 400
+goto -3112 -9987 400
+goto -3262 -10587 400
+goto -4162 -10737 400
+goto -4912 -9987 400
+@hunt
+fight 25 9000
+fight 25 9000
+goto -4762 -2000 500 30
+fight 25 9000
+goto -4762 -2000 500 30
+fight 25 9000
+autofight 3000
+goto -4912 -9987 400
+goto -4162 -10737 400
+goto -3262 -10587 400
+goto -3112 -9987 400
+goto -3112 -8487 400
+goto -2962 -7737 400
+goto -2962 -6987 400
+goto -2362 -6237 400
+goto -1612 -5487 400
+goto -1612 -3987 400
+goto -1462 -3387 400
+goto -712 -3237 400
+goto -112 -3387 400
 @r207walk
 goto 700 -3500 400
 goto 848 -7300 300
 face 848 -9000
-@swordA
+@takeA
 press a 0.3
 wait 3
-@swordAok
 press a 0.3
-wait 5
+wait 4
+dismiss
+@toB
 goto -112 -3387 500
 goto -712 -3237 500
 goto -1462 -3387 500
@@ -136,30 +177,33 @@ goto -3112 -9987 400
 goto -3262 -10587 400
 goto -3562 -10737 400
 goto -9112 -10887 500
-goto -9900 -10887 300
+goto -9800 -10850 300 8
 face -12000 -10874
-@swordB
-press a 0.3
-wait 3
-@swordBok
-press a 0.3
-wait 5
-@fixB
-fight 15 4000
-goto -9800 -10850 300 6
-face -12000 -10874
+@takeB
 press a 0.3
 wait 3
 press a 0.3
 wait 4
-@fixBwalk
 dismiss
+goto -9800 -10850 300 8
+face -12000 -10874
+@yardB
+press a 0.3
+wait 5
+@useB
+press a 0.3
+wait 2
+press a 0.3
+wait 8
+dismiss
+@toA
 goto -9112 -10887 500
 goto -3562 -10737 400
 goto -3262 -10587 400
 goto -3112 -9987 400
 goto -3112 -8487 400
 goto -2962 -7737 400
+@toA2
 goto -2962 -6987 400
 goto -2362 -6237 400
 goto -1612 -5487 400
@@ -170,15 +214,12 @@ goto -112 -3387 400
 goto 700 -3500 400
 goto 848 -7300 300
 face 848 -9000
-@takeA
-press a 0.3
-wait 3
-press a 0.3
-wait 4
-dismiss
-goto 848 -7300 300
-face 848 -9000
 @yardA
 press a 0.3
-wait 4
+wait 5
+@useA
+press a 0.3
+wait 2
+press a 0.3
+wait 10
 end
