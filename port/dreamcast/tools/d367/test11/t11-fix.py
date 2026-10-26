@@ -1102,6 +1102,15 @@ if os.path.isdir(PFX26D):
     DATA['pfx26'] = {'dc/tex.pak': PFX26D + '/dc/tex.pak'}
     PAK_DERIVED['pfx26'] = PFX26D + '/pak-derived.json'
     AFTER += [('pfx26', 'pui26')]
+# fxp26 (lane fxproof26 10-26, GC asset purge content proof): pfx26's tex.pak with two FX_PS2_NONE_CUT keys the PS2 does
+# draw, as PS2 pictures under the GC keys (purge-fx24/fx_cross_room.py FXX_ROOMS=r100,r206 pack): the window-break glass
+# crack 212e55c1 (GC ETM et00.eff / et2c.eff 0x14) <- PS2 r100.dat ETM et00.eff 0x14, and the r206 candle glow fef62a48
+# (GC EFF 0xe6, added: pfx26's pack lacks it) <- PS2 r50c.dat EFF #7 0xe6. fx_none_cut.inc no longer cuts them. After pfx26.
+FXP26D = os.environ.get('FXP26D', '/root/re4data/private/fxp26-20261026')
+if os.path.isdir(FXP26D):
+    DATA['fxp26'] = {'dc/tex.pak': FXP26D + '/dc/tex.pak'}
+    PAK_DERIVED['fxp26'] = FXP26D + '/pak-derived.json'
+    AFTER += [('fxp26', 'pfx26')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):

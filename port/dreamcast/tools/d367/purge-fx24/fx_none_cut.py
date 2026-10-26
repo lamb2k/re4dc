@@ -18,7 +18,15 @@ from pathlib import Path
 
 
 # Rows converted from a PS2 file other than the room's own (fx_cross_room.py PAIRS, coordinator 10-24): not cut.
-CROSS_ROOM = {('r117', 'st1/r117.arc#7:0x86')}   # church candle flames <- PS2 r10e.dat EFF #7 0x86 (data set pfx24)
+CROSS_ROOM = {('r117', 'st1/r117.arc#7:0x86'),   # church candle flames <- PS2 r10e.dat EFF #7 0x86 (data set pfx24)
+              # lane fxproof26 10-26 (content proof, data set fxp26): the window-break glass crack, GC ETM et00.eff /
+              # et2c.eff id 0x14 (key 212e55c1) <- PS2 r100.dat ETM et00.eff 0x14; the PS2 etc effect files keep it
+              # (EST5), the library paired only room EFFs.
+              ('r100', 'st1/r100.arc#11/et00.eff:0x14'), ('r101', 'st1/r101.arc#10/et00.eff:0x14'),
+              ('r102', 'st1/r102.arc#10/et2c.eff:0x14'), ('r105', 'st1/r105.arc#10/et00.eff:0x14'),
+              ('r107', 'st1/r107.arc#10/et00.eff:0x14'),
+              # the castle candle glow, GC r206 EFF #7 0xe6 <- PS2 r50c.dat EFF #7 0xe6 (PS2 r206 SST1-5 draw it as Core 0xe9)
+              ('r206', 'st1/r206.arc#7:0xe6')}
 
 
 def room_id(name):
