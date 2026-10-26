@@ -1869,6 +1869,29 @@ KOS_DISC_FIX ?= 0
 ifneq ($(filter $(KOS_DISC_FIX),0 1),$(KOS_DISC_FIX))
 $(error KOS_DISC_FIX must be 0 or 1)
 endif
+# Build17 / issue28: opt-in bounded direct-sector DMA, same-sector PIO retry,
+# and permanent session PIO after two consecutive failed DMA attempts. Streams
+# are refused from startup so their untimed KOS waits cannot block the retry.
+# No source/object change when absent or 0; the release recipe is unchanged.
+DISC_PIO_FALLBACK ?= 0
+ifneq ($(filter $(DISC_PIO_FALLBACK),0 1),$(DISC_PIO_FALLBACK))
+$(error DISC_PIO_FALLBACK must be 0 or 1)
+endif
+ifeq ($(DISC_PIO_FALLBACK),1)
+ifneq ($(KOS_DISC_FIX),1)
+$(error DISC_PIO_FALLBACK=1 needs KOS_DISC_FIX=1)
+endif
+ifeq ($(filter 2 3,$(DISC_READ_FALLBACK)),)
+$(error DISC_PIO_FALLBACK=1 needs DISC_READ_FALLBACK=2 or 3)
+endif
+ifneq ($(filter-out 0,$(DISC_FAIL_TEST) $(DVD_STUCK_TEST) $(DISC_DMA_DROP_TEST)),)
+$(error DISC_PIO_FALLBACK uses its synthetic fake-driver gate; legacy disc fault hooks must be 0)
+endif
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_PIO_FALLBACK=1
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_DISC_PIO_FALLBACK=1 -I$(CURDIR)/platform
+$(OBJDIR)/platform/dvd_read_safe.o: platform/disc_pio_fallback.h platform/disc_pio_native.inc
+$(OBJDIR)/src/game/snd.o: platform/disc_stream_table_check.h
+endif
 # DISC_DMA_WAIT_TIMEOUT=1 (issue #28 DreamShell, lane fix-dreamshell23 2026-10-23, default 0 = image unchanged; needs
 # KOS_DISC_FIX=1): KOS waited on a GD DMA completion with no limit (sector reads and stream requests), so a loader that
 # never completes a DMA (DreamShell's ISO loader, first read bgm/bio4str.hed) hung the boot before DISC_READ_FALLBACK=3's
@@ -1899,7 +1922,13 @@ $(KOSFIX)/fs_iso9660.c: $(KOS_BASE)/kernel/arch/dreamcast/fs/fs_iso9660.c $(KOS_
 	@rm -rf $(KOSFIX)/p-fs && mkdir -p $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs
 	cp $< $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs/
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-fs-iso9660-aeee10d9.patch
+ifeq ($(DISC_PIO_FALLBACK),1)
+	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
+endif
 	cp $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs/fs_iso9660.c $@
+ifeq ($(DISC_PIO_FALLBACK),1)
+$(KOSFIX)/fs_iso9660.c: $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
+endif
 # kos-804b319-cdrom-dma-done.patch (lane discread 10-15, the LinkOrder console stops): a GD DMA read that the BIOS
 # reported completed straight away left a DMA completion to be signalled later, which ended the NEXT DMA wait before its
 # data landed (console only). Stale completions are drained before every DMA and a DMA read returns with the GD-DMA
