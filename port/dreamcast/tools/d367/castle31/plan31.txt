@@ -587,3 +587,313 @@ face -12500 -10950
 press a 0.3
 room 203 15
 end
+@r203a
+autofight 0
+goto -17286 -9008 500
+goto -24786 -8708 500
+goto -36000 -10000 400
+@r203d1
+face -38000 -10000
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+goto -39486 -9908 500
+goto -47586 -8708 500
+goto -51500 -3750 400
+goto -51450 -2500 400
+goto -50900 1400 400
+goto -51750 7250 400
+@r203door
+goto -55800 9500 400
+face -57500 9600
+press a 0.3
+wait 3
+@r203key
+goto -56886 9591 400
+goto -58986 6891 400
+goto -59286 4491 400
+goto -59286 3291 400
+goto -58086 1791 400
+end
+@chest
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+end
+@chest2
+face -57300 1400
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+face -57400 2400
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+face -58600 1000
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+end
+@chest3
+goto -65100 1000 300 8
+face -67639 780
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+end
+@chest4
+face -65100 -1500
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+face -62600 900
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+face -65100 3400
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+end
+@chest5
+goto -66600 900 200 8
+face -67639 780
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+end
+@back203
+press b 0.3
+wait 1
+goto -64986 891 500
+goto -58086 1791 400
+goto -59286 3291 400
+goto -59286 4491 400
+goto -58986 6891 400
+goto -56886 9591 400
+goto -55800 9500 400
+face -51750 7250
+wait 1
+press a 0.3
+wait 3
+goto -51750 7250 400
+goto -50900 1400 400
+goto -51450 -2500 400
+goto -51500 -3750 400
+goto -47586 -8708 500
+goto -39486 -9908 500
+@gate203
+goto -37200 -10000 300 8
+face -34000 -10000
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+goto -32250 -19500 400
+goto -31162 -23244 300 8
+end
+@usekey
+face -31100 -26000
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 6
+press a 0.3
+wait 3
+press a 0.3
+room 201 15
+end
+@open201
+wait 2
+press a 0.3
+wait 3
+press a 0.3
+room 201 20
+end
+@r201a
+autofight 0
+goto -100 -15900 500
+goto -100 -17400 500
+goto -100 -18900 500
+goto 0 -20000 400
+goto 1750 -22500 400
+face 2500 -25500
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+goto 2500 -25500 400
+goto 12000 -30200 500
+goto 30000 -30200 500
+goto 39000 -30500 400
+goto 40000 -31600 400
+goto 41200 -32000 400
+goto 41750 -34500 400
+goto 43500 -35000 400
+goto 43500 -36500 400
+goto 45000 -36500 400
+goto 46300 -37900 300 8
+end
+@r201b
+goto 9800 -30300 300 8
+face 14000 -30300
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+goto 12000 -30200 500
+goto 30000 -30200 500
+goto 39000 -30500 400
+goto 40000 -31600 400
+goto 41200 -32000 400
+goto 41750 -34500 400
+goto 43500 -35000 400
+goto 43500 -36500 400
+goto 45000 -36500 400
+goto 46300 -37900 300 8
+end
+@pic
+wait 1
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 3
+end
+@pic2
+face 48500 -36800
+wait 1
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 3
+face 47200 -40200
+wait 1
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 3
+end
+@pic3
+goto 47500 -37900 200 8
+face 50000 -37900
+wait 1
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 3
+end
+@inv
+press y 0.3
+wait 4
+press y 0.3
+wait 2
+end
+@dungeon
+goto 45000 -36500 400
+goto 43500 -36500 400
+goto 43500 -35000 400
+goto 42000 -34750 400
+goto 41500 -33000 400
+goto 41000 -31750 400
+goto 39000 -30500 400
+goto 17000 -30500 500
+goto 16100 -37000 300 8
+wait 1
+press a 0.3
+wait 4
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 6
+end
+@usepk
+wait 1
+press a 0.8
+wait 3
+press a 0.8
+wait 6
+end
+@dung2
+press a 0.8
+wait 3
+goto 16012 -45000 400
+goto 19000 -45000 400
+goto 21300 -42000 400
+goto 22250 -47750 400
+goto 23250 -47750 400
+end
+@cell
+goto 27000 -42000 300 8
+face 31000 -42000
+wait 1
+press a 0.8
+wait 6
+press a 0.8
+wait 6
+end
+@cell2
+goto 29200 -42000 300 8
+face 32000 -42000
+wait 2
+press a 0.8
+wait 6
+press a 0.8
+wait 6
+end
