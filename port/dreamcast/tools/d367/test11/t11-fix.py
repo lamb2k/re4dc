@@ -839,6 +839,30 @@ def lostpart_gate(k, v, rec):
     rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
 
 
+def motion_key_gate(r, rm, rec):
+    """MOTION-KEYS (lane cast-ps2-25 10-26, Test 25 r100 house siege halted on "RE4DC MISSING: motion key read"): every
+    dc/mot key the live MTC table of a staged archive names must not be on the fixture's remove list (a data set took a
+    key off the disc that a later-staged archive still streams, e.g. a stale em/em1X.drs with GameCube Ganado motion over
+    pmgan24's). The whole-tree check (keys present on the final disc) is rr's MOTION-KEYS row (motion/mot_refs.py)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'motion'))
+    import mot_refs
+    bad, n = {}, 0
+    for k, v in sorted(r.items()):
+        if not (isinstance(v, str) and k.endswith(('.drs', '.dar', '.arc', '.das')) and os.path.isfile(v)):
+            continue
+        b = open(v, 'rb').read()
+        if mot_refs.MAGIC not in b:
+            continue
+        for _p, keys in mot_refs.tables(b):
+            for key in keys:
+                n += 1
+                if 'dc/mot/%s.fcv' % key in rm and 'dc/mot/%s.fcv' % key not in r:
+                    bad.setdefault(key, []).append(k)
+    assert not bad, ('MOTION-KEYS: staged archives stream dc/mot keys the fixture removes (check the order of the '
+                     'motion sets and stale stores, e.g. PS2SND24D)', {k: sorted(set(v)) for k, v in bad.items()})
+    rec.append('motion keys gate: %d MTC rows of staged archives, none removed' % n)
+
+
 def graft_all(grafts, r, out, rec):
     """GRAFT (lane fix-r100-props26 10-26): a set's {'graft': {dest: (source .dar, [ETM sub-file names])}} copies only
     those members, byte for byte, into the archive ALL sets composed (r[dest] after the last set), so its place in DATA
@@ -941,6 +965,7 @@ def main():
         if k in opt:
             r[f] = opt[k][0]
             rm.discard(f)
+    motion_key_gate(r, rm, rec)
     d['remove'] = sorted(rm)
     d.setdefault('provenance', {})['t11'] = {'base': base, 'label': [old, new], 'data': names, 'staged': rec,
                                              'opts': {k: v for k, v in opt.items()}}
@@ -1307,7 +1332,10 @@ DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/nati
 # 65 files (wep19 and em2a unchanged: no PS2 or no prebuilt bank), every one the size of the release file it replaces. Made from the RELEASE disc's final files (cand-590b8f5f),
 # so it must be the LAST set touching these paths (after objs13d, snd16, ch21r, ash21, ...); regenerate if a later set
 # changes one of them. RECIPE.txt and the maps (_map/) are in the store.
-PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-20261024')
+# Default = the regenerated store the release recipe exports (rr/recipe.conf; lane cast-ps2-25 10-26): the older
+# ps2snd24-20261024 em/em1[1-7].drs carry the GameCube Ganado motion pmgan24 replaced, whose keys pmgan24 removes; staged
+# after pmgan24 (worldopt26's arms, no recipe export) they halted the r100 house siege on a missing dc/mot key.
+PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-t24-20261024')
 DATA['ps2snd24'] = {p: PS2SND24D + '/' + p for p in (
     'bgm/aica_str.dat', 'bgm/bio4midi.dat', 'etc/core.das', 'ss/cmn/title.snd',
     'em/em11.drs', 'em/em12.drs', 'em/em13.drs', 'em/em15.drs', 'em/em16.drs', 'em/em17.drs', 'em/em18.drs',

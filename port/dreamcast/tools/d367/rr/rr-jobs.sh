@@ -56,6 +56,11 @@ for r in $(census_rooms); do
   job 1 cg-$r "$(run cg-$r c c 60 --warp "\"\$EVW\\fixtures\\cg-$r.txt\"")"
 done
 echo "$(census_rooms)" > "$W/census-rooms.txt"
+# siege (lane cast-ps2-25 10-26): the r100 house siege (bench-r100-house: rsf 0x100 13, scenario 0x10, the village
+# alerted, Ganados close in) on every tier. It halted Test 25 candidates on a dc/mot key a stale enemy archive streamed;
+# rr-judge.py fails on HALT / FAULT / RE4DC MISSING in its log.
+tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/siege-r100-warp.txt" > "$EVU/fixtures/siege-r100.txt"
+job 1 siege-r100 "$(run siege-r100 c c 60 --warp "\"\$EVW\\fixtures\\siege-r100.txt\"")"
 # GC-ASSET gate (cast-ps2-25 10-26): h2 + the gate rooms on the gate-ON twin's base a (rr-gca.sh), judged by rr-judge.py
 if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW/syms.txt" ]; then
   cp "$ROUTE/out-fprr${S7}aW/syms.txt" "$J/syms-a.txt"
