@@ -1159,6 +1159,35 @@ if os.path.isdir(FXC26BD):
     DATA['fxc26b'] = {'dc/tex.pak': FXC26BD + '/dc/tex.pak'}
     PAK_DERIVED['fxc26b'] = FXC26BD + '/pak-derived.json'
     AFTER += [('fxc26b', 'fxc26')]
+# wep26g (lane wep19-26 10-26, user: "all weapon models should be ps2"): the weapon models wep24 left GameCube.
+#   em/pl00.drs, em/pl08.drs  the grenade body 0x6A (hand / incendiary / flash pictures 0x6B / 0x6D / 0x6F: wep19.cpp,
+#                             objSubWep.cpp), the launcher / mine thrower 0x70 + 0x71 and the rocket 0x76 + 0x75
+#                             (objRocket.cpp, wep28.cpp) rebuilt in place from PS2 pl00.dat / pl08.dat
+#                             (ps2_weapons.py convert-pl on ps2snd24-t24's files: their sound banks, REL and motion kept)
+#   em/wep05.drs, ss/cmn/ss_wep05.dat  the Broken Butterfly fitted to the GC skeleton (wep05fit25's files, ps2_weapons.py
+#                             --fit-skeleton; motion already PS2-identical)
+#   dc/tex.pak                fxc26b's pack + the 6 PS2 picture keys (ch2rooms/pack_add.py; pak-derived.json: base fxc26b)
+# Left GC: the egg 0x7D (PS2 BIN 32 B over its slot; needs an archive relayout). Last of the em / tex.pak sets.
+# Store: re4-assets-private/wep26g-20261026 (RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP26GD = os.environ.get('WEP26GD', '/root/re4data/private/wep26g-20261026')
+if os.path.isdir(WEP26GD):
+    DATA['wep26g'] = {'em/pl00.drs': WEP26GD + '/em/pl00.drs', 'em/pl08.drs': WEP26GD + '/em/pl08.drs',
+                      'em/wep05.drs': WEP26GD + '/em/wep05.drs',
+                      'ss/cmn/ss_wep05.dat': WEP26GD + '/ss/cmn/ss_wep05.dat', 'dc/tex.pak': WEP26GD + '/dc/tex.pak'}
+    PAK_DERIVED['wep26g'] = WEP26GD + '/pak-derived.json'
+    AFTER += [('wep26g', 'fxc26b'), ('wep26g', 'ps2snd24'), ('wep26g', 'wep24'), ('wep26g', 'wep24ss'),
+              ('wep26g', 'pmwep24b'), ('wep26g', 'pmleon24b')]
+    if 'wep05fit25' in DATA:
+        CLASH += [('wep05fit25', 'wep26g')]
+# pmwep26 (same lane): weapon motion from PS2 for the archives pmwep24b left (motion/ps2_motion_prepared.py rewrite + verify,
+# all PASS): em/wep19.drs (grenades: 4 aim clips changed; the hand BIN 0x7 stays the LEON_HAND_PACK key, drawn as PS2 hand
+# blob 15), em/wep00.drs, em/wep05.drs (wep26g's), em/wep13.drs (ps2snd24's) whose clips were already PS2-identical (same
+# bytes; staged so GC-ASSET provenance, which takes motion only from pm* sets, attributes them). After wep26g.
+# Store: re4-assets-private/pmwep26-20261026.
+PMWEP26D = os.environ.get('PMWEP26D', '/root/re4data/private/pmwep26-20261026')
+if os.path.isdir(PMWEP26D):
+    DATA['pmwep26'] = {'em/' + _f: '%s/em/%s' % (PMWEP26D, _f) for _f in sorted(os.listdir(PMWEP26D + '/em'))}
+    AFTER += [('pmwep26', 'wep26g'), ('pmwep26', 'ps2snd24')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):

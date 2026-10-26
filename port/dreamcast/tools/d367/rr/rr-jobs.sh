@@ -72,6 +72,11 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW
     tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
     job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
   done
+  # gca-grenade (lane wep19-26 10-26): no other gca job equips a thrown weapon, so the grenade models (em/pl00.drs 0x6A
+  # + its three pictures), the wep19 module and its motion were never judged. r101: equip, aim and throw the hand,
+  # incendiary and flash grenades (warp `arm` + `act`), then the rocket launcher.
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-grenade-warp.txt" > "$EVU/fixtures/gca-grenade.txt"
+  job 1 gca-grenade "$(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"")"
 fi
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fprr${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"

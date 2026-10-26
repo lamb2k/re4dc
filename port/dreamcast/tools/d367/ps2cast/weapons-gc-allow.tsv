@@ -1,6 +1,6 @@
 # GC weapon-asset allowlist (lane purge-weapons24, 2026-10-24): weapon models / pictures the data sets wep24 + wep24ss
 # leave GameCube, for the GC-ASSET gate (CLAUDE.md "No GameCube assets"). It only shrinks; every row has a reason and
 # an owner, and rows are added only with the coordinator's review (decision 2026-10-24 for the rows below).
+# 2026-10-26 (lane wep19-26, user "all weapon models should be ps2"): the wep05 rows left; data set wep26g fits the
+# Broken Butterfly to the GC skeleton (ps2_weapons.py --fit-skeleton). No rows remain.
 # Columns (tab separated): disc file, archive entry (hex), what, reason, owner.
-em/wep05.drs	0x6	Broken Butterfly model (TPL 0x5 pictures with it)	PS2 wep05.dat BIN 0x6 bone 1 rest translation differs from the GC part by 14.97 mm (ps2_weapons.py bone check; not remapped)	coordinator
-ss/cmn/ss_wep05.dat	0x1	Broken Butterfly sub screen model (TPL 0x0 pictures with it)	same PS2 skeleton difference as em/wep05.drs 0x6 (14.97 mm, bone 1)	coordinator
