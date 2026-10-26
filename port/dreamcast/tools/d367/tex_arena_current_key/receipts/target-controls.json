@@ -1,0 +1,329 @@
+{
+  "status": "PASS",
+  "scope": "Make-derived native_ui SH-4 identity and enabled-build controls.\n\nThe archived integration base, current absent knobs, and explicit zero knobs\nmust produce identical complete preprocessed output and object bytes. Enabled\narms compile the fix and final-refusal diagnostic separately and together.\nThis uses public recipe fallbacks and does not link or run a release image.\n",
+  "baseline": "db222fc618045fc1da2bb3c7222743f83612ed1b",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "compiler_sha256": "0cdda7aca357d1d9d88a7fe639bad330c7e2183e1d3e823123cd47aaf9ba1b17",
+  "linker": "GNU ld (GNU Binutils) 2.45.1",
+  "kos": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sdk": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_ui.cpp": "6fccb2d689b4d728c84c84004efbb89550bda0b6e31e532bb34a99ec86ae2f3e",
+    "port/dreamcast/game/Makefile": "56fefad3b0070695c9dacad21966559ac14ff9cc54ee2409c1e3cbdeff9fb1c0",
+    "port/dreamcast/tools/d367/tex_arena_current_key/build_controls.py": "537dc38a620a40dc33ae7e948e651f9b7435928a81b5a9621a062d9e92bcbd28",
+    "port/dreamcast/tools/cloud/build18/build_profile.py": "47e787b0820f67e9f3fde33010a67ecddc0814059505204e1afec6d51952927a",
+    "port/dreamcast/tools/d367/ui_draw_lean/build_profile.py": "d9768c80edec4fc2fef9187a883cad2ac1b2f02b4a2c84be313661d4e7ec9ccc",
+    "port/dreamcast/tools/d367/world_submit_spike/build_profile.py": "93d339687cde6c61628b1c73803000616f95768669360bf18ad60258e4ea1aef"
+  },
+  "recipe": {
+    "release": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+    "missing_asset_overrides": [
+      "PS2_LEON=0",
+      "LEON_PS2_RIG=0",
+      "LEON_PS2_PORTRAIT_HAIR=0",
+      "LEON_HAND_PACK=0",
+      "PS2_GANADO=0",
+      "PS2_GANADO_LIT=0",
+      "GANADO_LOD=0",
+      "GANADO_EVENT_KEEP_LOD=0",
+      "ACTOR_PROBE_LIGHT=1",
+      "GANADO_LIT=0",
+      "NATIVE_MODEL_REGISTRY_DYING=0",
+      "LEON_HEADLESS=0",
+      "PS2_CH2_ENEMY=0",
+      "ACTOR_GANADO_PS2_STUMP=0",
+      "ACTOR_GANADO_PS2_GRIP=0"
+    ],
+    "input_manifest_sha256": "c6224c67b91ecc78ef75a77c6c599b44598e61722851265ce0015867df43b65f",
+    "input_count": 58
+  },
+  "off_identity_comparisons": 4,
+  "artifacts": {
+    "baseline": {
+      "preprocessed": {
+        "bytes": 1478621,
+        "sha256": "53b50835fde19d34ffe703af147cd6616edfb7b7e39346711d6ed03b0e7b0ced"
+      },
+      "object": {
+        "bytes": 413184,
+        "sha256": "9b013aba8ef2b98f1b355ad1a65b37429ac36d02d841f606e65bf8d221cd944b",
+        "executable_bytes": 81730,
+        "allocated_bytes": 394052,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 216,
+          "kind": "static"
+        }
+      ]
+    },
+    "absent": {
+      "preprocessed": {
+        "bytes": 1478621,
+        "sha256": "53b50835fde19d34ffe703af147cd6616edfb7b7e39346711d6ed03b0e7b0ced"
+      },
+      "object": {
+        "bytes": 413184,
+        "sha256": "9b013aba8ef2b98f1b355ad1a65b37429ac36d02d841f606e65bf8d221cd944b",
+        "executable_bytes": 81730,
+        "allocated_bytes": 394052,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 216,
+          "kind": "static"
+        }
+      ]
+    },
+    "zero": {
+      "preprocessed": {
+        "bytes": 1478621,
+        "sha256": "53b50835fde19d34ffe703af147cd6616edfb7b7e39346711d6ed03b0e7b0ced"
+      },
+      "object": {
+        "bytes": 413184,
+        "sha256": "9b013aba8ef2b98f1b355ad1a65b37429ac36d02d841f606e65bf8d221cd944b",
+        "executable_bytes": 81730,
+        "allocated_bytes": 394052,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 216,
+          "kind": "static"
+        }
+      ]
+    },
+    "fix": {
+      "preprocessed": {
+        "bytes": 1478615,
+        "sha256": "4d0ecca81ca436a1a643dd2884c07eaae2bac98064e6862f53b5a64bf01e1a08"
+      },
+      "object": {
+        "bytes": 413180,
+        "sha256": "934afa9a8ed48570396df9252d1dd5b5d99f128b27a05baacfd2393221c04269",
+        "executable_bytes": 81726,
+        "allocated_bytes": 394048,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 212,
+          "kind": "static"
+        }
+      ]
+    },
+    "log": {
+      "preprocessed": {
+        "bytes": 1480480,
+        "sha256": "3bb51e3c027c56e618f2769875fc8b477380adaa91d212e142a4a18d1bfa2c8a"
+      },
+      "object": {
+        "bytes": 414780,
+        "sha256": "8669108d6b3c5d49fd2f4a677b846cfb58d9aa9865a47eaa53e36287c3052e44",
+        "executable_bytes": 82202,
+        "allocated_bytes": 394848,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "void {anonymous}::tex_final_refusal(const Re4dcUiImage&, const Key&, bool, const char*, const char*, unsigned int)",
+          "bytes": 112,
+          "kind": "static"
+        },
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 220,
+          "kind": "static"
+        }
+      ]
+    },
+    "both": {
+      "preprocessed": {
+        "bytes": 1480474,
+        "sha256": "cd6f79f6ca14815c2074ff47e4d4771f0782af1c775a29ae2ad21890d6b2d9d4"
+      },
+      "object": {
+        "bytes": 414792,
+        "sha256": "de49c7cdddc19fc1a26044f1f98e50d13e953f9c2adea05ebfdf595c9431cab6",
+        "executable_bytes": 82202,
+        "allocated_bytes": 394848,
+        "zero_fill_bytes": 153375
+      },
+      "selected_stack_usage": [
+        {
+          "function": "void {anonymous}::tex_final_refusal(const Re4dcUiImage&, const Key&, bool, const char*, const char*, unsigned int)",
+          "bytes": 112,
+          "kind": "static"
+        },
+        {
+          "function": "{anonymous}::Entry* {anonymous}::load(const Re4dcUiImage&, bool, const Key*)",
+          "bytes": 216,
+          "kind": "static"
+        }
+      ]
+    }
+  },
+  "deltas": {
+    "fix": {
+      "executable_bytes": -4,
+      "allocated_bytes": -4,
+      "zero_fill_bytes": 0
+    },
+    "log": {
+      "executable_bytes": 472,
+      "allocated_bytes": 796,
+      "zero_fill_bytes": 0
+    },
+    "both": {
+      "executable_bytes": 472,
+      "allocated_bytes": 796,
+      "zero_fill_bytes": 0
+    }
+  },
+  "make_states": {
+    "baseline": {
+      "TEX_ARENA_CURRENT_KEY": "",
+      "TEX_FINAL_REFUSAL_LOG": "",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    },
+    "absent": {
+      "TEX_ARENA_CURRENT_KEY": "0",
+      "TEX_FINAL_REFUSAL_LOG": "0",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    },
+    "zero": {
+      "TEX_ARENA_CURRENT_KEY": "0",
+      "TEX_FINAL_REFUSAL_LOG": "0",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    },
+    "fix": {
+      "TEX_ARENA_CURRENT_KEY": "1",
+      "TEX_FINAL_REFUSAL_LOG": "0",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    },
+    "log": {
+      "TEX_ARENA_CURRENT_KEY": "0",
+      "TEX_FINAL_REFUSAL_LOG": "1",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    },
+    "both": {
+      "TEX_ARENA_CURRENT_KEY": "1",
+      "TEX_FINAL_REFUSAL_LOG": "1",
+      "VRAM_ROOM_ARENA": "1",
+      "CORE_PIN": "2",
+      "UI_VRAM": "1",
+      "VRAM_PAGES": "1"
+    }
+  },
+  "rejected_make_configurations": [
+    {
+      "knob": "TEX_ARENA_CURRENT_KEY",
+      "value": "2",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_ARENA_CURRENT_KEY",
+      "value": "-1",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_ARENA_CURRENT_KEY",
+      "value": "",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_ARENA_CURRENT_KEY",
+      "value": "0 1",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_FINAL_REFUSAL_LOG",
+      "value": "2",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_FINAL_REFUSAL_LOG",
+      "value": "-1",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_FINAL_REFUSAL_LOG",
+      "value": "",
+      "returncode": 2
+    },
+    {
+      "knob": "TEX_FINAL_REFUSAL_LOG",
+      "value": "0 1",
+      "returncode": 2
+    },
+    {
+      "options": [
+        "TEX_ARENA_CURRENT_KEY=1",
+        "VRAM_ROOM_ARENA=0"
+      ],
+      "returncode": 2
+    },
+    {
+      "options": [
+        "TEX_ARENA_CURRENT_KEY=1",
+        "VRAM_PAGES=0"
+      ],
+      "returncode": 2
+    },
+    {
+      "options": [
+        "TEX_ARENA_CURRENT_KEY=1",
+        "UI_VRAM=0"
+      ],
+      "returncode": 2
+    },
+    {
+      "options": [
+        "TEX_FINAL_REFUSAL_LOG=1",
+        "VRAM_PAGES=0"
+      ],
+      "returncode": 2
+    },
+    {
+      "options": [
+        "TEX_FINAL_REFUSAL_LOG=1",
+        "UI_VRAM=0"
+      ],
+      "returncode": 2
+    }
+  ],
+  "runtime_dependency_manifest_sha256": {
+    "baseline": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9",
+    "absent": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9",
+    "zero": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9",
+    "fix": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9",
+    "log": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9",
+    "both": "94158b0a94f7e5f6dda71088350cb9397ecef13437f7018189d4418b07bedcc9"
+  },
+  "memory_access_scope": "The fix retains the bounded core_nkeys scan (at most 16 two-word keys). It adds no allocation, file I/O, table traversal, or VRAM data store. Diagnostic logging separately scans allocator bookkeeping and emits one line per terminal refusal.",
+  "performance": "Warm/cold cycles, console cache behavior and whole-frame time not measured; no speed claim.",
+  "stack_limit": "Per-function GCC stack reports; helper and callees are additional. These are not full call-chain peak measurements.",
+  "limitations": "Complete public-configuration target TU/object controls with debug records omitted. No full game link/image identity, runtime performance, private assets, rendered pixels, or console acceptance."
+}

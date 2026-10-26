@@ -47,6 +47,18 @@ extern "C" unsigned re4dc_ps2_mesh_room();
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+#if !RE4DC_VRAM_ROOM_ARENA || !RE4DC_VRAM_PAGES || !RE4DC_UI_VRAM
+#error TEX_ARENA_CURRENT_KEY requires VRAM_ROOM_ARENA, VRAM_PAGES and UI_VRAM
+#endif
+#endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+#if !RE4DC_VRAM_PAGES || !RE4DC_UI_VRAM
+#error TEX_FINAL_REFUSAL_LOG requires VRAM_PAGES and UI_VRAM
+#endif
+extern "C" unsigned re4dc_room_id_now();
+extern "C" void re4dc_vram_pages_census(unsigned* out);
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
@@ -3752,6 +3764,24 @@ void gad_room_states(){
 #else
 #define RE4DC_GAD_HIT(k) do{}while(0)
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+// Only terminal load() refusals call this: no extra line for intermediate
+// retries, successful loads or cache hits. Read Package::error before close()
+// clears it. Invalid descriptors/identity failures have kv=0, never a stale key.
+void tex_final_refusal(const Re4dcUiImage& image,const Key& key,bool key_valid,
+                       const char* stage,const char* reason,unsigned need) {
+    unsigned census[13]={};re4dc_vram_pages_census(census);
+    re4dc_log("TEX-REFUSE r=%03x f=%u k=%08x-%08x kv=%u s=%s why=%.56s wh=%ux%u fmt=%u need=%u free=%u max=%u\n",
+              re4dc_room_id_now()&0xffffU,frame,key.crc,key.fnv,key_valid?1U:0U,
+              stage,reason?reason:"unknown",image.width,image.height,image.format,
+              need,census[3],census[4]);
+}
+#define RE4DC_TEX_FINAL_REFUSAL(...) tex_final_refusal(__VA_ARGS__);
+#define RE4DC_TEX_REFUSE_RETURN(...) do{tex_final_refusal(__VA_ARGS__);return nullptr;}while(0)
+#else
+#define RE4DC_TEX_FINAL_REFUSAL(...)
+#define RE4DC_TEX_REFUSE_RETURN(...) return nullptr
+#endif
 #if RE4DC_TEX_CHECK
 __attribute__((noinline))   // TEX_CHECK: texchk::site is this function's caller
 #endif
@@ -3790,8 +3820,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     hashdiag::site=__builtin_return_address(0);
 #endif
     RE4DC_PROFILE_SCOPE(TextureResolve);RE4DC_PROFILE_COUNT(TextureLookups,1);
-    if(!image.pixels || !image_size(image) || !image.width || !image.height || image.width>1024 || image.height>1024) return nullptr;
-    Key key{};if(prepared_key)key=*prepared_key;else if(!image_key(image,key)){RE4DC_TEXCHK_FAIL(Key{},"identity");return nullptr;}
+    if(!image.pixels || !image_size(image) || !image.width || !image.height || image.width>1024 || image.height>1024) RE4DC_TEX_REFUSE_RETURN(image,Key{},false,"input","invalid-image",0);
+    Key key{};if(prepared_key)key=*prepared_key;else if(!image_key(image,key)){RE4DC_TEXCHK_FAIL(Key{},"identity");RE4DC_TEX_REFUSE_RETURN(image,Key{},false,"identity","identity",0);}
 #if RE4DC_COPY_LEAN
     const unsigned hint=(key.crc^(key.crc>>7)^key.fnv)&127U;
     if(const unsigned h=entry_hint[hint]){
@@ -3812,7 +3842,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_VRAM_ROOM_LOG
         if(frame-fx_evict_frame<=1)++vram_guard_pressure;   // VRAM_ROOM_LOG: skipped under eviction pressure
 #endif
-        RE4DC_TEXCHK_SKIP(key,"fx-resident-only");return nullptr;}
+        RE4DC_TEXCHK_SKIP(key,"fx-resident-only");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","fx-resident-only",0);}
 #endif
 #if RE4DC_UI_VRAM
     {
@@ -3823,25 +3853,25 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         unsigned pw=8,ph=8;while(pw<image.width)pw*=2;while(ph<image.height)ph*=2;
         const unsigned least=std::min(pw*ph*2,2048+pw*ph/4);
         unsigned pinned=0;for(const auto& e:entries)if(e.valid && RE4DC_ENTRY_PINNED(e))pinned+=e.package.vram_bytes();
-        if(pinned+least>vram_budget){++vram_rejects;RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);RE4DC_TEXCHK_FAIL(key,"vram-budget");return nullptr;}
+        if(pinned+least>vram_budget){++vram_rejects;RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);RE4DC_TEXCHK_FAIL(key,"vram-budget");RE4DC_TEX_REFUSE_RETURN(image,key,true,"budget","vram-budget",least);}
     }
 #endif
 #if RE4DC_TEX_RESIDENT || RE4DC_SUBSCREEN
     // A package absent from the disc: fail without evicting an entry or
     // touching the filesystem again (it was retried every frame).
-    for(const auto& m:missing_keys) if(m.crc|m.fnv) if(m==key) {RE4DC_TEXCHK_FAIL(key,"missing");return nullptr;}
+    for(const auto& m:missing_keys) if(m.crc|m.fnv) if(m==key) {RE4DC_TEXCHK_FAIL(key,"missing");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","missing",0);}
 #endif
 #if RE4DC_UI_VRAM && RE4DC_UI_FRAG_LATCH
 #if RE4DC_UI_FRAG_RESERVE
-    if(key==frag_key && !frag_held && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");return nullptr;} // before any eviction
+    if(key==frag_key && !frag_held && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","frag-latched",0);} // before any eviction
 #else
-    if(key==frag_key && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");return nullptr;} // before any eviction
+    if(key==frag_key && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","frag-latched",0);} // before any eviction
 #endif
 #endif
     Entry* slot=nullptr;
     for(auto& e:entries) if(!e.valid){slot=&e;break;}
     if(!slot) for(auto& e:entries) if(!RE4DC_ENTRY_PINNED(e) && !RE4DC_CORE_PINNED(e) && (!slot || e.frame<slot->frame)) slot=&e;
-    if(!slot) {RE4DC_PROFILE_COUNT(TextureNoSlot,1);RE4DC_TEXCHK_FAIL(key,"no-slot");return nullptr;}
+    if(!slot) {RE4DC_PROFILE_COUNT(TextureNoSlot,1);RE4DC_TEXCHK_FAIL(key,"no-slot");RE4DC_TEX_REFUSE_RETURN(image,key,true,"slot","no-slot",0);}
 #if RE4DC_TEX_RESIDENT
     // Never evict a resident texture for a package that is not on the disc:
     // check it exists first (only when this load would evict), and remember
@@ -3862,14 +3892,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     // A pack read error is transient: no eviction, no per-file probe, and the key is not remembered as missing
     // (on a packed disc its loose file is gone); a later use retries (texpack_index.inc spaces the retries in UI frames).
-    if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");return nullptr;}
+    if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","pack-error",0);}
     const bool in_pack=pack==texpack::kFound;
 #undef RE4DC_PACK_FIND
 #if RE4DC_TEX_PAYLOAD_RETRY
     // Existing resident hits returned above. Only this exact failed member waits,
     // before close_entry/eviction or a new package open; never a loose-key miss.
     if(in_pack && texpack::payload_blocked(pack_member,frame,pack_epoch)){
-        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");return nullptr;
+        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","pack-payload-retry",0);
     }
 #endif
     if(slot->valid && !in_pack){
@@ -3881,7 +3911,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         if(f==FILEHND_INVALID){
             re4dc_log("native UI: package absent, not evicting: %s\n",probe);
             missing_keys[nmissing++%(sizeof(missing_keys)/sizeof(missing_keys[0]))]=key;
-            RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"absent");return nullptr;
+            RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"absent");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","absent",0);
         }
         fs_close(f);
     }
@@ -3915,6 +3945,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     slot->asset={};gca_tex_arm(*slot);
 #endif
     bool ok=RE4DC_OPEN_PACKAGE();
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+    unsigned refusal_need=0;
+    const char* refusal_stage="open";
+    const char* refusal_reason="open";
+#endif
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -3979,6 +4014,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     if(ok) {
         const auto& h=slot->package.header();
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        refusal_need=h.data_size;refusal_stage="budget";
+        refusal_reason=h.texture_count!=1?"texture-count":"vram-budget";
+#endif
         ok=h.texture_count==1 && h.data_size<=vram_budget;
         // Accounted budget first, then the real pool (allocator overhead).
         while(ok && (used+h.data_size>vram_budget || pvr_mem_available()<h.data_size))
@@ -3990,11 +4029,20 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     struct ArenaClass { explicit ArenaClass(unsigned c){re4dc_vram_arena_class=c;} ~ArenaClass(){re4dc_vram_arena_class=0;} };
     bool arena_core=false;
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+    // close_entry() retains the old slot key until success is published below.
+    // Placement belongs to this request, including all upload retries.
+    for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==key;
+#else
     for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==slot->key;
+#endif
 #endif
     const ArenaClass arena_class(arena_core?2U:1U);
 #endif
     if(ok) {RE4DC_PROFILE_SCOPE(TextureUpload);
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        refusal_stage="upload";refusal_reason="upload";
+#endif
         ok=slot->package.upload();
 #if RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
         // No contiguous block: take the overlay slab before evicting anything the scene uses.
@@ -4086,6 +4134,9 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
         }
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        if(ok){refusal_stage="payload";refusal_reason="release-payload";}
+#endif
         ok=ok && slot->package.release_payload();
         if(ok){RE4DC_PROFILE_COUNT(TextureUploads,1);RE4DC_PROFILE_COUNT(TextureUploadBytes,slot->package.vram_bytes());}
         else RE4DC_PROFILE_COUNT(TextureUploadFailures,1);
@@ -4124,7 +4175,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
     OVLW("upload");
 #if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+    re4dc_vram_ring_upload(key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#else
     re4dc_vram_ring_upload(slot->key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#endif
 #endif
     OVLG("upload");
 #if RE4DC_TEX_CHECK
@@ -4135,6 +4190,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         if(ok)texpack::payload_succeeded(pack_member,pack_epoch);
         else if(texpack_payload_retry::source_error(slot->package.error()))texpack::payload_failed(pack_member,frame,pack_epoch);
     }
+#endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+    if(!ok) RE4DC_TEX_FINAL_REFUSAL(image,key,true,refusal_stage,
+                                 slot->package.error()?slot->package.error():refusal_reason,refusal_need)
 #endif
     if(!ok) slot->package.close();
 #if RE4DC_TEX_META_EVICT
@@ -4170,6 +4229,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 }
 #undef RE4DC_OPEN_PACKAGE
 #undef RE4DC_OPEN_PACKAGE_RAW
+#undef RE4DC_TEX_FINAL_REFUSAL
+#undef RE4DC_TEX_REFUSE_RETURN
 #if RE4DC_UI_HANDLES
 // Direct texture handles. The first draw of a source image (with its alpha
 // mask for masked model parts) takes the full path: image_key() (source scan,
