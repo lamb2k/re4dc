@@ -1,0 +1,3 @@
+# rr EFFECT-CENSUS claims (tools/d367/rr/effect_census.py; lane fix-r100-props26 2026-10-26).
+# One row per claimed drop of a room's effect sets against EC_REF_TREE (recipe.conf): <glob> TAB <set or commit> TAB <reason>.
+# Item names: <room>:<EST|SST|PATH|EFM|EFFTEX|ETS|ETM> or <room>:room. Keep it short: a drop is a lost effect unless the PS2 cut it.
