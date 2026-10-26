@@ -27,6 +27,9 @@
 #if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
 #error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
 #endif
+#ifndef RE4DC_SCENERY_STREAM
+#define RE4DC_SCENERY_STREAM 0
+#endif
 #ifndef RE4DC_SCENERY_REPLAY_LEAN
 #define RE4DC_SCENERY_REPLAY_LEAN 0
 #endif
@@ -1070,11 +1073,32 @@ void load_screen(const float* mv,const float* p,const float* v){
     if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
     std::memcpy(last,in,sizeof(in));have=true;
 #endif
+#if RE4DC_SCENERY_STREAM
+    // SCENERY_STREAM: the same per-element chain (start value, then += row[k] * mv[4k + c] for k = 0, 1, 2) written out
+    // without the -Os loops.
+#define RE4DC_LS_EL(r,c,start) {float value=(start);value+=rows[r][0]*mv[c];value+=rows[r][1]*mv[4+c];value+=rows[r][2]*mv[8+c];screen[c][r]=value;}
+#define RE4DC_LS_ROW(r) RE4DC_LS_EL(r,0,0.0f) RE4DC_LS_EL(r,1,0.0f) RE4DC_LS_EL(r,2,0.0f) RE4DC_LS_EL(r,3,rows[r][3])
+    RE4DC_LS_ROW(0) RE4DC_LS_ROW(1) RE4DC_LS_ROW(2) RE4DC_LS_ROW(3)
+#undef RE4DC_LS_ROW
+#undef RE4DC_LS_EL
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    {   // check build: the loop form must give the same words
+        float ref[4][4];
+        for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
+            float value=c==3?rows[r][3]:0.0f;
+            for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
+            ref[c][r]=value;
+        }
+        extern unsigned stream_ls[2];++stream_ls[0];if(std::memcmp(ref,screen,sizeof(ref)))++stream_ls[1];
+    }
+#endif
+#else
     for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
         float value=c==3?rows[r][3]:0.0f;
         for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
         screen[c][r]=value; // KOS matrix_t is column-major for ftrv
     }
+#endif
     mat_load(&screen);
 }
 
@@ -2701,6 +2725,10 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 #endif
 }
 #endif
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses compared, mismatches
+unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
+#endif
 struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_RECORD_SPLIT
     const re4dc::record_split::RecordView package; const re4dc::room::MeshPart& part;
@@ -2761,6 +2789,28 @@ struct MeshDraw : Emitter {
         gathered=gather_pool;
         return gathered!=nullptr;
     }
+#if RE4DC_SCENERY_STREAM
+    // SCENERY_STREAM: the indexed meshlet whose gather is still owed (emit_pick transformed it from its pool). The
+    // clipper reads corners by meshlet index, so the gather runs (once, the same copy as corners()) before its first
+    // clip strip.
+    const RE4DC_SCENERY_RECORD* stream_l=nullptr;
+    __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(){
+        if(stream_l){const auto* l=stream_l;stream_l=nullptr;return corners(*l);}
+        return gathered;
+    }
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    // Check build: the gathered copy through transform_sched must give the same cache words and outcode bits 5..0.
+    __attribute__((noinline)) void stream_check(const RE4DC_SCENERY_RECORD& l,unsigned lo,unsigned n){
+        static pvr_vertex_t ref[256] __attribute__((aligned(32)));static std::uint8_t roc[256];
+        const auto* g=corners(l);
+        re4dc::vp::prime(ref,256);
+        re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(reinterpret_cast<const re4dc::vp::Vertex12*>(g)+lo,n,ref,roc,k);
+        ++stream_ck[0];stream_ck[1]+=n;
+        for(unsigned i=0;i<n;++i)
+            if(std::memcmp(&ref[i].x,&cache[lo+i].x,24) || ((roc[i]^outcodes[lo+i])&0x3fU)){++stream_ck[2];break;}
+    }
+#endif
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     template<class EmitRecord>
     const re4dc::room::CompactVertex12* corners(const EmitRecord& l){
@@ -3300,6 +3350,9 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_STREAM
+            if(!base)base=stream_gather();
+#endif
             result=clip_strip(base,batch,s,n);
             if(result<=0)return nullptr;
             s+=n;
@@ -3645,6 +3698,14 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         const auto* base=emit_corners(l,pk);
+#elif RE4DC_SCENERY_STREAM
+        // SCENERY_STREAM: an indexed pick is transformed from its pool (no gather); base stays null until a strip
+        // reaches the clipper (strips_lean gathers then, stream_gather()).
+        const bool ix=package.indexed(l);
+        stream_l=ix?&l:nullptr;
+        const auto* base=ix?nullptr:corners(l);
+        const auto* pool=reinterpret_cast<const vp::Vertex12*>(package.vertices()+l.first_vertex);
+        const std::uint16_t* offs=ix?package.pool_offsets(l):nullptr;
 #else
         const auto* base=corners(l);
 #endif
@@ -3662,11 +3723,22 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             re4dc::wc24::count(re4dc::wc24::Transformed,vn);
 #endif
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+            if(ix){
+                vp::transform_sched_ix(pool,offs+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+                stream_check(l,pk.lo,vn);
+#endif
+            }else
+#endif
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
             if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
 #endif
 #if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+            if(!ix)   // the SCDD tables never cover an indexed meshlet (scdd_compile.py; the loader refuses one)
+#endif
             if(const std::uint32_t dw=dd_word(l);dd_active(dw))
                 dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
 #endif
@@ -3693,6 +3765,14 @@ struct MeshDraw : Emitter {
         if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
 #endif
         re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
+#endif
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+        if(ix){
+            vp::transform_sched_ix(pool,offs,l.vertex_count,cache,outcodes,k);
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+            stream_check(l,0,l.vertex_count);
+#endif
+        }else
 #endif
 #if RE4DC_SCENERY_DEDUP
         if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
@@ -7295,6 +7375,14 @@ int ps2_pass(unsigned pass,float zfar){
         re4dc_log("PS2CAM f=%u cf=%08x c=%08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x p=%08x %08x %08x %08x %08x %08x %08x vp=%08x %08x %08x %08x %08x %08x\n",
             re4dc_ui_frame(),unsigned(far_bits),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
             w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
+    }
+#endif
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    if(!pass){
+        static unsigned logged=0;const unsigned f=re4dc_ui_frame();
+        if(f-logged>=300U){logged=f;
+            re4dc_log("SCNSTREAM check frame=%u room=%03x picks=%u corners=%u bad=%u screens=%u screen_bad=%u\n",f,ps2w.room,stream_ck[0],stream_ck[1],
+                      stream_ck[2],stream_ls[0],stream_ls[1]);}
     }
 #endif
 #if RE4DC_SCENERY_CONE

@@ -194,11 +194,170 @@ inline void transform_sched(const Vertex12* in,unsigned count,pvr_vertex_t* cach
           "fr8","fr9","fr10","fr11","fr12","fr13","fr14","fr15","t","memory" VP_ASM_FTRV_CLOBBER);
     }
 }
+// SCENERY_STREAM (lane scenery-rewrite25): transform_sched over an indexed (v3 pool) meshlet without the gather copy.
+// Vertex j is pool[ix[j]] (ix: the meshlet's u16 pool offsets); the 3 words are read from there instead of from a
+// gathered copy, so every FP operation and operand is transform_sched's and the cache entries / outcode bits are the
+// same. The input loads move to the top of each vertex (r0 = 12 * offset, @(r0,base)); the sequential input PREF is
+// dropped (the addresses are not sequential). count >= 1.
+#define VPS_IX_LOAD \
+    "mov.w   @%[ix]+,r0\n\t" \
+    "extu.w  r0,r0\n\t" \
+    "mov     r0,r1\n\t" \
+    "add     r0,r0\n\t" \
+    "add     r1,r0\n\t" \
+    "shll2   r0\n\t" \
+    "mov.l   @(r0,%[base]),r1\n\t" \
+    "add     #4,r0\n\t" \
+    "mov.l   @(r0,%[base]),r2\n\t" \
+    "add     #4,r0\n\t" \
+    "mov.l   @(r0,%[base]),r3\n\t"
+#define VPS_IX_PROLOGUE \
+    VPS_IX_LOAD \
+    "extu.w  r1,r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "float   fpul,fr0\n\t" \
+    "shlr16  r1\n\t" \
+    "lds     r1,fpul\n\t" \
+    "float   fpul,fr1\n\t" \
+    "extu.w  r2,r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "float   fpul,fr2\n\t" \
+    "fldi1   fr3\n\t" \
+    VP_ASM_FTRV \
+    "fcmp/gt fr3,fr14\n\t" \
+    "movt    %[k]\n\t" \
+    "fcmp/gt fr15,fr3\n\t" \
+    "rotcl   %[k]\n\t" \
+    "fmov    fr0,fr5\n\t" \
+    "fmov    fr1,fr6\n\t" \
+    "fmov    fr3,fr4\n\t" \
+    "fmul    fr4,fr4\n\t" \
+    VP_ASM_FSRRA4 \
+    "mov     r2,r0\n\t" \
+    "shlr16  r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "float   fpul,fr0\n\t" \
+    "fmov    fr9,fr2\n\t" \
+    "fmac    fr0,fr8,fr2\n\t" \
+    "extu.w  r3,r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "float   fpul,fr0\n\t" \
+    "fmov    fr11,fr3\n\t" \
+    "fmac    fr0,fr10,fr3\n\t" \
+    "shlr16  r3\n\t" \
+    "extu.b  r3,r0\n\t" \
+    "shll2   r0\n\t" \
+    "mov.l   @(r0,%[lo]),%[c]\n\t" \
+    "shlr8   r3\n\t" \
+    "mov     r3,r0\n\t" \
+    "shll2   r0\n\t" \
+    "mov.l   @(r0,%[hi]),r2\n\t" \
+    "or      r2,%[c]\n\t" \
+    "and     %[andm],%[c]\n\t" \
+    "or      %[orb],%[c]\n\t" \
+    "mov.l   %[c],@-%[dst]\n\t" \
+    "fmov.s  fr3,@-%[dst]\n\t" \
+    "fmov.s  fr2,@-%[dst]\n\t"
+#define VPS_IX_BODY \
+    VPS_IX_LOAD \
+    "fmul    fr4,fr5\n\t" \
+    "fldi1   fr3\n\t" \
+    "fmul    fr4,fr6\n\t" \
+    "extu.w  r1,r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "shlr16  r1\n\t" \
+    "float   fpul,fr0\n\t" \
+    "lds     r1,fpul\n\t" \
+    "float   fpul,fr1\n\t" \
+    "extu.w  r2,r0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "fcmp/gt fr5,fr7\n\t" \
+    "float   fpul,fr2\n\t" \
+    "mov     r2,r0\n\t" \
+    "shlr16  r0\n\t" \
+    "fmov.s  fr4,@-%[dst]\n\t" \
+    "rotcl   r1\n\t" \
+    "lds     r0,fpul\n\t" \
+    VP_ASM_FTRV \
+    "fmov.s  fr6,@-%[dst]\n\t" \
+    "fmov.s  fr5,@-%[dst]\n\t" \
+    "fcmp/gt fr12,fr5\n\t" \
+    "add     #56,%[dst]\n\t" \
+    "rotcl   r1\n\t" \
+    "fmov    fr9,fr2\n\t" \
+    "fcmp/gt fr6,fr7\n\t" \
+    "extu.w  r3,r0\n\t" \
+    "shlr16  r3\n\t" \
+    "fmov    fr0,fr5\n\t" \
+    "float   fpul,fr0\n\t" \
+    "lds     r0,fpul\n\t" \
+    "extu.b  r3,r0\n\t" \
+    "rotcl   r1\n\t" \
+    "fmov    fr3,fr4\n\t" \
+    "fcmp/gt fr13,fr6\n\t" \
+    "shll2   r0\n\t" \
+    "fmac    fr0,fr8,fr2\n\t" \
+    "mov.l   @(r0,%[lo]),%[c]\n\t" \
+    "rotcl   r1\n\t" \
+    "fmul    fr4,fr4\n\t" \
+    "fcmp/gt fr3,fr14\n\t" \
+    "shlr8   r3\n\t" \
+    "mov     r3,r0\n\t" \
+    "shll2   r1\n\t" \
+    VP_ASM_FSRRA4 \
+    "or      %[k],r1\n\t" \
+    "shll2   r0\n\t" \
+    "float   fpul,fr0\n\t" \
+    "movt    %[k]\n\t" \
+    "mov.l   @(r0,%[hi]),r2\n\t" \
+    "fcmp/gt fr15,fr3\n\t" \
+    "fmov    fr11,fr3\n\t" \
+    "mov.b   r1,@%[oc]\n\t" \
+    "fmac    fr0,fr10,fr3\n\t" \
+    "or      r2,%[c]\n\t" \
+    "and     %[andm],%[c]\n\t" \
+    "add     #1,%[oc]\n\t" \
+    "or      %[orb],%[c]\n\t" \
+    "fmov    fr1,fr6\n\t" \
+    "rotcl   %[k]\n\t" \
+    "mov.l   %[c],@-%[dst]\n\t" \
+    "fmov.s  fr3,@-%[dst]\n\t" \
+    "fmov.s  fr2,@-%[dst]\n\t"
+inline void transform_sched_ix(const Vertex12* base,const std::uint16_t* ix,unsigned count,pvr_vertex_t* cache,
+                               std::uint8_t* oc,const Constants& k){
+    const AsmConstants& f=k.f;
+    const float* kp=&f.zero;
+    auto* dst=reinterpret_cast<std::uint32_t*>(cache)+7; // entry + 28
+    const std::uint32_t* hi=k.lut;const std::uint32_t* lo=k.lut+256;
+    const std::uint32_t andm=k.and_mask,orb=k.or_bits;
+    std::uint32_t colour;
+    __asm__ __volatile__(
+        "fmov.s  @%[k]+,fr7\n\t" "fmov.s @%[k]+,fr8\n\t"  "fmov.s @%[k]+,fr9\n\t"
+        "fmov.s  @%[k]+,fr10\n\t" "fmov.s @%[k]+,fr11\n\t" "fmov.s @%[k]+,fr12\n\t"
+        "fmov.s  @%[k]+,fr13\n\t" "fmov.s @%[k]+,fr14\n\t" "fmov.s @%[k]+,fr15\n\t"
+        VPS_IX_PROLOGUE
+        "dt      %[count]\n\t"
+        "bt      2f\n"
+        "1:\n\t"
+        VPS_IX_BODY
+        "dt      %[count]\n\t"
+        "bf      1b\n"
+        "2:\n\t"
+        VPS_EPILOGUE
+        : [ix]"+r"(ix),[count]"+r"(count),[dst]"+r"(dst),[oc]"+r"(oc),[k]"+r"(kp),[c]"=&r"(colour)
+        : [base]"r"(base),[lo]"r"(lo),[hi]"r"(hi),[andm]"r"(andm),[orb]"r"(orb),"m"(f)
+        : "r0","r1","r2","r3","fpul","fr0","fr1","fr2","fr3","fr4","fr5","fr6","fr7",
+          "fr8","fr9","fr10","fr11","fr12","fr13","fr14","fr15","t","memory" VP_ASM_FTRV_CLOBBER);
+}
 #else
 // Host tests, and the fdiv 1/w form (HW_LEAN=0): the original kernel.
 template<unsigned Checks>
 inline void transform_sched(const Vertex12* in,unsigned count,pvr_vertex_t* cache,std::uint8_t* oc,const Constants& k){
     transform<Checks>(in,count,cache,oc,k);
+}
+inline void transform_sched_ix(const Vertex12* base,const std::uint16_t* ix,unsigned count,pvr_vertex_t* cache,
+                               std::uint8_t* oc,const Constants& k){
+    for(unsigned j=0;j<count;++j)transform<kChecksAll>(base+ix[j],1,cache+j,oc+j,k);
 }
 #endif
 } // namespace re4dc::vp
