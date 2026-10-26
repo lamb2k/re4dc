@@ -1,0 +1,15 @@
+name castle31-r203-key
+room 0x203
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 300
+dump
+goto 300 -30736 4156 -23004 0 sub
+act 1100 a 10
+act 1160 a 10
+entry 2
+alivelog 60

@@ -19,7 +19,9 @@ else
   PE3=${PE3:-/root/re4data/private/ps2enemy-ch34-20261018/PE3}
   PE4=${PE4:-/root/re4data/private/ps2enemy-ch34-20261018/PE4}
   eval "$(sed -n '/^CH4REC=/p' "$T/port/dreamcast/tools/d367/ch4found/ch4-build.sh")"
-  export CH2="$CH2 $CH4REC DISC_SET=1 WEAPON_WEP05=1"
+  # SS11_ROOM_EVICT=1: the Disc 2 load comes from the title (SS heap 11 preload pass); without the evict the title's
+  # 1.08 MB dynamic set stays beside r200's preload and 6 entries are evicted (castle31 10-26, c31-d2fast).
+  export CH2="$CH2 $CH4REC DISC_SET=1 WEAPON_WEP05=1 SS11_ROOM_EVICT=1"
 fi
 mkdir -p "$K"
 printf '%s\n' "$CH2" > "$K/disc-knobs-$LP.txt"

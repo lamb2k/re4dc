@@ -1,0 +1,3 @@
+name castle31-d2-load-r200
+stock
+alivelog 30

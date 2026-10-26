@@ -1,0 +1,3 @@
+name castle31-d2-load-stock
+stock
+alivelog 120

@@ -7,3 +7,4 @@ status 3 0x04000000
 inv default
 god
 goto 60 75905 9841 1303 sub
+stock

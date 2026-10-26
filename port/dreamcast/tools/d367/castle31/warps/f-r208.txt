@@ -1,0 +1,10 @@
+name castle31-r208-bridge
+room 0x208
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 300
+dump

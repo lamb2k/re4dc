@@ -114,6 +114,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "emdoor.h"
 #include "embox.h"
 #include "sscrn.h"
+#include "merchant.h"
 #include "re4dc_platform.h"
 #include "geometry.h"
 #include "camera.h"
@@ -327,6 +328,9 @@ struct Warp {
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
     int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
+    u16 stock_room;  // `stock`: logs the merchant stock and tune table once per room entry (castle31 shop check)
+    bool stock;
+    u32 stock_sum;
     bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
     u8 face_mode;
@@ -651,6 +655,8 @@ void load()
             if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
             if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "stock")) {
+            wp.stock = true; wp.stock_room = 0xFFFF;
         } else if (!strcmp(k, "money") && n >= 2) {
             wp.money = num(tok[1]);
         } else if (!strcmp(k, "ammo")) {
@@ -1354,6 +1360,28 @@ void face_poll()
 extern "C" { int re4dc_bell108_req = 0; }
 int addMoney(int n);   // src/game/item.cpp
 namespace {
+void stock_poll()
+{
+    // 30 room frames in: a card load sets room_id before the saved merchant data is restored
+    // Logged again whenever the tables change (an event adds stock, e.g. the r200 2-3 end).
+    if (!wp.stock || !pG || wp.room_frames < 30) return;
+    // MerchantData (include/merchant.h): stock 64 x {u16 id, s16 num, u8 isNew, pad3} then level 32 x {u16 id, u8 lv[4], u8 isNew, pad}
+    const u8* m = (const u8*) &merchantData[0];
+    u32 sum = 0;
+    for (int i = 0; i < 0x300; i++) sum = sum * 31u + m[i];
+    if (wp.stock_room == pG->room_id && wp.stock_sum == sum) return;
+    wp.stock_room = pG->room_id; wp.stock_sum = sum;
+    for (int i = 0; i < 64; i++) {
+        const u16 id = *(const u16*) (m + 8 * i); const s16 nm = *(const s16*) (m + 8 * i + 2);
+        if (id == 0xFFFF || (id == 0 && nm == 0)) continue;
+        re4dc_log("warp: stock room %x item %02x num %d new %d\n", pG->room_id, id, nm, m[8 * i + 4]);
+    }
+    for (int i = 0; i < 32; i++) {
+        const u8* e = m + 0x200 + 8 * i; const u16 id = *(const u16*) e;
+        if (id == 0xFFFF || id == 0) continue;
+        re4dc_log("warp: tune room %x item %02x lv %d %d %d %d\n", pG->room_id, id, e[2], e[3], e[4], e[5]);
+    }
+}
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
@@ -1362,6 +1390,7 @@ void god_alert_poll()
         re4dc_log("warp: money +%d -> %d\n", wp.money, have);
         wp.money = 0;
     }
+    stock_poll();
     if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
         ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
@@ -1819,6 +1848,7 @@ void re4dc_warp_poll(void)
 #endif
     if (!wp.active) {
         native_alive_poll();
+        stock_poll();
         return;
     }
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
