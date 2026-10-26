@@ -30,3 +30,7 @@ st1/r100.dar:0x0f ETM	windows26	GC window pane et0000 restored (GC-ASSET allowli
 st1/r10[157].dar:0x0e ETM	windows26	GC window panes et0000 / et2500 (+ GC et0000.tpl record in r105 / r107)
 st1/r11[1cf].dar:0x0e ETM	windows26	GC window panes et0000 / et2500 + GC et0000.tpl record
 st1/r100.dar:0x* ESQ	windows26	rebased after the ETM size change
+dc/native/r100/ps2-world.re4mesh:changed	n256r100	r100 world at 256-vertex meshlets (SCENERY_N256)
+dc/native/r100/ps2-world.r4sg:*	n256r100	strip groups of the r100 256-vertex world
+dc/native/r100/room.r4rc:*	n256r100	r100 room record of the 256-vertex world
+dc/native/r100/interior.cell:changed	icells26	r100 house cell as PCL2 for the n256r100 package (PS2_INTERIOR_CELLS=1)

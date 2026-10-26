@@ -61,8 +61,94 @@ def from_inc(src, out_inc, out_cell):
     print(f'{out_cell}: {len(cells)} cells, {len(portals)} portals, {len(data)} B')
 
 
+# PCL2 (PS2_INTERIOR_CELLS=1, lane interior-cells26): self-describing, no constants header, several houses per room.
+#   header 64 B: 'PCL2', room, mesh_crc, sidecar_crc, mesh_bytes, cell_count, portal_count, file_bytes, near_max (f32),
+#                house_count, 0 x 6
+#   houses house_count x 32 B: outer lo xyz, hi xyz (f32), first cell, cell count (u16), 0 (u32)
+#   cells, portals: as PCL1. Each house's cells are one contiguous run.
+MAGIC2 = b'PCL2'
+
+
+def pack2(room, mesh_crc, sidecar_crc, mesh_bytes, near_max, houses):
+    """houses: [(outer[6], cells, portals)] with cell first indices local to that house's portals."""
+    hdr_h, cells_b, portals_b, nc, np_ = bytearray(), bytearray(), bytearray(), 0, 0
+    for outer, cells, portals in houses:
+        hdr_h += struct.pack('<6f2HI', *outer, nc, len(cells), 0)
+        for lo, hi, first, count in cells:
+            assert first + count <= len(portals) and count <= 24
+            cells_b += struct.pack('<6f2H', *lo, *hi, first + np_, count)
+        for po in portals:
+            portals_b += struct.pack('<I5f', *po)
+        nc += len(cells); np_ += len(portals)
+    total = 64 + len(hdr_h) + len(cells_b) + len(portals_b)
+    hdr = MAGIC2 + struct.pack('<7If7I', room, mesh_crc, sidecar_crc, mesh_bytes, nc, np_, total, float(near_max),
+                               len(houses), 0, 0, 0, 0, 0, 0)
+    assert len(hdr) == 64
+    return bytes(hdr + hdr_h + cells_b + portals_b)
+
+
+def unpack1(data):
+    assert data[:4] == MAGIC
+    room, mc, sc, mb, nc, np_, _ = struct.unpack_from('<7I', data, 4)
+    cells = [struct.unpack_from('<6f2H', data, 32 + 28 * i) for i in range(nc)]
+    cells = [(c[0:3], c[3:6], c[6], c[7]) for c in cells]
+    off = 32 + 28 * nc
+    portals = [struct.unpack_from('<I5f', data, off + 24 * i) for i in range(np_)]
+    return room, mc, sc, mb, cells, portals
+
+
+def pcl1_to_pcl2(cell1, inc, out, mesh_crc=None, sidecar_crc=None, mesh_bytes=None):
+    """Re-wrap a PCL1 file (+ its constants .inc for near/outer) as PCL2, optionally re-keyed to another package whose
+    geometry is the same (e.g. the PT_CUTOUT / SMX / TR4 rebuilds)."""
+    room, mc, sc, mb, cells, portals = unpack1(Path(cell1).read_bytes())
+    t = Path(inc).read_text()
+    near = float(re.search(r'kPcNearMax=([-0-9.]+)f', t)[1])
+    outer = [float(x) for x in re.search(r'kPcOuter\[6\]=\{([^}]*)\}', t)[1].replace('f', '').split(',')]
+    data = pack2(room, mesh_crc if mesh_crc is not None else mc, sidecar_crc if sidecar_crc is not None else sc,
+                 mesh_bytes if mesh_bytes is not None else mb, near, [(outer, cells, portals)])
+    Path(out).write_bytes(data)
+    print(f'{out}: PCL2 room {room:x}, {len(cells)} cells, {len(portals)} portals, {len(data)} B')
+
+
+
+def unpack2(data):
+    assert data[:4] == MAGIC2
+    room, mc, sc, mb, nc, np_, total = struct.unpack_from('<7I', data, 4)
+    near = struct.unpack_from('<f', data, 32)[0]; nh = struct.unpack_from('<I', data, 36)[0]
+    assert total == len(data)
+    hs = [struct.unpack_from('<6f2HI', data, 64 + 32 * k) for k in range(nh)]
+    off = 64 + 32 * nh
+    cells = [struct.unpack_from('<6f2H', data, off + 28 * i) for i in range(nc)]
+    off += 28 * nc
+    portals = [struct.unpack_from('<I5f', data, off + 24 * i) for i in range(np_)]
+    houses = []
+    for h in hs:
+        cs = cells[h[6]:h[6] + h[7]]
+        p0 = min(c[6] for c in cs); p1 = max(c[6] + c[7] for c in cs)
+        houses.append((list(h[:6]), [(c[0:3], c[3:6], c[6] - p0, c[7]) for c in cs], portals[p0:p1]))
+    return (room, mc, sc, mb, near), houses
+
+
+def merge2(out, *ins):
+    """Join single-room PCL2 files (same package) into one file with one house each."""
+    key, houses = None, []
+    for f in ins:
+        k, hs = unpack2(Path(f).read_bytes())
+        assert key is None or k[:4] == key[:4], f'{f}: another package'
+        key = k if key is None else (k[:4] + (max(key[4], k[4]),))
+        houses += hs
+    data = pack2(*key[:4], key[4], houses)
+    Path(out).write_bytes(data)
+    print(f'{out}: PCL2 room {key[0]:x}, {len(houses)} houses, {len(data)} B')
+
+
 if __name__ == '__main__':
     if len(sys.argv) == 5 and sys.argv[1] == 'from-inc':
         from_inc(*sys.argv[2:])
+    elif len(sys.argv) in (5, 8) and sys.argv[1] == 'to-pcl2':   # to-pcl2 <pcl1 .cell> <.inc> <out> [mesh sidecar bytes]
+        extra = [int(x, 0) for x in sys.argv[5:]] if len(sys.argv) == 8 else []
+        pcl1_to_pcl2(*sys.argv[2:5], *extra)
+    elif len(sys.argv) >= 4 and sys.argv[1] == 'merge2':   # merge2 <out> <in.cell>...
+        merge2(*sys.argv[2:])
     else:
         sys.exit(__doc__)

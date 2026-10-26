@@ -11,7 +11,7 @@
 // and (lane world-n256all 10-26) r10a / r11a / r112 / r104 (data set n256c26: recorded recipes at 256, strip groups, fresh SCDD room files).
 // and (lane world-n256all 10-26) r10f / r10c (data set n256d26: recorded recipes at 256, strip groups, fresh SCDD room files).
 // and (lane world-n256all 10-26) r118 / r107 / r113 / r11b (data set n256e26: recorded recipes at 256, strip groups, fresh SCDD room files).
-{0x100U,19612U,283U,304U,179U,0x25d5daafU,0x195a20beU,0xfb35ea9cU,1537920U,0x14118acdU},
+{0x100U,19612U,283U,304U,179U,0x25d5daafU,0x195a20beU,0x45c5e14eU,1461184U,0x14118acdU},
 {0x101U,17100U,223U,342U,204U,0x7f878babU,0xddb50572U,0x4ec31f36U,1223744U,0x68100b21U},
 {0x102U,4412U,43U,134U,37U,0xcf4936c0U,0xe7f813caU,0x6c1c1637U,334816U,0xf6dd4f73U},
 {0x103U,11272U,134U,267U,134U,0xf0535d9dU,0xc12c5f80U,0x11b076c6U,1031104U,0x2af23d86U},

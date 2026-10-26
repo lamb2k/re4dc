@@ -2164,7 +2164,7 @@ struct State {
     float eye[3]{};
     int cell=-1; unsigned nfr=0; Frustum* fr=nullptr; // kMaxFr frustums in the cell block (null: not loaded)
     unsigned frame=~0U,setup_frame=~0U,done_frame=~0U;float corner=0; // done_frame: the frame the cell was last set up for
-    unsigned placements=0,clusters=0,meshlets=0,tests=0,active_frames=0,frames=0; // culled (=1/=3) or checked (=2)
+    unsigned placements=0,clusters=0,meshlets=0,tests=0,active_frames=0,frames=0; PC_STATE_EXTRA // culled (=1/=3) or checked (=2)
 } st;
 // The disc cell (r100 only): one heap-4 block = file (header, cells, portals) + both states' frustum arrays.
 struct Data {
@@ -2205,7 +2205,7 @@ inline void setup_state(State& st,const float* view,const float* P,float near){
         const Cell& c=data.cells[i];
         if(e[0]>=c.lo[0] && e[0]<=c.hi[0] && e[1]>=c.lo[1] && e[1]<=c.hi[1] && e[2]>=c.lo[2] && e[2]<=c.hi[2]){st.cell=int(i);break;}
     }
-    if(st.cell<0)return;
+    if(st.cell<0)return; PC_PICK_HOUSE(st)
     const Cell& c=data.cells[st.cell];
     if(c.count>kMaxFr)return;
     for(unsigned k=0;k<3;++k)st.eye[k]=e[k];
@@ -2232,7 +2232,7 @@ inline void setup_state(State& st,const float* view,const float* P,float near){
 inline void setup(const float* view,const float* P,float near){setup_state(st,view,P,near);}
 // World box (centre / half extents): 1 hidden, 0 drawn (seen through a portal), -1 meets the house box.
 inline int hidden_state(State& st,const float c[3],const float h[3]){
-    ++st.tests;
+    ++st.tests; PC_OUTER_DECL(st)
     float lo[3],hi[3];
     for(unsigned a=0;a<3;++a){lo[a]=c[a]-h[a]-kSlack;hi[a]=c[a]+h[a]+kSlack;}
     if(hi[0]>kPcOuter[0] && lo[0]<kPcOuter[3] && hi[1]>kPcOuter[1] && lo[1]<kPcOuter[4] && hi[2]>kPcOuter[2] && lo[2]<kPcOuter[5])return -1;
@@ -2283,7 +2283,7 @@ inline unsigned unload(){
     return kPcFileBytes+2U*kFrBytes;
 }
 // Reads /cd/dc/native/r100/interior.cell into a heap-4 block (the r100 package open, and after a route movie).
-inline bool load(){
+inline bool load(){ PC_LOAD_HOOK
     if(data.block)return true;
     if(!st.ok)return false;
 #if RE4DC_GC_ASSET_GATE
@@ -5248,6 +5248,8 @@ bool ps2_movie_layout(unsigned room){
        ps2w.package.header().bytes==1488192)
         return f.mesh==1488192 && f.side==19612 && ps2_movie.capacity==1512928;
 #endif
+    // n256r100 (SCENERY_N256, 256-vertex meshlets): the same sidecar, LUT and gather after a 1,461,184 B mesh.
+    if(room==0x100 && f.mesh==1461184)return f.side==19612 && ps2_movie.capacity==1461184U+(1562656U-1537920U);
     if(room==0x100)return f.mesh==1537920 && f.side==19612 && ps2_movie.capacity==1562656;
 #endif
     return false;
@@ -6927,9 +6929,9 @@ bool ps2_open(){
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
 #if RE4DC_SCENERY_DEDUP==3
-    pc::st.ok=ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
+    pc::st.ok=PC_ADOPT_PRE(ps2w.room,ps2w.package.source_crc(),policySourceCrc,ps2w.package.source_bytes()) ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
 #else
-    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+    pc::st.ok=PC_ADOPT_PRE(ps2w.room,mh.crc,policySourceCrc,mh.bytes) ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
 #endif
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
@@ -7490,7 +7492,7 @@ int ps2_pass(unsigned pass,float zfar){
             if(pcact::have && pcact::near==near && !std::memcmp(pcact::view,ps2w.view,sizeof(pcact::view)) &&
                !std::memcmp(pcact::P,P,sizeof(pcact::P))){
                 const pc::State& t=pc::st_trans;pc::State& s=pc::st;
-                s.active=t.active;s.cell=t.cell;s.nfr=t.nfr;s.corner=t.corner;
+                s.active=t.active;s.cell=t.cell;s.nfr=t.nfr;s.corner=t.corner; PC_COPY_EXTRA(s,t)
                 for(unsigned a=0;a<3;++a)s.eye[a]=t.eye[a];
                 if(s.fr && t.fr)for(unsigned i=0;i<t.nfr;++i)s.fr[i]=t.fr[i];else s.active=false;
                 if(s.active)s.setup_frame=sf;
@@ -7913,7 +7915,7 @@ int ps2_pass(unsigned pass,float zfar){
             const float blo[3]={mesh.bounds_min[0],mesh.bounds_min[1],mesh.bounds_min[2]},bhi[3]={mesh.bounds_max[0],mesh.bounds_max[1],mesh.bounds_max[2]};
             pc::world_box(RE4DC_PS2_AFFINE,blo,bhi,wc,wh);
             bool inside=true; // the placement box inside the house box: nothing in it can be outside
-            for(unsigned a=0;a<3;++a)inside=inside && wc[a]-wh[a]>=pc::kPcOuter[a] && wc[a]+wh[a]<=pc::kPcOuter[3+a];
+            for(unsigned a=0;a<3;++a)inside=inside && wc[a]-wh[a]>=PC_OUTER_RENDER[a] && wc[a]+wh[a]<=PC_OUTER_RENDER[3+a];
             if(!inside){
                 pc_state=pc::hidden(wc,wh)>0?2U:1U;
                 concat(RE4DC_PS2_AFFINE,grid,pc_wq);pc::abs_rows(pc_wq);

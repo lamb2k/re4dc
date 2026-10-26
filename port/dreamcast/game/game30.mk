@@ -2900,6 +2900,21 @@ endif
 # re4dc_actor_crowd_note under its settled-parts rule) and skips the submission. With PS2_INTERIOR_CULL=2 nothing is
 # skipped: the box is drawn magenta and the crowd entry the submission left is compared with the replay's
 # (INVISPCO checked / check_mis, must stay 0).
+# PS2_INTERIOR_CELLS=1 (lane interior-cells26 2026-10-26; render only; default 0: no effect; needs PS2_INTERIOR_CULL
+# 1/2/3): the interior cell becomes per room and data driven. No package constants are compiled in: the room's package
+# open reads /cd/dc/native/rXXX/interior.cell (PCL2 header: room, mesh CRC, sidecar CRC, mesh bytes, counts, file
+# bytes, near margin, house box; tools/d367/ps2world/interior/cell_file.py pack2) and adopts it only when every
+# identity word equals the open package's. A room without a file, or with a stale one, draws as with the knob off.
+PS2_INTERIOR_CELLS ?= 0
+ifneq ($(filter-out 0 1,$(PS2_INTERIOR_CELLS)),)
+$(error PS2_INTERIOR_CELLS must be 0 or 1)
+endif
+ifeq ($(PS2_INTERIOR_CELLS),1)
+ifeq ($(filter 1 2 3,$(PS2_INTERIOR_CULL)),)
+$(error PS2_INTERIOR_CELLS=1 needs PS2_INTERIOR_CULL=1, 2 or 3)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_INTERIOR_CELLS=1
+endif
 PS2_INTERIOR_ACTORS ?= 0
 ifneq ($(PS2_INTERIOR_ACTORS),0)
 ifeq ($(filter $(PS2_INTERIOR_ACTORS),1 2),)
