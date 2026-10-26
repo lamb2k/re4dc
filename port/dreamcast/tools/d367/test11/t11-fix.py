@@ -1642,5 +1642,18 @@ ICELLS26D = os.environ.get('ICELLS26D', '/root/re4data/private/icells26-20261026
 DATA['icells26'] = {'dc/native/%s/interior.cell' % r: ICELLS26D + '/dc/native/%s/interior.cell' % r
     for r in ('r100',)}
 
+# wsg26 (lane worldopt26 10-26, user 10-26 "yes extend the strip"): spatial strip groups for the 256-vertex meshlet
+# route rooms (tools/ps2_strip_groups.py default mode, 4 groups, on each room's shipped n256 package: corners renumbered in
+# group order, same bytes; r4sg policy word = the shipped r4sg's / the certificate source crc for r103, which had none).
+# r101 is already spatial (not in the set). r100 carries interior.cell with the new mesh crc (icells26's file otherwise).
+# Pairs with WORLD_SG26=1 (provenance_certificates_sg26.inc). After n256r100 and icells26. Release line only, never KSETS.
+# Store: re4-assets-private/wsg26-20261026 (RECIPE.txt).
+WSG26D = os.environ.get('WSG26D', '/root/re4data/private/wsg26-20261026')
+WSG26_ROOMS = ('r100', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d',
+               'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f')
+DATA['wsg26'] = {'dc/native/%s/%s' % (r, f): WSG26D + '/dc/native/%s/%s' % (r, f)
+    for r in WSG26_ROOMS for f in ('ps2-world.re4mesh', 'ps2-world.r4sg')}
+DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interior.cell'
+
 if __name__ == '__main__':
     main()

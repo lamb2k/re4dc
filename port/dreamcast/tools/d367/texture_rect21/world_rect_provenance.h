@@ -21,9 +21,31 @@ struct Certificate {
 inline constexpr Certificate certificates_base[] = {
 #include "provenance_certificates.inc"
 };
+#if defined(RE4DC_WORLD_SG26) && RE4DC_WORLD_SG26
+// WORLD_SG26=1 (lane worldopt26 2026-10-26): data set wsg26 renumbers the corners of 24 certified n256 packages
+// (spatial strip groups, same bytes): only their mesh crc differs from the n256 table (sg26_rows_match below).
+inline constexpr Certificate certificates_n256[] = {
+#include "provenance_certificates_n256.inc"
+};
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_sg26.inc"
+};
+static_assert(sizeof(certificates)==sizeof(certificates_n256));
+constexpr bool sg26_rows_match() {
+    for(unsigned i=0;i<sizeof(certificates)/sizeof(certificates[0]);++i){
+        const auto& a=certificates_n256[i];const auto& b=certificates[i];
+        if(a.room!=b.room || a.world_bytes!=b.world_bytes || a.placements!=b.placements || a.parts!=b.parts ||
+           a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
+           a.mesh_bytes!=b.mesh_bytes || a.source_crc!=b.source_crc)return false;
+    }
+    return true;
+}
+static_assert(sg26_rows_match());
+#else
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates_n256.inc"
 };
+#endif
 static_assert(sizeof(certificates)==sizeof(certificates_base));
 constexpr bool n256_rows_match() {
     unsigned swapped=0;
