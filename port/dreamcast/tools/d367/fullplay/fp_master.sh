@@ -43,6 +43,10 @@ for f in dc/warp.txt dc/padscript.txt dc/w11.txt; do
   head -c $FIXB /dev/zero > $WORK/cdroot/$f
 done
 ALLOW=(--allow 'dc/warp\.txt' --allow 'dc/padscript\.txt' --allow 'dc/w11\.txt')
+# FP_ALLOW_EXTRA='<regex> ...' (lane interior-cells26): data files a lane added to the tree it passes (e.g.
+# 'dc/native/r[0-9a-f]+/interior\.cell'); listed in base-diff.txt. Use with RE4DC_STAGE_EXT4=0: the base cache key does not
+# cover the tree.
+for a in ${FP_ALLOW_EXTRA:-}; do ALLOW+=(--allow "$a"); done
 # FP_GC_CATALOG=<file> (lane gc-catalog24b): stage a GC-ASSET diagnostic catalog as dc/gc-assets.idx; only that
 # one extra file is allowed in the base diff. Unset = unchanged behaviour.
 if [ -n "${FP_GC_CATALOG:-}" ]; then
