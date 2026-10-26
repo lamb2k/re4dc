@@ -15,6 +15,14 @@ CAND=$(cat "$W/cand.txt")
 G=$W/gca
 rm -rf "${G:?}"
 bash "$D/gc_port23/make_catalog.sh" "$CAND/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1
+# GC-ASSET (bytes) (lane gcleft26 10-26, report only): the same catalog with PROVENANCE_FOLLOW_BYTES=1, so a staging set
+# is credited only with the members whose bytes it changed; gca_bytes.py writes <work>/gca-bytes.json for rr-judge.py's
+# KNOWN row. Never fails the cycle.
+rm -rf "${W:?}/gca-bytes"
+{ PROVENANCE_FOLLOW_BYTES=1 bash "$D/gc_port23/make_catalog.sh" "$CAND/gdemu/track03.bin" "$W/recipe.conf" "$W/gca-bytes" | tail -1 &&
+  python3 "$D/gc_port23/gca_bytes.py" "$W/gca-bytes/catalog/catalog.json" --base "$G/catalog/catalog.json" --json "$W/gca-bytes.json"; } ||
+  echo "rr-gca: bytes catalog failed (report row only)"
+rm -rf "${W:?}/gca-bytes/raw"
 FP_TREE=$T FP_SKIP_IDENTITY=1 bash "$D/fullplay/fp_twin.sh" "$ROUTE/out-rr${S7}rP" "rr${S7}a" \
   GC_ASSET_GATE=1 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-rr${S7}a.txt" 2>&1
 O=$ROUTE/out-fprr${S7}aW

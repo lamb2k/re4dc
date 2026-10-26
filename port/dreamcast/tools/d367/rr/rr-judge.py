@@ -200,6 +200,16 @@ if build_ok and jobs:
         if not j.get('pass'):
             detail += ' | ' + ' / '.join(j.get('failures', [])[:3])
         add('GC-ASSET gate', bool(j.get('pass')), detail[:600], knownrow=os.environ.get('RR_GCA_MODE', 'gate') == 'report')
+    # GC-ASSET (bytes) (lane gcleft26 10-26): report only, never FAIL; rr-gca.sh's byte-following catalog (gca_bytes.py)
+    if 'gca' in srt:
+        try:
+            gb = json.loads(rd(W / 'gca-bytes.json'))
+            rk = sorted(gb['rooms'].items(), key=lambda kv: -kv[1].get('gc', 0))
+            add('GC-ASSET (bytes)', gb['gc'] == 0, ('gc %d unknown %d; kinds %s; rooms %s' % (
+                gb['gc'], gb['unknown'], ' '.join('%s=%d' % kv for kv in gb['kinds'].items()),
+                ' '.join('%s=%d' % (k, v['gc']) for k, v in rk if v.get('gc'))))[:600], knownrow=True)
+        except (ValueError, KeyError):
+            add('GC-ASSET (bytes)', False, 'bytes catalog did not run', knownrow=True)
     rooms = rd(W / 'census-rooms.txt').split()
     logs = [EVU / ('cg-' + r) / 'run-output.txt' for r in rooms if (EVU / ('cg-' + r) / 'run-output.txt').exists()]
     if rooms:
