@@ -401,20 +401,38 @@ extern "C" DvdSndStrWork Snd_str_work[4];
 // cancelled), so room setup and gameplay never see it; mid-room reads (BGM, weapons, the s30 movie) use the static area.
 #include "main_mem.h"
 extern "C" void OSFreeToHeap(int heap, void* p);
-extern "C" int re4dc_static_heap_free();
 int re4dc_dvd_borrow_window = 1;   // game.cpp: 1 from power-on / gameRoomMemInit to the end of gameRoomInit
 static u8* dvdBorrow;
+static int dvdBorrowHeap = -1, dvdBorrowHandle = -1;
 static unsigned dvdBorrowTakes, dvdBorrowSkips;
-static void* dvdBorrowTop(u32 need)
+static OSHeapDescriptor* dvdHeapDesc(int h) { return (OSHeapDescriptor*) ((re4dc_mem.heap + 0x1FU) & ~0x1FU) + h; }
+// The live heap whose largest free cell holds the block with DVD_BORROW_SPARE left over (heap 4 first: the room heap;
+// at boot / title, before heap 4 exists, whichever game heap is up). -1: none.
+static int dvdBorrowPick(s32 size)
+{
+    int best = -1; s32 best_free = 0;
+    for (int i = 0; i < MEM_HEAP_NUM; ++i) {
+        const int k = i == 0 ? 4 : i == 4 ? 0 : i;
+        if (Heap[k].handle < 0 || !memCheckHeapActive(k)) continue;
+        s32 big = 0;
+        for (OSHeapCell* c = dvdHeapDesc(Heap[k].handle)->free; c; c = c->next) if (c->size > big) big = c->size;
+        if (big >= size + (s32) RE4DC_DVD_BORROW_SPARE && big > best_free) {
+            best = k; best_free = big;
+            if (k == 4) break;
+        }
+    }
+    return best;
+}
+static void* dvdBorrowTop(int heap, u32 need)
 {
     // as read.cpp wepHeap4AllocTop (WEAPON_HEAP4_TOP): the top of the highest free cell, a plain allocated cell
-    OSHeapDescriptor* d = (OSHeapDescriptor*) ((re4dc_mem.heap + 0x1FU) & ~0x1FU) + Heap[4].handle;
+    OSHeapDescriptor* d = dvdHeapDesc(Heap[heap].handle);
     const s32 size = (s32) (((need + 0x1FU) & ~0x1FU) + 0x20U);
     OSHeapCell* best = 0;
     for (OSHeapCell* c = d->free; c; c = c->next) {
-        if (c->size >= size) best = c;
+        if (c->size >= size + (s32) RE4DC_DVD_BORROW_SPARE) best = c;
     }
-    if (best == 0 || best->size - size < 0x40) return 0;   // never take a whole cell
+    if (best == 0) return 0;
     best->size -= size;
     OSHeapCell* cell = (OSHeapCell*) ((u8*) best + best->size);
     cell->size = size;
@@ -427,18 +445,30 @@ static void* dvdBorrowTop(u32 need)
 static void dvdBorrowTake(s32 left)
 {
     if (dvdBorrow || !re4dc_dvd_borrow_window || left <= (s32) DVD_WHOLE) return;
-    if (!memCheckHeapActive(4) || Heap[4].handle < 0 || re4dc_static_heap_free() < (int) (RE4DC_DVD_BORROW_BYTES + RE4DC_DVD_BORROW_SPARE)) {
+    const int heap = dvdBorrowPick((s32) RE4DC_DVD_BORROW_BYTES + 0x20);
+    if (heap < 0) {
         ++dvdBorrowSkips;
         return;
     }
-    dvdBorrow = (u8*) dvdBorrowTop(RE4DC_DVD_BORROW_BYTES);
-    if (dvdBorrow) ++dvdBorrowTakes; else ++dvdBorrowSkips;
+    dvdBorrow = (u8*) dvdBorrowTop(heap, RE4DC_DVD_BORROW_BYTES);
+    if (dvdBorrow) {
+        ++dvdBorrowTakes;
+        dvdBorrowHeap = heap;
+        dvdBorrowHandle = Heap[heap].handle;
+    } else {
+        ++dvdBorrowSkips;
+    }
 }
 static void dvdBorrowGive()
 {
     if (!dvdBorrow) return;
-    OSFreeToHeap(Heap[4].handle, dvdBorrow);
+    // the heap can only have been rebuilt if a transfer spanned it (never seen): then the block went with it
+    if (Heap[dvdBorrowHeap].handle == dvdBorrowHandle && memCheckHeapActive(dvdBorrowHeap))
+        OSFreeToHeap(dvdBorrowHandle, dvdBorrow);
+    else
+        OSReport("DVD borrow: heap %d rebuilt under the block" "\n", dvdBorrowHeap);
     dvdBorrow = 0;
+    dvdBorrowHeap = dvdBorrowHandle = -1;
 }
 // gameRoomMemInit, before heap 4 is rebuilt (a transfer never spans it; logged if one did).
 extern "C" void re4dc_dvd_borrow_room_reset()
