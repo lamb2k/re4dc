@@ -2915,6 +2915,18 @@ ARENA_RING ?= 0
 ifneq ($(filter 3,$(OVL_GUARD))$(filter-out 0,$(ARENA_RING)),)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ARENA_RING=1
 endif
+# DVD_BUFF_KB=N (lane heap-margin25 2026-10-25, default 0 = the GameCube's 128 KB; N = 16..64, a power of two):
+# the DVD staging area (platform mem.cpp re4dc_dvd_buff) is N KB. src/game/dvd.cpp chunks every transfer through it:
+# sound / archive pieces of N KB (was 128 KB), memory swap and event swap reload through the N/2 halves. No read is
+# refused; smaller pieces only mean more disc requests during loads. The image (heap 4 at r100 s30) is 128-N KB smaller.
+DVD_BUFF_KB ?= 0
+ifneq ($(DVD_BUFF_KB),0)
+ifeq ($(filter 16 32 64,$(DVD_BUFF_KB)),)
+$(error DVD_BUFF_KB must be 0, 16, 32 or 64)
+endif
+GAME_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
+PLATFORM_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
+endif
 LOG_TRIM ?= 0
 ifneq ($(LOG_TRIM),0)
 $(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)

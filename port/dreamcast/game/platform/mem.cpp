@@ -169,7 +169,7 @@ char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
 // 1 while stdout is a separate device; 0 once fault.cpp routes the KOS
 // debug output into this ring (printing would then loop back here).
 int re4dc_log_console = 1;
-unsigned char re4dc_dvd_buff[0x20000] __attribute__((aligned(32)));
+unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
 
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
 // preemptive thread (the aica sequencer's "aica: t=... note" lines) cannot splice its text into the

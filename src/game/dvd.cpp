@@ -383,10 +383,15 @@ extern "C" DvdSndStrWork Snd_str_work[4];
 #if defined(__PPC__)
 #define DVD_BUFF ((void*) 0x80350000)
 #define DVD_BUFF2 ((void*) 0x80360000)
+#define DVD_HALF 0x10000
+#define DVD_WHOLE 0x20000
 #else
+// DVD_BUFF_KB (lane heap-margin25): the halves and the whole piece follow the platform buffer size (default 128 KB).
+#define DVD_WHOLE RE4DC_DVD_BUFF_BYTES
+#define DVD_HALF (RE4DC_DVD_BUFF_BYTES / 2)
 // The 128 KB read staging area at the GameCube's fixed 0x80350000 is a platform buffer here.
 #define DVD_BUFF ((void*) re4dc_dvd_buff)
-#define DVD_BUFF2 ((void*) (re4dc_dvd_buff + 0x10000))
+#define DVD_BUFF2 ((void*) (re4dc_dvd_buff + DVD_HALF))
 #endif
 
 // status field of cDvdQueue::flag
@@ -497,7 +502,7 @@ static int re4dc_event_swap_reload(void* mram, u32 aram, u32 size)
     void* runs = MEM_ALLOC(kSwapRunsCap, 1, 0xD);
     if (!runs) return -1;
     u32 crc = 0;
-    const int used = re4dc_swap_reload_record(em, mram, size, DVD_BUFF, 0x10000, runs, kSwapRunsCap, &crc);
+    const int used = re4dc_swap_reload_record(em, mram, size, DVD_BUFF, DVD_HALF, runs, kSwapRunsCap, &crc);
     if (used < 0) {
         re4dc_log("event swap reload: record %s bytes=%u failed (runs over %u B or read error)\n", em, (unsigned) size,
                   (unsigned) kSwapRunsCap);
@@ -570,8 +575,8 @@ void MemorySwap(void* mram, u32 aram, u32 size)
     DCFlushRange(mram, size);
     while (rest) {
         n = rest;
-        if (n > 0x10000) {
-            n = 0x10000;
+        if (n > DVD_HALF) {
+            n = DVD_HALF;
         }
         rest -= n;
         memcpy(DVD_BUFF, p, n);
@@ -940,7 +945,7 @@ void cDvdQueue::readMain()
     case 1:
         m_Counter = OSGetTick();
         m_be_flag |= 0x20;
-        m_DivReadSize = m_LeftSize > 0x20000 ? 0x20000 : m_LeftSize;
+        m_DivReadSize = m_LeftSize > DVD_WHOLE ? DVD_WHOLE : m_LeftSize;
         RE4DC_SND_PAD_READ((*ph)->type, m_TransAddr, m_DivReadSize, fileReadAsync(DVD_BUFF, m_DivReadSize, m_Offset));
         step++;
         break;
@@ -2422,6 +2427,6 @@ asm(".section .rodata; .balign 8");
 
 #if RE4DC_CABIN_SOURCE
 extern "C" int re4dc_cabin_source_swap_buffer(unsigned type,unsigned address,unsigned bytes){
-    return bytes && bytes<=0x10000 && address==(u32)(type==0?DVD_BUFF:DVD_BUFF2);
+    return bytes && bytes<=DVD_HALF && address==(u32)(type==0?DVD_BUFF:DVD_BUFF2);
 }
 #endif
