@@ -2927,9 +2927,44 @@ endif
 GAME_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
 PLATFORM_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
 endif
+# DVD_BORROW=1 (lane heap-margin25, default 0; needs DVD_BUFF_KB): load-time staging borrow (src/game/dvd.cpp): during
+# boot / new game / room loads a transfer larger than the static area reads through DVD_BORROW_KB (default 128) carved
+# from the top of heap 4, only while DVD_BORROW_SPARE_KB (default 512) more stays free; returned at the transfer's end.
+DVD_BORROW ?= 0
+DVD_BORROW_KB ?= 128
+DVD_BORROW_SPARE_KB ?= 512
+ifneq ($(DVD_BORROW),0)
+ifneq ($(DVD_BORROW),1)
+$(error DVD_BORROW must be 0 or 1)
+endif
+ifeq ($(DVD_BUFF_KB),0)
+$(error DVD_BORROW=1 needs DVD_BUFF_KB)
+endif
+$(OBJDIR)/src/game/dvd.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_DVD_BORROW=1 -DRE4DC_DVD_BORROW_BYTES=$(DVD_BORROW_KB)*1024U -DRE4DC_DVD_BORROW_SPARE=$(DVD_BORROW_SPARE_KB)*1024U
+endif
+# LOG_PLAY_KB=N (lane heap-margin25 2026-10-25, default 0: no effect): in a play image (DBG_WARP=0 and QA_MENU=0 only)
+# the RAM log ring is N KB (LOG_TRIM = 64 KB - N KB) with a 32-byte size header before it (mem.cpp RE4DC_LOG_RING_HDR;
+# read_log.py reads it, 64 KB when absent). The crash screen shows the ring's newest lines, which N >= 8 covers. Test,
+# warp and QA images keep 64 KB. The image (heap 4 at r100 s30) is 64 - N KB smaller, less the 32-byte header.
+LOG_PLAY_KB ?= 0
+# LOG_CRASH_TEST=N (test only, default 0): fault after the N-th log append (platform/mem.cpp), for the crash screen check.
+LOG_CRASH_TEST ?= 0
+ifneq ($(LOG_CRASH_TEST),0)
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_CRASH_TEST=$(LOG_CRASH_TEST)
+endif
+ifneq ($(LOG_PLAY_KB),0)
+ifeq ($(filter 8 16 32,$(LOG_PLAY_KB)),)
+$(error LOG_PLAY_KB must be 0, 8, 16 or 32)
+endif
+ifeq ($(filter-out 0,$(DBG_WARP))$(filter-out 0,$(QA_MENU)),)
+LOG_TRIM := $(shell echo $$((65536 - $(LOG_PLAY_KB) * 1024)))
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_RING_HDR=1
+endif
+endif
 LOG_TRIM ?= 0
 ifneq ($(LOG_TRIM),0)
 $(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
+$(OBJDIR)/qa_menu.o: GAME_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
 endif
 ifneq ($(OVL_GUARD),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)

@@ -489,6 +489,10 @@ extern "C" void re4dc_loadind_hold();
 extern "C" void re4dc_loadind_resume();
 extern "C" void re4dc_loadind_end();
 #endif
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+extern "C" void re4dc_dvd_borrow_room_reset();   // dvd.cpp DVD_BORROW
+extern "C" void re4dc_dvd_borrow_window_end();
+#endif
 // Rno0 == 2: room set-up after the room archive is loaded: player/area data, every manager's room
 // init + array allocation sized by the room "CNS" counts (models, parts, enemies, objects, sprites,
 // controllers, ctrl, lights, damage, SAT/EAT collision, events), the room data blocks (SMD/SMX
@@ -759,6 +763,9 @@ void gameRoomInit()
     }
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR
     re4dc_loadind_end();
+#endif
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+    re4dc_dvd_borrow_window_end();   // DVD_BORROW: room setup done; gameplay reads use the static staging area
 #endif
     BitOff(pG->System_flg, 0x2000);
     BitOff(pG->System_flg, 0x100);
@@ -1538,6 +1545,9 @@ extern "C" void re4dc_route_overlay_room_reset();   // platform/modules.cpp: pl0
 #endif
 void gameRoomMemInit()
 {
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+    re4dc_dvd_borrow_room_reset();
+#endif
 #if RE4DC_WEAPON_HEAP4
     re4dc_weapon_heap4_room_reset();
 #endif

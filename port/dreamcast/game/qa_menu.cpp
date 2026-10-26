@@ -60,7 +60,10 @@ void re4dc_world_meter_resume(void);
 int re4dc_view_dist_get(void) __attribute__((weak));                                         // option_rows.cpp
 #endif
 extern volatile unsigned long re4dc_log_head;                                                  // platform/mem.cpp
-extern char re4dc_logbuf[0x10000];
+#ifndef RE4DC_LOG_TRIM
+#define RE4DC_LOG_TRIM 0
+#endif
+extern char re4dc_logbuf[0x10000 - RE4DC_LOG_TRIM];                                            // mem.cpp RE4DC_LOG_SIZE
 }
 #include "third_party/qrcodegen/qrcodegen.h"
 

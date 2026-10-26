@@ -393,6 +393,75 @@ extern "C" DvdSndStrWork Snd_str_work[4];
 #define DVD_BUFF ((void*) re4dc_dvd_buff)
 #define DVD_BUFF2 ((void*) (re4dc_dvd_buff + DVD_HALF))
 #endif
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+// DVD_BORROW=1 (lane heap-margin25; needs DVD_BUFF_KB): while the game loads (boot, new game, a room change: from
+// gameRoomMemInit, and from power-on, to the end of gameRoomInit), a transfer larger than the static staging area reads
+// its pieces through a block carved from the top of heap 4's highest free cell (DVD_BORROW_KB), provided heap 4 keeps
+// DVD_BORROW_SPARE bytes free beside it. The block goes back when that transfer's last piece has been moved (or it is
+// cancelled), so room setup and gameplay never see it; mid-room reads (BGM, weapons, the s30 movie) use the static area.
+#include "main_mem.h"
+extern "C" void OSFreeToHeap(int heap, void* p);
+extern "C" int re4dc_static_heap_free();
+int re4dc_dvd_borrow_window = 1;   // game.cpp: 1 from power-on / gameRoomMemInit to the end of gameRoomInit
+static u8* dvdBorrow;
+static unsigned dvdBorrowTakes, dvdBorrowSkips;
+static void* dvdBorrowTop(u32 need)
+{
+    // as read.cpp wepHeap4AllocTop (WEAPON_HEAP4_TOP): the top of the highest free cell, a plain allocated cell
+    OSHeapDescriptor* d = (OSHeapDescriptor*) ((re4dc_mem.heap + 0x1FU) & ~0x1FU) + Heap[4].handle;
+    const s32 size = (s32) (((need + 0x1FU) & ~0x1FU) + 0x20U);
+    OSHeapCell* best = 0;
+    for (OSHeapCell* c = d->free; c; c = c->next) {
+        if (c->size >= size) best = c;
+    }
+    if (best == 0 || best->size - size < 0x40) return 0;   // never take a whole cell
+    best->size -= size;
+    OSHeapCell* cell = (OSHeapCell*) ((u8*) best + best->size);
+    cell->size = size;
+    cell->prev = 0;
+    cell->next = d->allocated;
+    if (cell->next) cell->next->prev = cell;
+    d->allocated = cell;
+    return (u8*) cell + 0x20;
+}
+static void dvdBorrowTake(s32 left)
+{
+    if (dvdBorrow || !re4dc_dvd_borrow_window || left <= (s32) DVD_WHOLE) return;
+    if (!memCheckHeapActive(4) || Heap[4].handle < 0 || re4dc_static_heap_free() < (int) (RE4DC_DVD_BORROW_BYTES + RE4DC_DVD_BORROW_SPARE)) {
+        ++dvdBorrowSkips;
+        return;
+    }
+    dvdBorrow = (u8*) dvdBorrowTop(RE4DC_DVD_BORROW_BYTES);
+    if (dvdBorrow) ++dvdBorrowTakes; else ++dvdBorrowSkips;
+}
+static void dvdBorrowGive()
+{
+    if (!dvdBorrow) return;
+    OSFreeToHeap(Heap[4].handle, dvdBorrow);
+    dvdBorrow = 0;
+}
+// gameRoomMemInit, before heap 4 is rebuilt (a transfer never spans it; logged if one did).
+extern "C" void re4dc_dvd_borrow_room_reset()
+{
+    if (dvdBorrow) OSReport("DVD borrow: dropped at room reset" "\n");
+    dvdBorrow = 0;
+    re4dc_dvd_borrow_window = 1;
+}
+extern "C" void re4dc_dvd_borrow_window_end()
+{
+    if (re4dc_dvd_borrow_window) OSReport("DVD borrow: load window end takes=%u skips=%u held=%d" "\n", dvdBorrowTakes, dvdBorrowSkips, dvdBorrow != 0);
+    re4dc_dvd_borrow_window = 0;
+}
+#define DVD_STAGE ((void*) (dvdBorrow ? dvdBorrow : (u8*) DVD_BUFF))
+#define DVD_PIECE (dvdBorrow ? (s32) RE4DC_DVD_BORROW_BYTES : (s32) DVD_WHOLE)
+#define DVD_BORROW_TAKE(left) dvdBorrowTake(left)
+#define DVD_BORROW_GIVE() dvdBorrowGive()
+#else
+#define DVD_STAGE DVD_BUFF
+#define DVD_PIECE DVD_WHOLE
+#define DVD_BORROW_TAKE(left) ((void) 0)
+#define DVD_BORROW_GIVE() ((void) 0)
+#endif
 
 // status field of cDvdQueue::flag
 enum {
@@ -945,8 +1014,9 @@ void cDvdQueue::readMain()
     case 1:
         m_Counter = OSGetTick();
         m_be_flag |= 0x20;
-        m_DivReadSize = m_LeftSize > DVD_WHOLE ? DVD_WHOLE : m_LeftSize;
-        RE4DC_SND_PAD_READ((*ph)->type, m_TransAddr, m_DivReadSize, fileReadAsync(DVD_BUFF, m_DivReadSize, m_Offset));
+        DVD_BORROW_TAKE(m_LeftSize);
+        m_DivReadSize = m_LeftSize > DVD_PIECE ? DVD_PIECE : m_LeftSize;
+        RE4DC_SND_PAD_READ((*ph)->type, m_TransAddr, m_DivReadSize, fileReadAsync(DVD_STAGE, m_DivReadSize, m_Offset));
         step++;
         break;
     case 2:
@@ -954,6 +1024,7 @@ void cDvdQueue::readMain()
             break;
         }
         if (chk(0x100000)) {
+            DVD_BORROW_GIVE();
             step = 0;
             m_Rno0 = 3;
             break;
@@ -964,8 +1035,8 @@ void cDvdQueue::readMain()
             step--;
             break;
         }
-        RE4DC_GCA_BANK_PIECE(this,(*ph)->type,(*ph)->size-m_LeftSize,DVD_BUFF,m_DivReadSize);
-        (this->*trans_proc_tbl[(*ph)->type])(DVD_BUFF, m_TransAddr, m_DivReadSize);
+        RE4DC_GCA_BANK_PIECE(this,(*ph)->type,(*ph)->size-m_LeftSize,DVD_STAGE,m_DivReadSize);
+        (this->*trans_proc_tbl[(*ph)->type])(DVD_STAGE, m_TransAddr, m_DivReadSize);
         step++;
         m_be_flag &= ~0x20;
         break;
@@ -977,6 +1048,7 @@ void cDvdQueue::readMain()
         m_Offset += m_DivReadSize;
         m_TransAddr += m_DivReadSize;
         if (m_LeftSize <= 0) {
+            DVD_BORROW_GIVE();
             RE4DC_GCA_BANK_END(this,(*ph)->type);
             switch ((*ph)->type) {
             case 2:

@@ -164,7 +164,16 @@ void* re4dc_gx_fifo(void)
 volatile unsigned long re4dc_log_magic __attribute__((aligned(32))) = 0x52453444;  // "RE4D"
 volatile unsigned long re4dc_log_head;   // bytes written so far (wraps in the ring)
 volatile unsigned long re4dc_stage;      // last platform stage reached (re4dc_set_stage)
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+// LOG_PLAY_KB (Makefile, play images only): the ring is shorter than the harness's 64 KB default, so 32 bytes before it
+// say how long it is: "LGSZ", its complement, the size (read_log.py reads them; written with the first log byte).
+struct Re4dcLogRing { unsigned long magic, nmagic, size, pad[5]; char buf[RE4DC_LOG_SIZE]; };
+extern "C" { Re4dcLogRing re4dc_logring __attribute__((aligned(32))); }
+asm(".global _re4dc_logbuf\n\t.set _re4dc_logbuf, _re4dc_logring+32");
+#define re4dc_logbuf re4dc_logring.buf
+#else
 char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
+#endif
 
 // 1 while stdout is a separate device; 0 once fault.cpp routes the KOS
 // debug output into this ring (printing would then loop back here).
@@ -179,12 +188,25 @@ void re4dc_log_raw(const char* data, unsigned long len)
 #if RE4DC_LOG_ATOMIC
     const int irq = irq_disable();
 #endif
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    if (!re4dc_logring.magic) {
+        re4dc_logring.size = RE4DC_LOG_SIZE;
+        re4dc_logring.nmagic = ~0x5A53474CUL;
+        re4dc_logring.magic = 0x5A53474CUL;  // "LGSZ"
+    }
+#endif
     while (len--) {
         re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = *data++;
         re4dc_log_head++;
     }
 #if RE4DC_LOG_ATOMIC
     irq_restore(irq);
+#endif
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    // LOG_CRASH_TEST=N (test arm only): a misaligned store after the N-th log append, so the crash screen's log rows
+    // can be checked on a play image (LOG_PLAY_KB).
+    static unsigned long calls;
+    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) *(volatile unsigned long*) 0x8c000002 = 1;
 #endif
 }
 
