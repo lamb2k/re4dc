@@ -1028,6 +1028,15 @@ if os.path.isdir(CODEC25D):
     DATA['codec25'].update({'ss/cmn/' + _f: CODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(CODEC25D + '/ss/cmn'))})
     PAK_DERIVED['codec25'] = CODEC25D + '/pak-derived.json'
     AFTER += [('codec25', 'gvar25')]
+# pmcodec25 (same lane, 10-25, animation counts as asset): the codec files FCV motions from the PS2 disc. 119 of the 121
+# FCV entries are already the PS2 bytes (the DC FCV layout is the PS2 / GC one); ss_oc305 entries 8 / 9 (revised on the
+# PS2) are replaced by the PS2 entries. Same files as codec25 otherwise; a pm* motion store, so provenance attributes the
+# clips ps2. After codec25. Store RECIPE.txt + SHA256SUMS.txt (src/pmcodec.py).
+PMCODEC25D = os.environ.get('PMCODEC25D', '/root/re4data/private/pmcodec25-20261025')
+if os.path.isdir(PMCODEC25D):
+    DATA['pmcodec25'] = {'ss/eng/ss_term.dat': PMCODEC25D + '/ss/eng/ss_term.dat'}
+    DATA['pmcodec25'].update({'ss/cmn/' + _f: PMCODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(PMCODEC25D + '/ss/cmn'))})
+    AFTER += [('pmcodec25', 'codec25')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
