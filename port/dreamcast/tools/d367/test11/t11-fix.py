@@ -1017,6 +1017,17 @@ GVAR25D = os.environ.get('GVAR25D', '/root/re4data/private/gvar25-20261025')
 if os.path.isdir(GVAR25D):
     DATA['gvar25'] = {'dc/tex.pak': GVAR25D + '/dc/tex.pak'}
     PAK_DERIVED['gvar25'] = GVAR25D + '/pak-derived.json'
+# codec25 (lane cast-ps2-25 10-25, no-GameCube-assets rule): the radio-call (codec) portraits and the terminal face from
+# the PS2 disc: ss/cmn/ss_ocNNN.dat entries 2..7 and ss/eng/ss_term.dat entries 6 / 8 are the PS2 BINs (the morph faces
+# re-laid from the PS2 GX layout, the VIF parts rebuilt; src/gxbin.py, src/vif2gx.py, src/codec_dat.py), and gvar25's
+# tex.pak + 15 portrait / codec-Leon pictures re-keyed to the PS2 picture at the same TPL index (src/codec_tex.py). Data
+# only, no knob. tex.pak derives from gvar25's: after gvar25 (AFTER). Store RECIPE.txt + SHA256SUMS.txt.
+CODEC25D = os.environ.get('CODEC25D', '/root/re4data/private/codec25-20261025')
+if os.path.isdir(CODEC25D):
+    DATA['codec25'] = {'dc/tex.pak': CODEC25D + '/dc/tex.pak', 'ss/eng/ss_term.dat': CODEC25D + '/ss/eng/ss_term.dat'}
+    DATA['codec25'].update({'ss/cmn/' + _f: CODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(CODEC25D + '/ss/cmn'))})
+    PAK_DERIVED['codec25'] = CODEC25D + '/pak-derived.json'
+    AFTER += [('codec25', 'gvar25')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
