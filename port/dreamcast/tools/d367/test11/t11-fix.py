@@ -1397,5 +1397,15 @@ N256C26D = os.environ.get('N256C26D', '/root/re4data/private/n256c26-20261026')
 DATA['n256c26'] = {'dc/native/%s/%s' % (r, f): N256C26D + '/dc/native/%s/%s' % (r, f)
     for r in ('r10a', 'r11a', 'r112', 'r104') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 
+# n256d26 (lane world-n256all 10-26, batch 4): r10d / r10f / r10c the same way as n256a26 (recipes: r10dbake23's own
+# ps2-world.json for r10d (the approved static bake, --bake-static), ch2regen t-fed4122a r10f, ch21l r10c; 64 byte-identical
+# to shipped). r10d's certificate row does not certify its bake (actual R4PW crc in use): no row swap, strip groups bind
+# the shipped R4PW crc. Census (Flycast WORLD_CENSUS24, world ms per drawn tick): r10d 5.26 -> 3.78, r10f 5.32 -> 5.07,
+# r10c 5.17 -> 4.11. r10e stays on 64 (5.47 -> 5.87 at 256, slower). Needs SCENERY_N256=1; after n256c26; release line
+# only, never KSETS. Store: re4-assets-private/n256d26-20261026.
+N256D26D = os.environ.get('N256D26D', '/root/re4data/private/n256d26-20261026')
+DATA['n256d26'] = {'dc/native/%s/%s' % (r, f): N256D26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10d', 'r10f', 'r10c') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
 if __name__ == '__main__':
     main()
