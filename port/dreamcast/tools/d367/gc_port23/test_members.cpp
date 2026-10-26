@@ -33,6 +33,19 @@ bool same(const Digest& a,const Digest& b) { return !std::memcmp(a.bytes,b.bytes
 Digest digest(const ModelMember& member){AssetDescription row;assert(describe_checked(member.asset,&row));return row.digest;}
 int main() {
     install(nullptr,0);begin(0x111,1,Required);
+    // Sub screen swap (cast-ps2-25 r16): an archive inside the parked area drops its members and binds nothing while
+    // parked; unpark restores it with its adopt-time digests (the relocated bytes are not hashed again).
+    {auto parked_archive=indexed();ModelMember before{},after_unpark{};int park_owner=0;
+     assert(member_adopt(&park_owner,parked_archive.data(),parked_archive.size(),true));
+     assert(member_capture(parked_archive.data()+64));assert(member_lookup(parked_archive.data()+64,&before));
+     const Digest kept=digest(before);parked_archive[72]=7;
+     member_park(parked_archive.data()+8,16);assert(!member_lookup(parked_archive.data()+64,&after_unpark));
+     assert(!member_capture(parked_archive.data()+64));
+     member_unpark();assert(member_lookup(parked_archive.data()+64,&after_unpark));assert(after_unpark.serial==before.serial);
+     assert(member_capture(parked_archive.data()+64));
+     assert(member_lookup(parked_archive.data()+64,&after_unpark));assert(same(kept,digest(after_unpark)));
+     member_park(parked_archive.data()+256,64);assert(member_lookup(parked_archive.data()+64,&after_unpark)); // outside
+     member_unpark();member_retire(&park_owner);}
     auto archive=indexed();int owner=0;ModelMember original{},later{};
     assert(member_adopt(&owner,archive.data(),archive.size(),true));
     assert(member_capture(archive.data()+64));assert(member_lookup(archive.data()+64,&original));assert(original.arc==4);

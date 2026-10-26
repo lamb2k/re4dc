@@ -257,6 +257,34 @@ void member_move(const void* owner,void* base) {
 void member_retire(const void* owner) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner==owner)revoke(i); }
 void member_retire_archive(const void* base) { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].base==base)revoke(i); }
 void member_retire_transient() { for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && archives[i].transient)revoke(i); }
+// cast-ps2-25 r16 item 5: the sub screen swaps the room's bytes out of its area while it is open (sscrn_bridge.cpp).
+// Archives in that area are parked (adopt-time member digests and captured members kept; nothing binds against
+// them while parked, so the screen's own data never resolves to a room archive); the close puts them back in the
+// same slots with the same generation once the area's bytes are restored byte-identical (hash checked by the bridge).
+namespace {
+struct Parked { Archive archive;Pre* pre;unsigned count,slot; } parked[ArchiveCount];
+unsigned parked_count;
+}
+void member_park(const void* area,unsigned bytes) {
+    const auto lo=reinterpret_cast<std::uintptr_t>(area);
+    for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner) {
+        const auto b=reinterpret_cast<std::uintptr_t>(archives[i].base);
+        if(!(lo<=b ? b-lo<bytes : lo-b<archives[i].bytes))continue;
+        if(parked_count==ArchiveCount){revoke(i);unresolved(SourceGeometry,"member-park-capacity");continue;}
+        member_flush();   // members stay: not current while parked, current again at unpark (same generation)
+        parked[parked_count++]={archives[i],pre[i],pre_count[i],i};
+        archives[i]={};pre[i]=nullptr;pre_count[i]=0;
+    }
+}
+void member_unpark() {
+    for(unsigned k=0;k<parked_count;++k) {
+        auto& p=parked[k];
+        if(archives[p.slot].owner){std::free(p.pre);unresolved(SourceGeometry,"member-unpark-slot");continue;}
+        archives[p.slot]=p.archive;
+        pre[p.slot]=p.pre;pre_count[p.slot]=p.count;
+    }
+    parked_count=0;
+}
 #if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
 extern "C" void re4dc_log(const char*,...);
 // Probe (diagnostic): first 32 distinct (why, address, caller) per run.
@@ -454,6 +482,8 @@ extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::m
 extern "C" void re4dc_gcasset_motion_use(const void* data) { re4dc_gcasset::motion_use(data); }
 extern "C" void re4dc_gcasset_motion_generated(const void* data) { re4dc_gcasset::motion_generated=data; }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
+extern "C" void re4dc_gcasset_member_park(const void* area,unsigned bytes) { re4dc_gcasset::member_park(area,bytes); }
+extern "C" void re4dc_gcasset_member_unpark() { re4dc_gcasset::member_unpark(); }
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
 // (before BlockCreate relocates their BINs), moved with pool compaction,
 // retired where the block's draw owner is unbound.
