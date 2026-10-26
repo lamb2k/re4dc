@@ -17,3 +17,5 @@ constexpr unsigned kPcCellCount=170U,kPcPortalCount=1186U,kPcFileBytes=33256U; /
 #define PC_ADOPT_PRE(r,m,s,b)
 #define PC_LOAD_HOOK
 #endif
+// lane worldopt26: WORLD_SG_CELL hook macro (empty with the knob off).
+#include "worldopt26_sg_cell.inc"

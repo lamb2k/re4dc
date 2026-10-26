@@ -3045,7 +3045,7 @@ struct MeshDraw : Emitter {
         // PS2_STRIP_GROUPS: a straddling meshlet tests its strip groups' grid boxes (outside one screen edge or nearer
         // than near: every strip of the group would be culled after the transform), transforms only the corner
         // range of the groups left and walks only their strips (in stored order). All groups left: the whole path.
-        if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
+        RE4DC_WO26_SG_CELL if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             re4dc::wc24::Scope wc_groups(re4dc::wc24::Selection);
 #endif

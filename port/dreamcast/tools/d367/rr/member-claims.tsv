@@ -70,3 +70,7 @@ st1/r1*.dar:ETM/et1[67]00.bin*	props26	PS2 doors reduced to at most the GC model
 st1/r1*.dar:ETM/et2b00.bin*	props26	PS2 door reduced to at most the GC model
 st1/r106.dar:0x34 BIN*	props26	PS2 room object reduced to at most the GC model
 st1/r10f.dar:0x23 BIN*	props26	PS2 room object reduced to at most the GC model
+# lane worldopt26 10-26: spatial strip groups (corner order only; WORLD_SG26=1)
+dc/native/r1*/ps2-world.re4mesh:changed	wsg26	256-vertex worlds with corners renumbered in strip-group order (same bytes; WORLD_SG26)
+dc/native/r1*/ps2-world.r4sg:*	wsg26	spatial strip groups of the 256-vertex worlds (r103 gains its first)
+dc/native/r100/interior.cell:changed	wsg26	r100 house cell rebound to the wsg26 r100 mesh crc (cells unchanged)
