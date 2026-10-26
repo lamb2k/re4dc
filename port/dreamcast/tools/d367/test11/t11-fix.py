@@ -1234,6 +1234,17 @@ FONTPS2XD = os.environ.get('FONTPS2XD', '/root/re4data/private/fontps2x25-202610
 if os.path.isdir(FONTPS2XD):
     DATA['fontps2x25'] = {'font/common_p.fnt': FONTPS2XD + '/font/common_p.fnt'}
     AFTER += [('fontps2x25', 'pui24f')]
+# dcglyph26 (lane dcglyph26 10-26; user: controller glyphs = the Dreamcast set, "dreamcast dpad"): wep26g's tex.pak with
+# the 9 Playing Manual pages (ss/Eng f01b-e f03b-d f09b-c) given our Dreamcast pad panel (lane manual19's companion art,
+# callouts per platform/pad.cpp; f09b / f09c made from it) and the HUD d-pad e42a7628 as a Dreamcast d-pad (same keys,
+# sizes and formats), and fontps2x25's common_p.fnt with the PS2 pad glyph cells 173-191 blank again (as Test 23 / the
+# GameCube English sheet; the shipped message tables never draw them). Data only. After wep26g (pack chain end) and fontps2x25.
+# Store: re4-assets-private/dcglyph26-20261026 (RECIPE.txt + SHA256SUMS + provenance.tsv).
+DCGLYPH26D = os.environ.get('DCGLYPH26D', '/root/re4data/private/dcglyph26-20261026')
+if os.path.isdir(DCGLYPH26D):
+    DATA['dcglyph26'] = {'dc/tex.pak': DCGLYPH26D + '/dc/tex.pak', 'font/common_p.fnt': DCGLYPH26D + '/font/common_p.fnt'}
+    PAK_DERIVED['dcglyph26'] = DCGLYPH26D + '/pak-derived.json'
+    AFTER += [('dcglyph26', 'wep26g'), ('dcglyph26', 'fontps2x25')]
 # leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
 # (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
 # materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
