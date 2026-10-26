@@ -112,6 +112,12 @@ if mc:
     add('MEMBER-CENSUS', mc[-1].startswith('MEMBER-CENSUS PASS') or 'skipped' in mc[-1],
         '; '.join([l for l in mc if l.startswith('UNCLAIMED')][:8] + [mc[-1]])[:600])
 
+# EFFECT-CENSUS (lane fix-r100-props26 10-26): per-room effect-set counts against Test 23; an unclaimed drop fails.
+ec = rd(W / 'effect-census.txt').strip().splitlines()
+if ec:
+    add('EFFECT-CENSUS', ec[-1].startswith('EFFECT-CENSUS PASS') or 'skipped' in ec[-1],
+        '; '.join([l for l in ec if l.startswith('UNCLAIMED')][:8] + [ec[-1]])[:600])
+
 extra = {}
 if build_ok and jobs:
     bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')

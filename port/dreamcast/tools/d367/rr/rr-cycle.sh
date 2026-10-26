@@ -142,6 +142,12 @@ bases() {
       "$TA/port/dreamcast/tools/d367/rr/${MC_CLAIMS:-member-claims.tsv}" --json "$W/member-census.json" > "$W/member-census.txt" 2>&1 || true
     tail -n 1 "$W/member-census.txt"
   else echo "MEMBER-CENSUS skipped: no reference tree (MC_REF_TREE=${MC_REF_TREE:-})" > "$W/member-census.txt"; fi
+  # EFFECT-CENSUS (lane fix-r100-props26 10-26): per route room, the effect sets (EFF sequences / paths / models /
+  # pictures, ETS placements, ETM models) may not drop below the reference ($EC_REF_TREE, Test 23) unless $EC_CLAIMS claims it.
+  if [ -n "${EC_REF_TREE:-}" ] && [ -d "$EC_REF_TREE" ]; then
+    python3 "$TA/port/dreamcast/tools/d367/rr/effect_census.py" "$EC_REF_TREE" "$W/rel/tree"       "$TA/port/dreamcast/tools/d367/rr/${EC_CLAIMS:-effect-claims.tsv}" --json "$W/effect-census.json" > "$W/effect-census.txt" 2>&1 || true
+    tail -n 1 "$W/effect-census.txt"
+  else echo "EFFECT-CENSUS skipped: no reference tree (EC_REF_TREE=${EC_REF_TREE:-})" > "$W/effect-census.txt"; fi
   tail -qn 1 "$W"/master-*.txt | cut -c1-200; rm -rf "${W:?}/rel/tree"; return $rc
 }
 jobs_quick() { bash "$BIN/rr-jobs.sh" quick "$W" "$TA" "$S7" "$EVU" "$EVW"; }
