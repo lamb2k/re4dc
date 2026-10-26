@@ -223,10 +223,29 @@ def build_portals(cfg, work):
             vcells, _ = exits(v, cfg['exit_cell'])
             for k, s in vcells.items():
                 cells.setdefault(k, set()).update(s)
-        for k, s in ecells.items():
-            cells.setdefault(k, set()).update(s)
+        if cfg.get('edge_rays', True):  # interior-cells26: off for rooms whose pieces overlap (no real cracks)
+            for k, s in ecells.items():
+                cells.setdefault(k, set()).update(s)
         sc['portals'] = portals_of(cfg, cells); heads += [head, ehead]
     return SC, heads
+
+
+def policy_crc(room, p):
+    """The sidecar identity the runtime compares (native_static.cpp policySourceCrc): with WORLD_RECT21 the certified
+    policy source crc of the package's provenance row (texture_rect21/provenance_certificates*.inc: room, r4pw bytes,
+    placements, parts, meshes, r4pw crc, ..., mesh crc, mesh bytes, policy crc), else the R4PW crc itself."""
+    import re
+    side_bytes = len(p.side) if hasattr(p, 'side') else None
+    here = Path(__file__).resolve().parent.parent.parent / 'texture_rect21'
+    for inc in ('provenance_certificates_n256.inc', 'provenance_certificates.inc'):
+        for m in re.finditer(r'\{(0x[0-9a-fA-F]+)U,(\d+)U,(\d+)U,(\d+)U,(\d+)U,(0x[0-9a-fA-F]+)U,(0x[0-9a-fA-F]+)U,'
+                             r'(0x[0-9a-fA-F]+)U,(\d+)U,(0x[0-9a-fA-F]+)U\}', (here / inc).read_text()):
+            g = m.groups()
+            if int(g[0], 16) == room and int(g[5], 16) == p.sidecar_crc and int(g[7], 16) == p.mesh_crc and int(g[8]) == p.mesh_bytes:
+                print(f'policy crc {g[9]} from {inc}')
+                return int(g[9], 16)
+    print(f'no provenance row: policy crc = the R4PW crc {p.sidecar_crc:08x}')
+    return p.sidecar_crc
 
 
 def emit(a):
@@ -246,7 +265,7 @@ def emit(a):
         portals += [(q['axis'], float(f'{q["plane"]:.1f}'), float(f'{q["u"][0]:.1f}'), float(f'{q["u"][1]:.1f}'),
                      float(f'{q["v"][0]:.1f}'), float(f'{q["v"][1]:.1f}')) for q in c['portals']]
     if getattr(a, 'pcl2', False):
-        data = cell_file.pack2(cfg['room'], p.mesh_crc, p.sidecar_crc, p.mesh_bytes, cfg['near_max'], [(O[0] + O[1], cells, portals)])
+        data = cell_file.pack2(cfg['room'], p.mesh_crc, policy_crc(cfg['room'], p), p.mesh_bytes, cfg['near_max'], [(O[0] + O[1], cells, portals)])
     else:
         data = cell_file.pack(cfg['room'], p.mesh_crc, p.sidecar_crc, p.mesh_bytes, cells, portals)
     Path(a.cell).write_bytes(data)

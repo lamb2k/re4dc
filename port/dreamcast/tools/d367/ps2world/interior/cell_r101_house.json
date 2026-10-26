@@ -102,7 +102,7 @@
  "target_step": 150,
  "exit_cell": 100,
  "dilate_cells": 2,
- "margin": 200,
+ "margin": 400,
  "edge_step": 40,
- "edge_eps": 2.0
+ "edge_eps": 2.0, "edge_rays": false
 }
