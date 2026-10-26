@@ -55,6 +55,9 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | landed 4c4a037c, default 0; owner r200 entry run (fx_dropped) next |
 | 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
 | 20 | #32 r100 shading code-history review (docs) | landed 331a945c (merge 61b0fe0f, docs) |
+| 21 | Texture arena uses the incoming key (`TEX_ARENA_CURRENT_KEY`, outside audit T22-T24) | landed 1717235b, default 0; local A/B on the T23 vanishing next |
+| 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
+| 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | queued |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
