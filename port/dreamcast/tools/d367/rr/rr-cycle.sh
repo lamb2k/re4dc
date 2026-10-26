@@ -90,6 +90,11 @@ build_release() {
   local O=$ROUTE/out-rr${S7}rP
   grep -q '^rc=0 ' "$W/build-rP.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "release build failed"; return 1; }
   [ ! -s "$O/missing.txt" ] || { echo "missing.txt not empty:"; head "$O/missing.txt"; return 1; }
+  # DROP-PROOF (lane purge-audit26 10-26): every drop / cut / empty the built recipe makes (ETS_MATCH rows, NONE-cut keys,
+  # --etm-empty members, dropping knobs) needs a proof row in rr/drop-proofs.tsv (rr/drop_proofs.py; judged by rr-judge.py).
+  python3 "$TA/port/dreamcast/tools/d367/rr/drop_proofs.py" "$TA" "$O/resolved-knobs.txt" --json "$W/drop-proof.json" \
+    > "$W/drop-proof.txt" 2>&1 || true
+  tail -n 1 "$W/drop-proof.txt"
   $TOOL/sh-elf-objcopy -R .stack -O binary "$O/re4dc-game.elf" "$W/img.bin"
   sha256sum < "$W/img.bin" | cut -c1-64 > "$W/image.sha256"; rm -f "$W/img.bin"
   echo "image $(cut -c1-16 "$W/image.sha256") end $(cat "$O/end.txt")"

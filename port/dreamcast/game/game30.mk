@@ -4076,3 +4076,11 @@ endif
 ifneq ($(PS2_ETS_MATCH),0)
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
 endif
+# PS2_FIRE_SST=1 (lane purge-audit26 2026-10-26; render only, default 0; needs PS2_ETS_MATCH=2 and DATA pfire26): the
+# torches PS2_ETS_MATCH=2 drops get their PS2 flames back the way PS2 draws them: the PS2 room EFF's fire SST sets
+# (pfire26 writes them into each torch room's ETM et14.eff), registered under owner 0x68 at room entry and started like
+# the room's own sets (area-bound ones with their effect area). Proofs: tools/d367/rr/drop-proofs.tsv.
+PS2_FIRE_SST ?= 0
+ifneq ($(PS2_FIRE_SST),0)
+$(OBJDIR)/src/game/EtcModel.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_PS2_FIRE_SST=$(PS2_FIRE_SST)
+endif

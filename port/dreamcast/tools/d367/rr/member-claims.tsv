@@ -59,3 +59,7 @@ st1/r1??.dar:ETM/et2500.bin	windows26	GC window pane grafted back (user 10-26)
 st1/r1??.dar:ETM/et0000.tpl	windows26	the pane picture record grafted with the pane (user 10-26)
 st1/r100.dar:0x?? NTR	windows26	NTR texture-identity table rebased by the r100 pane graft (offsets only; dar_graft checks every row)
 st1/r100.dar:0x?? ESQ	windows26	ESQ effect-sequence table rebased by the r100 pane graft (offsets only)
+st1/r1[01][0-9a-f].dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (purge-audit26)
+st2/r200.dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (purge-audit26)
+st[12]/r[12][01][0-9a-f].dar:0x* ESQ	pfire26	rebased after the ETM size change
+st[12]/r[12][01][0-9a-f].dar:0x* NTR	pfire26	rebased after the ETM size change

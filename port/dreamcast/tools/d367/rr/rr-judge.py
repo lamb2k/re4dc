@@ -117,6 +117,12 @@ ec = rd(W / 'effect-census.txt').strip().splitlines()
 if ec:
     add('EFFECT-CENSUS', ec[-1].startswith('EFFECT-CENSUS PASS') or 'skipped' in ec[-1],
         '; '.join([l for l in ec if l.startswith('UNCLAIMED')][:8] + [ec[-1]])[:600])
+# DROP-PROOF (lane purge-audit26 10-26): rr-cycle.sh build_release runs rr/drop_proofs.py on the built knob list; a drop
+# with no proof row in rr/drop-proofs.tsv, a "wrong" row, or a "fixed:K=V" row whose knob is not in the recipe fails.
+dpp = rd(W / 'drop-proof.txt').strip().splitlines()
+if dpp:
+    add('DROP-PROOF', dpp[-1].startswith('DROP-PROOF PASS'),
+        '; '.join([l for l in dpp if not l.startswith(('UNPROVEN', 'DROP-PROOF'))][:8] + [dpp[-1]])[:600])
 
 extra = {}
 if build_ok and jobs:
