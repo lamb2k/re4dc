@@ -3593,18 +3593,44 @@ void vram_room_frame(){
 // FX_PS2_NONE_CUT (lane purge-fx24, render only; effects30.mk): an effect picture the PS2 dropped (ps2lib effects-tex
 // ps2_source=NONE) is not drawn. Decided once per texture entry and room, then a byte test per sprite.
 }   // namespace (fx_none_cut.inc is plain data)
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+// FX_NONE_CUT_PACK (lane heap-margin25; effects30.mk): the same table packed (fx_none_cut_pack.inc, tools/d367/purge-fx24/
+// fx_none_cut_pack.py: each key once, rows as one-byte key indices per room) and the per-entry decision in one u16
+// ((room + 1) | cut << 15). Same answers and log lines; ~4 KB less image (heap 4 at r100 s30).
+struct FxPackKey { unsigned crc,fnv; };
+#include "fx_none_cut_pack.inc"
+#else
 struct FxNoneCutRow { unsigned short room; unsigned crc,fnv; };
 #include "fx_none_cut.inc"
+#endif
 extern "C" void re4dc_profile_source(re4dc::profile::Source* out);   // ui_bridge.cpp
 namespace {
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+unsigned short fxnone_room[kTextureCount];   // (room + 1) | cut << 15 when decided for the entry's current texture
+#else
 unsigned short fxnone_room[kTextureCount];   // room + 1 when decided for the entry's current texture
 unsigned char fxnone_cut[kTextureCount];
+#endif
 unsigned fxnone_cuts,fxnone_frame=~0U,fxnone_now;
 bool fx_none_cut(const Entry& e){
     const unsigned i=unsigned(&e-entries);
     if(i>=kTextureCount)return false;
     if(fxnone_frame!=frame){re4dc::profile::Source s{};re4dc_profile_source(&s);fxnone_now=s.room&0xffffU;fxnone_frame=frame;}
     const unsigned room=fxnone_now;
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+    if((fxnone_room[i]&0x7fffU)==((room+1U)&0x7fffU))return (fxnone_room[i]&0x8000U)!=0;
+    bool lib=false,cut=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(unsigned j=0;j<sizeof(kFxPackRoom)/sizeof(kFxPackRoom[0]) && !cut;++j){
+        const unsigned r=kFxPackRoom[j];
+        if(!(r==room || (r==0xffffU && !lib)))continue;
+        for(unsigned k=kFxPackBeg[j];k<kFxPackBeg[j+1];++k){
+            const FxPackKey& c=kFxPackKeys[kFxPackIdx[k]];
+            if(c.crc==e.key.crc && c.fnv==e.key.fnv){cut=true;break;}
+        }
+    }
+    fxnone_room[i]=(unsigned short)(((room+1U)&0x7fffU)|(cut?0x8000U:0U));
+#else
     if(fxnone_room[i]==room+1U)return fxnone_cut[i]!=0;
     bool lib=false,cut=false;
     for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
@@ -3612,6 +3638,7 @@ bool fx_none_cut(const Entry& e){
         if(c.crc==e.key.crc && c.fnv==e.key.fnv && (c.room==room || (c.room==0xffffU && !lib))){cut=true;break;}
     }
     fxnone_room[i]=(unsigned short)(room+1U);fxnone_cut[i]=cut;
+#endif
     if(cut)re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u\n",room,e.key.crc,e.key.fnv,fxnone_cuts);
     return cut;
 }

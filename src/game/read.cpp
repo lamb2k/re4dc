@@ -1146,6 +1146,20 @@ void ReleaseWepData()
 #endif
 }
 
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+// WEAPON_WEP04_OVL: gameRoomMemInit, before the route overlays leave heap 4: a linked weapon overlay (the Blacktail)
+// goes with its weapon data, so the next room's player constructor (weaponRelease / weaponLoad / weaponInit) reads and
+// links it again instead of keeping a module whose code was freed.
+extern "C" int re4dc_weapon_ovl_loaded(u32 id);   // platform/modules.cpp
+void re4dc_weapon_ovl_room_reset()
+{
+    if (pG->weapon_no_old != 0xFF && WepReadModule.pModule != NULL && BitChk16(WepReadModule.flag, 2) &&
+        re4dc_weapon_ovl_loaded(*(u32*) WepReadModule.pModule)) {
+        OSReport("weapon ovl: room reset releases weapon %x\n", pG->weapon_no);
+        ReleaseWepData();
+    }
+}
+#endif
 #if RE4DC_WEAPON_HEAP4
 // gameRoomMemInit, before heap 4 is rebuilt: a heap-4 body is released so the next room reloads it.
 void re4dc_weapon_heap4_room_reset()

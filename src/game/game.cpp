@@ -1530,6 +1530,9 @@ void gameDoordemo()
 #if RE4DC_WEAPON_HEAP4
 void re4dc_weapon_heap4_room_reset();   // read.cpp
 #endif
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+void re4dc_weapon_ovl_room_reset();   // read.cpp
+#endif
 #if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
 extern "C" void re4dc_route_overlay_room_reset();   // platform/modules.cpp: pl0f / em2f overlays leave heap 4
 #endif
@@ -1537,6 +1540,9 @@ void gameRoomMemInit()
 {
 #if RE4DC_WEAPON_HEAP4
     re4dc_weapon_heap4_room_reset();
+#endif
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+    re4dc_weapon_ovl_room_reset();
 #endif
 #if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
     re4dc_route_overlay_room_reset();
