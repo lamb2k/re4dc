@@ -2891,6 +2891,40 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# TEX_ARENA_CURRENT_KEY=1 (console regression fix, default 0): classify a texture
+# by its incoming key, not the previous occupant of its cache slot. Requires the
+# room arena; also corrects the optional arena upload ring's texture identity.
+TEX_ARENA_CURRENT_KEY ?= 0
+# TEX_FINAL_REFUSAL_LOG=1 (diagnostic, default 0): one TEX-REFUSE line for every
+# final load() refusal, including early guards, with incoming key (kv=0 when no
+# key is available), reason, room/frame and free/largest VRAM. Successful retries
+# are not refusals. Independent of the fix for matching A/B diagnostics; this
+# can produce many lines and is intended for short console reproduction runs.
+TEX_FINAL_REFUSAL_LOG ?= 0
+ifneq ($(words $(TEX_ARENA_CURRENT_KEY)),1)
+$(error TEX_ARENA_CURRENT_KEY must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(TEX_ARENA_CURRENT_KEY)),)
+$(error TEX_ARENA_CURRENT_KEY must be 0 or 1)
+endif
+ifneq ($(words $(TEX_FINAL_REFUSAL_LOG)),1)
+$(error TEX_FINAL_REFUSAL_LOG must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(TEX_FINAL_REFUSAL_LOG)),)
+$(error TEX_FINAL_REFUSAL_LOG must be 0 or 1)
+endif
+ifeq ($(TEX_ARENA_CURRENT_KEY),1)
+ifneq ($(VRAM_ROOM_ARENA)$(VRAM_PAGES)$(UI_VRAM),111)
+$(error TEX_ARENA_CURRENT_KEY=1 needs VRAM_ROOM_ARENA=1 VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_ARENA_CURRENT_KEY=1
+endif
+ifeq ($(TEX_FINAL_REFUSAL_LOG),1)
+ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
+$(error TEX_FINAL_REFUSAL_LOG=1 needs VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_FINAL_REFUSAL_LOG=1
+endif
 # VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
 # class 2 allocations use best fit below a47f2000 instead of top placement. The
 # final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
