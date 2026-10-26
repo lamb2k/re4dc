@@ -2112,14 +2112,7 @@ struct Portal { std::uint32_t axis; float plane,u0,u1,v0,v1; }; // u = axis+1, v
 #if defined(RE4DC_PS2_R100_TR4) && RE4DC_PS2_R100_TR4
 // PS2_R100_TR4=1 (game30.mk; needs PS2_R100_SMX=1): the SMX package plus --vertex-alpha tr4 (the 155 overlay faces
 // move to the translucent pass; geometry and placements are the same), so the same cell with its CRCs and bytes.
-#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
-// SCENERY_N256=1 (lane world-n256all): that package at 256-vertex meshlets. Same occluder triangles, so the same
-// sub-cells and portals (cell_variant.py proves it and writes the disc cell file); only its crc and bytes differ.
-#include "include/ps2_interior_cell_n256.inc"
-constexpr unsigned kPcSidecarUse=0x14118acdU,kPcMeshUse=kPcN256MeshUse,kPcMeshBytesUse=kPcN256MeshBytesUse;
-#else
 constexpr unsigned kPcSidecarUse=0x14118acdU,kPcMeshUse=0xfb35ea9cU,kPcMeshBytesUse=1537920U;
-#endif
 #elif defined(RE4DC_PS2_R100_SMX) && RE4DC_PS2_R100_SMX
 // PS2_R100_SMX=1 (game30.mk; needs PS2_PT_CUTOUT=1): the r100 package rebuilt with --color-light ps2 --tev-scale 1
 // --vc-clamp 2.0 (PS2 vertex colour x SMX ColorRGB; colour bytes and 2 un-instanced BINs differ, the geometry is the
