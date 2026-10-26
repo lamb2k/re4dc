@@ -1,4 +1,6 @@
 name castle31-seg
 stock
 alivelog 60
-plpos 30
+plpos 3
+god
+ammo

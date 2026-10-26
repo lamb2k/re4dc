@@ -330,6 +330,7 @@ struct Warp {
     int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
     u16 stock_room;  // `stock`: logs the merchant stock and tune table once per room entry (castle31 shop check)
     bool stock;
+    u16 ammo_keep, ammo_wep;  // `ammo` in observe runs (castle31 chain): most rounds seen loaded in the equipped weapon
     u32 pl_period;   // `plpos N`: Leon's position, angle and life every N room frames (castle31 no-warp segments)
     u32 stock_sum;
     bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
@@ -995,8 +996,54 @@ void alive_log_poll()
     }
 }
 
+// `god` / `ammo` (existing warp lines) also in observe runs (no room override: the castle31 no-warp chain), via
+// plpos_poll. Life back to max (a hit still lands: knockback, grabs and scripted
+// deaths run as in play); the equipped weapon's loaded count back to the most seen for that weapon.
+static void god_ammo_poll()
+{
+    if (!pG) return;
+    if (wp.god && pG->pl_life_max && pG->pl_life < pG->pl_life_max) pG->pl_life = pG->pl_life_max;
+    ItemWork* w = wp.ammo ? ItemMgr.pArm : nullptr;
+    if (!w) return;
+    const u16 loaded = w->bullet & 0x1FFF;
+    if (w->id != wp.ammo_wep) { wp.ammo_wep = w->id; wp.ammo_keep = loaded; }
+    if (loaded > wp.ammo_keep) wp.ammo_keep = loaded;
+    if (loaded < wp.ammo_keep) w->bullet = (u16) ((w->bullet & 0xE000) | wp.ammo_keep);
+}
+
+// Kills per room for the chain report: a creature id < 0x40 leaving the live set while Leon is in the room
+// (a cap park also leaves the live set, so `kill` rows are kills + parks; `warp: alivelist` shows the rest).
+static void kill_count_poll()
+{
+    static u32 last_live[64];
+    static u16 last_room = 0xFFFF;
+    static u32 kills;
+    if (!pG) return;
+    if (pG->room_id != last_room) {
+        if (last_room != 0xFFFF) re4dc_log("warp: kills room %x total %u\n", (unsigned) last_room, (unsigned) kills);
+        last_room = pG->room_id; kills = 0; memset(last_live, 0, sizeof(last_live));
+    }
+    u32 live[64] = {};
+    for (u32 i = 0; i < EmMgr.nArray && i < 64 * 32; i++) {
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (em && SceCheckEmAlive(em) == 1 && (em->id & 0xff) < 0x40) live[i >> 5] |= 1u << (i & 31);
+    }
+    for (int j = 0; j < 64; j++) {
+        u32 gone = last_live[j] & ~live[j];
+        for (; gone; gone &= gone - 1) {
+            cEm* em = (cEm*) EmMgr.workAt(j * 32 + __builtin_ctz(gone));
+            ++kills;
+            re4dc_log("warp: kill room %x frame %u id %02x n %u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
+                      em ? (unsigned) em->id & 0xff : 0u, (unsigned) kills);
+        }
+        last_live[j] = live[j];
+    }
+}
+
 void plpos_poll()
 {
+    god_ammo_poll();
+    if (wp.pl_period && pPL) kill_count_poll();
     if (!wp.pl_period || !pG || !pPL || wp.room_frames % wp.pl_period) return;
     // castle31 steer.py: also the nearest live enemy (any id, position + id) and the live count. A read, no logic state.
     cEm* best = nullptr;
