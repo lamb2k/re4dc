@@ -2727,7 +2727,7 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 #endif
 #if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
 unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses compared, mismatches
-unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
+unsigned stream_cen[6]; unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
 #endif
 struct MeshDraw : Emitter {
 #if RE4DC_SCENERY_RECORD_SPLIT
@@ -2808,6 +2808,25 @@ struct MeshDraw : Emitter {
         ++stream_ck[0];stream_ck[1]+=n;
         for(unsigned i=0;i<n;++i)
             if(std::memcmp(&ref[i].x,&cache[lo+i].x,24) || ((roc[i]^outcodes[lo+i])&0x3fU)){++stream_ck[2];break;}
+    }
+    // Census (check build): of the corners transformed [lo,lo+n), how many no kept strip uses (every strip that
+    // references them is culled: depth all&3 or screen all&0x3c). stream_cen: 0 transformed, 1 unused, 2 strips,
+    // 3 culled strips, 4 culled strips' corners, 5 picks whose strips are all culled.
+    std::uint8_t cen_use[256];unsigned cen_lo=0,cen_n=0,cen_kept=0;
+    void cen_begin(unsigned lo,unsigned n){cen_lo=lo;cen_n=n;cen_kept=0;__builtin_memset(cen_use,0,sizeof cen_use);stream_cen[0]+=n;}
+    void cen_strips(const std::uint8_t* s,const std::uint8_t* end){
+        while(s<end){
+            const unsigned n=*s++;
+            const auto c=re4dc::vp::codes(outcodes,s,n);
+            ++stream_cen[2];
+            if((c.all&3U) || (!(c.any&3U) && (c.all&0x3cU))){++stream_cen[3];stream_cen[4]+=n;}
+            else {++cen_kept;for(unsigned k=0;k<n;++k)cen_use[s[k]]=1;}
+            s+=n;
+        }
+    }
+    void cen_end(){
+        for(unsigned i=cen_lo;i<cen_lo+cen_n;++i)if(!cen_use[i])++stream_cen[1];
+        if(!cen_kept)++stream_cen[5];
     }
 #endif
 #endif
@@ -3728,6 +3747,11 @@ struct MeshDraw : Emitter {
                 vp::transform_sched_ix(pool,offs+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
                 stream_check(l,pk.lo,vn);
+                cen_begin(pk.lo,vn);
+                {unsigned pv=0;const auto* gg=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
+                 for(unsigned q=0;q<sg_groups;++q){const unsigned ge=gg[8*q+6];if(ge==pv)continue;
+                     if((pk.gmask>>q)&1U)cen_strips(sb+pv,sb+ge);pv=ge;}}
+                cen_end();
 #endif
             }else
 #endif
@@ -3771,6 +3795,7 @@ struct MeshDraw : Emitter {
             vp::transform_sched_ix(pool,offs,l.vertex_count,cache,outcodes,k);
 #if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
             stream_check(l,0,l.vertex_count);
+            cen_begin(0,l.vertex_count);cen_strips(sb,sb+l.strip_bytes);cen_end();
 #endif
         }else
 #endif
@@ -7348,6 +7373,8 @@ int ps2_pass(unsigned pass,float zfar){
         if(f-logged>=300U){logged=f;
             re4dc_log("SCNSTREAM check frame=%u room=%03x picks=%u corners=%u bad=%u screens=%u screen_bad=%u\n",f,ps2w.room,stream_ck[0],stream_ck[1],
                       stream_ck[2],stream_ls[0],stream_ls[1]);}
+        if(f==logged)re4dc_log("SCNSTREAM census transformed=%u unused=%u strips=%u culled=%u culled_corners=%u allculled_picks=%u\n",
+                      stream_cen[0],stream_cen[1],stream_cen[2],stream_cen[3],stream_cen[4],stream_cen[5]);
     }
 #endif
 #if RE4DC_SCENERY_CONE
