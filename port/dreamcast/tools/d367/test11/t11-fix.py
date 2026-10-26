@@ -780,6 +780,13 @@ SCPS25D = os.environ.get('SCPS25D', '/root/re4data/private/scps25-20261026')
 if os.path.isdir(SCPS25D):
     DATA['scps25'] = {'dc/native/%s/room.r4rc' % r: '%s/%s/room.r4rc' % (SCPS25D, r)
                       for r in sorted(os.listdir(SCPS25D)) if os.path.isdir('%s/%s' % (SCPS25D, r))}
+# sg825 (lane scenery-rewrite25 10-26, step 2 option A): 8 strip groups per meshlet for the PS2 world rooms whose
+# heap 4 allows it (tools/d367/scenery25/sg_refine.py: the shipped 4-group records split into consecutive runs; the
+# packages are unchanged). Only ps2-world.r4sg per chosen room. Last in the data line.
+SG825D = os.environ.get('SG825D', '/root/re4data/private/sg825-20261026')
+if os.path.isdir(SG825D):
+    DATA['sg825'] = {'dc/native/%s/ps2-world.r4sg' % r: '%s/%s/ps2-world.r4sg' % (SG825D, r)
+                     for r in sorted(os.listdir(SG825D)) if os.path.isfile('%s/%s/ps2-world.r4sg' % (SG825D, r))}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
