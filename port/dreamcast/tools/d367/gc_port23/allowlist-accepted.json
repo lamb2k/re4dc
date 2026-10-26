@@ -1,0 +1,186 @@
+{
+ "schema": 1,
+ "note": "Coordinator-accepted allowlist rows (rr-judge merges them into the last-good baseline). Add rows only with a recorded user or coordinator decision; remove when the asset is replaced. 2026-10-26: windows26 panes (user: glass and bars).",
+ "entries": [
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0100",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0100",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0101",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0101",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0105",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0105",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0107",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0107",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0111",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0111",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "011c",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "011c",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "011f",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "011f",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0101",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0105",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0111",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "7e7c5a5c0c2236a9462b4617f2cc4af4947ca0c9",
+   "kind": "layout",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [r100 static composite with the pane drawn; replaces the pre-windows26 unbound-accepted-model row]",
+   "room": "0100",
+   "sha256": "7e7c5a5c0c2236a9462b4617f2cc4af4947ca0c9ee6d7f1a46e65d9d8bdcb2df"
+  }
+ ]
+}

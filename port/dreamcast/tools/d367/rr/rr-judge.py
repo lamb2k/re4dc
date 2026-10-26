@@ -161,6 +161,15 @@ if build_ok and jobs:
         b = subprocess.run(['git', '-C', str(T), 'show', '%s:port/dreamcast/tools/d367/gc_port23/allowlist.json' % lgs.get('sha', 'HEAD')],
                            capture_output=True, text=True)
         base.write_text(b.stdout if b.returncode == 0 and b.stdout.strip() else rd(G / 'allowlist.json'))
+        # coordinator-accepted rows (gc_port23/allowlist-accepted.json, 10-26) join the shrink-only baseline: a growth the
+        # coordinator or user decided (e.g. windows26 panes) must not wait for a last-good candidate that cannot pass without it
+        acc = G / 'allowlist-accepted.json'
+        if acc.exists():
+            bj, aj = json.loads(base.read_text()), json.loads(acc.read_text())
+            kk = lambda r: (r.get('room') or r.get('phase'), r['kind'], r['id'], r['sha256'], r['provenance'])
+            have = {kk(r) for r in bj['entries']}
+            bj['entries'] += [r for r in aj['entries'] if kk(r) not in have]
+            base.write_text(json.dumps(bj, indent=1))
         jj = W / 'gca-judge.json'
         if all(p.exists() for p in gl):
             subprocess.run(['python3', str(G / 'judge.py'), *map(str, gl), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(base),
