@@ -34,4 +34,3 @@ dc/native/r100/ps2-world.re4mesh:changed	n256r100	r100 world at 256-vertex meshl
 dc/native/r100/ps2-world.r4sg:*	n256r100	strip groups of the r100 256-vertex world
 dc/native/r100/room.r4rc:*	n256r100	r100 room record of the 256-vertex world
 dc/native/r100/interior.cell:changed	icells26	r100 house cell as PCL2 for the n256r100 package (PS2_INTERIOR_CELLS=1)
-dc/native/r1*/interior.cell:added	icells26	per-room interior cells (r101 siege house, r11c siege cabin; PS2_INTERIOR_CELLS=1)
