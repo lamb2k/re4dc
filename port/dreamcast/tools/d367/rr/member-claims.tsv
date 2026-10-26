@@ -1,0 +1,27 @@
+# rr MEMBER-CENSUS claims (tools/d367/rr/member_census.py; lane fix-r100-props26 2026-10-26).
+# Reference: Test 24 (test-608abf36-20261025) release tree. One row per claimed difference of the candidate:
+# <glob over the census item names>	<data set / knob / commit>	<reason>. Rows are reviewed; an unclaimed difference fails rr.
+# When a new test ships: re-point MC_REF_TREE (recipe.conf) and empty this list down to the header.
+# Program (code changes every commit)
+1ST_READ.BIN:changed	code	release program
+dc/*.ovl:changed	code	room / enemy overlays built with the program
+dc/wep04.ovl:added	WEAPON_WEP04_OVL=1	heap-margin25: Blacktail as a room overlay
+# Test 25 data sets
+dc/texlow/*:removed	nostd103,nostd25	GC-derived low-detail pictures dropped (PS2 world only)
+dc/native/r10[013]/low/*:removed	nostd103,nostd25	GC-derived low-detail world (PS2 world only)
+dc/native/r10d/ps2-world.*:changed	r10dbake23	r10d baked PS2 world
+dc/native/r1*/ps2-world.re4mesh:changed	n256w25,n256x25,n256z25	worlds at 256-vertex meshlets (SCENERY_N256)
+dc/native/r1*/ps2-world.r4sg:*	n256w25,n256x25,n256z25	strip groups of the 256-vertex worlds
+dc/mot/*	pmrest25,pmash25,pmr113-25,pmcodec25	PS2 motion keys
+em/*.drs:changed	pmash25,pl08n25,gvar25	PS2 cast / motion packages
+st1/r10[036].dar:0x* FCV	pmrest25	PS2 motion in the room archive
+st1/r10[036].arc:changed	pmrest25	PS2 motion room archive
+st1/r113.dar:0x* FCV	pmr113-25	PS2 motion in the room archive
+st1/r113.arc:changed	pmr113-25	PS2 motion room archive
+st1/r1*.dar:0x* NTR	ps2snd24 regen	sound table regenerated on the composed disc
+st1/r1*.dar:0x* ESQ	ps2snd24 regen	sound sequence regenerated on the composed disc
+st1/r11e.dar:0x0d ITM	pick25	r11e PS2 pickups
+ss/cmn/*:changed	pics25c,pics25d,pics25e,pics25f	PS2 sub screen pictures
+ss/eng/*:changed	pics25e,pics25f	PS2 sub screen pictures (English)
+font/*:changed	fontps2x25	PS2 fonts
+dc/tex.pak:~*	pl08n25,gvar25,codec25,pics25c-f,pada25	re-derived pack chain (size / format of a picture)

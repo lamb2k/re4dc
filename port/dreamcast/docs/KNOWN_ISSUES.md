@@ -114,6 +114,8 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| The first house windows (the "JUMP OUT" window in the forest, and the windows in the village and farm houses) have no glass | test 24 | PS2 difference, not a bug: the PS2 version has no glass in these windows (its window model is an empty placeholder and its room has no glass picture), so from test 24 we draw them the PS2 way | |
+| Some candle flames (r102, r105, r108) and the r103 flipbook effect were not drawn | test 24 | 🟢 Fixed in test 25: the PS2 has these pictures in another file, so they are no longer cut | |
 | After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | 🟢 Fixed in test 24: the animation draws Mendez with his PS2 model | [#57](https://github.com/lamb2k/re4dc/issues/57) |
 | River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |
