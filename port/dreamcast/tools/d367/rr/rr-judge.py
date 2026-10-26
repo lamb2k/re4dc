@@ -164,7 +164,7 @@ if build_ok and jobs:
             '; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items()))) for r, c in sorted(nc.items())) or 'none')
         if not j.get('pass'):
             detail += ' | ' + ' / '.join(j.get('failures', [])[:3])
-        add('GC-ASSET gate', bool(j.get('pass')), detail[:600], knownrow=os.environ.get('RR_GCA_MODE', 'report') == 'report')
+        add('GC-ASSET gate', bool(j.get('pass')), detail[:600], knownrow=os.environ.get('RR_GCA_MODE', 'gate') == 'report')
     rooms = rd(W / 'census-rooms.txt').split()
     logs = [EVU / ('cg-' + r) / 'run-output.txt' for r in rooms if (EVU / ('cg-' + r) / 'run-output.txt').exists()]
     if rooms:
