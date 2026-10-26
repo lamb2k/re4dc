@@ -1,0 +1,70 @@
+// Actual extracted adapter/affine code; synthetic objects and allocation arena.
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+namespace {
+unsigned frame_no=0,heap_used=0,allocation_calls=0;
+alignas(32) unsigned char heap[65536];
+unsigned re4dc_ui_frame(){return frame_no;}
+void* re4dc_static_alloc(unsigned bytes){
+    ++allocation_calls;const unsigned rounded=(bytes+31U)&~31U;
+    if(rounded>sizeof(heap)-heap_used)return nullptr;
+    auto* p=heap+heap_used;heap_used+=rounded;return p;
+}
+void re4dc_static_free(void*){}
+int re4dc_static_heap_free(){return sizeof(heap)-heap_used;}
+void re4dc_log(const char*,...){}
+struct {unsigned room=0x104;}ps2w;
+namespace lean {constexpr unsigned kMode=RE4DC_PS2_WORLD_LEAN;struct {unsigned dyn_fast;}st;}
+@HELPERS@
+@STATE@
+}
+@BINDING@
+namespace {
+struct Part{Part* next;float pose[9];float mat[12];};
+struct Object{unsigned flag,serial;float mat[12];};
+alignas(32) Part parts[17];
+alignas(32) Object owners[17];
+unsigned char ids[17];
+const float rest[12]={0,0,-2,17,0,3,0,-5,-4,0,0,31};
+const float current[12]={2,0,0,-30,0,-5,0,40,0,0,3,50};
+float output[12];
+}
+extern "C" {
+extern const unsigned fixture_layout[]={1,sizeof(dyn::Slot),sizeof(dyn::PartPose),sizeof(dyn::RootWitness),
+    dyn::part_cell_bytes(1),dyn::slot_cell_bytes(250),__builtin_offsetof(dyn::Slot,parts),
+    __builtin_offsetof(dyn::Slot,root_matrix_offset),unsigned(reinterpret_cast<std::uintptr_t>(output)),
+    unsigned(reinterpret_cast<std::uintptr_t>(&allocation_calls))};
+unsigned fixture_setup(){
+    dyn::reset();heap_used=allocation_calls=0;frame_no=1;
+    dyn::slots=dyn::reserve_slots(17);dyn::nslots=17;dyn::nids=17;dyn::ids=ids;
+    if(!dyn::slots)return 0;
+    std::memset(dyn::slots,0,dyn::slot_cell_bytes(17));
+    for(unsigned i=0;i<17;++i){
+        ids[i]=i;dyn::slot_of[i]=i;owners[i].flag=7;owners[i].serial=10+i;
+        std::memcpy(owners[i].mat,rest,sizeof(rest));std::memset(parts+i,0,sizeof(Part));std::memcpy(parts[i].mat,rest,sizeof(rest));
+        re4dc_ps2_dyn_bind(0x104,i,owners+i,&owners[i].flag,&owners[i].serial,owners[i].mat);
+        re4dc_ps2_dyn_parts(0x104,i,owners+i,parts+i,1,offsetof(Part,next),offsetof(Part,pose),offsetof(Part,mat));
+    }
+    return allocation_calls==1;
+}
+void fixture_prepare(unsigned kind){
+    ++frame_no;
+    if(kind){
+        std::memcpy(parts[16].mat,current,sizeof(current));
+        if(kind>=2)for(unsigned i=0;i<16;++i){std::memcpy(parts[i].mat,current,sizeof(current));dyn::query(i);}
+    }
+    if(kind==3)owners[16].flag=1;
+    if(kind>=4){dyn::query(16);if(kind==4)std::memcpy(parts[16].mat,rest,sizeof(rest));else ++owners[16].serial;}
+}
+unsigned fixture_query(){return dyn::query(16);}
+unsigned fixture_draw(){
+    struct {unsigned placement;float affine[12];}pl{16,{}};std::memcpy(pl.affine,rest,sizeof(rest));
+    for(unsigned once=0;once<1;++once){
+@DRAW@
+        std::memcpy(output,affine,sizeof(output));return 1;
+    }
+    return 0;
+}
+}

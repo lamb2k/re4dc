@@ -3031,6 +3031,45 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
 $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
 endif
+# Root-pose refusal repairs (2026-10-26): independent, default-off controls.
+# CAP_FALLBACK recomputes a valid overflowing root in bounded draw scratch.
+# WITNESS_PREFLIGHT reserves bind witnesses with the room's unique-ID slots;
+# one-part registration never needs a later allocation or a recaptured pose.
+# If required reservation fails, log and stop at the named missing-resource
+# failure before gameplay; unavailable source geometry is not a fallback.
+# REFUSAL_DIAG buffers exact per-owner totals; emission is bounded and outside SQ.
+ROOT_POSE_CAP_FALLBACK ?= 0
+ROOT_POSE_WITNESS_PREFLIGHT ?= 0
+ROOT_POSE_REFUSAL_DIAG ?= 0
+ifneq ($(words $(ROOT_POSE_CAP_FALLBACK)),1)
+$(error ROOT_POSE_CAP_FALLBACK must be exactly one literal 0 or 1)
+endif
+ifneq ($(words $(ROOT_POSE_WITNESS_PREFLIGHT)),1)
+$(error ROOT_POSE_WITNESS_PREFLIGHT must be exactly one literal 0 or 1)
+endif
+ifneq ($(words $(ROOT_POSE_REFUSAL_DIAG)),1)
+$(error ROOT_POSE_REFUSAL_DIAG must be exactly one literal 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ROOT_POSE_CAP_FALLBACK) $(ROOT_POSE_WITNESS_PREFLIGHT) $(ROOT_POSE_REFUSAL_DIAG)),)
+$(error ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1)
+endif
+ifneq ($(filter 1,$(ROOT_POSE_CAP_FALLBACK) $(ROOT_POSE_WITNESS_PREFLIGHT) $(ROOT_POSE_REFUSAL_DIAG)),)
+ifneq ($(PS2_WORLD_ROOT_POSE)$(PS2_WORLD_PARTS)$(PS2_WORLD_DYNAMIC),111)
+$(error Root-pose refusal controls need PS2_WORLD_ROOT_POSE=1 PS2_WORLD_PARTS=1 PS2_WORLD_DYNAMIC=1)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error Root-pose refusal controls need PS2_WORLD_ROOMS=1 or 2)
+endif
+endif
+ifeq ($(ROOT_POSE_CAP_FALLBACK),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_CAP_FALLBACK=1
+endif
+ifeq ($(ROOT_POSE_WITNESS_PREFLIGHT),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_WITNESS_PREFLIGHT=1
+endif
+ifeq ($(ROOT_POSE_REFUSAL_DIAG),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_REFUSAL_DIAG=1
+endif
 # PS2_WORLD_SOURCE_OWNER=1: bounded r200 noncoarse event-image ownership at
 # original model callbacks. Source OTs, callbacks and model postludes remain.
 # SOURCE_TEX_PREP prepares only the reviewed current R4PW late-pass descriptor.

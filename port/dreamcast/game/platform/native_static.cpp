@@ -18,6 +18,24 @@
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
 #endif
+#ifndef RE4DC_ROOT_POSE_CAP_FALLBACK
+#define RE4DC_ROOT_POSE_CAP_FALLBACK 0
+#endif
+#ifndef RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+#define RE4DC_ROOT_POSE_WITNESS_PREFLIGHT 0
+#endif
+#ifndef RE4DC_ROOT_POSE_REFUSAL_DIAG
+#define RE4DC_ROOT_POSE_REFUSAL_DIAG 0
+#endif
+#if (RE4DC_ROOT_POSE_CAP_FALLBACK != 0 && RE4DC_ROOT_POSE_CAP_FALLBACK != 1) || \
+    (RE4DC_ROOT_POSE_WITNESS_PREFLIGHT != 0 && RE4DC_ROOT_POSE_WITNESS_PREFLIGHT != 1) || \
+    (RE4DC_ROOT_POSE_REFUSAL_DIAG != 0 && RE4DC_ROOT_POSE_REFUSAL_DIAG != 1)
+#error Root-pose refusal controls must be 0 or 1
+#endif
+#if (RE4DC_ROOT_POSE_CAP_FALLBACK || RE4DC_ROOT_POSE_WITNESS_PREFLIGHT || RE4DC_ROOT_POSE_REFUSAL_DIAG) && \
+    (!RE4DC_PS2_WORLD_ROOT_POSE || !RE4DC_PS2_WORLD_PARTS || !RE4DC_PS2_WORLD_DYNAMIC || !RE4DC_PS2_WORLD_ROOMS)
+#error Root-pose refusal controls need the room root-pose adapter
+#endif
 #ifndef RE4DC_SCENERY_SELECT_ONLY
 #define RE4DC_SCENERY_SELECT_ONLY 0
 #endif
@@ -5433,6 +5451,18 @@ constexpr unsigned part_cell_bytes(unsigned count){
         ;
 }
 #endif
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+// Stored after the unique-ID Slot array in its one Room4 cell. The existing
+// root reader's PartPose + two matrices layout is retained byte for byte.
+struct RootWitness { PartPose part; float root[24]; };
+static_assert(__builtin_offsetof(RootWitness,root)==sizeof(PartPose));
+static_assert(sizeof(RootWitness)==part_cell_bytes(1));
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+struct RootDiag { std::uint64_t refused,spill; unsigned reasons,dirty; };
+enum RootReason : unsigned { RootFlags=1,RootSerial=2,RootMissing=4,RootInvalid=8,
+    RootCapacity=16,RootHeap=32,RootChain=64 };
+#endif
 struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
 #if RE4DC_PS2_WORLD_PARTS
@@ -5441,11 +5471,65 @@ struct Slot {
     unsigned root_matrix_offset; // offset plus one; ~0U invalid; nonzero records a refused root witness
 #endif
 #endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    RootDiag diag;
+#endif
 };
 unsigned char* block=nullptr;                      // heap-4 block: the ids file
 const std::uint8_t* ids=nullptr; unsigned nids=0; // placement field -> id
 Slot* slots=nullptr; unsigned nslots=0;
 std::uint8_t slot_of[kIds];                        // id -> slot (kNone: baked)
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+static_assert(alignof(Slot)>=alignof(RootWitness));
+constexpr unsigned slot_cell_bytes(unsigned count){
+    constexpr unsigned stride=sizeof(Slot)+sizeof(RootWitness);
+    return count && count<=kIds && count<=~0U/stride?count*stride:0U;
+}
+Slot* reserve_slots(unsigned count){
+    const unsigned bytes=slot_cell_bytes(count);
+    return bytes?static_cast<Slot*>(re4dc_static_alloc(bytes)):nullptr;
+}
+PartPose* reserved_pose(const Slot& s){
+    if(!slots)return nullptr;
+    const auto at=reinterpret_cast<std::uintptr_t>(&s),base_slot=reinterpret_cast<std::uintptr_t>(slots);
+    if(at<base_slot || (at-base_slot)%sizeof(Slot) || (at-base_slot)/sizeof(Slot)>=nslots)return nullptr;
+    auto* base=reinterpret_cast<RootWitness*>(slots+nslots);
+    return &base[(at-base_slot)/sizeof(Slot)].part;
+}
+void release_parts(Slot& s){
+    if(s.parts && s.parts!=reserved_pose(s))re4dc_static_free(s.parts);
+}
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+unsigned diag_cursor=0,diag_frame=~0U;
+void root_note(Slot& s,unsigned reason,bool spill=false){
+    if(spill)++s.diag.spill;else ++s.diag.refused;
+    s.diag.reasons|=reason;s.diag.dirty=1;
+}
+void root_report(unsigned id,Slot& s,const char* when){
+    if(!s.diag.dirty)return;
+    re4dc_log("ROOTPOSE room=%03x id=%02x serial=%u object=%p when=%s refused=%llu spill=%llu reasons=%02x frame=%u\n",
+        ps2w.room,id,s.serial,static_cast<const void*>(s.obj),when,
+        static_cast<unsigned long long>(s.diag.refused),static_cast<unsigned long long>(s.diag.spill),
+        s.diag.reasons,re4dc_ui_frame());
+    s.diag.dirty=0;
+}
+// At pass entry, before any chunk/SQ ownership. At most four dirty owners per
+// 120 native frames; totals are never sampled or cleared by periodic emission.
+void root_reports(bool final=false){
+    if(!slots)return;
+    const unsigned now=re4dc_ui_frame();
+    if(!final && diag_frame!=~0U && now-diag_frame<120U)return;
+    diag_frame=now;
+    unsigned budget=final?kIds:4U;
+    for(unsigned walked=0;walked<kIds && budget;++walked){
+        const unsigned id=diag_cursor++;if(diag_cursor==kIds)diag_cursor=0;
+        const unsigned slot=slot_of[id];
+        if(slot==kNone || slot>=nslots || !slots[slot].diag.dirty)continue;
+        root_report(id,slots[slot],final?"retire":"periodic");--budget;
+    }
+}
+#endif
 #if RE4DC_PS2_WORLD_PARTS
 std::uint8_t object_order[kIds]; unsigned nobjects=0;
 #if RE4DC_PS2_WORLD_LEAN
@@ -5486,9 +5570,16 @@ void reset(){
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world();
 #endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    root_reports(true);diag_cursor=0;diag_frame=~0U;
+#endif
     if(block)re4dc_static_free(block);
 #if RE4DC_PS2_WORLD_PARTS
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    if(slots)for(unsigned i=0;i<nslots;++i)release_parts(slots[i]);
+#else
     if(slots)for(unsigned i=0;i<nslots;++i)if(slots[i].parts)re4dc_static_free(slots[i].parts);
+#endif
     nobjects=0;
 #if RE4DC_PS2_WORLD_LEAN
     lean_mask[0]=lean_mask[1]=0;
@@ -5517,6 +5608,10 @@ unsigned query(unsigned id){
     // source BIN, whose geometry may have been released by offline staging.
     if(s.root_matrix_offset){
         if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || s.root_matrix_offset==~0U){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            root_note(s,!s.obj || serial!=s.serial?RootSerial:(flag&7U)!=7U?RootFlags:
+                !s.parts?RootMissing:RootInvalid);
+#endif
             state[id]=2;++hidden;return 1;
         }
         const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
@@ -5524,6 +5619,9 @@ unsigned query(unsigned id){
         const float* inv=rest+12; // computed once at bind, before any changed tick
         float change[12];
         bool valid=true;
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        bool capacity=false;
+#endif
         for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
         if(valid && std::memcmp(now,rest,12U*sizeof(float))){
             concat(now,inv,change);
@@ -5532,9 +5630,25 @@ unsigned query(unsigned id){
                 std::memcpy(delta[nmoved],change,sizeof(change));moved_of[id]=std::uint8_t(nmoved++);
                 state[id]=3;++moved;return 2;
             }
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            capacity=valid;
+#endif
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+            if(valid){
+                ++overflow;++moved;
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+                root_note(s,RootCapacity,true);
+#endif
+                state[id]=5;return 4; // valid root, recomputed in this placement's draw scratch
+            }
+#else
             if(valid)++overflow;
+#endif
             valid=false;
         }
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!valid)root_note(s,capacity?RootCapacity:RootInvalid);
+#endif
         if(!valid){state[id]=2;++hidden;return 1;} // never display stale baked geometry on refusal
         state[id]=1;return 0;
     }
@@ -5564,6 +5678,43 @@ unsigned query(unsigned id){
     state[id]=std::uint8_t(r+1U);
     return r;
 }
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+// 0 refusal, 1 exact bind pose (use the baked affine directly), 2 moved.
+// Revalidate before touching the borrowed part: eligibility and native drawing
+// are separate callers, and a reused/hidden owner must never inherit a spill.
+// The output belongs to one placement, never to the 16-entry frame cache.
+int root_affine(unsigned id,const float* baked,float* out){
+    if(id>=kIds || !slots || slot_of[id]==kNone || slot_of[id]>=nslots)return 0;
+    Slot& s=slots[slot_of[id]];
+    std::uint32_t flag=0,serial=0;
+    if(s.obj){std::memcpy(&flag,s.obj+off_flag,4);std::memcpy(&serial,s.obj+off_serial,4);}
+    if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || !s.root_matrix_offset || s.root_matrix_offset==~0U){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        root_note(s,!s.obj || serial!=s.serial?RootSerial:(flag&7U)!=7U?RootFlags:
+            !s.parts?RootMissing:RootInvalid);
+#endif
+        state[id]=2;++hidden;return 0;
+    }
+    const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
+    const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+    float change[12];
+    bool valid=true;
+    for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
+    if(valid && !std::memcmp(now,rest,12U*sizeof(float)))return 1;
+    if(valid){
+        concat(now,rest+12,change);
+        for(float v:change)valid=valid && std::isfinite(v);
+    }
+    if(!valid){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        root_note(s,RootInvalid);
+#endif
+        state[id]=2;++hidden;return 0;
+    }
+    concat(change,baked,out);
+    return 2;
+}
+#endif
 }
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
@@ -6697,7 +6848,24 @@ bool ps2_open(){
                 for(unsigned i=0;i<ih.count;++i)if(idv[i]<dyn::kIds && count[idv[i]]<2)++count[idv[i]];
                 unsigned n=0;
                 for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)++n;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+                // R4ID has placement IDs, not part counts: any unique ID can
+                // become a one-root owner at setObj. Reserve every original
+                // witness now, in the same cell as its Slot, before publication.
+                auto* sb=dyn::reserve_slots(n);
+                if(n && !sb){
+                    re4dc_log("ROOTPOSE_PREFLIGHT room=%03x unique=%u bytes=%u heap=%d refused\n",
+                        ps2w.room,n,dyn::slot_cell_bytes(n),re4dc_static_heap_free());
+                    re4dc_static_free(ib);ib=nullptr;
+                    // Only the newly opened package is live here. The old
+                    // room was retired at the existing room-mismatch boundary;
+                    // no dyn owner or movie borrower has been published.
+                    ps2_free();
+                    re4dc_missing("root-pose witness preflight");return false;
+                }
+#else
                 auto* sb=n?static_cast<dyn::Slot*>(re4dc_static_alloc(n*sizeof(dyn::Slot))):nullptr;
+#endif
                 iwhy="no heap";
                 if(sb){
 #if RE4DC_GC_ASSET_GATE
@@ -6705,7 +6873,11 @@ bool ps2_open(){
 #endif
                     unsigned k=0;
                     for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)dyn::slot_of[id]=std::uint8_t(k++);
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+                    std::memset(static_cast<void*>(sb),0,dyn::slot_cell_bytes(n));
+#else
                     std::memset(static_cast<void*>(sb),0,n*sizeof(dyn::Slot));
+#endif
                     dyn::block=ib;dyn::ids=idv;dyn::nids=ih.count;dyn::slots=sb;dyn::nslots=n;ib=nullptr;
                     iwhy=nullptr;
                 }
@@ -7001,10 +7173,20 @@ bool ps2_movie_dyn_valid(){
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     if(dyn::block && !re4dc_room4_cell_valid(dyn::block,0,ps2_movie.generation))return false;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::slot_cell_bytes(dyn::nslots),ps2_movie.generation))return false;
+    if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i){
+        const dyn::Slot& s=dyn::slots[i];
+        if(!s.parts)continue;
+        if(s.nparts==1){if(s.parts!=dyn::reserved_pose(s))return false;}
+        else if(!re4dc_room4_cell_valid(s.parts,dyn::part_cell_bytes(s.nparts),ps2_movie.generation))return false;
+    }
+#else
     if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::nslots*sizeof(dyn::Slot),ps2_movie.generation))return false;
 #if RE4DC_PS2_WORLD_PARTS
     if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i)if(dyn::slots[i].parts &&
         !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::part_cell_bytes(dyn::slots[i].nparts),ps2_movie.generation))return false;
+#endif
 #endif
 #endif
     return true;
@@ -7183,6 +7365,9 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    dyn::root_reports(); // bounded emission before any direct/chunk/SQ ownership
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
     Wc24PassResult wc_result;
@@ -7641,6 +7826,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 )continue;   // hidden, or drawn with its source part hierarchy
                 if(st==2){concat(dyn::delta[dyn::moved_of[id]],pl.affine,moved_affine);affine=moved_affine;}
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+                else if(st==4){
+                    const int result=dyn::root_affine(id,pl.affine,moved_affine);
+                    if(!result)continue;
+                    if(result==2)affine=moved_affine;
+                }
+#endif
             }
         }
 #if RE4DC_PS2_WORLD_LEAN
@@ -8474,8 +8666,15 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
     dyn::off_serial=unsigned(static_cast<const unsigned char*>(serial)-o);
     dyn::off_mat=unsigned(reinterpret_cast<const unsigned char*>(mat)-o);
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    dyn::root_report(id,s,"rebind");s.diag={};
+#endif
 #if RE4DC_PS2_WORLD_PARTS
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    dyn::release_parts(s);
+#else
     if(s.parts)re4dc_static_free(s.parts);
+#endif
     s.parts=nullptr;s.nparts=0;s.source=false;
 #if RE4DC_PS2_WORLD_ROOT_POSE
     s.root_matrix_offset=0;
@@ -8497,15 +8696,50 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     if(!dyn::ids || ps2w.room!=room || id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone || !count || count>255)return;
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
     if(s.obj!=object || s.parts)return;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    // Register once at the original setObj bind. In particular, a refused
+    // chain/owner must never retry with an animated matrix as its bind pose.
+    if(count==1 && s.root_matrix_offset)return;
+    if(count==1)s.root_matrix_offset=matrix_offset<~0U-1U && !(matrix_offset%alignof(float))?matrix_offset+1U:~0U;
+    std::uint32_t serial=0;
+    if(object)std::memcpy(&serial,s.obj+dyn::off_serial,sizeof(serial));
+    if(!object || serial!=s.serial || (count==1 && s.root_matrix_offset==~0U)){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(count==1)dyn::root_note(s,!object || serial!=s.serial?dyn::RootSerial:dyn::RootInvalid);
+#endif
+        return;
+    }
+#else
 #if RE4DC_PS2_WORLD_ROOT_POSE
     if(count==1)s.root_matrix_offset=matrix_offset+1U;
 #endif
+#endif
     const unsigned part_bytes=dyn::part_cell_bytes(count);
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    auto* poses=count==1?dyn::reserved_pose(s):static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
+#else
     auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    if(!poses && count==1)dyn::root_note(s,dyn::RootHeap);
+#endif
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT || RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!p){
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+            if(count!=1)re4dc_static_free(poses);
+#else
+            re4dc_static_free(poses);
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            if(count==1)dyn::root_note(s,dyn::RootChain);
+#endif
+            re4dc_log("PS2PART short chain id=%02x part=%u/%u\n",id,i,count);return;}
+#else
         if(!p){re4dc_static_free(poses);re4dc_log("PS2PART short chain id=%02x part=%u/%u\n",id,i,count);return;}
+#endif
         poses[i].part=p;std::memcpy(poses[i].pose,p+pose_offset,sizeof(poses[i].pose));
         std::memcpy(&p,p+next_offset,sizeof(p));
     }
@@ -8515,6 +8749,9 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
         std::memcpy(root,static_cast<const unsigned char*>(first)+matrix_offset,12U*sizeof(float));
         bool valid=inverse(root,root+12);
         for(unsigned i=0;i<24;++i)valid=valid && std::isfinite(root[i]);
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!valid)dyn::root_note(s,dyn::RootInvalid);
+#endif
         if(!valid)s.root_matrix_offset=~0U;
     }
 #endif
