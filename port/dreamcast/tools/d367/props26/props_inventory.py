@@ -51,6 +51,9 @@ def overlap(a, b):
     return f
 
 
+BIG = 0
+
+
 def classify(cur, gbin, pbin, label):
     cur = cur.rstrip(b'\0')
     if cur == po.to_le(gbin, label).rstrip(b'\0'):
@@ -60,6 +63,9 @@ def classify(cur, gbin, pbin, label):
             return 'EMPTY', None
     except Exception:
         pass
+    if pbin is not None and BIG and ps2_bounds(pbin)[1] * po.GcModel(gbin).nv > BIG:
+        # rebuild proof too slow for a big model: changed bytes with a PS2 counterpart = converted (unproven)
+        return 'PS2?', dict(out_vertices_le=struct.unpack_from('<H', cur, 0x38)[0])
     if pbin is not None:
         po.LOD = False   # older sets converted without the reduction step
         for fold in (False, True):

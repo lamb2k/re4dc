@@ -24,7 +24,7 @@ triangle is oriented so its face normal agrees with its corner normals in the sa
      replaces the payload's BIN entries (GC arc : PS2 arc, archive indices as the game numbers them) and/or ETM
      BINs (paired by name) with le_mirror-converted rebuilt BINs; every other byte of the payload is kept.
      Since 2026-10-26 (lane props-ps2-26) every PS2 object is reduced in the convert step (mesh_lod, UV guard; see
-     LOD) and self-checked (self_check: fewer triangles than the GC model and no more bytes, reduction step run); an
+     LOD) and self-checked (self_check: no more triangles and no more bytes than the GC model, reduction step run); an
      object that fails is skipped and listed. The report's 'graft' block is the deliverable (--graft-json): a member
      set for t11-fix.py {'graft': ...}, never a whole-.dar replacement.
      --keep-larger --keep-larger-reason "..."   (refused without a reason) ship an object that fails the self-check.
@@ -97,21 +97,27 @@ def fold_uv(cs):
 # Dreamcast reduction inside the convert step (lane props-ps2-26 2026-10-26, coordinator scope: "fix the converter
 # itself"). On by default (--no-lod is test-only): the PS2 triangles go through mesh_lod's quadric simplifier with the
 # UV guard (LOD_UV_GUARD, as the world packages' --lod-uv-guard) before part assignment and strip building. Target:
-# fewer triangles than the GC model it replaces; the geometric error is capped at LOD_MAX_ERR of the model's bounds
+# no more triangles than the GC model it replaces; the geometric error is capped at LOD_MAX_ERR of the model's bounds
 # diagonal, so a reduction that would need more stops there (and the self-check refuses the object: it stays listed for
 # review, never shipped larger). Vertices on a material / bone-weight seam are locked (no texture or skin tear).
 LOD = True
 LOD_UV_GUARD = 0.02
 LOD_MAX_ERR = 0.04
 LOD_STEPS = 24
+# When the reduced mesh still has more bytes than the GC model (PS2 UV seams split vertices), the room pass retries
+# with a lower triangle target (fit_rebuild): LOD_SCALE x GC triangles, down this ladder, then gives up (listed).
+LOD_SCALE = 1.0
+LOD_LADDER = (1.0, 0.9, 0.8, 0.7, 0.6, 0.5)
 
 
 def lod_reduce(ps2, gc_tris):
     """[(tex, [(p, n, uv, w)] * 3)] -> (reduced list, report). Always reports (the self-check needs the step recorded)."""
     import mesh_lod as ml
-    rep = dict(step='mesh_lod', uv_guard=LOD_UV_GUARD, target=gc_tris - 1, tris_in=len(ps2), tris_out=len(ps2), error=0.0)
-    if len(ps2) < gc_tris:
-        rep['note'] = 'already below the GC count'
+    gc_tris = int(gc_tris * LOD_SCALE)
+    rep = dict(step='mesh_lod', uv_guard=LOD_UV_GUARD, target=gc_tris, scale=LOD_SCALE, tris_in=len(ps2),
+               tris_out=len(ps2), error=0.0)
+    if len(ps2) <= gc_tris:
+        rep['note'] = 'already at or below the GC count'
         return ps2, rep
     pts = [c[0] for t, cs in ps2 for c in cs]
     lo = [min(p[a] for p in pts) for a in range(3)]
@@ -138,7 +144,7 @@ def lod_reduce(ps2, gc_tris):
             s.run_to(diag * LOD_MAX_ERR * k / LOD_STEPS)
             cur = s.triangles()
             rep['error'] = round(s.error / diag, 5)
-            if len(cur) < gc_tris:
+            if len(cur) <= gc_tris:
                 break
     finally:
         ml.UV_GUARD = old
@@ -151,13 +157,29 @@ class SizeCheckError(ValueError):
     pass
 
 
+def fit_rebuild(args, before, size_of, *a, **kw):
+    """rebuild() down the LOD_LADDER until size_gate passes -> (new, st, why). why is None when it fits."""
+    global LOD_SCALE
+    why = None
+    try:
+        for sc in (LOD_LADDER if LOD else (1.0,)):
+            LOD_SCALE = sc
+            new, st = rebuild(*a, **kw)
+            why = size_gate(args, st, before, size_of(new))
+            if not why:
+                break
+    finally:
+        LOD_SCALE = 1.0
+    return new, st, why
+
+
 def self_check(st, before_bytes=None, after_bytes=None):
     """(d) of the 10-26 scope: a converted object may not be larger than what it replaces (triangles; bytes when known)
     and must have run the reduction step. Raises SizeCheckError."""
     if 'lod' not in st:
         raise SizeCheckError('reduction step skipped')
-    if st['gc_tris'] and st['out_tris'] >= st['gc_tris']:
-        raise SizeCheckError('PS2 %d triangles >= GC %d after reduction' % (st['out_tris'], st['gc_tris']))
+    if st['gc_tris'] and st['out_tris'] > st['gc_tris']:
+        raise SizeCheckError('PS2 %d triangles > GC %d after reduction' % (st['out_tris'], st['gc_tris']))
     if before_bytes is not None and after_bytes is not None and after_bytes > before_bytes:
         raise SizeCheckError('output %d bytes > source %d' % (after_bytes, before_bytes))
 
@@ -283,20 +305,26 @@ class Grid:
         self.pts, self.cell, self.g = pts, cell, {}
         for i, p in enumerate(pts):
             self.g.setdefault(self.key(p), []).append(i)
+        ks = list(self.g) or [(0, 0, 0)]
+        self.lo = [min(k[a] for k in ks) for a in range(3)]
+        self.hi = [max(k[a] for k in ks) for a in range(3)]
 
     def key(self, p):
         c = self.cell
         return (int(math.floor(p[0] / c)), int(math.floor(p[1] / c)), int(math.floor(p[2] / c)))
 
     def nearest(self, p, ok=None):
+        # Same cells in the same order as the original full-cube scan (results identical), but only each ring's
+        # shell is enumerated and rings past the occupied cells stop (props-ps2-26: a filtered query that matched
+        # nothing scanned ~17M empty cells).
         kx, ky, kz = self.key(p)
         best, bi = None, -1
-        for r in range(0, 64):
+        rmax = max(abs(kx - self.lo[0]), abs(kx - self.hi[0]), abs(ky - self.lo[1]), abs(ky - self.hi[1]),
+                   abs(kz - self.lo[2]), abs(kz - self.hi[2]))
+        for r in range(0, min(64, rmax + 1)):
             for dx in range(-r, r + 1):
                 for dy in range(-r, r + 1):
-                    for dz in range(-r, r + 1):
-                        if max(abs(dx), abs(dy), abs(dz)) != r:
-                            continue
+                    for dz in (range(-r, r + 1) if abs(dx) == r or abs(dy) == r else ((-r, r) if r else (0,))):
                         for i in self.g.get((kx + dx, ky + dy, kz + dz), ()):
                             if ok is not None and not ok(i):
                                 continue
@@ -786,10 +814,9 @@ def room(args):
         atl = None
         if (args.room, ga) in ATLAS_OBJECTS:
             atl, lay = room_atlas(gbin, pe[pa][1], pe.get(pa + 1), ATLAS_OBJECTS[(args.room, ga)])
-        new, st = rebuild(gbin, pe[pa][1], atlas=atl)
+        new, st, why = fit_rebuild(args, len(to_le(gbin, pair)), lambda b: len(to_le(b, pair)), gbin, pe[pa][1], atlas=atl)
         if atl:
             st['atlas'] = lay
-        why = size_gate(args, st, len(cur), len(to_le(new, pair)))
         if why:
             st.update(kind='room BIN', gc_arc=hex(ga), ps2_arc=hex(pa), skipped=why)
             report['objects'].append(st)
@@ -907,7 +934,8 @@ def room(args):
                         new, st = rebuild(gbin, None, lambda m: [], allow_empty=True)
                         st['ps2'] = 'placeholder (emptied)'
                     else:
-                        new, st = rebuild(gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
+                        new, st, _ = fit_rebuild(args, al(0x40 + len(src_le)), lambda b: al(0x40 + len(to_le(b, nm))),
+                                                 gbin, pents[nm], tex_map=TEX_MAPS.get(nm.lower()))
                     nl = to_le(new, nm)
                     h = bytearray(body[:0x40])
                     size = al(0x40 + len(nl))

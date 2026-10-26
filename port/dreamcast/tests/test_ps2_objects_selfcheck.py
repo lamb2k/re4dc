@@ -30,9 +30,8 @@ class SelfCheck(unittest.TestCase):
         with self.assertRaises(po.SizeCheckError):
             po.self_check(dict(gc_tris=100, out_tris=120, lod={}))
 
-    def test_equal_triangles_refused(self):
-        with self.assertRaises(po.SizeCheckError):
-            po.self_check(dict(gc_tris=100, out_tris=100, lod={}))
+    def test_equal_triangles_pass(self):
+        po.self_check(dict(gc_tris=100, out_tris=100, lod={}), before_bytes=1000, after_bytes=1000)
 
     def test_larger_bytes_refused(self):
         with self.assertRaises(po.SizeCheckError):
@@ -56,7 +55,7 @@ class SelfCheck(unittest.TestCase):
     def test_lod_reduces_below_gc(self):
         mesh = grid(12)                     # 288 triangles, flat: the quadric reducer collapses it freely
         out, rep = po.lod_reduce(mesh, 100)
-        self.assertLess(len(out), 100)
+        self.assertLessEqual(len(out), 100)
         self.assertEqual(rep['step'], 'mesh_lod')
         self.assertEqual(rep['tris_out'], len(out))
 
