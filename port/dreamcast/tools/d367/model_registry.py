@@ -794,7 +794,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: lod_of {d["lod_of"]} must be an earlier descriptor with the same source identity')
         elif identity in seen_identity:
             raise Fail(f'{name}: source identity {identity} is ambiguous with {seen_identity[identity]}')
-        seen_identity[identity] = name
+        if not d.get('lod_level'):   # NMR_POOL_LOD: numbered levels all name the full descriptor
+            seen_identity[identity] = name
         # ---- chunks
         chunks, hbones = parse_header(hdr)
         if hbones != draw:
@@ -846,7 +847,16 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: mask_runs names section {si}, the header has none')
             c = c[0]
             mj = inputs.json(os.path.join(mdir, 'mask-runs.json'), f'mask/{name}/{si}/mask-runs.json')
-            if mj['header_sha256'] != L['header_sha256'] or mj['section'] != si or mj['triangles']['chunk'] != c['triangles']:
+            same_as_full = False
+            if d.get('lod_level') and mj['header_sha256'] != L['header_sha256']:
+                # NMR_POOL_LOD: a numbered level keeps a masked section whole (glod_rung keep_roles); the full
+                # descriptor's mask runs index that section's arrays, so they apply when its chunk is byte-identical.
+                fe = [x for x in runtime if x['name'] == d.get('lod_of')]
+                fc = [x for x in fe[0]['chunks'] if x['source_info'] == si] if fe else []
+                same_as_full = bool(fc) and fe[0]['header_sha256'] == mj['header_sha256'] and all(
+                    fc[0][k] == c[k] for k in ('positions', 'normals', 'uv', 'stream', 'weights'))
+            if (mj['header_sha256'] != L['header_sha256'] and not same_as_full) or mj['section'] != si or \
+                    mj['triangles']['chunk'] != c['triangles']:
                 raise Fail(f'{name} section {si}: mask runs were made from another header / section')
             mask_only = bool(mj.get('mask_only'))
             # mask-only: the complete pinned Luis hair, or (--pool) a pool section whose every triangle is a hair card
@@ -937,6 +947,14 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             # archive, BINs, TPLs and skeleton; reduced mesh). Package word 44 bit 25 + bits 16..23 = that descriptor's
             # package index + 1; the runtime draws it outside in-engine events only.
             entry['lod_of'] = d['lod_of']
+            if d.get('lod_level'):
+                # NMR_POOL_LOD (lane lod26b 2026-10-26): a numbered pool level (word 44 bits 26..29; GANADO_LOD order)
+                lv = int(d['lod_level'])
+                if not 1 <= lv <= 15 or not pool:
+                    raise Fail(f'{name}: lod_level {lv} needs 1..15 and a pool descriptor')
+                entry['lod_level'] = lv
+        elif d.get('lod_level'):
+            raise Fail(f'{name}: lod_level needs lod_of')
         if draw_slots is not None:
             entry.update(source_bones=bones, slots=list(draw_slots))
         if not 1 <= entry['position_shift'] <= 4:
@@ -1216,6 +1234,13 @@ def lod_word(r, runtime):
     if full >= names.index(r['name']) or full > 254:
         raise Fail(f'{r["name"]}: lod_of {r["lod_of"]} must come earlier in the room package')
     f = runtime[full]
+    if r.get('lod_level'):
+        # NMR_POOL_LOD: a numbered pool level of a pool full descriptor, the same sections in the same order
+        same = [(s['bin'], s['tpl']) for s in f['sections']] == [(s['bin'], s['tpl']) for s in r['sections']]
+        if (f['model_id'], f['bones']) != (r['model_id'], r['bones']) or not same or not f.get('pool') or not r.get('pool') \
+                or f.get('lod_of'):
+            raise Fail(f'{r["name"]}: a numbered pool level needs its pool full descriptor\'s model id, bones and sections')
+        return (r['lod_level'] << 26) | (1 << 25) | ((full + 1) << 16)
     if (f['model_id'], f['bones'], len(f['sections'])) != (r['model_id'], r['bones'], len(r['sections'])) or f.get('pool') or r.get('pool'):
         raise Fail(f'{r["name"]}: a gameplay level needs its full descriptor\'s model id, bones and sections (no pool)')
     return (1 << 25) | ((full + 1) << 16)

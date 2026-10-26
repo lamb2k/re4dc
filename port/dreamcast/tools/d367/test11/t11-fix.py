@@ -1652,6 +1652,15 @@ DATA['n256r100'] = {'dc/native/r100/%s' % f: N256R100D + '/dc/native/r100/%s' % 
 ICELLS26D = os.environ.get('ICELLS26D', '/root/re4data/private/icells26-20261026')
 DATA['icells26'] = {'dc/native/%s/interior.cell' % r: ICELLS26D + '/dc/native/%s/interior.cell' % r
     for r in ('r100',)}
+# lod26b (lane lod26b 10-26, NMR_POOL_LOD=1 only: an image without the knob refuses a numbered level): the r11d / r108 /
+# r111 / r113 registry packages + a g50 numbered pool level (word 44 bits 26..29 = 3) of the chapter 2 pool Ganado
+# (ganado-em16-0bp r11d, ganado-em17-0cp r108 / r111 / r113), drawn while GANADO_LOD draws level >= 3. Each package is
+# its shipped spec rebuilt byte-identically (cast16 1446f422 / r108p cd46d46c / trap24 4227608a / 795eb168) + the level
+# (model-registry/ps2-*-lod26b.json). No texture (the level binds the full model's atlas). After cast16, r108p, trap24.
+# Store: re4-assets-private/lod26b-20261026 (RECIPE.txt, SHA256SUMS.txt).
+LOD26BD = os.environ.get('LOD26BD', '/root/re4data/private/lod26b-20261026')
+DATA['lod26b'] = {'dc/native/%s/registry.re4nmr' % r: LOD26BD + '/dc/native/%s/registry.re4nmr' % r
+    for r in ('r11d', 'r108', 'r111', 'r113')}
 
 # wsg26 (lane worldopt26 10-26, user 10-26 "yes extend the strip"): spatial strip groups for the 256-vertex meshlet
 # route rooms (tools/ps2_strip_groups.py default mode, 4 groups, on each room's shipped n256 package: corners renumbered in

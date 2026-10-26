@@ -150,7 +150,10 @@ bool pack_alias(const PackSpan& a,const PackSpan& b,const unsigned char* geom) {
 #define RE4DC_NMR_WORD44_BAD(w) (w)
 #endif
 // NATIVE_MODEL_REGISTRY_LOD: word 44 bit 25 = a gameplay level of package descriptor (bits 16..23) - 1.
-#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+// NMR_POOL_LOD: + bits 26..29 = the level's number (pool levels only).
+#define RE4DC_NMR_LOD_BITS ((15u<<26)|(1u<<25)|(255u<<16))
+#elif defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
 #define RE4DC_NMR_LOD_BITS ((1u<<25)|(255u<<16))
 #else
 #define RE4DC_NMR_LOD_BITS 0u
@@ -367,6 +370,20 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
             // pool nor itself a level); a word without bit 25 carries no index.
             const unsigned w=pu32(r,44),full=(w>>16)&255u;
             desc.lod_of=0;
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+            // NMR_POOL_LOD: a numbered level (bits 26..29) is a pool level of a pool full descriptor (same sections, in
+            // order: the generator copies the full one's section list); an unnumbered level keeps the rule below.
+            const unsigned lvl=(w>>26)&15u;
+            desc.lod_level=lvl;
+            if(lvl && (!(w&(1u<<25)) || !pool))return kPwDescriptor;
+            if(w&(1u<<25)) {
+                if(!full || full-1u>=d)return kPwDescriptor;
+                const auto& f=PKD[full-1u];
+                if(f.model_id!=id || f.bones!=bones || f.sections!=sections || f.lod_of ||
+                   (lvl?(!f.pool || !pool):(f.pool || pool)))return kPwDescriptor;
+                desc.lod_of=full;
+            } else if(full)return kPwDescriptor;
+#else
             if(w&(1u<<25)) {
                 if(!full || full-1u>=d)return kPwDescriptor;
                 const auto& f=PKD[full-1u];
@@ -377,6 +394,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
                    )return kPwDescriptor;
                 desc.lod_of=full;
             } else if(full)return kPwDescriptor;
+#endif
         }
 #endif
 #if RE4DC_NMR_SLOTS
@@ -542,6 +560,9 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
         // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
         if(PKD[b].lod_of==a+1u)continue;
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+        if(PKD[a].lod_of && PKD[b].lod_of==PKD[a].lod_of)continue;  // two numbered levels of one full descriptor
+#endif
 #endif
         bool same=true;
         for(unsigned i=0;i<PKD[a].sections && same;++i) {

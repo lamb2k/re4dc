@@ -1,0 +1,92 @@
+{
+ "registry": "ps2-ch1-r108p-lod",
+ "about": "lane castgc17 (2026-10-17, CAST-GC): r108 room package = ps2-ch1-r108 with ganado-em17-0c replaced by the pool descriptor ganado-em17-0cp (as ps2-ch2-r113p / r118p; NATIVE_MODEL_REGISTRY_POOL; built with --package-room 108 --pool --wide-identity). r108 spawns em17 type 0xc holding a weapon (body 0x1cd, head 0x1cf, TPL 0x1ce, hands 0x1c0 + grip 0x1c8): the non-pool descriptor has hands 0x1c0 / 0x1c5 only, so the registry refused it on role rows (NMRU roles) and the GameCube model drew (CAST-GC r108 em17, every pass). Crows and the snake are the shipped conversions. cast_dir = the shipped r108 cast dir plus ganado-em17-0cp from regcast-ch2p (the shipped spec over it reproduces the shipped package 6a059ff1 byte for byte). + lane lod26b (2026-10-26, NMR_POOL_LOD): numbered pool levels g17cp-g70 (2) / -g50 (3) of ganado-em17-0cp (glod_rung.py from the PS2 store; body at the glod ratio, head ** 0.5, other pool sections whole).",
+ "cast_dir": "/root/re4data/private/lod26b-20261026/cast-r108",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em17: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bits 2 and 4); crow: the source GX lighting record and source cull, as ps2-crow",
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/p2b-20261011/regcast-r108",
+  "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-ch1",
+  "/root/probe/lanes-20261015/ps2cast/conv-ch2/regcast-ch2p"
+ ],
+ "descriptors": [
+  {
+   "name": "ganado-em17-0cp",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17/em17_set.cpp Em17Set type 0xc + em10HeadSet / em10HandSet / em10SetAccesory (whood)",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261017r/ch2regen/ps2cast/conv-ch2/e17p-mask-head"
+   },
+   "pool": true,
+   "partial_sections": true
+  },
+  {
+   "name": "g17cp-g50",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17/em17_set.cpp Em17Set type 0xc + em10HeadSet / em10HandSet / em10SetAccesory (whood)",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261017r/ch2regen/ps2cast/conv-ch2/e17p-mask-head"
+   },
+   "pool": true,
+   "partial_sections": true,
+   "lod_of": "ganado-em17-0cp",
+   "lod_level": 3
+  },
+  {
+   "name": "crow-folded",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,0): body BIN 5 + wing BIN 6"
+  },
+  {
+   "name": "crow-spread",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,1): body BIN 5 + wing BIN 7"
+  },
+  {
+   "name": "snake-em24-00",
+   "archive": "em24",
+   "model_id": "0x24",
+   "source_types": [],
+   "module": "src/em24/em24.cpp em24_R0_Init: modelInit(ARC 5, ARC 6)",
+   "source_drops": [
+    "bump"
+   ]
+  }
+ ],
+ "room_packages": {
+  "108": {
+   "descriptors": [
+    "ganado-em17-0cp",
+    "g17cp-g50",
+    "crow-folded",
+    "crow-spread",
+    "snake-em24-00"
+   ],
+   "evidence": "castgc17 r108 census: em17 type 0xc refused on role rows (grip hand 0x1c8)"
+  }
+ }
+}

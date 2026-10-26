@@ -1,0 +1,60 @@
+{
+ "registry": "ps2-ch2-r11dp-lod",
+ "about": "CH23 em3b type2 cart: original seven-bone skeleton and all 2328 PS2 triangles. Only complete triangles using repeated negative U coordinates are shifted by a whole source texture period. lane cast16 (2026-10-16): + ganado-em16-0bp, Em16Set type 11 as a section pool (NATIVE_MODEL_REGISTRY_POOL; --pool). + lane lod26b (2026-10-26, NMR_POOL_LOD): numbered pool levels g16bp-g70 (2) / -g50 (3) of ganado-em16-0bp (glod_rung.py from the PS2 store; body at the glod ratio, head ** 0.5, other pool sections whole).",
+ "cast_dir": "/root/re4data/private/lod26b-20261026/cast-r11d",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "cart-em3b-02",
+   "archive": "em3b",
+   "model_id": "0x3b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em3b/em3b.cpp em3b_R0_Init: modelInit ARC0xb / TPL0xc"
+  },
+  {
+   "name": "ganado-em16-0bp",
+   "archive": "em16",
+   "model_id": "0x16",
+   "source_types": [
+    11
+   ],
+   "module": "src/em16/em16_set.cpp Em16Set type 11 + em10HeadSet / em10HandSet / em10SackSet / em10SetAccesory (whood)",
+   "pool": true,
+   "partial_sections": true,
+   "mask_runs": {
+    "12": "/root/probe/lanes-20261017r/ch2regen/r11d/e16p-mask-sack"
+   }
+  },
+  {
+   "name": "g16bp-g50",
+   "archive": "em16",
+   "model_id": "0x16",
+   "source_types": [
+    11
+   ],
+   "module": "src/em16/em16_set.cpp Em16Set type 11 + em10HeadSet / em10HandSet / em10SackSet / em10SetAccesory (whood)",
+   "pool": true,
+   "partial_sections": true,
+   "mask_runs": {
+    "12": "/root/probe/lanes-20261017r/ch2regen/r11d/e16p-mask-sack"
+   },
+   "lod_of": "ganado-em16-0bp",
+   "lod_level": 3
+  }
+ ],
+ "room_packages": {
+  "11d": {
+   "descriptors": [
+    "cart-em3b-02",
+    "ganado-em16-0bp",
+    "g16bp-g50"
+   ],
+   "evidence": "Source type2 cart BIN0xb/TPL0xc; seven identical PS2/GC bones."
+  }
+ },
+ "lighting": " em16: the source GX lighting record, as em17 type 0xc."
+}
