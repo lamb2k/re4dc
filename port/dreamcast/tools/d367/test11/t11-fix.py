@@ -1049,6 +1049,20 @@ if os.path.isdir(PICS25CD):
     DATA['pics25c'] = {'dc/tex.pak': PICS25CD + '/dc/tex.pak'}
     PAK_DERIVED['pics25c'] = PICS25CD + '/pak-derived.json'
     AFTER += [('pics25c', 'codec25')]
+# pics25d (same lane, round 14): the last GC etc/core.das HUD pictures (ammo gauge frame, save bar, HUD digits 0 / 1 / 2,
+# title noise x2) re-keyed to the PS2 Core.dat HUD pictures (alpha box fitted, ps2_hud_pak way). After pics25c.
+PICS25DD = os.environ.get('PICS25DD', '/root/re4data/private/pics25d-20261025')
+if os.path.isdir(PICS25DD):
+    DATA['pics25d'] = {'dc/tex.pak': PICS25DD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25d'] = PICS25DD + '/pak-derived.json'
+    AFTER += [('pics25d', 'pics25c')]
+# pada25 (same lane): the GameCube green A button (d17e9c56) recoloured to the Dreamcast A colour from the kept B pad
+# label (our pad-label art; reviewed exception like 755e1575 / 803499f2 / 3acc7fea). After pics25d.
+PADA25D = os.environ.get('PADA25D', '/root/re4data/private/pada25-20261025')
+if os.path.isdir(PADA25D):
+    DATA['pada25'] = {'dc/tex.pak': PADA25D + '/dc/tex.pak'}
+    PAK_DERIVED['pada25'] = PADA25D + '/pak-derived.json'
+    AFTER += [('pada25', 'pics25d')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
