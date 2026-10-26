@@ -13,6 +13,91 @@
 #endif
             ;
     }
+#if RE4DC_SCENERY_STREAM && RE4DC_SG_SELECT_LEAN && !RE4DC_SCENERY_RECORD_SPLIT && !RE4DC_SCENERY_CONE && \
+    !(defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK) && !(defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24) && \
+    !(defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2)
+    // SCENERY_STREAM: chunk_select below for this configuration as one tight loop: the same tests, expressions and
+    // picks (box_class / box_mask_lean / sg_select_lean, or the knob-off functions under the runtime switch; the same LOD
+    // rule), with the diagnostic counters dropped and the runtime switch read once per part.
+    __attribute__((noinline)) unsigned chunk_select(Pick* out){
+        const auto& lod=package.part_lods()[part_index];
+        const auto* levels=package.levels();const auto* all=package.meshlets();
+        const bool groups=sg && lean_am,box2=(lean::kMode&2U) && lean_am,slean=re4dc_sg_lean_on!=0;
+        unsigned np=0;
+        const auto* cl=package.clusters()+lod.first_cluster;
+        for(const auto* const cend=cl+lod.cluster_count;cl!=cend;++cl){
+            float lo[3],hi[3];
+            for(unsigned a=0;a<3;++a){lo[a]=float(cl->bounds_min[a]);hi[a]=float(cl->bounds_max[a]);}
+            unsigned cin;
+            if(lean_inside)cin=2;
+            else if(box2)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
+            else {
+                const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
+                cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
+            }
+            if(!cin)continue;
+            float depth=-mvq[11],radius=0;
+            for(unsigned a=0;a<3;++a){
+                depth-=mvq[8+a]*(lo[a]+hi[a])*0.5f;
+                radius+=std::fabs(mvq[8+a])*(hi[a]-lo[a])*0.5f;
+            }
+            depth-=radius;
+            if(depth<near)depth=near;
+            unsigned level=cl->level_count-1;
+            while(level && levels[cl->first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+            if(ps2)level=re4dc::room::nonempty_lod(levels+cl->first_level,cl->level_count,level);
+#endif
+            const auto& lv=levels[cl->first_level+level];
+            const unsigned li0=lv.first_meshlet,li1=li0+lv.meshlet_count;
+            if(cin==2 || !groups){
+                for(unsigned li=li0;li<li1;++li){
+                    if(cin!=2){
+                        const auto& l=all[li];
+                        const re4dc::render::DrawBounds bounds{
+                            {float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])},
+                            {float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])}};
+                        if(!re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0))continue;
+                    }
+                    Pick& pk=out[np++];pk.let=std::uint16_t(li);pk.nr=0xffU;
+                }
+                continue;
+            }
+            const std::uint8_t* gsrc=sg+16U*sg_groups*li0;
+            for(unsigned li=li0;li<li1;++li,gsrc+=16U*sg_groups){
+                const auto& l=all[li];
+                const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
+                const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+                const int mk=slean?lean::box_mask_lean(blo,bhi,mvq,lean_am,near,cull_far)
+                                  :lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
+                if(mk<0)continue;
+                Pick& pk=out[np++];
+                pk.let=std::uint16_t(li);pk.nr=0xffU;
+                if(!mk)continue;
+                const auto* g=reinterpret_cast<const std::uint16_t*>(gsrc);
+                unsigned glo,ghi,culled,nr;std::uint16_t r0[8],r1[8];
+                if(slean){
+                    if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
+                    nr=lean::sg_select_lean(g,sg_groups,sg_lp,unsigned(mk),r0,r1,glo,ghi,culled);
+                }else{
+                    if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
+                    nr=lean::sg_select(g,sg_groups,sg_coef,unsigned(mk),r0,r1,glo,ghi,culled);
+                }
+                if(culled){
+                    unsigned bits=0,prev=0,j=0;
+                    for(unsigned k=0;k<sg_groups && j<nr;++k){
+                        const unsigned gend=g[8*k+6];
+                        if(gend==prev)continue;
+                        if(r0[j]==prev && r1[j]==gend){bits|=1U<<k;++j;}
+                        prev=gend;
+                    }
+                    pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
+                }
+            }
+        }
+        return np;
+    }
+#else
     // Picks appended at out (room for part.meshlet_count); returns how many.
     __attribute__((noinline)) unsigned chunk_select(Pick* out){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
@@ -261,3 +346,4 @@
 #endif
         return np;
     }
+#endif
