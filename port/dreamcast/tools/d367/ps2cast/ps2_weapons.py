@@ -164,16 +164,28 @@ def skeleton_fit(gc_bin, ps2_bin):
     return off, 'fit: PS2 mesh moved by (%.3f, %.3f, %.3f) onto the GC skeleton' % off
 
 
+# wep19-26 round 3 (coordinator 10-26, --hands): Leon's hand BINs that are still GameCube bytes, converted to the PS2
+# file's hand BIN of the same arc (geometry onto the GC joints; no picture: the hand samples Leon's own TPL).
+#   wep19.drs 0x7: the grenade hand (wep19.cpp setMotion initWepHand(WEP_ARC_PTR(0x7))). LEON_HAND_PACK draws it from
+#   the pack by its runtime key; the converted BIN's new key is added to leon_hands_pl00.re4hp (hands_pack.py addkey)
+#   on the same PS2 blob, so the drawn hand is unchanged.
+HAND_PAIRS = {'wep19': {0x7: ()}}
+
+
 def em_units(args, src):
     """Leon's weapon archives em/wepNN.drs (DRS body; archive numbers = entry index + 4)."""
-    for w in (args.weapons.split(',') if args.weapons else sorted(WEAPON_PAIRS)):
+    table = dict(WEAPON_PAIRS)
+    if getattr(args, 'hands', False):
+        for w, hp in HAND_PAIRS.items():
+            table[w] = {**table.get(w, {}), **hp}
+    for w in (args.weapons.split(',') if args.weapons else sorted(table)):
         gcd = src.gc_file('em/%s.drs' % w)
         ps2d = src.ps2_file('%s.dat' % w)
         g = drs.Drs(gcd)
         yield dict(w=w, rel='em/%s.drs' % w, gc_rel='em/%s.drs' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
                    base=Path(args.base) / ('%s.drs' % w), gc_entry=lambda arc, g=g: g.entries[arc - 4],
                    pe={i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)},
-                   span=lambda base, arc: le_span(base, arc - 4), pairs=WEAPON_PAIRS[w])
+                   span=lambda base, arc: le_span(base, arc - 4), pairs=table[w])
 
 
 # wep19-26 (2026-10-26): weapon models that live in Leon's own archive (em/pl00.drs, and pl08 for the no-jacket
@@ -218,7 +230,10 @@ def ss_units(args, src):
         tpls = [i for i, (t, b) in enumerate(ge) if t.rstrip(b'\0') == b'TPL']
         pairs = {}
         for i, (t, b) in enumerate(ge):
-            if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
+            if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach != 0 and getattr(args, 'hands', False):
+                # --hands (wep19-26 round 3): Leon's hand BIN, drawn with his own picture (ss_model.cpp PL_ARC 5 / 17)
+                pairs[i] = ()
+            elif t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
                 if len(tpls) > 1:
                     raise ValueError('%s: %d TPL entries' % (w, len(tpls)))
                 # wep19-26: ss_wep13 / ss_wep19 carry no TPL (the model samples a picture the sub screen loads
@@ -232,10 +247,10 @@ def ss_units(args, src):
             return s, e, t
         yield dict(w=w, rel='ss/cmn/%s.dat' % w, gc_rel='ss/cmn/%s.dat' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
                    base=Path(args.base) / ('%s.dat' % w), gc_entry=lambda i, ge=ge: ge[i],
-                   pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs)
+                   pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs, bare=True)
 
 
-def relayout_grow(d, grow, w):
+def relayout_grow(d, grow, w, bare=False):
     """wep19-26: the DRS body laid out again with the grown BIN slots (grow: absolute slot start -> new bytes), by
     motion/ps2_motion_prepared.py relayout (every archive offset, table row and container record after the body
     remapped). Checked: same entry count / tags, every other member byte-identical, each grown slot = its BIN."""
@@ -243,12 +258,12 @@ def relayout_grow(d, grow, w):
     spec = importlib.util.spec_from_file_location('ps2_motion_prepared', HERE.parent / 'motion' / 'ps2_motion_prepared.py')
     pmp = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(pmp)
-    P = pmp.Prepared(d)
+    P = pmp.Prepared(d, bare)
     rel = {s - P.base: b for s, b in grow.items()}
     assert set(rel) <= set(P.starts), (w, 'grown slot is not a member start')
     members = [(s, e, rel.get(s, P.b[s:e]), None if s in rel else P.mtc.get(s)) for s, e in zip(P.starts, P.ends)]
-    cont, _, _ = pmp.relayout(d, P, members)
-    Q = pmp.Prepared(bytes(cont))
+    cont, _, _ = pmp.relayout(d, P, members, bare)
+    Q = pmp.Prepared(bytes(cont), bare)
     assert Q.n == P.n and Q.tags == P.tags, (w, 'entry table changed')
     assert bool(Q.rel) == bool(P.rel) and (not P.rel or Q.b[Q.rel:] == P.b[P.rel:]), (w, 'REL changed')
     for i in range(P.n):
@@ -372,7 +387,7 @@ def convert(args):
             if written:
                 manifest.append(dict(room=w, name=tname, swaps=written, pairs=[]))
         if grow:
-            base = bytearray(relayout_grow(bytes(base), grow, w))
+            base = bytearray(relayout_grow(bytes(base), grow, w, u.get('bare', False)))
             rep['relayout'] = {hex(k): len(v) for k, v in grow.items()}
         dst = out / 'files' / u['rel']
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -430,6 +445,8 @@ def main():
                        help='fit a PS2 mesh whose root children are uniformly translated onto the GC skeleton (wep05)')
         c.add_argument('--relayout', action='store_true',
                        help='a PS2 BIN larger than its slot grows the slot: the archive body is laid out again (egg 0x7D)')
+        c.add_argument('--hands', action='store_true',
+                       help="also Leon's GameCube hand BINs (HAND_PAIRS; convert-ss: every attach != 0 BIN), no pictures")
     a = ap.parse_args()
     sys.exit(convert(a))
 

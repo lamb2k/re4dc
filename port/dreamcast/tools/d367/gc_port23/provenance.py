@@ -18,7 +18,12 @@ Runtime-harvest rows (fonts, layout) stay unknown.
 Motion rows (kind=motion, one per FCV/SEQ clip key; gc-catalog24b round 8): only the PS2 motion stores (data sets
 named pm*: pmleon24b, pmgan24, pmwep24b) attribute motion, by their RECIPE; a key those stores' archives or dc/mot
 keys carry is ps2 wherever it sits; any other clip in a GameCube disc file is gc. The motion stores never
-attribute the other kinds staged in the same archive (models keep the previous set's provenance)."""
+attribute the other kinds staged in the same archive (models keep the previous set's provenance).
+Byte-following (wep19-26, coordinator 10-26): a set staging a whole file is credited only with the members whose bytes
+it changed. A member already present, byte for byte, in the previous set's copy of that file (motion sets included) is
+not that set's work: the row walks back to the set that first carried those bytes, and to the stager base rules
+(rule 3) when no set changed it. The first set staging a file has no earlier copy to compare and still gets the whole
+file; provenance-report.json lists those cases (whole_file_credit)."""
 import collections, csv, hashlib, importlib.util, io, json, os, re, sys
 from pathlib import Path
 
@@ -140,6 +145,45 @@ class Store:
         return self.level, 'set=%s %s' % (self.name, self.why)
 
 
+_DIGESTS = {}
+
+
+def file_digests(src, path):
+    """sha256 of every catalog member of one staged copy (build_catalog.member_rows; dc/native files whole), or None
+    when the copy is not a readable file."""
+    key = (str(src), path)
+    if key not in _DIGESTS:
+        f = Path(src)
+        if not f.is_file():
+            _DIGESTS[key] = None
+        else:
+            b = f.read_bytes()
+            out = {sha(b)} if path.startswith('dc/native/') else set()
+            out |= {sha(data) for _k, _i, data, _s in build_catalog.member_rows(path, b)}
+            _DIGESTS[key] = out
+    return _DIGESTS[key]
+
+
+def follow_bytes(sets, path, digest):
+    """The non-motion set that produced this member's bytes (wep19-26 byte-following), or None when no set changed
+    them (stager base). Returns (store, whole_file) where whole_file says the set is the file's first copy, so its
+    credit could not be checked against an earlier copy."""
+    for i in range(len(sets) - 1, -1, -1):
+        st = sets[i]
+        if MOTION_SET.match(st.name):
+            continue
+        if digest in st.tsv:
+            return st, False
+        own = file_digests(st.src, path)
+        if own is not None and digest not in own:
+            continue          # a later set's bytes (not in this copy)
+        prev = file_digests(sets[i - 1].src, path) if i else None
+        if prev is not None and digest in prev:
+            continue          # unchanged by this set: an earlier copy already carried these bytes
+        return st, i == 0 or prev is None
+    return None, False
+
+
 REVIEWED = Path(__file__).resolve().parent / 'provenance-reviewed.tsv'
 
 
@@ -223,6 +267,7 @@ def main(catalog, recipe_conf, out_dir):
     rows = json.loads(Path(catalog).read_text())['entries']
     reviewed = load_reviewed()
     proofs, unknown, counts = [], [], collections.Counter()
+    whole_file = collections.Counter()
     for r in rows:
         src = r['source']
         path = src.split('#')[0].lower()
@@ -255,9 +300,12 @@ def main(catalog, recipe_conf, out_dir):
                 prov, ev = 'gc', 'GameCube motion: clip of GameCube disc file %s, no PS2 motion set stages it' % gc_file(path)
             else:
                 ev = 'motion clip: no PS2 motion set, not on the GameCube disc'
-        elif [st for st in overlay.get(path, []) if not MOTION_SET.match(st.name)]:
-            st = [st for st in overlay[path] if not MOTION_SET.match(st.name)][-1]
+        elif follow_bytes(overlay.get(path, []), path, r['sha256'])[0] is not None:
+            st, whole = follow_bytes(overlay[path], path, r['sha256'])
             prov, ev = st.prov(r['sha256'], gc_file(path))
+            if whole and r['sha256'] not in st.tsv:
+                whole_file[(st.name, path, prov)] += 1
+                ev += ' (first copy of the file: whole-file credit)'
         elif gc_file(path) is not None:
             prov, ev = 'gc', 'stager base: GameCube disc file %s' % gc_file(path)
         elif 'ps2-world.' in path:
@@ -278,7 +326,8 @@ def main(catalog, recipe_conf, out_dir):
         for u in unknown:
             f.write('\t'.join(u) + '\n')
     rep = dict(sets=names, sets_not_in_t11=missing_sets, packs=[s.name for s in packs], first_pack=first_pack,
-               counts={'%s/%s' % k: v for k, v in sorted(counts.items())})
+               counts={'%s/%s' % k: v for k, v in sorted(counts.items())},
+               whole_file_credit=['%s %s %s rows=%d' % (k + (v,)) for k, v in sorted(whole_file.items())])
     (out / 'provenance-report.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps(rep['counts'], indent=0))
     print('packs', rep['packs'], 'missing sets', missing_sets)
