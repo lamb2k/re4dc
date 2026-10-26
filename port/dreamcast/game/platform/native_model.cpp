@@ -776,8 +776,16 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if RE4DC_GC_ASSET_GATE
     if(p) {
         const void* data=nullptr;re4dc_gcasset::ModelMember member;
-        if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
-            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.payload?re4dc_gcasset::replay_use.serial:0,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
+        if(re4dc_gcasset::replay_use.serial!=0xffffffffU){
+            // gc-catalog24b accepts an actor part selected through its model member (ActorSourceScope::accepted);
+            // its deferred replay keeps that member serial only when the live member holds the BIN this part
+            // draws, so a queued serial never relabels other geometry (cast-ps2-25 r17: the h2 translucent room
+            // model drawn after the codec screen lost its proof here).
+            const auto& r=re4dc_gcasset::replay_use;
+            const bool held=!r.payload && r.serial && re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
+                re4dc_gcasset::member_contains(r.serial,data,64);
+            re4dc_gcasset::source_use={r.payload||held?r.serial:0,r.mask,p->model,p->info,r.payload};
+        }
         else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
            re4dc_gcasset::member_lookup(data,&member)) {
             const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|

@@ -124,11 +124,13 @@ int main(){
     const unsigned first_reads=reads;emitted_checked(Weapon,model);emitted_checked(EffectPicture,ps2);
     assert(reads==first_reads);
     // gc-catalog24b r8: Motion is wired like any consumer. A seen row needs no
-    // read; a new motion identity binds (one catalog search) and is a row.
+    // read (cast-ps2-25 r17: a seen texture row given to Motion is a kind-mismatch
+    // error, from the seen-row bit); a new motion identity binds (one catalog search).
     emitted_checked(Motion,ps2);assert(reads==first_reads);
     emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
     assert(reads>first_reads);end(1);assert(rows()==3);
-    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=0")!=std::string::npos);
+    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=1")!=std::string::npos &&
+           output.find("why=kind-mismatch consumer=9")!=std::string::npos);
     assert(output.find("kind=motion id=not-admitted")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
     assert(output.find("source_geometry=1 texture=2 effect_picture=1 weapon=1")!=std::string::npos);
     // Room retirement resets observations, not the immutable disc epoch. A

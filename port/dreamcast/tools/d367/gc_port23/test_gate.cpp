@@ -134,9 +134,14 @@ int main() {
     CatalogRow own_sources[]={{"geometry","mesh",ps2,PS2},{"motion","pose",gc,GameCube}};
     assert(install(own_sources,2));output.clear();begin(0x111,1,Required);
     const auto mesh=bind_checked("geometry","mesh",ps2);emitted_checked(SourceGeometry,mesh);emitted_checked(Motion,mesh);end(1);
-    assert(output.find("motion-unwired consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos);
+    // Motion is wired (gc-catalog24b): the gate itself refuses a token of another kind (cast-ps2-25 r17).
+    assert(output.find("why=kind-mismatch consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos);
     output.clear();begin(0x111,2,Required);emitted(Motion,"motion","pose",gc);end(2);
-    assert(!rows() && output.find("motion-unwired consumer=9")!=std::string::npos && output.find("motion=0")!=std::string::npos);
+    assert(rows()==1 && output.find("kind=motion id=pose")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
+    // ...and a motion row never counts for another consumer, seen first or not.
+    output.clear();begin(0x111,4,Required);const auto pose=bind_checked("motion","pose",gc);
+    emitted_checked(SourceGeometry,pose);emitted_checked(Motion,pose);emitted_checked(SourceGeometry,pose);end(4);
+    assert(output.find("why=kind-mismatch consumer=0")!=std::string::npos && output.find("errors=2")!=std::string::npos);
     output.clear();begin(0x111,3,Required&~(1U<<Motion));for(unsigned i=0;i<Motion;++i)checked(Consumer(i));end(3);
     assert(output.find("wired=1ff checked=1ff required=3ff")!=std::string::npos && output.find("motion=0")!=std::string::npos);
     assert(maximum_counts==255); // transition scope is three bytes longer than room=ffffffff
