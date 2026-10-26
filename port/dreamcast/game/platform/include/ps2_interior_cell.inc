@@ -3,7 +3,7 @@
 //          ps2-world.r4pw sha256 bea1ade4c3bebe4d483c7ab191c39dbe901d66daa35f350fd5a44a092d179e22.
 // Config cell_r100.json sha256 5093f1296adbc4cf30e681473b6cab8222e779e32232aad5e13f2425a56a3ef8: 170 sub-cells, 1186 portals; 1327989960 sample rays, 13800288 escaped.
 #if RE4DC_PS2_INTERIOR_CELLS
-#include "include/ps2_interior_cells.inc"
+#include "ps2_interior_cells.inc"
 #else
 constexpr unsigned kPcRoom=0x100U,kPcMeshCrc=0x0ba73aacU,kPcSidecarCrc=0x6a47cd3bU,kPcMeshBytes=1531936U;
 constexpr float kPcNearMax=150.0f;
