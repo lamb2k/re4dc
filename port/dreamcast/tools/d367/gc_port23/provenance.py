@@ -89,6 +89,25 @@ def store_files(src):
     return None, {}
 
 
+def graft_digests(dar, members):
+    """sha256 of each named ETM sub-file body (past its 0x40 record header) in a native room archive, plus the body
+    without its zero tail."""
+    import struct as _st
+    sys.path[:0] = [str(Path(__file__).resolve().parent.parent.parent)]
+    import room_smd as _rs
+    import ps2_objects as _po
+    b = Path(dar).read_bytes()
+    _k, size, _d, off = _st.unpack_from('<4I', b, 0x20)
+    pay = b[off:off + size]
+    etm = next(pay[a:z] for t, a, z in _rs.tagged_entries(pay, '<') if t.rstrip(b'\0') == b'ETM')
+    out = set()
+    for n, a, z in _po.etm_entries(etm, '<'):
+        if n in members:
+            body = etm[a + 0x40:z]
+            out |= {hashlib.sha256(body).hexdigest(), hashlib.sha256(body.rstrip(b'\0')).hexdigest()}
+    return out
+
+
 class Store:
     def __init__(self, name, src, lines):
         self.name, self.src = name, src
@@ -151,6 +170,7 @@ def main(catalog, recipe_conf, out_dir):
         data = m.group(1).replace('${DATA}', data).replace('$DATA', data)
     names = [n for n in (mod.T17_DATA + ',' + data).split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
+    grafted = {}
     for n in names:
         if n not in mod.DATA:
             missing_sets.append(n); continue
@@ -161,6 +181,16 @@ def main(catalog, recipe_conf, out_dir):
                     if os.path.isdir(src):
                         for f in Path(src).rglob('*.re4tex'):
                             tex_loose[f.stem.lower()] = st
+                continue
+            if k == 'graft':
+                # member-level graft (t11-fix.py graft_all): the set owns only the grafted members, never the archive
+                # (the archive's other members keep their own sets' provenance). A grafted ETM member's catalog row is
+                # its body (sub-file past the 0x40 record header); those rows are attributed to the graft set as GC
+                # unless its store's provenance.tsv says otherwise.
+                for gdest, (gsrc, members) in srcs.items():
+                    st = stores.setdefault((n, gsrc), Store(n, gsrc, lines))
+                    for dg in graft_digests(gsrc, members):
+                        grafted[dg] = st
                 continue
             src = srcs if isinstance(srcs, str) else list(srcs)[-1]
             st = stores.setdefault((n, src), Store(n, src, lines))
@@ -200,6 +230,9 @@ def main(catalog, recipe_conf, out_dir):
         rv = reviewed.get((r['kind'], r['sha256']))
         if rv:
             prov, ev = rv
+        elif r['sha256'] in grafted:
+            st = grafted[r['sha256']]
+            prov, ev = st.tsv.get(r['sha256'], 'gc'), 'grafted member of set %s (%s)' % (st.name, st.src)
         elif src.startswith('runtime-harvest:'):
             ev = 'runtime harvest'
         elif r['kind'] == 'texture' and path == 'dc/tex.pak':

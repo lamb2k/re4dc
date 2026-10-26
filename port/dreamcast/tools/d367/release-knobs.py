@@ -122,6 +122,12 @@ def disc_files(sets):
                 die('disc set %s stages loose textures (tex): not supported in the Build-Assets zip' % n)
             if dest == 'ovl':
                 continue  # overlay names (ch2: em3b em35 pl14): built by the recipe, not data; the program zip has them
+            if dest == 'graft':
+                # member-level graft (t11-fix.py graft_all): the source archives ship beside the disc files; the disc
+                # file itself is the release disc's (the kit swaps the program into the release image)
+                for gdest, (gsrc, _members) in src.items():
+                    out['%s/disc-graft/%s/%s' % (ZIP_ROOT, n, gdest)] = Path(gsrc)
+                continue
             out['%s/disc/%s' % (ZIP_ROOT, dest)] = Path(src)
     # a set with DROP_LOOSE (pak17, test 17 on) leaves no loose dc/tex/<c>/<key>.re4tex on the disc (the pack holds
     # them all): the zip carries what the disc carries, so the earlier sets' loose textures stay out
