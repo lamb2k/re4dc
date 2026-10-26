@@ -106,6 +106,25 @@ $(error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UV_SNAPSHOT=1
 endif
+# SCENERY_STREAM=1 (lane scenery-rewrite25, exact, render only): the scenery draw rewrite (P2). Milestone 1: an indexed
+# (v3 pool) pick is transformed straight from its part pool through its offsets (vp::transform_sched_ix), with no gather
+# copy; the gather runs only if one of its strips reaches the clipper. Needs the chunk replay path.
+SCENERY_STREAM ?= 0
+ifneq ($(SCENERY_STREAM),0)
+ifneq ($(SCENERY_STREAM),1)
+$(error SCENERY_STREAM must be 0 or 1)
+endif
+ifneq ($(SCENERY_CHUNK)$(SCENERY_REPLAY_LEAN)$(MESH_VP_SCHED)$(HW_LEAN),1111)
+$(error SCENERY_STREAM needs SCENERY_CHUNK=1 SCENERY_REPLAY_LEAN=1 MESH_VP_SCHED=1 HW_LEAN=1)
+endif
+ifneq ($(filter-out 0,$(SCENERY_EMIT_PREFETCH) $(SCENERY_RECORD_SPLIT) $(SCENERY_DIRECT_STRIPS) $(PS2_PVS) $(CPU_BACKFACE) $(TA_HASH)),)
+$(error SCENERY_STREAM does not qualify SCENERY_EMIT_PREFETCH, SCENERY_RECORD_SPLIT, SCENERY_DIRECT_STRIPS, PS2_PVS, CPU_BACKFACE or TA_HASH)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_STREAM=1
+ifneq ($(filter-out 0,$(SCENERY_STREAM_CHECK)),)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_STREAM_CHECK=1
+endif
+endif
 # SCENERY_SELECT_LEAN2=1 (exact, render only): read packed meshlet bounds
 # directly and share each crossed plane across its groups, returning final picks.
 SCENERY_SELECT_LEAN2 ?= 0
