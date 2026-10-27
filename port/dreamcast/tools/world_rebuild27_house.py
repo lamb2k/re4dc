@@ -175,6 +175,74 @@ def author_walls(d, spec):
     return source, output, proofs
 
 
+def transfer_upper_roof_prelight(d,spec,source,target,groups):
+    """Transfer colour from the matching upper skin, never its dark underside.
+
+    Source position aliases can carry different lighting on opposite surfaces.
+    Authored lower ridge joins can also sit just below the upper source skin.
+    Sample the closest upper, same-side source triangle in 3D and interpolate
+    its colour barycentrically. Geometry, UVs, alpha and other groups stay exact.
+    """
+    import numpy as np
+    ids=list(source);ts=list(source.values());A=np.asarray(d['placements'][spec['placement']][2:]).reshape(3,4)
+    world=positions(d,spec['mesh'],ts)@A[:,:3].T+A[:,3]
+    normals=np.cross(world[:,1]-world[:,0],world[:,2]-world[:,0]);normals/=np.linalg.norm(normals,axis=1)[:,None]
+    colors=np.asarray([[[(v[5]>>s)&31 for s in (10,5,0)]for v in t]for t in ts],float)
+    cross=np.asarray(spec['world_cross_axis']);result=list(target);rows=[];cursor=0;old_sum=new_sum=area_sum=0.
+    # Interior samples are independent of the three transferred corner samples.
+    probes=np.asarray([[(i+1/3)/5,(j+1/3)/5,(4-i-j+1/3)/5]for i in range(5)for j in range(5-i)])
+    for group in groups:
+        count=group['output_triangles'];name=group['name']
+        if name not in ('near_slope','far_slope'):cursor+=count;continue
+        side=-1 if name=='near_slope' else 1
+        allowed=np.flatnonzero((normals[:,1]>.4)&(side*(normals@cross)>.15))
+        w.require(len(allowed)>0,'upper same-side roof source surfaces')
+        soup=world[allowed];a,b,c=soup[:,0],soup[:,1],soup[:,2];ab=b-a;ac=c-a
+        d00=(ab*ab).sum(1);d01=(ab*ac).sum(1);d11=(ac*ac).sum(1);den=d00*d11-d01*d01
+        def sample(point,direction):
+            ap=point-a;d20=(ap*ab).sum(1);d21=(ap*ac).sum(1)
+            u=(d11*d20-d01*d21)/den;v=(d00*d21-d01*d20)/den
+            weights=np.stack([1-u-v,u,v],axis=1)
+            projected=np.einsum('ni,nij->nj',weights,soup)
+            distances=((projected-point)**2).sum(1)
+            distances[(u<0)|(v<0)|(u+v>1)]=np.inf
+            for ia,ib in ((0,1),(1,2),(2,0)):
+                start=soup[:,ia];edge=soup[:,ib]-start
+                fraction=np.clip(((point-start)*edge).sum(1)/(edge*edge).sum(1),0,1)
+                p=start+edge*fraction[:,None];dist=((p-point)**2).sum(1)
+                better=dist<distances
+                weights[better]=0;weights[better,ia]=1-fraction[better];weights[better,ib]=fraction[better];distances[better]=dist[better]
+            best=float(distances.min());tied=np.flatnonzero(distances<=best+1e-8)
+            k=int(tied[np.argmax(normals[allowed[tied]]@direction)])
+            index=int(allowed[k]);bary=weights[k]
+            w.require((bary>=-1e-10).all() and abs(bary.sum()-1)<1e-8,'prelight barycentric weights')
+            return bary@colors[index],dict(source_id=list(ids[index]),source_weights=bary.tolist(),
+               distance_world_mm=float(np.sqrt(distances[k])),source_normal=normals[index].tolist())
+        for ordinal in range(cursor,cursor+count):
+            old=target[ordinal];p=positions(d,spec['mesh'],[old])[0]@A[:,:3].T+A[:,3]
+            normal=np.cross(p[1]-p[0],p[2]-p[0]);area=float(np.linalg.norm(normal)/2);normal/=np.linalg.norm(normal)
+            old_rgb=np.asarray([[(v[5]>>s)&31 for s in (10,5,0)]for v in old],float)
+            sampled=[sample(point,normal)for point in p];new_rgb=np.rint(np.asarray([q[0]for q in sampled])).astype(int)
+            w.require((new_rgb>=0).all()and(new_rgb<=31).all(),'source-derived prelight range')
+            result[ordinal]=tuple(tuple(v[:5])+((v[5]&0x8000)|int(rgb[0]<<10|rgb[1]<<5|rgb[2]),)for v,rgb in zip(old,new_rgb))
+            expected=np.asarray([sample(weights@p,normal)[0]for weights in probes])
+            old_error=float(abs(probes@old_rgb-expected).mean());new_error=float(abs(probes@new_rgb-expected).mean())
+            old_sum+=area*old_error;new_sum+=area*new_error;area_sum+=area
+            rows.append(dict(target_triangle=ordinal,group=name,source_corner_samples=[q[1]for q in sampled],
+              rgb5_before=old_rgb.astype(int).tolist(),rgb5_after=new_rgb.tolist(),
+              interior_rgb5_mae_before=old_error,interior_rgb5_mae_after=new_error))
+        cursor+=count
+    w.require(area_sum>0 and new_sum<old_sum,'upper roof colour transfer must improve independent interior samples')
+    for a,b in zip(target,result):w.require([v[:5]for v in a]==[v[:5]for v in b],'prelight-only transfer changed geometry/UV')
+    proof=dict(operation='upper same-side source roof skin closest-point barycentric prelight transfer',
+      source_orientation='normal.y > 0.4 and signed roof-cross normal > 0.15; underside excluded',
+      target_groups=['near_slope','far_slope'],triangles_changed=sum(a!=b for a,b in zip(target,result)),
+      independent_interior_samples_per_triangle=len(probes),rgb5_area_weighted_mae_before=old_sum/area_sum,
+      rgb5_area_weighted_mae_after=new_sum/area_sum,geometry_uv_alpha_unchanged=True,
+      wall_ridge_skirt_and_other_world_prelight_unchanged=True,rows=rows)
+    return result,proof
+
+
 def author_roof(d, spec):
     import numpy as np
     source, _, A = source_component(d, spec)
@@ -291,6 +359,10 @@ def author_roof(d, spec):
             global_proofs.append(dict(name=name,proof_scope='all quantized authored roof triangles against actual source boundary-edge quad',
               roof_triangles_checked=len(output),source_quad_area_mm2=physical_quad.area,source_quad_filled_area_mm2=float(filled)))
         proofs[0]['all_roof_notch_proofs']=global_proofs
+    if spec.get('prelight_transfer'):
+        w.require(spec['prelight_transfer']=='upper-same-side-barycentric/1','roof prelight transfer mode')
+        output,proof=transfer_upper_roof_prelight(d,spec,source,output,proofs)
+        proofs[0]['upper_prelight_transfer']=proof
     return source,output,proofs
 
 
