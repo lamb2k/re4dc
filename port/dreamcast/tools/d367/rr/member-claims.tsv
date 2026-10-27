@@ -89,3 +89,5 @@ st1/r11f.dar:0x* NTR	smdrel26	NTR rows rebased by the SMD release
 st2/r200.dar:0x* SMD	smdrel26b	r200 SMD BIN GX payload released (header, joints, box, part headers kept); PS2 world draws the room
 st2/r200.dar:0x* NTR	smdrel26b	NTR rows rebased by the SMD release
 st2/r200.dar:0x* ESQ	smdrel26b	ESQ rows rebased by the SMD release
+bgm/doorse.dat:changed	snd26	door sounds: block 11 PS2 PCM in place (blocks 0-10 GC, reviewed in gc_port23/sound-kept-gc.tsv)
+ss/eng/title.snd:removed	dropeng26	unread GameCube title sound file off the disc (drop-proofs.tsv file row)
