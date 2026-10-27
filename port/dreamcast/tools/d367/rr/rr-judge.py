@@ -205,8 +205,9 @@ if build_ok and jobs:
         try:
             gb = json.loads(rd(W / 'gca-bytes.json'))
             rk = sorted(gb['rooms'].items(), key=lambda kv: -kv[1].get('gc', 0))
-            add('GC-ASSET (bytes)', gb['gc'] == 0, ('gc %d unknown %d; kinds %s; rooms %s' % (
-                gb['gc'], gb['unknown'], ' '.join('%s=%d' % kv for kv in gb['kinds'].items()),
+            add('GC-ASSET (bytes)', gb['gc'] == 0, ('gc %d unknown %d; reviewed GC sound samples %d; kinds %s; rooms %s' % (
+                gb['gc'], gb['unknown'], gb.get('sound_samples_reviewed', {}).get('total', 0),
+                ' '.join('%s=%d' % kv for kv in gb['kinds'].items()),
                 ' '.join('%s=%d' % (k, v['gc']) for k, v in rk if v.get('gc'))))[:600], knownrow=True)
         except (ValueError, KeyError):
             add('GC-ASSET (bytes)', False, 'bytes catalog did not run', knownrow=True)

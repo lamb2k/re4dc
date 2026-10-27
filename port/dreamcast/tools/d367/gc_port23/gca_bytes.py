@@ -7,8 +7,22 @@ everything else by its top directory). rr-gca.sh runs it each cycle; rr-judge.py
 "GC-ASSET (bytes)" (never FAIL) so the GameCube data the whole-file credit hides stays visible until it is converted.
 --base: the default (whole-file credit) catalog of the same disc; the summary then also counts the rows that only
 byte-following moves to gc.
+sound-kept-gc.tsv (beside this file; sound_kept_gc.py): the reviewed wavetable samples that keep GameCube PCM (no PS2
+match). The row reports their count per file as reviewed; it changes no provenance and no verdict.
 """
 import argparse, collections, json, re, sys
+from pathlib import Path
+
+KEPT = Path(__file__).resolve().parent / 'sound-kept-gc.tsv'
+
+
+def kept_samples():
+    out = collections.Counter()
+    if KEPT.is_file():
+        for line in KEPT.read_text().splitlines():
+            if line and not line.startswith('#'):
+                out[line.split('\t')[0].split('#')[0]] += 1
+    return out
 
 
 def group(src):
@@ -47,12 +61,14 @@ def main():
     out = dict(gc=gc, unknown=unk, kinds=dict(sorted(kinds.items())),
                rooms={k: dict(v) for k, v in sorted(rooms.items())},
                moved_by_bytes=dict(sorted(moved.items())) if moved is not None else None)
+    ks = kept_samples()
+    out['sound_samples_reviewed'] = dict(total=sum(ks.values()), files=dict(sorted(ks.items())))
     if a.json:
         json.dump(out, open(a.json, 'w'), indent=1)
     top = sorted(rooms.items(), key=lambda kv: -kv[1]['gc'])
-    print('GC-ASSET (bytes): gc %d unknown %d%s; rooms %s' % (
+    print('GC-ASSET (bytes): gc %d unknown %d%s; reviewed GC sound samples %d (sound-kept-gc.tsv); rooms %s' % (
         gc, unk, '' if moved is None else ' (byte-following moves %d ps2->gc: %s)' % (
-            sum(moved.values()), ' '.join('%s=%d' % kv for kv in sorted(moved.items()))),
+            sum(moved.values()), ' '.join('%s=%d' % kv for kv in sorted(moved.items()))), sum(ks.values()),
         ' '.join('%s=%d' % (k, v['gc']) for k, v in top if v['gc'])))
     return 0
 
