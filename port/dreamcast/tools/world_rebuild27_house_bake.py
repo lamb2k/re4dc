@@ -45,7 +45,7 @@ def prepare(a):
     recipe['roof_continuation']=a.roof_continuation
     recipe['producer_files_sha256']={p.name:sha(p) for p in sorted(producer.iterdir()) if p.is_file()}
     (a.out/'PREPARATION.json').write_text(json.dumps(recipe,indent=2)+'\n')
-    (a.out/'RECIPE.txt').write_text('Private unaccepted C9 3D shell with PS2-only baked static detail.\nPrepare command: '+json.dumps(sys.argv)+'\nBlender Cycles EMIT selected-to-active; source texture multiplied by source corner prelight. No new lights or generated image content.\nTwo512x512RGB565/VQ maps, no mipmaps initially. Original textures stay resident; all texture costs incremental.\nGeometry remains C9 107triangles with real windows, doors, wall thickness and raised roof ridge.\nNo runtime binding, staging, SDK/Flycast, disc, SD or production recipe action.\n')
+    (a.out/'RECIPE.txt').write_text('Private unaccepted C9 3D shell with PS2-only baked static detail.\nPrepare command: '+json.dumps(sys.argv)+'\nBlender Cycles EMIT selected-to-active; source texture multiplied by source corner prelight. No new lights or generated image content.\nTwo 512x512 RGB565/VQ maps, no mipmaps initially. Original textures stay resident; all texture costs incremental.\nGeometry remains the reviewed C9 '+str(target_total)+' triangles with real windows, doors, wall thickness, roof notches and raised roof ridge.\nNumeric color: Non-Color images, Raw view, verbatim stored inverse-gained PS2 R4IM prelight; no extra gain/inverse gain or generated lighting.\nNo runtime binding, staging, SDK/Flycast, disc, SD or production recipe action.\n')
     print(json.dumps(recipe,indent=2))
 
 def encode(a):
