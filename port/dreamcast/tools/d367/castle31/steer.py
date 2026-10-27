@@ -133,14 +133,14 @@ class Steer:
             pl = self.pl
             if not pl or time.monotonic() - self.pl_t > 1.0:
                 self.keys([]); time.sleep(0.05); continue
-            if self.rescue_on and self.ash and self.ash['carried']:
-                self.log('rescue: %s' % self.rescue())
-                best, best_t = None, time.monotonic(); continue
             if getattr(self, 'rno', (0,))[0] == 4 and self.rno[2] == 1:  # grabbed (bomb hug / choke): shake off with A
                 n = 0
                 while getattr(self, 'rno', (0,))[0] == 4 and self.rno[2] == 1 and n < 60:
                     self.post('a', False); self.sleep(0.05); self.post('a', True); self.sleep(0.07); n += 1
                 self.log('shake: %d taps rno %s' % (n, self.rno)); best, best_t = None, time.monotonic(); continue
+            if self.rescue_on and self.ash and self.ash['carried']:
+                self.log('rescue: %s' % self.rescue())
+                best, best_t = None, time.monotonic(); continue
             if self.autofight and pl['n'] and abs(pl['ey'] - pl['y']) < 1500 and math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z']) < self.autofight:
                 self.log('autofight: %s at %d' % (self.fight(30, self.autofight * 1.5),
                                                   math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z'])))
@@ -204,6 +204,8 @@ class Steer:
                 self.keys([]); time.sleep(0.05); continue
             if not a['carried']:
                 break
+            if getattr(self, 'rno', (0,))[0] == 4 and self.rno[2] == 1:
+                self.post('a', False); self.sleep(0.05); self.post('a', True); self.sleep(0.07); continue
             dx, dz = a['x'] - pl['x'], a['z'] - pl['z']; d = math.hypot(dx, dz)
             err = wrap(math.atan2(dx, dz) - pl['ang'])
             if (d > 4000 or abs(a['y'] - pl['y']) > 1500) and self.maps:
