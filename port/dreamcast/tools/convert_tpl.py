@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import pathlib
 import re
 import struct
@@ -443,19 +444,33 @@ def _name_bytes(name: str) -> bytes:
     return encoded.ljust(64, b"\0")
 
 
+# RE4DC_PACK_ROUND=1 (colour27, 2026-10-27; offline, default 0 = the historical truncating packers, byte-identical
+# packages): round each 8-bit channel to the nearest 5/6/4-bit level instead of dropping its low bits. Truncation
+# darkens every value by half a step on average and sends 8-bit values below 16 (4444) / 8 (565, 1555) to 0, so faint
+# effect alpha vanishes (colour27 audit: 11 % of the visible texels of PS2 effects ship fully transparent).
+PACK_ROUND = os.environ.get("RE4DC_PACK_ROUND", "0") == "1"
+
+
+def _q(value: int, levels: int) -> int:
+    """8-bit channel -> 0..levels: nearest level (PACK_ROUND) or the historical truncation."""
+    if PACK_ROUND:
+        return (value * levels + 127) // 255
+    return value >> {31: 3, 63: 2, 15: 4}[levels]
+
+
 def _pack_565(pixel: tuple[int, int, int, int]) -> int:
     red, green, blue, _ = pixel
-    return ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3)
+    return (_q(red, 31) << 11) | (_q(green, 63) << 5) | _q(blue, 31)
 
 
 def _pack_1555(pixel: tuple[int, int, int, int]) -> int:
     red, green, blue, alpha = pixel
-    return ((1 if alpha >= 128 else 0) << 15) | ((red >> 3) << 10) | ((green >> 3) << 5) | (blue >> 3)
+    return ((1 if alpha >= 128 else 0) << 15) | (_q(red, 31) << 10) | (_q(green, 31) << 5) | _q(blue, 31)
 
 
 def _pack_4444(pixel: tuple[int, int, int, int]) -> int:
     red, green, blue, alpha = pixel
-    return ((alpha >> 4) << 12) | ((red >> 4) << 8) | ((green >> 4) << 4) | (blue >> 4)
+    return (_q(alpha, 15) << 12) | (_q(red, 15) << 8) | (_q(green, 15) << 4) | _q(blue, 15)
 
 
 def downsample_box(

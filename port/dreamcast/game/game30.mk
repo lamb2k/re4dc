@@ -3761,6 +3761,21 @@ endif
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
 endif
 
+# TEX_PAL32=1 (colour27, 2026-10-27; default 0: no definition, the image is unchanged): PAL4 / PAL8 descriptors flagged
+# kPalette8888 carry an ARGB8888 palette tail (texture_package.hpp), uploaded to the ARGB8888 palette RAM as is, so
+# effect colours and faint alpha keep the PS2 CLUT's 8 bits (tools/d367/colour27/fx_pal32.py writes them). Unflagged
+# packages load exactly as before. +32 B of VRAM per PAL4 package (+512 per PAL8), 0 palette RAM, no per-frame work.
+TEX_PAL32 ?= 0
+ifeq ($(filter $(TEX_PAL32),0 1),)
+$(error TEX_PAL32 must be 0 or 1)
+endif
+ifeq ($(TEX_PAL32),1)
+ifneq ($(TEX_PAL8_ALPHA),1)
+$(error TEX_PAL32=1 requires TEX_PAL8_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL32=1
+endif
+
 # Native square 16-bit twiddled mip chains, with unchanged base texels.
 # Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
 TEX_TWIDDLED_MIPMAP ?= 0
