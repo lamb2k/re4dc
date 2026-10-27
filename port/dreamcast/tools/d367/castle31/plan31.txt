@@ -1741,3 +1741,252 @@ wait 4
 press a 0.8
 wait 8
 end
+@noSel
+hold sr 0.3
+wait 1
+press a 0.3
+wait 3
+end
+@resc
+rescue 1
+autofight 4000
+goto 300 -5000 400
+goto 300 -3000 400
+end
+@selA
+press a 0.3
+wait 3
+press a 0.3
+wait 6
+end
+@moatd
+rescue 1
+autofight 0
+goto 1363 -17450 500
+goto 6013 -21350 500
+goto 8413 -21350 500
+goto 8563 -21950 500
+goto 9313 -26300 500
+goto 9463 -35450 500
+goto 9613 -36200 500
+goto 9913 -36950 500
+goto 10213 -37700 500
+goto 10513 -38450 500
+goto 10663 -39200 500
+goto 10963 -39950 500
+goto 10963 -40700 500
+goto 10963 -41450 500
+goto 10963 -42200 500
+goto 10963 -42950 500
+goto 10063 -45050 500
+goto 9313 -49850 500
+goto 9013 -50150 500
+goto 1363 -51950 500
+goto 13 -53300 500
+face 650 -60000
+wait 2
+press a 0.8
+wait 8
+end
+@plates2
+rescue 1
+autofight 3000
+press x 0.3
+wait 4
+goto -2000 -60000 500
+goto -4486 -66050 300
+wait 6
+press x 0.3
+wait 2
+goto -2000 -62000 500
+goto 2000 -62000 500
+goto 4513 -66050 300
+wait 15
+end
+@ashplate
+rescue 1
+autofight 0
+press x 0.3
+wait 8
+goto -2600 -66000 200
+wait 3
+press x 0.3
+wait 2
+goto 2000 -62000 500
+goto 4513 -66050 300
+wait 15
+end
+@ashplate2
+rescue 1
+autofight 0
+goto 4500 -66000 200
+wait 3
+goto 2400 -66000 200
+wait 3
+press x 0.2
+wait 3
+goto -2000 -62000 500
+goto -4486 -66050 300
+wait 20
+end
+@killp
+rescue 1
+autofight 9000
+goto 0 -62000 500
+goto 3000 -60000 500
+goto -3000 -60000 500
+goto 0 -62000 500
+wait 10
+end
+@ashplate3
+rescue 1
+autofight 0
+goto -3000 -62000 500
+goto -4486 -65500 300
+wait 10
+press x 0.2
+wait 3
+goto -2000 -62000 500
+goto 2000 -62000 500
+goto 4513 -66050 300
+wait 15
+end
+@tocrank
+rescue 1
+autofight 0
+press x 0.2
+goto 3463 -63650 500
+goto 313 -54650 500
+goto 313 -52400 500
+goto 2863 -49850 500
+goto 2863 -42350 500
+goto 2863 -41600 500
+goto 2863 -40850 500
+goto 2863 -40100 500
+goto 2863 -39350 500
+goto 2863 -38600 500
+goto 2863 -37850 500
+goto 2863 -37100 500
+goto 2863 -36350 500
+goto 2863 -35600 500
+goto 2863 -34850 500
+goto 2863 -33650 500
+goto 463 -29300 500
+goto 600 -29300 200 6
+end
+@crankop
+autofight 0
+face 600 -27000
+wait 1
+press a 0.5
+wait 3
+press a 0.5
+wait 2
+mash a 40
+end
+@tocrankF
+rescue 1
+autofight 3500
+goto 463 -54950 500
+goto 313 -54800 500
+goto 313 -52400 500
+goto 2863 -49850 500
+goto 2863 -42350 500
+goto 2863 -41600 500
+goto 2863 -40850 500
+goto 2863 -40100 500
+goto 2863 -39350 500
+goto 2863 -38600 500
+goto 2863 -37850 500
+goto 2863 -37100 500
+goto 2863 -36350 500
+goto 2863 -35600 500
+goto 2863 -34850 500
+goto 2863 -33650 500
+goto 463 -29300 500
+goto 600 -29300 200 6
+end
+@outdoor
+rescue 1
+autofight 0
+goto 300 -54900 200 6
+face 300 -50000
+wait 1
+press a 0.8
+wait 4
+goto 2863 -49850 500
+goto 2863 -42350 500
+goto 2863 -41600 500
+goto 2863 -40850 500
+goto 2863 -40100 500
+goto 2863 -39350 500
+goto 2863 -38600 500
+goto 2863 -37850 500
+goto 2863 -37100 500
+goto 2863 -36350 500
+goto 2863 -35600 500
+goto 2863 -34850 500
+goto 2863 -33650 500
+goto 463 -29300 500
+goto 600 -29300 200 6
+end
+@crankop2
+autofight 0
+face 600 -27000
+wait 1
+press a 0.5
+wait 3
+press a 0.3
+wait 50
+end
+@w50
+wait 52
+end
+@upbridge
+rescue 1
+autofight 0
+press x 0.2
+goto 463 -34400 500
+goto 463 -35150 500
+goto 463 -35900 500
+goto 463 -36650 500
+goto 463 -37400 500
+goto 463 -38150 500
+goto 463 -38900 500
+goto 463 -39650 500
+goto 13 -50000 500
+wait 5
+end
+@yubi
+rescue 1
+autofight 0
+goto 0 -52000 400
+wait 6
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 3
+press a 0.3
+wait 10
+end
+@lift
+rescue 1
+autofight 0
+goto -9500 -60500 300
+goto -10700 -60500 250
+wait 2
+press a 0.5
+wait 4
+press a 0.3
+wait 15
+end
+@kill7
+rescue 0
+autofight 6000
+goto -3000 -60000 500
+goto 3000 -60000 500
+goto -3000 -60000 500
+goto 3000 -60000 500
+end
