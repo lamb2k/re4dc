@@ -211,7 +211,11 @@ def main():
     native = source_path.read_text()
     pick = re.search(r'    struct Pick \{.*?\n    \};', native, re.S).group(0)
     start = native.index('const ChunkPart& queued=cctx[j];unsigned consumed=0;')
-    end = native.index('const ChunkPart& x=routed;', start) + len('const ChunkPart& x=routed;')
+    # Include the complete enabled routing preamble, including consumption
+    # after selecting either the original snapshot or an owned routed copy.
+    # The ordinary knob-OFF declaration is a stable boundary, independent of
+    # the enabled path's local pointer/reference names.
+    end = native.index('\n#else\n            const ChunkPart& x=cctx[j];', start)
     routing = native[start:end]
     require(routing.count('do {') == 1 and 'world_bake27::run' in routing, 'routing extraction')
     consumer = CONSUMER.replace('PICK_DEFINITION', pick).replace('ACTUAL_ROUTING_BLOCK', routing)

@@ -7703,15 +7703,20 @@ int ps2_pass(unsigned pass,float zfar){
             // their original key, UV basis, higher LOD and material policy.
             const ChunkPart& queued=cctx[j];unsigned consumed=0;
             do {
-                ChunkPart routed=queued;
-                if(ps2w.baked && queued.count){
+                ChunkPart routed;
+                const ChunkPart* selected=&queued;
+                // The two owned parts alone need copies and meshlet routing.
+                // All other world parts replay their original snapshot directly.
+                if(ps2w.baked && re4dc::world_bake27::owns_part(queued.index) && queued.count){
+                    routed=queued;
                     routed.first+=consumed;
                     routed.count=re4dc::world_bake27::run(cpk+routed.first,queued.count-consumed,queued.index);
                     const int atlas=re4dc::world_bake27::slot(queued.index,cpk[routed.first].let);
                     if(atlas>=0)for(unsigned k=0;k<4;++k)routed.key[k]=re4dc::world_bake27::textures[atlas][k];
+                    selected=&routed;
                 }
-                consumed+=routed.count;
-                const ChunkPart& x=routed;
+                const ChunkPart& x=*selected;
+                consumed+=x.count;
 #else
             const ChunkPart& x=cctx[j];
 #endif
