@@ -1304,7 +1304,7 @@ if os.path.isdir(WEP26ED):
 # PS2 positions, normals, UVs and triangles; in place, or a small window re-laid out; archive size and every other member
 # unchanged). The pictures are set gcl26p. Made from the FINAL disc files (ps2cast/gcl26-regen.sh), so it stages after
 # every set writing these paths; regenerate it when one of them changes. Store: re4-assets-private/gcl26-20261026.
-GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
+GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026b')
 if os.path.isdir(GCL26D):
     DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
     AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
@@ -1332,7 +1332,7 @@ if os.path.isdir(EFM26D):
 # prepare step left between the 0x400-byte header and the nested sound entry (em11 0x400..0x3962c0). dvd.cpp reads only
 # the header and each entry's [ofs, ofs + size) (nested rows relative to their entry, checked in range), so every read
 # byte, offset and size is unchanged. Store: re4-assets-private/gcl26z-20261026; regenerate after gcl26.
-GCL26ZD = os.environ.get('GCL26ZD', '/root/re4data/private/gcl26z-20261026')
+GCL26ZD = os.environ.get('GCL26ZD', '/root/re4data/private/gcl26z-20261026b')
 if os.path.isdir(GCL26ZD):
     DATA['gcl26z'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26ZD, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
     AFTER += [('gcl26z', 'gcl26')]

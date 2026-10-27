@@ -21,7 +21,8 @@ kept, NTR rows rebased; refused when an ESQ / MTC row points into it); with no s
 their TPL references (the archive TPLs / tex.pak keys are handled by the picture sets). Disc data only.
 
   ps2_ganado_bins.py build --release <prepared emNN.drs> --gc <GC emNN.drs> --ps2 <PS2 emNN.dat> --out <new .drs>
-                           [--json report.json] [--only 0x1bc,...]
+                           [--json report.json] [--only 0x1bc,...] [--cast-tree <final disc tree>]
+  --cast-tree keeps the BINs the native Ganado cast acquires by exact source bytes (cast_bins; required for a release set).
 Report: per member GC / PS2 / output triangles and vertices (positions), bytes, and the members left GC with the reason.
 """
 import argparse, hashlib, json, struct, sys
@@ -38,15 +39,44 @@ def sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
+GAME = HERE.parents[2] / 'game'
+
+
+def cast_bins(tree):
+    """BIN entry numbers the native Ganado cast acquires by exact source bytes (actor_lifetime.inc archive_adopt:
+    digest(entry BIN, SourceBlob.normalized)): the family-2 rows of actor_material_records.inc source_blobs and the
+    family-2 SBlob rows of every registry package on the disc (dc/native/*/*.re4nmr; coarse_actor_registry_pack_check.inc:
+    header 64 B, 12 section rows of 16 B (+4 offset, +12 count), SBlob = kind 11, 32-byte rows fm / family / bin).
+    A rewritten BIN fails that digest, the cast does not draw the Ganado and the GameCube path does (CAST-GC, rr
+    1026-2000-7832fcdb): these members keep their bytes."""
+    import re
+    keep = {int(m) for m in re.findall(r'\{&m_\w+,2u,(\d+)u,', (GAME / 'actor_material_records.inc').read_text())}
+    for f in sorted(Path(tree).glob('dc/native/*/*.re4nmr')):
+        b = f.read_bytes()
+        if len(b) < 64 + 12 * 16:
+            continue
+        at, n = struct.unpack_from('<I', b, 64 + 11 * 16 + 4)[0], struct.unpack_from('<I', b, 64 + 11 * 16 + 12)[0]
+        for k in range(n if at + 32 * n <= len(b) else 0):
+            _fm, fam, bn = struct.unpack_from('<3I', b, at + 32 * k)
+            if fam == 2:
+                keep.add(bn)
+    return keep
+
+
 def build(a):
     rel = Path(a.release).read_bytes()
     P = pa.Payload(rel)
     gc, ps2 = pa.gc_entries(a.gc), pa.ps2_entries(a.ps2)
     only = {int(x, 16) for x in a.only.split(',')} if a.only else None
-    rep = dict(release=a.release, release_sha256=sha(rel), gc=a.gc, ps2=a.ps2, converted={}, left={})
+    keep = cast_bins(a.cast_tree) if a.cast_tree else set()
+    rep = dict(release=a.release, release_sha256=sha(rel), gc=a.gc, ps2=a.ps2, converted={}, left={},
+               cast_kept=sorted('%#x' % x for x in keep))
     big, done = {}, {}
     for arc, (t, g) in sorted(gc.items()):
         if t != 'BIN' or arc - 4 >= P.count or not P.tags[arc - 4] or (only and arc not in only):
+            continue
+        if arc in keep:
+            rep['left']['%#x' % arc] = 'native cast source BIN (acquired by exact bytes): kept'
             continue
         i = arc - 4
         start, end = P.offs[i], P.end(i)
@@ -141,6 +171,8 @@ def main():
         b.add_argument(k, required=True)
     b.add_argument('--json')
     b.add_argument('--only')
+    b.add_argument('--cast-tree', help='final disc tree: keep the BINs the native Ganado cast acquires by exact bytes '
+                   '(actor_material_records.inc + its dc/native registry packages)')
     a = ap.parse_args()
     build(a)
 

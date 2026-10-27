@@ -16,7 +16,7 @@ S=${GCL26_SRC:-/root/re4data/private/gcl26-src}
 mkdir -p "$O/em" "$O/report"
 for em in em11 em12 em13 em15 em16 em17; do
   python3 "$H/ps2_ganado_bins.py" build --release "$X/em/$em.drs" --gc "$I/$em.drs" --ps2 "$S/$em.dat" \
-    --out "$O/em/$em.drs" --json "$O/report/$em.json" > "$O/report/$em.log" &
+    --cast-tree "${GCL26_CAST_TREE:-$X}" --out "$O/em/$em.drs" --json "$O/report/$em.json" > "$O/report/$em.log" &
 done
 wait
 grep -h TOTAL "$O"/report/*.log
