@@ -13,6 +13,15 @@
 #include "snd.h"
 #include "esp.h"
 #include "math_sub.h"
+#if defined(RE4DC_WARP_GOD_HOOK) && RE4DC_WARP_GOD_HOOK
+// Warp builds only (dbgwarp.mk): the `god` line turns the two lethal damage endings (r_no_3 6, the knock-down
+// with m_Work0) into their non-lethal ones; the rig logs each as god-rescue (not a real outcome).
+extern "C" int re4dc_warp_god;
+extern "C" unsigned re4dc_warp_god_rescues;
+static inline int warpGodRescue() { if (!re4dc_warp_god) return 0; ++re4dc_warp_god_rescues; return 1; }
+#else
+static inline int warpGodRescue() { return 0; }
+#endif
 
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
 extern "C" void re4dc_log(const char*, ...);
@@ -127,7 +136,7 @@ void damageNormal(cPlayer* pl)
             pl->m_Work0--;
         }
         if (pl->motionMove() != 0 || (pl->m_Work0 == 0 && (Key.on & 0x10F))) {
-            if (pl->r_no_3 == 6) {
+            if (pl->r_no_3 == 6 && !warpGodRescue()) {
                 pl->r_no_0 = 2;
                 pl->r_no_2 = 0;
                 pl->r_no_1 = 2;
@@ -252,7 +261,7 @@ void damageBlow(cPlayer* pl)
             }
         }
         if (pl->motionMove()) {
-            if (pl->m_Work0 != 0) {
+            if (pl->m_Work0 != 0 && !warpGodRescue()) {
                 pl->r_no_0 = 2;
                 pl->r_no_1 = 2;
                 pl->r_no_2 = 0;
