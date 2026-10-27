@@ -5,11 +5,14 @@
 #   <value> / RECORD <ticks> / MENU / RESUME / DIAG in, run on the game thread through the QA menu's own handlers.
 #   Settings: /cd/dc/qa/link.txt (optional): `number <digits>`, `host <a.b.c.d|peer>`, `port <n>`, `auto 1` (dial at the
 #   first game tick, for harness runs). Pi side and setup: tools/qalink/README.md.
-#   Files: qa_link.cpp (modem + PPP + UDP; a link thread and two rings), qa_menu.cpp (#if RE4DC_QA_LINK: the row and the
-#   protocol), dbgwarp_bridge.cpp (#if RE4DC_QA_LINK: qa_poll calls re4dc_qa_link_tick each tick).
-#   PPP: KOS's own libppp sources (the pinned $(KOS_BASE)/addons/libppp), compiled here with three names redirected to
-#   qa_link.cpp (thread stack from BSS, a sleeping receive loop, a modem write that cannot spin on a dropped line);
-#   libppp.a is not linked. The KOS network stack is used without net_init() (no work-queue thread, no DHCP).
+#   Files: qa_link.cpp (modem + PPP + UDP; a dial thread, the PPP thread and two rings), qa_menu.cpp (#if RE4DC_QA_LINK:
+#   the row and the protocol), dbgwarp_bridge.cpp (#if RE4DC_QA_LINK: qa_poll calls re4dc_qa_link_tick each tick).
+#   PPP: KOS's own libppp sources (the pinned $(KOS_BASE)/addons/libppp), compiled here with four names redirected to
+#   qa_link.cpp (thread stack from BSS, a sleeping receive loop that also moves the datagrams, a modem write that cannot
+#   spin on a dropped line, counted reads); libppp.a is not linked. The KOS network stack is used without net_init()
+#   (no work-queue thread, no DHCP). The modem driver's buffers and timeout worker stack come from BSS (--wrap below).
+#   Cost (lane qalink27, Flycast): ~0.12 ms a frame and 2.5 KiB KOS heap while the link is up, 0 while off; image +94 KiB
+#   (code 53 KiB, BSS 41 KiB) on QA discs. KOS 48 KiB squeeze gate PASS with the link up (5 scenes x 2).
 #   Default 0: nothing is compiled or linked; the image is byte-identical with or without this file.
 QA_LINK ?= 0
 ifneq ($(filter $(QA_LINK),0 1),$(QA_LINK))

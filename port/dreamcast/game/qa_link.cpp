@@ -8,7 +8,7 @@
 // Pieces:
 //  - KOS's libppp sources (addons/libppp, the pinned toolchain), compiled into the game by qalink.mk with these names
 //    redirected to this file instead of linking libppp.a:
-//      thd_create       -> re4dc_qalink_thd_create: the PPP thread runs detached on a static 8 KiB stack (high water 2 KiB measured) (BSS), not a
+//      thd_create       -> re4dc_qalink_thd_create: the PPP thread runs detached on a static 4 KiB stack (high water 2 KiB measured) (BSS), not a
 //                          32 KiB KOS heap stack;
 //      thd_pass         -> re4dc_qalink_thd_pass: sleeps 4 ms (libppp's receive loop and the modem connect wait call
 //                          thd_pass() in a loop, which would keep a thread always runnable at the game's priority). On
@@ -60,12 +60,12 @@ bool g_net_ready, g_ppp_init;
 volatile int g_dial_running, g_ppp_running;
 kthread_t* volatile g_ppp_thd;
 unsigned char g_dial_stack[8192] __attribute__((aligned(32)));
-unsigned char g_ppp_stack[8192] __attribute__((aligned(32)));
+unsigned char g_ppp_stack[4096] __attribute__((aligned(32)));
 void* (*g_ppp_fn)(void*);
 
 // Single-producer single-consumer rings of datagrams: [u16 length][bytes]. tx: game -> PPP thread; rx: PPP thread -> game.
 struct Ring {
-    unsigned char buf[8192];
+    unsigned char buf[4096];
     volatile unsigned head, tail;   // head written by the producer, tail by the consumer (byte counters)
     unsigned used() const { return head - tail; }
     bool put(const void* p, unsigned n) {
@@ -227,8 +227,8 @@ void __wrap_destroyChainBuffer(qalink_chain_buffer* b) {
 // ---------------------------------------------------------------- the modem's timeout worker on a BSS stack (--wrap)
 // modem_init (mintr.c) creates a oneshot timer, whose worker thread KOS would give a 32 KiB stack from the KOS heap
 // (measured: a 32 KiB sbrk request during the dial, an "Out of memory" line under the 48 KiB squeeze gate). A worker
-// created by the dial thread gets an 8 KiB static stack instead; any other caller is unchanged.
-static unsigned char g_timer_stack[8192] __attribute__((aligned(32)));
+// created by the dial thread gets a 4 KiB static stack instead; any other caller is unchanged.
+static unsigned char g_timer_stack[4096] __attribute__((aligned(32)));
 static kthread_t* volatile g_dial_thd;
 static kthread_t* volatile g_timer_thd;
 kthread_worker_t* __real_thd_worker_create_ex(const kthread_attr_t* attr, void (*routine)(void*), void* data);

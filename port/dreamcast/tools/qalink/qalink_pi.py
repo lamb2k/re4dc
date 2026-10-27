@@ -38,6 +38,7 @@ class Service:
         self.ctl.bind((host, int(port)))
         self.ctl.listen(4)
         self.console = None          # (ip, port) of the last datagram from the console
+        self.last_rx = 0.0           # time of that datagram
         self.lock = threading.Lock()
         self.waiters = {}            # command id -> list of answer lines
         self.next_id = 1
@@ -52,6 +53,7 @@ class Service:
     def on_datagram(self, data, addr):
         text = data.decode('latin-1')
         kind = text[:1] or '?'
+        self.last_rx = time.time()
         if self.console != addr:
             self.console = addr
             self.write('S', 'console at %s:%d' % addr)
@@ -110,7 +112,9 @@ class Service:
                 if not line:
                     continue
                 if line.upper() == 'STATUS':
-                    out = ['console %s' % ('%s:%d' % self.console if self.console else 'none'), 'log %s' % self.log_path]
+                    age = time.time() - self.last_rx
+                    out = ['console %s' % ('%s:%d last heard %.0f s ago' % (self.console + (age,)) if self.console else 'none'),
+                           'log %s' % self.log_path]
                 else:
                     out = self.send(line)
                 f.write('\n'.join(out).rstrip('\n') + '\n.\n')
