@@ -44,7 +44,7 @@ def function(s, name):
                 if depth == 0: return s[start:t.end()]
     raise ValueError('definition missing: ' + name)
 
-def off_projection(s):
+def off_projection(s, bake_off=False):
     """Evaluate only arena conditionals. Ordinary nested #ifs stay verbatim."""
     stack, out = [], []
     for line in s.splitlines(True):
@@ -54,7 +54,7 @@ def off_projection(s):
         if m:
             op, arg = m.groups()
             if op in ('if', 'ifdef', 'ifndef'):
-                arena = bool(re.search(r'\bRE4DC_HOUSE_ARENA27\b',arg))
+                arena = bool(re.search(r'\bRE4DC_HOUSE_ARENA27(?:_COUNTS)?\b',arg) or (bake_off and re.search(r'\bRE4DC_WORLD_REBUILD27(?:_BAKE|_LIVE_MASK)?\b',arg)))
                 value = op == 'ifndef' if arena else True
                 stack.append([arena, value])
                 if not arena and live: out.append(line)
@@ -67,10 +67,43 @@ def off_projection(s):
             else:
                 arena, _ = stack.pop()
                 if not arena and all(x[1] for x in stack): out.append(line)
-        elif live and not re.match(r'#\s*include\s+"(?:platform/)?(?:include/)?house_arena27.h"', t):
+        elif live and not re.match(r'#\s*include\s+"(?:platform/)?(?:include/)?house_arena27(?:_counts)?.h"', t):
             out.append(line)
     if stack: raise ValueError('unbalanced directives')
     return ''.join(out)
+
+def off_cpp(s,bake_off):
+    """Actual CPP evaluation of controlled guards; other directives opaque.
+
+    Opaque markers preserve every other conditional/include/macro spelling,
+    retaining both sides instead of guessing the SDK's unrelated definitions.
+    Newly empty headers are independently preprocessed before being omitted.
+    """
+    pattern=r'\b(?:RE4DC_HOUSE_ARENA27(?:_COUNTS)?'+('|RE4DC_WORLD_REBUILD27(?:_BAKE|_LIVE_MASK)?' if bake_off else '')+r')\b'
+    stack=[];encoded=[];markers={}
+    logical=[]
+    for line in s.splitlines(True):
+        if logical and logical[-1].endswith('\\\n'):logical[-1]+=line
+        else:logical.append(line)
+    for line in logical:
+        t=line.strip();m=re.match(r'#\s*(if|ifdef|ifndef|else|elif|endif)\b(.*)',t)
+        controlled=False
+        if m:
+            op,arg=m.groups()
+            if op in ('if','ifdef','ifndef'):
+                controlled=bool(re.search(pattern,arg));stack.append(controlled)
+            elif op=='endif':controlled=stack.pop()
+            else:controlled=stack[-1]
+        if re.match(r'#\s*include\s+"(?:platform/)?(?:include/)?house_arena27(?:_counts)?.h"',t):continue
+        if t.startswith('#') and not controlled:
+            key='ARENA_OPAQUE_DIRECTIVE_'+str(len(markers));markers[key]=line.rstrip('\n');encoded.append(key+'\n')
+        else:encoded.append(line)
+    assert not stack
+    flags=['g++','-E','-P','-x','c++','-DRE4DC_HOUSE_ARENA27=0','-DRE4DC_HOUSE_ARENA27_COUNTS=0']
+    if bake_off:flags+=['-DRE4DC_WORLD_REBUILD27_BAKE=0','-DRE4DC_WORLD_REBUILD27_LIVE_MASK=0','-DRE4DC_WORLD_REBUILD27=0']
+    p=subprocess.run(flags+['-'],input=''.join(encoded),text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    if p.returncode:raise RuntimeError(p.stderr)
+    return re.sub(r'\bARENA_OPAQUE_DIRECTIVE_\d+\b',lambda m:markers[m[0]],p.stdout)
 
 def run(cmd, **kw):
     p = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **kw)
@@ -242,6 +275,7 @@ def main():
     ap.add_argument('--tree', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--baseline', default=BASE)
+    ap.add_argument('--normal-bake-off',action='store_true',help='Explicit normal control WORLD_REBUILD27, WORLD_REBUILD27_BAKE and WORLD_REBUILD27_LIVE_MASK all0')
     ap.add_argument('--private-header', type=Path)
     ap.add_argument('--asset-root', type=Path, help='Actual private arena root with native/r101/arena0..2 and certificates')
     args = ap.parse_args()
@@ -249,13 +283,23 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     result = {'scope':'HOST/SOURCE ONLY; no SDK, emulator or timing claim', 'baseline':args.baseline,
               'head':run(['git','-C',str(tree),'rev-parse','HEAD']).strip(), 'source':{}, 'off_tokens':{}, 'host':{}}
+    # An empty added include is semantically absent. Verify it with the host
+    # preprocessor before omitting its spelling from the source-token control.
+    result['off_headers']={}
+    for name in ('house_arena27.h','house_arena27_counts.h'):
+        path=tree/'port/dreamcast/game/platform/include'/name
+        if not path.exists():continue
+        proc=subprocess.run(['g++','-E','-P','-x','c++','-DRE4DC_HOUSE_ARENA27=0','-DRE4DC_HOUSE_ARENA27_COUNTS=0',str(path)],text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        if proc.returncode:raise RuntimeError(proc.stderr)
+        result['off_headers'][name]={'pass':not tokens(proc.stdout),'sha256':sha(path.read_bytes()),'preprocessed_token_count':len(tokens(proc.stdout))}
     sources = {}
     for rel in FILES:
         data = (tree / rel).read_bytes(); s = data.decode(); sources[rel]=s
         base = run(['git','-C',str(tree),'show',args.baseline+':'+rel])
         result['source'][rel]=sha(data)
-        projected, original = tokens(off_projection(s)), tokens(base)
-        result['off_tokens'][rel]={'pass':projected==original,'tokens':len(projected)}
+        projected, original = tokens(off_projection(s,args.normal_bake_off)), tokens(off_projection(base,args.normal_bake_off))
+        cpp_current,cpp_base=tokens(off_cpp(s,args.normal_bake_off)),tokens(off_cpp(base,args.normal_bake_off))
+        result['off_tokens'][rel]={'pass':projected==original and cpp_current==cpp_base and cpp_current==projected,'tokens':len(projected),'actual_cpp_identical':cpp_current==cpp_base,'projection_matches_actual_cpp':cpp_current==projected}
         if projected != original:
             first=next((i for i,(a,b) in enumerate(zip(projected,original)) if a!=b),min(len(projected),len(original)))
             result['off_tokens'][rel]['first_difference']={'token':first,'current':projected[max(0,first-5):first+6],'baseline':original[max(0,first-5):first+6]}
@@ -418,10 +462,12 @@ printf("actual arena arm%d MeshPackage+full-body/policy authentication PASS; %u 
             # test detected anything. Require a produced executable + assertion.
             rejected=(out/('mutation_'+name)).exists() and 'Assertion' in str(e)
             result['mutations'][name]={'rejected':rejected,'diagnostic':str(e)}
+    result['controlled_off_definitions']={'RE4DC_HOUSE_ARENA27':0,'RE4DC_HOUSE_ARENA27_COUNTS':0}
+    if args.normal_bake_off:result['controlled_off_definitions'].update(RE4DC_WORLD_REBUILD27_BAKE=0,RE4DC_WORLD_REBUILD27_LIVE_MASK=0,RE4DC_WORLD_REBUILD27=0)
     result['source_readback_identical']=all(sha((tree/p).read_bytes())==digest for p,digest in result['source'].items())
     result['helper_sha256']=sha(Path(__file__).read_bytes())
     result['compiler']=run(['g++','--version']).splitlines()[0]
-    result['pass']=result['source_readback_identical'] and all(x['pass'] for group in ('off_tokens','host') for x in result[group].values()) and all(x['rejected'] for x in result['mutations'].values())
+    result['pass']=result['source_readback_identical'] and all(x['pass'] for group in ('off_tokens','off_headers','host') for x in result[group].values()) and all(x['rejected'] for x in result['mutations'].values())
     (out/'RESULT.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2));return 0 if result['pass'] else 1
 
