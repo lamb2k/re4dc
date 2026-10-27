@@ -27,7 +27,7 @@ class Feature:
         self.n=np.cross(self.p[:,1]-self.p[:,0],self.p[:,2]-self.p[:,0]);self.area=np.linalg.norm(self.n,axis=1)
         self.n/=np.maximum(self.area[:,None],1e-18)
         a=np.asarray(d['placements'][placement][2:]).reshape(3,4);self.a=a;self.inv=np.linalg.inv(a[:,:3])
-        self.samples=[];self.attribute_indices=None
+        self.samples=[];self.attribute_indices=None;self.attribute_domain_normal=None
     def world(self,q):
         return (np.asarray(q)*self.m[11:14]+self.m[8:11])@self.a[:,:3].T+self.a[:,3]
     def q(self,p):
@@ -58,7 +58,7 @@ class Feature:
     def encode(self,tri):
         q=self.q(tri);p=self.world(q);normal=np.cross(p[1]-p[0],p[2]-p[0]);length=np.linalg.norm(normal)
         w.require(length>1e-5,'degenerate authored triangle '+self.name);normal/=length
-        return tuple(tuple(map(int,v))+tuple(self.sample(point,normal))for v,point in zip(q,p))
+        return tuple(tuple(map(int,v))+tuple(self.sample(point,normal if self.attribute_domain_normal is None else self.attribute_domain_normal))for v,point in zip(q,p))
     def audit_target(self,target,predecessor=None):
         """Bind every witness to the final emitted corner, never rejected proposals."""
         self.samples=[];result=[]
@@ -76,9 +76,10 @@ class Feature:
                 continue
             points=self.world(np.array(t)[:,:3]);normal=np.cross(points[1]-points[0],points[2]-points[0]);normal/=np.linalg.norm(normal)
             for ci,(corner,point)in enumerate(zip(t,points)):
-                attribute=self.sample(point,normal)
+                domain=normal if self.attribute_domain_normal is None else self.attribute_domain_normal
+                attribute=self.sample(point,domain)
                 w.require(tuple(attribute)==tuple(corner[3:]),'final attribute witness mismatch '+self.name+' '+str((ti,ci)))
-                result.append(dict(self.samples[-1],target_triangle=ti,target_corner=ci,kind='same-side-source-barycentric'))
+                result.append(dict(self.samples[-1],target_triangle=ti,target_corner=ci,kind='same-side-source-barycentric'if self.attribute_domain_normal is None else'source-oriented-sheet-barycentric',sampling_domain_normal=domain.tolist(),target_source_normal_dot=float(self.n[self.samples[-1]['source_triangle']]@normal)))
         w.require(len(result)==3*len(target),'final corner witness cardinality')
         return result
 
@@ -164,7 +165,7 @@ class Feature:
         from shapely.geometry import Polygon,LineString
         from shapely.ops import split
         length=np.array([.99417922945167,0,-.10773884966382]);cross=np.array([.10773884966382,0,.99417922945167])
-        indices=np.flatnonzero(((self.n[:,1]<-.25)if underside else(self.n[:,1]>.25))&(self.area>1e-7));self.attribute_indices=indices
+        indices=np.flatnonzero(((self.n[:,1]<-.25)if underside else(self.n[:,1]>.25))&(self.area>1e-7));self.attribute_indices=indices;self.attribute_domain_normal=np.array([0.,-1. if underside else 1.,0.])
         pts=self.p[indices];xy=np.stack((pts@length,pts@cross),axis=2)
         region=shapely.set_precision(shapely.union_all([Polygon(t)for t in xy]),.1)
         polys=list(region.geoms)if hasattr(region,'geoms')else[region];simplified=[]
@@ -184,7 +185,7 @@ class Feature:
         simple=shapely.union_all(simplified);pieces=simplified
         cuts=[]
         if len(self.source)==139:
-            cuts=[LineString([(u,-100000),(u,100000)])for u in(5695,6275)]+[LineString([(-100000,v),(100000,v)])for v in(16000,19000)]
+            cuts=[LineString([(u,-100000),(u,100000)])for u in(5695,5984,6275)]+[LineString([(-100000,v),(100000,v)])for v in(16906,)]
         if underside:
             points=pts.reshape(-1,3);peaks=points[points[:,1]>=points[:,1].max()-100];cross_axis=1 if np.ptp(points@length)>np.ptp(points@cross)else 0
             position=float(np.median(peaks@(cross if cross_axis==1 else length)))
@@ -212,7 +213,7 @@ class Feature:
                 if(np.cross(actual[1]-actual[0],actual[2]-actual[0])[1]<0)!=underside:world.reverse();actual=actual[::-1]
                 out.append(self.encode(world));actual_polys.append(Polygon(np.stack((actual@length,actual@cross),axis=1)))
         actual_region=shapely.union_all(actual_polys)
-        return out,dict(operation='authored broad source roof/ceiling sheet with genuine source cutout contours',underside=underside,source_triangles=len(self.source),target_triangles=len(out),source_surface_triangles=indices.tolist(),boundary_tolerance_mm=40,ridge_cross_stations_mm=[5695,6275]if cuts else[],length_stations_mm=[16000,19000]if cuts else[],source_footprint_wkt=region.wkt,target_footprint_wkt=actual_region.wkt,projected_symmetric_difference_mm2=float(region.symmetric_difference(actual_region).area),projected_hausdorff_mm=float(region.hausdorff_distance(actual_region)),detail_tradeoff='source tile corrugations become broad 3D sheets; existing PS2 pixel detail reused')
+        return out,dict(operation='authored broad source roof/ceiling sheet with genuine source cutout contours',underside=underside,attribute_policy='nearest original upper/downward source sheet; coarse-face normal does not select distant fine-fold donor; actual coarse/source dots recorded separately',source_triangles=len(self.source),target_triangles=len(out),source_surface_triangles=indices.tolist(),boundary_tolerance_mm=40,ridge_cross_stations_mm=[5695,5984,6275]if len(self.source)==139 else[],length_stations_mm=[16906]if len(self.source)==139 else[],source_footprint_wkt=region.wkt,target_footprint_wkt=actual_region.wkt,projected_symmetric_difference_mm2=float(region.symmetric_difference(actual_region).area),projected_hausdorff_mm=float(region.hausdorff_distance(actual_region)),detail_tradeoff='source tile corrugations become broad 3D sheets; existing PS2 pixel detail reused')
     def ribbon(self,indices,normal):
         from shapely.geometry import Polygon,LineString
         pts=self.p[indices];normal=np.asarray(normal,float);normal/=np.linalg.norm(normal)
