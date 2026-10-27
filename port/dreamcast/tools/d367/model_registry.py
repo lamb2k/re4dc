@@ -86,6 +86,7 @@ MATERIAL_ROWS = 64          # actor_lifetime.inc Info::roles mask capacity
 SOURCE_BLOBS = 32           # actor_lifetime.inc Asset::templates mask capacity
 CH22_LUIS_COVERAGE = False  # explicit room11c pinned source coverage; package-only
 SLOTS = False               # --slots: draw-slot descriptors (source.json draw_slots), package only
+ASHLEY_RIG = False          # --ashley-rig: require the original full pl11 PS2 rig source contract
 WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (RE4DC_ACTOR_WIDE_IDENTITY)
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
@@ -521,6 +522,12 @@ def main():
         CH22_LUIS_COVERAGE = True
         PACK_CAPACITY['fpart'] = 83  # exact room11c Luis body + independent gun
     global SLOTS, PACK_MAX_BYTES
+    global ASHLEY_RIG
+    if '--ashley-rig' in args:
+        args.remove('--ashley-rig')
+        if '--slots' not in args:
+            sys.exit('model_registry: --ashley-rig needs --slots')
+        ASHLEY_RIG = True
     if '--slots' in args:
         args.remove('--slots')
         if package_room is None:
@@ -554,6 +561,8 @@ def main():
     source_normal_length = '--source-normal-length' in args
     if source_normal_length:
         args.remove('--source-normal-length')
+        if ASHLEY_RIG:
+            sys.exit('model_registry: PS2 Ashley rig must keep PS2 normals; --source-normal-length is forbidden')
     global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23
     if '--wide-identity' in args:
         args.remove('--wide-identity')
@@ -668,6 +677,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {L["runtime_header"]} sha256 differs from the catalog')
         binds = inputs.json(os.path.join(cast, name, 'source-bindings.json'), f'cast/{name}/source-bindings.json')
         src = inputs.json(os.path.join(cast, name, 'source.json'), f'cast/{name}/source.json')
+        if source_normal_length and src.get('ps2_rig'):
+            raise Fail(f'{name}: PS2 rig must keep PS2 normals; source-derived normal length is forbidden')
         # The spec's model id / source types are the cast's own, not a label: a descriptor never claims another
         # appearance's selection (the cow type 0 vs type 1 TPLs share one BIN).
         if int(d['model_id'], 16) != src.get('source_model_id') or sorted(d['source_types'] or []) != sorted(src.get('types') or []):
@@ -739,6 +750,10 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                     any(not 0 <= x < bones for x in draw_slots) or draw_slots != sorted(set(draw_slots))):
                 raise Fail(f'{name}: draw_slots must be strictly increasing source joints < {bones} (<= 255 joints)')
             draw = len(draw_slots)
+        if ASHLEY_RIG and not (src.get('ps2_rig', {}).get('schema') == 'ashley-ps2-rig-1' and
+                src['ps2_rig'].get('ps2_bones') == 81 and arcname == 'pl11' and
+                int(d['model_id'], 0) == 3 and bones == 141 and len(binds) == 7 and draw_slots is not None):
+            raise Fail(f'{name}: --ashley-rig requires the full pl11 PS2 rig 141-joint seven-role partner')
         # ---- sections against the archive
         sections, need, contract = [], 0, []
         for i, b in enumerate(binds):

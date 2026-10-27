@@ -648,6 +648,40 @@ endif
 #              the bump drop in the certificate (coarse_actor_material.inc), and the slot palettes' bind (one inverse
 #              per SOURCE joint: slot b uses its joint's; coarse_actor_owner_registry.inc registry_palettes).
 PS2_ASHLEY ?= 0
+# Ashley's PS2 bind and authored weights, with the existing game cloth simulation
+# adapted by tools/ps2_ashley.py --rig. Private rig headers pin all three hand sets.
+ASHLEY_PS2_RIG ?= 0
+ASHLEY_PS2_RIG_DIR ?=
+ifeq ($(filter $(ASHLEY_PS2_RIG),0 1),)
+$(error ASHLEY_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(ASHLEY_PS2_RIG),1)
+ifneq ($(PS2_ASHLEY),2)
+$(error ASHLEY_PS2_RIG needs PS2_ASHLEY=2)
+endif
+ifeq ($(strip $(ASHLEY_PS2_RIG_DIR)),)
+$(error ASHLEY_PS2_RIG needs ASHLEY_PS2_RIG_DIR from tools/d367/ashley_rig27/rig_header.py)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PS2_RIG=1 -I$(ASHLEY_PS2_RIG_DIR)
+$(OBJDIR)/coarse_actor.o: $(ASHLEY_PS2_RIG_DIR)/ashley_ps2_rig27.h
+endif
+# Playable cPlAshley has its own player-family/archive contract. It must never
+# inherit the partner's model3 predicate or distance LOD policy.
+ASHLEY_PLAYABLE_PS2_RIG ?= 0
+ASHLEY_PLAYABLE_PS2_RIG_DIR ?=
+ifeq ($(filter $(ASHLEY_PLAYABLE_PS2_RIG),0 1),)
+$(error ASHLEY_PLAYABLE_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(ASHLEY_PLAYABLE_PS2_RIG),1)
+ifneq ($(PS2_ASHLEY)$(NATIVE_MODEL_REGISTRY_PL_ASHLEY),21)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs PS2_ASHLEY=2 NATIVE_MODEL_REGISTRY_PL_ASHLEY=1)
+endif
+ifeq ($(strip $(ASHLEY_PLAYABLE_PS2_RIG_DIR)),)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs ASHLEY_PLAYABLE_PS2_RIG_DIR from tools/d367/ashley_playable27/rig_header.py)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PLAYABLE_PS2_RIG=1 -I$(ASHLEY_PLAYABLE_PS2_RIG_DIR)
+$(OBJDIR)/coarse_actor.o: $(ASHLEY_PLAYABLE_PS2_RIG_DIR)/ashley_playable_ps2_rig27.h
+endif
 # PS2_ASHLEY_ROOMS=1 (lane ps2cast 2026-10-15; default 0; render only; needs PS2_ASHLEY=1|2): Ashley in the chapter 2-2 /
 #              2-3 rooms whose own registry package already carries other PS2 actors (r111 / r113 crows, r112 merchant,
 #              r118 Ganados + wolf, r11c Luis, r11f Mendez). Her package is the room's SECOND package,
