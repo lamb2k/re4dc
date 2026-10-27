@@ -7247,12 +7247,14 @@ bool ps2_open(){
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[ps2w.placements[i].mesh];
         unsigned m=0;
-        for(unsigned k=0;k<mesh.part_count;++k){
 #if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+        for(unsigned k=0;k<mesh.part_count;++k){
             if(!world_rebuild27_live_part(mesh.first_part+k))continue;
-#endif
             m|=1U<<ps2w.parts[mesh.first_part+k].pass;
         }
+#else
+        for(unsigned k=0;k<mesh.part_count;++k)m|=1U<<ps2w.parts[mesh.first_part+k].pass;
+#endif
         ps2w.pass_mask[i]=std::uint8_t(m);
     }
 #endif
@@ -7487,12 +7489,14 @@ bool ps2_movie_reload(){
     ps2w.masked=h.placements<=Ps2World::kMaskPlacements;
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[placements[i].mesh];unsigned mask=0;
-        for(unsigned k=0;k<mesh.part_count;++k){
 #if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+        for(unsigned k=0;k<mesh.part_count;++k){
             if(!world_rebuild27_live_part(mesh.first_part+k))continue;
-#endif
             mask|=1u<<parts[mesh.first_part+k].pass;
         }
+#else
+        for(unsigned k=0;k<mesh.part_count;++k)mask|=1u<<parts[mesh.first_part+k].pass;
+#endif
         ps2w.pass_mask[i]=std::uint8_t(mask);
     }
 #endif
