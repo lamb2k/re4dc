@@ -71,6 +71,32 @@ inline constexpr Certificate certificates[] = {
 };
 #endif
 static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
+#if defined(RE4DC_WORLD_REBUILD27) && RE4DC_WORLD_REBUILD27
+// The private experiment changes r101's render geometry, not its placements,
+// materials, source identities or changing-object ownership. Candidate receipts
+// pin the full source/output hashes offline. Admission still requires the exact
+// physical R4PW file, an adopted mesh layout, and its recomputed body CRC below.
+// This certifies only that binding; it does not certify appearance or visibility.
+#include "world_rebuild27_certificates.inc"
+static_assert(sizeof(rebuild27_certificates)/sizeof(rebuild27_certificates[0])>0U);
+static_assert(sizeof(rebuild27_certificates)/sizeof(rebuild27_certificates[0])<=64U);
+constexpr bool rebuild27_rows_match_source() {
+    for(const auto& c:rebuild27_certificates) {
+        bool matched=false;
+        for(const auto& original:certificates) {
+            if(c.room==0x101U && original.room==c.room &&
+               c.world_bytes==original.world_bytes && c.placements==original.placements &&
+               c.parts==original.parts && c.meshes==original.meshes &&
+               c.physical_body_crc==original.physical_body_crc &&
+               c.physical_file_fnv==original.physical_file_fnv &&
+               c.source_crc==original.source_crc && c.mesh_bytes>0U)matched=true;
+        }
+        if(!matched)return false;
+    }
+    return true;
+}
+static_assert(rebuild27_rows_match_source());
+#endif
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);
@@ -80,9 +106,18 @@ inline std::uint32_t fnv(const unsigned char* b,unsigned bytes) {
     for(unsigned i=0;i<bytes;++i)h=(h^b[i])*16777619U;
     return h;
 }
+#if defined(RE4DC_WORLD_REBUILD27) && RE4DC_WORLD_REBUILD27
+inline std::uint32_t policy_source_crc(unsigned room,const unsigned char* world,unsigned bytes,
+                                       std::uint32_t mesh_crc,unsigned mesh_bytes,
+                                       unsigned mesh_parts,unsigned mesh_count
+                                       ,const unsigned char* mesh=nullptr,
+                                       std::uint32_t (*mesh_crc32)(const unsigned char*,unsigned)=nullptr
+                                       ) {
+#else
 inline std::uint32_t policy_source_crc(unsigned room,const unsigned char* world,unsigned bytes,
                                        std::uint32_t mesh_crc,unsigned mesh_bytes,
                                        unsigned mesh_parts,unsigned mesh_count) {
+#endif
     // Unknown tuples retain the actual CRC and ordinary mismatched-metadata
     // fallback. Neither the physical header nor any metadata byte is rewritten.
     if(!world || bytes<32U)return 0;
@@ -99,6 +134,29 @@ inline std::uint32_t policy_source_crc(unsigned room,const unsigned char* world,
            fnv(world,bytes)!=c.physical_file_fnv)continue;
         return c.source_crc;
     }
+#if defined(RE4DC_WORLD_REBUILD27) && RE4DC_WORLD_REBUILD27
+    for(const auto& c:rebuild27_certificates) {
+        if(room!=c.room || bytes!=c.world_bytes || mesh_crc!=c.mesh_crc ||
+           mesh_bytes!=c.mesh_bytes || mesh_parts!=c.parts || mesh_count!=c.meshes ||
+           actual!=c.physical_body_crc)continue;
+        if(world[0]!='R' || world[1]!='4' || world[2]!='P' || world[3]!='W' ||
+           word(world+4)!=1U || word(world+8)!=c.placements ||
+           word(world+12)!=c.parts || word(world+16)!=c.meshes ||
+           word(world+24)!=0U || word(world+28)!=0U ||
+           bytes!=32U+16U*c.parts+52U*c.placements ||
+           fnv(world,bytes)!=c.physical_file_fnv)continue;
+        // MeshPackage::adopt checks layout/commands, not the stored body CRC.
+        // Only these new candidate rows require this additional load-time check.
+        // R4IM's CRC covers everything after its fixed 80-byte header, including
+        // the v2/v3 LOD header. Use the caller's existing CRC implementation.
+        if(!mesh || !mesh_crc32 || mesh_bytes<80U ||
+           mesh[0]!='R' || mesh[1]!='4' || mesh[2]!='I' || mesh[3]!='M' ||
+           word(mesh+8)!=mesh_bytes || word(mesh+12)!=mesh_crc ||
+           word(mesh+16)!=mesh_count || word(mesh+20)!=mesh_parts ||
+           mesh_crc32(mesh+80U,mesh_bytes-80U)!=mesh_crc)continue;
+        return c.source_crc;
+    }
+#endif
     return actual;
 }
 }

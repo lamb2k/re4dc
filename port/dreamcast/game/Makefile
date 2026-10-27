@@ -3600,6 +3600,7 @@ include scenery_data_variants.mk
 include scenery_record_split.mk
 include scenery_n256.mk
 include worldopt26.mk
+include world_rebuild27.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
