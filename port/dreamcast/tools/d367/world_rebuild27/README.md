@@ -111,3 +111,12 @@ checks the Windows child's actual values, UTF-8 output and exact emulator SHA;
 it does not launch a guest. The caller still owns resource/trace leases, lane
 limits, bounded duration, exact programme/assets and current media readback.
 Do not reuse a mutable SD-stage pathname as an identity certificate.
+
+
+`prepare_bake_arm.py` prepares only an explicitly enabled private baked arm.
+It pins and checks the complete baseline manifest and candidate file manifest,
+requires resolved bake/residency knobs, copies the linked programme and all
+fifteen matching overlays, and adds the two exact atlas packages through the
+existing loose package paths. Original tex.pak is unchanged; every other file
+is checked again after preparation. Output must be fresh and disjoint. Its
+receipt is not a mastered-disc, guest, memory, performance or release gate.
