@@ -561,6 +561,8 @@ def main():
     source_normal_length = '--source-normal-length' in args
     if source_normal_length:
         args.remove('--source-normal-length')
+        if ASHLEY_RIG:
+            sys.exit('model_registry: PS2 Ashley rig must keep PS2 normals; --source-normal-length is forbidden')
     global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23
     if '--wide-identity' in args:
         args.remove('--wide-identity')
@@ -675,6 +677,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {L["runtime_header"]} sha256 differs from the catalog')
         binds = inputs.json(os.path.join(cast, name, 'source-bindings.json'), f'cast/{name}/source-bindings.json')
         src = inputs.json(os.path.join(cast, name, 'source.json'), f'cast/{name}/source.json')
+        if source_normal_length and src.get('ps2_rig'):
+            raise Fail(f'{name}: PS2 rig must keep PS2 normals; source-derived normal length is forbidden')
         # The spec's model id / source types are the cast's own, not a label: a descriptor never claims another
         # appearance's selection (the cow type 0 vs type 1 TPLs share one BIN).
         if int(d['model_id'], 16) != src.get('source_model_id') or sorted(d['source_types'] or []) != sorted(src.get('types') or []):

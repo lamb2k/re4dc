@@ -17,6 +17,10 @@ This rig arm applies only to converted partner Ashley (model 3, pl11). Playable
 Ashley (model 0, pl01) keeps its existing package and bind path, including when
 the new knob is enabled. Its different source face, hair and hand contracts need
 separate conversion and qualification before the rig can apply there.
+PS2 rig packages keep their native PS2 normal vectors, including magnitudes.
+The generator refuses `--source-normal-length` for this rig, even if its explicit
+Ashley mode is omitted, because that legacy option imports a source BIN lighting
+scale. Existing non-rig generation keeps its original policy.
 
 `ASHLEY_LOD=1` additionally needs the existing `NMR_POOL_LOD=1`,
 `NATIVE_MODEL_REGISTRY_ROLES5=1` and `NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1`.

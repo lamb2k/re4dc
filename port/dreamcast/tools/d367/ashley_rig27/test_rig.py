@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -44,6 +46,7 @@ class RigTests(unittest.TestCase):
                 (p / 'source.json').write_text(json.dumps(dict(draw_slots=[4, 70])))
             with self.assertRaises(ValueError):
                 header.generate(convs, root / 'out')
+
             for p in convs:
                 (p / 'source.json').write_text(json.dumps(dict(draw_slots=[4, 70], ps2_rig=dict(
                     schema='ashley-ps2-rig-1', ps2_bones=81))))
@@ -53,6 +56,13 @@ class RigTests(unittest.TestCase):
                 schema='ashley-ps2-rig-1', ps2_bones=81, changed=True))))
             with self.assertRaises(ValueError):
                 header.generate(convs, root / 'out')
+
+    def test_source_normal_length_refused(self):
+        run=subprocess.run([sys.executable,str(HERE.parent/'model_registry.py'),'unused-spec','unused-output',
+                            '--package-room','117','--slots','--pool','--roles5','--ashley-rig',
+                            '--source-normal-length'],capture_output=True,text=True)
+        self.assertNotEqual(run.returncode,0)
+        self.assertIn('PS2 Ashley rig must keep PS2 normals',run.stderr+run.stdout)
 
 
 if __name__ == '__main__':
