@@ -19,6 +19,10 @@
 // immutable chunk ID; texture and source identity stay per descriptor.
 #include "coarse_skin.h"
 #include "actor_ganado_ps2_stump.h"
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+#include "ashley_ps2_rig27.h"
+static_assert(ashley_ps2_rig27::version==1,"ASHLEY_PS2_RIG needs its PS2 rig build assets");
+#endif
 #if RE4DC_COARSE_SKIN_FTRV != 1
 #error NATIVE_MODEL_REGISTRY builds its palettes with COARSE_SKIN_FTRV=1
 #endif
@@ -385,6 +389,11 @@ constexpr float kRegistryBindMm=0.1f;
 __attribute__((noinline)) bool registry_skeleton_slots(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc,float* dev) {
     cParts* src[kRegSourceBones];
     const unsigned joints=desc.source_bones;const unsigned char* const up=desc.source_parents;
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+    // A PS2 rig arm must not silently skin an old surface-transferred package.
+    if(ashley_ps2_rig27::applies(desc.model_id,joints,desc.sections) &&
+       !ashley_ps2_rig27::slots_match(up+joints,desc.bones))return false;
+#endif
     cParts* part=m->pList;
     for(unsigned k=0;k<joints;++k){if(!part)return false;src[k]=part;part=part->pList;}
     if(part)return false;
@@ -638,7 +647,14 @@ int registry_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
 #if RE4DC_NMR_SLOTS
         // A draw-slot descriptor's bind run holds one inverse per SOURCE joint: slot b skins with its joint's
         // (source_parents[source_bones + b], the joint registry_skeleton_slots bound to parts[b]).
-        const float* const bind=desc->source_bones?desc->bind[desc->source_parents[desc->source_bones+b]]:desc->bind[b];
+        const float* bind=desc->source_bones?desc->bind[desc->source_parents[desc->source_bones+b]]:desc->bind[b];
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+        // PS2 shared bones use the package's PS2 bind. Garments use the existing
+        // solver's skin delta; no extra solver call, animation tick or RNG.
+        if(ashley_ps2_rig27::applies(desc->model_id,desc->source_bones,desc->sections) &&
+           desc->source_parents[desc->source_bones+b]>=64u)
+            bind=&registry_bound->parts[b]->lt_inv_mat[0][0];
+#endif
         registry_jobs[u]={&registry_bound->parts[b]->mat[0][0],bind,registry_T[b]};
 #else
         registry_jobs[u]={&registry_bound->parts[b]->mat[0][0],desc->bind[b],registry_T[b]};
