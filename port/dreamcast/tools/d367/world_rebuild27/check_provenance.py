@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Host binding checks using the private, pinned r101 R4PW as input.
 
-The extra mesh identities below are synthetic refusal/admission fixtures, not
-candidate geometry or a visual/performance certificate. No private bytes leave
-the explicitly selected output directory.
+The checks use an actual private candidate and mutate its bytes and binding
+arguments. They are not a visual/performance certificate. No private bytes
+leave the explicitly selected output directory.
 """
 import argparse
 import hashlib
