@@ -22,10 +22,12 @@ def prepare(a):
     require(not a.out.exists(),'immutable output already exists')
     exchange=json.loads(a.exchange.read_text());proof=json.loads(a.textures.read_text())
     require(exchange['schema']=='re4dc.world-rebuild27.house-exchange/1','C9 exchange schema')
-    for role,key,source_count,target_count in [('wall','0c77c65b-a7d392ac',145,63),('roof','5f6ca8e9-290510a7',262,44)]:
+    target_total=sum(len(exchange[role]['target']) for role in ('wall','roof'))
+    require(0<target_total<=128,'reviewed one-house target cap')
+    for role,key,source_count in [('wall','0c77c65b-a7d392ac',145),('roof','5f6ca8e9-290510a7',262)]:
         obj=exchange[role];tex=proof[role]
         require(obj['source_material_key']==key,'source material key '+role)
-        require(len(obj['source'])==source_count and len(obj['target'])==target_count,'bounded C9 counts')
+        require(len(obj['source'])==source_count and 0<len(obj['target'])<=128,'bounded C9 counts')
         require(tex['ps2_verified'] is True and tex['material_key']==key,'verified PS2 texture required '+role)
         path=Path(tex['path']);require(sha(path)==tex['sha256'],'source image digest '+role)
         for kind in ('source','target'):
@@ -36,7 +38,12 @@ def prepare(a):
     a.out.mkdir(parents=True)
     shutil.copy2(a.exchange,a.out/'HOUSE-EXCHANGE.json');shutil.copy2(a.textures,a.out/'PS2-TEXTURE-PROVENANCE.json')
     for role in ('wall','roof'):shutil.copy2(proof[role]['path'],a.out/(role+'-ps2-source.png'))
-    recipe=dict(schema='re4dc.world-rebuild27.house-bake/1',exchange_sha256=sha(a.exchange),provenance_sha256=sha(a.textures),tool_sha256=sha(Path(__file__)),blender_script_sha256=sha(HERE/'house_bake27/blender_bake.py'),source_policy='PS2 geometry, PS2 texture texels and PS2 prelight only',reference_triangles=407,target_triangles=107,dimensions=[512,512],maps=2,mipmaps=False,source_geometry_untouched=True,incremental_texture_residency=True,original_textures_retained=True,runtime_binding='Main must isolate the selected house core from shared source material parts before any target adoption',appearance_accepted=False,timing_available=False)
+    producer=a.out/'producer';producer.mkdir()
+    for helper in (HERE/'house_bake27').glob('*.py'):shutil.copy2(helper,producer/helper.name)
+    shutil.copy2(Path(__file__),producer/Path(__file__).name)
+    recipe=dict(schema='re4dc.world-rebuild27.house-bake/1',exchange_sha256=sha(a.exchange),provenance_sha256=sha(a.textures),tool_sha256=sha(Path(__file__)),blender_script_sha256=sha(HERE/'house_bake27/blender_bake.py'),source_policy='PS2 geometry, PS2 texture texels and PS2 prelight only',reference_triangles=407,target_triangles=target_total,dimensions=[512,512],maps=2,mipmaps=False,source_geometry_untouched=True,incremental_texture_residency=True,original_textures_retained=True,runtime_binding='Main must isolate the selected house core from shared source material parts before any target adoption',appearance_accepted=False,timing_available=False)
+    recipe['roof_continuation']=a.roof_continuation
+    recipe['producer_files_sha256']={p.name:sha(p) for p in sorted(producer.iterdir()) if p.is_file()}
     (a.out/'PREPARATION.json').write_text(json.dumps(recipe,indent=2)+'\n')
     (a.out/'RECIPE.txt').write_text('Private unaccepted C9 3D shell with PS2-only baked static detail.\nPrepare command: '+json.dumps(sys.argv)+'\nBlender Cycles EMIT selected-to-active; source texture multiplied by source corner prelight. No new lights or generated image content.\nTwo512x512RGB565/VQ maps, no mipmaps initially. Original textures stay resident; all texture costs incremental.\nGeometry remains C9 107triangles with real windows, doors, wall thickness and raised roof ridge.\nNo runtime binding, staging, SDK/Flycast, disc, SD or production recipe action.\n')
     print(json.dumps(recipe,indent=2))
@@ -69,6 +76,7 @@ def encode(a):
 def main():
     ap=argparse.ArgumentParser(description=__doc__);sp=ap.add_subparsers(dest='operation',required=True)
     p=sp.add_parser('prepare');p.add_argument('--exchange',type=Path,required=True);p.add_argument('--textures',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--roof-continuation',action='store_true',help='explicit bounded PS2-only same-component roof texture continuation; geometry unchanged')
     p=sp.add_parser('encode');p.add_argument('--out',type=Path,required=True);p.add_argument('--pvrtex',type=Path,required=True)
     a=ap.parse_args();prepare(a) if a.operation=='prepare' else encode(a)
 
