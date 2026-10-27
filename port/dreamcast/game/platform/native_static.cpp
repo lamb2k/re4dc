@@ -5241,6 +5241,9 @@ movie_world::Ledger ps2_movie;
 struct MovieWorldFiles { unsigned mesh=0,side=0,mesh_crc=0,mesh_fnv=0,side_crc=0,side_fnv=0; } ps2_movie_files;
 bool ps2_movie_layout(unsigned room){
     const auto& f=ps2_movie_files;
+    // n256b26 (SCENERY_N256, 256-vertex meshlets, 10-26): the same r11f sidecar, LUT and gather after a 759,648 B mesh.
+    // Without this row the s10/s11 movie arena refused the smaller package (terminal=3, 0/265; no heap fallback).
+    if(room==0x11f && f.mesh==759648)return f.side==9076 && ps2_movie.capacity==759648U+(811264U-797056U);
     if(room==0x11f)return f.mesh==797056 && f.side==9076 && ps2_movie.capacity==811264;
 #if RE4DC_MOVIE_WORLD_ARENA_S30
     // The current r100 SMX/TR4 package, with its LUT and gather storage.
