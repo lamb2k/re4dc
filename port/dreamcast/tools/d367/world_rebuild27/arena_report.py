@@ -62,7 +62,7 @@ def fixtures(paths):
 def parse(paths, run):
     arms, errors = {}, []
     for path in paths:
-        current, pending = None, None
+        current, pending, measuring = None, None, False
         for line in path.read_text(errors="replace").splitlines():
             data = values(line)
             if "arena27: INVALID" in line:
@@ -78,7 +78,15 @@ def parse(paths, run):
                     continue
                 if current in arms:
                     errors.append(f"{path}: duplicate arm {current} run {run}")
-                arms[current] = {"metadata": data, "tails": [], "pace": [], "result": {}, "ta": {}, "summary": {}, "source": str(path)}
+                arms[current] = {"metadata": data, "tails": [], "pace": [], "result": {}, "ta": {}, "summary": {}, "stream_warmup": [], "stream_measured": [], "source": str(path)}
+                measuring = False
+            boundary = re.search(r"bench: scene (\d+) (begin|end) room frame", line)
+            if boundary and int(boundary[1]) == current:
+                measuring = boundary[2] == "begin"
+                if boundary[2] == "end":
+                    current = None
+            if "native stream: " in line and current in arms:
+                arms[current]["stream_measured" if measuring else "stream_warmup"].append(data)
             if "arena27: window " in line and number(data, "run") == run:
                 pending = number(data, "scene")
             elif "PACE vmu " in line:
@@ -131,8 +139,26 @@ def report(args):
         for key in ("cpu_n", "gpu_n"):
             if not number(summary, key):
                 errors.append(f"arm {scene}: no {key} samples")
-        if not number(ta, "scenes") or not arm["tails"]:
-            errors.append(f"arm {scene}: missing TA or frame-tail samples")
+        if not arm["tails"]:
+            errors.append(f"arm {scene}: missing frame-tail samples")
+        stream = arm["stream_measured"]
+        baseline = arm["stream_warmup"][-1] if arm["stream_warmup"] else None
+        counter_delta = None
+        if not number(ta, "scenes"):
+            required = ("model_bytes", "ta_used", "ta_peak", "discarded", "black_frames", "missing")
+            if not baseline or not stream:
+                errors.append(f"arm {scene}: TA count unavailable; need warmup baseline and measured native stream rows")
+            elif any(key not in row for row in [baseline, *stream] for key in required):
+                errors.append(f"arm {scene}: incomplete native stream row")
+            else:
+                counter_delta = {key: number(stream[-1], key) - number(baseline, key)
+                                 for key in ("discarded", "black_frames", "missing")}
+                for key in counter_delta:
+                    samples = [number(baseline, key), *(number(row, key) for row in stream)]
+                    if any(b != a for a, b in zip(samples, samples[1:])):
+                        errors.append(f"arm {scene}: native stream {key} changed during measured samples")
+                if any(number(row, "model_bytes") <= 0 for row in stream):
+                    errors.append(f"arm {scene}: native stream has no model bytes on a measured sample")
         pace = arm["pace"]
         reg_n = sum(number(x, "reg_n") for x in pace)
         if not reg_n:
@@ -154,7 +180,13 @@ def report(args):
                      "pvr_registration_ms": sum(number(x, "reg_avg_us") * number(x, "reg_n") for x in pace) / reg_n / 1000 if reg_n else None,
                      "cpu_ms_per_tick": number(summary, "cpu_sum_us") / cpu_n / 1000 if cpu_n else None,
                      "cpu_sample_windows": cpu_n, "gpu_samples": gpu_n, "registration_samples": reg_n,
-                     "ta_bytes_per_presented_frame": {key: number(ta, key) for key in ("op_b", "opm_b", "tr_b", "trm_b", "pt_b")},
+                     "ta_bytes_per_presented_frame": {key: number(ta, key) for key in ("op_b", "opm_b", "tr_b", "trm_b", "pt_b")} if number(ta, "scenes") else None,
+                     "ta_count_status": "TA_HASH=4 available" if number(ta, "scenes") else "unavailable on streamed renderer; existing native stream samples used",
+                     "native_stream": {"measured_samples": len(stream), "warmup_baseline": baseline,
+                                       "counter_delta": counter_delta,
+                                       "model_bytes_samples": [number(row, "model_bytes") for row in stream],
+                                       "ta_used_samples": [number(row, "ta_used") for row in stream],
+                                       "ta_peak_samples": [number(row, "ta_peak") for row in stream]},
                      "tail": tail_stat, "source": arm["source"]})
     if len(build_ids) > 1 or None in build_ids:
         errors.append("arms must identify the same build")
@@ -171,6 +203,10 @@ def markdown(data):
     fmt = lambda value: "missing" if value is None else f"{value:.3f}"
     for row in data["arms"]:
         lines.append("| " + " | ".join([row["variant"], *(fmt(row[k]) for k in ("gpu_render_ms", "pvr_registration_ms", "present_ms", "cpu_ms_per_tick", "fps")), str(row["accepted_windows"])]) + " |")
+    for row in data["arms"]:
+        if row["ta_bytes_per_presented_frame"] is None:
+            stream = row["native_stream"]
+            lines += ["", f"{row['variant']}: TA list-byte count unavailable (streamed renderer). Native stream samples: {stream['measured_samples']}; model bytes {stream['model_bytes_samples']}; TA used {stream['ta_used_samples']}; TA peak {stream['ta_peak_samples']}; observed counter delta {stream['counter_delta']}."]
     if data["errors"]:
         lines += ["", "INCOMPLETE / INVALID: " + "; ".join(data["errors"])]
     lines += ["", "Registration, TA-done latency, GPU rendering and CPU work overlap. Do not add these columns. CPU is per tick; presentation is per drawn picture."]

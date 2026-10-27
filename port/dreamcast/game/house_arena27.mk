@@ -14,8 +14,14 @@ ifeq ($(HOUSE_ARENA27),1)
 ifneq ($(BENCHMARK)$(TAIL_METER)$(PACE_VMU_GPU),111)
 $(error HOUSE_ARENA27=1 needs BENCHMARK=1 TAIL_METER=1 PACE_VMU_GPU=1)
 endif
+ifeq ($(SCENERY_STREAM),1)
+ifneq ($(TA_HASH),0)
+$(error HOUSE_ARENA27 with SCENERY_STREAM=1 needs TA_HASH=0; use existing native stream counters)
+endif
+else
 ifneq ($(TA_HASH),4)
-$(error HOUSE_ARENA27=1 needs TA_HASH=4, the existing count-only TA meter)
+$(error HOUSE_ARENA27 without SCENERY_STREAM needs TA_HASH=4, the existing count-only TA meter)
+endif
 endif
 ifneq ($(BENCH_SCENARIO)$(BENCH_CENSUS),00)
 $(error HOUSE_ARENA27=1 cannot share BENCH_SCENARIO or BENCH_CENSUS)
