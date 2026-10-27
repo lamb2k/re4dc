@@ -1,4 +1,5 @@
 #include "include/house_arena27.h"
+#include "include/house_arena27_counts.h"
 #if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
 namespace re4dc::house_arena27 {
 #include "world_rebuild27_arena.inc"
@@ -825,6 +826,30 @@ void gcasset_static_policy(re4dc_gcasset::StaticManifest& source,unsigned room){
 }
 #endif
 Re4dcStaticStats stats{};
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+#if !RE4DC_HOUSE_ARENA27 || !RE4DC_MESH_FASTPATH || !RE4DC_MESH_DIRECT || !RE4DC_HW_LEAN || !RE4DC_SCENERY_STREAM || !RE4DC_SCENERY_CHUNK || !RE4DC_SCENERY_REPLAY_LEAN
+#error HOUSE_ARENA27_COUNTS requires the arena streamed direct chunk replay path
+#endif
+#if RE4DC_CPU_BACKFACE || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_SCENERY_DEDUP || RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_MESH_VP_SCHED!=1 || RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
+#error HOUSE_ARENA27_COUNTS refuses uncounted alternative transform/emission paths
+#endif
+static Re4dcHouseArena27Geometry* arena27_counts_active=nullptr;
+static uint32_t arena27_counts_sequence;
+static bool arena27_counts_entered;
+static void arena27_counts_transform(unsigned n,bool clipping){
+    if(!arena27_counts_active)return;
+    arena27_counts_active->transformed_positions+=n;
+    if(clipping)arena27_counts_active->transformed_clip+=n;
+    else arena27_counts_active->transformed_cache+=n;
+}
+static void arena27_counts_emit(unsigned corners,unsigned triangles){
+    if(!arena27_counts_active)return;
+    arena27_counts_active->emitted_corners+=corners;
+    arena27_counts_active->emitted_triangles+=triangles;
+}
+
+#endif
+
 #if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
 // SCN_CENSUS=1 (logiclod20.mk; test only): per meshlet drawn by meshlet(): visits, corners, corners of meshlets none of
 // whose strips reached the screen (all culled after the transform), strips emitted / culled, triangles emitted, plus the
@@ -1335,12 +1360,20 @@ struct Emitter {
 #if RE4DC_SCENERY_SUBMIT_BATCH
     Re4dcWorldSubmitBatch* submit_batch=nullptr; // borrowed only inside chunk_flush
     void end_direct(){if(sq){
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+        if(ps2)arena27_counts_emit(slots,output);
+#endif
+
         if(submit_batch)re4dc_ps2_world_direct_end_batch(slots,submit_batch);
         else re4dc_model_direct_end(slots);
         sq=nullptr;
     }}
 #else
-    void end_direct(){if(sq){re4dc_model_direct_end(slots);sq=nullptr;}}
+    void end_direct(){if(sq){
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+        if(ps2)arena27_counts_emit(slots,output);
+#endif
+re4dc_model_direct_end(slots);sq=nullptr;}}
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #define RE4DC_WC24_PUT_SCOPE() const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
@@ -1517,6 +1550,9 @@ struct Emitter {
 #endif
     void clip_vertex(const re4dc::render::StaticCorner& in,const re4dc::room::CompactBatch& batch,
                      re4dc::render::RenderVertex& out){
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+        if(ps2)arena27_counts_transform(1U,true);
+#endif
         float x=mvq[0]*in.x+mvq[1]*in.y+mvq[2]*in.z+mvq[3];
         float y=mvq[4]*in.x+mvq[5]*in.y+mvq[6]*in.z+mvq[7];
         float z=mvq[8]*in.x+mvq[9]*in.y+mvq[10]*in.z+mvq[11];
@@ -1610,6 +1646,9 @@ struct Emitter {
                 ++wc_transformed.n;
 #endif
                 const auto c=corner(base[index[i]]);
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+                if(ps2)arena27_counts_transform(1U,true);
+#endif
                 const float x=mvq[0]*c.x+mvq[1]*c.y+mvq[2]*c.z+mvq[3];
                 const float y=mvq[4]*c.x+mvq[5]*c.y+mvq[6]*c.z+mvq[7];
                 const float z=mvq[8]*c.x+mvq[9]*c.y+mvq[10]*c.z+mvq[11];
@@ -3263,6 +3302,10 @@ struct MeshDraw : Emitter {
 #endif
                     return 1;}
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+            if(ps2)arena27_counts_transform(vn,false);
+#endif
+
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 wc_groups.phase(re4dc::wc24::Transform);
                 re4dc::wc24::count(re4dc::wc24::Transformed,vn);
@@ -3294,6 +3337,9 @@ struct MeshDraw : Emitter {
                 return 1;
             }
         }
+#endif
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+        if(ps2)arena27_counts_transform(l.vertex_count,false);
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         // Count the actual arithmetic input range. DEDUP's copied entries are
@@ -3942,6 +3988,10 @@ struct MeshDraw : Emitter {
 #endif
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+            if(ps2)arena27_counts_transform(vn,false);
+#endif
+
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             re4dc::wc24::count(re4dc::wc24::Transformed,vn);
 #endif
@@ -3981,6 +4031,9 @@ struct MeshDraw : Emitter {
             }
             return 1;
         }
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+        if(ps2)arena27_counts_transform(l.vertex_count,false);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         unsigned wc_vertices=l.vertex_count;
 #if RE4DC_SCENERY_DEDUP
@@ -7087,6 +7140,8 @@ bool ps2_open(){
     if(ps2w.room==0x101U && policySourceCrc!=0x68100b21U){
         ps2_free();re4dc_missing("arena policy authentication");return false;
     }
+    if(ps2w.room==0x101U)re4dc_log("arena27: identity schema=2 variant=%u mesh_crc=%08x mesh_bytes=%u\n",
+        unsigned(re4dc_house_arena27_variant()),ps2w.package.header().crc,ps2w.package.header().bytes);
 #endif
 #if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
     ps2w.baked=re4dc::world_bake27::matches(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes);
@@ -7695,6 +7750,10 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #endif
     auto& c=ps2w.count[pass];c={};
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+    if(arena27_counts_active)arena27_counts_entered=true;
+#endif
+
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     wc_result.diag_fallback=&c.fallback;wc_result.diag_aborts=&c.aborts;
 #endif
@@ -8751,7 +8810,41 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
     return re4dc_far_shell_draw(cut,full);
 }
 #endif
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+// Exact per-call receipt. No formatting, timers, allocations or event walks.
+struct Arena27CountsScope {
+    Re4dcHouseArena27Geometry value{};
+    Re4dcHouseArena27Geometry* previous;
+    bool entered_before;
+    explicit Arena27CountsScope(unsigned pass):previous(arena27_counts_active),entered_before(arena27_counts_entered){
+        value.schema=1U;value.sequence=++arena27_counts_sequence;value.pass=pass;
+        value.ui_frame=re4dc_ui_frame();value.room_frame=re4dc_house_arena27_room_frame();
+        value.result=-2;arena27_counts_active=&value;arena27_counts_entered=false;
+    }
+    ~Arena27CountsScope(){
+        const bool entered=arena27_counts_entered;
+        if(ps2w.storage){value.mesh_crc=ps2w.package.header().crc;value.mesh_bytes=ps2w.package.header().bytes;}
+        if(ps2w.camera){
+            static_assert(sizeof(ps2w.view)==48U && sizeof(ps2w.projection)==28U && sizeof(ps2w.viewport)==24U,
+                          "arena camera identity requires exactly 100 bytes");
+            uint32_t hash=2166136261U;
+            const auto add=[&](const void* p,unsigned n){const auto* b=static_cast<const unsigned char*>(p);for(unsigned i=0;i<n;++i)hash=(hash^b[i])*16777619U;};
+            add(ps2w.view,sizeof(ps2w.view));add(ps2w.projection,sizeof(ps2w.projection));add(ps2w.viewport,sizeof(ps2w.viewport));
+            value.camera_hash=hash;
+        }
+        if(entered && value.pass<3U){value.fallback=ps2w.count[value.pass].fallback;value.aborts=ps2w.count[value.pass].aborts;}
+        value.valid=entered && value.pass<3U && value.result>0 && !value.fallback && !value.aborts && ps2w.camera && ps2w.storage && ps2w.room==0x101U && !previous;
+        arena27_counts_active=previous;arena27_counts_entered=entered_before;
+        re4dc_house_arena27_geometry(&value);
+    }
+};
+
+#endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+    Arena27CountsScope arena27_counts_scope(pass);
+#endif
+
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(pass==2U?re4dc::dsa24::WorldTranslucent:re4dc::dsa24::WorldOpaque);
     if(pass>2U)re4dc::dsa24::count(re4dc::dsa24::Unsupported);
@@ -8821,11 +8914,20 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     const int result=ps2_pass(pass,zfar);
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+    arena27_counts_scope.value.result=result;
+#endif
     // Only the claimed transaction consumes numeric pass evidence. Ordinary
     // native/D41 callers retain the original boolean return contract.
     return re4dc_source_world_group_claimed()?result:result>0;
 #else
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+    const int arena27_result=ps2_pass(pass,zfar);
+    arena27_counts_scope.value.result=arena27_result;
+    return arena27_result>0;
+#else
     return ps2_pass(pass,zfar)>0;
+#endif
 #endif
 }
 #if RE4DC_PS2_INTERIOR_CULL
