@@ -32,8 +32,12 @@ normal-hand 0 body rungs. Interaction hands 1/3 remain full. Camera distance bel
 5m draws full; 5–10m draws mid; 10m or farther draws far. In-engine events draw
 full. No geometry streams from disc when distance changes. Existing package v2
 aliases share only exactly equal immutable arrays with the same semantic
-context; streams remain independent. The existing 96-bone configuration and
-all allocation capacities stay unchanged. The r202 combined admission uses 71
+context; streams remain independent. The draw slots use the existing 96-bone
+configuration. No new maximum is introduced, but enabling the existing ROLES5
+and R202 capacity options increases static storage versus the narrow release:
+the pinned play build's `_end` grows 17440 bytes, including linker padding.
+This and the larger live skin arena need separate runtime memory gates.
+The r202 combined admission uses 71
 of its existing 72 geometry records (53 room plus 18 partner), behind this knob.
 
 Package using `model_registry.py ... --slots --pool --roles5 --ashley-rig

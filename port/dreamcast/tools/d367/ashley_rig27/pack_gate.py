@@ -34,6 +34,10 @@ def main():
     (a.output/'pack_test_types.h').write_text(types)
     flags=['RE4DC_NMR_ASHLEY=2','RE4DC_NMR_SLOTS=1','RE4DC_NMR_MASK=1','RE4DC_NMR_DROP_BUMP=1',
            'RE4DC_NMR_BONES=96','RE4DC_NMR_FACTS=224','RE4DC_ACTOR_PL08=1','RE4DC_NMR_POOL=1',
+           # These identity rows are enabled by the actual play recipe. Omitting
+           # them overstates free room-role bits, invalidating combined fit proof.
+           'RE4DC_LEON_HEADLESS=1','RE4DC_LEON_PS2_RIG=1','RE4DC_ACTOR_GANADO_APP0_GRIP=1',
+           'RE4DC_ACTOR_GANADO_PS2_STUMP=1',
            'RE4DC_NMR_ROLES5=1','RE4DC_NMR_PARTNER=2','RE4DC_NMR_LOD=1','RE4DC_NMR_POOL_LOD=1',
            'RE4DC_NMR_IMMUTABLE_ALIAS=1','RE4DC_ROUTE_CH23=1','RE4DC_ROUTE_CH22=1','RE4DC_NMR_SHIFT=1',
            'RE4DC_NMR_R202_CAST_CAPACITY=1']
@@ -44,6 +48,15 @@ def main():
     run=subprocess.run(cmd,capture_output=True,text=True)
     (a.output/'compile.log').write_text(run.stdout+run.stderr)
     if run.returncode:raise RuntimeError(run.stderr)
+    layout_source=a.output/'layout.cpp'
+    layout_source.write_text('#define main pack_reader_main\n#include "'+str(TOOLS/'model_registry_pack_test.cpp')+'"\n#undef main\n'
+        'int main(){std::printf("%u %u %u %u %u %u %u %u %u\\n",'
+        're4dc_material::kBaseRoles,re4dc_material::kRoomRoles,re4dc_material::kRoleMaskWords,'
+        'kRegChunks,kRegGeometry,kPackModels,kPackParts,kRegBones,unsigned(sizeof(re4dc_material::Role)));}\n')
+    layout_exe=a.output/'layout'
+    subprocess.run(cc[:-1]+[str(layout_source)]+['-D'+s for s in flags]+['-DRE4DC_ASHLEY_LOD=1','-o',str(layout_exe)],check=True,capture_output=True)
+    layout=dict(zip(('base_roles','room_roles','role_mask_words','refs','geometry','models','part_facts','bones','host_role_bytes'),
+                    map(int,subprocess.check_output([str(layout_exe)],text=True).split())))
     legacy=a.output/'reader-no-ashley-lod'
     subprocess.run(cc+['-D'+s for s in flags]+['-o',str(legacy)],check=True,capture_output=True)
     good=a.package.read_bytes();built,skipped=pt.alias_cases(good)
@@ -75,7 +88,7 @@ def main():
         off=subprocess.check_output([str(legacy),room,path],text=True).split()[-2:]
         rows.append(dict(case='unchanged-'+room,got=on,legacy=off,ok=on==off and on[0]=='none'))
     failures=sum(not r['ok'] for r in rows)
-    report=dict(package=str(a.package),room=a.room,cases=rows,skipped=skipped,failures=failures)
+    report=dict(package=str(a.package),room=a.room,flags=flags,layout=layout,cases=rows,skipped=skipped,failures=failures)
     (a.output/'results.json').write_text(json.dumps(report,indent=2))
     print(json.dumps(report,indent=2))
     raise SystemExit(bool(failures))
