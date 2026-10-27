@@ -51,6 +51,29 @@ MODEL_ID = 3                # pSUB->id == 3: Ashley
 PRESET = 'ashley11'         # ps2_cast.py PRESETS entry (finish / regcast metadata)
 # cSubAshley::setHand(no): right / left hand BINs (TPL 5) for hand sets 0 (open), 1, 3; one descriptor per set
 HAND_SETS = {0: (0xC, 0xF), 1: (0xD, 0x10), 3: (0xE, 0xF)}
+# ASHLEY_PS2_RIG: PS2 hair 64..68 and skirt 69..80 take the skin delta of the
+# nearest existing solver link in the same garment (pl_cloth.cpp girlHairP /
+# girlSkirtP). Unlike surface transfer, each PS2 influence survives as authored.
+# The simulation uses its own inverse bind, exactly as LEON_PS2_RIG does.
+RIG_MAP = {64: 70, 65: 73, 66: 76, 67: 79, 68: 82, 69: 104, 70: 98,
+           71: 95, 72: 140, 73: 136, 74: 133, 75: 110, 76: 116,
+           77: 119, 78: 122, 79: 124, 80: 127}
+
+
+def rig_weights(weights):
+    """PS2 weights on the animation adapter; never surface-transfer or fold."""
+    acc = {}
+    for bone, weight in weights:
+        if weight <= 0:
+            continue
+        if bone >= SOURCE_JOINTS and bone not in RIG_MAP:
+            raise ValueError(f'Unmapped PS2 cloth bone {bone}')
+        joint = RIG_MAP.get(bone, bone)
+        acc[joint] = acc.get(joint, 0.0) + weight
+    if not 1 <= len(acc) <= 3 or abs(sum(acc.values()) - 1.0) > .002:
+        raise ValueError(f'Invalid PS2 skin weights {weights}')
+    total = sum(acc.values())
+    return {b: w / total for b, w in acc.items()}
 
 
 def select_hands(n):
@@ -114,7 +137,7 @@ def pose_mats(gb, rng, body_deg=12.0, cloth_deg=30.0):
     return np.asarray(W) @ np.linalg.inv(rest)
 
 
-def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
+def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=False):
     out.mkdir(parents=True, exist_ok=True)
     pd, gd = Path(ps2_dat).read_bytes(), Path(gc_drs).read_bytes()
     ps2 = {i: (t, b) for i, t, b in pc.pb.dat_entries(pd)}
@@ -216,7 +239,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
             if any(b >= SOURCE_JOINTS and v > 0 for b, v in c['w']):
                 cloth_pts.append(c['p']); cloth_keys.append(id(c))
     tw = dict(cloth_corners=len(cloth_pts))
-    if cloth_pts:
+    if cloth_pts and not rig:
         d, ti, bary = nearest_surface(np.asarray(cloth_pts, float), donor['positions'], donor['triangles'])
         tw.update(donor=CLOTH_DONOR, donor_distance_mm=dict(median=float(np.median(d)), p95=float(np.percentile(d, 95)), max=float(d.max())))
         donor_w = {}
@@ -229,6 +252,10 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
     truncated = 0
     for t in tris_out:
         for c in t['corners']:
+            if rig:
+                c['acc'] = rig_weights(c['w'])
+                c['gw'] = sorted(c['acc'].items())
+                continue
             acc = {}
             cloth = 0.0
             for b, v in c['w']:
@@ -254,6 +281,8 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
         slots = sorted({b for t in tris_out for c in t['corners'] for b, _ in c['gw']})
         if len(slots) <= max_slots:
             break
+        if rig:
+            raise ValueError(f'PS2 rig needs {len(slots)} slots; refusing to fold authored influences to {max_slots}')
         tot = {}
         for t in tris_out:
             for c in t['corners']:
@@ -331,6 +360,12 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
     val['winding_flipped'] = bool(flips[0])
     # ---- source.json (full GC skeleton + slots) and mesh.json (slot bones)
     bones = [dict(id=b['id'], parent=b['parent'], address=f'pl11:part:{b["id"]}', rest=b['rest'], capture=b['capture']) for b in gb]
+    if rig:
+        # Shared animated bones are PS2 rests. Extra game parts remain solely the
+        # source hierarchy proof; garment slots read the solver bind at runtime.
+        for i in range(SOURCE_JOINTS):
+            rest = np.eye(4); rest[:3, 3] = p4[i]
+            bones[i].update(rest=rest.tolist(), capture=rest.tolist())
     infos = [dict(id=si, address=f'pl11:arc:{arc:03x}', source_data_address=f'pl11:arc:{arc:03x}', source_bin_arc=arc,
                   source_tpl_arc=tpl, source_sha256=pc.sha(pc.gc_entry(gc, arc, 'BIN')), role=role,
                   gc_positions=len(gmesh[role]['positions']), gc_triangles=len(gmesh[role]['triangles']))
@@ -338,6 +373,11 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
     source = dict(name=PRESET, schema='ps2cast-source-1', source_units='millimetres', source_archive='pl11',
                   source_archive_sha256=pc.sha(gd), ps2_archive_sha256=pc.sha(pd), bones=bones, draw_slots=slots,
                   infos=infos, category='registry', rooms=['r117'], types=[], source_model_id=MODEL_ID)
+    if rig:
+        source['ps2_rig'] = dict(schema='ashley-ps2-rig-1', ps2_archive_sha256=pc.sha(pd),
+                                 shared_bones=SOURCE_JOINTS, ps2_bones=81, rig_map=RIG_MAP,
+                                 simulation_bind='runtime lt_inv_mat', solver='existing game hair/skirt only')
+        tw.update(mode='PS2 rig map; authored weights', rig_map=RIG_MAP)
     sp = out / 'source.json'
     sp.write_text(json.dumps(source))
     slot_bones = [dict(bones[b], id=k, parent=-1, source_joint=b) for k, b in enumerate(slots)]
@@ -345,6 +385,9 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001):
                 positions_mm=positions, weights=weights, bones=slot_bones, triangles=triangles,
                 policy='PS2 source geometry, normals, UVs and skin weights; PS2 cloth influences transferred to the GC '
                        'cloth links (barycentric GC extra9 skin); weights on draw slots (slot k = GC joint draw_slots[k]).')
+    if rig:
+        mesh['policy'] = ('PS2 pl11 geometry, textures, shared skeleton rests and authored weights; PS2 hair/skirt '
+                          'driven through RIG_MAP by existing game simulation, with its own runtime bind. No folding.')
     (out / 'mesh.json').write_text(json.dumps(mesh))
     # ---- checks: rest + posed surface distance per section
     rng = np.random.default_rng(1014)
@@ -406,9 +449,10 @@ def main():
     c.add_argument('--max-slots', type=int, default=64)
     c.add_argument('--poses', type=int, default=24)
     c.add_argument('--hands', type=int, default=0, choices=sorted(HAND_SETS))
+    c.add_argument('--rig', action='store_true', help='PS2 bind/weights, existing hair/skirt solver through RIG_MAP')
     a = ap.parse_args()
     select_hands(a.hands)
-    convert(a.out, a.ps2_dat, a.gc_drs, a.max_slots, a.poses)
+    convert(a.out, a.ps2_dat, a.gc_drs, a.max_slots, a.poses, rig=a.rig)
 
 
 if __name__ == '__main__':
