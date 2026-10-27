@@ -23,7 +23,7 @@ The original 27-row lookup is unchanged. Missing or zero knobs add no flags.
 The private producer must separately prove full input/output hashes, unchanged
 materials/placements/IDs, unchanged dynamic-owner geometry, and valid rebuilt
 strip groups. Binding a mesh is not proof of its appearance or visibility.
-`check_provenance.py` exercises the real lookup with an actual private candidate,
+`check_provenance.py --baseline-ref <pinned pre-change commit>` exercises the real lookup with an actual private candidate,
 wrong tuples, changed physical policy bytes, changed mesh bytes, absent CRC
 validation, and an invalid compiled source certificate. It also compares
 preprocessed knob-off header output against the baseline. These are host/source

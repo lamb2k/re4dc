@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
     parser.add_argument("--world", type=Path, required=True)
+    parser.add_argument("--baseline-ref", required=True, help="Pinned pre-change source for the off-token control")
     parser.add_argument("--mesh", type=Path, required=True, help="Actual private candidate R4IM")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
@@ -30,7 +31,8 @@ def main():
     out.mkdir(parents=True, exist_ok=False)
     header = repo / REL
     old = out / "baseline-header.h"
-    old.write_text(subprocess.check_output(["git", "-C", str(repo), "show", "HEAD:" + REL], text=True))
+    baseline_ref = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "--verify", args.baseline_ref + "^{commit}"], text=True).strip()
+    old.write_text(subprocess.check_output(["git", "-C", str(repo), "show", baseline_ref + ":" + REL], text=True))
     flags = ["g++", "-std=c++17", "-DRE4DC_SCENERY_N256=1", "-DRE4DC_WORLD_SG26=1", "-I" + str(header.parent)]
     tokens = []
     for name, source in (("before", old), ("absent", header), ("zero", header)):
@@ -115,6 +117,7 @@ int main(int argc,char** argv){
         raise AssertionError("Wrong source certificate was accepted")
     receipt = {
         "scope": "source/host only; actual private candidate and mutations", "consumer": result.stdout.strip(),
+        "baseline_ref": baseline_ref,
         "off_tokens_identical": True, "wrong_source_compile_refused": True,
         "world_sha256": hashlib.sha256(args.world.read_bytes()).hexdigest(),
         "mesh_sha256": hashlib.sha256(mesh).hexdigest(),
