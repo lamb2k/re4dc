@@ -235,6 +235,8 @@ def asset_receipt(path):
 
 def report(args):
     arms, errors = parse(args.logs, args.run)
+    warnings = []
+    allow_target_miss = bool(getattr(args, "allow_target_miss", False))
     wanted = [args.single_arm] if args.single_arm else [1, 2, 3]
     fixture_meta = fixtures(args.fixtures) if args.fixtures else []
     if not fixture_meta:
@@ -300,6 +302,7 @@ def report(args):
                               "p95_us": percentile(samples, .95), "max_us": max(samples) if samples else None}
         geometry = geometry_report(arm, scene, errors) if version == 2 and counts else None
         identity = arm["identity"]
+        triangle_target = None
         if version == 2:
             if counts not in (0, 1):
                 errors.append(f"arm {scene}: invalid counts mode")
@@ -309,8 +312,17 @@ def report(args):
                 expected = expected_assets[scene]
                 triangles = int(expected["l0_triangles"])
                 lo, hi = {1: (2940, 2940), 2: (900, 1500), 3: (300, 600)}[scene]
-                if not lo <= triangles <= hi:
-                    errors.append(f"arm {scene}: package triangle budget {triangles} outside {lo}..{hi}")
+                target_met = lo <= triangles <= hi
+                waived = not target_met and scene in (2, 3) and allow_target_miss
+                reason = "Preserve black interior liners and roof undersides; look and production acceptance remain open."
+                triangle_target = {"range": [lo, hi], "actual": triangles, "target_met": target_met,
+                                   "measurement_exception": waived, "reason": reason if not target_met else None}
+                if not target_met:
+                    message = f"arm {scene}: package triangle target {triangles} outside {lo}..{hi}"
+                    if waived:
+                        warnings.append(message + "; explicit measurement exception only. " + reason)
+                    else:
+                        errors.append(message)
                 if not identity or number(identity, "schema") != 2 or crc(identity.get("mesh_crc", "")) != crc(expected["candidate_crc"]) or number(identity, "mesh_bytes") != int(expected["candidate_bytes"]):
                     errors.append(f"arm {scene}: verified loaded package identity missing/mismatched")
                 for observation in geometry or []:
@@ -319,7 +331,7 @@ def report(args):
                             errors.append(f"arm {scene}: geometry package identity differs from author receipt")
                         cameras.add(observation["camera_hash"])
         rows.append({"scene": scene, "variant": variant, "build": meta.get("build"),
-                     "instrumented_counts": bool(counts), "geometry": geometry,
+                     "instrumented_counts": bool(counts), "geometry": geometry, "triangle_target": triangle_target,
                      "asset_identity": expected_assets.get(scene) if version == 2 else None,
                      "loaded_identity": identity if version == 2 else None,
                      "room_frames": [number(meta, "begin"), number(meta, "end")],
@@ -348,7 +360,11 @@ def report(args):
         errors.append("arms have different measured room-frame ranges")
     return {"schema": "house-arena27-v2" if versions == {2} else "house-arena27-v1", "asset_receipt": receipt_meta, "environment": args.environment,
             "timing_label": "physical console" if args.environment == "console" else "cache-model Flycast; GPU timings are not hardware accurate",
-            "run": args.run, "valid": not errors, "errors": errors, "fixtures": fixture_meta,
+            "run": args.run, "valid": not errors, "errors": errors, "warnings": warnings,
+            "allow_target_miss": allow_target_miss,
+            "budget_qualified": (len(rows) == len(wanted) and all(row["triangle_target"] and row["triangle_target"]["target_met"] for row in rows)) if versions == {2} else None,
+            "eligibility": "invalid" if errors else "measurement-only-target-miss" if warnings else "validated",
+            "fixtures": fixture_meta,
             "logs": [{"path": str(p), "sha256": digest(p)} for p in args.logs], "arms": rows}
 
 
@@ -358,6 +374,10 @@ def markdown(data):
     for row in data["arms"]:
         lines.append("| " + " | ".join([row["variant"], *(fmt(row[k]) for k in ("gpu_render_ms", "pvr_registration_ms", "present_ms", "cpu_ms_per_tick", "fps")), str(row["accepted_windows"])]) + " |")
     for row in data["arms"]:
+        target = row.get("triangle_target")
+        if target and not target["target_met"]:
+            status = "explicit measurement exception; triangle target remains missed" if target["measurement_exception"] else "strict triangle target check failed"
+            lines += ["", f"{row['variant']}: TARGET MISS, {target['actual']} triangles versus {target['range'][0]}..{target['range'][1]}; {status}. {target['reason']}"]
         if row.get("instrumented_counts"):
             lines += ["", f"{row['variant']}: COUNTS BUILD. Timing is instrumented; use the separate counts=0 build for performance."]
             for observation in row["geometry"] or []:
@@ -369,6 +389,8 @@ def markdown(data):
         if row["ta_bytes_per_presented_frame"] is None:
             stream = row["native_stream"]
             lines += ["", f"{row['variant']}: TA list-byte count unavailable (streamed renderer). Native stream samples: {stream['measured_samples']}; model bytes {stream['model_bytes_samples']}; TA used {stream['ta_used_samples']}; TA peak {stream['ta_peak_samples']}; observed counter delta {stream['counter_delta']}."]
+    if data.get("warnings"):
+        lines += ["", "Measurement eligibility: " + data["eligibility"] + ". Geometry budget qualified: false."]
     if data["errors"]:
         lines += ["", "INCOMPLETE / INVALID: " + "; ".join(data["errors"])]
     lines += ["", "Registration, TA-done latency, GPU rendering and CPU work overlap. Do not add these columns. CPU is per tick; presentation is per drawn picture."]
@@ -381,6 +403,7 @@ def main():
     ap.add_argument("--environment", required=True, choices=("console", "cache-model-flycast"))
     ap.add_argument("--fixtures", nargs=3, type=Path, metavar=("WARP", "BENCH2", "BENCH3"))
     ap.add_argument("--asset-receipt", type=Path, help="v2 private author receipt with exact A/B/C package identities")
+    ap.add_argument("--allow-target-miss", action="store_true", help="permit measurement of B/C triangle-target misses; all identity/completion checks and exact A=2940 remain mandatory")
     ap.add_argument("--run", type=int, default=1)
     ap.add_argument("--single-arm", type=int, choices=(1, 2, 3))
     ap.add_argument("--json", type=Path)

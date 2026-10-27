@@ -75,3 +75,23 @@ Use console only for physical Dreamcast logs. Cache-model Flycast GPU values are
 not hardware accurate. Keep MODELLED CPU evidence separate. No hardware GPU win,
 visual acceptance, route qualification or release readiness follows from the
 source, host tests or instrumented observer alone.
+
+## Explicit measurement of the frozen target misses
+
+The frozen recognizable Rebuilt house has 1,578 triangles and Sparse has 655.
+These miss the prospective upper targets by 78 and 55 triangles respectively.
+The scientific decision retains black interior liners and roof undersides rather
+than deleting required panels. Cuts versus the 2,940-triangle Original are 46.3%
+and 77.7%. These are geometry reductions, not measured GPU gains or look approval.
+
+Budget validation remains strict by default. The coordinator may pass
+`--allow-target-miss` when measuring the pinned final packages. Only B/C target
+misses can receive this explicit measurement exception. Original must remain
+exactly 2,940. Every v2 row records triangle_target range, actual, target_met,
+measurement_exception and reason. Reports with the exception retain
+budget_qualified=false, explicit warnings and measurement-only-target-miss
+eligibility. No target is relabeled as passed, and any other failure still makes
+the report invalid. Malformed/mismatched package identities, invalid completion,
+source frame/camera checks and every existing measurement gate remain mandatory.
+The staging helper separately pins the exact final A/B/C receipt and package
+identities; this option does not admit arbitrary assets or approve production.
