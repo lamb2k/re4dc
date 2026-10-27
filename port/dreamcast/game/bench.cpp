@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#if defined(RE4DC_HOUSE_ARENA27_COUNTS) && RE4DC_HOUSE_ARENA27_COUNTS
+#include "platform/include/house_arena27_counts.h"
+#endif
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
@@ -78,7 +81,10 @@ namespace {
 static_assert(RE4DC_BENCH_SCENES == 3, "house arena needs exactly three scenes");
 static_assert(RE4DC_HOUSE_ARENA27_BEGIN > 0 && RE4DC_HOUSE_ARENA27_END > RE4DC_HOUSE_ARENA27_BEGIN + 120,
               "house arena needs warmup and more than 120 measured ticks for the existing CPU snapshot");
-static const char* const kArenaNames[3] = {"original", "simplifiedR4", "baked"};
+#ifndef RE4DC_HOUSE_ARENA27_COUNTS
+#define RE4DC_HOUSE_ARENA27_COUNTS 0
+#endif
+static const char* const kArenaNames[3] = {"Original", "Rebuilt", "Sparse"};
 #endif
 constexpr int kScenes = RE4DC_BENCH_SCENES;
 #ifndef RE4DC_BENCH_CENSUS
@@ -114,7 +120,22 @@ constexpr int kFiles = RE4DC_BENCH_FILES;
 int g_file;                       // fixture file of the running rows
 bool g_file_first;                // the next `bench` line is the file's first row
 char g_arm = 'A';
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_COUNTS
+constexpr unsigned kGeometryMetrics = 7;
+struct ArenaGeometry {
+    unsigned n, first_room, last_room, first_ui, last_ui, last_sequence, invalid, sequence_bad, identity_bad;
+    unsigned mesh_crc, mesh_bytes, camera_hash;
+    unsigned long long sum[kGeometryMetrics];
+    unsigned min[kGeometryMetrics], max[kGeometryMetrics];
+    Re4dcHouseArena27Geometry baseline, sample[4];
+    unsigned sample_mask;
+    bool have_baseline;
+};
+#endif
 struct Scene {
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_COUNTS
+    ArenaGeometry geometry[3];
+#endif
     char name[24];
     unsigned begin, end;          // measured room frames [begin, end)
     bool defined, measuring, done;
@@ -525,11 +546,42 @@ void draw_results(const Fb& fb) {
     fb_text(fb, 36, y, 2, 3, kCyan, RE4DC_TAIL_METER ? "Y: FRAME TAIL PAGE  A: RUN AGAIN" : "PRESS A TO RUN AGAIN");
 }
 
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_COUNTS
+void arena_geometry_values(const Re4dcHouseArena27Geometry& o, unsigned v[kGeometryMetrics]) {
+    v[0]=o.transformed_positions; v[1]=o.transformed_cache; v[2]=o.transformed_clip;
+    v[3]=o.emitted_corners; v[4]=o.emitted_triangles; v[5]=o.fallback; v[6]=o.aborts;
+}
+void arena_geometry_sample(unsigned scene, const char* phase, unsigned slot, const Re4dcHouseArena27Geometry& o) {
+    re4dc_log("arena27: geo_sample run=%u scene=%u phase=%s slot=%u pass=%u seq=%u ui=%u frame=%u camera=%08x xform=%u corners=%u tris=%u valid=%u result=%d\n",
+              g_run,scene,phase,slot,o.pass,o.sequence,o.ui_frame,o.room_frame,o.camera_hash,
+              o.transformed_positions,o.emitted_corners,o.emitted_triangles,o.valid,o.result);
+}
+void log_arena_geometry(unsigned scene, const Scene& s) {
+    static const char* const names[kGeometryMetrics]={"transformed_positions","transformed_cache","transformed_clip",
+                                                     "emitted_corners","emitted_triangles","fallback","aborts"};
+    for(unsigned pass=0;pass<3;++pass) {
+        const ArenaGeometry& g=s.geometry[pass];
+        re4dc_log("arena27: geo_pass run=%u scene=%u pass=%u n=%u first=%u last=%u ui_first=%u ui_last=%u invalid=%u sequence_bad=%u identity_bad=%u mesh_crc=%08x mesh_bytes=%u camera=%08x\n",
+                  g_run,scene,pass,g.n,g.first_room,g.last_room,g.first_ui,g.last_ui,g.invalid,g.sequence_bad,g.identity_bad,
+                  g.mesh_crc,g.mesh_bytes,g.camera_hash);
+        if(g.have_baseline)arena_geometry_sample(scene,"baseline",0,g.baseline);
+        for(unsigned slot=0;slot<4;++slot)if(g.sample_mask&(1U<<slot))arena_geometry_sample(scene,"measured",slot,g.sample[slot]);
+        if(!g.n)continue; // absent pass stays absent; a completed zero-output pass has n > 0
+        for(unsigned metric=0;metric<kGeometryMetrics;++metric)
+            re4dc_log("arena27: geo_metric run=%u scene=%u pass=%u name=%s sum=%llu min=%u max=%u\n",
+                      g_run,scene,pass,names[metric],g.sum[metric],g.min[metric],g.max[metric]);
+    }
+}
+#endif
+
 void log_results() {
     char code[384];
     make_code(code, sizeof(code));
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_COUNTS
+        log_arena_geometry(k+1,s);
+#endif
         re4dc_log("bench: result run %u scene %d %s windows=%u drawn=%u ticks=%u vblanks=%u fps10=%u min1s10=%u cpu10=%u "
                   "gpu10=%u speed=%u reads=%u reads_ps10=%u wait_ms=%u kos_min=%u end_frame=%u\n",
                   g_run, k + 1, s.name, s.windows, s.drawn, s.ticks, s.vblanks, fps10(s), s.min_fps10, cpu10(s), gpu10(s),
@@ -574,6 +626,35 @@ void log_results() {
 extern "C" {
 
 // ---------------------------------------------------------------- warp rig (dbgwarp_bridge.cpp)
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_COUNTS
+// Draw observes the frame already latched by dbgwarp; never relabel an older picture at the next tick.
+unsigned re4dc_house_arena27_room_frame(void) { return g_room_frame; }
+void re4dc_house_arena27_geometry(const Re4dcHouseArena27Geometry* observation) {
+    if(!observation)return;
+    const auto& o=*observation;
+    Scene& s=g_scene[g_cur];
+    if(!s.defined || s.done || o.pass>=3)return;
+    ArenaGeometry& g=s.geometry[o.pass];
+    if(o.room_frame<s.begin) { g.baseline=o;g.have_baseline=true;return; }
+    if(o.room_frame>=s.end)return;
+    if(g.n && (o.sequence<=g.last_sequence || o.ui_frame<=g.last_ui || o.room_frame<g.last_room)) {
+        ++g.sequence_bad;return;
+    }
+    if(!g.n) {
+        g.first_room=o.room_frame;g.first_ui=o.ui_frame;g.mesh_crc=o.mesh_crc;g.mesh_bytes=o.mesh_bytes;g.camera_hash=o.camera_hash;
+    } else if(o.mesh_crc!=g.mesh_crc || o.mesh_bytes!=g.mesh_bytes || o.camera_hash!=g.camera_hash)++g.identity_bad;
+    if(o.schema!=1 || !o.valid || o.result<0 || o.fallback || o.aborts)++g.invalid;
+    unsigned v[kGeometryMetrics];arena_geometry_values(o,v);
+    for(unsigned i=0;i<kGeometryMetrics;++i) {
+        g.sum[i]+=v[i];if(!g.n || v[i]<g.min[i])g.min[i]=v[i];if(v[i]>g.max[i])g.max[i]=v[i];
+    }
+    g.last_room=o.room_frame;g.last_ui=o.ui_frame;g.last_sequence=o.sequence;++g.n;
+    unsigned slot=0;
+    if(o.room_frame>=s.begin+120)slot=2;else if(o.room_frame>=s.begin+60)slot=1;
+    if(!(g.sample_mask&(1U<<slot))){g.sample[slot]=o;g.sample_mask|=1U<<slot;}
+    g.sample[3]=o;g.sample_mask|=1U<<3; // last completed observation, not a fabricated end-frame sample
+}
+#endif
 // A `bench <no> <begin> <end> <name>` line of the current fixture: the measured room frames of scene no (1-based).
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name)
 {
@@ -583,8 +664,8 @@ void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* nam
         re4dc_log("arena27: INVALID fixture scene=%d selected=%d begin=%u end=%u\n", no, g_file + 1, begin, end);
         return;
     }
-    re4dc_log("arena27: armed run=%u scene=%d variant=%s begin=%u end=%u build=%s\n",
-              g_run, no, kArenaNames[no - 1], begin, end, RE4DC_BENCH_ID);
+    re4dc_log("arena27: armed run=%u scene=%d variant=%s begin=%u end=%u build=%s schema=2 counts=%u\n",
+              g_run, no, kArenaNames[no - 1], begin, end, RE4DC_BENCH_ID, unsigned(RE4DC_HOUSE_ARENA27_COUNTS));
 #endif
     Scene& s = g_scene[no - 1];
     memset(&s, 0, sizeof(s));
@@ -1086,7 +1167,7 @@ extern "C" void __wrap_OSInit(void)
                                       "PHOTOGRAPH EVERY RESULTS PAGE."};
 #endif
 #if RE4DC_HOUSE_ARENA27
-            const char* body_arena[] = {"ONE LEON AND ONE COMPLETE HOUSE.", "A: ORIGINAL  B: SIMPLIFIED R4  C: BAKED",
+            const char* body_arena[] = {"ONE LEON AND ONE COMPLETE HOUSE.", "A: ORIGINAL  B: REBUILT  C: SPARSE",
                                        "START RUNS A / B / C WITH SOFT RESETS.", "WARMUP AND LOADING ARE NOT MEASURED.",
                                        "AFTER START DO NOT TOUCH THE CONTROLLER.", "PHOTOGRAPH BOTH RESULTS PAGES.",
                                        "THIS DISC SAVES NOTHING."};

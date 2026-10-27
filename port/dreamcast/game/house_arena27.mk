@@ -2,6 +2,19 @@
 # Include AFTER bench.mk. Reuses its scenes, resets, logger and timing hooks.
 HOUSE_ARENA27 ?= 0
 HOUSE_ARENA27_AUTO ?= 0
+HOUSE_ARENA27_COUNTS ?= 0
+ifneq ($(words $(HOUSE_ARENA27_COUNTS)),1)
+$(error HOUSE_ARENA27_COUNTS must be one value, 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(HOUSE_ARENA27_COUNTS)),)
+$(error HOUSE_ARENA27_COUNTS must be 0 or 1)
+endif
+ifeq ($(HOUSE_ARENA27_COUNTS),1)
+ifneq ($(HOUSE_ARENA27),1)
+$(error HOUSE_ARENA27_COUNTS=1 requires HOUSE_ARENA27=1)
+endif
+$(OBJDIR)/bench.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27_COUNTS=1
+endif
 HOUSE_ARENA27_BEGIN ?= 120
 HOUSE_ARENA27_END ?= 300
 ifneq ($(words $(HOUSE_ARENA27)),1)
@@ -38,13 +51,16 @@ ifneq ($(words $(HOUSE_ARENA27_AUTO)),1)
 $(error HOUSE_ARENA27_AUTO must be one value, 0..3)
 endif
 ifneq ($(filter-out 0 1 2 3,$(HOUSE_ARENA27_AUTO)),)
-$(error HOUSE_ARENA27_AUTO is 0 (normal menu), 1 original, 2 simplifiedR4, or 3 baked)
+$(error HOUSE_ARENA27_AUTO is 0 (normal menu), 1 Original, 2 Rebuilt, or 3 Sparse)
 endif
 ifneq ($(GAME_TICK_LOG),60)
 $(error HOUSE_ARENA27=1 needs GAME_TICK_LOG=60, the existing CPU snapshot window)
 endif
-ifneq ($(WORLD_REBUILD27)$(WORLD_REBUILD27_BAKE)$(PS2_WORLD_DRAW)$(PS2_PRELOAD_LEAN)$(COARSE_LEON),11111)
-$(error HOUSE_ARENA27 needs certified world/bake, PS2 world/preload and converted Leon)
+ifneq ($(WORLD_REBUILD27)$(PS2_WORLD_DRAW)$(PS2_PRELOAD_LEAN)$(COARSE_LEON),1111)
+$(error HOUSE_ARENA27 needs certified world, PS2 world/preload and converted Leon)
+endif
+ifneq ($(WORLD_REBUILD27_BAKE),0)
+$(error HOUSE_ARENA27 v2 requires WORLD_REBUILD27_BAKE=0; resident source textures only)
 endif
 ifneq ($(COARSE_WORLD)$(FAR_SHELL),00)
 $(error HOUSE_ARENA27 refuses collision substitutes and far shells)
@@ -56,5 +72,5 @@ endif
 $(OBJDIR)/bench.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
 $(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1 -DRE4DC_LOG_ATOMIC=1
 $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/coarse.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
-$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27_AUTO=$(HOUSE_ARENA27_AUTO) -DRE4DC_HOUSE_ARENA27_BEGIN=$(HOUSE_ARENA27_BEGIN) -DRE4DC_HOUSE_ARENA27_END=$(HOUSE_ARENA27_END) '-DRE4DC_BENCH_NAME="HOUSE ARENA A/B/C"' '-DRE4DC_BENCH_MENU="X: ORIGINAL ONLY  Y: SIMPLIFIED R4  B: BAKED"'
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27_AUTO=$(HOUSE_ARENA27_AUTO) -DRE4DC_HOUSE_ARENA27_BEGIN=$(HOUSE_ARENA27_BEGIN) -DRE4DC_HOUSE_ARENA27_END=$(HOUSE_ARENA27_END) '-DRE4DC_BENCH_NAME="HOUSE ARENA V2 A/B/C"' '-DRE4DC_BENCH_MENU="X: ORIGINAL ONLY  Y: REBUILT  B: SPARSE"'
 endif

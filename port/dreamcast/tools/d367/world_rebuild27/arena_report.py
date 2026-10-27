@@ -15,7 +15,21 @@ from pathlib import Path
 import re
 import sys
 
-VARIANTS = {1: "original", 2: "simplifiedR4", 3: "baked"}
+VARIANTS = {1: "original", 2: "simplifiedR4", 3: "baked"}  # historical v1 API/log labels
+VARIANTS_V2 = {1: "Original", 2: "Rebuilt", 3: "Sparse"}
+GEOMETRY_METRICS = ("transformed_positions", "transformed_cache", "transformed_clip", "emitted_corners", "emitted_triangles", "fallback", "aborts")
+
+
+def names(metadata):
+    return VARIANTS_V2 if number(metadata, "schema") == 2 else VARIANTS
+
+
+def crc(value):
+    text = str(value).lower().removeprefix("0x")
+    if not re.fullmatch(r"[0-9a-f]{1,8}", text):
+        raise ValueError("invalid CRC/hash word: " + text)
+    return text.zfill(8)
+
 
 
 def values(line):
@@ -73,14 +87,14 @@ def parse(paths, run):
                     current = None
                     continue
                 current = number(data, "scene")
-                if current not in VARIANTS or data.get("variant") != VARIANTS[current]:
+                if current not in VARIANTS or data.get("variant") != names(data)[current]:
                     errors.append(f"{path}: invalid arm metadata")
                     current = None
                     continue
                 if current in arms:
                     errors.append(f"{path}: duplicate arm {current} run {run}")
                 file_arms.add(current)
-                arms[current] = {"metadata": data, "tails": [], "pace": [], "result": {}, "ta": {}, "summary": {}, "stream_warmup": [], "stream_measured": [], "source": str(path)}
+                arms[current] = {"metadata": data, "tails": [], "pace": [], "result": {}, "ta": {}, "summary": {}, "stream_warmup": [], "stream_measured": [], "identity": {}, "geometry": {}, "source": str(path)}
                 measuring = False
             boundary = re.search(r"bench: scene (\d+) (begin|end) room frame", line)
             if boundary and int(boundary[1]) == current:
@@ -89,6 +103,28 @@ def parse(paths, run):
                     current = None
             if "native stream: " in line and current in arms:
                 arms[current]["stream_measured" if measuring else "stream_warmup"].append(data)
+            if "arena27: identity " in line:
+                scene = number(data, "variant") + 1
+                if scene in file_arms:
+                    previous = arms[scene]["identity"]
+                    if previous and previous != data:
+                        errors.append(f"{path}: conflicting loaded package identities for arm {scene}")
+                    arms[scene]["identity"] = data
+            if any(marker in line for marker in ("arena27: geo_pass ", "arena27: geo_metric ", "arena27: geo_sample ")) and number(data, "run") == run:
+                scene, pass_id = number(data, "scene"), number(data, "pass")
+                if scene in file_arms:
+                    geometry = arms[scene]["geometry"].setdefault(pass_id, {"summary": {}, "metrics": {}, "samples": []})
+                    if "arena27: geo_pass " in line:
+                        if geometry["summary"]:
+                            errors.append(f"{path}: duplicate geometry summary arm {scene} pass {pass_id}")
+                        geometry["summary"] = data
+                    elif "arena27: geo_metric " in line:
+                        key = data.get("name")
+                        if key in geometry["metrics"]:
+                            errors.append(f"{path}: duplicate geometry metric arm {scene} pass {pass_id} {key}")
+                        geometry["metrics"][key] = data
+                    else:
+                        geometry["samples"].append(data)
             if "arena27: window " in line and number(data, "run") == run:
                 pending = number(data, "scene")
             elif "PACE vmu " in line:
@@ -114,12 +150,97 @@ def parse(paths, run):
     return arms, errors
 
 
+def geometry_report(arm, scene, errors):
+    meta = arm["metadata"]
+    begin, end = number(meta, "begin"), number(meta, "end")
+    result, active = [], []
+    if set(arm["geometry"]) - {0, 1, 2}:
+        errors.append(f"arm {scene}: invalid geometry pass")
+    for pass_id in (0, 1, 2):
+        entry = arm["geometry"].get(pass_id)
+        if not entry or not number(entry["summary"], "n"):
+            result.append({"pass": pass_id, "status": "not observed", "frames": 0})
+            continue
+        active.append(pass_id)
+        summary, metrics = entry["summary"], entry["metrics"]
+        n = number(summary, "n")
+        if n <= 0 or not begin <= number(summary, "first") <= number(summary, "last") < end:
+            errors.append(f"arm {scene} pass {pass_id}: geometry frame range outside measured window")
+        if n > number(summary, "ui_last") - number(summary, "ui_first") + 1:
+            errors.append(f"arm {scene} pass {pass_id}: more observations than unique rendered frames")
+        if any(number(summary, k) for k in ("invalid", "sequence_bad", "identity_bad")):
+            errors.append(f"arm {scene} pass {pass_id}: invalid, duplicate or changing geometry observations")
+        if set(metrics) != set(GEOMETRY_METRICS):
+            errors.append(f"arm {scene} pass {pass_id}: incomplete geometry metric set")
+        totals = {}
+        for key in GEOMETRY_METRICS:
+            metric = metrics.get(key, {})
+            total, lo, hi = (number(metric, k) for k in ("sum", "min", "max"))
+            if not 0 <= lo <= hi or not lo * n <= total <= hi * n:
+                errors.append(f"arm {scene} pass {pass_id}: inconsistent metric {key}")
+            if key in ("fallback", "aborts") and total:
+                errors.append(f"arm {scene} pass {pass_id}: nonzero {key}")
+            totals[key] = {"sum": total, "mean_per_observed_frame": total / n, "min": lo, "max": hi}
+        baselines = [x for x in entry["samples"] if x.get("phase") == "baseline"]
+        measured = [x for x in entry["samples"] if x.get("phase") == "measured"]
+        if len(baselines) != 1 or not 0 <= number(baselines[0], "frame") < begin:
+            errors.append(f"arm {scene} pass {pass_id}: missing or invalid warmup baseline")
+        slots = [number(x, "slot") for x in measured]
+        if not measured or len(slots) != len(set(slots)) or 3 not in slots:
+            errors.append(f"arm {scene} pass {pass_id}: missing/duplicate measured camera samples")
+        for sample in measured:
+            if not begin <= number(sample, "frame") < end or number(sample, "valid") != 1 or number(sample, "result") < 0:
+                errors.append(f"arm {scene} pass {pass_id}: invalid measured camera sample")
+            if crc(sample.get("camera", "")) != crc(summary.get("camera", "")):
+                errors.append(f"arm {scene} pass {pass_id}: camera sample identity differs")
+        if measured and number(next((x for x in measured if number(x, "slot") == 3), {}), "frame") != number(summary, "last"):
+            errors.append(f"arm {scene} pass {pass_id}: last camera sample does not close aggregate")
+        result.append({"pass": pass_id, "status": "observed", "frames": n,
+                       "source_room_frames": [number(summary, "first"), number(summary, "last")],
+                       "camera_hash": crc(summary.get("camera", "")), "mesh_crc": crc(summary.get("mesh_crc", "")),
+                       "mesh_bytes": number(summary, "mesh_bytes"), "metrics": totals,
+                       "baseline": baselines[0] if baselines else None, "camera_samples": measured,
+                       "frustum_rejections": None, "strip_group_rejections": None,
+                       "rejection_status": "not supported by this exact observation path"})
+    if not active:
+        errors.append(f"arm {scene}: counts build has no observed geometry pass")
+    if not any(x.get("metrics", {}).get("emitted_triangles", {}).get("sum", 0) > 0 for x in result):
+        errors.append(f"arm {scene}: no emitted house triangles in measured geometry")
+    return result
+
+
+def asset_receipt(path):
+    if not path:
+        return None, {}
+    data = json.loads(path.read_text())
+    entries = data.get("arms", [])
+    if not isinstance(entries, list):
+        raise ValueError("asset receipt arms must be an exact A/B/C list")
+    result = {}
+    for item in entries:
+        label = item.get("arm")
+        if label not in ("A", "B", "C") or label in result:
+            raise ValueError("asset receipt has unknown or duplicate arm")
+        for key in ("candidate_sha256", "candidate_crc", "candidate_bytes", "l0_triangles"):
+            if key not in item:
+                raise ValueError(f"asset receipt arm {label} missing {key}")
+        if not re.fullmatch(r"[0-9a-f]{64}", item["candidate_sha256"]):
+            raise ValueError("asset receipt candidate SHA256 invalid")
+        crc(item["candidate_crc"])
+        result[ord(label) - ord("A") + 1] = item
+    if set(result) != {1, 2, 3}:
+        raise ValueError("asset receipt must identify all three arms")
+    return {"path": str(path), "sha256": digest(path), "schema": data.get("schema"), "arms": entries}, result
+
+
 def report(args):
     arms, errors = parse(args.logs, args.run)
     wanted = [args.single_arm] if args.single_arm else [1, 2, 3]
     fixture_meta = fixtures(args.fixtures) if args.fixtures else []
     if not fixture_meta:
         errors.append("supply --fixtures warp.txt bench2.txt bench3.txt to verify matched camera/pose commands")
+    receipt_meta, expected_assets = asset_receipt(getattr(args, "asset_receipt", None))
+    versions, counts_modes, cameras = set(), set(), set()
     build_ids, ranges = set(), set()
     rows = []
     for scene in wanted:
@@ -128,13 +249,17 @@ def report(args):
             errors.append(f"missing arm {scene} ({VARIANTS[scene]})")
             continue
         meta, summary, result, ta = (arm[k] for k in ("metadata", "summary", "result", "ta"))
+        version = 2 if number(meta, "schema") == 2 else 1
+        counts = number(meta, "counts") if version == 2 else 0
+        versions.add(version); counts_modes.add(counts)
+        variant = names(meta)[scene]
         build_ids.add(meta.get("build"))
         ranges.add((number(meta, "begin"), number(meta, "end")))
         if fixture_meta and (number(meta, "begin"), number(meta, "end")) != (fixture_meta[scene - 1]["begin"], fixture_meta[scene - 1]["end"]):
             errors.append(f"arm {scene}: log/fixture frame range differs")
         if not summary or number(summary, "end_frame") != number(meta, "end"):
             errors.append(f"arm {scene}: measured range did not finish exactly")
-        if summary.get("variant") != VARIANTS[scene]:
+        if summary.get("variant") != variant:
             errors.append(f"arm {scene}: result variant missing or mismatched")
         if number(result, "windows") < 2 or len(arm["pace"]) != number(result, "windows"):
             errors.append(f"arm {scene}: need at least two accepted complete PACE windows, matching result count")
@@ -173,7 +298,30 @@ def report(args):
             samples = [number(x, key) for x in tails if key not in ("rnd", "queue") or number(x, "lag") != 99]
             tail_stat[key] = {"n": len(samples), "mean_us": sum(samples) / len(samples) if samples else None,
                               "p95_us": percentile(samples, .95), "max_us": max(samples) if samples else None}
-        rows.append({"scene": scene, "variant": VARIANTS[scene], "build": meta.get("build"),
+        geometry = geometry_report(arm, scene, errors) if version == 2 and counts else None
+        identity = arm["identity"]
+        if version == 2:
+            if counts not in (0, 1):
+                errors.append(f"arm {scene}: invalid counts mode")
+            if not expected_assets:
+                errors.append(f"arm {scene}: v2 requires --asset-receipt with author package identities")
+            else:
+                expected = expected_assets[scene]
+                triangles = int(expected["l0_triangles"])
+                lo, hi = {1: (2940, 2940), 2: (900, 1500), 3: (300, 600)}[scene]
+                if not lo <= triangles <= hi:
+                    errors.append(f"arm {scene}: package triangle budget {triangles} outside {lo}..{hi}")
+                if not identity or number(identity, "schema") != 2 or crc(identity.get("mesh_crc", "")) != crc(expected["candidate_crc"]) or number(identity, "mesh_bytes") != int(expected["candidate_bytes"]):
+                    errors.append(f"arm {scene}: verified loaded package identity missing/mismatched")
+                for observation in geometry or []:
+                    if observation["status"] == "observed":
+                        if observation["mesh_crc"] != crc(expected["candidate_crc"]) or observation["mesh_bytes"] != int(expected["candidate_bytes"]):
+                            errors.append(f"arm {scene}: geometry package identity differs from author receipt")
+                        cameras.add(observation["camera_hash"])
+        rows.append({"scene": scene, "variant": variant, "build": meta.get("build"),
+                     "instrumented_counts": bool(counts), "geometry": geometry,
+                     "asset_identity": expected_assets.get(scene) if version == 2 else None,
+                     "loaded_identity": identity if version == 2 else None,
                      "room_frames": [number(meta, "begin"), number(meta, "end")],
                      "accepted_windows": number(result, "windows"), "drawn": number(result, "drawn"),
                      "ticks": number(result, "ticks"), "fps": number(result, "drawn") * 59.94 / vb if vb else None,
@@ -190,11 +338,15 @@ def report(args):
                                        "ta_used_samples": [number(row, "ta_used") for row in stream],
                                        "ta_peak_samples": [number(row, "ta_peak") for row in stream]},
                      "tail": tail_stat, "source": arm["source"]})
+    if len(versions) > 1 or len(counts_modes) > 1:
+        errors.append("do not combine v1/v2 or counts/timing builds in one comparison")
+    if len(cameras) > 1:
+        errors.append("geometry camera identity differs between measured passes/arms")
     if len(build_ids) > 1 or None in build_ids:
         errors.append("arms must identify the same build")
     if len(ranges) > 1:
         errors.append("arms have different measured room-frame ranges")
-    return {"schema": "house-arena27-v1", "environment": args.environment,
+    return {"schema": "house-arena27-v2" if versions == {2} else "house-arena27-v1", "asset_receipt": receipt_meta, "environment": args.environment,
             "timing_label": "physical console" if args.environment == "console" else "cache-model Flycast; GPU timings are not hardware accurate",
             "run": args.run, "valid": not errors, "errors": errors, "fixtures": fixture_meta,
             "logs": [{"path": str(p), "sha256": digest(p)} for p in args.logs], "arms": rows}
@@ -206,6 +358,14 @@ def markdown(data):
     for row in data["arms"]:
         lines.append("| " + " | ".join([row["variant"], *(fmt(row[k]) for k in ("gpu_render_ms", "pvr_registration_ms", "present_ms", "cpu_ms_per_tick", "fps")), str(row["accepted_windows"])]) + " |")
     for row in data["arms"]:
+        if row.get("instrumented_counts"):
+            lines += ["", f"{row['variant']}: COUNTS BUILD. Timing is instrumented; use the separate counts=0 build for performance."]
+            for observation in row["geometry"] or []:
+                if observation["status"] != "observed":
+                    lines.append(f"Pass {observation['pass']}: not observed; no zero-output pass invented.")
+                    continue
+                metric = observation["metrics"]
+                lines.append(f"Pass {observation['pass']}, {observation['frames']} observed pictures: transformed {metric['transformed_positions']['mean_per_observed_frame']:.3f}, emitted corners {metric['emitted_corners']['mean_per_observed_frame']:.3f}, emitted triangles {metric['emitted_triangles']['mean_per_observed_frame']:.3f} per picture; camera {observation['camera_hash']}. Frustum/strip-group rejection details unavailable.")
         if row["ta_bytes_per_presented_frame"] is None:
             stream = row["native_stream"]
             lines += ["", f"{row['variant']}: TA list-byte count unavailable (streamed renderer). Native stream samples: {stream['measured_samples']}; model bytes {stream['model_bytes_samples']}; TA used {stream['ta_used_samples']}; TA peak {stream['ta_peak_samples']}; observed counter delta {stream['counter_delta']}."]
@@ -220,6 +380,7 @@ def main():
     ap.add_argument("logs", nargs="+", type=Path)
     ap.add_argument("--environment", required=True, choices=("console", "cache-model-flycast"))
     ap.add_argument("--fixtures", nargs=3, type=Path, metavar=("WARP", "BENCH2", "BENCH3"))
+    ap.add_argument("--asset-receipt", type=Path, help="v2 private author receipt with exact A/B/C package identities")
     ap.add_argument("--run", type=int, default=1)
     ap.add_argument("--single-arm", type=int, choices=(1, 2, 3))
     ap.add_argument("--json", type=Path)
