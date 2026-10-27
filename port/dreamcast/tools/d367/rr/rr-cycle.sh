@@ -193,6 +193,8 @@ if [ "$TIER" = full ]; then
   # the FULL tier re-checks the last good candidate (no rebuild of the release image)
   LGW=$(sed -n 's/^work=//p' "$RR_HOME/state/last-good")
   for f in cand.txt image.sha256 knobs-diff.txt diff-log.txt; do cp "$LGW/$f" "$W/" 2>/dev/null || true; done
+  # MOTION-KEYS reads the release fixture the quick cycle wrote in package(); the full tier does not package, so carry it
+  mkdir -p "$W/pkg/fix"; cp "$LGW/pkg/fix/pkg-rr${S7}rP.json" "$W/pkg/fix/" 2>/dev/null || echo "full: no release fixture in $LGW"
   [ -s "$ROUTE/out-rr${S7}rP/re4dc-game.elf" ] || { echo "full: release build out-rr${S7}rP is gone"; ok=0; }
   if [ $ok = 1 ] && { ! [ -s "$ROUTE/out-fprr${S7}gW/re4dc-game.elf" ] || ! [ -s "$ROUTE/out-fprr${S7}cW/re4dc-game.elf" ]; }; then
     step build-twins build_twins || ok=0
