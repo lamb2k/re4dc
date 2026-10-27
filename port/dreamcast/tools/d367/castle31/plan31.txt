@@ -1990,3 +1990,259 @@ goto 3000 -60000 500
 goto -3000 -60000 500
 goto 3000 -60000 500
 end
+@catch
+rescue 0
+autofight 0
+goto 9000 -60000 400
+goto 10600 -60600 250
+wait 2
+press a 0.5
+wait 4
+press a 0.5
+wait 8
+end
+@moatfight
+rescue 1
+autofight 5000
+goto 0 -52000 500
+goto 2000 -50000 500
+goto 0 -52000 500
+goto -2000 -50000 500
+goto 0 -52000 500
+end
+@ashplate4
+rescue 1
+autofight 0
+press x 0.2
+wait 2
+goto -3000 -63000 400
+goto -4500 -66900 250
+wait 8
+press x 0.2
+wait 3
+goto -2000 -62000 500
+goto 2000 -62000 500
+goto 4513 -66050 300
+wait 12
+end
+@toDoorIn
+rescue 1
+autofight 0
+press x 0.2
+goto 3463 -63650 500
+goto 313 -56000 400
+goto 300 -55000 200
+end
+@crankop3
+autofight 0
+goto 600 -29300 200 6
+face 600 -27000
+wait 1
+press a 0.5
+wait 3
+press a 0.3
+wait 45
+end
+@pickLeon
+hold sl 0.3
+wait 1
+press a 0.3
+wait 52
+end
+@toCrank2
+rescue 1
+autofight 0
+press x 0.2
+goto 2413 -42350 500
+goto 2413 -41600 500
+goto 2413 -40850 500
+goto 2563 -40100 500
+goto 2713 -39350 500
+goto 2863 -38750 500
+goto 2863 -38000 500
+goto 2863 -37250 500
+goto 2863 -36500 500
+goto 2863 -35750 500
+goto 2863 -35000 500
+goto 2863 -33650 500
+goto 463 -29300 500
+goto 600 -29300 200 6
+face 600 -27000
+wait 2
+press a 0.5
+wait 3
+end
+@pickL2
+hold sl 0.1
+wait 1
+press a 0.3
+wait 50
+end
+@pickL3
+press a 0.3
+wait 2
+hold sl 0.1
+wait 2
+press a 0.3
+wait 50
+end
+@crankL
+autofight 0
+goto 600 -29300 200 6
+face 600 -27000
+wait 2
+press a 0.5
+wait 3
+press a 0.3
+wait 2
+press a 0.3
+wait 45
+end
+@selA50
+press a 0.3
+wait 52
+end
+@fightC
+rescue 1
+autofight 8000
+goto 600 -25000 500
+goto 600 -29000 500
+goto 600 -25000 500
+goto 600 -29000 500
+end
+@callw
+rescue 1
+press x 0.2
+wait 3
+goto 0 -48000 400
+wait 30
+end
+@calllift
+rescue 1
+autofight 0
+press x 0.2
+wait 15
+goto -9500 -60500 300
+goto -10700 -60500 250
+wait 3
+press a 0.5
+wait 4
+press a 0.3
+wait 12
+end
+@north
+rescue 1
+autofight 5000
+press x 0.2
+goto 6000 -62000 500
+goto 2000 -66000 500
+goto 0 -68000 500
+goto 0 -75000 500
+goto 0 -85000 500
+goto 0 -95000 500
+goto 0 -103000 500
+goto 0 -106800 300
+face 0 -110000
+wait 1
+press a 0.8
+room 204 20
+end
+@jumpN
+autofight 0
+goto 0 -68400 200 5
+face 0 -80000
+wait 1
+press a 0.5
+wait 4
+goto 0 -75000 500
+end
+@probeN
+autofight 0
+goto 3500 -68300 300 5
+goto 3500 -71000 300 5
+goto -3500 -68300 300 6
+goto -3500 -71000 300 5
+goto 0 -68300 300 5
+end
+@jumpN2
+autofight 0
+goto 0 -68500 150 6
+face 0 -80000
+wait 1
+press a 0.5
+wait 4
+goto 0 -76500 300 6
+face 0 -85000
+wait 1
+press a 0.5
+wait 4
+goto 0 -84000 300 6
+face 0 -95000
+wait 1
+press a 0.5
+wait 4
+goto 0 -95000 400 8
+end
+@jumpN3
+autofight 0
+face 0 -95000
+wait 1
+press a 0.5
+wait 4
+goto 0 -95000 400 8
+press x 0.2
+wait 6
+goto 0 -103000 400 8
+goto 0 -106800 300 8
+face 0 -110000
+wait 1
+press a 0.8
+room 204 20
+end
+@save204
+rescue 1
+autofight 4000
+goto 600 -15000 500 15
+goto 1350 -30100 400 15
+face 1507 -31163
+wait 1
+press a 0.4
+wait 3
+press a 0.4
+wait 3
+press a 0.4
+wait 3
+press a 0.4
+wait 4
+end
+@slot204
+wait 3
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 4
+press a 0.3
+wait 6
+press b 0.3
+wait 3
+end
+@slot204b
+wait 4
+press sd 0.2
+wait 2
+press a 0.3
+wait 4
+press sl 0.2
+wait 2
+press a 0.3
+wait 12
+end
+@jumpE
+autofight 0
+edgejump 0 -73000 5
+edgejump 0 -81000 5
+edgejump 0 -89500 5
+goto 0 -95000 400 8
+end

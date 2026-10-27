@@ -27,13 +27,24 @@ def sat_bytes(path):
     return [d[a:b] for tag, a, b in room_smd.tagged_entries(d, e) if tag == b'SAT\0'][0]
 
 
-def parse(d):
+def parse(d, extra=()):
+    fl, wl = parse1(d, 0)
+    for k in extra:
+        r = parse1(d, k)
+        if r:
+            fl += r[0]; wl += r[1]
+    return fl, wl
+
+
+def parse1(d, k):
     for E in '<>':
         try:
             offs = [0]
             if d[0] & 0x80:
                 offs = list(struct.unpack_from(E + '%dI' % d[1], d, 4))
-            b = offs[0]
+            if k >= len(offs):
+                return None
+            b = offs[k]
             _, _, nv, nn, ne, _, npoly, nf, ns, nw, nb = struct.unpack_from(E + 'BB9H', d, b)
             if nf + ns + nw != npoly or nv > 20000 or b + 0x14 + 12 * nv > len(d):
                 continue
@@ -83,8 +94,9 @@ def main():
     ap.add_argument('y0', type=float); ap.add_argument('x1', type=float); ap.add_argument('z1', type=float)
     ap.add_argument('--cell', type=float, default=150.0); ap.add_argument('--png')
     ap.add_argument('--gy', type=float, help='goal floor height (default: the nearest floor in x/z)')
+    ap.add_argument('--extra', default='', help='more SAT entries of a multi-SAT, e.g. 1,2 (r208 footings)')
     a = ap.parse_args()
-    floors, walls = parse(sat_bytes(a.room))
+    floors, walls = parse(sat_bytes(a.room), [int(v) for v in a.extra.split(',') if v])
     if a.png:  # top-down map: floors shaded by height, walls red, start/goal marked; grid labels every 5 m
         from PIL import Image, ImageDraw
         pts = [p for t in floors + walls for p in t]
