@@ -666,6 +666,9 @@ void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
     if(!bytes)return;
     if(list>=5 || !packet || bytes%32){re4dc_gcasset::unresolved(consumer,"packet-shape");return;}
+    // Modifier-volume lists (MV_SHADOWS volumes, re4dc_ui_mv_send) carry no texture: their 0x80000000 triangle words
+    // read as polygon headers whose "address" is vertex data (GC-ASSET-PROBE addr=0x0 caller=re4dc_ui_mv_send). Nothing to attribute.
+    if(list==PVR_LIST_OP_MOD || list==PVR_LIST_TR_MOD)return;
     auto& state=gcasset_packet_states[list];
     const auto* words=static_cast<const std::uint32_t*>(packet);
     for(unsigned offset=0;offset<bytes;offset+=32) {
