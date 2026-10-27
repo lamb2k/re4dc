@@ -39,6 +39,11 @@ inline constexpr std::uint32_t kBinaryAlpha = 1U << 1U;
 // TEX_TWIDDLED_MIPMAP additionally admits square native 16-bit twiddled
 // chains: six prefix bytes, then 1x1 through the unchanged base texels.
 inline constexpr std::uint32_t kMipmap = 1U << 2U;
+// TEX_PAL32=1 only (colour27, 2026-10-27): a kPal4Argb4444 / kPal8Argb4444 descriptor whose palette tail is 16 / 256
+// little-endian ARGB8888 words (64 / 1024 bytes) instead of ARGB4444 words. Palette RAM is ARGB8888 already
+// (initialize_palettes), so the PS2 CLUT colours reach the PVR unquantised. Builds without TEX_PAL32 reject the
+// descriptor through its payload size.
+inline constexpr std::uint32_t kPalette8888 = 1U << 3U;
 // Game GANADO_ATLAS_DROP only, never on disc: set at load time on a mipmapped VQ
 // descriptor whose top level was left out (Package::drop_top_level). The
 // descriptor keeps its logical size (UV scales and size checks are unchanged);
