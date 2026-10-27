@@ -9,8 +9,10 @@ the arena renderer extension; this note describes the benchmark contract.
 ## Build and fixtures
 
 Include game/house_arena27.mk after bench.mk. Add HOUSE_ARENA27=1,
-BENCH_SCENES=3, BENCHMARK=1, TAIL_METER=1, PACE_VMU_GPU=1, TA_HASH=4 and
-GAME_TICK_LOG=60 to the isolated candidate recipe. All normal BENCHMARK
+BENCH_SCENES=3, BENCHMARK=1, TAIL_METER=1, PACE_VMU_GPU=1 and
+GAME_TICK_LOG=60 to the isolated candidate recipe. SCENERY_STREAM=1 requires
+TA_HASH=0, retaining its existing guard and renderer path. A non-streamed
+control requires TA_HASH=4 for existing TA list-byte counts. All normal BENCHMARK
 prerequisites still apply. No flags or objects are added when HOUSE_ARENA27=0.
 The recipe must pin its actual source SHA, resolved knobs and staged asset hashes.
 Do not infer the current production recipe from the older floor worktree.
@@ -71,6 +73,13 @@ Use --environment console only for log files captured on a physical Dreamcast.
 The report exits 2 for incomplete/invalid data, including absent GPU stamps,
 fewer than two complete pace windows, no CPU snapshots, missing TA counts,
 missing frame-tail samples, mismatched bounds/builds or missing fixture proof.
+When TA_HASH is unavailable on the streamed path, require existing native stream
+rows both in warmup and after the benchmark begin marker, up to scene end. The
+latest warmup row supplies cumulative discarded/black_frames/missing baselines;
+any measured change is rejected. Each measured sample must have positive
+model_bytes and contain ta_used/ta_peak. ta_used can be zero in emulation.
+These periodic rows establish sampled-frame observations, not a full-frame
+fault census; no result is fabricated for the gaps between diagnostic rows.
 Duplicate captures of the same arm/run are rejected instead of averaged silently.
 
 Reported values:
@@ -81,8 +90,10 @@ Reported values:
 - CPU is the existing tick-log CPU mark per logic tick. Frame-tail work, blocked
   time, TA-done latency, render and queue carry sample counts, mean, p95 and max.
 - TA input retains OP, OP modifier, TR, TR modifier and PT bytes per presented
-  frame from TA_HASH=4. These are submitted TA bytes, not inferred triangles or
-  per-house GPU cycles. No vertex-buffer high-water mark is invented.
+  frame from TA_HASH=4 when available. Otherwise list-byte counts are null and
+  explicitly unavailable; the report retains sampled native model_bytes,
+  ta_used and ta_peak instead. These are existing submitted-byte/buffer counters,
+  not inferred triangles or per-house GPU cycles. No buffer size is invented.
 
 Registration, TA-done latency, GPU rendering and CPU work overlap. Never add
 these columns as independent costs. The frame range is exact, while timing
