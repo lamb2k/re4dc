@@ -887,6 +887,32 @@ def graft_all(grafts, r, out, rec):
         rec.append('%s graft %s %s onto %s -> %s' % (nm, dest, '+'.join(members), sha(cur), sha(o)))
 
 
+def smdrel_all(smdrels, r, out, rec):
+    """SMDREL (lane arcuse26 10-26): a set's {'smdrel': {dest: convert_room_bins.py summary}} releases the composed
+    archive's SMD BINs (tools/room_smd.py release contract: header, joints, box corners and part headers stay, the GX
+    payload leaves the loaded room payload; NTR / ESQ rebased), after every set and graft, so no later set is undone.
+    room_smd.diff_release proves the output differs from the composed archive only by that contract."""
+    if not smdrels:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+    import room_smd
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, summary in smdrels:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('smdrel %s: no composed %s' % (nm, dest), cur)
+        comp = Path(cur).read_bytes()
+        own, skipped = room_smd.load_identities([summary])
+        assert not skipped, ('smdrel %s %s: BINs the summary does not cover' % (nm, dest), skipped)
+        res, rep = room_smd.release_container(comp, own)
+        chk = room_smd.diff_release(comp, res)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        Path(o).write_bytes(res)
+        r[dest] = o
+        rec.append('%s smdrel %s %d BINs released, payload -%d B, onto %s -> %s' % (
+            nm, dest, chk['released_bins'], chk['saved'], sha(cur), sha(o)))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -908,6 +934,7 @@ def main():
     rec = []
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
     grafts = []
+    smdrels = []
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
@@ -930,6 +957,11 @@ def main():
                     assert os.path.exists(src), (nm, dest, src)
                     grafts.append((nm, dest, src, list(members)))
                 continue
+            if k == 'smdrel':   # SMD BIN release on the composed archive, after every set and graft (smdrel_all)
+                for dest, summary in v.items():
+                    assert os.path.exists(summary), (nm, dest, summary)
+                    smdrels.append((nm, dest, summary))
+                continue
             if k == 'remove':   # paths the set takes off the disc (nostd20)
                 for p_ in v:
                     r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
@@ -944,6 +976,7 @@ def main():
             lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     graft_all(grafts, r, out, rec)
+    smdrel_all(smdrels, r, out, rec)
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
@@ -1501,6 +1534,13 @@ if os.path.isdir(WINDOWS26D):
     for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
         _m = ['et0000.bin'] + (['et2500.bin'] if _r in ('r101', 'r105', 'r111') else []) +              (['et0000.tpl'] if _r in ('r105', 'r107', 'r111', 'r11c', 'r11f') else [])
         DATA['windows26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (WINDOWS26D, _r), _m)
+# smdrel26 (lane arcuse26 10-26): r11f's 69 SMD BINs (1,219,008 B of GX payload in the loaded room payload; the PS2 world
+# draws the barn) released through the room_smd.py contract like every other route room. Applied on the composed
+# archive after all sets and grafts (smdrel_all). Store: summary of convert_room_bins.py on the GC r11f.das (the
+# ch2 prep-room.sh options); the package itself is not staged (PS2 world room, as r11e).
+SMDREL26D = os.environ.get('SMDREL26D', '/root/re4data/private/arcuse26-20261026')
+if os.path.isdir(SMDREL26D):
+    DATA['smdrel26'] = {'smdrel': {'st1/r11f.dar': SMDREL26D + '/r11f/MAINSCENARIO.re4mesh.json'}}
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
