@@ -58,3 +58,18 @@ $(error Missing private world_rebuild27_bake_certificates.inc)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_REBUILD27_BAKE=1
 endif
+
+# Independent bounded world setup experiment. Never enabled by a recipe here.
+WORLD_ZERO_PRIME27 ?= 0
+ifneq ($(words $(WORLD_ZERO_PRIME27)),1)
+$(error WORLD_ZERO_PRIME27 must be one value, 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_ZERO_PRIME27)),)
+$(error WORLD_ZERO_PRIME27 must be 0 or 1)
+endif
+ifeq ($(WORLD_ZERO_PRIME27),1)
+ifneq ($(SCENERY_CHUNK)$(SCENERY_SELECT_ONLY)$(SCENERY_REPLAY_LEAN),111)
+$(error WORLD_ZERO_PRIME27=1 requires the qualified chunk/select/replay path)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_ZERO_PRIME27=1
+endif

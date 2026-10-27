@@ -3740,7 +3740,14 @@ struct MeshDraw : Emitter {
         const auto* base=corners(l);
 #endif
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
-        if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
+#if defined(RE4DC_WORLD_ZERO_PRIME27) && RE4DC_WORLD_ZERO_PRIME27
+        // No strip group consumes an empty PS2 pick. Keep admission, decoder,
+        // counters and its normal return; later nonempty picks prime on demand.
+        if((!ps2 || pk.nr!=0U) && l.vertex_count>primed){
+#else
+        if(l.vertex_count>primed){
+#endif
+            vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
             if(lean_part){lean::prime_at=cache;lean::primed=primed;}
         }
         const std::uint8_t* const sb=package.strip_begin(l);
