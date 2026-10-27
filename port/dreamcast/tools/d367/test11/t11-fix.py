@@ -1308,6 +1308,15 @@ GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
 if os.path.isdir(GCL26D):
     DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
     AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
+# pic26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack (gcl26p's) with
+# r101's 5d59dae9 (a 64x64 VQ package set v101 added under a GameCube picture key) as PS2 pixels: PS2 r101.dat TPL
+# 0x3e7f40 image 1, NCC 1.000 against the package itself (ps2cast/em_eff_pics.py --pair - r101.dat; size and format kept).
+# Stages after gcl26p (last tex.pak set). Store: re4-assets-private/pic26-20261026.
+PIC26D = os.environ.get('PIC26D', '/root/re4data/private/pic26-20261026')
+if os.path.isdir(PIC26D):
+    DATA['pic26'] = {'dc/tex.pak': PIC26D + '/dc/tex.pak'}
+    PAK_DERIVED['pic26'] = PIC26D + '/pak-derived.json'
+    AFTER += [('pic26', 'gcl26p')]
 # efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
 # picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
 # efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
