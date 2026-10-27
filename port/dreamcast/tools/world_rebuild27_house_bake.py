@@ -69,6 +69,9 @@ def encode(a):
         report['full_incremental_vram_bytes']+=aligned
         report['maps'].append(row)
     report['full_incremental_native_package_bytes']=sum(r['native_package_file_bytes'] for r in report['maps'])
+    report['ui_vram_page_alignment_additional_bytes_upper_bound']=len(report['maps'])*(2048-32)
+    report['full_incremental_vram_allocation_upper_bound_bytes']=report['full_incremental_vram_bytes']+report['ui_vram_page_alignment_additional_bytes_upper_bound']
+    report['allocation_bound_reason']='UI_VRAM allocate_texture may reserve payload+2016 per VQ if its first allocation is not 2KiB-page-aligned. An active page allocator can avoid this extra backing; target allocation is not measured here.'
     report['runtime_allocation_acceptance']='Encoded payload/alignment accounting only; main must prove contiguous VRAM and per-core material binding. No original texture residency is subtracted.'
     (a.out/'ENCODED-TEXTURE-BUDGET.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
