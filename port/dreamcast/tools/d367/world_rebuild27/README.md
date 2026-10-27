@@ -53,3 +53,19 @@ The final decision table must distinguish a traversal/setup floor in B, detail
 cost in C, and any remaining non-world frame cost. Do not expand beyond r101
 before that table has been shown to the user. No speed claim follows from
 triangle counts alone.
+
+## Empty-part setup control
+
+`WORLD_REBUILD27_LIVE_MASK=1` is a separate default-off control. It requires
+`WORLD_REBUILD27=1` and `PS2_PASS_MASK=1`. For r101 only, load and movie-restore
+mask construction omit parts whose adopted R4IM range is empty at every LOD;
+transparency-policy additions use the same live-part test. Other rooms retain
+the original masks. No per-frame loop or static array is added. Diagnostics
+PS2_PASS_MASK=2/3 are deliberately refused rather than silently changing their
+comparison contracts.
+
+The bounded MODELLED control observes less setup work with unchanged B1 assets,
+but still exceeds the 2 ms goal by a validated lower bound. Programme layout and
+model cache effects are included; its CPU-work estimate is not a certified
+world-time saving. Exact pixels, route behavior, actual memory and physical
+console results remain separate gates. Keep this control off in production.
