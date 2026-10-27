@@ -244,7 +244,7 @@ def cmd_zipcheck(a):
 
 def cmd_doclint(a):
     head, _ = read_file(a.knobs)
-    cur = float(head.get('test', '0'))
+    cur = float(re.match(r'\d+(?:\.\d+)?', head.get('test', '0')).group(0))   # 24b -> 24
     tag = head.get('tag', '')
     bad = []
     for doc in a.docs:

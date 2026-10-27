@@ -7,13 +7,45 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 24](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 24b](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 24b
+
+Test 24b replaces Test 24, which we pulled for missing scenery in the first area. Still up to the castle gate.
+Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Fixed: the first area's scenery is back.** The door, the house windows, a house and the explosives in the tree.
+- **Custom title screen back** (it was lost in Test 24).
+- **Window glass and bars** are back in the village, farm and barn houses.
+
+  ![A house with window glass and bars](https://github.com/lamb2k/re4dc/raw/test-52cb8198-20261027/docs/images/releases/test24b/windows.jpg)
+  <br>The first house in the forest: bars and glass in the windows. Flycast capture.
+- **PS2 torch flames**, and explosions and candle effects are back.
+- **Every weapon is PS2**, and Leon moves on the PS2 skeleton.
+
+  ![Leon in the village with the PS2 rocket launcher](https://github.com/lamb2k/re4dc/raw/test-52cb8198-20261027/docs/images/releases/test24b/weapons.jpg)
+  <br>The PS2 rocket launcher on Leon's back in the village. Flycast capture.
+- **Dreamcast controller art** in the Player's Manual and on the HUD.
+
+  ![The HUD with the Dreamcast A button](https://github.com/lamb2k/re4dc/raw/test-52cb8198-20261027/docs/images/releases/test24b/dc-controller.jpg)
+  <br>The Dreamcast A button on the HUD in the village. Flycast capture.
+- **PS2 radio call portraits.**
+- **Faster scenery** in the village square, the farm and 19 more rooms.
+- **Hanging cloth and flags** are drawn, and **Leon's flashlight** lights the ground at night ([#55](https://github.com/lamb2k/re4dc/issues/55)).
+- **Faster merchant hideout** in the cave, and **PS2 animations** for the last characters that used GameCube ones.
+- **More PS2 data:** room props, Ganado bodies, pictures and sounds.
+
+## Coming soon: Test 25
+
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 25.
+
+- [ ] **Chapter 3-1 playable on Disc 2:** the castle's first part, past the gate. Both discs come in the one game zip.
+- [ ] **The farm's PS2 world layout.**
 
 ## What's new in Test 24
 
-The PS2 look and sound in place of the GameCube's, still up to the castle gate. Full details are in the
-[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+Test 24 was pulled (missing scenery in the first area); everything in it is in Test 24b.
 
 - **PS2 weapons and HUD.** Leon's guns come from the PS2, in his hands and in the inventory, with the PS2 HUD.
 
@@ -40,18 +72,6 @@ The PS2 look and sound in place of the GameCube's, still up to the castle gate. 
 - **Fixed:** Mendez has his PS2 model in the barn door animation ([#57](https://github.com/lamb2k/re4dc/issues/57)),
   and the Blacktail can be equipped ([#58](https://github.com/lamb2k/re4dc/issues/58)).
 - **Under the hood:** the GameCube cutscene files no longer load, and about 13 MB came off the disc.
-
-## Coming soon: Test 25
-
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 25.
-
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [x] **Faster scenery in the village square and the farm:** the world is drawn in bigger pieces.
-- [ ] **The farm's PS2 world layout.**
-- [x] **Hanging cloth, flags and fabric** are drawn ([#55](https://github.com/lamb2k/re4dc/issues/55)).
-- [x] **Leon's flashlight** lights the ground in the night areas ([#55](https://github.com/lamb2k/re4dc/issues/55)).
-- [x] **Faster merchant hideout** in the cave: simpler back shelves.
-- [x] **PS2 animations** for the last enemies and characters that still used GameCube ones.
 
 ## What's new in Test 23
 
