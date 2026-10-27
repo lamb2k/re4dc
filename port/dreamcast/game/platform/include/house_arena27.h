@@ -4,4 +4,5 @@
 extern "C" int re4dc_house_arena27_variant(void);
 extern "C" int re4dc_house_arena27_active(void);
 extern "C" int re4dc_house_arena27_model(const void* model);
+extern "C" void re4dc_model_packet_abort(void);
 #endif
