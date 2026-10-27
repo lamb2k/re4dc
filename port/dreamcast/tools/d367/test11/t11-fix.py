@@ -1308,6 +1308,15 @@ GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
 if os.path.isdir(GCL26D):
     DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
     AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
+# gcl26z (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): em/em11..em17.drs = set gcl26's archives
+# with the bytes no header entry reads zero-filled (ps2cast/drs_dead_fill.py): the original GameCube archive body the
+# prepare step left between the 0x400-byte header and the nested sound entry (em11 0x400..0x3962c0). dvd.cpp reads only
+# the header and each entry's [ofs, ofs + size) (nested rows relative to their entry, checked in range), so every read
+# byte, offset and size is unchanged. Store: re4-assets-private/gcl26z-20261026; regenerate after gcl26.
+GCL26ZD = os.environ.get('GCL26ZD', '/root/re4data/private/gcl26z-20261026')
+if os.path.isdir(GCL26ZD):
+    DATA['gcl26z'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26ZD, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
+    AFTER += [('gcl26z', 'gcl26')]
 # gcl26p (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack with 6 pictures
 # as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes and formats kept, no package grows): the Ganado EFF
 # pictures of every emNN archive 03d1e9a5 / 195b4634 / 41e0ece4 <- PS2 em12.dat TPL images 5 / 6 / 32; core.das entry 25
