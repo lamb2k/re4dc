@@ -58,6 +58,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 21 | Texture arena uses the incoming key (`TEX_ARENA_CURRENT_KEY`, outside audit T22-T24) | landed 1717235b, default 0; local A/B on the T23 vanishing next |
 | 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
+| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`) | queued 2026-10-27, NEXT |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -199,6 +200,42 @@ Plain words, short sections. Link it from CONTRIBUTING.md.
 ### Build 20: r100 unlit area history (docs only)
 **Why:** #32 (Test 14, real console): the place where villagers first throw a rock (r100, outside the house) draws unlit, as flat colour.
 **Do:** from git history, list every change to r100 lighting and shading: light sets, LIGHT_CUT_HOLD, the actor probe light, PS2 prelit colours in the world, `PS2_WORLD_*` knobs, fog/mist. For each: commit, knob, what it changes, and whether it could make that area flat. End with the two or three most likely causes and the run the local owner should do to confirm each. Write it as `port/dreamcast/docs/cloud/R100-SHADING-HISTORY.md`.
+
+## Drawing on hardware (added 2026-10-27)
+
+### Build 24: near-camera draw setup blow-up on console (`DRAW_SETUP_AUDIT`)
+**Why:** on a real console the farm (r103, day) drops to 5-6 fps near the barn and the Ganado bodies, and is about 19 fps from 20 m away. Flycast, including the cache-model build, stays at 30 fps in every state. The cost is the hidden "setup" phase inside the QA page's TOTAL: Render() (world draw + the models' draw list), which the QA buckets don't show (tick_log.cpp, qa_menu.cpp). User: "we really need to figure out drawing ... it seems like it's just not right."
+
+Console QA Diagnostics readings (ms per 33.4 ms tick, Test 24b QA 52cb8198 unless noted):
+
+| Spot | fps | QA CPU% | TOTAL | buckets (logic+fx+models+scenery+post+wait) | setup = TOTAL - buckets |
+|---|---:|---:|---:|---:|---:|
+| r101 cross, 0 alive | 26.9 | 102 | 33.7 | ~9.3 | ~24 |
+| r103 barn, 4 alive | 5.9 | 229 | 54.9 | ~17.4 | ~37 |
+| r103 near bodies, 0 alive | 5.4 | 274 | 69.0 | ~14.1 | ~55 |
+| r103 20 m from bodies, 0 alive | 18.9 | 99 | 33.4 | ~15.5 | ~18 |
+| r103 near barn, n256 off (disc N) | 5.9 | 496 | 104.9 | ~9.5 | ~95 |
+| r10c, 1 alive | 13.7 | 117 | 37.0 | ~17.8 | ~19 |
+| r113, 4 alive | 11.9 | 126 | 41.9 | ~24.5 | ~17 |
+
+- QA CPU% is work before the vblank wait as a share of a 33.4 ms tick; there is also ~20 ms per tick outside TOTAL (Render_before, present, pacing).
+- The GPU is not the limit: the near-bodies PACE line reads gpu_avg 16.0 ms.
+- The farm's night visit (no bodies) runs about 10 fps faster than the day farm near the barn.
+- Ruled out by lane farm-barn27 on Flycast: motion disc reads / heap 4 (1.3 MB free, 0 misses/s), body logic (bodies cost 0 on Flycast), VRAM reload loops.
+- Reminder (top of this file): the game is data-cache bound on console and nothing we emulate sees it.
+
+**Do (code audit; you have no console, so prove what you can on synthetic cases):**
+- Walk every path inside Render() setup for the world and the model draw list, and list the costs that grow with camera proximity or with many models near the camera and that exist only on hardware:
+  - misaligned loads/stores that trap on SH-4 (Flycast hides them);
+  - near-plane / guard-band clipping that multiplies per triangle when large polygons or bodies are close;
+  - store-queue / TA FIFO backpressure when one model or wall emits many polygons in a burst;
+  - data-cache thrash: per-model draw records, matrices, skinning or vertex buffers walked out of order, or one 32-byte line touched per vertex;
+  - any per-frame rebuild (sort, list, light set) that scales with the number of models or bodies in view.
+- For each suspect give the code site, why it is hardware-only, and its expected scaling with the readings above.
+- Add a diagnostic knob (`DRAW_SETUP_AUDIT`, default 0) that splits setup into world opaque / world translucent / shell / per-model draw list / clip / submit, with counts (models, triangles in, triangles after clip, translucent items sent vs on screen), printed on the QA Diagnostics page next to the existing WORLD_METER rows. Reuse PERF_PHASE_MISS for per-phase cache misses.
+- For the top one or two suspects, a fix under its own default-off knob (approximations welcome), with the usual bytes/lines-touched report.
+
+**Local owner then runs:** the QA diagnostic disc (farm-barn27, WORLD_METER=1) on the console near the barn and 20 m away, then your knobs.
 
 ## Open questions back to Claude
 
