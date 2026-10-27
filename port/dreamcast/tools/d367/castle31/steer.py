@@ -108,6 +108,8 @@ class Steer:
             if not self.rep['rooms'] or self.rep['rooms'][-1] != g[0]:
                 self.rep['rooms'].append(g[0]); self.log('room %s' % g[0])
             self.rep['live_peak'] = max(self.rep['live_peak'], self.pl['n'])
+        for m in re.finditer(r'warp: pl room .*? rno (\d+)/(\d+)/(\d+)', new):
+            self.rno = tuple(int(v) for v in m.groups())
         for m in ASH.finditer(new):
             g = m.groups()
             self.ash = dict(x=int(g[0]), y=int(g[1]), z=int(g[2]), life=int(g[3]), carried=bool(int(g[4], 16) & 0x10000))
@@ -134,6 +136,11 @@ class Steer:
             if self.rescue_on and self.ash and self.ash['carried']:
                 self.log('rescue: %s' % self.rescue())
                 best, best_t = None, time.monotonic(); continue
+            if getattr(self, 'rno', (0,))[0] == 4 and self.rno[2] == 1:  # grabbed (bomb hug / choke): shake off with A
+                n = 0
+                while getattr(self, 'rno', (0,))[0] == 4 and self.rno[2] == 1 and n < 60:
+                    self.post('a', False); self.sleep(0.05); self.post('a', True); self.sleep(0.07); n += 1
+                self.log('shake: %d taps rno %s' % (n, self.rno)); best, best_t = None, time.monotonic(); continue
             if self.autofight and pl['n'] and abs(pl['ey'] - pl['y']) < 1500 and math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z']) < self.autofight:
                 self.log('autofight: %s at %d' % (self.fight(30, self.autofight * 1.5),
                                                   math.hypot(pl['ex'] - pl['x'], pl['ez'] - pl['z'])))
