@@ -9,13 +9,17 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 out=Path(sys.argv[sys.argv.index('--')+1]);exchange=json.loads((out/'HOUSE-EXCHANGE.json').read_text())
+preparation=json.loads((out/'PREPARATION.json').read_text())
 assert not bpy.app.online_access and not (out/'house-bake.blend').exists()
 for addon in list(bpy.context.preferences.addons.keys()):
     bpy.ops.preferences.addon_disable(module=addon)
+# Cycles is Blender's bundled local bake engine, registered as a built-in
+# add-on in this installation. Enable only it after disabling other add-ons.
+bpy.ops.preferences.addon_enable(module='cycles')
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=1;scene.cycles.use_denoising=False
+scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=8;scene.cycles.use_denoising=False
 scene.render.threads_mode='FIXED';scene.render.threads=4
-scene.view_settings.view_transform='Standard';scene.view_settings.look='None';scene.view_settings.exposure=0;scene.view_settings.gamma=1
+scene.view_settings.view_transform='Raw';scene.view_settings.look='None';scene.view_settings.exposure=0;scene.view_settings.gamma=1
 scene.render.image_settings.file_format='PNG';scene.render.resolution_x=640;scene.render.resolution_y=480;scene.render.resolution_percentage=100
 scene.world.color=(.03,.03,.03);scene.render.film_transparent=False
 collections={}
@@ -24,7 +28,7 @@ for name in ('REFERENCE_LOCKED','CANDIDATE_CONSERVATIVE','CANDIDATE_LEAN','REVIE
 
 def coords(p):return (p[0]/1000,-p[2]/1000,p[1]/1000)
 def material(role):
-    image=bpy.data.images.load(str(out/(role+'-ps2-source.png')),check_existing=True);image.colorspace_settings.name='sRGB'
+    image=bpy.data.images.load(str(out/(role+'-ps2-source.png')),check_existing=True);image.colorspace_settings.name='Non-Color'
     m=bpy.data.materials.new(role+'_PS2_ALBEDO_TIMES_PS2_PRELIGHT');m.use_nodes=True;n=m.node_tree.nodes;n.clear();links=m.node_tree.links
     tex=n.new('ShaderNodeTexImage');tex.image=image;tex.extension='REPEAT';tex.interpolation='Linear'
     uv=n.new('ShaderNodeUVMap');uv.uv_map='SOURCE_UV';links.new(uv.outputs['UV'],tex.inputs['Vector'])
@@ -49,7 +53,8 @@ def mesh(role,kind,collection,mat):
         for loop,st,sc in zip(poly.loop_indices,t['uv'],t['prelight_rgba']):uv.data[loop].uv=(st[0],1-st[1]);col.data[loop].color=sc
     obj['source_part']=exchange[role]['part'];obj['source_mesh']=exchange[role]['mesh'];obj['source_material_key']=exchange[role]['source_material_key'];return obj
 
-objects={};bake_receipt={'blender_version':bpy.app.version_string,'offline':not bpy.app.online_access,'bake_type':'EMIT selected-to-active','new_lighting':False,'maps':[],'reference_triangles':407,'target_triangles':107,'appearance_accepted':False,'timing_available':False}
+objects={};bake_receipt={'blender_version':bpy.app.version_string,'offline':not bpy.app.online_access,'bake_type':'EMIT selected-to-active','producer_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'new_lighting':False,'maps':[],'reference_triangles':407,'target_triangles':preparation['target_triangles'],'appearance_accepted':False,'timing_available':False}
+assert bake_receipt['producer_script_sha256']==preparation['blender_script_sha256'],'frozen Blender producer pin'
 for role in ('wall','roof'):
     mat=material(role)
     src=mesh(role,'source',collections['REFERENCE_LOCKED'],mat)
@@ -60,7 +65,7 @@ for role in ('wall','roof'):
     bpy.ops.object.mode_set(mode='EDIT');bpy.ops.mesh.select_all(action='SELECT');bpy.ops.uv.smart_project(angle_limit=math.radians(66),island_margin=.04,area_weight=1,correct_aspect=True,scale_to_bounds=True);bpy.ops.object.mode_set(mode='OBJECT')
     target.data.uv_layers['BAKE_UV'].active_render=True
     image=bpy.data.images.new(role+'_BAKED_PS2_STATIC_DETAIL',width=512,height=512,alpha=False,float_buffer=False)
-    image.generated_color=(.01,.01,.01,1);image.colorspace_settings.name='sRGB'
+    image.generated_color=(.01,.01,.01,1);image.colorspace_settings.name='Non-Color'
     n=target.active_material.node_tree.nodes;node=n.new('ShaderNodeTexImage');node.image=image;n.active=node
     src.hide_render=False;target.hide_render=False;plain.hide_render=True
     for other in objects.values():
@@ -68,6 +73,9 @@ for role in ('wall','roof'):
     bpy.ops.object.select_all(action='DESELECT');src.select_set(True);target.select_set(True);bpy.context.view_layer.objects.active=target
     scene.render.bake.use_selected_to_active=True;scene.render.bake.cage_extrusion=.25;scene.render.bake.max_ray_distance=1.;scene.render.bake.margin=8
     bpy.ops.object.bake(type='EMIT')
+    if role=='roof' and preparation.get('roof_continuation',False):
+        sys.path.insert(0,str(Path(__file__).resolve().parent));import roof_continuation
+        bake_receipt['roof_continuation']=roof_continuation.apply(out,src,target,image,exchange)
     image.filepath_raw=str(out/(role+'-baked.png'));image.file_format='PNG';image.save()
     # Candidate display samples only the baked result; prelight is already in it.
     nodes=target.active_material.node_tree.nodes;nodes.clear();links=target.active_material.node_tree.links
@@ -109,7 +117,7 @@ for image in bpy.data.images:
     if image.source=='FILE':image.pack()
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'house-bake.blend'),check_existing=False)
 (out/'BLENDER-BAKE-RECEIPT.json').write_text(json.dumps(bake_receipt,indent=2)+'\n')
-atlas=dict(schema='re4dc.world-rebuild27.house-baked-atlas/1',geometry_candidate_sha256=exchange['candidate_sha256'],reference_source_sha256=exchange['source_sha256'],uv_origin=[0,0],uv_scale=[1,1],uv_convention='runtime top-left; v=1-BlenderV',prelight_contract='Set baked core vertex color to white; source PS2 prelight is already multiplied into baked pixels. Retain unrelated source prelight exactly.',runtime_binding='Unbound authoring artifact. Shared part160/288 require isolated selected-core material binding from main.',wall={},roof={})
+atlas=dict(schema='re4dc.world-rebuild27.house-baked-atlas/1',geometry_candidate_sha256=exchange['candidate_sha256'],reference_source_sha256=exchange['source_sha256'],preparation_sha256=hashlib.sha256((out/'PREPARATION.json').read_bytes()).hexdigest(),provenance_sha256=preparation['provenance_sha256'],uv_origin=[0,0],uv_scale=[1,1],uv_convention='runtime top-left; v=1-BlenderV',prelight_contract='Set baked core vertex color to white; source PS2 prelight is already multiplied into baked pixels. Retain unrelated source prelight exactly.',runtime_binding='Unbound authoring artifact. Shared part160/288 require isolated selected-core material binding from main.',wall={},roof={})
 for role,record in zip(('wall','roof'),bake_receipt['maps']):
     basis=exchange[role]['uv_origin_step'];triangles=[];max_error=0
     for ordinal,(t,uvs) in enumerate(zip(exchange[role]['target'],record['atlas_uv_per_triangle'])):
