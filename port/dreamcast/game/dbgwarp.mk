@@ -70,6 +70,7 @@ PLATFORM_OBJS += $(OBJDIR)/dbgwarp_bridge.o
 # castle31 no-warp chain: warp line `god` = Leon takes no damage (LifeDownSet2 player branch; a one-frame hit larger
 # than his life would otherwise start the death routine before the per-frame refill). Warp builds only.
 $(OBJDIR)/src/game/em_sub.o: GAME_CPPFLAGS += -DRE4DC_WARP_GOD_HOOK=1
+$(OBJDIR)/src/game/pl_npc.o: GAME_CPPFLAGS += -DRE4DC_WARP_GOD_HOOK=1
 # Included after the link rule: name the object as its prerequisite here.
 $(TARGET): $(OBJDIR)/dbgwarp_bridge.o
 $(OBJDIR)/dbgwarp_bridge.o: dbgwarp_bridge.cpp $(OBJDIR)/dbgwarp.h

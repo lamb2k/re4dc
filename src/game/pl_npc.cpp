@@ -2041,6 +2041,17 @@ void cSubChar::moveDamage()
             }
         }
         if (subSelf->motionMove()) {
+#if defined(RE4DC_WARP_GOD_HOOK) && RE4DC_WARP_GOD_HOOK
+            // Warp builds only (dbgwarp.mk): the `ashley` line turns the blast death (7/9: blown down, then life 0
+            // in r_no_1 2) into the knock-down and get-up the game's own invincible debug flag uses (8/10), logged
+            // by the rig as ashley-rescue (not a real outcome; subtracted like ashley-free).
+            extern int re4dc_warp_ashley;
+            extern unsigned re4dc_warp_ashley_rescues;
+            if (re4dc_warp_ashley && (subHideMode == 7 || subHideMode == 9)) {
+                subHideMode++;
+                ++re4dc_warp_ashley_rescues;
+            }
+#endif
             switch (subHideMode) {   // default first (laid out first); separate identical bodies
             default:
                 setFace(0);

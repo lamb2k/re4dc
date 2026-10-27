@@ -125,7 +125,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <arch/timer.h>
 
 // `god`: read by LifeDownSet2 (src/game/em_sub.cpp, RE4DC_WARP_GOD_HOOK, warp builds only): no damage to the player.
-extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; }
+extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; unsigned re4dc_warp_ashley_rescues; }
 #include <kos/thread.h>
 #include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
@@ -1047,6 +1047,12 @@ static void ashley_poll()
         }
     } else {
         wp.ashley_carry = 0;
+    }
+    static unsigned rescues_seen;
+    if (re4dc_warp_ashley_rescues != rescues_seen) {  // blast death turned into knock-down + get-up (pl_npc hook)
+        rescues_seen = re4dc_warp_ashley_rescues;
+        re4dc_log("warp: ashley-rescue frame %u room %x cause blast-death n %u (not a real outcome)\n",
+                  (unsigned) wp.room_frames, (unsigned) pG->room_id, rescues_seen);
     }
     static unsigned saves_seen;
     if (re4dc_warp_ashley_saves != saves_seen) {  // LifeDownSet2 kept her at 1 point (a one-frame lethal hit)
