@@ -1,3 +1,4 @@
+#include "platform/include/house_arena27.h"
 #include "platform/include/gc_asset_motion_unknown.h"
 #include "actor_visibility_diag.h"
 // Recovered commonModelTrans -> existing native frame/packet/texture owner.
@@ -15,6 +16,19 @@
 #include "view.h"
 extern "C" unsigned re4dc_fog_enabled();
 extern "C" void re4dc_fog_note_far(float far);
+#endif
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+#include "player.h"
+extern "C" int re4dc_house_arena27_active(){
+    // Invalid scene metadata must not turn isolation off and draw the full room.
+    return pG && unsigned(pG->room_id)==0x101U;
+}
+extern "C" int re4dc_house_arena27_model(const void* model){
+    if(!re4dc_house_arena27_active())return 1;
+    const auto* m=static_cast<const cModel*>(model);
+    return m && pPL && m==static_cast<const cModel*>(pPL) && m->kindid==0 && m->id==0 && m->nParts==119;
+
+}
 #endif
 #include <stddef.h>
 #include <string.h>

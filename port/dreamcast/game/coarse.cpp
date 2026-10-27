@@ -1,3 +1,4 @@
+#include "platform/include/house_arena27.h"
 // COARSE=1 (30 fps rethink, step 2): the coarse complete square. In-room play runs unchanged
 // (enemies, events, HUD, audio); each image is drawn here from gameplay records instead of the
 // source visual pipeline:
@@ -556,6 +557,9 @@ void draw_blocks(Out& o, cSat* sat, const cSatBlock* b, const PieceView& pv, con
 
 void draw_world(Out& o)
 {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
 #if RE4DC_COARSE_SAT_SCENERY_ONLY
     bool scenery_drawn = false;
 #if RE4DC_PS2_WORLD_DRAW
@@ -665,6 +669,9 @@ bool actor_visible(const cModel* m)
 
 void blob(Out& o, const Vec& at, float r)
 {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
     const Vec q[4] = {{at.x - r, at.y + 8.0f, at.z - r}, {at.x + r, at.y + 8.0f, at.z - r},
                       {at.x + r, at.y + 8.0f, at.z + r}, {at.x - r, at.y + 8.0f, at.z + r}};
     H v[4];
@@ -678,6 +685,9 @@ void blob(Out& o, const Vec& at, float r)
 
 void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
 {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_model(m))return;
+#endif
 #if RE4DC_COARSE_SOURCE_ACTORS
     // Both source-handled and invalid membership suppress this substitute.
     // Invalid membership is logged by the owner and invalidates the candidate.
@@ -696,6 +706,10 @@ void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
         if(o.sq)re4dc_coarse_end(o.n);
         o.total+=o.n;o.n=0;o.sq=nullptr;
         const int handled=re4dc_coarse_leon(m);
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+        // This fixture must never substitute a ribbon/blob for Leon.
+        if(re4dc_house_arena27_active() && !handled){re4dc_model_packet_abort();return;}
+#endif
         o.sq=re4dc_coarse_begin(1);load_rows(g_S);
         if(handled){if(o.sq)blob(o,m->pos,330.0f);return;}
     }
@@ -767,6 +781,9 @@ extern "C" int re4dc_esp_sprite_class(cEsp* esp);   // esp_sub.cpp (COARSE_FX_SP
 #endif
 void draw_effects(Out& o)
 {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES >= 2
     return;   // the sprite classes draw in the effect OT; no markers for the rest
 #endif

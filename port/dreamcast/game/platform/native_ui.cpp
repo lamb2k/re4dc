@@ -1,3 +1,4 @@
+#include "include/house_arena27.h"
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_gate.h"
 #include "include/gc_asset_packet_cursor.h"
@@ -2589,9 +2590,15 @@ void stream_close(bool present) {
     if(present && !re4dc_r11f_present(frame,source_draws_finished,stream_aborted))present=false;
 #endif
 #if defined(RE4DC_SHADOW_BLOB) && RE4DC_SHADOW_BLOB
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     if(present && !stream_aborted && !direct_open && world_autosort)re4dc_blob_emit(frame);
 #endif
 #if RE4DC_MV_SHADOWS
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     if(present && !stream_aborted && !direct_open){mv_open=false;re4dc_mv_emit(frame);if(mv_open)++mv_scenes;}
 #endif
 #if RE4DC_TA_GUARD
@@ -5845,6 +5852,9 @@ void glyph_draw_run(unsigned first,unsigned count){
 short glyph_quarter(float f){f*=4.0f;return (short)(f<-32000.0f?-32000:f>32000.0f?32000:int(f<0?f-0.5f:f+0.5f));}
 }
 extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
     if(!frame_ready || !glyph_atlas)return;
 #if RE4DC_PVR_STREAM
     if(stream_aborted)return;
@@ -6490,6 +6500,9 @@ extern "C" void re4dc_ui_begin(){
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
 extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
     RE4DC_PROFILE_SCOPE(UiEnqueue);
     if(!frame_ready)return;
 #if RE4DC_PVR_STREAM
@@ -6734,12 +6747,21 @@ extern "C" void re4dc_ui_present(){
     }
 #endif
 #if RE4DC_DOOR_FREEZE && RE4DC_PVR_STREAM
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     if(!door_done && !re4dc_vi_black() && !stream_aborted)door_draw(); // over the frame's world and UI, as Render() ends with it
 #endif
 #if RE4DC_PACE_CATCHUP && RE4DC_PACE_DEBUG && RE4DC_PVR_STREAM
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     {int pace_mode;if(re4dc_pace_note(&pace_mode) && !re4dc_vi_black())pace_note_draw(pace_mode);}
 #endif
 #if defined(RE4DC_RENDER_OPTION) && RE4DC_RENDER_OPTION && RE4DC_PVR_STREAM
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     if(!re4dc_vi_black())speed_draw();
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if(!re4dc_vi_black() && !stream_aborted)bench_banner_draw();   // bench.mk: on every presented frame
@@ -6748,6 +6770,9 @@ extern "C" void re4dc_ui_present(){
 #endif
 #endif
 #if RE4DC_PERF_HUD
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     if(!re4dc_vi_black()){
         pvr_stats_t hud_stats;pvr_get_stats(&hud_stats);
         const unsigned start=PVR_GET(PVR_TA_VERTBUF_START),pos=PVR_GET(PVR_TA_VERTBUF_POS);
@@ -8429,6 +8454,9 @@ extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE b
 #define stream_send gcasset_fx_stream_send
 #endif
 extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return 1;
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(4);
 #endif
@@ -8800,11 +8828,17 @@ static int subscreen_submit(const Re4dcSubscreenQuad* q,const pvr_vertex_t* vert
     return 1;
 }
 extern "C" int re4dc_subscreen_quad(const Re4dcSubscreenQuad* q){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return 1;
+#endif
     if(!q || !frame_ready || stream_aborted || draining_parts)return 0;
     pvr_vertex_t vertices[12];
     return subscreen_submit(q,vertices,re4dc::subscreen::vertices(*q,vertices));
 }
 extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad* q,unsigned width){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return 1;
+#endif
     if(!q || !frame_ready || stream_aborted || draining_parts)return 0;
     pvr_vertex_t vertices[12];
     return subscreen_submit(q,vertices,re4dc::subscreen::line_vertices(*q,width,vertices));
@@ -8817,6 +8851,9 @@ extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad* q,unsigned width){
 // factor carries it), depth tested, no depth write; queued in source OT order like the subscreen quads.
 extern "C" int re4dc_water45_quad(const float positions[4][3],const float rgb[4][3],const float* projection,
                                   const float* viewport){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return 1;
+#endif
     if(!frame_ready || stream_aborted || draining_parts)return 0;
     Re4dcSubscreenQuad q;
     std::memcpy(q.positions,positions,sizeof(q.positions));
@@ -8875,6 +8912,9 @@ extern "C" int re4dc_water45_quad(const float positions[4][3],const float rgb[4]
 #if defined(RE4DC_LAKE_RIPPLES) && RE4DC_LAKE_RIPPLES
 // LAKE_RIPPLES (native_lake.cpp): a prebuilt TR packet (headers and vertices) queued like the water quad above.
 extern "C" int re4dc_ui_tr_packet(const void* packet,unsigned bytes){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return 1;
+#endif
     if(!frame_ready || stream_aborted || draining_parts || !bytes)return 0;
     if(source_draws_finished){AVD_EVENT(Direct,nullptr,nullptr,4);stream_select(PVR_LIST_TR_POLY);stream_send(packet,bytes);return 1;}
     const unsigned required=kSubscreenQuadNode+((bytes+31)&~31U);
@@ -8964,6 +9004,9 @@ void post_params(unsigned rate,unsigned type,int power,unsigned level,unsigned p
 }
 extern "C" void re4dc_post_filter00(unsigned char rate,unsigned char type,signed char power,unsigned char level,
                                     unsigned char pow,unsigned char bias,int valid){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())return;
+#endif
     ++post_calls;
     const unsigned key1=rate|unsigned(type)<<8|unsigned((unsigned char)power)<<16|unsigned(level)<<24;
     const unsigned key2=pow|unsigned(bias)<<8|(valid?0x10000U:0U);
