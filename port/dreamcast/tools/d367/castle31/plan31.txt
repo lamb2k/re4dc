@@ -1659,3 +1659,85 @@ goto 12613 -18200 500
 goto 14413 -18650 500
 wait 15
 end
+@moat
+rescue 1
+autofight 5000
+goto 1363 -17450 500
+goto 6013 -21350 500
+goto 8413 -21350 500
+goto 8563 -21950 500
+goto 9313 -26300 500
+goto 9463 -35450 500
+goto 9613 -36200 500
+goto 9913 -36950 500
+goto 10213 -37700 500
+goto 10513 -38450 500
+goto 10663 -39200 500
+goto 10963 -39950 500
+goto 10963 -40700 500
+goto 10963 -41450 500
+goto 10963 -42200 500
+goto 10963 -42950 500
+goto 10063 -45050 500
+end
+@plates
+rescue 1
+autofight 0
+goto 9313 -49850 500
+goto 8863 -50300 500
+goto 1363 -51950 500
+goto 313 -53750 500
+goto -4486 -66050 500
+wait 4
+press x 0.3
+wait 2
+goto -2000 -62000 500
+goto 2000 -62000 500
+goto 4513 -66050 400
+wait 20
+end
+@fight208
+rescue 1
+autofight 8000
+goto 0 -3000 500
+goto 0 -6000 500
+goto 0 -3000 500
+goto 0 -6000 500
+end
+@moatdoor
+rescue 1
+autofight 0
+press a 0.5
+wait 6
+goto -300 -56000 400
+goto -2000 -62000 500
+goto -4486 -66050 400
+wait 3
+press x 0.3
+wait 2
+goto -2000 -62000 500
+goto 2000 -62000 500
+goto 4513 -66050 400
+wait 20
+end
+@moatdoor2
+autofight 0
+goto -100 -53400 200 6
+face -100 -60000
+wait 1
+press a 0.8
+wait 4
+press a 0.8
+wait 6
+goto -100 -56000 400
+end
+@moatdoor3
+autofight 0
+press x 0.3
+wait 6
+goto -100 -53400 200 6
+face -100 -60000
+wait 4
+press a 0.8
+wait 8
+end
