@@ -118,6 +118,8 @@ def dissolve(tris,step,boundary_tolerance=1e-8,approximate_uv=False):
             out.append((vs[a],vs[b],vs[c]));indices.pop(k);found=True;break
         if not found:return tris,'non-simple or collinear boundary',None
     out.append(tuple(vs[i] for i in indices))
+    if any(dot(cross(sub(pos(t[1],step),pos(t[0],step)),sub(pos(t[2],step),pos(t[0],step))),n)<=1e-8 for t in out):
+        return tris,'degenerate or reversed output',None
     if len(out)>=len(tris):return tris,'no interior tessellation saving',None
     return out,'authored',{'boundary_vertices':len(vs),'boundary_vertices_before':len(original_boundary),'boundary_subdivisions_removed':removed,'boundary_tolerance_local':boundary_tolerance,'source_boundary':original_boundary,'output_boundary':vs,'boundary_loops':1,'source_triangles':len(tris),'output_triangles':len(out),'removed_interior_vertices':len(corners)-len(original_boundary),'emitted_positions_uv_color_exact_source_corners':True,'UV_appearance_approximation':approximate_uv,'source_interior_uv_seam_edges':sum(len(uses)==2 and (uses[0][0][:5]!=uses[1][1][:5] or uses[0][1][:5]!=uses[1][0][:5]) for uses in edges.values())}
 
