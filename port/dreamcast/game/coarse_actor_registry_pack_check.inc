@@ -207,7 +207,12 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
     const unsigned version=pu32(p,8),header=pu32(p,12),total=pu32(p,16),kinds=pu32(p,20),table=pu32(p,24),skin=pu32(p,28),
         proom=pu32(p,32),pcrc=pu32(p,36),pfnv=pu32(p,40),hcrc=pu32(p,44),app0=pu32(p,48),max_bones=pu32(p,52);
 #if RE4DC_NMR_IMMUTABLE_ALIAS
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+    const bool ashley_alias=version==2u && pu32(p,56)==1u && proom==room;
+    const bool alias=ashley_alias;
+#else
     const bool alias=version==2u && pu32(p,56)==1u && room==0x11fu && proom==0x11fu;
+#endif
     const bool bad_version=!(version==1u && !pu32(p,56)) && !alias;
     if(bad_version || header!=kPackHeader || total!=size || kinds!=kPackKinds || table!=kPackHeader || app0!=nmr::appearance_first ||
               !max_bones || max_bones>kRegBones || pu32(p,60)){detail=version;return kPwHeader;}
@@ -236,7 +241,14 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
            bytes!=count*kPackRecord[k])return kPwTable;
 #if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
         // The r202 source cast is exactly 53 primary + 16 partner geometries. All other rooms retain 64.
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD && RE4DC_NMR_IMMUTABLE_ALIAS
+        // Measured r202: 53 room geometries +18 PS2 Ashley body-rung
+        // geometries. This stays inside the existing72-record storage.
+        const unsigned room_geometry_max=room==0x202u?(alias?71u:69u):64u;
+        if(k==kGeom && count+RE4DC_PBK(k)>room_geometry_max)return kPwTable;
+#else
         if(k==kGeom && count+RE4DC_PBK(k)>(room==0x202u?69u:64u))return kPwTable;
+#endif
 #endif
 #if RE4DC_ROUTE_CH22 && !RE4DC_ROUTE_CH23 && !RE4DC_NMR_POOL
         if(k==kFPart && room!=0x11cu && count>32u)return kPwTable;
@@ -315,6 +327,12 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         for(unsigned k=0;k<n;++k)if(r[k]<0x20 || r[k]>0x7e)return kPwDescriptor;
         for(unsigned k=n;k<16;++k)if(r[k])return kPwDescriptor;
         const unsigned app=pu32(r,16),id=pu32(r,20),bones=pu32(r,24),sections=pu32(r,28),first=pu32(r,32),pat=pu32(r,36),bfirst=pu32(r,40);
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD && RE4DC_NMR_IMMUTABLE_ALIAS
+        // The existing Mendez alias package stays admitted. Every descriptor of
+        // another alias package must be the pinned Ashley source type.
+        if(alias && room!=0x11fu && (((pu32(r,44)>>8)&255u)!=141u || sections!=7u || (id!=3u && id!=0u) ||
+                                   ((pu32(r,44)>>24)&1u)))return kPwDescriptor;
+#endif
 #if RE4DC_NMR_SLOTS
         // A draw-slot descriptor (word 44 bits 8..15 = S source joints): parents run = S source parents (u8, 0xff =
         // root, else an earlier joint) + `bones` slot bytes (strictly increasing joints < S); bind run = S inverses.
@@ -375,13 +393,28 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
             // order: the generator copies the full one's section list); an unnumbered level keeps the rule below.
             const unsigned lvl=(w>>26)&15u;
             desc.lod_level=lvl;
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+            const bool ashley=S==141u && sections==7u && (id==3u || id==0u) && !pool;
+            if(lvl && (!(w&(1u<<25)) || (!pool && !ashley) || (ashley && lvl>2u)))return kPwDescriptor;
+#else
             if(lvl && (!(w&(1u<<25)) || !pool))return kPwDescriptor;
+#endif
             if(w&(1u<<25)) {
                 if(!full || full-1u>=d)return kPwDescriptor;
                 const auto& f=PKD[full-1u];
                 if(f.model_id!=id || f.bones!=bones || f.sections!=sections || f.lod_of ||
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+                   (ashley?(f.pool || f.source_bones!=141u):(lvl?(!f.pool || !pool):(f.pool || pool))))return kPwDescriptor;
+#else
                    (lvl?(!f.pool || !pool):(f.pool || pool)))return kPwDescriptor;
+#endif
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+                // A partner package's level names its full descriptor in the
+                // combined view, just as its appearance and first_chunk do.
+                desc.lod_of=full+(ashley?RE4DC_PB(desc):0u);
+#else
                 desc.lod_of=full;
+#endif
             } else if(full)return kPwDescriptor;
 #else
             if(w&(1u<<25)) {
@@ -559,7 +592,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
 #if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
         // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
         // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+        if(PKD[b].lod_of==a+1u+(PKD[b].source_bones==141u?RE4DC_PB(desc):0u))continue;
+#else
         if(PKD[b].lod_of==a+1u)continue;
+#endif
 #if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
         if(PKD[a].lod_of && PKD[b].lod_of==PKD[a].lod_of)continue;  // two numbered levels of one full descriptor
 #endif

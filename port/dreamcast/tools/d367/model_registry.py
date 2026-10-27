@@ -86,6 +86,7 @@ MATERIAL_ROWS = 64          # actor_lifetime.inc Info::roles mask capacity
 SOURCE_BLOBS = 32           # actor_lifetime.inc Asset::templates mask capacity
 CH22_LUIS_COVERAGE = False  # explicit room11c pinned source coverage; package-only
 SLOTS = False               # --slots: draw-slot descriptors (source.json draw_slots), package only
+ASHLEY_RIG = False           # --ashley-rig: numbered PS2 Ashley draw-slot levels only
 WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (RE4DC_ACTOR_WIDE_IDENTITY)
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
@@ -521,6 +522,12 @@ def main():
         CH22_LUIS_COVERAGE = True
         PACK_CAPACITY['fpart'] = 83  # exact room11c Luis body + independent gun
     global SLOTS, PACK_MAX_BYTES
+    global ASHLEY_RIG
+    if '--ashley-rig' in args:
+        args.remove('--ashley-rig')
+        if '--slots' not in args or '--roles5' not in args:
+            sys.exit('model_registry: --ashley-rig needs --slots --pool --roles5')
+        ASHLEY_RIG = True
     if '--slots' in args:
         args.remove('--slots')
         if package_room is None:
@@ -549,11 +556,13 @@ def main():
     immutable_arrays = '--immutable-array-alias' in args
     if immutable_arrays:
         args.remove('--immutable-array-alias')
-        if package_room != 0x11f or PACK_CAPACITY['fpart'] != 128:
+        if (package_room != 0x11f and not ASHLEY_RIG) or PACK_CAPACITY['fpart'] != 128:
             sys.exit('model_registry: --immutable-array-alias requires --package-room 11f and --ch23-facts')
     source_normal_length = '--source-normal-length' in args
     if source_normal_length:
         args.remove('--source-normal-length')
+        if ASHLEY_RIG:
+            sys.exit('model_registry: PS2 Ashley rig must keep PS2 normals; --source-normal-length is forbidden')
     global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23
     if '--wide-identity' in args:
         args.remove('--wide-identity')
@@ -668,6 +677,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {L["runtime_header"]} sha256 differs from the catalog')
         binds = inputs.json(os.path.join(cast, name, 'source-bindings.json'), f'cast/{name}/source-bindings.json')
         src = inputs.json(os.path.join(cast, name, 'source.json'), f'cast/{name}/source.json')
+        if source_normal_length and src.get('ps2_rig'):
+            raise Fail(f'{name}: PS2 rig must keep PS2 normals; source-derived normal length is forbidden')
         # The spec's model id / source types are the cast's own, not a label: a descriptor never claims another
         # appearance's selection (the cow type 0 vs type 1 TPLs share one BIN).
         if int(d['model_id'], 16) != src.get('source_model_id') or sorted(d['source_types'] or []) != sorted(src.get('types') or []):
@@ -739,6 +750,11 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                     any(not 0 <= x < bones for x in draw_slots) or draw_slots != sorted(set(draw_slots))):
                 raise Fail(f'{name}: draw_slots must be strictly increasing source joints < {bones} (<= 255 joints)')
             draw = len(draw_slots)
+        ashley_rig = (ASHLEY_RIG and src.get('ps2_rig', {}).get('schema') == 'ashley-ps2-rig-1' and
+                      src.get('ps2_rig', {}).get('ps2_bones') == 81 and bones == 141 and
+                      len(binds) == 7 and draw_slots is not None and int(d['model_id'], 0) in (0, 3))
+        if ASHLEY_RIG and not ashley_rig:
+            raise Fail(f'{name}: --ashley-rig requires a PS2 rig 141-source-joint seven-role Ashley descriptor')
         # ---- sections against the archive
         sections, need, contract = [], 0, []
         for i, b in enumerate(binds):
@@ -950,13 +966,15 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             if d.get('lod_level'):
                 # NMR_POOL_LOD (lane lod26b 2026-10-26): a numbered pool level (word 44 bits 26..29; GANADO_LOD order)
                 lv = int(d['lod_level'])
-                if not 1 <= lv <= 15 or not pool:
+                if not 1 <= lv <= 15 or (not pool and not (ashley_rig and lv <= 2)):
                     raise Fail(f'{name}: lod_level {lv} needs 1..15 and a pool descriptor')
                 entry['lod_level'] = lv
         elif d.get('lod_level'):
             raise Fail(f'{name}: lod_level needs lod_of')
         if draw_slots is not None:
             entry.update(source_bones=bones, slots=list(draw_slots))
+        if ashley_rig:
+            entry['ashley_rig'] = True
         if not 1 <= entry['position_shift'] <= 4:
             raise Fail(f'{name}: position_shift {entry["position_shift"]} outside 1..4')
         # "source_drops": ["bump"] (lane ps2cast-2): the source path itself never draws the bump stage (trans.cpp
@@ -1237,7 +1255,12 @@ def lod_word(r, runtime):
     if r.get('lod_level'):
         # NMR_POOL_LOD: a numbered pool level of a pool full descriptor, the same sections in the same order
         same = [(s['bin'], s['tpl']) for s in f['sections']] == [(s['bin'], s['tpl']) for s in r['sections']]
-        if (f['model_id'], f['bones']) != (r['model_id'], r['bones']) or not same or not f.get('pool') or not r.get('pool') \
+        ashley = (ASHLEY_RIG and r.get('ashley_rig') and f.get('ashley_rig') and
+                  r.get('source_bones') == f.get('source_bones') == 141 and
+                  r['model_id'] in (0, 3) and len(r['sections']) == 7 and
+                  r.get('slots') == f.get('slots') and 1 <= r['lod_level'] <= 2 and
+                  not r.get('pool') and not f.get('pool'))
+        if (f['model_id'], f['bones']) != (r['model_id'], r['bones']) or not same or (not ashley and (not f.get('pool') or not r.get('pool'))) \
                 or f.get('lod_of'):
             raise Fail(f'{r["name"]}: a numbered pool level needs its pool full descriptor\'s model id, bones and sections')
         return (r['lod_level'] << 26) | (1 << 25) | ((full + 1) << 16)
@@ -1247,7 +1270,7 @@ def lod_word(r, runtime):
 
 
 def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blobs, immutable_arrays=False):
-    if immutable_arrays and room != 0x11f:
+    if immutable_arrays and room != 0x11f and not (ASHLEY_RIG and runtime and all(r.get('ashley_rig') for r in runtime)):
         raise Fail("immutable-array alias package is qualified only for room 11f")
     tex_index = {t: i for i, t in enumerate(used_tex)}
     geoms, gkey, refs, desc, parents, bind = [], {}, [], [], bytearray(), []
