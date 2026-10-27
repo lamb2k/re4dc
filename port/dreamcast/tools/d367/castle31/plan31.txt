@@ -1609,3 +1609,53 @@ goto 38600 -52800 500
 goto 41300 -48000 500
 goto 38600 -52800 500
 end
+@pressA
+wait 1
+press a 0.5
+wait 8
+end
+@last1
+rescue 1
+autofight 0
+goto 38600 -52800 500
+goto 39500 -52200 500
+autofight 5000
+goto 41300 -50400 500
+goto 41300 -47000 500
+goto 41300 -44000 500
+end
+@last2
+rescue 1
+autofight 0
+goto 39500 -52200 500
+goto 41300 -50400 500
+autofight 2500
+goto 41400 -49300 300
+goto 41400 -48000 300
+end
+@go208
+rescue 1
+autofight 0
+press x 0.3
+goto 41300 -50400 500
+goto 39500 -52200 500
+goto 38600 -52800 500
+goto 39200 -55200 500
+goto 39800 -55800 500
+goto 41300 -64500 400
+wait 6
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@wingR
+rescue 1
+autofight 6000
+goto 9013 -4400 500
+goto 9163 -4550 500
+goto 11713 -17450 500
+goto 12613 -18200 500
+goto 14413 -18650 500
+wait 15
+end
