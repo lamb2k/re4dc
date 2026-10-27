@@ -70,7 +70,70 @@ def canonical(tris):
     return collections.Counter(min(t, t[1:]+t[:1], t[2:]+t[:2]) for t in tris)
 
 
-def protected_source_pieces(d, path, pin, full_parts):
+def author_planar_boundary(tris, step, world_scale):
+    """Rebuild one named roof/facade using its single convex open boundary.
+
+    Holes, multiple boundaries, closed solids, strong relief and nonconvex
+    outlines are refused. Boundary corners keep their source depth, UV/color
+    and silhouette; interior tessellation/lighting detail is an approximation.
+    """
+    import numpy as np
+    edges=collections.Counter()
+    corners={}
+    for t in tris:
+        for v in t:corners.setdefault(v[:3],v)
+        for a,b in zip(t,t[1:]+t[:1]):
+            if a[:3]!=b[:3]:edges[tuple(sorted((a[:3],b[:3])))]+=1
+    adjacent=collections.defaultdict(list)
+    for (a,b),count in edges.items():
+        if count==1:adjacent[a].append(b);adjacent[b].append(a)
+        elif count>2:return tris,None
+    if len(adjacent)<3 or any(len(v)!=2 for v in adjacent.values()):return tris,None
+    start=min(adjacent);ring=[start];prev=None;cur=start
+    while True:
+        choices=[v for v in adjacent[cur] if v!=prev]
+        nxt=choices[0]
+        if nxt==start:break
+        if nxt in ring:return tris,None
+        ring.append(nxt);prev,cur=cur,nxt
+    if len(ring)!=len(adjacent):return tris,None  # a second loop is an opening
+    xyz=np.asarray(list(corners),float)*np.asarray(step)
+    center=xyz.mean(0);_,axes=np.linalg.eigh((xyz-center).T@(xyz-center))
+    projected=(xyz-center)@axes
+    if np.ptp(projected[:,0])*world_scale>50:return tris,None
+    # Remove only collinear boundary subdivisions, to 5 mm in actual world
+    # space. No interior decimator or UV seam operation is run.
+    while len(ring)>3:
+        removed=False
+        for i in range(len(ring)):
+            a,b,c=(np.asarray(ring[k%len(ring)],float)*np.asarray(step) for k in (i-1,i,i+1))
+            ac=c-a;length=np.linalg.norm(ac)
+            distance=np.linalg.norm(np.cross(b-a,ac))/max(length,1e-12)
+            if distance*world_scale<=5 and np.dot(b-a,b-c)<=0:
+                ring.pop(i);removed=True;break
+        if not removed:break
+    rp=(np.asarray(ring,float)*np.asarray(step)-center)@axes[:,1:]
+    turns=[]
+    for i in range(len(ring)):
+        a,b,c=(rp[k%len(ring)] for k in (i-1,i,i+1))
+        ab,bc=b-a,c-b
+        turns.append(float(ab[0]*bc[1]-ab[1]*bc[0]))
+    if min(turns)<-1e-5 and max(turns)>1e-5:return tris,None
+    vertices=[corners[v] for v in ring]
+    out=[(vertices[0],vertices[i],vertices[i+1]) for i in range(1,len(vertices)-1)]
+    if len(out)>=len(tris):return tris,None
+    normal=sum((np.cross((np.asarray(t[1][:3])-t[0][:3])*step,
+                         (np.asarray(t[2][:3])-t[0][:3])*step) for t in tris),np.zeros(3))
+    t=out[0];newnormal=np.cross((np.asarray(t[1][:3])-t[0][:3])*step,
+                               (np.asarray(t[2][:3])-t[0][:3])*step)
+    if np.dot(normal,newnormal)<0:out=[(t[0],t[2],t[1]) for t in out]
+    return out,dict(operation='single convex roof/facade boundary retessellation',
+             triangles_before=len(tris),triangles_after=len(out),boundary_vertices=len(ring),
+             maximum_relief_mm=float(np.ptp(projected[:,0])*world_scale),
+             openings='one source boundary, no holes',appearance_accepted=False)
+
+
+def protected_source_pieces(d, path, pin, full_parts, author_features=False):
     """Map prior camera-visible losses to current connected SOURCE pieces.
 
     The source piece is retained exactly, rather than restoring every unrelated
@@ -87,6 +150,8 @@ def protected_source_pieces(d, path, pin, full_parts):
     selected=collections.defaultdict(set)
     fallbacks=set()
     mapped=0
+    authored=0
+    authored_pieces={}
     evidence=[]
     for (pli,pi), records in by.items():
         if pi in full_parts:
@@ -131,8 +196,18 @@ def protected_source_pieces(d, path, pin, full_parts):
             for ti in matches[0]:
                 ci,ordinal=identities[ti];selected[ci].add(ordinal)
             mapped+=1
+            detail=None
+            if author_features and r.get('author_group') in ('roof-surfaces','facade-surfaces'):
+                ts=[tris[ti] for ti in matches[0]]
+                scale=float(np.linalg.norm(A[:,:3],axis=0).max())
+                rebuilt,detail=author_planar_boundary(ts,np.asarray(m[11:14]),scale)
+                if detail:
+                    identity=tuple(identities[ti] for ti in matches[0])
+                    authored_pieces[identity]=rebuilt
+                    authored+=1
             evidence.append(dict(placement=pli,part=pi,source_box=[r['lo'],r['hi']],
-                                 source_triangles=r['ntri'],result='exact connected source piece retained'))
+                                 source_triangles=r['ntri'],result='authored named boundary' if detail else
+                                 'exact connected source piece retained',authoring=detail))
     parts={pi for _,pi in by}-full_parts
     replacements={}
     for pi in parts-fallbacks:
@@ -140,7 +215,25 @@ def protected_source_pieces(d, path, pin, full_parts):
         for ci in range(fc,fc+cc):
             c=d['clusters'][ci];ts=level_triangles(d,d['levels'][c[6]])
             replacements[ci]=[t for ti,t in enumerate(ts) if ti in selected[ci]]
-    return replacements,parts,dict(flagged_pieces=len(flags),mapped_exact=mapped,
+    # A source-connected roof may cross cluster boundaries. Keep its existing
+    # identity by assigning the authored boundary to its first source cluster.
+    # Its other cluster slots remain present, empty for this feature.
+    for identity,rebuilt in authored_pieces.items():
+        bycluster=collections.defaultdict(set)
+        for ci,ti in identity:bycluster[ci].add(ti)
+        if any(ci not in replacements for ci in bycluster):continue
+        for ci,ordinals in bycluster.items():
+            source=level_triangles(d,d['levels'][d['clusters'][ci][6]])
+            remove=canonical([source[ti] for ti in ordinals])
+            kept=[]
+            for t in replacements[ci]:
+                key=min(t,t[1:]+t[:1],t[2:]+t[:2])
+                if remove[key]:remove[key]-=1
+                else:kept.append(t)
+            replacements[ci]=kept
+        replacements[min(bycluster)].extend(rebuilt)
+    return replacements,parts,dict(flagged_pieces=len(flags),mapped_source_pieces=mapped,
+             mapped_exact=mapped-authored,authored_named_pieces=authored,
              fallback_whole_parts=sorted(fallbacks),records=evidence)
 
 
@@ -449,9 +542,13 @@ def main():
                     help='explicit primitive authoring; requires numpy, preserves changing owners')
     ap.add_argument('--protected-pieces', type=Path,
                     help='pinned prior lost-part evidence; retain precise connected features, not whole parts')
+    ap.add_argument('--author-planar-features',action='store_true',
+                    help='rebuild explicitly named roof/facade pieces through their source boundary')
     args = ap.parse_args()
     require(not (args.solid_shells and args.protected_pieces),
             'primitive authoring and source-piece restoration need separate named candidates')
+    require(not args.author_planar_features or args.protected_pieces,
+            'named planar authoring requires protected-piece feature input')
     require(not args.out.exists(), 'output exists; use a new immutable candidate name')
     plan_blob = args.plan.read_bytes()
     plan = json.loads(plan_blob)
@@ -482,7 +579,7 @@ def main():
     piece_replacements, piece_evidence = {}, None
     if args.protected_pieces:
         piece_replacements, selected_parts, piece_evidence = protected_source_pieces(
-            d,args.protected_pieces,plan['protected_evidence']['sha256'],set(part_group))
+            d,args.protected_pieces,plan['protected_evidence']['sha256'],set(part_group),args.author_planar_features)
         for pi in selected_parts:
             part_group[pi]='exact-protected-connected-pieces'
     out = compile_selection(d, set(part_group))
