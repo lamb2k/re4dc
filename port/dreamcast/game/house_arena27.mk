@@ -54,6 +54,7 @@ $(error HOUSE_ARENA27 requires its private arena identity/placement/texture head
 endif
 # Root-owned renderer filters use the same default-off switch; there is no new timing implementation.
 $(OBJDIR)/bench.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1 -DRE4DC_LOG_ATOMIC=1
 $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/coarse.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27_AUTO=$(HOUSE_ARENA27_AUTO) -DRE4DC_HOUSE_ARENA27_BEGIN=$(HOUSE_ARENA27_BEGIN) -DRE4DC_HOUSE_ARENA27_END=$(HOUSE_ARENA27_END) '-DRE4DC_BENCH_NAME="HOUSE ARENA A/B/C"' '-DRE4DC_BENCH_MENU="X: ORIGINAL ONLY  Y: SIMPLIFIED R4  B: BAKED"'
 endif
