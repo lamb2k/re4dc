@@ -31,6 +31,8 @@ QALINK_PPP_DEFS += -DPPP_DEBUG -Ddbglog=re4dc_qalink_dbglog
 $(OBJDIR)/qa_link.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_DEBUG=1
 endif
 PLATFORM_OBJS += $(OBJDIR)/qa_link.o $(QALINK_PPP_OBJS)
+# the modem driver's chain buffers and its timeout worker's stack from BSS (qa_link.cpp): no KOS heap for them
+GAME_LDFLAGS += -Wl,--wrap=createChainBuffer -Wl,--wrap=destroyChainBuffer -Wl,--wrap=thd_worker_create_ex
 $(TARGET): $(OBJDIR)/qa_link.o $(QALINK_PPP_OBJS)
 $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK=1
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_QA_LINK=1

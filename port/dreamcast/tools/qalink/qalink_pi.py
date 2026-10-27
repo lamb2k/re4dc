@@ -125,7 +125,11 @@ class Service:
             r, _, _ = select.select(inputs, [], [], 1.0)
             for s in r:
                 if s is self.udp:
-                    data, addr = self.udp.recvfrom(2048)
+                    try:
+                        data, addr = self.udp.recvfrom(2048)
+                    except OSError as e:   # e.g. Windows reports an ICMP port-unreachable as a reset; keep serving
+                        self.write('S', 'udp receive error: %s' % e)
+                        continue
                     self.on_datagram(data, addr)
                 elif s is self.ctl:
                     conn, _ = self.ctl.accept()
