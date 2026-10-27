@@ -1351,3 +1351,57 @@ wait 1
 press a 0.8
 wait 10
 end
+@lever13
+autofight 0
+goto 32750 -41250 300 8
+goto 33900 -40000 100 10
+face 36000 -40000
+wait 1
+press a 0.8
+wait 8
+end
+@dism
+press a 0.3
+wait 2
+press b 0.3
+wait 1
+end
+@chk
+press a 0.3
+wait 4
+end
+@unst2
+hold sd 0.6
+hold sl 0.6
+goto -9762 -10837 300 8
+face -12500 -10950
+wait 1
+press a 0.8
+room 203 15
+end
+@retake
+press a 0.8
+wait 4
+press a 0.8
+wait 3
+press b 0.3
+wait 2
+face -12500 -10950
+wait 1
+press a 0.3
+wait 3
+press a 0.8
+wait 2
+press a 0.8
+wait 10
+end
+@useHere
+face -12500 -10950
+wait 1
+press a 0.3
+wait 4
+press a 0.8
+wait 2
+press a 0.8
+wait 12
+end

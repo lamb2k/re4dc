@@ -112,6 +112,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "sce_sys.h"
 #include "etc_model.h"
 #include "emdoor.h"
+#include "emswitch.h"
 #include "embox.h"
 #include "sscrn.h"
 #include "merchant.h"
@@ -1143,6 +1144,23 @@ void plpos_poll()
                   (unsigned) wp.room_frames, (int) pSubEm->pos.x, (int) pSubEm->pos.y, (int) pSubEm->pos.z,
                   (int) (s16) pG->ashley_life, (unsigned) pG->Status_flg[1], (unsigned) pSubEm->r_no_0,
                   (unsigned) pSubEm->r_no_1, (unsigned) pSubEm->r_no_2);
+    // castle31: room flags and every lever switch (0x4B) with the inputs of emSwitchOperationActEvtCk
+    // (distance, height gap, the player's and the lever's facing errors), so a missing prompt is attributable.
+    re4dc_log("warp: rflg room %x frame %u room_flg %08x rsf0 %d rsf1 %d rsf5 %d\n", (unsigned) pG->room_id,
+              (unsigned) wp.room_frames, (unsigned) pG->Room_flg[0], RsfCheck(G_ROOM_ID, 0) ? 1 : 0,
+              RsfCheck(G_ROOM_ID, 1) ? 1 : 0, RsfCheck(G_ROOM_ID, 5) ? 1 : 0);
+    for (cEm* e = EmMgr.getEmPtr(0x4B, 0); e; e = EmMgr.getEmPtr(0x4B, e)) {
+        EmSwitchWork* w = EMSWITCH_WK(e);
+        const float dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z;
+        re4dc_log("warp: sw room %x frame %u pos %d %d %d ang %d type %d state %d opened %d act %d mode %d ck %d"
+                  " dist %d dy %d muku_pl %d muku_sw %d rno %u/%u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
+                  (int) e->pos.x, (int) e->pos.y, (int) e->pos.z, (int) (e->ang.y * 1000.0f), (int) e->type,
+                  (int) w->state, (int) w->opened, (int) w->actButton, (int) w->Mode, (int) w->Ck_dis,
+                  (int) sqrtf(dx * dx + dz * dz), (int) (e->pos.y - (pPL->pos.y + 1000.0f)),
+                  (int) (Muku(&pPL->pos, &e->pos, pPL->ang.y, 3.1415927f) * 1000.0f),
+                  (int) (Muku(&e->pos, &pPL->pos, e->ang.y, 3.1415927f) * 1000.0f), (unsigned) e->r_no_0,
+                  (unsigned) e->r_no_1);
+    }
 }
 
 void kill_poll();
