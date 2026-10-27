@@ -1360,6 +1360,17 @@ if os.path.isdir(PIC26BD):
     DATA['pic26b'] = {'dc/tex.pak': PIC26BD + '/dc/tex.pak'}
     PAK_DERIVED['pic26b'] = PIC26BD + '/pak-derived.json'
     AFTER += [('pic26b', 'pic26')]
+# snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
+# ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
+# its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
+#   em/pl14.drs      chapter 2 overlay bank: 19 of 20 samples from PS2 pl14.snd (1 kept GC, no PS2 match)
+#   bgm/doorse.dat   door sounds: the PS2 has no door-sound bank (doorse.hed is an offset table only); ps2_audio.py now
+#                    matches them by sound against pl00 / core / the chapter-1 room banks: block 11's 2 samples from PS2;
+#                    blocks 0-10 (18 samples) keep GC (no PS2 match at the matcher's floor).
+# Neither file is written by another set. Store: re4-assets-private/snd26-20261027 (RECIPE.txt, SHA256SUMS, _map/).
+SND26D = os.environ.get('SND26D', '/root/re4data/private/snd26-20261027')
+if os.path.isdir(SND26D + '/em'):
+    DATA['snd26'] = {'em/pl14.drs': SND26D + '/em/pl14.drs', 'bgm/doorse.dat': SND26D + '/bgm/doorse.dat'}
 # efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
 # picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
 # efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
