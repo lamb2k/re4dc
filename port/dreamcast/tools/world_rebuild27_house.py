@@ -197,13 +197,18 @@ def author_roof(d, spec):
         import shapely
         from shapely.geometry import Polygon,Point
         notch=spec['notches'][str(strip)]
+        edge_counts=collections.Counter()
+        for t in source.values():
+            for a,b in zip(t,t[1:]+t[:1]):edge_counts[tuple(sorted((a[:3],b[:3])))]+=1
+        for edge in notch['boundary_source_edges']:
+            w.require(edge_counts[tuple(sorted(tuple(v)for v in edge))]==1,'physical source notch boundary edge')
         length=np.asarray(spec['world_length_axis']);cross=np.asarray(spec['world_cross_axis'])
         basis=np.stack([length,cross]).T
         xyz=positions(d,spec['mesh'],ts);world=xyz@A[:,:3].T+A[:,3];xy=world@basis
         footprint=shapely.unary_union([Polygon(t)for t in xy])
         cut=Polygon(notch['cut_plan_mm']).buffer(3,join_style='mitre')
         target=footprint.difference(cut)
-        w.require(target.geom_type=='Polygon','one explicit open roof notch')
+        w.require(target.geom_type in ('Polygon','MultiPolygon'),'explicit roof notch polygon surfaces: '+target.geom_type)
         boundary=np.asarray(notch['source_boundary_world_mm']);boundary_xy=boundary@basis
         source_polys=[Polygon(t)for t in xy];result=[]
         inverse=np.linalg.inv(A[:,:3]);m=d['meshes'][spec['mesh']]
@@ -238,6 +243,7 @@ def author_roof(d, spec):
         filled=emitted.intersection(Polygon(notch['cut_plan_mm'])).area
         w.require(filled<1e-5,'roof dormer notch filled after quantization')
         return result,dict(name=notch['name'],source_boundary_world_mm=notch['source_boundary_world_mm'],
+          boundary_source_edges=notch['boundary_source_edges'],proof_scope='this named band; separate all-roof proof follows',
           source_cut_plan_mm=notch['cut_plan_mm'],source_notch_filled_area_mm2=float(filled),
           retained_other_source_part=56,quantization_clearance_mm=3)
     for strip,name in enumerate(names):
@@ -270,6 +276,21 @@ def author_roof(d, spec):
             w.require(np.dot(np.cross(pp[1]-pp[0],pp[2]-pp[0]),expected)>1e-9,'roof end winding')
         output.extend(tris);proofs.append(dict(name='ridge_end_'+str(end),output_triangles=len(tris)))
     w.require(len(output)<=spec['triangle_cap'],'named roof budget exceeded')
+    if spec.get('notches'):
+        import shapely
+        from shapely.geometry import Polygon
+        basis=np.stack([spec['world_length_axis'],spec['world_cross_axis']]).T
+        world=positions(d,spec['mesh'],output)@A[:,:3].T+A[:,3]
+        projected=shapely.unary_union([Polygon(t@basis)for t in world])
+        global_proofs=[]
+        for name in sorted({n['name']for n in spec['notches'].values()}):
+            n=next(n for n in spec['notches'].values()if n['name']==name)
+            physical_quad=Polygon(np.asarray(n['source_boundary_world_mm'])@basis)
+            filled=projected.intersection(physical_quad).area
+            w.require(filled<1e-5,'all-roof projection filled physical source notch: '+name)
+            global_proofs.append(dict(name=name,proof_scope='all quantized authored roof triangles against actual source boundary-edge quad',
+              roof_triangles_checked=len(output),source_quad_area_mm2=physical_quad.area,source_quad_filled_area_mm2=float(filled)))
+        proofs[0]['all_roof_notch_proofs']=global_proofs
     return source,output,proofs
 
 
@@ -316,6 +337,7 @@ def main():
     context_blob=(a.context/'ps2-world.re4mesh').read_bytes();context=w.codec.decode(context_blob,files['ps2-world.r4pw'],True)
     wall_source,wall,wall_proof=author_walls(d,plan['walls'])
     roof_source,roof,roof_proof=author_roof(d,plan['roof'])
+    w.require(len(wall)+len(roof)<=plan['budget']['total_cap'],'complete named house core budget')
     replacements={};expected={};changed_parts=set();source_count=0
     for spec,source,authored in ((plan['walls'],wall_source,wall),(plan['roof'],roof_source,roof)):
         w.require(spec['mesh'] not in owners,'changing owner cannot be authored')
