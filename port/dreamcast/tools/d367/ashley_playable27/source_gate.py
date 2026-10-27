@@ -105,7 +105,8 @@ def audit(root):
     original=json.loads((root/'conv-n-o/source.json').read_text())
     negatives=[]
     for name,mutate in [('partner-archive',lambda s:s.update(source_archive='pl11')),
-                        ('leon-owner',lambda s:s.update(source_model_id=3)),
+                        ('partner-model',lambda s:s.update(source_model_id=3)),
+                        ('leon-119-skeleton',lambda s:s.update(bones=s['bones'][:119])),
                         ('partner-face-tpl',lambda s:s['infos'][1].update(source_tpl_arc=11)),
                         ('foreign-hand',lambda s:s['infos'][5].update(source_bin_arc=12)),
                         ('duplicate-slot',lambda s:s['draw_slots'].__setitem__(1,s['draw_slots'][0]))]:

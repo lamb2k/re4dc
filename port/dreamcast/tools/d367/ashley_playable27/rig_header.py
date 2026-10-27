@@ -28,6 +28,7 @@ def generate(output, convs):
         infos = [(x['source_bin_arc'], x['source_tpl_arc']) for x in s['infos']]
         if (s.get('source_archive') != 'pl01' or s.get('source_model_id') != 0 or
                 rig.get('schema') != 'ashley-ps2-rig-1' or rig.get('ps2_bones') != 81 or
+                rig.get('shared_bones') != 64 or len(s.get('bones', [])) != 141 or len(infos) != 7 or
                 infos[:5] != [(4, 5), (7, 9), (6, 11), (8, 5), (10, 5)] or
                 infos[5] not in [(17, 5), (167, 168)] or infos[6] not in [(20, 5), (21, 5)]):
             raise ValueError(f'{p}: exact playable pl01 rig/source role contract required')
