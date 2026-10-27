@@ -1,4 +1,13 @@
 #include "../world_scratch.h"
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+#if !RE4DC_WORLD_REBUILD27 || !RE4DC_SCENERY_CHUNK || !RE4DC_SCENERY_SELECT_ONLY || !RE4DC_SCENERY_REPLAY_LEAN || !RE4DC_PS2_PRELOAD_LEAN
+#error WORLD_REBUILD27_BAKE needs the certified chunk/replay/preload path
+#endif
+#if RE4DC_PS2_PVS || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DEDUP || (RE4DC_PS2_WORLD_LEAN & 8)
+#error WORLD_REBUILD27_BAKE has not qualified these alternate selection paths
+#endif
+#include "include/world_rebuild27_bake.h"
+#endif
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
@@ -5165,6 +5174,9 @@ struct Ps2World {
     re4dc::room::MeshPackage package;
 #endif
     unsigned char* storage=nullptr; unsigned bytes=0;
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+    bool baked=false; // one exact admitted package; retired with its storage
+#endif
     const Ps2Part* parts=nullptr; const Ps2Placement* placements=nullptr; unsigned nplacements=0;
     const std::uint32_t* lut=nullptr; re4dc::room::CompactVertex12* gather=nullptr;
     float view[12]{},projection[7]{},viewport[6]{}; bool camera=false,attempted=false;
@@ -5191,6 +5203,14 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+// Candidate geometry can leave policy parts and placements intentionally empty.
+// adopt() proves every LOD range is inside its MeshPart range; zero therefore
+// means no level can submit geometry. Keep other rooms on the original mask.
+static bool world_rebuild27_live_part(unsigned part){
+    return ps2w.room!=0x101U || ps2w.package.parts()[part].meshlet_count!=0;
+}
+#endif
 #if RE4DC_GC_ASSET_GATE
 void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
 // cast-ps2-25 r16 item 5: the world's sealed manifest as captured at open (gate builds only). A route movie lends the
@@ -6101,6 +6121,9 @@ static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
         const auto& mesh=ps2w.package.meshes()[pl[i].mesh];
         for(unsigned k=0;k<mesh.part_count;++k){
             const unsigned p=mesh.first_part+k;
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(p))continue;
+#endif
             if(p>=nparts || parts[p].pass!=2 || (parts[p].reserved&1U))continue;
             const unsigned t=target(cls[p],kTpFlat|kTpCard|kTpSofta);
             if(t<2)ps2w.pass_mask[i]|=std::uint8_t(1U<<t);
@@ -6805,9 +6828,19 @@ bool ps2_open(){
 #else
             ps2w.package.header().crc,ps2w.package.header().bytes,
 #endif
-            ps2w.package.header().part_count,ps2w.package.header().mesh_count);
+            ps2w.package.header().part_count,ps2w.package.header().mesh_count
+#if defined(RE4DC_WORLD_REBUILD27) && RE4DC_WORLD_REBUILD27
+            ,s,ps2_crc32
+#endif
+            );
 #else
         h.crc;
+#endif
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+    ps2w.baked=re4dc::world_bake27::matches(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes);
+    if(ps2w.baked && policySourceCrc!=0x68100b21U){
+        ps2_free();re4dc_missing("world bake package authentication");return false;
+    }
 #endif
 #if RE4DC_PS2_AREA_HIDE
 #if RE4DC_WORLD_RECT21
@@ -6907,7 +6940,12 @@ bool ps2_open(){
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[ps2w.placements[i].mesh];
         unsigned m=0;
-        for(unsigned k=0;k<mesh.part_count;++k)m|=1U<<ps2w.parts[mesh.first_part+k].pass;
+        for(unsigned k=0;k<mesh.part_count;++k){
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+#endif
+            m|=1U<<ps2w.parts[mesh.first_part+k].pass;
+        }
         ps2w.pass_mask[i]=std::uint8_t(m);
     }
 #endif
@@ -7139,7 +7177,12 @@ bool ps2_movie_reload(){
     ps2w.masked=h.placements<=Ps2World::kMaskPlacements;
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[placements[i].mesh];unsigned mask=0;
-        for(unsigned k=0;k<mesh.part_count;++k)mask|=1u<<parts[mesh.first_part+k].pass;
+        for(unsigned k=0;k<mesh.part_count;++k){
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+#endif
+            mask|=1u<<parts[mesh.first_part+k].pass;
+        }
         ps2w.pass_mask[i]=std::uint8_t(mask);
     }
 #endif
@@ -7654,7 +7697,24 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #endif
         for(unsigned j=0;j<nctx;++j){
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+            // Split selected picks without repeating selection or changing their order.
+            // Only L0 core meshlets have private atlas keys; all other picks keep
+            // their original key, UV basis, higher LOD and material policy.
+            const ChunkPart& queued=cctx[j];unsigned consumed=0;
+            do {
+                ChunkPart routed=queued;
+                if(ps2w.baked && queued.count){
+                    routed.first+=consumed;
+                    routed.count=re4dc::world_bake27::run(cpk+routed.first,queued.count-consumed,queued.index);
+                    const int atlas=re4dc::world_bake27::slot(queued.index,cpk[routed.first].let);
+                    if(atlas>=0)for(unsigned k=0;k<4;++k)routed.key[k]=re4dc::world_bake27::textures[atlas][k];
+                }
+                consumed+=routed.count;
+                const ChunkPart& x=routed;
+#else
             const ChunkPart& x=cctx[j];
+#endif
             part.cull=x.cull;
 #if RE4DC_SCENERY_UV_SNAPSHOT
             part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
@@ -7726,6 +7786,9 @@ int ps2_pass(unsigned pass,float zfar){
             else {++c.fallback;whd::note(pass,x.key);}
 #else
             else ++c.fallback;
+#endif
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+            } while(consumed<queued.count);
 #endif
         }
         nctx=npk=0;
@@ -8027,6 +8090,13 @@ int ps2_pass(unsigned pass,float zfar){
                     x.count=d.chunk_select(cpk+npk);npk+=x.count;
                     continue;
                 }
+            }
+#endif
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+            // An unsupported selector must never draw atlas UVs with the old key.
+            if(ps2w.baked && re4dc::world_bake27::owns_part(index)){
+                if(chunk_flush()<0)return -1;
+                re4dc_missing("world bake selection unsupported");++c.aborts;return -1;
             }
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
@@ -8641,6 +8711,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
     ps2w.storage=nullptr;ps2w.bytes=0;ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+    ps2w.baked=false;
+#endif
     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.attempted=false;
 #if RE4DC_PS2_PASS_MASK
     ps2w.masked=false;
@@ -8947,7 +9020,18 @@ extern "C" int re4dc_ps2_mesh_texture(unsigned i,unsigned out[4]){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 0;
 #endif
+#if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
+    if(!ps2w.storage || !ps2w.parts || ps2w.room!=ps2w.want)return 0;
+    // Enter the existing room preload/residency budget before first draw.
+    // Original shared source textures remain in the list and are fully charged.
+    if(ps2w.baked){
+        if(i<2U){for(unsigned k=0;k<4;++k)out[k]=re4dc::world_bake27::textures[i][k];return 1;}
+        i-=2U;
+    }
+    if(i>=ps2w.package.header().part_count)return 0;
+#else
     if(!ps2w.storage || !ps2w.parts || ps2w.room!=ps2w.want || i>=ps2w.package.header().part_count)return 0;
+#endif
     const auto& q=ps2w.parts[i];
     out[0]=q.crc;out[1]=q.fnv;out[2]=q.width;out[3]=q.height;
     return 1;
