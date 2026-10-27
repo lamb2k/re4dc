@@ -669,6 +669,23 @@ ASHLEY_LOD ?= 0
 ifeq ($(filter $(ASHLEY_LOD),0 1),)
 $(error ASHLEY_LOD must be 0 or 1)
 endif
+# Playable cPlAshley has its own player-family/archive contract. It must never
+# inherit the partner's model3 predicate or distance LOD policy.
+ASHLEY_PLAYABLE_PS2_RIG ?= 0
+ASHLEY_PLAYABLE_PS2_RIG_DIR ?=
+ifeq ($(filter $(ASHLEY_PLAYABLE_PS2_RIG),0 1),)
+$(error ASHLEY_PLAYABLE_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(ASHLEY_PLAYABLE_PS2_RIG),1)
+ifneq ($(PS2_ASHLEY)$(NATIVE_MODEL_REGISTRY_PL_ASHLEY),21)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs PS2_ASHLEY=2 NATIVE_MODEL_REGISTRY_PL_ASHLEY=1)
+endif
+ifeq ($(strip $(ASHLEY_PLAYABLE_PS2_RIG_DIR)),)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs ASHLEY_PLAYABLE_PS2_RIG_DIR from tools/d367/ashley_playable27/rig_header.py)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PLAYABLE_PS2_RIG=1 -I$(ASHLEY_PLAYABLE_PS2_RIG_DIR)
+$(OBJDIR)/coarse_actor.o: $(ASHLEY_PLAYABLE_PS2_RIG_DIR)/ashley_playable_ps2_rig27.h
+endif
 ifeq ($(ASHLEY_LOD),1)
 ifneq ($(ASHLEY_PS2_RIG)$(NMR_POOL_LOD)$(NATIVE_MODEL_REGISTRY_ROLES5),111)
 $(error ASHLEY_LOD needs ASHLEY_PS2_RIG=1 NMR_POOL_LOD=1 NATIVE_MODEL_REGISTRY_ROLES5=1)
