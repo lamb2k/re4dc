@@ -89,6 +89,14 @@ def author_walls(d, spec):
         u = np.asarray([0., 1., 0.]); u -= normal*np.dot(normal, u); u /= np.linalg.norm(u)
         v = np.cross(normal, u)
         uv = (xyz-origin) @ np.stack([u, v]).T
+        # Source UV islands cannot define a single broad-face regression.
+        # Use an explicit square physical tile for this named wall only,
+        # keeping the existing PS2 material and shared part UV basis intact.
+        part=d['parts'][spec['part']];tile=spec['texture_tile_world_mm']
+        low=uv.min((0,1));rate=scale/tile
+        uv_field=np.asarray([[0.,rate/part[11]],[rate/part[10],0.],
+          [(-low[1]*rate-.1-part[8])/part[10],(-low[0]*rate-part[9])/part[11]]])
+        w.require(abs(np.linalg.det(uv_field[:2]))>1e-7,'wall UV field has collapsed')
         union = shapely.unary_union([Polygon(t) for t in uv])
         parts = list(union.geoms) if union.geom_type == 'MultiPolygon' else [union]
         w.require(all(p.geom_type == 'Polygon' for p in parts), 'wall projected polygons')
@@ -128,7 +136,8 @@ def author_walls(d, spec):
                         grid = np.rint((local-m[8:11])/m[11:14]).astype(int)
                         w.require((grid >= 0).all() and (grid <= 65535).all(), 'wall position grid')
                         src = ts[index]
-                        tex = np.rint(np.asarray([a[3:5] for a in src]).T@weights).astype(int)
+                        tex = np.rint(np.asarray([point[0],point[1],1.])@uv_field).astype(int)
+                        w.require((tex>=0).all() and (tex<=65535).all(),'wall affine UV outside original part grid')
                         rgb = np.asarray([[(a[5]>>s)&31 for s in (10,5,0)] for a in src])
                         rgb = np.rint(rgb.T@weights).astype(int)
                         color = (int(src[int(np.argmax(weights))][5])&0x8000)|int(rgb[0]<<10|rgb[1]<<5|rgb[2])
@@ -156,6 +165,9 @@ def author_walls(d, spec):
         proofs.append(dict(name=face['name'],source_ids=ids,source_triangles=len(ts),output_triangles=len(authored),
              operation='named facade contour with explicit source aperture and notch subtraction',
              normal=normal.tolist(),maximum_source_relief_world_mm=float(abs((xyz-origin)@normal).max()*scale),
+             texture_mapping='explicit square planar tile on existing resident source texture; original shared part UV basis',
+             texture_tile_world_mm=tile,
+             uv_grid_field=uv_field.tolist(),
              opening_proofs=face_proofs))
     w.require(covered == source.keys(),'wall face partition must cover the complete named component')
     w.require(len(output)<=spec['triangle_cap'],'named wall budget exceeded: '+str(
@@ -172,10 +184,68 @@ def author_roof(d, spec):
     w.require(all(v in corners for row in profiles for v in row), 'roof profile must use exact source corners')
     names = ('near_slope','near_ridge_skirt','ridge_cap','far_ridge_skirt','far_slope')
     output=[];proofs=[]
+    part=d['parts'][spec['part']]
+    world_profiles=positions(d,spec['mesh'],profiles)@A[:,:3].T+A[:,3]
+    length=np.asarray(spec['world_length_axis']);station=world_profiles[:,2]@length
+    us=(station-station[0])/(station[-1]-station[0])
+    strip_v=((0.,.89),(.89,.92),(.92,1.),(.92,.89),(.89,0.))
+    def tex_corner(vertex,u_value,v_value):
+        grid=np.rint((np.asarray([u_value,v_value])-part[8:10])/part[10:12]).astype(int)
+        w.require((grid>=0).all() and (grid<=65535).all(),'roof aligned UV outside original part grid')
+        return tuple(vertex[:3])+tuple(int(a)for a in grid)+(vertex[5],)
+    def notch_band(ts,strip):
+        import shapely
+        from shapely.geometry import Polygon,Point
+        notch=spec['notches'][str(strip)]
+        length=np.asarray(spec['world_length_axis']);cross=np.asarray(spec['world_cross_axis'])
+        basis=np.stack([length,cross]).T
+        xyz=positions(d,spec['mesh'],ts);world=xyz@A[:,:3].T+A[:,3];xy=world@basis
+        footprint=shapely.unary_union([Polygon(t)for t in xy])
+        cut=Polygon(notch['cut_plan_mm']).buffer(3,join_style='mitre')
+        target=footprint.difference(cut)
+        w.require(target.geom_type=='Polygon','one explicit open roof notch')
+        boundary=np.asarray(notch['source_boundary_world_mm']);boundary_xy=boundary@basis
+        source_polys=[Polygon(t)for t in xy];result=[]
+        inverse=np.linalg.inv(A[:,:3]);m=d['meshes'][spec['mesh']]
+        for tri in shapely.constrained_delaunay_triangles(target).geoms:
+            corners=[]
+            for point in list(tri.exterior.coords)[:3]:
+                index=min(range(len(ts)),key=lambda i:source_polys[i].distance(Point(point)))
+                a,b,c=xy[index];bary=np.linalg.lstsq(np.column_stack([b-a,c-a]),np.asarray(point)-a,rcond=None)[0]
+                weights=np.clip([1-bary.sum(),*bary],0,1);weights/=weights.sum()
+                p=world[index].T@weights
+                # New cut-edge corners follow the actual source notch depth,
+                # so retained dormer geometry meets the new broad roof skin.
+                nearest=None
+                for a,b in zip(boundary,np.roll(boundary,-1,axis=0)):
+                    aa=a@basis;bb=b@basis;ab=bb-aa
+                    fraction=float(np.clip(np.dot(np.asarray(point)-aa,ab)/max(np.dot(ab,ab),1e-12),0,1))
+                    distance=float(np.linalg.norm(np.asarray(point)-(aa+fraction*ab)))
+                    if nearest is None or distance<nearest[0]:nearest=(distance,a+(b-a)*fraction)
+                if nearest[0]<5:
+                    p=length*point[0]+cross*point[1]+np.asarray([0.,nearest[1][1],0.])
+                local=inverse@(p-A[:,3]);grid=np.rint((local-m[8:11])/m[11:14]).astype(int)
+                tex=np.rint(np.asarray([v[3:5]for v in ts[index]]).T@weights).astype(int)
+                cols=np.asarray([[(v[5]>>s)&31 for s in (10,5,0)]for v in ts[index]])
+                rgb=np.rint(cols.T@weights).astype(int);color=(ts[index][int(np.argmax(weights))][5]&0x8000)|int(rgb[0]<<10|rgb[1]<<5|rgb[2])
+                w.require((grid>=0).all()and(grid<=65535).all(),'roof notch grid')
+                corners.append(tuple(int(a)for a in grid)+tuple(int(a)for a in tex)+(color,))
+            pp=positions(d,spec['mesh'],[corners])[0]@A[:,:3].T+A[:,3]
+            if np.dot(np.cross(pp[1]-pp[0],pp[2]-pp[0]),spec['world_outward_directions'][strip])<0:corners.reverse();pp=pp[::-1]
+            w.require(np.dot(np.cross(pp[1]-pp[0],pp[2]-pp[0]),spec['world_outward_directions'][strip])>1e-7,'roof notch winding/area')
+            result.append(tuple(corners))
+        emitted=shapely.unary_union([Polygon(p@basis)for p in positions(d,spec['mesh'],result)@A[:,:3].T+A[:,3]])
+        filled=emitted.intersection(Polygon(notch['cut_plan_mm'])).area
+        w.require(filled<1e-5,'roof dormer notch filled after quantization')
+        return result,dict(name=notch['name'],source_boundary_world_mm=notch['source_boundary_world_mm'],
+          source_cut_plan_mm=notch['cut_plan_mm'],source_notch_filled_area_mm2=float(filled),
+          retained_other_source_part=56,quantization_clearance_mm=3)
     for strip,name in enumerate(names):
         tris=[]
         for row in range(len(profiles)-1):
-            a,b=profiles[row][strip:strip+2];c,e=profiles[row+1][strip:strip+2]
+            va,vb=strip_v[strip]
+            a,b=[tex_corner(vertex,us[row],vv)for vertex,vv in zip(profiles[row][strip:strip+2],(va,vb))]
+            c,e=[tex_corner(vertex,us[row+1],vv)for vertex,vv in zip(profiles[row+1][strip:strip+2],(va,vb))]
             for tri in ((a,c,e),(a,e,b)):
                 pp=positions(d,spec['mesh'],[tri])[0]
                 n=np.cross(pp[1]-pp[0],pp[2]-pp[0])
@@ -185,9 +255,12 @@ def author_roof(d, spec):
                 if np.dot(wn,direction)<0:tri=(tri[0],tri[2],tri[1]);wn=-wn
                 w.require(np.dot(wn,direction)>1e-9,'roof degenerate/winding')
                 tris.append(tri)
-        output.extend(tris);proofs.append(dict(name=name,output_triangles=len(tris),source_profile_corners=profiles))
-    for end,row in enumerate((profiles[0],profiles[-1])):
-        cap=[row[i] for i in (1,2,3,4)]
+        notch_proof=None
+        if str(strip)in spec.get('notches',{}):tris,notch_proof=notch_band(tris,strip)
+        output.extend(tris);proofs.append(dict(name=name,output_triangles=len(tris),source_profile_corners=profiles,
+          texture_mapping='house-axis aligned U, explicit roof strip V on existing resident source texture',v_endpoints=list(strip_v[strip]),notch_proof=notch_proof))
+    for end,row in ([] if spec.get('retain_original_ridge_ends') else enumerate((profiles[0],profiles[-1]))):
+        cap=[tex_corner(row[i],uu,vv) for i,uu,vv in ((1,0.,.89),(2,0.,1.),(3,1.,1.),(4,1.,.89))]
         tris=[(cap[0],cap[1],cap[2]),(cap[0],cap[2],cap[3])]
         local=positions(d,spec['mesh'],tris);expected=np.asarray(spec['local_length_axis'])*(-1 if end==0 else 1)
         if np.dot(np.cross(local[0,1]-local[0,0],local[0,2]-local[0,0]),expected)<0:
@@ -232,13 +305,15 @@ def main():
     sys.path.insert(0,str(a.dependencies))
     plan_bytes=a.plan.read_bytes();plan=json.loads(plan_bytes)
     w.require(plan['room']=='r101' and plan['operation']=='one named house wall/roof replacement','bounded house plan')
+    for key in ('source_sha256','context_sha256'):
+        w.require(set(plan[key])==set(w.SOURCE_INPUTS),'exact five-file pin inventory: '+key)
     w.require(w.sha((HERE/'world_rebuild27.py').read_bytes())==plan['helper_sha256'],'reviewed helper pin')
     d,files,owners,policy=w.load(a.source)
     for n in w.SOURCE_INPUTS:
         w.require(w.sha(files[n])==plan['source_sha256'][n],'source pin '+n)
         w.require(w.sha((a.context/n).read_bytes())==plan['context_sha256'][n],'context pin '+n)
     for n in w.UNCHANGED_COMPANIONS:w.require((a.context/n).read_bytes()==files[n],'context source companion '+n)
-    context_blob=(a.context/'ps2-world.re4mesh').read_bytes();context=w.codec.decode(context_blob,files['ps2-world.r4pw'])
+    context_blob=(a.context/'ps2-world.re4mesh').read_bytes();context=w.codec.decode(context_blob,files['ps2-world.r4pw'],True)
     wall_source,wall,wall_proof=author_walls(d,plan['walls'])
     roof_source,roof,roof_proof=author_roof(d,plan['roof'])
     replacements={};expected={};changed_parts=set();source_count=0
@@ -273,7 +348,10 @@ def main():
         def __getitem__(self,ci):
             index=self.cursor[ci];self.cursor[ci]+=1
             return dict.__getitem__(self,ci)[index]
-    provider=Levels();out=w.install_shells(context,provider)
+    provider=Levels();working=copy.deepcopy(context)
+    working.pop('index_layout',None)  # New authored stream, not identity-span replay.
+    working['schema']=w.codec.SCHEMA
+    out=w.install_shells(working,provider)
     raw=w.codec.serialize_mesh(out);pol=w.codec.serialize_policy(out)
     w.require(pol==files['ps2-world.r4pw'],'unchanged policy')
     a.out.mkdir(parents=True)
@@ -305,13 +383,14 @@ def main():
     h=struct.unpack_from('<4s19I',mesh)
     row=[0x101,len(pol),len(out['placements']),len(out['parts']),len(out['meshes']),struct.unpack_from('<I',pol,20)[0],w.fnv(pol),h[3],len(mesh),policy]
     (a.out/'world_rebuild27_certificates.inc').write_text('// PRIVATE named house replacement, no visibility certificate.\nstatic constexpr Certificate rebuild27_certificates[] = {\n{'+','.join('0x%08xU'%v for v in row)+'},\n};\n')
-    context_receipt=json.loads((a.context/'RECEIPT.json').read_text())
+    context_l0=sum(len(w.level_triangles(context,context['levels'][c[6]])) for c in context['clusters'])
     receipt=dict(name=a.out.name,operation=plan['operation'],source_sha256={n:w.sha(v) for n,v in files.items()},
       context_sha256=plan['context_sha256'],plan_sha256=w.sha(plan_bytes),tool_sha256=w.sha(Path(__file__).read_bytes()),
       helper_sha256=plan['helper_sha256'],candidate_sha256=w.sha(mesh),candidate_bytes=len(mesh),candidate_crc='%08x'%h[3],
       certificate_row=row,unchanged_companion_sha256=companion_hashes,unchanged_companions_readback_verified=True,
       core_triangles_before=source_count,core_triangles_after=len(wall)+len(roof),walls_triangles=len(wall),roof_triangles=len(roof),
-      l0_triangles_before=context_receipt['l0_triangles_after'],l0_triangles_after=context_receipt['l0_triangles_after']-source_count+len(wall)+len(roof),
+      l0_triangles_before=context_l0,l0_triangles_after=context_l0-source_count+len(wall)+len(roof),
+      context_is_original_source=context_blob==files['ps2-world.re4mesh'],
       unique_owner_meshes=len(owners),owner_levels_exact=owner_levels,untouched_levels_sequence_exact=untouched_levels,
       all_higher_lods_unchanged=True,all_other_world_geometry_exact_to_context=True,
       appearance_accepted=False,timing_available=False,lostpart_verdict='NOT RUN; no source-feature or native appearance PASS inferred',
