@@ -189,7 +189,7 @@ def geometry_report(arm, scene, errors):
         if not measured or len(slots) != len(set(slots)) or 3 not in slots:
             errors.append(f"arm {scene} pass {pass_id}: missing/duplicate measured camera samples")
         for sample in measured:
-            if not begin <= number(sample, "frame") < end or number(sample, "valid") != 1 or number(sample, "result") < 0:
+            if not begin <= number(sample, "frame") < end or number(sample, "valid") != 1 or number(sample, "result") <= 0:
                 errors.append(f"arm {scene} pass {pass_id}: invalid measured camera sample")
             if crc(sample.get("camera", "")) != crc(summary.get("camera", "")):
                 errors.append(f"arm {scene} pass {pass_id}: camera sample identity differs")

@@ -643,7 +643,7 @@ void re4dc_house_arena27_geometry(const Re4dcHouseArena27Geometry* observation) 
     if(!g.n) {
         g.first_room=o.room_frame;g.first_ui=o.ui_frame;g.mesh_crc=o.mesh_crc;g.mesh_bytes=o.mesh_bytes;g.camera_hash=o.camera_hash;
     } else if(o.mesh_crc!=g.mesh_crc || o.mesh_bytes!=g.mesh_bytes || o.camera_hash!=g.camera_hash)++g.identity_bad;
-    if(o.schema!=1 || !o.valid || o.result<0 || o.fallback || o.aborts)++g.invalid;
+    if(o.schema!=1 || !o.valid || o.result<=0 || o.fallback || o.aborts)++g.invalid;
     unsigned v[kGeometryMetrics];arena_geometry_values(o,v);
     for(unsigned i=0;i<kGeometryMetrics;++i) {
         g.sum[i]+=v[i];if(!g.n || v[i]<g.min[i])g.min[i]=v[i];if(v[i]>g.max[i])g.max[i]=v[i];

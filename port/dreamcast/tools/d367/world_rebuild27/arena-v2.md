@@ -32,7 +32,8 @@ triangles, result/valid flags, fallback and abort counters.
 
 The benchmark stores each observed pass separately, deduplicates sequence/UI
 frame, rejects changing mesh/camera identities and invalid/fallback/abort records,
-and accumulates sum/min/max over actual observations whose room frame lies in
+requires a strictly positive completion result (zero-output PT/TR still returns
+result=1), and accumulates sum/min/max over actual observations whose room frame lies in
 [120,300). It records the latest warmup baseline and up to four measured camera
 samples per pass: first in each 60-tick band and the last completed observation.
 Logs are emitted at results, outside the measured window. This avoids hundreds
