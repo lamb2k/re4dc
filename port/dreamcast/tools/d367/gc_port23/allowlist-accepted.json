@@ -211,6 +211,76 @@
    "provenance": "gc",
    "reason": "user custom title art (not GC): the 2026 title background with the port credit (user 10-27: custom title image required)",
    "sha256": "fbf5676505e66047b97fa31315c62bccac50b104f7f499438015e03883e79821"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0100",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0101",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0100",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0101",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0103",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "011e",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "011f",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
   }
  ]
 }
