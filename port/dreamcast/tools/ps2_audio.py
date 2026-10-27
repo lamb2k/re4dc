@@ -429,7 +429,10 @@ def ps2_sources(spec, ps2dir):
         # music: the PS2 splits the songs differently (miNNN_a / _b); every song's instruments are candidates
         c = sorted(f for f in os.listdir(ps2dir) if f.startswith('mi') and f.endswith('.snd'))
     elif name == 'bgm/doorse.dat':
-        c = []
+        # gcleft26 10-27 (sound plan A): the PS2 has no door-sound file; its door sounds sit in the resident and room
+        # banks. Matched by sound like a stub bank (Leon's, the core and every chapter-1 room bank)
+        c = ['pl00.snd', 'core.snd'] + sorted(x for x in os.listdir(ps2dir) if x.startswith('r1') and x.endswith('.snd'))
+        STUB_SPECS.add(spec)
     else:
         c = [b + '.snd']
         # wep19-26 (10-26): a PS2 bank that is only a stub (every part type 0xFFFFFFFE, sndType 8 arg 0x3d: no bank of
