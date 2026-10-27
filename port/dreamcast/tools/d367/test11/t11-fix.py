@@ -1371,6 +1371,13 @@ if os.path.isdir(PIC26BD):
 SND26D = os.environ.get('SND26D', '/root/re4data/private/snd26-20261027')
 if os.path.isdir(SND26D + '/em'):
     DATA['snd26'] = {'em/pl14.drs': SND26D + '/em/pl14.drs', 'bgm/doorse.dat': SND26D + '/bgm/doorse.dat'}
+# dropeng26 (lane gcleft26 10-27, no-GameCube-assets rule; data only, no knob): ss/eng/title.snd off the disc. It is a
+# GameCube sound archive the game never reads: src/game/title.cpp:174 reads SS/cmn/title.snd (PS2 PCM since ps2snd24)
+# and nothing names SS/eng/title.snd (sscrn / read.cpp language paths are option.dat / title.dat / ss_*.dat). Proof: the
+# loader's own "DVD: Read File:" log over all 41 runs of rr cycle 1026-2000-7832fcdb (boot, gca-title through the title,
+# menus and card screens, h2 into r100, every census room, siege, KOS): SS/cmn/title.snd 41 times, SS/eng/title.snd 0.
+# rr/drop-proofs.tsv row: file - ss/eng/title.snd.
+DATA['dropeng26'] = {'remove': ['ss/eng/title.snd']}
 # efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
 # picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
 # efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
