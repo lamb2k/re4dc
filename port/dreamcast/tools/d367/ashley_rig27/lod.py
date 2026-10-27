@@ -63,11 +63,11 @@ class SkinnedSimplifier(ml.Simplifier):
         return super()._valid(u, v)
 
 
-def reduce(mesh, pct):
+def reduce(mesh, pct, body_only=False):
     groups = defaultdict(list)
     for t in mesh['triangles']:
         groups[t['source_info']].append(t)
-    keep = {1, 5, 6}
+    keep = {1, 2, 3, 4, 5, 6} if body_only else {1, 5, 6}
     fixed = sum(len(ts) for r, ts in groups.items() if r in keep)
     reducible = len(mesh['triangles']) - fixed
     ratio = max(.02, (len(mesh['triangles']) * pct / 100 - fixed) / reducible)
@@ -116,12 +116,13 @@ def main():
     ap.add_argument('source', type=Path)
     ap.add_argument('output', type=Path)
     ap.add_argument('--pct', type=int, choices=(70, 50), required=True)
+    ap.add_argument('--body-only', action='store_true', help='Keep face, hair/cards, hands and trim full (bounded five-descriptor package)')
     a = ap.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
     mesh = json.loads((a.source / 'mesh.json').read_text())
     if 'ps2_rig' not in json.loads((a.source / 'source.json').read_text()):
         raise ValueError('ASHLEY_PS2_RIG conversion required')
-    reduced, report = reduce(mesh, a.pct)
+    reduced, report = reduce(mesh, a.pct, a.body_only)
     for f in ('source.json', 'source-bindings.json', 'validation.json', 'atlas.png', 'atlas-rgba.png'):
         shutil.copy2(a.source / f, a.output / f)
     (a.output / 'mesh.json').write_text(json.dumps(reduced))

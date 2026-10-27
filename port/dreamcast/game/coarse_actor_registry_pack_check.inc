@@ -241,7 +241,14 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
            bytes!=count*kPackRecord[k])return kPwTable;
 #if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
         // The r202 source cast is exactly 53 primary + 16 partner geometries. All other rooms retain 64.
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD && RE4DC_NMR_IMMUTABLE_ALIAS
+        // Measured r202: 53 room geometries +18 PS2 Ashley body-rung
+        // geometries. This stays inside the existing72-record storage.
+        const unsigned room_geometry_max=room==0x202u?(alias?71u:69u):64u;
+        if(k==kGeom && count+RE4DC_PBK(k)>room_geometry_max)return kPwTable;
+#else
         if(k==kGeom && count+RE4DC_PBK(k)>(room==0x202u?69u:64u))return kPwTable;
+#endif
 #endif
 #if RE4DC_ROUTE_CH22 && !RE4DC_ROUTE_CH23 && !RE4DC_NMR_POOL
         if(k==kFPart && room!=0x11cu && count>32u)return kPwTable;
@@ -585,7 +592,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
 #if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
         // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
         // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+        if(PKD[b].lod_of==a+1u+(PKD[b].source_bones==141u?RE4DC_PB(desc):0u))continue;
+#else
         if(PKD[b].lod_of==a+1u)continue;
+#endif
 #if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
         if(PKD[a].lod_of && PKD[b].lod_of==PKD[a].lod_of)continue;  // two numbered levels of one full descriptor
 #endif

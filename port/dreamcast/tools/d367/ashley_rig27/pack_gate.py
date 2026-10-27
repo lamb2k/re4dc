@@ -22,6 +22,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('package',type=Path);ap.add_argument('output',type=Path)
     ap.add_argument('--room',default='117');ap.add_argument('--partner-base',type=Path)
+    ap.add_argument('--control',action='append',default=[],help='Unchanged original package as roomhex:path; readers must agree')
     a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
     mat=(GAME/'coarse_actor_material.inc').read_text();reg=(GAME/'coarse_actor_owner_registry.inc').read_text()
     x,y=mat.index('struct Digest'),mat.index('struct SourceBlob');y=mat.index('\n',y)+1
@@ -32,9 +33,10 @@ def main():
     types+='\n'+reg[x:y]+'\n'
     (a.output/'pack_test_types.h').write_text(types)
     flags=['RE4DC_NMR_ASHLEY=2','RE4DC_NMR_SLOTS=1','RE4DC_NMR_MASK=1','RE4DC_NMR_DROP_BUMP=1',
-           'RE4DC_NMR_BONES=128','RE4DC_NMR_FACTS=224','RE4DC_ACTOR_PL08=1','RE4DC_NMR_POOL=1',
+           'RE4DC_NMR_BONES=96','RE4DC_NMR_FACTS=224','RE4DC_ACTOR_PL08=1','RE4DC_NMR_POOL=1',
            'RE4DC_NMR_ROLES5=1','RE4DC_NMR_PARTNER=2','RE4DC_NMR_LOD=1','RE4DC_NMR_POOL_LOD=1',
-           'RE4DC_NMR_IMMUTABLE_ALIAS=1','RE4DC_ROUTE_CH23=1','RE4DC_NMR_R202_CAST_CAPACITY=1']
+           'RE4DC_NMR_IMMUTABLE_ALIAS=1','RE4DC_ROUTE_CH23=1','RE4DC_ROUTE_CH22=1','RE4DC_NMR_SHIFT=1',
+           'RE4DC_NMR_R202_CAST_CAPACITY=1']
     cc=['g++','-std=c++17','-O1','-I',str(a.output),'-I',str(GAME),'-I',str(GAME/'platform/include'),
         str(TOOLS/'model_registry_pack_test.cpp')]
     exe=a.output/'reader'
@@ -67,6 +69,11 @@ def main():
         pair=subprocess.check_output([str(exe),a.room,str(a.partner_base),'+'+str(a.package)],text=True)
         accepted=[line.rsplit(' ',2)[1] for line in pair.splitlines()]
         rows.append(dict(case='combined-room-and-partner',got=accepted,ok=accepted==['none','none']))
+    for control in a.control:
+        room,path=control.split(':',1)
+        on=subprocess.check_output([str(exe),room,path],text=True).split()[-2:]
+        off=subprocess.check_output([str(legacy),room,path],text=True).split()[-2:]
+        rows.append(dict(case='unchanged-'+room,got=on,legacy=off,ok=on==off and on[0]=='none'))
     failures=sum(not r['ok'] for r in rows)
     report=dict(package=str(a.package),room=a.room,cases=rows,skipped=skipped,failures=failures)
     (a.output/'results.json').write_text(json.dumps(report,indent=2))

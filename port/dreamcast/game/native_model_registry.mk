@@ -676,9 +676,6 @@ endif
 ifneq ($(NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS),1)
 $(error ASHLEY_LOD needs NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1)
 endif
-ifneq ($(NATIVE_MODEL_REGISTRY_BONES),128)
-$(error ASHLEY_LOD needs NATIVE_MODEL_REGISTRY_BONES=128 for its nine source-parent/slot tables)
-endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_LOD=1
 endif
 # PS2_ASHLEY_ROOMS=1 (lane ps2cast 2026-10-15; default 0; render only; needs PS2_ASHLEY=1|2): Ashley in the chapter 2-2 /
