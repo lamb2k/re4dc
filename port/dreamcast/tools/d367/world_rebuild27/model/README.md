@@ -42,3 +42,23 @@ per observed drawn world. They already reject the 2 ms target for B1 in this
 test. Complete total-world timing remains unqualified because contextual root
 coverage is partial. This is MODELLED CPU evidence; it does not qualify cache
 Flycast/GDEMU transport, PVR deadlines, appearance, the route or console timing.
+
+## B1 live-mask follow-up
+
+`preflight-live-mask27.py` verifies the supplied new programme and derives its
+own frame address before a single authorized follow-up capture.
+`report-live-mask27.py` compares that capture with retained B1 OFF evidence,
+validates the unchanged B1 assets/fixture and counts actual draw entries from
+the new ELF's exact symbols. It includes programme layout changes in the result.
+
+The one ON capture uses ELF
+`ad21da2dff7650d1b13b875cbb9c14752f5325245989859c010568cf8a9af98d`,
+physical Frame_cnt `0c379f80`, source supplied by main at `3b29ffab3`.
+It completed in 42.424 seconds with the same two timed ticks and 30-counted-tick
+window. Estimated CPU work is 21.038 -> 19.613 ms/drawn world. Validated partial
+world cost remains at least 3.135 ms/drawn world, so total-world <=2 ms remains
+unqualified. Different contextual coverage prevents interpreting its lower-bound
+delta as total-world savings. `_end` grows 32 bytes. Exact model output parity,
+unchanged B1 game data and the draw denominator are recorded in
+`MODELLED-LIVE-MASK-v1.json` and its Markdown companion in the same evidence root.
+Only ON was freshly run; OFF remains the original retained evidence.
