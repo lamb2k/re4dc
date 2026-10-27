@@ -218,7 +218,7 @@ def main():
     rep = dict(name=a.name, status='STARTING', start_utc=now(), disc=str(disc), tracks=linked, seconds=a.seconds,
                vmu=a.vmu, keys=a.keys, stop=a.stop, fixtures=fixtures, errors=[], key_log=[], align=a.align,
                emu=os.environ.get('RE4DC_EMU', 'harness'),
-               emu_env={k: v for k, v in os.environ.items() if k.startswith('RE4DC_GD_') or k == 'RE4DC_CONSOLE_DYNAREC'})
+               emu_env={k: v for k, v in os.environ.items() if k.startswith('RE4DC_GD_') or k.startswith('RE4DC_CONSOLE_')})
     while count_flycasts() >= maxfc:
         time.sleep(5)
     startup = subprocess.STARTUPINFO(); startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW; startup.wShowWindow = 0

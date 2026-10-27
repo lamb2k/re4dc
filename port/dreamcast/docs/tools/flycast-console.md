@@ -51,6 +51,41 @@ allocates a line without reading memory (copy-back), as on hardware. The interpr
 less game time); use it only when stale cache lines are a suspect. With the dynarec on (default), the cache model is
 not used and the binary behaves like the fast build plus the GD profile.
 
+**HLE BIOS coherency (fix-cachefly27, 2026-10-27, fork 8fb534cc, exe sha256 7e0b26ca...b1b1).** The HLE BIOS used to
+write the GD TOC, subcode and SYSINFO results to host RAM with memcpy, past the modelled operand cache. A real BIOS
+stores them with the CPU, through the cache, so under the cache model the game read stale TOC lines: endless disc
+change / drive re-init before the title (Test 24b, 175 disc changes in 90 s; CACHE_COHERENT_DMA=1 in the game had
+hidden it). Now any valid cached copy is refreshed after those stores (Sh4OCache::SyncFromRam). DMA (sector DMA,
+gdemu landings, stream DMA) is unchanged: it bypasses the cache and the game invalidates, as on hardware. With the
+dynarec on nothing changes. The previous exe is kept as `flycast-console-8e6c4987-prev.exe`.
+
+## Savestates for cache-model comparisons (<= 1 min runs)
+
+The interpreter runs about 5x slower than real time (a cold boot needs ~60 s to reach early boot, ~5 min to the
+title menu). Comparison runs start from a saved scene instead:
+
+- `RE4DC_CONSOLE_LOAD_STATE=<file>`: load this state at boot (before the first frame).
+- `RE4DC_CONSOLE_SAVE_STATE=<file>`: quick saves go to this file; with `RE4DC_CONSOLE_SAVE_AT_S=<host s>` the
+  emulator saves once that many wall seconds after start, with no input.
+- Make a state from the same exe and the same disc, and save it with the cache model on (dynarec off):
+  1. fast: dynarec on, RE4DC_GD_PROFILE=gdemu, reach the scene (QA disc: teleporter keys, for example
+     `presets in | 2 | down`, then `a`, `a`, `down`, `down`, `a` = CHAPTER 1-1 / R101 BY THE CROSS), SAVE_AT_S ~50;
+  2. cache: dynarec off (RE4DC_CONSOLE_DYNAREC=no), LOAD_STATE = step 1, SAVE_STATE = the final file, SAVE_AT_S 40.
+  A dynarec-made state carries an empty (all-invalid) cache, so step 2 only warms it; the step-2 file is the one to
+  use. A state belongs to one exe + disc image; never load it into another build.
+- Run: dynarec off, gdemu, LOAD_STATE = the step-2 file, `--seconds 60`. fp_run.py passes the environment through
+  and records RE4DC_CONSOLE_* in run-result.json `emu_env`.
+
+| Gate (2026-10-27, cache model, gdemu seed 1) | Result |
+|---|---|
+| Test 24b release disc (52cb8198, track03 0aceb947), cold boot, old exe 8e6c4987, 90 s | FAIL: 175 disc changes, no title |
+| same disc, new exe, cold boot, newgame keys (named exception: 500 s wall) | title, New Game, r100 entered (~480 s wall, guest frame ~13000); 1 disc change (boot), 0 bad reads |
+| Test 24b QA disc, state at r101 by the cross, 60 s | r101 runs ~30 s game time, 0 bad reads, 0 disc changes |
+| Test 22 QA disc (a2477bd2), state at r101 by the cross, 60 s | same, 0 bad reads, 0 disc changes |
+| Test 24b release disc, dynarec on, profile unset, old vs new exe, 60 s | same title/state sequence (1 disc change each) |
+
+Evidence: `C:/Flycast-Evidence/re4-dreamcast/fix-cachefly27-20261027` (runs/, states/).
+
 ## Harness use (opt-in RE4DC_EMU=console)
 
 - Full-play / gate runs: `RE4DC_EMU=console` makes `tools/d367/fullplay/fp_run.py` copy flycast-console.exe instead
