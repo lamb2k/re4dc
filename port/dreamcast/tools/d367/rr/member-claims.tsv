@@ -78,3 +78,7 @@ dc/native/r11d/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool le
 dc/native/r108/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
 dc/native/r111/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
 dc/native/r113/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+st1/r102.dar:ETM/et13.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r103.dar:ETM/et05.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r105.dar:ETM/et22.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r11b.dar:ETM/et03.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
