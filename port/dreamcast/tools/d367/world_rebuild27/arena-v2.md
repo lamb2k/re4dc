@@ -52,6 +52,10 @@ triangle counts. A renderer callback is not a PVR presentation receipt.
 The verified loader emits `arena27: identity schema=2 variant=0..2 mesh_crc=...
 mesh_bytes=...` in both builds. Author receipts contain exactly three A/B/C arm
 entries with arm, candidate_sha256, candidate_crc, candidate_bytes and l0_triangles.
+The actual whole-house receipt uses integer arm IDs 1/2/3 and uint32 integer
+CRCs; historical A/B/C IDs and hexadecimal CRC strings remain supported. IDs
+must match their declared order and may not repeat; bool IDs/CRCs and CRC values
+outside uint32 are rejected. Position is never used to invent an arm identity.
 The reporter pins the private receipt SHA256, matches runtime and observation
 CRC/bytes against that author identity, and checks the declared package budgets.
 The source/author authentication is owned by the asset generator and runtime
