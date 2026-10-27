@@ -8,6 +8,7 @@ import argparse, hashlib, importlib.util, json, re, resource, subprocess
 from pathlib import Path
 
 BASE='b6a5a3d34'
+REPAIR='4a4cde9ce9ea53f95fbffddbc42e2dabe4154958'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def extract(s,anchor):
     start=s.index(anchor)
@@ -21,6 +22,36 @@ def cmd(c):
     p=subprocess.run(c,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     if p.returncode:raise RuntimeError(p.stdout)
     return p.stdout
+
+def approved_loop_repair(tree,baseline):
+    rel='port/dreamcast/game/platform/native_static.cpp'
+    before_ref=cmd(['git','-C',str(tree),'show',REPAIR+'^:'+rel])
+    after_ref=cmd(['git','-C',str(tree),'show',REPAIR+':'+rel])
+    names=cmd(['git','-C',str(tree),'diff','--name-only',REPAIR+'^',REPAIR]).splitlines()
+    assert names==[rel], 'approved repair unexpectedly changes another path'
+    replaced=before_ref;control=baseline
+    for body in ('m|=1U<<ps2w.parts[mesh.first_part+k].pass;','mask|=1u<<parts[mesh.first_part+k].pass;'):
+        old='''        for(unsigned k=0;k<mesh.part_count;++k){
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+#endif
+            BODY
+        }
+'''.replace('BODY',body)
+        new='''#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+        for(unsigned k=0;k<mesh.part_count;++k){
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+            BODY
+        }
+#else
+        for(unsigned k=0;k<mesh.part_count;++k)BODY
+#endif
+'''.replace('BODY',body)
+        assert before_ref.count(old)==1 and after_ref.count(new)==1 and control.count(old)==1,'approved loop hunk mismatch'
+        replaced=replaced.replace(old,new,1);control=control.replace(old,new,1)
+    assert replaced==after_ref,'approved reference contains changes outside the two exact loop repairs'
+    patch=cmd(['git','-C',str(tree),'diff',REPAIR+'^',REPAIR,'--',rel])
+    return control,{'reference':REPAIR,'exact_hunks_applied':2,'reference_patch_sha256':hashlib.sha256(patch.encode()).hexdigest(),'repaired_baseline_sha256':hashlib.sha256(control.encode()).hexdigest()}
 
 PREFIX=r'''
 #include <cassert>
@@ -165,6 +196,7 @@ int main(){
 def main():
     resource.setrlimit(resource.RLIMIT_CORE,(0,0))
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--tree',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--off-control-repair',choices=['live-mask-4a4cde9ce'],help='Apply only the two exact approved loop repairs to the immutable pre-counter b6 control; retain raw comparison results')
     a=ap.parse_args();tree=a.tree.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     source=tree/'port/dreamcast/game/platform/native_static.cpp';s=source.read_text();header=tree/'port/dreamcast/game/platform/include/house_arena27_counts.h'
     ca_path=tree/'port/dreamcast/tools/d367/world_rebuild27/check_arena.py'
@@ -185,6 +217,18 @@ def main():
         unsigned(re4dc_house_arena27_variant()),ps2w.package.header().crc,ps2w.package.header().bytes);
 '''
     assert projected.count(identity)==1
+    raw_off_equal=ca.tokens(projected.replace(identity,''))==ca.tokens(baseline)
+    raw_house_equal=ca.tokens(ca.off_projection(projected))==ca.tokens(ca.off_projection(baseline))
+    repair=None
+    if a.off_control_repair:
+        raw_baseline=baseline
+        baseline,repair=approved_loop_repair(tree,baseline)
+        wrong=raw_baseline.replace('m|=1U<<ps2w.parts[mesh.first_part+k].pass;','m|=2U<<ps2w.parts[mesh.first_part+k].pass;',1)
+        try:
+            approved_loop_repair(tree,wrong)
+            raise RuntimeError('damaged control hunk accepted')
+        except AssertionError:
+            repair['damaged_hunk_refused']=True
     off_equal=ca.tokens(projected.replace(identity,''))==ca.tokens(baseline)
     # HOUSE=0 removes both the approved identity line and the new counters.
     house_off=ca.off_projection(projected)
@@ -201,6 +245,9 @@ def main():
         cmd(['g++','-std=c++17','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-I'+str(header.parent),*extra,str(p),'-o',str(exe)])
         return cmd([str(exe)]).strip()
     result={'scope':'SOURCE/HOST arithmetic receipts only; no SDK/guest/timing','head':cmd(['git','-C',str(tree),'rev-parse','HEAD']).strip(),'native_sha256':sha(source),'header_sha256':sha(header),'counts0_renderer_tokens_identical_except_approved_identity_log':off_equal,'house0_tokens_identical':house_zero,'host':{},'refusals':{}}
+    result['immutable_baseline']=BASE
+    result['unrepaired_baseline_comparison']={'counts0_identical':raw_off_equal,'house0_identical':raw_house_equal,'reason':'4a4cde9ce restores exact original LIVE_MASK-OFF loop token spelling; historical raw failure is retained'}
+    result['explicit_off_control_repair']=repair
     result['host']['scope_wrapper_owner']=build('scope_wrapper_owner',program)
     result['host']['actual_emit_pick']=pick_check(s,build,helper_state,helpers)
     result['host']['actual_clip_positions']=clip_check(s,build,helper_state,helpers)
