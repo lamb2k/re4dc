@@ -23,6 +23,10 @@
 #include "ashley_ps2_rig27.h"
 static_assert(ashley_ps2_rig27::version==1,"ASHLEY_PS2_RIG needs its PS2 rig build assets");
 #endif
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+#include "ashley_playable_ps2_rig27.h"
+static_assert(ashley_playable_ps2_rig27::version==1,"ASHLEY_PLAYABLE_PS2_RIG needs its own PS2 rig build assets");
+#endif
 #if RE4DC_COARSE_SKIN_FTRV != 1
 #error NATIVE_MODEL_REGISTRY builds its palettes with COARSE_SKIN_FTRV=1
 #endif
@@ -389,6 +393,14 @@ constexpr float kRegistryBindMm=0.1f;
 __attribute__((noinline)) bool registry_skeleton_slots(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc,float* dev) {
     cParts* src[kRegSourceBones];
     const unsigned joints=desc.source_bones;const unsigned char* const up=desc.source_parents;
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+    // registry_bind has already reproved every adopted player-family role.
+    // Shape alone never authorizes mapping: Leon and unrelated model0 owners
+    // cannot use this adapter, even if a descriptor resembles playable Ashley.
+    if(ashley_playable_ps2_rig27::shape(desc.model_id,joints,desc.sections) &&
+       ((const cModel*)pPL!=m || m->ot_type!=7u ||
+        !ashley_playable_ps2_rig27::slots_match(up+joints,desc.bones)))return false;
+#endif
 #if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
     // A PS2 rig arm must not silently skin an old surface-transferred package.
     if(ashley_ps2_rig27::applies(desc.model_id,joints,desc.sections) &&
@@ -648,6 +660,14 @@ int registry_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
         // A draw-slot descriptor's bind run holds one inverse per SOURCE joint: slot b skins with its joint's
         // (source_parents[source_bones + b], the joint registry_skeleton_slots bound to parts[b]).
         const float* bind=desc->source_bones?desc->bind[desc->source_parents[desc->source_bones+b]]:desc->bind[b];
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+        // The full source/owner/slot proof above remains required on every bind.
+        // Read the existing solver's bind for garment links; never advance it.
+        if((const cModel*)pPL==m && m->ot_type==7u &&
+           ashley_playable_ps2_rig27::shape(desc->model_id,desc->source_bones,desc->sections) &&
+           desc->source_parents[desc->source_bones+b]>=64u)
+            bind=&registry_bound->parts[b]->lt_inv_mat[0][0];
+#endif
 #if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
         // PS2 shared bones use the package's PS2 bind. Garments use the existing
         // solver's skin delta; no extra solver call, animation tick or RNG.

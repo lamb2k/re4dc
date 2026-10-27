@@ -142,14 +142,23 @@ def pose_mats(gb, rng, body_deg=12.0, cloth_deg=30.0):
     return np.asarray(W) @ np.linalg.inv(rest)
 
 
-def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=False):
+def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=False, profile=None):
+    # An explicit archive profile supplies its own source roles and PS2 members.
+    # Keep the established pl11 defaults byte-identical when no profile is given.
+    sections = SECTIONS if profile is None else profile['sections']
+    ps2_sources = PS2_SOURCES if profile is None else profile['ps2_sources']
+    preset = PRESET if profile is None else profile['preset']
+    archive = 'pl11' if profile is None else profile['archive']
+    model_id = MODEL_ID if profile is None else profile['model_id']
+    rooms = ['r117'] if profile is None else profile['rooms']
+    cloth_donor = CLOTH_DONOR if profile is None else profile['cloth_donor']
     out.mkdir(parents=True, exist_ok=True)
     pd, gd = Path(ps2_dat).read_bytes(), Path(gc_drs).read_bytes()
     ps2 = {i: (t, b) for i, t, b in pc.pb.dat_entries(pd)}
     gc = pc.drs.Drs(gd)
     ptd = pc.load_module('ps2_tpl_decode', pc.WA / 'from-main/ps2-trees/tools/ps2_tpl_decode.py')
     # preset / inputs.gc.cache / sections[].bones + palettes: what ps2_cast.py finish and regcast read
-    val = dict(tool='ps2_ashley.py', preset=PRESET, inputs=dict(ps2=dict(path=str(ps2_dat), bytes=len(pd), sha256=pc.sha(pd)),
+    val = dict(tool='ps2_ashley.py', preset=preset, inputs=dict(ps2=dict(path=str(ps2_dat), bytes=len(pd), sha256=pc.sha(pd)),
                                                                gc=dict(cache=str(gc_drs), bytes=len(gd), sha256=pc.sha(gd))))
     # ---- skeletons
     gbody = pc.gc_entry(gc, 4, 'BIN')
@@ -157,7 +166,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     assert all(b['attach'] == b['id'] for b in gb), 'GC parts with attach != index'
     n_src = len(gb)
     gworld = np.asarray([np.asarray(b['rest'])[:3, 3] for b in gb])
-    pbins = {arc: pc.pb.parse_bin(pc.ps2_entry(ps2, arc, 'BIN')) for arc in sorted({s[0] for s in PS2_SOURCES})}
+    pbins = {arc: pc.pb.parse_bin(pc.ps2_entry(ps2, arc, 'BIN')) for arc in sorted({s[0] for s in ps2_sources})}
     p4 = world_positions(pbins[4].bones)
     skel = dict(gc_joints=n_src, ps2_joints=len(pbins[4].bones))
     for arc, m in pbins.items():
@@ -179,7 +188,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     # ---- GC role meshes (rest), every section's skeleton = the body's
     gmesh, gsig = {}, {}
     attach = {}
-    for role, arc, tpl in SECTIONS:
+    for role, arc, tpl in sections:
         gbin = pc.gc_entry(gc, arc, 'BIN')
         parts = pc.modelbin.parse(gbin).parts
         g = pc.gc_mesh(gbin)
@@ -199,7 +208,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     val['skeleton']['attachment_sections'] = attach
     # ---- textures: one atlas from the PS2 TPLs the sources use
     images, tpl_base = [], {}
-    for tpl_arc in sorted({s[2] for s in PS2_SOURCES}):
+    for tpl_arc in sorted({s[2] for s in ps2_sources}):
         tpl = pc.ps2_entry(ps2, tpl_arc, 'TPL'); tp = ptd.parse_tpl(tpl)
         tpl_base[tpl_arc] = len(images)
         for h in tp['entries']:
@@ -207,9 +216,9 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
             images.append(dict(index=len(images), tpl=hex(tpl_arc), width=w, height=ht, rgba=bytes(rgba),
                                alpha_raw=sorted(st['alpha_raw_hist'])))
     # ---- PS2 triangles -> GC roles
-    role_index = {r: i for i, (r, _, _) in enumerate(SECTIONS)}
+    role_index = {r: i for i, (r, _, _) in enumerate(sections)}
     tris_out, used_images, part = [], [], {}
-    for arc, mats, tpl_arc, cands in PS2_SOURCES:
+    for arc, mats, tpl_arc, cands in ps2_sources:
         m = pbins[arc]
         for mi, corners in pc.pb.triangles(m):
             if mi not in mats:
@@ -237,7 +246,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     if missing:
         raise SystemExit(f'GC roles with no PS2 triangle: {missing} (a covered-role contract would be needed)')
     # ---- weights: PS2 non-cloth kept, PS2 cloth influence -> the GC donor surface's weights
-    donor = gmesh[CLOTH_DONOR]
+    donor = gmesh[cloth_donor]
     cloth_pts, cloth_keys = [], []
     for t in tris_out:
         for c in t['corners']:
@@ -246,7 +255,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     tw = dict(cloth_corners=len(cloth_pts))
     if cloth_pts and not rig:
         d, ti, bary = nearest_surface(np.asarray(cloth_pts, float), donor['positions'], donor['triangles'])
-        tw.update(donor=CLOTH_DONOR, donor_distance_mm=dict(median=float(np.median(d)), p95=float(np.percentile(d, 95)), max=float(d.max())))
+        tw.update(donor=cloth_donor, donor_distance_mm=dict(median=float(np.median(d)), p95=float(np.percentile(d, 95)), max=float(d.max())))
         donor_w = {}
         for key, t3, bb in zip(cloth_keys, ti, bary):
             acc = {}
@@ -351,7 +360,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     P = np.asarray(positions)
     val.update(degenerate_triangles_dropped=degenerate, zero_normals_replaced_by_face_normal=zero_n)
     flips = []
-    for si, (role, _, _) in enumerate(SECTIONS):
+    for si, (role, _, _) in enumerate(sections):
         g = gmesh[role]
         ts = [t for t in triangles if t['source_info'] == si]
         g_ok = pc.winding_agreement(g['positions'], g['triangles'], g['corner_normals'])
@@ -364,20 +373,20 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
             t['corners'] = t['corners'][::-1]
     val['winding_flipped'] = bool(flips[0])
     # ---- source.json (full GC skeleton + slots) and mesh.json (slot bones)
-    bones = [dict(id=b['id'], parent=b['parent'], address=f'pl11:part:{b["id"]}', rest=b['rest'], capture=b['capture']) for b in gb]
+    bones = [dict(id=b['id'], parent=b['parent'], address=f'{archive}:part:{b["id"]}', rest=b['rest'], capture=b['capture']) for b in gb]
     if rig:
         # Shared animated bones are PS2 rests. Extra game parts remain solely the
         # source hierarchy proof; garment slots read the solver bind at runtime.
         for i in range(SOURCE_JOINTS):
             rest = np.eye(4); rest[:3, 3] = p4[i]
             bones[i].update(rest=rest.tolist(), capture=rest.tolist())
-    infos = [dict(id=si, address=f'pl11:arc:{arc:03x}', source_data_address=f'pl11:arc:{arc:03x}', source_bin_arc=arc,
+    infos = [dict(id=si, address=f'{archive}:arc:{arc:03x}', source_data_address=f'{archive}:arc:{arc:03x}', source_bin_arc=arc,
                   source_tpl_arc=tpl, source_sha256=pc.sha(pc.gc_entry(gc, arc, 'BIN')), role=role,
                   gc_positions=len(gmesh[role]['positions']), gc_triangles=len(gmesh[role]['triangles']))
-             for si, (role, arc, tpl) in enumerate(SECTIONS)]
-    source = dict(name=PRESET, schema='ps2cast-source-1', source_units='millimetres', source_archive='pl11',
+             for si, (role, arc, tpl) in enumerate(sections)]
+    source = dict(name=preset, schema='ps2cast-source-1', source_units='millimetres', source_archive=archive,
                   source_archive_sha256=pc.sha(gd), ps2_archive_sha256=pc.sha(pd), bones=bones, draw_slots=slots,
-                  infos=infos, category='registry', rooms=['r117'], types=[], source_model_id=MODEL_ID)
+                  infos=infos, category='registry', rooms=rooms, types=[], source_model_id=model_id)
     if rig:
         source['ps2_rig'] = dict(schema='ashley-ps2-rig-1', ps2_archive_sha256=pc.sha(pd),
                                  shared_bones=SOURCE_JOINTS, ps2_bones=81, rig_map=RIG_MAP,
@@ -386,19 +395,19 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     sp = out / 'source.json'
     sp.write_text(json.dumps(source))
     slot_bones = [dict(bones[b], id=k, parent=-1, source_joint=b) for k, b in enumerate(slots)]
-    mesh = dict(schema='re4dc-approved-render-mesh-1', source_sha256=pc.sha(sp.read_bytes()), mesh='ashley11_ps2',
+    mesh = dict(schema='re4dc-approved-render-mesh-1', source_sha256=pc.sha(sp.read_bytes()), mesh='ashley11_ps2' if profile is None else preset+'_ps2',
                 positions_mm=positions, weights=weights, bones=slot_bones, triangles=triangles,
                 policy='PS2 source geometry, normals, UVs and skin weights; PS2 cloth influences transferred to the GC '
                        'cloth links (barycentric GC extra9 skin); weights on draw slots (slot k = GC joint draw_slots[k]).')
     if rig:
-        mesh['policy'] = ('PS2 pl11 geometry, textures, shared skeleton rests and authored weights; PS2 hair/skirt '
+        mesh['policy'] = (f'PS2 {archive} geometry, textures, shared skeleton rests and authored weights; PS2 hair/skirt '
                           'driven through RIG_MAP by existing game simulation, with its own runtime bind. No folding.')
     (out / 'mesh.json').write_text(json.dumps(mesh))
     # ---- checks: rest + posed surface distance per section
     rng = np.random.default_rng(1014)
     mats = [pose_mats(gb, rng) for _ in range(poses)]
     secs = []
-    for si, (role, arc, tpl) in enumerate(SECTIONS):
+    for si, (role, arc, tpl) in enumerate(sections):
         g = gmesh[role]
         ts = [t for t in triangles if t['source_info'] == si]
         vids = sorted({c['vertex'] for t in ts for c in t['corners']})
@@ -434,7 +443,7 @@ def convert(out, ps2_dat, gc_drs, max_slots=64, poses=24, bone_tol=0.001, rig=Fa
     val['native'] = {k: v for k, v in report.items() if k != 'chunks'}
     val['native']['chunks'] = [{k: v for k, v in c.items() if k != 'palette_weights'} for c in report['chunks']]
     binds = [dict(bin=arc, tpl=tpl, role=role, **pc.gc_signature(pc.gc_entry(gc, arc, 'BIN')),
-                  binding_scope='GC source array signature (the loaded model the PS2 mesh replaces)') for role, arc, tpl in SECTIONS]
+                  binding_scope='GC source array signature (the loaded model the PS2 mesh replaces)') for role, arc, tpl in sections]
     (out / 'source-bindings.json').write_text(json.dumps(binds, indent=2))
     val['texture']['key'] = pc.texture_key(out / 'atlas.png')
     (out / 'validation.json').write_text(json.dumps(val, indent=1))
