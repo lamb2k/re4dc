@@ -48,6 +48,7 @@ ROUTE = 'r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r11a r11b r
 WA = Path(os.environ.get('RE4_WORLD_AGENT', '/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926'))
 CMPR = 14
 TOOL_VERSION = 'ps2_items-v2'
+PS2_KEYS = set()   # census --catalog
 
 
 def sha(b):
@@ -684,6 +685,11 @@ class Packer:
             # an R4NREF record is a record even when no NTR row lists it (a graft or a later externalising set moved
             # the table; lane gcleft26 10-26: CMPR texels written over it would break the record)
             is_rec = at in self.recs or bytes(self.pay[at:at + 8]) == b'R4NREF\0\0'
+            # a record already naming a PS2-catalogued key (census --catalog; e.g. r109 / r119 et10 efm 0f -> 4f784887,
+            # PS2 r109.dat) is PS2 even when it is not the library's key: kept as it is
+            if is_rec and '%08x-%08x' % struct.unpack_from('<2I', self.pay, at + 8) in PS2_KEYS:
+                done.append('already')
+                continue
             if (ww, hh, fmt) == (s['w'], s['h'], s['fmt']):
                 if is_rec and struct.unpack_from('<2I', self.pay, at + 8) == (kc, kf):
                     done.append('already')
@@ -882,6 +888,9 @@ def pack_ss(args):
 
 
 def census(args):
+    if args.catalog:   # GC-ASSET catalog (gc_port23/make_catalog.sh): texture keys whose provenance is ps2
+        PS2_KEYS.update(e['id'] for e in json.loads(Path(args.catalog).read_text())['entries']
+                        if e['kind'] == 'texture' and e['provenance'] == 'ps2')
     dar = Path(args.dar).read_bytes()
     pay, off = payload_of(dar)
     rows = []
@@ -978,6 +987,7 @@ def main():
     a = sp.add_parser('verify'); a.add_argument('--dar', required=True)
     a = sp.add_parser('census'); a.add_argument('--dar', required=True); a.add_argument('--room', required=True)
     a.add_argument('--lib', required=True); a.add_argument('--classes', default='items,breakables')
+    a.add_argument('--catalog', help='GC-ASSET catalog.json: a picture record naming any PS2-provenance key counts as PS2')
     a = sp.add_parser('gate'); a.add_argument('--lib', required=True); a.add_argument('--rooms', required=True)
     a.add_argument('--result', required=True, help='PASS:<run> or FAIL:<run>'); a.add_argument('--classes', default='items,breakables')
     args = ap.parse_args()
