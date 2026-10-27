@@ -500,6 +500,33 @@ static const Ps2EtsDrop g_ps2_ets_drop[] = {
     {0x200, 0x14, 0x0007},  // r200 et1400
 };
 
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+// PS2_ETS_LIGHT (lane fix-r111-27 2026-10-27): the room lights (LIT) still name the dropped torches as their etc
+// parent (light ParentType 3, ParentNo = parts << 16 | slot). Without the model cLight::calcPos / getNormal logged
+// "ETCMODEL PARENT NOT FOUND" every frame and left the light at a stale position (r111: 10 torch lights near the
+// world origin, so the em17 villagers drew unlit). The dropped entry's placement is kept per slot and the light is
+// placed from it: root translation + yaw (torches stand upright; the part offset is the light's own Pos).
+struct Ps2EtsGhost {
+    u8 valid;
+    Vec pos;
+    Vec ang;
+};
+static Ps2EtsGhost g_ps2_ets_ghost[0x40];
+
+int re4dc_ps2_ets_ghost_mtx(u32 parentNo, Mtx out)
+{
+    u32 no = parentNo & 0xFFFF;
+    if (no >= 0x40 || !g_ps2_ets_ghost[no].valid) {
+        return 0;
+    }
+    PSMTXRotRad(out, 'y', g_ps2_ets_ghost[no].ang.y);
+    out[0][3] = g_ps2_ets_ghost[no].pos.x;
+    out[1][3] = g_ps2_ets_ghost[no].pos.y;
+    out[2][3] = g_ps2_ets_ghost[no].pos.z;
+    return 1;
+}
+#endif
+
 static int ps2_ets_dropped(u32 room, u32 id, u32 no)
 {
     for (u32 k = 0; k < sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]); k++) {
@@ -551,6 +578,11 @@ int EtcModelListSet(EtcList* list)
     ps2_fire_sst();
 #endif
     d = list->data;
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+    for (i = 0; i < 0x40; i++) {
+        g_ps2_ets_ghost[i].valid = 0;
+    }
+#endif
     for (i = 0; i < list->num; i++) {
 #if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH
         // PS2_ETS_MATCH (game30.mk, lane fix-r10d-speed23): etc entries the PS2 room lists (r10d.dat ETS) dropped.
@@ -562,6 +594,13 @@ int EtcModelListSet(EtcList* list)
 #else
         // =2 (lane purge-props24 2026-10-24): every chapter 1-2 room; see ps2_ets_dropped.
         if (ps2_ets_dropped(pG->room_id, d[i].id, d[i].no)) {
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+            if (d[i].no < 0x40) {
+                g_ps2_ets_ghost[d[i].no].valid = 1;
+                g_ps2_ets_ghost[d[i].no].pos = d[i].pos;
+                g_ps2_ets_ghost[d[i].no].ang = d[i].ang;
+            }
+#endif
             continue;
         }
 #endif
