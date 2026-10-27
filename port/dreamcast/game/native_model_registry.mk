@@ -665,6 +665,22 @@ endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PS2_RIG=1 -I$(ASHLEY_PS2_RIG_DIR)
 $(OBJDIR)/coarse_actor.o: $(ASHLEY_PS2_RIG_DIR)/ashley_ps2_rig27.h
 endif
+ASHLEY_LOD ?= 0
+ifeq ($(filter $(ASHLEY_LOD),0 1),)
+$(error ASHLEY_LOD must be 0 or 1)
+endif
+ifeq ($(ASHLEY_LOD),1)
+ifneq ($(ASHLEY_PS2_RIG)$(NMR_POOL_LOD)$(NATIVE_MODEL_REGISTRY_ROLES5),111)
+$(error ASHLEY_LOD needs ASHLEY_PS2_RIG=1 NMR_POOL_LOD=1 NATIVE_MODEL_REGISTRY_ROLES5=1)
+endif
+ifneq ($(NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS),1)
+$(error ASHLEY_LOD needs NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1)
+endif
+ifneq ($(NATIVE_MODEL_REGISTRY_BONES),128)
+$(error ASHLEY_LOD needs NATIVE_MODEL_REGISTRY_BONES=128 for its nine source-parent/slot tables)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_LOD=1
+endif
 # PS2_ASHLEY_ROOMS=1 (lane ps2cast 2026-10-15; default 0; render only; needs PS2_ASHLEY=1|2): Ashley in the chapter 2-2 /
 #              2-3 rooms whose own registry package already carries other PS2 actors (r111 / r113 crows, r112 merchant,
 #              r118 Ganados + wolf, r11c Luis, r11f Mendez). Her package is the room's SECOND package,

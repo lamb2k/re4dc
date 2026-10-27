@@ -486,6 +486,29 @@ bool registry_skeleton(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc)
 unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
+#if defined(RE4DC_ASHLEY_LOD) && RE4DC_ASHLEY_LOD
+    const auto& ashley=registry.descriptors[full];
+    if(ashley.source_bones==141u && ashley.sections==7u && (ashley.model_id==3u || ashley.model_id==0u)) {
+        // Only the render descriptor changes. Keep close-ups and in-engine events
+        // full; partner motion, cloth, event scheduling and RNG always run once.
+        const float dx=m->pParts->mat[0][3]-pG->Cam.param.pos.x;
+        const float dy=m->pParts->mat[1][3]-pG->Cam.param.pos.y;
+        const float dz=m->pParts->mat[2][3]-pG->Cam.param.pos.z;
+        const float dist2=dx*dx+dy*dy+dz*dz;
+        const unsigned want=(pG->Status_flg[1]&0x10000000u)?0u:dist2>=10000.0f*10000.0f?2u:
+                            dist2>=5000.0f*5000.0f?1u:0u;
+        if(!want)return full;
+        unsigned best=full,best_level=0;
+        cModelInfo* probe[8]{};
+        for(unsigned l=0;l<registry.descriptor_count;++l) {
+            const auto& ld=registry.descriptors[l];
+            if(ld.lod_of!=full+1u || ld.pool || !ld.lod_level || ld.lod_level>want || ld.lod_level<=best_level)continue;
+            if(!re4dc_actor_role_bindings(m,ld.appearance,probe,count))continue;
+            best=l;best_level=ld.lod_level;
+        }
+        return best;
+    }
+#endif
 #if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
     // NMR_POOL_LOD (lane lod26b): a pool Ganado follows the level the cast Ganados draw now (GANADO_LOD level_cur:
     // its own event rule and GANADO_EVENT_KEEP_LOD apply): the numbered pool level with the highest number not above

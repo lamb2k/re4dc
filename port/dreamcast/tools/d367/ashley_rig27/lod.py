@@ -86,7 +86,9 @@ def reduce(mesh, pct):
                     tuple((tuple(c['uv']), tuple(c['normal']), 0) for c in t['corners'])) for t in ts]
             s = SkinnedSimplifier(mesh, raw, locks)
             target = max(1, round(len(ts) * ratio))
-            for step in range(1, 81):
+            # Distinct guarded error budgets when the requested percentage hits
+            # the protected floor. Report achieved counts, never relabel a floor.
+            for step in range(1, (32 if pct == 70 else 80) + 1):
                 s.run_to(step * .25)
                 if len(s.triangles()) <= target:
                     break
