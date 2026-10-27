@@ -6,8 +6,12 @@ owns integration, target measurements, route qualification and releases.
 
 The tool uses the existing Build 11 R4IM/R4PW codec and current strip-group
 generator. It does not repeat the completed Blender identity prerequisite.
-Its source plan must pin geometry, material/placement policy and ownership IDs.
-It supports r101 only and refuses an existing output directory.
+Its source directory and plan must provide all five inputs: geometry, R4PW
+material/placement policy, R4ID ownership IDs, R4TC texture classes and the whole
+room.r4rc. Missing files or SHA256 pins fail before output is created. It
+supports r101 only and refuses an existing output directory. All four unchanged
+companions are copied from the verified input bytes, read back, and recorded
+with source and output hashes in the receipt before preservation is claimed.
 
 Each retained uniquely owned scroll mesh remains exact at every source level.
 The runtime admits a changing owner only for a source ID below 250 that occurs
