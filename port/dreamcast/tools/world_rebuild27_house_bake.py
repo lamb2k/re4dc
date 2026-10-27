@@ -55,9 +55,14 @@ def encode(a):
         h=convert_tpl.HEADER.unpack_from(blob);desc=convert_tpl.TEXTURE.unpack_from(blob,h[5])
         # HEADER offsets are read by the existing packer's metadata; inspect
         # returned backing explicitly rather than treating package file size as VRAM.
-        payload_bytes=metadata.get('payload_bytes',len(dt.read_bytes())-32)
-        row=dict(role=role,width=512,height=512,encoded_file_bytes=dt.stat().st_size,native_package_file_bytes=len(blob),encoder_metadata=metadata,dt_sha256=sha(dt),native_package_sha256=sha(package),base_vq_theory_bytes=2048+512*512//4)
+        payload_bytes=metadata['vram_bytes'];aligned=(payload_bytes+31)&~31
+        require(metadata['width']==metadata['height']==512 and metadata['payload']=='vq','encoded dimensions/layout')
+        require(desc[5]==payload_bytes and payload_bytes==2048+512*512//4,'actual descriptor compact VQ backing')
+        row=dict(role=role,width=512,height=512,encoded_file_bytes=dt.stat().st_size,native_package_file_bytes=len(blob),actual_vq_payload_bytes=payload_bytes,aligned_vram_bytes=aligned,mip_backing_bytes=0,encoder_metadata=metadata,dt_sha256=sha(dt),native_package_sha256=sha(package),base_vq_theory_bytes=2048+512*512//4)
+        report['full_incremental_vram_bytes']+=aligned
         report['maps'].append(row)
+    report['full_incremental_native_package_bytes']=sum(r['native_package_file_bytes'] for r in report['maps'])
+    report['runtime_allocation_acceptance']='Encoded payload/alignment accounting only; main must prove contiguous VRAM and per-core material binding. No original texture residency is subtracted.'
     (a.out/'ENCODED-TEXTURE-BUDGET.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 

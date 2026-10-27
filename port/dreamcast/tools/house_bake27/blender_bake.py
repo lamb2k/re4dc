@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import sys
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 out=Path(sys.argv[sys.argv.index('--')+1]);exchange=json.loads((out/'HOUSE-EXCHANGE.json').read_text())
 assert not bpy.app.online_access and not (out/'house-bake.blend').exists()
@@ -34,9 +35,14 @@ def material(role):
     output=n.new('ShaderNodeOutputMaterial');links.new(emit.outputs[0],output.inputs['Surface']);return m
 
 def mesh(role,kind,collection,mat):
-    ts=exchange[role][kind];vs=[];faces=[]
+    ts=exchange[role][kind];vs=[];faces=[];pool={}
     for t in ts:
-        base=len(vs);vs.extend(coords(p) for p in t['world_mm']);faces.append((base,base+1,base+2))
+        face=[]
+        for p in t['world_mm']:
+            point=coords(p)
+            if point not in pool:pool[point]=len(vs);vs.append(point)
+            face.append(pool[point])
+        faces.append(tuple(face))
     me=bpy.data.meshes.new(role+'_'+kind);me.from_pydata(vs,[],faces);me.update();obj=bpy.data.objects.new(role+'_'+kind,me);collection.objects.link(obj);me.materials.append(mat)
     uv=me.uv_layers.new(name='SOURCE_UV');col=me.color_attributes.new(name='PS2_PRELIGHT',type='FLOAT_COLOR',domain='CORNER')
     for poly,t in zip(me.polygons,ts):
@@ -69,7 +75,13 @@ for role in ('wall','roof'):
     uv=nodes.new('ShaderNodeUVMap');uv.uv_map='BAKE_UV';links.new(uv.outputs['UV'],tex.inputs['Vector'])
     emit=nodes.new('ShaderNodeEmission');links.new(tex.outputs['Color'],emit.inputs['Color']);output=nodes.new('ShaderNodeOutputMaterial');links.new(emit.outputs[0],output.inputs['Surface'])
     uvs=[[[float(v) for v in target.data.uv_layers['BAKE_UV'].data[i].uv] for i in p.loop_indices] for p in target.data.polygons]
-    bake_receipt['maps'].append(dict(role=role,width=512,height=512,uv_layer='BAKE_UV',target_triangles=len(target.data.polygons),geometry_unchanged=True,atlas_uv_per_triangle=uvs))
+    bvh=BVHTree.FromPolygons([v.co for v in src.data.vertices],[list(p.vertices) for p in src.data.polygons],all_triangles=True)
+    hit_audit=[]
+    for p in target.data.polygons:
+        center=p.center;normal=p.normal
+        hit=bvh.ray_cast(center+normal*.25,-normal,1.)
+        hit_audit.append(dict(target_triangle=p.index,centroid_source_hit=hit[0] is not None,distance_m=hit[3] if hit[0] is not None else None))
+    bake_receipt['maps'].append(dict(role=role,width=512,height=512,uv_layer='BAKE_UV',target_triangles=len(target.data.polygons),geometry_unchanged=True,atlas_uv_per_triangle=uvs,centroid_projection_audit=hit_audit))
     objects[role]=(src,plain,target)
 
 # Validate that bake only adds UV/image data. Positions, triangle order, holes,
@@ -92,9 +104,22 @@ for frame in range(12):
             for i,obj in enumerate(triple):obj.hide_render=i!=index
         scene.render.filepath=str(out/(label+'-%02d.png'%frame));bpy.ops.render.render(write_still=True)
 for triple in objects.values():
-    for i,obj in enumerate(triple):obj.hide_render=i!=2
+    for i,obj in enumerate(triple):obj.hide_render=i!=2;obj.hide_set(i!=2);obj.hide_select=i!=2
 for image in bpy.data.images:
     if image.source=='FILE':image.pack()
 bpy.ops.wm.save_as_mainfile(filepath=str(out/'house-bake.blend'),check_existing=False)
 (out/'BLENDER-BAKE-RECEIPT.json').write_text(json.dumps(bake_receipt,indent=2)+'\n')
+atlas=dict(schema='re4dc.world-rebuild27.house-baked-atlas/1',geometry_candidate_sha256=exchange['candidate_sha256'],reference_source_sha256=exchange['source_sha256'],uv_origin=[0,0],uv_scale=[1,1],uv_convention='runtime top-left; v=1-BlenderV',prelight_contract='Set baked core vertex color to white; source PS2 prelight is already multiplied into baked pixels. Retain unrelated source prelight exactly.',runtime_binding='Unbound authoring artifact. Shared part160/288 require isolated selected-core material binding from main.',wall={},roof={})
+for role,record in zip(('wall','roof'),bake_receipt['maps']):
+    basis=exchange[role]['uv_origin_step'];triangles=[];max_error=0
+    for ordinal,(t,uvs) in enumerate(zip(exchange[role]['target'],record['atlas_uv_per_triangle'])):
+        uvtop=[[u,1-v] for u,v in uvs];encoded=[]
+        for corner,uv in zip(t['corners'],uvtop):
+            quv=[round((uv[i]-basis[i])/basis[i+2]) for i in range(2)]
+            assert all(0<=q<=65535 for q in quv),'atlas UV outside existing sourcepart bias/scale range'
+            max_error=max(max_error,max(abs((basis[i]+quv[i]*basis[i+2])-uv[i]) for i in range(2)))
+            encoded.append(list(corner[:3])+quv+[65535])
+        triangles.append(dict(target_triangle_ordinal=ordinal,original_corners=t['corners'],world_mm=t['world_mm'],baked_uv_top_left=uvtop,baked_prelight_rgba=[[1,1,1,1]]*3,baked_corners_existing_part_basis=encoded))
+    atlas[role]=dict(original_material_key=exchange[role]['source_material_key'],source_part=exchange[role]['part'],source_mesh=exchange[role]['mesh'],source_uv_origin_step=basis,source_uv_basis_unchanged=True,maximum_uv_quantization_error=max_error,maximum_uv_quantization_error_texels_at_512=max_error*512,texture_png=role+'-baked.png',white_prelight_word=65535,target_triangles=triangles,meshlet_binding='Main assembler must generate separate L0 meshlets/vertices from these corners, then certify wall/roof meshlet ranges; no shared vertex mutation.')
+(out/'ATLAS-EXCHANGE.json').write_text(json.dumps(atlas,indent=2)+'\n')
 print('HOUSE_BAKE_COMPLETE',out)
