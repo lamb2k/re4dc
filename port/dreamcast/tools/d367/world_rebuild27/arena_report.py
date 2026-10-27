@@ -63,6 +63,7 @@ def parse(paths, run):
     arms, errors = {}, []
     for path in paths:
         current, pending, measuring = None, None, False
+        file_arms = set()  # footer rows are valid only for scenes armed in this file/run
         for line in path.read_text(errors="replace").splitlines():
             data = values(line)
             if "arena27: INVALID" in line:
@@ -78,6 +79,7 @@ def parse(paths, run):
                     continue
                 if current in arms:
                     errors.append(f"{path}: duplicate arm {current} run {run}")
+                file_arms.add(current)
                 arms[current] = {"metadata": data, "tails": [], "pace": [], "result": {}, "ta": {}, "summary": {}, "stream_warmup": [], "stream_measured": [], "source": str(path)}
                 measuring = False
             boundary = re.search(r"bench: scene (\d+) (begin|end) room frame", line)
@@ -90,7 +92,7 @@ def parse(paths, run):
             if "arena27: window " in line and number(data, "run") == run:
                 pending = number(data, "scene")
             elif "PACE vmu " in line:
-                if pending in arms:
+                if pending in file_arms:
                     arms[pending]["pace"].append(data)
                 pending = None
             elif "tail: sc=" in line and current in arms and number(data, "sc") == current:
@@ -99,15 +101,15 @@ def parse(paths, run):
                     arms[current]["tails"].append(data)
             elif "arena27: result " in line and number(data, "run") == run:
                 scene = number(data, "scene")
-                if scene in arms:
+                if scene in file_arms:
                     arms[scene]["summary"] = data
             elif "bench: result run " in line:
                 match = re.search(r"bench: result run (\d+) scene (\d+)", line)
-                if match and int(match[1]) == run and int(match[2]) in arms:
+                if match and int(match[1]) == run and int(match[2]) in file_arms:
                     arms[int(match[2])]["result"] = data
             elif "bench: ta run " in line:
                 match = re.search(r"bench: ta run (\d+) scene (\d+)", line)
-                if match and int(match[1]) == run and int(match[2]) in arms:
+                if match and int(match[1]) == run and int(match[2]) in file_arms:
                     arms[int(match[2])]["ta"] = data
     return arms, errors
 
