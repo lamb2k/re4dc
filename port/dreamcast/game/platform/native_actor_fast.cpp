@@ -42,6 +42,16 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
+#ifndef RE4DC_ACTOR_CLIP_REUSE
+#define RE4DC_ACTOR_CLIP_REUSE 0
+#endif
+#if RE4DC_ACTOR_CLIP_REUSE
+#include "include/actor_clip_reuse.hpp"
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart*);
+#endif
 // ACTOR_BACKFACE_CONE (backface.mk, lane backface-cone23; render only; default 0: no code). For the models
 // coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_mark), the converter splits each
 // opaque part's strips by (palette entry, facing) before clustering, so a meshlet's triangles share one skinning matrix
@@ -3404,18 +3414,58 @@ struct Part {
     unsigned rs = 6, color_index = 0;
     const u8* colors = nullptr;
     u32 alpha = 0;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    bool dsa_xlu = re4dc_dsa24_model_translucent(&p) != 0;
+    unsigned dsa_classified = 0, dsa_overlap = 0;
+    void dsa_strip_overlap(const u8* index, unsigned n) {
+        if (!dsa_xlu || n < 3) return;
+        dsa_classified += n - 2;
+        for (unsigned t = 0; t < n - 2; ++t) {
+            const unsigned common = cache.oc[index[t] & 127U] &
+                cache.oc[index[t + 1] & 127U] & cache.oc[index[t + 2] & 127U];
+            if (!(common & kOcScreen)) ++dsa_overlap;
+        }
+    }
+    void dsa_known_overlap(unsigned n) {
+        if (dsa_xlu) { dsa_classified += n; dsa_overlap += n; }
+    }
+    // Existing topology totals cover the ordinary and shared chunk backends.
+    // Output is CPU-emitted topology, not pixel/depth visibility on the PVR.
+    ~Part() {
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesIn, input);
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesOut, output);
+        if (dsa_xlu) {
+            re4dc::dsa24::count(re4dc::dsa24::XluSubmitted, output);
+            re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap, dsa_overlap);
+            // Alternate chunk backends can emit outside Part's strip sinks.
+            // Keep their submitted count; never invent their overlap count.
+            if (dsa_classified != output)
+                re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+        }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        // The optional backface path retains pre-backface output accounting.
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+    }
+#endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
     AvkSetup<AvkPos> position_setup;
     AvkSetup<AvkLight> light_setup;
 #endif
 
     bool flush() {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
         if (!streaming) return false;
         re4dc_model_packet_commit(used); committed = true;
         used = 0; ++stats.flushes;
         return true;
     }
     bool room(unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if RE4DC_ACTOR_DIRECT
         if (direct) return slots + n <= 32767U;
 #endif
@@ -3423,6 +3473,9 @@ struct Part {
     }
     pvr_vertex_t* at() { return static_cast<pvr_vertex_t*>(packet.vertices) + used; }
     void put(const pvr_vertex_t* v, unsigned n) {  // prepared vertices (clipped triangles)
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_put(cache.v, v, n);
@@ -3432,6 +3485,10 @@ struct Part {
         std::memcpy(at(), v, n * sizeof(pvr_vertex_t)); used += n;
     }
     void strip(const u8* index, unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        dsa_strip_overlap(index, n);
+#endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_strip(cache.v, index, n);
@@ -3493,7 +3550,13 @@ struct Part {
         return packet.capacity - used >= n || (streaming && packet.capacity >= n);
     }
     bool whole(const u8* index, unsigned count, unsigned triangles) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
         if (!room(count)) return false;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_known_overlap(triangles);
+#endif
 #if RE4DC_ACTOR_DIRECT
         if (direct) {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
@@ -3565,13 +3628,59 @@ struct Part {
         return true;
     }
     bool clip_strip(const Records& r, const u8* index, unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+        re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
+#endif
         ++stats.fallback_runs;
+#if RE4DC_ACTOR_CLIP_REUSE
+        return re4dc::actor_clip::reuse_strip(n,
+            [&](unsigned corner, re4dc::render::RenderVertex& v, float& opacity) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
+                const unsigned li = index[corner] & 127U;
+                float w[3], nn[3];
+                world_of(f, p, r, li, w, nn);
+                v = {};
+                float x = w[0], y = w[1], z = w[2];
+                v.position.world_x = x; v.position.world_y = y; v.position.world_z = z;
+                v.position.depth = -z;
+                if (z != 0.0f) project(x, y, z, &projection);
+                v.position.x = x; v.position.y = y; v.position.z = z;
+                v.u = uv16 ? unpacked_u(cache.v[li]) : cache.v[li].u; v.v = cache.v[li].v;
+                const u32 rgb = cache.v[li].argb;
+                v.light_red = float((rgb >> 16) & 255) * (1.0f / 255.0f);
+                v.light_green = float((rgb >> 8) & 255) * (1.0f / 255.0f);
+                v.light_blue = float(rgb & 255) * (1.0f / 255.0f);
+                opacity = float(colors ? colors[r.ci(li) * 4 + 3] : (p.alpha_state & 255)) * (1.0f / 255.0f);
+            },
+            [&](const re4dc::render::RenderVertex* in, const float* opacity) {
+                pvr_vertex_t triangles[6];
+                const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+                ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
+                if (uv16) pack_uv16(triangles, 3 * m, false);
+                if (m && !room(3 * m)) return false;
+                put(triangles, 3 * m);
+                output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(m);
+#endif
+                return true;
+            });
+#else
         for (unsigned t = 0; t + 2 < n; ++t) {
             unsigned tri[3] = {t, t + 1, t + 2};
             if (t & 1) std::swap(tri[0], tri[1]);  // strip parity
             re4dc::render::RenderVertex in[3];
             float opacity[3];
             for (unsigned k = 0; k < 3; ++k) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
                 const unsigned li = index[tri[k]] & 127U;
                 float w[3], nn[3];
                 world_of(f, p, r, li, w, nn);
@@ -3592,12 +3701,19 @@ struct Part {
             pvr_vertex_t triangles[6];
             const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
             ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
             if (uv16) pack_uv16(triangles, 3 * m, false);
             if (m && !room(3 * m)) return false;
             put(triangles, 3 * m);
             output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_known_overlap(m);
+#endif
         }
         return true;
+#endif
     }
 };
 
@@ -5607,6 +5723,10 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }  // namespace
 #endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
@@ -6371,6 +6491,10 @@ void one_close(OneWindow& w) {
 // LEON_NATIVE_PIPE (native_actor_leon_pipe.inc): known != nullptr hands in one_qualifies' result (its registry entry
 // and source), which the caller's preflight proved for this part; one_chunk(p, w) below is the unchanged call.
 int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, const Re4dcActorSource* known_src) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(p.model, 1);
 #endif
@@ -6382,6 +6506,10 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     else if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
     if (p.positions) return -1;
     APROF_SPAN(aprof_chunk, APROF_CHUNK);
     APROF_COUNT(APROF_N_CHUNKS, 1);

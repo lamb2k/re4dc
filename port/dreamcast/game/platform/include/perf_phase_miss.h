@@ -35,5 +35,14 @@ Control controls();
 unsigned line_count();
 int format_line(unsigned row, char* out, unsigned capacity);
 int summary(char* out, unsigned capacity);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+// Read-only sub-observer of the existing PRFC1 owner. Never starts, stops or
+// resets a counter; retains PM14 controls, owner-thread and loss checks.
+struct AuditSample {
+    uint64_t value;
+    uint32_t generation, event, qualification;
+};
+bool read_audit_sample(AuditSample* out);
+#endif
 } }
 #endif

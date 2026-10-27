@@ -1,0 +1,274 @@
+{
+  "status": "PASS",
+  "scope": "Build24 actual observer + existing PM14 owner, deterministic synthetic controls.",
+  "sanitized": true,
+  "source_sha256": {
+    "port/dreamcast/game/draw_setup_audit.cpp": "03ba3d2961c39494cfacfac81eb0e2aff3171bba147579a59f1955e8c32697fb",
+    "port/dreamcast/game/platform/include/draw_setup_audit.h": "8f9724ad32da75fe96ea61ee1e7b9f639977f8c8c373600f0c9d2877191b6e22",
+    "port/dreamcast/game/perf_phase_miss.cpp": "670ac90f210310abb85806a3383aa0ecd170eac64b457258fc6de262407c7610",
+    "port/dreamcast/game/platform/include/perf_phase_miss.h": "f90c4a51e4454c63dad25b5ba2533961ea765b0c4b4389cb58faa4a6eeb43bf5",
+    "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+    "port/dreamcast/tools/cloud/build24/check_core.cpp": "4c6b10c6314ca91332a8c3e461ec2dac4404395a8d0c665b8b49e99d6bc4f290",
+    "port/dreamcast/tools/cloud/build24/run_core.py": "7fab984f149bcc3571f709b201d87891f51528114512589e2b226b7e9f3e99c8"
+  },
+  "commands": [
+    [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-DRE4DC_DRAW_SETUP_AUDIT_HOST=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=3",
+      "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-fno-pie",
+      "-no-pie",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/cloud/build24/check_core.cpp",
+      "-o",
+      "/tmp/re4dc-b24-core-final/core-0"
+    ],
+    [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-DRE4DC_DRAW_SETUP_AUDIT_HOST=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=3",
+      "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-fno-pie",
+      "-no-pie",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/cloud/build24/check_core.cpp",
+      "-DRE4DC_PERF_PHASE_MISS=1",
+      "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+      "-DRE4DC_WORLD_CENSUS24=1",
+      "-DRE4DC_PERF_PHASE_MISS_EVENT=15",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/perf_phase_miss.cpp",
+      "-o",
+      "/tmp/re4dc-b24-core-final/core-15"
+    ],
+    [
+      "g++",
+      "-std=c++17",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-misleading-indentation",
+      "-DRE4DC_DRAW_SETUP_AUDIT_HOST=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT=1",
+      "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=3",
+      "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-fno-pie",
+      "-no-pie",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/cloud/build24/check_core.cpp",
+      "-DRE4DC_PERF_PHASE_MISS=1",
+      "-DRE4DC_PERF_PHASE_MISS_HOST=1",
+      "-DRE4DC_WORLD_CENSUS24=1",
+      "-DRE4DC_PERF_PHASE_MISS_EVENT=37",
+      "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/perf_phase_miss.cpp",
+      "-o",
+      "/tmp/re4dc-b24-core-final/core-37"
+    ]
+  ],
+  "cases": [
+    {
+      "event": 0,
+      "case": "partition",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "skipped",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "lifecycle",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "nesting",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "stale",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "alien",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "incomplete",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "backward",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "depth",
+      "status": "PASS"
+    },
+    {
+      "event": 0,
+      "case": "invalid",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "partition",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "skipped",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "lifecycle",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "nesting",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "stale",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "alien",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "incomplete",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "backward",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "depth",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "invalid",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "pm-loss",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "pm-unrun",
+      "status": "PASS"
+    },
+    {
+      "event": 15,
+      "case": "pm-wrap",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "partition",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "skipped",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "lifecycle",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "nesting",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "stale",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "alien",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "incomplete",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "backward",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "depth",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "invalid",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "pm-loss",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "pm-unrun",
+      "status": "PASS"
+    },
+    {
+      "event": 37,
+      "case": "pm-wrap",
+      "status": "PASS"
+    }
+  ],
+  "case_count": 36,
+  "limits": "Injected clocks/registers; verifies accounting, isolation, parity of denominators and ownership. No console timing or hardware PMU qualification.",
+  "commands_in_receipt": "Commands record the isolated execution paths; use the README commands with your own output directories."
+}

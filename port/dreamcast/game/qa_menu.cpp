@@ -1,3 +1,6 @@
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "platform/include/draw_setup_audit.h"
+#endif
 // QA menu (QA_MENU=1 in qamenu.mk; the tester QA disc only, never a release image). Lane qa20, user 2026-10-20.
 //
 // One general QA disc: a teleporter (chapter -> place, each place a warp rig fixture that sets the story state), the
@@ -237,7 +240,12 @@ const char* wm_shell_name() { return re4dc_qa_wshell == 1 ? "ON" : re4dc_qa_wshe
 // The game side (dbgwarp_bridge.cpp qa_poll, at menu open): room, Ganados alive, heap 4 free, preset name.
 struct QaGame { unsigned room; int alive, heap4; char preset[24]; };
 QaGame g_game;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+char g_diag[8192];             // sealed draw audit + existing rows + log; QR keeps all pages
+unsigned g_diag_page;
+#else
 char g_diag[3072];             // the snapshot: "key=value" lines, then LOG and the last log lines
+#endif
 int g_diag_len, g_diag_stats;  // bytes, bytes before LOG
 constexpr int kLogLines = 20, kLogCols = 96;
 char g_log[kLogLines][kLogCols + 1];
@@ -298,6 +306,9 @@ int scratch_rows(int at) {
 #endif
 
 void snap_diag() {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    g_diag_page=0;
+#endif
     int a = 0;
     a = addf(a, "RE4DCQA1\nbuild=%s\nroom=%03x preset=%s\n", RE4DC_QA_NAME, g_game.room,
              g_game.preset[0] ? g_game.preset : "-");
@@ -363,6 +374,12 @@ void snap_diag() {
         }else a=addf(a,"world timing/vertices=NA collecting this room/View/PVS window\n");
 #endif
     } else a = addf(a, "ms10=NA\n");
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    for(unsigned i=0;i<re4dc::dsa24::line_count();++i){
+        char row[240];
+        if(re4dc::dsa24::format_line(i,row,sizeof(row))>0)a=addf(a,"%s\n",row);
+    }
+#endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     {
         const int vd = re4dc_view_dist_get ? re4dc_view_dist_get() : -1;
@@ -435,6 +452,41 @@ void draw_qr(const Fb& fb, int page) {
     fb_text(fb, tx, 120, 1, 2, 0x000000, "B: BACK");
     fb_text(fb, tx, 160, 1, 2, 0x000000, "PHOTO EACH PAGE");
 }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+unsigned diag_page_rows(const Fb& fb){return fb.h>92?unsigned((fb.h-76)/16):1U;}
+unsigned diag_rows(const Fb& fb,unsigned first,bool paint){
+    unsigned cols=fb.w>60?unsigned((fb.w-60)/6):1U;
+    if(cols>100)cols=100;
+    const unsigned limit=first+diag_page_rows(fb);
+    unsigned row=0;
+    for(int i=0;i<g_diag_len;){
+        int j=i;while(j<g_diag_len&&g_diag[j]!='\n')++j;
+        if(i){
+            for(unsigned off=0;off<unsigned(j-i);off+=cols,++row){
+                if(!paint||row<first||row>=limit)continue;
+                char part[101];const unsigned left=unsigned(j-i)-off;
+                const unsigned take=left<cols?left:cols;
+                memcpy(part,g_diag+i+off,take);part[take]=0;
+                fb_text(fb,30,40+int(row-first)*16,1,2,kCyan,part);
+            }
+        }
+        i=j+1;
+    }
+    return row;
+}
+unsigned diag_pages(const Fb& fb){
+    const unsigned n=diag_rows(fb,0,false),rows=diag_page_rows(fb);
+    return n?(n+rows-1)/rows:1U;
+}
+void draw_diag(const Fb& fb){
+    const unsigned pages=diag_pages(fb);g_diag_page%=pages;
+    fb_fill(fb,0,0,fb.w,fb.h,0x000000);fb_fill(fb,20,8,fb.w-40,22,kRed);
+    char title[80];snprintf(title,sizeof(title),"DIAGNOSTICS - PAUSED %u/%u",g_diag_page+1,pages);
+    fb_center(fb,12,1,2,kWhite,title);
+    diag_rows(fb,g_diag_page*diag_page_rows(fb),true);
+    fb_text(fb,30,fb.h-26,1,2,kGrey,"RIGHT/LEFT: PAGE  X: QR SNAPSHOT  B: BACK");
+}
+#else
 void draw_diag(const Fb& fb) {
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
     fb_fill(fb, 20, 8, fb.w - 40, 22, kRed);
@@ -462,6 +514,8 @@ void draw_diag(const Fb& fb) {
     }
     fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, "X: QR SNAPSHOT (PHOTO IT)   B: BACK");
 }
+
+#endif
 
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 // The game is paused here. Read only the sealed census, wrapping all its rows
@@ -691,6 +745,16 @@ int run(Menu& m, bool boot) {
             }
         }
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(m.screen==M_DIAG){
+            const unsigned pages=diag_pages(fb);
+            if(press&(CONT_DPAD_RIGHT|CONT_DPAD_DOWN)){
+                g_diag_page=(g_diag_page+1)%pages;dirty=true;
+            }else if(press&(CONT_DPAD_LEFT|CONT_DPAD_UP)){
+                g_diag_page=(g_diag_page+pages-1)%pages;dirty=true;
+            }
+        }
+#endif
         if (press & CONT_B) {
             dirty = true;
             if (m.screen == M_PRE) m.screen = M_CHAP;
@@ -788,6 +852,9 @@ void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset) {
 // Harness (`qa_menu` / `qa_diag` warp lines): the menu drawn once, the Diagnostics page and its QR pages held for
 // hold_ms each (captures), then a teleport to /cd/dc/qa/<file> (file empty: resume).
 int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::pause();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
 #endif
@@ -832,6 +899,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::resume();
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::resume();
+#endif
     if (!file || !file[0]) return 0;
     snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
     re4dc_log("qa: auto teleport %s\n", g_path);
@@ -841,6 +911,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 
 // In-game menu (the warp rig's poll, frame loop stopped). 0 resume, 1 teleport (*path), 2 title, 3 refill health.
 int re4dc_qa_menu(const char** path) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::pause();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
 #endif
@@ -866,6 +939,9 @@ int re4dc_qa_menu(const char** path) {
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::resume();
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::resume();
 #endif
     re4dc_log("qa: menu closed (%d)\n", a);
     if (a == -1) { *path = g_path; return 1; }

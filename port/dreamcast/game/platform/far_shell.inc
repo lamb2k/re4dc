@@ -252,6 +252,9 @@ extern "C" float re4dc_far_shell_full(float cut) {
 }
 // After the PS2 world's opaque pass (native_ps2_world.cpp re4dc_ps2_world_draw): the shell between cut and full.
 extern "C" int re4dc_far_shell_draw(float cut, float full) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_shell(re4dc::dsa24::Shell);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc_phase(re4dc::wc24::FarOP,re4dc::wc24::Other);
     Wc24PassResult wc_result;
@@ -307,6 +310,9 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
     const float split = .5f * (cut + full);   // fine / coarse level split (version 2 files): 18.75 m at Short
     struct Busy { Busy() { st.drawing = true; } ~Busy() { st.drawing = false; } } busy;   // no shortfall free mid-draw
     for (unsigned gi = 0; gi < ng; ++gi) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_shell.phase(re4dc::dsa24::Work);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Selection);
 #endif
@@ -359,6 +365,9 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
         if (!sq || out.scratch_capacity < g.vcount) { ++st.refused; continue; }
 #endif
         ++drawn;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
         re4dc::wc24::count(re4dc::wc24::Transformed,g.vcount);
@@ -420,6 +429,10 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
             o[7] = 0;
         }
         st.vtx += g.vcount;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_shell.phase(re4dc::dsa24::Submit);
+        unsigned dsa_in=0,dsa_out=0;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Submit);
         unsigned wc_strip_inputs=0;
@@ -429,6 +442,9 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
         const std::uint32_t* const b32 = reinterpret_cast<const std::uint32_t*>(buf);
         while (p < e) {
             const unsigned n = *p++;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_in+=n-2U;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             wc_strip_inputs+=n;
 #endif
@@ -450,17 +466,27 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
 #endif
                 }
                 slots += n;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_out+=n-2U;
+#endif
                 st.strip_verts += n;
             } else
                 ++st.strips_cut;
             p += n;
         }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesIn,dsa_in);
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesOut,dsa_out);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::count(re4dc::wc24::StripInputs,wc_strip_inputs);
 #endif
     }
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     wc_phase.phase(re4dc::wc24::Submit);
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    dsa_shell.phase(re4dc::dsa24::Submit);
 #endif
     if (sq) re4dc_model_direct_end(slots);
     st.groups_drawn += drawn;

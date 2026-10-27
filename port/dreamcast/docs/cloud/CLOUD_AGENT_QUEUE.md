@@ -58,7 +58,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 21 | Texture arena uses the incoming key (`TEX_ARENA_CURRENT_KEY`, outside audit T22-T24) | landed 1717235b, default 0; local A/B on the T23 vanishing next |
 | 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
-| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`) | queued 2026-10-27, NEXT |
+| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`) | cloud hand-back 2026-10-27 on `codex/draw-setup-audit-20261027`; all knobs default 0; merge/console acceptance pending |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -240,6 +240,63 @@ Console QA Diagnostics readings (ms per 33.4 ms tick, Test 24b QA 52cb8198 unles
 ## Open questions back to Claude
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
+
+### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
+
+Based on `a9fa0b8850f762acbf3ce49e86d7c24394df894b`. The
+[audit, measurements, receipts and owner run plan](../../tools/cloud/build24/README.md)
+cover `DRAW_SETUP_AUDIT`, `ACTOR_CLIP_REUSE` and `SCENERY_CLIP_GATHER`, all
+independently default 0. No recipe/data enablement; no console-FPS claim.
+
+**Timing correction:** current `main.cpp` calls `ProcessTickInit` before
+`Render_before`, input/debug work and `Render`, so the old setup residual is
+not `Render()` alone. The observer separates inclusive legacy setup, actual
+Render, FRAME BEGIN, world OP/PT, world TR, shell, models, clip and submit, with
+a reconciled whole-loop residual. The historical readings above are retained.
+Deferred UI/effect nodes stay outside model timing; the death-fade ticket
+branch includes model acquisition, palette and list setup. CPU-emitted/staged
+triangle counts and conservative viewport overlap do not prove depth visibility,
+TA consumption or presentation.
+
+The two exact candidates address demonstrated repeated work:
+
+- Actor clipping: `3(n-2)` corner preparations become `n`, preserving winding,
+  output, opacity/UV, capacities and refusal order. A rigid near-clipped
+  64-corner fixture is 78,025 → 32,998 warm model cycles, with fewer repeated
+  loads/stores. Three-corner strips slightly regress; unique data lines rise
+  by one in the fixture. This is not a measured cache-miss reduction.
+- Indexed-world clipping: gather only referenced local slots into the existing
+  scratch. A 64-vertex pick clipping three corners is 1,589 → 206 warm model
+  cycles and 114 → 16 distinct data lines in a synthetic scattered layout.
+  Full coverage regresses to 2,646 cycles. Single-strip warm crossover is
+  37/38 distinct corners; repeated strips change it. The current n64 pack is
+  primary, with n256 included as a format-boundary control.
+
+Evidence includes full Make-derived SH-4 disabled identity/enabled compilation,
+a supplemental death-fade include gate, actor packet/direct output equality,
+61,440 world clip-consumer comparisons, 36 observer/PMU controls, sanitizer
+runs, guarded 320/640 QA rendering, and actual target-instruction pricing.
+The linked-game, private-asset, game-state STRICT and console gates remain local.
+The assetless compile profile uses `NMR_POOL_LOD=0` symmetrically in both arms
+because its `GANADO_LOD=0` conflicts with the current recipe prerequisite; the
+recipe itself is unchanged. Receipts distinguish these limits from passes.
+
+**Questions for the local run:**
+
+1. With the exact same daytime farm/body state near the barn and 20 m away,
+   does the excess land in FRAME BEGIN, MODEL CLIP/WORK, WORLD CLIP or SUBMIT?
+   Please capture the complete sealed identity/count/phase rows, including
+   unsupported counts and reconciliation, over 300–600 drawn ticks.
+2. What are the actual actor clip-strip/reconstruction population and indexed
+   gather coverage? The report's 7.89582 ms combined example is **MODELLED**
+   from hypothetical counts (32 rigid 64-corner strips + 100 sparse n64 picks),
+   not an estimate for this farm. Dense clipping can make the world fix worse.
+3. Do independent fix OFF/ON pairs improve real time with the observer OFF,
+   while passing the existing image/TA/gameplay gates? The observer itself can
+   cost several modeled milliseconds and must not be used as acceptance timing.
+4. Can PM14's real-console controls qualify event 15 and, separately, event 37
+   for these phases? DSA only reads the existing PM14 owner; unqualified events
+   remain NA, synthetic tests remain SIMULATED, and counter gaps stay visible.
 
 ### 2026-10-26: Build 20 hand-back — r100 shading history (`codex/r100-shading-history-20261026`)
 

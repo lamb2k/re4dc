@@ -1,3 +1,6 @@
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 // Narrow ModelData indexed-stream adapter, not a GX display-list interpreter.
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
@@ -711,6 +714,9 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 #define PP_PATH(x) ((void) 0)
 #endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#endif
 #if RE4DC_GC_ASSET_GATE
     // Replacement/static paths must supply their own immutable asset proof.
     // A source caller's BIN cannot certify the bytes their emitter consumes.
@@ -868,6 +874,11 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // An actor decline may have restored a frozen/outer context. The generic
     // walker has no complete constituent receipt yet; preserve class only.
     re4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // The legacy GX walker is timed, but its clip/topology counters are not
+    // part of the native actor/R4IM census. Never present those gaps as zero.
+    if(p)re4dc::dsa24::count(re4dc::dsa24::Unsupported);
 #endif
     if(!p || p->alpha_state>511 || ((p->alpha_state&256) && (!(p->flags&0x80000000U) || !p->colors)) || p->shift>30 || (p->position_stride!=6 && p->position_stride!=8) ||
        !p->position_count || !p->normal_count || p->stream_bytes>1024*1024 ||

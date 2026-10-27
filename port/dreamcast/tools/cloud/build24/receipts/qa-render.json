@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "scope": "Actual Build24 Diagnostics pagination/font, guarded 320/640 framebuffer capture.\n\nExtracts production display functions and fills their snapshot with the actual\nobserver's synthetic sealed rows. No image or game data is committed.\n",
+  "layouts": [
+    {
+      "width": 320,
+      "height": 240,
+      "bpp": 2,
+      "rows": 70,
+      "pages": 7,
+      "guards": true
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "bpp": 4,
+      "rows": 70,
+      "pages": 7,
+      "guards": true
+    },
+    {
+      "width": 640,
+      "height": 480,
+      "bpp": 2,
+      "rows": 43,
+      "pages": 2,
+      "guards": true
+    },
+    {
+      "width": 640,
+      "height": 480,
+      "bpp": 4,
+      "rows": 43,
+      "pages": 2,
+      "guards": true
+    }
+  ],
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-unused-function",
+    "-Wno-misleading-indentation",
+    "-DRE4DC_DRAW_SETUP_AUDIT=1",
+    "-DRE4DC_DRAW_SETUP_AUDIT_HOST=1",
+    "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=3",
+    "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+    "/tmp/re4dc-b24-qa-final/qa.cpp",
+    "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp",
+    "-o",
+    "/tmp/re4dc-b24-qa-final/qa"
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/qa_menu.cpp": "a88946d6d2c3c30577a0910959ed1e81bf52a29aa876f5ac3fd1cd41c87aa8d9",
+    "port/dreamcast/game/draw_setup_audit.cpp": "03ba3d2961c39494cfacfac81eb0e2aff3171bba147579a59f1955e8c32697fb",
+    "port/dreamcast/tools/cloud/build24/check_core.cpp": "4c6b10c6314ca91332a8c3e461ec2dac4404395a8d0c665b8b49e99d6bc4f290",
+    "port/dreamcast/tools/cloud/build10/qa_render_fixture.cpp": "c6fe12b836e5b7f45f926100039de6455533524669a3d951dd7bd617053b1dc9",
+    "port/dreamcast/game/platform/include/draw_setup_audit.h": "8f9724ad32da75fe96ea61ee1e7b9f639977f8c8c373600f0c9d2877191b6e22",
+    "port/dreamcast/tools/cloud/build24/qa_render_check.py": "80d2252de7432fac54d57aa30fdc7aab9308ee8b1a4c10253f6353ad969b300e"
+  },
+  "extracted_sha256": "05ea5e0f089e708dcaaeda5604926e3516bd0cc25a854aae8e9c1ac6e4dd9fdb",
+  "captures": {
+    "qa-320-2-0.ppm": "e8fbc83687247cf26477f83007e9dc2c5f655377a527238790d29ec03ee4cdbc",
+    "qa-320-2-1.ppm": "28d134d137504d450613849bca9a8382376d065f3b107be174aa7fca85896382",
+    "qa-320-2-2.ppm": "156632affe4f91bb0a269165415b83bb2905cd40d548b8ee23fca62dc20d8585",
+    "qa-320-2-3.ppm": "b0bb15f00e18c2bc72fdcb66d8cbc0e9f8102e2263a02834248bbf4e21e94083",
+    "qa-320-2-4.ppm": "f1092bf20e7fbd0c2b57417f395895a824cf7ce9f10b753d27dc9dd6dcb4e974",
+    "qa-320-2-5.ppm": "b4dbab334f68b4bdab9626b04638cfe25d5b1458300690e8551e32d83d2c4610",
+    "qa-320-2-6.ppm": "dc59188ee8df9121694acfaa3f25932a7273b71e1d52cad78f63817609e4a821",
+    "qa-320-4-0.ppm": "94273c95e455e4d928d6f57eabd002f285275073c27369b5d3f45d96f9bcd3ac",
+    "qa-320-4-1.ppm": "ecb5e4baa5c227d5b3bdbb3ce98ade5350846ad42c624a2340fae42ce8f0156a",
+    "qa-320-4-2.ppm": "0abe37605137f87f96a48f9c174bb77eeb7c9c09c19c89945ab230c41c69c876",
+    "qa-320-4-3.ppm": "624cf3ae2f7ac78ac4d286accc4f12d283eaac46aa6c89b2a800c9e8ac4210d7",
+    "qa-320-4-4.ppm": "3104789ae3f00188728545acaa7555ced0ab162e2232c95834b0d26ec92a1f10",
+    "qa-320-4-5.ppm": "b462d03a0572beeeadc0c73b9b133f459f68a00c0ee7ad42ac236057f1955934",
+    "qa-320-4-6.ppm": "809f08461fa0ccf69011ac9213e19443b00baa01745fd095c396adb2c3e2dd87",
+    "qa-640-2-0.ppm": "6879e48168f6a11c3ae5b2ad7600970cb922fed401e3d0afe0763062bfb46672",
+    "qa-640-2-1.ppm": "d48f429644b49cc3ca40b87c75864c47391990bcc9593818648d8692592d0922",
+    "qa-640-4-0.ppm": "4a324a0f5e7972e200707fd62fbfdb750b96602287a7214aff2815e8763206b2",
+    "qa-640-4-1.ppm": "c5b2409e76d51fae8e303e79b881ae60d6587a739b0df412d998afec74530941"
+  },
+  "commands_in_receipt": "Commands record the isolated execution paths; use the README commands with your own output directories."
+}

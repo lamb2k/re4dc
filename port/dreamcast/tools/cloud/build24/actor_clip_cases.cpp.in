@@ -1,0 +1,113 @@
+// Appended to Build 2's whole-production-TU host adapter. All assets synthetic.
+#include "include/actor_clip_reuse.hpp"
+namespace check {
+void clip_reuse_controls() {
+    unsigned controls = 0;
+    for (unsigned n = 0; n <= 128; ++n) {
+        const unsigned triangles = n < 3 ? 0 : n - 2;
+        for (unsigned accepted = 0; accepted <= triangles; ++accepted) {
+            unsigned prepares = 0, emits = 0;
+            const bool ok = re4dc::actor_clip::reuse_strip(n,
+                [&](unsigned i, re4dc::render::RenderVertex& v, float& opacity) {
+                    assert(i == prepares++ && i < n);
+                    v = {};
+                    v.position.depth = float(i);
+                    opacity = float(i);
+                },
+                [&](const re4dc::render::RenderVertex* v, const float* opacity) {
+                    unsigned expected[3] = {emits, emits + 1, emits + 2};
+                    if (emits & 1U) std::swap(expected[0], expected[1]);
+                    for (unsigned k = 0; k < 3; ++k) {
+                        assert(v[k].position.depth == float(expected[k]));
+                        assert(opacity[k] == float(expected[k]));
+                    }
+                    return emits++ < accepted;
+                });
+            assert(ok == (accepted == triangles));
+            assert(emits == (ok ? triangles : accepted + 1));
+            assert(prepares == (n < 3 ? 0 : ok ? n : accepted + 3));
+            ++controls;
+        }
+    }
+    std::fprintf(stderr, "reuse_controls=%u\n", controls);
+}
+
+void clip_case(unsigned id, unsigned kind, unsigned n, unsigned style,
+               unsigned cull, bool packed_uv, unsigned limit) {
+    start();
+    Asset a(kind, 1, n, n, 1, true);
+    a.p.cull = cull;
+    a.p.alpha_state = style & 1U ? 256U | 173U : 201U;
+    const unsigned ps = kind == 2 ? 6U : 8U;
+    for (unsigned j = 0; j < n; ++j) {
+        short* v = reinterpret_cast<short*>(
+            reinterpret_cast<unsigned char*>(a.positions.data()) + j * ps);
+        // Keep nondegenerate screen triangles near the screen, plus boundary,
+        // offscreen, behind-camera, far and repeated-index controls below.
+        v[0] = short(j % 3 == 0 ? -2 : j % 3 == 1 ? 2 : 0);
+        v[1] = short(j % 3 == 2 ? 2 : -2);
+        switch (style / 2) {
+        case 0: v[2] = short(j % 3 == 0 ? -3 : -15); break;
+        case 1: v[2] = short(j % 3 == 0 ? -5 : -15); break;
+        case 2: v[2] = -15; break;
+        case 3: v[2] = -3; break;
+        case 4: v[2] = short(j % 3 == 0 ? 0 : -15); break;
+        case 5: v[2] = short(j % 3 == 0 ? 2 : -15); break;
+        case 6: v[2] = -3000; break;
+        case 7: v[2] = short(j % 3 == 0 ? -3 : -15); v[0] = -3000; break;
+        }
+    }
+    a.bind();
+    const float near = a.p.projection[6] / (a.p.projection[5] - 1.0f);
+    const float far = a.p.projection[6] / a.p.projection[5];
+    Frame& f = *prepare_frame(a.p, near, far);
+    Part e{a.p, f, {a.p.projection, a.p.viewport},
+           {near, far, 640.0f, 480.0f, project, nullptr}};
+    e.clip.context = &e.projection;
+    e.packet = {slab, limit, 1.0f, 1.0f};
+    e.streaming = false;
+    e.cache.v = scratch_vertices;
+    e.colors = a.p.alpha_state & 256U ? a.colors.data() : nullptr;
+    e.uv16 = packed_uv;
+    unsigned char index[128];
+    for (unsigned j = 0; j < n; ++j) {
+        // Last EOL bit and occasional repeated vertices exercise index masking
+        // and degenerate triangles without resetting strip parity.
+        index[j] = static_cast<unsigned char>(j % 9U == 8U ? j - 1U : j);
+        scratch_vertices[j] = {PVR_CMD_VERTEX, 0, 0, 0,
+            float(j) * .03125f - .5f, .75f - float(j) * .015625f,
+            0x804070a0U + j * 257U, 0};
+    }
+    index[n - 1] |= 128U;
+    if (packed_uv) pack_uv16(scratch_vertices, n, true);
+    const auto* b = reinterpret_cast<const BlobHeader*>(a.p.stream);
+    const Records r{reinterpret_cast<const u16*>(a.p.stream + b->rec4 * 4U),
+                    4U, b->color_index, true};
+    const unsigned before = stats.fallback_triangles;
+    const bool ok = e.clip_strip(r, index, n);
+    const unsigned walked = unsigned(stats.fallback_triangles) - before;
+    assert(walked > 0 && walked <= n - 2U);
+    if (limit >= 6U * (n - 2U)) assert(ok && walked == n - 2U);
+    event(90, ok, e.output);
+    event(92, walked, e.used);
+    words(slab, e.used * 8U);
+    finish(id);
+}
+
+void clip_cases() {
+    clip_reuse_controls();
+    unsigned id = 10000;
+    for (unsigned kind : {0U, 1U, 2U, 3U})
+        for (unsigned n : {3U, 4U, 5U, 8U, 16U, 64U, 128U})
+            for (unsigned style = 0; style < 16; ++style)
+                for (unsigned cull = 0; cull < 4; ++cull)
+                    for (bool packed : {false, true})
+                        clip_case(id++, kind, n, style, cull, packed, 1024U);
+    // Exact first-failure behavior: after a refused triangle no future corner
+    // is prepared or submitted, and earlier writes remain unchanged.
+    for (unsigned limit : {0U, 3U, 6U, 9U, 12U})
+        for (unsigned kind : {0U, 1U, 2U, 3U})
+            for (bool packed : {false, true})
+                clip_case(id++, kind, 64U, 1U, 0U, packed, limit);
+}
+}  // namespace check

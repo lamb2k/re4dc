@@ -127,6 +127,16 @@ namespace { bool sourceWorldR11fModelBlocked(cModel* model); }
 extern "C" void re4dc_leon_gc_note(cModel*); // mcheck.mk MCHECK_LEONGC (coarse_actor_transaction.inc)
 #endif
 
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#define DSA24_RENDER() const re4dc::dsa24::RenderScope dsa_render;
+#define DSA24_MODEL() const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList); re4dc::dsa24::count(re4dc::dsa24::Models);
+#define DSA24_MODEL_OT(call) { const re4dc::dsa24::Scope dsa_ot(re4dc::dsa24::ModelList); call; }
+#else
+#define DSA24_RENDER()
+#define DSA24_MODEL()
+#define DSA24_MODEL_OT(call) call
+#endif
 #line 1 "D:/Bio4/Prog/trans.cpp"
 
 extern cEm* pPL;   // game/em.cpp
@@ -2668,7 +2678,7 @@ extern "C" void re4dc_r200_scroll_diag();               // source_world_scroll.i
 // effects, screen, cockpit, id models, messages, after-render, debug, then 0x13..0x15), the
 // filter 09 post-process and the draw-sync callback. Skipped output while System_flg 0x800.
 void Render()
-{
+{ DSA24_RENDER()
 #if RE4DC_PS2_WORLD_R11F_OWNER
     R11fRenderScope r11fScope;
 #endif
@@ -2733,7 +2743,7 @@ void Render()
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SUBSCRN);
     SetDrawTmpBufType(0);
-    ExecOt(OT_TYPE_MODEL);
+    DSA24_MODEL_OT(ExecOt(OT_TYPE_MODEL));
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SHADOW_DRAW);
     SetDrawTmpBufType(0);
@@ -2834,7 +2844,7 @@ static void ModelRenderBody(cModel* m)
 #else
 void ModelRender(cModel* m)
 #endif
-{
+{ DSA24_MODEL()
 #if defined(RE4DC_OTHER_PROFILE) && RE4DC_OTHER_PROFILE
     OtherActorDraw otherActorDraw(m);
 #endif

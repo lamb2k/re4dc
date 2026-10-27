@@ -25,6 +25,9 @@
 #include <cmath>
 #include "native_render_profile.hpp"
 #include "include/native_ps2_world.h"
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "include/world_census24.h"
 #endif
@@ -692,6 +695,9 @@ extern "C" int re4dc_ps2_world_covers(unsigned room){
 extern "C" int re4dc_ps2_world_covers(unsigned room){return room==0x101;}
 #endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
@@ -752,6 +758,11 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #endif
     return drawn?1:fallback(4);
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // Historical R4P renderer: time is covered, detailed geometry counters
+    // describe only the shipping R4IM path and cannot certify this fallback.
+    re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
     state.pending=false;auto& owner=storage();Owner now{};
     if(room!=0x101 || !current(nullptr,now) || now.room!=room){owner.retire();return 0;}
     if(!owner.live()){
@@ -781,6 +792,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 // PS2_WORLD_ROOMS=2, an image the coarse path does not draw (native_static.cpp re4dc_ps2_mesh_source, camera
 // already set): pass 0 now; re4dc_ps2_world_flush draws PT / TR as for a coarse image.
 extern "C" int re4dc_ps2_world_source_draw(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
@@ -836,6 +850,9 @@ extern "C" int re4dc_ps2_world_pending(){
     return state.pending && state.frame==re4dc_ui_frame() && state.flushed!=state.frame;
 }
 extern "C" void re4dc_ps2_world_flush(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldTranslucent);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     // Shared deferred-pass dispatch/receipt work is charged to NearPT Other;
     // each actual PT/TR pass supplies its own nested path and phases.
