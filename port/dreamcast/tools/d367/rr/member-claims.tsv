@@ -95,3 +95,5 @@ ss/eng/title.snd:removed	dropeng26	unread GameCube title sound file off the disc
 dc/tex.pak:~c67f5c01-63e0879e	title27	user custom title art (not GC), Test 23 package
 # font22 10-27 (lane font22-27): Test 22 A pad label (user 10-27, Test 22 buttons and icons)
 dc/tex.pak:~d17e9c56-fa23c229	font22	Test 22 A pad label (GC-derived Dreamcast button set), user 10-27
+# font22b 10-27 (lane font22-27 round 2): Test 22 controller glyph set (user 10-27)
+dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0), user 10-27
