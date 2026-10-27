@@ -25,7 +25,13 @@ def names(metadata):
 
 
 def crc(value):
-    text = str(value).lower().removeprefix("0x")
+    if type(value) is int:
+        if not 0 <= value <= 0xffffffff:
+            raise ValueError("CRC/hash integer outside uint32 range")
+        return f"{value:08x}"
+    if not isinstance(value, str):
+        raise ValueError("CRC/hash must be a uint32 integer or hexadecimal string")
+    text = value.lower().removeprefix("0x")
     if not re.fullmatch(r"[0-9a-f]{1,8}", text):
         raise ValueError("invalid CRC/hash word: " + text)
     return text.zfill(8)
@@ -217,17 +223,23 @@ def asset_receipt(path):
     if not isinstance(entries, list):
         raise ValueError("asset receipt arms must be an exact A/B/C list")
     result = {}
-    for item in entries:
+    for position, item in enumerate(entries, 1):
         label = item.get("arm")
-        if label not in ("A", "B", "C") or label in result:
-            raise ValueError("asset receipt has unknown or duplicate arm")
+        if type(label) is int and label in (1, 2, 3):
+            scene = label
+        elif isinstance(label, str) and label in ("A", "B", "C"):
+            scene = ord(label) - ord("A") + 1
+        else:
+            raise ValueError("asset receipt has unknown arm; expected integer 1..3 or A/B/C")
+        if scene in result or scene != position:
+            raise ValueError("asset receipt has duplicate or out-of-order arm")
         for key in ("candidate_sha256", "candidate_crc", "candidate_bytes", "l0_triangles"):
             if key not in item:
                 raise ValueError(f"asset receipt arm {label} missing {key}")
         if not re.fullmatch(r"[0-9a-f]{64}", item["candidate_sha256"]):
             raise ValueError("asset receipt candidate SHA256 invalid")
         crc(item["candidate_crc"])
-        result[ord(label) - ord("A") + 1] = item
+        result[scene] = item
     if set(result) != {1, 2, 3}:
         raise ValueError("asset receipt must identify all three arms")
     return {"path": str(path), "sha256": digest(path), "schema": data.get("schema"), "arms": entries}, result
