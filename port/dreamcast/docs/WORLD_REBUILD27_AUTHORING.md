@@ -29,6 +29,16 @@ the selected source L0 pieces are used at every previously nonempty LOD slot;
 previously empty distance slots remain empty. This can increase work relative
 to a source coarse level and must be measured on the actual selected view.
 
+`--author-planar-features` applies only to explicitly named roof/facade records
+in that private feature input. It reconstructs a source face using its single
+convex outer boundary, preserving its depth and winding while replacing interior
+tessellation and interpolated texture/lighting detail. It refuses multiple
+boundaries (openings), nonconvex outlines, nonmanifold edges and strong relief.
+Existing protected beam/fence/branch records are not eligible for this operation.
+The first actual candidate authors five named faces; its look and native cost
+remain separate gates. This is a deliberately bounded authoring primitive, not
+a global decimator or a declaration that generic source reduction is sufficient.
+
 `--solid-shells` is a separately named primitive authoring experiment, requiring
 NumPy. It reconstructs sufficiently solid projected masses as opaque boxes or
 broad planar quads. Current source texture identity remains; UV and prelit
