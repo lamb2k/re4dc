@@ -104,3 +104,14 @@ Cache-model Flycast establishes execution, asset loading, visibility and proxy
 direction only. Its GPU timings are not hardware accurate and cannot establish
 PowerVR hardware impact. Keep hwmodel MODELLED CPU evidence separate. Physical
 console A/B/C readings remain required before claiming a GPU improvement.
+
+## Capture coherence
+
+Only this diagnostic enables the existing atomic log append and uses the SH4 P2
+alias of the same ring/head, so the host reader sees complete current records.
+The exported head remains a four-byte symbol in a dedicated padded 32-byte line;
+it cannot share dirty cache state with the VI stage writer. First append writes
+back and invalidates startup BSS ranges once, under the same IRQ scope, before
+any P2 write. The normal logger remains unchanged when the arena is off.
+This observer cost belongs to all three benchmark arms, not to a production
+performance estimate. Corrupt earlier captures are retained and rejected.
