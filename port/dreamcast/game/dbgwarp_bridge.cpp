@@ -127,6 +127,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 // `god`: read by LifeDownSet2 (src/game/em_sub.cpp, RE4DC_WARP_GOD_HOOK, warp builds only): no damage to the player.
 extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; unsigned re4dc_warp_ashley_rescues; unsigned re4dc_warp_god_rescues; }
 #include <kos/thread.h>
+#include "emdoor.h"
 #include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
@@ -1172,6 +1173,19 @@ void plpos_poll()
                   (int) (Muku(&pPL->pos, &e->pos, pPL->ang.y, 3.1415927f) * 1000.0f),
                   (int) (Muku(&e->pos, &pPL->pos, e->ang.y, 3.1415927f) * 1000.0f), (unsigned) e->r_no_0,
                   (unsigned) e->r_no_1);
+    }
+    // castle31: doors (0x41) within 4 m: why A does or does not open them (cEmDoor::ckOpen 0 ok, 1 open/broken,
+    // 2 object in the way, 3 locked) with the lock inputs.
+    for (cEm* e = EmMgr.getEmPtr(0x41, 0); e; e = EmMgr.getEmPtr(0x41, e)) {
+        const float dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z;
+        if (dx * dx + dz * dz > 16000000.0f) continue;
+        cEmDoor* d = (cEmDoor*) e;
+        EmDoorWork* w = EMDOOR_WK(d);
+        re4dc_log("warp: door room %x frame %u pos %d %d %d type %d hp %d ck %u be %08x flag %08x lock %d/%d chain %d/%d/%d"
+                  " key %u etc %d rno %u/%u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, (int) e->pos.x,
+                  (int) e->pos.y, (int) e->pos.z, (int) e->type, (int) e->hp, (unsigned) d->ckOpen(), (unsigned) w->Be_flg,
+                  (unsigned) e->flag, w->Lock_L_hp, w->Lock_R_hp, w->Chain_hp[0], w->Chain_hp[1], w->Chain_hp[2],
+                  (unsigned) w->Key_flag, (int) w->Etc_no, (unsigned) e->r_no_0, (unsigned) e->r_no_1);
     }
 }
 
