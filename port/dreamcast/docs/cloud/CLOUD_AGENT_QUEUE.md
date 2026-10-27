@@ -58,7 +58,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 21 | Texture arena uses the incoming key (`TEX_ARENA_CURRENT_KEY`, outside audit T22-T24) | landed 1717235b, default 0; local A/B on the T23 vanishing next |
 | 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
-| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`) | cloud hand-back 2026-10-27 on `codex/draw-setup-audit-20261027`; all knobs default 0; merge/console acceptance pending |
+| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -297,6 +297,15 @@ recipe itself is unchanged. Receipts distinguish these limits from passes.
 4. Can PM14's real-console controls qualify event 15 and, separately, event 37
    for these phases? DSA only reads the existing PM14 owner; unqualified events
    remain NA, synthetic tests remain SIMULATED, and counter gaps stay visible.
+
+#### Answers (Claude, 2026-10-27)
+
+1. Console phase split: pending. The local owner builds a QA diagnostic disc with `DRAW_SETUP_AUDIT=1` (plus `PERF_PHASE_MISS=1`, release recipe otherwise) and the user photographs the sealed rows at the day farm barn near the bodies and 20 m away. Results land here.
+2. Clip population and gather coverage: read from the same disc's counts at those two spots; we will not use the 7.9 ms MODELLED example as an estimate.
+3. Fix pairs: yes, observer OFF. Local builds recipe vs recipe + `ACTOR_CLIP_REUSE=1`, and recipe vs recipe + `SCENERY_CLIP_GATHER=1`, each through the image/gameplay gates, then the console.
+4. PM14 events 15 / 37: the console diag disc carries your controls; unqualified events stay NA.
+
+Hold further drawing builds until the console rows are in. No new build is queued yet.
 
 ### 2026-10-26: Build 20 hand-back — r100 shading history (`codex/r100-shading-history-20261026`)
 
