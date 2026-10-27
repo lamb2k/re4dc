@@ -1232,6 +1232,38 @@ extern "C" int re4dc_pfire_load(void* data)
                   (unsigned) tex, (unsigned) est, (unsigned) sst);
         return 0;
     }
+#if defined(RE4DC_PS2_FIRE_HALO_CUT) && RE4DC_PS2_FIRE_HALO_CUT
+    // PS2_FIRE_HALO_CUT (lane fix-r111-27 2026-10-27): every pfire26 torch has an esp 0x0B record with texture id
+    // 0x79 and a 2400..4600-unit sprite pulled 60 units toward the camera (the PS2 halo). Our core texture 0x79 is
+    // not the PS2 soft glow, so it drew as a fire tens of metres wide over the view (r111 from 50 m away) and filled
+    // the screen with translucent layers. The halo records are dropped; flame (esp 0x00) and spark (0x0B / 0x2E)
+    // records stay. Records are 300 bytes after a 0x30-byte set head whose first u16 is the record count.
+    {
+        u32* sofs = (u32*) ((u8*) d + d->ofsSstData);
+        u32 cut = 0;
+        for (u32 k = 0; k < sofs[0]; k++) {
+            u8* set = (u8*) d + d->ofsSstData + sofs[1 + k];
+            u16 num = *(u16*) set;
+            u8* rec = set + 0x30;
+            u16 keep = 0;
+            for (u16 r = 0; r < num; r++) {
+                u8* src = rec + r * 300;
+                if (src[1] == 0x0B && src[2] == 0x79) {
+                    cut++;
+                    continue;
+                }
+                if (keep != r) {
+                    for (u32 b = 0; b < 300; b++) {
+                        rec[keep * 300 + b] = src[b];   // forward copy: keep < r
+                    }
+                }
+                keep++;
+            }
+            *(u16*) set = keep;
+        }
+        re4dc_log("pfire: room=%03x halo records cut=%u\n", (unsigned) pG->room_id, (unsigned) cut);
+    }
+#endif
     if (!EspDataLoad((u32) data, RE4DC_PFIRE_OWNER, 0)) {
         return 0;
     }

@@ -26,6 +26,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #endif
 
 // game/trans.cpp texture LOD / TEV scale settings
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+int re4dc_ps2_ets_ghost_mtx(u32 parentNo, Mtx out);   // EtcModel.cpp (PS2_ETS_LIGHT)
+#endif
 extern u8 gxCsScale[];
 extern u8 min_lod;
 extern u8 max_lod;
@@ -1394,6 +1397,13 @@ int cLight::calcPos(Vec* src, Vec* dst)
         no = ParentNo & 0xFFFF;
         if (getRoomEtcOnLight(ParentNo, &p, 0) == 0) {
             p = 0;
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+            Mtx gm;
+            if (re4dc_ps2_ets_ghost_mtx(ParentNo, gm)) {
+                PSMTXMultVec(gm, src, dst);
+                break;
+            }
+#endif
             if (!(pG->Debug_flg[0] & 0x80000000)) {
                 pLog->err(0, 0, "Lit:calcPos() %d-%d ETCMODEL PARENT NOT FOUND", no, partsNo);
             }
@@ -1465,6 +1475,13 @@ int cLight::getNormal(Vec* src, Vec* dst)
         no = ParentNo & 0xFFFF;
         if (getRoomEtcOnLight(ParentNo, &p, 0) == 0) {
             p = 0;
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+            Mtx gm;
+            if (re4dc_ps2_ets_ghost_mtx(ParentNo, gm)) {
+                PSMTXMultVecSR(gm, src, dst);
+                break;
+            }
+#endif
             if (!(pG->Debug_flg[0] & 0x80000000)) {
                 pLog->err(0, 0, "cLight::getNormal() ETCMODEL PARENT NOT FOUND %d %d", no, partsNo);
             }
