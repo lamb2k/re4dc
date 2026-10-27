@@ -15,7 +15,8 @@ from pathlib import Path
 BASE = '322d8bc4fab3d6dbf41237281ced5cd08266fb2f'
 FILES = ['port/dreamcast/game/coarse.cpp', 'port/dreamcast/game/model_bridge.cpp',
          'port/dreamcast/game/platform/native_static.cpp',
-         'port/dreamcast/game/platform/native_ui.cpp', 'src/game/trans.cpp', 'src/game/trans_ot.cpp']
+         'port/dreamcast/game/platform/native_ui.cpp', 'src/game/trans.cpp', 'src/game/trans_ot.cpp',
+         'port/dreamcast/game/platform/mem.cpp']
 
 def sha(b):
     return hashlib.sha256(b).hexdigest()
@@ -53,7 +54,7 @@ def off_projection(s):
         if m:
             op, arg = m.groups()
             if op in ('if', 'ifdef', 'ifndef'):
-                arena = 'RE4DC_HOUSE_ARENA27' in arg
+                arena = bool(re.search(r'\bRE4DC_HOUSE_ARENA27\b',arg))
                 value = op == 'ifndef' if arena else True
                 stack.append([arena, value])
                 if not arena and live: out.append(line)
@@ -122,6 +123,119 @@ unsigned long long re4dc_otp_now_us(){return 0;}
 unsigned re4dc_stream_model_bytes_now(){return 0;}
 void otp_add(void*,void*,unsigned,unsigned,unsigned){++profiles;events.push_back(5);}
 '''.replace('VALUE', str(arena))
+
+def log_checks(out, source):
+    """Actual writer/helpers with separate cached/physical host backing stores.
+
+    Only target-layout fixture declarations normalize unsigned long to uint32_t
+    for the LP64 host. Actual writer/helper text is unchanged.
+    """
+    alias=function(source,'arena27_log_alias')
+    startup=function(source,'arena27_log_startup')
+    raw=function(source,'re4dc_log_raw')
+    head_decl=re.search(r'struct alignas\(32\) Arena27LogHeadLine[^\n]+',source).group()
+    ring_decl=re.search(r'struct Re4dcLogRing[^\n]+',source).group().replace('unsigned long','uint32_t')
+    prefix=r'''
+#include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <cstdio>
+#include <vector>
+#include <string>
+#include <climits>
+#define RE4DC_HOUSE_ARENA27 1
+#define RE4DC_HOUSE_ARENA27_LOG_HOST_TEST 1
+#define RE4DC_LOG_ATOMIC _ATOMIC_
+#define RE4DC_LOG_RING_HDR _HEADER_
+#define RE4DC_LOG_TRIM _TRIM_
+#define RE4DC_LOG_SIZE (0x10000-RE4DC_LOG_TRIM)
+HEAD_DECL
+Arena27LogHeadLine re4dc_arena27_log_head_line,physical_head;
+#define re4dc_log_head re4dc_arena27_log_head_line.value
+#if RE4DC_LOG_RING_HDR
+RING_DECL
+alignas(32) Re4dcLogRing re4dc_logring,physical_ring;
+#define re4dc_logbuf re4dc_logring.buf
+unsigned char* cached_begin=(unsigned char*)&re4dc_logring;
+unsigned char* physical_begin=(unsigned char*)&physical_ring;
+constexpr unsigned total_bytes=sizeof(Re4dcLogRing);
+char* physical_buf=physical_ring.buf;
+#else
+alignas(32) char re4dc_logbuf[RE4DC_LOG_SIZE],physical_buf[RE4DC_LOG_SIZE];
+unsigned char* cached_begin=(unsigned char*)re4dc_logbuf;
+unsigned char* physical_begin=(unsigned char*)physical_buf;
+constexpr unsigned total_bytes=RE4DC_LOG_SIZE;
+#endif
+struct Event{uintptr_t address;unsigned count;bool wb;};std::vector<Event> cache_events;
+unsigned irq_state=0,disable_calls=0,restore_calls=0;bool pending=false,request=false;
+void re4dc_log_raw(const char*,unsigned long);
+int irq_disable(){int saved=irq_state;irq_state=0x100000f0U;++disable_calls;return saved;}
+void irq_restore(int saved){assert(irq_state==0x100000f0U);irq_state=unsigned(saved);++restore_calls;if(!irq_state&&pending){pending=false;re4dc_log_raw("IRQ\n",4);}}
+uintptr_t map_address(uintptr_t address){
+ const auto begin=reinterpret_cast<uintptr_t>(cached_begin),head=reinterpret_cast<uintptr_t>(&re4dc_arena27_log_head_line);
+ if(address>=begin&&address<begin+total_bytes)return reinterpret_cast<uintptr_t>(physical_begin)+(address-begin);
+ if(address>=head&&address<head+sizeof(Arena27LogHeadLine))return reinterpret_cast<uintptr_t>(&physical_head)+(address-head);
+ assert(false);return 0;}
+uintptr_t re4dc_house_arena27_log_test_alias(uintptr_t address){assert(irq_state==0x100000f0U);if(request){pending=true;request=false;}return map_address(address);}
+void dcache_wback_range(uintptr_t address,unsigned count){assert(irq_state==0x100000f0U);assert(count&&count<=16384&&address%32==0&&count%32==0);cache_events.push_back({address,count,true});std::memcpy(reinterpret_cast<void*>(map_address(address)),reinterpret_cast<void*>(address),count);}
+void dcache_inval_range(uintptr_t address,unsigned count){assert(irq_state==0x100000f0U);assert(!cache_events.empty());auto e=cache_events.back();assert(e.wb&&e.address==address&&e.count==count);cache_events.push_back({address,count,false});}
+'''.replace('HEAD_DECL',head_decl).replace('RING_DECL',ring_decl)
+    tests=r'''
+int main(){
+ static_assert(sizeof(Arena27LogHeadLine)==32&&alignof(Arena27LogHeadLine)==32);
+ assert(sizeof(re4dc_log_head)==4);
+ std::memset(cached_begin,0,total_bytes);std::memset(physical_begin,0xA5,total_bytes);physical_head.value=0xDEADBEEF;
+ re4dc_log_raw(nullptr,0);assert(physical_head.value==0&&re4dc_log_head==0);
+ assert(disable_calls==1&&restore_calls==1&&irq_state==0);
+ const unsigned init_events=cache_events.size();assert(init_events==2*((total_bytes+16383)/16384+1));
+ uintptr_t next=reinterpret_cast<uintptr_t>(cached_begin);unsigned covered=0;
+ for(unsigned i=0;i<init_events-2;i+=2){assert(cache_events[i].address==next);next+=cache_events[i].count;covered+=cache_events[i].count;}assert(covered==total_bytes);
+ assert(cache_events[init_events-2].address==reinterpret_cast<uintptr_t>(&re4dc_arena27_log_head_line));
+#if RE4DC_LOG_RING_HDR
+ assert(physical_ring.magic==0x5A53474CU&&physical_ring.nmagic==~uint32_t(0x5A53474CU)&&physical_ring.size==RE4DC_LOG_SIZE);
+ assert(re4dc_logring.magic==0); // metadata writes are uncached too
+#endif
+ std::vector<char> oracle(RE4DC_LOG_SIZE,0);uint32_t position=0;
+ auto expected=[&](const char* data,unsigned len){for(unsigned i=0;i<len;++i){oracle[position%RE4DC_LOG_SIZE]=data[i];++position;}};
+ auto equal=[&](){assert(physical_head.value==position);assert(!std::memcmp(oracle.data(),physical_buf,RE4DC_LOG_SIZE));assert(re4dc_log_head==0);assert(cache_events.size()==init_events);};
+ const char binary[]={'A','\0','B','\n'};re4dc_log_raw(binary,sizeof(binary));expected(binary,sizeof(binary));equal();
+ std::vector<char> long_input(2*RE4DC_LOG_SIZE+87);for(unsigned i=0;i<long_input.size();++i)long_input[i]=char((i*37)%256);
+ re4dc_log_raw(long_input.data(),long_input.size());expected(long_input.data(),long_input.size());equal();
+ request=true;re4dc_log_raw("outer\n",6);expected("outer\n",6);expected("IRQ\n",4);equal();assert(!pending);
+ irq_state=0x100000f0U;re4dc_log_raw("masked\n",7);expected("masked\n",7);equal();assert(irq_state==0x100000f0U);irq_state=0;
+ physical_head.value=position=UINT32_MAX-2;re4dc_log_raw(binary,sizeof(binary));expected(binary,sizeof(binary));equal();assert(position==1);
+ assert(disable_calls==restore_calls);for(unsigned i=0;i<total_bytes;++i)assert(cached_begin[i]==0);
+ puts("actual raw logger PASS: physical-only bytes/head/header, first bounded WB/inval once, IRQ/restoration/deferred interrupt, empty/binary/long/ring+uint32 wrap");}
+'''
+    result={}
+    mutation_program=None
+    for hdr,trim in ((0,0),(0,24576),(1,0),(1,24576)):
+        program=prefix.replace('_ATOMIC_','1').replace('_HEADER_',str(hdr)).replace('_TRIM_',str(trim))
+        program+=alias+'\n'+startup+'\n'+raw+'\n'+tests
+        if not hdr and not trim:mutation_program=program
+        name=f'log_h{hdr}_t{trim}'
+        try:result[name]={'pass':True,'stdout':compile_run(out,name,program,('-Wno-overflow',))}
+        except RuntimeError as e:result[name]={'pass':False,'error':str(e)}
+    for sh in (0,1):
+        p='#include <cstdint>\n#include <cassert>\n#include <cstdio>\n'+('#define __sh__ 1\n' if sh else '')+alias
+        p+='\nint main(){for(uintptr_t p:{uintptr_t(0x8c000000U),uintptr_t(0x8c1234a0U),uintptr_t(0x8cffffffU)})assert(arena27_log_alias(p)==EXPECTED);puts("actual alias arithmetic PASS");}'
+        p=p.replace('#include <cstdint>','#include <cstdint>\n#include <initializer_list>').replace('EXPECTED','(p|uintptr_t(0xa0000000U))' if sh else 'p')
+        name='log_alias_sh'+str(sh)
+        try:result[name]={'pass':True,'stdout':compile_run(out,name,p)}
+        except RuntimeError as e:result[name]={'pass':False,'error':str(e)}
+    for name,before,after in (
+        ('cached_write','return re4dc_house_arena27_log_test_alias(address);','return address;'),
+        ('repeated_init','coherent=true;','coherent=false;'),
+        ('no_irq','const int irq = irq_disable();','const int irq = 0;')):
+        mutated=mutation_program.replace(before,after)
+        assert mutated!=mutation_program
+        name='log_mutation_'+name
+        try:
+            compile_run(out,name,mutated,('-Wno-overflow',))
+            result[name]={'pass':False,'error':'mutant accepted'}
+        except RuntimeError as e:
+            result[name]={'pass':(out/name).exists() and 'Assertion' in str(e),'diagnostic':str(e)}
+    return result
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
@@ -254,6 +368,7 @@ puts("actual package routing PASS: all three paths and invalid variant refusal")
         test+='puts("actual native direct guards PASS: eight entry boundaries, handled return, no write, inactive passthrough");}'
         result['host']['native_direct_guards']={'pass':True,'stdout':compile_run(out,'native_direct_guards',host_prefix(1)+funcs+'\nint writes;\n'+''.join(guards)+test)}
     except (RuntimeError,ValueError) as e: result['host']['native_direct_guards']={'pass':False,'error':str(e)}
+    result['host'].update(log_checks(out,sources[FILES[6]]))
     if args.asset_root:
         root=args.asset_root.resolve()
         (out/'kos').mkdir()
