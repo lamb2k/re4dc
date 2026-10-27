@@ -95,11 +95,14 @@ def author_walls(d, spec):
         authored = []; face_proofs = []
         for poly in parts:
             # Named facade only: 20 mm outer contour edit. Retain every source
-            # hole and concave negative space with a 3 mm quantization margin.
+            # hole with a 3 mm quantization margin. An exterior opening's core
+            # beyond the 25 mm boundary band remains empty; boundary/prelight
+            # tessellation is deliberately approximate, not a coverage PASS.
             outer = Polygon(poly.exterior).simplify(20/scale, preserve_topology=True)
             holes = [Polygon(h) for h in poly.interiors]
             negative = poly.convex_hull.difference(poly)
-            target = outer.difference(negative.buffer(3/scale, join_style='mitre'))
+            negative_core = negative.buffer(-25/scale, join_style='mitre')
+            target = outer.difference(negative_core)
             target = target.difference(shapely.unary_union([h.buffer(3/scale,join_style='mitre') for h in holes]))
             w.require(not target.is_empty, 'wall negative space removed entire plane')
             target_polys = list(target.geoms) if target.geom_type == 'MultiPolygon' else [target]
@@ -137,11 +140,15 @@ def author_walls(d, spec):
                     authored.append(tuple(verts))
             emitted = [Polygon((positions(d,mesh,[t])[0]-origin)@np.stack([u,v]).T) for t in authored]
             emitted_union = shapely.unary_union(emitted)
-            # All source negative space, including notches open to the facade
-            # perimeter, must remain empty after integer-grid serialization.
-            filled = float(negative.intersection(emitted_union).area)
+            # Check every source hole exactly, and all exterior door/notch
+            # cores independently after integer-grid serialization.
+            filled = float(negative_core.intersection(emitted_union).area)
             w.require(filled < 1e-5, 'authored wall filled a source window/door/negative region')
+            hole_filled = float(shapely.unary_union(holes).intersection(emitted_union).area)
+            w.require(hole_filled < 1e-5, 'authored wall filled a source hole')
             face_proofs.append(dict(source_holes=len(holes),negative_space_filled_area=filled,
+                  source_hole_filled_area=hole_filled,exterior_boundary_band_world_mm=25,
+                  source_negative_boundary_band_filled_area=float(negative.intersection(emitted_union).area),
                   negative_space_area=float(negative.area),output_holes=sum(len(p.interiors) for p in
                   (list(emitted_union.geoms) if emitted_union.geom_type=='MultiPolygon' else [emitted_union])),
                   boundary_hausdorff_world_mm=float(poly.boundary.hausdorff_distance(emitted_union.boundary)*scale)))
@@ -191,6 +198,29 @@ def author_roof(d, spec):
         output.extend(tris);proofs.append(dict(name='ridge_end_'+str(end),output_triangles=len(tris)))
     w.require(len(output)<=spec['triangle_cap'],'named roof budget exceeded')
     return source,output,proofs
+
+
+def exchange_group(d, spec, source, target, proofs):
+    """Stable offline source/target exchange; no texture binding is implied."""
+    import numpy as np
+    pl=d['placements'][spec['placement']];A=np.asarray(pl[2:]).reshape(3,4)
+    part=d['parts'][spec['part']]
+    def rows(ts):
+        world=positions(d,spec['mesh'],ts)@A[:,:3].T+A[:,3]
+        return [dict(corners=t,world_mm=xyz.tolist(),
+          uv=[[part[8]+v[3]*part[10],part[9]+v[4]*part[11]] for v in t],
+          prelight_rgba=[[(v[5]>>10&31)/31,(v[5]>>5&31)/31,(v[5]&31)/31,1. if v[5]&0x8000 else 0.] for v in t])
+          for t,xyz in zip(ts,world)]
+    groups=[];cursor=0
+    for p in proofs:
+        count=p['output_triangles'];groups.append(dict(name=p['name'],target_first=cursor,target_count=count,
+          source_ids=p.get('source_ids',list(source)),contract=p))
+        cursor+=count
+    w.require(cursor==len(target),'exchange named target partition')
+    return dict(mesh=spec['mesh'],part=spec['part'],placement=spec['placement'],
+       source_material_key='%08x-%08x'%tuple(d['materials'][spec['part']][:2]),
+       material_record=d['materials'][spec['part']],uv_origin_step=part[8:12],
+       source_ids=list(source),source=rows(list(source.values())),target=rows(target),named_groups=groups)
 
 
 def main():
@@ -287,6 +317,12 @@ def main():
       appearance_accepted=False,timing_available=False,lostpart_verdict='NOT RUN; no source-feature or native appearance PASS inferred',
       wall_groups=wall_proof,roof_groups=roof_proof,remaining_differences=plan['remaining_differences'])
     (a.out/'RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n');(a.out/'house-plan.json').write_bytes(plan_bytes)
+    exchange=dict(schema='re4dc.world-rebuild27.house-exchange/1',units='world millimetres; original PS2 axes',
+      source_sha256=receipt['source_sha256'],context_sha256=plan['context_sha256'],candidate_sha256=receipt['candidate_sha256'],
+      plan_sha256=receipt['plan_sha256'],source_pixels='NOT INCLUDED; main must establish actual PS2 TPL pixel provenance',
+      runtime_binding='UNRESOLVED for any new bake key/UV; material key and UV basis are shared across the whole source part',
+      wall=exchange_group(d,plan['walls'],wall_source,wall,wall_proof),roof=exchange_group(d,plan['roof'],roof_source,roof,roof_proof))
+    (a.out/'HOUSE-EXCHANGE.json').write_text(json.dumps(exchange,indent=2)+'\n')
     (a.out/'RECIPE.txt').write_text('Private named right-house wall/roof replacement, default off.\nCommand: '+json.dumps(sys.argv)+'\nNo runtime/staging/texture changes. No timing/appearance acceptance.\n')
     (a.out/'SHA256SUMS').write_text(''.join(w.sha(p.read_bytes())+'  '+p.name+'\n' for p in sorted(a.out.iterdir()) if p.is_file()))
     print(json.dumps({k:receipt[k] for k in ('name','candidate_sha256','candidate_bytes','core_triangles_before','core_triangles_after','walls_triangles','roof_triangles','l0_triangles_after')},indent=2))
