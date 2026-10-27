@@ -8,6 +8,10 @@
 // consequences. The frame-buffer and FIFO regions (0x80460000, 0x803F0000)
 // are not carved: the Dreamcast renderer owns its own.
 #include <kos.h>
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+#include <kos/cache.h>
+#include <stdint.h>
+#endif
 #include <malloc.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -165,7 +169,17 @@ void* re4dc_gx_fifo(void)
 #endif
 #define RE4DC_LOG_SIZE (0x10000 - RE4DC_LOG_TRIM)
 volatile unsigned long re4dc_log_magic __attribute__((aligned(32))) = 0x52453444;  // "RE4D"
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+// Keep the public 4-byte head symbol, but isolate its physical cache line.
+// VI writes stage through P1; it must never evict a stale copy of this P2 head.
+struct alignas(32) Arena27LogHeadLine { volatile uint32_t value; uint32_t pad[7]; };
+Arena27LogHeadLine re4dc_arena27_log_head_line;
+static_assert(sizeof(Arena27LogHeadLine)==32,"arena log head owns one cache line");
+asm(".global _re4dc_log_head\n\t.type _re4dc_log_head, @object\n\t.set _re4dc_log_head, _re4dc_arena27_log_head_line\n\t.size _re4dc_log_head, 4");
+#define re4dc_log_head re4dc_arena27_log_head_line.value
+#else
 volatile unsigned long re4dc_log_head;   // bytes written so far (wraps in the ring)
+#endif
 volatile unsigned long re4dc_stage;      // last platform stage reached (re4dc_set_stage)
 #if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
 // LOG_PLAY_KB (Makefile, play images only): the ring is shorter than the harness's 64 KB default, so 32 bytes before it
@@ -187,6 +201,39 @@ char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
 int re4dc_log_console = 1;
 unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
 
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+static uintptr_t arena27_log_alias(uintptr_t address){
+#if defined(RE4DC_HOUSE_ARENA27_LOG_HOST_TEST)
+    extern uintptr_t re4dc_house_arena27_log_test_alias(uintptr_t);
+    return re4dc_house_arena27_log_test_alias(address);
+#elif defined(__sh__)
+    return address|uintptr_t(0xa0000000U);
+#else
+    return address;
+#endif
+}
+static void arena27_log_startup(){
+    static bool coherent=false;
+    if(coherent)return;
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    const uintptr_t begin=reinterpret_cast<uintptr_t>(&re4dc_logring);
+    const unsigned bytes=sizeof(re4dc_logring);
+#else
+    const uintptr_t begin=reinterpret_cast<uintptr_t>(re4dc_logbuf);
+    const unsigned bytes=sizeof(re4dc_logbuf);
+#endif
+    // KOS clears BSS through P1 after cache enable. Retire its dirty zeros
+    // before the first P2 append. Bounded ranges avoid a whole-cache helper.
+    for(unsigned off=0;off<bytes;off+=16384U){
+        const unsigned count=bytes-off<16384U?bytes-off:16384U;
+        dcache_wback_range(begin+off,count);dcache_inval_range(begin+off,count);
+    }
+    const uintptr_t head=reinterpret_cast<uintptr_t>(&re4dc_arena27_log_head_line);
+    dcache_wback_range(head,32);dcache_inval_range(head,32);
+    coherent=true;
+}
+#endif
+
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
 // preemptive thread (the aica sequencer's "aica: t=... note" lines) cannot splice its text into the
 // middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). Release builds keep the plain loop.
@@ -195,6 +242,16 @@ void re4dc_log_raw(const char* data, unsigned long len)
 #if RE4DC_LOG_ATOMIC
     const int irq = irq_disable();
 #endif
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    arena27_log_startup();
+    auto* const bytes=reinterpret_cast<volatile char*>(arena27_log_alias(reinterpret_cast<uintptr_t>(re4dc_logbuf)));
+    auto* const head=reinterpret_cast<volatile uint32_t*>(arena27_log_alias(reinterpret_cast<uintptr_t>(&re4dc_log_head)));
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    auto* const ring=reinterpret_cast<volatile Re4dcLogRing*>(arena27_log_alias(reinterpret_cast<uintptr_t>(&re4dc_logring)));
+    if(!ring->magic){ring->size=RE4DC_LOG_SIZE;ring->nmagic=~0x5A53474CUL;ring->magic=0x5A53474CUL;}
+#endif
+    while(len--){bytes[*head%RE4DC_LOG_SIZE]=*data++;++*head;}
+#else
 #if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
     if (!re4dc_logring.magic) {
         re4dc_logring.size = RE4DC_LOG_SIZE;
@@ -206,6 +263,7 @@ void re4dc_log_raw(const char* data, unsigned long len)
         re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = *data++;
         re4dc_log_head++;
     }
+#endif
 #if RE4DC_LOG_ATOMIC
     irq_restore(irq);
 #endif
