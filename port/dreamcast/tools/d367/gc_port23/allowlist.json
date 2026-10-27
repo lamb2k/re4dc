@@ -121,26 +121,6 @@
    "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
   },
   {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
-   "id": "d17e9c56-fa23c229",
-   "kind": "texture",
-   "owner": "cast-ps2-25",
-   "provenance": "gc",
-   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
-   "room": "0100",
-   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
-  },
-  {
-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
-   "id": "d17e9c56-fa23c229",
-   "kind": "texture",
-   "owner": "cast-ps2-25",
-   "provenance": "gc",
-   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
-   "room": "0101",
-   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
-  },
-  {
    "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
    "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
    "kind": "model",
@@ -349,6 +329,26 @@
    "provenance": "gc",
    "reason": "user custom title art (not GC): the 2026 title background with the port credit (user 10-27: custom title image required)",
    "sha256": "fbf5676505e66047b97fa31315c62bccac50b104f7f499438015e03883e79821"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0100",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0101",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
   }
  ],
  "schema": 1

@@ -1372,6 +1372,18 @@ if os.path.isdir(TITLE27D):
     DATA['title27'] = {'dc/tex.pak': TITLE27D + '/dc/tex.pak'}
     PAK_DERIVED['title27'] = TITLE27D + '/pak-derived.json'
     AFTER += [('title27', 'pic26b')]
+# font22 (lane font22-27 10-27, user: "bring back the glyph and typography set used in build 22", narrowed to the in-game
+# buttons and icons, HUD and fonts kept): dc/tex.pak = title27's pack with the A pad label d17e9c56-fa23c229 (etc/core.das
+# 0x1e4d60#0, 32x32 ARGB4444; action prompts and menu help rows) back to the package Test 22 shipped (GC-derived Dreamcast
+# button set; replaces pada25 / pada25b). The only button picture outside the HUD that differs Test 22 vs Test 24b (B / L / R
+# are identical). Built on title27's pack, so the title art stays; title27_gate checks both keys on the final pack.
+# GC-ASSET reviewed rows (user 10-27, owner font22-27). Store: re4-assets-private/font22-20261027.
+FONT22D = os.environ.get('FONT22D', '/root/re4data/private/font22-20261027')
+FONT22_KEYS = [(0xd17e9c56, 0xfa23c229)]
+if os.path.isdir(FONT22D):
+    DATA['font22'] = {'dc/tex.pak': FONT22D + '/dc/tex.pak'}
+    PAK_DERIVED['font22'] = FONT22D + '/pak-derived.json'
+    AFTER += [('font22', 'title27')]
 
 
 def title27_gate(names, r, rec):
@@ -1386,6 +1398,15 @@ def title27_gate(names, r, rec):
         raise SystemExit('title27: the staged dc/tex.pak (%s) does not hold the user title art under c67f5c01-63e0879e; '
                          'a set after title27 replaced it: rebuild that set on title27 or put title27 last' % r['dc/tex.pak'])
     rec.append('title27 gate: c67f5c01-63e0879e = user title art')
+    if 'font22' in names:
+        pak = tex_merge.read(r['dc/tex.pak'])
+        for k in FONT22_KEYS:
+            n_ = '%08x-%08x' % k
+            if pak.get(k) != open('%s/%s.re4tex' % (FONT22D, n_), 'rb').read():
+                raise SystemExit('font22: the staged dc/tex.pak (%s) does not hold the Test 22 button picture under %s; '
+                                 'a set after font22 replaced it: rebuild that set on font22 or put font22 last'
+                                 % (r['dc/tex.pak'], n_))
+        rec.append('font22 gate: %d Test 22 button pictures' % len(FONT22_KEYS))
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
