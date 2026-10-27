@@ -58,6 +58,14 @@ original PS2 pl01. The prepared archive's 13 required normalized BIN/TPL members
 also match the source identity inputs exactly. This provenance does not certify
 unrelated baseline actors or assets.
 
+`room_motion_gate.py` independently audits the original PS2 r20d/e room data
+against the preserved prepared Castle mirrors. All 30/8 live FCV and SEQ
+members, including Ashley's crank/switch/death interactions, already match PS2
+byte for byte. No room replacement is needed. Extra PS2-only members are
+reported and left unselected. The current release stage contains neither room
+archive; preparing player packages does not produce a complete Castle chapter
+or resume the room-logic lane.
+
 Private receipts, complete source pins and reproduction helpers live outside
 Git. SDK flags/preprocessing/object/ELF/raw identities and exact static/arena
 deltas must be pinned before guests. Live look, gameplay, heap/KOS margins,
