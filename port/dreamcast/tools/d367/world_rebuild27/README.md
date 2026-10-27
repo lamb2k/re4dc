@@ -120,3 +120,12 @@ fifteen matching overlays, and adds the two exact atlas packages through the
 existing loose package paths. Original tex.pak is unchanged; every other file
 is checked again after preparation. Output must be fresh and disjoint. Its
 receipt is not a mastered-disc, guest, memory, performance or release gate.
+
+
+`pin_zip_baseline.py` freezes the coordinator's immutable final-control ZIP.
+It verifies the full archive/track/programme hashes, parses the raw track in
+bounded host RAM, and reuses only hash-identical files from the old private
+control by hardlink. Changed files are copied into a fresh private tree and
+all files are read back. The five r101 source inputs must remain identical,
+otherwise the tool refuses to carry the old authoring proof forward. ZIP
+identity and extraction are host checks; they do not prove a guest boot.
