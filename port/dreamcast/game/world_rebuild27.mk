@@ -19,3 +19,21 @@ $(error Missing private world_rebuild27_certificates.inc)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_REBUILD27=1 -I$(WORLD_REBUILD27_DIR)
 endif
+
+# Separate bounded setup control: omit only r101 parts empty at EVERY LOD.
+WORLD_REBUILD27_LIVE_MASK ?= 0
+ifneq ($(words $(WORLD_REBUILD27_LIVE_MASK)),1)
+$(error WORLD_REBUILD27_LIVE_MASK must be one value, 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_REBUILD27_LIVE_MASK)),)
+$(error WORLD_REBUILD27_LIVE_MASK must be 0 or 1)
+endif
+ifeq ($(WORLD_REBUILD27_LIVE_MASK),1)
+ifneq ($(WORLD_REBUILD27),1)
+$(error WORLD_REBUILD27_LIVE_MASK=1 requires WORLD_REBUILD27=1)
+endif
+ifneq ($(PS2_PASS_MASK),1)
+$(error WORLD_REBUILD27_LIVE_MASK=1 requires PS2_PASS_MASK=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_REBUILD27_LIVE_MASK=1
+endif

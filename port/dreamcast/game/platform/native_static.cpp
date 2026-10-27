@@ -5191,6 +5191,14 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+// Candidate geometry can leave policy parts and placements intentionally empty.
+// adopt() proves every LOD range is inside its MeshPart range; zero therefore
+// means no level can submit geometry. Keep other rooms on the original mask.
+static bool world_rebuild27_live_part(unsigned part){
+    return ps2w.room!=0x101U || ps2w.package.parts()[part].meshlet_count!=0;
+}
+#endif
 #if RE4DC_GC_ASSET_GATE
 void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
 // cast-ps2-25 r16 item 5: the world's sealed manifest as captured at open (gate builds only). A route movie lends the
@@ -6098,6 +6106,9 @@ static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
         const auto& mesh=ps2w.package.meshes()[pl[i].mesh];
         for(unsigned k=0;k<mesh.part_count;++k){
             const unsigned p=mesh.first_part+k;
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(p))continue;
+#endif
             if(p>=nparts || parts[p].pass!=2 || (parts[p].reserved&1U))continue;
             const unsigned t=target(cls[p],kTpFlat|kTpCard|kTpSofta);
             if(t<2)ps2w.pass_mask[i]|=std::uint8_t(1U<<t);
@@ -6908,7 +6919,12 @@ bool ps2_open(){
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[ps2w.placements[i].mesh];
         unsigned m=0;
-        for(unsigned k=0;k<mesh.part_count;++k)m|=1U<<ps2w.parts[mesh.first_part+k].pass;
+        for(unsigned k=0;k<mesh.part_count;++k){
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+#endif
+            m|=1U<<ps2w.parts[mesh.first_part+k].pass;
+        }
         ps2w.pass_mask[i]=std::uint8_t(m);
     }
 #endif
@@ -7140,7 +7156,12 @@ bool ps2_movie_reload(){
     ps2w.masked=h.placements<=Ps2World::kMaskPlacements;
     for(unsigned i=0;ps2w.masked && i<h.placements;++i){
         const auto& mesh=ps2w.package.meshes()[placements[i].mesh];unsigned mask=0;
-        for(unsigned k=0;k<mesh.part_count;++k)mask|=1u<<parts[mesh.first_part+k].pass;
+        for(unsigned k=0;k<mesh.part_count;++k){
+#if defined(RE4DC_WORLD_REBUILD27_LIVE_MASK) && RE4DC_WORLD_REBUILD27_LIVE_MASK
+            if(!world_rebuild27_live_part(mesh.first_part+k))continue;
+#endif
+            mask|=1u<<parts[mesh.first_part+k].pass;
+        }
         ps2w.pass_mask[i]=std::uint8_t(mask);
     }
 #endif
