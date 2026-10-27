@@ -22,6 +22,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / 'd367/world_blender_roundtrip'))
 import package as codec
 
+SOURCE_INPUTS = ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids',
+                 'ps2-world.r4tc', 'room.r4rc')
+UNCHANGED_COMPANIONS = SOURCE_INPUTS[1:]
+
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
@@ -41,8 +45,7 @@ def require(ok, why):
 
 def load(source):
     require(source.name == 'r101', 'r101 directory required; no other room is supported')
-    files = {n: (source/n).read_bytes() for n in
-             ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids')}
+    files = {n: (source/n).read_bytes() for n in SOURCE_INPUTS}
     d = codec.decode(files['ps2-world.re4mesh'], files['ps2-world.r4pw'], True)
     ids = files['ps2-world.ids']
     magic, version, count, policy = struct.unpack_from('<4s3I', ids)
@@ -553,11 +556,12 @@ def main():
     plan_blob = args.plan.read_bytes()
     plan = json.loads(plan_blob)
     require(plan['room'] == 'r101', 'plan room')
-    require({'ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids'} <= plan['source_sha256'].keys(),
-            'source geometry, policy and ownership pins are required')
+    require(set(SOURCE_INPUTS) <= plan['source_sha256'].keys(),
+            'all five source pins are required: '+', '.join(SOURCE_INPUTS))
     d, files, owners, policy = load(args.source)
     for name, pin in plan['source_sha256'].items():
-        require(sha((args.source/name).read_bytes()) == pin, 'source pin mismatch: '+name)
+        blob = files[name] if name in files else (args.source/name).read_bytes()
+        require(sha(blob) == pin, 'source pin mismatch: '+name)
     names = args.groups.split(',')
     require(len(set(names)) == len(names) and all(n in plan['groups'] for n in names), 'unknown/duplicate group')
     part_group = {}
@@ -618,11 +622,13 @@ def main():
     sg = bytearray((args.out/'ps2-world.r4sg').read_bytes())
     struct.pack_into('<I', sg, 24, policy)
     (args.out/'ps2-world.r4sg').write_bytes(sg)
-    for n in ('ps2-world.ids', 'ps2-world.r4tc'):
-        if (args.source/n).exists():
-            (args.out/n).write_bytes((args.source/n).read_bytes())
-    if (args.source/'room.r4rc').exists():
-        (args.out/'room.r4rc').write_bytes((args.source/'room.r4rc').read_bytes())
+    for n in UNCHANGED_COMPANIONS:
+        (args.out/n).write_bytes(files[n])
+    companion_hashes = {}
+    for n in UNCHANGED_COMPANIONS:
+        copied = (args.out/n).read_bytes()
+        require(copied == files[n], 'companion copy readback mismatch: '+n)
+        companion_hashes[n] = sha(copied)
     mh = struct.unpack_from('<4s19I', mesh)
     row = [0x101, len(policy_blob), len(out['placements']), len(out['parts']), len(out['meshes']),
            struct.unpack_from('<I', policy_blob, 20)[0], fnv(policy_blob), mh[3], len(mesh), policy]
@@ -636,7 +642,10 @@ def main():
                    candidate_sha256=sha(mesh), candidate_bytes=len(mesh),
                    candidate_crc='%08x' % mh[3], certificate_row=row,
                    runtime_policy_mapping_required=True,
-                   unchanged_companions=['ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc'],
+                   unchanged_companions=list(UNCHANGED_COMPANIONS),
+                   unchanged_companion_sha256=companion_hashes,
+                   unchanged_companions_readback_verified=True,
+                   output_sha256={'ps2-world.re4mesh': sha(mesh), **companion_hashes},
                    room_file='Whole source room.r4rc unchanged: GRID/OCCL/SRCB/SCDD preserved; no new visibility proof')
     (args.out/'RECEIPT.json').write_text(json.dumps(receipt, indent=2)+'\n')
     (args.out/'feature-plan.json').write_bytes(plan_blob)
