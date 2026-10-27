@@ -117,12 +117,23 @@ def main():
         require(sha((a.bake/(role+'-ps2-source.png')).read_bytes())==provenance_doc[role]['sha256'],'bake source pixel hash '+role)
     exchange_path=a.c9/'HOUSE-EXCHANGE.json';exchange=json.loads(exchange_path.read_text())
     require(exchange['candidate_sha256']==sha(c9blob),'C9 exchange pin')
+    require(sha(exchange_path.read_bytes())==prep_doc['exchange_sha256'],'C9 exchange/preparation chain')
     require(len(exchange['wall']['source'])==145 and len(exchange['roof']['source'])==262,'407 source core count')
     target_counts={r:len(exchange[r]['target']) for r in ('wall','roof')}
     require(sum(target_counts.values())<=128 and all(target_counts.values()),'reviewed shell triangle budget')
     for role in ('wall','roof'):
         require(len(atlas[role]['target_triangles'])==target_counts[role],'atlas/current C9 target counts')
         require(atlas[role]['source_uv_origin_step']==exchange[role]['uv_origin_step'],'existing sourcepart UV basis pin')
+        require(atlas[role]['source_part']=={'wall':160,'roof':288}[role],'selected core source part')
+        require(atlas[role]['original_material_key']==exchange[role]['source_material_key']==provenance_doc[role]['material_key'],'source PS2 material binding')
+        basis=exchange[role]['uv_origin_step']
+        for t in atlas[role]['target_triangles']:
+            require(len(t['original_corners'])==len(t['baked_corners_existing_part_basis'])==len(t['baked_uv_top_left'])==3,'atlas corner count')
+            for old,new,uv in zip(t['original_corners'],t['baked_corners_existing_part_basis'],t['baked_uv_top_left']):
+                require(old[:3]==new[:3],'bake may not move C9 geometry')
+                require(len(new)==6 and all(type(v) is int and 0<=v<=65535 for v in new) and new[5]==65535,'baked UV/prelight encoding')
+                require(all(0<=value<=1 for value in uv),'normalized atlas UV range')
+                require(all(abs(basis[i]+new[3+i]*basis[2+i]-uv[i])<=basis[2+i]*.50001+1e-9 for i in range(2)),'atlas UV quantization contract')
     # Independently prove the C9 room is clean A except its named407core. This
     # refuses any inherited C8 omissions before writing an output directory.
     role_parts={exchange[r]['part']:r for r in ('wall','roof')}
@@ -154,7 +165,8 @@ def main():
         keys[role]=[zlib.crc32(payload)&0xffffffff,fnv(payload),512,512]
         texture_report.append(dict(role=role,key=keys[role],payload_bytes=len(payload),aligned_vram_bytes=(len(payload)+31)&~31,native_file_bytes=len(blob),native_sha256=sha(blob)))
     out,ranges,expected,isolated=assemble(c9,atlas,w,mesh_lod)
-    a.out.mkdir(parents=True);(a.out/'ps2-world.raw.re4mesh').write_bytes(w.codec.serialize_mesh(out));(a.out/'ps2-world.r4pw').write_bytes(files['ps2-world.r4pw'])
+    raw=w.codec.serialize_mesh(out);w.codec.decode(raw,files['ps2-world.r4pw'])
+    a.out.mkdir(parents=True);(a.out/'ps2-world.raw.re4mesh').write_bytes(raw);(a.out/'ps2-world.r4pw').write_bytes(files['ps2-world.r4pw'])
     run=subprocess.run([sys.executable,str(a.helper_dir/'ps2_strip_groups.py'),str(a.out/'ps2-world.raw.re4mesh'),str(a.out/'ps2-world.r4pw'),str(a.out/'ps2-world.re4mesh'),str(a.out/'ps2-world.r4sg'),'--groups','4','--report',str(a.out/'strip-groups.json')],check=True,capture_output=True,text=True)
     (a.out/'strip-groups.log').write_text(run.stdout+run.stderr)
     sg=bytearray((a.out/'ps2-world.r4sg').read_bytes());struct.pack_into('<I',sg,24,policy);(a.out/'ps2-world.r4sg').write_bytes(sg)
