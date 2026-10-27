@@ -69,3 +69,45 @@ but still exceeds the 2 ms goal by a validated lower bound. Programme layout and
 model cache effects are included; its CPU-work estimate is not a certified
 world-time saving. Exact pixels, route behavior, actual memory and physical
 console results remain separate gates. Keep this control off in production.
+
+
+## Baked house core
+
+`WORLD_REBUILD27_BAKE=1` is a separate private default-off control requiring
+WORLD_REBUILD27, the existing scenery chunk/select/replay path and PS2 lean
+preload. Its additional private header pins one exact r101 mesh body and at
+most sixteen L0 meshlet ranges, on source parts160/288 only. The original
+R4PW, part UV basis, placements and other material records stay unchanged.
+The producer must give baked meshlets distinct vertex records, including
+white prelight after baking PS2 source prelight into the atlas once.
+
+Replay splits existing selected picks into contiguous original/atlas material
+runs without changing pick order, pass, cull or selector decisions. Other
+parts and higher LODs keep original keys. Unsupported selection for an owned
+baked part aborts before submitting wrong UV/material data. The two added
+textures enter the existing room-preload list; all original shared textures
+remain in the budget. Encoded bytes do not prove actual room residency.
+
+`check_bake.py` compiles the actual routing block and uses the existing host
+MeshPackage consumer. It checks a real private package, full/sparse/partial
+pick streams, CRC and policy mutations, and invalid private headers. It also
+checks clean-A geometry outside the named core, private vertex isolation,
+source UV-basis preservation and unchanged higher LOD/owner geometry. This is
+source/host coverage, not execution of camera selection or the SH4/PVR emitter.
+
+New baked data are an explicit private data option: a knob-off control stages
+original A data and its exact programme; it must not stage atlas UV geometry
+with a programme that cannot route atlas materials. No recipe selects these
+private data. PS2 texture provenance, decoded VQ stills/movement, route events,
+KOS/H2/heap/VRAM, cache-model and physical gates remain required separately.
+
+## Windows cache-model launch environment
+
+Source `cache_environment.sh` before invoking Windows fp_run.py from WSL. It
+propagates the required emulator/profile values with WSLENV and sets the
+Windows Python reader to UTF-8. The previous cp1252 exception on U+FFFD was
+a host logging fault, not a guest crash. `bash cache_environment.sh --verify`
+checks the Windows child's actual values, UTF-8 output and exact emulator SHA;
+it does not launch a guest. The caller still owns resource/trace leases, lane
+limits, bounded duration, exact programme/assets and current media readback.
+Do not reuse a mutable SD-stage pathname as an identity certificate.
