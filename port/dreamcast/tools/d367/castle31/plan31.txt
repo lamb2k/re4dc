@@ -1405,3 +1405,18 @@ wait 2
 press a 0.8
 wait 12
 end
+@r208a
+autofight 5000
+goto -136 -34100 500
+goto -136 -35600 500
+goto -136 -37100 500
+goto -136 -38600 500
+goto 463 -40100 500
+goto 4663 -52400 500
+goto 4663 -59300 500
+goto 9763 -61100 400
+goto 10600 -61000 300 8
+wait 2
+press a 0.8
+wait 6
+end
