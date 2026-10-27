@@ -1350,6 +1350,16 @@ if os.path.isdir(PIC26D):
     DATA['pic26'] = {'dc/tex.pak': PIC26D + '/dc/tex.pak'}
     PAK_DERIVED['pic26'] = PIC26D + '/pak-derived.json'
     AFTER += [('pic26', 'gcl26p')]
+# pic26b (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = pic26's pack with 9160de78
+# (128x128 VQ in vram/resident/r101.tsv, loaded at boot, drawn in r101 visit 3; no data-set provenance, no GC disc twin)
+# as PS2 pixels: the Ganado archive picture PS2 em12.dat TPL 0x2b0100 image 0 (the same picture in em13/15/16/17.dat),
+# NCC 1.000 against the package itself (ps2cast/em_eff_pics.py --pair - em12.dat 9160de78-c705d4ae:67; size and format
+# kept). Not Dreamcast-made menu art. Stages after pic26 (last tex.pak set). Store: re4-assets-private/pic26b-20261026.
+PIC26BD = os.environ.get('PIC26BD', '/root/re4data/private/pic26b-20261026')
+if os.path.isdir(PIC26BD):
+    DATA['pic26b'] = {'dc/tex.pak': PIC26BD + '/dc/tex.pak'}
+    PAK_DERIVED['pic26b'] = PIC26BD + '/pak-derived.json'
+    AFTER += [('pic26b', 'pic26')]
 # efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
 # picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
 # efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
