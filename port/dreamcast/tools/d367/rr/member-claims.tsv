@@ -85,3 +85,7 @@ st1/r11b.dar:ETM/et03.eff	efm26	debris effect model picture record -> PS2 key (g
 # smdrel26 (lane arcuse26 2026-10-26): r11f SMD BINs released (room_smd.py contract; NTR rebased)
 st1/r11f.dar:0x08 SMD	smdrel26	r11f SMD BIN GX payload released (header, joints, box, part headers kept); PS2 world draws the barn
 st1/r11f.dar:0x* NTR	smdrel26	NTR rows rebased by the SMD release
+# smdrel26b (lane arcuse26 2026-10-26): r200 SMD BINs released (room_smd.py contract; NTR / ESQ rebased)
+st2/r200.dar:0x* SMD	smdrel26b	r200 SMD BIN GX payload released (header, joints, box, part headers kept); PS2 world draws the room
+st2/r200.dar:0x* NTR	smdrel26b	NTR rows rebased by the SMD release
+st2/r200.dar:0x* ESQ	smdrel26b	ESQ rows rebased by the SMD release
