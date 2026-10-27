@@ -39,7 +39,10 @@ Cycles EMIT selected-to-active writes two 512x512 maps. No mip chain is added.
 Existing KOS pvrtex produces full 256-entry RGB565/VQ, and
 `convert_tpl.package_existing_vq` wraps the encoded data unchanged. Each compact
 payload is 67,584 bytes, including its 2,048-byte codebook; 32-byte alignment adds
-nothing. Both maps cost **135,168 incremental VRAM bytes**. Original textures
+nothing. Both maps require **135,168 incremental payload/aligned VRAM bytes**.
+`UI_VRAM` may reserve another 2,016 bytes per VQ texture when its first allocation
+is not 2 KiB-page-aligned: the conservative allocation bound is **139,200 bytes**.
+The active page allocator may avoid that extra backing. Original textures
 stay resident. Each `.dt` is 67,616 bytes and each native package is 67,728 bytes.
 No upload, contiguous-VRAM or target lifetime acceptance is inferred from this
 arithmetic. Far shimmer and mip qualification remain open.
