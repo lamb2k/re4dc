@@ -156,6 +156,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms);
 void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset);
 void re4dc_qa_set_flags(unsigned f);
 void re4dc_qa_in_room(int on);
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path);   // qa_menu.cpp (qalink.mk QA_LINK)
+#endif
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
@@ -1798,6 +1801,19 @@ bool bench_poll()
 // entry or menu (no door load). The menu holds the frame loop (no hang check meanwhile, as `still`). A teleport or
 // "quit to title" requests the source's soft reset (as the benchmark disc); re4dc_warp_soft_reset arms the preset.
 // true = a reset is pending: the rest of the poll is skipped.
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// QA_LINK: the Diagnostics page's game side for the remote link's telemetry (once a second, game thread).
+void qa_link_game()
+{
+    if (!pG) return;
+    int live = 0;
+    for (int id = 0x10; id <= 0x20; ++id)
+        for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+            if ((e->be_flag & 1) && e->hp > 0) ++live;
+    re4dc_qa_game((unsigned) pG->room_id, live, memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1,
+                  wp.name[0] ? wp.name : nullptr);
+}
+#endif
 bool qa_poll()
 {
     if (!pG) return false;
@@ -1821,7 +1837,30 @@ bool qa_poll()
                            !SubScreenWk.type && !SceSys.event_start_cnt && pPL->checkEvent() == 1;
     qa_frames = free_play ? qa_frames + 1 : 0;
     const bool autom = qa_auto_armed && qa_frames >= (qa_auto_frame > 30 ? qa_auto_frame : 30);
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    // the remote link (commands in, telemetry out); TELEPORT / TITLE / MENU come back only in free play (30 frames)
+    bool link_menu = false;
+    {
+        const char* lpath = nullptr;
+        const int la = re4dc_qa_link_tick(qa_link_game, qa_frames >= 30, &lpath);
+        if (la == 3) {
+            pG->pl_life = pG->pl_life_max;
+            if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+            re4dc_log("qa: health refilled (link)\n");
+        } else if (la == 1 || la == 2) {
+            qa_next = la == 1 ? lpath : nullptr;
+            qa_pending = true;
+            SndSoftReset();
+            pG->System_flg |= 0x4000000;
+            stamp(la == 1 ? "qa: teleport (link): soft reset requested" : "qa: quit to title (link): soft reset requested");
+            return true;
+        }
+        link_menu = la == 4;
+    }
+    if (!autom && !link_menu && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+#else
     if (!autom && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+#endif
     const u32 keep = pG->System_flg & 0x20000000;
     pG->System_flg |= 0x20000000;   // no hang check while the menu holds the frame loop
     const char* path = nullptr;
