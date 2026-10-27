@@ -71,7 +71,7 @@ def canonical(tris):
 
 
 def author_planar_boundary(tris, step, world_scale):
-    """Rebuild one named roof/facade using its single convex open boundary.
+    """Rebuild one named ground/roof/facade using its single convex boundary.
 
     Holes, multiple boundaries, closed solids, strong relief and nonconvex
     outlines are refused. Boundary corners keep their source depth, UV/color
@@ -127,7 +127,7 @@ def author_planar_boundary(tris, step, world_scale):
     t=out[0];newnormal=np.cross((np.asarray(t[1][:3])-t[0][:3])*step,
                                (np.asarray(t[2][:3])-t[0][:3])*step)
     if np.dot(normal,newnormal)<0:out=[(t[0],t[2],t[1]) for t in out]
-    return out,dict(operation='single convex roof/facade boundary retessellation',
+    return out,dict(operation='single convex source-surface boundary retessellation',
              triangles_before=len(tris),triangles_after=len(out),boundary_vertices=len(ring),
              maximum_relief_mm=float(np.ptp(projected[:,0])*world_scale),
              openings='one source boundary, no holes',appearance_accepted=False)
@@ -197,7 +197,7 @@ def protected_source_pieces(d, path, pin, full_parts, author_features=False):
                 ci,ordinal=identities[ti];selected[ci].add(ordinal)
             mapped+=1
             detail=None
-            if author_features and r.get('author_group') in ('roof-surfaces','facade-surfaces'):
+            if author_features and r.get('author_group') in ('ground-surfaces','roof-surfaces','facade-surfaces'):
                 ts=[tris[ti] for ti in matches[0]]
                 scale=float(np.linalg.norm(A[:,:3],axis=0).max())
                 rebuilt,detail=author_planar_boundary(ts,np.asarray(m[11:14]),scale)
