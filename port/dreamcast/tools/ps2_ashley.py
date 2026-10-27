@@ -25,7 +25,10 @@ Outputs (the ps2_cast.py convert layout, so ps2_cast_native.sh / finish / regcas
   source-bindings.json. validation.json adds the partition, the weight transfer and a posed check (random joint
   rotations, GC mesh skinned with GC weights vs PS2 mesh with converted weights, both on the same 141 matrices).
 
-usage: ps2_ashley.py convert <out dir> [--ps2-dat P] [--gc-drs G] [--max-slots 64] [--poses 24] [--hands 0|1|3]
+--rig selects the PS2 bind and authored weights through RIG_MAP instead of the
+surface transfer above; folding is refused. Only the existing game cloth solver runs.
+
+usage: ps2_ashley.py convert <out dir> [--ps2-dat P] [--gc-drs G] [--max-slots 64] [--poses 24] [--hands 0|1|3] [--rig]
 Windows Python (numpy, PIL), like ps2_cast.py stage 1.
 """
 import argparse, json, math, shutil, sys
@@ -64,7 +67,9 @@ def rig_weights(weights):
     """PS2 weights on the animation adapter; never surface-transfer or fold."""
     acc = {}
     for bone, weight in weights:
-        if weight <= 0:
+        if not isinstance(bone, int) or bone < 0 or not math.isfinite(weight) or weight < 0 or weight > 1:
+            raise ValueError(f'Invalid PS2 skin influence {(bone, weight)}')
+        if weight == 0:
             continue
         if bone >= SOURCE_JOINTS and bone not in RIG_MAP:
             raise ValueError(f'Unmapped PS2 cloth bone {bone}')

@@ -30,7 +30,8 @@ class RigTests(unittest.TestCase):
         self.assertEqual(len(set(ashley.RIG_MAP.values())), 17)
 
     def test_invalid_weights_refused(self):
-        for weights in ([(81, 1)], [(4, .2)], [], [(1, .25), (2, .25), (3, .25), (4, .25)]):
+        for weights in ([(81, 1)], [(4, .2)], [], [(1, .25), (2, .25), (3, .25), (4, .25)],
+                        [(-1, 1)], [(1, -1), (2, 1)], [(1, float('nan'))], [(1, float('inf'))]):
             with self.assertRaises(ValueError):
                 ashley.rig_weights(weights)
 
