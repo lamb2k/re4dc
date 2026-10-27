@@ -6802,7 +6802,11 @@ bool ps2_open(){
 #else
             ps2w.package.header().crc,ps2w.package.header().bytes,
 #endif
-            ps2w.package.header().part_count,ps2w.package.header().mesh_count);
+            ps2w.package.header().part_count,ps2w.package.header().mesh_count
+#if defined(RE4DC_WORLD_REBUILD27) && RE4DC_WORLD_REBUILD27
+            ,s,ps2_crc32
+#endif
+            );
 #else
         h.crc;
 #endif
