@@ -399,6 +399,26 @@
    "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
    "room": "011f",
    "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "gca-n256off27 private rr 1027-1520-44a76a5d gca-r101:2520 (also gca-grenade) / gca-r103:1993; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "443631ad5bd4b27e992c5694f80f440373664d97",
+   "kind": "layout",
+   "owner": "gca-n256off27",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r101 at 64-vertex meshlets (n256off27, user 10-27: Test 22's world pieces; ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Its harvested ps2 layout rows (gc-audit25) predate later sidecar/graft data, so the digest is new; the window pane graft's GC models are separate kind=model rows. Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "0101",
+   "sha256": "443631ad5bd4b27e992c5694f80f440373664d970098bc6e20e18c6fcbc2f963"
+  },
+  {
+   "evidence": "gca-n256off27 private rr 1027-1520-44a76a5d gca-r101:2520 (also gca-grenade) / gca-r103:1993; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "551a2fa592cbb71772520cfb4bb3dca31b608956",
+   "kind": "layout",
+   "owner": "gca-n256off27",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r103 at 64-vertex meshlets (n256off27, user 10-27: Test 22's world pieces; ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Its harvested ps2 layout rows (gc-audit25) predate later sidecar/graft data, so the digest is new; the window pane graft's GC models are separate kind=model rows. Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "0103",
+   "sha256": "551a2fa592cbb71772520cfb4bb3dca31b6089560c04d9d9b00f1b36e76497ff"
   }
  ],
  "schema": 1
