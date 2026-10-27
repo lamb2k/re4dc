@@ -21,6 +21,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+#include <stdlib.h>
+#include <ctype.h>
+#include <strings.h>
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "world_census24.h"
 #define QA_CENSUS_ROW A_CENSUS,
@@ -67,6 +72,18 @@ extern volatile unsigned long re4dc_log_head;                                   
 #define RE4DC_LOG_TRIM 0
 #endif
 extern char re4dc_logbuf[0x10000 - RE4DC_LOG_TRIM];                                            // mem.cpp RE4DC_LOG_SIZE
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// qa_link.cpp (QA_LINK=1): modem + PPP + UDP transport
+void re4dc_qalink_config(const char* number, const char* host, unsigned port, unsigned lport);
+int re4dc_qalink_start(void);
+void re4dc_qalink_stop(void);
+int re4dc_qalink_up(void);
+int re4dc_qalink_wanted(void);
+void re4dc_qalink_state_text(char* out, unsigned n);
+void re4dc_qalink_counters(unsigned* tx, unsigned* rx, unsigned* drops, unsigned* queued);
+int re4dc_qalink_send(const void* p, unsigned n);
+int re4dc_qalink_recv(char* p, unsigned max);
+#endif
 }
 #include "third_party/qrcodegen/qrcodegen.h"
 
@@ -581,6 +598,13 @@ enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
 #define QA_WS_ROW
 #define QA_WS_ENUM
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+#define QA_LINK_ROW A_LINK,
+#define QA_LINK_ENUM , A_LINK
+#else
+#define QA_LINK_ROW
+#define QA_LINK_ENUM
+#endif
 enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     , A_PVS
@@ -588,7 +612,7 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     , A_CENSUS
 #endif
-    QA_WS_ENUM
+    QA_WS_ENUM QA_LINK_ENUM
 };
 struct Menu {
     bool boot;
@@ -632,6 +656,9 @@ void item_text(int a, char* out, unsigned n) {
     case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
                           re4dc_world_scratch_live == 1 ? "B HALF CACHE" : "A NORMAL"); break;
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    case A_LINK: { char st[64]; re4dc_qalink_state_text(st, sizeof(st)); snprintf(out, n, "REMOTE LINK: %s", st); break; }
+#endif
     default: out[0] = 0;
     }
 }
@@ -641,6 +668,354 @@ int presets_of(int ch, int* idx) {
         if (g_p[i].ch == ch) idx[n++] = i;
     return n;
 }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// ---------------------------------------------------------------- remote link protocol (QA_LINK; tools/qalink/README.md)
+// Console -> Pi, one UDP datagram each (text; the first line is the header):
+//   T <seq> <ms> <part>/<parts>   telemetry, once a second: the Diagnostics page's rows (DRAW_SETUP_AUDIT rows included)
+//                                 and a "link" row; split into parts of <= 1100 bytes
+//   L <seq> <dropped bytes>       new RAM log lines since the last L (at most 640 bytes a second; the rest is counted)
+//   R <id> <first tick>           RECORD: the wall time of each game tick (us, comma separated), 30 ticks a datagram
+//   A <id> <OK|ERR> <text>        the answer to command <id>
+//   D <id> <part>/<parts>         DIAG: the full Diagnostics snapshot (rows + the last 20 log lines)
+// Pi -> console: "<id> <COMMAND> [args]" (id = any token without spaces; the console echoes it):
+//   PING [x] | TELEPORT <preset file or label words> | QA <row> <value> | RECORD <ticks> | MENU | RESUME | DIAG | HELLO
+//   QA rows: LEON / PARTNER / ENEMY ON|OFF, SPEED ON|OFF, SHORE 30|45, HEALTH, TITLE, and with WORLD_METER: WOPQ / WXLU
+//   GAME|FULL|12.5|10|8, WSHELL GAME|ON|OFF, PVS ON|OFF; WORLD_SCRATCH: WSCR A|B|C.
+// Commands run on the game thread inside the QA menu's own handlers (no input is synthesized). TELEPORT / TITLE wait
+// for free play (the in-game menu's rule) and then take the menu's soft-reset path; MENU opens the in-game menu at the
+// next free-play tick; while it is open the menu itself answers commands (RESUME closes it).
+enum { LA_NONE, LA_TELEPORT, LA_TITLE, LA_HEALTH, LA_MENU, LA_RESUME };
+struct Link {
+    bool cfg_read, auto_start;
+    unsigned seq, log_seq;
+    unsigned long log_sent;
+    uint64_t next_ms, cost_us, cost_t0;
+    unsigned cost_last;                  // us spent in link_tick over the last whole second (game thread)
+    int pending;                          // LA_TELEPORT / LA_TITLE / LA_MENU waiting for free play
+    char pending_id[16];
+    char last_state[64];
+    // RECORD
+    char rec_id[16];
+    unsigned rec_left, rec_n, rec_first;
+    uint64_t rec_prev_us;
+    unsigned rec_us[1800];
+    char rec_line[400];
+    int rec_len;
+    void (*game)(void);
+} g_link;
+
+void link_send_text(const char* s, int n) { re4dc_qalink_send(s, (unsigned) n); }
+void link_reply(const char* id, bool ok, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
+void link_reply(const char* id, bool ok, const char* fmt, ...) {
+    char b[300];
+    int k = snprintf(b, sizeof(b), "A %s %s ", id, ok ? "OK" : "ERR");
+    va_list ap;
+    va_start(ap, fmt);
+    const int m = vsnprintf(b + k, sizeof(b) - k, fmt, ap);
+    va_end(ap);
+    k = m < 0 ? k : (k + m >= (int) sizeof(b) ? (int) sizeof(b) - 1 : k + m);
+    link_send_text(b, k);
+}
+void link_read_cfg() {
+    if (g_link.cfg_read) return;
+    g_link.cfg_read = true;
+    char text[512];
+    const int len = re4dc_fixture_read("/cd/dc/qa/link.txt", text, sizeof(text) - 1);
+    char number[24] = "", host[24] = "";
+    unsigned port = 0, lport = 0;
+    if (len > 0) {
+        text[len] = 0;
+        for (char* line = text; line && *line;) {
+            char* next = strchr(line, '\n');
+            if (next) *next++ = 0;
+            char* cr = strchr(line, '\r');
+            if (cr) *cr = 0;
+            if (!strncmp(line, "number ", 7)) strncpy(number, line + 7, sizeof(number) - 1);
+            else if (!strncmp(line, "host ", 5)) strncpy(host, line + 5, sizeof(host) - 1);
+            else if (!strncmp(line, "port ", 5)) port = (unsigned) atoi(line + 5);
+            else if (!strncmp(line, "lport ", 6)) lport = (unsigned) atoi(line + 6);
+            else if (!strncmp(line, "auto ", 5)) g_link.auto_start = atoi(line + 5) != 0;
+            line = next;
+        }
+    }
+    re4dc_qalink_config(number, host, port, lport);
+    re4dc_log("qalink: config %s number=%s host=%s port=%u lport=%u auto=%d\n", len > 0 ? "link.txt" : "defaults",
+              number[0] ? number : "default", host[0] ? host : "peer", port, lport, (int) g_link.auto_start);
+}
+void link_toggle() {
+    link_read_cfg();
+    if (re4dc_qalink_wanted()) { re4dc_qalink_stop(); re4dc_log("qa: remote link off\n"); }
+    else { re4dc_qalink_start(); re4dc_log("qa: remote link on\n"); }
+}
+bool link_state_changed() {
+    char st[64];
+    re4dc_qalink_state_text(st, sizeof(st));
+    if (!strcmp(st, g_link.last_state)) return false;
+    strcpy(g_link.last_state, st);
+    return true;
+}
+bool word_is(const char* a, const char* b) { return !strcasecmp(a, b); }
+int on_off(const char* v) { return word_is(v, "ON") || word_is(v, "1") ? 1 : word_is(v, "OFF") || word_is(v, "0") ? 0 : -1; }
+// Finds a preset by its fixture file (with or without .txt) or by words of its label; -1 none.
+int find_preset(const char* q) {
+    for (int i = 0; i < g_np; ++i) {
+        const char* f = g_p[i].file;
+        const size_t ql = strlen(q);
+        if (!strcasecmp(f, q) || (!strncasecmp(f, q, ql) && !strcasecmp(f + ql, ".txt"))) return i;
+    }
+    for (int i = 0; i < g_np; ++i) {
+        char lab[48];
+        unsigned k = 0;
+        for (; g_p[i].label[k] && k < sizeof(lab) - 1; ++k) lab[k] = (char) toupper((unsigned char) g_p[i].label[k]);
+        lab[k] = 0;
+        char qq[48];
+        for (k = 0; q[k] && k < sizeof(qq) - 1; ++k) qq[k] = (char) toupper((unsigned char) q[k]);
+        qq[k] = 0;
+        if (strstr(lab, qq)) return i;
+    }
+    return -1;
+}
+// QA <row> <value>: the menu rows' own state changes. Returns LA_HEALTH / LA_TITLE for the rows that act on the game.
+int link_qa_row(const char* id, const char* row, const char* v) {
+    unsigned bit = word_is(row, "LEON") ? 1 : word_is(row, "PARTNER") ? 2 : word_is(row, "ENEMY") ? 4 : 0;
+    if (bit) {
+        const int o = on_off(v);
+        if (o < 0) { link_reply(id, false, "QA %s needs ON or OFF", row); return LA_NONE; }
+        g_flags = o ? (g_flags | bit) : (g_flags & ~bit);
+        re4dc_log("qa: toggles %x (link)\n", (unsigned) g_flags);
+        link_reply(id, true, "QA %s %s flags=%x", row, o ? "ON" : "OFF", (unsigned) g_flags);
+        return LA_NONE;
+    }
+    if (word_is(row, "SPEED")) {
+        const int o = on_off(v);
+        if (o < 0) { link_reply(id, false, "QA SPEED needs ON or OFF"); return LA_NONE; }
+        for (int k = 0; k < 4 && ((re4dc_quality_speed() & 2) != 0) != (o != 0); ++k) re4dc_speed_cycle();
+        link_reply(id, true, "QA SPEED %s", speed_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "SHORE")) {
+        if (!&re4dc_qa_shore_far_mm) { link_reply(id, false, "QA SHORE: not in this build (LAKE_FAR)"); return LA_NONE; }
+        re4dc_qa_shore_far_mm = atoi(v) == 30 ? 30000u : 0u;
+        link_reply(id, true, "QA SHORE %s", re4dc_qa_shore_far_mm ? "30 M" : "45 M");
+        return LA_NONE;
+    }
+    if (word_is(row, "HEALTH")) { link_reply(id, true, "QA HEALTH refilled"); return LA_HEALTH; }
+    if (word_is(row, "TITLE")) return LA_TITLE;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    if (word_is(row, "WOPQ") || word_is(row, "WXLU")) {
+        const unsigned mm = word_is(v, "GAME") ? 0u : word_is(v, "FULL") ? 1u : (unsigned) (atof(v) * 1000.0 + 0.5);
+        const bool opq = word_is(row, "WOPQ");
+        bool okv = false;
+        if (opq) { for (unsigned x : kOpq) okv |= x == mm; } else { for (unsigned x : kXlu) okv |= x == mm; }
+        if (!okv) { link_reply(id, false, "QA %s: value not on the row", row); return LA_NONE; }
+        (opq ? re4dc_qa_wopq_mm : re4dc_qa_wxlu_mm) = mm;
+        link_reply(id, true, "QA world rows opq=%s xlu=%s shell=%s", wm_opq_name(), wm_xlu_name(), wm_shell_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "WSHELL")) {
+        const int s = word_is(v, "GAME") ? 0 : word_is(v, "ON") ? 1 : word_is(v, "OFF") ? 2 : -1;
+        if (s < 0) { link_reply(id, false, "QA WSHELL needs GAME, ON or OFF"); return LA_NONE; }
+        re4dc_qa_wshell = (unsigned) s;
+        link_reply(id, true, "QA WSHELL %s", wm_shell_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "PVS")) {
+        const int o = on_off(v);
+        if (o < 0 || !re4dc_ps2_pvs_set) { link_reply(id, false, "QA PVS needs ON or OFF (and a PVS build)"); return LA_NONE; }
+        re4dc_ps2_pvs_set((unsigned) o);
+        link_reply(id, true, "QA PVS %s this boot", o ? "ON" : "OFF");
+        return LA_NONE;
+    }
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+    if (word_is(row, "WSCR")) {
+        const int s = word_is(v, "A") ? 0 : word_is(v, "B") ? 1 : word_is(v, "C") ? 2 : -1;
+        if (s < 0) { link_reply(id, false, "QA WSCR needs A, B or C"); return LA_NONE; }
+        re4dc_world_scratch_live = (unsigned) s;
+        link_reply(id, true, "QA WSCR %c", 'A' + s);
+        return LA_NONE;
+    }
+#endif
+    link_reply(id, false, "QA: unknown row %s", row);
+    return LA_NONE;
+}
+// The full Diagnostics snapshot in parts (DIAG) / the rows only (telemetry).
+void link_send_parts(char kind, const char* id, const char* text, int len) {
+    constexpr int kPart = 1100;
+    const int parts = len ? (len + kPart - 1) / kPart : 1;
+    char b[kPart + 64];
+    for (int p = 0; p < parts; ++p) {
+        const int off = p * kPart, n = len - off < kPart ? len - off : kPart;
+        const int h = kind == 'T' ? snprintf(b, sizeof(b), "T %u %u %d/%d\n", g_link.seq,
+                                             (unsigned) (timer_ms_gettime64() & 0xFFFFFFFFu), p + 1, parts)
+                                  : snprintf(b, sizeof(b), "D %s %d/%d\n", id, p + 1, parts);
+        memcpy(b + h, text + off, n > 0 ? n : 0);
+        link_send_text(b, h + (n > 0 ? n : 0));
+    }
+}
+void link_telemetry() {
+    if (g_link.game) g_link.game();
+    snap_diag();
+    const char* rows = strchr(g_diag, '\n');   // the stats rows after "RE4DCQA1"
+    rows = rows ? rows + 1 : g_diag;
+    int n = g_diag_stats - (int) (rows - g_diag);
+    static char t[sizeof(g_diag) + 160];
+    if (n < 0) n = 0;
+    memcpy(t, rows, n);
+    unsigned tx, rx, dr, q;
+    re4dc_qalink_counters(&tx, &rx, &dr, &q);
+    n += snprintf(t + n, sizeof(t) - n, "link tx=%u rx=%u drops=%u queued=%u cost_us_per_s=%u\n", tx, rx, dr, q,
+                  g_link.cost_last);
+    ++g_link.seq;
+    link_send_parts('T', "", t, n);
+}
+void link_log() {   // new RAM log bytes since the last call, at most 640 a second
+    const unsigned long head = re4dc_log_head, size = sizeof(re4dc_logbuf);
+    if (!g_link.log_sent || head - g_link.log_sent > size) g_link.log_sent = head > size ? head - size : 0;
+    unsigned long n = head - g_link.log_sent, dropped = 0;
+    if (!n) return;
+    if (n > 640) { dropped = n - 640; g_link.log_sent += dropped; n = 640; }
+    char b[720];
+    int h = snprintf(b, sizeof(b), "L %u %lu\n", ++g_link.log_seq, dropped);
+    for (unsigned long i = 0; i < n; ++i) {
+        const char c = re4dc_logbuf[(g_link.log_sent + i) % size];
+        b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
+    }
+    g_link.log_sent += n;
+    link_send_text(b, h);
+}
+void record_flush() {
+    if (g_link.rec_len) link_send_text(g_link.rec_line, g_link.rec_len);
+    g_link.rec_len = 0;
+}
+void record_tick(uint64_t now_us) {
+    if (!g_link.rec_left) return;
+    const unsigned us = g_link.rec_prev_us ? (unsigned) (now_us - g_link.rec_prev_us) : 0;
+    g_link.rec_prev_us = now_us;
+    if (!us) return;   // the first tick has no previous one
+    if (g_link.rec_n < sizeof(g_link.rec_us) / sizeof(g_link.rec_us[0])) g_link.rec_us[g_link.rec_n] = us;
+    if (!g_link.rec_len)
+        g_link.rec_len = snprintf(g_link.rec_line, sizeof(g_link.rec_line), "R %s %u\n", g_link.rec_id, g_link.rec_n);
+    g_link.rec_len += snprintf(g_link.rec_line + g_link.rec_len, sizeof(g_link.rec_line) - g_link.rec_len, "%u,", us);
+    ++g_link.rec_n;
+    if (g_link.rec_n % 30 == 0) record_flush();
+    if (--g_link.rec_left) return;
+    record_flush();
+    // summary: mean / p50 / p99 / max of the recorded ticks, then the phase rows (fps / ms10) of the Diagnostics page
+    const unsigned n = g_link.rec_n < 1800 ? g_link.rec_n : 1800;
+    unsigned* v = g_link.rec_us;
+    for (unsigned i = 1; i < n; ++i) {   // insertion sort (<= 1800 values, once per RECORD)
+        const unsigned x = v[i];
+        unsigned j = i;
+        for (; j && v[j - 1] > x; --j) v[j] = v[j - 1];
+        v[j] = x;
+    }
+    unsigned long long sum = 0;
+    for (unsigned i = 0; i < n; ++i) sum += v[i];
+    if (g_link.game) g_link.game();
+    snap_diag();
+    char rows[400];
+    int k = 0;
+    rows[0] = 0;
+    for (const char* p = g_diag; p && *p && p < g_diag + g_diag_stats;) {
+        const char* e = strchr(p, '\n');
+        const int len = e ? (int) (e - p) : (int) strlen(p);
+        if ((!strncmp(p, "fps", 3) || !strncmp(p, "ms10", 4)) && k + len + 3 < (int) sizeof(rows))
+            k += snprintf(rows + k, sizeof(rows) - k, " | %.*s", len, p);
+        p = e ? e + 1 : nullptr;
+    }
+    link_reply(g_link.rec_id, true, "RECORD ticks=%u mean_us=%u p50_us=%u p99_us=%u max_us=%u%s", n,
+               n ? (unsigned) (sum / n) : 0u, n ? v[n / 2] : 0u, n ? v[(n * 99) / 100 < n ? (n * 99) / 100 : n - 1] : 0u,
+               n ? v[n - 1] : 0u, rows);
+}
+// One command datagram. in_menu: the in-game menu is open (MENU / RESUME differ).
+int link_command(char* line, bool in_menu) {
+    char* save = nullptr;
+    char* id = strtok_r(line, " \r\n", &save);
+    char* cmd = id ? strtok_r(nullptr, " \r\n", &save) : nullptr;
+    char* rest = save ? save + strspn(save, " ") : nullptr;
+    if (rest) { char* e = rest + strlen(rest); while (e > rest && (e[-1] == '\n' || e[-1] == '\r' || e[-1] == ' ')) *--e = 0; }
+    if (!id || !cmd) return LA_NONE;
+    if (strlen(id) > 15) id[15] = 0;
+    re4dc_log("qalink: cmd %s %s %s\n", id, cmd, rest ? rest : "");
+    if (word_is(cmd, "PING") || word_is(cmd, "HELLO")) {
+        link_reply(id, true, "PONG %s build=%s menu=%d", rest ? rest : "", RE4DC_QA_NAME, (int) in_menu);
+        return LA_NONE;
+    }
+    if (word_is(cmd, "DIAG")) {
+        if (g_link.game) g_link.game();
+        snap_diag();
+        link_send_parts('D', id, g_diag, g_diag_len);
+        return LA_NONE;
+    }
+    if (word_is(cmd, "RECORD")) {
+        const int n = rest ? atoi(rest) : 0;
+        if (n <= 0 || n > 1800) { link_reply(id, false, "RECORD needs 1..1800 ticks"); return LA_NONE; }
+        strncpy(g_link.rec_id, id, sizeof(g_link.rec_id) - 1);
+        g_link.rec_left = (unsigned) n; g_link.rec_n = 0; g_link.rec_prev_us = 0; g_link.rec_len = 0;
+        link_reply(id, true, "RECORD %d ticks started", n);
+        return LA_NONE;
+    }
+    int act = LA_NONE;
+    if (word_is(cmd, "QA")) {
+        char* s2 = nullptr;
+        char* row = rest ? strtok_r(rest, " ", &s2) : nullptr;
+        char* val = row ? strtok_r(nullptr, " ", &s2) : nullptr;
+        if (!row) { link_reply(id, false, "QA <row> <value>"); return LA_NONE; }
+        act = link_qa_row(id, row, val ? val : "");
+        if (act == LA_HEALTH) return in_menu ? LA_HEALTH : LA_HEALTH;
+    } else if (word_is(cmd, "TELEPORT")) {
+        load_presets();
+        const int i = rest && *rest ? find_preset(rest) : -1;
+        if (i < 0) { link_reply(id, false, "TELEPORT: no preset matches '%s' (%d presets)", rest ? rest : "", g_np); return LA_NONE; }
+        snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", g_p[i].file);
+        re4dc_log("qa: teleport %s (%s) (link)\n", g_path, g_p[i].label);
+        link_reply(id, true, "TELEPORT %s (%s)%s", g_p[i].file, g_p[i].label, in_menu ? "" : " at the next free-play tick");
+        act = LA_TELEPORT;
+    } else if (word_is(cmd, "MENU")) {
+        if (in_menu) { link_reply(id, true, "MENU already open"); return LA_NONE; }
+        link_reply(id, true, "MENU opens at the next free-play tick");
+        act = LA_MENU;
+    } else if (word_is(cmd, "RESUME")) {
+        if (!in_menu) { link_reply(id, true, "RESUME: the menu is not open"); return LA_NONE; }
+        link_reply(id, true, "RESUME");
+        return LA_RESUME;
+    } else {
+        link_reply(id, false, "unknown command %s", cmd);
+        return LA_NONE;
+    }
+    if (act == LA_TITLE) link_reply(id, true, "TITLE%s", in_menu ? "" : " at the next free-play tick");
+    if (in_menu) return act;
+    g_link.pending = act;   // TELEPORT / TITLE / MENU wait for free play
+    strncpy(g_link.pending_id, id, sizeof(g_link.pending_id) - 1);
+    return LA_NONE;
+}
+// Each pass: commands in, then once a second telemetry + log out. Returns an LA_ action for the caller.
+int link_pump(bool in_menu) {
+    const uint64_t t0 = timer_us_gettime64();
+    if (!g_link.cfg_read) {
+        link_read_cfg();
+        if (g_link.auto_start) re4dc_qalink_start();
+    }
+    if (!re4dc_qalink_up()) return LA_NONE;
+    int act = LA_NONE;
+    char buf[1400];
+    for (int k = 0; k < 4 && act == LA_NONE && re4dc_qalink_recv(buf, sizeof(buf)) >= 0; ++k) act = link_command(buf, in_menu);
+    const uint64_t ms = t0 / 1000;
+    if (ms >= g_link.next_ms) {
+        g_link.next_ms = ms + 1000;
+        link_telemetry();
+        link_log();
+    }
+    const uint64_t t1 = timer_us_gettime64();
+    g_link.cost_us += t1 - t0;
+    if (t1 - g_link.cost_t0 >= 1000000) {
+        g_link.cost_last = (unsigned) g_link.cost_us; g_link.cost_us = 0; g_link.cost_t0 = t1;
+    }
+    return act;
+}
+#endif
+
 void draw_screen(const Fb& fb, const Menu& m);
 // The screen, then a log line with the framebuffer for the harness captures (capture_ui_vram.py reads "fb=front,back" as
 // KOS pointers: 0xa5000000 + 2 x the display offset).
@@ -794,6 +1169,9 @@ int run(Menu& m, bool boot) {
                 else if (a == A_CENSUS) { m.census_page = 0; m.screen = M_CENSUS; }
 #endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+                else if (a == A_LINK) link_toggle();
+#endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
                 else if (a == A_WSCR) {   // live arm, this boot only: A -> B -> C -> A
                     re4dc_world_scratch_live = (re4dc_world_scratch_live + 1) % 3;
@@ -817,6 +1195,16 @@ int run(Menu& m, bool boot) {
                 if (a >= A_LEON && a <= A_ENEMY) re4dc_log("qa: toggles %x\n", (unsigned) g_flags);
             }
         }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+        if (!boot) {   // remote commands while the in-game menu holds the frame loop
+            const int la = link_pump(true);
+            if (la == LA_TELEPORT) return -1;
+            if (la == LA_RESUME) return A_RESUME;
+            if (la == LA_TITLE) return A_TITLE;
+            if (la == LA_HEALTH) return A_HEALTH;
+            if (la != LA_NONE || link_state_changed()) dirty = true;
+        }
+#endif
         spin_us(16000);
     }
 }
@@ -840,6 +1228,26 @@ int re4dc_qa_combo(void) {
     return p.l > 200 && p.r > 200 && (p.buttons & CONT_DPAD_DOWN);
 }
 
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// The remote link's game-thread pass (dbgwarp_bridge.cpp qa_poll, every game tick). game() fills the Diagnostics
+// page's game side (room, Ganados alive, heap 4); free_play = the in-game menu could open now. Returns 0 nothing,
+// 1 teleport (*path), 2 quit to the title, 3 refill health, 4 open the in-game menu.
+int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path) {
+    g_link.game = game;
+    const uint64_t now = timer_us_gettime64();
+    int act = link_pump(false);
+    if (re4dc_qalink_up()) record_tick(now);
+    if (act == LA_HEALTH) return 3;
+    if (!g_link.pending || !free_play) return 0;
+    act = g_link.pending;
+    g_link.pending = LA_NONE;
+    re4dc_log("qalink: %s (command %s)\n", act == LA_TELEPORT ? "teleport" : act == LA_TITLE ? "quit to title" : "menu",
+              g_link.pending_id);
+    if (act == LA_TELEPORT) { *path = g_path; return 1; }
+    return act == LA_TITLE ? 2 : 4;
+}
+#endif
+
 unsigned re4dc_qa_flags(void) { return g_flags; }
 void re4dc_qa_set_flags(unsigned f) { g_flags = f & 7; }
 
@@ -861,9 +1269,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -922,9 +1330,9 @@ int re4dc_qa_menu(const char** path) {
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
