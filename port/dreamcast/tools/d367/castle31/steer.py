@@ -327,6 +327,30 @@ class Steer:
                 self.running = int(t[1]); r = 'ok'
             elif c == 'face':
                 r = self.face(int(t[1]), int(t[2]))
+            elif c == 'edgejump':  # edgejump X Z [T]: gap jump. Walk at (X,Z) until Leon stops on the edge (the A
+                # prompt only fires at the edge; pressing 350 units short does nothing), face 10 m on along the same
+                # line, press A, and check that Leon landed past the edge.
+                tx, tz = int(t[1]), int(t[2])
+                t0 = time.monotonic(); last = None; last_t = t0
+                while time.monotonic() - t0 < (float(t[3]) if len(t) > 3 else 6.0):  # no stall back-off here
+                    self.poll(); pl = self.pl
+                    d = math.hypot(tx - pl['x'], tz - pl['z'])
+                    if last is None or d < last - 30:
+                        last, last_t = d, time.monotonic()
+                    elif time.monotonic() - last_t > 1.0:
+                        break  # stopped on the edge
+                    err = wrap(math.atan2(tx - pl['x'], tz - pl['z']) - pl['ang'])
+                    k = ['su'] if abs(err) < 0.7 else []
+                    if abs(err) > 0.15:
+                        k.append('sl' if err > 0 else 'sr')
+                    self.keys(k); time.sleep(0.05)
+                self.keys([]); self.poll(); x0, z0 = self.pl['x'], self.pl['z']
+                d = math.hypot(tx - x0, tz - z0) or 1.0
+                self.face(int(x0 + (tx - x0) * 10000 / d), int(z0 + (tz - z0) * 10000 / d))
+                self.sleep(1.0)
+                self.post('a', False); time.sleep(0.5); self.post('a', True)
+                self.sleep(4.0); self.poll()
+                r = 'ok' if math.hypot(self.pl['x'] - x0, self.pl['z'] - z0) > 2000 else 'nojump'
             elif c == 'room':
                 r = self.wait_rx(None, float(t[2]) if len(t) > 2 else 30, room=t[1].lower())
             elif c == 'log':
