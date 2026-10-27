@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "scope": "Check Build24 subset gathering through the production world clip consumer.\n\nThe real R4IM reader adopts synthetic indexed packages, the new helper fills\nthe existing local corner slots, and exact extracted Emitter corner/clip_strip\nbodies run against both full and subset gathers. Only projection and the packet\nsink use host adapters. No game data, console timing or whole-renderer claim.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build24/world_host.py": "f327c013af07c0979fed286c47267598860097b2559ce86325836e665d44bcde",
+    "port/dreamcast/tools/cloud/build24/world_fixture.cpp.in": "7571b13755d3305b52a749c8be847956cebcdc9db29a61aff86046aec0efe82a",
+    "port/dreamcast/game/platform/native_static.cpp": "3e0b6fd8980f8489ada135e1f41fd3a834f844f8ee40e51e1f872a7b413577d7",
+    "port/dreamcast/game/platform/include/scenery_clip_gather.hpp": "7bdb262721e66fd06c6128229b8456d8d4f46cf6211be8ece2ff83a0876ebe09",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+    "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba"
+  },
+  "configurations": [
+    {
+      "configuration": "lean0-accept0",
+      "command": [
+        "g++",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-std=c++20",
+        "-O1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-D__sh__=1",
+        "-DRE4DC_HW_LEAN=1",
+        "-DRE4DC_PS2_VERTEX_ALPHA=1",
+        "-DRE4DC_COPY_LEAN=1",
+        "-DRE4DC_MESH_CLIP_LEAN=0",
+        "-DRE4DC_MESH_CLIP_ACCEPT=0",
+        "-I/tmp/re4dc-build24-world-asan-03/host",
+        "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room",
+        "/tmp/re4dc-build24-world-asan-03/fixture.cpp",
+        "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-build24-world-asan-03/lean0-accept0"
+      ],
+      "packages": 320,
+      "clip_comparisons": 20480,
+      "emitted_triangles": 153842,
+      "capacity_refusals": 2846,
+      "unique_copies": 570016
+    },
+    {
+      "configuration": "lean1-accept0",
+      "command": [
+        "g++",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-std=c++20",
+        "-O1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-D__sh__=1",
+        "-DRE4DC_HW_LEAN=1",
+        "-DRE4DC_PS2_VERTEX_ALPHA=1",
+        "-DRE4DC_COPY_LEAN=1",
+        "-DRE4DC_MESH_CLIP_LEAN=1",
+        "-DRE4DC_MESH_CLIP_ACCEPT=0",
+        "-I/tmp/re4dc-build24-world-asan-03/host",
+        "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room",
+        "/tmp/re4dc-build24-world-asan-03/fixture.cpp",
+        "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-build24-world-asan-03/lean1-accept0"
+      ],
+      "packages": 320,
+      "clip_comparisons": 20480,
+      "emitted_triangles": 153842,
+      "capacity_refusals": 2846,
+      "unique_copies": 570016
+    },
+    {
+      "configuration": "lean1-accept1",
+      "command": [
+        "g++",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-std=c++20",
+        "-O1",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-Wall",
+        "-Wextra",
+        "-D__sh__=1",
+        "-DRE4DC_HW_LEAN=1",
+        "-DRE4DC_PS2_VERTEX_ALPHA=1",
+        "-DRE4DC_COPY_LEAN=1",
+        "-DRE4DC_MESH_CLIP_LEAN=1",
+        "-DRE4DC_MESH_CLIP_ACCEPT=1",
+        "-I/tmp/re4dc-build24-world-asan-03/host",
+        "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room",
+        "/tmp/re4dc-build24-world-asan-03/fixture.cpp",
+        "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-build24-world-asan-03/lean1-accept1"
+      ],
+      "packages": 320,
+      "clip_comparisons": 20480,
+      "emitted_triangles": 153842,
+      "capacity_refusals": 2846,
+      "unique_copies": 570016
+    }
+  ],
+  "extracted_sha256": {
+    "DECODE": "c3598378a2644347ae10c0210f1d3778f1216cee9a9d84e7238841258c5a5f9f",
+    "CLIP": "3dd0bf4a977f4f18615550097d057e0f5fdc6f6079a46fc228c6850c12e0980a"
+  },
+  "sanitizer": "address,undefined",
+  "host_adapters": {
+    "projection": "Same scalar 1/abs(z) projection for both arms; SH4 fsrra is not emulated.",
+    "packet": "Same bounded scratch and explicit flush refusal for both arms; no real TA/SQ owner.",
+    "matrix": "Unused mat_trans_nodiv stub; tested production clip_vertex uses explicit mvq."
+  },
+  "raw_receipt_sha256": "3a6f255dddae1614a02948363797b268be74b0e22b2f4d9196f6df4b08587335",
+  "compactor_sha256": "642478c95714206facd5cf69ab31266752bc8188361035c32e6b5baf0d0464b9"
+}

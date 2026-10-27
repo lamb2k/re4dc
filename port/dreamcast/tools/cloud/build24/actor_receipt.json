@@ -1,0 +1,1919 @@
+{
+  "status": "PASS",
+  "scope": "Execute and price actual compiled actor clip reconstruction OFF/ON.\n\nThe timed entry includes full Part construction and Part::clip_strip. The\nunchanged shared clipper exposes every prepared vertex/opacity byte then returns\nzero, so clipping arithmetic, nonempty TA output and devices are excluded. The\nsame observed edge is used for both arms. Synthetic rigid, skinned and stride-6\nsource inputs cover near-crossing and far-depth strips, without game assets.\nWarm/cold-I scheduling estimates assume perfect D-cache and a synthetic code\nlayout. Data load/store and 32-byte line visits are observed addresses, not\ncache misses, bus traffic, console time or a whole-frame speedup estimate.\n",
+  "baseline": "a9fa0b8850f762acbf3ce49e86d7c24394df894b",
+  "host": [
+    {
+      "status": "PASS",
+      "sanitizer": null,
+      "receipt_sha256": "5cad64f10e79c99afc487241b3d1cecea201f05585ab297351724ce68aed6291",
+      "helper_controls_per_configuration": 8130,
+      "configurations": [
+        {
+          "name": "direct0-reuse0",
+          "cases": 3766,
+          "added_clip_cases": 3624,
+          "output_bytes": 6186480,
+          "output_sha256": "0ae40ae44639c17eaea8510f1575397baf2211bb81254373fa10141d56d2fa83"
+        },
+        {
+          "name": "direct0-reuse1",
+          "cases": 3766,
+          "added_clip_cases": 3624,
+          "output_bytes": 6186480,
+          "output_sha256": "0ae40ae44639c17eaea8510f1575397baf2211bb81254373fa10141d56d2fa83"
+        },
+        {
+          "name": "direct1-reuse0",
+          "cases": 3774,
+          "added_clip_cases": 3624,
+          "output_bytes": 5702028,
+          "output_sha256": "0bb5b6c886620a76e98c293dba993154427909f4828dbb24a95bd6b4bec3931c"
+        },
+        {
+          "name": "direct1-reuse1",
+          "cases": 3774,
+          "added_clip_cases": 3624,
+          "output_bytes": 5702028,
+          "output_sha256": "0bb5b6c886620a76e98c293dba993154427909f4828dbb24a95bd6b4bec3931c"
+        }
+      ],
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_actor_fast.cpp": "7f0f308a41d79b3958c65b08cb4ac06593123fff576de621543e19fec12f9ba2",
+        "port/dreamcast/game/platform/include/actor_clip_reuse.hpp": "b3e7d71e817a672164458762805af4d967c5b78f75c9041c3f34c9a0ad5d7e69",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/tools/d367/actor_setup_lean/check_runtime.py": "f6f8000e7a879bfc5eb646af3858309c62dff1f8f5831c8f9d2d292da1e7b9ff",
+        "port/dreamcast/tools/d367/actor_setup_lean/fixture_actor.cpp.in": "39af845a9578aebc6a599e6f3417ba8ffe5ab0c6b7d80e889951e98c61661246",
+        "port/dreamcast/tools/cloud/build24/actor_clip_cases.cpp.in": "fa37722f91764aa9f9730e3d508b2c9730dd5fe5f7d43a59904d0517cacee16e",
+        "port/dreamcast/tools/cloud/build24/actor_host.py": "9602876cff295f3f89a3a378cceaf3cfe6608585cb9a18994f39a25e26e1f2e5"
+      },
+      "host_adaptations": {
+        "avk_admission": "#if RE4DC_ACTOR_VTX_KERNEL && defined(__sh__) && RE4DC_ACTOR_ASM && !defined(ACTOR_TEST_XMTRX)",
+        "target_abi_assertions": "static_assert(__builtin_offsetof(AvkPos, matrix) == 28 && __builtin_offsetof(AvkPos, width) == 40 &&\n              __builtin_offsetof(AvkPos, bv) == 68, \"avk_sh4.S AvkPos\");\nstatic_assert(__builtin_offsetof(AvkLight, dirs) == 24 && __builtin_offsetof(AvkLight, alpha) == 36,\n              \"avk_sh4.S AvkLight\");",
+        "meshlet_transport": "Existing production portable copy, including index EOL flags, for SQ and packet.",
+        "strip_transport": "SQ strip copy: all 8 words, final EOL, MOVCA command policy.",
+        "empty_vector_output": "Fixture output skips fwrite for empty vectors (no output-byte change)."
+      }
+    },
+    {
+      "status": "PASS",
+      "sanitizer": "address,undefined",
+      "receipt_sha256": "b4235e3c5a46b12bc3eaed4b8ecf9b363cdc7298d9f0d1ccafbdca5965bc416f",
+      "helper_controls_per_configuration": 8130,
+      "configurations": [
+        {
+          "name": "direct0-reuse0",
+          "cases": 3766,
+          "added_clip_cases": 3624,
+          "output_bytes": 6186480,
+          "output_sha256": "0ae40ae44639c17eaea8510f1575397baf2211bb81254373fa10141d56d2fa83"
+        },
+        {
+          "name": "direct0-reuse1",
+          "cases": 3766,
+          "added_clip_cases": 3624,
+          "output_bytes": 6186480,
+          "output_sha256": "0ae40ae44639c17eaea8510f1575397baf2211bb81254373fa10141d56d2fa83"
+        },
+        {
+          "name": "direct1-reuse0",
+          "cases": 3774,
+          "added_clip_cases": 3624,
+          "output_bytes": 5702028,
+          "output_sha256": "0bb5b6c886620a76e98c293dba993154427909f4828dbb24a95bd6b4bec3931c"
+        },
+        {
+          "name": "direct1-reuse1",
+          "cases": 3774,
+          "added_clip_cases": 3624,
+          "output_bytes": 5702028,
+          "output_sha256": "0bb5b6c886620a76e98c293dba993154427909f4828dbb24a95bd6b4bec3931c"
+        }
+      ],
+      "source_sha256": {
+        "port/dreamcast/game/platform/native_actor_fast.cpp": "7f0f308a41d79b3958c65b08cb4ac06593123fff576de621543e19fec12f9ba2",
+        "port/dreamcast/game/platform/include/actor_clip_reuse.hpp": "b3e7d71e817a672164458762805af4d967c5b78f75c9041c3f34c9a0ad5d7e69",
+        "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+        "port/dreamcast/tools/d367/actor_setup_lean/check_runtime.py": "f6f8000e7a879bfc5eb646af3858309c62dff1f8f5831c8f9d2d292da1e7b9ff",
+        "port/dreamcast/tools/d367/actor_setup_lean/fixture_actor.cpp.in": "39af845a9578aebc6a599e6f3417ba8ffe5ab0c6b7d80e889951e98c61661246",
+        "port/dreamcast/tools/cloud/build24/actor_clip_cases.cpp.in": "fa37722f91764aa9f9730e3d508b2c9730dd5fe5f7d43a59904d0517cacee16e",
+        "port/dreamcast/tools/cloud/build24/actor_host.py": "9602876cff295f3f89a3a378cceaf3cfe6608585cb9a18994f39a25e26e1f2e5"
+      },
+      "host_adaptations": {
+        "avk_admission": "#if RE4DC_ACTOR_VTX_KERNEL && defined(__sh__) && RE4DC_ACTOR_ASM && !defined(ACTOR_TEST_XMTRX)",
+        "target_abi_assertions": "static_assert(__builtin_offsetof(AvkPos, matrix) == 28 && __builtin_offsetof(AvkPos, width) == 40 &&\n              __builtin_offsetof(AvkPos, bv) == 68, \"avk_sh4.S AvkPos\");\nstatic_assert(__builtin_offsetof(AvkLight, dirs) == 24 && __builtin_offsetof(AvkLight, alpha) == 36,\n              \"avk_sh4.S AvkLight\");",
+        "meshlet_transport": "Existing production portable copy, including index EOL flags, for SQ and packet.",
+        "strip_transport": "SQ strip copy: all 8 words, final EOL, MOVCA command policy.",
+        "empty_vector_output": "Fixture output skips fwrite for empty vectors (no output-byte change)."
+      }
+    }
+  ],
+  "target_build": {
+    "receipt_sha256": "0df5682ed3239aa050cf3594915355787a275f85fd08cfd18f836b670e70f845",
+    "source_sha256": {
+      "port/dreamcast/game/platform/native_actor_fast.cpp": "7f0f308a41d79b3958c65b08cb4ac06593123fff576de621543e19fec12f9ba2",
+      "port/dreamcast/game/platform/include/actor_clip_reuse.hpp": "b3e7d71e817a672164458762805af4d967c5b78f75c9041c3f34c9a0ad5d7e69",
+      "port/dreamcast/tools/cloud/build24/actor_target_build.py": "9df6f83942a3646e7860b0c1a3449f1a00a71f6bd9a0e355ea6ba7250faba7fd",
+      "port/dreamcast/tools/cloud/build24/actor_target.cpp.in": "fd0558c6d38d808d000e47a7b8591e90b7c9bab4fc93d923e1fac513a199ed68"
+    },
+    "recipe": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+    "overrides": [
+      "DRAW_SETUP_AUDIT=0",
+      "ACTOR_CLIP_REUSE=0",
+      "NMR_POOL_LOD=0"
+    ],
+    "generated_headers": {
+      "d349-stack.h": "c76096ae0722f473c62a1f9e916f5f8f2ee92d497982887faec8c0ebd435679a",
+      "native-actor.h": "4a74d88e3310a5e866d4fb6fd439c7931e11ffb3a9fdf665f591e4650dc95361",
+      "pipeline30.h": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739",
+      "dbgwarp.h": "5bd416e52e19500fcd19148b6478d17f73598e8474167c921ca8ccb8568006f1",
+      "scenery30.h": "af1859d4f6346b00615c64776b1b6f60dfddece35e4f94e342fbd0d76cf3ee2c",
+      "tahash.h": "d8c463d1534f7fdd66a8677bc25332396dbbd8a1c9100f744a15fd66bac61515"
+    },
+    "arms": {
+      "reuse0": {
+        "elf_sha256": "940152b4aff78aeb6ad1b260b7565868560eb3691420c3128024e3e30c778e2d",
+        "fixture_sections": {
+          "executable_bytes": 3192,
+          "allocated_bytes": 12156,
+          "zero_fill_bytes": 8096
+        }
+      },
+      "reuse1": {
+        "elf_sha256": "4dec1d259fce75e137f04a254c7b082855ddeba36b8215c5fea88cba565ffd8a",
+        "fixture_sections": {
+          "executable_bytes": 3288,
+          "allocated_bytes": 12252,
+          "zero_fill_bytes": 8096
+        }
+      }
+    }
+  },
+  "target_run": {
+    "receipt_sha256": "172b58a943e825fb9f7617d3db54dec82e766c504e1ae41102b9f64d69aad32a",
+    "source_sha256": {
+      "port/dreamcast/tools/cloud/build24/actor_target_run.py": "34e8d0e1de5417ebac7547042b83d3f876fd513e69015a92b656bba3246d5915",
+      "port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+      "port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+      "port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+      "port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e",
+      "port/dreamcast/tools/d367/world_replay_lean/target_run.py": "519937b2c950be305c9c6bc609a7d6d646d9cac8e768a1575f6a72d988715756"
+    },
+    "memory_controls": {
+      "status": "PASS",
+      "controls": [
+        "fetches excluded; scalar load/store retained",
+        "PC-relative literal classified as data",
+        "data read of current opcode word retained",
+        "delay slot attributed exactly once",
+        "double-register move counted as one 8-byte load",
+        "32-bit effective address wrap",
+        "store queues excluded from cached footprint",
+        "cached PREF counted separately from demand loads"
+      ]
+    },
+    "opcode_controls": {
+      "status": "PASS",
+      "cases": 20,
+      "scope": "XOR unsigned8-bit immediate preserves T and performs no memory access"
+    },
+    "model": {
+      "reuse0": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "reuse1": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      }
+    },
+    "cases": [
+      {
+        "name": "rigid-near-n3",
+        "kind": "rigid-near",
+        "vertices": 3,
+        "triangles": 1,
+        "rebuilds_off": 3,
+        "rebuilds_on": 3,
+        "arms": {
+          "reuse0": {
+            "instructions": 1545,
+            "model_cycles": 1377,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0c283c7bb9cc081367b22a765cc8c04f839977f735a50527d941672ba691e048",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2003,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 372,
+              "store_instructions": 210,
+              "load_accesses": 372,
+              "store_accesses": 210,
+              "load_bytes": 1340,
+              "store_bytes": 837,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 47,
+              "unique_line_bytes": 1504
+            },
+            "demand_32byte_line_visits": 582,
+            "repeated_32byte_line_visits": 535
+          },
+          "reuse1": {
+            "instructions": 1573,
+            "model_cycles": 1400,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0c283c7bb9cc081367b22a765cc8c04f839977f735a50527d941672ba691e048",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 1999,
+              "instruction_fills": 51.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 388,
+              "store_instructions": 227,
+              "load_accesses": 388,
+              "store_accesses": 227,
+              "load_bytes": 1418,
+              "store_bytes": 905,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 615,
+            "repeated_32byte_line_visits": 567
+          }
+        }
+      },
+      {
+        "name": "rigid-near-n4",
+        "kind": "rigid-near",
+        "vertices": 4,
+        "triangles": 2,
+        "rebuilds_off": 6,
+        "rebuilds_on": 4,
+        "arms": {
+          "reuse0": {
+            "instructions": 2943,
+            "model_cycles": 2635,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "80aa6f9a5b6371c766fac43377712b78fe336fa873c869ad76f5cad53cdbdf31",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 3261,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 716,
+              "store_instructions": 369,
+              "load_accesses": 716,
+              "store_accesses": 369,
+              "load_bytes": 2574,
+              "store_bytes": 1473,
+              "unique_read_lines": 43,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 1085,
+            "repeated_32byte_line_visits": 1037
+          },
+          "reuse1": {
+            "instructions": 2145,
+            "model_cycles": 1918,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "80aa6f9a5b6371c766fac43377712b78fe336fa873c869ad76f5cad53cdbdf31",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2548,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 535,
+              "store_instructions": 305,
+              "load_accesses": 535,
+              "store_accesses": 305,
+              "load_bytes": 1960,
+              "store_bytes": 1217,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 49,
+              "unique_line_bytes": 1568
+            },
+            "demand_32byte_line_visits": 840,
+            "repeated_32byte_line_visits": 791
+          }
+        }
+      },
+      {
+        "name": "rigid-near-n16",
+        "kind": "rigid-near",
+        "vertices": 16,
+        "triangles": 14,
+        "rebuilds_off": 42,
+        "rebuilds_on": 16,
+        "arms": {
+          "reuse0": {
+            "instructions": 19695,
+            "model_cycles": 17713,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "9c16af0beb5faf8eae85beb5edb6bbe1839fdcb063cebdeefb93f79f7baa3d1a",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 18339,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 4844,
+              "store_instructions": 2265,
+              "load_accesses": 4844,
+              "store_accesses": 2265,
+              "load_bytes": 17382,
+              "store_bytes": 9057,
+              "unique_read_lines": 62,
+              "unique_write_lines": 17,
+              "unique_data_lines": 67,
+              "unique_line_bytes": 2144
+            },
+            "demand_32byte_line_visits": 7109,
+            "repeated_32byte_line_visits": 7042
+          },
+          "reuse1": {
+            "instructions": 9009,
+            "model_cycles": 8134,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "9c16af0beb5faf8eae85beb5edb6bbe1839fdcb063cebdeefb93f79f7baa3d1a",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 8764,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 2299,
+              "store_instructions": 1241,
+              "load_accesses": 2299,
+              "store_accesses": 1241,
+              "load_bytes": 8464,
+              "store_bytes": 4961,
+              "unique_read_lines": 66,
+              "unique_write_lines": 17,
+              "unique_data_lines": 68,
+              "unique_line_bytes": 2176
+            },
+            "demand_32byte_line_visits": 3540,
+            "repeated_32byte_line_visits": 3472
+          }
+        }
+      },
+      {
+        "name": "rigid-near-n64",
+        "kind": "rigid-near",
+        "vertices": 64,
+        "triangles": 62,
+        "rebuilds_off": 186,
+        "rebuilds_on": 64,
+        "arms": {
+          "reuse0": {
+            "instructions": 86703,
+            "model_cycles": 78025,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "37fee84e212c43ebf3c0db19d61644e9f7b64f2aaa40166734b996e5133f179f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 78651,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 21356,
+              "store_instructions": 9849,
+              "load_accesses": 21356,
+              "store_accesses": 9849,
+              "load_bytes": 76614,
+              "store_bytes": 39393,
+              "unique_read_lines": 141,
+              "unique_write_lines": 17,
+              "unique_data_lines": 146,
+              "unique_line_bytes": 4672
+            },
+            "demand_32byte_line_visits": 31205,
+            "repeated_32byte_line_visits": 31059
+          },
+          "reuse1": {
+            "instructions": 36465,
+            "model_cycles": 32998,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "37fee84e212c43ebf3c0db19d61644e9f7b64f2aaa40166734b996e5133f179f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 33628,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 9355,
+              "store_instructions": 4985,
+              "load_accesses": 9355,
+              "store_accesses": 4985,
+              "load_bytes": 34480,
+              "store_bytes": 19937,
+              "unique_read_lines": 145,
+              "unique_write_lines": 17,
+              "unique_data_lines": 147,
+              "unique_line_bytes": 4704
+            },
+            "demand_32byte_line_visits": 14340,
+            "repeated_32byte_line_visits": 14193
+          }
+        }
+      },
+      {
+        "name": "rigid-near-n128",
+        "kind": "rigid-near",
+        "vertices": 128,
+        "triangles": 126,
+        "rebuilds_off": 378,
+        "rebuilds_on": 128,
+        "arms": {
+          "reuse0": {
+            "instructions": 176047,
+            "model_cycles": 158441,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "3718604319147e04880e021539fabd5db88dfb3f90f714254ac34302192d8611",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 159067,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 43372,
+              "store_instructions": 19961,
+              "load_accesses": 43372,
+              "store_accesses": 19961,
+              "load_bytes": 155590,
+              "store_bytes": 79841,
+              "unique_read_lines": 247,
+              "unique_write_lines": 17,
+              "unique_data_lines": 252,
+              "unique_line_bytes": 8064
+            },
+            "demand_32byte_line_visits": 63333,
+            "repeated_32byte_line_visits": 63081
+          },
+          "reuse1": {
+            "instructions": 73073,
+            "model_cycles": 66150,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "3718604319147e04880e021539fabd5db88dfb3f90f714254ac34302192d8611",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 66780,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 18763,
+              "store_instructions": 9977,
+              "load_accesses": 18763,
+              "store_accesses": 9977,
+              "load_bytes": 69168,
+              "store_bytes": 39905,
+              "unique_read_lines": 251,
+              "unique_write_lines": 17,
+              "unique_data_lines": 253,
+              "unique_line_bytes": 8096
+            },
+            "demand_32byte_line_visits": 28740,
+            "repeated_32byte_line_visits": 28487
+          }
+        }
+      },
+      {
+        "name": "skin-near-n3",
+        "kind": "skin-near",
+        "vertices": 3,
+        "triangles": 1,
+        "rebuilds_off": 3,
+        "rebuilds_on": 3,
+        "arms": {
+          "reuse0": {
+            "instructions": 1936,
+            "model_cycles": 1716,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0a411e1a0bc432de984f43ce603930f7b8b76d190dcede08838c7bf3aa16f4f2",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2416,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 463,
+              "store_instructions": 216,
+              "load_accesses": 463,
+              "store_accesses": 216,
+              "load_bytes": 1671,
+              "store_bytes": 861,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 52,
+              "unique_line_bytes": 1664
+            },
+            "demand_32byte_line_visits": 679,
+            "repeated_32byte_line_visits": 627
+          },
+          "reuse1": {
+            "instructions": 1967,
+            "model_cycles": 1730,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0a411e1a0bc432de984f43ce603930f7b8b76d190dcede08838c7bf3aa16f4f2",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2418,
+              "instruction_fills": 59.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 473,
+              "store_instructions": 233,
+              "load_accesses": 473,
+              "store_accesses": 233,
+              "load_bytes": 1725,
+              "store_bytes": 929,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 53,
+              "unique_line_bytes": 1696
+            },
+            "demand_32byte_line_visits": 706,
+            "repeated_32byte_line_visits": 653
+          }
+        }
+      },
+      {
+        "name": "skin-near-n4",
+        "kind": "skin-near",
+        "vertices": 4,
+        "triangles": 2,
+        "rebuilds_off": 6,
+        "rebuilds_on": 4,
+        "arms": {
+          "reuse0": {
+            "instructions": 3724,
+            "model_cycles": 3313,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "57d398e9c1776c77f29e2b13e1c561092d11bde9b7a2a7e8ffeffee52ecf0f9f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 4013,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 897,
+              "store_instructions": 381,
+              "load_accesses": 897,
+              "store_accesses": 381,
+              "load_bytes": 3232,
+              "store_bytes": 1521,
+              "unique_read_lines": 48,
+              "unique_write_lines": 17,
+              "unique_data_lines": 53,
+              "unique_line_bytes": 1696
+            },
+            "demand_32byte_line_visits": 1278,
+            "repeated_32byte_line_visits": 1225
+          },
+          "reuse1": {
+            "instructions": 2670,
+            "model_cycles": 2358,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "57d398e9c1776c77f29e2b13e1c561092d11bde9b7a2a7e8ffeffee52ecf0f9f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 3077,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 648,
+              "store_instructions": 313,
+              "load_accesses": 648,
+              "store_accesses": 313,
+              "load_bytes": 2368,
+              "store_bytes": 1249,
+              "unique_read_lines": 52,
+              "unique_write_lines": 17,
+              "unique_data_lines": 54,
+              "unique_line_bytes": 1728
+            },
+            "demand_32byte_line_visits": 961,
+            "repeated_32byte_line_visits": 907
+          }
+        }
+      },
+      {
+        "name": "skin-near-n16",
+        "kind": "skin-near",
+        "vertices": 16,
+        "triangles": 14,
+        "rebuilds_off": 42,
+        "rebuilds_on": 16,
+        "arms": {
+          "reuse0": {
+            "instructions": 25156,
+            "model_cycles": 22459,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "95aa6ef6186d3f4263f33f6190354b06f1fa7d0bededcb18d147e54a953849cf",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 23159,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 6105,
+              "store_instructions": 2349,
+              "load_accesses": 6105,
+              "store_accesses": 2349,
+              "load_bytes": 21964,
+              "store_bytes": 9393,
+              "unique_read_lines": 68,
+              "unique_write_lines": 17,
+              "unique_data_lines": 73,
+              "unique_line_bytes": 2336
+            },
+            "demand_32byte_line_visits": 8454,
+            "repeated_32byte_line_visits": 8381
+          },
+          "reuse1": {
+            "instructions": 11106,
+            "model_cycles": 9894,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "95aa6ef6186d3f4263f33f6190354b06f1fa7d0bededcb18d147e54a953849cf",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 10613,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 2748,
+              "store_instructions": 1273,
+              "load_accesses": 2748,
+              "store_accesses": 1273,
+              "load_bytes": 10084,
+              "store_bytes": 5089,
+              "unique_read_lines": 72,
+              "unique_write_lines": 17,
+              "unique_data_lines": 74,
+              "unique_line_bytes": 2368
+            },
+            "demand_32byte_line_visits": 4021,
+            "repeated_32byte_line_visits": 3947
+          }
+        }
+      },
+      {
+        "name": "skin-near-n64",
+        "kind": "skin-near",
+        "vertices": 64,
+        "triangles": 62,
+        "rebuilds_off": 186,
+        "rebuilds_on": 64,
+        "arms": {
+          "reuse0": {
+            "instructions": 110884,
+            "model_cycles": 99043,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "d8e4fd5504e8f85e041a44e11878bdd682fae388a6b3c63127a5a70a9791bd11",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 99743,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 26937,
+              "store_instructions": 10221,
+              "load_accesses": 26937,
+              "store_accesses": 10221,
+              "load_bytes": 96892,
+              "store_bytes": 40881,
+              "unique_read_lines": 153,
+              "unique_write_lines": 17,
+              "unique_data_lines": 158,
+              "unique_line_bytes": 5056
+            },
+            "demand_32byte_line_visits": 37158,
+            "repeated_32byte_line_visits": 37000
+          },
+          "reuse1": {
+            "instructions": 44850,
+            "model_cycles": 40038,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "d8e4fd5504e8f85e041a44e11878bdd682fae388a6b3c63127a5a70a9791bd11",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 40757,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 11148,
+              "store_instructions": 5113,
+              "load_accesses": 11148,
+              "store_accesses": 5113,
+              "load_bytes": 40948,
+              "store_bytes": 20449,
+              "unique_read_lines": 157,
+              "unique_write_lines": 17,
+              "unique_data_lines": 159,
+              "unique_line_bytes": 5088
+            },
+            "demand_32byte_line_visits": 16261,
+            "repeated_32byte_line_visits": 16102
+          }
+        }
+      },
+      {
+        "name": "skin-near-n128",
+        "kind": "skin-near",
+        "vertices": 128,
+        "triangles": 126,
+        "rebuilds_off": 378,
+        "rebuilds_on": 128,
+        "arms": {
+          "reuse0": {
+            "instructions": 225188,
+            "model_cycles": 201155,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "00396b2f739ad5e7069265a787fa116911333a3a8570915c0a834343937cfad3",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 201855,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 54713,
+              "store_instructions": 20717,
+              "load_accesses": 54713,
+              "store_accesses": 20717,
+              "load_bytes": 196796,
+              "store_bytes": 82865,
+              "unique_read_lines": 267,
+              "unique_write_lines": 17,
+              "unique_data_lines": 272,
+              "unique_line_bytes": 8704
+            },
+            "demand_32byte_line_visits": 75430,
+            "repeated_32byte_line_visits": 75158
+          },
+          "reuse1": {
+            "instructions": 89842,
+            "model_cycles": 80230,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "00396b2f739ad5e7069265a787fa116911333a3a8570915c0a834343937cfad3",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 80949,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 22348,
+              "store_instructions": 10233,
+              "load_accesses": 22348,
+              "store_accesses": 10233,
+              "load_bytes": 82100,
+              "store_bytes": 40929,
+              "unique_read_lines": 271,
+              "unique_write_lines": 17,
+              "unique_data_lines": 273,
+              "unique_line_bytes": 8736
+            },
+            "demand_32byte_line_visits": 32581,
+            "repeated_32byte_line_visits": 32308
+          }
+        }
+      },
+      {
+        "name": "rigid-far-n3",
+        "kind": "rigid-far",
+        "vertices": 3,
+        "triangles": 1,
+        "rebuilds_off": 3,
+        "rebuilds_on": 3,
+        "arms": {
+          "reuse0": {
+            "instructions": 1545,
+            "model_cycles": 1377,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "96fe60b1a7766be280a391e64c4eb00f3d1cf75f83a4840a933ccdb221336827",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2003,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 372,
+              "store_instructions": 210,
+              "load_accesses": 372,
+              "store_accesses": 210,
+              "load_bytes": 1340,
+              "store_bytes": 837,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 47,
+              "unique_line_bytes": 1504
+            },
+            "demand_32byte_line_visits": 582,
+            "repeated_32byte_line_visits": 535
+          },
+          "reuse1": {
+            "instructions": 1573,
+            "model_cycles": 1400,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "96fe60b1a7766be280a391e64c4eb00f3d1cf75f83a4840a933ccdb221336827",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 1999,
+              "instruction_fills": 51.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 388,
+              "store_instructions": 227,
+              "load_accesses": 388,
+              "store_accesses": 227,
+              "load_bytes": 1418,
+              "store_bytes": 905,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 615,
+            "repeated_32byte_line_visits": 567
+          }
+        }
+      },
+      {
+        "name": "rigid-far-n4",
+        "kind": "rigid-far",
+        "vertices": 4,
+        "triangles": 2,
+        "rebuilds_off": 6,
+        "rebuilds_on": 4,
+        "arms": {
+          "reuse0": {
+            "instructions": 2943,
+            "model_cycles": 2635,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "e3d94f936a760e0175f060be550eb0c9c1d98d14b49ec2c251ae22ba028a58df",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 3261,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 716,
+              "store_instructions": 369,
+              "load_accesses": 716,
+              "store_accesses": 369,
+              "load_bytes": 2574,
+              "store_bytes": 1473,
+              "unique_read_lines": 43,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 1085,
+            "repeated_32byte_line_visits": 1037
+          },
+          "reuse1": {
+            "instructions": 2145,
+            "model_cycles": 1918,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "e3d94f936a760e0175f060be550eb0c9c1d98d14b49ec2c251ae22ba028a58df",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2548,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 535,
+              "store_instructions": 305,
+              "load_accesses": 535,
+              "store_accesses": 305,
+              "load_bytes": 1960,
+              "store_bytes": 1217,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 49,
+              "unique_line_bytes": 1568
+            },
+            "demand_32byte_line_visits": 840,
+            "repeated_32byte_line_visits": 791
+          }
+        }
+      },
+      {
+        "name": "rigid-far-n16",
+        "kind": "rigid-far",
+        "vertices": 16,
+        "triangles": 14,
+        "rebuilds_off": 42,
+        "rebuilds_on": 16,
+        "arms": {
+          "reuse0": {
+            "instructions": 19695,
+            "model_cycles": 17713,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "cc5414ee7234947be5e8186082f3320fae2ea3f9143db073d1217b6b58400476",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 18339,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 4844,
+              "store_instructions": 2265,
+              "load_accesses": 4844,
+              "store_accesses": 2265,
+              "load_bytes": 17382,
+              "store_bytes": 9057,
+              "unique_read_lines": 62,
+              "unique_write_lines": 17,
+              "unique_data_lines": 67,
+              "unique_line_bytes": 2144
+            },
+            "demand_32byte_line_visits": 7109,
+            "repeated_32byte_line_visits": 7042
+          },
+          "reuse1": {
+            "instructions": 9009,
+            "model_cycles": 8134,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "cc5414ee7234947be5e8186082f3320fae2ea3f9143db073d1217b6b58400476",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 8764,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 2299,
+              "store_instructions": 1241,
+              "load_accesses": 2299,
+              "store_accesses": 1241,
+              "load_bytes": 8464,
+              "store_bytes": 4961,
+              "unique_read_lines": 66,
+              "unique_write_lines": 17,
+              "unique_data_lines": 68,
+              "unique_line_bytes": 2176
+            },
+            "demand_32byte_line_visits": 3540,
+            "repeated_32byte_line_visits": 3472
+          }
+        }
+      },
+      {
+        "name": "rigid-far-n64",
+        "kind": "rigid-far",
+        "vertices": 64,
+        "triangles": 62,
+        "rebuilds_off": 186,
+        "rebuilds_on": 64,
+        "arms": {
+          "reuse0": {
+            "instructions": 86703,
+            "model_cycles": 78025,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "2fe01b8c8386b215314a0e04b669e333be40dc1922c9897dd7d144955fe6eae5",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 78651,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 21356,
+              "store_instructions": 9849,
+              "load_accesses": 21356,
+              "store_accesses": 9849,
+              "load_bytes": 76614,
+              "store_bytes": 39393,
+              "unique_read_lines": 141,
+              "unique_write_lines": 17,
+              "unique_data_lines": 146,
+              "unique_line_bytes": 4672
+            },
+            "demand_32byte_line_visits": 31205,
+            "repeated_32byte_line_visits": 31059
+          },
+          "reuse1": {
+            "instructions": 36465,
+            "model_cycles": 32998,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "2fe01b8c8386b215314a0e04b669e333be40dc1922c9897dd7d144955fe6eae5",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 33628,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 9355,
+              "store_instructions": 4985,
+              "load_accesses": 9355,
+              "store_accesses": 4985,
+              "load_bytes": 34480,
+              "store_bytes": 19937,
+              "unique_read_lines": 145,
+              "unique_write_lines": 17,
+              "unique_data_lines": 147,
+              "unique_line_bytes": 4704
+            },
+            "demand_32byte_line_visits": 14340,
+            "repeated_32byte_line_visits": 14193
+          }
+        }
+      },
+      {
+        "name": "rigid-far-n128",
+        "kind": "rigid-far",
+        "vertices": 128,
+        "triangles": 126,
+        "rebuilds_off": 378,
+        "rebuilds_on": 128,
+        "arms": {
+          "reuse0": {
+            "instructions": 176047,
+            "model_cycles": 158441,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "f8556ba1865399377d66d0d46791ea9cc36e7f14b7c9707a2d98ba9ea5650211",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 159067,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 43372,
+              "store_instructions": 19961,
+              "load_accesses": 43372,
+              "store_accesses": 19961,
+              "load_bytes": 155590,
+              "store_bytes": 79841,
+              "unique_read_lines": 247,
+              "unique_write_lines": 17,
+              "unique_data_lines": 252,
+              "unique_line_bytes": 8064
+            },
+            "demand_32byte_line_visits": 63333,
+            "repeated_32byte_line_visits": 63081
+          },
+          "reuse1": {
+            "instructions": 73073,
+            "model_cycles": 66150,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "f8556ba1865399377d66d0d46791ea9cc36e7f14b7c9707a2d98ba9ea5650211",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 66780,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 18763,
+              "store_instructions": 9977,
+              "load_accesses": 18763,
+              "store_accesses": 9977,
+              "load_bytes": 69168,
+              "store_bytes": 39905,
+              "unique_read_lines": 251,
+              "unique_write_lines": 17,
+              "unique_data_lines": 253,
+              "unique_line_bytes": 8096
+            },
+            "demand_32byte_line_visits": 28740,
+            "repeated_32byte_line_visits": 28487
+          }
+        }
+      },
+      {
+        "name": "skin-far-n3",
+        "kind": "skin-far",
+        "vertices": 3,
+        "triangles": 1,
+        "rebuilds_off": 3,
+        "rebuilds_on": 3,
+        "arms": {
+          "reuse0": {
+            "instructions": 1936,
+            "model_cycles": 1716,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "00260d9bd8208c01c9418ebd08b62d37ffec9dc96bd2702c8cebb30634ed671d",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2416,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 463,
+              "store_instructions": 216,
+              "load_accesses": 463,
+              "store_accesses": 216,
+              "load_bytes": 1671,
+              "store_bytes": 861,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 52,
+              "unique_line_bytes": 1664
+            },
+            "demand_32byte_line_visits": 679,
+            "repeated_32byte_line_visits": 627
+          },
+          "reuse1": {
+            "instructions": 1967,
+            "model_cycles": 1730,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "00260d9bd8208c01c9418ebd08b62d37ffec9dc96bd2702c8cebb30634ed671d",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2418,
+              "instruction_fills": 59.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 473,
+              "store_instructions": 233,
+              "load_accesses": 473,
+              "store_accesses": 233,
+              "load_bytes": 1725,
+              "store_bytes": 929,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 53,
+              "unique_line_bytes": 1696
+            },
+            "demand_32byte_line_visits": 706,
+            "repeated_32byte_line_visits": 653
+          }
+        }
+      },
+      {
+        "name": "skin-far-n4",
+        "kind": "skin-far",
+        "vertices": 4,
+        "triangles": 2,
+        "rebuilds_off": 6,
+        "rebuilds_on": 4,
+        "arms": {
+          "reuse0": {
+            "instructions": 3724,
+            "model_cycles": 3313,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "9ecf38bf9725903784983ec55ad5371a49dd66ef9b542d55ad23b108bf7dd010",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 4013,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 897,
+              "store_instructions": 381,
+              "load_accesses": 897,
+              "store_accesses": 381,
+              "load_bytes": 3232,
+              "store_bytes": 1521,
+              "unique_read_lines": 48,
+              "unique_write_lines": 17,
+              "unique_data_lines": 53,
+              "unique_line_bytes": 1696
+            },
+            "demand_32byte_line_visits": 1278,
+            "repeated_32byte_line_visits": 1225
+          },
+          "reuse1": {
+            "instructions": 2670,
+            "model_cycles": 2358,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "9ecf38bf9725903784983ec55ad5371a49dd66ef9b542d55ad23b108bf7dd010",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 3077,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 648,
+              "store_instructions": 313,
+              "load_accesses": 648,
+              "store_accesses": 313,
+              "load_bytes": 2368,
+              "store_bytes": 1249,
+              "unique_read_lines": 52,
+              "unique_write_lines": 17,
+              "unique_data_lines": 54,
+              "unique_line_bytes": 1728
+            },
+            "demand_32byte_line_visits": 961,
+            "repeated_32byte_line_visits": 907
+          }
+        }
+      },
+      {
+        "name": "skin-far-n16",
+        "kind": "skin-far",
+        "vertices": 16,
+        "triangles": 14,
+        "rebuilds_off": 42,
+        "rebuilds_on": 16,
+        "arms": {
+          "reuse0": {
+            "instructions": 25156,
+            "model_cycles": 22459,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "7d6fb60c056c78ae1990fd2bbe9e77ce08c58d63181ea86efab1d817d1412373",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 23159,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 6105,
+              "store_instructions": 2349,
+              "load_accesses": 6105,
+              "store_accesses": 2349,
+              "load_bytes": 21964,
+              "store_bytes": 9393,
+              "unique_read_lines": 68,
+              "unique_write_lines": 17,
+              "unique_data_lines": 73,
+              "unique_line_bytes": 2336
+            },
+            "demand_32byte_line_visits": 8454,
+            "repeated_32byte_line_visits": 8381
+          },
+          "reuse1": {
+            "instructions": 11106,
+            "model_cycles": 9894,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "7d6fb60c056c78ae1990fd2bbe9e77ce08c58d63181ea86efab1d817d1412373",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 10613,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 2748,
+              "store_instructions": 1273,
+              "load_accesses": 2748,
+              "store_accesses": 1273,
+              "load_bytes": 10084,
+              "store_bytes": 5089,
+              "unique_read_lines": 72,
+              "unique_write_lines": 17,
+              "unique_data_lines": 74,
+              "unique_line_bytes": 2368
+            },
+            "demand_32byte_line_visits": 4021,
+            "repeated_32byte_line_visits": 3947
+          }
+        }
+      },
+      {
+        "name": "skin-far-n64",
+        "kind": "skin-far",
+        "vertices": 64,
+        "triangles": 62,
+        "rebuilds_off": 186,
+        "rebuilds_on": 64,
+        "arms": {
+          "reuse0": {
+            "instructions": 110884,
+            "model_cycles": 99043,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "a86aaa075b52987e06d4aff7a63d7365b7c9353d2c6b3a6201573b8950b26840",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 99743,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 26937,
+              "store_instructions": 10221,
+              "load_accesses": 26937,
+              "store_accesses": 10221,
+              "load_bytes": 96892,
+              "store_bytes": 40881,
+              "unique_read_lines": 153,
+              "unique_write_lines": 17,
+              "unique_data_lines": 158,
+              "unique_line_bytes": 5056
+            },
+            "demand_32byte_line_visits": 37158,
+            "repeated_32byte_line_visits": 37000
+          },
+          "reuse1": {
+            "instructions": 44850,
+            "model_cycles": 40038,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "a86aaa075b52987e06d4aff7a63d7365b7c9353d2c6b3a6201573b8950b26840",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 40757,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 11148,
+              "store_instructions": 5113,
+              "load_accesses": 11148,
+              "store_accesses": 5113,
+              "load_bytes": 40948,
+              "store_bytes": 20449,
+              "unique_read_lines": 157,
+              "unique_write_lines": 17,
+              "unique_data_lines": 159,
+              "unique_line_bytes": 5088
+            },
+            "demand_32byte_line_visits": 16261,
+            "repeated_32byte_line_visits": 16102
+          }
+        }
+      },
+      {
+        "name": "skin-far-n128",
+        "kind": "skin-far",
+        "vertices": 128,
+        "triangles": 126,
+        "rebuilds_off": 378,
+        "rebuilds_on": 128,
+        "arms": {
+          "reuse0": {
+            "instructions": 225188,
+            "model_cycles": 201155,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "e472cf7a29e56f5775d6cb6c7362ce335af4d9971c431a16bcd9e5c37d1d0888",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 201855,
+              "instruction_fills": 60.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 54713,
+              "store_instructions": 20717,
+              "load_accesses": 54713,
+              "store_accesses": 20717,
+              "load_bytes": 196796,
+              "store_bytes": 82865,
+              "unique_read_lines": 267,
+              "unique_write_lines": 17,
+              "unique_data_lines": 272,
+              "unique_line_bytes": 8704
+            },
+            "demand_32byte_line_visits": 75430,
+            "repeated_32byte_line_visits": 75158
+          },
+          "reuse1": {
+            "instructions": 89842,
+            "model_cycles": 80230,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "e472cf7a29e56f5775d6cb6c7362ce335af4d9971c431a16bcd9e5c37d1d0888",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 80949,
+              "instruction_fills": 62.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 22348,
+              "store_instructions": 10233,
+              "load_accesses": 22348,
+              "store_accesses": 10233,
+              "load_bytes": 82100,
+              "store_bytes": 40929,
+              "unique_read_lines": 271,
+              "unique_write_lines": 17,
+              "unique_data_lines": 273,
+              "unique_line_bytes": 8736
+            },
+            "demand_32byte_line_visits": 32581,
+            "repeated_32byte_line_visits": 32308
+          }
+        }
+      },
+      {
+        "name": "source6-near-n3",
+        "kind": "source6-near",
+        "vertices": 3,
+        "triangles": 1,
+        "rebuilds_off": 3,
+        "rebuilds_on": 3,
+        "arms": {
+          "reuse0": {
+            "instructions": 1545,
+            "model_cycles": 1377,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0c283c7bb9cc081367b22a765cc8c04f839977f735a50527d941672ba691e048",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2003,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 372,
+              "store_instructions": 210,
+              "load_accesses": 372,
+              "store_accesses": 210,
+              "load_bytes": 1340,
+              "store_bytes": 837,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 47,
+              "unique_line_bytes": 1504
+            },
+            "demand_32byte_line_visits": 582,
+            "repeated_32byte_line_visits": 535
+          },
+          "reuse1": {
+            "instructions": 1573,
+            "model_cycles": 1400,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 1,
+            "prepared_bytes": 168,
+            "prepared_sha256": "0c283c7bb9cc081367b22a765cc8c04f839977f735a50527d941672ba691e048",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 1999,
+              "instruction_fills": 51.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 388,
+              "store_instructions": 227,
+              "load_accesses": 388,
+              "store_accesses": 227,
+              "load_bytes": 1418,
+              "store_bytes": 905,
+              "unique_read_lines": 42,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 615,
+            "repeated_32byte_line_visits": 567
+          }
+        }
+      },
+      {
+        "name": "source6-near-n4",
+        "kind": "source6-near",
+        "vertices": 4,
+        "triangles": 2,
+        "rebuilds_off": 6,
+        "rebuilds_on": 4,
+        "arms": {
+          "reuse0": {
+            "instructions": 2943,
+            "model_cycles": 2635,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "80aa6f9a5b6371c766fac43377712b78fe336fa873c869ad76f5cad53cdbdf31",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 3261,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 716,
+              "store_instructions": 369,
+              "load_accesses": 716,
+              "store_accesses": 369,
+              "load_bytes": 2574,
+              "store_bytes": 1473,
+              "unique_read_lines": 43,
+              "unique_write_lines": 17,
+              "unique_data_lines": 48,
+              "unique_line_bytes": 1536
+            },
+            "demand_32byte_line_visits": 1085,
+            "repeated_32byte_line_visits": 1037
+          },
+          "reuse1": {
+            "instructions": 2145,
+            "model_cycles": 1918,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 2,
+            "prepared_bytes": 336,
+            "prepared_sha256": "80aa6f9a5b6371c766fac43377712b78fe336fa873c869ad76f5cad53cdbdf31",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 2548,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 535,
+              "store_instructions": 305,
+              "load_accesses": 535,
+              "store_accesses": 305,
+              "load_bytes": 1960,
+              "store_bytes": 1217,
+              "unique_read_lines": 47,
+              "unique_write_lines": 17,
+              "unique_data_lines": 49,
+              "unique_line_bytes": 1568
+            },
+            "demand_32byte_line_visits": 840,
+            "repeated_32byte_line_visits": 791
+          }
+        }
+      },
+      {
+        "name": "source6-near-n16",
+        "kind": "source6-near",
+        "vertices": 16,
+        "triangles": 14,
+        "rebuilds_off": 42,
+        "rebuilds_on": 16,
+        "arms": {
+          "reuse0": {
+            "instructions": 19695,
+            "model_cycles": 17713,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "9c16af0beb5faf8eae85beb5edb6bbe1839fdcb063cebdeefb93f79f7baa3d1a",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 18339,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 4844,
+              "store_instructions": 2265,
+              "load_accesses": 4844,
+              "store_accesses": 2265,
+              "load_bytes": 17382,
+              "store_bytes": 9057,
+              "unique_read_lines": 61,
+              "unique_write_lines": 17,
+              "unique_data_lines": 66,
+              "unique_line_bytes": 2112
+            },
+            "demand_32byte_line_visits": 7109,
+            "repeated_32byte_line_visits": 7043
+          },
+          "reuse1": {
+            "instructions": 9009,
+            "model_cycles": 8134,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 14,
+            "prepared_bytes": 2352,
+            "prepared_sha256": "9c16af0beb5faf8eae85beb5edb6bbe1839fdcb063cebdeefb93f79f7baa3d1a",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 8764,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 2299,
+              "store_instructions": 1241,
+              "load_accesses": 2299,
+              "store_accesses": 1241,
+              "load_bytes": 8464,
+              "store_bytes": 4961,
+              "unique_read_lines": 65,
+              "unique_write_lines": 17,
+              "unique_data_lines": 67,
+              "unique_line_bytes": 2144
+            },
+            "demand_32byte_line_visits": 3540,
+            "repeated_32byte_line_visits": 3473
+          }
+        }
+      },
+      {
+        "name": "source6-near-n64",
+        "kind": "source6-near",
+        "vertices": 64,
+        "triangles": 62,
+        "rebuilds_off": 186,
+        "rebuilds_on": 64,
+        "arms": {
+          "reuse0": {
+            "instructions": 86703,
+            "model_cycles": 78025,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "37fee84e212c43ebf3c0db19d61644e9f7b64f2aaa40166734b996e5133f179f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 78651,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 21356,
+              "store_instructions": 9849,
+              "load_accesses": 21356,
+              "store_accesses": 9849,
+              "load_bytes": 76614,
+              "store_bytes": 39393,
+              "unique_read_lines": 137,
+              "unique_write_lines": 17,
+              "unique_data_lines": 142,
+              "unique_line_bytes": 4544
+            },
+            "demand_32byte_line_visits": 31205,
+            "repeated_32byte_line_visits": 31063
+          },
+          "reuse1": {
+            "instructions": 36465,
+            "model_cycles": 32998,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 62,
+            "prepared_bytes": 10416,
+            "prepared_sha256": "37fee84e212c43ebf3c0db19d61644e9f7b64f2aaa40166734b996e5133f179f",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 33628,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 9355,
+              "store_instructions": 4985,
+              "load_accesses": 9355,
+              "store_accesses": 4985,
+              "load_bytes": 34480,
+              "store_bytes": 19937,
+              "unique_read_lines": 141,
+              "unique_write_lines": 17,
+              "unique_data_lines": 143,
+              "unique_line_bytes": 4576
+            },
+            "demand_32byte_line_visits": 14340,
+            "repeated_32byte_line_visits": 14197
+          }
+        }
+      },
+      {
+        "name": "source6-near-n128",
+        "kind": "source6-near",
+        "vertices": 128,
+        "triangles": 126,
+        "rebuilds_off": 378,
+        "rebuilds_on": 128,
+        "arms": {
+          "reuse0": {
+            "instructions": 176047,
+            "model_cycles": 158441,
+            "peak_stack_bytes": 716,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "3718604319147e04880e021539fabd5db88dfb3f90f714254ac34302192d8611",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 159067,
+              "instruction_fills": 53.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 43372,
+              "store_instructions": 19961,
+              "load_accesses": 43372,
+              "store_accesses": 19961,
+              "load_bytes": 155590,
+              "store_bytes": 79841,
+              "unique_read_lines": 239,
+              "unique_write_lines": 17,
+              "unique_data_lines": 244,
+              "unique_line_bytes": 7808
+            },
+            "demand_32byte_line_visits": 63333,
+            "repeated_32byte_line_visits": 63089
+          },
+          "reuse1": {
+            "instructions": 73073,
+            "model_cycles": 66150,
+            "peak_stack_bytes": 736,
+            "prepared_triangles": 126,
+            "prepared_bytes": 21168,
+            "prepared_sha256": "3718604319147e04880e021539fabd5db88dfb3f90f714254ac34302192d8611",
+            "part_size": 116,
+            "frame_size": 312,
+            "cold_icache": {
+              "model_cycles": 66780,
+              "instruction_fills": 54.0,
+              "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+            },
+            "cached_data": {
+              "load_instructions": 18763,
+              "store_instructions": 9977,
+              "load_accesses": 18763,
+              "store_accesses": 9977,
+              "load_bytes": 69168,
+              "store_bytes": 39905,
+              "unique_read_lines": 243,
+              "unique_write_lines": 17,
+              "unique_data_lines": 245,
+              "unique_line_bytes": 7840
+            },
+            "demand_32byte_line_visits": 28740,
+            "repeated_32byte_line_visits": 28495
+          }
+        }
+      }
+    ],
+    "first_rigid_near_prepared_triangle_hex": "00000c4300c0c643abaa2a3f000040bf000090bf0000c0bf0000c03f000000bf0000403f8180803ee2e0e03ea1a0203f000000000000be4300c087438988083e0000a03f000090bf0000f0c00000f0400000f0be00003c3f8180803ee4e2e23ea2a1213f000000000000a643008057438988083e0000803e0000603f0000f0c00000f0400000e0be0000383f8180803ee6e4e43ea3a2223f00000000aead2d3faead2d3faead2d3f"
+  },
+  "qualifications": [
+    "Far-depth controls deliberately invoke clip_strip; ordinary rendering normally takes the existing fast strip path for these inputs.",
+    "The observed clipper returns zero. Unchanged clipper arithmetic and nonempty TA/device emission are excluded from target pricing; host tests use the real shared clipper and compare actual emitted bytes.",
+    "Synthetic fixture peak stack is 716 bytes OFF and 736 ON. Unique touched data lines rise by one; measured savings are repeated accesses, not a reduced total data footprint or measured cache misses.",
+    "The n=3 warm model regresses by 23 cycles for rigid/source6 and 14 for skin. Longer tested strips improve. No console, scene, FPS, whole-frame, or STRICT acceptance is claimed.",
+    "Fixture executable bytes rise 3192 to 3288; final production translation-unit and disabled identity checks are reported separately by build_controls.py."
+  ]
+}

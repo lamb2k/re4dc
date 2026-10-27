@@ -36,6 +36,11 @@ int actor_fade_queue_failure() {re4dc_model_packet_abort();return -1;}
 // is popped and its value copied before a callback can yield/retire storage.
 bool actor_fade_drain_head() {
     if(!deferred_first || deferred_first->lighting!=kActorFadeTag)return false;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // Include dying-actor ticket restore, acquisition and palette/list setup,
+    // not just the nested native part emission, in the model-list interval.
+    const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#endif
     const auto* node=deferred_first;
     Re4dcActorFadeTicket ticket{};
     std::memcpy(&ticket,reinterpret_cast<const unsigned char*>(node)+kActorFadeNode,sizeof(ticket));

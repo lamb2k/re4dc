@@ -1,0 +1,49 @@
+// Compile the production observer unchanged, replacing only its documented
+// host hooks. These hooks supply synthetic time/thread/identity/PMU samples;
+// their instructions are included, their real hardware/OS costs are unpriced.
+#define RE4DC_DRAW_SETUP_AUDIT_HOST 1
+#include "@DC@/game/draw_setup_audit.cpp"
+
+extern "C" {
+uint64_t fixture_clock;
+uintptr_t fixture_thread;
+unsigned fixture_identity[re4dc::dsa24::IdentityWords];
+}
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+re4dc::ppm14::AuditSample fixture_sample;
+bool fixture_sample_valid;
+#endif
+
+extern "C" {
+struct Arguments { unsigned path,phase,counter,amount,token,tick,room; };
+__attribute__((noinline)) unsigned fixture_enter(const Arguments* a){
+    return re4dc::dsa24::enter(re4dc::dsa24::Path(a->path),re4dc::dsa24::Phase(a->phase));
+}
+__attribute__((noinline)) unsigned fixture_nested(const Arguments* a){
+    return re4dc::dsa24::enter(re4dc::dsa24::Phase(a->phase));
+}
+__attribute__((noinline)) void fixture_leave(const Arguments* a){re4dc::dsa24::leave(a->token);}
+__attribute__((noinline)) void fixture_phase(const Arguments* a){re4dc::dsa24::set_phase(re4dc::dsa24::Phase(a->phase));}
+__attribute__((noinline)) void fixture_count(const Arguments* a){re4dc::dsa24::count(re4dc::dsa24::Counter(a->counter),a->amount);}
+__attribute__((noinline)) void fixture_next_tick(const Arguments* a){re4dc::dsa24::begin_tick(a->tick,a->room);}
+__attribute__((used)) extern const uintptr_t fixture_layout[]={
+    sizeof(Arguments),sizeof(re4dc::dsa24::Snapshot),sizeof(re4dc::dsa24::current),
+    uintptr_t(&re4dc::dsa24::current),uintptr_t(&re4dc::dsa24::window),
+    uintptr_t(&re4dc::dsa24::state),uintptr_t(&re4dc::dsa24::epoch),
+    uintptr_t(&re4dc::dsa24::owner),uintptr_t(&re4dc::dsa24::paused),
+    uintptr_t(&re4dc::dsa24::have_key),uintptr_t(&re4dc::dsa24::have_sealed),
+    uintptr_t(re4dc::dsa24::key),uintptr_t(&fixture_clock),uintptr_t(&fixture_thread),uintptr_t(fixture_identity),
+    offsetof(re4dc::dsa24::Frame,begin),offsetof(re4dc::dsa24::Frame,last),
+    offsetof(re4dc::dsa24::Frame,tick),offsetof(re4dc::dsa24::Frame,active),
+    offsetof(re4dc::dsa24::Frame,complete),offsetof(re4dc::dsa24::Frame,attempt),offsetof(re4dc::dsa24::Frame,finished),
+    offsetof(re4dc::dsa24::Snapshot,phase_us),offsetof(re4dc::dsa24::Snapshot,phase_events),
+    offsetof(re4dc::dsa24::Snapshot,counters),offsetof(re4dc::dsa24::Snapshot,outside_us),
+    offsetof(re4dc::dsa24::Snapshot,wall_us),offsetof(re4dc::dsa24::Snapshot,ticks),
+    offsetof(re4dc::dsa24::Snapshot,drawn),offsetof(re4dc::dsa24::Snapshot,errors),
+    offsetof(re4dc::dsa24::Snapshot,pm_samples),offsetof(re4dc::dsa24::Snapshot,pm_gaps),offsetof(re4dc::dsa24::Snapshot,pm_wraps),
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+    uintptr_t(&re4dc::dsa24::previous_pm),uintptr_t(&re4dc::dsa24::have_pm),uintptr_t(&fixture_sample),uintptr_t(&fixture_sample_valid),
+#endif
+};
+__attribute__((used)) extern const unsigned fixture_layout_count=sizeof(fixture_layout)/sizeof(fixture_layout[0]);
+}

@@ -74,6 +74,28 @@ f32 ORTHO_R;
 #define WC24_WAIT()
 #define WC24_DECISION()
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#define DSA24_BEGIN() re4dc::dsa24::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#define DSA24_END() re4dc::dsa24::end_tick();
+#define DSA24_RESET() re4dc::dsa24::reset();
+#define DSA24_SETUP_BEGIN() re4dc::dsa24::begin_setup();
+#define DSA24_SETUP_END() re4dc::dsa24::end_setup();
+#define DSA24_BEFORE(call) { const re4dc::dsa24::Scope dsa_begin(re4dc::dsa24::FrameBegin); call; }
+#if RE4DC_PACE_CATCHUP
+#define DSA24_DECISION() re4dc::dsa24::decision(!re4dc_pace_skipping);
+#else
+#define DSA24_DECISION() re4dc::dsa24::decision(true);
+#endif
+#else
+#define DSA24_BEGIN()
+#define DSA24_END()
+#define DSA24_RESET()
+#define DSA24_SETUP_BEGIN()
+#define DSA24_SETUP_END()
+#define DSA24_BEFORE(call) call
+#define DSA24_DECISION()
+#endif
 #line 58
 
 extern "C" {
@@ -236,7 +258,7 @@ int main()
     int ret;
 
     systemStartInit();
-RESTART: WC24_RESET()
+RESTART: WC24_RESET() DSA24_RESET()
     {
         systemRestartInit();
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -274,7 +296,7 @@ RESTART: WC24_RESET()
             BitOff(pG->Debug_flg[3], 0x2000);
         }
         TaskExec(0, Title_task, 0);
-        for (;;) { WC24_BEGIN()
+        for (;;) { WC24_BEGIN() DSA24_BEGIN()
 #if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
             // Determinism trace (LOGIC_TRACE=1 test builds only): the state left by the previous
             // iteration's complete logic + render pass, independent of how long rendering took.
@@ -285,11 +307,11 @@ RESTART: WC24_RESET()
             // Render_swap); the logic tick below runs in full either way.
             re4dc_pace_begin();
 #endif
-            OTHER_PHASE(4); WC24_DECISION() // definitive bench_iter boundary: after pace_begin
+            OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() // definitive bench_iter boundary: after pace_begin
             StopwatchInit();
-            ProcessTickInit();
+            ProcessTickInit(); DSA24_SETUP_BEGIN()
             MWC("top");
-            Render_before();
+            DSA24_BEFORE(Render_before());
             ClearOTagR(MainOt, 5);
             PadRead();
             DebugControl();
@@ -297,7 +319,7 @@ RESTART: WC24_RESET()
 #if RE4DC_PACE_CATCHUP
             re4dc_pace_test_draw();
 #endif
-            ProcessTickGet(4, "RENDER SETUP");
+            ProcessTickGet(4, "RENDER SETUP"); DSA24_SETUP_END()
             SetPrimBuffPtr();
             ClearOt();
             MWC("clear");
@@ -397,7 +419,7 @@ RESTART: WC24_RESET()
             ProcessTickLog();  // GAME_TICK_LOG: per-subsystem timing line every N frames
 #endif
             MWC("end");
-            ret = systemResetCheck(); WC24_END()
+            ret = systemResetCheck(); WC24_END() DSA24_END()
             if (ret == 1) {
                 goto RESTART;
             }

@@ -1,3 +1,6 @@
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_gate.h"
 #include "include/gc_asset_packet_cursor.h"
@@ -2537,6 +2540,9 @@ void post_diag_frame(){
 }
 #endif
 void stream_send(const void* data,unsigned bytes) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
     re4dc::profile::Scope profile_scope(stream_list==PVR_LIST_OP_POLY?re4dc::profile::SubmitOP:
         stream_list==PVR_LIST_PT_POLY?re4dc::profile::SubmitPT:re4dc::profile::SubmitTR);
     ++frame_pvr_calls;frame_pvr_bytes+=bytes;
@@ -2635,6 +2641,9 @@ void stream_close(bool present) {
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::scene_finished(); // finished game scene, including a later discard
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::scene_finished();
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     // pvr_scene_finish can wait. Revalidate immediately before presentation.
@@ -7464,6 +7473,9 @@ if(!handle){
     return 1;
 }
 extern "C" void re4dc_model_packet_commit(unsigned count){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7575,6 +7587,9 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 }
 #endif
 extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* out){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
 #endif
@@ -7628,6 +7643,9 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 static void model_direct_account(unsigned vertices){
 #else
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
@@ -7658,6 +7676,9 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 }
 #if RE4DC_SCENERY_SUBMIT_BATCH
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7669,6 +7690,9 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     model_direct_account(vertices);
 }
 extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7681,6 +7705,9 @@ extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
     }
 }
 extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7723,6 +7750,9 @@ extern "C" int re4dc_ui_blob_send(const void* data,unsigned bytes){
 #endif
 #if RE4DC_COARSE_ONE_SUBMIT && RE4DC_TA_DIRECT
 extern "C" int re4dc_model_direct_begin_reserved(const Re4dcModelPart* p,const Re4dcModelPacket* reserved,Re4dcModelDirect* out){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(2);
 #endif
@@ -9449,6 +9479,9 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
 // One implementation for the ordinary and batched entry points: the cache,
 // material gates, header modifiers and accounting below remain shared.
 extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_batch(const unsigned* k,Re4dcModelDirect* out,Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
     struct FailedBegin {
         Re4dcWorldSubmitBatch* batch;bool accepted=false;
         ~FailedBegin(){if(!accepted)re4dc_ps2_world_batch_close(batch);}
@@ -9947,6 +9980,11 @@ struct R11fSourceFinishScope {
 }
 #endif
 extern "C" void re4dc_model_finish_source_draws(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // This queue also contains UI, effects, water and post-processing nodes.
+    // Only the actual model branch below belongs to the model-list bucket.
+    const re4dc::dsa24::Scope dsa_drain(re4dc::dsa24::RenderOther);
+#endif
     AVD_EVENT(FinishBegin,nullptr,nullptr,0);
     RE4DC_PROFILE_SCOPE(TranslucentDrain);
 #if RE4DC_PS2_WORLD_R11F_OWNER
@@ -10077,6 +10115,9 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
         // Copy the small view before I/O can yield. Retirement clears the queue
         // and aborts this same frame; it never frees an in-flight PVR texture.
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#endif
         Re4dcModelPart view=restore_view(deferred_first);
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
         re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
@@ -10669,5 +10710,11 @@ extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_po
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_poly_mod_compile(dst,&c);
+}
+#endif
+
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart* p){
+    return (draining_parts?draining_list:select_model_pass(p))==PVR_LIST_TR_POLY;
 }
 #endif

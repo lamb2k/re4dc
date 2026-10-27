@@ -48,6 +48,22 @@
 #ifndef RE4DC_SCENERY_STREAM
 #define RE4DC_SCENERY_STREAM 0
 #endif
+#ifndef RE4DC_SCENERY_CLIP_GATHER
+#define RE4DC_SCENERY_CLIP_GATHER 0
+#endif
+#if RE4DC_SCENERY_CLIP_GATHER != 0 && RE4DC_SCENERY_CLIP_GATHER != 1
+#error SCENERY_CLIP_GATHER must be 0 or 1
+#endif
+#if RE4DC_SCENERY_CLIP_GATHER
+#if !RE4DC_SCENERY_STREAM || !RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || \
+    RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_DEDUP==3 || (RE4DC_CPU_BACKFACE != 0 && RE4DC_CPU_BACKFACE != 2)
+#error SCENERY_CLIP_GATHER needs streamed direct chunks, EMIT_PREFETCH=0, DEDUP!=3 and CPU_BACKFACE=0 or 2
+#endif
+#include "include/scenery_clip_gather.hpp"
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+#endif
 #ifndef RE4DC_SCENERY_REPLAY_LEAN
 #define RE4DC_SCENERY_REPLAY_LEAN 0
 #endif
@@ -1179,6 +1195,34 @@ struct Wc24PassResult {
 #endif
 };
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+// Part totals are accumulated once, on every exit; counters never read clocks.
+struct DsaStaticPart {
+    const unsigned& input;const unsigned& output;
+    unsigned in0,out0;bool translucent,complete=false;
+    DsaStaticPart(const unsigned& i,const unsigned& o,bool tr):input(i),output(o),in0(i),out0(o),translucent(tr){
+        re4dc::dsa24::count(re4dc::dsa24::Parts);
+    }
+    ~DsaStaticPart(){
+        const unsigned ni=input-in0,no=output-out0;
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesIn,ni);
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesOut,no);
+        if(translucent)re4dc::dsa24::count(re4dc::dsa24::XluSubmitted,no);
+        if(!complete && (ni || no))re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+    }
+};
+struct DsaStaticCount {
+    re4dc::dsa24::Counter counter;unsigned n=0;
+    explicit DsaStaticCount(re4dc::dsa24::Counter c):counter(c){}
+    ~DsaStaticCount(){re4dc::dsa24::count(counter,n);}
+};
+// View overlap means a conservative projected triangle bounding-box overlap,
+// not depth visibility, coverage, or a rasterized-pixel measurement.
+static bool dsa_triangle_overlap(const pvr_vertex_t& a,const pvr_vertex_t& b,const pvr_vertex_t& c){
+    return !((a.x<0 && b.x<0 && c.x<0) || (a.x>RE4DC_SCREEN_WF && b.x>RE4DC_SCREEN_WF && c.x>RE4DC_SCREEN_WF) ||
+             (a.y<0 && b.y<0 && c.y<0) || (a.y>RE4DC_SCREEN_HF && b.y>RE4DC_SCREEN_HF && c.y>RE4DC_SCREEN_HF));
+}
+#endif
 struct Emitter {
     const Re4dcModelPart& p;
     float mv[12];  // package -> view: group bounds
@@ -1190,6 +1234,24 @@ struct Emitter {
     unsigned limit=0; // packet slots strips may use: packet.capacity less any borrowed tail
     bool streaming=false,bound=false,submitted=false;
     bool vertex_alpha=false; // corner alpha from the colour palette (source vertex alpha)
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    bool dsa_xlu()const{
+#if RE4DC_PS2_WORLD_MESH
+        return ps2 && ps2[4]==2U;
+#else
+        return false;
+#endif
+    }
+    void dsa_packet_overlap(const pvr_vertex_t* vertices,unsigned n)const{
+        if(!dsa_xlu())return;
+        unsigned run=0,overlap=0;
+        for(unsigned i=0;i<n;++i){
+            if(++run>=3U && dsa_triangle_overlap(vertices[i-2],vertices[i-1],vertices[i]))++overlap;
+            if(vertices[i].flags==PVR_CMD_VERTEX_EOL)run=0;
+        }
+        re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap,overlap);
+    }
+#endif
 #if RE4DC_SCENERY_DEDUP==3
     const re4dc::room::CompactVertex12* dd_base=nullptr;
     unsigned dd_unique=0,dd_count=0; // borrowed meshlet context, no allocation or retained mask
@@ -1265,7 +1327,14 @@ struct Emitter {
 #else
 #define RE4DC_WC24_PUT_SCOPE()
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    void put(unsigned n){RE4DC_WC24_PUT_SCOPE()
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        dsa_packet_overlap(dst+used,n);
+        sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#else
     void put(unsigned n){RE4DC_WC24_PUT_SCOPE()sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#endif
 #undef RE4DC_WC24_PUT_SCOPE
 #endif
     bool bind(){
@@ -1370,6 +1439,12 @@ struct Emitter {
         return true;
     }
     bool flush(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        // The packet path may stage output before a later refusal; its part
+        // scope marks incomplete totals unsupported on that exit.
+        if(streaming && used)dsa_packet_overlap(dst,used);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
 #endif
@@ -1485,6 +1560,12 @@ struct Emitter {
     template<class Vertex,class Index>
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
                    const Index* index,unsigned count){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+        re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
+        re4dc::dsa24::count(re4dc::dsa24::ClipTriangles,count-2U);
+        DsaStaticCount dsa_rebuild(re4dc::dsa24::ClipRebuilds);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_clip(re4dc::wc24::Clip);
         Wc24Count wc_transformed(re4dc::wc24::Transformed);
@@ -1502,6 +1583,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF,half_w=RE4DC_SCREEN_HALF_WF,half_h=RE4DC_SCREEN_HALF_HF;
             unsigned all=0x3fU;
             for(unsigned i=0;i<count && all;++i){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                ++dsa_rebuild.n;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 ++wc_transformed.n;
 #endif
@@ -1546,6 +1630,9 @@ struct Emitter {
                 {const unsigned t=s2;s2=s1;s1=s0;s0=t;}
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 re4dc::render::RenderVertex& v=ring[s0];
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                ++dsa_rebuild.n;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 ++wc_transformed.n;
 #endif
@@ -1594,6 +1681,9 @@ struct Emitter {
 #endif
         if(count<=kClipOnce){
             re4dc::render::RenderVertex once[kClipOnce];float once_alpha[kClipOnce];
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_rebuild.n+=count;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             wc_transformed.n+=count;
 #endif
@@ -1618,6 +1708,9 @@ struct Emitter {
 #endif
         for(unsigned i=2;i<count;++i){
             re4dc::render::RenderVertex tri[3];
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_rebuild.n+=3U;
+#endif
             const re4dc::render::StaticCorner corners[3]={corner(base[index[i-2+(i&1)]]),
                 corner(base[index[i-1-(i&1)]]),corner(base[index[i]])};
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
@@ -1641,6 +1734,9 @@ struct Draw : Emitter {
     View& view; unsigned material;
     // 1 drawn (possibly nothing visible), 0 fallback allowed, -1 frame aborted.
     int run(const re4dc::room::CompactSourceRange& range){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#endif
         const auto& package=view.package;
         if(!re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
         streaming=re4dc_model_packet_streaming()!=0;
@@ -1686,8 +1782,19 @@ struct Draw : Emitter {
                 if(result<=0)return result;
             }
         }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            dsa_packet_overlap(dst,used);
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 };
@@ -2748,6 +2855,28 @@ unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses co
 unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
 #endif
 struct MeshDraw : Emitter {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT && RE4DC_MESH_FASTPATH
+    void dsa_index_overlap(const std::uint8_t* indices,unsigned n)const{
+        if(!dsa_xlu())return;
+        unsigned overlap=0;
+        for(unsigned i=2;i<n;++i)
+            if(dsa_triangle_overlap(cache[indices[i-2]],cache[indices[i-1]],cache[indices[i]]))++overlap;
+        re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap,overlap);
+    }
+    void dsa_lean_overlap(const std::uint8_t* begin,const std::uint8_t* end)const{
+        if(!dsa_xlu())return;
+        // walk_lean stops before a depth-crossing strip. Replay only its
+        // inexpensive integer admission predicates; do not emit or transform.
+        constexpr unsigned mask=re4dc::vp::depth_mask(re4dc::vp::kChecksAll)|
+                                re4dc::vp::screen_mask(re4dc::vp::kChecksAll);
+        for(const std::uint8_t* s=begin;s<end;){
+            const unsigned n=*s++;
+            const auto c=re4dc::vp::codes(outcodes,s,n);
+            if(!(c.all&mask))dsa_index_overlap(s,n);
+            s+=n;
+        }
+    }
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     const re4dc::record_split::RecordView package; const re4dc::room::MeshPart& part;
 #else
@@ -2812,10 +2941,33 @@ struct MeshDraw : Emitter {
     // clipper reads corners by meshlet index, so the gather runs (once, the same copy as corners()) before its first
     // clip strip.
     const RE4DC_SCENERY_RECORD* stream_l=nullptr;
+#if RE4DC_SCENERY_CLIP_GATHER
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+    __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(
+        const re4dc::room::CompactVertex12* base,const std::uint8_t* indices,unsigned count){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+#endif
+        if(!stream_l)return base;
+        const auto& l=*stream_l;
+        const unsigned copied=stream_clip_gather.fill(package.vertices()+l.first_vertex,
+            package.pool_offsets(l),gathered,indices,count);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,copied);
+#else
+        (void)copied;
+#endif
+        return gathered;
+    }
+#else
     __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+#endif
         if(stream_l){const auto* l=stream_l;stream_l=nullptr;return corners(*l);}
         return gathered;
     }
+#endif
 #if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
     // Check build: the gathered copy through transform_sched must give the same cache words and outcode bits 5..0.
     __attribute__((noinline)) void stream_check(const RE4DC_SCENERY_RECORD& l,unsigned lo,unsigned n){
@@ -2841,6 +2993,9 @@ struct MeshDraw : Emitter {
         dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
 #endif
         if(!package.indexed(l))return base;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,l.vertex_count);
+#endif
         // Three word moves per corner: R4IM vertices are 4-byte aligned.
         typedef std::uint32_t __attribute__((may_alias)) Word;
         const std::uint16_t* offsets=package.pool_offsets(l);
@@ -3294,6 +3449,12 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
     const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                      const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        // This diagnostic does not replay CPU2's determinant/run splitting.
+        // Triangle output is exact; translucent viewport overlap is unqualified.
+        if(dsa_xlu())re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
 #endif
@@ -3320,7 +3481,11 @@ struct MeshDraw : Emitter {
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
 #if RE4DC_SCENERY_STREAM
+#if RE4DC_SCENERY_CLIP_GATHER
+            base=stream_gather(base,s,n);
+#else
             if(!base)base=stream_gather();   // backface26: the owed gather before a clip strip, as strips_lean
+#endif
 #endif
             result=clip_strip(base,batch,s,n);
             if(result<=0)return nullptr;
@@ -3339,6 +3504,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
         if(bf_on())return strips_bf_sq(s,end,base,batch,result);
 #elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
@@ -3348,6 +3516,9 @@ struct MeshDraw : Emitter {
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0;
             s=re4dc::vp::walk_lean(s,end,outcodes,cache,limit,q,culled,emitted);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_lean_overlap(mark,s);
+#endif
 #if defined(RE4DC_TA_HASH) && RE4DC_TA_HASH && RE4DC_TA_HASH != 4
             // TA_HASH (test builds): walk_lean writes the store queues itself, so the run is walked again here
             // and every emitted strip's words are hashed as emit_sq() hashes them (EOL in the last flags word).
@@ -3372,7 +3543,11 @@ struct MeshDraw : Emitter {
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
 #if RE4DC_SCENERY_STREAM
+#if RE4DC_SCENERY_CLIP_GATHER
+            base=stream_gather(base,s,n);
+#else
             if(!base)base=stream_gather();
+#endif
 #endif
             result=clip_strip(base,batch,s,n);
             if(result<=0)return nullptr;
@@ -3674,6 +3849,9 @@ struct MeshDraw : Emitter {
         // and DEDUP's fill can read corners outside that interval. Hoist the
         // immutable count before may-alias stores instead of rereading it.
         const unsigned count=l.vertex_count;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,count);
+#endif
         typedef std::uint32_t __attribute__((may_alias)) Word;
         const std::uint16_t* offsets=package.pool_offsets(l);
         const Word* in=reinterpret_cast<const Word*>(base);
@@ -3724,6 +3902,9 @@ struct MeshDraw : Emitter {
         // reaches the clipper (strips_lean gathers then, stream_gather()).
         const bool ix=package.indexed(l);
         stream_l=ix?&l:nullptr;
+#if RE4DC_SCENERY_CLIP_GATHER
+        stream_clip_gather.begin();
+#endif
         const auto* base=ix?nullptr:corners(l);
         const auto* pool=reinterpret_cast<const vp::Vertex12*>(package.vertices()+l.first_vertex);
         const std::uint16_t* offs=ix?package.pool_offsets(l):nullptr;
@@ -3842,6 +4023,14 @@ struct MeshDraw : Emitter {
 #else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#if RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_MESH_CLASSIFY
+        // Fused direct strips and classified non-All legacy walks do not
+        // expose a complete separate submit/viewport-overlap measurement.
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
 #endif
@@ -3877,12 +4066,32 @@ struct MeshDraw : Emitter {
             }
 #endif
             const int r=emit_pick(pk[i]);if(r<=0)return r;}
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            dsa_packet_overlap(dst,used);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 #endif
     int run(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#if RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_MESH_CLASSIFY
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#if !RE4DC_MESH_FASTPATH || RE4DC_MESH_STRIP_LEAN!=1 || RE4DC_CPU_BACKFACE==1
+        if(dsa_xlu())re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
 #endif
@@ -3921,8 +4130,19 @@ struct MeshDraw : Emitter {
                 if(result<=0)return result;
             }
         }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            dsa_packet_overlap(dst,used);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 };
@@ -8410,6 +8630,10 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
 }
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(pass==2U?re4dc::dsa24::WorldTranslucent:re4dc::dsa24::WorldOpaque);
+    if(pass>2U)re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(pass<3U?static_cast<re4dc::wc24::Path>(pass):re4dc::wc24::PathCount,
                                      re4dc::wc24::Other);
