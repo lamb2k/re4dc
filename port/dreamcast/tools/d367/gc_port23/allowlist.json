@@ -339,6 +339,16 @@
    "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11f (ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
    "room": "011f",
    "sha256": "3157380ad1cd13e74aef335b21cb63c03330cbb29b9f8d3fecee87d50551e746"
+  },
+  {
+   "evidence": "fix-title27 10-27: data set title27 restores the Test 23 package (sha256 fbf56765) from the user PNG 182f26ae (re4-assets-private/title27-20261027 RECIPE.txt); catalog of the fixed disc lists it gc only because its RECIPE names no other-console source",
+   "id": "c67f5c01-63e0879e",
+   "kind": "texture",
+   "owner": "fix-title27",
+   "phase": "startup",
+   "provenance": "gc",
+   "reason": "user custom title art (not GC): the 2026 title background with the port credit (user 10-27: custom title image required)",
+   "sha256": "fbf5676505e66047b97fa31315c62bccac50b104f7f499438015e03883e79821"
   }
  ],
  "schema": 1

@@ -987,6 +987,7 @@ def main():
     for t in opt.get('--texdir', []):
         texdir(t, r, rec)
     drop_loose(names, r, rm, rec)
+    title27_gate(names, r, rec)
     if '--warp' in opt:
         kept = rm & media_paths()
         if kept:
@@ -1360,6 +1361,31 @@ if os.path.isdir(PIC26BD):
     DATA['pic26b'] = {'dc/tex.pak': PIC26BD + '/dc/tex.pak'}
     PAK_DERIVED['pic26b'] = PIC26BD + '/pak-derived.json'
     AFTER += [('pic26b', 'pic26')]
+# title27 (lane fix-title27 10-27, user: "missing the custom title image"): dc/tex.pak = pic26b's pack with the title
+# background c67f5c01-63e0879e (ss/eng/title.dat EFF 0, TPL 31, texture 0) back to the user's 2026 title art (credit
+# top-middle; the package Test 23 shipped, from the UI_OVERRIDES PNG sha256 182f26ae). pui24s (Test 24) re-made that key
+# as the PS2 title picture. The user's own art, not a GameCube asset. Must be the LAST tex.pak set: title27_gate fails a
+# fixture whose final dc/tex.pak holds other bytes under the key. Store: re4-assets-private/title27-20261027.
+TITLE27D = os.environ.get('TITLE27D', '/root/re4data/private/title27-20261027')
+TITLE27_KEY = (0xc67f5c01, 0x63e0879e)
+if os.path.isdir(TITLE27D):
+    DATA['title27'] = {'dc/tex.pak': TITLE27D + '/dc/tex.pak'}
+    PAK_DERIVED['title27'] = TITLE27D + '/pak-derived.json'
+    AFTER += [('title27', 'pic26b')]
+
+
+def title27_gate(names, r, rec):
+    # a set after title27 that stages dc/tex.pak would silently undo the user's title art (Test 24: pui24s did)
+    if 'title27' not in names:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+    import tex_merge
+    want = open(TITLE27D + '/c67f5c01-63e0879e.re4tex', 'rb').read()
+    got = tex_merge.read(r['dc/tex.pak']).get(TITLE27_KEY)
+    if got != want:
+        raise SystemExit('title27: the staged dc/tex.pak (%s) does not hold the user title art under c67f5c01-63e0879e; '
+                         'a set after title27 replaced it: rebuild that set on title27 or put title27 last' % r['dc/tex.pak'])
+    rec.append('title27 gate: c67f5c01-63e0879e = user title art')
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
