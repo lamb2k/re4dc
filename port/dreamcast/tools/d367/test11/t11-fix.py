@@ -1308,6 +1308,16 @@ GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026')
 if os.path.isdir(GCL26D):
     DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
     AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
+# efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
+# picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
+# efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
+# sets moved the table), so ps2_items.py pack now treats it as a record and writes the PS2 key the lib holds (65a31923 /
+# f60c0cef / 6ca072ca / c1bcca73, all in tex.pak); 8 bytes per file. A GRAFT of the ETM member only (dar_graft proves
+# every other member). Store: re4-assets-private/efm26-20261026.
+EFM26D = os.environ.get('EFM26D', '/root/re4data/private/efm26-20261026')
+if os.path.isdir(EFM26D):
+    DATA['efm26'] = {'graft': {'st1/%s.dar' % _r: ('%s/st1/%s.dar' % (EFM26D, _r), [_m])
+                               for _r, _m in (('r102', 'et13.eff'), ('r103', 'et05.eff'), ('r105', 'et22.eff'), ('r11b', 'et03.eff'))}}
 # gcl26z (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): em/em11..em17.drs = set gcl26's archives
 # with the bytes no header entry reads zero-filled (ps2cast/drs_dead_fill.py): the original GameCube archive body the
 # prepare step left between the 0x400-byte header and the nested sound entry (em11 0x400..0x3962c0). dvd.cpp reads only

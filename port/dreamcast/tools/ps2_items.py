@@ -681,7 +681,9 @@ class Packer:
             kc, kf = (int(x, 16) for x in s['key'].split('-'))
             at = tpl + data
             tex = (self.lib / a['cls'] / a['room'] / s['cmpr']).read_bytes()
-            is_rec = at in self.recs
+            # an R4NREF record is a record even when no NTR row lists it (a graft or a later externalising set moved
+            # the table; lane gcleft26 10-26: CMPR texels written over it would break the record)
+            is_rec = at in self.recs or bytes(self.pay[at:at + 8]) == b'R4NREF\0\0'
             if (ww, hh, fmt) == (s['w'], s['h'], s['fmt']):
                 if is_rec and struct.unpack_from('<2I', self.pay, at + 8) == (kc, kf):
                     done.append('already')
