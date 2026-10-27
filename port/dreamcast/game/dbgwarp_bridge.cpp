@@ -1145,6 +1145,7 @@ void plpos_poll()
                   (unsigned) pSubEm->r_no_1, (unsigned) pSubEm->r_no_2);
 }
 
+void kill_poll();
 void native_alive_poll()
 {
     // Never inspect EmMgr while the title, load, room jump or teardown owns it.
@@ -1154,6 +1155,7 @@ void native_alive_poll()
     ++wp.room_frames;
     alive_log_poll();
     plpos_poll();
+    if (wp.has_kill) kill_poll();  // castle31 chain: an assisted  (r201 Garrador) in an observe run
 }
 
 void kill_poll()

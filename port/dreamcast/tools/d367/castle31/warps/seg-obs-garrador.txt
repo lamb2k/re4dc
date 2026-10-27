@@ -1,0 +1,9 @@
+name castle31-seg
+stock
+alivelog 60
+plpos 3
+god
+ammo
+ashley
+kill 0x1b 100 0x201 1
+killpart 37

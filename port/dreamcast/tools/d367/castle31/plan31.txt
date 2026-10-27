@@ -593,21 +593,26 @@ goto -17286 -9008 500
 goto -24786 -8708 500
 goto -36000 -10000 400
 @r203d1
-face -38000 -10000
-wait 1
-press a 0.3
+goto -37000 -9800 150 8
+hold sl 0.4
+wait 2
+press a 0.8
 wait 3
-press a 0.3
+press a 0.8
 wait 3
 goto -39486 -9908 500
 goto -47586 -8708 500
 goto -51500 -3750 400
+@r203mid
 goto -51450 -2500 400
 goto -50900 1400 400
 goto -51750 7250 400
 @r203door
 goto -55800 9500 400
 face -57500 9600
+wait 2
+press a 0.3
+wait 1
 press a 0.3
 wait 3
 @r203key
@@ -711,6 +716,7 @@ face -51750 7250
 wait 1
 press a 0.3
 wait 3
+@houseout2
 goto -51750 7250 400
 goto -50900 1400 400
 goto -51450 -2500 400
@@ -896,4 +902,452 @@ press a 0.8
 wait 6
 press a 0.8
 wait 6
+end
+@door207b
+goto 20408 -58208 300 8
+face 20352 -60000
+wait 1
+hold su 1.0
+press a 0.8
+wait 2
+press a 0.8
+room 207 20
+end
+@thru
+goto -36500 -10300 200 8
+goto -38200 -10300 300
+goto -39486 -9908 500
+goto -47586 -8708 500
+goto -51500 -3750 400
+end
+@openit
+wait 2
+press a 0.3
+wait 1
+press a 0.3
+wait 3
+goto -38200 -10000 300
+goto -39486 -9908 500
+goto -47586 -8708 500
+goto -51500 -3750 400
+end
+@houseout
+wait 2
+press a 0.3
+wait 1
+press a 0.3
+wait 3
+goto -56886 9591 400
+goto -55500 9500 400
+end
+@houseout3
+face -54000 9550
+wait 2
+press a 0.3
+wait 1
+press a 0.3
+wait 3
+goto -55500 9500 400
+end
+@incell
+goto 31300 -42000 300 8
+wait 20
+end
+@msg
+press a 0.8
+wait 2
+press a 0.8
+wait 2
+end
+@msgb
+wait 1
+press b 0.3
+wait 2
+press b 0.3
+wait 2
+press a 0.3
+wait 2
+press y 0.3
+wait 2
+end
+@idle
+wait 50
+end
+@fixA
+autofight 0
+press b 0.3
+wait 1
+press b 0.3
+wait 1
+goto -9112 -10887 500
+goto -3562 -10737 400
+goto -3262 -10587 400
+goto -3112 -9987 400
+goto -3112 -8487 400
+goto -2962 -7737 400
+goto -2962 -6987 400
+goto -2362 -6237 400
+goto -1612 -5487 400
+goto -1612 -3987 400
+goto -1462 -3387 400
+goto -712 -3237 400
+goto -112 -3387 400
+goto 700 -3500 400
+goto 848 -7300 300
+face 848 -9000
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 4
+press a 0.3
+wait 2
+press a 0.8
+wait 3
+end
+@fixA2
+autofight 0
+goto -712 -3237 400
+goto -112 -3387 400
+goto 700 -3500 400
+goto 848 -7300 300
+face 848 -9000
+wait 1
+press a 0.3
+wait 3
+press a 0.3
+wait 4
+press a 0.3
+wait 2
+press a 0.8
+wait 3
+end
+@placeG2
+goto 848 -7300 300
+face 848 -9000
+wait 1
+press a 0.3
+wait 3
+press sr 0.2
+wait 1
+press a 0.8
+wait 2
+press a 0.8
+wait 8
+end
+@fixA3
+autofight 0
+goto -4162 -3237 500
+goto -4462 -3537 500
+goto -5062 -9837 500
+goto -4162 -10737 500
+goto -3262 -10737 500
+goto -2962 -9237 500
+goto -2962 -7737 500
+goto -2962 -6987 400
+goto -2362 -6237 400
+goto -1612 -5487 400
+goto -1612 -3987 400
+goto -1462 -3387 400
+goto -712 -3237 400
+goto -112 -3387 400
+goto 700 -3500 400
+goto 848 -7300 300
+face 848 -9000
+wait 1
+press a 0.3
+wait 3
+press sr 0.2
+wait 1
+press a 0.8
+wait 2
+press a 0.8
+wait 8
+end
+@sayno
+press b 0.3
+wait 2
+press b 0.3
+wait 2
+end
+@pickno
+press a 0.8
+wait 3
+end
+@pkdoor
+goto 16100 -37000 200 8
+face 16100 -40000
+wait 2
+press a 0.3
+wait 4
+press a 0.8
+wait 3
+press a 0.8
+wait 6
+end
+@inv2
+press start 0.3
+wait 3
+end
+@topic
+goto 17000 -30500 500
+goto 39000 -30500 500
+goto 41000 -31750 400
+goto 41500 -33000 400
+goto 42000 -34750 400
+goto 43500 -35000 400
+goto 43500 -36500 400
+goto 45000 -36500 400
+goto 46300 -37900 300 8
+end
+@pkdoor2
+goto 16095 -37150 120 10
+face 15500 -40000
+wait 2
+press a 0.3
+wait 4
+press a 0.8
+wait 3
+press a 0.8
+wait 6
+end
+@lever
+press a 0.8
+wait 3
+press a 0.8
+wait 2
+goto 32500 -42000 200 8
+face 34500 -42000
+wait 1
+press a 0.8
+wait 4
+press a 0.8
+wait 6
+end
+@lever2
+goto 33100 -42500 150 8
+face 33600 -44000
+wait 1
+press a 0.8
+wait 4
+face 34000 -40000
+wait 1
+press a 0.8
+wait 4
+end
+@lever3
+face 33300 -45000
+wait 1
+press a 0.8
+wait 4
+face 31000 -43500
+wait 1
+press a 0.8
+wait 4
+face 31000 -42600
+wait 1
+press a 0.8
+wait 4
+face 33300 -40000
+wait 1
+press a 0.8
+wait 4
+face 35500 -42600
+wait 1
+press a 0.8
+wait 4
+end
+@lever4
+goto 32750 -41250 150 8
+face 32750 -39000
+wait 1
+press a 0.8
+wait 4
+face 35000 -41250
+wait 1
+press a 0.8
+wait 4
+face 30500 -41250
+wait 1
+press a 0.8
+wait 4
+end
+@to208
+autofight 0
+goto 29600 -42000 500
+goto 21500 -45000 500
+goto 17000 -45600 500
+goto 16700 -44400 500
+goto 16700 -42900 500
+goto 16700 -41400 500
+goto 16700 -39900 500
+goto 16100 -38400 500
+goto 17300 -32100 500
+goto 18500 -31200 500
+@to208b
+autofight 5000
+goto 39200 -30600 500
+goto 40700 -31800 500
+goto 41300 -33000 500
+goto 41300 -50400 500
+goto 39500 -52200 500
+goto 38600 -52800 500
+goto 39200 -55200 500
+goto 39800 -55800 500
+goto 41300 -64500 400
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@lever5
+goto 32750 -41250 150 8
+face 31000 -42500
+wait 1
+press a 0.8
+wait 5
+face 32000 -43500
+wait 1
+press a 0.8
+wait 5
+face 31000 -41250
+wait 1
+press a 0.8
+wait 5
+face 31500 -40000
+wait 1
+press a 0.8
+wait 5
+end
+@to208c
+autofight 0
+goto 41300 -38500 300
+goto 41300 -45000 400
+goto 41300 -50400 500
+goto 39500 -52200 500
+goto 38600 -52800 500
+goto 39200 -55200 500
+goto 39800 -55800 500
+goto 41300 -64500 400
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@lever6
+goto 32580 -42064 120 10
+face 32580 -44000
+wait 1
+press a 0.8
+wait 5
+face 34000 -43500
+wait 1
+press a 0.8
+wait 5
+face 32580 -40000
+wait 1
+press a 0.8
+wait 5
+face 34000 -40600
+wait 1
+press a 0.8
+wait 5
+end
+@lever7
+goto 33200 -41600 120 8
+face 34600 -41300
+wait 1
+press a 0.8
+wait 6
+goto 33300 -41200 120 8
+face 34600 -40600
+wait 1
+press a 0.8
+wait 6
+goto 33500 -41700 120 8
+face 35000 -41700
+wait 1
+press a 0.8
+wait 6
+end
+@lever8
+goto 33300 -42300 100 8
+face 35000 -42500
+wait 1
+press a 0.8
+wait 6
+goto 33500 -42500 100 8
+face 35000 -42800
+wait 1
+press a 0.8
+wait 6
+goto 33200 -42600 100 8
+face 34500 -43200
+wait 1
+press a 0.8
+wait 6
+end
+@lever9
+goto 33070 -40900 100 8
+face 33070 -39000
+wait 1
+press a 0.8
+wait 6
+goto 33070 -40700 100 8
+face 33070 -39000
+wait 1
+press a 0.8
+wait 6
+end
+@ngate
+autofight 5000
+goto 41000 -32100 500
+goto 40400 -31500 500
+goto 38900 -30600 500
+goto 32300 -29100 500
+goto 30200 -25500 500
+goto 29900 -25200 500
+goto 23000 -23200 300 8
+face 23000 -21000
+wait 1
+press a 0.8
+wait 3
+press a 0.8
+room 208 20
+end
+@lever10
+goto 31000 -41300 200 8
+goto 32587 -41318 100 8
+wait 1
+press a 0.8
+wait 6
+goto 31800 -41000 200 8
+goto 32587 -40900 100 8
+wait 1
+press a 0.8
+wait 6
+end
+@lever11
+goto 33100 -40400 100 8
+face 36000 -40400
+wait 1
+press a 0.8
+wait 6
+goto 33400 -40900 100 8
+face 33400 -38000
+wait 1
+press a 0.8
+wait 6
+goto 33300 -40600 100 8
+face 35000 -39500
+wait 1
+press a 0.8
+wait 6
+end
+@lever12
+goto 33100 -40400 100 8
+face 36000 -40400
+wait 1
+press a 0.8
+wait 10
 end
