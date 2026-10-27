@@ -1420,3 +1420,192 @@ wait 2
 press a 0.8
 wait 6
 end
+@r208b
+autofight 0
+goto 2863 -34100 400
+goto 1963 -33200 400
+goto 1363 -33800 300
+goto 1363 -35300 300
+goto 1363 -36800 300
+goto 1363 -38300 300
+goto 1363 -39800 300
+goto 1963 -43400 400
+goto 4663 -53600 400
+goto 4663 -59300 400
+goto 9763 -61100 400
+goto 10600 -61000 300 8
+wait 2
+press a 0.8
+wait 6
+end
+@cellb
+goto 27150 -41900 150 10
+face 31000 -41900
+wait 1
+press a 0.8
+wait 6
+press a 0.8
+wait 6
+goto 29200 -42000 300 8
+face 32000 -42000
+wait 2
+press a 0.8
+wait 6
+press a 0.8
+wait 6
+end
+@callA
+autofight 0
+press x 0.3
+wait 6
+goto 32750 -41250 300 8
+press x 0.3
+wait 8
+end
+@guard
+autofight 9000
+press x 0.3
+wait 50
+end
+@to208s
+autofight 9000
+goto 30000 -29500 500
+wait 8
+goto 36000 -29500 500
+wait 15
+goto 39200 -30600 500
+wait 25
+end
+@step1
+autofight 9000
+goto 40700 -31800 500
+wait 40
+end
+@step2
+autofight 9000
+goto 41300 -33000 500
+wait 40
+end
+@snipe
+autofight 16000
+face 41000 -43000
+wait 50
+end
+@step3
+autofight 9000
+goto 41300 -33000 500
+goto 41300 -35500 500
+wait 40
+end
+@charge
+autofight 0
+press x 0.3
+wait 2
+autofight 6000
+goto 41300 -33000 500
+goto 41300 -38000 500
+goto 41300 -42000 500
+goto 41300 -45000 500
+wait 20
+end
+@charge2
+autofight 0
+goto 41300 -35500 500
+autofight 12000
+face 41300 -43000
+wait 45
+end
+@charge3
+rescue 1
+autofight 12000
+goto 41300 -36000 400
+goto 41300 -40000 400
+goto 41300 -44000 400
+end
+@dash
+rescue 1
+autofight 0
+goto 41300 -36000 400
+goto 41300 -40000 400
+goto 41300 -44000 400
+goto 41300 -48000 400
+end
+@tail208
+rescue 1
+autofight 0
+goto 41300 -50400 500
+goto 39500 -52200 500
+goto 38600 -52800 500
+goto 39200 -55200 500
+goto 39800 -55800 500
+press x 0.3
+wait 2
+goto 41300 -64500 400
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@dash2
+rescue 1
+autofight 0
+goto 41300 -36000 400
+goto 41300 -40000 400
+goto 41300 -44000 400
+mash a 5
+goto 41300 -48000 400 4
+mash a 5
+goto 41300 -50400 500
+end
+@dash3
+rescue 1
+autofight 0
+goto 41300 -36000 400
+goto 41300 -40000 400
+goto 41300 -44000 400
+goto 41300 -48000 400
+goto 41300 -50400 500
+goto 39500 -52200 500
+goto 38600 -52800 500
+goto 39200 -55200 500
+goto 39800 -55800 500
+press x 0.3
+wait 2
+goto 41300 -64500 400
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@door208
+rescue 1
+wait 20
+goto 41300 -64500 400
+face 41300 -67000
+wait 1
+press a 0.8
+room 208 20
+end
+@clear201
+rescue 1
+autofight 10000
+goto 39800 -55800 500
+goto 38600 -52800 500
+goto 41300 -48000 500
+goto 41300 -44000 500
+goto 41300 -48000 500
+goto 38600 -52800 500
+goto 39800 -55800 500
+end
+@clearW
+dismiss
+rescue 1
+press x 0.3
+wait 1
+autofight 10000
+goto 41300 -60000 500
+goto 39800 -55800 500
+goto 38600 -52800 500
+goto 41300 -48000 500
+goto 38600 -52800 500
+end
