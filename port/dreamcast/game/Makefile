@@ -3634,6 +3634,7 @@ endif
 
 # BENCHMARK=1: the public benchmark disc (bench.mk; default 0: nothing compiled, image unchanged)
 include bench.mk
+include house_arena27.mk
 # QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
 include qamenu.mk
 

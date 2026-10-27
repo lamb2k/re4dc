@@ -1,3 +1,4 @@
+#include "house_arena27.h"
 // game/trans.cpp: the model renderer. ModelTrans registers a model in the ordering tables,
 // commonScreenMatSub skins its vertices into the primitive buffer, ModelRender / commonModelTrans
 // set up the TEV stages of every material and submit the display lists.
@@ -2747,8 +2748,14 @@ void Render()
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SHADOW_DRAW);
     SetDrawTmpBufType(0);
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
     bio4_AddBgColor();
     if (pG->Debug_flg[0] & 0x00040000) {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
         drawGround(0);
     }
     ExecOt(OT_TYPE_SUBSCRN_NEAR);
@@ -2759,15 +2766,31 @@ void Render()
     // The prior Trans ticket has this exact source frame; native begin and
     // opaque drawing have completed, but source effect callbacks have not.
 #if RE4DC_COARSE
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())re4dc_ps2_fx_common_render(coarse,1);
+    else
+#endif
     re4dc_ps2_fx_common_render(coarse,0);
 #else
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())re4dc_ps2_fx_common_render(0,1);
+    else
+#endif
     re4dc_ps2_fx_common_render(0,0);
 #endif
 #endif
 #if RE4DC_PS2_FX_ADDITIONS
 #if RE4DC_COARSE
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())re4dc_ps2_fx_stage1_render(coarse,1);
+    else
+#endif
     re4dc_ps2_fx_stage1_render(coarse,0);
 #else
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(re4dc_house_arena27_active())re4dc_ps2_fx_stage1_render(0,1);
+    else
+#endif
     re4dc_ps2_fx_stage1_render(0,0);
 #endif
 #endif
@@ -2814,6 +2837,9 @@ void Render()
     GXSetFog(0, 0.0f, 0.0f, FRef(ZNEAR), FRef(ZFAR), c);
     ExecOt(0x15);
     if (Filter09GetbUse() == 1) {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
         Filter09Render(0);
     }
     GXSetDrawSync(0xADEB);
@@ -2845,6 +2871,9 @@ static void ModelRenderBody(cModel* m)
 void ModelRender(cModel* m)
 #endif
 { DSA24_MODEL()
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_model(m))return;
+#endif
 #if defined(RE4DC_OTHER_PROFILE) && RE4DC_OTHER_PROFILE
     OtherActorDraw otherActorDraw(m);
 #endif
@@ -3325,6 +3354,9 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
     }
     if (!(pG->Status_flg[1] & 0x100)) {
         if (MODEL_EXT(m)->pFootShadowTbl != 0 && (m->be_flag & 0x10)) {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
             DrawFootShadow((cEm*) m);
         }
     }
@@ -3734,6 +3766,9 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
     }
     if (!(pG->Status_flg[1] & 0x100)) {
         if (MODEL_EXT(m)->pFootShadowTbl != 0 && (m->be_flag & 0x10)) {
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(!re4dc_house_arena27_active())
+#endif
             DrawFootShadow((cEm*) m);
         }
         if (m->ot_type == 7) {

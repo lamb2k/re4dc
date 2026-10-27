@@ -1,3 +1,14 @@
+#include "include/house_arena27.h"
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+namespace re4dc::house_arena27 {
+#include "world_rebuild27_arena.inc"
+constexpr bool placement(unsigned id){for(unsigned p:placements)if(p==id)return true;return false;}
+constexpr bool matches(int variant,unsigned crc,unsigned bytes){
+    return variant>=0 && variant<3 && mesh_identity[variant][0]==crc && mesh_identity[variant][1]==bytes;
+}
+static_assert(sizeof(mesh_identity)/sizeof(mesh_identity[0])==3U,"Arena requires all three exact mesh identities");
+}
+#endif
 #include "../world_scratch.h"
 #if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
 #if !RE4DC_WORLD_REBUILD27 || !RE4DC_SCENERY_CHUNK || !RE4DC_SCENERY_SELECT_ONLY || !RE4DC_SCENERY_REPLAY_LEAN || !RE4DC_PS2_PRELOAD_LEAN
@@ -6791,6 +6802,15 @@ bool ps2_open(){
     char mpath[48],ppath[48];
     snprintf(mpath,sizeof(mpath),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
     snprintf(ppath,sizeof(ppath),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(ps2w.room==0x101U){
+        const int variant=re4dc_house_arena27_variant();
+        if(variant<0 || variant>=3){re4dc_missing("arena invalid variant");return false;}
+        snprintf(mpath,sizeof(mpath),"/cd/dc/native/r101/arena%d/ps2-world.re4mesh",variant);
+        snprintf(ppath,sizeof(ppath),"/cd/dc/native/r101/arena%d/ps2-world.r4pw",variant);
+        re4dc_log("house arena package: variant=%d mesh=%s policy=%s\n",variant,mpath,ppath);
+    }
+#endif
     re4dc_log("PS2MESH room=%03x open\n",ps2w.room);
 #if RE4DC_SCENERY21_AB
     // SCENERY21_AB (bench disc): arm B reads the sc21 package of a room that has one (dc/native/rXXX/sc21/)
@@ -7032,6 +7052,13 @@ bool ps2_open(){
         re4dc_log("PS2MESH open failed: %s mesh=%u sidecar=%u heap=%d\n",why?why:"?",msize,psize,before);
         return false;
     }
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(ps2w.room==0x101U && !re4dc::house_arena27::matches(re4dc_house_arena27_variant(),
+       ps2w.package.header().crc,ps2w.package.header().bytes)){
+        ps2w.package.close();re4dc_static_free(s);ps2w.parts=nullptr;ps2w.placements=nullptr;
+        re4dc_missing("arena package identity mismatch");return false;
+    }
+#endif
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
 #if RE4DC_GC_ASSET_GATE
     if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
@@ -7055,6 +7082,11 @@ bool ps2_open(){
             );
 #else
         h.crc;
+#endif
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(ps2w.room==0x101U && policySourceCrc!=0x68100b21U){
+        ps2_free();re4dc_missing("arena policy authentication");return false;
+    }
 #endif
 #if defined(RE4DC_WORLD_REBUILD27_BAKE) && RE4DC_WORLD_REBUILD27_BAKE
     ps2w.baked=re4dc::world_bake27::matches(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes);
@@ -7221,6 +7253,9 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+        if(ps2w.room==0x101U)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r101/arena%d/ps2-world.r4sg",re4dc_house_arena27_variant());
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
         if(ps2w.package.is_split())snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world-split.r4sg",ps2w.room);
 #endif
@@ -8039,6 +8074,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+        if(ps2w.room==0x101U && !re4dc::house_arena27::placement(i))continue;
+#endif
 #if RE4DC_PS2_PVS
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
         // Qualification mode ONLY: internal pvs::cur still authenticates source
@@ -8083,9 +8121,15 @@ int ps2_pass(unsigned pass,float zfar){
         if(pvs_cur && pvs::hidden(i))continue;
 #endif
 #if RE4DC_PS2_AREA_HIDE
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+        if(ps2w.room!=0x101U)
+#endif
         if(area::cur && area::hide(pl.placement)){++area::skipped;continue;}
 #endif
 #if RE4DC_PS2_PLACE_GATE
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+        if(ps2w.room!=0x101U)
+#endif
         if(gated && gate::skip(pl.placement)){++gate::skipped;continue;}
 #endif
 #if RE4DC_PS2_PASS_MASK
@@ -8106,6 +8150,9 @@ int ps2_pass(unsigned pass,float zfar){
         // The r11f owner admits only the whole immutable authored group.
         // Its baked placements need no dynamic slot or source-pointer reads.
         if(
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+           ps2w.room!=0x101U &&
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
            !re4dc_source_world_group_claimed() &&
 #endif
@@ -9246,6 +9293,13 @@ extern "C" void re4dc_ps2_mesh_source(unsigned room,const Re4dcModelPart& p){
 // PS2_PRELOAD_LEAN (game30.mk): the open package's part textures for the room preload (native_ui.cpp), in part
 // order with repeats (the caller skips keys it has); 0 past the end or when no package is open.
 extern "C" int re4dc_ps2_mesh_texture(unsigned i,unsigned out[4]){
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+    if(ps2w.storage && ps2w.parts && ps2w.room==0x101U && ps2w.want==0x101U){
+        if(i>=sizeof(re4dc::house_arena27::textures)/sizeof(re4dc::house_arena27::textures[0]))return 0;
+        for(unsigned k=0;k<4;++k)out[k]=re4dc::house_arena27::textures[i][k];
+        return 1;
+    }
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 0;
 #endif

@@ -37,8 +37,17 @@ endif
 ifneq ($(GAME_TICK_LOG),60)
 $(error HOUSE_ARENA27=1 needs GAME_TICK_LOG=60, the existing CPU snapshot window)
 endif
+ifneq ($(WORLD_REBUILD27)$(WORLD_REBUILD27_BAKE)$(PS2_WORLD_DRAW)$(PS2_PRELOAD_LEAN)$(COARSE_LEON),11111)
+$(error HOUSE_ARENA27 needs certified world/bake, PS2 world/preload and converted Leon)
+endif
+ifneq ($(COARSE_WORLD)$(FAR_SHELL),00)
+$(error HOUSE_ARENA27 refuses collision substitutes and far shells)
+endif
+ifeq ($(wildcard $(WORLD_REBUILD27_DIR)/world_rebuild27_arena.inc),)
+$(error HOUSE_ARENA27 requires its private arena identity/placement/texture header)
+endif
 # Root-owned renderer filters use the same default-off switch; there is no new timing implementation.
 $(OBJDIR)/bench.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
-$(OBJDIR)/src/game/trans.o $(OBJDIR)/coarse.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
+$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/coarse.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_HOUSE_ARENA27=1
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_HOUSE_ARENA27_AUTO=$(HOUSE_ARENA27_AUTO) -DRE4DC_HOUSE_ARENA27_BEGIN=$(HOUSE_ARENA27_BEGIN) -DRE4DC_HOUSE_ARENA27_END=$(HOUSE_ARENA27_END) '-DRE4DC_BENCH_NAME="HOUSE ARENA A/B/C"' '-DRE4DC_BENCH_MENU="X: ORIGINAL ONLY  Y: SIMPLIFIED R4  B: BAKED"'
 endif

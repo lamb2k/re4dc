@@ -1051,6 +1051,9 @@ extern "C" void __wrap_OSInit(void)
     re4dc_log("arena27: auto scene=%d variant=%s build=%s\n", g_only + 1, kArenaNames[g_only], RE4DC_BENCH_ID);
     return;
 #endif
+#if RE4DC_HOUSE_ARENA27
+    re4dc_log("arena27: menu ready build=%s auto=%d\n",RE4DC_BENCH_ID,RE4DC_HOUSE_ARENA27_AUTO);
+#endif
     const uint64_t t0 = timer_us_gettime64();
     constexpr unsigned kAuto = 20;
     unsigned shown = ~0u;

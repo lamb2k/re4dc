@@ -1,3 +1,7 @@
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+#include "house_arena27.h"
+#include "trans.h"
+#endif
 // game/trans_ot: the draw ordering tables (OT) — 23 tables (OT_MAX) of depth-bucketed linked
 // lists of OtData {func, data, kind}; each frame the draw code adds callbacks into a table (by
 // camera depth for the world / model tables 17 / 13, or a fixed bucket with AddOtDirect) and the
@@ -531,6 +535,13 @@ int ExecOt(int type)
 #endif
 #if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
                 const unsigned long long otp_t0 = re4dc_otp_now_us(); const unsigned otp_b0 = re4dc_stream_model_bytes_now();
+#endif
+#if defined(RE4DC_HOUSE_ARENA27) && RE4DC_HOUSE_ARENA27
+                // Keep the OT walk, observer scopes and source-owner cleanup.
+                // Only the actual Leon model callback may emit scene content.
+                if(!re4dc_house_arena27_active() ||
+                   ((type==0xBU || type==0xDU || type==0x11U) &&
+                    p->func==(void (*)(void*))ModelRender && re4dc_house_arena27_model(p->data)))
 #endif
                 p->func(p->data);
 #if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
