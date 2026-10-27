@@ -68,6 +68,18 @@ namespace {
 #ifndef RE4DC_BENCH_NAME
 #define RE4DC_BENCH_NAME "BENCHMARK DISC"
 #endif
+#ifndef RE4DC_HOUSE_ARENA27
+#define RE4DC_HOUSE_ARENA27 0
+#endif
+#if RE4DC_HOUSE_ARENA27
+#ifndef RE4DC_HOUSE_ARENA27_AUTO
+#define RE4DC_HOUSE_ARENA27_AUTO 0
+#endif
+static_assert(RE4DC_BENCH_SCENES == 3, "house arena needs exactly three scenes");
+static_assert(RE4DC_HOUSE_ARENA27_BEGIN > 0 && RE4DC_HOUSE_ARENA27_END > RE4DC_HOUSE_ARENA27_BEGIN + 120,
+              "house arena needs warmup and more than 120 measured ticks for the existing CPU snapshot");
+static const char* const kArenaNames[3] = {"original", "simplifiedR4", "baked"};
+#endif
 constexpr int kScenes = RE4DC_BENCH_SCENES;
 #ifndef RE4DC_BENCH_CENSUS
 #define RE4DC_BENCH_CENSUS 0
@@ -522,6 +534,10 @@ void log_results() {
                   "gpu10=%u speed=%u reads=%u reads_ps10=%u wait_ms=%u kos_min=%u end_frame=%u\n",
                   g_run, k + 1, s.name, s.windows, s.drawn, s.ticks, s.vblanks, fps10(s), s.min_fps10, cpu10(s), gpu10(s),
                   speed_pct(s), s.reads, reads_ps10(s), wait_ms(s), s.kos_min, s.end_frame);
+#if RE4DC_HOUSE_ARENA27
+        re4dc_log("arena27: result run=%u scene=%d variant=%s begin=%u end=%u end_frame=%u cpu_n=%u cpu_sum_us=%llu gpu_n=%u gpu_sum_ns=%llu\n",
+                  g_run, k + 1, kArenaNames[k], s.begin, s.end, s.end_frame, s.cpu_n, s.cpu_us_sum, s.rnd_n, s.rnd_sum_ns);
+#endif
         if (RE4DC_BENCH_CENSUS)
             re4dc_log("bench: census arm %c run %u row %d %s esp_avg=%u esp_max=%u hits=%u rigid_parts=%u rigid_verts=%u n=%u\n",
                       g_arm, g_run, k + 1, s.name, cen_avg(s.esp_sum, s.cen_n), s.esp_max, s.hits1 - s.hits0,
@@ -562,6 +578,14 @@ extern "C" {
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name)
 {
     if (no < 1 || no > kScenes) return;
+#if RE4DC_HOUSE_ARENA27
+    if (no != g_file + 1 || begin != RE4DC_HOUSE_ARENA27_BEGIN || end != RE4DC_HOUSE_ARENA27_END) {
+        re4dc_log("arena27: INVALID fixture scene=%d selected=%d begin=%u end=%u\n", no, g_file + 1, begin, end);
+        return;
+    }
+    re4dc_log("arena27: armed run=%u scene=%d variant=%s begin=%u end=%u build=%s\n",
+              g_run, no, kArenaNames[no - 1], begin, end, RE4DC_BENCH_ID);
+#endif
     Scene& s = g_scene[no - 1];
     memset(&s, 0, sizeof(s));
     strncpy(s.name, name ? name : "-", sizeof(s.name) - 1);
@@ -630,6 +654,9 @@ const char* re4dc_bench_next_scene(void)
 {
     if (g_only >= 0) return nullptr;
     if (RE4DC_BENCH_CENSUS) return g_file + 1 < kFiles ? kScenePath[g_file + 1] : nullptr;
+#if RE4DC_HOUSE_ARENA27
+    if (g_cur + 1 < kScenes) g_file = g_cur + 1;   // select data before the next reset/room load
+#endif
     return g_cur + 1 < kScenes ? kScenePath[g_cur + 1] : nullptr;
 }
 // The warp rig, before it parses a fixture: which file it is (BENCH_CENSUS rows).
@@ -653,7 +680,16 @@ void re4dc_bench_census(unsigned esp_live, unsigned hits, unsigned rg_parts, uns
 }
 char re4dc_bench_arm(void) { return g_arm; }
 // The first scene's fixture (the warp rig's first load): scene 1, or the start screen's single scene.
-const char* re4dc_bench_first_scene(void) { return kScenePath[g_only >= 0 ? g_only : 0]; }
+const char* re4dc_bench_first_scene(void) {
+#if RE4DC_HOUSE_ARENA27
+    g_file = g_only >= 0 ? g_only : 0;   // first fixture, before room data are opened
+#endif
+    return kScenePath[g_only >= 0 ? g_only : 0];
+}
+#if RE4DC_HOUSE_ARENA27
+// Test-only data selector: 0 original, 1 simplifiedR4, 2 baked. Valid before room entry.
+int re4dc_house_arena27_variant(void) { return g_file; }
+#endif
 int re4dc_bench_scene_no(void) { return g_cur + 1; }
 // The warp rig, each game tick of the scene's room before re4dc_bench_tick: Ganados alive (SceCountEmAlive(0x10, 0x20)).
 void re4dc_bench_alive(int n) { g_alive_now = n; }
@@ -687,6 +723,9 @@ const char* re4dc_bench_results(void)
     ++g_run;
     re4dc_log("bench: A pressed: run %u\n", g_run);
     g_cur = 0;
+#if RE4DC_HOUSE_ARENA27
+    g_file = g_only >= 0 ? g_only : 0;
+#endif
     if (RE4DC_BENCH_CENSUS) for (int k = 0; k < kScenes; ++k) g_scene[k].defined = false;
     return kScenePath[g_only >= 0 ? g_only : 0];
 }
@@ -707,6 +746,11 @@ void re4dc_bench_window(unsigned drawn, unsigned ticks, unsigned vblanks, unsign
         for (int l = 0; l < 6; ++l) { ta_d[l] = tc[l] - g_ta_prev[l]; g_ta_prev[l] = tc[l]; }
     }
     if (!include || !vblanks) return;
+#if RE4DC_HOUSE_ARENA27
+    // The immediately following PACE vmu line belongs to this accepted whole window.
+    re4dc_log("arena27: window run=%u scene=%d frame=%u drawn=%u ticks=%u vblanks=%u gpu_n=%u\n",
+              g_run, g_cur + 1, g_room_frame, drawn, ticks, vblanks, rnd_n);
+#endif
     ++s.windows;
     for (int l = 0; l < 5; ++l) s.ta_words[l] += ta_d[l];
     s.ta_scenes += ta_d[5];
@@ -848,7 +892,11 @@ void re4dc_tail_begin(int skip)
             }
             Scene& s = g_scene[g_cur];
             const unsigned vb = vbnow - f_vb0;
-            const bool measured = s.defined && s.measuring;
+            const bool measured = s.defined && s.measuring
+#if RE4DC_HOUSE_ARENA27
+                                  && g_room_frame > s.begin   // exclude the picture already open at warmup end
+#endif
+                                  ;
             const unsigned ta = ta_tag == f_seq && ta_t > tl_t0 ? us_of(ta_t - tl_t0) : 0;
             // the newest finished render (this picture's or, pipelined, the previous one's), each render counted once
             const bool fresh = done_tag && done_tag != tl_counted_tag;
@@ -996,6 +1044,13 @@ extern "C" void __wrap_OSInit(void)
     scenario_menu(fb);
     return;
 #endif
+#if RE4DC_HOUSE_ARENA27 && RE4DC_HOUSE_ARENA27_AUTO
+    g_only = RE4DC_HOUSE_ARENA27_AUTO - 1;
+    g_file = g_only;
+    g_masked = true;
+    re4dc_log("arena27: auto scene=%d variant=%s build=%s\n", g_only + 1, kArenaNames[g_only], RE4DC_BENCH_ID);
+    return;
+#endif
     const uint64_t t0 = timer_us_gettime64();
     constexpr unsigned kAuto = 20;
     unsigned shown = ~0u;
@@ -1010,6 +1065,7 @@ extern "C" void __wrap_OSInit(void)
             fb_center(fb, y, 3, 4, kWhite, RE4DC_BENCH_NAME); y += 36;
             fb_center(fb, y, 3, 4, kWhite, "THIS IS NOT THE GAME"); y += 50;
             fb_center(fb, y, 2, 3, kYellow, "RE4 DREAMCAST PORT - PERFORMANCE TEST"); y += 36;
+#if !RE4DC_HOUSE_ARENA27
             const char* body_std[] = {"THIS DISC ONLY MEASURES PERFORMANCE.",
                                   "IT CANNOT BE PLAYED AND SAVES NOTHING.",
                                   "TO PLAY, USE THE CURRENT TEST RELEASE:",
@@ -1025,8 +1081,18 @@ extern "C" void __wrap_OSInit(void)
             const char* body_cmp[] = {"THIS DISC ONLY MEASURES PERFORMANCE.", "IT CANNOT BE PLAYED AND SAVES NOTHING.", "",
                                       run_line, "THEN THE RESULTS (Y: NEXT PAGE).", "AFTER START DO NOT TOUCH THE CONTROLLER.",
                                       "PHOTOGRAPH EVERY RESULTS PAGE."};
+#endif
+#if RE4DC_HOUSE_ARENA27
+            const char* body_arena[] = {"ONE LEON AND ONE COMPLETE HOUSE.", "A: ORIGINAL  B: SIMPLIFIED R4  C: BAKED",
+                                       "START RUNS A / B / C WITH SOFT RESETS.", "WARMUP AND LOADING ARE NOT MEASURED.",
+                                       "AFTER START DO NOT TOUCH THE CONTROLLER.", "PHOTOGRAPH BOTH RESULTS PAGES.",
+                                       "THIS DISC SAVES NOTHING."};
+            const char* const* body = body_arena;
+            const int nbody = 7;
+#else
             const char* const* body = RE4DC_BENCH_CAPCMP ? body_cmp : body_std;
             const int nbody = RE4DC_BENCH_CAPCMP ? 7 : 9;
+#endif
             if (kTight) {
                 // the scene menu (a disc of more than two scenes)
                 const char* menu[] = {"START: ALL SCENES IN ORDER", RE4DC_BENCH_MENU, RE4DC_BENCH_MENU2, RE4DC_BENCH_MENU3};
