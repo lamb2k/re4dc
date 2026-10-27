@@ -1541,6 +1541,10 @@ if os.path.isdir(WINDOWS26D):
 SMDREL26D = os.environ.get('SMDREL26D', '/root/re4data/private/arcuse26-20261026')
 if os.path.isdir(SMDREL26D):
     DATA['smdrel26'] = {'smdrel': {'st1/r11f.dar': SMDREL26D + '/r11f/MAINSCENARIO.re4mesh.json'}}
+# smdrel26b (lane arcuse26 10-26): the same release for st2/r200 (57 SMD BINs, 1,151,008 B; PS2 world room), on the
+# composed st2/r200.dar as the recipe stands. Summary of convert_room_bins.py on the GC r200.das, same options.
+if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
+    DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
