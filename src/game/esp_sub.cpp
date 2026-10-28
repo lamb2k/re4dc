@@ -1115,7 +1115,9 @@ enum { kEssLayer = 2 };
 extern "C" {
 u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
 }
-#if defined(RE4DC_ESP_SETUP_LEAN) && RE4DC_ESP_SETUP_LEAN && \
+// FX_EARLY_CUT (lane fxcut28, effects30.mk) enables this early Essential decline on its own, without ESP_SETUP_LEAN's
+// header sharing: the unconditional cuts return before the matrix / projection / sprite build.
+#if ((defined(RE4DC_ESP_SETUP_LEAN) && RE4DC_ESP_SETUP_LEAN) || (defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT == 1)) && \
     !(defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG) && \
     !(defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS) && !defined(RE4DC_MIST_CUT)
 #define RE4DC_ESP_ESSENTIAL_EARLY 1

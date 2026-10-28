@@ -258,6 +258,25 @@ $(error FX_NONE_CUT_PACK is 0 or 1 and needs FX_PS2_NONE_CUT=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_NONE_CUT_PACK=1
 endif
+# FX_EARLY_CUT=1 (lane fxcut28 2026-10-28; render only, default 0): the effect cuts decide before the work they skip.
+#                    FX_PS2_NONE_CUT declines a dropped picture inside load() before eviction / budget / file I/O (no
+#                    upload of a picture it then discards) and remembers the image descriptor, so later frames skip the
+#                    resolve; the Essential filter (FX_LEVEL=3) declines its unconditional cuts before the matrix and
+#                    projection (the early half of ESP_SETUP_LEAN, without its header sharing). Same sprites drawn.
+# FX_CUT_LOG=1 (test only, default 0): "fx cut log:" every 120 effect frames: sprites drawn, PS2-none cuts, early
+#                    skips, texture package opens, missing / resident-only declines (both arms of an FX_EARLY_CUT A/B).
+FX_EARLY_CUT ?= 0
+ifneq ($(FX_EARLY_CUT),0)
+ifneq ($(filter-out 1 2,$(FX_EARLY_CUT)),)
+$(error FX_EARLY_CUT is 0, 1 or 2 (test only: the texture half without the Essential half))
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_EARLY_CUT=$(FX_EARLY_CUT)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_EARLY_CUT=1
+endif
+FX_CUT_LOG ?= 0
+ifneq ($(FX_CUT_LOG),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_CUT_LOG=1
+endif
 # ITEMS_CENSUS=1 (lane items 2026-10-14; diagnostic, test builds only, default 0; log only): "itemcen:" lines, the
 #                    ModelData signature of every item model (cItmSys::DataLoad) and effect model (EspDataLoad) the game
 #                    registers; tools/d367/items_census.py counts the GameCube fallbacks against the PS2 library.
