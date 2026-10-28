@@ -72,3 +72,10 @@ Edit `recipe.conf` (CH2, DATA, KSETS, data dirs, CH2_REF) in the same landing, t
   (vertex/poly load; the emulator has no separate vertex counter); FAIL above +SPEED_GPU_TOL_PCT (5) % or when the fast
   run did not reach the scene's room. Numbers are labelled cache-model Flycast.
 - **RR_SPEED_REF** = the commit the live release's tag points at. The release lane bumps it at publish (next: 92cec32f).
+
+## 2026-10-28 (lane guards28, round 3; coordinator decision (a))
+
+- SPEED-GPU cross runs with no enemies: the QA disc of each commit is built with `speed/gpu-presets/r101x.txt`
+  (RR_QA_PRESET_DIR in rr-qa.sh replaces the same-named mkqa preset), r101x plus every r101 Ganado `dead`
+  (warp.py R101_BELL_DEAD), so the cross compares rendering only. Crowd cost stays in the CPU row's cross and in bell/farm.
+- Cache key = commit sha8 + a hash of speed/gpu-presets (`g<sha8>p<hash6>`): cached discs and stats rebuild from the key.

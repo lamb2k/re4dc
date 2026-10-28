@@ -60,8 +60,8 @@ case "${1:-status}" in
     for f in "$HERE"/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/$(basename "$f")"; done
     # speed/ (lane guards28 10-28): the SPEED row's scripts and scene warps
     mkdir -p "$RR_HOME/bin/speed/warps"
-    mkdir -p "$RR_HOME/bin/speed/gpu-keys"
-    for f in "$HERE"/speed/* "$HERE"/speed/warps/* "$HERE"/speed/gpu-keys/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/${f#"$HERE"/}"; done
+    mkdir -p "$RR_HOME/bin/speed/gpu-keys" "$RR_HOME/bin/speed/gpu-presets"
+    for f in "$HERE"/speed/* "$HERE"/speed/warps/* "$HERE"/speed/gpu-keys/* "$HERE"/speed/gpu-presets/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/${f#"$HERE"/}"; done
     chmod +x "$RR_HOME"/bin/*.sh "$RR_HOME"/bin/speed/*.sh
     ( crontab -l 2>/dev/null | grep -v 'rr-cycle.sh' || true; echo "$CRON" ) | crontab -
     echo "installed $(ls "$RR_HOME/bin" | wc -l) files; cron: $(crontab -l | grep -c rr-cycle.sh) line" ;;
