@@ -1,0 +1,15 @@
+name bench-r101-cross
+# Public benchmark disc (BENCHMARK=1, bench.mk), scene 1 = /cd/dc/warp.txt: benchmark-r101 (lane crowd12, 2026-10-14)
+# unchanged: the r101 square, Leon by the burning cross / pyre facing the square, the whole crowd alerted at room frame
+# 30 and converging on him, god mode, no pad input (Leon stands still, the camera stays on the same view). Full effects
+# on screen (camera haze and mist, pyre fire, torches); Ganados at the R101_ALIVE_CAP=6 rule. Settle room frames 0..299
+# (10 s), measure 300..1199 (30 s of game time).
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+bench 1 300 1200 R101 CROSS

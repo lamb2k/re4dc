@@ -1,0 +1,12 @@
+name farm-midfight
+# Scenario disc (lane scenario19, user 10-19): the r103 farm partway through its fight. Leon enters from the r101
+# door as in play (no god mode, no scripted input after the warp). The rig kills the Ganado nearest him through
+# the game own damage path (room frame 150): its body lies as in play, the room kill count runs, and the
+# live Ganados stay at cap 4 with the held ones released as further kills happen. alivelog prints the live count.
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default
+killnear
+kill 0x12 150 0x103
+alivelog 150
