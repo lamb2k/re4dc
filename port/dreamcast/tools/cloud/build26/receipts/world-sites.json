@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "scope": "Execute production world admission and shared-strip audit sites on host.\n\nThe selector's chunk_ok and the chunk-submit outcode/dispatch functions are\nextracted verbatim. Only the final SQ writer and callback use bounded test\nsinks. Verify first-refusal precedence, intentional culls, null callbacks,\ncapacity/depth precedence, callback failure propagation and paused counters.\n",
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-DRE4DC_DRAW_FALLBACK_AUDIT=1",
+    "-DRE4DC_PS2_PVS=1",
+    "-DRE4DC_PS2_INTERIOR_CULL=1",
+    "-DRE4DC_QUALITY_ASSETS=1",
+    "/workspace/scratch/206a5d423cac/build26-world-sites133-final/sites.cpp",
+    "-o",
+    "/workspace/scratch/206a5d423cac/build26-world-sites133-final/sites"
+  ],
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build26/world_audit_sites.py": "dbbd010ba66ee1ab2a9e5414f9afd5907dccc4c9a9831abc3f0776223fdd055f",
+    "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "fae89ab1aa26963cae38412596afc4b0fc574ec78b9409f4632be30e7fe30d07",
+    "port/dreamcast/game/platform/chunk_submit.cpp": "50b902310ca2f5f8bef73e44d539d4ea88f1f08c1b4b391ff3bff91dbfa8adbb",
+    "port/dreamcast/game/platform/include/draw_fallback_audit.h": "91f0289f1291e8cc64e88d63ef0c7764e4b90fbf606ce33e569b68ef11829749",
+    "port/dreamcast/game/platform/include/draw_fallback_model.def": "887311c6449585101111ddebda48696e6137e6841fb9d9b188ee4b4d264330b1",
+    "port/dreamcast/game/platform/include/draw_fallback_other.def": "9dd56aaa649009f98d9a2bdf7e3e78fd7a9eb31e804f5596db0fcab3c3731c15",
+    "port/dreamcast/game/platform/include/draw_fallback_world.def": "a75ff3edf352b357f54039d3ddc2c2306d21d8d43d3b292be49d35269cecc5cd"
+  },
+  "extracted_sha256": {
+    "SELECTOR": "1211024221e2a2609638d2e938e4d99e880c26ab68da8fcfe1d429139a815fa3",
+    "CODES": "d94af74bbc600990114bab0ec209e395e4e95877fd9af39a7ef6fefb7b87e33f",
+    "STRIPS": "4db44ff8fe4990ecdc6f106a9c175f9e950db61698281d7dbbd516c12471c0ad"
+  },
+  "selector_cases": 128,
+  "strip_cases": 640
+}

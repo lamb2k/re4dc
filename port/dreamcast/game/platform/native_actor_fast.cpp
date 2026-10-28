@@ -1,3 +1,11 @@
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
+#define DFA26_MODEL_SLOW(reason, n, ...) { DFA26_MODEL_HIT(reason, n) __VA_ARGS__ }
+#else
+#define DFA26_MODEL_HIT(reason, n)
+#define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
@@ -47,6 +55,12 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #endif
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
+#endif
+#ifndef RE4DC_ACTOR_CLIP_FRONT26
+#define RE4DC_ACTOR_CLIP_FRONT26 0
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+#include "include/actor_clip_front26.hpp"
 #endif
 #ifndef RE4DC_ACTOR_CLIP_REUSE
 #define RE4DC_ACTOR_CLIP_REUSE 0
@@ -1838,6 +1852,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
 #endif
             return &f;
         }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorFramePrepare, 1)
+#endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
 #if RE4DC_GC_ASSET_GATE
@@ -1889,6 +1906,11 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
                 f.dirs_fold[0] = NAN;  // no directions built yet
             }
             ++stats.skinned_parts;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if (!f.skin_positions) re4dc::dfa26::hit(re4dc::dfa26::ActorSkinTable);
+        } else {
+            re4dc::dfa26::hit(re4dc::dfa26::ActorSkinSource);
+#endif
         }
     }
     float M[3][4];
@@ -2246,7 +2268,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
     // ambient/material (approximation); B28_WHY still records it.
     if (S.ambient_vertex || S.material_vertex) B28_WHY(1);
 #else
-    if (S.ambient_vertex || S.material_vertex) { B28_WHY(1); return false; }  // per-vertex colour: slow path
+    if (S.ambient_vertex || S.material_vertex) { DFA26_MODEL_HIT(ActorLightVertex, 1) B28_WHY(1); return false; }  // per-vertex colour: slow path
 #endif
     if (!S.enable) {
         L.constant = true;
@@ -2257,7 +2279,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
 #if RE4DC_ACTOR_LIGHT_CAP
     if (S.diffuse != 2 || !caps255) B28_WHY(2);  // folds anyway (clamped diffuse, the fast kernel's 1.0x cap)
 #else
-    if (S.diffuse != 2 || !caps255) { B28_WHY(2); return false; }
+    if (S.diffuse != 2 || !caps255) { DFA26_MODEL_HIT(ActorLightScale, 1) B28_WHY(2); return false; }
 #endif
 #if RE4DC_LEON_LIGHT_HEADROOM
     { const float g = leon_gain(S); for (unsigned c = 0; c < 3; ++c) scale[c] *= g; }
@@ -2273,7 +2295,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
     // part's own normal matrix, (modelview 3x3)^-T, since Leon's roles do not share one rotation.
     float Np[12];
     if (N[3] == 1.0e30f) {
-        if (!leon_part_normal(m, Np)) return false;
+        if (!leon_part_normal(m, Np)) DFA26_MODEL_SLOW(ActorLightBasis, 1, return false;)
         N = Np;
     }
 #endif
@@ -2322,7 +2344,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
             continue;
         }
 #endif
-        if (L.count == 3) { B28_WHY(3); return false; }  // fourth significant light: slow path
+        if (L.count == 3) { DFA26_MODEL_HIT(ActorLightOverflow, 1) B28_WHY(3); return false; }  // fourth significant light: slow path
         float* o = L.dir[L.count];
         o[0] = (N[0] * lx + N[4] * ly + N[8] * lz) * f.nq;
         o[1] = (N[1] * lx + N[5] * ly + N[9] * lz) * f.nq;
@@ -2509,12 +2531,12 @@ const ProbeEntry& probe_of(const Re4dcModelPart& p) {
 }
 // The part's Lights from its actor's probe; false: not eligible / not representable (build_lights then runs).
 bool probe_lights(const Re4dcModelPart& p, const Frame& f, Lights& L) {
-    if (!probe_eligible(p)) return false;
+    if (!probe_eligible(p)) DFA26_MODEL_SLOW(ActorProbeDecline, 1, return false;)
     const SourceLighting& S = *p.lighting;
     float scale[3];
     for (unsigned c = 0; c < 3; ++c) {
         scale[c] = S.material[c] * S.tev_scale;
-        if (!(scale[c] >= 255.0f)) { ++probe_stats.declined; return false; }  // build_lights' caps255 condition
+        if (!(scale[c] >= 255.0f)) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }  // build_lights' caps255 condition
     }
 #if RE4DC_LEON_LIGHT_HEADROOM
     { const float g = leon_gain(S); for (unsigned c = 0; c < 3; ++c) scale[c] *= g; }
@@ -2523,11 +2545,11 @@ bool probe_lights(const Re4dcModelPart& p, const Frame& f, Lights& L) {
     float Np[12];
     const bool leon = N[3] == 1.0e30f;
     if (leon) {
-        if (!leon_part_normal(p.modelview, Np)) { ++probe_stats.declined; return false; }
+        if (!leon_part_normal(p.modelview, Np)) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }
         N = Np;
     }
     const ProbeEntry& e = probe_of(p);
-    if (!e.ok) { ++probe_stats.declined; return false; }
+    if (!e.ok) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }
     lights_reset(L);
     L.source = &S;
     L.probe = true;
@@ -3538,6 +3560,9 @@ struct Part {
     Re4dcModelPacket packet{};
     Cache cache{};
     unsigned used = 0, input = 0, output = 0, primed = 0;
+#if RE4DC_ACTOR_CLIP_FRONT26
+    unsigned clip_vertices = 0; // current meshlet, validates cached clip indices
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
     // Unlike flags/oargb, this must start fresh for each Part even when a OneWindow reuses its cache.
     unsigned flat_primed = 0;
@@ -3784,12 +3809,19 @@ struct Part {
         re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
         re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorClipStrip, 1)
+#endif
         ++stats.fallback_runs;
-#if RE4DC_ACTOR_CLIP_REUSE
-        return re4dc::actor_clip::reuse_strip(n,
+#if RE4DC_ACTOR_CLIP_FRONT26
+        return re4dc::actor_clip26::walk_strip<RE4DC_ACTOR_CLIP_REUSE != 0, kOcNear | kOcFar>(
+            index, n, cache.v, cache.oc, clip_vertices, p.cull, clip.width, clip.height,
             [&](unsigned corner, re4dc::render::RenderVertex& v, float& opacity) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
                 re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
 #endif
                 const unsigned li = index[corner] & 127U;
                 float w[3], nn[3];
@@ -3810,7 +3842,61 @@ struct Part {
             [&](const re4dc::render::RenderVertex* in, const float* opacity) {
                 pvr_vertex_t triangles[6];
                 const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
-                ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
+            ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
+                if (uv16) pack_uv16(triangles, 3 * m, false);
+                if (m && !room(3 * m)) return false;
+                put(triangles, 3 * m); output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(m);
+#endif
+                return true;
+            },
+            [&](const pvr_vertex_t* triangles) {
+                if (!room(3)) return false;
+                put(triangles, 3); ++output;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(1);
+#endif
+                return true;
+            });
+#elif RE4DC_ACTOR_CLIP_REUSE
+        return re4dc::actor_clip::reuse_strip(n,
+            [&](unsigned corner, re4dc::render::RenderVertex& v, float& opacity) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
+                const unsigned li = index[corner] & 127U;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
+#endif
+                float w[3], nn[3];
+                world_of(f, p, r, li, w, nn);
+                v = {};
+                float x = w[0], y = w[1], z = w[2];
+                v.position.world_x = x; v.position.world_y = y; v.position.world_z = z;
+                v.position.depth = -z;
+                if (z != 0.0f) project(x, y, z, &projection);
+                v.position.x = x; v.position.y = y; v.position.z = z;
+                v.u = uv16 ? unpacked_u(cache.v[li]) : cache.v[li].u; v.v = cache.v[li].v;
+                const u32 rgb = cache.v[li].argb;
+                v.light_red = float((rgb >> 16) & 255) * (1.0f / 255.0f);
+                v.light_green = float((rgb >> 8) & 255) * (1.0f / 255.0f);
+                v.light_blue = float(rgb & 255) * (1.0f / 255.0f);
+                opacity = float(colors ? colors[r.ci(li) * 4 + 3] : (p.alpha_state & 255)) * (1.0f / 255.0f);
+            },
+            [&](const re4dc::render::RenderVertex* in, const float* opacity) {
+                pvr_vertex_t triangles[6];
+                const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
+            ++stats.fallback_triangles;
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
                 re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
 #endif
@@ -3834,6 +3920,9 @@ struct Part {
                 re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
 #endif
                 const unsigned li = index[tri[k]] & 127U;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
+#endif
                 float w[3], nn[3];
                 world_of(f, p, r, li, w, nn);
                 auto& v = in[k];
@@ -3852,6 +3941,9 @@ struct Part {
             }
             pvr_vertex_t triangles[6];
             const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
             ++stats.fallback_triangles;
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
             re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
@@ -4166,6 +4258,9 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
     AvkPos& a = setup.args;
     a.pos = f.positions; a.uv = e.p.uv;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkPos a;
     a.pos = f.positions; a.uv = e.p.uv; a.rs = r.stride * 2U;
 #endif
@@ -4288,6 +4383,9 @@ unsigned avk_lights_n16(Part& e, const Lights& L, const Records& r, unsigned n) 
     const auto kernel = setup.kernel;
     a.rs = r.stride * 2U;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
     a.dirs = skin ? f.skin_dirs : &L.dir[0][0]; a.ready = f.dirs_ready; a.entries = f.palette_entries;
@@ -4372,6 +4470,9 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     AvkLight& a = setup.args;
     a.nrm = f.normals; a.color = L.color; a.alpha = e.alpha;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
 #endif
@@ -4573,6 +4674,9 @@ void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bo
 #endif
     if (i == n) { stats.position_transforms += n; return; }
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorPositionFallback, n - i)
+#endif
     if (f.mode != kSkin) load_xmtrx(f.screen);
     while (i < n) {
         int palette = 0;
@@ -4648,6 +4752,9 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #endif
     if (done == n) return;
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorLightFallback, n - done)
+#endif
     LightConst k{};
     k.cap = 255.0f;
     load_xmtrx(L.color);
@@ -4709,6 +4816,9 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #endif
 // Pass 2 (exact, slow): the generic path's per-vertex evaluator.
 void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorLightExact, n)
+#endif
 #if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
     b28::verts(n);
 #endif
@@ -4896,6 +5006,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
     re4dc_gcasset::HandDerivationScope gcasset_mutation(&b,e.p.stream_bytes);
 #endif
     // Rebake: light every level-0 record into its colour field.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::ActorBakeRelight);
+#endif
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     u16* records = reinterpret_cast<u16*>(base + b.rec4 * 4U);
     u32 clamped = 0;
@@ -5229,7 +5342,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #endif
         ) & ~31U;
         u8* work = out && room ? static_cast<u8*>(scratch(room)) : nullptr;
-        if (!work) { ++stats.workspace_misses; workspace_top = mark; return nullptr; }
+        if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return nullptr; }
         const bool opaque = p.blend == 0;
 #if defined(RE4DC_ACTOR_TEST)
         const double t0 = test_now_us();
@@ -5298,13 +5411,16 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #endif
         ) & ~31U;
     u8* work = out && rest ? static_cast<u8*>(scratch(rest)) : nullptr;
-    if (!work) { ++stats.workspace_misses; workspace_top = mark; return nullptr; }
+    if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return nullptr; }
     Converter c(p, sort, out, want, Arena{work, rest}, false);  // per submit: no LOD, unbaked
 #if RE4DC_ACTOR_BACKFACE_CONE
     c.abc_no_split = true;
 #endif
     if (!c.run()) { ++stats.conversion_rejects; workspace_top = mark; return nullptr; }
     workspace_top = unsigned(out - workspace) + ((c.bytes() + 31U) & ~31U);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorTransient, 1)
+#endif
     ++stats.transient_conversions;
     return reinterpret_cast<const BlobHeader*>(out);
 }
@@ -5369,7 +5485,7 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     if(!work)gcasset_mutation.complete(); // the only owned write was the completed flag clear
 #endif
-    if (!work) { ++stats.workspace_misses; workspace_top = mark; return; }
+    if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return; }
     u8* w = gx;
     auto put16 = [&](unsigned v) { *w++ = u8(v >> 8); *w++ = u8(v); };
     const u16* records = reinterpret_cast<const u16*>(stream + b.rec4 * 4U);
@@ -5597,7 +5713,7 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
         skins[i]={info,position_buffer,palette,entries,0};++stats.skin_registered;return 1;
     }
 #endif
-    if (skin_count == kSkins) return 0;
+    if (skin_count == kSkins) DFA26_MODEL_SLOW(ActorSkinRegistry, 1, return 0;)
     skins[skin_count++] = {info, position_buffer, palette, entries, 0};
     ++stats.skin_registered;
     return 1;
@@ -5639,6 +5755,9 @@ extern "C" void re4dc_actor_materialize(const Re4dcModelPart* p) {
     if (!e || e->materialized) return;
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries)return; // no source palette was deferred
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
 #endif
     re4dc_skin_materialize(e->info, e->palette);
     e->materialized = 1;
@@ -5683,6 +5802,9 @@ extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p) {
     if(!e->palette || !e->entries)return 0; // never materialize a placeholder
 #endif
     if (!e->materialized) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
+#endif
         if (!re4dc_skin_materialize(e->info, e->palette)) return 0;
         e->materialized = 1;
         ++stats.materialized_infos;
@@ -5995,7 +6117,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
     }
 #endif
-    if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+    if (!part || !qualifies(*part)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
@@ -6014,7 +6136,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
-        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+        near_distance <= 0.0f || far_distance <= near_distance) { DFA26_MODEL_HIT(ActorProjection, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
     const BlobHeader* blob = blob_of(p);
@@ -6024,7 +6146,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     PXF_SPAN(cls_us, pxt);
 #endif
     if (kLodBuild && blob && (blob->flags & kLodPending)) relod(p, crowd_class > 0);
-    if (!blob && !(blob = convert(p))) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+    if (!blob && !(blob = convert(p))) { DFA26_MODEL_HIT(ActorConvert, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
     if (p.cull == 3) { re4dc_model_result(0, 0, 0); PXF_EXIT(kCull3); return 1; }
@@ -6261,6 +6383,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         }
     }
     const bool rigid_flat = rigid && rigid_px < RE4DC_RIGID_FLAT_PX;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (rigid && !rigid_flat) re4dc::dfa26::hit(re4dc::dfa26::ActorRigidFull);
+#endif
 #endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
@@ -6289,6 +6414,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_ACTOR_UV16
         re4dc_model_next_header_pcw(pcw_set, pcw_clear);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorPacketPath, 1)
+#endif
         if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
             RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
             re4dc_model_result(2, 0, 0);
@@ -6298,6 +6426,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         e.cache.v = static_cast<pvr_vertex_t*>(e.packet.vertices) + e.packet.capacity;
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
+#endif
 
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     const unsigned long long pxf_l0 = re4dc_otp_now_us();
@@ -6429,6 +6560,16 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (!abc || !abc[mi].k) re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#else
+        re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#endif
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+        e.clip_vertices = nv;
+#endif
         unsigned all, any;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
         chunk_positions(e, r, nv, k, s16_uv, all, any);
@@ -6452,6 +6593,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         pass_fast_only(e, lights, r, nv);
 #else
         if (lights.constant) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (e.colors) re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#else
+            re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#endif
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
             else
@@ -6521,7 +6669,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (rigid) { ok = rigid_strips(e, r, index, nv, ni, nt, any); continue; }
 #endif
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
-        else ok = e.strips(r, index, ni);
+        else DFA26_MODEL_SLOW(ActorStripScan, 1, ok = e.strips(r, index, ni);)
 #endif
     }
 #if RE4DC_ACTOR_DIRECT
@@ -6649,6 +6797,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
 #else
             return f;
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorFramePrepare, 1)
+#endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
 #if RE4DC_GC_ASSET_GATE
@@ -6692,6 +6843,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
 #endif
         f.dirs_fold[0] = NAN;  // no directions built yet
     }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!f.skin_positions) re4dc::dfa26::hit(re4dc::dfa26::ActorSkinTable);
+#endif
     ++stats.skinned_parts;
     if (!memo.valid || !same_words(memo.modelview, p.modelview, 12) || !same_words(memo.projection, p.projection, 7) ||
         !same_words(memo.viewport, p.viewport, 6)) {
@@ -6758,7 +6912,7 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
     if (known) { se = known; src = *known_src; }
-    else if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
+    else if (!one_qualifies(p, se, src)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; return 0; }
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
@@ -6777,7 +6931,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
-    if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
+    if (!one_qualifies(p, se, src)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; return 0; }
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
@@ -6788,14 +6942,14 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
-        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; return 0; }
+        near_distance <= 0.0f || far_distance <= near_distance) { DFA26_MODEL_HIT(ActorProjection, 1) ++stats.declined; return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
     const BlobHeader* blob = blob_of(p);
     int crowd_class = 0;
     if constexpr (kCrowd) crowd_class = re4dc_actor_model_class(p.model, p.info);
     if (kLodBuild && blob && (blob->flags & kLodPending)) relod(p, crowd_class > 0);
-    if (!blob && !(blob = convert(p))) { ++stats.declined; return 0; }
+    if (!blob && !(blob = convert(p))) { DFA26_MODEL_HIT(ActorConvert, 1) ++stats.declined; return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
     if (p.cull == 3) { re4dc_model_result(0, 0, 0); return 1; }
@@ -7001,6 +7155,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             }
             w.open = true; w.sq = w.direct.sq; w.slots = 0; w.primed = 0;
         } else {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            DFA26_MODEL_HIT(ActorPacketPath, 1)
+#endif
             if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
                 RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
                 re4dc_model_result(2, 0, 0);
@@ -7016,6 +7173,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         e.cache.v = static_cast<pvr_vertex_t*>(w.direct.scratch);
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
+#endif
 
     APROF_SPAN(aprof_lit0, APROF_LIT);
     const SourceLighting& S = *p.lighting;
@@ -7164,6 +7324,16 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             }
         }
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (!abc || !abc[mi].k) re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#else
+        re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#endif
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+        e.clip_vertices = nv;
+#endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
         APROF_SPAN(aprof_pos, APROF_POS);
@@ -7184,6 +7354,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         pass_fast_only(e, lights, r, nv);
 #else
         if (lights.constant) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (e.colors) re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#else
+            re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#endif
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
             else
@@ -7251,7 +7428,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         }
 #else
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
-        else ok = e.strips(r, index, ni);
+        else DFA26_MODEL_SLOW(ActorStripScan, 1, ok = e.strips(r, index, ni);)
 #endif
         APROF_STOP(aprof_pack);
     }
@@ -7496,6 +7673,11 @@ unsigned re4dc_actor_plan_on = 1;
 alignas(32) unsigned char re4dc_actor_plan_store[RE4DC_ACTOR_PLAN_STORE];
 void re4dc_actor_plan_note(unsigned kind, int hit, int bad) {
     if (kind >= APLAN_KINDS) return;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    static_assert(re4dc::dfa26::ActorPlanMat - re4dc::dfa26::ActorPlanBind + 1 == APLAN_KINDS,
+                  "Build 26 plan reasons retain the APLAN kind order");
+    if (!hit) re4dc::dfa26::hit(static_cast<re4dc::dfa26::Reason>(re4dc::dfa26::ActorPlanBind + kind));
+#endif
     ++aplan_checks[kind]; aplan_hits[kind] += hit != 0; aplan_bad[kind] += bad != 0;
     if (frame_serial - aplan_log_frame < 600U) return;
     aplan_log_frame = frame_serial;

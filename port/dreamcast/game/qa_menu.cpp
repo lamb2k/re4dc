@@ -1,3 +1,7 @@
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "platform/include/draw_fallback_audit.h"
+#include "platform/include/draw_fallback_link26.hpp"
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "platform/include/draw_setup_audit.h"
 #endif
@@ -263,7 +267,14 @@ const char* wm_shell_name() { return re4dc_qa_wshell == 1 ? "ON" : re4dc_qa_wshe
 // The game side (dbgwarp_bridge.cpp qa_poll, at menu open): room, Ganados alive, heap 4 free, preset name.
 struct QaGame { unsigned room; int alive, heap4; char preset[24]; };
 QaGame g_game;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+char g_diag[12288];            // existing 8 KiB DSA snapshot plus compact fallback rows
+#else
+char g_diag[7168];             // existing 3 KiB QA snapshot plus 4 KiB of compact fallback rows
+#endif
+unsigned g_diag_page;
+#elif defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 char g_diag[8192];             // sealed draw audit + existing rows + log; QR keeps all pages
 unsigned g_diag_page;
 #elif defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
@@ -333,7 +344,7 @@ int scratch_rows(int at) {
 
 void snap_diag() {
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
     g_diag_page=0;
 #endif
     int a = 0;
@@ -410,6 +421,12 @@ void snap_diag() {
                  s.avoided[0], s.avoided[1], s.avoided[2], s.avoided[3], s.avoided[4]);
         a = addf(a, "AL25 vertices flat=%u multiply=%u (avoided != fallback)\n",
                  s.flat_vertices, s.multiply_vertices);
+    }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    for(unsigned i=0;i<re4dc::dfa26::line_count();++i){
+        char row[192];
+        if(re4dc::dfa26::format_line(i,row,sizeof(row))>0)a=addf(a,"%s\n",row);
     }
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
@@ -491,7 +508,7 @@ void draw_qr(const Fb& fb, int page) {
     fb_text(fb, tx, 160, 1, 2, 0x000000, "PHOTO EACH PAGE");
 }
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
 unsigned diag_page_rows(const Fb& fb){return fb.h>92?unsigned((fb.h-76)/16):1U;}
 unsigned diag_rows(const Fb& fb,unsigned first,bool paint){
     unsigned cols=fb.w>60?unsigned((fb.w-60)/6):1U;
@@ -725,6 +742,9 @@ struct Link {
     int rec_len;
     void (*game)(void);
 } g_link;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+re4dc::dfa26::Telemetry<sizeof(g_diag)+160> g_fallback_telemetry;
+#endif
 
 void link_send_text(const char* s, int n) { re4dc_qalink_send(s, (unsigned) n); }
 void link_reply(const char* id, bool ok, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
@@ -878,12 +898,23 @@ void link_send_parts(char kind, const char* id, const char* text, int len) {
 }
 int drive_row(char* out, int n);   // remote driving (below): Leon's room / position / facing / camera and the queue
 void link_telemetry() {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (g_fallback_telemetry.pending) return;
+    const unsigned diag_page=g_diag_page;
+#endif
     if (g_link.game) g_link.game();
     snap_diag();
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    g_diag_page=diag_page; // background telemetry must not reset the viewed page
+#endif
     const char* rows = strchr(g_diag, '\n');   // the stats rows after "RE4DCQA1"
     rows = rows ? rows + 1 : g_diag;
     int n = g_diag_stats - (int) (rows - g_diag);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    auto& t=g_fallback_telemetry.text;
+#else
     static char t[sizeof(g_diag) + 160];
+#endif
     if (n < 0) n = 0;
     memcpy(t, rows, n);
     unsigned tx, rx, dr, q;
@@ -892,7 +923,11 @@ void link_telemetry() {
                   q, re4dc_qalink_bulk_skips(), g_link.cost_last);
     n += drive_row(t + n, (int) sizeof(t) - n);
     ++g_link.seq;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    g_fallback_telemetry.begin((unsigned)n,g_link.seq,(unsigned)timer_ms_gettime64());
+#else
     link_send_parts('T', "", t, n);
+#endif
 }
 void link_log() {   // new RAM log bytes since the last call, at most 640 a second
     const unsigned long head = re4dc_log_head, size = sizeof(re4dc_logbuf);
@@ -1321,7 +1356,11 @@ int link_pump(bool in_menu) {
         link_read_cfg();
         if (g_link.auto_start) re4dc_qalink_start();
     }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!re4dc_qalink_up()) { g_fallback_telemetry.cancel(); return LA_NONE; }
+#else
     if (!re4dc_qalink_up()) return LA_NONE;
+#endif
     int act = LA_NONE;
     char buf[1400];
     for (int k = 0; k < 4 && act == LA_NONE && re4dc_qalink_recv(buf, sizeof(buf)) >= 0; ++k) act = link_command(buf, in_menu);
@@ -1331,6 +1370,11 @@ int link_pump(bool in_menu) {
         link_telemetry();
         link_log();
     }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    g_fallback_telemetry.step(ms,[](const char* bytes,unsigned count){
+        return re4dc_qalink_send_bulk(bytes,count);
+    });
+#endif
     const uint64_t t1 = timer_us_gettime64();
     g_link.cost_us += t1 - t0;
     if (t1 - g_link.cost_t0 >= 1000000) {
@@ -1445,7 +1489,7 @@ int run(Menu& m, bool boot) {
         }
 #endif
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
         if(m.screen==M_DIAG){
             const unsigned pages=diag_pages(fb);
             if(press&(CONT_DPAD_RIGHT|CONT_DPAD_DOWN)){
@@ -1652,6 +1696,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::pause();
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::pause();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
 #endif
@@ -1699,6 +1746,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::resume();
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::resume();
+#endif
     if (!file || !file[0]) return 0;
     snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
     re4dc_log("qa: auto teleport %s\n", g_path);
@@ -1710,6 +1760,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 int re4dc_qa_menu(const char** path) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::pause();
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::pause();
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
@@ -1739,6 +1792,9 @@ int re4dc_qa_menu(const char** path) {
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::resume();
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::resume();
 #endif
     re4dc_log("qa: menu closed (%d)\n", a);
     if (a == -1) { *path = g_path; return 1; }

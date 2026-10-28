@@ -1,0 +1,3280 @@
+{
+  "status": "PASS",
+  "baseline": "9a66e3fce8899f69378f12b5f9517f297f1fa314",
+  "scope": "Summarize verified whole-TU sections and compiler stack frames for Build26.\n\nThese are relocatable object sections before final linking/garbage collection.\nThey do not assert a game-image, system-memory or maximum call-chain budget.\nEach enabled profile is compared with the same QA_LINK baseline setting.\n",
+  "profiles": {
+    "on-audit": {
+      "baseline": "qa-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "DRAW_FALLBACK_AUDIT=1",
+        "QA_LINK=0"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3996,
+              "delta": 52
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41514,
+              "delta": 52
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "dae061948522311022b9e92616e48bcca0080f31fce54c46e3f94eac62e1e2c0"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6614,
+              "delta": 108
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7275,
+              "delta": 108
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "910ace27de3604ab3918250965800e184413dda144066938f34720f189ca12ab"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 63380,
+              "delta": 2704
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 78138,
+              "delta": 2704
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3770:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 564,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "cf3a65ef260dc85943e72eabfe51a888505801b11e037bc5b466ad3619213e21"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14832,
+              "delta": 432
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 15072,
+              "delta": 432
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6140,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "b899f19d1311b51b6f162d2e09cd2ce357437033326fd25f2f523f27a79c24df"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 72052,
+              "delta": 944
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 115874,
+              "delta": 944
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9004,
+              "selected": [
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1616:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "2b4dd38dcbc45f8046515c3498f3f320bf10bf2e0c928a5c0d4a4fac7e324b4d"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82782,
+              "delta": 376
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 395181,
+              "delta": 376
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": [
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "1f2613f38625d6d549996b8db7fd30d16f430346ac4894120ca42d8ea5f982fa"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 2020,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2645,
+              "delta": 102
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "96099da456322d2c9570bf238cc594e108b920ef9b64e0f9a5ff087fa8910ad9"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "6b5928d0cda149954a6ff6a52c016f0d7427637a9323497fb8c1f0e749e7f726"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12438,
+              "after": 12926,
+              "delta": 488
+            },
+            "allocated_bytes": {
+              "before": 39636,
+              "after": 44184,
+              "delta": 4548
+            },
+            "zero_fill_bytes": {
+              "before": 23868,
+              "after": 27964,
+              "delta": 4096
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:495:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2",
+          "candidate_object_sha256": "23bbdb4c6f4d57d8ee6827eb59a96d00ca901ca28b2c0f4809b8ca273ad19f0f"
+        },
+        "draw_fallback_audit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 0,
+              "after": 768,
+              "delta": 768
+            },
+            "allocated_bytes": {
+              "before": 0,
+              "after": 5310,
+              "delta": 5310
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 1104,
+              "delta": 1104
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 0,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 48,
+              "selected": [
+                {
+                  "function": "<stdin>:28:6:void re4dc::dfa26::begin_tick(uint32_t, uint32_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:36:6:void re4dc::dfa26::decision(bool)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:37:6:void re4dc::dfa26::end_tick()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:45:6:void re4dc::dfa26::pause()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:46:6:void re4dc::dfa26::resume()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:47:6:void re4dc::dfa26::reset()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:48:6:bool re4dc::dfa26::snapshot(Snapshot*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:49:13:const char* re4dc::dfa26::label(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:50:13:const char* re4dc::dfa26::unit(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:51:10:unsigned int re4dc::dfa26::line_count()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:52:5:int re4dc::dfa26::format_line(unsigned int, char*, unsigned int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": null,
+          "candidate_object_sha256": "61a9787136f94097321b293ad5860334f3954d487756cf9c5c07e22a9f143d61"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 293298,
+          "after": 299370,
+          "delta": 6072
+        },
+        "allocated_bytes": {
+          "before": 745814,
+          "after": 760490,
+          "delta": 14676
+        },
+        "zero_fill_bytes": {
+          "before": 256943,
+          "after": 262143,
+          "delta": 5200
+        }
+      }
+    },
+    "on-audit-link": {
+      "baseline": "link-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "DRAW_FALLBACK_AUDIT=1",
+        "QA_LINK=1"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3996,
+              "delta": 52
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41514,
+              "delta": 52
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "dae061948522311022b9e92616e48bcca0080f31fce54c46e3f94eac62e1e2c0"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6614,
+              "delta": 108
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7275,
+              "delta": 108
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "910ace27de3604ab3918250965800e184413dda144066938f34720f189ca12ab"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 63380,
+              "delta": 2704
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 78138,
+              "delta": 2704
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3770:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 564,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "cf3a65ef260dc85943e72eabfe51a888505801b11e037bc5b466ad3619213e21"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14832,
+              "delta": 432
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 15072,
+              "delta": 432
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6140,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "b899f19d1311b51b6f162d2e09cd2ce357437033326fd25f2f523f27a79c24df"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 72052,
+              "delta": 944
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 115874,
+              "delta": 944
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9004,
+              "selected": [
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1616:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "2b4dd38dcbc45f8046515c3498f3f320bf10bf2e0c928a5c0d4a4fac7e324b4d"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82782,
+              "delta": 376
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 395181,
+              "delta": 376
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": [
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "1f2613f38625d6d549996b8db7fd30d16f430346ac4894120ca42d8ea5f982fa"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 2020,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2645,
+              "delta": 102
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "96099da456322d2c9570bf238cc594e108b920ef9b64e0f9a5ff087fa8910ad9"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "6b5928d0cda149954a6ff6a52c016f0d7427637a9323497fb8c1f0e749e7f726"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 19086,
+              "after": 19818,
+              "delta": 732
+            },
+            "allocated_bytes": {
+              "before": 58710,
+              "after": 67635,
+              "delta": 8925
+            },
+            "zero_fill_bytes": {
+              "before": 34872,
+              "after": 43100,
+              "delta": 8228
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:997:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2264,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2708,
+              "selected": [
+                {
+                  "function": "<stdin>:495:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2708,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "62bd7e65e3171daccce5404964320c15dcdfc242a47c261b8b709ba108dd3b76",
+          "candidate_object_sha256": "1ef6b5b185f4d4ef622bf5d9ad06920a0822eed88ab8ccc67c07eb7aeb2f9d1e"
+        },
+        "draw_fallback_audit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 0,
+              "after": 768,
+              "delta": 768
+            },
+            "allocated_bytes": {
+              "before": 0,
+              "after": 5310,
+              "delta": 5310
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 1104,
+              "delta": 1104
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 0,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 48,
+              "selected": [
+                {
+                  "function": "<stdin>:28:6:void re4dc::dfa26::begin_tick(uint32_t, uint32_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:36:6:void re4dc::dfa26::decision(bool)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:37:6:void re4dc::dfa26::end_tick()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:45:6:void re4dc::dfa26::pause()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:46:6:void re4dc::dfa26::resume()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:47:6:void re4dc::dfa26::reset()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:48:6:bool re4dc::dfa26::snapshot(Snapshot*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:49:13:const char* re4dc::dfa26::label(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:50:13:const char* re4dc::dfa26::unit(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:51:10:unsigned int re4dc::dfa26::line_count()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:52:5:int re4dc::dfa26::format_line(unsigned int, char*, unsigned int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": null,
+          "candidate_object_sha256": "61a9787136f94097321b293ad5860334f3954d487756cf9c5c07e22a9f143d61"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 299946,
+          "after": 306262,
+          "delta": 6316
+        },
+        "allocated_bytes": {
+          "before": 764888,
+          "after": 783941,
+          "delta": 19053
+        },
+        "zero_fill_bytes": {
+          "before": 267947,
+          "after": 277279,
+          "delta": 9332
+        }
+      }
+    },
+    "on-actor-fix": {
+      "baseline": "qa-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "ACTOR_CLIP_FRONT26=1",
+        "QA_LINK=0"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3944,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41462,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6506,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7167,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 61836,
+              "delta": 1160
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 76597,
+              "delta": 1163
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "include/actor_clip_front26.hpp:16:20:re4dc::actor_clip26::FrontResult re4dc::actor_clip26::front_triangle(const pvr_vertex_t*, const unsigned char*, unsigned int, const unsigned int*, unsigned int, float, float, pvr_vertex_t*) [with unsigned int DepthMask = 48]",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/actor_clip_front26.hpp:41:6:bool re4dc::actor_clip26::walk_strip(const unsigned char*, unsigned int, const pvr_vertex_t*, const unsigned char*, unsigned int, unsigned int, float, float, Prepare&&, EmitSlow&&, EmitFront&&) [with bool Reuse = false; unsigned int DepthMask = 48; Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; EmitSlow = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>; EmitFront = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const pvr_vertex_t*)>]",
+                  "bytes": 684,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "6f378d8c62df00592ff84891478dfd96c60f12f79861e166763b3f8673a3d68a"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14400,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 14640,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 71108,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 114930,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1616:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82406,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 394805,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 1920,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2543,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12438,
+              "after": 12438,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 39636,
+              "after": 39636,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 23868,
+              "after": 23868,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2",
+          "candidate_object_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 293298,
+          "after": 294458,
+          "delta": 1160
+        },
+        "allocated_bytes": {
+          "before": 745814,
+          "after": 746977,
+          "delta": 1163
+        },
+        "zero_fill_bytes": {
+          "before": 256943,
+          "after": 256943,
+          "delta": 0
+        }
+      }
+    },
+    "on-world-fix": {
+      "baseline": "qa-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "SCENERY_CLIP_INDEXED26=1",
+        "QA_LINK=0"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3944,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41462,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6506,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7167,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 60676,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 75434,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3770:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14400,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 14640,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 72068,
+              "delta": 960
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 115890,
+              "delta": 960
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1689:33:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>::<lambda(float)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<const re4dc::room::CompactVertex12*, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = const re4dc::room::CompactVertex12*; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "816f23d6576d1fe6b579f8e9b24727635462513aefa38d202606f05fbb923b65"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82406,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 394805,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 1920,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2543,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12438,
+              "after": 12438,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 39636,
+              "after": 39636,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 23868,
+              "after": 23868,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2",
+          "candidate_object_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 293298,
+          "after": 294258,
+          "delta": 960
+        },
+        "allocated_bytes": {
+          "before": 745814,
+          "after": 746774,
+          "delta": 960
+        },
+        "zero_fill_bytes": {
+          "before": 256943,
+          "after": 256943,
+          "delta": 0
+        }
+      }
+    },
+    "on-fixes": {
+      "baseline": "link-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "ACTOR_CLIP_FRONT26=1",
+        "SCENERY_CLIP_INDEXED26=1",
+        "QA_LINK=1"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3944,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41462,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6506,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7167,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 61836,
+              "delta": 1160
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 76597,
+              "delta": 1163
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "include/actor_clip_front26.hpp:16:20:re4dc::actor_clip26::FrontResult re4dc::actor_clip26::front_triangle(const pvr_vertex_t*, const unsigned char*, unsigned int, const unsigned int*, unsigned int, float, float, pvr_vertex_t*) [with unsigned int DepthMask = 48]",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/actor_clip_front26.hpp:41:6:bool re4dc::actor_clip26::walk_strip(const unsigned char*, unsigned int, const pvr_vertex_t*, const unsigned char*, unsigned int, unsigned int, float, float, Prepare&&, EmitSlow&&, EmitFront&&) [with bool Reuse = false; unsigned int DepthMask = 48; Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; EmitSlow = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>; EmitFront = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const pvr_vertex_t*)>]",
+                  "bytes": 684,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "6f378d8c62df00592ff84891478dfd96c60f12f79861e166763b3f8673a3d68a"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14400,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 14640,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 72068,
+              "delta": 960
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 115890,
+              "delta": 960
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1689:33:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>::<lambda(float)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<const re4dc::room::CompactVertex12*, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = const re4dc::room::CompactVertex12*; Index = unsigned char]",
+                  "bytes": 572,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "816f23d6576d1fe6b579f8e9b24727635462513aefa38d202606f05fbb923b65"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82406,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 394805,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 1920,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2543,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1036,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 19086,
+              "after": 19086,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 58710,
+              "after": 58710,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 34872,
+              "after": 34872,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:997:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2264,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2264,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "62bd7e65e3171daccce5404964320c15dcdfc242a47c261b8b709ba108dd3b76",
+          "candidate_object_sha256": "62bd7e65e3171daccce5404964320c15dcdfc242a47c261b8b709ba108dd3b76"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 299946,
+          "after": 302066,
+          "delta": 2120
+        },
+        "allocated_bytes": {
+          "before": 764888,
+          "after": 767011,
+          "delta": 2123
+        },
+        "zero_fill_bytes": {
+          "before": 267947,
+          "after": 267947,
+          "delta": 0
+        }
+      }
+    },
+    "on-audit-fixes": {
+      "baseline": "link-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "DRAW_FALLBACK_AUDIT=1",
+        "ACTOR_CLIP_FRONT26=1",
+        "SCENERY_CLIP_INDEXED26=1",
+        "QA_LINK=1"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 3996,
+              "delta": 52
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41514,
+              "delta": 52
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "dae061948522311022b9e92616e48bcca0080f31fce54c46e3f94eac62e1e2c0"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 38864,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54161,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6614,
+              "delta": 108
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7275,
+              "delta": 108
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "910ace27de3604ab3918250965800e184413dda144066938f34720f189ca12ab"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 64492,
+              "delta": 3816
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 79253,
+              "delta": 3819
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "include/actor_clip_front26.hpp:16:20:re4dc::actor_clip26::FrontResult re4dc::actor_clip26::front_triangle(const pvr_vertex_t*, const unsigned char*, unsigned int, const unsigned int*, unsigned int, float, float, pvr_vertex_t*) [with unsigned int DepthMask = 48]",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/actor_clip_front26.hpp:41:6:bool re4dc::actor_clip26::walk_strip(const unsigned char*, unsigned int, const pvr_vertex_t*, const unsigned char*, unsigned int, unsigned int, float, float, Prepare&&, EmitSlow&&, EmitFront&&) [with bool Reuse = false; unsigned int DepthMask = 48; Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; EmitSlow = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>; EmitFront = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const pvr_vertex_t*)>]",
+                  "bytes": 684,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "3c720c59197f13adf91862c6ccd85b4fefb771744c82e000873202fb4d7330f9"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14832,
+              "delta": 432
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 15072,
+              "delta": 432
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6140,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "b899f19d1311b51b6f162d2e09cd2ce357437033326fd25f2f523f27a79c24df"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 73064,
+              "delta": 1956
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 116886,
+              "delta": 1956
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9004,
+              "selected": [
+                {
+                  "function": "<stdin>:1689:33:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>::<lambda(float)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<const re4dc::room::CompactVertex12*, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>; Index = unsigned char]",
+                  "bytes": 584,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = const re4dc::room::CompactVertex12*; Index = unsigned char]",
+                  "bytes": 584,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "ddad90b3dcf593c027ce44134742ccecae7af0881a85010b6c8720b1c5a6fa1a"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 82782,
+              "delta": 376
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 395181,
+              "delta": 376
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": [
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "1f2613f38625d6d549996b8db7fd30d16f430346ac4894120ca42d8ea5f982fa"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 2020,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2645,
+              "delta": 102
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "96099da456322d2c9570bf238cc594e108b920ef9b64e0f9a5ff087fa8910ad9"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "6b5928d0cda149954a6ff6a52c016f0d7427637a9323497fb8c1f0e749e7f726"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 19086,
+              "after": 19818,
+              "delta": 732
+            },
+            "allocated_bytes": {
+              "before": 58710,
+              "after": 67635,
+              "delta": 8925
+            },
+            "zero_fill_bytes": {
+              "before": 34872,
+              "after": 43100,
+              "delta": 8228
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:997:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2264,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2708,
+              "selected": [
+                {
+                  "function": "<stdin>:495:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2708,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "62bd7e65e3171daccce5404964320c15dcdfc242a47c261b8b709ba108dd3b76",
+          "candidate_object_sha256": "1ef6b5b185f4d4ef622bf5d9ad06920a0822eed88ab8ccc67c07eb7aeb2f9d1e"
+        },
+        "draw_fallback_audit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 0,
+              "after": 768,
+              "delta": 768
+            },
+            "allocated_bytes": {
+              "before": 0,
+              "after": 5310,
+              "delta": 5310
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 1104,
+              "delta": 1104
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 0,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 48,
+              "selected": [
+                {
+                  "function": "<stdin>:28:6:void re4dc::dfa26::begin_tick(uint32_t, uint32_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:36:6:void re4dc::dfa26::decision(bool)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:37:6:void re4dc::dfa26::end_tick()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:45:6:void re4dc::dfa26::pause()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:46:6:void re4dc::dfa26::resume()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:47:6:void re4dc::dfa26::reset()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:48:6:bool re4dc::dfa26::snapshot(Snapshot*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:49:13:const char* re4dc::dfa26::label(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:50:13:const char* re4dc::dfa26::unit(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:51:10:unsigned int re4dc::dfa26::line_count()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:52:5:int re4dc::dfa26::format_line(unsigned int, char*, unsigned int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": null,
+          "candidate_object_sha256": "61a9787136f94097321b293ad5860334f3954d487756cf9c5c07e22a9f143d61"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 299946,
+          "after": 308386,
+          "delta": 8440
+        },
+        "allocated_bytes": {
+          "before": 764888,
+          "after": 786068,
+          "delta": 21180
+        },
+        "zero_fill_bytes": {
+          "before": 267947,
+          "after": 277279,
+          "delta": 9332
+        }
+      }
+    },
+    "on-audit-fixes-reuse": {
+      "baseline": "link-baseline",
+      "overrides": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "DRAW_FALLBACK_AUDIT=1",
+        "ACTOR_CLIP_FRONT26=1",
+        "SCENERY_CLIP_INDEXED26=1",
+        "QA_LINK=1",
+        "ACTOR_SETUP_LEAN=1",
+        "ACTOR_CLIP_REUSE=1",
+        "ACTOR_BYTES_LEAN=1",
+        "SCENERY_CLIP_GATHER=1",
+        "ESP_SETUP_LEAN=1",
+        "DRAW_SETUP_AUDIT=1",
+        "DRAW_SETUP_AUDIT_XLU=1"
+      ],
+      "units": {
+        "main": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3944,
+              "after": 4092,
+              "delta": 148
+            },
+            "allocated_bytes": {
+              "before": 41462,
+              "after": 41610,
+              "delta": 148
+            },
+            "zero_fill_bytes": {
+              "before": 37235,
+              "after": 37235,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 36,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 36,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "c25902427b2bad0a347f936205cee530595f81a7f61e6c14a4f56e2dcc4579c1",
+          "candidate_object_sha256": "ec2fbfdd464dbff480b1c8bc74a07bced8429baefd7c6eb376e332000c850c1d"
+        },
+        "esp_sub": {
+          "sections": {
+            "executable_bytes": {
+              "before": 38864,
+              "after": 39024,
+              "delta": 160
+            },
+            "allocated_bytes": {
+              "before": 54161,
+              "after": 54321,
+              "delta": 160
+            },
+            "zero_fill_bytes": {
+              "before": 11482,
+              "after": 11482,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 1064,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+          "candidate_object_sha256": "25a7206dc8954c0c17e29bd41cb0524fa1d23a9b269fe9370bfaa15d3280b61d"
+        },
+        "model_bridge": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6506,
+              "after": 6706,
+              "delta": 200
+            },
+            "allocated_bytes": {
+              "before": 7167,
+              "after": 7367,
+              "delta": 200
+            },
+            "zero_fill_bytes": {
+              "before": 138,
+              "after": 138,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 324,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 324,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "f2f704c11bec9486d64c1f5a5972b39c0e17338bdc691393b61a2bde38274321",
+          "candidate_object_sha256": "431138b57612158119670796dd5f0720bfdc70b9847674436da941ea78b46c17"
+        },
+        "native_actor_fast": {
+          "sections": {
+            "executable_bytes": {
+              "before": 60676,
+              "after": 66564,
+              "delta": 5888
+            },
+            "allocated_bytes": {
+              "before": 75434,
+              "after": 81325,
+              "delta": 5891
+            },
+            "zero_fill_bytes": {
+              "before": 12991,
+              "after": 12991,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "<stdin>:3745:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+                  "bytes": 556,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2388,
+              "selected": [
+                {
+                  "function": "include/actor_clip_front26.hpp:16:20:re4dc::actor_clip26::FrontResult re4dc::actor_clip26::front_triangle(const pvr_vertex_t*, const unsigned char*, unsigned int, const unsigned int*, unsigned int, float, float, pvr_vertex_t*) [with unsigned int DepthMask = 48]",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/actor_clip_front26.hpp:41:6:bool re4dc::actor_clip26::walk_strip(const unsigned char*, unsigned int, const pvr_vertex_t*, const unsigned char*, unsigned int, unsigned int, float, float, Prepare&&, EmitSlow&&, EmitFront&&) [with bool Reuse = true; unsigned int DepthMask = 48; Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; EmitSlow = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>; EmitFront = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const pvr_vertex_t*)>]",
+                  "bytes": 840,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "acdc711cb7f48fcdc219f1ff3803fdb5253dd16fe699b4d39b8200b1ae671971",
+          "candidate_object_sha256": "8f25d8aebdf69b25cfa1754f808c49330e2673e75cffa4f4970cd8f5771ddf06"
+        },
+        "native_model": {
+          "sections": {
+            "executable_bytes": {
+              "before": 14400,
+              "after": 14964,
+              "delta": 564
+            },
+            "allocated_bytes": {
+              "before": 14640,
+              "after": 15204,
+              "delta": 564
+            },
+            "zero_fill_bytes": {
+              "before": 192,
+              "after": 192,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 6136,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 6144,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "bc61cdf48afe3d7cdd28e10adc793f23bb69aa51be33015b0b5423e75c4b8dc3",
+          "candidate_object_sha256": "6bd173a89fe2d041c440ac7f2630a9a7f477c60838a17c830085ffd3cb8b0b6d"
+        },
+        "native_static": {
+          "sections": {
+            "executable_bytes": {
+              "before": 71108,
+              "after": 75848,
+              "delta": 4740
+            },
+            "allocated_bytes": {
+              "before": 114930,
+              "after": 119670,
+              "delta": 4740
+            },
+            "zero_fill_bytes": {
+              "before": 17345,
+              "after": 17345,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 9008,
+              "selected": [
+                {
+                  "function": "<stdin>:1631:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1576:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+                  "bytes": 560,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 9036,
+              "selected": [
+                {
+                  "function": "<stdin>:1689:33:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>::<lambda(float)>",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, unsigned char>(re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1685:29:{anonymous}::Emitter::clip_strip<const re4dc::room::CompactVertex12*, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12>; Index = unsigned char]",
+                  "bytes": 584,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1613:9:int {anonymous}::Emitter::clip_strip(Source, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Source = const re4dc::room::CompactVertex12*; Index = unsigned char]",
+                  "bytes": 584,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "147f68b655a789babe472adc49de4b283635d954849fa56a519d2d1e66180dd6",
+          "candidate_object_sha256": "d4b3a2394992a6193a6832a853040317337f1536539f4f9f49263408b9241f2b"
+        },
+        "native_ui": {
+          "sections": {
+            "executable_bytes": {
+              "before": 82406,
+              "after": 83250,
+              "delta": 844
+            },
+            "allocated_bytes": {
+              "before": 394805,
+              "after": 395657,
+              "delta": 852
+            },
+            "zero_fill_bytes": {
+              "before": 153384,
+              "after": 153384,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 7200,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 7200,
+              "selected": [
+                {
+                  "function": "include/draw_fallback_audit.h:22:13:void re4dc::dfa26::hit(Reason, uint32_t)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "candidate_object_sha256": "d85001c2e3663f7b456991f55e0aa973e4c759c8b4ead6b6c5f3b0f1caac2d72"
+        },
+        "native_ps2_world": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1920,
+              "after": 2100,
+              "delta": 180
+            },
+            "allocated_bytes": {
+              "before": 2543,
+              "after": 2725,
+              "delta": 182
+            },
+            "zero_fill_bytes": {
+              "before": 308,
+              "after": 308,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 152,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "e86d2c1e9d46f84d5d31fe2685f2db7fb5de7b444793c1d60ec33c63d140458b",
+          "candidate_object_sha256": "688c3724ecb95d2b34091eb875d19f13ed9aa0cbd21b49dee9ee538b91ad89fb"
+        },
+        "chunk_submit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "allocated_bytes": {
+              "before": 1036,
+              "after": 1136,
+              "delta": 100
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 0,
+              "delta": 0
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 296,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 296,
+              "selected": []
+            }
+          },
+          "baseline_object_sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "candidate_object_sha256": "6b5928d0cda149954a6ff6a52c016f0d7427637a9323497fb8c1f0e749e7f726"
+        },
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 19086,
+              "after": 19918,
+              "delta": 832
+            },
+            "allocated_bytes": {
+              "before": 58710,
+              "after": 77975,
+              "delta": 19265
+            },
+            "zero_fill_bytes": {
+              "before": 34872,
+              "after": 53340,
+              "delta": 18468
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 2280,
+              "selected": [
+                {
+                  "function": "<stdin>:327:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:997:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2264,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "maximum_local_frame": 2708,
+              "selected": [
+                {
+                  "function": "<stdin>:495:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:338:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2708,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": "62bd7e65e3171daccce5404964320c15dcdfc242a47c261b8b709ba108dd3b76",
+          "candidate_object_sha256": "20601a898fae376b1e277baa5620cdd888bf6efdd963b8672c6b020e92273486"
+        },
+        "draw_fallback_audit": {
+          "sections": {
+            "executable_bytes": {
+              "before": 0,
+              "after": 768,
+              "delta": 768
+            },
+            "allocated_bytes": {
+              "before": 0,
+              "after": 5310,
+              "delta": 5310
+            },
+            "zero_fill_bytes": {
+              "before": 0,
+              "after": 1104,
+              "delta": 1104
+            }
+          },
+          "local_stack_frames": {
+            "before": {
+              "maximum_local_frame": 0,
+              "selected": []
+            },
+            "after": {
+              "maximum_local_frame": 48,
+              "selected": [
+                {
+                  "function": "<stdin>:28:6:void re4dc::dfa26::begin_tick(uint32_t, uint32_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:36:6:void re4dc::dfa26::decision(bool)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:37:6:void re4dc::dfa26::end_tick()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:45:6:void re4dc::dfa26::pause()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:46:6:void re4dc::dfa26::resume()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:47:6:void re4dc::dfa26::reset()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:48:6:bool re4dc::dfa26::snapshot(Snapshot*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:49:13:const char* re4dc::dfa26::label(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:50:13:const char* re4dc::dfa26::unit(Reason)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:51:10:unsigned int re4dc::dfa26::line_count()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:52:5:int re4dc::dfa26::format_line(unsigned int, char*, unsigned int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "baseline_object_sha256": null,
+          "candidate_object_sha256": "61a9787136f94097321b293ad5860334f3954d487756cf9c5c07e22a9f143d61"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 299946,
+          "after": 314370,
+          "delta": 14424
+        },
+        "allocated_bytes": {
+          "before": 764888,
+          "after": 802300,
+          "delta": 37412
+        },
+        "zero_fill_bytes": {
+          "before": 267947,
+          "after": 287519,
+          "delta": 19572
+        }
+      }
+    }
+  },
+  "source_receipts_sha256": {
+    "off": "0deadab530e3c8eb8b954d41da4cb8d36cb709c0bc4ab8b88c15ff754fe3e1dd",
+    "on": "d431cab34e92bacb99aeadf5d892cc5c07e7dc49c23f6dacc31123e7cbd9d87c"
+  },
+  "script_sha256": "28f0afb81a36c109638b5b5d296d07de034cef8feea370e833f12682ca234c01",
+  "limitations": "Section sizes include code/data/literal-pool sections before final link. Allocated includes zero-fill. Compiler local frames are not summed blindly and are not a full game stack watermark; observed fixture call-chain peaks are separately reported in cost receipts."
+}

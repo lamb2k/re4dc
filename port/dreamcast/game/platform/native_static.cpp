@@ -64,6 +64,22 @@
 #endif
 #include "include/scenery_clip_gather.hpp"
 #endif
+#ifndef RE4DC_SCENERY_CLIP_INDEXED26
+#define RE4DC_SCENERY_CLIP_INDEXED26 0
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26 != 0 && RE4DC_SCENERY_CLIP_INDEXED26 != 1
+#error SCENERY_CLIP_INDEXED26 must be 0 or 1
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26
+#if !RE4DC_SCENERY_STREAM || !RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || \
+    RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_DEDUP==3 || (RE4DC_CPU_BACKFACE != 0 && RE4DC_CPU_BACKFACE != 2)
+#error SCENERY_CLIP_INDEXED26 needs streamed direct chunks, MESH_FASTPATH, EMIT_PREFETCH=0, DEDUP!=3 and CPU_BACKFACE=0 or 2
+#endif
+#include "include/scenery_clip_indexed26.hpp"
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "include/draw_setup_audit.h"
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
@@ -309,6 +325,9 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 // the per-strip-corner Emitter path for every meshlet (A/B reference).
 #ifndef RE4DC_MESH_FASTPATH
 #define RE4DC_MESH_FASTPATH 1
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26 && !RE4DC_MESH_FASTPATH
+#error SCENERY_CLIP_INDEXED26 needs MESH_FASTPATH=1
 #endif
 #ifndef RE4DC_MESH_CLASSIFY
 #define RE4DC_MESH_CLASSIFY 0 // 1: skip outcodes in wholly visible meshlets (+1.5 KiB image)
@@ -1120,6 +1139,9 @@ void load_screen(const float* mv,const float* p,const float* v){
     if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
     std::memcpy(last,in,sizeof(in));have=true;
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldScreenRebuild);
+#endif
 #if RE4DC_SCENERY_STREAM
     // SCENERY_STREAM: the same per-element chain (start value, then += row[k] * mv[4k + c] for k = 0, 1, 2) written out
     // without the -Os loops.
@@ -1399,6 +1421,13 @@ struct Emitter {
 #if RE4DC_MESH_DIRECT
         if(direct){
             Re4dcModelDirect out{};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT && RE4DC_PS2_WORLD_MESH
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(ps2 && !submit_batch)re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitUnbatched);
+#else
+            if(ps2)re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitUnbatched);
+#endif
+#endif
 #if RE4DC_PS2_WORLD_MESH
 #if RE4DC_SCENERY_PIECE_STATE
             re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
@@ -1573,6 +1602,13 @@ struct Emitter {
                 else if(sq){put(count);output+=count-2;++stats.strips;}
 #endif
                 else {used+=count;output+=count-2;++stats.strips;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                if(!outside
+#if RE4DC_MESH_DIRECT
+                    && !sq
+#endif
+                  )re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitBuffered);
+#endif
                 return 1;
             }
         }
@@ -1581,9 +1617,24 @@ struct Emitter {
     // Near/far crossing or oversize: the shared clipper, triangle by triangle,
     // keeping strip winding (odd triangles swap their first two corners).
     // input was already counted by the caller.
+#if RE4DC_SCENERY_CLIP_INDEXED26
+    template<class Source,class Index>
+    int clip_strip(Source base,const re4dc::room::CompactBatch& batch,
+#else
     template<class Vertex,class Index>
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
+#endif
                    const Index* index,unsigned count){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(count>limit?re4dc::dfa26::WorldClipCapacity:re4dc::dfa26::WorldClipDepth);
+        struct ClipAudit {
+            unsigned rebuilt=0,projected=0;
+            ~ClipAudit(){
+                re4dc::dfa26::hit(re4dc::dfa26::WorldClipRebuild,rebuilt);
+                re4dc::dfa26::hit(re4dc::dfa26::WorldClipProject,projected);
+            }
+        } clip_audit;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
         re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
@@ -1607,6 +1658,9 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF,half_w=RE4DC_SCREEN_HALF_WF,half_h=RE4DC_SCREEN_HALF_HF;
             unsigned all=0x3fU;
             for(unsigned i=0;i<count && all;++i){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.rebuilt;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
                 ++dsa_rebuild.n;
 #endif
@@ -1654,6 +1708,9 @@ struct Emitter {
                 {const unsigned t=s2;s2=s1;s1=s0;s0=t;}
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 re4dc::render::RenderVertex& v=ring[s0];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.rebuilt;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
                 ++dsa_rebuild.n;
 #endif
@@ -1681,6 +1738,9 @@ struct Emitter {
                 }else if(inside){
                     const re4dc::render::RenderVertex tri[3]={va,vb,v};
                     const float ta[3]={ring_alpha[ia],ring_alpha[ib],ring_alpha[s0]};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                    ++clip_audit.projected;
+#endif
                     emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,ta);
                 }
 #if RE4DC_MESH_CLIP_ACCEPT==2
@@ -1705,6 +1765,9 @@ struct Emitter {
 #endif
         if(count<=kClipOnce){
             re4dc::render::RenderVertex once[kClipOnce];float once_alpha[kClipOnce];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            clip_audit.rebuilt+=count;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
             dsa_rebuild.n+=count;
 #endif
@@ -1721,6 +1784,9 @@ struct Emitter {
                 const re4dc::render::RenderVertex tri[3]={once[ia],once[ib],once[i]};
                 const float ta[3]={once_alpha[ia],once_alpha[ib],once_alpha[i]};
                 if(limit-used<6 && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.projected;
+#endif
                 const unsigned emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,ta);
 #if RE4DC_MESH_DIRECT
                 if(sq){if(emitted)put(emitted*3);output+=emitted;stats.triangles_clipped+=emitted;continue;}
@@ -1732,6 +1798,9 @@ struct Emitter {
 #endif
         for(unsigned i=2;i<count;++i){
             re4dc::render::RenderVertex tri[3];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            clip_audit.rebuilt+=3U;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
             dsa_rebuild.n+=3U;
 #endif
@@ -1745,6 +1814,9 @@ struct Emitter {
                 if(vertex_alpha)alphas[k]=float(corners[k].argb>>24)RE4DC_INV255;
             }
             if(limit-used<6 && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            ++clip_audit.projected;
+#endif
             const unsigned emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,alphas);
 #if RE4DC_MESH_DIRECT
             if(sq){if(emitted)put(emitted*3);output+=emitted;stats.triangles_clipped+=emitted;continue;}
@@ -1762,7 +1834,11 @@ struct Draw : Emitter {
         DsaStaticPart dsa_part(input,output,dsa_xlu());
 #endif
         const auto& package=view.package;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
+#else
         if(!re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
+#endif
         streaming=re4dc_model_packet_streaming()!=0;
 #if RE4DC_HW_LEAN
         set_clip();
@@ -2653,6 +2729,9 @@ inline void sg_coef(const float* m,float near_distance,float* out){
 // visible groups' strip ranges r0..r1, their corner range lo..hi and how many are left; counts culled.
 __attribute__((noinline)) unsigned sg_select(const std::uint16_t* g,unsigned n,const float* coef,unsigned mask,
         std::uint16_t* r0,std::uint16_t* r1,unsigned& lo,unsigned& hi,unsigned& culled){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldSgRanges);
+#endif
     unsigned prev=0,nr=0,vlo=255,vhi=0,cut=0;
     // the crossed planes, once per meshlet (not a 5-step skip loop per group)
     const float* pl[5];unsigned np=0;
@@ -2721,6 +2800,9 @@ inline void sg_coef_lean(const float* m,float near_distance,SgPlane* out){
 // the plane records read in order.
 __attribute__((noinline)) unsigned sg_select_lean(const std::uint16_t* g,unsigned n,const SgPlane* planes,unsigned mask,
         std::uint16_t* r0,std::uint16_t* r1,unsigned& lo,unsigned& hi,unsigned& culled){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldSgRanges);
+#endif
     const SgPlane* pl[5];unsigned np=0;
     if(mask&1U)pl[np++]=planes;
     if(mask&2U)pl[np++]=planes+1;
@@ -2987,6 +3069,19 @@ struct MeshDraw : Emitter {
     // clipper reads corners by meshlet index, so the gather runs (once, the same copy as corners()) before its first
     // clip strip.
     const RE4DC_SCENERY_RECORD* stream_l=nullptr;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+    int clip_stream_strip(const re4dc::room::CompactVertex12* base,
+                          const re4dc::room::CompactBatch& batch,
+                          const std::uint8_t* indices,unsigned count){
+        if(stream_l){
+            const auto& l=*stream_l;
+            const re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12> source{
+                package.vertices()+l.first_vertex,package.pool_offsets(l)};
+            return clip_strip(source,batch,indices,count);
+        }
+        return clip_strip(base,batch,indices,count);
+    }
+#endif
 #if RE4DC_SCENERY_CLIP_GATHER
     re4dc::scenery_clip24::Gather stream_clip_gather;
     __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(
@@ -2998,6 +3093,9 @@ struct MeshDraw : Emitter {
         const auto& l=*stream_l;
         const unsigned copied=stream_clip_gather.fill(package.vertices()+l.first_vertex,
             package.pool_offsets(l),gathered,indices,count);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherPartial,copied);
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,copied);
 #else
@@ -3039,6 +3137,9 @@ struct MeshDraw : Emitter {
         dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
 #endif
         if(!package.indexed(l))return base;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherFull,l.vertex_count);
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,l.vertex_count);
 #endif
@@ -3115,6 +3216,10 @@ struct MeshDraw : Emitter {
 #endif
     bool borrow(){
         if(cache)return true;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!lut)re4dc::dfa26::hit(re4dc::dfa26::WorldCacheNoLut);
+        else if(limit<re4dc::vp::kCacheSlots+64U)re4dc::dfa26::hit(re4dc::dfa26::WorldCacheCapacity);
+#endif
         if(!lut || limit<re4dc::vp::kCacheSlots+64U)return false; // small slab: per-corner path
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
@@ -3165,15 +3270,29 @@ struct MeshDraw : Emitter {
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
 #endif
         namespace data=re4dc::scenery_data;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)
+            re4dc::dfa26::hit(re4dc::dfa26::WorldDirectKind);
+#endif
         if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)return false;
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        const unsigned direct_class=re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far);
+        if(direct_class!=re4dc::vp::kChecksNone){re4dc::dfa26::hit(re4dc::dfa26::WorldDirectBoundary);return false;}
+#else
         if(re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far)!=re4dc::vp::kChecksNone)return false;
+#endif
         const auto source=data::payload(package,l);
         const auto* end=source.strips+source.strip_bytes;
         // The old path sends oversize strips through its clipper even inside.
         // Keep that exact fallback and decide it before any irreversible SQ burst.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        for(const auto* s=source.strips;s<end;){const unsigned n=*s++;
+            if(n>limit){re4dc::dfa26::hit(re4dc::dfa26::WorldDirectCapacity);return false;}s+=n;}
+#else
         for(const auto* s=source.strips;s<end;){const unsigned n=*s++;if(n>limit)return false;s+=n;}
+#endif
         const auto* in=reinterpret_cast<const re4dc::vp::Vertex12*>(source.vertices);
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         // Fused work has no separate cached-submit interval. Charge the whole
@@ -3197,6 +3316,9 @@ struct MeshDraw : Emitter {
 #endif
         return true;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldDirectDiagnostic);
+#endif
         (void)l;return false;
 #endif
     }
@@ -3394,6 +3516,9 @@ struct MeshDraw : Emitter {
 #endif
                 if(!s)return result;}
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(s<end)re4dc::dfa26::hit(re4dc::dfa26::WorldStripGeneral);
+#endif
         while(s<end){
             const unsigned n=*s++;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
@@ -3426,6 +3551,9 @@ struct MeshDraw : Emitter {
 #endif
                 else {
                     if(n>limit-used && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                    re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitBuffered);
+#endif
                     vp::emit(dst+used,cache,s,n);
                     used+=n;output+=n-2;++stats.strips;
                 }
@@ -3530,6 +3658,9 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+            result=clip_stream_strip(base,batch,s,n);
+#else
 #if RE4DC_SCENERY_STREAM
 #if RE4DC_SCENERY_CLIP_GATHER
             base=stream_gather(base,s,n);
@@ -3538,6 +3669,7 @@ struct MeshDraw : Emitter {
 #endif
 #endif
             result=clip_strip(base,batch,s,n);
+#endif
             if(result<=0)return nullptr;
             s+=n;
         }
@@ -3592,6 +3724,9 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+            result=clip_stream_strip(base,batch,s,n);
+#else
 #if RE4DC_SCENERY_STREAM
 #if RE4DC_SCENERY_CLIP_GATHER
             base=stream_gather(base,s,n);
@@ -3600,6 +3735,7 @@ struct MeshDraw : Emitter {
 #endif
 #endif
             result=clip_strip(base,batch,s,n);
+#endif
             if(result<=0)return nullptr;
             s+=n;
         }
@@ -3728,6 +3864,9 @@ struct MeshDraw : Emitter {
         const auto* base=corners(l);
         const std::uint8_t* s=package.strip_begin(l);
         const std::uint8_t* const end=s+l.strip_bytes;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(s<end)re4dc::dfa26::hit(re4dc::dfa26::WorldStripGeneral);
+#endif
         while(s<end){
             const unsigned n=*s++;
             const int result=strip(base,batch,s,n);
@@ -3899,6 +4038,9 @@ struct MeshDraw : Emitter {
         // and DEDUP's fill can read corners outside that interval. Hoist the
         // immutable count before may-alias stores instead of rereading it.
         const unsigned count=l.vertex_count;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherFull,count);
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,count);
 #endif
@@ -4089,6 +4231,9 @@ struct MeshDraw : Emitter {
         else if(n && following)prefetch_emit_header(*following);
 #endif
 #if !RE4DC_SCENERY_REPLAY_LEAN
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldReplayLegacy);
+#endif
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
         palette=nullptr;
@@ -4147,9 +4292,17 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
+#else
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
+#endif
+#else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
 #else
         if(!re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
+#endif
 #endif
         streaming=re4dc_model_packet_streaming()!=0;
 #if RE4DC_HW_LEAN
@@ -4170,6 +4323,9 @@ struct MeshDraw : Emitter {
         }else
 #endif
         {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(part.meshlet_count)re4dc::dfa26::hit(re4dc::dfa26::WorldMeshNoLod);
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
             const auto lets=package.meshlets()+part.first_meshlet;
 #else
@@ -5132,10 +5288,16 @@ int tree_quad(MeshView& v,const re4dc::room::MeshRecord& mesh,StdImpt& t,const R
 }
 #endif
 int mesh_submit(const Re4dcModelPart& p){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.static_geometry && (!p.info || !p.part || !stats.owners_open))re4dc::dfa26::hit(re4dc::dfa26::WorldGcOwner);
+#endif
     if(!p.static_geometry || !p.info || !p.part || !stats.owners_open)return 0;
     unsigned owner=0;
     const MeshEntry* e=find_entry(p.model,owner);
     if(!e){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcLocate);
+#endif
         ++stats.locate_misses;
         if(stats.locate_misses<=32)re4dc_log("native mesh: unbound part model=%p\n",p.model);
         return 0;
@@ -5143,6 +5305,9 @@ int mesh_submit(const Re4dcModelPart& p){
     MeshView& v=e->common?mesh_views[kCommonView]:mesh_views[owner];
 #if RE4DC_GC_ASSET_GATE
     GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!v.package.valid() || e->mesh>=v.package.header().mesh_count)re4dc::dfa26::hit(re4dc::dfa26::WorldGcPackage);
 #endif
     if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}
     const auto& mesh=v.package.meshes()[e->mesh];
@@ -5159,6 +5324,9 @@ int mesh_submit(const Re4dcModelPart& p){
     const auto* part=(data && offset<0x100000U)?
         v.package.source_part(e->mesh,vertices,parts,std::uint32_t(offset),p.stream_bytes):nullptr;
     if(!part){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcMaterial);
+#endif
         ++stats.key_misses;
         if(stats.key_misses<=32)re4dc_log("native mesh: part mismatch bin=%u common=%u vertices=%u/%u parts=%u/%u offset=%u size=%u\n",
             mesh.bin,mesh.common,vertices,mesh.source_vertices,parts,mesh.source_parts,unsigned(offset),p.stream_bytes);
@@ -5197,8 +5365,15 @@ int mesh_submit(const Re4dcModelPart& p){
         }
     }
     if(p.cull==3)return 1;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)return 0;
     const float near=p.projection[6]/(p.projection[5]-1),far=p.projection[6]/p.projection[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)return 0;
 #if RE4DC_QUALITY_ASSETS
     // Standard clutter cull (s16.3): the mesh's bounds centre at view depth >= mm draws nothing.
@@ -5325,6 +5500,9 @@ int mesh_submit(const Re4dcModelPart& p){
 #endif
     if(result>0){++stats.parts_native;return 1;}
     if(result<0){re4dc_model_packet_abort();++stats.aborts;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
     ++stats.parts_fallback;return 0;
 }
 #endif
@@ -5346,9 +5524,15 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
 #endif
     return mesh_submit(p);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.static_geometry && (!p.world || !p.view || !stats.owners_open))re4dc::dfa26::hit(re4dc::dfa26::WorldGcOwner);
+#endif
     if(!p.world || !p.view || !p.static_geometry || !stats.owners_open)return 0;
     Located at;
     if(!locate(p,at)){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcLocate);
+#endif
         ++stats.locate_misses;
         if(stats.locate_misses<=32)re4dc_log("native static: unlocated part model=%p serial=%u key=%u/%u\n",p.model,p.serial,p.source_key[0],p.source_key[1]);
         return 0;
@@ -5362,10 +5546,16 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     unsigned material=header.material_count;
     for(unsigned m=0;m<header.material_count;++m)
         if(v.keys[m].texture==p.source_key[0] && v.keys[m].alpha==p.source_key[1]){material=m;break;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(material==header.material_count)re4dc::dfa26::hit(re4dc::dfa26::WorldGcMaterial);
+#endif
     if(material==header.material_count){++stats.key_misses;return 0;}
     const unsigned long long bit=1ULL<<material;
     // One part per key draws all of that key's batches; its twins either skip
     // (drawn) or follow it to the generic path, never both.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(b.fallback&bit)re4dc::dfa26::hit(re4dc::dfa26::WorldGcCachedDecline);
+#endif
     if(b.fallback&bit){++stats.parts_fallback;return 0;}
     if(b.drawn&bit){++stats.parts_skipped;return 1;}
     // Per-vertex source alpha: the prelit package is opaque, which is exact only
@@ -5379,13 +5569,23 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
         // test. An opaque (blend 0), unmasked, non-alpha-texture material draws
         // the same whatever its vertex alpha, so it is native opaque too.
         const bool alpha_unused=p.blend==0 && !(p.material_flags&4) && p.mask_ref>255;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(low<255 && !alpha_unused)re4dc::dfa26::hit(re4dc::dfa26::WorldGcVertexAlpha);
+#endif
         if(low<255 && !alpha_unused){b.fallback|=bit;++stats.parts_fallback;++stats.vertex_alpha;return 0;}
         opaque=p;opaque.alpha_state=255;drawn=&opaque;
         if(low<255)++stats.vertex_alpha_unused;else ++stats.vertex_opaque;
     }
     if(p.cull==3){b.drawn|=bit;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0){b.fallback|=bit;return 0;}
     const float near=p.projection[6]/(p.projection[5]-1),far=p.projection[6]/p.projection[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){b.fallback|=bit;return 0;}
     // Queued translucent parts replay through this function in pass order.
     if(re4dc_model_defer_part(drawn))return 1;
@@ -5397,7 +5597,11 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     float to_world[12]={kPackageToSource,0,0,0, 0,kPackageToSource,0,0, 0,0,kPackageToSource,0};
     if(std::memcmp(p.world,b.world,sizeof(b.world))){
         float inv[12],delta[12],moved[12];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!inverse(b.world,inv)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcTransform);b.fallback|=bit;return 0;}
+#else
         if(!inverse(b.world,inv)){b.fallback|=bit;return 0;}
+#endif
         concat(p.world,inv,delta);concat(delta,to_world,moved);
         std::memcpy(to_world,moved,sizeof(moved));++stats.moved_objects;
     }
@@ -5410,6 +5614,9 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     const int result=d.run({at.source,b.first_group,b.group_count});
     if(result>0){b.drawn|=bit;++stats.parts_native;return 1;}
     if(result<0){re4dc_model_packet_abort();b.drawn|=bit;++stats.aborts;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
     b.fallback|=bit;++stats.parts_fallback;return 0;
 #else
     (void)part;return 0;
@@ -7693,6 +7900,9 @@ int ps2_pass(unsigned pass,float zfar){
     re4dc_ps2_sky_header=0;
 #endif
     const float* P=ps2w.projection;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldPs2Projection);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0){
         wc_result.why.first(re4dc::wc24::ErrorProjection,pass,
@@ -7702,6 +7912,10 @@ int ps2_pass(unsigned pass,float zfar){
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)return 0;
 #endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2Projection);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){
         uint32_t a,b;std::memcpy(&a,&near,4);std::memcpy(&b,&far,4);
@@ -8002,6 +8216,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(result==0)re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;}
 #if RE4DC_WORLD_HOLE_DIAG
@@ -8130,12 +8347,18 @@ int ps2_pass(unsigned pass,float zfar){
 #define RE4DC_PS2_AFFINE affine
 #else
         ++c.placements;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];concat(ps2w.view,affine,mv);
 #define RE4DC_PS2_AFFINE affine
 #endif
 #else
         ++c.placements;
 #if !RE4DC_PS2_WORLD_LEAN
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];concat(ps2w.view,pl.affine,mv);
 #endif
 #define RE4DC_PS2_AFFINE pl.affine
@@ -8165,9 +8388,16 @@ int ps2_pass(unsigned pass,float zfar){
                     mv[4*r]=a[4*r]+0.0f;mv[4*r+1]=a[4*r+1]+0.0f;mv[4*r+2]=a[4*r+2]+0.0f;
                     mv[4*r+3]=a[4*r]*b[3]+a[4*r+1]*b[7]+a[4*r+2]*b[11]+a[4*r+3];
                 }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            }else {re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);lean::concat_u(a,b,mv);}
+#else
             }else lean::concat_u(a,b,mv);
+#endif
         }
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,mv);
 #endif
         if(lean::kMode&8U){float r[12];concat(ps2w.view,RE4DC_PS2_AFFINE,r);if(std::memcmp(r,mv,sizeof(r)))++lean::st.check_bad;}
@@ -8275,7 +8505,12 @@ int ps2_pass(unsigned pass,float zfar){
                 d.pc_mode=pc_state?1U:0U;
 #endif
                 const auto& selected_part=pk.parts()[index];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                if(d.chunk_ok() && (selected_part.meshlet_count<=kChunkPicks ||
+                    (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#else
                 if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+#endif
 #if RE4DC_PS2_VERTEX_ALPHA
                     const bool marked=(meta.reserved&1U)!=0;
                     // Keep the original lazy LUT preparation at selection.
@@ -8310,6 +8545,9 @@ int ps2_pass(unsigned pass,float zfar){
                     continue;
                 }
             }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            re4dc::dfa26::hit(re4dc::dfa26::WorldSelectorLegacy);
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
             const bool marked=(meta.reserved&1U)!=0; // a --vertex-alpha tr4 part: ARGB4444 corners, alpha kept
@@ -8351,7 +8589,12 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
 #if !RE4DC_SCENERY_SELECT_ONLY
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#else
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
+#endif
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
@@ -8396,6 +8639,9 @@ int ps2_pass(unsigned pass,float zfar){
             if(r11fNativeClaimed() && !re4dc_r11f_binding_valid()) {
                 re4dc_r11f_binding_failed();++c.aborts;return -1;
             }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(result==0)re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
 #endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;return -1;}
@@ -8762,12 +9008,35 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(pass>2){
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);
+#endif
+        return 0;
+    }
+    if(!ps2w.camera){
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2NoCamera);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);
+#endif
+        return 0;
+    }
+    if(!ps2_open()){
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2NoPackage);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);
+#endif
+        return 0;
+    }
+#else
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(pass>2){wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);return 0;}
     if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);return 0;}
     if(!ps2_open()){wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);return 0;}
 #else
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
     MovieWorldRead read;

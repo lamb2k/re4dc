@@ -3,6 +3,9 @@
 // {x, y, 1/w, pad} (16 B), [12288, 12544) corner outcodes, [12544, 12800) point outcodes.
 #if defined(RE4DC_CHUNK_SUBMIT) && RE4DC_CHUNK_SUBMIT
 #include "chunk_submit.h"
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#endif
 #include "re4dc_screen.h"
 #include <kos.h>
 #include <cstdint>
@@ -97,6 +100,10 @@ int re4dc_chunk_strips(re4dc_chunk_sink* s,const std::uint8_t* strips,unsigned s
         const re4dc::vp::StripCodes c=codes_of(oc,idx,n,mask);
         if(c.all&kDepth){++s->culled;continue;}
         if((c.any&kDepth) || n>s->limit){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            // Capacity takes precedence when both predicates are true.
+            if(s->clip)re4dc::dfa26::hit(n>s->limit?re4dc::dfa26::ChunkClipCapacity:re4dc::dfa26::ChunkClipDepth);
+#endif
             ++s->clipped;
             const int r=s->clip?s->clip(s->clip_ctx,idx,n,form):1;
             if(r<=0)return r;

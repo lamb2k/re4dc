@@ -1,3 +1,6 @@
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "draw_fallback_audit.h"
+#endif
 // game/esp_sub: the shared part of the effect sprites (D:/Bio4/Prog/esp_sub.cpp): the cEsp base
 // class members (CommonMove life/motion/colour update, AnmMove texture animation, ChannelSet
 // colour + distance fade, ApplyMatrix), the common sprite draw EspCommonTrans with its heat
@@ -3100,6 +3103,9 @@ void EspCommonTrans(cEsp* esp)
     if (EspSpriteEligible(esp)) {
         EspSpriteEmit(esp);
     }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::EffectLegacy);
 #endif
     RE4DC_RENDER_MTXInverse(esp->m_Mat, inv);
     PSMTXTranspose(inv, inv);

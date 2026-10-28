@@ -96,6 +96,22 @@ f32 ORTHO_R;
 #define DSA24_BEFORE(call) call
 #define DSA24_DECISION()
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "draw_fallback_audit.h"
+#define DFA26_BEGIN() re4dc::dfa26::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#define DFA26_END() re4dc::dfa26::end_tick();
+#define DFA26_RESET() re4dc::dfa26::reset();
+#if RE4DC_PACE_CATCHUP
+#define DFA26_DECISION() re4dc::dfa26::decision(!re4dc_pace_skipping);
+#else
+#define DFA26_DECISION() re4dc::dfa26::decision(true);
+#endif
+#else
+#define DFA26_BEGIN()
+#define DFA26_END()
+#define DFA26_RESET()
+#define DFA26_DECISION()
+#endif
 #line 58
 
 extern "C" {
@@ -258,7 +274,7 @@ int main()
     int ret;
 
     systemStartInit();
-RESTART: WC24_RESET() DSA24_RESET()
+RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
     {
         systemRestartInit();
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -296,7 +312,7 @@ RESTART: WC24_RESET() DSA24_RESET()
             BitOff(pG->Debug_flg[3], 0x2000);
         }
         TaskExec(0, Title_task, 0);
-        for (;;) { WC24_BEGIN() DSA24_BEGIN()
+        for (;;) { WC24_BEGIN() DSA24_BEGIN() DFA26_BEGIN()
 #if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
             // Determinism trace (LOGIC_TRACE=1 test builds only): the state left by the previous
             // iteration's complete logic + render pass, independent of how long rendering took.
@@ -307,7 +323,7 @@ RESTART: WC24_RESET() DSA24_RESET()
             // Render_swap); the logic tick below runs in full either way.
             re4dc_pace_begin();
 #endif
-            OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() // definitive bench_iter boundary: after pace_begin
+            OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() DFA26_DECISION() // definitive bench_iter boundary: after pace_begin
             StopwatchInit();
             ProcessTickInit(); DSA24_SETUP_BEGIN()
             MWC("top");
@@ -419,7 +435,7 @@ RESTART: WC24_RESET() DSA24_RESET()
             ProcessTickLog();  // GAME_TICK_LOG: per-subsystem timing line every N frames
 #endif
             MWC("end");
-            ret = systemResetCheck(); WC24_END() DSA24_END()
+            ret = systemResetCheck(); WC24_END() DSA24_END() DFA26_END()
             if (ret == 1) {
                 goto RESTART;
             }
