@@ -1,0 +1,312 @@
+From 319af32d700654962dd0201649e93d8c933ed0a3 Mon Sep 17 00:00:00 2001
+From: stevedamnvan <100538383+stevedamnvan@users.noreply.github.com>
+Date: Mon, 26 Oct 2026 02:36:07 -0400
+Subject: [PATCH] GC-ASSET r17 (gate-ON only): kind check per consumer,
+ member-selected replay keeps a held serial; host tests repaired
+
+- gc_asset_gate.cpp emitted_checked: a token counts only for its own kind (a motion row only for Motion, any other
+  row never for Motion), first sight or seen; else why=kind-mismatch.
+- native_model.cpp: a deferred replay of a part selected through its model member (gc-catalog24b) keeps the queued
+  serial only when member_contains(serial, drawn BIN, 64); otherwise 0 as before (h2: the 2 not-covered
+  unbound-accepted-model after the codec screen, replay serial 0x27, payload none).
+- gc_asset_members.cpp: weak ensure_disc_catalog (false) so host builds without gc_asset_disc.cpp link.
+- tests: test_gate kind-mismatch cases; test_runtime_index expects the mismatch; test_runtime_hooks replay keep
+  case; fixtures take the PROF probe globals, StdRoom.gca_unused and the world seal stubs; actor_main mutant
+  'restore positive replay' retired (24b member acceptance). C++ host tests PASS; python 43 -> 16 failing.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU
+---
+ port/dreamcast/game/platform/gc_asset_gate.cpp   | 16 +++++++++++++---
+ .../dreamcast/game/platform/gc_asset_members.cpp |  2 ++
+ port/dreamcast/game/platform/native_model.cpp    | 12 ++++++++++--
+ .../dreamcast/tools/d367/gc_port23/test_gate.cpp |  9 +++++++--
+ .../tools/d367/gc_port23/test_motion_unknown.py  |  2 +-
+ .../d367/gc_port23/test_runtime_actor_main.py    |  8 ++++++--
+ .../tools/d367/gc_port23/test_runtime_hooks.py   | 10 +++++++---
+ .../tools/d367/gc_port23/test_runtime_index.py   |  6 ++++--
+ .../gc_port23/test_runtime_static_manifest.py    |  2 ++
+ .../gc_port23/test_runtime_static_proposal.py    |  2 +-
+ .../d367/gc_port23/test_runtime_static_wiring.py |  4 +++-
+ 11 files changed, 56 insertions(+), 17 deletions(-)
+
+diff --git a/port/dreamcast/game/platform/gc_asset_gate.cpp b/port/dreamcast/game/platform/gc_asset_gate.cpp
+index 317ac93dd..9000465bf 100644
+--- a/port/dreamcast/game/platform/gc_asset_gate.cpp
++++ b/port/dreamcast/game/platform/gc_asset_gate.cpp
+@@ -12,6 +12,7 @@ namespace {
+ constexpr unsigned CatalogLimit=16320,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^14 token index
+ #include "include/gc_asset_sha.inc"
+ unsigned char seen[2048];
++unsigned char motion_row[2048];   // cast-ps2-25 r17: the seen row is a "motion" row (kind check per consumer)
+ AssetDescription unknown_assets[UnknownLimit];unsigned unknown_count,catalog_epoch;
+ CatalogReadAt catalog_read;void* catalog_context;unsigned catalog_bytes;
+ const CatalogRow* catalog;
+@@ -310,7 +311,7 @@ static void begin_at(unsigned r,unsigned v,unsigned mask,bool startup,bool admit
+     room=r;visit=v;wired=mask;checked_mask=used=overflow=errors=0;
+     for(unsigned i=0;i<ErrorKinds;++i){error_kind[i]=nullptr;error_count[i]=0;}error_kinds_lost=0;
+     std::memset(emissions,0,sizeof emissions);active=true;
+-    std::memset(seen,0,sizeof seen);
++    std::memset(seen,0,sizeof seen);std::memset(motion_row,0,sizeof motion_row);
+     errors=queue_faults.exchange(0);
+     if(queue_lock.test_and_set(std::memory_order_acquire)) { ++errors;queue_active.store(0); }
+     else {
+@@ -439,10 +440,19 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
+     if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {
+         unresolved(consumer,"catalog-token");return;
+     }
+-    if(seen[index/8]&(1U<<(index%8)))return;
++    // A token counts only for its own kind: a motion row only for Motion, any other row never for Motion
++    // (cast-ps2-25 r17: a PS2 geometry token must not certify a clip).
++    const unsigned bit=1U<<(index%8);
++    if(seen[index/8]&bit){
++        if(bool(motion_row[index/8]&bit)!=(consumer==Motion))unresolved(consumer,"kind-mismatch");
++        return;
++    }
+     AssetDescription row;
+     if(!describe_checked(asset,&row)){unresolved(consumer,"catalog-read");return;}
+-    seen[index/8]|=1U<<(index%8);
++    seen[index/8]|=bit;
++    const bool motion=!std::strcmp(row.kind,"motion");
++    if(motion)motion_row[index/8]|=bit;
++    if(motion!=(consumer==Motion)){unresolved(consumer,"kind-mismatch");return;}
+     if(row.provenance==PS2 || row.provenance==Authored)return;
+     ++used;char sha[65];hex(row.digest,sha);
+     re4dc_log("GC-ASSET v=2 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
+diff --git a/port/dreamcast/game/platform/gc_asset_members.cpp b/port/dreamcast/game/platform/gc_asset_members.cpp
+index 73a70e5d7..83e0e4f0d 100644
+--- a/port/dreamcast/game/platform/gc_asset_members.cpp
++++ b/port/dreamcast/game/platform/gc_asset_members.cpp
+@@ -495,6 +495,8 @@ extern "C" void re4dc_gcasset_member_unpark() { re4dc_gcasset::member_unpark();
+ // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded
+ // (before BlockCreate relocates their BINs), moved with pool compaction,
+ // retired where the block's draw owner is unbound.
++// gc_asset_disc.cpp (KOS fs) defines the real one in the game; host builds of this unit without it adopt nothing.
++namespace re4dc_gcasset { __attribute__((weak)) bool ensure_disc_catalog() { return false; } }
+ extern "C" void re4dc_gcasset_block_adopt(const void* owner,void* archive,unsigned bytes) {
+     if(re4dc_gcasset::ensure_disc_catalog())re4dc_gcasset::member_adopt(owner,archive,bytes,true);
+ }
+diff --git a/port/dreamcast/game/platform/native_model.cpp b/port/dreamcast/game/platform/native_model.cpp
+index e319f9a18..e4b3a4c5a 100644
+--- a/port/dreamcast/game/platform/native_model.cpp
++++ b/port/dreamcast/game/platform/native_model.cpp
+@@ -776,8 +776,16 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+ #if RE4DC_GC_ASSET_GATE
+     if(p) {
+         const void* data=nullptr;re4dc_gcasset::ModelMember member;
+-        if(re4dc_gcasset::replay_use.serial!=0xffffffffU)
+-            re4dc_gcasset::source_use={re4dc_gcasset::replay_use.payload?re4dc_gcasset::replay_use.serial:0,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
++        if(re4dc_gcasset::replay_use.serial!=0xffffffffU){
++            // gc-catalog24b accepts an actor part selected through its model member (ActorSourceScope::accepted);
++            // its deferred replay keeps that member serial only when the live member holds the BIN this part
++            // draws, so a queued serial never relabels other geometry (cast-ps2-25 r17: the h2 translucent room
++            // model drawn after the codec screen lost its proof here).
++            const auto& r=re4dc_gcasset::replay_use;
++            const bool held=!r.payload && r.serial && re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
++                re4dc_gcasset::member_contains(r.serial,data,64);
++            re4dc_gcasset::source_use={r.payload||held?r.serial:0,r.mask,p->model,p->info,r.payload};
++        }
+         else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
+            re4dc_gcasset::member_lookup(data,&member)) {
+             const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_gate.cpp b/port/dreamcast/tools/d367/gc_port23/test_gate.cpp
+index 5dc52310f..97825c830 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_gate.cpp
++++ b/port/dreamcast/tools/d367/gc_port23/test_gate.cpp
+@@ -134,9 +134,14 @@ int main() {
+     CatalogRow own_sources[]={{"geometry","mesh",ps2,PS2},{"motion","pose",gc,GameCube}};
+     assert(install(own_sources,2));output.clear();begin(0x111,1,Required);
+     const auto mesh=bind_checked("geometry","mesh",ps2);emitted_checked(SourceGeometry,mesh);emitted_checked(Motion,mesh);end(1);
+-    assert(output.find("motion-unwired consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos);
++    // Motion is wired (gc-catalog24b): the gate itself refuses a token of another kind (cast-ps2-25 r17).
++    assert(output.find("why=kind-mismatch consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos);
+     output.clear();begin(0x111,2,Required);emitted(Motion,"motion","pose",gc);end(2);
+-    assert(!rows() && output.find("motion-unwired consumer=9")!=std::string::npos && output.find("motion=0")!=std::string::npos);
++    assert(rows()==1 && output.find("kind=motion id=pose")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
++    // ...and a motion row never counts for another consumer, seen first or not.
++    output.clear();begin(0x111,4,Required);const auto pose=bind_checked("motion","pose",gc);
++    emitted_checked(SourceGeometry,pose);emitted_checked(Motion,pose);emitted_checked(SourceGeometry,pose);end(4);
++    assert(output.find("why=kind-mismatch consumer=0")!=std::string::npos && output.find("errors=2")!=std::string::npos);
+     output.clear();begin(0x111,3,Required&~(1U<<Motion));for(unsigned i=0;i<Motion;++i)checked(Consumer(i));end(3);
+     assert(output.find("wired=1ff checked=1ff required=3ff")!=std::string::npos && output.find("motion=0")!=std::string::npos);
+     assert(maximum_counts==255); // transition scope is three bytes longer than room=ffffffff
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py b/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py
+index 188631951..0f9034263 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py
+@@ -178,7 +178,7 @@ int main(){
+ 
+     def leaf_fixture(self):
+         ui=(PLATFORM/'native_ui.cpp').read_text()
+-        helpers=ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helpers=ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         commit=function(ui,'extern "C" void re4dc_model_packet_commit(')
+         start=ui.index('#if RE4DC_TA_DIRECT',ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION'))
+         direct='void direct_account(unsigned vertices){\n'+ui[start:ui.index('\n}\n#if RE4DC_SCENERY_SUBMIT_BATCH',start)+2]
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py
+index f64229df9..d89dbfc70 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py
+@@ -18,7 +18,7 @@ class ActorMainTests(unittest.TestCase):
+         guard = model[model.index('#if RE4DC_GC_ASSET_GATE\n    // An actor decline'):]
+         guard = guard[:guard.index('#endif')+len('#endif')]
+         ui = (GAME / 'platform/native_ui.cpp').read_text()
+-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         commit = function(ui, 'extern "C" void re4dc_model_packet_commit(')
+         marker = ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION')
+         start = ui.index('#if RE4DC_TA_DIRECT', marker)
+@@ -81,7 +81,9 @@ int main(){unsigned char bin[128]={},foreign[64]={};unsigned one=1,offset=32;mem
+         self.compile_run(fixture, direct=True)
+         for label, old, new in [
+             ('blanket raw BIN', 'source_use={0,mask,p->model,p->info};', 'source_use={member.serial,mask,p->model,p->info};'),
+-            ('restore positive replay', 'replay_use.payload?re4dc_gcasset::replay_use.serial:0', 'replay_use.serial'),
++            # 'restore positive replay' retired (cast-ps2-25 r17): since gc-catalog24b a member-selected actor part is
++            # accepted on its member, and a replay keeps it only when that member holds the drawn BIN
++            # (test_runtime_hooks test_raw_replay_is_explicitly_unqualified covers the relabel case).
+             ('leaked fallback proof', 're4dc_gcasset::source_use={0,re4dc_gcasset::source_use.mask,p?p->model:nullptr,p?p->info:nullptr};', ''),
+         ]:
+             with self.subTest(mutant=label):
+@@ -115,6 +117,7 @@ extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsign
+ struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
+ struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
+ ''' + selection + r'''
++const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
+ SourceUse gcasset_model_pending;
+ ''' + function(ui, 'void gcasset_model_prepare(') + '\n' + function(ui, 'void gcasset_model_accept(') + r'''
+ int main(){unsigned char bytes[512]={71},alien[64]={19};const auto digest=fingerprint(bytes,sizeof bytes);char id[41];for(unsigned i=0;i<20;++i)sprintf(id+2*i,"%02x",digest.bytes[i]);CatalogRow row{"geometry",id,digest,PS2};assert(install(&row,1));
+@@ -186,6 +189,7 @@ constexpr unsigned kFrames=4;Frame frames[kFrames];unsigned frame_victim,frame_s
+ bool same_words(const float*a,const float*b,unsigned n){return !memcmp(a,b,n*4);}
+ struct SkinEntry{};struct OneScreen{};
+ ''' + prepare + '\n' + one + r'''
++const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
+ SourceUse gcasset_model_pending;
+ ''' + function(ui, 'void gcasset_model_prepare(') + '\n' + function(ui, 'void gcasset_model_accept(') + r'''
+ struct Stats{unsigned parts=0,declined=0,handled=0,deferred=0,culled_parts=0;}stats;
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py
+index f733ed12d..3f5df647d 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_hooks.py
+@@ -22,7 +22,7 @@ def function(source, marker):
+ class RuntimeTextureTests(unittest.TestCase):
+     def test_actual_payload_scope_latch_and_retirement(self):
+         ui = (GAME / 'platform/native_ui.cpp').read_text()
+-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         fixture = (HERE / 'test_payloads.cpp').read_text().replace('// ACTUAL_UI_HELPERS', helpers)
+         with tempfile.TemporaryDirectory(prefix='gc-port23-payload-', dir='/dev/shm') as temporary:
+             root = Path(temporary)
+@@ -79,7 +79,7 @@ int main(){using namespace re4dc_gcasset;int info,other;cModel model{1,0};
+         bridge = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_model_identity(')
+         classifier = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_weapon_consumer(')
+         ui = (GAME / 'platform/native_ui.cpp').read_text()
+-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         fixture = r'''
+ #include "gc_asset_members.h"
+ #include "gc_asset_payloads.h"
+@@ -111,6 +111,9 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
+  logs.clear();member_retire(&ownerA);
+  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
+  assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
++ logs.clear(); // the queued serial of the member that holds the drawn BIN is kept (cast-ps2-25 r17)
++ {ReplayScope replay(mb.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
++ assert(logs.find("unbound-accepted-model")==std::string::npos);
+ }
+ '''
+         with tempfile.TemporaryDirectory(prefix='gc-port23-replay-', dir='/dev/shm') as temporary:
+@@ -149,6 +152,7 @@ int re4dc_static_submit(const Re4dcModelPart*){assert(!re4dc_gcasset::source_use
+ extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void* info,const void** data){*data=static_cast<const Info*>(info)->data;return 0;}
+ extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
+ bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
++bool re4dc_gcasset::member_contains(unsigned serial,const void* data,unsigned){return serial==77 && data==&a;}
+ void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
+ ''' + gateway + r'''
+ struct DeferredPart{unsigned asset_serial=0,asset_mask=0;re4dc_gcasset::PayloadProof* asset_payload=nullptr;};
+@@ -186,7 +190,7 @@ int main(){
+ 
+     def test_actual_source_latch_packet_direct_and_switch(self):
+         ui = (GAME / 'platform/native_ui.cpp').read_text()
+-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         commit = function(ui, 'extern "C" void re4dc_model_packet_commit(')
+         marker = ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION')
+         start = ui.index('#if RE4DC_TA_DIRECT', marker)
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_index.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_index.py
+index 7f2ec42ef..c864a47e6 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_index.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_index.py
+@@ -124,11 +124,13 @@ int main(){
+     const unsigned first_reads=reads;emitted_checked(Weapon,model);emitted_checked(EffectPicture,ps2);
+     assert(reads==first_reads);
+     // gc-catalog24b r8: Motion is wired like any consumer. A seen row needs no
+-    // read; a new motion identity binds (one catalog search) and is a row.
++    // read (cast-ps2-25 r17: a seen texture row given to Motion is a kind-mismatch
++    // error, from the seen-row bit); a new motion identity binds (one catalog search).
+     emitted_checked(Motion,ps2);assert(reads==first_reads);
+     emitted(Motion,"motion","not-admitted",fingerprint("motion",6));
+     assert(reads>first_reads);end(1);assert(rows()==3);
+-    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=0")!=std::string::npos);
++    assert(output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=1")!=std::string::npos &&
++           output.find("why=kind-mismatch consumer=9")!=std::string::npos);
+     assert(output.find("kind=motion id=not-admitted")!=std::string::npos && output.find("consumer=motion")!=std::string::npos);
+     assert(output.find("source_geometry=1 texture=2 effect_picture=1 weapon=1")!=std::string::npos);
+     // Room retirement resets observations, not the immutable disc epoch. A
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py
+index 4ea0fd781..19152fecb 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py
+@@ -31,6 +31,7 @@ unsigned identity=0x01230000U,role=1,resolutions;
+ extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**out){assert(!sq);++resolutions;*out=nullptr;return identity;}
+ extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return role;}
+ '''+scope+r'''
++const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
+ SourceUse gcasset_model_pending;
+ '''+function(ui,'void gcasset_model_prepare(')+'\n'+function(ui,'void gcasset_model_accept(')+r'''
+ PayloadProof proof,receipt;int owner,index_owner,wrong;
+@@ -83,6 +84,7 @@ using namespace re4dc_gcasset;
+ bool sq;std::string logs;
+ extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char out[256];va_list ap;va_start(ap,fmt);vsnprintf(out,sizeof out,fmt,ap);va_end(ap);logs+=out;}
+ struct Re4dcModelPart{const void*model;const void*info;};
++const void* gcasset_probe_part;const void* gcasset_probe_caller;const void* gcasset_probe_outer;
+ SourceUse gcasset_model_pending;
+ '''+function(ui,'void gcasset_model_prepare(')+'\n'+function(ui,'void gcasset_model_accept(')+r'''
+ PayloadProof proof,view,copy;
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_proposal.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_proposal.py
+index 3051a0457..6604f5167 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_proposal.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_proposal.py
+@@ -69,7 +69,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();unsigned
+     def test_proposed_actual_mixed_owner_impostor_flush(self):
+         static = (GAME / 'platform/native_static.cpp').read_text()
+         ui = (GAME / 'platform/native_ui.cpp').read_text()
+-        helper = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
++        helper = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
+         fixture = r'''
+ #include "gc_asset_static.h"
+ #include <cassert>
+diff --git a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py
+index ccc65dc5e..f051aad20 100644
+--- a/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py
++++ b/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py
+@@ -47,6 +47,8 @@ ssize_t fs_read(file_t f,void*p,unsigned n){assert(!ps2w.asset_proof.serial);++r
+ void*re4dc_static_alloc(unsigned n){return new unsigned char[n];}void re4dc_static_free(void*p){delete[] static_cast<unsigned char*>(p);}int re4dc_static_heap_free(){return 3000000;}
+ unsigned ps2_crc32(const unsigned char*,unsigned){return 1;}
+ void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)payload_invalidate(ps2w.asset_proof,&ps2w);}
++// cast-ps2-25 r17: the movie reseal keeps the open-time manifest (not exercised here)
++struct{bool have=false;}gcasset_world_seal;void gcasset_world_seal_keep(const StaticManifest&,const unsigned char*,unsigned,const unsigned char*,unsigned){}
+ void ps2_free(){gcasset_invalidate_world();if(ps2w.storage)re4dc_static_free(ps2w.storage);ps2w.storage=nullptr;ps2w.attempted=false;ps2w.parts=nullptr;ps2w.placements=nullptr;}
+ void gcasset_static_policy(StaticManifest&m,unsigned){static_manifest_note(m,STD_INDEX,Disabled);static_manifest_note(m,PCL1_CELL,Disabled);}
+ '''+cold+'\n'+function(source,'bool ps2_open(){')+r'''
+@@ -185,7 +187,7 @@ int main(){assert(install(nullptr,0));memcpy(index_file.data(),"R4TI",4);unsigne
+ #include <string>
+ using namespace re4dc_gcasset;
+ extern "C" void re4dc_log(const char*,...){}
+-struct StdRoom{PayloadProof asset_proof;unsigned room=0,mesh_views=0,checked=0,ntex=0,ndrop=0,ncull=0,nimp=0,nptex=0,nimpt=0;bool active=false;}std_room;
++struct StdRoom{PayloadProof asset_proof;unsigned room=0,mesh_views=0,checked=0,ntex=0,ndrop=0,ncull=0,nimp=0,nptex=0,nimpt=0;bool active=false;unsigned char gca_unused=0;}std_room;
+ constexpr unsigned kStdText=128;std::string source="original full read prefix";bool rejected=false;int forced=-2;unsigned invalidations;
+ bool re4dc_quality_std_assets(){return true;}
+ void gcasset_static_invalidate_all(){++invalidations;}
+-- 
+2.43.0
+

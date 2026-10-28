@@ -1,0 +1,89 @@
+{
+ "base_pak": "/root/re4data/private/pics25c-20261025/dc/tex.pak",
+ "rows": [
+  {
+   "key": "4e996a00-773be2ae",
+   "what": "scope / lens frame 143x90 <- PS2 128x64",
+   "gc": "etc/core.das@1da240#0",
+   "ps2": "Core.dat@1314b0#0",
+   "orient": "id",
+   "mode": "fit",
+   "ncc": 0.998,
+   "mae": 56.28,
+   "bytes": 10384,
+   "sha256": "d4b2f50f612f4df8d564a6e5dbd52915313ffde4bb5506bf45d112082875ff93"
+  },
+  {
+   "key": "57d16e1c-9471e465",
+   "what": "save / load bar 640x8 <- PS2 256x8",
+   "gc": "etc/core.das@1e7de0#0",
+   "ps2": "Core.dat@13a1d0#0",
+   "orient": "id",
+   "mode": "full",
+   "ncc": 1.0,
+   "mae": 4.72,
+   "bytes": 4240,
+   "sha256": "404433587af34a8bc5b9460723a6c819fb3550dfa27acdd553724e8d59d2c910"
+  },
+  {
+   "key": "076e860e-52b615a0",
+   "what": "HUD digit 2 16x24 <- PS2 32x16 (transposed)",
+   "gc": "etc/core.das@1e1580#2",
+   "ps2": "Core.dat@136430#2",
+   "orient": "T",
+   "mode": "fit",
+   "ncc": 0.965,
+   "mae": 24.67,
+   "bytes": 1168,
+   "sha256": "5c95d08f2adfb3a7ac70be737ed76de096d0d15c2b2b7924a9ba8c54b9921b7d"
+  },
+  {
+   "key": "79d3fc0f-e9580b27",
+   "what": "HUD digit 0 16x24 <- PS2 32x16 (transposed)",
+   "gc": "etc/core.das@1e1580#0",
+   "ps2": "Core.dat@136430#0",
+   "orient": "T",
+   "mode": "fit",
+   "ncc": 0.965,
+   "mae": 26.26,
+   "bytes": 1168,
+   "sha256": "fb41dea98ec970adbb314f217c22f5cf63e2594b4d20f387c6fb5bea9c43c520"
+  },
+  {
+   "key": "7bf226fe-35eb7852",
+   "what": "HUD digit 1 16x24 <- PS2 32x16 (transposed)",
+   "gc": "etc/core.das@1e1580#1",
+   "ps2": "Core.dat@136430#1",
+   "orient": "T",
+   "mode": "fit",
+   "ncc": 0.969,
+   "mae": 22.39,
+   "bytes": 1168,
+   "sha256": "691f3792537c749503e93bd6e5130409d24ec71e8a352ab425d5247e41dde4e9"
+  },
+  {
+   "key": "4b8a904e-bbc564e2",
+   "what": "title noise frame 0 320x224 <- PS2 256x256",
+   "gc": "etc/core.das@1a13e0#0",
+   "ps2": "Core.dat@87c60#0",
+   "orient": "T",
+   "mode": "full",
+   "ncc": 0.999,
+   "mae": 28.49,
+   "bytes": 34960,
+   "sha256": "59a54d4f8556654ad2676fd98b44b0641bfbe4b4e3876aef8a4f2511eb07c89e"
+  },
+  {
+   "key": "f3237b4d-3d5682c5",
+   "what": "title noise frame 1 320x224 <- PS2 256x256 (mirrored; the PS2 has one noise picture)",
+   "gc": "etc/core.das@1a13e0#1",
+   "ps2": "Core.dat@87c60#0",
+   "orient": "h",
+   "mode": "full",
+   "ncc": 0.999,
+   "mae": 28.98,
+   "bytes": 34960,
+   "sha256": "8fa77c7f726ecd9fc653606675f2debdd693071e0e00782ee61a88f02faaa830"
+  }
+ ]
+}

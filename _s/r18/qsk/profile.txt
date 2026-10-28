@@ -1,0 +1,6 @@
+COARSE_LEON=1
+ACTOR_TRANSACTION=1
+LEON_HAND_PACK=1
+LEON_LOD=0
+LEON_HAND_PACK_HDR=/root/probe/lanes/route/out-cp25rigW/obj/leon_hands/ps2leon_runtime_handpack.h
+PS2_LEON_DIR=/root/re4data/private/ps2leon-rig-20261026

@@ -1,0 +1,8 @@
+cast-ps2-25 r22: fxc26b, the last GC core.das EFF #25 pictures route rooms load, to PS2
+
+The fxc26 tex.pak with core EFF #25 ids 0x0e (strip), 0x31 (bulb) and 0x61 (panel) as PS2 Core.dat EFF 25 pictures under
+the GC keys (castps2-26/fx_core_id.py). Every other EFF #25 id is already PS2 or loaded by no route room; EFF #16 is empty.
+Set fxc26b after fxc26; recipe DATA and member-claims name it. RECIPE.txt written for the n256w25 / y25 / z25 / r100 stores.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU

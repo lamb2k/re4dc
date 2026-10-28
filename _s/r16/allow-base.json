@@ -1,0 +1,265 @@
+{
+ "entries": [
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0100",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0101",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0103",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c8e60#0 (59x51 C4) (HUD shoulder button L); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "755e1575-fea9d26b",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "011f",
+   "sha256": "1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0100",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0101",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0103",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1c87e0#0 (59x48 C4) (HUD shoulder button R); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "803499f2-4b0a27a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "011f",
+   "sha256": "1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0100",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0101",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "0103",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "purgeui24/gc-asset-exceptions.tsv etc/core.das 0x1e7100#0 (36x36 C4) (HUD button B); catalog 23d8a519 row; gc-audit25 10-25: coordinator reviewed (Dreamcast-authored HUD labels)",
+   "id": "3acc7fea-7110b4a8",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "reviewed exception: our own Dreamcast pad-label art (Dreamcast button glyphs), not GameCube; no PS2 equivalent",
+   "room": "011f",
+   "sha256": "55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad"
+  },
+  {
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "cast-ps2-25",
+   "provenance": "gc",
+   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
+   "room": "0100",
+   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
+  },
+  {
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r101 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=119128064&bytes=2192; pada25b-20261025 RECIPE; cast-ps2-25 round 14 census cg-h2-pdd",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "cast-ps2-25",
+   "provenance": "gc",
+   "reason": "Dreamcast A pad label: our own Dreamcast pad-label art (set pada25b: an A drawn on our B label 3acc7fea); no PS2 equivalent, like L / R / B",
+   "room": "0101",
+   "sha256": "01154ca8abf0c7dc80e9f5977e44e4b550e8d1a153496b510822631b6a6cbfec"
+  },
+  {
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
+   "id": "2c9c252a-51c59944",
+   "kind": "texture",
+   "owner": "gc-catalog24b",
+   "provenance": "unknown",
+   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
+   "room": "011e",
+   "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
+  },
+  {
+   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
+   "id": "2c9c252a-51c59944",
+   "kind": "texture",
+   "owner": "gc-catalog24b",
+   "provenance": "unknown",
+   "reason": "tex.pak key with no data-set attribution (provenance unknown; catalog unknown-rows.tsv)",
+   "room": "011f",
+   "sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
+   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
+   "room": "0100",
+   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
+   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "GameCube skeleton data for the PS2 Leon mesh",
+   "room": "0100",
+   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
+   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
+   "room": "0101",
+   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
+   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "GameCube skeleton data for the PS2 Leon mesh",
+   "room": "0101",
+   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
+   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
+   "room": "0103",
+   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
+   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "GameCube skeleton data for the PS2 Leon mesh",
+   "room": "0103",
+   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
+   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
+   "room": "011e",
+   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
+   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "GameCube skeleton data for the PS2 Leon mesh",
+   "room": "011e",
+   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; PS2_LEON=1 arm-a (PS2_LEON_DIR /root/probe/lanes-20261011/pl08/assets/arm-a, ps2leon pack_arm.py from PS2 pl00) chunk arrays, counts, hair UV and runs; reviewed ps2 in provenance-reviewed.tsv",
+   "id": "890085edb9a03c566671f65ae4c3a8b078dbe391",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "PS2 Leon mesh (PS2 pl00, compiled into the program): reviewed ps2; compiled arrays have no catalog source, so the runtime reports unknown",
+   "room": "011f",
+   "sha256": "890085edb9a03c566671f65ae4c3a8b078dbe391c5d449c9a942080859283784"
+  },
+  {
+   "evidence": "gc-audit25 10-25 round 3: compiled Leon split (gc_asset_actor_compiled.inc payload_capture_fragments_split, replaces 017fb4f6); census cg-*-X (pin edc56207), GC-ASSET-SRC run cg-r101-S named the capture site; leon4k::bind (119-bone bind table) + each chunk source_info (the GC infos the PS2 arm keeps, ps2leon.mk)",
+   "id": "76c0d880d7bdb17542da15b57b0f35e11997e35d",
+   "kind": "geometry",
+   "owner": "gc-audit25",
+   "provenance": "unknown",
+   "reason": "GameCube skeleton data for the PS2 Leon mesh",
+   "room": "011f",
+   "sha256": "76c0d880d7bdb17542da15b57b0f35e11997e35da60bfb0770b4b69dbcd10447"
+  }
+ ],
+ "schema": 1
+}

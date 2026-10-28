@@ -1,0 +1,19 @@
+name r119-g3
+room 0x11a
+pos 104077 -4700 57276
+ang -1.743
+find 0x00280004
+inv default
+god
+goto 200 -60241 7140 69673
+act 300 a 10
+act 400 a 10
+act 500 a 10
+trg 0 1600 0x119
+kill 0x2b 2200 0x119 0xd
+entry 2
+goto 200 124500 2251 10888 -1.571
+goto 3400 96500 2251 13045 3.14
+act 3500 a 10
+act 3600 a 10
+act 3700 a 10

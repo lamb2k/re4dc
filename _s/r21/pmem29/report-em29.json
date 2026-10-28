@@ -1,0 +1,350 @@
+{
+ "payload": "/root/work/lanes/cast-ps2-25/_s/r21/tree/em/em29.drs",
+ "payload_sha256": "16b5f9197382d83a3e792dee4765ce289e9ef86a2783e97447e2e886e1f3cb47",
+ "ps2": "em29.dat",
+ "ps2_sha256": "7dab4f2d3beeec2657abef2af3b5e938e7f9d71ca2cc19a21254427c28edc6ab",
+ "clips": [
+  {
+   "slots": [
+    3
+   ],
+   "arc": [
+    7
+   ],
+   "gc": {
+    "bytes": 2080,
+    "max_frame": 30,
+    "joints": 14
+   },
+   "ps2_bytes": 2080,
+   "ps2_max_frame": 30,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    4
+   ],
+   "arc": [
+    8
+   ],
+   "gc": {
+    "bytes": 1856,
+    "max_frame": 24,
+    "joints": 14
+   },
+   "ps2_bytes": 1856,
+   "ps2_max_frame": 24,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    5
+   ],
+   "arc": [
+    9
+   ],
+   "gc": {
+    "bytes": 2112,
+    "max_frame": 18,
+    "joints": 14
+   },
+   "ps2_bytes": 2112,
+   "ps2_max_frame": 18,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    6
+   ],
+   "arc": [
+    10
+   ],
+   "gc": {
+    "bytes": 2048,
+    "max_frame": 11,
+    "joints": 14
+   },
+   "ps2_bytes": 2048,
+   "ps2_max_frame": 11,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    7
+   ],
+   "arc": [
+    11
+   ],
+   "gc": {
+    "bytes": 1088,
+    "max_frame": 6,
+    "joints": 14
+   },
+   "ps2_bytes": 1088,
+   "ps2_max_frame": 6,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    8
+   ],
+   "arc": [
+    12
+   ],
+   "gc": {
+    "bytes": 992,
+    "max_frame": 3,
+    "joints": 14
+   },
+   "ps2_bytes": 992,
+   "ps2_max_frame": 3,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    9
+   ],
+   "arc": [
+    13
+   ],
+   "gc": {
+    "bytes": 1536,
+    "max_frame": 8,
+    "joints": 14
+   },
+   "ps2_bytes": 1536,
+   "ps2_max_frame": 8,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    10
+   ],
+   "arc": [
+    14
+   ],
+   "gc": {
+    "bytes": 1152,
+    "max_frame": 3,
+    "joints": 14
+   },
+   "ps2_bytes": 1152,
+   "ps2_max_frame": 3,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    11
+   ],
+   "arc": [
+    15
+   ],
+   "gc": {
+    "bytes": 3104,
+    "max_frame": 20,
+    "joints": 12
+   },
+   "ps2_bytes": 3104,
+   "ps2_max_frame": 20,
+   "ps2_joints": 12,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    12
+   ],
+   "arc": [
+    16
+   ],
+   "gc": {
+    "bytes": 2048,
+    "max_frame": 18,
+    "joints": 14
+   },
+   "ps2_bytes": 2048,
+   "ps2_max_frame": 18,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    13
+   ],
+   "arc": [
+    17
+   ],
+   "gc": {
+    "bytes": 2656,
+    "max_frame": 18,
+    "joints": 14
+   },
+   "ps2_bytes": 2656,
+   "ps2_max_frame": 18,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    14
+   ],
+   "arc": [
+    18
+   ],
+   "gc": {
+    "bytes": 3136,
+    "max_frame": 25,
+    "joints": 14
+   },
+   "ps2_bytes": 3136,
+   "ps2_max_frame": 25,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    15
+   ],
+   "arc": [
+    19
+   ],
+   "gc": {
+    "bytes": 2368,
+    "max_frame": 21,
+    "joints": 14
+   },
+   "ps2_bytes": 2368,
+   "ps2_max_frame": 21,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    16
+   ],
+   "arc": [
+    20
+   ],
+   "gc": {
+    "bytes": 1088,
+    "max_frame": 6,
+    "joints": 14
+   },
+   "ps2_bytes": 1088,
+   "ps2_max_frame": 6,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    17
+   ],
+   "arc": [
+    21
+   ],
+   "gc": {
+    "bytes": 1792,
+    "max_frame": 10,
+    "joints": 14
+   },
+   "ps2_bytes": 1792,
+   "ps2_max_frame": 10,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    18
+   ],
+   "arc": [
+    22
+   ],
+   "gc": {
+    "bytes": 1216,
+    "max_frame": 30,
+    "joints": 14
+   },
+   "ps2_bytes": 1216,
+   "ps2_max_frame": 30,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    19
+   ],
+   "arc": [
+    23
+   ],
+   "gc": {
+    "bytes": 2080,
+    "max_frame": 17,
+    "joints": 14
+   },
+   "ps2_bytes": 2080,
+   "ps2_max_frame": 17,
+   "ps2_joints": 14,
+   "streamed": false,
+   "changed": false
+  },
+  {
+   "slots": [
+    20
+   ],
+   "arc": [
+    24
+   ],
+   "gc": {
+    "bytes": 6368,
+    "max_frame": 28,
+    "joints": 24
+   },
+   "ps2_bytes": 6368,
+   "ps2_max_frame": 28,
+   "ps2_joints": 24,
+   "streamed": false,
+   "changed": false
+  }
+ ],
+ "seq_changed": [],
+ "keys_new": [],
+ "out_sha256": "16b5f9197382d83a3e792dee4765ce289e9ef86a2783e97447e2e886e1f3cb47",
+ "body_bytes": [
+  63264,
+  63264
+ ],
+ "hot_bytes": [
+  0,
+  0
+ ],
+ "mtc_rows": [
+  0,
+  0
+ ],
+ "fcv_members": 18,
+ "fcv_changed": 0,
+ "length_changes": []
+}

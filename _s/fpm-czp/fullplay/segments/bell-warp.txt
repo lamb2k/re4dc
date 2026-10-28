@@ -1,0 +1,8 @@
+name r101-bell-timer
+# r101 square, fight about to start (flags 6/7 clear, first visit done)
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god

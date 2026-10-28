@@ -1,0 +1,133 @@
+diff --git a/port/dreamcast/game/model_bridge.cpp b/port/dreamcast/game/model_bridge.cpp
+index 60f0c96e1..040fb0c7d 100644
+--- a/port/dreamcast/game/model_bridge.cpp
++++ b/port/dreamcast/game/model_bridge.cpp
+@@ -1085,3 +1085,9 @@ extern "C" unsigned re4dc_propprof_key(const void* model) {
+     return m ? (unsigned(m->kindid) & 255u) << 16 | (unsigned(m->id) & 255u) << 8 | (unsigned(m->type) & 255u) : 0xffffffu;
+ }
+ #endif
++// cast-ps2-25 diagnostic (diag tree only)
++extern "C" unsigned re4dc_cp25_model_key(const void* model) {
++    const cModel* m = static_cast<const cModel*>(model);
++    unsigned n=0;if(m)for(auto* i=m->pModelInfo;i && n<255;i=i->pList)++n;
++    return m ? (unsigned(m->id) & 0xffU) | ((unsigned(m->ot_type) & 0xffU) << 8) | ((unsigned(m->nParts) & 0xffU) << 16) | (n<<24) : ~0U;
++}
+diff --git a/port/dreamcast/game/platform/gc_asset_members.cpp b/port/dreamcast/game/platform/gc_asset_members.cpp
+index 0180409cb..a9ac80dd9 100644
+--- a/port/dreamcast/game/platform/gc_asset_members.cpp
++++ b/port/dreamcast/game/platform/gc_asset_members.cpp
+@@ -324,10 +324,18 @@ bool member_contains(unsigned serial,const void* data,unsigned bytes) {
+         return contains(member.base,member.bytes,data,bytes);
+     return false;
+ }
++}
++extern "C" unsigned re4dc_cp25_model_key(const void*);
++namespace re4dc_gcasset {
+ void member_accept(unsigned serial,unsigned mask) {
+     const unsigned allowed=(1U<<SourceGeometry)|(1U<<Weapon);
+     if(!serial || !mask || (mask&~allowed)) { use_faults|=mask&allowed?mask&allowed:1U<<SourceGeometry;return; }
+-    for(auto& member:members)if(current(member) && member.serial==serial) {member.uses|=mask;return;}
++    for(auto& member:members)if(current(member) && member.serial==serial) {
++#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
++        if(member.bytes==35008||member.bytes==56992||member.bytes==69120||member.bytes==11872){
++            static unsigned n;++n;if(n<=24||!(n&255))re4dc_log("CP25ACC n=%u bytes=%u model=%p key=%08x info=%p caller=%p arc=%u name=%s\n",n,member.bytes,source_use.model,source_use.model?re4dc_cp25_model_key(source_use.model):0u,source_use.info,__builtin_return_address(0),member.arc,member.name?member.name:"-");}
++#endif
++        member.uses|=mask;return;}
+     use_faults|=mask;
+ }
+ void member_flush() {
+diff --git a/port/dreamcast/game/platform/include/gc_asset_actor_select.inc b/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
+index 1dce3bd94..642e3cfa7 100644
+--- a/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
++++ b/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
+@@ -62,7 +62,10 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
+     // These reads are not among the selected package's proven five ranges.
+     // Never let a package/BIN token bless an external vertex color source.
+     if((part->alpha_state&256) || (part->lighting &&
+-       (part->lighting->ambient_vertex || part->lighting->material_vertex)))return classify?gcasset_actor_member_use(part,0):SourceUse{};
++       (part->lighting->ambient_vertex || part->lighting->material_vertex))){
++        {static unsigned dn;if(++dn<=60||!(dn&1023))re4dc_log("CP25VTX n=%u model=%p info=%p alpha=%x amb=%u mat=%u\n",dn,part->model,part->info,part->alpha_state,
++            part->lighting?unsigned(part->lighting->ambient_vertex):9u,part->lighting?unsigned(part->lighting->material_vertex):9u);}
++        return classify?gcasset_actor_member_use(part,0):SourceUse{};}
+     PayloadProof* selected=nullptr;bool ambiguous=false;
+     const auto accept=[&](PayloadProof& proof){if(selected && selected!=&proof)ambiguous=true;else selected=&proof;};
+ #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
+@@ -86,6 +89,22 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
+         if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
+             for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
+     }
++#if RE4DC_NMR_MASK
++    // cast-ps2-25: a masked section draws two runs (coarse_actor_owner_registry.inc plan): the section's own
++    // positions / normals / palettes with the UV + stream of its run geometry mask_geometry[0] (opaque) or [1]
++    // (alpha-masked cards: PS2 Ashley's head, hair and skirt). The run is the package's bytes exactly as the plan
++    // loads it (owned_run_load); every consumed array must lie inside the same package proof.
++    for(unsigned k=0;k<registry.chunk_count;++k){
++        const auto& s=registry.chunks[k];
++        for(unsigned h=0;h<2;++h){
++            if(s.mask_geometry[h]==~0u || s.mask_geometry[h]>=registry.geometry_count)continue;
++            const auto base=registry_gview(s.geometry),run=registry_gview(s.mask_geometry[h]);
++            auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
++            if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
++                for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
++        }
++    }
++#endif
+ #endif
+ #if RE4DC_ACTOR_PL08 && RE4DC_ACTOR_PL08_PACK
+     if(pl08_pack.published)for(unsigned k=0;k<3;++k){const auto& c=pl08_pack_chunks[k];const unsigned uv_bytes=pl08_pack.view[k].bytes[2];
+@@ -97,6 +116,19 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
+         const auto& c=leon4k::chunks[5+side];const auto& x=leon_hand_pack::blobs[leon_hand_pack::slot_blob[side]];
+         if(gcasset_actor_chunk(c,x.size[2],*part,*source))accept(leon_hand_pack::gcasset_hand_slot[side]);
+     }
++#endif
++#if 1 // CP25 diag
++    if(!selected){static unsigned en;if(++en<=60||!(en&1023)){unsigned pm=0,sm=0,um=0;
++        for(unsigned g=0;g<registry.geometry_count;++g){
++#if RE4DC_NMR_MASK
++            const auto c=registry_gview(g);
++#else
++            const auto& c=registry.chunks[g];
++#endif
++            if(c.positions==source->positions){++pm;if(c.uv==part->uv)++um;
++                const auto st=reinterpret_cast<std::uintptr_t>(c.stream),at=reinterpret_cast<std::uintptr_t>(part->stream);if(at>=st && at-st<=c.stream_bytes)++sm;}}
++        re4dc_log("CP25END n=%u model=%p info=%p amb=%u posmatch=%u uvmatch=%u streammatch=%u geoms=%u pc=%u/%u nc=%u/%u pal=%u small=%u\n",en,part->model,part->info,unsigned(ambiguous),pm,um,sm,
++            unsigned(registry.geometry_count),part->position_count,source->position_count,part->normal_count,source->normal_count,source->palette_entries,unsigned(source->small_normals));}}
+ #endif
+     // Other hand owners remain unqualified, never the caller BIN.
+     if(!selected && !ambiguous && classify)return gcasset_actor_member_use(part,0);
+diff --git a/port/dreamcast/game/platform/native_model.cpp b/port/dreamcast/game/platform/native_model.cpp
+index e319f9a18..8b6321b03 100644
+--- a/port/dreamcast/game/platform/native_model.cpp
++++ b/port/dreamcast/game/platform/native_model.cpp
+@@ -710,6 +710,9 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
+ #else
+ #define PP_PATH(x) ((void) 0)
+ #endif
++#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
++extern "C" int re4dc_registry_owned(const void*);
++#endif
+ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+ #if RE4DC_GC_ASSET_GATE
+     // Replacement/static paths must supply their own immutable asset proof.
+@@ -773,6 +776,10 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+         plain.source_key[0]=0;plain.source_key[1]=0xff;p=&plain;}
+ #endif
+ #endif
++#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
++    {if(p && re4dc_registry_owned(p->model)){static unsigned on;if(++on<=40||!(on&511))
++        re4dc_log("CP25OWN n=%u model=%p info=%p pos=%p replay=%x caller=%p\n",on,p->model,p->info,p->positions,re4dc_gcasset::replay_use.serial,__builtin_return_address(0));}}
++#endif
+ #if RE4DC_GC_ASSET_GATE
+     if(p) {
+         const void* data=nullptr;re4dc_gcasset::ModelMember member;
+@@ -780,6 +787,10 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+             re4dc_gcasset::source_use={re4dc_gcasset::replay_use.payload?re4dc_gcasset::replay_use.serial:0,re4dc_gcasset::replay_use.mask,p->model,p->info,re4dc_gcasset::replay_use.payload};
+         else if(re4dc_gcasset_model_identity(p->model,p->info,&data)!=0xffffffffU &&
+            re4dc_gcasset::member_lookup(data,&member)) {
++#if defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
++            if(member.name[0]=='p'&&member.name[1]=='l'&&member.name[2]=='1'&&member.name[3]=='1'){static unsigned an;if(++an<=40||!(an&511))
++                re4dc_log("CP25SUB n=%u arc=%u model=%p info=%p pos=%p caller=%p\n",an,member.arc,p->model,p->info,p->positions,__builtin_return_address(0));}
++#endif
+             const unsigned mask=(1U<<re4dc_gcasset::SourceGeometry)|
+                 (re4dc_gcasset_weapon_consumer(p->model,p->info,member.arc,member.family)?1U<<re4dc_gcasset::Weapon:0U);
+             // Role is known, but a full BIN hash does not authenticate every

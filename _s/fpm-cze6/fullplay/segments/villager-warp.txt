@@ -1,0 +1,13 @@
+name r101-villager-join
+# r101 square fight (fix list 12): kills down to fewer than 9 Ganados with Leon in PS2 area 0x21; the two villagers
+# (list 0x1B, 0x1A) join one at a time (PS2_ENEMY_RULES, PS2 R101Main) and the kill target rises by one each
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god
+alivelog 150
+kill 0x15 100 0x101
+killrep 12 40
+goto 300 17486 700 -16680

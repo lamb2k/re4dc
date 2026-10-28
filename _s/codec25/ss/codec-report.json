@@ -1,0 +1,3582 @@
+{
+ "ss_oc101.dat": {
+  "size": [
+   705408,
+   703616
+  ],
+  "sha256": "ca35c70f44417300e75cd109096deb2f6af1a38c55598e480f0c0acb381c310f",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc102.dat": {
+  "size": [
+   581408,
+   579616
+  ],
+  "sha256": "4c3ebca48ac721376d075ba3ba7ce7b2252a0c819fbfcbbc0201f60ecd637ea9",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc103a.dat": {
+  "size": [
+   568160,
+   566368
+  ],
+  "sha256": "f0c86c8b739337f9c1e710af69e492768cadb8ff7d9b0f7a2987c674c3eed7c7",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc103b.dat": {
+  "size": [
+   626048,
+   624256
+  ],
+  "sha256": "08f6fce636a5823ff0372c381ab6ebbdb1fed4e10f27c0b81b169f639b4f7568",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc104.dat": {
+  "size": [
+   642560,
+   640768
+  ],
+  "sha256": "01f3a2f09cc9ad513ac20474cc0d97ef842c8dc50d54a8ea92255f736e568999",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc105.dat": {
+  "size": [
+   793984,
+   792192
+  ],
+  "sha256": "25c3c671ffa3ef4befa80396b5b84809703326a7a2d8f8652879170c3474efe3",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc106.dat": {
+  "size": [
+   582496,
+   580704
+  ],
+  "sha256": "82aaf07791230b2646bdd430ad82328a57d0a00f1176ce9c3955c479be20dd47",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc107.dat": {
+  "size": [
+   602496,
+   600704
+  ],
+  "sha256": "c7ccdd8d6b852d365fd54d4615b28561e3450d225a8dbf1a8687456406e18c24",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc108.dat": {
+  "size": [
+   645120,
+   643328
+  ],
+  "sha256": "f98984e4b1376c8a665274aad48167c3c7ce8cad1ad9881608910da3043b670c",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc109.dat": {
+  "size": [
+   540032,
+   538240
+  ],
+  "sha256": "2f2414436d2741c47c71ef66c3d8f4205484f34eb89afb6220897c20872d7f07",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc110.dat": {
+  "size": [
+   580224,
+   578432
+  ],
+  "sha256": "36f29f1d9e670601e571895179d1a7163137bd27b072069dc57e5f04f1911964",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc111.dat": {
+  "size": [
+   603040,
+   601248
+  ],
+  "sha256": "8ea8ce187e9450feb0c1069f9ecb3da6ee825a472b01226a1700d141e0fec04e",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc112.dat": {
+  "size": [
+   550080,
+   548288
+  ],
+  "sha256": "8a1d95fb5588c53600c7fe34d6b79e188ce4200fa0ccdbb8115e924b8162cb21",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc201.dat": {
+  "size": [
+   669728,
+   667936
+  ],
+  "sha256": "d07db3364cbd696c3844ca4e6c3171da9293e31cbd4b7460b66ef60abd5e6f3b",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc202.dat": {
+  "size": [
+   632224,
+   626400
+  ],
+  "sha256": "da924b1c2e962ddef0caf075fc73d874754d95ff12448008d6d09b56d392cb6b",
+  "entries": {
+   "2": {
+    "gc": 104032,
+    "ps2": 100160,
+    "kind": {
+     "positions": 2551,
+     "normals": 3041,
+     "uvs": 1849,
+     "weights": 216,
+     "parts": 42,
+     "triangles": 5299
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     19,
+     42
+    ],
+    "nvtx": [
+     3061,
+     2551
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 24896,
+    "ps2": 24000,
+    "kind": {
+     "positions": 580,
+     "normals": 580,
+     "uvs": 296,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1152
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     580,
+     580
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 8704,
+    "ps2": 8384,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 97,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 83584,
+    "ps2": 83584,
+    "kind": "gx",
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1576,
+     1576
+    ],
+    "wind": 0.998
+   },
+   "6": {
+    "gc": 22048,
+    "ps2": 21312,
+    "kind": {
+     "positions": 651,
+     "normals": 673,
+     "uvs": 524,
+     "weights": 8,
+     "parts": 1,
+     "triangles": 944
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     12,
+     1
+    ],
+    "nvtx": [
+     688,
+     651
+    ],
+    "wind": 0.998
+   },
+   "7": "absent"
+  }
+ },
+ "ss_oc203.dat": {
+  "size": [
+   674400,
+   668576
+  ],
+  "sha256": "88867d30488f81ced523f28ac64a543e1ab29e8a3d90b6b97bd19de6eac07882",
+  "entries": {
+   "2": {
+    "gc": 104032,
+    "ps2": 100160,
+    "kind": {
+     "positions": 2551,
+     "normals": 3041,
+     "uvs": 1849,
+     "weights": 216,
+     "parts": 42,
+     "triangles": 5299
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     19,
+     42
+    ],
+    "nvtx": [
+     3061,
+     2551
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 24896,
+    "ps2": 24000,
+    "kind": {
+     "positions": 580,
+     "normals": 580,
+     "uvs": 296,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1152
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     580,
+     580
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 8704,
+    "ps2": 8384,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 97,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 83584,
+    "ps2": 83584,
+    "kind": "gx",
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1576,
+     1576
+    ],
+    "wind": 0.998
+   },
+   "6": {
+    "gc": 22048,
+    "ps2": 21312,
+    "kind": {
+     "positions": 651,
+     "normals": 673,
+     "uvs": 524,
+     "weights": 8,
+     "parts": 1,
+     "triangles": 944
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     12,
+     1
+    ],
+    "nvtx": [
+     688,
+     651
+    ],
+    "wind": 0.998
+   },
+   "7": "absent"
+  }
+ },
+ "ss_oc204.dat": {
+  "size": [
+   516384,
+   510560
+  ],
+  "sha256": "ea52a17dfa4d150db108fc3a31595fd8165a607f4c92df9253c15b60ad21023c",
+  "entries": {
+   "2": {
+    "gc": 104032,
+    "ps2": 100160,
+    "kind": {
+     "positions": 2551,
+     "normals": 3041,
+     "uvs": 1849,
+     "weights": 216,
+     "parts": 42,
+     "triangles": 5299
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     19,
+     42
+    ],
+    "nvtx": [
+     3061,
+     2551
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 24896,
+    "ps2": 24000,
+    "kind": {
+     "positions": 580,
+     "normals": 580,
+     "uvs": 296,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1152
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     580,
+     580
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 8704,
+    "ps2": 8384,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 97,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 83584,
+    "ps2": 83584,
+    "kind": "gx",
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1576,
+     1576
+    ],
+    "wind": 0.998
+   },
+   "6": {
+    "gc": 22048,
+    "ps2": 21312,
+    "kind": {
+     "positions": 651,
+     "normals": 673,
+     "uvs": 524,
+     "weights": 8,
+     "parts": 1,
+     "triangles": 944
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     12,
+     1
+    ],
+    "nvtx": [
+     688,
+     651
+    ],
+    "wind": 0.998
+   },
+   "7": "absent"
+  }
+ },
+ "ss_oc205.dat": {
+  "size": [
+   571232,
+   565408
+  ],
+  "sha256": "a68f9d94734860a6900fa08b6c66720d83a86a050392d4b8a23a6d84c7575437",
+  "entries": {
+   "2": {
+    "gc": 104032,
+    "ps2": 100160,
+    "kind": {
+     "positions": 2551,
+     "normals": 3041,
+     "uvs": 1849,
+     "weights": 216,
+     "parts": 42,
+     "triangles": 5299
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     19,
+     42
+    ],
+    "nvtx": [
+     3061,
+     2551
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 24896,
+    "ps2": 24000,
+    "kind": {
+     "positions": 580,
+     "normals": 580,
+     "uvs": 296,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1152
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     580,
+     580
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 8704,
+    "ps2": 8384,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 97,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 83584,
+    "ps2": 83584,
+    "kind": "gx",
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1576,
+     1576
+    ],
+    "wind": 0.998
+   },
+   "6": {
+    "gc": 22048,
+    "ps2": 21312,
+    "kind": {
+     "positions": 651,
+     "normals": 673,
+     "uvs": 524,
+     "weights": 8,
+     "parts": 1,
+     "triangles": 944
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     12,
+     1
+    ],
+    "nvtx": [
+     688,
+     651
+    ],
+    "wind": 0.998
+   },
+   "7": "absent"
+  }
+ },
+ "ss_oc206.dat": {
+  "size": [
+   417504,
+   411680
+  ],
+  "sha256": "128f59323022e91669211b39fa117edb105e29761355f2c80444883d5a1dd86e",
+  "entries": {
+   "2": {
+    "gc": 104032,
+    "ps2": 100160,
+    "kind": {
+     "positions": 2551,
+     "normals": 3041,
+     "uvs": 1849,
+     "weights": 216,
+     "parts": 42,
+     "triangles": 5299
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     19,
+     42
+    ],
+    "nvtx": [
+     3061,
+     2551
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 24896,
+    "ps2": 24000,
+    "kind": {
+     "positions": 580,
+     "normals": 580,
+     "uvs": 296,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1152
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     580,
+     580
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 8704,
+    "ps2": 8384,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 97,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 83584,
+    "ps2": 83584,
+    "kind": "gx",
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1576,
+     1576
+    ],
+    "wind": 0.998
+   },
+   "6": {
+    "gc": 22048,
+    "ps2": 21312,
+    "kind": {
+     "positions": 651,
+     "normals": 673,
+     "uvs": 524,
+     "weights": 8,
+     "parts": 1,
+     "triangles": 944
+    },
+    "nparts": [
+     111,
+     111
+    ],
+    "ndl": [
+     12,
+     1
+    ],
+    "nvtx": [
+     688,
+     651
+    ],
+    "wind": 0.998
+   },
+   "7": "absent"
+  }
+ },
+ "ss_oc301.dat": {
+  "size": [
+   637344,
+   632992
+  ],
+  "sha256": "eadf18cd537e87bfdd8142996632409442abe383ab76f8cbc519fbb3cae6cfb7",
+  "entries": {
+   "2": {
+    "gc": 77376,
+    "ps2": 73216,
+    "kind": {
+     "positions": 1795,
+     "normals": 2078,
+     "uvs": 1538,
+     "weights": 72,
+     "parts": 3,
+     "triangles": 3572
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     9,
+     3
+    ],
+    "nvtx": [
+     2075,
+     1795
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 31328,
+    "ps2": 30816,
+    "kind": {
+     "positions": 734,
+     "normals": 762,
+     "uvs": 461,
+     "weights": 51,
+     "parts": 12,
+     "triangles": 1460
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     12
+    ],
+    "nvtx": [
+     734,
+     734
+    ],
+    "wind": 0.997
+   },
+   "4": {
+    "gc": 11456,
+    "ps2": 11488,
+    "kind": {
+     "positions": 258,
+     "normals": 258,
+     "uvs": 226,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 480
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     258,
+     258
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 116064,
+    "ps2": 116064,
+    "kind": "gx",
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     2107,
+     2107
+    ],
+    "wind": 0.997
+   },
+   "6": {
+    "gc": 58496,
+    "ps2": 58528,
+    "kind": {
+     "positions": 1449,
+     "normals": 1499,
+     "uvs": 1620,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2498
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     11,
+     1
+    ],
+    "nvtx": [
+     1449,
+     1449
+    ],
+    "wind": 1.0
+   },
+   "7": {
+    "gc": 21792,
+    "ps2": 22048,
+    "kind": {
+     "positions": 514,
+     "normals": 539,
+     "uvs": 396,
+     "weights": 21,
+     "parts": 2,
+     "triangles": 946
+    },
+    "nparts": [
+     152,
+     152
+    ],
+    "ndl": [
+     3,
+     2
+    ],
+    "nvtx": [
+     514,
+     514
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc302.dat": {
+  "size": [
+   713504,
+   707520
+  ],
+  "sha256": "a43e83f534981f098139ff38efb2225764648175fdb2b0bacc1955d4af0ae2b9",
+  "entries": {
+   "2": {
+    "gc": 77376,
+    "ps2": 73216,
+    "kind": {
+     "positions": 1795,
+     "normals": 2078,
+     "uvs": 1538,
+     "weights": 72,
+     "parts": 3,
+     "triangles": 3572
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     9,
+     3
+    ],
+    "nvtx": [
+     2075,
+     1795
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 31328,
+    "ps2": 30816,
+    "kind": {
+     "positions": 734,
+     "normals": 762,
+     "uvs": 461,
+     "weights": 51,
+     "parts": 12,
+     "triangles": 1460
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     12
+    ],
+    "nvtx": [
+     734,
+     734
+    ],
+    "wind": 0.997
+   },
+   "4": {
+    "gc": 11456,
+    "ps2": 11488,
+    "kind": {
+     "positions": 258,
+     "normals": 258,
+     "uvs": 226,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 480
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     258,
+     258
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 116064,
+    "ps2": 116064,
+    "kind": "gx",
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     2107,
+     2107
+    ],
+    "wind": 0.997
+   },
+   "6": {
+    "gc": 58496,
+    "ps2": 58528,
+    "kind": {
+     "positions": 1449,
+     "normals": 1499,
+     "uvs": 1620,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2498
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     11,
+     1
+    ],
+    "nvtx": [
+     1449,
+     1449
+    ],
+    "wind": 1.0
+   },
+   "7": {
+    "gc": 25088,
+    "ps2": 23712,
+    "kind": {
+     "positions": 450,
+     "normals": 706,
+     "uvs": 275,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 1372
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     710,
+     450
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc303.dat": {
+  "size": [
+   819232,
+   813248
+  ],
+  "sha256": "f915a71e4326dc6cad17deb7f4867dcd45c9b3301bbbbaafc7e47580a2a1a503",
+  "entries": {
+   "2": {
+    "gc": 77376,
+    "ps2": 73216,
+    "kind": {
+     "positions": 1795,
+     "normals": 2078,
+     "uvs": 1538,
+     "weights": 72,
+     "parts": 3,
+     "triangles": 3572
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     9,
+     3
+    ],
+    "nvtx": [
+     2075,
+     1795
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 31328,
+    "ps2": 30816,
+    "kind": {
+     "positions": 734,
+     "normals": 762,
+     "uvs": 461,
+     "weights": 51,
+     "parts": 12,
+     "triangles": 1460
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     12
+    ],
+    "nvtx": [
+     734,
+     734
+    ],
+    "wind": 0.997
+   },
+   "4": {
+    "gc": 11456,
+    "ps2": 11488,
+    "kind": {
+     "positions": 258,
+     "normals": 258,
+     "uvs": 226,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 480
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     258,
+     258
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 116064,
+    "ps2": 116064,
+    "kind": "gx",
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     2107,
+     2107
+    ],
+    "wind": 0.997
+   },
+   "6": {
+    "gc": 58496,
+    "ps2": 58528,
+    "kind": {
+     "positions": 1449,
+     "normals": 1499,
+     "uvs": 1620,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2498
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     11,
+     1
+    ],
+    "nvtx": [
+     1449,
+     1449
+    ],
+    "wind": 1.0
+   },
+   "7": {
+    "gc": 25088,
+    "ps2": 23712,
+    "kind": {
+     "positions": 450,
+     "normals": 706,
+     "uvs": 275,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 1372
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     710,
+     450
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc304.dat": {
+  "size": [
+   689344,
+   683360
+  ],
+  "sha256": "2e732e9b8c73b24758c50c9cfd66a72a6c14b0e57ec68c0a416f31fb0b5fff32",
+  "entries": {
+   "2": {
+    "gc": 77376,
+    "ps2": 73216,
+    "kind": {
+     "positions": 1795,
+     "normals": 2078,
+     "uvs": 1538,
+     "weights": 72,
+     "parts": 3,
+     "triangles": 3572
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     9,
+     3
+    ],
+    "nvtx": [
+     2075,
+     1795
+    ],
+    "wind": 1.0
+   },
+   "3": {
+    "gc": 31328,
+    "ps2": 30816,
+    "kind": {
+     "positions": 734,
+     "normals": 762,
+     "uvs": 461,
+     "weights": 51,
+     "parts": 12,
+     "triangles": 1460
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     12
+    ],
+    "nvtx": [
+     734,
+     734
+    ],
+    "wind": 0.997
+   },
+   "4": {
+    "gc": 11456,
+    "ps2": 11488,
+    "kind": {
+     "positions": 258,
+     "normals": 258,
+     "uvs": 226,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 480
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     258,
+     258
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 116064,
+    "ps2": 116064,
+    "kind": "gx",
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     2107,
+     2107
+    ],
+    "wind": 0.997
+   },
+   "6": {
+    "gc": 58496,
+    "ps2": 58528,
+    "kind": {
+     "positions": 1449,
+     "normals": 1499,
+     "uvs": 1620,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2498
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     11,
+     1
+    ],
+    "nvtx": [
+     1449,
+     1449
+    ],
+    "wind": 1.0
+   },
+   "7": {
+    "gc": 25088,
+    "ps2": 23712,
+    "kind": {
+     "positions": 450,
+     "normals": 706,
+     "uvs": 275,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 1372
+    },
+    "nparts": [
+     143,
+     143
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     710,
+     450
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_oc305.dat": {
+  "size": [
+   648224,
+   646432
+  ],
+  "sha256": "24f44d31692e97e28907568aff6eb772e9cc9df07da449f87ec0b29744619a71",
+  "entries": {
+   "2": {
+    "gc": 104672,
+    "ps2": 102816,
+    "kind": {
+     "positions": 2898,
+     "normals": 2788,
+     "uvs": 1815,
+     "weights": 69,
+     "parts": 9,
+     "triangles": 5285
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     16,
+     9
+    ],
+    "nvtx": [
+     2916,
+     2898
+    ],
+    "wind": 0.997
+   },
+   "3": {
+    "gc": 22976,
+    "ps2": 22528,
+    "kind": {
+     "positions": 578,
+     "normals": 578,
+     "uvs": 184,
+     "weights": 42,
+     "parts": 2,
+     "triangles": 1134
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     578,
+     578
+    ],
+    "wind": 1.0
+   },
+   "4": {
+    "gc": 7936,
+    "ps2": 7904,
+    "kind": {
+     "positions": 194,
+     "normals": 194,
+     "uvs": 180,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     194,
+     194
+    ],
+    "wind": 1.0
+   },
+   "5": {
+    "gc": 91808,
+    "ps2": 91808,
+    "kind": "gx",
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1805,
+     1805
+    ],
+    "wind": 0.999
+   },
+   "6": {
+    "gc": 44288,
+    "ps2": 44960,
+    "kind": {
+     "positions": 1297,
+     "normals": 1289,
+     "uvs": 1213,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 2352
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     1297,
+     1297
+    ],
+    "wind": 0.991
+   },
+   "7": {
+    "gc": 16896,
+    "ps2": 16768,
+    "kind": {
+     "positions": 485,
+     "normals": 474,
+     "uvs": 188,
+     "weights": 1,
+     "parts": 1,
+     "triangles": 780
+    },
+    "nparts": [
+     67,
+     67
+    ],
+    "ndl": [
+     1,
+     1
+    ],
+    "nvtx": [
+     485,
+     485
+    ],
+    "wind": 1.0
+   }
+  }
+ },
+ "ss_term.dat": {
+  "size": [
+   551104,
+   551072
+  ],
+  "sha256": "8bd91723ecd72978092c67ffe2232c37b2f295c9f5cdf720318b285f46ed3dec",
+  "entries": {
+   "6": {
+    "gc": 7616,
+    "ps2": 7584,
+    "kind": {
+     "positions": 146,
+     "normals": 146,
+     "uvs": 127,
+     "weights": 2,
+     "parts": 1,
+     "triangles": 264
+    },
+    "nparts": [
+     119,
+     119
+    ],
+    "ndl": [
+     2,
+     1
+    ],
+    "nvtx": [
+     146,
+     146
+    ],
+    "wind": 1.0
+   },
+   "8": {
+    "gc": 84128,
+    "ps2": 84128,
+    "kind": "gx",
+    "nparts": [
+     119,
+     119
+    ],
+    "ndl": [
+     2,
+     2
+    ],
+    "nvtx": [
+     1473,
+     1473
+    ],
+    "wind": 1.0
+   }
+  }
+ }
+}

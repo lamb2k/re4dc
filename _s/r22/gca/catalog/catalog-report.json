@@ -1,0 +1,63 @@
+{
+ "counts": {
+  "font-glyph": {
+   "ps2": 232,
+   "unknown": 28
+  },
+  "font-palette": {
+   "ps2": 1,
+   "unknown": 1
+  },
+  "geometry": {
+   "authored": 98,
+   "ps2": 119,
+   "unknown": 54
+  },
+  "layout": {
+   "ps2": 8
+  },
+  "model": {
+   "gc": 2469,
+   "ps2": 675,
+   "unknown": 880
+  },
+  "motion": {
+   "gc": 1111,
+   "ps2": 1415
+  },
+  "movie": {
+   "ps2": 3,
+   "unknown": 42
+  },
+  "sound-aram": {
+   "gc": 66,
+   "ps2": 180,
+   "unknown": 4
+  },
+  "sound-mram": {
+   "gc": 39,
+   "ps2": 99,
+   "unknown": 2
+  },
+  "sound-stream": {
+   "ps2": 52
+  },
+  "texture": {
+   "gc": 1035,
+   "ps2": 3106,
+   "unknown": 3229
+  }
+ },
+ "harvest_sha256": "6792815c48788aad1249dcaa16ebe3652eb1a77455cf1bb6e7c83e60552cad70",
+ "label": "DIAGNOSTIC catalog: not a gate pass, origin unproven unless proofs",
+ "manifest_sha256": "9827afa727d4e999094c9da49fc107e83e309d38b6e09870ffcc3f9dd71cc767",
+ "pin": "11f46ffe1dbe99322047a8e7d4c36803cac236590a1c225a551ff2f7351feeb7",
+ "proofs_sha256": "050d5bf820f35232020177331ef7f59e75d7dbc6741ab8cd053c5db6565b6275",
+ "rows": 14948,
+ "runtime_harvest_kinds": [
+  "font-glyph",
+  "font-palette",
+  "layout"
+ ],
+ "schema": 1
+}

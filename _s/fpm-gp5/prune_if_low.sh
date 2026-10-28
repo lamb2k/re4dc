@@ -1,0 +1,1 @@
+/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/fullplay/../prune_if_low.sh

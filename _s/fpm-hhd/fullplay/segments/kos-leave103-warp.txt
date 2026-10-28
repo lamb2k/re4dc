@@ -1,0 +1,18 @@
+# KOS squeeze gate (kos_squeeze.sh, 2026-10-15): the r101 cross fight of kos-fight-warp.txt, then at room frame 450
+# (~20 s of fight, the crowd engaged) the room changes to r103 (the r101 door arrival, as long-warp) through the source's SceAtExecRoomJump
+# (WARP_JUMP=1 twin): r101's KOS use carried into the next room load.
+name kos-leave103
+# benchmark-r101 (lane crowd12, 2026-10-14): the r101 square, Leon by the burning cross / pyre facing the square
+# (lp2 "wide" view: 12 Ganados alive), the whole crowd alerted at room frame 30 and converging on him, god mode.
+# No pad input: Leon stands still, so the camera stays behind him on the same view. Full effects on screen: the
+# camera haze and mist, the pyre fire, torches. Settle room frames 0..299 (10 s), measure 300..1199 (30 s of game time).
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+# STACK v3 data (crowd12 2026-10-14): tex_merge.py of tex-t11.pak + fx12 ps2lib (5182665f) + vram12 world VQ tex-vr12-ps2vq.pak (0cfe783a), wrap-safe marked; objs r101 (32dfe338)
+jump 450 0x101 0x103 -47609 12 7084 1.8890

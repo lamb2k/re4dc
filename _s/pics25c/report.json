@@ -1,0 +1,126 @@
+{
+ "base_pak": "/root/re4data/private/codec25-20261025/dc/tex.pak",
+ "rows": [
+  {
+   "key": "13afc3c6-d074dc67",
+   "gc": "Evd/r100s40.evd@1dba00#9",
+   "ps2": "r100.dat@40d2a0#6",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 3.0,
+   "bytes": 18576,
+   "sha256": "2c4b6e3dae38d332c82c71111fefa3eca12c0b603b07407ca492a0fd8785fd93"
+  },
+  {
+   "key": "40f7d76b-b4427d4f",
+   "gc": "em/pl00.drs@f0dc0#0",
+   "ps2": "pl00.dat@faa00#0",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.92,
+   "bytes": 3216,
+   "sha256": "659581b4cb3b628f7ff2d2dc67cac84e539b4c04b60887f0d2f0780dfb44bd6a"
+  },
+  {
+   "key": "45426d95-d06bebbb",
+   "gc": "em/em3b.drs@21d00#4",
+   "ps2": "em3b.dat@1e060#3",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 3.17,
+   "bytes": 6288,
+   "sha256": "1597cb2d60394b31c42577402301eb2bf6305680d5b666e8095aef5dbf1946b3"
+  },
+  {
+   "key": "46d07d75-53ed5eee",
+   "gc": "em/em3b.drs@21d00#5",
+   "ps2": "em3b.dat@1e060#4",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 1.86,
+   "bytes": 6288,
+   "sha256": "a9378fc585c12b4644052c0023b9d26f4553279e36bf5b26b7db91ee515b23d3"
+  },
+  {
+   "key": "47062d28-e8df2e54",
+   "gc": "Evd/r100s40.evd@1dba00#10",
+   "ps2": "r100.dat@40d2a0#7",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.01,
+   "bytes": 6288,
+   "sha256": "6d2d536d36d2e323d0e5f78f47d2394ddc4807bec1a84683fbb21b8e1441dcef"
+  },
+  {
+   "key": "540e6582-93ab49e4",
+   "gc": "em/em3b.drs@21d00#3",
+   "ps2": "em3b.dat@1e060#2",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.46,
+   "bytes": 18576,
+   "sha256": "5cb9636b7f24417821ee8b5a64e40f75559861ebec2e1e1a4b952b81441aca94"
+  },
+  {
+   "key": "58921a54-929e60e3",
+   "gc": "Evd/r100s03.evd@134240#0",
+   "ps2": "em10.dat@6da240#0",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.96,
+   "bytes": 4240,
+   "sha256": "f3454852574d73c5fa9199798162c1c61198b0627d7756c98e2ab3b216342f49"
+  },
+  {
+   "key": "73dd55d6-dbcc3375",
+   "gc": "St1/r100.das@2f5660#0",
+   "ps2": "r100.dat@3a6cc0#0",
+   "orient": "T",
+   "ncc": 1.0,
+   "mae": 3.6,
+   "bytes": 10384,
+   "sha256": "5ba9d3bd2762710977bf7e3f7a62b95a2cdd6775071c646f88d2c5ecdf24f7ed"
+  },
+  {
+   "key": "cd026c6d-3a54bfa9",
+   "gc": "Evd/r100s03.evd@78d40#0",
+   "ps2": "pl00.dat@665c0#0",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.13,
+   "bytes": 4240,
+   "sha256": "433e7da71d5e56d703e4f4fc27fadad0f1d77b9b5a7e7165df795aa0e88da7d5"
+  },
+  {
+   "key": "dde6f32a-0b7cfdcf",
+   "gc": "em/pl00.drs@35400#4",
+   "ps2": "pl00.dat@328e0#2",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.09,
+   "bytes": 10384,
+   "sha256": "5f39e1b718599f804cbaec0568b089fd43a508e11760da2a062577f09157a71c"
+  },
+  {
+   "key": "e7b6e077-bbf20c84",
+   "gc": "Evd/r100s40.evd@1dba00#6",
+   "ps2": "r100.dat@40d2a0#4",
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.32,
+   "bytes": 6288,
+   "sha256": "a5a2336efe38a3109117b92ee64a38531dfc84b2231be57ef216f53b6cd84a11"
+  },
+  {
+   "key": "91f49545-9a934a0d",
+   "gc": "St1/r103.das@303b20#0",
+   "ps2": "r103.dat@2d62c0#0",
+   "orient": "id",
+   "ncc": 0.998,
+   "mae": 6.21,
+   "path": "pal4 requant onto the base palette",
+   "bytes": 8368,
+   "sha256": "84c3891bd1a8aed6ef7191d528bf42e65cce058a74cfac7041323caeb41e3436"
+  }
+ ]
+}

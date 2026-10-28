@@ -1,0 +1,17 @@
+{
+ "base_pak": "/root/re4data/private/pics25d-20261025/dc/tex.pak",
+ "rows": [
+  {
+   "key": "d17e9c56-fa23c229",
+   "what": "button A (GC green) -> Dreamcast A colour",
+   "gc": "etc/core.das@1e4d60#0",
+   "ps2": "recolour of the GC glyph (B label palette)",
+   "orient": null,
+   "mode": null,
+   "ncc": 0.996,
+   "mae": 41.67,
+   "bytes": 2192,
+   "sha256": "1ff520eb74bed53b4fa62e0d552fcccc4aad0fe28c80ebb3aef06dd809f89fe2"
+  }
+ ]
+}

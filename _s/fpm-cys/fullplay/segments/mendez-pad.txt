@@ -1,0 +1,17 @@
+# Intro START is ordinary movie input; one source tick later release in the QTE.
+# The source alone chooses A+B or L+R. Offer the two exclusive chords on separate ticks.
+# Successful s02 runs naturally so its picture-585 fire callback is also exercised.
+clock source
+0 1000 1 movie=1/7936 200000
++1 0000 1 qte=1 200000
++146 0300 1 qte=1 2
++2 0060 1 qte=1 2
+
+# Ordinary A on source frame count, after full S11; independent of cancelled warp acts.
+2500 0100 3
+2800 0100 3
+3100 0100 3
+
+# Independent ordinary A after the source window approach; no forced action/state.
+3300 0100 3
+3304 0000 1

@@ -1,0 +1,59 @@
+{
+ "base_pak": "/root/re4data/private/pada25b-20261025/dc/tex.pak",
+ "rows": [
+  {
+   "key": "48369d01-cf9063bd",
+   "what": "pair d0206f2b + d879f967 (Evd/r100s40.evd)",
+   "ps2": "em3b.dat@1e060#0",
+   "orient": "id",
+   "bytes": 6288,
+   "sha256": "7833206ec9fbca1e345566f61b5309005f37351d490fa24f6ed8d4f793fdb2f7"
+  },
+  {
+   "key": "dc363980-b5147ee2",
+   "what": "pair 45426d95 + 77b98e4f (Evd/r100s20.evd)",
+   "ps2": "em3b.dat@1e060#3",
+   "orient": "id",
+   "bytes": 6288,
+   "sha256": "37e263b1b93c39eab3032a5a3a35a40b9b4d849b03bac04c7cce7f0b0031f24f"
+  },
+  {
+   "key": "6adc2e7d-9646e5b8",
+   "what": "pair f13c6720 + e3c4a925 (Evd/r100s40.evd)",
+   "ps2": "r100.dat@40d2a0#0",
+   "orient": "id",
+   "bytes": 400,
+   "sha256": "bd8ec8ae937ee4437ac56c8e8eb1479e1059a74a6759aa1b901385d1772e5fa9"
+  },
+  {
+   "key": "279052e0-b695f91f",
+   "what": "pair 12a489ae + 5e3c1264 (ss/Cmn/ss_oc101.dat, radio-call hair)",
+   "ps2": "ss_oc101.dat@cc0#12",
+   "orient": "T",
+   "bytes": 10384,
+   "sha256": "c44284c2160768322a1c633f9586798f3fa9c7c8b821349d1a1af7f433ea6a5f"
+  },
+  {
+   "key": "b3c2a412-d219779c",
+   "what": "r11f foliage (no GC TPL / pair source on the GC discs; PS2 match NCC 1.0)",
+   "ps2": "r11f.dat@1a44b0#30",
+   "orient": "id",
+   "bytes": 4240,
+   "sha256": "c0ab34404c39d0aa0b4b739f6c9c0e10e15250459a31dba2ec7f15b2f29d00b0"
+  },
+  {
+   "key": "e35f8167-71a2d7e8",
+   "what": "pair 9264be9a + 0ca65484 (Evd/r100s03.evd; PS2 colour exact, mask MAE 5)",
+   "ps2": "colour ss_oc101.dat@cc0#1 + mask ss_oc101.dat@cc0#15",
+   "bytes": 3216,
+   "sha256": "bd57f2417f2e7d1362d1b7e768900d0ddc7b938b0d273e66e79d42747b57692b"
+  },
+  {
+   "key": "2e6a0903-9fe7dbb0",
+   "what": "pair 9264be9a + 2b388d2d (ss/Cmn/ss_oc101.dat; PS2 colour exact, mask MAE 1)",
+   "ps2": "colour ss_oc101.dat@cc0#1 + mask ss_oc101.dat@cc0#2",
+   "bytes": 3216,
+   "sha256": "177d66fc0b8d96a7fe0032acc0d04372d70aa152a7864d0d55988f8fcc9df11f"
+  }
+ ]
+}

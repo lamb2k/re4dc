@@ -1,0 +1,49 @@
+{
+ "counts": {
+  "font-glyph": {
+   "unknown": 260
+  },
+  "font-palette": {
+   "unknown": 2
+  },
+  "geometry": {
+   "unknown": 271
+  },
+  "layout": {
+   "unknown": 8
+  },
+  "model": {
+   "unknown": 4024
+  },
+  "motion": {
+   "unknown": 2526
+  },
+  "movie": {
+   "unknown": 45
+  },
+  "sound-aram": {
+   "unknown": 250
+  },
+  "sound-mram": {
+   "unknown": 140
+  },
+  "sound-stream": {
+   "unknown": 52
+  },
+  "texture": {
+   "unknown": 7370
+  }
+ },
+ "harvest_sha256": "6792815c48788aad1249dcaa16ebe3652eb1a77455cf1bb6e7c83e60552cad70",
+ "label": "DIAGNOSTIC catalog: not a gate pass, origin unproven unless proofs",
+ "manifest_sha256": "9827afa727d4e999094c9da49fc107e83e309d38b6e09870ffcc3f9dd71cc767",
+ "pin": "864db23ff5a9e2c72ec3601e6caf6f076b47dac707c78d274c9135d9585fba3e",
+ "proofs_sha256": null,
+ "rows": 14948,
+ "runtime_harvest_kinds": [
+  "font-glyph",
+  "font-palette",
+  "layout"
+ ],
+ "schema": 1
+}

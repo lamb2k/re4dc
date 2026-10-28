@@ -1,0 +1,19 @@
+name crash-inv
+# Crash suite: r100 after the radio call (r100-post-radio). Y opens the attache case, A on the cursor item opens its
+# command list, down + A picks the second command (Examine for the starting handgun), B backs out of the examine
+# view, the list and the case. Act frames count PADRead calls, which keep counting inside the sub screen.
+room 0x100
+pos -99685 -484 -1343
+ang 2.2460
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+act 60 y 3
+act 360 a 4
+act 450 0x0004 3
+act 520 a 4
+act 800 b 4
+act 900 b 4
+act 1000 b 4
+act 1100 b 4

@@ -1,0 +1,162 @@
+{
+  "schema": 2,
+  "protocol_version": 2,
+  "judge_contract": 2,
+  "gate": "GC-ASSET",
+  "protocol_sha256": "dbd443bbe154bbd8eb2ce171162865fb2e9b7b6d8490a343223fb71552166027",
+  "required": "3ff",
+  "consumers": [
+    "source_geometry",
+    "texture",
+    "effect_picture",
+    "weapon",
+    "font",
+    "ui",
+    "sound_bank",
+    "sound_stream",
+    "movie",
+    "motion"
+  ],
+  "pass": false,
+  "rooms": [
+    "0100",
+    "0101",
+    "0103",
+    "011e",
+    "011f"
+  ],
+  "visits": 18,
+  "per_room": {
+    "0100": {
+      "visits": 2,
+      "rows": {
+        "unknown": 2
+      },
+      "errors": {
+        "unbound-accepted-payload": 972,
+        "member-span": 1,
+        "member-unbound": 5,
+        "motion-unbound": 6,
+        "unbound-accepted-model": 207
+      },
+      "covered": [
+        "texture",
+        "effect_picture",
+        "weapon",
+        "font",
+        "ui",
+        "sound_bank",
+        "sound_stream",
+        "movie",
+        "motion"
+      ],
+      "not_covered": [
+        "source_geometry"
+      ]
+    },
+    "0101": {
+      "visits": 1,
+      "rows": {
+        "unknown": 1
+      },
+      "errors": {},
+      "covered": [
+        "texture",
+        "effect_picture",
+        "weapon",
+        "font",
+        "ui",
+        "sound_bank",
+        "sound_stream",
+        "movie",
+        "motion"
+      ],
+      "not_covered": [
+        "source_geometry"
+      ]
+    },
+    "0103": {
+      "visits": 1,
+      "rows": {
+        "unknown": 1
+      },
+      "errors": {},
+      "covered": [
+        "texture",
+        "effect_picture",
+        "weapon",
+        "font",
+        "ui",
+        "sound_bank",
+        "sound_stream",
+        "movie",
+        "motion"
+      ],
+      "not_covered": [
+        "source_geometry"
+      ]
+    },
+    "011e": {
+      "visits": 1,
+      "rows": {
+        "unknown": 1
+      },
+      "errors": {},
+      "covered": [
+        "texture",
+        "effect_picture",
+        "weapon",
+        "font",
+        "ui",
+        "sound_bank",
+        "sound_stream",
+        "movie",
+        "motion"
+      ],
+      "not_covered": [
+        "source_geometry"
+      ]
+    },
+    "011f": {
+      "visits": 1,
+      "rows": {
+        "unknown": 1
+      },
+      "errors": {},
+      "covered": [
+        "texture",
+        "effect_picture",
+        "weapon",
+        "font",
+        "ui",
+        "sound_bank",
+        "sound_stream",
+        "movie",
+        "motion"
+      ],
+      "not_covered": [
+        "source_geometry"
+      ]
+    }
+  },
+  "out_of_scope_errors": {},
+  "allowed_used": 5,
+  "not_covered_errors": {
+    "0100": {
+      "source_geometry/unbound-accepted-payload": 972,
+      "source_geometry/member-span": 1,
+      "source_geometry/member-unbound": 5,
+      "source_geometry/unbound-accepted-model": 207
+    }
+  },
+  "failures": [
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3300: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3301: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3447: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3448: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3450: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3451: runtime diagnostic error: GC-ASSET-ERROR v=2 why=motion-unbound consumer=9",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:3592: error kinds in scope: motion-unbound=6",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/cast-ps2-25/cg-h2-gt1/run-output.txt:4696: error kinds in scope: motion-unbound=6"
+  ]
+}

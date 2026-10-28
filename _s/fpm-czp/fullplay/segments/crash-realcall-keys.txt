@@ -1,0 +1,25 @@
+# fp_run.py --keys (crash suite realcall): New Game on the unmodified release disc as newgame-keys.txt, then A every
+# 6 s once the first radio call's sub screen opens (r100 after s40), as a player closes it.
+fixture: state card=8/1 | 1.5 | up
+- | 0.8 | a
+fixture: state title=2/ | 1.5 | start
+fixture: state title=5/ | 1.5 | start
+fixture: state title=5/1 | 2.0 | up
+- | 1.2 | a
+fixture: state title=7/ | 2.5 | start
+- | 1.5 | a
+subscreen backing: open | 8.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a
+- | 6.0 | a

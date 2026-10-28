@@ -1,0 +1,14 @@
+cast-ps2-25 r24: MOTION-KEYS gates; PS2SND24D default = the regenerated store; rr r100 house-siege job
+
+The r100 house-siege halt ("RE4DC MISSING: motion key read" dc/mot/18f9ad45-ba6230e7.fcv, then 4c4a3483-8be0de5f) came
+from stagings without the recipe's exports: t11-fix.py's default PS2SND24D (ps2snd24-20261024) holds em/em11..17.drs
+with the GameCube Ganado motion pmgan24 replaced; staged after pmgan24 they stream the 169 GC keys pmgan24 removes. The
+release recipe exports ps2snd24-t24-20261024 (PS2 motion + PS2 sound), so the release tree is clean.
+- t11-fix.py: PS2SND24D defaults to ps2snd24-t24-20261024; motion_key_gate() stops any fixture whose staged archives'
+  live MTC tables name a dc/mot key the fixture removes.
+- motion/mot_refs.py: whole-tree MOTION-KEYS check (every live MTC key present in dc/mot, none on the fixture's remove
+  list; dead tables in front of a rewritten body are skipped). rr-cycle.sh bases() runs it; rr-judge.py row MOTION-KEYS.
+- rr: siege-r100 Flycast job (bench-r100-house warp, every tier) + judge row "siege r100 HALT/FAULT/MISSING 0".
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU

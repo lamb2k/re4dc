@@ -1,0 +1,1 @@
+Visible source-model diagnostic with manual keyboard route; startup-menu fixture only. Source camera, position, flags, health and AI unmodified. Material/lighting, audio, full combat and room acceptance remain unqualified.

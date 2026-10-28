@@ -1,0 +1,3 @@
+built routefpcp25r22aW 91a7e6c5d8968d2a
+/opt/toolchains/dc/sh-elf/bin/sh-elf-nm: '/root/probe/lanes/route/out-rrd4164d2rP/re4dc-game.elf': No such file
+TWIN fpcp25r22aW tree=/root/work/lanes/cast-ps2-25-base sha=d4164d22a9462bdb00d6d46aa5381d7d360b40d6 diag="DBG_WARP=1 WARP_JUMP=1 PC_SAMPLER=0 TEX_CHECK=1 MCHECK_LEONGC=1 GC_ASSET_GATE=1 GC_ASSET_CATALOG_PIN_FILE=/root/work/lanes/cast-ps2-25/_s/r22/gca/gc-assets.pin" end=8c44dab4 release_end=

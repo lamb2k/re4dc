@@ -1,0 +1,19 @@
+name r100-s30-cliff
+# s03, then the s03 Ganado killed at room frame 400: s20 + the ambush + the call
+room 0x100
+pos -82910 860 -38480
+ang -0.1293
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+act 30 fwd 150
+kill 0x12 400 0x100
+goto 900 -110405 -733 2193 -1.5708
+act 1500 a 3
+act 1800 a 3
+act 2100 a 3
+act 2400 a 3
+act 2700 a 3
+act 3000 a 3
+
+late 0x00 1400 0x100

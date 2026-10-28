@@ -1,0 +1,67 @@
+diff --git a/port/dreamcast/game/model_bridge.cpp b/port/dreamcast/game/model_bridge.cpp
+index 60f0c96e1..f94bd7440 100644
+--- a/port/dreamcast/game/model_bridge.cpp
++++ b/port/dreamcast/game/model_bridge.cpp
+@@ -881,6 +881,7 @@ extern "C" unsigned long long re4dc_otp_now_us();
+ #endif
+ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
+  const void* part_ptr,const float mv[3][4],unsigned pass){
++    {const cModel* cm=static_cast<const cModel*>(model);if(cm && cm->id==0 && cm->nParts==119){static unsigned cp25d;if(++cp25d<=12)re4dc_log("CP25DMP n=%u m=%p caller=%p pass=%u\n",cp25d,model,__builtin_return_address(0),pass);}} // CP25DIAG
+     if(!RE4DC_MODEL_DIAG() || pass)return;
+ #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+     struct BridgeProf { const void* m; unsigned long long t0; unsigned b0;
+diff --git a/port/dreamcast/game/platform/native_model.cpp b/port/dreamcast/game/platform/native_model.cpp
+index e319f9a18..21d43d55f 100644
+--- a/port/dreamcast/game/platform/native_model.cpp
++++ b/port/dreamcast/game/platform/native_model.cpp
+@@ -754,7 +754,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+         hr_view.lighting=&hr_lighting;p=&hr_view;
+ #endif
+         if(leon_hr_parts++<4 || !(leon_hr_parts&1023U))
+-            re4dc_log("LEON_HR source part %ux%u fmt=%u x0.5 n=%u\n",p->image.width,p->image.height,p->image.format,leon_hr_parts);
++            re4dc_log("LEON_HR source part %ux%u fmt=%u x0.5 n=%u caller=%p model=%p\n",p->image.width,p->image.height,p->image.format,leon_hr_parts,__builtin_return_address(0),p->model); /* CP25DIAG */
+     }
+ #endif
+ #if RE4DC_NATIVE_STATIC
+diff --git a/src/game/shadow.cpp b/src/game/shadow.cpp
+index 550934427..b9b193ce7 100644
+--- a/src/game/shadow.cpp
++++ b/src/game/shadow.cpp
+@@ -22,6 +22,7 @@
+ #include "shadow.h"
+ 
+ extern cEm* pPL;   // game/em.cpp
++extern "C" void re4dc_log(const char*, ...); // CP25DIAG
+ extern cEm* pSUB;  // game/em.cpp
+ #if RE4DC_LEON_FACE_LAZY
+ extern "C" void re4dc_face_lazy_resolve(const void* info);  // game/trans.cpp (game30.mk LEON_FACE_LAZY)
+@@ -1112,6 +1113,9 @@ void make_shadow_texture(ShadowMng* mng)
+             } else {
+                 info = p->pModelInfo;
+             }
++#if 1 // CP25DIAG
++            {static unsigned cp25n;if(++cp25n<=40||!(cp25n&255))re4dc_log("CP25SHD n=%u f=%u room=%04x model=%p pl=%u id=%u noself=%u shinfo=%u\n",cp25n,unsigned(pG->Frame_cnt),unsigned(pG->room_id),p,unsigned(p==(cModel*)pPL),unsigned(p->id),unsigned(SHD_NO_SELF(mng)?1:0),unsigned(p->pShadowModelInfo!=0));}
++#endif
+             if (SHD_NO_SELF(mng)) {
+                 commonModelTrans(p, info, mng->lookAt, 1);
+             } else {
+diff --git a/src/game/trans.cpp b/src/game/trans.cpp
+index 17d66f567..4e7a36686 100644
+--- a/src/game/trans.cpp
++++ b/src/game/trans.cpp
+@@ -3025,6 +3025,7 @@ void ModelRender(cModel* m)
+ // the display list; foot shadows afterwards. flag bit0 = the shadow / depth pass (no alpha).
+ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
+ {
++    if(flag && m && m->id==0 && m->nParts==119){static unsigned cp25f;if(++cp25f<=60||!(cp25f&255))re4dc_log("CP25FLAG n=%u f=%u m=%p flag=%d caller=%p\n",cp25f,unsigned(pG->Frame_cnt),m,flag,__builtin_return_address(0));} // CP25DIAG
+     FRONT_TEX_FLUSH();
+     static int bl[5][4] = {
+         {1, 4, 5, 0},
+@@ -3081,6 +3082,7 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
+ #if RE4DC_ACTOR_TRANSACTION
+     if(!flag) {
+         const int owned=re4dc_actor_transaction_draw(m);
++        if(m->id==0 && m->nParts==119 && owned==0){static unsigned cp25t;if(++cp25t<=60||!(cp25t&255))re4dc_log("CP25TX n=%u f=%u m=%p pl=%u ot=%u caller=%p\n",cp25t,unsigned(pG->Frame_cnt),m,unsigned(m==(cModel*)pPL),unsigned(m->ot_type),__builtin_return_address(0));} // CP25DIAG
+ #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
+         // mcheck.mk MCHECK_LEONGC (test builds): the player's model left to the source (GameCube) path.
+         if(owned==0 && m==(cModel*)pPL)re4dc_leon_gc_note(m);

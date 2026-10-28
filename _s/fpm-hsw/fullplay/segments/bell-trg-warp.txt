@@ -1,0 +1,11 @@
+name r101-bell-trg
+# r101 square fight (flags 6/7 clear, first visit done, god mode); the bell (event 30, r101s30) is forced at room frame
+# 2400 by the source's DebugTrg(0) shortcut (about 2,200 fight frames) instead of the 11,700-frame timer: 5-minute gate
+# segment (2026-10-14). The fight rules are covered by `villager`; the timer itself is not.
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god
+trg 0 2400 0x101

@@ -1,0 +1,10 @@
+name r105-event-west
+# r105 area 8 (west half) with the key item: s00, then the chapter 1-2 end
+room 0x105
+pos 7400 6020 5500
+ang 0.0000
+items 0 0x20000000
+inv default
+act 90 a 4
+act 180 a 4
+act 270 a 4

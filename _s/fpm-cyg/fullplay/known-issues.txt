@@ -1,0 +1,57 @@
+# Known issues the full-play gate does not count (fp_check.py). One per line:
+#   builds | category | segment | regex on the log line (or failure text) | why, with the KNOWN_ISSUES.md row / issue
+# builds: comma-separated commit prefixes of the release tree (prep.json release_tree_commit), or *.
+# categories: crash hang missing misalign dropped-free log gc-fallback texture alloc io movie route leak reset-memory vram
+# (vram and gc-fallback also match vram/vram_gate.py's failure text: 'r101: 3 thrash-guard refusal(s) ...', 'GameCube
+# effect picture <key>: ...'; ps2lib NONE rows are known gaps without an entry here.)
+# Every entry must name a KNOWN_ISSUES.md row (or the bug report it came from). Keep it short: a known issue that
+# spreads to new rooms or builds fails the gate again.
+
+# --- Rows in KNOWN_ISSUES.md ---
+# "Leon switches back to the GameCube model after the boat" (test 8, test 9; In progress, #26). Test 9 / 9.1 lack
+# LEON_HAND_POSES, so MCHECK_LEONGC reports GC Leon draws in most rooms, not only after the boat. Never allowed for
+# later builds: a93e8be0+ carry the fix, and LHPACK (hand package missing) is never allowed.
+db351823,40fb4deb,135fde2b | gc-fallback | * | ^LEONGC (?!armed) | KNOWN_ISSUES "Leon switches back to the GameCube model after the boat" (#26), unfixed in test 9 / 9.1 (no LEON_HAND_POSES)
+# "Footsteps and room ambience are silent in r103 (the farm), and in later rooms" (all builds, Open).
+* | sound | * | aica: blk \d+ .*does not fit | KNOWN_ISSUES "Footsteps and room ambience are silent in r103 and later rooms" (sound banks not prebuilt)
+# "After loading a save and resetting, the first room starts with less free memory" (test 9, Open, #26).
+db351823,40fb4deb,135fde2b,a93e8be0,bd57e195,af0eedf6,eb4e8813 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26)
+# Soft reset destroys heap 4 on purpose (RESET_HEAP_FIX): fp_check already notes drops inside the reset window.
+# 2026-10-22 (lane reset22): FIXED by RESET_MEM_FIX=1 in the rr recipe (the 61,312 B was the pl08 package cell, reloaded
+# into r100 because the bound player file survived the reset). The "*" row pinned to 61312 B is removed: any deficit fails.
+
+# --- Found by this gate on 2026-10-14 (test 9 and 9.1), not yet in KNOWN_ISSUES.md: add rows there. ---
+# Scoped to the test 9 / 9.1 trees only, so any later build that still has them FAILS.
+# bd57e195 (lane/cx-integrate, Codex work default-off; play image byte-identical to a93e8be0) added 2026-10-14 after its
+# gate (fullplay-20261014\cxint-085015) showed the same failures as a93e8be0's (t10s-a-030550): the same h2 staging
+# lines, the same ch12 495x150 refusal, the same ch21 fbec854a lines, the same reset deficit (61312 B), the bell miss at
+# frame 7852 (a93e8be0: 7867).
+db351823,40fb4deb,135fde2b,a93e8be0,bd57e195,eb4e8813 | texture | * | no contiguous block for|texchk: FAIL PVR texture allocation failed | NEW 10-14: VRAM fragmentation refuses a texture for 120+ frames (r105 UI 495x150, r10b 512x512, r119 256x256) although enough VRAM is free
+db351823,40fb4deb,135fde2b,a93e8be0,bd57e195 | texture | bell | re4tex 128x128 fmt=14$|FAIL (open failed|missing) [0-9a-f]{8}-[0-9a-f]{8} 128x128 fmt=14 | NEW 10-14: at the r101 bell (room frame ~8100) a 128x128 fmt=14 texture is looked up that is not on the disc; its id differs per build (9.1 8de064f0-4c53f61a, test 9 9a9c2701-99af7ea7, a93e8be0 447d46a4-89f3730b and 926d9ee7-cbd1c81a, bd57e195 0cb473bf-292b39a0): an id hashed from changing data?
+db351823,40fb4deb,135fde2b,a93e8be0,bd57e195 | alloc | h2 | alloc\[[0-9a-f]+\]:free\[[0-9a-f]+\] native UI texture staging | NEW 10-14: r100 s30 start: UI texture staging (55 KB) does not fit while the movie borrows heap 4
+db351823,40fb4deb,135fde2b,a93e8be0,bd57e195 | texture | ch21 | fbec854a-b7656a09 | NEW 10-14: chapter 2-1 results screen texture /cd/dc/tex/f/fbec854a-b7656a09.re4tex (pair color c050cf4e-216cd784 mask ec97f64b-dab43d54) is not on the disc
+40fb4deb,135fde2b | movie | lake | route movie terminal=3 id=10b10 | NEW 10-14: test 9.1 twin: r10b s10 ends on its first picture (terminal=3, "texture retirement: open scene discarded", vram_free=21504 at start); plays whole on test 9 and a93e8be0
+
+# --- Test 13 RC (2026-10-15): rows that the test 12.2 control shows the same way (fullplay-20261015 t122ctl-095515,
+# t122ctlh2-100441). Scoped to the test 13 release tree; 12.2 itself (2602b5c3 / 677229c8) shows them too.
+# (Route goals are not matchable here: the h2 segment's s30 goal still reports FAIL; 12.2 fails it the same way.)
+05e5ff76,677229c8,d2cd2a88,ba856017,e2048df6 | alloc | h2 | alloc\[[0-9a-f]+\]:free\[[0-9a-f]+\] native UI texture staging | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (12.2 control the same)
+05e5ff76,677229c8,d2cd2a88,ba856017,e2048df6 | movie | h2 | id=10030 | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (s30 terminal=3 0/340; 12.2 the same)
+05e5ff76,677229c8,d2cd2a88,ba856017,e2048df6 | vram | boat | r10b: 12 thrash-guard refusal | KNOWN_ISSUES "On the r10b boat, a few effect pictures can be skipped while video memory is full" (12.2 control: the same 12)
+
+# --- Test 15 release check (t15rel.conf, 2026-10-16) ---
+# The comingsoon segment exists to show the Coming Soon hold on the release build: its Coming Soon line is the goal.
+6b5bc9b0,0a4ef1b4 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+# Test 15 / 15.1 (0a4ef1b4, the same 4 refusals and 61,312 B) release check reset segment (user 10-16: publish; non-blocking): KNOWN_ISSUES r102 row (#33) and the reset row.
+6b5bc9b0,0a4ef1b4,e2048df6 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; test 14: 76, test 15: 4)
+6b5bc9b0,0a4ef1b4,e2048df6 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)
+# Test 16.4 (release tree 9e8a3780, 10-17): the same three rows; its release check showed them identically on 16.3 (t164-20261017\t163base).
+9e8a3780 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+9e8a3780 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; 16.3 and 16.4: 5)
+9e8a3780 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)
+
+# --- Test 16 release check (t16rel.conf, 2026-10-16): the same three rows for the test 16 programs (9d4a5655, 5339313b, 72871476) and test 16.1 (ad3ea515): the
+# deliberate Coming Soon hold, and the reset segment's r102 (#33) and reset-memory (#26) rows, which test 16 does not change. Test 16.2: program a8cf395d, its release build tree 968c7bd8 (the 16.2 data prep; same program image f214bd94). Test 16.3: program and release build tree 03776737.
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; test 14: 76, test 15: 4)
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)

@@ -1,0 +1,140 @@
+From 97345f8b98897afb3b56267c7048537ea4845ba5 Mon Sep 17 00:00:00 2001
+From: stevedamnvan <100538383+stevedamnvan@users.noreply.github.com>
+Date: Sun, 25 Oct 2026 15:16:57 -0400
+Subject: [PATCH] cast-ps2-25: GC-ASSET credits the PS2 Ashley's masked runs to
+ her package (allowlist 93 -> 87)
+
+The 6 "GameCube cast model still drawn" rows em/pl01.drs#body (17c2d1a1, 9d447531, ddfc4b21) in r11e and r11f
+were a census misattribution, not a GameCube draw. The bytes are GC pl11 BINs 7 / 6 / 9 (head, hair, skirt;
+byte-identical in pl01.drs, hence the label). The partner Ashley is fully drawn by her PS2 registry package
+(ash21/ashley11: NMRS plan=R every frame). But her head, hair and skirt sections are masked sections: two runs
+that use the section's positions with the UV and stream of mask_geometry[0] / [1]. gcasset_actor_current_select
+matched only whole chunk views, found none and accepted the run on the source info's GC member.
+Diagnostic twin (7250e5c6): posmatch=1 uvmatch=0 streammatch=0 for exactly those three infos.
+
+Fix (GC_ASSET_GATE builds only; the .inc is inside #if RE4DC_GC_ASSET_GATE): also match a masked section's
+run views, with every consumed array inside the same package proof.
+
+Gates: gate-ON census on cand-2e8a7cef + this tree (catalog cat15 edc56207): r11e and r11f kind=model rows 0
+(control 3 each). The other rows are unchanged allowed unknown textures. The judge's remaining failures are the
+pre-existing motion-unknown-accepted-records / payload-catalog-bind errors, also present in the control.
+Release image unchanged: route-build of the rr recipe from this tree = 57a3450d957641d2 (rr cand-2e8a7cef).
+So KOS, heap 4 and gameplay are untouched and there is no look change.
+Evidence C:\Flycast-Evidence\re4-dreamcast\cast-ps2-25 (cg-r11e-j, cg-r11f-j; diag cg-r11e-d5).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU
+---
+ .../include/gc_asset_actor_select.inc         | 17 ++++++
+ .../tools/d367/gc_port23/allowlist.json       | 60 -------------------
+ 2 files changed, 17 insertions(+), 60 deletions(-)
+
+diff --git a/port/dreamcast/game/platform/include/gc_asset_actor_select.inc b/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
+index 1dce3bd94..34432fa03 100644
+--- a/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
++++ b/port/dreamcast/game/platform/include/gc_asset_actor_select.inc
+@@ -86,6 +86,23 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
+         if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
+             for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
+     }
++#if RE4DC_NMR_MASK
++    // cast-ps2-25: a masked section draws two runs (coarse_actor_owner_registry.inc plan): the section's own
++    // positions / normals / palettes with the UV + stream of its run geometry mask_geometry[0] (opaque) or [1]
++    // (alpha-masked cards: the PS2 Ashley's head, hair and skirt). Without this the run matched no view and was
++    // reported as the GameCube member of its source info (pl11 BINs 6 / 7 / 9), though the PS2 package drew it.
++    // Every consumed array must still lie inside the same package proof.
++    for(unsigned k=0;k<registry.chunk_count;++k){
++        const auto& s=registry.chunks[k];
++        for(unsigned h=0;h<2;++h){
++            if(s.mask_geometry[h]==~0u || s.mask_geometry[h]>=registry.geometry_count)continue;
++            const auto base=registry_gview(s.geometry),run=registry_gview(s.mask_geometry[h]);
++            auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
++            if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
++                for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
++        }
++    }
++#endif
+ #endif
+ #if RE4DC_ACTOR_PL08 && RE4DC_ACTOR_PL08_PACK
+     if(pl08_pack.published)for(unsigned k=0;k<3;++k){const auto& c=pl08_pack_chunks[k];const unsigned uv_bytes=pl08_pack.view[k].bytes[2];
+diff --git a/port/dreamcast/tools/d367/gc_port23/allowlist.json b/port/dreamcast/tools/d367/gc_port23/allowlist.json
+index a92c521a7..8b813028d 100644
+--- a/port/dreamcast/tools/d367/gc_port23/allowlist.json
++++ b/port/dreamcast/tools/d367/gc_port23/allowlist.json
+@@ -640,36 +640,6 @@
+    "room": "0103",
+    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
+   },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "17c2d1a1d1b48cdd66687e1781c869626218fa4b",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011e",
+-   "sha256": "17c2d1a1d1b48cdd66687e1781c869626218fa4b7948359ee92000933bd9f7e5"
+-  },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "9d447531e18f0ea917d5ce2ed93bc420bc238869",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011e",
+-   "sha256": "9d447531e18f0ea917d5ce2ed93bc420bc238869c88004fc106c6bb071881f3b"
+-  },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "ddfc4b2176800c4897147e67d07379cf4f7bbbb7",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011e",
+-   "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
+-  },
+   {
+    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11e (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=4616192&bytes=1168",
+    "id": "076e860e-52b615a0",
+@@ -720,36 +690,6 @@
+    "room": "011e",
+    "sha256": "a5abe76daafda2e2fbdba980394e791307863f31741d0323888310dc74ac5d3a"
+   },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "17c2d1a1d1b48cdd66687e1781c869626218fa4b",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011f",
+-   "sha256": "17c2d1a1d1b48cdd66687e1781c869626218fa4b7948359ee92000933bd9f7e5"
+-  },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "9d447531e18f0ea917d5ce2ed93bc420bc238869",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011f",
+-   "sha256": "9d447531e18f0ea917d5ce2ed93bc420bc238869c88004fc106c6bb071881f3b"
+-  },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl01.drs#body",
+-   "id": "ddfc4b2176800c4897147e67d07379cf4f7bbbb7",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "011f",
+-   "sha256": "ddfc4b2176800c4897147e67d07379cf4f7bbbb79015b8b63f72f2357faa234d"
+-  },
+   {
+    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-r11f (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=28217344&bytes=6288",
+    "id": "2c9c252a-51c59944",
+-- 
+2.43.0
+

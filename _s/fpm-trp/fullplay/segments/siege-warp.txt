@@ -1,0 +1,15 @@
+name ch22-s3b-r11c-siege-end
+# Codex r11c-siege-native start (cabin interior, Ashley following), god; the siege runs to its own end
+room 0x11c
+pos 90900 0 -55600
+ang 0
+find 0x00100000
+status 3 0x04000000
+inv default
+act_clock source
+god
+alivelog 300
+census 900
+census 6000
+# DebugTrg(0) ends the siege at room frame 1500 (r11c.cpp: kill/time limit or DebugTrg(0)); chapter 2-2 end + save by the pad
+trg 0 1500 0x11c

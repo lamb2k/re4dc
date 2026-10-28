@@ -1,0 +1,47 @@
+name shoot-r101
+# lane codex22 (Codex audit unit, first-use reads): r101 cross fight (benchmark-r101 position), god mode, crowd
+# alerted at 30; aim (R) and fire (R+A) a full magazine of 10, reload (R+B), 6 more shots; rig kill of 0x15 at 200.
+# Read with DISC_READ_LOG=1 VRAM_ROOM_LOG=1 MOTION_MISS_LOG=1 twins: disc reads after the room-entry preload.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+kill 0x15 200 0x101
+act 60 0x0020 25
+act 85 0x0120 3
+act 88 0x0020 17
+act 105 0x0120 3
+act 108 0x0020 17
+act 125 0x0120 3
+act 128 0x0020 17
+act 145 0x0120 3
+act 148 0x0020 17
+act 165 0x0120 3
+act 168 0x0020 17
+act 185 0x0120 3
+act 188 0x0020 17
+act 205 0x0120 3
+act 208 0x0020 17
+act 225 0x0120 3
+act 228 0x0020 17
+act 245 0x0120 3
+act 248 0x0020 17
+act 265 0x0120 3
+act 268 0x0020 17
+act 285 0x0220 4
+act 289 0x0020 70
+act 359 0x0120 3
+act 362 0x0020 17
+act 379 0x0120 3
+act 382 0x0020 17
+act 399 0x0120 3
+act 402 0x0020 17
+act 419 0x0120 3
+act 422 0x0020 17
+act 439 0x0120 3
+act 442 0x0020 17
+act 459 0x0120 3
+act 462 0x0020 17

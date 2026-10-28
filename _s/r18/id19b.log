@@ -1,0 +1,30 @@
+  931 |     p.mask=mask;p.mask_ref=mask_ref;p.mask_same_uv=mask_same_uv;
+      |                                     ^
+model_bridge.cpp:936:5: error: ‘p’ does not name a type
+  936 |     p.lighting=re4dc_gx_model_lighting_ref();
+      |     ^
+model_bridge.cpp:941:22: error: ‘d’ was not declared in this scope
+  941 |     const bool nrm8=(d->flags&0x20000000U)!=0;
+      |                      ^
+model_bridge.cpp:942:5: error: ‘p’ does not name a type
+  942 |     p.static_geometry=rigid && m->kindid==2 && !d->shapeOfs && !(info->be_flag&2);
+      |     ^
+model_bridge.cpp:943:5: error: ‘p’ does not name a type
+  943 |     p.normal_stride=nrm8?(rigid?4:3):(rigid?8:6);p.normal_shift=nrm8?6:14;
+      |     ^
+model_bridge.cpp:943:50: error: ‘p’ does not name a type
+  943 |     p.normal_stride=nrm8?(rigid?4:3):(rigid?8:6);p.normal_shift=nrm8?6:14;
+      |                                                  ^
+model_bridge.cpp:989:5: error: expected unqualified-id before ‘if’
+  989 |     if(sob::take(m,info,d,part,p))return;  // STATIC_OBJ_BATCH: held for its info's run
+      |     ^~
+model_bridge.cpp:991:23: error: expected constructor, destructor, or type conversion before ‘(’ token
+  991 |     re4dc_model_submit(&p);
+      |                       ^
+model_bridge.cpp:998:1: error: expected declaration before ‘}’ token
+  998 | }
+      | ^
+make: *** [Makefile:2582: /root/probe/lanes/route/out-cp25id/obj/model_bridge.o] Error 1
+make: *** Waiting for unfinished jobs....
+rm platform/sdk/gen/mtxvec.c platform/sdk/gen/OSAlloc.c platform/sdk/gen/mtx.c platform/sdk/gen/mtx44.c platform/sdk/gen/quat.c platform/sdk/gen/vec.c
+make: Leaving directory '/root/work/lanes/cast-ps2-25/port/dreamcast/game'

@@ -1,0 +1,26 @@
+{
+ "name": "r100s30",
+ "afs_member": 15,
+ "sfd_bytes": 5306368,
+ "sfd_sha256": "b5a5c8d8f453e6f5751cd516f1349c8509cd3b84af78038a6bf6086ca0a0df8d",
+ "source": {
+  "video": "mpeg2video 512x336 30000/1001",
+  "audio": [
+   "adpcm_adx 48000Hz ch2"
+  ],
+  "duration": 11.345978,
+  "bit_rate": 3741497
+ },
+ "width": 288,
+ "height": 192,
+ "frames": 340,
+ "duration_s": 11.345,
+ "m1v_bytes": 945570,
+ "pcm_bytes": 1451948,
+ "seq_bytes": 2402286,
+ "seq_sha256": "02c11d9e3a74669bd5ecb679331f1774dc9d30ac2adad72503dee3a8c59b0180",
+ "max_video_record": 9314,
+ "seq_bytes_per_s": 211755,
+ "video_bytes_per_s": 83349,
+ "ps2_evd_bytes": 3168
+}

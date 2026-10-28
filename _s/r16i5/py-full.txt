@@ -1,0 +1,427 @@
+............................................FF...../dev/shm/gc-port23-actor-source-kis4ezqd/fixture.cpp: In function ‘re4dc_gcasset::SourceUse {anonymous}::gcasset_actor_current_select(const Re4dcModelPart*, const Re4dcActorSource*, bool)’:
+/dev/shm/gc-port23-actor-source-kis4ezqd/fixture.cpp:113:33: error: ‘struct RegistryView’ has no member named ‘chunk_count’
+  113 |     for(unsigned k=0;k<registry.chunk_count;++k){
+      |                                 ^~~~~~~~~~~
+/dev/shm/gc-port23-actor-source-kis4ezqd/fixture.cpp:114:32: error: ‘struct RegistryView’ has no member named ‘chunks’
+  114 |         const auto& s=registry.chunks[k];
+      |                                ^~~~~~
+/dev/shm/gc-port23-actor-source-kis4ezqd/fixture.cpp:118:30: error: ‘run’ was not declared in this scope
+  118 |             auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
+      |                              ^~~
+E./dev/shm/gc-port23-actor-source-rwpnp5f_/fixture.cpp: In function ‘re4dc_gcasset::SourceUse {anonymous}::gcasset_actor_current_select(const Re4dcModelPart*, const Re4dcActorSource*, bool)’:
+/dev/shm/gc-port23-actor-source-rwpnp5f_/fixture.cpp:134:33: error: ‘struct RegistryView’ has no member named ‘chunk_count’
+  134 |     for(unsigned k=0;k<registry.chunk_count;++k){
+      |                                 ^~~~~~~~~~~
+/dev/shm/gc-port23-actor-source-rwpnp5f_/fixture.cpp:135:32: error: ‘struct RegistryView’ has no member named ‘chunks’
+  135 |         const auto& s=registry.chunks[k];
+      |                                ^~~~~~
+/dev/shm/gc-port23-actor-source-rwpnp5f_/fixture.cpp:139:30: error: ‘run’ was not declared in this scope
+  139 |             auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
+      |                              ^~~
+E../dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp: In function ‘re4dc_gcasset::SourceUse {anonymous}::gcasset_actor_current_select(const Re4dcModelPart*, const Re4dcActorSource*, bool)’:
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp:165:33: error: ‘struct RegistryView’ has no member named ‘chunk_count’
+  165 |     for(unsigned k=0;k<registry.chunk_count;++k){
+      |                                 ^~~~~~~~~~~
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp:166:32: error: ‘struct RegistryView’ has no member named ‘chunks’
+  166 |         const auto& s=registry.chunks[k];
+      |                                ^~~~~~
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp:170:30: error: ‘run’ was not declared in this scope
+  170 |             auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
+      |                              ^~~
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp: In function ‘void gcasset_model_prepare(const Re4dcModelPart*)’:
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp:306:5: error: ‘gcasset_probe_part’ was not declared in this scope
+  306 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |     ^~~~~~~~~~~~~~~~~~
+/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp:306:26: error: ‘gcasset_probe_caller’ was not declared in this scope
+  306 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |                          ^~~~~~~~~~~~~~~~~~~~
+EF/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp: In function ‘re4dc_gcasset::SourceUse {anonymous}::gcasset_actor_current_select(const Re4dcModelPart*, const Re4dcActorSource*, bool)’:
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp:114:33: error: ‘struct RegistryView’ has no member named ‘chunk_count’
+  114 |     for(unsigned k=0;k<registry.chunk_count;++k){
+      |                                 ^~~~~~~~~~~
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp:115:32: error: ‘struct RegistryView’ has no member named ‘chunks’
+  115 |         const auto& s=registry.chunks[k];
+      |                                ^~~~~~
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp:119:30: error: ‘run’ was not declared in this scope
+  119 |             auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
+      |                              ^~~
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp: In function ‘void gcasset_model_prepare(const Re4dcModelPart*)’:
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp:193:5: error: ‘gcasset_probe_part’ was not declared in this scope
+  193 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |     ^~~~~~~~~~~~~~~~~~
+/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp:193:26: error: ‘gcasset_probe_caller’ was not declared in this scope
+  193 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |                          ^~~~~~~~~~~~~~~~~~~~
+E./dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp: In member function ‘void Queue::advance()’:
+/dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp:28:13: error: ‘DVD_BORROW_GIVE’ was not declared in this scope
+   28 |             DVD_BORROW_GIVE();
+      |             ^~~~~~~~~~~~~~~
+In file included from /dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp:2:
+/dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp:39:70: error: ‘DVD_STAGE’ was not declared in this scope
+   39 |         RE4DC_GCA_BANK_PIECE(this,(*ph)->type,(*ph)->size-m_LeftSize,DVD_STAGE,m_DivReadSize);
+      |                                                                      ^~~~~~~~~
+/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include/gc_asset_audio.h:28:133: note: in definition of macro ‘RE4DC_GCA_BANK_PIECE’
+   28 | #define RE4DC_GCA_BANK_PIECE(owner,part,offset,data,bytes) do{if((part)==1 || (part)==2)re4dc_gcasset::bank_piece(owner,part,offset,data,bytes);}while(0)
+      |                                                                                                                                     ^~~~
+/dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp:40:46: error: ‘DVD_STAGE’ was not declared in this scope
+   40 |         (this->*trans_proc_tbl[(*ph)->type])(DVD_STAGE, m_TransAddr, m_DivReadSize);
+      |                                              ^~~~~~~~~
+/dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp:52:13: error: ‘DVD_BORROW_GIVE’ was not declared in this scope
+   52 |             DVD_BORROW_GIVE();
+      |             ^~~~~~~~~~~~~~~
+Estream entry identity ok
+.......F...fixture: /dev/shm/gc-port23-hand-owner-hmv8pymu/fixture.cpp:723: int main(): Assertion `logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos' failed.
+E..........fixture: /dev/shm/gc-port23-index-djjbpnqw/fixture.cpp:37: int main(): Assertion `output.find("motion-unwired")==std::string::npos && output.find("motion=2")!=std::string::npos && output.find("errors=0")!=std::string::npos' failed.
+E.F..streamed movie digest ok
+.../dev/shm/gc-port23-static-manifest-t1p7nilp/fixture.cpp: In function ‘void gcasset_model_prepare(const Re4dcModelPart*)’:
+/dev/shm/gc-port23-static-manifest-t1p7nilp/fixture.cpp:14:5: error: ‘gcasset_probe_part’ was not declared in this scope
+   14 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |     ^~~~~~~~~~~~~~~~~~
+/dev/shm/gc-port23-static-manifest-t1p7nilp/fixture.cpp:14:26: error: ‘gcasset_probe_caller’ was not declared in this scope
+   14 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |                          ^~~~~~~~~~~~~~~~~~~~
+E/dev/shm/gc-port23-static-manifest-y_xrvic4/fixture.cpp: In function ‘void gcasset_model_prepare(const Re4dcModelPart*)’:
+/dev/shm/gc-port23-static-manifest-y_xrvic4/fixture.cpp:52:5: error: ‘gcasset_probe_part’ was not declared in this scope
+   52 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |     ^~~~~~~~~~~~~~~~~~
+/dev/shm/gc-port23-static-manifest-y_xrvic4/fixture.cpp:52:26: error: ‘gcasset_probe_caller’ was not declared in this scope
+   52 |     gcasset_probe_part=p;gcasset_probe_caller=__builtin_return_address(0);
+      |                          ^~~~~~~~~~~~~~~~~~~~
+E...F.....F.FFFFFs................
+======================================================================
+ERROR: test_actual_pack_selection_and_shared_window_acknowledgement (test_runtime_actor_assets.ActorAssetTests.test_actual_pack_selection_and_shared_window_acknowledgement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_assets.py", line 167, in test_actual_pack_selection_and_shared_window_acknowledgement
+    self.compile_run(fixture, ['-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1',
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_assets.py", line 219, in compile_run
+    subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1', '-DRE4DC_ACTOR_PL08=1', '-DRE4DC_ACTOR_PL08_PACK=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '/dev/shm/gc-port23-actor-source-kis4ezqd/fixture.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_payloads.cpp', '-o', '/dev/shm/gc-port23-actor-source-kis4ezqd/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_replacement_weapon_class_and_frozen_replay (test_runtime_actor_assets.ActorAssetTests.test_actual_replacement_weapon_class_and_frozen_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_assets.py", line 68, in test_actual_replacement_weapon_class_and_frozen_replay
+    self.compile_run(fixture, definitions, bridge_stubs=False)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_assets.py", line 219, in compile_run
+    subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '/dev/shm/gc-port23-actor-source-rwpnp5f_/fixture.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_payloads.cpp', '-o', '/dev/shm/gc-port23-actor-source-rwpnp5f_/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_main_defer_cache_and_acceptance (test_runtime_actor_main.ActorMainTests.test_actual_main_defer_cache_and_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py", line 254, in test_actual_main_defer_cache_and_acceptance
+    self.compile_run(fixture)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py", line 273, in compile_run
+    subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '/dev/shm/gc-port23-actor-main-8jn_1czl/fixture.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_payloads.cpp', '-o', '/dev/shm/gc-port23-actor-main-8jn_1czl/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_external_uv_weight_color_and_shape_cannot_inherit_ps2 (test_runtime_actor_main.ActorMainTests.test_external_uv_weight_color_and_shape_cannot_inherit_ps2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py", line 131, in test_external_uv_weight_color_and_shape_cannot_inherit_ps2
+    self.compile_run(fixture)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py", line 273, in compile_run
+    subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '/dev/shm/gc-port23-actor-main-irwa6vxx/fixture.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_payloads.cpp', '-o', '/dev/shm/gc-port23-actor-main-irwa6vxx/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_dvd_success_error_and_completion_fragments (test_runtime_audio.RuntimeAudioTests.test_actual_dvd_success_error_and_completion_fragments)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_audio.py", line 145, in test_actual_dvd_success_error_and_completion_fragments
+    subprocess.run(['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '/dev/shm/gc-port23-dvd-xbbn31ap/fixture.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_audio.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '-o', '/dev/shm/gc-port23-dvd-xbbn31ap/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_direct_worker_aica_selection_derivation_and_replay (test_runtime_hand_owner.HandOwnerTests.test_actual_direct_worker_aica_selection_derivation_and_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_hand_owner.py", line 132, in test_actual_direct_worker_aica_selection_derivation_and_replay
+    subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/lib64/ld-linux-x86-64.so.2', '/dev/shm/gc-port23-hand-owner-hmv8pymu/fixture']' died with <Signals.SIGABRT: 6>.
+
+======================================================================
+ERROR: test_actual_reader_tokens_and_disc_room_lifetimes (test_runtime_index.RuntimeIndexTests.test_actual_reader_tokens_and_disc_room_lifetimes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_index.py", line 174, in test_actual_reader_tokens_and_disc_room_lifetimes
+    subprocess.run(['/lib64/ld-linux-x86-64.so.2', str(executable)], check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/lib64/ld-linux-x86-64.so.2', '/dev/shm/gc-port23-index-djjbpnqw/fixture']' died with <Signals.SIGABRT: 6>.
+
+======================================================================
+ERROR: test_actual_composite_and_known_unknown_lifetimes (test_runtime_static_manifest.StaticManifestTests.test_actual_composite_and_known_unknown_lifetimes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py", line 135, in test_actual_composite_and_known_unknown_lifetimes
+    self.compile(fixture,payload)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py", line 153, in compile
+    subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_GATE=1',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform', '/dev/shm/gc-port23-static-manifest-t1p7nilp/fixture.cpp', '/dev/shm/gc-port23-static-manifest-t1p7nilp/payload.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '-o', '/dev/shm/gc-port23-static-manifest-t1p7nilp/fixture']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_actual_static_scope_refuses_external_colour_and_fresh_replay_class (test_runtime_static_manifest.StaticManifestTests.test_actual_static_scope_refuses_external_colour_and_fresh_replay_class)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py", line 56, in test_actual_static_scope_refuses_external_colour_and_fresh_replay_class
+    self.compile(fixture,payload)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_manifest.py", line 153, in compile
+    subprocess.run(['g++','-std=c++17','-O2','-Wall','-Wextra','-Werror','-DRE4DC_GC_ASSET_GATE=1',
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-DRE4DC_GC_ASSET_GATE=1', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/include', '-I', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform', '/dev/shm/gc-port23-static-manifest-y_xrvic4/fixture.cpp', '/dev/shm/gc-port23-static-manifest-y_xrvic4/payload.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_gate.cpp', '/root/work/lanes/cast-ps2-25/port/dreamcast/game/platform/gc_asset_members.cpp', '-o', '/dev/shm/gc-port23-static-manifest-y_xrvic4/fixture']' returned non-zero exit status 1.
+
+======================================================================
+FAIL: test_default0_tokens_and_empty_helper (test_motion_unknown.MotionUnknownTests.test_default0_tokens_and_empty_helper)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py", line 350, in test_default0_tokens_and_empty_helper
+    self.assertEqual(tokens(streams[0]),tokens(streams[1]),unit)
+AssertionError: Lists differ: ['nam[30650 chars];', 'pvr_scene_begin', '(', ')', ';', 'pvr_lis[24415 chars] '}'] != ['nam[30650 chars];', 'RE4DC_TEX_USE_KEYS', '(', ')', 'pvr_scene[24447 chars] '}']
+
+First differing element 3958:
+'pvr_scene_begin'
+'RE4DC_TEX_USE_KEYS'
+
+Second list contains 3 additional elements.
+First extra element 7050:
+'nullptr'
+
+Diff is 76384 characters long. Set self.maxDiff to None to see it. : platform/native_ui.cpp
+
+======================================================================
+FAIL: test_exact_ui_projection_and_mutants (test_motion_unknown.MotionUnknownTests.test_exact_ui_projection_and_mutants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_motion_unknown.py", line 326, in test_exact_ui_projection_and_mutants
+    self.assertEqual(project_ui_motion0(source),baseline)
+AssertionError: '#inc[685 chars]n#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WO[567653 chars]if\n' != '#inc[685 chars]n#if RE4DC_WORLD_SCRATCH\nextern "C" unsigned [541304 chars]if\n'
+
+======================================================================
+FAIL: test_actual_raw_gateway_packet_direct_and_defer_cannot_accept_ps2_bin (test_runtime_actor_main.ActorMainTests.test_actual_raw_gateway_packet_direct_and_defer_cannot_accept_ps2_bin) (mutant='restore positive replay')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_actor_main.py", line 88, in test_actual_raw_gateway_packet_direct_and_defer_cannot_accept_ps2_bin
+    self.assertEqual(fixture.count(old),1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_actual_hand_off_preprocessor_identity_and_safe_pump_placement (test_runtime_hand_copy.HandCopyTests.test_actual_hand_off_preprocessor_identity_and_safe_pump_placement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_hand_copy.py", line 29, in test_actual_hand_off_preprocessor_identity_and_safe_pump_placement
+    self.assertEqual(tokens(outputs[0]), tokens(outputs[1]))
+AssertionError: Lists differ: ['ext[13170 chars]', 'x10000', ';', 'unsigned', 'h', '[', '8', '[22453 chars]ons'] != ['ext[13170 chars]', 'x20000', '/', '2', ';', 'unsigned', 'h', '[22700 chars]ons']
+
+First differing element 1640:
+'x10000'
+'x20000'
+
+Second list contains 34 additional elements.
+First extra element 5058:
+'+'
+
+Diff is 51295 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_current_audits_and_gc_room_hook_composition (test_runtime_lifecycle.RuntimeLifecycleTests.test_current_audits_and_gc_room_hook_composition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_lifecycle.py", line 26, in test_current_audits_and_gc_room_hook_composition
+    check_projection(current)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_lifecycle.py", line 25, in check_projection
+    self.assertEqual(text.replace(include, '').replace(guard, ''), incoming)
+AssertionError: '#inc[1743 chars]\n#ifndef RE4DC_UI_DRAW_LEAN\n#define RE4DC_UI[47625 chars]if\n' != '#inc[1743 chars]\n#if RE4DC_UI_QUAD_LEAN\n// UI_QUAD_LEAN (gam[46893 chars]if\n'
+Diff is 50334 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_actual_cached_selector_receipts_do_not_hash_parsed_storage (test_runtime_static_wiring.StaticWiringTests.test_actual_cached_selector_receipts_do_not_hash_parsed_storage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 168, in test_actual_cached_selector_receipts_do_not_hash_parsed_storage
+    self.run_cpp(fixture)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 21, in run_cpp
+    else:self.assertEqual(result.returncode,0,result.stderr+result.stdout)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -6 != 0 : test: /dev/shm/gc-static-wiring-axed7o8l/test.cpp:135: int main(): Assertion `!static_manifest_seal(rejected,sealed) && !trans::cls && index_reads==2' failed.
+
+
+======================================================================
+FAIL: test_actual_standard_original_read_precedes_tokenization_and_reload (test_runtime_static_wiring.StaticWiringTests.test_actual_standard_original_read_precedes_tokenization_and_reload)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 201, in test_actual_standard_original_read_precedes_tokenization_and_reload
+    self.run_cpp(fixture,['RE4DC_QUALITY_ASSETS=1'])
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 18, in run_cpp
+    self.assertEqual(compiled.returncode,0,compiled.stderr)
+AssertionError: 1 != 0 : /dev/shm/gc-static-wiring-m0p5vwhw/test.cpp: In function ‘void re4dc_std_room_enter(unsigned int)’:
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp:24:7: error: ‘struct StdRoom’ has no member named ‘gca_unused’
+   24 |     r.gca_unused=0;
+      |       ^~~~~~~~~~
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp:31:7: error: ‘struct StdRoom’ has no member named ‘gca_unused’
+   31 |     r.gca_unused=n<=0?1:2;   // cleared once the index is accepted below
+      |       ^~~~~~~~~~
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp:45:7: error: ‘struct StdRoom’ has no member named ‘gca_unused’
+   45 |     r.gca_unused=0;
+      |       ^~~~~~~~~~
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp: In function ‘void gcasset_static_policy(re4dc_gcasset::StaticManifest&, unsigned int)’:
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp:55:45: error: ‘struct StdRoom’ has no member named ‘gca_unused’
+   55 |     else if(std_room.room==room && std_room.gca_unused)static_manifest_note(source,STD_INDEX,std_room.gca_unused==1?Absent:Rejected);
+      |                                             ^~~~~~~~~~
+/dev/shm/gc-static-wiring-m0p5vwhw/test.cpp:55:103: error: ‘struct StdRoom’ has no member named ‘gca_unused’
+   55 |     else if(std_room.room==room && std_room.gca_unused)static_manifest_note(source,STD_INDEX,std_room.gca_unused==1?Absent:Rejected);
+      |                                                                                                       ^~~~~~~~~~
+
+
+======================================================================
+FAIL: test_actual_world_read_adopt_and_partial_failure (test_runtime_static_wiring.StaticWiringTests.test_actual_world_read_adopt_and_partial_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 59, in test_actual_world_read_adopt_and_partial_failure
+    self.run_cpp(fixture,definitions)
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 18, in run_cpp
+    self.assertEqual(compiled.returncode,0,compiled.stderr)
+AssertionError: 1 != 0 : /dev/shm/gc-static-wiring-7naql056/test.cpp: In function ‘bool ps2_open()’:
+/dev/shm/gc-static-wiring-7naql056/test.cpp:57:53: error: ‘gcasset_world_seal’ was not declared in this scope
+   57 |     re4dc_gcasset::payload_retire(ps2w.asset_proof);gcasset_world_seal.have=false;
+      |                                                     ^~~~~~~~~~~~~~~~~~
+/dev/shm/gc-static-wiring-7naql056/test.cpp:552:5: error: ‘gcasset_world_seal_keep’ was not declared in this scope
+  552 |     gcasset_world_seal_keep(gcasset_source,s,msize,s+mbytes,psize);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+======================================================================
+FAIL: test_gate0_static_and_shell_tokens_equal_reviewed_parent (test_runtime_static_wiring.StaticWiringTests.test_gate0_static_and_shell_tokens_equal_reviewed_parent) (file='native_static.cpp', dedup=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 425, in test_gate0_static_and_shell_tokens_equal_reviewed_parent
+    self.assertEqual(tokens(outputs[0]),tokens(outputs[1]))
+AssertionError: Lists differ: ['ext[218351 chars]t', 're4dc', ':', ':', 'render', ':', ':', 'Dr[13167 chars] '}'] != ['ext[218351 chars]t', 'unsigned', 'pvs_source_placement', '=', '[13322 chars] '}']
+
+First differing element 33385:
+'re4dc'
+'unsigned'
+
+Second list contains 19 additional elements.
+First extra element 35366:
+'ps2w'
+
+Diff is 338030 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_gate0_static_and_shell_tokens_equal_reviewed_parent (test_runtime_static_wiring.StaticWiringTests.test_gate0_static_and_shell_tokens_equal_reviewed_parent) (file='native_static.cpp', dedup=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 425, in test_gate0_static_and_shell_tokens_equal_reviewed_parent
+    self.assertEqual(tokens(outputs[0]),tokens(outputs[1]))
+AssertionError: Lists differ: ['ext[230978 chars]t', 're4dc', ':', ':', 'render', ':', ':', 'Dr[13196 chars] '}'] != ['ext[230978 chars]t', 'unsigned', 'pvs_source_placement', '=', '[13351 chars] '}']
+
+First differing element 35396:
+'re4dc'
+'unsigned'
+
+Second list contains 19 additional elements.
+First extra element 37381:
+'ps2w'
+
+Diff is 356737 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_gate0_static_and_shell_tokens_equal_reviewed_parent (test_runtime_static_wiring.StaticWiringTests.test_gate0_static_and_shell_tokens_equal_reviewed_parent) (file='native_static.cpp', dedup=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 425, in test_gate0_static_and_shell_tokens_equal_reviewed_parent
+    self.assertEqual(tokens(outputs[0]),tokens(outputs[1]))
+AssertionError: Lists differ: ['ext[236642 chars]t', 're4dc', ':', ':', 'render', ':', ':', 'Dr[13196 chars] '}'] != ['ext[236642 chars]t', 'unsigned', 'pvs_source_placement', '=', '[13351 chars] '}']
+
+First differing element 36319:
+'re4dc'
+'unsigned'
+
+Second list contains 19 additional elements.
+First extra element 38304:
+'ps2w'
+
+Diff is 365170 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_gate0_static_and_shell_tokens_equal_reviewed_parent (test_runtime_static_wiring.StaticWiringTests.test_gate0_static_and_shell_tokens_equal_reviewed_parent) (file='native_static.cpp', dedup=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/root/work/lanes/cast-ps2-25/port/dreamcast/tools/d367/gc_port23/test_runtime_static_wiring.py", line 425, in test_gate0_static_and_shell_tokens_equal_reviewed_parent
+    self.assertEqual(tokens(outputs[0]),tokens(outputs[1]))
+AssertionError: Lists differ: ['ext[227329 chars]t', 're4dc', ':', ':', 'render', ':', ':', 'Dr[13196 chars] '}'] != ['ext[227329 chars]t', 'unsigned', 'pvs_source_placement', '=', '[13351 chars] '}']
+
+First differing element 34721:
+'re4dc'
+'unsigned'
+
+Second list contains 19 additional elements.
+First extra element 36706:
+'ps2w'
+
+Diff is 351063 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 123 tests in 103.946s
+
+FAILED (failures=12, errors=9, skipped=1)
+{
+  "source_sha256": "7ebe906c604d7d091a78359ad4b4f6a2b7b9c5e1d64144adeb97662b7bab1a83",
+  "scope": "Host fake IO over actual function, no SDK or guest acceptance",
+  "cases": [
+    {
+      "gate": 0,
+      "entries": 63,
+      "result": "7 actual-function cases passed"
+    },
+    {
+      "gate": 0,
+      "entries": 255,
+      "result": "9 actual-function cases passed"
+    },
+    {
+      "gate": 1,
+      "entries": 63,
+      "result": "10 actual-function cases passed"
+    },
+    {
+      "gate": 1,
+      "entries": 255,
+      "result": "12 actual-function cases passed"
+    }
+  ]
+}
+not-harvested geometry e81935fb86434cdaaeee21ebe051cca827243ab4 e81935fb86434cdaaeee21ebe051cca827243ab4cccfdafeee8202004630924e (run/run-output.txt)
+harvest rows 1, other misses 1
+{"font-glyph": {"unknown": 1}, "geometry": {"unknown": 1}, "model": {"unknown": 2}, "movie": {"unknown": 2}, "sound-stream": {"unknown": 1}, "texture": {"unknown": 2}}
+rows 9
+6af73ed6bc2cbe59df87e9a6bfc3488995b35f797a4e4062f4d26274d8c5b618
+{"geometry": {"unknown": 1}, "model": {"unknown": 2}, "movie": {"unknown": 2}, "sound-stream": {"unknown": 1}, "texture": {"unknown": 2}}
+rows 8
+3f73ab9716462ea5fce333ae97408f8aa79a4b224bb38ee84e64ab5dcf8e7230
+{"geometry": {"unknown": 1}, "model": {"unknown": 2}, "movie": {"unknown": 2}, "sound-stream": {"unknown": 1}, "texture": {"unknown": 2}}
+rows 8
+3f73ab9716462ea5fce333ae97408f8aa79a4b224bb38ee84e64ab5dcf8e7230
+{"geometry": {"unknown": 1}, "model": {"unknown": 2}, "movie": {"ps2": 1, "unknown": 1}, "sound-stream": {"unknown": 1}, "texture": {"unknown": 2}}
+rows 8
+d90944d401cbf1c769a27f1fe54d2ba6bea84be18c92f2ed693be82bdf30f22a

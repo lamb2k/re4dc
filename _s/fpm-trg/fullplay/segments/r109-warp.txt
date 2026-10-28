@@ -1,0 +1,13 @@
+name bridge-door-r108-r109-action
+room 0x108
+pos 95000 1724 13115
+ang 1.5708
+inv default
+god
+act_clock source
+act 10 a 4
+act 40 fwd 40
+act 90 a 4
+act 120 a 4
+act 150 a 4
+dump

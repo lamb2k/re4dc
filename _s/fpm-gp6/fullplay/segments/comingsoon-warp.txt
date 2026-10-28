@@ -1,0 +1,9 @@
+name r117-comingsoon
+# r117 (the chapter 2-1 end room): at room frame 120 the warp rig's room jump (WARP_JUMP, the source SceAtExecRoomJump,
+# as a door does) asks for r11c, which this disc does not carry: route_end.cpp fades to black and holds on "Coming Soon"
+room 0x117
+pos 6202 3998 -3700
+ang 3.1416
+inv default
+god
+jump 120 0x117 0x11c 0 0 0 0

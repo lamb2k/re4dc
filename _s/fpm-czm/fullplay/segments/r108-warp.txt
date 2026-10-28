@@ -1,0 +1,5 @@
+name t8-wi108
+room 0x108
+pos 51300 8624 -6071
+ang 1.5708
+inv default

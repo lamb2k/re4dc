@@ -1,0 +1,275 @@
+{
+ "base_pak": "/root/re4data/private/gvar25-20261025/dc/tex.pak",
+ "rows": [
+  {
+   "key": "23be4bf9-55cac1fc",
+   "gc": "ss_oc102.dat@cc0#6",
+   "ps2": "ss_oc102.dat@cc0#6",
+   "gc_size": [
+    128,
+    256
+   ],
+   "ps2_size": [
+    256,
+    128
+   ],
+   "orient": "T",
+   "ncc": 1.0,
+   "mae": 1.43,
+   "bytes": 10384,
+   "sha256": "90203efd9ad6134e9304bf95d1ec516f38ad652306002bea144b90f075415985"
+  },
+  {
+   "key": "5e3c1264-a53c4db5",
+   "gc": "ss_oc102.dat@cc0#13",
+   "ps2": "ss_oc102.dat@cc0#13",
+   "gc_size": [
+    128,
+    256
+   ],
+   "ps2_size": [
+    256,
+    128
+   ],
+   "orient": "T",
+   "ncc": 0.991,
+   "mae": 7.78,
+   "bytes": 10384,
+   "sha256": "5297965d229a310042b7fbc07893e38fc9d7a2f578c6a34c3d182575277732ce"
+  },
+  {
+   "key": "0ca65484-422d49c4",
+   "gc": "ss_oc102.dat@cc0#15",
+   "ps2": "ss_oc102.dat@cc0#15",
+   "gc_size": [
+    64,
+    64
+   ],
+   "ps2_size": [
+    64,
+    64
+   ],
+   "orient": "id",
+   "ncc": 0.993,
+   "mae": 11.93,
+   "bytes": 8336,
+   "sha256": "f093be33d5fae246b9bed255fd27ee3ed9ab9889b4f9ec6ea8132290c1116efb"
+  },
+  {
+   "key": "971b53b9-5ee5d8d9",
+   "gc": "ss_oc202.dat@1d40#4",
+   "ps2": "ss_oc202.dat@1d40#4",
+   "gc_size": [
+    64,
+    128
+   ],
+   "ps2_size": [
+    128,
+    64
+   ],
+   "orient": "T",
+   "ncc": 1.0,
+   "mae": 1.51,
+   "bytes": 16528,
+   "sha256": "7a0f35c76cfed064edbe16039670f11ae8032a50d19d1377c4e9137c96fe3daa"
+  },
+  {
+   "key": "8826ebbf-23f2650a",
+   "gc": "ss_oc202.dat@1d40#5",
+   "ps2": "ss_oc202.dat@1d40#5",
+   "gc_size": [
+    64,
+    128
+   ],
+   "ps2_size": [
+    128,
+    64
+   ],
+   "orient": "T",
+   "ncc": 0.99,
+   "mae": 11.81,
+   "bytes": 16528,
+   "sha256": "dea7020c79fb3ee662612b552d853b5d3621b4114540a4e173154408f3adef39"
+  },
+  {
+   "key": "215466cb-93cfd406",
+   "gc": "ss_oc202.dat@1d40#7",
+   "ps2": "ss_oc202.dat@1d40#7",
+   "gc_size": [
+    64,
+    64
+   ],
+   "ps2_size": [
+    64,
+    64
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 1.51,
+   "bytes": 8336,
+   "sha256": "9a582ff05da98cd891434c46f6f0c1e01b872b236b373e1b6dff7f3cef4c567f"
+  },
+  {
+   "key": "52c5f368-d50b192c",
+   "gc": "ss_oc202.dat@1d40#8",
+   "ps2": "ss_oc202.dat@1d40#8",
+   "gc_size": [
+    64,
+    64
+   ],
+   "ps2_size": [
+    64,
+    64
+   ],
+   "orient": "id",
+   "ncc": 0.989,
+   "mae": 14.55,
+   "bytes": 8336,
+   "sha256": "7911324218424dd512be0f833894f2a1e9db10cb256f37e218f6af9c777d1097"
+  },
+  {
+   "key": "af309387-d15660b7",
+   "gc": "ss_oc301.dat@1a40#6",
+   "ps2": "ss_oc301.dat@1a40#6",
+   "gc_size": [
+    128,
+    128
+   ],
+   "ps2_size": [
+    128,
+    128
+   ],
+   "orient": "id",
+   "ncc": 0.99,
+   "mae": 9.45,
+   "bytes": 32912,
+   "sha256": "8ff61d9a743ad8b148f5a54a60ca57b28414d6ebefeaa238bfab6da97771c1a3"
+  },
+  {
+   "key": "b02896e6-83ceb36c",
+   "gc": "ss_oc301.dat@1a40#8",
+   "ps2": "ss_oc301.dat@1a40#8",
+   "gc_size": [
+    64,
+    64
+   ],
+   "ps2_size": [
+    64,
+    64
+   ],
+   "orient": "id",
+   "ncc": 0.985,
+   "mae": 23.5,
+   "bytes": 3216,
+   "sha256": "8f5ce8596b28e5e5e99e2d495d0ec7cd65e7c3f03f705d35bac15161e2a3e084"
+  },
+  {
+   "key": "454db056-054c7e30",
+   "gc": "ss_term.dat@7ce20#2",
+   "ps2": "ss_oc102.dat@c2f20#2",
+   "gc_size": [
+    256,
+    256
+   ],
+   "ps2_size": [
+    256,
+    256
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.65,
+   "bytes": 18576,
+   "sha256": "0ba0ccc07646af182a6df48707d1df8e8a84482354689edc3cb8517cd61724bb"
+  },
+  {
+   "key": "1f625c95-7aed4809",
+   "gc": "pl00.drs@e120#0",
+   "ps2": "pl00.dat@15f80#0",
+   "gc_size": [
+    256,
+    128
+   ],
+   "ps2_size": [
+    256,
+    128
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.05,
+   "bytes": 10384,
+   "sha256": "6b3a0ac429d44c8da0fb4297251a4c70c16d30c4bb1928b3a87412352273e84f"
+  },
+  {
+   "key": "23f6b950-9ea131c1",
+   "gc": "pl00.drs@e120#2",
+   "ps2": "pl00.dat@15f80#2",
+   "gc_size": [
+    128,
+    128
+   ],
+   "ps2_size": [
+    128,
+    128
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 0.86,
+   "bytes": 6288,
+   "sha256": "fa1fca8370f25e9221196f611bce9958afdbdd44e603e6d9cfc8c8ddb7c1be79"
+  },
+  {
+   "key": "15f7e18c-11dc93e0",
+   "gc": "pl00.drs@e120#3",
+   "ps2": "pl00.dat@15f80#3",
+   "gc_size": [
+    256,
+    256
+   ],
+   "ps2_size": [
+    256,
+    256
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 2.08,
+   "bytes": 18576,
+   "sha256": "cf05554d89b288987a43226f6892d0b107fedcc7361cb410ce9c290dc21c1870"
+  },
+  {
+   "key": "878b23c0-e7038833",
+   "gc": "pl00.drs@e120#5",
+   "ps2": "pl00.dat@15f80#5",
+   "gc_size": [
+    128,
+    128
+   ],
+   "ps2_size": [
+    128,
+    128
+   ],
+   "orient": "id",
+   "ncc": 1.0,
+   "mae": 1.48,
+   "bytes": 6288,
+   "sha256": "35b4a0bcf507bc4f589cb48c0060d236e09d76ca728d97322b44e7159db5c627"
+  },
+  {
+   "key": "2a8a368f-76c02b02",
+   "gc": "pl00.drs@e120#7",
+   "ps2": "pl00.dat@15f80#7",
+   "gc_size": [
+    128,
+    256
+   ],
+   "ps2_size": [
+    256,
+    128
+   ],
+   "orient": "T",
+   "ncc": 1.0,
+   "mae": 1.5,
+   "bytes": 10384,
+   "sha256": "03d6f48abb058b503c81da7a75e806e4a6e6e009491d2557944da9a3d871ee08"
+  }
+ ]
+}

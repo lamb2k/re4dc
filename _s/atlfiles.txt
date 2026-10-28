@@ -1,0 +1,146 @@
+/root/probe/lanes-20261017r/ch2regen/worlds/t-fed4122a/r11f-ps2/tex/b3c2a412-d219779c.re4tex
+/root/probe/castle21-recovered-j-content-20261021/tree/dc/tex/6/65c6fe5a-2593694e.re4tex
+/root/probe/castle21-recovered-j-content-20261021/tree/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/root/probe/castle21-recovered-j-content-20261021/tree/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/root/probe/castle21-recovered-j-content-20261021/tree/dc/tex/b/b3c2a412-d219779c.re4tex
+/root/probe/lanes-20261010/ps2cast-all-assets/pg5/tex/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261010/ps2cast-all-assets/pg5/tex/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261010/ps2cast-all-assets/pg5/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261010/ps2cast-all-assets/pg5/inputs/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261016/cast16/conv4/regcast-old/ganado-em13-03g/ps2-v1/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261016/cast16/conv4/regcast-old/ganado-em13-00g/ps2-v1/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-03g/ps2-v1/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-00g/ps2-v1/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261016/cast16/conv4/ganado-em13-03g/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261016/cast16/conv4/ganado-em13-00g/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/out-cast/cast16data-ch4/dc/tex/6/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/out-cast/cast16data-ch4/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/a/reg-225/tex/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/a/reg-225/tex/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/a/reg-225/inputs/cast/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-03g/ps2-v1/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/a/reg-225/inputs/cast/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-00g/ps2-v1/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/b/reg-225/tex/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/b/reg-225/tex/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/b/reg-225/inputs/cast/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-03g/ps2-v1/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/c16reg/b/reg-225/inputs/cast/root/probe/lanes-20261016/cast16/conv4/regcast-ch4/ganado-em13-00g/ps2-v1/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/ch4found/cast/regcast-ch4/ganado-em13-03g/ps2-v1/texture/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/ch4found/cast/regcast-ch4/ganado-em13-00g/ps2-v1/texture/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch4regen/out-forch3/dc/tex/6/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch4regen/out-forch3/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch5regen/pairs-st3/all/48369d01-cf9063bd.re4tex
+/root/probe/lanes-20261018/ch5regen/out/files/dc/tex/4/48369d01-cf9063bd.re4tex
+/root/probe/lanes-20261018/ch5regen/pairs-e1/e35f8167-71a2d7e8.re4tex
+/root/probe/lanes-20261018/ch3regen/extra/castlepak/c31/work/vq-packages/e35f8167-71a2d7e8.re4tex
+/root/probe/lanes-20261018/ch3regen/extra/castlepak/c31/work/vq-packages/2e6a0903-9fe7dbb0.re4tex
+/root/probe/lanes-20261018/ch3regen/extra/castlepak/c31/work/src-packages/e35f8167-71a2d7e8.re4tex
+/root/probe/lanes-20261018/ch3regen/extra/castlepak/c31/work/src-packages/2e6a0903-9fe7dbb0.re4tex
+/root/probe/lanes-20261018/ch3regen/out/ch3found-20261016/dc/tex/6/65c6fe5a-2593694e.re4tex
+/root/probe/lanes-20261018/ch3regen/out/ch3found-20261016/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/root/probe/lanes-20261018/ch5tex/vq1/vq-packages/e35f8167-71a2d7e8.re4tex
+/root/probe/lanes-20261018/ch5tex/vq1/src-packages/e35f8167-71a2d7e8.re4tex
+/root/re4data/private/ch2data-20261018/files/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/root/re4data/private/ch2data-20261018/files/dc/tex/b/b3c2a412-d219779c.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20e-v3/tex/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20e-v3/inputs/mask/pl01-eo/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20e-v3/inputs/mask/pl01-ec/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20d-v3/tex/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20d-v3/inputs/mask/pl01-nc/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20d-v3/inputs/mask/pl01-no/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/masks/r20e-closed/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/masks/normal-closed/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/masks/normal-open/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/masks/r20e-open/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/files/dc/tex/2/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20d.tmp-2979048/inputs/mask/pl01-nc/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-20261020/reg-r20d.tmp-2979048/inputs/mask/pl01-no/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-winners-20261020/current-winners/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20e/tex/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20e/inputs/mask/pl01-eo/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20e/inputs/mask/pl01-ec/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20d/tex/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20d/inputs/mask/pl01-nc/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/castle21-playable-ashley-player-family-20261020/reg-r20d/inputs/mask/pl01-no/3/2c9c252a-51c59944.re4tex
+/root/re4data/private/qa21-r11e-ashley-hot-20261020/existing-texture-links/b3c2a412-d219779c.re4tex
+/root/re4data/private/qa21-r11e-ashley-hot-20261020/existing-texture-links/e35f8167-71a2d7e8.re4tex
+/root/re4data/private/castle18-r204-exact-pal4-20261019/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/root/re4data/private/ch2data-20261016/files/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/root/re4data/private/ch2data-20261016/files/dc/tex/b/b3c2a412-d219779c.re4tex
+/root/re4data/private/castle18-r204-exact-pal4-v2-20261019/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle18-r204-exact-pal4-20261019/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle18-r204-exact-pal4-v2-20261019/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/files/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/masks/normal-closed/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/masks/normal-open/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/masks/r20e-closed/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/masks/r20e-open/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20d-v3/inputs/mask/pl01-nc/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20d-v3/inputs/mask/pl01-no/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20d-v3/tex/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20e-v3/inputs/mask/pl01-ec/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20e-v3/inputs/mask/pl01-eo/3/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-20261020/reg-r20e-v3/tex/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/castle21-playable-ashley-winners-20261020/current-winners/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2data-20261018/files/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2data-20261018/files/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2regen-20261018/datasets/ch2data-20261016/files/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2regen-20261018/datasets/ch2data-20261016/files/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2regen-20261018/pakmatch/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch2regen-20261018/worlds/t-fed4122a/r11f-ps2/tex/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch3regen-20261018/ch3found-20261016/dc/tex/6/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch3regen-20261018/ch3found-20261016/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch4regen-20261018/cast/cast16data-ch4/dc/tex/6/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch4regen-20261018/cast/cast16data-ch4/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch4regen-20261018/for-ch3/dc/tex/6/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch4regen-20261018/for-ch3/dc/tex/e/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ch5regen-20261018/files/dc/tex/4/48369d01-cf9063bd.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/crowd-20261001/bundle-ps2near/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/castle-20261015/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/castle-20261015/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch22-20261014/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch22-20261014/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch2code-20261016/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch2code-20261016/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch3found-20261016/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch3found-20261016/dc/tex/e/e35f8167-71a2d7e8.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/ch4found-20261016/dc/tex/b/b3c2a412-d219779c.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/p2a-20261011/cast-mip/ganado-em15-00/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/p2a-20261011/cast-mip/ganado-em15-03/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/bundle-em15-00/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/bundle-em15-00/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/bundle-em15-00+em17-0c/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/bundle-em15-00+em17-0c/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/cast/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-20260930/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado5/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado5/inputs/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado5/tex/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado5/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado6/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado6/inputs/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado6/tex/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/bundle-ps2ganado6/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/cast/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/cast/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/bundle-ps2ganado5f/inputs/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/bundle-ps2ganado5f/inputs/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/bundle-ps2ganado5f/tex/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/bundle-ps2ganado5f/tex/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/cast/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/cast/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/flatn/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/ganado-em15-00/texture/ebed7ba6-2ca7490f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-all-20261010/ganado-em15-03/texture/65c6fe5a-2593694e.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r111/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r112/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r113/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r117/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r118/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r11c/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast/r11f/ashley-pl11/dc/tex/2/2c9c252a-51c59944.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/texture-vq-20260929/48369d01-cf9063bd.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/texture-vq-20260929/dc363980-b5147ee2.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/from-main/packages/r101-original/tex/279052e0-b695f91f.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/from-main/packages/r101-original/tex/2e6a0903-9fe7dbb0.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/from-main/packages/r101-original/tex/48369d01-cf9063bd.re4tex
+/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/from-main/packages/r101-original/tex/dc363980-b5147ee2.re4tex

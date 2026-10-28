@@ -1,0 +1,10 @@
+name r106-closet
+# in the closet event area (r106s00, chapter 1-1 end)
+room 0x106
+pos 158150 -9246 -44000
+ang 0.0000
+inv default
+act 60 a 4
+act 150 a 4
+act 240 a 4
+act 330 a 4

@@ -1,0 +1,19 @@
+{
+ "gc": "etc/core.das:0#25",
+ "id": 49,
+ "gc_tpl": 32,
+ "ps2": "Core.dat entry 25",
+ "rows": [
+  {
+   "gc_id": "etc/core.das:0#25:0x31",
+   "ps2_source": "Core.dat:25",
+   "dc_format": "PAL4_ARGB4444 32x32 x1 (GC 32x32 x1)",
+   "sha256": "4af87a24a7b631156fedddb4a90ef6ba3b9eec8809bcd2e25845506c9bb1a04a",
+   "bytes": 688,
+   "note": "err 0.00, 16 PS2 colours -> 16"
+  }
+ ],
+ "keys": [
+  "6d33c3f9-9f8cf668"
+ ]
+}

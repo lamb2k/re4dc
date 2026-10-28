@@ -1,0 +1,93 @@
+From 9f83ac248bb80e090d9758fa6b36e35f093fc91d Mon Sep 17 00:00:00 2001
+From: stevedamnvan <100538383+stevedamnvan@users.noreply.github.com>
+Date: Sun, 25 Oct 2026 16:27:55 -0400
+Subject: [PATCH] cast-ps2-25: LEON_NO_GC_FRONT (default 0): Leon never drawn
+ through the GameCube front path (allowlist -1: ef82164d)
+
+The r100 row "em/pl0a.drs#body ef82164d" is Leon's weapon hand BIN (wepNN arc 10, shared by every wepNN.drs and
+pl0a.drs). On r100's first frames after the s20 movie (h2 frame ~610, ~6 frames) the source actor ledger is not active,
+so re4dc_actor_transaction_identity is 0. Leon (pPL, id 0, 119 parts) was then not a transaction candidate, and
+trans.cpp ModelRender drew him GC through frontNativeRender. Diagnostic chain: re4dc_draw_model_part <- frontNativeRender
+<- ModelRender. It is not the shadow pass: shadow.cpp commonModelTrans flag=1 never ran for him.
+With the knob, those frames draw no Leon, as NATIVE_MODEL_REGISTRY_NO_GC_FRONT already does for registry actors.
+The check sits on the existing NO_GC_FRONT line (macro always defined 0/1), so no source line moves.
+
+Gates (lane tree at c3538c30, cand-2e8a7cef data, Flycast):
+- GC-ASSET gate-ON h2, knob on: ef82164d row 0 (control 1).
+- h2 twin, knob on: s30 340/340, heap_before 93856; LEONGC notes 0.
+- Knob off: image identical to the same tree without the change (37f75800e83d620c both).
+Not covered: Leon textures 23f6b950 / 2a8a368f stay. A second Leon-like model (id 0, ot 0, 119 parts, 5 infos, not
+pPL) is drawn through the source path from h2 frame ~689 on (LEON_HR source parts every frame).
+Needs the recipe line LEON_NO_GC_FRONT=1 for the allowlist change. KOS48 not run (no allocation).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU
+---
+ port/dreamcast/game/native_model_registry.mk       | 13 +++++++++++++
+ port/dreamcast/tools/d367/gc_port23/allowlist.json | 10 ----------
+ src/game/trans.cpp                                 |  4 ++--
+ 3 files changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/port/dreamcast/game/native_model_registry.mk b/port/dreamcast/game/native_model_registry.mk
+index a4339d1fe..70000ac25 100644
+--- a/port/dreamcast/game/native_model_registry.mk
++++ b/port/dreamcast/game/native_model_registry.mk
+@@ -566,6 +566,19 @@ endif
+ ifeq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
+ GAME_CPPFLAGS += -DRE4DC_NMR_NO_GC_FRONT=1
+ endif
++# LEON_NO_GC_FRONT=1 (lane cast-ps2-25 2026-10-25; default 0; render only; needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1):
++#   the same rule for Leon (pPL). On r100's first frames after the s20 movie the source ledger is not active
++#   (re4dc_actor_transaction_identity 0), so Leon was not a transaction candidate and trans.cpp ModelRender drew him GC
++#   through frontNativeRender (GC-ASSET r100: his weapon hand BIN ef82164d). Those frames draw no Leon. The macro is
++#   always defined (0 / 1) so the check sits on an existing source line: knob off, the image is unchanged.
++LEON_NO_GC_FRONT ?= 0
++ifeq ($(filter $(LEON_NO_GC_FRONT),0 1),)
++$(error LEON_NO_GC_FRONT must be 0 or 1)
++endif
++ifeq ($(LEON_NO_GC_FRONT)$(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),10)
++$(error LEON_NO_GC_FRONT=1 needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)
++endif
++GAME_CPPFLAGS += -DRE4DC_LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT)
+ # NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
+ #   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
+ #   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
+diff --git a/port/dreamcast/tools/d367/gc_port23/allowlist.json b/port/dreamcast/tools/d367/gc_port23/allowlist.json
+index 8b813028d..a0a91efe4 100644
+--- a/port/dreamcast/tools/d367/gc_port23/allowlist.json
++++ b/port/dreamcast/tools/d367/gc_port23/allowlist.json
+@@ -130,16 +130,6 @@
+    "room": "0100",
+    "sha256": "0841eeefc0cafa4489c00472613f9cfc15e1093bd44634d0b150123099991219"
+   },
+-  {
+-   "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=em/pl0a.drs#body",
+-   "id": "ef82164d62904ffcf1ddf68eb6fe6a4a536e1067",
+-   "kind": "model",
+-   "owner": "purge-cast24",
+-   "provenance": "gc",
+-   "reason": "GameCube cast model still drawn (no PS2 cast package in this recipe)",
+-   "room": "0100",
+-   "sha256": "ef82164d62904ffcf1ddf68eb6fe6a4a536e106777787b511ff067f092e5f916"
+-  },
+   {
+    "evidence": "gc-catalog24b gate-ON census on cand-29190a9c C:\\Flycast-Evidence\\re4-dreamcast\\gc-catalog24\\c24-h2 (catalog cat13 c753818a, compose-test24 candidate 29190a9c data); source=dc/tex.pak#offset=2232320&bytes=18576",
+    "id": "034bb1e9-ac6489af",
+diff --git a/src/game/trans.cpp b/src/game/trans.cpp
+index 17d66f567..281d94c6c 100644
+--- a/src/game/trans.cpp
++++ b/src/game/trans.cpp
+@@ -2909,8 +2909,8 @@ void ModelRender(cModel* m)
+ #endif
+ #if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
+     // NATIVE_MODEL_REGISTRY_NO_GC_FRONT: a registry-owned actor the ledger did not nominate this frame (door demo start)
+-    // is not drawn through the GameCube front path.
+-    if(frontNative && re4dc_registry_owned(m))return;
++    // is not drawn through the GameCube front path; LEON_NO_GC_FRONT: neither is Leon (native_model_registry.mk).
++    if(frontNative && (re4dc_registry_owned(m) || (RE4DC_LEON_NO_GC_FRONT && m==(cModel*)pPL)))return;
+ #endif
+ 
+ #if RE4DC_FRONT_NATIVE < 2
+-- 
+2.43.0
+

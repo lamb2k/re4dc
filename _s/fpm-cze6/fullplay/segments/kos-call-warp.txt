@@ -1,0 +1,30 @@
+name kos-call
+# KOS squeeze gate call scene (kos_squeeze.sh), from the SS_CHAIN_CHECK check (crash lane 10-15): r100 after the first radio call (as fullplay cache-warp), god mode,
+# then the source radio call 0 replayed as a scenario task at room frame 30 (warp `radio`): sub screen open / close
+# inside a 1-minute run. A closes the call (host keys).
+room 0x100
+pos -99685 -484 -1343
+ang 2.2460
+rsf 0x100 13
+scenario 0 0x00000010
+find 0x00002000
+inv default
+god
+radio 30 0
+act 250 a 3
+act 280 a 3
+act 310 a 3
+act 340 a 3
+act 370 a 3
+act 400 a 3
+act 430 a 3
+act 460 a 3
+act 490 a 3
+act 520 a 3
+act 550 a 3
+act 580 a 3
+act 610 a 3
+act 640 a 3
+act 670 a 3
+act 700 a 3
+# (the act presses do not reach the replayed call's sub screen; the scene ends at the open, where the call takes its memory)

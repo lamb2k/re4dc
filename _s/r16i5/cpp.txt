@@ -1,0 +1,23 @@
+GC-ASSET v2 production formatter maxima including newline: ASSET=247 COUNTS=255 BEGIN=157 END=168 (logger256)
+synthetic-7901 [read install]: rows=7901 binds=7901 reads/bind=3 absent=82 PASS
+synthetic-7901 [stream install]: rows=7901 binds=7901 reads/bind=3 absent=82 PASS
+synthetic-16320 (64-row blocks) [read install]: rows=16320 binds=16320 reads/bind=4 absent=169 PASS
+synthetic-16320 (64-row blocks) [stream install]: rows=16320 binds=16320 reads/bind=4 absent=169 PASS
+synthetic-1 [read install]: rows=1 binds=1 reads/bind=2 absent=1 PASS
+synthetic-1 [stream install]: rows=1 binds=1 reads/bind=2 absent=1 PASS
+synthetic-33 [read install]: rows=33 binds=33 reads/bind=2 absent=1 PASS
+synthetic-33 [stream install]: rows=33 binds=33 reads/bind=2 absent=1 PASS
+sparse index verdicts equal the exact lookup
+   text	   data	    bss	    dec	    hex	filename
+     32	      0	      0	     32	     20	/dev/shm/gc-port23-host-xbkkK1/off.o
+  16683	    128	  22368	  39179	   990b	/dev/shm/gc-port23-host-xbkkK1/on.o
+   text	   data	    bss	    dec	    hex	filename
+     32	      0	      0	     32	     20	/dev/shm/gc-port23-host-xbkkK1/members-off.o
+  10648	     80	  15232	  25960	   6568	/dev/shm/gc-port23-host-xbkkK1/members-on.o
+   text	   data	    bss	    dec	    hex	filename
+     32	      0	      0	     32	     20	/dev/shm/gc-port23-host-xbkkK1/payloads-off.o
+   7107	      0	     32	   7139	   1be3	/dev/shm/gc-port23-host-xbkkK1/payloads-on.o
+   text	   data	    bss	    dec	    hex	filename
+     32	      0	      0	     32	     20	/dev/shm/gc-port23-host-xbkkK1/audio-off.o
+   4949	      8	   1400	   6357	   18d5	/dev/shm/gc-port23-host-xbkkK1/audio-on.o
+GC-ASSET host core and judge tests PASS; target and runtime gates not run.

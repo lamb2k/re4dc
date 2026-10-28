@@ -1,0 +1,6 @@
+name i26-boat
+room 0x10b
+pos -72513 2890 -23602
+inv default
+god
+goto 300 -48810 -1000 25500 3.14159

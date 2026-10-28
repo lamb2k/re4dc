@@ -1,0 +1,12 @@
+name r117-ashley
+# r117 upstairs in area 7 (Ashley's door: action button, centre 6202, 3998, -3927; Item_find_flg 0x00100000 clear):
+# A -> s00 (Ashley found) -> Playing Manual 3 (file 0xA, paged by the padscript), then goto area 6 (centre -4476,
+# -1037, 3169) -> s10 (Saddler) -> chapter 2-1 end + save
+room 0x117
+pos 6202 3998 -3700
+ang 3.1416
+inv default
+god
+act 30 a 4
+goto 400 -4476 -1037 3169
+census 900

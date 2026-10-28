@@ -1,0 +1,7 @@
+name crash-call
+# Crash suite (align logger): fresh r100 entry, flag 13 clear, so R100Init runs r100_StartEvent: the s40 in-engine
+# event, then the first radio call (OpeSetOpenTerm(0)); the pad script closes the call with A. Console test 11
+# (eb4e8813) faulted right after this call closed (2026-10-14, walk_signature misaligned read).
+room 0x100
+inv default
+god

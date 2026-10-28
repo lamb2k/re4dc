@@ -1,0 +1,28 @@
+{
+"font-glyph/ps2": 232,
+"font-glyph/unknown": 28,
+"font-palette/ps2": 1,
+"font-palette/unknown": 1,
+"geometry/authored": 117,
+"geometry/ps2": 50,
+"geometry/unknown": 83,
+"layout/ps2": 8,
+"model/gc": 2412,
+"model/ps2": 734,
+"model/unknown": 880,
+"motion/gc": 1130,
+"motion/ps2": 1393,
+"movie/ps2": 3,
+"movie/unknown": 42,
+"sound-aram/gc": 38,
+"sound-aram/ps2": 208,
+"sound-aram/unknown": 4,
+"sound-mram/gc": 25,
+"sound-mram/ps2": 113,
+"sound-mram/unknown": 2,
+"sound-stream/ps2": 52,
+"texture/gc": 1040,
+"texture/ps2": 3038,
+"texture/unknown": 3291
+}
+packs ['ch2', 'pak17', 'ch2', 'pak17', 'v101', 'ch21r', 'pair20', 'ch21l', 'mip22', 'mip22b', 'fol24', 'pui24', 'pfx24', 'pui24s', 'props24', 'props24p', 'atlas24', 'props24b', 'props24l', 'props24x', 'leonhair24', 'leonatl24', 'wep24', 'pl08n25', 'gvar25', 'codec25', 'pics25c', 'pics25d', 'pada25', 'pada25b', 'pics25e', 'pics25f'] missing sets []

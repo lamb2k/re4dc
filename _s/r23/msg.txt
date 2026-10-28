@@ -1,0 +1,9 @@
+cast-ps2-25 r23: core.das EFF #1 PS2 pictures traced (torch flame 0x28 and 100 more keys)
+
+The 15 r11e torch flame keys (GC core.das EFF #1 id 0x28, tpl29) are already PS2 in tex.pak: their bytes equal
+ps2lib effects-tex/common (fx_ps2_pack lib, PS2 Core.dat EFF #1 id 0x28 frame f; a fresh convert_set run reproduces all 30
+frames byte for byte). They read unknown only because the key is unchanged since the ch2 pack. 101 provenance-reviewed
+rows (exact bytes) cover every EFF #1 key in that state. No data change, so no fxc26c set.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AkGpf8W8oYKd2z6cLgVseU

@@ -1,0 +1,5 @@
+name p2b-r10a-entry
+room 0x10a
+pos -58327 7346 69786
+ang 0.0
+inv default

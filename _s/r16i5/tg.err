@@ -1,0 +1,1 @@
+tg: tools/d367/gc_port23/test_gate.cpp:137: int main(): Assertion `output.find("motion-unwired consumer=9")!=std::string::npos && output.find("errors=1")!=std::string::npos' failed.

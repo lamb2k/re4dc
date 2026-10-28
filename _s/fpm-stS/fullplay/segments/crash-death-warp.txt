@@ -1,0 +1,9 @@
+name crash-death
+# Crash suite: the r101 square fight (r101-bell-fight, no god mode); the W11 fixture (crash-death-w11.txt) kills Leon
+# at room frame 600 through the source damage entry; the pad script presses A on the Continue screen (w11 phase
+# dead), and the room is entered again (generation 2).
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default

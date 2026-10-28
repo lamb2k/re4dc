@@ -1,0 +1,10 @@
+name r103-r106-door
+# at the r103 -> r106 door (door 1 has no lock or flag)
+room 0x103
+pos 9470 38 -759
+ang 0.8406
+inv default
+act 30 fwd 20
+act 60 a 4
+act 150 a 4
+act 240 a 4

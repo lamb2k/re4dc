@@ -1,0 +1,12 @@
+name r104-r107-door-unlocked
+# at the r104 -> r107 emblem gate, unlocked
+room 0x104
+pos 27604 -72 -27727
+ang 2.0026
+rsf 0x104 1
+unlock 0 0x00400000
+inv default
+act 30 fwd 20
+act 60 a 4
+act 150 a 4
+act 240 a 4
