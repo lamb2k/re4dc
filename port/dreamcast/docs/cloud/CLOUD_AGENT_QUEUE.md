@@ -59,6 +59,10 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
 | 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
+| 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | QUEUED 10-28 |
+| 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) | QUEUED 10-28 |
+| 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | QUEUED 10-28 |
+| 28 | QA link code review + fixes (`QA_LINK`) | QUEUED 10-28 (after local link28 lands) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -236,6 +240,74 @@ Console QA Diagnostics readings (ms per 33.4 ms tick, Test 24b QA 52cb8198 unles
 - For the top one or two suspects, a fix under its own default-off knob (approximations welcome), with the usual bytes/lines-touched report.
 
 **Local owner then runs:** the QA diagnostic disc (farm-barn27, WORLD_METER=1) on the console near the barn and 20 m away, then your knobs.
+
+## Fast paths only (added 2026-10-28)
+
+User, 10-28: "I want simple lighting that doesn't fall back to per-vertex lighting at all. ... audit where things are using a recently optimized drawing path correctly. Fallbacks cause a lot of slowdown."
+
+First real-console reading over the modem link (QA disc DIAGLINK ae0f7b2b = `DRAW_SETUP_AUDIT` + `PERF_PHASE_MISS` + `WORLD_METER` + `QA_LINK`), r103 day, inside the first barn, not near the bodies, 4 Ganados alive:
+
+| | Farm yard | First barn |
+|---|---:|---:|
+| fps | 14.7 | 5.9 |
+| QA render (ms per tick) | 8.1 | 51.2 |
+| DSA24 MODELS work / submit (µs per drawn tick) | - | 20,930 / 3,829 |
+| DSA24 WORLD OP/PT work / clip / submit | - | 11,595 / 1,191 / 4,498 |
+
+- MODELS at the barn is ~22 model calls, ~42 parts and ~7.4k triangles in per drawn tick, so about 2.8 µs per triangle. That is roughly 10x the normal skinned path: 4 Ganados at r101 measure ~3 ms on the console.
+- MODELS XLU is ~680 translucent triangles per tick, almost all on screen.
+- The SH-4 model (local lane barn28) prices the exact per-vertex light pass at only 1.6 ms MODELLED there, so the rest of the 21 ms is not explained yet. Animals are off (`ANIMALS_OFF=1`).
+
+### Build 25: one simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`)
+**Why:** the actor kernel (platform/native_actor_fast.cpp, the GIGANTE_LIGHTS fold, ACTOR_EXACT_FAST, ACTOR_PROBE_LIGHT, GANADO_LIT, PS2_GANADO_LIT, CROWD_FLAT) sends parts off the fast fold for these reasons: per-vertex colours, diffuse/scale materials, a fourth significant light, and probe declines (~11% of parts). Each one costs exact per-vertex light maths. Lane barn28 (local) is building `ACTOR_LIGHT_CAP`: at most 3 lights, but the exact evaluator stays. This build goes further.
+**Do:**
+- Under `ACTOR_LIGHT_FAST_ONLY=1` (default 0), every model (Leon, Ganados, partners, bosses, props on the actor path) takes one fast light path. That path is:
+  - the probe or fold of at most N lights (N = 3 or less), plus ambient;
+  - per-vertex colours handled as a precomputed multiply, never a light evaluation;
+  - diffuse/scale materials folded into the part colour.
+- No per-vertex light evaluation remains reachable with the knob on. Add a counter that must read 0: parts that would have fallen back, by reason.
+- Keep Leon's live probe (muzzle flash and fire still light him) through the same fast path.
+- **Offline bake tool** (tools only, separate flag): bake the static light and AO of each character into its vertex colours or palette, from the PS2 mesh/rig. At run time, a baked model needs only a room tint plus the flash term. Output: a data set the local owner packs. Give the format and a Leon + em12 example.
+- Report which outputs change (approximation). It is a look change; we run stills and gameplay equivalence locally.
+
+### Build 26: fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`)
+**Why:** many recent speed builds added a fast path that keeps the old path as a fallback, and fallbacks have cost us before (GC GX path, coarse scenery, legacy clip, texture resolve). The barn reading suggests something is still on a slow path near the camera.
+**Do:**
+- Walk every draw path, world and models, and list each fast/slow split:
+  - the knob and recipe value;
+  - the condition that sends work to the slow path;
+  - what the slow path costs per item (MODELLED);
+  - whether the condition can occur in chapters 1-2 data.
+- Cover at least:
+  - the world: SCENERY_* (SELECT_LEAN2, REPLAY_LEAN, SUBMIT_BATCH, EMIT_PREFETCH, LOCAL_INDEXED/DIRECT_STRIPS, RECORD_SPLIT), PS2_WORLD_*, shells, GC GX/MeshDraw paths;
+  - models: ACTOR_SETUP_LEAN, ACTOR_BYTES_LEAN, ACTOR_CLIP_REUSE, the native actor vs legacy model path, skinning, light (Build 25);
+  - clip and guard band, translucent sort/submit, texture resolve, effects (ESP_SETUP_LEAN).
+- Add `DRAW_FALLBACK_AUDIT=1` (default 0): one cheap counter per fast/slow split, as items per tick on the slow path by reason, shown on the QA Diagnostics page and in the QA_LINK T rows (≤1200 B per datagram part, compact).
+- Then the local owner runs it on the console at the barn and reads which fallbacks fire.
+- For each fallback that fires in chapters 1-2, propose removing the trigger, preferably by offline data conversion, or a fast approximation. Put the top two under their own default-off knobs.
+
+### Build 27: port the missing weapon modules wep05 / wep06 / wep12 (`WEP_MODULES_27`)
+**Why:** on equip, wep12 (Thompson, item 0x34) halts the game ("module: id 56 not in the image; link failed", then "DLL link/unlink failed called; halting"). wep05 (item 0x29, module 67) never finishes loading, and wep06 (item 0x2a, module 50) fails the same way. Their code was never ported. The sound banks for all three are fixed (snd28c, 8766fa4a).
+**Do:**
+- Port the modules from the decompilation into the image the same way as the existing wep modules (config/G4BE08/modules.py; include/wep_mod.h has wep12 notes: objTompson, pl_machine).
+- Add them to the module table, and make the equip path refuse cleanly (no halt) for any id still missing.
+- Report the size added per module. The local owner checks equip and fire for each in Flycast.
+
+### Build 28: QA link code review (`QA_LINK`, review + fixes)
+**Why:** our own modem link (lane qalink27; port/dreamcast/tools/qalink/README.md; KOS libppp with redirected I/O and a wrapped modem worker) showed three faults in the first console session:
+- command receive stalls under a telemetry backlog (rx stuck while queued ~650, drops rising);
+- KOS free fell from 3,128 to 1,808 bytes while the link was up;
+- after a hang-up, pressing A never redials.
+
+Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here when it lands.
+**Do:**
+- Review the console link code after link28 lands, plus qalink_pi.py and qalink.py, for:
+  - unbounded queues or KOS allocations;
+  - blocking calls on the game thread;
+  - hang-up/redial state errors;
+  - IRQ or SQ contention with the PVR;
+  - datagram sizes against the console's no-fragment rule.
+- Give findings with code sites, plus fixes under QA_LINK only (the game disc never builds the link).
 
 ## Open questions back to Claude
 
