@@ -1459,8 +1459,17 @@ if os.path.isdir(SND28D + '/em'):
 SND28BD = os.environ.get('SND28BD', '/root/re4data/private/snd28b-20261028')
 if os.path.isdir(SND28BD + '/em'):
     DATA['snd28b'] = {'em/%s.drs' % n: SND28BD + '/em/%s.drs' % n for n in (
-        'pl05', 'pl09', 'pl0c', 'pl10', 'pl15', 'em14', 'wep03', 'wep04', 'wep05', 'wep06', 'wep08', 'wep10', 'wep12',
-        'wep14', 'wep15', 'wep16', 'wep17', 'wep18')}
+        'pl05', 'pl09', 'pl0c', 'pl10', 'pl15', 'em14')}   # its wepNN copies are superseded by snd28c (round 3)
+# snd28c (lane snd28 round 3, 10-28, issue #1: silent weapons; data only, no knob): em/wep03-06 08 10 12 14-18 carried
+# their WEP sound block as GC data the runtime converts at load, which never fits ("blk 2 ... does not fit": every equip
+# silent). Each is prebuilt AIC1 into the frozen WEP slot (72,544 B) at the highest rate that fits (aica_banks.py fitwep,
+# the WEAPONS rule; 8000-22050 Hz), then gets PS2 PCM (ps2_audio.py banks): 134 of 146 samples PS2. Made from the 92cec32f
+# release disc's final files (after wep24 / wep26g / wep05fit25): keep snd28c after them. Store: re4-assets-private/
+# snd28c-20261028 (README-snd28c.txt, provenance.tsv, _map/ incl. fitwep/*.json rates).
+SND28CD = os.environ.get('SND28CD', '/root/re4data/private/snd28c-20261028')
+if os.path.isdir(SND28CD + '/em'):
+    DATA['snd28c'] = {'em/%s.drs' % n: SND28CD + '/em/%s.drs' % n for n in (
+        'wep03', 'wep04', 'wep05', 'wep06', 'wep08', 'wep10', 'wep12', 'wep14', 'wep15', 'wep16', 'wep17', 'wep18')}
 # dropeng26 (lane gcleft26 10-27, no-GameCube-assets rule; data only, no knob): ss/eng/title.snd off the disc. It is a
 # GameCube sound archive the game never reads: src/game/title.cpp:174 reads SS/cmn/title.snd (PS2 PCM since ps2snd24)
 # and nothing names SS/eng/title.snd (sscrn / read.cpp language paths are option.dat / title.dat / ss_*.dat). Proof: the
