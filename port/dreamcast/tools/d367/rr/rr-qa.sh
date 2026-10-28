@@ -6,6 +6,8 @@
 #   <zip dir> -   : zip written to <work>/qa, tested (testzip) and deleted (full tier: the zip step is checked only)
 #   <zip dir> DIR : zip kept as DIR/RE4DC-QA-Test<N>-<sha8>-<date>-GDEMU.zip (rr.sh package)
 #   [evidence]    : also master an fp_master.sh base at <evidence>/_discs/qa for the QA Flycast jobs (rr-jobs.sh full)
+# QA_LINK=1 (lane link28, user 10-28: every test / QA disc carries the remote link; recipe.conf note): the QA menu row
+#   REMOTE LINK dials a DreamPi (tools/qalink/README.md). The game disc never carries it.
 # The QA build out-rr<sha7>qrW is reused when it exists (rr-clean-builds.sh deletes it with the cycle's other builds).
 set -euo pipefail
 W=${1:?work}; TR=${2:?tree}; SHA=${3:?sha}; TN=${4:?test name}; ZD=${5:?zip dir or -}; EVU=${6:-}
@@ -13,15 +15,18 @@ BIN=$(cd "$(dirname "$0")" && pwd)
 S7=${SHA:0:7}; S8=${SHA:0:8}
 T=$TR/port/dreamcast/tools/d367
 if [ -s "$W/recipe.conf" ]; then . "$W/recipe.conf"; else . "$BIN/recipe.conf"; fi
-L=rr${S7}qrW
+# RR_QA_LP / RR_QA_XON / RR_QA_KEEP (lane link28): a diagnostic QA disc from the same steps (its own label prefix,
+#   extra knobs after the QA ones, and a copy of the gdemu folder kept at RR_QA_KEEP); unset = the rr QA disc.
+LQ=${RR_QA_LP:-rr${S7}q}
+L=${LQ}rW
 O=/root/probe/lanes/route/out-$L
 R=$W/qa
 export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
 export PKG_SRC=$RE4DC_PAYLOAD_ROOT/tree
 rm -rf "${R:?}"; mkdir -p "$R/fix" "$R/logs" "$R/qa"
 if [ ! -s "$O/re4dc-game.elf" ]; then
-  K=$W/kq T=$TR LP=rr${S7}q CH2="$CH2" \
-    XON="QA_MENU=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8" \
+  K=$W/kq T=$TR LP=$LQ CH2="$CH2" \
+    XON="QA_MENU=1 QA_LINK=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8 ${RR_QA_XON:-}" \
     bash "$T/ch2/ch2-build.sh" rW 2>&1 | grep '^rc=' | cut -c1-200 | tee "$R/logs/build.txt"
   grep -q '^rc=0 ' "$R/logs/build.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "QA build failed"; exit 1; }
 fi
@@ -33,6 +38,9 @@ python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
 python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
 # RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
 if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi
+# RR_QA_LINKTXT='auto 1\nhost <PC>\nlport 52042' (lane link28; harness twins only, never a tester disc): /dc/qa/link.txt,
+#   so the link dials at the first game tick (KOS squeeze / s30 / command runs with the link up in Flycast's modem)
+[ -z "${RR_QA_LINKTXT:-}" ] || printf '%b\n' "$RR_QA_LINKTXT" > "$R/qa/link.txt"
 mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)
@@ -68,10 +76,11 @@ P
 if [ -n "$EVU" ]; then
   F=$T/fullplay
   python3 "$F/fp_iso.py" extract "$R/gdemu/track03.bin" "$R/tree" --manifest "$R/man.json" --ipbin "$R/IP.BIN" | tail -1
-  bash "$F/fp_master.sh" "$R/tree" "$R/man.json" "$R/IP.BIN" "$EVU/_discs/qa" > "$R/logs/master.txt" 2>&1 || { tail -5 "$R/logs/master.txt"; exit 1; }
+  bash "$F/fp_master.sh" "$R/tree" "$R/man.json" "$R/IP.BIN" "$EVU/_discs/${RR_QA_BASE:-qa}" > "$R/logs/master.txt" 2>&1 || { tail -5 "$R/logs/master.txt"; exit 1; }
   tail -1 "$R/logs/master.txt" | cut -c1-200
   rm -rf "${R:?}/tree"
 fi
+[ -z "${RR_QA_KEEP:-}" ] || { rm -rf "${RR_QA_KEEP:?}"; cp -a "$R/gdemu" "$RR_QA_KEEP"; }
 # RR_QA_KEEP_GDEMU=1 (speed/rr-speed-gpu.sh, lane guards28 10-28): keep the disc for the cache-model GPU row
 [ "${RR_QA_KEEP_GDEMU:-0}" = 1 ] || rm -rf "${R:?}/gdemu"
 echo QA_OK

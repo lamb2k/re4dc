@@ -101,6 +101,17 @@ lport 52040         the console's UDP port
 auto 1              dial at the first game tick (harness runs)
 ```
 
+## Which discs carry the link (lane link28, user 10-28)
+
+- **Every QA disc:** `QA_LINK` defaults to `QA_MENU` (game/qalink.mk), so any `QA_MENU=1` build has the menu row.
+  `QA_LINK=0` on the make line turns it off for one arm. The rr QA disc (rr-qa.sh) says `QA_LINK=1` explicitly.
+- **Benchmark, arena and scenario discs** (`BENCHMARK=1`, no QA menu): add `QA_LINK=1` and put `auto 1` in
+  `/dc/link.txt` (the fixtures folder mkgdi.sh copies to `/dc/`). game/qa_link_bench.cpp dials at the first game tick
+  and sends `T` (link row, scene number), `L` (log, 640 B/s) and `B <seq> <dropped>`: every RAM log line starting
+  `bench: ` or `PACE` (results, phases, tail summary, code, pace windows), lossless, including the results screen.
+  Only `PING` is answered; menu commands answer `ERR`. benchpub/bench-build.sh and lake20/scn-disc.sh do this.
+- **The game disc never** (QA_MENU=0): +94 KiB static would cost heap 4 and the s30 movie room.
+
 ## Limits
 
 - Hardware only: the real modem, the inducer and DreamPi's pppd. The same disc was proven end to end in Flycast's

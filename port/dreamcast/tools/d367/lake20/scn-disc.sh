@@ -31,6 +31,8 @@ for k in 1 2 3 4 5; do
   n=$k
 done
 printf 'speed=screen\n' > "$D/fix/quality.txt"
+# QA_LINK=1 programs (lane link28 10-28): the remote link dials on its own (game/qa_link_bench.cpp); inert otherwise
+echo 'auto 1' > "$D/fix/link.txt"
 echo "scenes $n"
 (cd "$T" && LAYOUT=standard TITLE="RE4DC LAKE SCENARIO (NOT THE GAME)" PRODUCT=T0020 bash mkgdi.sh "$O/re4dc-game.elf" "$D/pkgtree" "$D/gdemu" "$D/fix" | tail -2)
 rm -f "$D/gdemu/IP.BIN"

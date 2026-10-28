@@ -204,6 +204,8 @@ def main():
         (cap / 'mappings' / 'SDL_Keyboard.cfg').write_text(
             '[digital]\n' + ''.join('bind%d = %d:%s\n' % (i, k, n) for i, (k, n) in enumerate(binds)) +
             '\n[emulator]\nmapping_name = Keyboard\nversion = 3\n')
+    if os.environ.get('RE4DC_MODEM_PPP') == '1':  # QA_LINK runs (lane link28): Flycast's own PPP peer, not DCNet
+        cfg = re.sub(r'(?ms)^\[network\]\n(?:(?!\[).*\n)*', '', cfg) + '\n[network]\nDCNet = no\n'
     (cap / 'emu.cfg').write_text(cfg)
     steps = []
     if a.keys:

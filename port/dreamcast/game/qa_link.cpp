@@ -44,6 +44,8 @@
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
+void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));  // os.cpp
+int _ppp_enter_phase(int phase);   // libppp ppp_internal.h (compiled into the game by qalink.mk)
 int net_udp_init(void);   // kernel/net/net_udp.c (KOS internal; registers UDP with fs_socket)
 }
 
@@ -51,6 +53,7 @@ namespace {
 enum { S_OFF, S_DIAL, S_PPP, S_UP, S_FAILED, S_DROPPED, S_STOPPING };
 volatile int g_state = S_OFF, g_attempt, g_err, g_stop;
 volatile unsigned g_rate, g_tx_bytes, g_rx_bytes, g_tx_drops, g_modem_tx, g_modem_rx;
+volatile unsigned g_bulk_skips;   // telemetry / log datagrams refused (queue past kBulkCap or KOS below kKosFloor)
 unsigned char g_ip[4], g_peer[4];
 char g_number[24] = "1111111";
 unsigned g_host = 0xFFFFFFFFu;   // network order; 255.255.255.255 = whoever is at the other end of the PPP link
@@ -94,8 +97,13 @@ struct Ring {
 Ring g_tx, g_rx;
 unsigned char g_pkt[1408];   // the PPP thread's datagram buffer
 
-// The PPP thread, link up: queued datagrams out, received ones in. Called between libppp's receive passes, with
-// libppp's mutex released (sendto takes it).
+// The PPP thread, link up: received datagrams in first, then at most ONE queued datagram out. Called between libppp's
+// receive passes, with libppp's mutex released (sendto takes it).
+// link28 (first console session 10-28: commands stopped arriving under heavy telemetry): sendto runs libppp's modem
+// write, which waits while the modem's 1 KiB tx buffer drains (~0.3 s for a full datagram at 33.6 kbps). The old loop
+// sent the whole tx ring in one pass, so libppp never got back to reading the modem: its 1 KiB rx chain buffer
+// overflowed and the Pi's commands were lost while the backlog lasted (queued ~650, rx stuck). One datagram per pass
+// lets libppp read the line between datagrams; the game side keeps the backlog short (re4dc_qalink_send_bulk).
 void pump() {
     if (!modem_is_connected()) {
         g_state = S_DROPPED;
@@ -103,16 +111,6 @@ void pump() {
         return;
     }
     int n;
-    while ((n = g_tx.get(g_pkt, sizeof(g_pkt))) >= 0) {
-        sockaddr_in to;
-        memset(&to, 0, sizeof(to));
-        to.sin_family = AF_INET;
-        to.sin_port = htons(g_port);
-        to.sin_addr.s_addr = g_host;
-        if (sendto(g_sock, g_pkt, n, 0, (sockaddr*) &to, sizeof(to)) == n) g_tx_bytes = g_tx_bytes + n;
-        else g_tx_drops = g_tx_drops + 1;
-        if (!modem_is_connected()) return;
-    }
     for (;;) {
         sockaddr_in from;
         socklen_t fl = sizeof(from);
@@ -125,6 +123,15 @@ void pump() {
             re4dc_log("qalink: peer %u.%u.%u.%u\n", g_peer[0], g_peer[1], g_peer[2], g_peer[3]);
         }
         g_rx.put(g_pkt, (unsigned) n);
+    }
+    if ((n = g_tx.get(g_pkt, sizeof(g_pkt))) >= 0) {
+        sockaddr_in to;
+        memset(&to, 0, sizeof(to));
+        to.sin_family = AF_INET;
+        to.sin_port = htons(g_port);
+        to.sin_addr.s_addr = g_host;
+        if (sendto(g_sock, g_pkt, n, 0, (sockaddr*) &to, sizeof(to)) == n) g_tx_bytes = g_tx_bytes + n;
+        else g_tx_drops = g_tx_drops + 1;
     }
 }
 
@@ -257,12 +264,32 @@ void re4dc_qalink_timer_down(void) {
 }  // extern "C"
 
 namespace {
+// link28 (console 10-28: after a hang-up under a big backlog, A never dialled again): the old order shut PPP down first.
+// ppp_shutdown takes libppp's mutex, which the PPP thread held inside sendto -> modem write, waiting for the modem's tx
+// buffer to drain; the hang-up waited 2 s, set OFF with the PPP thread still alive, and every later start refused
+// (g_ppp_running). Now: stop the pump and drop the queue, drop the LINE first (a blocked modem write then discards and
+// returns, so libppp lets the mutex go), then close PPP; a PPP thread still alive after 3.2 s is destroyed (its stack is
+// static), so the state always ends OFF with nothing left running and the next A dials.
 void hang_up() {
-    if (g_sock >= 0) { const int s = g_sock; g_sock = -1; close(s); }
+    const int s = g_sock;
+    g_sock = -1;          // pump() stops (thd_pass checks g_sock)
+    g_tx.clear();         // nothing more to send
+    modem_shutdown();     // the line drops: libppp's blocked modem write returns
+    if (s >= 0) close(s);
+    // ppp_shutdown only shuts the protocols down (LCP's terminate waits for a peer a dropped line never brings back);
+    // libppp's thread loops until the phase is DEAD (Flycast, link28: it never left, the old code then reported OFF
+    // with the thread alive and every later start refused). Enter DEAD first, let the thread leave, then shut down.
+    if (g_ppp_init) _ppp_enter_phase(PPP_PHASE_DEAD);
+    for (int i = 0; i < 400 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
     if (g_ppp_init) { ppp_shutdown(); g_ppp_init = false; }
-    modem_shutdown();
     re4dc_qalink_timer_down();
-    for (int i = 0; i < 250 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
+    if (g_ppp_running) {
+        kthread_t* t = g_ppp_thd;
+        if (t) thd_destroy(t);
+        g_ppp_thd = nullptr;
+        g_ppp_running = 0;
+        re4dc_log("qalink: PPP thread did not leave; destroyed\n");
+    }
 }
 
 bool dial_once() {
@@ -304,14 +331,18 @@ bool dial_once() {
     return true;
 }
 
-// The dial thread: arg 0 = dial (3 tries), 1 = hang up. Detached; it leaves once the link is up or down.
+// The dial thread: arg 0 = dial (3 tries), 1 = hang up, 2 = hang up, then dial (A on LINE DROPPED, or a start while
+// an old PPP thread is still leaving). Detached; it leaves once the link is up or down.
 void* dial_main(void* arg) {
     g_dial_thd = thd_get_current();
-    if (arg) {
+    const intptr_t mode = (intptr_t) arg;
+    if (mode) {
         hang_up();
         g_state = S_OFF;
         re4dc_log("qalink: hung up\n");
-    } else {
+    }
+    if (mode != 1 && !g_stop) {
+        g_state = S_DIAL;
         bool up = false;
         for (int a = 1; a <= 3 && !g_stop && !up; ++a) {
             g_attempt = a;
@@ -369,11 +400,12 @@ void re4dc_qalink_config(const char* number, const char* host, unsigned port, un
 // Start (dial thread) / stop (a thread hangs up). Both return at once.
 void re4dc_qalink_stop(void);
 int re4dc_qalink_start(void) {
-    if (g_state == S_DROPPED) { re4dc_qalink_stop(); return 0; }   // a dropped line hangs up first
-    if (g_dial_running || g_state == S_UP || g_ppp_running) return 0;   // dialling, up, or still hanging up
-    g_stop = 0; g_err = 0; g_attempt = 0; g_state = S_DIAL;
+    if (g_dial_running || g_state == S_UP) return 0;   // dialling / hanging up already, or up
+    // OFF / FAILED: dial. LINE DROPPED, or an old PPP thread still leaving: hang up first, then dial (one thread).
+    const int mode = (g_state == S_DROPPED || g_ppp_running || g_sock >= 0) ? 2 : 0;
+    g_stop = 0; g_err = 0; g_attempt = 0; g_state = mode ? S_STOPPING : S_DIAL;
     g_rx.clear();
-    if (!spawn_dial(0)) { g_state = S_FAILED; g_err = -30; return -1; }
+    if (!spawn_dial(mode)) { g_state = S_FAILED; g_err = -30; return -1; }
     re4dc_log("qalink: start number=%s port=%u lport=%u\n", g_number, (unsigned) g_port, (unsigned) g_lport);
     return 0;
 }
@@ -398,7 +430,7 @@ void re4dc_qalink_state_text(char* out, unsigned n) {
     case S_UP: snprintf(out, n, "UP %u.%u.%u.%u TO %u.%u.%u.%u", g_ip[0], g_ip[1], g_ip[2], g_ip[3], g_peer[0], g_peer[1],
                         g_peer[2], g_peer[3]); break;
     case S_FAILED: snprintf(out, n, "FAILED (%d) - A: RETRY", g_err); break;
-    case S_DROPPED: snprintf(out, n, "LINE DROPPED - A: HANG UP"); break;
+    case S_DROPPED: snprintf(out, n, "LINE DROPPED - A: REDIAL"); break;
     default: snprintf(out, n, "HANGING UP"); break;
     }
 }
@@ -412,6 +444,25 @@ int re4dc_qalink_send(const void* p, unsigned n) {
     if (!g_tx.put(p, n)) { g_tx_drops = g_tx_drops + 1; return 0; }
     return 1;
 }
+// Telemetry / log rows (link28): queued only while the backlog is short (kBulkCap bytes, about 0.7 s of line at
+// 33.6 kbps) and the KOS heap keeps kKosFloor free (chunks + break room); otherwise skipped and counted, so a slow line
+// or a long session never grows the backlog. Answers (re4dc_qalink_send) keep the rest of the ring.
+// The link's KOS use (link28 audit): tx allocates nothing (libppp and net_udp build frames on the stack; the modem chain
+// buffers and the thread stacks are BSS); each received datagram is two KOS mallocs (net_udp packet + data) that the
+// recvfrom loop in pump() frees on the same pass, so the link's KOS use is bounded by one pass of commands.
+int re4dc_qalink_send_bulk(const void* p, unsigned n) {
+    enum { kBulkCap = 2400, kKosFloor = 32768 };
+    if (g_state != S_UP) return 0;
+    bool ok = g_tx.used() + n + 2 <= kBulkCap;
+    if (ok && re4dc_kos_heap_state) {
+        unsigned f = 0, u = 0, b = 0;
+        re4dc_kos_heap_state(&f, &u, &b);
+        ok = f + b >= kKosFloor;
+    }
+    if (!ok) { g_bulk_skips = g_bulk_skips + 1; return 0; }
+    return re4dc_qalink_send(p, n);
+}
+unsigned re4dc_qalink_bulk_skips(void) { return g_bulk_skips; }
 int re4dc_qalink_recv(char* p, unsigned max) {
     const int n = g_rx.get(p, max - 1);
     if (n >= 0) p[n] = 0;
