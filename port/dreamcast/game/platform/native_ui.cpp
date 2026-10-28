@@ -10212,6 +10212,9 @@ extern "C" void re4dc_model_finish_source_draws(){
         const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
 #endif
         Re4dcModelPart view=restore_view(deferred_first);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        const re4dc::dsa24::x28::ModelScope dsa28_model(view.model);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
         re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
 #endif
@@ -10810,4 +10813,11 @@ extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_po
 extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart* p){
     return (draining_parts?draining_list:select_model_pass(p))==PVR_LIST_TR_POLY;
 }
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// XLU28 area class of a model part's list: 0 opaque, 1 punch-through, 2 translucent.
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart* p){
+    const unsigned list=draining_parts?draining_list:select_model_pass(p);
+    return list==PVR_LIST_TR_POLY?2U:list==PVR_LIST_PT_POLY?1U:0U;
+}
+#endif
 #endif

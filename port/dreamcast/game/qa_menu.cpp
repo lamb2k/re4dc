@@ -62,7 +62,7 @@ unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* 
 void re4dc_ps2_pvs_set(unsigned on) __attribute__((weak));
 void re4dc_ps2_pvs_state(unsigned out[4]) __attribute__((weak));
 void re4dc_pvs23_receipt_state(unsigned out[5]) __attribute__((weak));
-int re4dc_world_meter_window(unsigned out[11]);
+int re4dc_world_meter_window(unsigned out[11]) __attribute__((weak));                           // tick_log.cpp (GAME_TICK_LOG != 0)
 int re4dc_world_meter_geometry_supported(void);
 void re4dc_world_meter_resume(void);
 int re4dc_view_dist_get(void) __attribute__((weak));                                         // option_rows.cpp
@@ -383,7 +383,7 @@ void snap_diag() {
             a=addf(a,"Crossing triangles may have 0 corners inside; depth visibility NA.\n");
         }else a=addf(a,"cache_xform/input_inside=NA unsupported transform path\n");
         unsigned window[11];
-        if(re4dc_world_meter_window(window))a=addf(a,"world_window room=%03x View=%u PVS=%u frames=%u-%u ticks=%u seq=%u\n",window[0],window[1],window[2],window[7],window[8],window[9],window[10]);
+        if(re4dc_world_meter_window && re4dc_world_meter_window(window))a=addf(a,"world_window room=%03x View=%u PVS=%u frames=%u-%u ticks=%u seq=%u\n",window[0],window[1],window[2],window[7],window[8],window[9],window[10]);
         (void) total;
 #else
         a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u total=%u\n",

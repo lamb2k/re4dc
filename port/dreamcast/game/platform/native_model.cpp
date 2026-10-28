@@ -752,6 +752,9 @@ struct Scope {
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(p?p->model:nullptr);
+#endif
 #endif
 #if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
     const b28m::Scope b28m_scope(p);

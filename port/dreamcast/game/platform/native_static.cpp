@@ -63,6 +63,10 @@
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "include/draw_setup_audit.h"
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+struct Re4dcModelPart;
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
+#endif
 #endif
 #ifndef RE4DC_SCENERY_REPLAY_LEAN
 #define RE4DC_SCENERY_REPLAY_LEAN 0
@@ -1242,7 +1246,18 @@ struct Emitter {
         return false;
 #endif
     }
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    unsigned dsa28_cls()const{
+#if RE4DC_PS2_WORLD_MESH
+        if(ps2)return ps2[4]<=2U?ps2[4]:0U;
+#endif
+        return re4dc_dsa28_model_class(&p);
+    }
+#endif
     void dsa_packet_overlap(const pvr_vertex_t* vertices,unsigned n)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::packet(dsa28_cls(),p.cull,vertices,n,PVR_CMD_VERTEX_EOL);
+#endif
         if(!dsa_xlu())return;
         unsigned run=0,overlap=0;
         for(unsigned i=0;i<n;++i){
@@ -2857,6 +2872,9 @@ unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, co
 struct MeshDraw : Emitter {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT && RE4DC_MESH_FASTPATH
     void dsa_index_overlap(const std::uint8_t* indices,unsigned n)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::strip(dsa28_cls(),p.cull,cache,indices,n,0xffU);
+#endif
         if(!dsa_xlu())return;
         unsigned overlap=0;
         for(unsigned i=2;i<n;++i)
@@ -2864,7 +2882,11 @@ struct MeshDraw : Emitter {
         re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap,overlap);
     }
     void dsa_lean_overlap(const std::uint8_t* begin,const std::uint8_t* end)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(!dsa_xlu() && !re4dc::dsa24::x28::sample)return;  // XLU28 replays every pass on its sampled ticks
+#else
         if(!dsa_xlu())return;
+#endif
         // walk_lean stops before a depth-crossing strip. Replay only its
         // inexpensive integer admission predicates; do not emit or transform.
         constexpr unsigned mask=re4dc::vp::depth_mask(re4dc::vp::kChecksAll)|
@@ -3372,7 +3394,11 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
                 else if(sq && bf_on()){bf_send(s,n);output+=n-2;++stats.strips;}
 #endif
-                else if(sq){sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
+                else if(sq){
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+                    if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::strip(dsa28_cls(),p.cull,cache,s,n,0xffU);
+#endif
+                    sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
 #endif
                 else {
                     if(n>limit-used && !flush())return submitted?-1:0;
