@@ -200,6 +200,7 @@ def main():
     ap.add_argument('--dir', default='~/qalink', help='qalink_pi.py and the log on the Pi (default ~/qalink)')
     ap.add_argument('--local', default='', help='log of a qalink_pi.py serve on this PC (Flycast tests): no ssh')
     ap.add_argument('--out', default='', help='capture folder (default C:\\Flycast-Evidence\\re4-dreamcast\\console-<date>)')
+    ap.add_argument('--review28', action='store_true', help='opt in to bounded Build28 replies and complete-snapshot captures')
     sub = ap.add_subparsers(dest='mode', required=True)
     sd = sub.add_parser('send')
     sd.add_argument('command', nargs='+')
@@ -218,6 +219,9 @@ def main():
     a = ap.parse_args()
     if not a.pi and not a.local:
         ap.error('--pi user@host (or set QALINK_PI), or --local <log>')
+    if a.review28:
+        import qalink_review28
+        return qalink_review28.client_main(sys.modules[__name__], a)
     link = Link(a)
     d = a.dir
     if a.mode == 'send':

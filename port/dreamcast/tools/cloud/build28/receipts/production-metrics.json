@@ -1,0 +1,5194 @@
+{
+  "status": "PASS",
+  "baseline": "568c357656efbec468db06a282c1f79caebaa725",
+  "scope": "Summarize Build28 complete selected-TU sections and compiler local frames.\n\nEach enabled profile uses its exact matching integration profile as reference.\nAll figures precede final linking and garbage collection. Local stack frames\nare not a complete call chain, IRQ watermark or console heap measurement.\n",
+  "profiles": {
+    "q0-f0-d0-on": {
+      "baseline": "q0-f0-d0-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12438,
+              "after": 12438,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 39636,
+              "after": 39636,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 23868,
+              "after": 23868,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2",
+          "after_sha256": "99040b09cf6e0755f6c19276a1cae9b90482b49a026c8ff2fb7634bc04b64ed2"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 12438,
+          "after": 12438,
+          "delta": 0
+        },
+        "allocated_bytes": {
+          "before": 39636,
+          "after": 39636,
+          "delta": 0
+        },
+        "zero_fill_bytes": {
+          "before": 23868,
+          "after": 23868,
+          "delta": 0
+        }
+      }
+    },
+    "q0-f0-d1-on": {
+      "baseline": "q0-f0-d1-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12926,
+              "after": 12926,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 45208,
+              "after": 45208,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 28988,
+              "after": 28988,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f4c0a128d6c290ea41409fedbf657afa7eb024baaa1ae93f014440d1da7ffd3",
+          "after_sha256": "1f4c0a128d6c290ea41409fedbf657afa7eb024baaa1ae93f014440d1da7ffd3"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 12926,
+          "after": 12926,
+          "delta": 0
+        },
+        "allocated_bytes": {
+          "before": 45208,
+          "after": 45208,
+          "delta": 0
+        },
+        "zero_fill_bytes": {
+          "before": 28988,
+          "after": 28988,
+          "delta": 0
+        }
+      }
+    },
+    "q0-f1-d0-on": {
+      "baseline": "q0-f1-d0-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 12926,
+              "after": 12926,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 44184,
+              "after": 44184,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 27964,
+              "after": 27964,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "23bbdb4c6f4d57d8ee6827eb59a96d00ca901ca28b2c0f4809b8ca273ad19f0f",
+          "after_sha256": "23bbdb4c6f4d57d8ee6827eb59a96d00ca901ca28b2c0f4809b8ca273ad19f0f"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 12926,
+          "after": 12926,
+          "delta": 0
+        },
+        "allocated_bytes": {
+          "before": 44184,
+          "after": 44184,
+          "delta": 0
+        },
+        "zero_fill_bytes": {
+          "before": 27964,
+          "after": 27964,
+          "delta": 0
+        }
+      }
+    },
+    "q0-f1-d1-on": {
+      "baseline": "q0-f1-d1-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 13030,
+              "after": 13030,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 49408,
+              "after": 49408,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 33084,
+              "after": 33084,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 2280,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 508,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "3c04b711fc6cdd9027f090d6ce7e241f4d867d8e61ecd7beefd028ee34f82534",
+          "after_sha256": "3c04b711fc6cdd9027f090d6ce7e241f4d867d8e61ecd7beefd028ee34f82534"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 13030,
+          "after": 13030,
+          "delta": 0
+        },
+        "allocated_bytes": {
+          "before": 49408,
+          "after": 49408,
+          "delta": 0
+        },
+        "zero_fill_bytes": {
+          "before": 33084,
+          "after": 33084,
+          "delta": 0
+        }
+      }
+    },
+    "q1-f0-d0-on": {
+      "baseline": "q1-f0-d0-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 25626,
+              "after": 27170,
+              "delta": 1544
+            },
+            "allocated_bytes": {
+              "before": 75799,
+              "after": 77880,
+              "delta": 2081
+            },
+            "zero_fill_bytes": {
+              "before": 43948,
+              "after": 44221,
+              "delta": 273
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2648,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:261:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:262:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1027:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1028:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:763:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1099:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:801:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:802:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:887:6:void {anonymous}::link_send_parts(char, const char*, const char*, int)",
+                  "bytes": 1224,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:949:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:753:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1042:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1052:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1063:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:953:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1355:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2648,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1607:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1623:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1639:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1650:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1681:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:267:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:268:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1120:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1121:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:774:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:764:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1192:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:812:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:813:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1217:6:bool {anonymous}::drive_number28(const char*, float*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:900:6:void {anonymous}::link_snapshot28()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1127:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1145:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1135:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1038:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1156:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1491:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1767:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1783:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1809:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1823:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1857:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "16498ade3cbf62064120a8404ef209da6585272a6f9fddaf0d7a5628ebc02743",
+          "after_sha256": "867f282ee3440147bca1cdf3e92eb43b94099167fade3368766c73244e64d866"
+        },
+        "qa_link": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3888,
+              "after": 5040,
+              "delta": 1152
+            },
+            "allocated_bytes": {
+              "before": 32605,
+              "after": 33788,
+              "delta": 1183
+            },
+            "zero_fill_bytes": {
+              "before": 28170,
+              "after": 28197,
+              "delta": 27
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:138:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:363:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:148:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:166:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:171:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:195:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:217:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:228:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:242:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:259:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:273:6:void {anonymous}::hang_up()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:336:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:392:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:402:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:412:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:420:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:422:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:425:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:437:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:442:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:453:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:465:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:466:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:194:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:81:6:bool {anonymous}::stack_busy28(tid_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:532:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:208:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:231:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:251:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:260:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:296:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:329:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:343:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:360:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:375:6:bool {anonymous}::hang_up()",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:478:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:564:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:577:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:594:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:610:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:612:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:615:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:627:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:632:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:643:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:655:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:656:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:668:6:void re4dc_qalink_review_counters(unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "454662814971c8d8093ed06aa7e84d9fef8b1998036c31654fadf94d9a412644",
+          "after_sha256": "2b790fcca76d909853b2f61e826744f8f1ca88ed4d17cc12452e1fb196481332"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 29514,
+          "after": 32210,
+          "delta": 2696
+        },
+        "allocated_bytes": {
+          "before": 108404,
+          "after": 111668,
+          "delta": 3264
+        },
+        "zero_fill_bytes": {
+          "before": 72118,
+          "after": 72418,
+          "delta": 300
+        }
+      }
+    },
+    "q1-f0-d1-on": {
+      "baseline": "q1-f0-d1-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 26122,
+              "after": 27678,
+              "delta": 1556
+            },
+            "allocated_bytes": {
+              "before": 86503,
+              "after": 88596,
+              "delta": 2093
+            },
+            "zero_fill_bytes": {
+              "before": 54192,
+              "after": 54465,
+              "delta": 273
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2648,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:261:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:262:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1027:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1028:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:763:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1099:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:801:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:802:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:887:6:void {anonymous}::link_send_parts(char, const char*, const char*, int)",
+                  "bytes": 1224,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:949:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:753:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1042:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1052:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1063:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:953:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1355:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 2648,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1607:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1623:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1639:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1650:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1681:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:267:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:268:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1120:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1121:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:774:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:764:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1192:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:812:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:813:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1217:6:bool {anonymous}::drive_number28(const char*, float*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:900:6:void {anonymous}::link_snapshot28()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1127:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1145:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1135:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1038:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1156:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1491:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1767:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1783:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1809:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1823:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1857:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "d7667e89e9085fce22704bdfb43fe3b5b04b8cf8b5807eb4c0d16eb9c3f3674a",
+          "after_sha256": "a247f953669d426ed290dd14b010383b9dced325a2b995103b10fafc826fb9a5"
+        },
+        "qa_link": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3888,
+              "after": 5040,
+              "delta": 1152
+            },
+            "allocated_bytes": {
+              "before": 32605,
+              "after": 33788,
+              "delta": 1183
+            },
+            "zero_fill_bytes": {
+              "before": 28170,
+              "after": 28197,
+              "delta": 27
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:138:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:363:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:148:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:166:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:171:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:195:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:217:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:228:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:242:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:259:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:273:6:void {anonymous}::hang_up()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:336:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:392:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:402:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:412:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:420:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:422:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:425:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:437:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:442:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:453:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:465:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:466:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:194:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:81:6:bool {anonymous}::stack_busy28(tid_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:532:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:208:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:231:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:251:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:260:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:296:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:329:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:343:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:360:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:375:6:bool {anonymous}::hang_up()",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:478:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:564:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:577:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:594:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:610:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:612:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:615:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:627:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:632:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:643:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:655:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:656:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:668:6:void re4dc_qalink_review_counters(unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "454662814971c8d8093ed06aa7e84d9fef8b1998036c31654fadf94d9a412644",
+          "after_sha256": "2b790fcca76d909853b2f61e826744f8f1ca88ed4d17cc12452e1fb196481332"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 30010,
+          "after": 32718,
+          "delta": 2708
+        },
+        "allocated_bytes": {
+          "before": 119108,
+          "after": 122384,
+          "delta": 3276
+        },
+        "zero_fill_bytes": {
+          "before": 82362,
+          "after": 82662,
+          "delta": 300
+        }
+      }
+    },
+    "q1-f1-d0-on": {
+      "baseline": "q1-f1-d0-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 26366,
+              "after": 27678,
+              "delta": 1312
+            },
+            "allocated_bytes": {
+              "before": 84731,
+              "after": 86548,
+              "delta": 1817
+            },
+            "zero_fill_bytes": {
+              "before": 52176,
+              "after": 52417,
+              "delta": 241
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:261:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:262:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1027:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1028:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:763:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1099:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:801:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:802:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:949:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:753:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1042:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1052:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1063:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:953:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1355:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1607:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1623:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1639:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1650:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1681:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:267:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:268:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1120:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1121:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:774:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:764:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1192:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:812:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:813:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1217:6:bool {anonymous}::drive_number28(const char*, float*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:900:6:void {anonymous}::link_snapshot28()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1127:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1145:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1135:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1038:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1156:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1491:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1767:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1783:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1809:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1823:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1857:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "3f60094e5bd33782153c0bfb6a2dac12f2683fcc6a44bf037db7f927c98339fe",
+          "after_sha256": "2031ca22d166d3135ec0339a8a77870b2f4cc2bb8d6c9d7af3e9d25d45971b77"
+        },
+        "qa_link": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3888,
+              "after": 5040,
+              "delta": 1152
+            },
+            "allocated_bytes": {
+              "before": 32605,
+              "after": 33788,
+              "delta": 1183
+            },
+            "zero_fill_bytes": {
+              "before": 28170,
+              "after": 28197,
+              "delta": 27
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:138:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:363:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:148:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:166:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:171:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:195:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:217:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:228:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:242:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:259:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:273:6:void {anonymous}::hang_up()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:336:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:392:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:402:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:412:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:420:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:422:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:425:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:437:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:442:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:453:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:465:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:466:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:194:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:81:6:bool {anonymous}::stack_busy28(tid_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:532:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:208:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:231:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:251:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:260:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:296:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:329:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:343:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:360:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:375:6:bool {anonymous}::hang_up()",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:478:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:564:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:577:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:594:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:610:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:612:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:615:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:627:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:632:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:643:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:655:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:656:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:668:6:void re4dc_qalink_review_counters(unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "454662814971c8d8093ed06aa7e84d9fef8b1998036c31654fadf94d9a412644",
+          "after_sha256": "2b790fcca76d909853b2f61e826744f8f1ca88ed4d17cc12452e1fb196481332"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 30254,
+          "after": 32718,
+          "delta": 2464
+        },
+        "allocated_bytes": {
+          "before": 117336,
+          "after": 120336,
+          "delta": 3000
+        },
+        "zero_fill_bytes": {
+          "before": 80346,
+          "after": 80614,
+          "delta": 268
+        }
+      }
+    },
+    "q1-f1-d1-on": {
+      "baseline": "q1-f1-d1-baseline",
+      "units": {
+        "qa_menu": {
+          "sections": {
+            "executable_bytes": {
+              "before": 26466,
+              "after": 27778,
+              "delta": 1312
+            },
+            "allocated_bytes": {
+              "before": 95071,
+              "after": 96888,
+              "delta": 1817
+            },
+            "zero_fill_bytes": {
+              "before": 62416,
+              "after": 62657,
+              "delta": 241
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:141:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:158:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:175:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:257:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:261:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:262:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:706:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1027:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1028:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:190:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:216:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:763:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:167:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:515:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1099:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:801:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:802:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:198:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1583:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:345:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:949:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:753:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1042:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1052:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1063:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:953:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1355:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:535:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1397:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1392:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1455:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1595:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1598:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1607:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1623:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1639:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1650:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1681:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1687:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1688:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1691:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1698:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1763:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1810:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1811:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1812:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1816:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1819:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 3092,
+              "frames": [
+                {
+                  "function": "<stdin>:147:6:void {anonymous}::fb_fill(const Fb&, int, int, int, int, uint32_t)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:164:6:void {anonymous}::fb_text(const Fb&, int, int, int, int, uint32_t, const char*)",
+                  "bytes": 68,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:181:4:{anonymous}::Fb {anonymous}::fb_displayed()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:263:13:const char* {anonymous}::mm_name(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:267:13:const char* {anonymous}::wm_opq_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:268:13:const char* {anonymous}::wm_xlu_name()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:269:13:const char* {anonymous}::wm_shell_name()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:712:5:int {anonymous}::presets_of(int, int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1120:12:{anonymous}::DriveStep* {anonymous}::drv_head()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1121:6:bool {anonymous}::drv_push(const DriveStep&)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:196:5:{anonymous}::Pad {anonymous}::pad_read()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:222:6:void {anonymous}::load_presets()",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:774:6:void {anonymous}::link_read_cfg()",
+                  "bytes": 604,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:173:6:void {anonymous}::fb_center(const Fb&, int, int, int, uint32_t, const char*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:521:10:unsigned int {anonymous}::diag_rows(const Fb&, unsigned int, bool)",
+                  "bytes": 176,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:324:5:)",
+                  "bytes": 92,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:764:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1192:6:bool {anonymous}::parse_buttons(const char*, short unsigned int*)",
+                  "bytes": 84,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:812:6:bool {anonymous}::word_is(const char*, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:813:5:int {anonymous}::on_off(const char*)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1217:6:bool {anonymous}::drive_number28(const char*, float*)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:204:6:void {anonymous}::spin_us(uint32_t)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1743:6:void {anonymous}::wait_release()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:351:6:void {anonymous}::snap_diag()",
+                  "bytes": 2280,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:900:6:void {anonymous}::link_snapshot28()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1127:6:void {anonymous}::drv_report(const DriveStep&, const char*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1145:6:void {anonymous}::drv_clear(const char*)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1135:6:void {anonymous}::drv_pop(const char*, bool)",
+                  "bytes": 96,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1034:6:void {anonymous}::record_flush()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1038:6:void {anonymous}::record_tick(uint64_t)",
+                  "bytes": 456,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1156:6:void {anonymous}::drv_mark(const char*, const char*)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1491:5:int {anonymous}::link_pump(bool)",
+                  "bytes": 3092,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:541:10:unsigned int {anonymous}::diag_pages(const Fb&)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1557:6:void {anonymous}::draw_screen(const Fb&, const Menu&)",
+                  "bytes": 944,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1552:6:void {anonymous}::draw(const Fb&, const Menu&)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1615:5:int {anonymous}::run(Menu&, bool)",
+                  "bytes": 556,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1755:13:const char* re4dc_qa_boot_path()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1758:5:int re4dc_qa_combo()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1767:5:int re4dc_qa_link_tick(void (*)(), int, const char**)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1783:6:void re4dc_qa_drive_feed(unsigned int, float, float, float, float, float, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1809:5:int re4dc_qa_link_tpos(float*, int*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1823:6:void re4dc_qa_drive_pad(short unsigned int*, signed char*, signed char*, unsigned char*, int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1857:13:const char* re4dc_qa_drive_osd_text()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1863:10:unsigned int re4dc_qa_flags()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1864:6:void re4dc_qa_set_flags(unsigned int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1867:6:void re4dc_qa_game(unsigned int, int, int, const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1874:5:int re4dc_qa_menu_auto(const char*, const char**, unsigned int)",
+                  "bytes": 112,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1939:5:int re4dc_qa_menu(const char**)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1986:13:const char* re4dc_bench_banner()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1987:5:int re4dc_qa_banner_on()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1988:6:void re4dc_qa_in_room(int)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1992:10:unsigned int __wrap_re4dc_ui_frame()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:1995:6:void __wrap_OSInit()",
+                  "bytes": 144,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "4cb01951dfa8fcaae18e31d8d8134e136f263016622ea80a1e0d3134ff788522",
+          "after_sha256": "dd481e13c264e5d1867f530ba01f09d065b34e7ccfb2d3852e8a86f28aaa24cf"
+        },
+        "qa_link": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3888,
+              "after": 5040,
+              "delta": 1152
+            },
+            "allocated_bytes": {
+              "before": 32605,
+              "after": 33788,
+              "delta": 1183
+            },
+            "zero_fill_bytes": {
+              "before": 28170,
+              "after": 28197,
+              "delta": 27
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:138:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:363:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:148:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:166:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:171:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:195:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:217:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:228:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:242:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:259:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:273:6:void {anonymous}::hang_up()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:336:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:392:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:402:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:412:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:420:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:422:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:425:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:437:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:442:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:453:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:465:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:466:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:194:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:81:6:bool {anonymous}::stack_busy28(tid_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:532:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:208:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:231:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:251:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:260:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:296:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:329:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:343:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:360:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:375:6:bool {anonymous}::hang_up()",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:478:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:564:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:577:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:594:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:610:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:612:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:615:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:627:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:632:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:643:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:655:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:656:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:668:6:void re4dc_qalink_review_counters(unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "454662814971c8d8093ed06aa7e84d9fef8b1998036c31654fadf94d9a412644",
+          "after_sha256": "2b790fcca76d909853b2f61e826744f8f1ca88ed4d17cc12452e1fb196481332"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 30354,
+          "after": 32818,
+          "delta": 2464
+        },
+        "allocated_bytes": {
+          "before": 127676,
+          "after": 130676,
+          "delta": 3000
+        },
+        "zero_fill_bytes": {
+          "before": 90586,
+          "after": 90854,
+          "delta": 268
+        }
+      }
+    },
+    "bench-on": {
+      "baseline": "bench-baseline",
+      "units": {
+        "qa_link": {
+          "sections": {
+            "executable_bytes": {
+              "before": 3888,
+              "after": 5040,
+              "delta": 1152
+            },
+            "allocated_bytes": {
+              "before": 32605,
+              "after": 33788,
+              "delta": 1183
+            },
+            "zero_fill_bytes": {
+              "before": 28170,
+              "after": 28197,
+              "delta": 27
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:138:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:363:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:148:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:166:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:171:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:195:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:217:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:228:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:242:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:259:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:273:6:void {anonymous}::hang_up()",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:336:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 52,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:392:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:402:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:412:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:420:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:422:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:425:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:437:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:442:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:453:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:465:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:466:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 248,
+              "frames": [
+                {
+                  "function": "<stdin>:194:7:void* {anonymous}::ppp_trampoline(void*)",
+                  "bytes": 12,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:81:6:bool {anonymous}::stack_busy28(tid_t)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:532:6:bool {anonymous}::spawn_dial(int)",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:208:12:kthread_t* re4dc_qalink_thd_create(bool, void* (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:231:6:void re4dc_qalink_thd_pass()",
+                  "bytes": 36,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:251:6:)",
+                  "bytes": 248,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:260:5:int re4dc_qalink_modem_write(unsigned char*, int)",
+                  "bytes": 16,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:296:5:int re4dc_qalink_modem_read(unsigned char*, int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:318:22:qalink_chain_buffer* __wrap_createChainBuffer(int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:329:6:void __wrap_destroyChainBuffer(qalink_chain_buffer*)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:343:19:kthread_worker_t* __wrap_thd_worker_create_ex(const kthread_attr_t*, void (*)(void*), void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:360:6:void re4dc_qalink_timer_down()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:375:6:bool {anonymous}::hang_up()",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:478:7:void* {anonymous}::dial_main(void*)",
+                  "bytes": 40,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:564:6:void re4dc_qalink_config(const char*, const char*, unsigned int, unsigned int)",
+                  "bytes": 44,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:577:5:int re4dc_qalink_start()",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:594:6:void re4dc_qalink_stop()",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:610:5:int re4dc_qalink_up()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:612:5:int re4dc_qalink_wanted()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:615:6:void re4dc_qalink_state_text(char*, unsigned int)",
+                  "bytes": 32,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:627:6:void re4dc_qalink_counters(unsigned int*, unsigned int*, unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:632:5:int re4dc_qalink_send(const void*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:643:5:int re4dc_qalink_send_bulk(const void*, unsigned int)",
+                  "bytes": 24,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:655:10:unsigned int re4dc_qalink_bulk_skips()",
+                  "bytes": 0,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:656:5:int re4dc_qalink_recv(char*, unsigned int)",
+                  "bytes": 8,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:668:6:void re4dc_qalink_review_counters(unsigned int*, unsigned int*)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "454662814971c8d8093ed06aa7e84d9fef8b1998036c31654fadf94d9a412644",
+          "after_sha256": "2b790fcca76d909853b2f61e826744f8f1ca88ed4d17cc12452e1fb196481332"
+        },
+        "qa_link_bench": {
+          "sections": {
+            "executable_bytes": {
+              "before": 2876,
+              "after": 3332,
+              "delta": 456
+            },
+            "allocated_bytes": {
+              "before": 3400,
+              "after": 3865,
+              "delta": 465
+            },
+            "zero_fill_bytes": {
+              "before": 56,
+              "after": 65,
+              "delta": 9
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 2968,
+              "frames": [
+                {
+                  "function": "<stdin>:86:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:180:17:void re4dc_qa_link_bench_tick()",
+                  "bytes": 2968,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 3108,
+              "frames": [
+                {
+                  "function": "<stdin>:86:6:)",
+                  "bytes": 400,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:277:17:void re4dc_qa_link_bench_tick()",
+                  "bytes": 3108,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "3155efc33b9cb64abe8d575d954d1e94b7f3b5a6de1aa813b11e973bd1100876",
+          "after_sha256": "361c990b0abea553792a07785084affcadf91e76c55cee75613b7fc1ab72109c"
+        }
+      },
+      "totals": {
+        "executable_bytes": {
+          "before": 6764,
+          "after": 8372,
+          "delta": 1608
+        },
+        "allocated_bytes": {
+          "before": 36005,
+          "after": 37653,
+          "delta": 1648
+        },
+        "zero_fill_bytes": {
+          "before": 28226,
+          "after": 28262,
+          "delta": 36
+        }
+      }
+    }
+  },
+  "syntax_control": false,
+  "source_receipts_sha256": {
+    "off": "e5930eed75fa6509f05a1027fc45152e4e7dc193afcb8bcdbf11eb077874ac6a",
+    "on": "4027a6981468e009e38cfe0a2a18844b7e52abd405648e48a76802efa1323f67"
+  },
+  "script_sha256": "051f828866fde331991c48f76685e73e0423993df2fddade80ec5c1193fedf68",
+  "limitations": "Relocatable code/data/BSS before final game link; allocated includes zero-fill. All source-controlled static buffers are counted, but no socket/PPP heap or complete game stack measurement is claimed."
+}

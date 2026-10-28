@@ -23,6 +23,21 @@ QA_LINK ?= $(if $(filter 1,$(QA_MENU)),1,0)
 ifneq ($(filter $(QA_LINK),0 1),$(QA_LINK))
 $(error QA_LINK must be 0 or 1)
 endif
+# Build 28: bounded transport/snapshot lifecycle fixes and exact RECORD sorting.
+# Independent opt-in; inert on a game disc (QA_LINK=0). Companion tools opt in
+# separately with --review28. Off does not add a compiler definition.
+QA_LINK_REVIEW28 ?= 0
+ifneq ($(words $(QA_LINK_REVIEW28)),1)
+$(error QA_LINK_REVIEW28 must be one value: 0 or 1)
+endif
+ifneq ($(filter $(QA_LINK_REVIEW28),0 1),$(QA_LINK_REVIEW28))
+$(error QA_LINK_REVIEW28 must be 0 or 1)
+endif
+ifeq ($(QA_LINK),1)
+ifeq ($(QA_LINK_REVIEW28),1)
+$(OBJDIR)/qa_link.o $(OBJDIR)/qa_menu.o $(OBJDIR)/qa_link_bench.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_REVIEW28=1
+endif
+endif
 ifeq ($(QA_LINK),1)
 ifneq ($(QA_MENU),1)
 ifneq ($(BENCHMARK),1)

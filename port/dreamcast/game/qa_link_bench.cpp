@@ -111,8 +111,35 @@ void command(char* line) {
 
 const unsigned long kLog = sizeof(re4dc_logbuf);
 char log_at(unsigned long i) { return re4dc_logbuf[i % kLog]; }
+#if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
+bool g_log_started28;
+struct ResultScan28 {
+    unsigned long scan;
+    bool initialized, aligning, ready;
+} g_scan28;
+#endif
 
 void send_log() {   // new RAM log bytes since the last call, at most 640 a second (the QA disc's L stream)
+#if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
+    const unsigned long head = re4dc_log_head;
+    unsigned long at = g_bl.log_sent, dropped = 0;
+    if (!g_log_started28) { at = head > kLog ? head - kLog : 0; dropped = at; }
+    if (head - at > kLog) { dropped = head - at - kLog; at = head - kLog; }
+    unsigned long n = head - at;
+    if (!n) return;
+    if (n > 640) { dropped += n - 640; at += n - 640; n = 640; }
+    char b[720];
+    int h = snprintf(b, sizeof(b), "L %u %lu\n", g_bl.log_seq + 1, dropped);
+    for (unsigned long i = 0; i < n; ++i) {
+        const char c = log_at(at + i);
+        b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
+    }
+    if (re4dc_qalink_send_bulk(b, (unsigned) h)) {
+        g_bl.log_sent = at + n;
+        ++g_bl.log_seq;
+        g_log_started28 = true;
+    }
+#else
     const unsigned long head = re4dc_log_head;
     if (!g_bl.log_sent || head - g_bl.log_sent > kLog) g_bl.log_sent = head > kLog ? head - kLog : 0;
     unsigned long n = head - g_bl.log_sent, dropped = 0;
@@ -126,6 +153,7 @@ void send_log() {   // new RAM log bytes since the last call, at most 640 a seco
     }
     g_bl.log_sent += n;
     re4dc_qalink_send_bulk(b, (unsigned) h);   // skipped when backlogged
+#endif
 }
 
 bool wanted_line(unsigned long at) {
@@ -140,6 +168,74 @@ bool wanted_line(unsigned long at) {
 
 // The result rows, lossless: complete lines only, while the transmit ring has room (at most 3 datagrams a pass).
 void send_results() {
+#if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
+    // A partial/oversized line used to be scanned from its beginning every tick.
+    // Keep its scan position and cap newly examined bytes, including unwanted logs.
+    enum { kScanBytes = 2048, kPacket = 1200, kHeader = 48 };
+    const unsigned long head = re4dc_log_head;
+    if (!g_scan28.initialized) {
+        g_scan28.initialized = true;
+        g_bl.b_sent = head > kLog ? head - kLog : 0;
+        g_scan28.scan = g_bl.b_sent;
+        g_scan28.aligning = head > kLog;
+        g_bl.b_dropped += g_bl.b_sent;
+    }
+    if (head - g_bl.b_sent > kLog) {
+        g_bl.b_dropped += head - g_bl.b_sent - kLog;
+        g_bl.b_sent = head - kLog;
+        g_scan28.scan = g_bl.b_sent;
+        g_scan28.aligning = true;
+        g_scan28.ready = false;
+    }
+    unsigned budget = kScanBytes;
+    for (int d = 0; d < 3; ++d) {
+        unsigned tx, rx, dr, q;
+        re4dc_qalink_counters(&tx, &rx, &dr, &q);
+        if (q > 1024) return;
+        const ResultScan28 saved_scan = g_scan28;
+        const unsigned long saved_sent = g_bl.b_sent, saved_dropped = g_bl.b_dropped;
+        char b[kPacket];
+        unsigned h = kHeader;
+        for (;;) {
+            if (!g_scan28.ready) {
+                while (budget && g_scan28.scan != head) {
+                    --budget;
+                    if (log_at(g_scan28.scan++) == '\n') { g_scan28.ready = true; break; }
+                }
+                if (!g_scan28.ready) break;
+            }
+            const unsigned long len = g_scan28.scan - g_bl.b_sent;
+            if (g_scan28.aligning) {
+                g_bl.b_dropped += len;
+                g_scan28.aligning = false;
+            } else if (wanted_line(g_bl.b_sent)) {
+                if (len > kPacket - kHeader) g_bl.b_dropped += len;
+                else {
+                    if (h + len > kPacket) break;   // ready line retained for the next packet
+                    for (unsigned long i = 0; i < len; ++i) {
+                        const char c = log_at(g_bl.b_sent + i);
+                        b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
+                    }
+                }
+            }
+            g_bl.b_sent = g_scan28.scan;
+            g_scan28.ready = false;
+        }
+        if (h > kHeader || g_bl.b_dropped) {
+            const int n = snprintf(b, kHeader, "B %u %lu\n", g_bl.b_seq + 1, g_bl.b_dropped);
+            memmove(b + n, b + kHeader, h - kHeader);
+            if (!re4dc_qalink_send(b, (unsigned) n + h - kHeader)) {
+                g_scan28 = saved_scan;
+                g_bl.b_sent = saved_sent;
+                g_bl.b_dropped = saved_dropped;
+                return;
+            }
+            ++g_bl.b_seq;
+            g_bl.b_dropped = 0;
+        }
+        if (h == kHeader || (!budget && !g_scan28.ready) || g_bl.b_sent == head) return;
+    }
+#else
     const unsigned long head = re4dc_log_head;
     if (!g_bl.b_sent) g_bl.b_sent = head > kLog ? head - kLog : 0;   // from the oldest line still in the ring
     if (head - g_bl.b_sent > kLog) { g_bl.b_dropped += head - kLog - g_bl.b_sent; g_bl.b_sent = head - kLog; }
@@ -174,6 +270,7 @@ void send_results() {
         g_bl.b_sent = at;
         if (h == h0 || at >= head) return;
     }
+#endif
 }
 }  // namespace
 
