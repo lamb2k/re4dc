@@ -83,13 +83,18 @@ class Service:
                 wait = max(wait, int(command.split()[1]) / 25.0 + 10)   # ticks at >= 25 a second, plus slack
             except (IndexError, ValueError):
                 pass
+        if verb in ('GOTO', 'SCRIPT'):   # lane linkpad28: wait for the walk's DONE row (or an ERR)
+            wait = max(wait, 70.0 if verb == 'GOTO' else 290.0)
         end = time.time() + wait
         while time.time() < end:
             time.sleep(0.05)
             with self.lock:
                 got = list(self.waiters[cid])
             finals = [g for g in got if g.startswith('A %s ' % cid)]
-            if verb == 'RECORD':
+            if verb in ('GOTO', 'SCRIPT'):
+                if any(' DONE ' in g or ' ERR ' in g for g in finals):
+                    break
+            elif verb == 'RECORD':
                 if any(' RECORD ticks=' in g for g in finals) or any(' ERR ' in g for g in finals):
                     break
             elif verb == 'DIAG':

@@ -53,6 +53,8 @@ $(TARGET): $(OBJDIR)/qa_link.o $(QALINK_PPP_OBJS)
 ifeq ($(QA_MENU),1)
 $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK=1
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_QA_LINK=1
+# remote driving (lane linkpad28): PAD / GOTO / SCRIPT at the pad read, the "PC DRIVING" label
+$(OBJDIR)/platform/pad.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK=1
 else
 # benchmark / arena disc: the link's game side without a QA menu (qa_link_bench.cpp)
 PLATFORM_OBJS += $(OBJDIR)/qa_link_bench.o

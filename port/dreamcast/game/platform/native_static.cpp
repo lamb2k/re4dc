@@ -542,7 +542,13 @@ extern "C" const char* re4dc_fx_level_osd_text(void); // esp_sub.cpp: the FX lev
 #if defined(RE4DC_LEON_LIGHT_TOGGLE) && RE4DC_LEON_LIGHT_TOGGLE
 extern "C" const char* re4dc_leon_light_osd_text(void); // native_actor_fast.cpp: the Leon lighting mode, 3 s after a change
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+extern "C" const char* re4dc_qa_drive_osd_text(void); // qa_menu.cpp: "PC DRIVING" while the QA link drives Leon
+#endif
 extern "C" const char* re4dc_look_osd_text(void){
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    if(const char* dv=re4dc_qa_drive_osd_text())return dv;
+#endif
 #if defined(RE4DC_FX_LEVEL_TOGGLE) && RE4DC_FX_LEVEL_TOGGLE
     if(const char* fl=re4dc_fx_level_osd_text())return fl;
 #endif

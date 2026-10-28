@@ -21,6 +21,7 @@
 #include <dc/video.h>
 #include <arch/timer.h>
 #include <stdarg.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -875,6 +876,7 @@ void link_send_parts(char kind, const char* id, const char* text, int len) {
         else link_send_text(b, h + (n > 0 ? n : 0));
     }
 }
+int drive_row(char* out, int n);   // remote driving (below): Leon's room / position / facing / camera and the queue
 void link_telemetry() {
     if (g_link.game) g_link.game();
     snap_diag();
@@ -888,6 +890,7 @@ void link_telemetry() {
     re4dc_qalink_counters(&tx, &rx, &dr, &q);
     n += snprintf(t + n, sizeof(t) - n, "link tx=%u rx=%u drops=%u queued=%u skips=%u cost_us_per_s=%u\n", tx, rx, dr,
                   q, re4dc_qalink_bulk_skips(), g_link.cost_last);
+    n += drive_row(t + n, (int) sizeof(t) - n);
     ++g_link.seq;
     link_send_parts('T', "", t, n);
 }
@@ -950,6 +953,303 @@ void record_tick(uint64_t now_us) {
                n ? (unsigned) (sum / n) : 0u, n ? v[n / 2] : 0u, n ? v[(n * 99) / 100 < n ? (n * 99) / 100 : n - 1] : 0u,
                n ? v[n - 1] : 0u, rows);
 }
+// ---------------------------------------------------------------- remote driving (lane linkpad28, user 10-28)
+// PAD / GOTO / SCRIPT / MARK and TELEPORT POS: the PC moves Leon and cuts the session into sections. One queue of steps
+// (PAD: buttons + stick for N ticks; GOTO: autopilot to x/z; MARK: a marker), applied at the game's pad read
+// (platform/pad.cpp re4dc_qa_drive_pad, game thread) in free play only (no QA menu, movie, event, sub screen or door
+// load; a step with ANY runs anywhere). Any real pad input (or a fixture press) cancels the queue at once and blocks
+// driving for 3 s. The on-screen label "PC DRIVING" (the look label, native_static.cpp) shows while a step runs.
+enum { DK_PAD, DK_GOTO, DK_MARK };
+struct DriveStep {
+    unsigned char kind, run, any, verb;   // verb: 'P' PAD, 'G' GOTO, 'S' SCRIPT
+    unsigned short buttons, ticks;        // PAD: GameCube PAD_* bits, ticks; GOTO: timeout ticks
+    signed char lx, ly;
+    float x, z;
+    char id[16];
+    char label[40];                       // MARK label / SCRIPT name
+};
+struct Drive {
+    DriveStep q[64];
+    unsigned head, n;                     // ring
+    unsigned done_ticks;                  // ticks spent on the head step
+    bool feed, free_now;
+    unsigned room;
+    float x, y, z, ang, cam;
+    uint64_t block_until_ms, cancel_ms;
+    unsigned cancels;
+    unsigned short ob;                    // GOTO output, applied at the next pad read
+    signed char ox, oy;
+    float chk_x, chk_z;                   // GOTO stuck check
+    unsigned chk_t;
+    bool tpos_pending;
+    float tpos[4];
+    bool tpos_ang;
+    char tpos_id[16];
+} g_drv;
+const char* verb_name(unsigned char v) { return v == 'G' ? "GOTO" : v == 'S' ? "SCRIPT" : "PAD"; }
+DriveStep* drv_head() { return g_drv.n ? &g_drv.q[g_drv.head % 64] : nullptr; }
+bool drv_push(const DriveStep& s) {
+    if (g_drv.n >= 64) return false;
+    g_drv.q[(g_drv.head + g_drv.n) % 64] = s;
+    ++g_drv.n;
+    return true;
+}
+void drv_report(const DriveStep& s, const char* why) {
+    link_reply(s.id, true, "%s DONE %s room=%03x pos=%d,%d,%d ang=%d/1000", verb_name(s.verb), why, g_drv.room,
+               (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, (int) (g_drv.ang * 1000.0f));
+    re4dc_log("qadrive: %s %s DONE %s pos=%d,%d,%d\n", s.id, verb_name(s.verb), why, (int) g_drv.x, (int) g_drv.y,
+              (int) g_drv.z);
+}
+// The head step finished (why = reason): pop it; when no later step shares its id, the command is DONE. A failed GOTO
+// drops the rest of its command (a script stops where its walk failed).
+void drv_pop(const char* why, bool fail) {
+    DriveStep* h = drv_head();
+    if (!h) return;
+    const DriveStep s = *h;
+    g_drv.head = (g_drv.head + 1) % 64;
+    --g_drv.n;
+    g_drv.done_ticks = 0;
+    if (fail) while (g_drv.n && !strcmp(drv_head()->id, s.id)) { g_drv.head = (g_drv.head + 1) % 64; --g_drv.n; }
+    if (!g_drv.n || strcmp(drv_head()->id, s.id)) drv_report(s, why);
+}
+void drv_clear(const char* why) {
+    char last[16] = "";
+    while (g_drv.n) {
+        DriveStep* h = drv_head();
+        if (strcmp(last, h->id)) { drv_report(*h, why); strcpy(last, h->id); }
+        g_drv.head = (g_drv.head + 1) % 64;
+        --g_drv.n;
+    }
+    g_drv.done_ticks = 0;
+    g_drv.ob = 0; g_drv.ox = g_drv.oy = 0;
+}
+void drv_mark(const char* id, const char* label) {
+    char b[96];
+    const int k = snprintf(b, sizeof(b), "M %u %s", (unsigned) (timer_ms_gettime64() & 0xFFFFFFFFu), label);
+    link_send_text(b, k < (int) sizeof(b) ? k : (int) sizeof(b) - 1);
+    re4dc_log("qamark: %s\n", label);
+    if (id) link_reply(id, true, "MARK %s", label);
+}
+float wrap_pi(float a) {
+    while (a > 3.14159265f) a -= 6.2831853f;
+    while (a < -3.14159265f) a += 6.2831853f;
+    return a;
+}
+// GOTO, once per game tick (feed): the stick and buttons for the next pad read, or the step's end.
+// RE4's tank controls: stick X turns Leon (right = clockwise from above = his angle falls), stick Y walks; B + forward runs.
+void drv_goto_tick(DriveStep* s) {
+    // A straight line, no path finding (user 10-28: teleport to exact spots; a human walks the rest). Under 0.3 m of
+    // progress in 3 s = stuck.
+    const float dx = s->x - g_drv.x, dz = s->z - g_drv.z, d = sqrtf(dx * dx + dz * dz);
+    if (d < 500.0f) { drv_pop("arrived", false); return; }
+    if (g_drv.done_ticks >= s->ticks) { drv_pop("timeout", true); return; }
+    if (g_drv.done_ticks == 0) { g_drv.chk_t = 0; g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; }
+    if (g_drv.done_ticks - g_drv.chk_t >= 90) {
+        const float mx = g_drv.x - g_drv.chk_x, mz = g_drv.z - g_drv.chk_z;
+        if (mx * mx + mz * mz < 300.0f * 300.0f) { drv_pop("stuck", true); return; }
+        g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; g_drv.chk_t = g_drv.done_ticks;
+    }
+    const float err = wrap_pi(atan2f(dx, dz) - g_drv.ang);
+    float sx = -err * 120.0f;   // stick right turns Leon clockwise (his angle falls); full rate from ~0.6 rad of error
+    if (sx > 70.0f) sx = 70.0f;
+    if (sx < -70.0f) sx = -70.0f;
+    const float ae = err < 0 ? -err : err;
+    g_drv.ox = (signed char) sx;
+    g_drv.oy = ae > 0.7f ? 0 : d < 1500.0f ? 45 : 70;
+    g_drv.ob = (s->run && ae < 0.3f && d > 2000.0f) ? 0x0200 : 0;   // PAD_BUTTON_B: run
+}
+// Button words: hex GameCube bits as the fixtures (0108), or names joined by '+' (A+B, UP, R+A, NONE).
+bool parse_buttons(const char* w, unsigned short* out) {
+    static const struct { const char* n; unsigned short b; } kN[] = {
+        {"LEFT", 0x1}, {"RIGHT", 0x2}, {"DOWN", 0x4}, {"UP", 0x8}, {"Z", 0x10}, {"R", 0x20}, {"L", 0x40},
+        {"A", 0x100}, {"B", 0x200}, {"X", 0x400}, {"Y", 0x800}, {"START", 0x1000}, {"NONE", 0}, {"-", 0}};
+    char* e = nullptr;
+    const unsigned long v = strtoul(w, &e, 16);
+    if (e && !*e && *w) { *out = (unsigned short) v; return true; }
+    unsigned short b = 0;
+    char tmp[48];
+    strncpy(tmp, w, sizeof(tmp) - 1);
+    tmp[sizeof(tmp) - 1] = 0;
+    char* sv = nullptr;
+    for (char* t = strtok_r(tmp, "+", &sv); t; t = strtok_r(nullptr, "+", &sv)) {
+        bool f = false;
+        for (const auto& k : kN) if (!strcasecmp(t, k.n)) { b |= k.b; f = true; break; }
+        if (!f) return false;
+    }
+    *out = b;
+    return true;
+}
+int clamp_stick(int v) { return v > 72 ? 72 : v < -72 ? -72 : v; }
+// SCRIPT <name>: /cd/dc/qa/pad/<name>.txt. Lines as the harness fixtures ("[+]frame buttons hold [state ...]": a
+// press due `frame` ticks after the previous press starts, held `hold` ticks; state qualifiers are ignored here),
+// plus "stick=<lx>,<ly>" on a press line, "goto <x> <z> [run] [timeout_s]", "mark <label>" and "wait <ticks>".
+int drv_script(const char* id, const char* name, bool any) {
+    char path[96];
+    snprintf(path, sizeof(path), "/cd/dc/qa/pad/%s%s", name, strchr(name, '.') ? "" : ".txt");
+    static char text[4096];
+    const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
+    if (len <= 0) return -1;
+    text[len] = 0;
+    int steps = 0;
+    unsigned t = 0, last_start = 0;
+    DriveStep s;
+    for (char* line = text; line && *line;) {
+        char* next = strchr(line, '\n');
+        if (next) *next++ = 0;
+        char* h = strchr(line, '#');
+        if (h) *h = 0;
+        char* sv = nullptr;
+        char* w[8] = {};
+        int nw = 0;
+        for (char* tk = strtok_r(line, " \t\r", &sv); tk && nw < 8; tk = strtok_r(nullptr, " \t\r", &sv)) w[nw++] = tk;
+        line = next;
+        if (!nw || !strcmp(w[0], "clock")) continue;
+        memset(&s, 0, sizeof(s));
+        strncpy(s.id, id, sizeof(s.id) - 1);
+        strncpy(s.label, name, sizeof(s.label) - 1);
+        s.verb = 'S';
+        s.any = any;
+        if (!strcasecmp(w[0], "goto") && nw >= 3) {
+            s.kind = DK_GOTO;
+            s.x = (float) atof(w[1]); s.z = (float) atof(w[2]);
+            s.run = nw >= 4 && !strcasecmp(w[3], "run");
+            const int to = nw >= 4 ? atoi(w[nw - 1]) : 0;
+            s.ticks = (unsigned short) ((to > 0 ? to : 20) * 30);
+        } else if (!strcasecmp(w[0], "mark") && nw >= 2) {
+            s.kind = DK_MARK;
+            strncpy(s.label, w[1], sizeof(s.label) - 1);
+        } else if (!strcasecmp(w[0], "wait") && nw >= 2) {
+            s.kind = DK_PAD; s.ticks = (unsigned short) atoi(w[1]);
+        } else if (nw >= 3) {
+            const bool rel = w[0][0] == '+';
+            const unsigned f = (unsigned) atoi(w[0] + rel);
+            const unsigned start = rel ? last_start + f : f;
+            if (start > t) {   // idle until the press is due
+                DriveStep idle = s;
+                idle.kind = DK_PAD; idle.ticks = (unsigned short) (start - t);
+                if (!drv_push(idle)) return -2;
+                ++steps;
+                t = start;
+            }
+            s.kind = DK_PAD;
+            if (!parse_buttons(w[1], &s.buttons)) continue;
+            s.ticks = (unsigned short) atoi(w[2]);
+            for (int k = 3; k < nw; ++k)
+                if (!strncasecmp(w[k], "stick=", 6)) {
+                    int lx = 0, ly = 0;
+                    sscanf(w[k] + 6, "%d,%d", &lx, &ly);
+                    s.lx = (signed char) clamp_stick(lx); s.ly = (signed char) clamp_stick(ly);
+                }
+            last_start = t;
+            t += s.ticks;
+        } else continue;
+        if (!drv_push(s)) return -2;
+        ++steps;
+    }
+    return steps;
+}
+// The command verbs. Returns true when `cmd` was one of them (answered here).
+bool drive_command(const char* id, const char* cmd, char* rest, bool in_menu) {
+    char* sv = nullptr;
+    char* w[8] = {};
+    int nw = 0;
+    if (word_is(cmd, "MARK")) {
+        drv_mark(id, rest && *rest ? rest : "-");
+        return true;
+    }
+    if (!word_is(cmd, "PAD") && !word_is(cmd, "GOTO") && !word_is(cmd, "SCRIPT")) return false;
+    char tmp[200];
+    strncpy(tmp, rest ? rest : "", sizeof(tmp) - 1);
+    tmp[sizeof(tmp) - 1] = 0;
+    for (char* tk = strtok_r(tmp, " ", &sv); tk && nw < 8; tk = strtok_r(nullptr, " ", &sv)) w[nw++] = tk;
+    bool any = false;
+    if (nw && word_is(w[nw - 1], "ANY")) { any = true; --nw; }
+    if (word_is(cmd, "PAD") && nw && word_is(w[0], "STOP")) {
+        drv_clear("stopped");
+        link_reply(id, true, "PAD STOP");
+        return true;
+    }
+    const uint64_t now = timer_ms_gettime64();
+    if (now < g_drv.block_until_ms) {
+        link_reply(id, false, "%s: real pad input %u ms ago; driving blocked for 3 s", cmd,
+                   (unsigned) (3000 - (g_drv.block_until_ms - now)));
+        return true;
+    }
+    if (in_menu && !any) { link_reply(id, false, "%s: the QA menu is open (RESUME first, or add ANY)", cmd); return true; }
+    DriveStep s;
+    memset(&s, 0, sizeof(s));
+    strncpy(s.id, id, sizeof(s.id) - 1);
+    s.any = any;
+    if (word_is(cmd, "PAD")) {
+        // PAD <buttons> <lx> <ly> <ticks> [ANY]
+        if (nw < 4 || !parse_buttons(w[0], &s.buttons)) {
+            link_reply(id, false, "PAD <buttons> <lx> <ly> <ticks> [ANY] | PAD STOP");
+            return true;
+        }
+        s.kind = DK_PAD; s.verb = 'P';
+        s.lx = (signed char) clamp_stick(atoi(w[1])); s.ly = (signed char) clamp_stick(atoi(w[2]));
+        const int t = atoi(w[3]);
+        s.ticks = (unsigned short) (t < 1 ? 1 : t > 1800 ? 1800 : t);
+        if (!drv_push(s)) { link_reply(id, false, "PAD: queue full (64 steps)"); return true; }
+        link_reply(id, true, "PAD queued %04x stick=%d,%d ticks=%u steps=%u", s.buttons, s.lx, s.ly, s.ticks, g_drv.n);
+        return true;
+    }
+    if (word_is(cmd, "GOTO")) {
+        // GOTO <x> <z> [run] [timeout_s] [ANY]
+        if (nw < 2) { link_reply(id, false, "GOTO <x> <z> [run] [timeout_s] [ANY]"); return true; }
+        s.kind = DK_GOTO; s.verb = 'G';
+        s.x = (float) atof(w[0]); s.z = (float) atof(w[1]);
+        int to = 20;
+        for (int k = 2; k < nw; ++k) { if (word_is(w[k], "RUN")) s.run = 1; else if (atoi(w[k]) > 0) to = atoi(w[k]); }
+        s.ticks = (unsigned short) ((to > 60 ? 60 : to) * 30);
+        if (!drv_push(s)) { link_reply(id, false, "GOTO: queue full"); return true; }
+        const float dx = s.x - g_drv.x, dz = s.z - g_drv.z;
+        link_reply(id, true, "GOTO started to %d,%d%s dist=%d timeout=%ds from %d,%d", (int) s.x, (int) s.z, s.run ? " run" : "",
+                   (int) sqrtf(dx * dx + dz * dz), to, (int) g_drv.x, (int) g_drv.z);
+        return true;
+    }
+    // SCRIPT <name> [ANY]
+    if (!nw) { link_reply(id, false, "SCRIPT <name> (/cd/dc/qa/pad/<name>.txt)"); return true; }
+    const unsigned before = g_drv.n;
+    const int n = drv_script(id, w[0], any);
+    if (n < 0) {
+        while (g_drv.n > before) --g_drv.n;   // drop a half-queued script
+        link_reply(id, false, n == -1 ? "SCRIPT: no /cd/dc/qa/pad/%s(.txt)" : "SCRIPT %s: more than 64 steps", w[0]);
+        return true;
+    }
+    link_reply(id, true, "SCRIPT %s started steps=%d", w[0], n);
+    return true;
+}
+// TELEPORT POS <x> <y> <z> [yaw]: Leon moved within this room at the next free-play tick (dbgwarp_bridge.cpp qa_poll,
+// the warp rig's `goto` path: setPos / setAng).
+bool tpos_command(const char* id, char* rest, bool in_menu) {
+    float v[4] = {0, 0, 0, 0};
+    const int n = rest ? sscanf(rest, "%*s %f %f %f %f", &v[0], &v[1], &v[2], &v[3]) : 0;
+    if (n < 3) { link_reply(id, false, "TELEPORT POS <x> <y> <z> [yaw]"); return true; }
+    if (in_menu) { link_reply(id, false, "TELEPORT POS: the QA menu is open (RESUME first)"); return true; }
+    if (!g_drv.free_now) { link_reply(id, false, "TELEPORT POS: not in free play (movie, event, door or sub screen)"); return true; }
+    memcpy(g_drv.tpos, v, sizeof(v));
+    g_drv.tpos_ang = n >= 4;
+    g_drv.tpos_pending = true;
+    strncpy(g_drv.tpos_id, id, sizeof(g_drv.tpos_id) - 1);
+    return true;
+}
+int drive_row(char* out, int n) {
+    if (n <= 0) return 0;
+    const DriveStep* h = g_drv.n ? &g_drv.q[g_drv.head % 64] : nullptr;
+    const uint64_t now = timer_ms_gettime64();
+    char st[64];
+    if (now < g_drv.block_until_ms) snprintf(st, sizeof(st), "HOLD(real pad)");
+    else if (!h) snprintf(st, sizeof(st), "IDLE");
+    else if (h->kind == DK_GOTO)
+        snprintf(st, sizeof(st), "GOTO %s to=%d,%d d=%d", h->id, (int) h->x, (int) h->z,
+                 (int) sqrtf((h->x - g_drv.x) * (h->x - g_drv.x) + (h->z - g_drv.z) * (h->z - g_drv.z)));
+    else snprintf(st, sizeof(st), "%s %s %04x %u/%u", verb_name(h->verb), h->id, h->buttons, g_drv.done_ticks, h->ticks);
+    const int k = snprintf(out, n, "drv room=%03x pos=%d,%d,%d ang=%d cam=%d free=%d q=%u cancels=%u %s\n", g_drv.room,
+                           (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, (int) (g_drv.ang * 1000.0f),
+                           (int) (g_drv.cam * 1000.0f), (int) g_drv.free_now, g_drv.n, g_drv.cancels, st);
+    return k < 0 ? 0 : k >= n ? n - 1 : k;
+}
 // One command datagram. in_menu: the in-game menu is open (MENU / RESUME differ).
 int link_command(char* line, bool in_menu) {
     char* save = nullptr;
@@ -978,6 +1278,8 @@ int link_command(char* line, bool in_menu) {
         link_reply(id, true, "RECORD %d ticks started", n);
         return LA_NONE;
     }
+    if (drive_command(id, cmd, rest, in_menu)) return LA_NONE;
+    if (word_is(cmd, "TELEPORT") && rest && !strncasecmp(rest, "POS ", 4)) { tpos_command(id, rest, in_menu); return LA_NONE; }
     int act = LA_NONE;
     if (word_is(cmd, "QA")) {
         char* s2 = nullptr;
@@ -1268,6 +1570,70 @@ int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path) {
               g_link.pending_id);
     if (act == LA_TELEPORT) { *path = g_path; return 1; }
     return act == LA_TITLE ? 2 : 4;
+}
+// Remote driving, game side (dbgwarp_bridge.cpp qa_poll, every tick before re4dc_qa_link_tick): Leon's state and
+// whether the game is in free play now. Runs the GOTO / MARK steps.
+void re4dc_qa_drive_feed(unsigned room, float x, float y, float z, float ang, float cam, int free_play) {
+    g_drv.feed = true;
+    g_drv.room = room; g_drv.x = x; g_drv.y = y; g_drv.z = z; g_drv.ang = ang; g_drv.cam = cam;
+    g_drv.free_now = free_play != 0;
+    g_drv.ob = 0; g_drv.ox = g_drv.oy = 0;
+    for (int guard = 0; guard < 8; ++guard) {
+        DriveStep* h = drv_head();
+        if (!h) return;
+        if (h->kind == DK_MARK) { drv_mark(nullptr, h->label); drv_pop("marked", false); continue; }
+        if (h->kind != DK_GOTO) return;
+        if (!free_play && !h->any) return;   // paused (event, door, movie); resumes in free play
+        drv_goto_tick(h);
+        if (drv_head() == h && g_drv.n) { ++g_drv.done_ticks; return; }
+    }
+}
+// TELEPORT POS, at the next free-play tick: 1 and the position (x y z yaw; *has_ang) when one is due.
+int re4dc_qa_link_tpos(float* p, int* has_ang) {
+    if (!g_drv.tpos_pending || !g_drv.free_now) return 0;
+    g_drv.tpos_pending = false;
+    memcpy(p, g_drv.tpos, sizeof(g_drv.tpos));
+    *has_ang = g_drv.tpos_ang;
+    link_reply(g_drv.tpos_id, true, "TELEPORT POS %d,%d,%d%s from %d,%d,%d room=%03x", (int) p[0], (int) p[1], (int) p[2],
+               *has_ang ? " yaw set" : "", (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, g_drv.room);
+    return 1;
+}
+// platform/pad.cpp PADRead, port A, after the mapping: real = any real button / stick past 24 / fixture press. A real
+// input cancels driving (3 s block); otherwise the head step's buttons and stick go in.
+void re4dc_qa_drive_pad(unsigned short* buttons, signed char* sx, signed char* sy, unsigned char* trig_r, int real) {
+    if (real) {
+        if (g_drv.n) {
+            ++g_drv.cancels;
+            re4dc_log("qadrive: real pad input: driving cancelled (%u steps)\n", g_drv.n);
+            drv_clear("cancelled by real pad");
+            g_drv.cancel_ms = timer_ms_gettime64();
+        }
+        const uint64_t until = timer_ms_gettime64() + 3000;
+        if (g_drv.block_until_ms < until) g_drv.block_until_ms = until;
+        return;
+    }
+    DriveStep* h = drv_head();
+    if (!h || (!g_drv.free_now && !h->any)) {
+        // a PAD press interrupted by an event / door / movie ends there (no stale press after it)
+        if (h && h->kind == DK_PAD && g_drv.done_ticks) drv_pop("ended by an event", false);
+        return;
+    }
+    unsigned short b;
+    signed char x, y;
+    if (h->kind == DK_GOTO) { b = g_drv.ob; x = g_drv.ox; y = g_drv.oy; }
+    else if (h->kind == DK_PAD) {
+        b = h->buttons; x = h->lx; y = h->ly;
+        if (++g_drv.done_ticks >= h->ticks) drv_pop("ok", false);
+    } else return;
+    *buttons |= b;
+    if (x) *sx = x;
+    if (y) *sy = y;
+    if ((b & 0x20) && !*trig_r) *trig_r = 0xC0;   // R: the analog trigger the aim reads
+}
+// native_static.cpp re4dc_look_osd_text: the on-screen label while the PC drives (or holds after a real press).
+const char* re4dc_qa_drive_osd_text(void) {
+    if (g_drv.cancels && timer_ms_gettime64() < g_drv.cancel_ms + 3000) return "PC DRIVE: HOLD (PAD PRESSED)";
+    return g_drv.n ? "PC DRIVING (QA LINK)" : nullptr;
 }
 #endif
 

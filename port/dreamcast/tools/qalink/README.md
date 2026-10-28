@@ -76,6 +76,41 @@ Raspberry Pi running DreamPi. No build travels over the link: the disc still loa
 | `RECORD <ticks>` | The wall time of each game tick (µs), 30 per datagram, then mean / p50 / p99 / max and the fps and phase rows. 1 to 1800 ticks. |
 | `DIAG` | The full Diagnostics page (as the QR snapshot) including the last 20 log lines. |
 | `MENU` / `RESUME` | Opens the in-game QA menu at the next free-play moment / closes it. |
+| `TELEPORT POS <x> <y> <z> [yaw]` | Moves Leon within the current room at the next free-play tick (the warp rig's `goto` path). Refused while the QA menu, a movie, an event or a door load is up. The floor is not checked: use positions read from a `drv` row. |
+| `PAD <buttons> <lx> <ly> <ticks> [ANY]` | Buttons plus stick for N ticks, queued (up to 64 steps). Buttons: hex GameCube bits as the fixtures (`0100`) or names joined by `+` (`A`, `R+A`, `B+UP`, `NONE`). Stick -72..72, +y forward, +x turns right. `PAD STOP` clears the queue. |
+| `GOTO <x> <z> [run] [timeout_s] [ANY]` | Walks Leon in a straight line (turn, then walk; `run` holds B). Answers `GOTO DONE arrived` within 0.5 m, `timeout` (default 20 s) or `stuck` (under 0.3 m in 3 s). No path finding: teleport to exact spots instead. |
+| `SCRIPT <name> [ANY]` | Plays `/cd/dc/qa/pad/<name>.txt` (fixture lines `[+]frame buttons hold [stick=lx,ly]`, plus `goto`, `mark <label>`, `wait <ticks>`). Shipped: `look-around`, `aim-hold`. |
+| `MARK <label>` | A marker: `qamark: <label>` in the RAM log and an `M <ms> <label>` datagram (the PC cuts sections between markers). |
+
+Driving rules: steps run at the game's pad read in free play only (no QA menu, movie, event, sub screen or door load) unless
+the command ends in `ANY`. Any real pad input cancels the queue at once and blocks driving for 3 s. The top-left label reads
+`PC DRIVING (QA LINK)` while a step runs, `PC DRIVE: HOLD (PAD PRESSED)` for 3 s after a cancel. GOTO and SCRIPT answer
+twice: `started`, then `DONE <reason>` with the room, position and facing.
+
+## Driving and capture from the PC (qalink.py)
+
+Every action is one ssh call (alias, e.g. `--pi re4pi`):
+
+```
+python qalink.py --pi re4pi teleport r103
+python qalink.py --pi re4pi teleport pos -11000 163 -1000 -1.1
+python qalink.py --pi re4pi goto -15500 -2300
+python qalink.py --pi re4pi pad A 0 0 5
+python qalink.py --pi re4pi script look-around
+python qalink.py --pi re4pi mark doorway
+python qalink.py --pi re4pi capture start barn-inside
+python qalink.py --pi re4pi capture stop
+python qalink.py --pi re4pi session sessions/barn.txt
+```
+
+- `capture stop` writes the Pi log between the two markers to `C:\Flycast-Evidence\re4-dreamcast\console-<date>\<label>.log`
+  and `<label>.summary.txt` (every numeric telemetry field averaged over the section: fps, cpu, ms10 phases, KOS, VRAM,
+  Ganados, link). `--out <dir>` picks another folder.
+- `session <file>`: one action per line (`teleport`, `goto`, `pad`, `script`, `mark`, `capture start|stop`, `record`,
+  `qa`, `wait <s>`), `#` comments. Shipped: `sessions/barn.txt` (r103 barn inside / by the west wall / 21 m out) and
+  `sessions/cross.txt` (r101 cross with and without the crowd in view), 20 s sections each.
+- The Pi service must be the version with GOTO / SCRIPT waits (`qalink_pi.py` from this folder; copy it to the Pi once).
+- `drv` telemetry row, once a second: `drv room=103 pos=x,y,z ang=<mrad> cam=<mrad> free=0|1 q=<steps> cancels=n <state>`.
 
 ## What the console sends
 

@@ -158,6 +158,8 @@ void re4dc_qa_set_flags(unsigned f);
 void re4dc_qa_in_room(int on);
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
 int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path);   // qa_menu.cpp (qalink.mk QA_LINK)
+void re4dc_qa_drive_feed(unsigned room, float x, float y, float z, float ang, float cam, int free_play);   // qa_menu.cpp
+int re4dc_qa_link_tpos(float* p, int* has_ang);                                                       // qa_menu.cpp
 #endif
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
@@ -1850,6 +1852,27 @@ bool qa_poll()
     // the remote link (commands in, telemetry out); TELEPORT / TITLE / MENU come back only in free play (30 frames)
     bool link_menu = false;
     {
+        // remote driving (lane linkpad28): Leon's state and free play for PAD / GOTO / SCRIPT; TELEPORT POS here
+        if (pPL) {
+            const Vec& lk = pG->Cam.Look;   // pos - at: the view looks along -Look
+            re4dc_qa_drive_feed((unsigned) pG->room_id, pPL->pos.x, pPL->pos.y, pPL->pos.z, pPL->ang.y,
+                                atan2f(-lk.x, -lk.z), free_play && qa_frames >= 2);
+            float tp[4];
+            int has_ang = 0;
+            if (re4dc_qa_link_tpos(tp, &has_ang)) {
+                Vec p = {tp[0], tp[1], tp[2]};
+                pPL->setPos(&p);
+                if (has_ang) {
+                    Vec a = {0.0f, tp[3], 0.0f};
+                    pPL->setAng(&a);
+                }
+                char what[80];
+                snprintf(what, sizeof(what), "qa: teleport pos (link) %d,%d,%d", (int) p.x, (int) p.y, (int) p.z);
+                stamp(what);
+            }
+        } else {
+            re4dc_qa_drive_feed((unsigned) pG->room_id, 0, 0, 0, 0, 0, 0);
+        }
         const char* lpath = nullptr;
         const int la = re4dc_qa_link_tick(qa_link_game, qa_frames >= 30, &lpath);
         if (la == 3) {
