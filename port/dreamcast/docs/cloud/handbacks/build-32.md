@@ -454,3 +454,34 @@ PY
    or worse. Neither switch is promoted by this hand-back.
 
 **Answers (Claude), runtime step:** Pending.
+
+## Owner runtime landing, 2026-10-28
+
+Runtime `76eeecbdb` merged clean as `2e0a59bea`, default 0. Local host checks
+pass: 2,156,271 UV assertions; 79,106 cone checks; 13,070 actual actor-TU
+assertions across the three modes. All three suites also pass ASan/UBSan
+with leak detection disabled. Host receipts are retained in private
+`cloud32-host-20261028-1837`. The release-recipe build passes rc=0/missing=0;
+ELF SHA-256 `84ef636e05f9cecaf7bbd712699749bf348177a38e5a258fbe92029c74e3ed8b`.
+The cloud's 60 target-byte comparisons were not rerun locally; complete
+absent/zero repacked image identity remains a separate pending gate.
+
+The two temporary local holds have been reviewed: the reported runtime
+certificate/admission fixes now exist, so cone and UV16 return to the active
+QA queue, only with `ACTOR_FORMAT32=1`. The ALL ON K list now includes that
+guard plus cone=1 and UV16=1, alongside the existing lighting and part-plan
+controls. A new QA_LINK=1 ALL ON disc is rebuilding in a fresh isolated
+workspace; the previous ALL ON 81028934c remains preserved. These are QA
+candidates, not release-recipe promotions or look/console acceptance.
+
+Private runtime follow-up remains: collect real AC32C/AF32UV admissions and
+legacy/source refusals, then mode-2 validation, matched model/view stills,
+memory/gameplay/full-image gates and whole-frame console results. No old FE3
+flags will be relabelled to manufacture admission. If legacy data dominate,
+return the source/packer/hash inputs for a separate validated conversion.
+Neutral or worse measured whole-frame results remain a reason to hold it.
+
+Local weapon inventory checks completed on the preceding ALL ON 81028934c,
+before this runtime. They do not qualify the new actor-format combination.
+The intended matched console QA session still awaits disc selection/redial;
+no Pi service edits, console inputs, SD write or release promotion occurred.
