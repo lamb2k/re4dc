@@ -173,14 +173,29 @@ def main():
     sv.add_argument('--log', default=os.path.expanduser('~/qalink/qalink.log'))
     sv.add_argument('--udp', type=int, default=UDP_PORT)
     sv.add_argument('--control', default=CONTROL, help='host:port of the TCP control port (default %s)' % CONTROL)
+    sv.add_argument('--review28', action='store_true', help='opt in to bounded Build28 service and packet journal')
     sd = sub.add_parser('send')
     sd.add_argument('command', nargs='+')
     sd.add_argument('--control', default=CONTROL)
     sd.add_argument('--timeout', type=float, default=120.0)
+    sd.add_argument('--review28', action='store_true', help='require the bounded Build28 service and complete replies')
     a = ap.parse_args()
     if a.mode == 'serve':
+        if a.review28:
+            import qalink_review28
+            service = qalink_review28.service_class(Service)(a.log, a.udp, a.control)
+            try:
+                service.serve()
+            except KeyboardInterrupt:
+                pass
+            finally:
+                service.close()
+            return 0
         Service(a.log, a.udp, a.control).serve()
         return 0
+    if a.review28:
+        import qalink_review28
+        return qalink_review28.send_command(a.control, ' '.join(a.command), a.timeout)
     return send_command(a.control, ' '.join(a.command), a.timeout)
 
 

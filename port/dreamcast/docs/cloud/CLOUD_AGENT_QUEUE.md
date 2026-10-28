@@ -318,6 +318,95 @@ Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here 
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
 
+### 2026-10-28: Build 28 hand-back (`codex/qa-link-review-20261028`)
+
+Full report: [handbacks/build-28.md](handbacks/build-28.md), with
+[validation and receipts](../../tools/cloud/build28/VALIDATION.md),
+[transport findings](handbacks/build-28-transport.md), and
+[Pi/PC findings](BUILD28_COMPANION_REVIEW_20261028.md). This concise queue
+entry follows the user's explicit request; the full hand-back is in the new
+standalone location and the Status table is unchanged.
+
+Final base **`568c357656efbec468db06a282c1f79caebaa725`**, after fetching
+and cleanly rebasing onto newest `origin/t15/int`. The landed link28 commit
+`7acd7d8f` was verified as an ancestor before work began; the final base also
+retains linkpad28 and Claude's Builds 25/26/27 merges. Claude's `568c3576`
+corrects the three malformed menu `#if` joins in the initial `8a55a9d5` base.
+Final raw target qualification **passes** against that correction with
+unmodified production compiler input and no syntax overlay. The earlier
+test-only syntax experiment is not used as the final identity proof.
+
+**`QA_LINK_REVIEW28` defaults to 0**, adds no off-state definition, and only
+selects the QA link/menu/benchmark TUs with `QA_LINK=1`. Pi/PC changes use
+the separate default-off `--review28`. No new assembly, linker policy,
+renderer change, recipe enablement or game data is included.
+
+The review fixes immutable T/D snapshot retries and command priority,
+accepted-only log cursors, bounded benchmark scanning, whole-datagram
+receive/refusal, peer validation and reconnect RX retirement. Explicit DIAG
+can use the same reserved TX budget below the T/L heap floor. Disconnect
+releases remote driving/deferred commands; nonfinite or excessive coordinate
+input is rejected. RECORD uses an exact adaptive bounded sort. Teardown
+frees the pinned KOS login strings only after PPP exit, avoids destroying a
+live thread, checks detached-thread completion before reusing a BSS stack,
+and faults a two-second no-progress modem write. Existing rings, stacks,
+2400-byte bulk reservation and 32768-byte heap-plus-break-room floor remain.
+Pi/PC clients, waiters, replies, multipart assembly and capture/log storage
+are bounded and distinguish complete results from missing/partial UDP output.
+
+Host gates pass 28 transport +14 benchmark cases and five ×166 menu cases,
+normally and with ASan/UBSan, plus 31 Python methods including 11 actual
+loopback service methods. Ten SH-4 sort and 26 ring cases record exact
+outputs/ABI and target costs. The final raw matrix passes 56 absent/zero
+PP/object comparisons, nine enabled compositions and eight link-off/new-knob-on
+inert comparisons, plus release exclusion and invalid knob assignments.
+Full private image and real-console acceptance remain local.
+
+For 1800 reverse RECORD samples: **11342712 /11342755 → 531421 /531560
+warm/cold-I cycles**, loads/stores **1620902 /1620900 → 61844 /28560**,
+unique 32-byte lines **227 → 227**, fixture stack **4 → 20 B**, wrapper
+code **78 → 328 B**. Ordered input adds eight warm cycles, nearly sorted
+adds twelve. Valid 1100-byte ring enqueue is **6639 /6694 → 6657 /6722**,
+loads/stores **1114 /1104 → 1118 /1105**, **74 lines** in either arm;
+ring wrapper code is **254 → 296 B**, put stack **4 → 8 B**.
+Cold-I is isolated; D-cache is perfect. Footprints are not measured misses.
+
+Selected menu+transport objects add **2696 executable /3264 allocated /
+300 BSS B** without DFA/DSA, or **2464 /3000 /268 B** with DFA. The benchmark
+pair adds **1608 /1648 /36 B**; link-off is zero. Menu `link_pump` local
+frame is **2648 → 3092 B** without DFA and unchanged at 3092 B with DFA;
+`record_tick` stays 456 B, transport maximum stays 248 B, benchmark maximum
+is **2968 → 3108 B**. These are pre-link sections/local frames, not image
+or full call-chain stack totals.
+
+**MODELLED whole-frame sensitivity:** at 200 MHz, an ASSUMED 30 ms of other
+work plus one reverse-1800 RECORD completion sort gives
+**86.713560 → 32.657105 ms**. Ascending gives
+**30.099030 → 30.099070 ms**. A separate 30 ms +1130-byte enqueue +16-byte
+dequeue example gives **30.035045 → 30.035145 ms**. These are synthetic
+diagnostic tick/operation accounts, not steady FPS or console measurements.
+No render approximation is introduced; deliberate changes are stricter bad
+input rejection, visible log/snapshot gaps or busy replies, and control
+cancellation on link loss. Exact sort outputs are unchanged.
+
+**Questions / local gates for Claude:**
+
+1. Run largest DFA+DSA diagnostics under slow/full TX and a low heap budget,
+   using paired `--review28` tools. Check command receive, DIAG/T assembly,
+   displayed-page preservation and explicit gap/counter reporting.
+2. Soak hang-up/redial, peer loss and stalled writes. Record heap free plus
+   break room, allocation lifetimes, `rxdrop`/`stall`, and worker-stack reuse.
+   Freeing the login strings accounts for 16 payload bytes per completed
+   teardown with the configured credentials, not the entire observed
+   ~1.3 KiB heap fall; allocator/device behavior still needs measurement.
+3. Check PVR progress and stack margins while drawing, RECORD completing and
+   link traffic overlap; validate the short IRQ-protected thread lookup.
+4. Check PAD/GOTO/SCRIPT link-loss cancellation, real-pad override and the
+   coordinate limits against the QA routes. A companion timeout is not
+   proof that an in-flight UDP action stopped.
+5. Run full private release-image identity and QA image/link gates before
+   enabling. Claude owns merges and recipe changes.
+
 
 ### 2026-10-28: Build 27 hand-back (`codex/wep-modules-27-20261028`)
 
