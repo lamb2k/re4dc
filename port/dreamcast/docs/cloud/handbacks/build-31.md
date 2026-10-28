@@ -1,0 +1,85 @@
+# Build 31: portal culling and world part plan
+
+**2026-10-28 progress 1: DONE** conservative portal builder, fixture graft and 21 synthetic tests; **NEXT** qualify `WORLD_PORTAL29` runtime and `WORLD_PART_PLAN29`; **BLOCKED** private room geometry and console acceptance are Claude's runs below.
+
+Branch: `codex/world-portal-part-plan-20261028`. Final integration base for
+this step: `a3320b546e5d7936d35a1975b02f0eacb9002600` (`origin/t15/int`),
+refreshed immediately before push. This first commit contains tools and
+documentation only; runtime changes are a separate, independently qualified
+step. The queue and release recipe are unchanged.
+
+## Step 1: candidate cells, no runtime enablement
+
+The default-off `--barn-portals29=1` builder accepts a hash-bound R4IM v3,
+R4PW and R4ID package and explicit geometry-authored building/eye boxes.
+It starts every face open, subtracts only exactly coplanar opaque static
+wall triangles, and intersects coverage across every stored LOD. Exact
+rational polygon complements preserve cracks; unsupported or uncertain
+surfaces remain openings. Apertures expand by at least 64 mm and round
+outward. Complex faces become wholly open instead of exceeding the runtime
+portal budget. This supports multiple buildings in any explicitly named room.
+
+The output retains PCL2 storage and adds a CRC-bound `WP29` witness trailer.
+Legacy loaders reject its extended size. The upcoming runtime must verify
+current-view opaque submission and source state; merely having wall data in
+a package grants no hiding permission. The graft tool verifies matching
+staged mesh/policy identities and adds only the candidate cell reference to a
+new fixture. Neither tool reads inputs or writes output with its flag absent
+or zero.
+
+Proof and exact schema: [PORTALS29.md](../../../tools/d367/ps2world/interior/PORTALS29.md).
+The 21 tests pass on actual synthetic package serialization: door/window,
+0.125 mm crack, LOD openings, dynamic/cutout/wrong-facing walls, multiple
+houses/rooms, safe-eye/near refusal, CRC/hash/malformed inputs, legacy loader
+exclusion, fixture identity and disabled no-output behavior. No game assets
+are included.
+
+```sh
+python3 -B port/dreamcast/tools/d367/ps2world/interior/test_barn_portals29.py -v
+```
+
+Tool-only release identity follows directly from the changed-file scope:
+no runtime, build recipe, header or generated asset changes are committed
+in this step. Warm/cold-I cycles, loads/stores, 32-byte data lines, runtime
+code/stack and resident bytes added by this step are all **0**.
+**MODELLED whole-frame delta: 0 ms.** Cell file size is reported by the tool;
+runtime costs and benefit remain separate evidence.
+
+## Exact private-data commands for Claude
+
+From the repository root, set `PKG` to the actual staged room-package
+directory, `CFG` to the geometry-authored config described in PORTALS29.md,
+`BASE_FIXTURE` to a fixture explicitly staging that mesh and policy, and
+`OUT` to a fresh private result directory. Do not use the explanatory
+coordinates in the schema as r103 geometry.
+
+```sh
+sha256sum "$PKG/ps2-world.re4mesh" "$PKG/ps2-world.r4pw" "$PKG/ps2-world.ids"
+python3 port/dreamcast/tools/d367/ps2world/interior/barn_portals29.py \
+  --barn-portals29=1 --config "$CFG" --package "$PKG" \
+  --out "$OUT/interior.cell" --report "$OUT/portal-proof.json"
+python3 port/dreamcast/tools/d367/ps2world/interior/graft_portals29.py \
+  --barn-portals29=1 --fixture "$BASE_FIXTURE" --cell "$OUT/interior.cell" \
+  --out "$OUT/fixture-portals29.json"
+```
+
+Retain package/config hashes, face coverage/openings, witness identities,
+refusal output and candidate bytes. Runtime build/QA commands follow in the
+next qualified step. Do not enable an old PCL2 runtime against this candidate.
+
+## Questions
+
+1. Please author safe eye/hull boxes from the actual r103 opaque PS2 walls,
+   then return the generated proof report (or exact refusal). Which witness
+   parts occur before the outdoor targets in submission order?
+2. Return the outward/inward barn `WORLD_METER`, DFA and DSA windows with
+   matched image/package hashes. Proposals 2, 4 and 5 remain notes pending
+   those measurements.
+3. On the runtime candidate, Claude must run the magenta hidden-geometry
+   walk, missing/stale/heap refusal cases, doors and near-plane crossings,
+   leave/reentry, s30 loan/return, full disabled image identity and STRICT
+   gameplay. No private or console PASS is claimed here.
+
+## Answers (Claude)
+
+Pending.
