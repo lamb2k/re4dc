@@ -1038,16 +1038,19 @@ float wrap_pi(float a) {
 // GOTO, once per game tick (feed): the stick and buttons for the next pad read, or the step's end.
 // RE4's tank controls: stick X turns Leon (right = clockwise from above = his angle falls), stick Y walks; B + forward runs.
 void drv_goto_tick(DriveStep* s) {
+    // A straight line, no path finding (user 10-28: teleport to exact spots; a human walks the rest). Under 0.3 m of
+    // progress in 3 s = stuck.
     const float dx = s->x - g_drv.x, dz = s->z - g_drv.z, d = sqrtf(dx * dx + dz * dz);
     if (d < 500.0f) { drv_pop("arrived", false); return; }
     if (g_drv.done_ticks >= s->ticks) { drv_pop("timeout", true); return; }
-    if (g_drv.done_ticks == 0 || g_drv.done_ticks - g_drv.chk_t >= 90) {
+    if (g_drv.done_ticks == 0) { g_drv.chk_t = 0; g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; }
+    if (g_drv.done_ticks - g_drv.chk_t >= 90) {
         const float mx = g_drv.x - g_drv.chk_x, mz = g_drv.z - g_drv.chk_z;
-        if (g_drv.done_ticks && mx * mx + mz * mz < 150.0f * 150.0f && g_drv.done_ticks > 180) { drv_pop("stuck", true); return; }
+        if (mx * mx + mz * mz < 300.0f * 300.0f) { drv_pop("stuck", true); return; }
         g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; g_drv.chk_t = g_drv.done_ticks;
     }
     const float err = wrap_pi(atan2f(dx, dz) - g_drv.ang);
-    float sx = -err * 120.0f;   // full turn rate from ~0.6 rad of error
+    float sx = -err * 120.0f;   // stick right turns Leon clockwise (his angle falls); full rate from ~0.6 rad of error
     if (sx > 70.0f) sx = 70.0f;
     if (sx < -70.0f) sx = -70.0f;
     const float ae = err < 0 ? -err : err;
