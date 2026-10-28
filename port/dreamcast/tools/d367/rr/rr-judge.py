@@ -139,6 +139,13 @@ if sp:
         checks.append(('SPEED vs live release', 'SKIP', sp[-1][:200]))
     else:
         add('SPEED vs live release', sp[-1].startswith('SPEED PASS'), sp[-1][:400])
+# SPEED-GPU (guards28 10-28): rr/speed/rr-speed-gpu.sh, cache-model Flycast SQ->TA bytes + TA list bytes vs the live release
+sg = rd(W / 'speed-gpu.txt').strip().splitlines()
+if sg:
+    if sg[-1].startswith('SPEED-GPU SKIP'):
+        checks.append(('SPEED-GPU vs live release', 'SKIP', sg[-1][:200]))
+    else:
+        add('SPEED-GPU vs live release', sg[-1].startswith('SPEED-GPU PASS'), sg[-1][:400])
 
 extra = {}
 if build_ok and jobs:

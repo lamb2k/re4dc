@@ -4,7 +4,7 @@
 # nothing compared them). Builds each commit's own release recipe as a cost arm (rr-speed-build.sh), runs the five
 # hwmodel benchmark scenes (cross, bell, farm, house, r11c; rr-speed-hw.sh, at most SPEED_PAR=2 Flycasts at once) and
 # judges candidate vs reference with rr_speed.py (tolerance SPEED_TOL_MS=1.0 / SPEED_TOL_PCT=3). The reference
-# (normally the live release, recipe.conf RR_SPEED_REF) is measured once and cached by sha in $RR_HOME/speed/<sha8>.
+# (normally the live release, recipe.conf RR_SPEED_REF) is measured once and cached by sha in $SPEED_EV/ref-<sha8>.
 # Writes the rr_speed.py table to <out file>; its last line is "SPEED PASS|FAIL ...". Exit 0 PASS, 1 FAIL, 2 error.
 set -euo pipefail
 REF=${1:?ref sha}; CAND=${2:?cand sha}; OUT=${3:?out file}
@@ -30,7 +30,7 @@ measure() { # <sha8> <label> <evidence dir>
   done
   for p in "${pids[@]}"; do wait "$p" || true; done
 }
-RD=$RR_HOME/speed/$R8
+RD=$EVB/ref-$R8   # on C: (hwproject needs a Windows-visible evidence root); kept as the reference cache
 if ! ls "$RD"/hwmodel-*-r11c/proj/projection.txt >/dev/null 2>&1; then measure "$R8" "sr$R8" "$RD" || { echo "SPEED FAIL: reference $R8 did not build" > "$OUT"; exit 2; }; fi
 CD=$EVB/$C8
 measure "$C8" "sc$C8" "$CD" || { echo "SPEED FAIL: candidate $C8 did not build" > "$OUT"; exit 2; }

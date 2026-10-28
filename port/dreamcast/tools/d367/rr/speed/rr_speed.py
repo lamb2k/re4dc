@@ -49,7 +49,7 @@ def main():
             bad.append(s)
         parts.append(f'{s} {a:.1f}->{b:.1f} ({b - a:+.1f})')
         print(f'| {s} | {a:.1f} | {b:.1f} | {b - a:+.1f} | +{lim:.1f} | {"PASS" if ok else "FAIL"} |')
-    print(('SPEED FAIL (slower: ' + ' '.join(bad) + '): ' if bad else 'SPEED PASS: ') + ', '.join(parts) + ' ms MODELLED')
+    print(('SPEED FAIL (slower or not measured: ' + ' '.join(bad) + '): ' if bad else 'SPEED PASS: ') + ', '.join(parts) + ' ms MODELLED')
     return 1 if bad else 0
 
 

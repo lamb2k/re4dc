@@ -61,3 +61,14 @@ Edit `recipe.conf` (CH2, DATA, KSETS, data dirs, CH2_REF) in the same landing, t
   console row.
 - **MOVIEARENA row (every tier):** with MOVIE_LAYOUT_GUARD=1 (recipe T15_M) the game logs `MOVIEARENA refuse id=.. room=..
   why=.. mesh=.. side=.. capacity=.. need=..` for every refused eligible movie arena borrow; any such line in any job log fails.
+
+## 2026-10-28 (lane guards28, round 2)
+
+- **SPEED-GPU row (full tier, coordinator decision):** `speed/rr-speed-gpu.sh <ref> <cand> <out>` builds each commit's
+  QA disc (rr-qa.sh, RR_QA_KEEP_GDEMU=1), then per scene `speed/gpu-scene.sh` on the cache-model Flycast (flycast-console
+  cstat build, SPEED_GPU_EXE; emulator patch f06da2d8): fast run with the QA teleporter keys (`speed/gpu-keys`) saving a
+  state, a cache-model warm run, then a 60 s measured run (RE4DC_CACHE_STATS + RE4DC_TA_STATS). Every run <= 60 s, at most
+  2 Flycasts. `speed/rr_speed_gpu.py` compares SQ->TA bytes per frame (sq_flush x 32) and the TA display-list bytes
+  (vertex/poly load; the emulator has no separate vertex counter); FAIL above +SPEED_GPU_TOL_PCT (5) % or when the fast
+  run did not reach the scene's room. Numbers are labelled cache-model Flycast.
+- **RR_SPEED_REF** = the commit the live release's tag points at. The release lane bumps it at publish (next: 92cec32f).
