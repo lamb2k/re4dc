@@ -31,6 +31,8 @@ PKG_K=$R python3 "$T/test8/t8-pkgtree.py" "$L" "$R/fix/pkg-$L.json" > "$R/logs/p
 grep -q PKGTREE_OK "$R/logs/pkgtree.txt" || { tail -20 "$R/logs/pkgtree.txt"; exit 1; }
 python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
 python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
+# RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
+if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi
 mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)

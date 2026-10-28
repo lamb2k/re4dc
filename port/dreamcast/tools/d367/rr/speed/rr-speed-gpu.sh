@@ -17,6 +17,9 @@ PAR=${SPEED_PAR:-2}
 EVB=${SPEED_EV:-/mnt/c/Flycast-Evidence/re4-dreamcast/rr-speed}
 GITBASH=${GITBASH:-/mnt/c/Program Files/Git/bin/bash.exe}
 R8=$(git -C "$MAIN" rev-parse "$REF" | cut -c1-8); C8=$(git -C "$MAIN" rev-parse "$CAND" | cut -c1-8)
+# cache key = commit + the measurement presets (speed/gpu-presets, e.g. the enemy-free cross): a disc and its stats are
+# reused only for the same pair, so any cached disc can be rebuilt from its key
+PH=$(cat "$HERE"/gpu-presets/*.txt | sha256sum | cut -c1-6)
 EV=$EVB/gpu; mkdir -p "$W" "$EV"
 qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   local s=$1 x=$2 t=$W/tree-$2 qw=$W/qa-$2
@@ -24,7 +27,7 @@ qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   if [ ! -d "$t" ]; then git -C "$MAIN" worktree prune; git -C "$MAIN" worktree add -q --detach "$t" "$s"; fi
   git -C "$t" submodule update -q --init --recursive
   mkdir -p "$qw"; git -C "$t" show HEAD:port/dreamcast/tools/d367/rr/recipe.conf | tr -d '\r' > "$qw/recipe.conf"
-  RR_QA_KEEP_GDEMU=1 bash "$HERE/../rr-qa.sh" "$qw" "$t" "$(git -C "$t" rev-parse HEAD)" "speed$x" - > "$W/qa-$x.log" 2>&1 \
+  RR_QA_KEEP_GDEMU=1 RR_QA_PRESET_DIR="$HERE/gpu-presets" bash "$HERE/../rr-qa.sh" "$qw" "$t" "$(git -C "$t" rev-parse HEAD)" "speed$x" - > "$W/qa-$x.log" 2>&1 \
     || { tail -5 "$W/qa-$x.log"; return 1; }
   local s7; s7=$(git -C "$t" rev-parse HEAD | cut -c1-7)
   rm -rf "${EV:?}/disc-$x"; mkdir -p "$EV/disc-$x"
@@ -45,14 +48,14 @@ scenes() { # <label>
   done
   for p in "${pids[@]}"; do wait "$p" || true; done
 }
-for pair in "$R8 g$R8" "$C8 g$C8"; do
+for pair in "$R8 g${R8}p$PH" "$C8 g${C8}p$PH"; do
   set -- $pair
   qa "$1" "$2" || { echo "SPEED-GPU FAIL: QA disc of $1 did not build" > "$OUT"; exit 2; }
   scenes "$2"
 done
 rc=0
-python3 "$HERE/rr_speed_gpu.py" "$EV" "g$R8" "g$C8" --tol-pct "${SPEED_GPU_TOL_PCT:-5}" --scenes "${SCENES// /,}" > "$OUT" || rc=$?
+python3 "$HERE/rr_speed_gpu.py" "$EV" "g${R8}p$PH" "g${C8}p$PH" --tol-pct "${SPEED_GPU_TOL_PCT:-5}" --scenes "${SCENES// /,}" > "$OUT" || rc=$?
 cat "$OUT"
 # the candidate's disc is rebuildable (the reference's is kept for the next cycle)
-[ "${SPEED_GPU_KEEP_CAND:-0}" = 1 ] || rm -rf "${EV:?}/disc-g${C8:?}"
+[ "${SPEED_GPU_KEEP_CAND:-0}" = 1 ] || rm -rf "${EV:?}/disc-g${C8:?}p${PH:?}"
 exit $rc
