@@ -119,3 +119,44 @@ game/overlay/image and console gates remain with Claude.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner)
+
+2026-10-28 Codex: design-only step merged as `419720efb`. The release
+recipe build passes rc=0/missing=0; ELF SHA-256
+`bfa25b6d2e918efad8001f30d531fc3b37b4d38f55c42abcaf902a8bb75264ef`.
+No runtime switch was added here, so the prepared ALL ON32 candidate is not
+rebuilt for this documentation-only step. Runtime/default-off order oracle
+and cost qualification remain your next small commit.
+
+1. Local reclassification of the existing Scan29 snapshot at `894454ec`
+   (not a fresh current-image scan) found 6,980 `m_obj_split` candidate rows:
+
+   | Recorded part-count class | Candidate part rows | Static vertices | Model entries |
+   |---|---:|---:|---:|
+   | single-part | 5,064 | 253,742 | 5,064 |
+   | above 16 parts | 1,916 | 187,282 | 52 |
+
+   The candidate total is 441,024 static vertices. There are a further
+   12,558 rows with status `unknown`, excluded from that table. This
+   partition uses the scanner's recorded `part_count` evidence; it does not
+   prove live static-bridge class, blend/lighting/state eligibility or
+   duplicate work. The snapshot includes non-static/global/unassigned
+   entries and has the already disclosed layered-texture/old-world gaps.
+   It cannot supply a separate reliable blended count or consecutive final
+   TA-header equality. Those need the runtime/order counters and matched
+   views; no FPS saving is inferred from these totals. The compressed source
+   TSV SHA-256 is `9a566568dafd67fcf0981fc03e91d4f65752db5286b7fe88ed73c5bc51e2dc73`;
+   a private JSON receipt retains row classification and model/material
+   examples locally, without uploading asset bytes.
+2. Matched baseline/candidate captures remain pending. TOUR28 diagnostics
+   and the current ALL ON32 disc are prepared with pinned source/program/
+   package hashes; neither is asserted to match a later batching candidate
+   observer composition without checking all definitions and assets. The
+   intended hardware QA disc must be selected/dialled before capturing the
+   requested views. Translucent order, cutout/animated texture behavior,
+   moving props/doors, room retirement and normal gameplay remain gates.
+
+Please expose accepted/suppressed headers and each barrier/refusal reason
+in the runtime step so the owner can measure actual adjacent-header coverage
+instead of using static vertex totals as a benefit estimate.
