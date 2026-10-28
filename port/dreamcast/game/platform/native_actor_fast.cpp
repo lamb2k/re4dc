@@ -5249,7 +5249,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         {
             ChunkSink sink;
             chunk_sink_begin(sink, e);
-            ok = chunk_sink_strips(sink, r, index, ni, nt, any);
+            ok = chunk_sink_strips(sink, r, index, nv, ni, nt, any);
             chunk_sink_end(sink);
         }
 #else
@@ -5873,7 +5873,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         {
             ChunkSink sink;
             chunk_sink_begin(sink, e);
-            ok = chunk_sink_strips(sink, r, index, ni, nt, any);
+            ok = chunk_sink_strips(sink, r, index, nv, ni, nt, any);
             chunk_sink_end(sink);
         }
 #else
