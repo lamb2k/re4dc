@@ -37,6 +37,9 @@ void decision(bool draw_attempt) { drawn=draw_attempt?1U:0U; }
 void end_tick() {
     if (!active) return;
     active=false;
+    // Keep the last tick that drew: under frame skip most ticks draw nothing, and sealing those zeros hid every
+    // count on the console (r103 barn, 10-28: every row read drawn=0).
+    if (!drawn && valid) return;
     sealed.sequence=++sequence; sealed.tick=tick; sealed.room=room;
     sealed.drawn=drawn; sealed.overflow=overflow;
     std::memcpy(sealed.items,live,sizeof(live));
