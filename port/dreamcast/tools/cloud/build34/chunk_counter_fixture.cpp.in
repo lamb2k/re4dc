@@ -1,0 +1,66 @@
+// The declarations and sink dispatch below are copied from the current source
+// by scn21_host.py. Backend/Part edges are controlled solely to force outcomes.
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <initializer_list>
+using u8=std::uint8_t;using u16=std::uint16_t;
+constexpr unsigned kMaxVertices=256,kOcCull=1,kOcNear=2;
+static unsigned checks,cases,backend_calls,whole_calls,strip_calls,dfa_backend,dfa_strip;
+static bool backend_accept,backend_result=true;
+#define CHECK(x) do {++checks;if(!(x)){std::fprintf(stderr,"check failed %d: %s\n",__LINE__,#x);std::abort();}}while(0)
+struct Records {};
+struct Part { bool fit=true,result=true;bool fits(unsigned){return fit;}
+    bool whole(const u8*,unsigned,unsigned){++whole_calls;return result;}
+    bool strips(const Records&,const u8*,unsigned){++strip_calls;return result;}
+};
+static struct {unsigned meshlets_whole;} stats;
+static bool chunk_backend(Part&,const Records&,const u8*,unsigned,unsigned,unsigned,bool& ok){
+    ++backend_calls;ok=backend_result;return backend_accept;
+}
+#if RE4DC_DRAW_FALLBACK_AUDIT
+enum { ActorChunkBackend,ActorStripScan };
+#define DFA26_MODEL_HIT(name,count) do{if(name==ActorChunkBackend)dfa_backend+=count;else dfa_strip+=count;}while(0);
+#else
+#define DFA26_MODEL_HIT(name,count)
+#endif
+@DECLARATIONS@
+@SINK@
+@BEGIN@
+@DISPATCH@
+
+int main(){
+    Part part;Records records;ChunkSink sink;chunk_sink_begin(sink,part);
+    const u8 index[3]={0,1,2};
+    for(bool accept:{false,true})for(bool result:{false,true})for(unsigned any:{0U,kOcCull,kOcNear})for(bool fits:{false,true}){
+        ++cases;
+        part.fit=fits;part.result=result;backend_accept=accept;backend_result=result;
+        backend_calls=whole_calls=strip_calls=dfa_backend=dfa_strip=0;stats.meshlets_whole=0;chunk_backend_fallbacks=100;
+        CHECK(chunk_sink_strips(sink,records,index,3,3,1,any)==result);
+#if RE4DC_CHAR_CHUNK_BACKEND
+        CHECK(backend_calls==1);
+        if(accept){CHECK(whole_calls+strip_calls==0);CHECK(chunk_backend_fallbacks==100);CHECK(dfa_backend==0);continue;}
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+        CHECK(chunk_backend_fallbacks==101);
+#else
+        CHECK(chunk_backend_fallbacks==100);
+#endif
+#if RE4DC_DRAW_FALLBACK_AUDIT
+        CHECK(dfa_backend==1);
+#else
+        CHECK(dfa_backend==0);
+#endif
+#else
+        CHECK(backend_calls==0);CHECK(chunk_backend_fallbacks==100);CHECK(dfa_backend==0);
+#endif
+        const bool whole=!any&&fits;
+        CHECK(whole_calls==unsigned(whole));CHECK(strip_calls==unsigned(!whole));CHECK(stats.meshlets_whole==unsigned(whole));
+#if RE4DC_DRAW_FALLBACK_AUDIT
+        CHECK(dfa_strip==unsigned(!whole));
+#else
+        CHECK(dfa_strip==0);
+#endif
+    }
+    std::printf("{\"cases\":%u,\"checks\":%u,\"backend\":%u,\"fast_only\":%u,\"audit\":%u}\n",cases,checks,
+                RE4DC_CHAR_CHUNK_BACKEND,RE4DC_ACTOR_LIGHT_FAST_ONLY,RE4DC_DRAW_FALLBACK_AUDIT);
+}

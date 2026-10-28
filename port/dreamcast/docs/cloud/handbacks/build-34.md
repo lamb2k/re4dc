@@ -1,5 +1,15 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+**2026-10-28 progress 2: DONE** bounded SCCN/SCPS loaders, current-descriptor
+front-cache validation, the existing LCHK fallback count, and a default-off
+SCPS-only metadata tool; host/sanitizer, SH-4 cost and 24 raw disabled-byte
+comparisons pass, with six enabled compilation/relocatable-link profiles;
+**NEXT** Claude's isolated current-data/console pairs below; **BLOCKED** full
+image identity, real coverage, STRICT/look/memory and net console benefit.
+Final runtime base: `1511637ac54057807b654ac55ea43a48f6e8ae47`; the advance from
+qualified `ac154934df7ddf14fc5c6b6932a24a99a253f8e6` is documentation only.
+Owner answers below are preserved. No release switch was enabled.
+
 **2026-10-28 progress 1: DONE** all seventeen source/history decisions below;
 **NEXT** bounded scenery sidecar validation, front texture-cache validation,
 the missing character-backend fallback count, and their host/SH-4 gates;
@@ -23,8 +33,8 @@ were recoverable, and one entry was not actually off in the asset-complete relea
 | Control / current disposition | What it does | When and why it is off | Recommendation and remaining gate |
 |---|---|---|---|
 | `CHAR_CHUNK=0` | Compact repeated positions and, on the normal-light path, repeated normals before expanding the original vertex order. | Introduced 2026-10-19; disabled 2026-10-20 by [fbba3e20](https://github.com/lamb2k/re4dc/commit/fbba3e20cf275cb51a4e0f1e4bc13d76ad6dace6): MODELLED cross 66.2 ms ON / 65.0 OFF. Current FAST_ONLY also removes its normal-cache benefit. | **Park.** Need actual repeat/admission counts and a net win against current FAST_ONLY, including extra scratch traffic. |
-| `CHAR_CHUNK_BACKEND=0` | Adapt transformed character vertices/outcodes to the shared strip backend. | 2026-10-19 pull-in withdrawn by the user, [b2072d12](https://github.com/lamb2k/re4dc/commit/b2072d121cd0db63c2c79bd9ab418ca08b2e1a67); depends on the parked front end. Its old LCHK fallback count has no writer. | **Park.** Repair the counter, then isolate backend 0/1 after front-end qualification. |
-| `FRONT_TEXOBJ=0` | Cache packed GX texture objects per TPL set, keeping source swaps/tail behavior. | Introduced off 2026-09-23, [58d405e9](https://github.com/lamb2k/re4dc/commit/58d405e9b4536544f259ca244230170ca5aa162d); never promoted. The current key can hit after a non-first descriptor or dimensions change. | **Enable after fix and qualification.** Validate all packed words and wrap side effects; current STRICT, lifecycle/look, RAM and console cost gates remain. |
+| `CHAR_CHUNK_BACKEND=0` | Adapt transformed character vertices/outcodes to the shared strip backend. | 2026-10-19 pull-in withdrawn by the user, [b2072d12](https://github.com/lamb2k/re4dc/commit/b2072d121cd0db63c2c79bd9ab418ca08b2e1a67); depends on the parked front end. Its audit-baseline LCHK fallback count had no writer; step 2 repairs it. | **Park.** Repair the counter, then isolate backend 0/1 after front-end qualification. |
+| `FRONT_TEXOBJ=0` | Cache packed GX texture objects per TPL set, keeping source swaps/tail behavior. | Introduced off 2026-09-23, [58d405e9](https://github.com/lamb2k/re4dc/commit/58d405e9b4536544f259ca244230170ca5aa162d); never promoted. The audit-baseline key could hit after a non-first descriptor or dimensions change; step 2 repairs it. | **Enable after fix and qualification.** Validate all packed words and wrap side effects; current STRICT, lifecycle/look, RAM and console cost gates remain. |
 | `GAME_HF_ASM=0` | Existing assembly Hermite sampler with exact fallback/check mode. | Early imported experiment; recorded G29.76 ms versus control 29.17 in the September 29 checklist. Later `GAME_HF_REG=1` is mutually exclusive. | **Park.** Any future test must beat the enabled register sampler, not an old C baseline. |
 | `GAME_TRIG_FSCA=0` | Approximate global `sincosf`, including collision-fed callers. | Introduced as a retained negative experiment 2026-10-05, [90e6341c](https://github.com/lamb2k/re4dc/commit/90e6341c15dc08c6b4a26e75665f78112a24847e); line-query and enemy-collision decisions failed. | **Park.** Requires a revised caller boundary and new discrete-decision/STRICT gates. Mode 2 still returns the approximation. |
 | `LEON_HAND_PACK=1` | Disc/AICA hand-pose package with two CPU slots. | **Already enabled** in current `test24/release-knobs.txt`. The cloud public build forced 0 because generated private assets were absent. | **Enable / retain existing 1.** Correct the inventory classification; no recipe change. Verify matching package when testing retain. |
@@ -47,7 +57,7 @@ limitations, and prerequisite/conflict details are in the
 [render/texture review](build-34-render-review.md). These are decision inputs,
 not edits to the release recipe or `offknob-hold.txt`.
 
-## Cheap fixes selected for the next commit
+## Step 1 plan: cheap fixes selected for the runtime commit
 
 1. SCCN/SCPS must establish header length and aligned, overflow-safe extents
    before reads/writes. SCCN must reject out-of-range slope indices and malformed
@@ -218,3 +228,283 @@ Console pairs remain pending user disc selection plus REMOTE LINK, matching
 camera/game state and600 drawn-frame windows with the source/profile, resolved
 knobs, paired overlays, media hashes, memory and observer settings retained.
 No private assets, SD writes, release setting changes or publication.
+
+## Step 2: bounded repairs under existing switches
+
+### Qualification and receipt boundaries
+
+The actual-loader/sink host suite and its ASan/UBSan twin each pass **7,628
+cases / 140,249 assertions** across twelve loader and eight sink compositions.
+The actual-source front-cache suite and its sanitized twin each pass **23
+scenarios / 173,714 checks**, with seven baseline mutation counterexamples.
+The SCPS-only generator passes five test methods spanning valid R4IM versions,
+malformed containers, preservation, replacement, default-zero no-I/O and
+overwrite refusal. LeakSanitizer alone was disabled for the environment's
+task-map restriction; address and undefined-behavior checks remained fatal.
+
+The pinned GCC 15.2/binutils 2.45.1 gate passes **24 complete raw preprocessed
+file/object identities**: three changed translation units, release/QA,
+absent/explicit-zero, preprocessor/object. Six enabled profiles compile full
+production translation units and perform relocatable links with unchanged
+providers; six matched existing-ON controls isolate the repair's size change.
+Six invalid Make cases are rejected and three accepted sign controls pass.
+FRONT_TEXOBJ is checked in the actual generated `records30.h`. The final
+receipt freezes 246 consumed inputs. The [baseline equivalence receipt](../../../tools/cloud/build34/receipts/baseline-equivalence.json)
+(SHA-256 `2758e0d6b8b0340c81a5070510d63560f0b8752af0770f9538ffd8a93d5b09f9`)
+verifies all 196 baseline and 246 candidate inputs against final `1511637a`;
+only eight Markdown paths changed upstream. No whole-game/overlay link is claimed:
+the cloud SDK lacks built KOS libraries and private assets.
+
+The initial raw OFF check caught a legacy `__LINE__` diagnostic shift, 2465
+to 2491, after the cache body grew. An existing-style source `#line` boundary
+restores the original downstream mapping. The failed attempt is retained as
+superseded evidence, not counted as a PASS. Final OFF checks and all affected
+trans objects were rebuilt; unchanged ON inputs were verified, and all six
+partial links were recreated. No whitespace/content normalization hid a change.
+
+Receipts and reproduction scripts are in
+[`tools/cloud/build34`](../../../tools/cloud/build34/README.md):
+
+| Evidence | Receipt | SHA-256 |
+|---|---|---|
+| Target identities, enabled profiles, old-ON sizes | [target-controls.json](../../../tools/cloud/build34/receipts/target-controls.json) | `d7e0c9c63dd07820f8e20e2a1819f8afd8ecc082a3af80663c51cae153e7a8f0` |
+| Scenery/sink normal | [scn21-host.json](../../../tools/cloud/build34/receipts/scn21-host.json) | `80704975f4f396b0d9f56d93bca362a40dc68227f09cc094aa49b2c7c8abeb55` |
+| Scenery/sink sanitized | [scn21-sanitized.json](../../../tools/cloud/build34/receipts/scn21-sanitized.json) | `68ab44c6f6fd289a37c42b4baa0b59f2201720cc4e02ab766adf0e7bc9b3eb33` |
+| Scenery helper cost | [scn21-cost.json](../../../tools/cloud/build34/receipts/scn21-cost.json) | `6c7fe7a0646887d11c4fc29c899c4e7fb73827bbfe97caee8ae72667bb90c95c` |
+| Front-cache normal | [front-host.json](../../../tools/cloud/build34/receipts/front-host.json) | `f484c53fd1599db842a13618413ca44e0fb4af9d42c17234d92552ba7f48ef8d` |
+| Front-cache sanitized | [front-sanitized.json](../../../tools/cloud/build34/receipts/front-sanitized.json) | `c9a19114a93a200add47cb5d7ecfce354efa3fa1cd1c45eb81120f41c5500662` |
+| Front-cache cost | [front-cost.json](../../../tools/cloud/build34/receipts/front-cost.json) | `734d070564f4e57fef356ba0826615d62d22d0a2e3e6a4e8ddad8ea157b0c596` |
+| SCPS-only metadata | [scps-only.json](../../../tools/cloud/build34/receipts/scps-only.json) | `6705ce1f0b08e39a2c39daf8664c30cb196c52cb569933326a181f2f858ef61f` |
+
+### Repair-only code, storage and stack
+
+These are changed-TU deltas against the **same existing enabled controls** at
+the qualified baseline, not the old feature's entire cost versus OFF:
+
+| Repair/profile | Executable bytes | Allocated bytes including BSS | BSS | Maximum local frame before / after |
+|---|---:|---:|---:|---:|
+| Cone, either sign | +376 | +480 | 0 | 9,004 / 9,004 B |
+| Piece-state | +56 | +92 | 0 | 9,016 / 9,016 B |
+| Front cache | +292 | +292 | 0 | 1,184 / 1,184 B |
+| Backend decline count, normal light/LCHK | +16 | +20 | +4 | 2,388 / 2,388 B |
+| Backend decline count, FAST_ONLY | 0 | 0 | 0 | 2,388 / 2,388 B; object identical |
+
+Cone's `ps2_open` local frame grows 600 to 604 B; its production helper has
+a 36 B local frame. Maxima above are local frames, not maximum call-chain stack.
+The cache retains its existing 32 keys/512 records. SCPS data costs
+`ceil32(ceil16(16 + 4 * part_count))` bytes in the shared loaded room block,
+plus existing allocator effects, only when that section is selected.
+
+### Warm/cold-I cycles and traffic
+
+The SH-4 fixtures execute actual compiled helper instructions with current
+Make-derived flags. The scenery fixture has eight dynamic-input cases plus
+eight established DIV0U controls. The front fixture has 34 old/repaired cases
+and uses separately compiled descriptor/GX providers to avoid artificial
+inlining. Data-cache misses, bus/media/GPU behavior and game workload are not
+modeled. Distinct 32-byte lines include observed stack/literal/data accesses;
+they are footprints, not hardware cache-miss measurements.
+
+| Piece | Warm / cold-I cycles | Load / store instructions | 32 B lines | Observed fixture chain stack |
+|---|---:|---:|---:|---:|
+| SCCN short refusal | 90 / 199 | 32 / 15 | 9 | 72 B |
+| SCCN valid, 4 records | 3,486 / 3,821 | 549 / 420 | 24 | 76 B |
+| SCCN valid, 128 records | 16,296 / 16,631 | 2,064 / 916 | 55 | 76 B |
+| SCPS valid, 128 slots | 120 / 283 | 32 / 12 | 7 | 32 B |
+| Repaired front hit, 1 descriptor | 233 / 479 | 81 / 15 | 25 | 300 B |
+| Repaired front hit, 8 descriptors | 667 / 913 | 207 / 15 | 39 | 300 B |
+| Repaired front hit, 32 descriptors | 2,155 / 2,401 | 639 / 15 | 84 | 300 B |
+| Repaired front hit, 248 descriptors | 15,547 / 15,793 | 4,527 / 15 | 487 | 300 B |
+| Repaired dirty refresh, 32 descriptors | 5,442 / 5,797 | 1,264 / 408 | 119 | 328 B |
+| Uncached source init, 32 descriptors | 2,562 / 2,743 | 665 / 426 | 89 | 60 B |
+
+The old unchecked hit cost 159/374 cycles, 61 loads/15 stores and 21 lines,
+independent of descriptor count, but returns incorrect words in mutation
+controls. It is not an acceptable performance alternative for those inputs.
+At eight descriptors, validation leaves little helper advantage over the
+uncached initializer's 690 warm cycles; at one descriptor the repaired hit
+is slower than the 144-cycle source initializer. The historical 0.45 ms claim
+must not be reused for this corrected implementation.
+
+**MODELLED whole-frame sensitivity:** at 200 MHz, assuming 30 ms of other
+work and 200 stable 32-descriptor initializations, the repaired helper gives
+**32.155 ms**, versus **32.562 ms** for the uncached initializer. This assumes
+the fixture's key/search/swap state; it excludes real key distributions,
+downstream rendering, memory stalls and all other cache effects. It is not
+an observed workload, net frame prediction or acceptance. A single 128-record
+SCCN open contributes 0.08148 ms warm helper work (30.08148 ms with the same
+arbitrary 30 ms other-work assumption); ordinary frames without an open pay
+none of this loader work. SCPS helper cost excludes unchanged slot clearing.
+The small diagnostic counter adds two load instructions (including its literal
+address) and one store to the decline path, touching one counter line plus the
+existing literal line. Its store uses an existing branch delay slot; local
+stack is unchanged. Warm/cold-I cycles were not separately priced. Exact
+opcode/size evidence is retained in `receipts/chunk-counter.json`; no counter
+frame-cost or speed claim is made.
+
+No new approximation is introduced. Valid scenery sidecars preserve their
+old rendering; refused malformed sidecars use ordinary drawing. On cache
+mutation inputs, corrected optional GX words now match the source initializer.
+The diagnostic counter intentionally changes its reported value. Release
+controls remain zero, with exact disabled source/object identity above.
+
+The runtime changes are deliberately limited to three demonstrated defects.
+SCCN/SCPS headers now establish length/alignment before copying; extent checks
+use subtraction/division before multiplication. SCCN validates all 64 slope
+words, its record index, finite nonnegative radius and builder axis bounds.
+These integer IEEE-word checks remain effective under production fast-math.
+They validate format safety, not geometric enclosure of source triangles.
+Refusal clears the borrowed section and uses ordinary rendering. Enabled
+`SCENERY_CONE_SIGN` accepts only 1, +1 or -1; irrelevant values remain ignored
+when cone is off. No per-frame cone arithmetic changes.
+
+FRONT_TEXOBJ now validates all four packed GX descriptor words on a hit,
+including added-only/shared TPL aliases. It performs the source wrap-header
+writes even on an otherwise unchanged hit. A dirty key flushes the previous
+symbolic set before refreshing its existing record range, preserving tail,
+sequential swap and reset behavior. There is no new cache allocation, capacity
+or public layout. This is a correctness repair with an O(descriptor-count)
+validation cost, not a claim that the old modelled saving survives.
+
+The LCHK backend-decline count now increments when that normal-lighting
+diagnostic is compiled. FAST_ONLY continues using its existing DFA reason;
+there is no new unreported counter or BSS in that composition.
+
+`tools/cloud/build34/scps_only.py --scps-only34=1` removes a separate data blocker:
+it adds/replaces only the optional SCPS section bound to the unchanged R4IM
+CRC, byte size and part count. It preserves non-SCPS payloads and directory
+metadata apart from offsets, checks R4RC CRC/overlap/limits, and refreshes the
+container size/CRC. It never writes the mesh, policy or strip-group files.
+Default 0 reads/writes nothing; outputs must be new. Its 32-byte-rounded SCPS
+size is a contribution to the existing shared room allocation, excluding
+allocator overhead and any existing low-heap eviction behavior.
+
+### Exact owner commands for the fixed candidates
+
+Use the SDK/submodule/QA setup and `arm34` function above. Current
+`ACTOR_TRANSACTION=1` rejects the historical `FRONT_NATIVE=2` replay profile;
+the supported current-recipe pair uses FRONT_NATIVE=1. Host cache/snapshot
+tests are not a complete FRONT_NATIVE=2 game run.
+
+```bash
+arm34 front-control FRONT_NATIVE=1 FRONT_TEXOBJ=0
+arm34 front-cache FRONT_NATIVE=1 FRONT_TEXOBJ=1
+```
+
+For SCPS, set `DISC_TREE` to the exact final staged input disc tree and `ROOM`
+to the selected room (start with `r101`, then `r103`). A missing room file or
+unsupported container is a reported blocker; do not fabricate collision,
+placement or other sections. Build identical metadata into both program arms:
+
+```bash
+ROOM=r103
+python3 -B port/dreamcast/tools/cloud/build34/scps_only.py --scps-only34=1 \
+  --mesh "$DISC_TREE/dc/native/$ROOM/ps2-world.re4mesh" \
+  --room-file "$DISC_TREE/dc/native/$ROOM/room.r4rc" \
+  --out "$OUT/scps/$ROOM/room.r4rc" --report "$OUT/scps/$ROOM/report.json"
+PIECE=(PS2_WORLD_HDR_CACHE=1 SCENERY_CONE=0 SCENERY_DEDUP=0
+       PS2_PVS_BATCH_COMPOSE=0 WORLD_PORTAL29=0)
+for arm in piece-control piece piece-check; do
+  opts=("${PIECE[@]}" SCENERY_PIECE_STATE=0)
+  if [[ "$arm" != piece-control ]]; then opts+=(SCENERY_PIECE_STATE=1); fi
+  if [[ "$arm" == piece-check ]]; then opts+=(PS2_WORLD_HDR_CACHE=2); fi
+  RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$OUT/program-$arm" \
+    bash port/dreamcast/build-public.sh "${QA[@]}" "${opts[@]}"
+  python3 port/dreamcast/tools/swap-program.py "$GDEMU_ZIP" \
+    "$OUT/program-$arm" "$OUT/disc-$arm" \
+    --replace "dc/native/$ROOM/room.r4rc=$OUT/scps/$ROOM/room.r4rc"
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile loader
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile standard
+done
+```
+
+Require `SCN21 piece ... on`, nonzero `PS2HDR piece_hits`, zero check mismatches,
+unchanged mesh/policy/groups and all other room-section hashes, room/movie
+reopen and texture eviction correctness, current standard-program s30 floor,
+and net console CPU gain. Keep the unmodified release control as well as the
+same-SCPS-data control. The check arm is not a timing arm.
+
+The cone remains parked for its recorded regression. If Claude selects a new
+cone experiment after inspecting coverage, use the existing builder against
+the actual current source and compare identical rewritten data in both arms:
+
+```bash
+python3 -B port/dreamcast/tools/d367/scenery21/scn21_build.py \
+  "$DISC_TREE/dc/native" "$OUT/sc21" --groups 4 --facing r101 r103
+for arm in cone-control cone; do
+  value=0; if [[ "$arm" == cone ]]; then value=1; fi
+  RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$OUT/program-$arm" \
+    bash port/dreamcast/build-public.sh "${QA[@]}" \
+    SCENERY_CONE="$value" SCENERY_CONE_SIGN=1 SCENERY_PIECE_STATE=0 \
+    SCENERY_DEDUP=0 SCENERY21_AB=0 PS2_PVS_BATCH_COMPOSE=0 WORLD_PORTAL29=0
+  replacements=()
+  for room in r101 r103; do
+    for name in ps2-world.re4mesh ps2-world.r4sg room.r4rc; do
+      replacements+=(--replace "dc/native/$room/$name=$OUT/sc21/$room/$name")
+    done
+  done
+  python3 port/dreamcast/tools/swap-program.py "$GDEMU_ZIP" \
+    "$OUT/program-$arm" "$OUT/disc-$arm" "${replacements[@]}"
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile loader
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile standard
+done
+```
+
+`--replace` deliberately refuses absent image paths. Only use `--add` for a
+particular path after confirming that it is absent in the source image. This
+broader sc21 conversion is separate from the new metadata-only SCPS test.
+Retain triangle/strip-order/source-binding checks and the normal release
+control; do not infer speed from the converter's data-only `--sim` figures.
+
+### Complete disabled-image gate
+
+Set `BASE_TREE` to a clean checkout of the final integration base recorded
+above; initialize its pinned SH4ZAM submodule as well. Use identical SDK,
+absolute recipe/assets, epoch and source GDEMU image. No diagnostic or data
+overrides belong in this gate. The existing release has all five repaired
+controls off.
+
+```bash
+git -C "$BASE_TREE" submodule update --init -- port/dreamcast/game/third_party/sh4zam
+identity34() {
+  local tree=$1 arm=$2; shift 2
+  RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$OUT/program-$arm" \
+    bash "$tree/port/dreamcast/build-public.sh" "$@"
+  python3 port/dreamcast/tools/swap-program.py "$GDEMU_ZIP" \
+    "$OUT/program-$arm" "$OUT/disc-$arm"
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile loader
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile standard
+}
+identity34 "$BASE_TREE" identity-base
+identity34 "$PWD" identity-absent
+identity34 "$PWD" identity-zero SCENERY_CONE=0 SCENERY_PIECE_STATE=0 \
+  FRONT_TEXOBJ=0 CHAR_CHUNK=0 CHAR_CHUNK_BACKEND=0
+python3 - "$OUT" <<'PY'
+from pathlib import Path
+import hashlib, shlex, sys
+root = Path(sys.argv[1])
+def manifest(arm):
+    path = root / ('disc-' + arm)
+    gdi = path / 'disc.gdi'
+    names = {'disc.gdi'} | {shlex.split(line)[4]
+                           for line in gdi.read_text().splitlines()[1:] if line.strip()}
+    result = {}
+    for name in sorted(names):
+        h = hashlib.sha256()
+        with (path / name).open('rb') as stream:
+            for block in iter(lambda: stream.read(1 << 20), b''):
+                h.update(block)
+        result[name] = h.hexdigest()
+    return result
+baseline = manifest('identity-base')
+for arm in ('identity-absent', 'identity-zero'):
+    assert manifest(arm) == baseline, arm
+print('PASS: complete repacked GDI and every track match baseline/absent/zero')
+PY
+```
+
+Return current source/resolved settings, exact data hashes, full build and
+image identities, nonzero cache/cull/refusal coverage, raw matched 600-drawn
+windows, look/STRICT results and the standard memory floor. These results are
+required before promoting a conditional recommendation. The cloud supplies
+code/synthetic evidence; it has no private assets, built KOS libraries or console.

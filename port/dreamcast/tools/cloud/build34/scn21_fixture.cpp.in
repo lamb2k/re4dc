@@ -1,0 +1,202 @@
+// scn21_open below is extracted verbatim from native_static.cpp. The section
+// provider and package shell are controlled substitutes; no game data is used.
+#include <algorithm>
+#include <cassert>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <vector>
+#include "scn21_validate34.hpp"
+
+static unsigned checks, cases;
+#define CHECK(x) do { ++checks; if (!(x)) { std::fprintf(stderr,"check failed at %d: %s\n",__LINE__,#x); std::abort(); } } while (0)
+struct Header { std::uint32_t crc,bytes,meshlet_count,part_count; };
+struct Package { Header h; const Header& header()const{return h;} };
+struct World { Package package;unsigned room,sg_groups;bool sg,alt; } ps2w;
+#if RE4DC_SCENERY_CONE
+namespace cone { const void* pkg;const std::uint8_t* rec;const float* tab2; }
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+namespace piece { const void* pkg;std::uint32_t* table; }
+#endif
+struct re4dc_room_header {};
+struct Section {
+    std::vector<std::uint8_t> data;
+    unsigned len=0,version=1,offset=0;
+    bool present=true;
+    std::uint8_t* ptr(){return present?data.data()+offset:nullptr;}
+    void resize(unsigned n,unsigned off=0,unsigned padding=16){
+        len=n;offset=off;data.assign(std::max(1U,n+off+padding),0xa5);present=true;version=1;
+    }
+    void put(unsigned at,std::uint32_t x){CHECK(at+4U<=len);std::memcpy(ptr()+at,&x,4);}
+};
+static Section csec,psec;
+static unsigned room;
+static re4dc_room_header room_header;
+static std::string logs;
+static unsigned invalidations,bytes_audit[2],state_audit[2];
+static bool span_ok=true,original_ok=true;
+namespace re4dc_gcasset { enum SectionId { SCCN,SCPS };enum State { Absent=1,Disabled=2 }; }
+#if RE4DC_GC_ASSET_GATE
+#define GCASSET_STATIC_ONLY_PARAM void* gcmanifest=nullptr
+#else
+#define GCASSET_STATIC_ONLY_PARAM
+#endif
+static void gcasset_invalidate_world(){++invalidations;}
+static void gcasset_static_state(void*,re4dc_gcasset::SectionId id,re4dc_gcasset::State state){state_audit[id]=state;}
+static void gcasset_static_bytes(void*,re4dc_gcasset::SectionId id,const void*,unsigned,unsigned,unsigned){++bytes_audit[id];}
+static bool re4dc_gcasset_room_span(const void*,unsigned,unsigned,unsigned,const re4dc_room_header*){return span_ok;}
+static bool re4dc_gcasset_room_original(const void*,unsigned,unsigned,unsigned,const re4dc_room_header*){return original_ok;}
+static unsigned re4dc_room_file_room(){return room;}
+static const void* re4dc_room_section(const char* name,unsigned* len,unsigned* ver,unsigned* flags,const re4dc_room_header** h){
+    Section& s=std::strcmp(name,"SCCN")==0?csec:psec;
+    *len=s.len;*ver=s.version;*flags=0;*h=&room_header;return s.ptr();
+}
+static void re4dc_log(const char* fmt,...){
+    char message[256];va_list ap;va_start(ap,fmt);std::vsnprintf(message,sizeof message,fmt,ap);va_end(ap);logs+=message;
+}
+
+@OPEN@
+
+static const std::uint8_t valid_cones[]={ @BUILDER_BYTES@ };
+static constexpr unsigned meshlets=@MESHLETS@,groups=@GROUPS@,parts=7;
+static constexpr std::uint32_t crc=0x04758321U,mesh_bytes=123456U;
+static void reset(){
+    ps2w.package.h={crc,mesh_bytes,meshlets,parts};ps2w.room=room=0x103;ps2w.sg_groups=groups;ps2w.sg=ps2w.alt=true;
+    csec.resize(16U+sizeof valid_cones);csec.put(0,crc);csec.put(4,mesh_bytes);csec.put(8,meshlets);csec.put(12,groups);
+    std::memcpy(csec.ptr()+16,valid_cones,sizeof valid_cones);
+    psec.resize(16+parts*4);psec.put(0,crc);psec.put(4,mesh_bytes);psec.put(8,parts);psec.put(12,0);
+    logs.clear();invalidations=0;std::fill(bytes_audit,bytes_audit+2,0);std::fill(state_audit,state_audit+2,0);
+    span_ok=original_ok=true;
+}
+static void open(bool cone_ok,bool piece_ok,const char* reason=nullptr){
+    ++cases;
+    const auto cbefore=csec.data,pbefore=psec.data;
+#if RE4DC_SCENERY_CONE
+    cone::pkg=reinterpret_cast<void*>(std::uintptr_t(1));cone::rec=reinterpret_cast<const std::uint8_t*>(std::uintptr_t(1));
+    cone::tab2=reinterpret_cast<const float*>(std::uintptr_t(1));
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    piece::pkg=reinterpret_cast<void*>(std::uintptr_t(1));piece::table=reinterpret_cast<std::uint32_t*>(std::uintptr_t(1));
+#endif
+    scn21_open();
+#if RE4DC_SCENERY_CONE
+    CHECK((cone::pkg!=nullptr)==cone_ok);
+    CHECK(cone_ok?cone::pkg==&ps2w.package:cone::rec==nullptr&&cone::tab2==nullptr);
+    if(cone_ok){CHECK(cone::rec==csec.ptr()+272);CHECK(reinterpret_cast<const void*>(cone::tab2)==csec.ptr()+16);}
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    CHECK((piece::pkg!=nullptr)==piece_ok);
+    CHECK(piece_ok?piece::pkg==&ps2w.package:piece::table==nullptr);
+    if(piece_ok){
+        CHECK(reinterpret_cast<const void*>(piece::table)==psec.ptr()+16);
+        for(unsigned i=0;i<ps2w.package.h.part_count;++i)CHECK(piece::table[i]==0);
+        auto expected=pbefore;
+        std::fill(expected.begin()+psec.offset+16,expected.begin()+psec.offset+16+4U*ps2w.package.h.part_count,0);
+        CHECK(psec.data==expected); // no header, padding or adjacent-byte writes
+    }else CHECK(psec.data==pbefore);
+#else
+    CHECK(psec.data==pbefore);
+#endif
+    CHECK(csec.data==cbefore); // SCCN is borrowed immutable data
+#if RE4DC_GC_ASSET_GATE
+    CHECK(invalidations>0);
+#endif
+    if(reason)CHECK(logs.find(reason)!=std::string::npos);
+}
+
+int main(){
+    reset();open(true,true,"on");
+    // Reopening clears live slot words again; no cached successful admission.
+#if RE4DC_SCENERY_PIECE_STATE
+    for(unsigned i=0;i<parts;++i)psec.put(16+4*i,0x12345678U+i);
+    open(true,true);
+#endif
+    reset();room=0x101;open(false,false,"room");
+    reset();csec.present=psec.present=false;open(false,false,"no section");
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_SCENERY_CONE
+    CHECK(state_audit[0]==re4dc_gcasset::Absent);
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    CHECK(state_audit[1]==re4dc_gcasset::Absent);
+#endif
+    reset();span_ok=original_ok=false;open(true,true);CHECK(bytes_audit[0]==0&&bytes_audit[1]==0);
+#endif
+#if RE4DC_SCENERY21_AB
+    reset();ps2w.alt=false;open(false,false,"arm A");
+#if RE4DC_GC_ASSET_GATE
+#if RE4DC_SCENERY_CONE
+    CHECK(state_audit[0]==re4dc_gcasset::Disabled);
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    CHECK(state_audit[1]==re4dc_gcasset::Disabled);
+#endif
+#endif
+#endif
+    // Exact small allocations let ASan observe even a header-sized overread.
+    for(unsigned n=0;n<16;++n){
+        reset();csec.resize(n,0,0);psec.resize(n,0,0);open(false,false,"short header");
+    }
+    for(unsigned off=1;off<4;++off){
+        reset();auto oldc=csec.data,oldp=psec.data;
+        const unsigned nc=csec.len,np=psec.len;
+        csec.resize(nc,off);psec.resize(np,off);
+        std::memcpy(csec.ptr(),oldc.data(),nc);std::memcpy(psec.ptr(),oldp.data(),np);
+        open(false,false,"alignment");
+    }
+    for(unsigned word=0;word<3;++word){
+        reset();csec.put(4*word,~re4dc_scn21::word(csec.ptr()+4*word));
+        psec.put(4*word,~re4dc_scn21::word(psec.ptr()+4*word));open(false,false,"package");
+    }
+    reset();csec.version=psec.version=2;open(false,false,"package");
+#if RE4DC_SCENERY_CONE
+    reset();ps2w.sg=false;open(false,true,"no strip groups");
+    reset();csec.put(12,groups+1);open(false,true,"package");
+    for(unsigned n=16;n<272;++n){reset();csec.len=n;open(false,true,"short table");}
+    for(unsigned n: {0U,9U,0x20000000U,0xffffffffU}){
+        reset();ps2w.sg_groups=n;csec.put(12,n);open(false,true,"groups");
+    }
+    for(unsigned n: {0x20000000U,0x40000000U,0xffffffffU}){
+        reset();ps2w.package.h.meshlet_count=n;csec.put(8,n);open(false,true,"records");
+    }
+    reset();--csec.len;open(false,true,"records");
+    reset();ps2w.package.h.meshlet_count=0;csec.put(8,0);csec.len=272;open(true,true);
+    // Every field used to index the 64-entry table must be rejected above 63.
+    for(unsigned k=64;k<256;++k){reset();csec.ptr()[275]=std::uint8_t(k);open(false,true,"cone index");}
+    // Finite and positive table order checks use bits, including fast-math.
+    for(unsigned k=0;k<64;++k){
+        for(std::uint32_t bad: {0x7fc12345U,0x7f800000U,0xff800000U,0xbf800000U}){
+            reset();csec.put(16+4*k,bad);open(false,true,"cone table");
+        }
+    }
+    for(unsigned k=1;k<64;++k){
+        reset();csec.put(16+4*k,re4dc_scn21::word(csec.ptr()+12+4*k));open(false,true,"cone table");
+    }
+    for(std::uint32_t bad: {0U,0x80000000U,0xbf800000U,0x7f800000U,0xff800000U,0x7fa00001U,0x7fc12345U}){
+        reset();csec.put(276,bad);open(false,true,"cone radius");
+    }
+    for(unsigned a=0;a<3;++a){reset();csec.ptr()[272+a]=128;open(false,true,"cone axis");}
+    reset();std::fill(csec.ptr()+272,csec.ptr()+275,0);open(false,true,"cone axis");
+    reset();std::fill(csec.ptr()+272,csec.ptr()+275,127);open(false,true,"cone axis");
+    // All finite active codes and the builder's no-cone sentinel stay legal.
+    for(unsigned k=1;k<64;++k){reset();csec.ptr()[275]=std::uint8_t(k);open(true,true);}
+    reset();std::fill(csec.ptr()+272,csec.ptr()+280,0);open(true,true);
+    // Explicit limit: a finite but geometrically insufficient radius passes
+    // format checks. Only the trusted builder/source proof can rule this out.
+    reset();csec.put(276,0x3f800000U);open(true,true);
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    reset();psec.put(12,1);open(true,false,"package");
+    for(unsigned n=16;n<16+parts*4;++n){reset();psec.len=n;open(true,false,"slots");}
+    for(unsigned n: {0x40000000U,0x80000000U,0xffffffffU}){
+        reset();ps2w.package.h.part_count=n;psec.put(8,n);open(true,false,"slots");
+    }
+    reset();ps2w.package.h.part_count=0;psec.put(8,0);psec.len=16;open(true,true);
+#endif
+    std::printf("{\"cases\":%u,\"checks\":%u,\"cone\":%u,\"piece\":%u,\"ab\":%u,\"gc\":%u}\n",
+                cases,checks,RE4DC_SCENERY_CONE,RE4DC_SCENERY_PIECE_STATE,RE4DC_SCENERY21_AB,RE4DC_GC_ASSET_GATE);
+}

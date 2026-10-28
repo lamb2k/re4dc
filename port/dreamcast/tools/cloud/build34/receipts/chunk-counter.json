@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f",
+    "port/dreamcast/game/platform/native_actor_chunk.inc": "454980bf0c83cbb9bf3dfaeca2fd37d166833ff46c0cf494a957ab59cb6d5a35"
+  },
+  "compiler": "sh-elf-g++.real (GCC) 15.2.0",
+  "compiler_sha256": "0607fbaf0a3af5e6ad0a1696628ffba7585c74482a423f805f0575181f7ce8da",
+  "existing_on_control_receipt_sha256": "8fb22d8074c5c3a256a8e2ded59bb231213bc48d702877ed6ae73eae6782bdcf",
+  "exact_lchk": {
+    "control": "control-on-combined-exact",
+    "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+    "units": {
+      "native_actor_fast": {
+        "executable_bytes": 16,
+        "allocated_bytes": 20,
+        "zero_fill_bytes": 4,
+        "max_stack_before": 2388,
+        "max_stack_after": 2388,
+        "changed_local_frames": [],
+        "object_identical": false
+      }
+    },
+    "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+  },
+  "fast_only": {
+    "control": "control-on-combined-fast",
+    "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+    "units": {
+      "native_actor_fast": {
+        "executable_bytes": 0,
+        "allocated_bytes": 0,
+        "zero_fill_bytes": 0,
+        "max_stack_before": 2388,
+        "max_stack_after": 2388,
+        "changed_local_frames": [],
+        "object_identical": true
+      }
+    },
+    "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+  },
+  "objects": {
+    "on-combined-exact": "b4a1575715710ae82777237390f22aff2259a71cf3a0c2610303c27d7b2dd461",
+    "control-on-combined-exact": "571366155195635a4ca2ccb53be0df6c16db8b08b4b517d6241f3f4fec927abe",
+    "on-combined-fast": "063544af7c3cce301cfb512db2c7893db9e24a36e5862afb190b3abb53d7a13c",
+    "control-on-combined-fast": "063544af7c3cce301cfb512db2c7893db9e24a36e5862afb190b3abb53d7a13c"
+  },
+  "function_text_bytes": {
+    "chunk_sink_strips": {
+      "before": 912,
+      "after": 924
+    },
+    "chunk_lights": {
+      "before": 692,
+      "after": 696
+    }
+  },
+  "memory_operations": "Decline path loads a literal counter address, loads one32-bit counter, increments, then stores one32-bit counter. The store occupies the existing conditional branch delay slot. One4-byte BSS counter becomes retained; FAST_ONLY1 object remains identical. No cycle or whole-frame performance estimate is inferred from this excerpt.",
+  "disassembly_sha256": "49410863f32735c240f80b65d944f78c708d0a29a679c3e8d42ea95ac42d0cc7",
+  "final_target_receipt_sha256": "d7e0c9c63dd07820f8e20e2a1819f8afd8ecc082a3af80663c51cae153e7a8f0"
+}
