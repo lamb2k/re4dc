@@ -1,0 +1,208 @@
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include "ACTOR_IMPLEMENTATION"
+static int fixture_model_id=0x40;
+extern "C" int re4dc_actor_model_id(const void*) { return fixture_model_id; }
+extern "C" int re4dc_actor_obj_id(const void*) { return -1; }
+extern "C" void re4dc_log(const char*, ...) {}
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+extern "C" int re4dc_b28_model_kind(const void*) { return fixture_model_id; }
+#endif
+#if RE4DC_LEON_LIGHT_TOGGLE
+extern "C" unsigned re4dc_vi_retrace_count() { return 0; }
+#endif
+static SourceLighting source(unsigned count) {
+    SourceLighting s{};
+    s.enable=1; s.diffuse=2; s.attenuation=2; s.mask=(1U<<count)-1U;
+    s.ambient[0]=20; s.ambient[1]=30; s.ambient[2]=40;
+    s.normal_matrix[0]=s.normal_matrix[5]=s.normal_matrix[10]=1;
+    for(unsigned i=0;i<count;++i) {
+        s.lights[i].position[0]=float(i)*200;
+        s.lights[i].position[2]=100;
+        s.lights[i].color[0]=50+15*i;
+        s.lights[i].color[1]=40+11*i;
+        s.lights[i].color[2]=30+7*i;
+    }
+    return s;
+}
+static Re4dcModelPart part(SourceLighting& s) {
+    Re4dcModelPart p{};
+    p.lighting=&s; p.model=&s;
+    p.modelview[0]=p.modelview[5]=p.modelview[10]=1;
+    p.modelview[11]=-1000;
+    return p;
+}
+int main() {
+    Frame f{}; f.nq=1.0f/64.0f;
+    const float center[3]={0,0,0};
+    unsigned checks=0;
+    // Every former scalar/material/fourth-light decline is now a constant
+    // path. Immutable source, <=3 directions, no palette or normals supplied.
+    for(unsigned count=0;count<=8;++count)
+    for(unsigned diffuse=0;diffuse<=2;++diffuse)
+    for(unsigned vertex=0;vertex<4;++vertex) {
+        SourceLighting s=source(count); s.diffuse=diffuse;
+        s.ambient_vertex=vertex&1; s.material_vertex=vertex>>1;
+        s.material[0]=128; s.material[1]=64; s.tev_scale=.5f;
+        auto p=part(s); auto before=s;
+        Lights light;
+        assert(fast_only_lights(p,f,center,light));
+        assert(light.fast && light.constant && light.count<=3);
+        assert(!std::memcmp(&s,&before,sizeof(s)));
+        assert(re4dc_actor_light25_part_rgb(&p,center)==light.constant_rgb);
+        ++checks;
+    }
+    // No-light disabled records retain constant material*scale. Multiply
+    // handles each source colour identity and preserves vertex/material alpha.
+    for(unsigned alpha_mode : {0U,1U})
+    for(unsigned vertex_mode : {0U,1U,2U,3U}) {
+        SourceLighting s=source(0); s.enable=0;
+        s.ambient_vertex=vertex_mode&1; s.material_vertex=vertex_mode>>1;
+        unsigned char colours[12]={255,128,0,17, 64,255,128,99, 0,64,255,233};
+        auto p=part(s); p.colors=colours;
+        const SourceLighting before=s;
+        Lights light; assert(fast_only_lights(p,f,center,light));
+        pvr_vertex_t cache[3]{};
+        // Reverse/non-sequential colour indices catch accidental vi/ni use.
+        const u16 rec[12]={700,800,900,2, 701,801,901,0, 702,802,902,1};
+        Records r{rec,4,0,true};
+        Part e{p,f,{}, {}}; e.cache.v=cache; e.alpha=0x56000000U;
+        e.colors=alpha_mode?colours:nullptr;
+        pass_fast_only(e,light,r,3);
+        for(unsigned i=0;i<3;++i) {
+            const unsigned ci=rec[i*4+3];
+            unsigned rgb=light.constant_rgb;
+            if(vertex_mode) {
+                const unsigned char* c=colours+ci*4;
+                rgb=(((rgb>>16)&255U)*c[0]+127U)/255U<<16 |
+                    (((rgb>>8)&255U)*c[1]+127U)/255U<<8 |
+                    ((rgb&255U)*c[2]+127U)/255U;
+            }
+            assert(cache[i].argb==((alpha_mode?unsigned(colours[ci*4+3])<<24:e.alpha)|rgb));
+        }
+        assert(!std::memcmp(&s,&before,sizeof(s)));
+        ++checks;
+    }
+    // Every 8-bit input pair verifies rounded multiply and white identity.
+    for(unsigned a=0;a<256;++a) for(unsigned b=0;b<256;++b) {
+        const unsigned char colour[3]={static_cast<u8>(b),static_cast<u8>(b),static_cast<u8>(b)};
+        const unsigned gain=(a*65536U+127U)/255U;
+        const Re4dcActorLight25Colour part_colour{a*0x010101U,{gain,gain,gain}};
+        assert(re4dc_actor_light25_multiply(part_colour,colour)==((a*b+127U)/255U)*0x010101U);
+    }
+    checks+=65536;
+    // Keep gains above1 through a baked colour multiply: room tint1 + a .5
+    // flash must brighten baked64 to96 without Leon texture headroom.
+    {
+        SourceLighting s=source(1); s.material_vertex=1; s.diffuse=0;
+        s.ambient[0]=s.ambient[1]=s.ambient[2]=255;
+        s.lights[0].color[0]=s.lights[0].color[1]=s.lights[0].color[2]=128;
+        auto p=part(s);
+        unsigned char c[4]={64,64,64,73}; p.colors=c;
+        Lights light; assert(fast_only_lights(p,f,center,light));
+        assert(light.constant_rgb==0xFFFFFFU && light.colour25.gain[0]>65536U);
+        pvr_vertex_t cache[1]{}; const u16 rec[3]={0,0,0}; Records r{rec,3,0,false};
+        Part e{p,f,{}, {}}; e.cache.v=cache; e.colors=c;
+        pass_fast_only(e,light,r,1);
+        assert(cache[0].argb==0x49606060U);
+        Re4dcActorLight25Colour shared;
+        re4dc_actor_light25_part_colour(&p,center,&shared);
+        assert(re4dc_actor_light25_multiply(shared,c)==0x606060U);
+        const unsigned char white[3]={255,255,255};
+        assert(re4dc_actor_light25_multiply(shared,white)==0xFFFFFFU);
+        s.tev_scale=1.0e10f;
+        assert(fast_only_lights(p,f,center,light));
+        assert(light.colour25.gain[0]==0x00FFFFFFU);
+        assert(re4dc_actor_light25_multiply(light.colour25,white)==0xFFFFFFU);
+        ++checks;
+    }
+#if RE4DC_ACTOR_PROBE_LIGHT
+    // Leon keeps a live probe even with the flags/materials/normal basis that
+    // used to decline it. A light changing next drawn frame changes the RGB.
+    SourceLighting leon=source(1); leon.normal_matrix[3]=1.0e30f;
+    leon.material_vertex=1; leon.material[0]=64;
+    auto p=part(leon); p.modelview[0]=0; // singular normal basis is now irrelevant
+    ++frame_serial;
+    Lights cold; assert(fast_only_lights(p,f,center,cold));
+    assert(cold.probe && cold.constant && cold.count<=3);
+    Re4dcLightProbe probe{}; assert(re4dc_actor_light_probe(p.model,&probe));
+    const unsigned old=probe_stats.built;
+    Lights again; assert(fast_only_lights(p,f,center,again));
+    assert(again.constant_rgb==cold.constant_rgb && probe_stats.built==old);
+    leon.lights[0].color[0]=240; leon.lights[0].color[1]=220;
+    ++frame_serial;
+    Lights flash; assert(fast_only_lights(p,f,center,flash));
+    assert(flash.constant_rgb!=cold.constant_rgb && probe_stats.built==old+1);
+    assert(light25_stats.avoided[RE4DC_AL25_PROBE_DECLINE]>0);
+    assert(light25_stats.avoided[RE4DC_AL25_NORMAL_BASIS]>0);
+    ++checks;
+#endif
+#if RE4DC_ACTOR_PROBE_LIGHT >= 2
+    // Ganados keep their shared shadow probe fresh and use their own fill,
+    // even if tint/vertex flags would have declined the old probe admission.
+    {
+        fixture_model_id=0x12;
+        SourceLighting ganado=source(1); ganado.material_vertex=1; ganado.material[0]=64;
+        auto gp=part(ganado);
+        ++frame_serial;
+        Lights first; assert(fast_only_lights(gp,f,center,first));
+        assert(first.probe && first.constant);
+        Re4dcLightProbe initial{}; assert(re4dc_actor_light_probe(gp.model,&initial));
+        assert(initial.serial==frame_serial);
+        float expected=50.0f; // ambient20 + .6 * the single50-red light
+#if RE4DC_GANADO_LIT_FILL
+        if(ganlit_fill>0) expected+=.6f*float(ganlit_fill)/100.0f*70.0f;
+#endif
+        assert(std::fabs(float((first.constant_rgb>>16)&255U)-expected)<1.01f);
+        const unsigned built=probe_stats.built;
+        ganado.lights[0].color[0]=180;
+        ++frame_serial;
+        Lights next; assert(fast_only_lights(gp,f,center,next));
+        Re4dcLightProbe latest{}; assert(re4dc_actor_light_probe(gp.model,&latest));
+        assert(latest.serial==frame_serial && latest.color[0]>initial.color[0]);
+        assert(next.constant_rgb!=first.constant_rgb && probe_stats.built==built+1);
+#if RE4DC_GANADO_LIT_TOGGLE
+        re4dc_ganlit_set(0); ++frame_serial;
+        Lights no_probe; assert(fast_only_lights(gp,f,center,no_probe));
+        assert(!no_probe.probe && no_probe.constant && probe_stats.built==built+1);
+        re4dc_ganlit_set(9);
+#endif
+        fixture_model_id=0x40;
+        ++checks;
+    }
+#endif
+    // Newly merged BARN28 diagnostics must count FAST_ONLY dispatch as fast;
+    // CAP's per-vertex approximation must remain bypassed even without its
+    // GIGANTE dependency. The production sites use this same B28_NOTE wrapper.
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    {
+        SourceLighting barn=source(8); barn.material_vertex=1; barn.diffuse=0;
+        auto bp=part(barn); Lights light;
+        assert(B28_NOTE(bp,fast_only_lights(bp,f,center,light)));
+        assert(light.fast && light.constant && light.count<=3);
+        assert(b28::nrows==1 && b28::rows[0].fast_parts==1);
+        assert(b28::rows[0].parts==0 && b28::rows[0].verts==0);
+        assert(b28::rows[0].reason==0 && b28::cur==0xffffffffU);
+        ++checks;
+    }
+#endif
+    Re4dcActorLight25Stats out{};
+    re4dc_actor_light25_snapshot(&out);
+    assert(out.parts>0 && out.fallback_parts==0);
+    assert(out.avoided[RE4DC_AL25_VERTEX_COLOUR]>0);
+    assert(out.avoided[RE4DC_AL25_DIFFUSE_SCALE]>0);
+    assert(out.avoided[RE4DC_AL25_LIGHT_OVERFLOW]>0);
+    assert(out.flat_vertices>0 && out.multiply_vertices>0);
+    assert(stats.slow_light_vertices==0);
+    // Exercise the invariant guard itself; it is not a hard-coded zero.
+    SourceLighting s=source(0); auto p2=part(s); Lights invalid{};
+    invalid.source=&s;
+    pvr_vertex_t cache[1]{}; const u16 rec[3]={0,0,0}; Records r{rec,3,0,false};
+    Part e{p2,f,{}, {}}; e.cache.v=cache;
+    pass_fast_only(e,invalid,r,1);
+    assert(light25_stats.fallback_parts==1 && stats.slow_light_vertices==0);
+    unsigned sat=~0U-1U; light25_add(sat,8); assert(sat==~0U);
+    std::printf("PASS ACTOR_LIGHT_FAST_ONLY %u cases; normal dispatch fallback=0; injected invariant violation=1\n",checks);
+}

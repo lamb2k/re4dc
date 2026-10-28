@@ -42,6 +42,12 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
+#ifndef RE4DC_ACTOR_LIGHT_FAST_ONLY
+#define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.h"
+#endif
 #ifndef RE4DC_ACTOR_CLIP_REUSE
 #define RE4DC_ACTOR_CLIP_REUSE 0
 #endif
@@ -1861,12 +1867,19 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
                     o.frame = ~0U; o.skin_positions = o.skin_dirs = nullptr; o.skin_ready = o.dirs_ready = nullptr;
                 }
             workspace_end = workspace_bytes;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+            f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
+            if (f.skin_positions) {
+                f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
+                std::memset(f.skin_ready, 0, entries);
+#else
             f.skin_positions = static_cast<float*>(frame_table(entries * (28U * 4U + 2U)));
             if (f.skin_positions) {
                 f.skin_dirs = f.skin_positions + entries * 16U;
                 f.skin_ready = reinterpret_cast<u8*>(f.skin_dirs + entries * 12U);
                 f.dirs_ready = f.skin_ready + entries;
                 std::memset(f.skin_ready, 0, entries * 2U);
+#endif
 #if RE4DC_AVK
                 f.avk_all = false;
 #endif
@@ -1978,6 +1991,9 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
 // in columns 0..2 and ambient x scale in column 3. Same per-object
 // approximation (evaluated at the part centre) as native_actor.cpp.
 struct Lights {
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    Re4dcActorLight25Colour colour25;
+#endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
     // Every successful fold (including the constant/probe paths) calls lights_reset before reading these.
     // Probe declines fall through to build_lights, which also resets. Keep the fields not reset below initialized.
@@ -1996,19 +2012,21 @@ struct Lights {
     alignas(8) float color[16]{};
     const SourceLighting* source = nullptr;
 #endif
-#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST && !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #error STATUE_LIGHTS=2 needs ACTOR_EXACT_FAST (the exact evaluator adds the ambient share)
 #endif
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
     bool exact_ready = false;  // STATUE_LIGHTS=2: build_lights already filled the prepared set (strongest 3)
     float extra[3]{};          // STATUE_LIGHTS=2: the dropped lights' share, added to the ambient start
 #endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #if RE4DC_ACTOR_NO_CLEAR
     // ACTOR_NO_CLEAR: the exact path's prepared lights are not default-initialised (~0.4 KB per Lights): they are
     // read only by pass_lights_exact, after a fold that returned false, and the callers assign them on that return.
     union PreparedSlot { re4dc::render::PreparedSourceLights v; PreparedSlot() {} } prepared_slot;
 #else
     re4dc::render::PreparedSourceLights prepared;
+#endif
 #endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
     float view_dot[3];
@@ -2088,7 +2106,7 @@ inline float leon_gain(const SourceLighting& S) {
 #ifndef RE4DC_ACTOR_LIGHT_CAP
 #define RE4DC_ACTOR_LIGHT_CAP 0
 #endif
-#if RE4DC_ACTOR_LIGHT_CAP && !RE4DC_GIGANTE_LIGHTS
+#if RE4DC_ACTOR_LIGHT_CAP && !RE4DC_GIGANTE_LIGHTS && !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #error ACTOR_LIGHT_CAP needs GIGANTE_LIGHTS (the light fold)
 #endif
 #ifndef RE4DC_LEON_LIGHT_FILL
@@ -2149,6 +2167,9 @@ bool leon_part_normal(const float m[12], float N[12]) {
 // vertices. One B28L line per row every 300 actor frames.
 }  // namespace
 extern "C" int re4dc_b28_model_kind(const void* model);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
 namespace {
 namespace b28 {
 struct Row { int id, obj; unsigned reason, parts, verts, lights_max, fast_parts; };
@@ -2185,6 +2206,7 @@ void window(unsigned frame) {
 #define B28_WHY(x) ((void) 0)
 #define B28_NOTE(p, v) (v)
 #endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3], Lights& L) {
     const SourceLighting& S = *p.lighting;
 #if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
@@ -2384,6 +2406,7 @@ void flat_fallback(const Re4dcModelPart& p, Lights& L) {
 #define RE4DC_CAP_EXACT(p, c, L) ((void) 0)
 #endif
 
+#endif
 #if RE4DC_ACTOR_PROBE_LIGHT
 // ACTOR_PROBE_LIGHT=1/2 (crowd.mk; render only; default 0): one light probe per actor per frame. The GX light set that
 // LightSetModel selected for the actor (the record LEON_SOURCE_LIGHT / PS2_GANADO_LIT capture, dynamic lights
@@ -2608,6 +2631,7 @@ extern "C" int re4dc_actor_light_probe(const void* model, Re4dcLightProbe* out) 
     return 1;
 }
 namespace {
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // The part's light fold: the actor's probe when it applies, else build_lights.
 bool part_lights(const Re4dcModelPart& p, const Frame& f, const float center[3], Lights& L) {
 #if RE4DC_LEON_LIGHT_TOGGLE
@@ -2634,10 +2658,18 @@ bool part_lights(const Re4dcModelPart& p, const Frame& f, const float center[3],
     return build_lights(p, f, center, L);
 }
 #define RE4DC_PART_LIGHTS part_lights
+#endif
 #else
 #define RE4DC_PART_LIGHTS build_lights
 #endif
 
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.inc"
+#undef RE4DC_PART_LIGHTS
+#define RE4DC_PART_LIGHTS fast_only_lights
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Light directions of palette entry i (skinned normals): R_i^T l, w = 0,
 // cached per entry for the current part's light set.
 const float* skin_light_dirs(Frame& f, const Lights& L, unsigned i, float* fallback) {
@@ -2683,6 +2715,7 @@ void probe_dirs_all(Frame& f, const Lights& L) {
 }
 #endif
 
+#endif
 // ----------------------------------------------------------- the meshlet --
 // Outcode bits, built MSB-first by the SH4 kernel's rotcl chain (ACTOR_VTX_KERNEL: the order of
 // avk_sh4.S's chain, near first; ACTOR_POS_ASM combines its two chains to match).
@@ -2755,6 +2788,7 @@ unsigned positions_c(const u8* rec, unsigned rs, unsigned n, const u8* pos, unsi
     return i;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Pass 2 (fast lights), portable. XMTRX holds the colour matrix. Small (s8)
 // normals only; with check, stops at the first record whose normal palette
 // index (byte 3) != palette.
@@ -2777,6 +2811,7 @@ unsigned lights_c(const u8* rec, unsigned rs, unsigned n, const u8* nrm, unsigne
     return i;
 }
 
+#endif
 #if defined(__sh__) && RE4DC_ACTOR_ASM
 // SH4 pass 1: one dynarec block per record (no calls, no spills), constants
 // resident in fr7..fr15, stores through one pre-decrementing pointer.
@@ -2874,6 +2909,7 @@ unsigned positions_asm(const u8* rec, unsigned rs, unsigned n, const u8* pos, in
     return n - left;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // SH4 pass 2 (fast lights): fipr per light (fv8, fv12 resident; direction 2
 // reloaded into fv0), m = d + |d|, colour by ftrv, clamp, pack.
 #define ACTOR_NRM_ADDR4 "shll2   r0\n\t"
@@ -2950,6 +2986,7 @@ unsigned lights_asm(const u8* rec, unsigned rs, unsigned n, const u8* nrm, unsig
         __asm__ __volatile__(ACTOR_LIGHT_ASM(ACTOR_NRM_ADDR3, "") ACTOR_LIGHT_OPERANDS);
     return n - left;
 }
+#endif
 #endif
 
 // One strip starting at index: corner count and AND/OR of its outcodes.
@@ -4070,6 +4107,7 @@ void avk_build_all(Frame& f) {
     for (unsigned j = 0; j < entries; ++j)
         if (!f.skin_ready[j]) { skin_position_matrix(f, j, f.skin_positions + j * 16U); f.skin_ready[j] = 1; }
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Skinned light directions used by records [i, n) and not built yet (skin_light_dirs).
 void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, unsigned n) {
     alignas(8) float temp[12];
@@ -4081,6 +4119,7 @@ void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, uns
         if (!f.dirs_ready[palette < f.palette_entries ? palette : 0U]) skin_light_dirs(f, L, palette, temp);
     }
 }
+#endif
 unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv) {
     Frame& f = e.f;
     const bool skin = f.mode == kSkin;
@@ -4150,6 +4189,7 @@ inline void avk_fold(const u8* oc, unsigned n, unsigned& all, unsigned& any) {
     for (; j < n; ++j) { a &= oc[j]; o |= oc[j]; }
     all &= a & 255U; any |= o & 255U;
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #if RE4DC_ACTOR_LIGHT_N16
 // ACTOR_LIGHT_N16: pass 2 for s16 normals (normal_shift 14: the owner path's parts, skinned stride 8, rigid
 // stride 8 or 6) on the n16 kernels, with the s8 kernels' contract: the same fold (L.dir / skin_dirs, built by
@@ -4339,6 +4379,7 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
         avk_build_dirs(f, L, r, i, n);
     }
 }
+#endif
 #if RE4DC_AVK == 2
 // Check build: the kernels run first, then the previous path (positions_asm / positions_c,
 // lights_asm) recomputes the same records into the arrays below and every word is compared before
@@ -4388,7 +4429,9 @@ void avk_check_emit(const pvr_vertex_t* cache, const u8* index, unsigned n) {
 }
 void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv, unsigned& all,
                     unsigned& any);
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n);
+#endif
 void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, const PosConst& k, bool s16_uv,
                          unsigned all, unsigned any) {
     AvkCheck& c = avk_chk;
@@ -4456,6 +4499,7 @@ void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, c
                   avk_build_mc);
     }
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 void avk_check_lights(Part& e, const Lights& L, const Records& r, unsigned n, unsigned done) {
     AvkCheck& c = avk_chk;
     if (!done) { ++c.light_other; return; }
@@ -4479,6 +4523,7 @@ void avk_check_lights(Part& e, const Lights& L, const Records& r, unsigned n, un
         }
     }
 }
+#endif
 #endif
 #endif
 
@@ -4532,6 +4577,32 @@ void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bo
     stats.position_transforms += n;
 }
 
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+// Each part's RGB was computed once. This loop never reads normal/light/palette
+// data. The invariant guard is live, and catches any future nonconstant dispatch.
+void pass_fast_only(Part& e, const Lights& L, const Records& r, unsigned n) {
+    if (!L.constant || !L.fast) light25_add(light25_stats.fallback_parts);
+    const bool multiply = e.p.colors && (L.source->ambient_vertex || L.source->material_vertex);
+    light25_add(multiply ? light25_stats.multiply_vertices : light25_stats.flat_vertices, n);
+    const u32 rgb = L.constant_rgb;
+    if (!multiply && !e.colors) {
+        const u32 argb = e.alpha | rgb;
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+        e.flat_colors(n, argb);
+#else
+        for (unsigned i = 0; i < n; ++i) e.cache.v[i].argb = argb;
+#endif
+        return;
+    }
+    for (unsigned i = 0; i < n; ++i) {
+        const unsigned ci = r.ci(i);
+        const u32 alpha = e.colors ? u32(e.colors[ci * 4U + 3U]) << 24 : e.alpha;
+        e.cache.v[i].argb = alpha | (multiply ? re4dc_actor_light25_multiply(L.colour25, e.p.colors + ci * 4U) : rgb);
+    }
+}
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Pass 2 (fast directional fold) over a meshlet.
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     Frame& f = e.f;
@@ -4730,6 +4801,7 @@ void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
     stats.slow_light_vertices += n;
 }
 
+#endif
 // ------------------------------------------------------------- prelit --
 // Records of a kHasBake part carry an RGB565 colour lit with BakeBlock's
 // fold. A draw whose fold matches (within kBakeTolerance of each light's
@@ -4766,6 +4838,7 @@ bool near_vec(const float* a, const float* b, unsigned n, float scale) {
     return true;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Returns the use for this draw; scale[c] = 8.8 fixed per channel (kBakeScaled).
 BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs, unsigned scale[3]) {
     u8* base = reinterpret_cast<u8*>(const_cast<BlobHeader*>(&b));
@@ -4846,6 +4919,7 @@ void pass_baked(Part& e, const Records& r, unsigned n, const unsigned* scale) {
     }
 }
 
+#endif
 // LOD: the coarsest level whose error, projected at the bind-pose bounding
 // sphere's nearest depth, is at most lod_tau pixels (0: always level 0).
 #ifndef RE4DC_ACTOR_LOD_PX
@@ -5075,8 +5149,13 @@ unsigned add_bake_field(u8* blob, unsigned size, unsigned capacity) {
 // compares the fold (and a skinned part's pose) with the one they were baked
 // with and rebakes when it moved, so a later motion stays correct.
 bool prelit_candidate(const Re4dcModelPart& p) {
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    (void)p;
+    return false;
+#else
     return kPrelit && p.blend == 0 && !(p.alpha_state & 256) && p.lighting->enable && !p.lighting->ambient_vertex &&
            !p.lighting->material_vertex && re4dc_actor_model_prelit(p.model, p.info) != 0;
+#endif
 }
 
 // A part of a lazily deferred info (no arrays yet) qualifies only if it will
@@ -5662,6 +5741,26 @@ extern "C" const void* re4dc_actor_accessory_parent(const void* model);  // mode
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
 extern "C" void re4dc_callprof_part(const void* model, unsigned path);  // model_bridge.cpp
 #endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+extern "C" void re4dc_actor_light25_snapshot(Re4dcActorLight25Stats* out) {
+    if (out) *out = light25_stats;
+}
+extern "C" void re4dc_actor_light25_part_colour(const Re4dcModelPart* p, const float center[3], Re4dcActorLight25Colour* out) {
+    if (!out) return;
+    if (!p || !p->lighting) { *out = {0xFFFFFFU, {65536U, 65536U, 65536U}}; return; }
+    static const float origin[3] = {0.0f, 0.0f, 0.0f};
+    const Frame unused{};
+    Lights lights;
+    fast_only_lights(*p, unused, center ? center : origin, lights);
+    if (!lights.constant || !lights.fast) light25_add(light25_stats.fallback_parts);
+    *out = lights.colour25;
+}
+extern "C" unsigned re4dc_actor_light25_part_rgb(const Re4dcModelPart* p, const float center[3]) {
+    Re4dcActorLight25Colour colour;
+    re4dc_actor_light25_part_colour(p, center, &colour);
+    return colour.rgb;
+}
+#endif
 extern "C" int re4dc_actor_stream_encoded(const unsigned char* stream,unsigned bytes) {
     return stream && bytes>=sizeof(BlobHeader) && stream[0]==kMagic && stream[1]==kVersion;
 }
@@ -6177,6 +6276,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
+#else
     if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, lights))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lights.exact_ready)
@@ -6184,6 +6286,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
         RE4DC_CAP_EXACT(p, blob->center, lights);
     }
+#endif
 #if !RE4DC_ACTOR_SETUP_LEAN
     lights.source = p.lighting;
 #endif
@@ -6209,6 +6312,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
     // directions from nearby part centres) keep the entries already built.
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -6221,6 +6325,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         }
     }
+#endif
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const PosConst k{0.0f, uv_scale * e.packet.u_scale, p.uv_offset[0] * e.packet.u_scale,
@@ -6228,7 +6333,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
-#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA && !RE4DC_ACTOR_LIGHT_FAST_ONLY
     const bool retain_flat = lights.constant && !e.colors;
     u32 flat_argb = 0;
     if (retain_flat) {
@@ -6251,9 +6356,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
     const u8* records = base + blob->rec4 * 4U;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    constexpr BakeUse bake = kBakeNone;
+#else
     unsigned bake_scale[3];
     const BakeUse bake = kPrelit && (blob->flags & kHasBake) && blob->bake4 && lights.fast && !lights.constant && !e.colors
         ? bake_prepare(e, lights, *blob, rs, bake_scale) : kBakeNone;
+#endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
@@ -6308,6 +6417,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         }
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        pass_fast_only(e, lights, r, nv);
+#else
         if (lights.constant) {
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
@@ -6360,7 +6472,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
         if (bake == kBakeNone) stats.normals_lit += nv;
+#endif
         if (any & kOcNear) ++stats.meshlets_clipped;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
         {
@@ -6527,12 +6643,19 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         }
     workspace_end = workspace_bytes;
     const unsigned entries = se.entries;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
+    if (f.skin_positions) {
+        f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
+        std::memset(f.skin_ready, 0, entries);
+#else
     f.skin_positions = static_cast<float*>(frame_table(entries * (28U * 4U + 2U)));
     if (f.skin_positions) {
         f.skin_dirs = f.skin_positions + entries * 16U;
         f.skin_ready = reinterpret_cast<u8*>(f.skin_dirs + entries * 12U);
         f.dirs_ready = f.skin_ready + entries;
         std::memset(f.skin_ready, 0, entries * 2U);
+#endif
 #if RE4DC_AVK
         f.avk_all = false;
 #endif
@@ -6864,6 +6987,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     G1PC_PART(p, true);
     if (!constant_source || !w.lights_ready || w.lights.source != p.lighting) {
         G1PC_LIGHT(p, f, blob->center);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        B28_NOTE(p, fast_only_lights(p, f, blob->center, *lp));
+#else
         if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, *lp))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lp->exact_ready)
@@ -6871,6 +6997,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
         RE4DC_CAP_EXACT(p, blob->center, *lp);
         }
+#endif
 #if !RE4DC_ACTOR_SETUP_LEAN
         lp->source = p.lighting;
 #endif
@@ -6897,6 +7024,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         lights.constant = true;  // never the window's record: lights.fast is false for constant lighting
         lights.constant_rgb = part_colour(lights);
     }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -6909,6 +7037,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
         }
     }
+#endif
     APROF_STOP(aprof_lit0);
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
@@ -6917,7 +7046,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
-#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA && !RE4DC_ACTOR_LIGHT_FAST_ONLY
     const bool retain_flat = lights.constant && !e.colors;
     u32 flat_argb = 0;
     if (retain_flat) {
@@ -6936,9 +7065,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
     const u8* records = base + blob->rec4 * 4U;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    constexpr BakeUse bake = kBakeNone;
+#else
     unsigned bake_scale[3];
     const BakeUse bake = kPrelit && (blob->flags & kHasBake) && blob->bake4 && lights.fast && !lights.constant && !e.colors
         ? bake_prepare(e, lights, *blob, rs, bake_scale) : kBakeNone;
+#endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
@@ -7007,6 +7140,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         }
         e.prime(nv);
         APROF_SPAN(aprof_lit, APROF_LIT);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        pass_fast_only(e, lights, r, nv);
+#else
         if (lights.constant) {
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
@@ -7057,8 +7193,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+
+#endif
         APROF_STOP(aprof_lit);
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
         if (bake == kBakeNone) stats.normals_lit += nv;
+#endif
         if (any & kOcNear) ++stats.meshlets_clipped;
         APROF_SPAN(aprof_pack, APROF_PACK);
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK

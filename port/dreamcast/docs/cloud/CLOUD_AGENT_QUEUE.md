@@ -313,6 +313,75 @@ Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here 
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
 
+
+### 2026-10-28: Build 25 hand-back (`codex/actor-light-fast-only-20261028`)
+
+Base `7acd7d8f` (`origin/t15/int`, including barn28 and link28). `ACTOR_LIGHT_FAST_ONLY=1`, default 0,
+now uses one bounded part colour/gain path across native actors, generic
+model admission fallbacks and legacy static-package first-light preparation.
+Leon and Ganado live/shared probes remain available; other parts keep at most
+three significant lights plus ambient. Old directional/exact vertex-light
+passes and runtime rebaking preprocess out. Source/baked RGB uses a prepared
+Q16 gain and final clamp; a production-code control proves baked 64 becomes
+96 under room tint 1 + flash 0.5, preserving alpha 73. No new production
+assembly, linker work or runtime allocation. Release defaults are unchanged.
+
+`AL25 fallback=0 MUST=0` is a live invariant on Diagnostics and QA_LINK rows.
+Former decline bins are separate, overlapping lifetime totals, not actual
+fallbacks. Normal fixtures keep fallback 0; an injected bad dispatch increments
+it to 1 without reaching a vertex-light evaluator. QA framing passes 14
+controls, maximum tested datagram 1,128 B. The separate default-off
+`--bake-static-light` tool emits source/rig-bound RGB palettes and corner
+mappings; synthetic Leon/em12 examples and the private pack adapter contract
+are included. No game assets are committed.
+
+The [full report](BUILD25_ACTOR_LIGHT_FAST_ONLY_20261028.md) and
+[receipts](../../tools/cloud/build25/receipts) record 32 complete SH-4
+preprocessed/object OFF identity comparisons rerun on the final base, six
+enabled compositions and 15 compiled-light cost cases. Four production-TU
+host profiles pass 65,653 / 65,654 / 65,655 / 65,654 controls, also ASan/UBSan;
+the bake passes 14 test methods including 250 BVH/full-scan rays. CAP/BARN28
+composition with the old GIGANTE prerequisite off is covered: fast-only mode
+takes precedence and BARN28 slow parts/vertices stay zero. Full private
+game/image and console gates remain local.
+
+Per 128-input piece, the compiled old material-scale exact pass versus the
+new flat-RGB/source-alpha pass costs **100,853 / 101,690 → 3,987 / 4,204
+cycles (warm / cold I)**; cached loads/stores **20,471 / 3,060 → 683 / 178**;
+unique demanded 32-byte lines **267 → 191**, line visits **23,531 → 861**.
+The new colour pass reads no position/normal bytes. Setup is priced separately
+in the report, along with vertex-colour/eight-light/probe cases. These are
+perfect-D-cache model/address observations, not hardware misses or timings.
+Four QA objects shrink executable sections 13,916 B and allocated sections
+12,834 B; BSS grows 1,056 B. Compiler stack frames: light setup 520 → 268 B,
+vertex pass 716 → 44 B. `Lights` is 568 → 168 B; skin scratch saves 49 B per
+palette entry before rounding. Final linked-image/heap placement is unmeasured.
+
+**MODELLED whole-frame sensitivity:** ASSUMED 30 ms of other work plus 42
+copies of the 128-input material-scale fixture at 200 MHz gives 51.38598 →
+31.23291 ms (lighting 21.38598 → 1.23291 ms). This is an intentionally
+exact-fallback-heavy synthetic frame, not a barn/r101 estimate, and does not
+borrow the queue's 47.8 ms baseline. Offline-tool-only runtime delta is zero.
+
+**Changed outputs / owner questions:**
+
+1. Please run the matching console barn/yard and chapter 1–2 views with the
+   current recipe, retain exact image/asset hashes, and verify fallback stays
+   zero across Leon, Ganados, partners, bosses, props and generic admission
+   paths. Lighting is now uniform within a part; bounded/residual light,
+   diffuse/material and Q16 colour differences need stills plus the local
+   gameplay-equivalence gate. Legacy static first-light appearance changes
+   too; its old first-draw freeze remains, while PS2 prelit worlds are unchanged.
+2. Which private Leon/em12 packing entry point will consume the RGB/corner
+   dataset? Preserve source alpha, rig and source-info/UV seams; use
+   `material_vertex=1`, `ambient_vertex=0` and room tint plus flash/fire without
+   applying baked static lamps again. Report final resident colour/index bytes
+   and check flash, animation and shadow direction on the actual packed models.
+3. Please run full OFF image identity, enabled private probe-2 composition,
+   s30/heap and console look/timing gates. Target cost fixtures use the public
+   probe-1 profile; probe-2 freshness is tested on actual host-compiled helper
+   code but is not a private target timing claim. Claude owns merges/enabling.
+
 ### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
 
 Based on `a9fa0b8850f762acbf3ce49e86d7c24394df894b`. The
