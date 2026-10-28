@@ -45,6 +45,7 @@
 extern "C" {
 void re4dc_log(const char* fmt, ...);
 void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));  // os.cpp
+int _ppp_enter_phase(int phase);   // libppp ppp_internal.h (compiled into the game by qalink.mk)
 int net_udp_init(void);   // kernel/net/net_udp.c (KOS internal; registers UDP with fs_socket)
 }
 
@@ -275,9 +276,13 @@ void hang_up() {
     g_tx.clear();         // nothing more to send
     modem_shutdown();     // the line drops: libppp's blocked modem write returns
     if (s >= 0) close(s);
+    // ppp_shutdown only shuts the protocols down (LCP's terminate waits for a peer a dropped line never brings back);
+    // libppp's thread loops until the phase is DEAD (Flycast, link28: it never left, the old code then reported OFF
+    // with the thread alive and every later start refused). Enter DEAD first, let the thread leave, then shut down.
+    if (g_ppp_init) _ppp_enter_phase(PPP_PHASE_DEAD);
+    for (int i = 0; i < 400 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
     if (g_ppp_init) { ppp_shutdown(); g_ppp_init = false; }
     re4dc_qalink_timer_down();
-    for (int i = 0; i < 400 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
     if (g_ppp_running) {
         kthread_t* t = g_ppp_thd;
         if (t) thd_destroy(t);
