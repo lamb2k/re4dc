@@ -3436,6 +3436,21 @@ void ftObj(GXTexObj* o, const FtRec& r)
         w[k] = k < 4 ? r.w[k] : 0;
     }
 }
+FtRec ftRecord(TEXHeader* h, u8 wrap)
+{
+    // Preserve the source's header writes even when the packed object matches.
+    // Another model can share this header through its added TPL.
+    if (wrap) {
+        h->wrapT = 1;
+        h->wrapS = 1;
+    }
+    FtRec r;
+    r.w[0] = (u32) h->data;
+    r.w[1] = ((u32) (u16) h->width << 16) | (u16) h->height;
+    r.w[2] = (u32) h->format;
+    r.w[3] = ((u32) h->wrapS << 8) | (u32) h->wrapT | ((u32) (u8) (h->minLOD == h->maxLOD ? 0 : 1) << 16);
+    return r;
+}
 const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
 {
     const u32 room = ((u32) pG->stage_no << 8) | pG->room_no;
@@ -3452,6 +3467,27 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
     for (u32 k = 0; k < ft_nkeys; k++) {
         const FtKey& key = ft_keys[k];
         if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap && key.data0 == data0) {
+            // Pointer identity does not certify the remaining descriptors or
+            // their current packed fields after same-room reuse/relocation.
+            bool same = true;
+            for (u32 i = 0; i < n; i++) {
+                const FtRec now = ftRecord(ftDesc(info, i)->textureHeader, wrap);
+                const FtRec& old = ft_recs[key.first + i];
+                if (now.w[0] != old.w[0] || now.w[1] != old.w[1] || now.w[2] != old.w[2] || now.w[3] != old.w[3]) {
+                    same = false;
+                    break;
+                }
+            }
+            if (!same) {
+                // The preceding symbolic set may use these records. Materialize
+                // it before refreshing in place so its tail/remap stay intact.
+                frontTexFlush();
+                for (u32 i = 0; i < n; i++) {
+                    ft_recs[key.first + i] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
+                }
+                ++ft_builds;
+                return &key;
+            }
             ++ft_hits;
             return &key;
         }
@@ -3469,17 +3505,7 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
     key.count = (u8) n;
     key.wrap = wrap;
     for (u32 i = 0; i < n; i++) {
-        TEXDescriptor* td = ftDesc(info, i);
-        TEXHeader* h = td->textureHeader;
-        if (wrap) {
-            h->wrapT = 1;
-            h->wrapS = 1;
-        }
-        FtRec& r = ft_recs[ft_nrecs++];
-        r.w[0] = (u32) h->data;
-        r.w[1] = ((u32) (u16) h->width << 16) | (u16) h->height;
-        r.w[2] = (u32) h->format;
-        r.w[3] = ((u32) h->wrapS << 8) | (u32) h->wrapT | ((u32) (u8) (h->minLOD == h->maxLOD ? 0 : 1) << 16);
+        ft_recs[ft_nrecs++] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
     }
     if (wrap) {
         // The fix-up rewrote the headers: sets of this TPL cached without it are stale.
@@ -3559,6 +3585,8 @@ static void frontTexFlush()
     ++ft_flushes;
 }
 #endif
+// Keep the original source diagnostic locations after the optional cache body.
+#line 2302 "D:/Bio4/Prog/trans.cpp"
 static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
 {
     GxWork* gx = GXWORK();

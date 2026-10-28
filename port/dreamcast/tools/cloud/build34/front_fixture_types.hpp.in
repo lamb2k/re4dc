@@ -1,0 +1,51 @@
+// External edge types. TPL, GxWork and cModelExt layouts and implementation
+// bodies are taken from production. Partial model/global stand-ins retain
+// every accessed SH-4 member offset; the host uses wider native pointers.
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+using u8=std::uint8_t;using u16=std::uint16_t;using u32=std::uint32_t;
+using s32=std::int32_t;using f32=float;
+#define TYPES_H
+#include "@TPL_HEADER@"
+struct GXTexObj {u32 w[8];};
+using Mtx=float[3][4];
+struct GxStageWork {u32 words[3];};
+@GX_WORK@
+struct EmLightArea {u8 bytes[16];};
+struct cTexChg {u8 num;u8 tbl[510];void move(GXTexObj*);};
+@MODEL_EXT@
+struct cModel {};
+#define MODEL_EXT(m) ((cModelExt*)(m))
+struct ModelData {u8 unused[0x20];u32 flags;};
+struct cModelInfo {
+    u8 unused0[0x10];void* tpl_addr;
+    u8 unused1[0x11c-0x14];u32 nAddTex;TEXPalette* pAddTpl;
+};
+struct FixtureGame {
+    u8 unused0[0x184];GxWork gxStage;
+    u8 unused1[0x4f9c-0x184-sizeof(GxWork)];u8 stage_no,room_no;
+    u8 unused2[0x51e4-0x4f9e];u32 Frame_cnt;
+};
+static FixtureGame game;
+FixtureGame* pG=&game;
+#define GXWORK() ((GxWork*)&pG->gxStage)
+static void re4dc_log(const char*,...) {}
+static void frontTexFlush();
+@TEX_GET@
+@GX_INIT@
+@SWAP@
+@CACHE@
+static void source_init(cModel* m,cModelInfo* info,ModelData* d,GxWork* gx) {
+    u32 i;
+    @SOURCE_LOOP@
+}
+#ifdef __sh__
+static_assert(sizeof(TEXHeader)==36 && sizeof(TEXDescriptor)==8 && sizeof(TEXPalette)==12);
+static_assert(offsetof(TEXHeader,data)==8 && offsetof(TEXHeader,minLOD)==33);
+static_assert(offsetof(cModelInfo,tpl_addr)==0x10 && offsetof(cModelInfo,nAddTex)==0x11c && offsetof(cModelInfo,pAddTpl)==0x120);
+static_assert(offsetof(ModelData,flags)==0x20 && offsetof(cModelExt,pTexChg)==0x31c);
+static_assert(offsetof(GxWork,texObj)==0x2e8c && offsetof(FixtureGame,gxStage)==0x184);
+static_assert(offsetof(FixtureGame,stage_no)==0x4f9c && offsetof(FixtureGame,Frame_cnt)==0x51e4);
+static_assert(sizeof(FtKey)==16 && sizeof(FtRec)==16);
+#endif

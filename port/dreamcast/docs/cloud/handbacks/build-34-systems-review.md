@@ -1,5 +1,7 @@
 # Build 34: six systems switches reviewed on 2026-10-28
 
+This is the step-1 source/history snapshot. The qualified step-2 repairs and current commands are in [build-34.md](build-34.md).
+
 Audit baseline: `36643bf8ab5a78c581274f28eca702ae8aa48330` on `codex/offknob-review-20261028`. Repository paths below are relative to its root. Commit dates are the recorded author dates, including their original UTC offset. Historical timing and emulator receipts are not physical-console results. A default-zero introduction is not described as an enable-then-disable event unless recipe history establishes one.
 
 ## Decisions

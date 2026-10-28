@@ -1,0 +1,222 @@
+{
+  "status": "PASS",
+  "sanitize": true,
+  "fast_math": true,
+  "variants": [
+    {
+      "kind": "scn21",
+      "label": "c1-p0-ab0-gc0",
+      "cases": 881,
+      "checks": 11863,
+      "cone": 1,
+      "piece": 0,
+      "ab": 0,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p0-ab0-gc1",
+      "cases": 882,
+      "checks": 12761,
+      "cone": 1,
+      "piece": 0,
+      "ab": 0,
+      "gc": 1
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p0-ab1-gc0",
+      "cases": 882,
+      "checks": 11876,
+      "cone": 1,
+      "piece": 0,
+      "ab": 1,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p0-ab1-gc1",
+      "cases": 883,
+      "checks": 12776,
+      "cone": 1,
+      "piece": 0,
+      "ab": 1,
+      "gc": 1
+    },
+    {
+      "kind": "scn21",
+      "label": "c0-p1-ab0-gc0",
+      "cases": 60,
+      "checks": 805,
+      "cone": 0,
+      "piece": 1,
+      "ab": 0,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c0-p1-ab0-gc1",
+      "cases": 61,
+      "checks": 888,
+      "cone": 0,
+      "piece": 1,
+      "ab": 0,
+      "gc": 1
+    },
+    {
+      "kind": "scn21",
+      "label": "c0-p1-ab1-gc0",
+      "cases": 61,
+      "checks": 818,
+      "cone": 0,
+      "piece": 1,
+      "ab": 1,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c0-p1-ab1-gc1",
+      "cases": 62,
+      "checks": 903,
+      "cone": 0,
+      "piece": 1,
+      "ab": 1,
+      "gc": 1
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p1-ab0-gc0",
+      "cases": 915,
+      "checks": 21062,
+      "cone": 1,
+      "piece": 1,
+      "ab": 0,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p1-ab0-gc1",
+      "cases": 916,
+      "checks": 22005,
+      "cone": 1,
+      "piece": 1,
+      "ab": 0,
+      "gc": 1
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p1-ab1-gc0",
+      "cases": 916,
+      "checks": 21077,
+      "cone": 1,
+      "piece": 1,
+      "ab": 1,
+      "gc": 0
+    },
+    {
+      "kind": "scn21",
+      "label": "c1-p1-ab1-gc1",
+      "cases": 917,
+      "checks": 22023,
+      "cone": 1,
+      "piece": 1,
+      "ab": 1,
+      "gc": 1
+    },
+    {
+      "kind": "counter",
+      "label": "be0-fast0-audit0",
+      "cases": 24,
+      "checks": 192,
+      "backend": 0,
+      "fast_only": 0,
+      "audit": 0
+    },
+    {
+      "kind": "counter",
+      "label": "be0-fast0-audit1",
+      "cases": 24,
+      "checks": 192,
+      "backend": 0,
+      "fast_only": 0,
+      "audit": 1
+    },
+    {
+      "kind": "counter",
+      "label": "be0-fast1-audit0",
+      "cases": 24,
+      "checks": 192,
+      "backend": 0,
+      "fast_only": 1,
+      "audit": 0
+    },
+    {
+      "kind": "counter",
+      "label": "be0-fast1-audit1",
+      "cases": 24,
+      "checks": 192,
+      "backend": 0,
+      "fast_only": 1,
+      "audit": 1
+    },
+    {
+      "kind": "counter",
+      "label": "be1-fast0-audit0",
+      "cases": 24,
+      "checks": 156,
+      "backend": 1,
+      "fast_only": 0,
+      "audit": 0
+    },
+    {
+      "kind": "counter",
+      "label": "be1-fast0-audit1",
+      "cases": 24,
+      "checks": 156,
+      "backend": 1,
+      "fast_only": 0,
+      "audit": 1
+    },
+    {
+      "kind": "counter",
+      "label": "be1-fast1-audit0",
+      "cases": 24,
+      "checks": 156,
+      "backend": 1,
+      "fast_only": 1,
+      "audit": 0
+    },
+    {
+      "kind": "counter",
+      "label": "be1-fast1-audit1",
+      "cases": 24,
+      "checks": 156,
+      "backend": 1,
+      "fast_only": 1,
+      "audit": 1
+    }
+  ],
+  "cases": 7628,
+  "checks": 140249,
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "7a21d815c60b58bde647aa218cc545af2ef6fa1837763e81403043348ecfe51d",
+    "port/dreamcast/game/platform/native_actor_chunk.inc": "454980bf0c83cbb9bf3dfaeca2fd37d166833ff46c0cf494a957ab59cb6d5a35",
+    "port/dreamcast/game/platform/include/scn21_validate34.hpp": "c4989cf6a5d5a172d128acbbe962351f64c1b33ee251e1d27c7c924b7116d168",
+    "port/dreamcast/tools/d367/scenery21/scn21_build.py": "4775b5d303b628c1b320863823b39a8d778d3d313bdb8c5447e16a1af94870c0",
+    "port/dreamcast/game/scenery19.mk": "ef9501b6120905ea22e4371590c44ceffa2e771070fe1bbbf0a81aa16d5394ca",
+    "port/dreamcast/tools/cloud/build34/scn21_host.py": "2b99b48542ecab77e6806e211638d974a9c9ea6c8f9c123eff0ab61a51dffb5f",
+    "port/dreamcast/tools/cloud/build34/scn21_fixture.cpp.in": "07ceebcbc88d04ac1710c1c697be65af01fa63ec747bb3ed33eaca0a203c2818",
+    "port/dreamcast/tools/cloud/build34/chunk_counter_fixture.cpp.in": "bb69763b96c2426001fe46c139e50d9ac6742653ac85c6cca8d4cc9db0a89258",
+    "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py": "6256c454fe90f494b4584f16af1a6a3a703fee37daaccf615bddb0a0ba86e2ba"
+  },
+  "fragment_sha256": {
+    "OPEN": "24a1468162796ab88eb1528b2c373c081c570bf6f53b47f922a5fda12136d31d",
+    "DECLARATIONS": "9d1e6a3435d4da5a044ad17167839ab133c08bbf3ede445ef600016c2f25db03",
+    "SINK": "6118c85984614713a53bb3e4d09eb062c5b11c835ce00cfcbedb21040b8dda30",
+    "BEGIN": "3fb9eef716844d1c756c0ca4a01f02edb404a2ee0a388703678f9a4a3226ec58",
+    "DISPATCH": "e354f71fa70e4dcf025fe5bbc71dc3ec210d2aa427ed0cd36535a2886b310332"
+  },
+  "builder_data_sha256": "5f426480dca166e47e12d240b839ac72a6ed1650f811e58b3eb61497307db27d",
+  "scope": "Actual loader and sink dispatch with controlled room/package/backend edges; no private geometry or target timing.",
+  "limits": "SCCN format checks do not authenticate the geometric cone certificate. A finite undersized radius is explicitly accepted by a limitation test."
+}

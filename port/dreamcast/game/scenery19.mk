@@ -236,6 +236,12 @@ endif
 SCENERY_CONE ?= 0
 SCENERY_CONE_SIGN ?= 1
 ifneq ($(SCENERY_CONE),0)
+ifneq ($(words $(SCENERY_CONE_SIGN)),1)
+$(error SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled)
+endif
+ifneq ($(filter-out 1 +1 -1,$(SCENERY_CONE_SIGN)),)
+$(error SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled)
+endif
 ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_CONE needs SCENERY_CHUNK)
 endif

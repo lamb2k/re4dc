@@ -1,0 +1,2493 @@
+{
+  "status": "PASS",
+  "scope": "Reusable Make-derived SH-4 compilation and disabled byte-identity gate.\n\nThe default matrix qualifies the existing-switch fixes in Build34. --config accepts the same JSON shape as\n--print-config for later isolated builds. Every changed existing translation\nunit is compiled from the archived integration tree and current source with\nchanged existing controls absent and explicitly zero. Complete preprocessed files and\nobjects must match byte for byte. Enabled arms compile production source and\nperform a relocatable link; this does not build a whole game or prove visuals.\nDebug records and preprocessor line markers are consistently omitted. No game\ndata, console, emulator, target cache timing or full-image PASS is claimed.\n",
+  "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+  "config": {
+    "knobs": [
+      "SCENERY_CONE",
+      "SCENERY_PIECE_STATE",
+      "FRONT_TEXOBJ",
+      "CHAR_CHUNK",
+      "CHAR_CHUNK_BACKEND"
+    ],
+    "units": {
+      "native_static": [
+        "platform/native_static.o",
+        "platform/native_static.cpp"
+      ],
+      "trans": [
+        "src/game/trans.o",
+        "../../../src/game/trans.cpp"
+      ],
+      "native_actor_fast": [
+        "platform/native_actor_fast.o",
+        "platform/native_actor_fast.cpp"
+      ],
+      "native_ui": [
+        "platform/native_ui.o",
+        "platform/native_ui.cpp"
+      ],
+      "chunk_submit": [
+        "platform/chunk_submit.o",
+        "platform/chunk_submit.cpp"
+      ]
+    },
+    "knob_units": {
+      "SCENERY_CONE": [
+        "native_static"
+      ],
+      "SCENERY_PIECE_STATE": [
+        "native_static",
+        "native_ui"
+      ],
+      "FRONT_TEXOBJ": [
+        "trans"
+      ],
+      "CHAR_CHUNK": [
+        "native_actor_fast"
+      ],
+      "CHAR_CHUNK_BACKEND": [
+        "native_actor_fast"
+      ]
+    },
+    "knob_headers": {
+      "FRONT_TEXOBJ": {
+        "trans": "records30.h"
+      }
+    },
+    "on_only_units": [
+      "native_ui",
+      "chunk_submit"
+    ],
+    "off_profiles": {
+      "release": [
+        "NMR_POOL_LOD=0"
+      ],
+      "qa": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1"
+      ]
+    },
+    "on_profiles": {
+      "cone-plus": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "SCENERY_CONE=1",
+        "SCENERY_CONE_SIGN=1"
+      ],
+      "cone-minus": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "SCENERY_CONE=1",
+        "SCENERY_CONE_SIGN=1",
+        "SCENERY_CONE_SIGN=-1"
+      ],
+      "piece": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "SCENERY_PIECE_STATE=1",
+        "PS2_WORLD_HDR_CACHE=1"
+      ],
+      "front": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "FRONT_TEXOBJ=1"
+      ],
+      "combined-exact": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "SCENERY_CONE=1",
+        "SCENERY_CONE_SIGN=1",
+        "SCENERY_PIECE_STATE=1",
+        "PS2_WORLD_HDR_CACHE=1",
+        "FRONT_TEXOBJ=1",
+        "CHAR_CHUNK=1",
+        "CHAR_CHUNK_BACKEND=1",
+        "CHUNK_SUBMIT=1",
+        "COARSE_ONE_SUBMIT=1",
+        "ACTOR_LIGHT_FAST_ONLY=0",
+        "CHAR_CHUNK=2"
+      ],
+      "combined-fast": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "SCENERY_CONE=1",
+        "SCENERY_CONE_SIGN=1",
+        "SCENERY_PIECE_STATE=1",
+        "PS2_WORLD_HDR_CACHE=1",
+        "FRONT_TEXOBJ=1",
+        "CHAR_CHUNK=1",
+        "CHAR_CHUNK_BACKEND=1",
+        "CHUNK_SUBMIT=1",
+        "COARSE_ONE_SUBMIT=1",
+        "ACTOR_LIGHT_FAST_ONLY=1"
+      ]
+    },
+    "existing_on_controls": {
+      "cone-plus": [
+        "native_static"
+      ],
+      "cone-minus": [
+        "native_static"
+      ],
+      "piece": [
+        "native_static"
+      ],
+      "front": [
+        "trans"
+      ],
+      "combined-exact": [
+        "native_actor_fast"
+      ],
+      "combined-fast": [
+        "native_actor_fast"
+      ]
+    },
+    "watch_fields": [
+      "QA_MENU",
+      "QA_LINK",
+      "SCENERY_CONE_SIGN",
+      "PS2_WORLD_HDR_CACHE",
+      "PS2_WORLD_ROOMS",
+      "SCENERY_CHUNK",
+      "SCENERY_STREAM",
+      "SCENERY_SUBMIT_BATCH",
+      "SCENERY_REPLAY_LEAN",
+      "PS2_PVS",
+      "PS2_PVS_BATCH_COMPOSE",
+      "WORLD_PORTAL29",
+      "FRONT_NATIVE",
+      "COARSE_ONE_SUBMIT",
+      "CHUNK_SUBMIT",
+      "ACTOR_LIGHT_FAST_ONLY"
+    ],
+    "must_resolve": [
+      "re4dc_ps2_piece_slot",
+      "re4dc_chunk_"
+    ],
+    "invalid_compositions": [
+      {
+        "reason": "enabled scenery cone sign must be exactly 1 or -1",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=1",
+          "SCENERY_CONE_SIGN="
+        ]
+      },
+      {
+        "reason": "enabled scenery cone sign must be exactly 1 or -1",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=1",
+          "SCENERY_CONE_SIGN=0"
+        ]
+      },
+      {
+        "reason": "enabled scenery cone sign must be exactly 1 or -1",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=1",
+          "SCENERY_CONE_SIGN=2"
+        ]
+      },
+      {
+        "reason": "enabled scenery cone sign must be exactly 1 or -1",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=1",
+          "SCENERY_CONE_SIGN=1 -1"
+        ]
+      },
+      {
+        "reason": "enabled actor chunk backend supports only 0 or 1",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "CHAR_CHUNK=1",
+          "CHAR_CHUNK_BACKEND=2"
+        ]
+      },
+      {
+        "reason": "actor chunk backend requires the shared provider",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "CHAR_CHUNK=1",
+          "CHAR_CHUNK_BACKEND=1",
+          "CHUNK_SUBMIT=0"
+        ]
+      }
+    ],
+    "accepted_compositions": [
+      {
+        "reason": "disabled scenery cone ignores its unused sign",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=0",
+          "SCENERY_CONE_SIGN=2"
+        ]
+      },
+      {
+        "reason": "disabled scenery cone also ignores an empty unused sign",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=0",
+          "SCENERY_CONE_SIGN="
+        ]
+      },
+      {
+        "reason": "enabled scenery cone accepts the explicit positive sign",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "SCENERY_CONE=1",
+          "SCENERY_CONE_SIGN=+1"
+        ]
+      }
+    ]
+  },
+  "config_sha256": "a2fd62a052da3fbd99740aed397b8e0af994a70e62cc7a3d1e74f93f2954fe5d",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build34/build_controls.py": "102850818851579510f3fbb3e54eff2810c4bb3ff57aff3e50c3fb395d21a5c6",
+    "port/dreamcast/tools/cloud/build26/build_controls.py": "66582d44486cd1cbea42f0b5ac423380b4b8395130164ad81f22cbc3a76f1e8f",
+    "port/dreamcast/tools/cloud/build24/build_controls.py": "7b9185a3b8f0ce980a1f9f2f31b5e0fe3c8ec3b285eb64ab45afd3c5c8575a7c",
+    "port/dreamcast/tools/cloud/build18/build_profile.py": "47e787b0820f67e9f3fde33010a67ecddc0814059505204e1afec6d51952927a",
+    "port/dreamcast/tools/d367/ui_draw_lean/build_profile.py": "d9768c80edec4fc2fef9187a883cad2ac1b2f02b4a2c84be313661d4e7ec9ccc",
+    "port/dreamcast/tools/d367/world_submit_spike/build_profile.py": "93d339687cde6c61628b1c73803000616f95768669360bf18ad60258e4ea1aef",
+    "port/dreamcast/tools/d367/world_setup_spike/build_target.py": "a83d3c356db200150d23febc5aa45ae5f7f667005c87f851b4d64883bc96f29e",
+    "port/dreamcast/tools/d367/world_setup_spike/release_profile.py": "76f987d26a783b0ba17345569e685786998c2f52fff468328d0d4e6ce842093b",
+    "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+    "port/dreamcast/tools/d367/test24/release-knobs.txt": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+    "port/dreamcast/tools/d367/rr/recipe.conf": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+    "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+    "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+    "port/dreamcast/game/Makefile": "be34ee619b766898d8c2aa580c765c3cd6ff6731fb810b1f967f5cc3358a787a",
+    "port/dreamcast/game/actor_format32.mk": "fbf58bdec4129640db9840420e10cf7f309f83368f2330184aab7a3e806db054",
+    "port/dreamcast/game/actor_ganado_ps2_stump.mk": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a",
+    "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+    "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+    "port/dreamcast/game/barn28.mk": "0d7f3bdfdfd8e9628c3e67fdd6c286437ad83c3475053885ab2678452542c15f",
+    "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+    "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+    "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+    "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+    "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+    "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+    "port/dreamcast/game/crowd.mk": "db5dcfb0e9ec85d116c222cb266badff62a90df275c50e2a33f0eeb4bbb68fca",
+    "port/dreamcast/game/dbgwarp.mk": "7dabc7487167c8c0ec2d3f583278b650bb1619decf7f8abc663ec74533ed98d1",
+    "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+    "port/dreamcast/game/draw_fallback_audit.mk": "f85ce3c213ea182c92999fbf1c0665532089f75f4ad63eaba852bd17a72ac21b",
+    "port/dreamcast/game/draw_setup_audit.mk": "69465519c474c2db137897dabd822de4dc29234622f5a96dba436b30c2ade7a6",
+    "port/dreamcast/game/effects30.mk": "5d5c82d6bc19483dfc969321d8628e7e879c44a9888ea11d30e25d0d2bc3aba3",
+    "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+    "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+    "port/dreamcast/game/fallback_audit29.mk": "d01e66fb6cc5b76035b6a3b5ef8037b8d84c03fb64e57e8a047bc1567f488c22",
+    "port/dreamcast/game/fallback_scan29.mk": "2e590a292012ca4258fbd0ee27f6c12e6bd3a35203f8e255e63cd5b744ce4a83",
+    "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+    "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+    "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+    "port/dreamcast/game/game30.mk": "ac9f81c61cf45f1dee205c6ff211fdc90387725f36c57b67486e9b0a96244207",
+    "port/dreamcast/game/gc_asset_gate.mk": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd",
+    "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+    "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+    "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+    "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+    "port/dreamcast/game/mendezfx.mk": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167",
+    "port/dreamcast/game/native_model_registry.mk": "b83bf9dde04fc4f75c41f86509ac0bbc6fc505c0ab26b12a3f68ef122db32737",
+    "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+    "port/dreamcast/game/partdump.mk": "abd44d97992217788371885a60c9898d2e00429f0d0e5ef6bfe255abf6773416",
+    "port/dreamcast/game/perf_phase_miss.mk": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6",
+    "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+    "port/dreamcast/game/ps2leon.mk": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137",
+    "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+    "port/dreamcast/game/qalink.mk": "7ce627272ce0df4cfb9ff6d8415b093282a90b5f960a0599a4ded0aa7a460d31",
+    "port/dreamcast/game/qamenu.mk": "8278906026e8836d4027e48f99292fbc0b47eac2f59bbe76dda96dc38f33ba56",
+    "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+    "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+    "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+    "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+    "port/dreamcast/game/scenery19.mk": "ef9501b6120905ea22e4371590c44ceffa2e771070fe1bbbf0a81aa16d5394ca",
+    "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+    "port/dreamcast/game/scenery_data_variants.mk": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4",
+    "port/dreamcast/game/scenery_n256.mk": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8",
+    "port/dreamcast/game/scenery_record_split.mk": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c",
+    "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+    "port/dreamcast/game/static_obj_batch33.mk": "a44fd8a36a85550814a2906e200af187073423ad791ab047e2c013bfff3ae86d",
+    "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+    "port/dreamcast/game/t2exact.mk": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2",
+    "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+    "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+    "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+    "port/dreamcast/game/wep_modules27.mk": "8c47364afbafd2d02b445e343cfa43c8ac9a979186076b07a3913fe15c7bd7a5",
+    "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+    "port/dreamcast/game/world_census24_errors.mk": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874",
+    "port/dreamcast/game/world_plan29.mk": "245e8471c064f9195c2c88e13e20913b2448ee2b3c18b741432dced0f8143042",
+    "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+    "port/dreamcast/game/worldopt26.mk": "290b454a0b075fb097b21d9c8566282204dd93e21c7c7e5109e77447261a26e9",
+    "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057",
+    "port/dreamcast/game/platform/native_static.cpp": "7a21d815c60b58bde647aa218cc545af2ef6fa1837763e81403043348ecfe51d",
+    "port/dreamcast/game/platform/include/native_event_file.h": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.h": "0e9f68c219112d29667f681269211fbf95fd534479ab999d933df08271127974",
+    "port/dreamcast/game/world_scratch.h": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6",
+    "port/dreamcast/game/platform/include/bfc_class.h": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107",
+    "port/dreamcast/game/platform/include/movie_world_arena.h": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815",
+    "port/dreamcast/game/platform/include/native_cabin.h": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660",
+    "port/dreamcast/game/platform/include/native_io.h": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+    "port/dreamcast/game/platform/include/ps2_source_world.h": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029",
+    "port/dreamcast/game/platform/include/re4dc_screen.h": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f",
+    "port/dreamcast/game/platform/include/native_ps2_world.h": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_provenance.h": "afa345958e441ce801169ad0d0763652f5749f6c8e67825ed9a15afde1a56b43",
+    "port/dreamcast/tools/d367/texture_rect21/provenance_certificates.inc": "371206a9784a86359208fff95925f7d11d8360c33c0a8ab983d097923ecc9cde",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origin.h": "31908e1cd70769f164e19199853c27997d24efcee85657fcae4efa23ea205c55",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origins.inc": "93d44d4ff4b22aad124237a487c2c1c9be529106250477c07d830453b9ac44d1",
+    "port/dreamcast/game/platform/include/scn21_validate34.hpp": "c4989cf6a5d5a172d128acbbe962351f64c1b33ee251e1d27c7c924b7116d168",
+    "port/dreamcast/game/platform/include/native_static.h": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef",
+    "port/dreamcast/game/platform/include/cache20.h": "0477e8c84785b9c242c96363c371327380e460e0693245284a4ab0a7d45b3bfd",
+    "port/dreamcast/game/platform/include/pvs23_meter.hpp": "0dd6282122b93d543f4105920f16f2106047c4a1d9a080efdaf4e1da7751f349",
+    "port/dreamcast/game/platform/quality.h": "f781f8d36cb5b7017346bb6ae12acd47d34b31762de560a767da5850d8209270",
+    "port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "port/dreamcast/game/platform/include/native_ui.h": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+    "port/dreamcast/room/source_lighting.hpp": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45",
+    "port/dreamcast/game/platform/include/gc_asset_static.h": "1d78c81c8c1096b622374dfc477f60ad2fe64fc6365195dd4877445434679bd4",
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": "04be6fb54668d397982ef545c3464e84b96e222b8faabfa7e4c82851c7369b34",
+    "port/dreamcast/game/platform/include/gc_asset_members.h": "558c2baf0d82768e7225d85ca73cc404e493a877910667bf5c082ee9964eec3b",
+    "port/dreamcast/game/platform/include/gc_asset_gate.h": "4dfbee21becd264b55b249fef6f09bddf654d3168d59501482d82bd8685f64a1",
+    "port/dreamcast/game/platform/include/gc_asset_static_source.inc": "27b94d5b44bfd139fc606891d62125e20e42f993f0541e218d7888a5b1864e37",
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "port/dreamcast/game/platform/include/re4dc_platform.h": "a3d43b28fd78980cb50ac508b6aa816d1efabdc8b62c4c296fa414b71e36524b",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+    "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/native_draw_plan.hpp": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405",
+    "port/dreamcast/room/nonempty_lod.hpp": "75c7a9a591827257e81e0681ce3a5c1e6947ac9a2657d68deef37f828ad01061",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+    "port/dreamcast/room/mesh_fastpath_sched.hpp": "17d7d74994c696ceaddaf30d323d7c64bb131782f05f11423b8454305e73f1b0",
+    "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+    "port/dreamcast/game/charbake_variants.h": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29",
+    "port/dreamcast/game/platform/include/ta_direct.hpp": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe",
+    "port/dreamcast/game/platform/include/ps2_interior_cell.inc": "4ec4ca49ce5c4af005a0d8b87cccfcfb65eb9abf751ac68cdd449f9cea7dcad5",
+    "port/dreamcast/game/platform/include/worldopt26_sg_cell.inc": "f7732f558e7bb49518747f7b269fe9dbdc7449178ec211070a73547a2d89383b",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "f425dde0075cd74242dfe8f9a1fc45b276c7f238394418f5bb01b2f04ac5a553",
+    "port/dreamcast/game/platform/include/movie_world_arena_lifecycle.inc": "e137da9d61c8c8a6929ed13412a063028fb8cf173f56a114d52164efe1de27ef",
+    "port/dreamcast/game/platform/far_shell.inc": "5d7a2a6b75fc3e9f2258697ca06ef69077a242578fe4ac109b0342d17d076e65",
+    "port/dreamcast/game/platform/include/room_file.h": "c6985ebf7d77e87ee4602e435a0854b13915e57308fd5762152fa365338c7f55",
+    "port/dreamcast/game/platform/include/foliage_keys.inc": "b3db418a40a6d44151a3f969faba3b12ee13010b75e68507c1c24180a870b4a4",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/game/platform/include/ps2_world_rooms.inc": "ed4779f8c71b8e9c0044cbd38b49b6b942ce767f78ccb898a30e45dae0828731",
+    "port/dreamcast/game/platform/include/native_source_world.inc": "c5ab3def7f3a6647ddbc84bf6e9893c748a8ff10b906d8d087cc2f8a2be1d7ab",
+    "src/game/trans.cpp": "4bdf9c21fec3ce2ec0d65aaeafa383d33361a74ce3b1b69b410da47a8100acd7",
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+    "include/atari.h": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+    "include/types.h": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+    "include/vec.h": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+    "include/db_log.h": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+    "include/va_ppc.h": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/at_sub.h": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679",
+    "include/at_sub2.h": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d",
+    "include/main_mem.h": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+    "port/dreamcast/game/platform/include/native_primitive.h": "9cf7bd89c3fab26f0806d74ce3e97ff9b6eee12d1ff99ef83b3020cfbd080e7f",
+    "include/light.h": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c",
+    "include/gx.h": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8",
+    "port/dreamcast/game/gx_fast.h": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959",
+    "include/lightPath.h": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d",
+    "include/ctrl.h": "938832700d8a652c49f0fa739b4eca902ee3b51a96a207bfddd6d37c8d5a71b3",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/camera.h": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "port/dreamcast/game/platform/include/actor_lifetime.h": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+    "port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": "6d77e23c0668904e3dee5feef000a60dadcf0cf9288f5340fa967c6f2208d736",
+    "include/atariInfo.h": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+    "port/dreamcast/game/platform/include/coarse_actor_transaction.h": "ea4a2c3f00ac08f6b4b7c1acb5dbbfe98fbc1ea39ee864ae92ca5e10ac3aa304",
+    "port/dreamcast/game/platform/include/coarse_source_frame.h": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746",
+    "port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49",
+    "port/dreamcast/game/platform/include/coarse_actor_preflight.h": "238c507a5df66357ffb59ac3f16a1ed226778d88ec48f5c7aa24df772eb41679",
+    "port/dreamcast/game/platform/include/actor_native_owner.h": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a",
+    "port/dreamcast/game/platform/include/native_actor.hpp": "2c2e225a7184f3b5842409641e0554c1d58229c4f63e7ac035b40fe329cb7dee",
+    "port/dreamcast/game/platform/include/actor_resource_lease.h": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9",
+    "port/dreamcast/game/platform/include/coarse_actor_geometry_once.h": "71855740daa83974fb3db00fd91fc32384de1b0b1e8f9db3991ec96aab372118",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/obj.h": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768",
+    "include/pendulum.h": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4",
+    "include/view.h": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087",
+    "include/main_sub.h": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6",
+    "include/math_sub.h": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+    "include/trans_ot.h": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48",
+    "include/trans.h": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4",
+    "include/shadow.h": "4b10031d0c5dfe2e1804b1c3fcf265e4a20261f7256300b7d2c04f1e38e416c5",
+    "include/room_tex.h": "7f0555ce6cf99c94b4172a32f1f8f75ac9e6506647aa190e29c6c539c81b04dc",
+    "include/texture.h": "9f2d2feef84556f763967af35b247f1e247d6384938af249daa0f477edbbb7eb",
+    "include/tpl.h": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+    "include/TexRender.h": "ce680f2b5d731d10c5b7267d4cae0e5cd8645ef3d3afff5c94beebcd82512b44",
+    "include/cam_motion.h": "6cb34db02486f3c20388484c7211bc6835405e27f21bef9eea8ed5dce20bf711",
+    "include/cam_extra.h": "4f7ea1e32200b074e1d72a302e245d02637da678da756a7d5c498868efca02d9",
+    "include/motion.h": "4bdf10720065d691e0f20a493082399f8650811b1358eef6fa856206e4b23857",
+    "include/cam_ctrl.h": "2ac891e596fb1bde591f7a11929ebcfe538f8c2767dd77c842abad7dfec80436",
+    "include/cam_qfps.h": "bfdc8492b68f17e7588c7a64c08b4d4162a96400fb0f949ffc366c169aee6c72",
+    "include/examine.h": "d0105d808d3e8964b3a8b067070f35327d9a6b06723edc3b5d5a5642f6eef732",
+    "include/id_sys.h": "25dc142236e80043d83c9432de3148fb09916336bf5d3f9070fc7ce8ca9be2e0",
+    "include/hermite.h": "9fd7cfd6151b2106560a4b4b46f678153b16d0193f5867c37dfb845d4f032b69",
+    "include/debug.h": "26a1c33ca387718513794d8365cbc32e3852342b919d7a6952fd6abd79ddea2f",
+    "include/cloth.h": "870eeef769185b185d145cfd64b933e1cf77b48a061e2939c5599d75673fd463",
+    "include/filter.h": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4",
+    "include/foot_shadow.h": "01bdb1833e0c0584880bd62617b364b1710a106b435fa7ba6930266c5de6135d",
+    "include/db_cam.h": "74f1e72cf17a14445dce0a748c9ba97a1dc7663366928f396c107abb5d81fc9e",
+    "include/joy.h": "e20bab477cf784375a20ae7c46a116acb000d31a0705976e252e8582be181330",
+    "port/dreamcast/game/platform/include/source_actor_owner_hooks.inc": "24c358a9e7055147c3255ca3a64514acf7514036c248b817d569941552d5d41e",
+    "port/dreamcast/game/platform/include/source_world_frame.inc": "abe2a711f66d0b95cf9ae0056db933433d2a6b4d508377517226ff3d61a931ec",
+    "port/dreamcast/game/platform/include/source_world_memory.inc": "29c0dfead79cd74ce078662486193f6669caa8ee5a9ea993042e2329e461aac5",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f",
+    "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67",
+    "port/dreamcast/game/platform/include/gc_asset_actor.h": "e601e026a611e339d6caf233d02e932885a4b8163d970471dd88cf6f7315e849",
+    "port/dreamcast/game/platform/include/actor_prof.h": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf",
+    "port/dreamcast/game/platform/include/actor_plan.h": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626",
+    "port/dreamcast/game/platform/include/actor_light_probe.h": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b",
+    "port/dreamcast/game/platform/include/warp_late.h": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56",
+    "port/dreamcast/game/platform/include/native_actor_owner_registry.inc": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f",
+    "port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.inc": "b2a3e7ebc020149078b9f9d9635a40ef0868db165729e5a91cbe24264a7dc60e",
+    "port/dreamcast/game/platform/native_actor_rigid.inc": "5885e036f63e23735ddd46057bb1de81861c30d90a8ee01ccafbfc834f6c7fc9",
+    "port/dreamcast/game/platform/chunk_submit.h": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a",
+    "port/dreamcast/game/platform/include/native_actor_owner_submit.inc": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23",
+    "port/dreamcast/game/platform/include/native_actor_owner_runs.inc": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5",
+    "port/dreamcast/game/platform/native_ui.cpp": "c3ae6e4c505be78948b93ea82c0ccbb24e4962919d4c7f87ec7b2089898ce189",
+    "port/dreamcast/game/platform/preload_skip_gcidle.h": "e4282e3055458aad8f968a06cb6e8483967a0c19f7b15838de093435279f0c69",
+    "port/dreamcast/game/platform/preload_skip_gcidle.inc": "c36963537dd7c2339293103288d83a7cb1ee6f551e8f9d912545bc783141e121",
+    "port/dreamcast/game/platform/include/re4dc_vmu.h": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc",
+    "port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98",
+    "port/dreamcast/game/platform/include/gc_asset_audio.h": "d4df30b1f478edc25d570ba4f4c70d9be89305a0d0b2d3df13fc7f0f96656985",
+    "port/dreamcast/game/platform/include/gc_asset_movie.h": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e",
+    "port/dreamcast/game/platform/include/gc_asset_movie_stream.h": "bee23b0136fab7a844f498bf18567fae73597f29c2c45d4da2741d3ad95eb913",
+    "port/dreamcast/game/platform/include/gc_asset_lifecycle.h": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff",
+    "port/dreamcast/game/platform/include/actor_visibility_diag.h": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d",
+    "port/dreamcast/game/platform/include/actor_transaction_diag.h": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": "a77de47c842bbc8281b205c7883a42680eabe664f7435c8501f61c94bdae9905",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations_fol24.inc": "175a027ce9f3d3a09b0cfde1fe2e8fab87e92c3a05043229c88c1b259079dbad",
+    "port/dreamcast/game/platform/include/re4dc_pad_prompts.h": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59",
+    "port/dreamcast/game/platform/include/re4dc_manual_pages.h": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee",
+    "port/dreamcast/game/platform/include/binocular_art_keys.h": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206",
+    "port/dreamcast/game/platform/include/hud_source_mask.h": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b",
+    "port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "port/dreamcast/game/platform/include/pc_sampler.h": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0",
+    "port/dreamcast/room/texture_package.hpp": "6a8990a11daf6ca3b3ae2e30232f2648e8f041dbb583e0037161ad4b84f8c397",
+    "port/dreamcast/room/room_storage.hpp": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0",
+    "port/dreamcast/room/gpu_lifecycle.hpp": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91",
+    "port/dreamcast/game/platform/include/texpack_payload_retry.inc": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38",
+    "port/dreamcast/game/platform/include/texpack_index.inc": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+    "port/dreamcast/game/platform/include/manual_pages_keys.inc": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8",
+    "port/dreamcast/game/platform/include/hud_source_mask_keys.inc": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68",
+    "port/dreamcast/game/platform/fx_none_cut_pack.inc": "502ae15ece814ebf10435c0891d3d3f80273f907879f2f3129c17b06b610a7b4",
+    "port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17",
+    "port/dreamcast/game/platform/include/manual_pages_native.inc": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921",
+    "port/dreamcast/game/platform/include/native_ui_source_world.inc": "b3a12a69f1d0216c348502441bb8d2b866bb3a5952d04d6c73a5260ce8a355c3",
+    "port/dreamcast/game/platform/include/hud_source_mask_native.inc": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755",
+    "port/dreamcast/game/platform/include/native_ui_actor_material.inc": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b",
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2",
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "0f2727427f75a7bf25142bf74cfba3eee88140a4ab119e47150f59f411f61bee",
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481",
+    "port/dreamcast/game/platform/include/native_flashlight_pool.inc": "cc56e2984902582ebf523f648ccbcb608708a1a057bd92af81c8247cf22d527b",
+    "port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512",
+    "port/dreamcast/game/platform/include/native_water_ps2.inc": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a",
+    "port/dreamcast/game/platform/chunk_submit.cpp": "50b902310ca2f5f8bef73e44d539d4ea88f1f08c1b4b391ff3bff91dbfa8adbb",
+    "port/dreamcast/game/platform/native_actor_chunk.inc": "454980bf0c83cbb9bf3dfaeca2fd37d166833ff46c0cf494a957ab59cb6d5a35"
+  },
+  "compiler": "sh-elf-g++.real (GCC) 15.2.0",
+  "compiler_sha256": "0607fbaf0a3af5e6ad0a1696628ffba7585c74482a423f805f0575181f7ce8da",
+  "linker": "GNU ld (GNU Binutils) 2.45.1",
+  "kos": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sdk": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "pinned_executable_sha256": {
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-addr2line": "199ea91dd1d5a24f21cf1e4c73fc80e0c433cb3aff7991ffddfc21e802aa199f",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ar": "678f337da2c1fdef6647939042954f388b1d70e458d49a21eab7db1bca0fb8d2",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-as": "0d7aa0c4b358faa256f3dc6be0145b7182d840962175a7df20721105a85e33cd",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-c++": "07bbffddbf0555c49b660287a63a349dc5d85c7b2255cc9b069d86b1043e519d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-c++filt": "8daf09b7d91908943dd52ba8ba45008305991bbcef9dc5015bea758e88e9239c",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-cpp": "3fb0f41c6c7d1cc2f60cb01451ad9651c8d234348603dee91758420dfd772627",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-elfedit": "8594f87caaffebeb2310217e71b61ea77e4e90e6015827ed7ffd3bbaa6784b61",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-g++": "07bbffddbf0555c49b660287a63a349dc5d85c7b2255cc9b069d86b1043e519d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-15.2.0": "267f6c57b3409d609000e6a95df2998e89835f83ecbdf3ea5cf51519c0c88e90",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-ar": "2915aed592c0ee23f703457229f899d18c0ad660558138e1824de4bee6ee311d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-nm": "6b31b9db93407f9868793a5a66c809f097d072d3fe6b0d342f5276b39f80ee1e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-ranlib": "0b0e56ff35994e080f9faeab6f66016fac30c4dbed3963f0b05240f17d910d60",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc": "267f6c57b3409d609000e6a95df2998e89835f83ecbdf3ea5cf51519c0c88e90",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov-dump": "822fcd04e0b7b5378ee50564e72a66921a3d86e501616199b7687225b8798c4c",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov-tool": "9046190ee78d2862d2ce2200f373f915a80b8a90fe028acbfe1609332d59ae7a",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov": "307eef994ae14fcde4383933a32f9cc23e988273376782b1248cf52e4f129d04",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gprof": "bc0704a13ba8a96bbac67383687692e5f5519044fda3a97c20df79b6b0057bc7",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ld.bfd": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ld": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-lto-dump": "676f1b0c817908987f1a4c8881184a13ad2c8e8790c480a368955d9bb285e29e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-nm": "ef30252edd525548739bd327736ce3982dc90e27297030d0f7e0dff1571fe3be",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy": "758c807063f9d0b1a46fc07388c36ed6594fc976c3143f1663ff8eddb20d9144",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-objdump": "628cb154e37a5fcd9cf9e21be8df7421cfe96633bd05e90fb04289a7b04404a6",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ranlib": "fbbc9237eae6102536bf80a4a9fb793240d75e75bfe6addc42380f25d20bd5bf",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-readelf": "e14a9f0c0a86342166707f29ae6abfd64f8b06af27c144508e8d1b78f58fa9c2",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-size": "ce6c4306af7636329b40a45996a81fb1f70b549be6e76166997b27ed176d84ea",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-strings": "4ecdac5dd6144748914762dc5117f6f9078f66adcdac86f95fa1ed52c259898e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-strip": "ea01109e168d788cfa10b89489dca09345a177185d8ed50d52bdbb79c7cceeb8",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1": "003ec800828303c334fef579fd917298cc95bc6013b7848519052f1d03382633",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1obj": "b5f7914ba70bff00562ef1e476989cc5f6d45702e0a6f48409314118f2bd93a0",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1objplus": "3db30aa76825bb961c8396ca5a84406dcc3832148f29c693a99f2a39d4e86fac",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus": "015825ba86765ed774abf73986eed6f003cc8c3e60bc9505b5b2e88f00587fb8",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/collect2": "938d23e46badcdca3b91231e2355e9862521843f91511192f1b13ac51653be80",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/g++-mapper-server": "48fc93bb8a68e6a0da6f6f0cd03267b15bfc67eb7b4039a90ca1ef92fc2e2604",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/install-tools/fixincl": "a024328f79aa3a5dca952fe82c5aa87711042c25820d81647e66522edbf75539",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/lto-wrapper": "dbcc9aee1f3ffb1577f3144ac917fd2d9899fab5a86203c62468b8e5552895eb",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/lto1": "16541b69997b0166f40e37f0a274601079645bc6cdaf1c7e4f015f1e11ea11ed",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/plugin/gengtype": "041b0314b7bfc7ed8f732501db1c733fb14bf790322e4b2b15b41dbff2839086",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ar": "678f337da2c1fdef6647939042954f388b1d70e458d49a21eab7db1bca0fb8d2",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/as": "0d7aa0c4b358faa256f3dc6be0145b7182d840962175a7df20721105a85e33cd",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ld.bfd": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ld": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/nm": "ef30252edd525548739bd327736ce3982dc90e27297030d0f7e0dff1571fe3be",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/objcopy": "758c807063f9d0b1a46fc07388c36ed6594fc976c3143f1663ff8eddb20d9144",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/objdump": "628cb154e37a5fcd9cf9e21be8df7421cfe96633bd05e90fb04289a7b04404a6",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ranlib": "fbbc9237eae6102536bf80a4a9fb793240d75e75bfe6addc42380f25d20bd5bf",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/readelf": "e14a9f0c0a86342166707f29ae6abfd64f8b06af27c144508e8d1b78f58fa9c2",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/strip": "ea01109e168d788cfa10b89489dca09345a177185d8ed50d52bdbb79c7cceeb8"
+  },
+  "off_identity_comparisons": 24,
+  "disabled_identity": [
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_static",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_static",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "trans",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "trans",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_static",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_static",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "trans",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "trans",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_static",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_static",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "trans",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "trans",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_static",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_static",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "trans",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "trans",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    }
+  ],
+  "enabled_compiles": [
+    {
+      "profile": "cone-plus",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "cone-minus",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "piece",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "front",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "combined-exact",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "combined-fast",
+      "units": [
+        "native_static",
+        "trans",
+        "native_actor_fast",
+        "native_ui",
+        "chunk_submit"
+      ],
+      "compiled": true
+    }
+  ],
+  "artifacts": {
+    "on-cone-plus": {
+      "native_static": {
+        "ii": {
+          "bytes": 1078399,
+          "sha256": "f6b0c2036c07f59b82d5f58599bdbb4cf96e036de81fa7d2d201f1c66d8aa7fd"
+        },
+        "o": {
+          "bytes": 189120,
+          "sha256": "fc3f67944b5454df7785d4b93bdcb2da1618096d21c79849255340e6b85c9d61",
+          "executable_bytes": 72612,
+          "allocated_bytes": 116738,
+          "zero_fill_bytes": 17377,
+          "stack": {
+            "max_bytes": 9004,
+            "functions": 184,
+            "details_sha256": "88305c34e598af8c9ace570e5f33c60842d73457a063e3a0b08e619aa37d17de"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "373e40ca11285ad991bac73e780bd2e3833cb6d5707222ddccc29659b4d95462"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-cone-plus": {
+      "native_static": {
+        "ii": {
+          "bytes": 1076002,
+          "sha256": "2db5819133d06a7407131bd997d89dd23180d2819c73d3f0e17c999050e2092b"
+        },
+        "o": {
+          "bytes": 188108,
+          "sha256": "b6334aecaff0e39cab16a18d1202411eed4c5891a1a0978382e665cc9f96ca4b",
+          "executable_bytes": 72236,
+          "allocated_bytes": 116258,
+          "zero_fill_bytes": 17377,
+          "stack": {
+            "max_bytes": 9004,
+            "functions": 183,
+            "details_sha256": "7705e1737f0e24901668c67268fad66aefe056647789b5a52ec9baa72b1ec4c9"
+          }
+        }
+      }
+    },
+    "on-cone-minus": {
+      "native_static": {
+        "ii": {
+          "bytes": 1078401,
+          "sha256": "68d86ce360a28080349fadc30edbc156aea9a9cc8cc0b04c124173c11b1ec8cc"
+        },
+        "o": {
+          "bytes": 189116,
+          "sha256": "734bbb2816b6f5ed72b0f4ac179fcbf948e5c4460c5255af8e8b5b2374e9c8fb",
+          "executable_bytes": 72608,
+          "allocated_bytes": 116734,
+          "zero_fill_bytes": 17377,
+          "stack": {
+            "max_bytes": 9004,
+            "functions": 184,
+            "details_sha256": "88305c34e598af8c9ace570e5f33c60842d73457a063e3a0b08e619aa37d17de"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "373e40ca11285ad991bac73e780bd2e3833cb6d5707222ddccc29659b4d95462"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-cone-minus": {
+      "native_static": {
+        "ii": {
+          "bytes": 1076004,
+          "sha256": "259562c5f91ebeafcf780f64b7c510b0c761ad59a41f1f424b4150686a23960c"
+        },
+        "o": {
+          "bytes": 188104,
+          "sha256": "41d200dc387af8f54dcbec88035591517373403f6cc615430c3186b3caa31769",
+          "executable_bytes": 72232,
+          "allocated_bytes": 116254,
+          "zero_fill_bytes": 17377,
+          "stack": {
+            "max_bytes": 9004,
+            "functions": 183,
+            "details_sha256": "7705e1737f0e24901668c67268fad66aefe056647789b5a52ec9baa72b1ec4c9"
+          }
+        }
+      }
+    },
+    "on-piece": {
+      "native_static": {
+        "ii": {
+          "bytes": 1071819,
+          "sha256": "c68cb0ffb90240bd028d4b7dab985a1fd5da205eb4a5e44238ab90825c0ce326"
+        },
+        "o": {
+          "bytes": 185812,
+          "sha256": "41b7b2bba480d6f224f912720f80c4f2963e8b1cc07c58e214ac025cbc8df9b3",
+          "executable_bytes": 71124,
+          "allocated_bytes": 115050,
+          "zero_fill_bytes": 17353,
+          "stack": {
+            "max_bytes": 9016,
+            "functions": 183,
+            "details_sha256": "fde243ea67fbdd52bcc7405e633e46a3a4277d04b53cf3afab98a1038554a057"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1481455,
+          "sha256": "62f05a31afbf5f49c5514cdf275b4eab971e2ea4bec864a63e63bd66a067c5c0"
+        },
+        "o": {
+          "bytes": 415268,
+          "sha256": "3030b3df6cc0580ce069c4733edab78f14dc428951700b9077cdb39ebb333490",
+          "executable_bytes": 82586,
+          "allocated_bytes": 395007,
+          "zero_fill_bytes": 153392,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "50b6364d6d938fa66c8531e6798b0f80595d07b403c92338960e0ebdc58a6fe7"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-piece": {
+      "native_static": {
+        "ii": {
+          "bytes": 1069387,
+          "sha256": "d4ac87d8dc5fc91d8fce718cf429dbe1fcc910396134a4b0df525fe7e6829098"
+        },
+        "o": {
+          "bytes": 185672,
+          "sha256": "9f68eecdcdb022abb2c76986d4e4f2fe96ef5b1c9c7d36368f969361cb30fed9",
+          "executable_bytes": 71068,
+          "allocated_bytes": 114958,
+          "zero_fill_bytes": 17353,
+          "stack": {
+            "max_bytes": 9016,
+            "functions": 183,
+            "details_sha256": "1bca5f649e3364eb914fe2753f203169b4105ac16afd69405784627423e1d18a"
+          }
+        }
+      }
+    },
+    "on-front": {
+      "native_static": {
+        "ii": {
+          "bytes": 1067487,
+          "sha256": "66840ef3ba185f99da97220ebaf6034abb4c0caf2533fe84e801594b5ca8ccc1"
+        },
+        "o": {
+          "bytes": 184532,
+          "sha256": "5cbdbc3900eaaaa19fc992c8fdf9f5bcdf2ae043f4adba4a8123fbd97a2b3c47",
+          "executable_bytes": 70680,
+          "allocated_bytes": 114490,
+          "zero_fill_bytes": 17345,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 183,
+            "details_sha256": "1800fe3155266f05a72222fe2ef8eb120808f29e78f2b7ef4d5989293167101d"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 335041,
+          "sha256": "22ca94aff6159bb7e2abea16d9343962ce77ad47ff00dec1d6ed33f2187121e9"
+        },
+        "o": {
+          "bytes": 104176,
+          "sha256": "4eb8ff49ce34d4fffd1162c40468314d713baba9102412e3501f211cd38a0702",
+          "executable_bytes": 53344,
+          "allocated_bytes": 67244,
+          "zero_fill_bytes": 12105,
+          "stack": {
+            "max_bytes": 1184,
+            "functions": 69,
+            "details_sha256": "ad20b768c9f485ce877d2c4c5fb31f70b5751ebed87fae14e9c4661d1375e391"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "373e40ca11285ad991bac73e780bd2e3833cb6d5707222ddccc29659b4d95462"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-front": {
+      "trans": {
+        "ii": {
+          "bytes": 334344,
+          "sha256": "573b96ef857a6f0ae27aa66b18a7a61988a4c45766935e81f9bea8430639b9fc"
+        },
+        "o": {
+          "bytes": 103812,
+          "sha256": "af7c715769c3984c1cb959dedf56a6035a22183a4c38797de805849fdef5e221",
+          "executable_bytes": 53052,
+          "allocated_bytes": 66952,
+          "zero_fill_bytes": 12105,
+          "stack": {
+            "max_bytes": 1184,
+            "functions": 69,
+            "details_sha256": "16d693b400ada91097cacf9cd0d037c7985fb800bf64f345ccc19e859756431d"
+          }
+        }
+      }
+    },
+    "on-combined-exact": {
+      "native_static": {
+        "ii": {
+          "bytes": 1078927,
+          "sha256": "e9cd27e2bb6f5267bf34d9ab226c82afa8a04737d632d6f47dc06bd610fbc4f1"
+        },
+        "o": {
+          "bytes": 191308,
+          "sha256": "8304f5e2efcc120ae4b85a67c8b37b949bed19039ac0f41b1b7cd5f5657e0d79",
+          "executable_bytes": 73512,
+          "allocated_bytes": 117708,
+          "zero_fill_bytes": 17385,
+          "stack": {
+            "max_bytes": 9016,
+            "functions": 185,
+            "details_sha256": "d4db8396cf28d4f41f2602234cec723c552d440ec6cf64ae3a6907e15285a64e"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 335041,
+          "sha256": "22ca94aff6159bb7e2abea16d9343962ce77ad47ff00dec1d6ed33f2187121e9"
+        },
+        "o": {
+          "bytes": 104176,
+          "sha256": "4eb8ff49ce34d4fffd1162c40468314d713baba9102412e3501f211cd38a0702",
+          "executable_bytes": 53344,
+          "allocated_bytes": 67244,
+          "zero_fill_bytes": 12105,
+          "stack": {
+            "max_bytes": 1184,
+            "functions": 69,
+            "details_sha256": "ad20b768c9f485ce877d2c4c5fb31f70b5751ebed87fae14e9c4661d1375e391"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1205613,
+          "sha256": "531808a189503b9c95945637e872bf3dfb901672a2d2babe592152994ebaac44"
+        },
+        "o": {
+          "bytes": 102140,
+          "sha256": "b4a1575715710ae82777237390f22aff2259a71cf3a0c2610303c27d7b2dd461",
+          "executable_bytes": 62248,
+          "allocated_bytes": 87814,
+          "zero_fill_bytes": 23479,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 77,
+            "details_sha256": "538e2dd50f2b5c517734205a9aeb1f01000c2ad6bba47f7bbde807e35539984d"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1481455,
+          "sha256": "62f05a31afbf5f49c5514cdf275b4eab971e2ea4bec864a63e63bd66a067c5c0"
+        },
+        "o": {
+          "bytes": 415268,
+          "sha256": "3030b3df6cc0580ce069c4733edab78f14dc428951700b9077cdb39ebb333490",
+          "executable_bytes": 82586,
+          "allocated_bytes": 395007,
+          "zero_fill_bytes": 153392,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "50b6364d6d938fa66c8531e6798b0f80595d07b403c92338960e0ebdc58a6fe7"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-combined-exact": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1205582,
+          "sha256": "af32a7f91047df31a11a33916db24b4aa7bb248d12444ca470a35dd49aac0204"
+        },
+        "o": {
+          "bytes": 101932,
+          "sha256": "571366155195635a4ca2ccb53be0df6c16db8b08b4b517d6241f3f4fec927abe",
+          "executable_bytes": 62232,
+          "allocated_bytes": 87794,
+          "zero_fill_bytes": 23475,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 77,
+            "details_sha256": "538e2dd50f2b5c517734205a9aeb1f01000c2ad6bba47f7bbde807e35539984d"
+          }
+        }
+      }
+    },
+    "on-combined-fast": {
+      "native_static": {
+        "ii": {
+          "bytes": 1079656,
+          "sha256": "4b83ba72260e320e86a58321620c72026333247e16d0509692d6bfb8b97c93d2"
+        },
+        "o": {
+          "bytes": 190488,
+          "sha256": "f192c37e2806d65c7d02e29dc8d99499af2ededa97f273df316a74b54869fe3c",
+          "executable_bytes": 73064,
+          "allocated_bytes": 117248,
+          "zero_fill_bytes": 17385,
+          "stack": {
+            "max_bytes": 9016,
+            "functions": 185,
+            "details_sha256": "937142c81607da061ac5eea4e782bae4642351bb61c02b374f77c9360c26bac7"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 335041,
+          "sha256": "22ca94aff6159bb7e2abea16d9343962ce77ad47ff00dec1d6ed33f2187121e9"
+        },
+        "o": {
+          "bytes": 104176,
+          "sha256": "4eb8ff49ce34d4fffd1162c40468314d713baba9102412e3501f211cd38a0702",
+          "executable_bytes": 53344,
+          "allocated_bytes": 67244,
+          "zero_fill_bytes": 12105,
+          "stack": {
+            "max_bytes": 1184,
+            "functions": 69,
+            "details_sha256": "ad20b768c9f485ce877d2c4c5fb31f70b5751ebed87fae14e9c4661d1375e391"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1176807,
+          "sha256": "1d5cc4d6db940a868ae038bfcc5f03d7e3e77f119e6c4a9bc72f92bab3078d7e"
+        },
+        "o": {
+          "bytes": 83772,
+          "sha256": "063544af7c3cce301cfb512db2c7893db9e24a36e5862afb190b3abb53d7a13c",
+          "executable_bytes": 51012,
+          "allocated_bytes": 66681,
+          "zero_fill_bytes": 13955,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 69,
+            "details_sha256": "cd375aff555b4e53b26c71855bde305867787da345af5f614f5c33901b3ba7a7"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1481455,
+          "sha256": "62f05a31afbf5f49c5514cdf275b4eab971e2ea4bec864a63e63bd66a067c5c0"
+        },
+        "o": {
+          "bytes": 415268,
+          "sha256": "3030b3df6cc0580ce069c4733edab78f14dc428951700b9077cdb39ebb333490",
+          "executable_bytes": 82586,
+          "allocated_bytes": 395007,
+          "zero_fill_bytes": 153392,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "50b6364d6d938fa66c8531e6798b0f80595d07b403c92338960e0ebdc58a6fe7"
+          }
+        }
+      },
+      "chunk_submit": {
+        "ii": {
+          "bytes": 729642,
+          "sha256": "aeee15eec8d1c7c76ac716b383bb51c211f9afaa36a6be34c4c9708768bca144"
+        },
+        "o": {
+          "bytes": 3156,
+          "sha256": "a738ac8e5b5f2e4dc191a6d0f61124ebfd39729e98967581043ea6b7336d70df",
+          "executable_bytes": 1036,
+          "allocated_bytes": 1036,
+          "zero_fill_bytes": 0,
+          "stack": {
+            "max_bytes": 296,
+            "functions": 11,
+            "details_sha256": "d7b1949b79a2bb5a0c35cc9c6bbc607469d990726f1f3813dc0ef1994e145883"
+          }
+        }
+      }
+    },
+    "control-on-combined-fast": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1176807,
+          "sha256": "1d5cc4d6db940a868ae038bfcc5f03d7e3e77f119e6c4a9bc72f92bab3078d7e"
+        },
+        "o": {
+          "bytes": 83772,
+          "sha256": "063544af7c3cce301cfb512db2c7893db9e24a36e5862afb190b3abb53d7a13c",
+          "executable_bytes": 51012,
+          "allocated_bytes": 66681,
+          "zero_fill_bytes": 13955,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 69,
+            "details_sha256": "cd375aff555b4e53b26c71855bde305867787da345af5f614f5c33901b3ba7a7"
+          }
+        }
+      }
+    },
+    "release-baseline": {
+      "native_static": {
+        "ii": {
+          "bytes": 1063466,
+          "sha256": "74ea6e4a0cc417137fb8aee563484340123c8cd2a112502f361966dc24cd5e9e"
+        },
+        "o": {
+          "bytes": 178960,
+          "sha256": "fd81cdc8f43c8fb5d6280540333b3675ffbcbedd79a4bf8051cf5062df54c6c8",
+          "executable_bytes": 69176,
+          "allocated_bytes": 112849,
+          "zero_fill_bytes": 17212,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 172,
+            "details_sha256": "059f8fc842ed136b43524f404a6a89bf8c8924d49e655b730d65e5ada1dd8e04"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "0d4d6efb68645b75ecdf75025812ebafdacdec35737b466d548101691995e5ee"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    },
+    "release-absent": {
+      "native_static": {
+        "ii": {
+          "bytes": 1063466,
+          "sha256": "74ea6e4a0cc417137fb8aee563484340123c8cd2a112502f361966dc24cd5e9e"
+        },
+        "o": {
+          "bytes": 178960,
+          "sha256": "fd81cdc8f43c8fb5d6280540333b3675ffbcbedd79a4bf8051cf5062df54c6c8",
+          "executable_bytes": 69176,
+          "allocated_bytes": 112849,
+          "zero_fill_bytes": 17212,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 172,
+            "details_sha256": "afff6d4c9379f1fd5f73100dd42efa91a947d4d2acdb581ad424a6af4e6b9d92"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    },
+    "release-zero": {
+      "native_static": {
+        "ii": {
+          "bytes": 1063466,
+          "sha256": "74ea6e4a0cc417137fb8aee563484340123c8cd2a112502f361966dc24cd5e9e"
+        },
+        "o": {
+          "bytes": 178960,
+          "sha256": "fd81cdc8f43c8fb5d6280540333b3675ffbcbedd79a4bf8051cf5062df54c6c8",
+          "executable_bytes": 69176,
+          "allocated_bytes": 112849,
+          "zero_fill_bytes": 17212,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 172,
+            "details_sha256": "afff6d4c9379f1fd5f73100dd42efa91a947d4d2acdb581ad424a6af4e6b9d92"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    },
+    "qa-baseline": {
+      "native_static": {
+        "ii": {
+          "bytes": 1067487,
+          "sha256": "66840ef3ba185f99da97220ebaf6034abb4c0caf2533fe84e801594b5ca8ccc1"
+        },
+        "o": {
+          "bytes": 184532,
+          "sha256": "5cbdbc3900eaaaa19fc992c8fdf9f5bcdf2ae043f4adba4a8123fbd97a2b3c47",
+          "executable_bytes": 70680,
+          "allocated_bytes": 114490,
+          "zero_fill_bytes": 17345,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 183,
+            "details_sha256": "84f64b26abab41d50983d57eec022b6e330f7adbcfe6de7fa7fd50653488af23"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "0d4d6efb68645b75ecdf75025812ebafdacdec35737b466d548101691995e5ee"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    },
+    "qa-absent": {
+      "native_static": {
+        "ii": {
+          "bytes": 1067487,
+          "sha256": "66840ef3ba185f99da97220ebaf6034abb4c0caf2533fe84e801594b5ca8ccc1"
+        },
+        "o": {
+          "bytes": 184532,
+          "sha256": "5cbdbc3900eaaaa19fc992c8fdf9f5bcdf2ae043f4adba4a8123fbd97a2b3c47",
+          "executable_bytes": 70680,
+          "allocated_bytes": 114490,
+          "zero_fill_bytes": 17345,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 183,
+            "details_sha256": "1800fe3155266f05a72222fe2ef8eb120808f29e78f2b7ef4d5989293167101d"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    },
+    "qa-zero": {
+      "native_static": {
+        "ii": {
+          "bytes": 1067487,
+          "sha256": "66840ef3ba185f99da97220ebaf6034abb4c0caf2533fe84e801594b5ca8ccc1"
+        },
+        "o": {
+          "bytes": 184532,
+          "sha256": "5cbdbc3900eaaaa19fc992c8fdf9f5bcdf2ae043f4adba4a8123fbd97a2b3c47",
+          "executable_bytes": 70680,
+          "allocated_bytes": 114490,
+          "zero_fill_bytes": 17345,
+          "stack": {
+            "max_bytes": 9008,
+            "functions": 183,
+            "details_sha256": "1800fe3155266f05a72222fe2ef8eb120808f29e78f2b7ef4d5989293167101d"
+          }
+        }
+      },
+      "trans": {
+        "ii": {
+          "bytes": 329794,
+          "sha256": "bf9ceaabbc0a4ca4be2ae0a1fe32a1be08e0cb12f544a6d0c3589626b03c514c"
+        },
+        "o": {
+          "bytes": 98576,
+          "sha256": "80879ac5a5fb90fc728c5acef7cb613553388db6746d5acbf3f4c79823f64f2b",
+          "executable_bytes": 51072,
+          "allocated_bytes": 55884,
+          "zero_fill_bytes": 3117,
+          "stack": {
+            "max_bytes": 1176,
+            "functions": 65,
+            "details_sha256": "aa003fe8a35f68866524939dc441f57787174b36ae21b2e42ac6248ef16fd194"
+          }
+        }
+      },
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      }
+    }
+  },
+  "dependency_set_sha256": {
+    "on-cone-plus": {
+      "native_static": "c16b9dad521f7377f0fb58cb47f8339a6986eeb1ca92508692a34b213ffa8df5",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-cone-plus": {
+      "native_static": "f12e68705265d1a7773d06d752e9b37f196398a9529163d3dc9cbdea333d28ae"
+    },
+    "on-cone-minus": {
+      "native_static": "c16b9dad521f7377f0fb58cb47f8339a6986eeb1ca92508692a34b213ffa8df5",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-cone-minus": {
+      "native_static": "f12e68705265d1a7773d06d752e9b37f196398a9529163d3dc9cbdea333d28ae"
+    },
+    "on-piece": {
+      "native_static": "c16b9dad521f7377f0fb58cb47f8339a6986eeb1ca92508692a34b213ffa8df5",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-piece": {
+      "native_static": "f12e68705265d1a7773d06d752e9b37f196398a9529163d3dc9cbdea333d28ae"
+    },
+    "on-front": {
+      "native_static": "45fdce13242f4c4097a75605a3e457f2edb847fd8b53c70285353abe37cabd58",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-front": {
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb"
+    },
+    "on-combined-exact": {
+      "native_static": "4da78b0193de0dd83323df5b72c528c8c7b4f3662115bd7dc2770eddf60102a0",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "bb0a8cb365a62d29553a65982a1fc71625ff9ea147b6e902eb2140a48aa17464",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-combined-exact": {
+      "native_actor_fast": "e720d29ac4b819f0c69ac5cb08c47bf46edc8407ce6ea6046d7b1304ffa6dc85"
+    },
+    "on-combined-fast": {
+      "native_static": "c16b9dad521f7377f0fb58cb47f8339a6986eeb1ca92508692a34b213ffa8df5",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "e3eef715bf4b83a68715177604b2e6342f4e90d846fdbb0471a106c83cc07702",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "chunk_submit": "689f6721f41ba78d15a0c86c76fd0a776418894903c809e96a4e36e78a6ec3b3"
+    },
+    "control-on-combined-fast": {
+      "native_actor_fast": "6a44fe2956df719d2dfebc9b6f261d01f12b789c05826f9c4f40a2c0dd009189"
+    },
+    "release-baseline": {
+      "native_static": "91e924c59485603635f96694d670fb43e615a3a657053fc00adcd8e8d95c0a3d",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    },
+    "release-absent": {
+      "native_static": "91e924c59485603635f96694d670fb43e615a3a657053fc00adcd8e8d95c0a3d",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    },
+    "release-zero": {
+      "native_static": "91e924c59485603635f96694d670fb43e615a3a657053fc00adcd8e8d95c0a3d",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    },
+    "qa-baseline": {
+      "native_static": "45fdce13242f4c4097a75605a3e457f2edb847fd8b53c70285353abe37cabd58",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    },
+    "qa-absent": {
+      "native_static": "45fdce13242f4c4097a75605a3e457f2edb847fd8b53c70285353abe37cabd58",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    },
+    "qa-zero": {
+      "native_static": "45fdce13242f4c4097a75605a3e457f2edb847fd8b53c70285353abe37cabd58",
+      "trans": "020b1ff9fe029e66536680b3924a2e8201c0fde86e45e01bddd208fd5128afeb",
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f"
+    }
+  },
+  "partial_links": {
+    "on-cone-plus": {
+      "sha256": "83a5aa88d9880623b4f7ed7a1592f4bf530577a96db7716079624d754c875467",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-cone-minus": {
+      "sha256": "67a088dc97ce90daca0973aa927101d2dcea2122db68c9b5fcab40c1c23fca8d",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-piece": {
+      "sha256": "9889869008a99156f2e990c28b0e526028b3c0a5faa7d6c6ec285b12709d5f83",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-front": {
+      "sha256": "a2d2b323acf7b0c251702fb02f99567c846a3052687808a938f7231e03967a7c",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-combined-exact": {
+      "sha256": "9398f4d77d7784e4945e01e5e88775a177ac04377fae6ba2c29d8bb2249f4a64",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-combined-fast": {
+      "sha256": "1236f6499a844399d3aa30c1c3d04f6bf567705ad4d06a718cf8dc682e788418",
+      "checked_symbol_fragments": [
+        "re4dc_ps2_piece_slot",
+        "re4dc_chunk_"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    }
+  },
+  "generated_knob_definitions": {
+    "on-front": {
+      "FRONT_TEXOBJ": {
+        "unit": "trans",
+        "generated_header": "records30.h",
+        "sha256": "dc45696e76b1617c425df6464baa1f9a786648a79ae7724c8338184c70ef5861",
+        "value": "1"
+      }
+    },
+    "on-combined-exact": {
+      "FRONT_TEXOBJ": {
+        "unit": "trans",
+        "generated_header": "records30.h",
+        "sha256": "dc45696e76b1617c425df6464baa1f9a786648a79ae7724c8338184c70ef5861",
+        "value": "1"
+      }
+    },
+    "on-combined-fast": {
+      "FRONT_TEXOBJ": {
+        "unit": "trans",
+        "generated_header": "records30.h",
+        "sha256": "dc45696e76b1617c425df6464baa1f9a786648a79ae7724c8338184c70ef5861",
+        "value": "1"
+      }
+    }
+  },
+  "matched_existing_on_fix_deltas": {
+    "cone-plus": {
+      "control": "control-on-cone-plus",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "native_static": {
+          "executable_bytes": 376,
+          "allocated_bytes": 480,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 9004,
+          "max_stack_after": 9004,
+          "changed_local_frames": [
+            {
+              "function": "bool {anonymous}::ps2_open()",
+              "before": 600,
+              "after": 604
+            },
+            {
+              "function": "const char* re4dc_scn21::cone(const uint8_t*, unsigned int, unsigned int, uint32_t, uint32_t, uint32_t, unsigned int, uint32_t (&)[4])",
+              "before": null,
+              "after": 36
+            }
+          ],
+          "object_identical": false
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    },
+    "cone-minus": {
+      "control": "control-on-cone-minus",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "native_static": {
+          "executable_bytes": 376,
+          "allocated_bytes": 480,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 9004,
+          "max_stack_after": 9004,
+          "changed_local_frames": [
+            {
+              "function": "bool {anonymous}::ps2_open()",
+              "before": 600,
+              "after": 604
+            },
+            {
+              "function": "const char* re4dc_scn21::cone(const uint8_t*, unsigned int, unsigned int, uint32_t, uint32_t, uint32_t, unsigned int, uint32_t (&)[4])",
+              "before": null,
+              "after": 36
+            }
+          ],
+          "object_identical": false
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    },
+    "piece": {
+      "control": "control-on-piece",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "native_static": {
+          "executable_bytes": 56,
+          "allocated_bytes": 92,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 9016,
+          "max_stack_after": 9016,
+          "changed_local_frames": [],
+          "object_identical": false
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    },
+    "front": {
+      "control": "control-on-front",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "trans": {
+          "executable_bytes": 292,
+          "allocated_bytes": 292,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 1184,
+          "max_stack_after": 1184,
+          "changed_local_frames": [],
+          "object_identical": false
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    },
+    "combined-exact": {
+      "control": "control-on-combined-exact",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 16,
+          "allocated_bytes": 20,
+          "zero_fill_bytes": 4,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388,
+          "changed_local_frames": [],
+          "object_identical": false
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    },
+    "combined-fast": {
+      "control": "control-on-combined-fast",
+      "baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388,
+          "changed_local_frames": [],
+          "object_identical": true
+        }
+      },
+      "scope": "Same existing-ON Make options; changed TUs only; local stack frames, not call-chain peaks"
+    }
+  },
+  "raw_evidence": {
+    "layout": "on-all preserves original full ON controls/providers; recovery contains final OFF/trans recompiles and freshly recombined links",
+    "superseded_attempt": "Initial off-release/off-qa failed raw trans preprocessor identity: legacy HALT line2465 shifted to2491. These failed comparisons are not counted as PASS.",
+    "repair": "A source #line directive restores the existing diagnostic mapping. Only src/game/trans.cpp changed after the successful original ON receipt.",
+    "reused_on_receipt_sha256": "8fb22d8074c5c3a256a8e2ded59bb231213bc48d702877ed6ae73eae6782bdcf",
+    "replaced_source": {
+      "path": "src/game/trans.cpp",
+      "before": "2976894dbf1b1cda38eeaa324a73143e3d9e24db2d8907de3e5b4caab5e0b83e",
+      "after": "4bdf9c21fec3ce2ec0d65aaeafa383d33361a74ce3b1b69b410da47a8100acd7"
+    },
+    "replacement_scope": "All six candidate trans objects and the front existing-ON trans control recompiled. Other ON source/dependency inputs revalidated unchanged. All six partial links recreated from final objects.",
+    "subruns": [
+      {
+        "name": "recovery/off-release",
+        "receipt_sha256": "52c1a5cfb5cbff2d54beeb0a7a08fe165facd8a981a1b334fc675af57c68e166",
+        "log_sha256": "c9c36561d86ea77b46a849cee6273bd3f7132aff681b53b8cb74dcd4b9f5bb0f"
+      },
+      {
+        "name": "recovery/off-qa",
+        "receipt_sha256": "847834e3616a02406593152c378151778c6d1bcd2792179231f1e24e31e4d514",
+        "log_sha256": "95dc1708849b1a0bef85132ca35197b49eb72eb9cefa30381f1d3193dec9cf50"
+      },
+      {
+        "name": "recovery/on-trans",
+        "receipt_sha256": "96837896a4cad3b89785dd003a6eb21b56eb62135e6b9baeb0d87988134ab450",
+        "log_sha256": "9a6f60792e0015df97c92e77d3baf5b0fccd8fa792c421486b48487e734470fd"
+      }
+    ],
+    "replacement_config_sha256": "60159a01a5af179f2516c94047f37fcaf6f787870e830a0f05e23a0a97b23f90",
+    "relink_commands_sha256": "305e987b4e9d568dc69988c3c272724bd11d8651b27f341ebaadb51cd7a79519"
+  },
+  "validation_only_overrides": {
+    "NMR_POOL_LOD": 0,
+    "reason": "Private selected LOD input unavailable; same public recipe override in control and candidate"
+  },
+  "full_receipt_sha256": "4b5cfa77cde798c217cce55b13fce6e53bcb5096160c57c558d11d5975e759af",
+  "release_defaults": {
+    "SCENERY_CONE": "0",
+    "SCENERY_PIECE_STATE": "0",
+    "FRONT_TEXOBJ": "0",
+    "CHAR_CHUNK": "0",
+    "CHAR_CHUNK_BACKEND": "0",
+    "QA_MENU": "0",
+    "QA_LINK": "0",
+    "SCENERY_CONE_SIGN": "1",
+    "PS2_WORLD_HDR_CACHE": "1",
+    "PS2_WORLD_ROOMS": "2",
+    "SCENERY_CHUNK": "1",
+    "SCENERY_STREAM": "1",
+    "SCENERY_SUBMIT_BATCH": "1",
+    "SCENERY_REPLAY_LEAN": "1",
+    "PS2_PVS": "0",
+    "PS2_PVS_BATCH_COMPOSE": "0",
+    "WORLD_PORTAL29": "0",
+    "FRONT_NATIVE": "1",
+    "COARSE_ONE_SUBMIT": "1",
+    "CHUNK_SUBMIT": "1",
+    "ACTOR_LIGHT_FAST_ONLY": "1"
+  },
+  "make_rejections": [
+    {
+      "reason": "enabled scenery cone sign must be exactly 1 or -1",
+      "returncode": 2,
+      "log_sha256": "029dbce7f81e6d9994ff5dcb1b4d5d3211e75c92c63476ee85eafe22a9efe78c",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-0/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-0/obj/aica-audio.h'\nscenery19.mk:240: *** SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled.  Stop.\n"
+    },
+    {
+      "reason": "enabled scenery cone sign must be exactly 1 or -1",
+      "returncode": 2,
+      "log_sha256": "c623c303c722409b86f8aa6fde773e6077bd29fb8e4a06bc8fb0bc0b40658fd9",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-1/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-1/obj/aica-audio.h'\nscenery19.mk:243: *** SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled.  Stop.\n"
+    },
+    {
+      "reason": "enabled scenery cone sign must be exactly 1 or -1",
+      "returncode": 2,
+      "log_sha256": "450678c6e9d8dbf179ec75d2c6ba5296716a00effa4e6da0ba4e7092caa4c7b0",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-2/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-2/obj/aica-audio.h'\nscenery19.mk:243: *** SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled.  Stop.\n"
+    },
+    {
+      "reason": "enabled scenery cone sign must be exactly 1 or -1",
+      "returncode": 2,
+      "log_sha256": "047edbcad589e8b108429ae2600ae2c912a60c89edb21f8c92a61369159f50f9",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-3/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-3/obj/aica-audio.h'\nscenery19.mk:240: *** SCENERY_CONE_SIGN must be 1, +1 or -1 when SCENERY_CONE is enabled.  Stop.\n"
+    },
+    {
+      "reason": "enabled actor chunk backend supports only 0 or 1",
+      "returncode": 2,
+      "log_sha256": "bebc172048bad8cdcc873fe5879225d354be59a6f08376450e2cf2fc469e522e",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-4/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-4/obj/aica-audio.h'\nchardraw19.mk:17: *** CHAR_CHUNK_BACKEND must be 0 or 1.  Stop.\n"
+    },
+    {
+      "reason": "actor chunk backend requires the shared provider",
+      "returncode": 2,
+      "log_sha256": "5aab0fb9484a1fd59b0f49405b336e2399a0671f28156f3eba96b12e04754330",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-5/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build34-target-final/recovery/off-qa/reject-5/obj/aica-audio.h'\nchardraw19.mk:21: *** CHAR_CHUNK_BACKEND=1 needs CHUNK_SUBMIT=1 (the shared back end, scenery19.mk).  Stop.\n"
+    }
+  ],
+  "make_acceptances": [
+    {
+      "reason": "disabled scenery cone ignores its unused sign",
+      "returncode": 0,
+      "log_sha256": "6683f09780f29bb5d6f958ae1a010e71f5d0f97729224dbf45b5f9d3b18b5ae3",
+      "error": null
+    },
+    {
+      "reason": "disabled scenery cone also ignores an empty unused sign",
+      "returncode": 0,
+      "log_sha256": "3cb17e77b9479006d74b3e22cc2b8b09659dc1877f8da75291af9159d3d46578",
+      "error": null
+    },
+    {
+      "reason": "enabled scenery cone accepts the explicit positive sign",
+      "returncode": 0,
+      "log_sha256": "3ef6a9f8e263f37a9620638d0aba7cabc5723854cfd831cad3caaec96af53cd1",
+      "error": null
+    }
+  ],
+  "matched_changed_unit_size_deltas": {
+    "cone-plus": {
+      "control": "qa-zero",
+      "units": {
+        "native_static": {
+          "executable_bytes": 1932,
+          "allocated_bytes": 2248,
+          "zero_fill_bytes": 32,
+          "max_stack_before": 9008,
+          "max_stack_after": 9004
+        },
+        "trans": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 1176,
+          "max_stack_after": 1176
+        },
+        "native_actor_fast": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        }
+      },
+      "total": {
+        "executable_bytes": 1932,
+        "allocated_bytes": 2248,
+        "zero_fill_bytes": 32
+      }
+    },
+    "cone-minus": {
+      "control": "qa-zero",
+      "units": {
+        "native_static": {
+          "executable_bytes": 1928,
+          "allocated_bytes": 2244,
+          "zero_fill_bytes": 32,
+          "max_stack_before": 9008,
+          "max_stack_after": 9004
+        },
+        "trans": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 1176,
+          "max_stack_after": 1176
+        },
+        "native_actor_fast": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        }
+      },
+      "total": {
+        "executable_bytes": 1928,
+        "allocated_bytes": 2244,
+        "zero_fill_bytes": 32
+      }
+    },
+    "piece": {
+      "control": "qa-zero",
+      "units": {
+        "native_static": {
+          "executable_bytes": 444,
+          "allocated_bytes": 560,
+          "zero_fill_bytes": 8,
+          "max_stack_before": 9008,
+          "max_stack_after": 9016
+        },
+        "trans": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 1176,
+          "max_stack_after": 1176
+        },
+        "native_actor_fast": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        }
+      },
+      "total": {
+        "executable_bytes": 444,
+        "allocated_bytes": 560,
+        "zero_fill_bytes": 8
+      }
+    },
+    "front": {
+      "control": "qa-zero",
+      "units": {
+        "native_static": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 9008,
+          "max_stack_after": 9008
+        },
+        "trans": {
+          "executable_bytes": 2272,
+          "allocated_bytes": 11360,
+          "zero_fill_bytes": 8988,
+          "max_stack_before": 1176,
+          "max_stack_after": 1184
+        },
+        "native_actor_fast": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        }
+      },
+      "total": {
+        "executable_bytes": 2272,
+        "allocated_bytes": 11360,
+        "zero_fill_bytes": 8988
+      }
+    },
+    "combined-fast": {
+      "control": "qa-zero",
+      "units": {
+        "native_static": {
+          "executable_bytes": 2384,
+          "allocated_bytes": 2758,
+          "zero_fill_bytes": 40,
+          "max_stack_before": 9008,
+          "max_stack_after": 9016
+        },
+        "trans": {
+          "executable_bytes": 2272,
+          "allocated_bytes": 11360,
+          "zero_fill_bytes": 8988,
+          "max_stack_before": 1176,
+          "max_stack_after": 1184
+        },
+        "native_actor_fast": {
+          "executable_bytes": 472,
+          "allocated_bytes": 1453,
+          "zero_fill_bytes": 928,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        }
+      },
+      "total": {
+        "executable_bytes": 5128,
+        "allocated_bytes": 15571,
+        "zero_fill_bytes": 9956
+      }
+    }
+  },
+  "size_scope": {
+    "comparisons": "Matched controls cover only the three changed TUs, same lighting/recipe profile, experimental controls zero versus enabled. These are feature-level deltas, not isolated repair-only cycle or image costs.",
+    "providers": "native_ui and chunk_submit are unchanged ON-only provider TUs; absolute sizes appear in artifacts but they have no OFF identity/delta claim.",
+    "combined_exact": "ACTOR_LIGHT_FAST_ONLY=0 has no matched OFF target control in this bounded matrix. Report absolute object and local stack sizes only; do not compare its costs to FAST_ONLY=1 as though only the repairs changed."
+  }
+}

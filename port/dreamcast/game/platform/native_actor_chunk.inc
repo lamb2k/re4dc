@@ -225,6 +225,9 @@ inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, u
 #if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
     bool ok = true;
     if (chunk_backend(e, r, index, nv, ni, nt, ok)) return ok;
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    ++chunk_backend_fallbacks;
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorChunkBackend, 1)
 #endif

@@ -1,0 +1,279 @@
+{
+  "status": "PASS",
+  "scope": "Execute actual FRONT_TEXOBJ helpers against the uncached production loop.\n\nEvery effective GX word, materialized tail, sequential swap and descriptor\nside effect is checked. External model/global types preserve accessed SH-4\noffsets; host pointers are wider. This is no full native replay, game route,\ntarget performance or console qualification. No proprietary assets are used.\n",
+  "source_sha256": {
+    "src/game/trans.cpp": "4bdf9c21fec3ce2ec0d65aaeafa383d33361a74ce3b1b69b410da47a8100acd7",
+    "port/dreamcast/game/platform/gx_stub.cpp": "4bd41b2ecc331f467f040324ef6b9a1dc18e55fe3fec0f49b4633d55c20a3817",
+    "port/dreamcast/game/platform/misc.cpp": "a3b02bf83573dec4d2f2f2152cc018541f8d586c47cb397200daf374449ba4a5",
+    "include/tpl.h": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+    "include/trans.h": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "port/dreamcast/tools/cloud/build34/front_sources.py": "5c501b718bdd116d1f0c75b983b7376e32612cbf2e6b6db3d78495d1e688f743",
+    "port/dreamcast/tools/cloud/build34/front_fixture_types.hpp.in": "42836d7886eb9b59114ed3f90a1a9afe1e5dfa92b73e5a3623c1391f75c036a9",
+    "port/dreamcast/tools/cloud/build34/front_host.py": "1d3fc0ec05ea289f820ac53f7cf7601dbaf642569bfd4eef227635daf2abf76c",
+    "port/dreamcast/tools/cloud/build34/front_fixture.cpp.in": "95389ebbe0db669f92dfb09c2564084f4eca9f8d9f2fcafdff8794a36e3b1807"
+  },
+  "extracted_sha256": {
+    "CACHE": "c3bc770ae97e200708a87ae40a19ef8047250fe72b2466983b4661634150f503",
+    "SOURCE_LOOP": "5c1239a61931a1c50f86ee3b4a4ff0f6cb195532fd066101ee431da22e625797",
+    "SWAP": "9a7041e8a3ca79abba1bfb070f533f11c5e74e1cc0aa75be77ba9f3b4710c7aa",
+    "GX_INIT": "68346490a3b065c49a4476489bec06d5279a5fd1eec33408cb2d360f1aa4ba0b",
+    "TEX_GET": "8e1da58e82b1b7176ceec9689b8739678d36233ef3325298f23ad2f542bbf165",
+    "GX_WORK": "dfee1c71b360a6dd958e38a44060ce7cfcce25f7510e672ad5777b946545b6c4",
+    "MODEL_EXT": "01dfc9b456a66103c8e22efd3d1c5eb1755f64cbcde6e582206f09d9e373510e",
+    "TPL_HEADER": "9b42d19150c6db82c13d5bf73195ca8c575fc4e9e699bf483d0cede7acb01fbc"
+  },
+  "cases": 23,
+  "checks": 173714,
+  "scenarios": [
+    {
+      "case": "secondary-data",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "same-pointer-width",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "first-height",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "secondary-format",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "secondary-wrap",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "mip-relation",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "header-pointer-reuse",
+      "checks": 3984,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "stable-hits-and-ignored-fields",
+      "checks": 9955,
+      "hits": 3,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "forced-wrap-hit-side-effects",
+      "checks": 3983,
+      "hits": 1,
+      "builds": 1,
+      "fallbacks": 0,
+      "flushes": 1,
+      "resets": 0
+    },
+    {
+      "case": "shared-added-wrap-alias",
+      "checks": 5973,
+      "hits": 0,
+      "builds": 3,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "primary-empty-added-mutations",
+      "checks": 3983,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "first-data-new-key",
+      "checks": 3983,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 1,
+      "resets": 0
+    },
+    {
+      "case": "sequential-swaps-refresh",
+      "checks": 5977,
+      "hits": 1,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "smaller-set-preserves-swapped-tail",
+      "checks": 3986,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "dirty-prior-key-then-smaller-tail",
+      "checks": 5976,
+      "hits": 0,
+      "builds": 3,
+      "fallbacks": 0,
+      "flushes": 3,
+      "resets": 0
+    },
+    {
+      "case": "count-shrink-and-grow",
+      "checks": 5976,
+      "hits": 1,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "out-of-set-swap-source-fallback",
+      "checks": 3986,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 1,
+      "flushes": 1,
+      "resets": 0
+    },
+    {
+      "case": "zero-count-and-invalid-lookup",
+      "checks": 3981,
+      "hits": 0,
+      "builds": 1,
+      "fallbacks": 1,
+      "flushes": 1,
+      "resets": 0
+    },
+    {
+      "case": "room-stage-and-return-reset",
+      "checks": 5977,
+      "hits": 0,
+      "builds": 3,
+      "fallbacks": 0,
+      "flushes": 3,
+      "resets": 0
+    },
+    {
+      "case": "key-capacity-reset",
+      "checks": 67629,
+      "hits": 0,
+      "builds": 34,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 1
+    },
+    {
+      "case": "record-capacity-reset",
+      "checks": 6480,
+      "hits": 0,
+      "builds": 3,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 1
+    },
+    {
+      "case": "snapshot-flush-and-reuse",
+      "checks": 3992,
+      "hits": 1,
+      "builds": 1,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    },
+    {
+      "case": "same-storage-recycled-descriptors",
+      "checks": 3989,
+      "hits": 0,
+      "builds": 2,
+      "fallbacks": 0,
+      "flushes": 2,
+      "resets": 0
+    }
+  ],
+  "control_ref": "36643bf8ab5a78c581274f28eca702ae8aa48330",
+  "control_counterexamples": [
+    {
+      "mutation": 0,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 1,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 2,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 3,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 4,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 5,
+      "expected_counterexample": true,
+      "returncode": 31
+    },
+    {
+      "mutation": 6,
+      "expected_counterexample": true,
+      "returncode": 31
+    }
+  ],
+  "sanitize": false,
+  "sanitizer_scope": null,
+  "limits": "Actual cache helpers and uncached native init loop, not the complete frontNativeModelTrans caller. Current release ACTOR_TRANSACTION forbids FRONT_NATIVE=2. No route/image/STRICT or allocation-generation proof is claimed."
+}
