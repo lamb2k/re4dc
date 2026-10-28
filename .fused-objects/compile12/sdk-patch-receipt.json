@@ -1,0 +1,13 @@
+{
+  "overlay": "/root/probe/codex-backface-sh4zam-fused/.fused-objects/sealed12",
+  "sdk_pin": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "patch_sha256": "2416f7e2ca66b11b5cc535e83e481cfeea2c765a9dc5e13a94a453e9d6470761",
+  "files": {
+    "include/sh4zam/shz_strip.h": "ed96d15b9c13035fccc8f9be1471f083e0c573a2376b13b6189dbd61c60df334",
+    "source/shz_strip.cpp": "9ae9668bf5fa73f350c1c8cc37e4728124f233fce1e9233a7a964a53837053d6",
+    "source/shz_strip.S": "7df8c77d806f12ff5265ec860303ff8e6cb2c87c2df4a3b99b1d91551d906311",
+    "source/shz_strip_area.inc": "fb0f068066d4e7993688130e967cdb87aa9bdd5ed4848b2cebbbae429b8ebd37",
+    "source/shz_strip_fused.inc": "164c0df37d8746edf00a6ffa6a12506c545b378d7fc6e2ae1ff2bf6db9bede6a",
+    "CMakeLists.txt": "4f4e8ca23c12bc8e90c34684fb25b6c571740cc2d555fa73775abd31b2a375c1"
+  }
+}

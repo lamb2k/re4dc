@@ -1,0 +1,12 @@
+CMakeLists.txt.user
+*.o
+*.a
+*.lib
+*.d
+*.elf
+*.img
+*.log
+build*/
+.vscode/
+doc/html/
+doc/latex/

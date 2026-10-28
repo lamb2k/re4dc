@@ -1,0 +1,660 @@
+/*! \file
+    \brief   C++ routines for operating on in-memory matrices.
+    \ingroup matrix
+
+    This file provides a C++ binding layer over the C API provided by
+    shz_matrix.h.
+
+    \author    2025, 2026 Falco Girgis
+    \copyright MIT License
+
+    \todo
+        - Fully document
+        - Operator overloading
+        - full transforms (GL-style) taking a separate destination matrix?
+*/
+
+#ifndef SHZ_MATRIX_HPP
+#define SHZ_MATRIX_HPP
+
+#include "shz_matrix.h"
+#include "shz_vector.hpp"
+#include "shz_quat.hpp"
+#include "shz_xmtrx.hpp"
+
+namespace shz {
+
+    struct mat4x4: public shz_mat4x4_t {
+        static constexpr size_t Rows = 4;   //!< Number of rows
+        static constexpr size_t Cols = 4;   //!< Number of columns
+
+        mat4x4() noexcept = default;
+
+        SHZ_FORCE_INLINE mat4x4(const mat4x4& other) noexcept {
+            shz_mat4x4_copy(this, &other);
+        }
+
+        SHZ_FORCE_INLINE mat4x4(const shz_mat4x4_t& other) noexcept {
+            shz_mat4x4_copy(this, &other);
+        }
+
+#ifdef SHZ_CPP23
+        //! Returns a pointer to the internal floating-point array held by the matrix.
+        SHZ_FORCE_INLINE auto data(this auto&& self) noexcept {
+            return &self[0];
+        }
+
+        //! Overloaded subscript operator -- allows for indexing matrices like an array.
+        SHZ_FORCE_INLINE decltype(auto) operator[](this auto&& self, size_t index) noexcept {
+            return std::forward<decltype(self)>(self).elem[index];
+        }
+
+        //! Returns an iterator to the beginning of the matrix -- For STL support.
+        SHZ_FORCE_INLINE auto begin(this auto&& self) noexcept {
+            return &self[0];
+        }
+
+        //! Returns an iterator to the end of the matrix -- For STL support.
+        SHZ_FORCE_INLINE auto end(this auto&& self) noexcept {
+            return &self[Rows * Cols];
+        }
+
+        //! Overloaded space-ship operator, for generic lexicographical comparison of matrices.
+        friend constexpr auto operator<=>(const mat4x4& lhs, const mat4x4& rhs) noexcept {
+            return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(),
+                                                          rhs.begin(), rhs.end());
+        }
+
+        //! Overloaded "less-than" operator, for comparing matrices.
+        friend constexpr auto operator<(const mat4x4& lhs, const mat4x4& rhs) noexcept {
+            return std::lexicographical_compare(lhs.begin(), lhs.end(),
+                                                rhs.begin(), rhs.end());
+        }
+#endif
+        //! Overloaded equality operator, for comparing vectors.
+        friend bool operator==(const mat4x4& lhs, const mat4x4& rhs) noexcept {
+            return shz_mat4x4_equal(&lhs, &rhs);
+        }
+
+        mat4x4& operator=(const shz_mat4x4_t& other) noexcept {
+            shz_mat4x4_copy(this, &other);
+            return *this;
+        }
+
+        /*! \name  Initialization
+            \brief Routines for fully initializing a matrix.
+           @{
+        */
+
+        SHZ_FORCE_INLINE void init_identity() noexcept {
+            shz_mat4x4_init_identity(this);
+        }
+
+        SHZ_DEPRECATED("Operation is always safe now. Use default version.")
+        SHZ_FORCE_INLINE void init_identity_safe() noexcept {
+            shz_mat4x4_init_identity(this);
+        }
+
+        SHZ_FORCE_INLINE void init_zero() noexcept {
+            shz_mat4x4_init_zero(this);
+        }
+
+        SHZ_FORCE_INLINE void init_one() noexcept {
+            shz_mat4x4_init_one(this);
+        }
+
+        SHZ_FORCE_INLINE void init_fill(float value) noexcept {
+            shz_mat4x4_init_fill(this, value);
+        }
+
+        SHZ_FORCE_INLINE void init_translation(float x, float y, float z) noexcept {
+            shz_mat4x4_init_translation(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void init_translation(const vec3& v) noexcept {
+            init_translation(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void init_scale(float x, float y, float z) noexcept {
+            shz_mat4x4_init_scale(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void init_scale(const vec3& v) noexcept {
+            init_scale(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_x(float angle) noexcept {
+            shz_mat4x4_init_rotation_x(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_y(float angle) noexcept {
+            shz_mat4x4_init_rotation_y(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_z(float angle) noexcept {
+            shz_mat4x4_init_rotation_z(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_xyz(float xAngle, float yAngle, float zAngle) noexcept {
+            shz_mat4x4_init_rotation_xyz(this, xAngle, yAngle, zAngle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_zyx(float zAngle, float yAngle, float xAngle) noexcept {
+            shz_mat4x4_init_rotation_zyx(this, zAngle, yAngle, xAngle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_zxy(float zAngle, float xAngle, float yAngle) noexcept {
+            shz_mat4x4_init_rotation_zxy(this, zAngle, xAngle, yAngle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_yxz(float yAngle, float xAngle, float zAngle) noexcept {
+            shz_mat4x4_init_rotation_yxz(this, yAngle, xAngle, zAngle);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation(float angle, float x, float y, float z) noexcept {
+            shz_mat4x4_init_rotation(this, angle, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation(float angle, const vec3& axis) noexcept {
+            init_rotation(angle, axis.x, axis.y, axis.z);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_dir(float angle, float x, float y, float z) noexcept {
+            shz_mat4x4_init_rotation_dir(this, angle, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation_dir(float angle, const vec3& dir) noexcept {
+            init_rotation_dir(angle, dir.x, dir.y, dir.z);
+        }
+
+        SHZ_FORCE_INLINE void init_rotation(const quat& q) noexcept {
+            shz_mat4x4_init_rotation_quat(this, q);
+        }
+
+        SHZ_FORCE_INLINE void init_diagonal(float x, float y, float z, float w) noexcept {
+            shz_mat4x4_init_diagonal(this, x, y, z, w);
+        }
+
+        SHZ_FORCE_INLINE void init_diagonal(const vec4& v) noexcept {
+            init_diagonal(v.x, v.y, v.z, v.w);
+        }
+
+        SHZ_FORCE_INLINE void init_upper_triangular(float col1, const vec2& col2, const vec3& col3, const vec4& col4) noexcept{
+            shz_mat4x4_init_upper_triangular(this, col1, col2, col3, col4);
+        }
+
+        SHZ_FORCE_INLINE void init_lower_triangular(const vec4& col1, const vec3& col2, const vec2& col3, float col4) noexcept {
+            shz_mat4x4_init_lower_triangular(this, col1, col2, col3, col4);
+        }
+
+        SHZ_FORCE_INLINE void init_symmetric_skew(float x, float y, float z) noexcept {
+            shz_mat4x4_init_symmetric_skew(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void init_symmetric_skew(const vec3& v) noexcept {
+            init_symmetric_skew(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void init_outer_product(const vec4& v1, const vec4& v2) noexcept {
+            shz_mat4x4_init_outer_product(this, v1, v2);
+        }
+
+        SHZ_FORCE_INLINE void init_permutation_wxyz() noexcept {
+            shz_mat4x4_init_permutation_wxyz(this);
+        }
+
+        SHZ_FORCE_INLINE void init_permutation_yzwx() noexcept {
+            shz_mat4x4_init_permutation_yzwx(this);
+        }
+
+        SHZ_FORCE_INLINE void init_screen(float width, float height) noexcept {
+            shz_mat4x4_init_screen(this, width, height);
+        }
+
+        SHZ_FORCE_INLINE void init_lookat(const vec3& eye, const vec3& center, const vec3& up) noexcept {
+            shz_mat4x4_init_lookat(this, eye, center, up);
+        }
+
+        SHZ_FORCE_INLINE void init_ortho(float left, float right, float bottom, float top, float znear, float zfar) noexcept {
+            shz_mat4x4_init_ortho(this, left, right, bottom, top, znear, zfar);
+        }
+
+        SHZ_FORCE_INLINE void init_frustum(float left, float right, float bottom, float top, float znear, float zfar) noexcept {
+            shz_mat4x4_init_frustum(this, left, right, bottom, top, znear, zfar);
+        }
+
+        SHZ_FORCE_INLINE void init_perspective(float fov, float aspect, float znear) noexcept {
+            shz_mat4x4_init_perspective(this, fov, aspect, znear);
+        }
+
+        //! @}
+
+        /*! \name  Getting
+            \brief Routines for getting specific values within a matrix
+            @{
+        */
+
+        //! C++ wrapper for shz_mat4x4_row().
+        SHZ_FORCE_INLINE vec4 row(size_t index) const noexcept {
+            return shz_mat4x4_row(this, index);
+        }
+
+        //! C++ wrapper for shz_mat4x4_col().
+        SHZ_FORCE_INLINE vec4 col(size_t index) const noexcept {
+            return shz_mat4x4_col(this, index);
+        }
+
+        SHZ_FORCE_INLINE vec3 get_translation() const noexcept {
+            return shz_mat4x4_get_translation(this);
+        }
+
+        /*! Returns the scaling components from the inner 3x3 matrix of XMTRX, as a 3D vector.
+
+            \warning This routine assumes XMTRX is a standard TRS-style transform matrix,
+                     without shearing or reflection.
+        */
+        SHZ_FORCE_INLINE vec3 get_scale() const noexcept {
+            return shz_mat4x4_get_scale(this);
+        }
+
+        //! @}
+
+        /*! \name  Setting
+            \brief Routines for setting specific values within a matrix
+            @{
+        */
+
+        SHZ_FORCE_INLINE void set_row(size_t index, vec4 values) noexcept {
+            shz_mat4x4_set_row(this, index, values);
+        }
+
+        SHZ_FORCE_INLINE void set_col(size_t index, vec4 values) noexcept {
+            shz_mat4x4_set_col(this, index, values);
+        }
+
+        SHZ_FORCE_INLINE void swap_rows(size_t row1, size_t row2) noexcept {
+            shz_mat4x4_swap_rows(this, row1, row2);
+        }
+
+        SHZ_FORCE_INLINE void swap_cols(size_t col1, size_t col2) noexcept {
+            shz_mat4x4_swap_cols(this, col1, col2);
+        }
+
+        SHZ_FORCE_INLINE void set_translation(float x, float y, float z) noexcept {
+            shz_mat4x4_set_translation(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void set_translation(const vec3& v) noexcept {
+            set_translation(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void set_scale(float x, float y, float z) noexcept {
+            shz_mat4x4_set_scale(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void set_scale(const vec3& v) noexcept {
+            set_scale(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void set_rotation(const quat& rot) noexcept {
+            shz_mat4x4_set_rotation_quat(this, rot);
+        }
+
+        SHZ_FORCE_INLINE void set_diagonal(float x, float y, float z, float w) noexcept {
+            shz_mat4x4_set_diagonal(this, x, y, z, w);
+        }
+
+        SHZ_FORCE_INLINE void set_diagonal(const vec4& v) noexcept {
+            set_diagonal(v.x, v.y, v.z, v.w);
+        }
+
+        //! @}
+
+        /*! \name  Applying
+            \brief Routines for multiplying and accumulating onto the given matrix.
+            @{
+        */
+
+        SHZ_FORCE_INLINE void apply(const shz_mat4x4_t& mat) noexcept {
+            shz_mat4x4_apply(this, &mat);
+        }
+
+        SHZ_FORCE_INLINE void apply(const float mat[16]) noexcept {
+            shz_mat4x4_apply_unaligned(this, mat);
+        }
+
+        SHZ_FORCE_INLINE void apply_transpose(const shz_mat4x4_t& mat) noexcept {
+            shz_mat4x4_apply_transpose(this, &mat);
+        }
+
+        SHZ_FORCE_INLINE void apply_transpose(const float mat[16]) noexcept {
+            shz_mat4x4_apply_transpose_unaligned(this, mat);
+        }
+
+        SHZ_FORCE_INLINE void apply_scale(float x, float y, float z) noexcept {
+            shz_mat4x4_apply_scale(this, x, y, z);
+        }
+        
+        SHZ_FORCE_INLINE void apply_scale(const vec3& v) noexcept {
+            apply_scale(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void apply_translation(float x, float y, float z) noexcept {
+            shz_mat4x4_apply_translation(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void apply_translation(const vec3& v) noexcept {
+            apply_translation(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_x(float angle) noexcept {
+            shz_mat4x4_apply_rotation_x(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_y(float angle) noexcept {
+            shz_mat4x4_apply_rotation_y(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_z(float angle) noexcept {
+            shz_mat4x4_apply_rotation_z(this, angle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_xyz(float xAngle, float yAngle, float zAngle) noexcept {
+            shz_mat4x4_apply_rotation_xyz(this, xAngle, yAngle, zAngle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_zyx(float zAngle, float yAngle, float xAngle) noexcept {
+            shz_mat4x4_apply_rotation_zyx(this, zAngle, yAngle, xAngle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_zxy(float zAngle, float xAngle, float yAngle) noexcept {
+            shz_mat4x4_apply_rotation_zxy(this, zAngle, xAngle, yAngle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation_yxz(float yAngle, float xAngle, float zAngle) noexcept {
+            shz_mat4x4_apply_rotation_yxz(this, yAngle, xAngle, zAngle);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation(float angle, float x, float y, float z) noexcept {
+            shz_mat4x4_apply_rotation(this, angle, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation(float angle, vec3 axis) noexcept {
+            apply_rotation(angle, axis.x, axis.y, axis.z);
+        }
+
+        SHZ_FORCE_INLINE void apply_rotation(const quat& q) noexcept {
+            shz_mat4x4_apply_rotation_quat(this, q);
+        }
+
+        SHZ_FORCE_INLINE void apply_lookat(vec3 pos, vec3 target, vec3 up) noexcept {
+            shz_mat4x4_apply_lookat(this, pos, target, up);
+        }
+
+        SHZ_FORCE_INLINE void apply_ortho(float left, float right, float bottom, float top, float znear, float zfar) noexcept {
+            shz_mat4x4_apply_ortho(this, left, right, bottom, top, znear, zfar);
+        }
+
+        SHZ_FORCE_INLINE void apply_frustum(float left, float right, float bottom, float top, float znear, float zfar) noexcept {
+            shz_mat4x4_apply_frustum(this, left, right, bottom, top, znear, zfar);
+        }
+
+        SHZ_FORCE_INLINE void apply_perspective(float fov, float aspect, float znear) noexcept {
+            shz_mat4x4_apply_perspective(this, fov, aspect, znear);
+        }
+
+        SHZ_FORCE_INLINE void apply_screen(float width, float height) noexcept {
+            shz_mat4x4_apply_screen(this, width, height);
+        }
+
+        SHZ_FORCE_INLINE void apply_symmetric_skew(float x, float y, float z) noexcept {
+            shz_mat4x4_apply_symmetric_skew(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void apply_permutation_wxyz() noexcept {
+            shz_mat4x4_apply_permutation_wxyz(this);
+        }
+
+        SHZ_FORCE_INLINE void apply_permutation_yzwx() noexcept {
+            shz_mat4x4_apply_permutation_yzwx(this);
+        }
+
+        SHZ_FORCE_INLINE void apply_self() noexcept {
+            shz_mat4x4_apply_self(this);
+        }
+
+        //! @}
+
+        /*! \name  GL Transformations
+            \brief OpenGL-style 4x4 matrix transforms.
+            @{
+        */
+
+        SHZ_FORCE_INLINE void translate(float x, float y, float z) noexcept {
+            shz_mat4x4_translate(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void translate(vec3 v) noexcept {
+            translate(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void scale(float x, float y, float z) noexcept {
+            shz_mat4x4_scale(this, x, y, z);
+        }
+
+        SHZ_FORCE_INLINE void scale(vec3 v) noexcept {
+            scale(v.x, v.y, v.z);
+        }
+
+        SHZ_FORCE_INLINE void rotate_x(float radians) noexcept {
+            shz_mat4x4_rotate_x(this, radians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_y(float radians) noexcept {
+            shz_mat4x4_rotate_y(this, radians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_z(float radians) noexcept {
+            shz_mat4x4_rotate_z(this, radians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_xyz(float xRadians, float yRadians, float zRadians) noexcept {
+            shz_mat4x4_rotate_xyz(this, xRadians, yRadians, zRadians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_zyx(float zRadians, float yRadians, float xRadians) noexcept {
+            shz_mat4x4_rotate_zyx(this, zRadians, yRadians, xRadians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_zxy(float zRadians, float xRadians, float yRadians) noexcept {
+            shz_mat4x4_rotate_zxy(this, zRadians, xRadians, yRadians);
+        }
+
+        SHZ_FORCE_INLINE void rotate_yxz(float yRadians, float xRadians, float zRadians) noexcept {
+            shz_mat4x4_rotate_yxz(this, yRadians, xRadians, zRadians);
+        }
+
+        SHZ_FORCE_INLINE void rotate(float radians, float xAxis, float yAxis, float zAxis) noexcept {
+            shz_mat4x4_rotate(this, radians, xAxis, yAxis, zAxis);
+        }
+
+        SHZ_FORCE_INLINE void rotate(float radians, vec3 axis) noexcept {
+            rotate(radians, axis.x, axis.y, axis.z);
+        }
+
+        //! @}
+
+        /*! \name  Reverse GL Transformations
+            \brief Pre-multiplication variants of OpenGL-style 4x4 matrix transforms.
+            @{
+        */
+
+        /*! Pre-multiplies and accumulates the given matrix onto the 3D translation matrix with the given components.
+
+            \warning This routin clobbers XMTRX.
+        */
+        SHZ_FORCE_INLINE void translate_reverse(float x, float y, float z) noexcept {
+            shz_mat4x4_translate_reverse(this, x, y, z);
+        }
+
+        /*! Pre-multiplies and accumulates the given matrix onto the 3D translation matrix with the given position vector.
+
+            \warning This routin clobbers XMTRX.
+        */
+        SHZ_FORCE_INLINE void translate_reverse(const shz::vec3& pos) noexcept {
+            translate_reverse(pos.x, pos.y, pos.z);
+        }
+
+        /*! Pre-multiplies and accumulates the given matrix onto the 3D scaling matrix with the given components.
+
+            \warning This routine clobbers XMTRX
+        */
+        SHZ_FORCE_INLINE void scale_reverse(float x, float y, float z) noexcept {
+            shz_mat4x4_scale_reverse(this, x, y, z);
+        }
+
+        /*! Pre-multiplies and accumulates the given matrix onto the 3D scaling matrix with the given size vector.
+
+            \warning This routine clobbers XMTRX
+        */
+        SHZ_FORCE_INLINE void scale_reverse(const shz::vec3& size) noexcept {
+            scale_reverse(size.x, size.y, size.z);
+        }
+
+        //! @}
+
+        /*! \name  Multiplication
+            \brief Routines for multiplying two matrices and storing the result in a third.
+            @{
+        */
+
+        SHZ_FORCE_INLINE static void mult(shz_mat4x4_t* dst, const shz_mat4x4_t& lhs, const shz_mat4x4_t& rhs) noexcept {
+            shz_mat4x4_mult(dst, &lhs, &rhs);
+        }
+
+        SHZ_FORCE_INLINE static void mult(shz_mat4x4_t* dst, const shz_mat4x4_t& lhs, const float rhs[16]) noexcept {
+            shz_mat4x4_mult_unaligned(dst, &lhs, rhs);
+        }
+
+        SHZ_FORCE_INLINE static void mult_transpose(shz_mat4x4_t* dst, const shz_mat4x4_t& lhs, const shz_mat4x4_t& rhs) noexcept {
+            shz_mat4x4_mult_transpose(dst, &lhs, &rhs);
+        }
+
+        SHZ_FORCE_INLINE static void mult_transpose(shz_mat4x4_t* dst, const shz_mat4x4_t& lhs, const float rhs[16]) noexcept {
+            shz_mat4x4_mult_transpose_unaligned(dst, &lhs, rhs);
+        }
+
+        //! @}
+
+        /*! \name  Transforming
+            \brief Routines for transforming vectors and points by a matrix.
+            @{
+        */
+
+        SHZ_FORCE_INLINE vec2 transform(const vec2& in) const noexcept {
+            return shz_mat4x4_transform_vec2(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec3 transform(const vec3& in) const noexcept {
+            return shz_mat4x4_transform_vec3(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec4 transform(const vec4& in) const noexcept {
+            return shz_mat4x4_transform_vec4(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec2 transform_point(const vec2& pt) const noexcept {
+            return shz_mat4x4_transform_point2(this, pt);
+        }
+
+        SHZ_FORCE_INLINE vec3 transform_point(const vec3& pt) const noexcept {
+            return shz_mat4x4_transform_point3(this, pt);
+        }
+
+        SHZ_FORCE_INLINE vec2 transform_transpose(const vec2& in) const noexcept {
+            return shz_mat4x4_transform_vec2_transpose(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec3 transform_transpose(const vec3& in) const noexcept {
+            return shz_mat4x4_transform_vec3_transpose(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec4 transform_transpose(const vec4& in) const noexcept {
+            return shz_mat4x4_transform_vec4_transpose(this, in);
+        }
+
+        SHZ_FORCE_INLINE vec2 transform_point_transpose(const vec2& pt) const noexcept {
+            return shz_mat4x4_transform_point2_transpose(this, pt);
+        }
+
+        SHZ_FORCE_INLINE vec3 transform_point_transpose(const vec3& pt) const noexcept {
+            return shz_mat4x4_transform_point3_transpose(this, pt);
+        }
+
+        //! @}
+
+        /*! \name  Miscellaneous
+            \brief Other matrix-related operations and routines
+            @{
+        */
+
+        SHZ_FORCE_INLINE static void copy(shz_mat4x4_t* lhs, const shz_mat4x4_t& rhs) noexcept {
+            shz_mat4x4_copy(lhs, &rhs);
+        }
+
+        SHZ_FORCE_INLINE static void copy(shz_mat4x4_t* lhs, const float rhs[16]) noexcept {
+            shz_mat4x4_copy_unaligned(lhs, rhs);
+        }
+
+        friend SHZ_FORCE_INLINE void swap(shz_mat4x4_t& matA, shz_mat4x4_t& matB) noexcept {
+            shz_mat4x4_swap(&matA, &matB);
+        }
+
+        SHZ_FORCE_INLINE quat to_quat() const noexcept {
+            return shz_mat4x4_to_quat(this);
+        }
+
+        SHZ_FORCE_INLINE float determinant() const noexcept {
+            return shz_mat4x4_determinant(this);
+        }
+
+        SHZ_FORCE_INLINE float trace() const noexcept {
+            return shz_mat4x4_trace(this);
+        }
+
+        SHZ_FORCE_INLINE void inverse(mat4x4* out) const noexcept {
+            shz_mat4x4_inverse(this, out);
+        }
+
+        SHZ_FORCE_INLINE void inverse_block_triangular(mat4x4* out) const noexcept {
+            shz_mat4x4_inverse_block_triangular(this, out);
+        }
+
+        SHZ_FORCE_INLINE void decompose(vec3* translation, quat* rotation, vec3* scale) const noexcept {
+            shz_mat4x4_decompose(this, translation, rotation, scale);
+        }
+
+        /*! Adds and accumulates a scaled 4x4 matrix into the given matrix.
+
+            Each component of \p joint_matrix will be multiplied by \p weight, with the result
+            being added to the existing value of that component in \p dst.
+
+            This is useful for accumulating weighted joint matrices onto an initially
+            zeroed-out matrix.
+
+            \warning This routine clobbers XMTRX.
+
+            \sa shz_mat4x4_init_zero()
+        */
+        SHZ_FORCE_INLINE void blend(const shz_mat4x4_t& joint_matrix, float weight) noexcept {
+            shz_mat4x4_blend(this, &joint_matrix, weight);
+        }
+
+        //! @}
+    };
+
+    //! Alternate mat4x4 C++ alias for those who like POSIX style.
+    using mat4x4_t = mat4x4;
+}
+
+#endif

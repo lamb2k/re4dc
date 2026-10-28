@@ -1,0 +1,24 @@
+{
+  "scope": "Expanded actual SH4 fused-mask, six-phase and actor boundary controls.",
+  "cases": 12126,
+  "comparisons": 24252,
+  "groups": {
+    "exhaustive10": 4096,
+    "mask-boundaries": 7962,
+    "whole-short-long-boundaries": 8,
+    "index-boundaries": 60
+  },
+  "decoder_internal_relocations_match_actual_linker": true,
+  "max_steps": 86300,
+  "exact_words": true,
+  "all_six_phase_endings": true,
+  "logical64_crossword_and_parity": true,
+  "short_long_eol_boundaries": true,
+  "objects": {
+    "kernel-trace1.o": "dda469cad2e3017273c7a18ec7e7b12e31e3a1dc697dc7b8cec87653f17d55db",
+    "sdk-walk.o": "230e0b57b91c03736e63a5103ba9960992f46ed36bc54e478ccb9df825455da8",
+    "kernel-trace0.o": "349afa8775cfd3c04c9eb967de275effa9228acae8a39c57769eb8fb8d27e0cc"
+  },
+  "source": "a2b601fd6cccd61b189fa5782031e28743241325a3ba7e534bbedf9c286fd7c1",
+  "limits": "Host execution of actual target opcodes and unchanged target-lowered C oracle; no guest/hardware or transform saving."
+}

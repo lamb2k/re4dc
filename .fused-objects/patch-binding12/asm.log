@@ -1,0 +1,6 @@
+.fused-objects/sealed12/source/shz_strip.S: Assembler messages:
+.fused-objects/sealed12/source/shz_strip.S:442: Warning: overflow in branch to .Lback; converted into longer instruction sequence
+.fused-objects/sealed12/source/shz_strip_fused.inc:379: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sealed12/source/shz_strip_fused.inc:393: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sealed12/source/shz_strip_fused.inc:410: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence
+.fused-objects/sealed12/source/shz_strip_fused.inc:414: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence

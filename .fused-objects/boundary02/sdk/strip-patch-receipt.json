@@ -1,0 +1,11 @@
+{
+  "sdk_pin": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "patch_sha256": "30ee92b666d6b526802a208115061e8cbbffdad26fd3e742022a220952a1d1c4",
+  "files": {
+    "include/sh4zam/shz_strip.h": "ed96d15b9c13035fccc8f9be1471f083e0c573a2376b13b6189dbd61c60df334",
+    "source/shz_strip.cpp": "e3538ff6850511613afeea2f83000a2fa605d2a2ec220ea1ae37601649315981",
+    "source/shz_strip.S": "5ac4e2f5ece9c2985dc7a750c8c9ab4f43dc1afcd62f84cdad75f2b19e38c22e",
+    "source/shz_strip_area.inc": "9008380cfeded462b4cb811eeedf206428fd89f710c9447bd5f775bf368db26e"
+  },
+  "stage": "SDK API relocation; no speed acceptance"
+}

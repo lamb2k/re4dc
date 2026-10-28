@@ -1,0 +1,8 @@
+.fused-objects/sdk-dev10/source/shz_strip.S: Assembler messages:
+.fused-objects/sdk-dev10/source/shz_strip.S:442: Warning: overflow in branch to .Lback; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:292: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:306: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:324: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:328: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:442: Warning: overflow in branch to .Lfused_skip; converted into longer instruction sequence
+.fused-objects/sdk-dev10/source/shz_strip_fused.inc:547: Warning: overflow in branch to .Lfused_find; converted into longer instruction sequence

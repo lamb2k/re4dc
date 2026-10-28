@@ -1,0 +1,14 @@
+include:
+  - remote: https://raw.githubusercontent.com/gyrovorbis/libgimbal/master/util/pipeline-template.yml
+ 
+variables:
+  BINARY_PATH: test
+  BINARY_NAME: Sh4zamTests
+  PROJECT_CMAKE_ARGS: -DSHZ_ENABLE_TESTS=ON
+  DOCS_FTP_ADDRESS: sh4zam.com
+  BUILD_MACOS_GCC_DISABLED: "YES"
+  BUILD_PSP_DISABLED: "YES"
+  BUILD_PSVITA_DISABLED: "YES"
+  BUILD_ANDROID_SIM_DISABLED: "YES"
+  BUILD_IOS_SIM_DISABLED: "YES"
+  TEST_DREAMCAST_EMU_DISABLED: "YES"

@@ -1,0 +1,8 @@
+.fused-objects/sdk-dev11/source/shz_strip.S: Assembler messages:
+.fused-objects/sdk-dev11/source/shz_strip.S:442: Warning: overflow in branch to .Lback; converted into longer instruction sequence
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:308: Error: displacement to defined symbol .Lfused_world_decide overflows 12-bit field
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:381: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:395: Warning: overflow in branch to .Lbatch_world_cull; converted into longer instruction sequence
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:406: Error: displacement to defined symbol .Lfused_begin overflows 12-bit field
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:413: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence
+.fused-objects/sdk-dev11/source/shz_strip_fused.inc:417: Warning: overflow in branch to .Lfused_complete; converted into longer instruction sequence

@@ -1,0 +1,33 @@
+{
+  "scope": "Actual linked SDK caller opcodes versus target-lowered C strip oracle.",
+  "comparisons": 740,
+  "mode_controls": 32,
+  "cases": 185,
+  "groups": {
+    "sizes": 14,
+    "outcode-position": 90,
+    "outcode-all": 10,
+    "limit-stop": 10,
+    "random-batch": 50,
+    "interior-first-zero-depth": 4,
+    "gate-depth-all": 1,
+    "gate-screen-all": 1,
+    "gate-limit-first-zero": 1,
+    "gate-depth-before-limit": 1,
+    "gate-limit-first-depth": 1,
+    "prepassed-eligible-first-screen": 1,
+    "eligible-first-zero-later-screen": 1
+  },
+  "exact_words": true,
+  "clip_stop_pointer": true,
+  "all_any_order": true,
+  "counts": true,
+  "callee_fpscr_xf": true,
+  "no_hardware_claim": true,
+  "conservative_rejects_skip_all_area": true,
+  "interior_crossing_cost_explicit": true,
+  "files": {
+    "walk-trace1.elf": "081c5af48544eda4c0b888a925d318dfbaafe842da6b5540aa459620bc74d55b",
+    "walk-trace0.elf": "a2b396e208c7f8bd785ffcf8c6508ee427ece4d6477836e4962cbcb3d17f3ad1"
+  }
+}

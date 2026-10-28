@@ -1,0 +1,48 @@
+/*! \file
+ *  \brief C++ wrappers for preprocessor definitions and macro utilities.
+ *
+ *  This file contains the C++ API around the C preprocessor and macro API.
+ *
+ *  \author    2025, 2026 Falco Girgis
+ *  \copyright MIT License
+ */
+
+#ifndef SHZ_CDEFS_HPP
+#define SHZ_CDEFS_HPP
+
+#include "shz_cdefs.h"
+
+#if (defined(_MSVC_LANG) && _MSVC_LANG > 202002L) || (defined(__cplusplus) && __cplusplus > 202002L)
+    //! Defined if building with C++23 to enable optional features.
+#   define SHZ_CPP23    1
+#endif
+
+//! Namespace enclosing the SH4ZAM C++ API.
+namespace shz {
+
+    /*! \name  Aliasing Types
+     *  \brief Types which may break C/C++'s strict aliasing rules
+     *  @{
+     */
+
+    //! int16_t type whose value may be aliased as another type.
+    using alias_int16_t  = shz_alias_int16_t;
+    //! uint16_t type whose value may be aliased as another type.
+    using alias_uint16_t = shz_alias_uint16_t;
+    //! int32_t type whose value may be aliased as another type.
+    using alias_int32_t  = shz_alias_int32_t;
+    //! uint32_t type whose value may be aliased as another type.
+    using alias_uint32_t = shz_alias_uint32_t;
+    //! float type whose value may be aliased as another type.
+    using alias_float_t  = shz_alias_float_t;
+    //! int64_t type whose value may be aliased as another type.
+    using alias_int64_t  = shz_alias_int64_t;
+    //! uint64_t type whose value may be aliased as another type.
+    using alias_uint64_t = shz_alias_uint64_t;
+    //! double type whose value may be aliased as another type.
+    using alias_double_t = shz_alias_double_t;
+
+    //! @}
+}
+
+#endif

@@ -1,0 +1,116 @@
+{
+  "sdk_pin": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "compiler": "15.2.0",
+  "compiler_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+  "compiler_sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+  "flags": [
+    "-m4-single",
+    "-ml",
+    "-O2",
+    "-std=gnu++17",
+    "-DNDEBUG",
+    "-fno-exceptions",
+    "-fno-rtti",
+    "-ffp-contract=fast",
+    "-fno-fast-math"
+  ],
+  "source_hashes": {
+    "tools/d367/backface_sh4zam_sdk/generate.py": "3bc47cdcf042fc70122c558cc960a339f90dbd86e0aea61f6eaa361bae94d549",
+    "tools/d367/backface_sh4zam_sdk/area_probe.cpp": "d69cca8d377fe2fe1f8a3d29ba93b5ee9046f0810bf056f47ee5d2d874db4049",
+    "tools/d367/backface_sh4zam_sdk/abi_probe.cpp": "08ebd4d63318017144e0500bba74a919fe8e64686ae286a0b7cbaed5a72ec19f",
+    "room/backface_sh4zam.hpp": "8181cbdb9a0f85bee3f5baae07272c20d1a36672d5dbfdef4b7a6d599b3aaa38",
+    "game/third_party/sh4zam/include/sh4zam/shz_vector.h": "844bae12ab9ca484135b03e58050b1308da31c21e5a2c7862c09c98ded29626d",
+    "game/third_party/sh4zam/include/sh4zam/shz_scalar.h": "fc3e4b2195bf55a76795eedd5910cd52b4248a6454763ea909011da63ea7b6fc",
+    "game/third_party/sh4zam/include/sh4zam/inline/shz_vector.inl.h": "6011b3b0f5de566f5245d2f216eedfa0649d62b0cab44fd1e9b45af3100ea323",
+    "game/third_party/sh4zam/include/sh4zam/inline/shz_scalar.inl.h": "fc699674f5abf5a929d0ff2fbe02da03c4a183b55c273f59cb7d0937d35e8857"
+  },
+  "source_digest": "0577a999571287496087a6226f953bcb1101680902ef3d70fc61a1e9a543f171",
+  "target_macro_sha256": "9008380cfeded462b4cb811eeedf206428fd89f710c9447bd5f775bf368db26e",
+  "actual_compiler_area": [
+    "fsub fr4,fr6",
+    "fsub fr5,fr9",
+    "fsub fr5,fr7",
+    "fsub fr4,fr8",
+    "fmul fr9,fr6",
+    "fmov fr7,fr0",
+    "fneg fr6",
+    "fmac fr0,fr8,fr6",
+    "rts",
+    "fmov fr6,fr0"
+  ],
+  "actual_float_abi": {
+    "a": "fr5",
+    "b": "fr4",
+    "c": "fr7",
+    "d": "fr6",
+    "e": "fr9",
+    "f": "fr8"
+  },
+  "register_mapping": {
+    "fr4": "fr9",
+    "fr5": "fr8",
+    "fr6": "fr2",
+    "fr7": "fr0",
+    "fr8": "fr1",
+    "fr9": "fr3",
+    "fr0": "fr0"
+  },
+  "macro_body": [
+    "fmov fr11,fr2",
+    "fmov fr12,fr3",
+    "fmov fr10,fr0",
+    "fmov fr13,fr1",
+    "fsub fr9,fr2",
+    "fsub fr8,fr3",
+    "fsub fr8,fr0",
+    "fsub fr9,fr1",
+    "fmul fr3,fr2",
+    "fneg fr2",
+    "fmac fr0,fr1,fr2"
+  ],
+  "fast_mapping": {
+    "fr4": "fr\\ay",
+    "fr5": "fr\\ax",
+    "fr6": "fr2",
+    "fr7": "fr1",
+    "fr8": "fr13",
+    "fr9": "fr12",
+    "fr0": "fr0"
+  },
+  "fast_stages": [
+    [
+      "SH4ZAM_BACKFACE_CX ax",
+      [
+        1
+      ]
+    ],
+    [
+      "SH4ZAM_BACKFACE_CY ay",
+      [
+        3
+      ]
+    ],
+    [
+      "SH4ZAM_BACKFACE_BX ax",
+      [
+        2
+      ]
+    ],
+    [
+      "SH4ZAM_BACKFACE_PRODUCT ay",
+      [
+        0,
+        4,
+        6
+      ]
+    ],
+    [
+      "SH4ZAM_BACKFACE_FMAC",
+      [
+        5,
+        7
+      ]
+    ]
+  ],
+  "scope": "Target object and generated runtime arithmetic; no Flycast or hardware acceptance"
+}

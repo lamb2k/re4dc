@@ -1,0 +1,21 @@
+{
+  "source_header": "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/room/backface_emit.hpp",
+  "source_sha256": "5c9b4815695b058d79cc97f9203bd0a2d763c086adafdca6316549cefc576c20",
+  "generated_sha256": "f338d9ace95fca30427afd7af94102d41271ccd217adcd4a57d0646ae194af0e",
+  "library_sha256": "363b805c38e67ef858a1bd93aef1675dd3764cc54e836a7e96edbfe2a227acd9",
+  "command": [
+    "g++",
+    "-O2",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-shared",
+    "-fPIC",
+    "-I/root/probe/codex-backface-sh4zam-fused/.fused-objects/compile06",
+    "-I/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4_kernel/include",
+    "/root/probe/codex-backface-sh4zam-fused/port/dreamcast/tools/d367/backface_sh4_kernel/oracle.cpp",
+    "-o",
+    "/root/probe/codex-backface-sh4zam-fused/.fused-objects/compile06/oracle.so"
+  ],
+  "target_order": "rounded second product, fneg, FMAC first product plus negative second",
+  "scope": "host target-lowered C template oracle; actual target opcodes separately pinned"
+}

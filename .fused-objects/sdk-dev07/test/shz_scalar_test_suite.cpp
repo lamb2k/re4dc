@@ -1,0 +1,648 @@
+#include "shz_test_scenario.h"
+#include "shz_test.hpp"
+#include "sh4zam/shz_scalar.hpp"
+
+#include <cglm/cglm.h>
+
+#include <print>
+#include <array>
+
+#define GBL_SELF_TYPE shz_scalar_test_suite
+
+GBL_TEST_FIXTURE_NONE
+GBL_TEST_INIT_NONE
+GBL_TEST_FINAL_NONE
+
+GBL_TEST_CASE(min)
+    GBL_TEST_VERIFY((shz::fminf(-3.0f, 12.0f)) == -3.0f);
+    GBL_TEST_VERIFY((shz::fminf(8, 8)) == 8);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(max)
+    GBL_TEST_VERIFY(shz::fmaxf(-3.0f, 12.0f) == 12.0f);
+    GBL_TEST_VERIFY(shz::fmaxf(8, 8) == 8);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(clamp)
+    GBL_TEST_VERIFY(shz::clampf(-3.0f, 0.0f, 1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::clampf(12, -13, 33) == 12);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(norm)
+    GBL_TEST_COMPARE(shz::normalizef(-3.0f, 0.0f, 1.0f), -3.0f);
+    GBL_TEST_VERIFY(shz::equalf(shz::normalizef(12.0f, -12.0f, 24.0f), 0.66666666666f));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(floorf)
+    auto test = [&](volatile float value, float expected) {
+        GBL_CTX_BEGIN(pCtx);
+        GBL_TEST_VERIFY(shz::floorf(value) == expected);
+        GBL_CTX_END();
+    };
+
+    GBL_TEST_CALL(test( 1.8f,  1.0f));
+    GBL_TEST_CALL(test( 1.3f,  1.0f));
+    GBL_TEST_CALL(test( 0.8f,  0.0f));
+    GBL_TEST_CALL(test( 0.3f,  0.0f));
+    GBL_TEST_CALL(test( 0.0f,  0.0f));
+    GBL_TEST_CALL(test(-0.3f, -1.0f));
+    GBL_TEST_CALL(test(-0.8f, -1.0f));
+    GBL_TEST_CALL(test(-1.3f, -2.0f));
+    GBL_TEST_CALL(test(-1.8f, -2.0f));
+
+    GBL_TEST_COMPARE(shz::floorf(-3.0f), -3.0f);
+
+    {
+        volatile float value = -0.8f;
+        GBL_TEST_VERIFY(
+            (benchmark_cmp<float>)(
+                "shz::floorf", shz::floorf,
+                "floorf", floorf, value
+            )
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(ceilf)
+    auto test = [&](volatile float value, float expected) {
+        GBL_CTX_BEGIN(pCtx);
+        GBL_TEST_VERIFY(shz::ceilf(value) == expected);
+        GBL_CTX_END();
+    };
+
+    GBL_TEST_CALL(test( 1.8f,  2.0f));
+    GBL_TEST_CALL(test( 1.3f,  2.0f));
+    GBL_TEST_CALL(test( 0.8f,  1.0f));
+    GBL_TEST_CALL(test( 0.3f,  1.0f));
+    GBL_TEST_CALL(test( 0.0f,  0.0f));
+    GBL_TEST_CALL(test(-0.3f,  0.0f));
+    GBL_TEST_CALL(test(-0.8f,  0.0f));
+    GBL_TEST_CALL(test(-1.3f, -1.0f));
+    GBL_TEST_CALL(test(-1.8f, -1.0f));
+
+    GBL_TEST_COMPARE(shz::ceilf(-3.0f), -3.0f);
+
+    {
+        volatile float value = 99.0f;
+        GBL_TEST_VERIFY(
+            (benchmark_cmp<float>)(
+                "shz::ceilf", shz::ceilf,
+                "ceilf", ceilf, value
+            )
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(fmacf)
+    GBL_TEST_VERIFY(shz::fmaf(1.0f,  2.0f,  3.0f) ==  5.0f);
+    GBL_TEST_VERIFY(shz::fmaf(0.0f,  1.0f,  4.0f) ==  4.0f);
+    GBL_TEST_VERIFY(shz::fmaf(3.0f, -1.0f, -5.0f) == -8.0f);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(lerpf)
+    GBL_TEST_VERIFY(shz::lerpf(0.0f,    1.0f, 0.5f) ==   0.5f);
+    GBL_TEST_VERIFY(shz::lerpf(0.0f,    0.0f, 1.0f) ==   0.0f);
+    GBL_TEST_VERIFY(shz::lerpf(1.0f,   -1.0f, 0.5f) ==   0.0f);
+    GBL_TEST_VERIFY(shz::lerpf(-12.0f, 33.0f, 1.0f) ==  33.0f);
+    GBL_TEST_VERIFY(shz::lerpf(12.0f, -33.0f, 1.0f) == -33.0f);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(barycentric_lerpf)
+    // A: u=0, v=0, w=1 -> should return 'a' (value 10)
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 0.0f, 0.0f) == 10.0f);
+    // B: u=1, v=0, w=0 -> should return 'b' (value 20)
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 1.0f, 0.0f) == 20.0f);
+    // C: u=0, v=1, w=0 -> should return 'c' (value 30)
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 0.0f, 1.0f) == 30.0f);
+
+    // Test center point: u=1/3, v=1/3, w=1/3 -> should be average
+    {
+        float u = 1.0f/3.0f;
+        float v = 1.0f/3.0f;
+        float expected = (10.0f + 20.0f + 30.0f) / 3.0f;
+        GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, u, v) == expected);
+    }
+
+    // Midpoint A-B: u=0.5, v=0, w=0.5 -> should be (a+b)/2
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 0.5f, 0.0f) == 15.0f);
+    // Midpoint B-C: u=0.5, v=0.5, w=0 -> should be (b+c)/2
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 0.5f, 0.5f) == 25.0f);
+    // Midpoint A-C: u=0, v=0.5, w=0.5 -> should be (a+c)/2
+    GBL_TEST_VERIFY(shz_barycentric_lerpf(10.0f, 20.0f, 30.0f, 0.0f, 0.5f) == 20.0f);
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(inv_sqrtf)
+   auto test = [&](auto value) {
+        float shzv = shz::inv_sqrtf(value);
+        float ceev = 1.0f / sqrtf(fabsf(value));
+#if 0
+        std::println("{} vs {}", shzv, ceev);
+#endif
+        if(isnan(shzv) && isnan(ceev)) return true;
+        return shz::equalf(shzv, ceev);
+   };
+   GBL_TEST_VERIFY(test(333333.33f));
+   GBL_TEST_VERIFY(test(1.001f));
+   GBL_TEST_VERIFY(test((volatile float)1.0f));
+   //GBL_TEST_VERIFY(test(0.55f));
+   //GBL_TEST_VERIFY(test(0.01f));
+   //GBL_TEST_VERIFY(test(-0.001f));
+   //GBL_TEST_VERIFY(test(-0.55f));
+   GBL_TEST_VERIFY(test(-1.0f));
+   GBL_TEST_VERIFY(test(-1.001f));
+   GBL_TEST_VERIFY(test((volatile float)-33333.33f));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(invf_fsrra)
+    auto test = [&](float value) {
+        return gblFloatEquals(shz::invf_fsrra(value),
+                              1.0f / sqrtf(value * value),
+                              0.01f);
+   };
+   GBL_TEST_VERIFY(test(333333.33f));
+   GBL_TEST_VERIFY(test(1.001f));
+   GBL_TEST_VERIFY(test(1.0f));
+   //GBL_TEST_VERIFY(test(0.55f));
+   //GBL_TEST_VERIFY(test(0.01f));
+   //GBL_TEST_VERIFY(test(-0.001f));
+   //GBL_TEST_VERIFY(test(-0.55f));
+   GBL_TEST_VERIFY(test(-1.0f));
+   GBL_TEST_VERIFY(test(-1.001f));
+   //GBL_TEST_VERIFY(test(-33333.33f));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(divf_fsrra)
+    auto test = [&](float num, float denom) {
+        volatile float nom = num;
+        return gblFloatEquals(shz::divf_fsrra(num, denom), num / sqrtf(denom * denom), 0.001f)
+            && gblFloatEquals(shz::divf_fsrra(nom, denom), num / sqrtf(denom * denom), 0.001f);
+   };
+   GBL_TEST_VERIFY(test(1.0f, 333333.33f));
+   //GBL_TEST_VERIFY(test(0.001f, 1.001f));
+   GBL_TEST_VERIFY(test(0.0f, 1.0f));
+   //GBL_TEST_VERIFY(test(-3.0f, 0.55f));
+   //GBL_TEST_VERIFY(test(0.01f, 0.01f));
+   //GBL_TEST_VERIFY(test(9999.0f, -0.001f));
+   //GBL_TEST_VERIFY(test(0.55f, -0.55f));
+   //GBL_TEST_VERIFY(test(-1.0f, 0.3333f));
+   //GBL_TEST_VERIFY(test(-1.001f, 0.666f));
+   //GBL_TEST_VERIFY(test(-33333.33f, 0.0001f));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(invf)
+    auto test = [&](float value) {
+        volatile float volue = value;
+        return gblFloatEquals(shz::invf(value), 1.0f / value, 0.001f)
+            && gblFloatEquals(shz::invf(volue), 1.0f / value, 0.001f);
+   };
+   GBL_TEST_VERIFY(test(333333.33f));
+   GBL_TEST_VERIFY(test(1.001f));
+   GBL_TEST_VERIFY(test(1.0f));
+   GBL_TEST_VERIFY(test(0.55f));
+   GBL_TEST_VERIFY(test(0.01f));
+   GBL_TEST_VERIFY(test(-0.001f));
+   GBL_TEST_VERIFY(test(-0.55f));
+   GBL_TEST_VERIFY(test(-1.0f));
+   GBL_TEST_VERIFY(test(-1.001f));
+   GBL_TEST_VERIFY(test(-33333.33f));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(dot6f)
+   auto test = [&](std::array<float, 3> vec1,
+                   std::array<float, 3> vec2)
+   {
+        float fipr_res = shz::dot6f(vec1[0], vec1[1], vec1[2],
+                                    vec2[0], vec2[1], vec2[2]);
+        float c_res    = vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
+        return gblFloatEquals(fipr_res, c_res, shz::fipr_max_error);
+    };
+    GBL_TEST_VERIFY(test({ 1.0f,   2.0f, 3.0f   },
+                         { 1.0f,   2.0f, 3.0f   }));
+    GBL_TEST_VERIFY(test({-1.0f,   2.0f, 3.333f },
+                         { 1.0f, -22.0f, 3.0f   }));
+    GBL_TEST_VERIFY(test({-1.0f,   0.0f, 3.333f },
+                         { 1.0f, -22.0f, 3.0f   }));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(dot8f)
+   auto test = [&](std::array<float, 4> vec1,
+                   std::array<float, 4> vec2)
+   {
+        float fipr_res = shz::dot8f(vec1[0], vec1[1], vec1[2], vec1[3],
+                                    vec2[0], vec2[1], vec2[2], vec2[3]);    
+        float c_res    = vec1[0] * vec2[0] + vec1[1] * vec2[1] +
+                         vec1[2] * vec2[2] + vec1[3] * vec2[3];
+        return gblFloatEquals(fipr_res, c_res, shz::fipr_max_error);
+    };
+    GBL_TEST_VERIFY(test({ 1.0f,   2.0f, 3.0f,    4.0f   }, 
+                         { 1.0f,   2.0f, 3.0f,    4.0f   }));
+    GBL_TEST_VERIFY(test({-1.0f,   2.0f, 3.333f,  4.0f   }, 
+                         { 1.0f, -22.0f, 3.0f,    4.5555f}));
+    GBL_TEST_VERIFY(test({-1.0f,   0.0f, 3.333f, -4.4345f},
+                         { 1.0f, -22.0f, 3.0f,    4.5555f}));
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(mag_sqr3f)
+   auto test = [&](std::array<float, 3> vec1) {
+        float fipr_res = shz::mag_sqr3f(vec1[0], vec1[1], vec1[2]);
+        float c_res    = vec1[0] * vec1[0] + vec1[1] * vec1[1] + vec1[2] * vec1[2];
+        return gblFloatEquals(fipr_res, c_res, shz::fipr_max_error);
+    };
+    GBL_TEST_VERIFY(test({ 1.0f,   2.0f, 3.0f   }));
+    GBL_TEST_VERIFY(test({ 1.0f, -22.0f, 3.0f   }));
+    GBL_TEST_VERIFY(test({-1.0f,   0.0f, 3.333f }));
+    {
+        volatile float a = 1.0f, b = 2.0f, c = 3.0f;
+        (benchmark_cmp<float>)("shz::mag_sqr3f", shz::mag_sqr3f,
+                               "a*a + b*b + c*c",
+                               [](volatile float x, volatile float y, volatile float z) {
+                                   return (x * x) + (y * y) + (z * z);
+                               }, a, b, c
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(mag_sqr4f)
+   auto test = [&](std::array<float, 4> vec1) {
+        float fipr_res = shz::mag_sqr4f(vec1[0], vec1[1], vec1[2], vec1[3]);    
+        float c_res    = vec1[0] * vec1[0] + vec1[1] * vec1[1] +
+                         vec1[2] * vec1[2] + vec1[3] * vec1[3];
+        return gblFloatEquals(fipr_res, c_res, shz::fipr_max_error);
+    };
+    GBL_TEST_VERIFY(test({ 1.0f,   2.0f, 3.0f,    4.0f   }));
+    GBL_TEST_VERIFY(test({ 1.0f, -22.0f, 3.0f,    4.5555f}));
+    GBL_TEST_VERIFY(test({-1.0f,   0.0f, 3.333f, -4.4345f}));
+    {
+        volatile float a = 1.0f, b = 2.0f, c = 3.0f, d = 4.0f;
+            (benchmark_cmp<float>)("shz::mag_sqr4f", shz::mag_sqr4f,
+                                   "a*a + b*b + c*c + d*d",
+                                   [](float a, float b, float c, float d) {
+                                       return (a * a) + (b * b) + (c * c) + (d * d);
+                                   }, a, b, c, d
+            );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(stepf)
+    GBL_TEST_VERIFY(shz::stepf(1.0f, 1.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0f, 1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::stepf(1.0f, 0.0f) == 1.0f);
+
+    GBL_TEST_VERIFY(shz::stepf(0.5f, 1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::stepf(1.0f, 0.5f) == 1.0f);
+
+    GBL_TEST_VERIFY(shz::stepf(0.0001f, 0.0001f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0002f, 0.0001f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0001f, 0.0002f) == 0.0f);
+
+    // Negatives
+    GBL_TEST_VERIFY(shz::stepf(-2.0f, -1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::stepf(-1.0f, -1.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0f, -1.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(-1.0f, 0.0f) == 0.0f);
+
+    // Signed Zero
+    GBL_TEST_VERIFY(shz::stepf(-0.0f, 0.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0f, -0.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(-0.0f, -0.0f) == 1.0f);
+
+    // Denormals
+    GBL_TEST_VERIFY(shz::stepf(std::numeric_limits<float>::denorm_min(), 0.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.0f, std::numeric_limits<float>::denorm_min()) == 0.0f);
+    GBL_TEST_VERIFY(shz::stepf(std::numeric_limits<float>::denorm_min(), std::numeric_limits<float>::denorm_min()) == 1.0f);
+
+    // NaN and INFINITE
+#if !defined(__FAST_MATH__) && (!defined(__FINITE_MATH_ONLY__) || (__FINITE_MATH_ONLY__ == 0))
+    GBL_TEST_VERIFY(shz::stepf(NAN, NAN) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(NAN, 0.1f) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(0.1f, NAN) == 1.0f);
+    GBL_TEST_VERIFY(shz::stepf(INFINITY, INFINITY));
+    GBL_TEST_VERIFY(shz::stepf(INFINITY, 0.1f));
+    GBL_TEST_VERIFY(!shz::stepf(0.1f, INFINITY));
+#endif
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(smoothstepf)
+    auto test = [&](float x, float edge0, float edge1, float expect) {
+        volatile float res = shz::smoothstepf(x, edge0, edge1);
+        return shz_equalf(res, expect);
+    };
+
+    GBL_TEST_VERIFY(test(-1.0f, 0.0f, 1.0f, 0.0f)); // Below edge0
+    GBL_TEST_VERIFY(test( 2.0f, 0.0f, 1.0f, 1.0f)); // Above edge1
+    GBL_TEST_VERIFY(shz::smoothstepf( 0.0f, 0.0f, 1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::smoothstepf( 1.0f, 0.0f, 1.0f) == 1.0f);
+
+    GBL_TEST_VERIFY(shz::smoothstepf(0.5f, 0.0f, 1.0f) == 0.5f);
+    GBL_TEST_VERIFY(shz::smoothstepf(0.25f, 0.0f, 1.0f) == 0.15625f); // 5/32
+    GBL_TEST_VERIFY(shz::smoothstepf(0.75f, 0.0f, 1.0f) == 0.84375f); // 27/32
+
+    // Degenerate edges
+    GBL_TEST_VERIFY(test(0.0f, 1.0f, 1.0f, 0.0f)); // edge0==edge1
+    GBL_TEST_VERIFY(shz::smoothstepf(1.0f, 1.0f, 1.0f) == 1.0f);
+
+    // Test edges and midpoint
+    GBL_TEST_VERIFY(shz::smoothstepf(2.0f, 2.0f, 6.0f) == 0.0f);
+    GBL_TEST_VERIFY(test(4.0f, 2.0f, 6.0f, 0.5f)); // in range
+    GBL_TEST_VERIFY(shz::smoothstepf(6.0f, 2.0f, 6.0f) == 1.0f);
+
+    // Ensure monotonic
+    GBL_TEST_VERIFY(shz::smoothstepf(0.25f, 0.0f, 1.0f) < shz::smoothstepf(0.5f, 0.0f, 1.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf(0.5f, 0.0f, 1.0f) < shz::smoothstepf(0.75f, 0.0f, 1.0f));
+
+    // Ensure edge behavior matches safe variants.
+    GBL_TEST_VERIFY(shz::smoothstepf(-1.0f, 0.0f, 1.0f) == shz::smoothstepf_safe(-1.0f, 0.0f, 1.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf(2.0f, 0.0f, 1.0f) == shz::smoothstepf_safe(2.0f, 0.0f, 1.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf(0.0f, 0.0f, 1.0f) == shz::smoothstepf_safe(0.0f, 0.0f, 1.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf(1.0f, 0.0f, 1.0f) == shz::smoothstepf_safe(1.0f, 0.0f, 1.0f));
+
+    {
+        volatile float x = 0.25f;
+        volatile float edge0 = 0.0f;
+        volatile float edge1 = 17.0f;
+        (benchmark_cmp<float>)(
+            "shz::smoothstepf", shz::smoothstepf,
+            "glm_smoothstep", [](float edge0, float edge1, float x) { return glm_smoothstep(edge0, edge1, x); },
+            x, edge0, edge1);
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(smoothstepf_safe)
+    auto test = [&](float x, float edge0, float edge1, float expect) {
+        float res = shz::smoothstepf_safe(x, edge0, edge1);
+        return gblFloatEquals(res, expect);
+    };
+
+    GBL_TEST_VERIFY(test(-1.0f, 0.0f, 1.0f, 0.0f)); // below edge0
+    GBL_TEST_VERIFY(test( 2.0f, 0.0f, 1.0f, 1.0f)); // above edge1
+    GBL_TEST_VERIFY(shz::smoothstepf_safe( 0.0f, 0.0f, 1.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe( 1.0f, 0.0f, 1.0f) == 1.0f);
+
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.5f, 0.0f, 1.0f) == 0.5f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.25f, 0.0f, 1.0f) == 0.15625f); // 5/32
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.75f, 0.0f, 1.0f) == 0.84375f); // 27/32
+
+    // Reversed edges (undefined in spec)
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(-1.0f, 1.0f, 0.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe( 0.0f, 1.0f, 0.0f) == 1.0f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe( 1.0f, 1.0f, 0.0f) == 0.0f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe( 2.0f, 1.0f, 0.0f) == 0.0f);
+
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.5f, 1.0f, 0.0f) == 0.5f);
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.25f, 1.0f, 0.0f) == 0.84375f); // 27/32
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.75f, 1.0f, 0.0f) == 0.15625f); // 5/32
+
+    // Degenerate edges
+    GBL_TEST_VERIFY(test(0.0f, 1.0f, 1.0f, 0.0f)); // edge0==edge1
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(1.0f, 1.0f, 1.0f) == 1.0f);
+
+    // Test edges and midpoint
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(2.0f, 2.0f, 6.0f) == 0.0f);
+    GBL_TEST_VERIFY(test(4.0f, 2.0f, 6.0f, 0.5f)); // in range
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(6.0f, 2.0f, 6.0f) == 1.0f);
+
+    // Ensure monotonic
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.25f, 0.0f, 1.0f) < shz::smoothstepf_safe(0.5f, 0.0f, 1.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.5f, 0.0f, 1.0f) < shz::smoothstepf_safe(0.75f, 0.0f, 1.0f));
+
+    // Mirrored monotonic
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.25f, 1.0f, 0.0f) > shz::smoothstepf_safe(0.5f, 1.0f, 0.0f));
+    GBL_TEST_VERIFY(shz::smoothstepf_safe(0.5f, 1.0f, 0.0f) > shz::smoothstepf_safe(0.75f, 1.0f, 0.0f));
+
+    {
+        volatile float x = 0.25f;
+        volatile float edge0 = 0.0f;
+        volatile float edge1 = 17.0f;
+        (benchmark_cmp<float>)(
+            "shz::smoothstepf_safe", shz::smoothstepf_safe,
+            "glm_smoothstep", [](float edge0, float edge1, float x) { return glm_smoothstep(edge0, edge1, x); },
+            x, edge0, edge1);
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(cbrtf)
+
+    auto test = [&](volatile float value) {
+        float c_res = shz::cbrtf(value);
+        float cbrt_res = cbrtf(value);
+#if 0
+        std::println("{} vs {} vs {}", pow_res, cbrt_res, c_res);
+#endif
+        return gblFloatEquals(cbrt_res, c_res, 0.0001f);
+    };
+GBL_TEST_SKIP("FUCKED");
+    GBL_TEST_VERIFY(test(27.0f));
+    GBL_TEST_VERIFY(test(1.0f));
+    GBL_TEST_VERIFY(test(-27.0f));
+    GBL_TEST_VERIFY(test(-0.125f));
+    {
+        volatile float value = -0.125f;
+        GBL_TEST_VERIFY(
+            (benchmark_cmp<float>)("shz::cbrtf", shz::cbrtf,
+                                   "cbrtf", cbrtf, value)
+        );
+        GBL_TEST_VERIFY(
+            (benchmark_cmp<float>)("shz::cbrtf", shz::cbrtf,
+                                   "powf(x, 1.0f/3.0f)", [](float x) { return powf(x, 1.0f / 3.0f); },
+                                    value)
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(logf)
+    auto test = [&](volatile float value) {
+        float shz_res, c_res;
+
+        shz_res = shz::logf(value);
+        c_res = logf(value);
+
+        return gblRelativeError(shz_res, c_res) <= 0.2f;
+    };
+
+    GBL_TEST_VERIFY(test(27.0f));
+    GBL_TEST_VERIFY(test(1.1f));
+    GBL_TEST_VERIFY(test(7.324234f));
+    GBL_TEST_VERIFY(test(0.000125f));
+    GBL_TEST_VERIFY(
+        (benchmark_cmp<float>)(
+            "shz::logf", shz::logf,
+            "logf", logf, 9999.0f
+        )
+    );
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(log10f)
+    auto test = [&](volatile float value) {
+        float shz_res, c_res;
+
+        shz_res = shz::log10f(value);
+        c_res = log10f(value);
+#if 0
+        std::println("{} vs {}", shz_res, c_res);
+#endif
+        return gblRelativeError(shz_res, c_res) <= 0.2f;
+    };
+
+    GBL_TEST_VERIFY(test(27.0f));
+    GBL_TEST_VERIFY(test(1.1f));
+    GBL_TEST_VERIFY(test(7.324234f));
+    GBL_TEST_VERIFY(test(0.000125f));
+    GBL_TEST_VERIFY(
+        (benchmark_cmp<float>)(
+            "shz::log10f", shz::log10f,
+            "log10f", log10f, 9999.0f
+        )
+    );
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(pow10f)
+    auto test = [&](float value) {
+        float shz_res, c_res;
+
+        shz_res = shz::pow10f(value);
+        c_res = powf(10.0f, value);
+#if 0
+        std::println("{} vs {}", shz_res, c_res);
+#endif
+        return gblRelativeError(shz_res, c_res) <= 0.2f;
+    };
+    GBL_TEST_VERIFY(test(27.0f));
+    GBL_TEST_VERIFY(test(1.0f));
+    GBL_TEST_VERIFY(test(27.45345f));
+    GBL_TEST_VERIFY(test(0.125f));
+
+    GBL_TEST_VERIFY(
+        (benchmark_cmp<float>)(
+            "shz::pow10f", shz::pow10f,
+            "pow10f", [](float value) { return powf(10.0f, value); }, 99.0f
+        )
+    );
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(fmodf)
+    auto test = [&](volatile float num, volatile float denom, float expected) {
+        GBL_CTX_BEGIN(pCtx);
+        GBL_TEST_VERIFY(shz::equalf(shz::fmodf(num, denom), expected));
+        GBL_CTX_END();
+    };
+
+    // Sign of result always matches numerator across all four sign combinations
+    GBL_TEST_CALL(test( 7.0f,  3.0f,  1.0f));
+    GBL_TEST_CALL(test(-7.0f,  3.0f, -1.0f));
+    GBL_TEST_CALL(test( 7.0f, -3.0f,  1.0f));
+    GBL_TEST_CALL(test(-7.0f, -3.0f, -1.0f));
+
+    // Zero numerator
+    GBL_TEST_CALL(test( 0.0f,  5.0f,  0.0f));
+
+    // |num| < |denom|: no full quotients, returns num unchanged
+    GBL_TEST_CALL(test( 2.0f,  5.0f,  2.0f));
+    GBL_TEST_CALL(test(-2.0f,  5.0f, -2.0f));
+    GBL_TEST_CALL(test( 2.0f, -5.0f,  2.0f));
+
+    // Exact divisibility: remainder is zero
+    GBL_TEST_CALL(test( 9.0f,  3.0f,  0.0f));
+    GBL_TEST_CALL(test(-9.0f,  3.0f,  0.0f));
+    GBL_TEST_CALL(test( 5.0f,  5.0f,  0.0f));
+    GBL_TEST_CALL(test(10.0f,  5.0f,  0.0f));
+    GBL_TEST_CALL(test(15.0f,  5.0f,  0.0f));
+
+    // Non-integer denominator
+    GBL_TEST_CALL(test( 5.5f,  2.0f,  1.5f));  // 5.5 = 2*2.0 + 1.5
+    GBL_TEST_CALL(test(-5.5f,  2.0f, -1.5f));
+    GBL_TEST_CALL(test( 5.5f, -2.0f,  1.5f));
+    GBL_TEST_CALL(test( 5.0f,  1.5f,  0.5f));  // 5.0 = 3*1.5 + 0.5
+
+    // Truncation toward zero: result stays positive when x/y exceeds n+0.5
+    // trunc(8/3)=2 -> 8-2*3=2; contrast with remainderf: round(8/3)=3 -> 8-3*3=-1
+    GBL_TEST_CALL(test( 8.0f,  3.0f,  2.0f));
+    GBL_TEST_CALL(test(-8.0f,  3.0f, -2.0f));
+
+    {
+        volatile float num = -5.0f;
+        volatile float den = 2.0f;
+        GBL_TEST_VERIFY((benchmark_cmp<float>)(
+            "shz::fmodf", shz::fmodf,
+            "fmodf", fmodf, num, den)
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_CASE(remainderf)
+    auto test = [&](volatile float num, volatile float denom, float expected) {
+        GBL_CTX_BEGIN(pCtx);
+        GBL_TEST_VERIFY(shz::equalf(shz::remainderf(num, denom), expected));
+        GBL_CTX_END();
+    };
+
+    // round(7/3)=round(2.33)=2 -> 7-2*3=1
+    GBL_TEST_CALL(test( 7.0f,  3.0f,  1.0f));
+    // round(8/3)=round(2.67)=3 -> 8-3*3=-1: negative result despite positive inputs
+    GBL_TEST_CALL(test( 8.0f,  3.0f, -1.0f));
+
+    // All four sign combinations
+    GBL_TEST_CALL(test(-7.0f,  3.0f, -1.0f));
+    GBL_TEST_CALL(test(-8.0f,  3.0f,  1.0f));
+    GBL_TEST_CALL(test( 7.0f, -3.0f,  1.0f));
+    GBL_TEST_CALL(test(-7.0f, -3.0f, -1.0f));
+    GBL_TEST_CALL(test(-8.0f, -3.0f,  1.0f));
+
+    // Zero numerator
+    GBL_TEST_CALL(test( 0.0f,  3.0f,  0.0f));
+
+    // Exact divisibility
+    GBL_TEST_CALL(test( 6.0f,  3.0f,  0.0f));
+    GBL_TEST_CALL(test(-6.0f,  3.0f,  0.0f));
+
+    // |num| < denom/2: rounds to 0, remainder equals num
+    GBL_TEST_CALL(test( 1.0f,  3.0f,  1.0f));  // round(1/3)=0, 1-0*3=1
+    GBL_TEST_CALL(test(-1.0f,  3.0f, -1.0f));  // round(-1/3)=0, -1-0*3=-1
+
+    // |num| > denom/2: rounds to nearest quotient, result crosses into opposite sign
+    GBL_TEST_CALL(test( 2.0f,  3.0f, -1.0f));  // round(2/3)=1, 2-1*3=-1
+    GBL_TEST_CALL(test(-2.0f,  3.0f,  1.0f));  // round(-2/3)=-1, -2-(-1)*3=1
+
+    // Non-integer denominator
+    GBL_TEST_CALL(test( 5.5f,  2.0f, -0.5f));  // round(2.75)=3, 5.5-3*2=-0.5
+    GBL_TEST_CALL(test(-3.5f,  2.0f,  0.5f));  // round(-1.75)=-2, -3.5-(-2)*2=0.5
+
+    // Result is always bounded: |remainder| <= |denom| / 2
+    GBL_TEST_VERIFY(shz_fabsf(shz::remainderf(volatile_cast( 10.0f), volatile_cast(3.0f))) <= 1.5f);
+    GBL_TEST_VERIFY(shz_fabsf(shz::remainderf(volatile_cast(-10.0f), volatile_cast(3.0f))) <= 1.5f);
+
+    {
+        volatile float num = 7.0f;
+        volatile float den = 3.0f;
+        GBL_TEST_VERIFY((benchmark_cmp<float>)(
+            "shz::remainderf", shz::remainderf,
+            "remainderf", remainderf, num, den)
+        );
+    }
+GBL_TEST_CASE_END
+
+GBL_TEST_REGISTER(min,
+                  max,
+                  clamp,
+                  norm,
+                  floorf,
+                  ceilf,
+                  fmacf,
+                  lerpf,
+                  barycentric_lerpf,
+                  inv_sqrtf,
+                  invf_fsrra,
+                  divf_fsrra,
+                  invf,
+                  dot6f,
+                  dot8f,
+                  mag_sqr3f,
+                  mag_sqr4f,
+                  stepf,
+                  smoothstepf,
+                  smoothstepf_safe,
+                  cbrtf,
+                  logf,
+                  log10f,
+                  pow10f,
+                  fmodf,
+                  remainderf)
