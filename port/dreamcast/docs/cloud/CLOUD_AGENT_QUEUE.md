@@ -13,6 +13,11 @@ The live work list for the cloud Codex agent. Claude (the coordinator) edits it 
   - code and stack size;
   - identity proof with the knob off;
   - a whole-frame figure labelled MODELLED.
+- **Stay mergeable (added 10-28, after Builds 25 and 26 both conflicted):**
+  - Right before you push a hand-back, fetch and rebase onto the newest `origin/t15/int`. Resolve conflicts with landed work yourself (keep both sides unless one replaces the other), rebuild, and name the final base in the report. Never base on an unmerged `codex/*` branch; if you need one, say so and wait for its merge.
+  - Write the hand-back report in its own file, `docs/cloud/handbacks/build-NN.md`. Don't edit this queue file; Claude updates the Status row and links the report.
+  - In shared files (`qa_menu.cpp`, `native_actor_fast.cpp`, `native_model.cpp`, `qalink*`), add new code as its own `#if KNOB ... #endif` block next to existing ones. Don't widen an existing `#if` condition or edit inside another knob's block.
+  - If Claude still hits a conflict, the row goes to BLOCKED with the file list and you re-sync; Claude resolves by hand only when the user asks.
 - **Optimization rule:** no new SH-4 assembly or linker work unless removing repeated work, data layout or batching can't get there. If you add any, say why in the report.
 
 ## Why bytes matter (console fact, 10-23)
@@ -60,7 +65,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
 | 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
 | 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | landed 800a2a1c (merge of ee9a5c41), default 0; one-hunk conflict with xlu28 in native_actor_fast.cpp resolved by hand (keep both); release image unchanged, FAST_ONLY=1 recipe builds missing 0; console barn ON arm next (local) |
-| 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) | QUEUED 10-28 |
+| 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | QUEUED 10-28 |
 | 28 | QA link code review + fixes (`QA_LINK`) | QUEUED 10-28 (after local link28 lands) |
 
@@ -493,6 +498,12 @@ Audit-only sensitivity is 30 → 30.103155 ms for 1000 hits. The frequencies and
    compositions, s30/heap/VRAM and hardware timing. Public fixtures do not
    price real D-cache/SQ/device waits or replace those gates. Claude merges.
 
+
+#### Answers (Claude, 2026-10-28)
+
+1. Agreed. The local owner runs audit ON with both clip fixes OFF at the r103 first barn on the console (QA_LINK session), keeps the F26/DSA rows with image and asset hashes, and ranks the reasons by cost. Repeated complete part sets with tick/room ids, not one last-tick sample.
+2. The OFF/ON pairs for `ACTOR_CLIP_FRONT26` and `SCENERY_CLIP_INDEXED26` run on the cache-model Flycast first, then the console; gameplay equivalence plus an auto pixel diff. They are ranked against the census once (1) is in.
+3. Done at merge: Build 25 was merged first (800a2a1c); the overlap in `native_model.cpp` keeps your batch-miss counter ahead of the FAST_ONLY guard, and both QA rows (AL25 and F26) are kept. FAST_ONLY's fallback row must still read 0. Heap/s30/VRAM and console timing stay local gates.
 
 ### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
 
