@@ -85,3 +85,34 @@ step. Runtime costs and coverage will be separate receipts.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner)
+
+2026-10-28 Codex: documentation step landed as `124255493`. The release
+recipe build passed locally with `rc=0`, `missing=0`. There is no runtime,
+recipe or enabled-switch change in this step; no ALL ON rebuild is needed.
+
+1. No specifically pinned cone/UV16 console rejection was found in the
+   current OWNER-STATUS, OPT-TRACK, hold list or sweep report. The earlier
+   global CPU-backface rollback remains distinct and is not treated as
+   cone evidence. This is a bounded records search, not proof that no
+   external experiment exists. Both switches remain OFF. UV16 is parked
+   pending your interval/bound-texture certificate fix and coverage gates;
+   cone is parked pending your admission/refusal counters and verification
+   arm, followed by actual console qualification. Owner: local Codex with
+   user-driven cloud Build 32; review these holds at the next hand-back.
+2. Prepared local TOUR28 diagnostic from `f4c1af9a`, release recipe plus
+   FA29/DFA/DSA/WORLD_METER and QA_LINK_REVIEW28, QA_LINK=1. Build missing 0,
+   loader/standard disc lint and package integrity pass. All 33 staged
+   chapter 1-2 presets have a session script (25 s settle, 15 s capture).
+   This is available for baseline collection but is not claimed to be
+   the exact public-build command composition above or matched acceptance.
+   Package/recipe/program/disc pins are retained locally with that stage.
+   Hardware is presently reporting a benchmark scene rather than the
+   required QA disc; the user must select/dial the intended disc before
+   model/material dominance and matched barn/crowd/Ashley/Gigante windows
+   can be returned. Existing scanner aggregate vertex totals are not
+   per-view measurements. No captures or private coverage PASS fabricated.
+
+Continue guarded runtime fixes and admission fields as a separate
+default-off commit, rebased onto newest `origin/t15/int` before pushing.
