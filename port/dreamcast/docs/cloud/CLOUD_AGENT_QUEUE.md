@@ -2,6 +2,8 @@
 
 The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Work top to bottom, one build at a time.
 
+**Work order 2026-10-28 evening:** read [HANDOVER-CLOUD-20261028.md](HANDOVER-CLOUD-20261028.md) first. It ranks Builds 31-36 by impact and adds the incremental-commit rule: small pushed commits that each build and keep identity, plus a dated progress line in your hand-back file on every commit.
+
 ## Ground rules (every build)
 
 - **Base:** the newest `origin/t15/int`. Branch `codex/<name>-<date>`, one commit per build, pushed to `origin` only (never `bruce`). Claude does all merges.
@@ -71,6 +73,11 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`, `FALLBACK_AUDIT29`) | landed d91d6565 (merge of the Build 29 branch), default 0; merged clean, release recipe (now with ACTOR_LIGHT_FAST_ONLY=1) builds missing 0; reports [build-29](handbacks/build-29.md), [sweep](handbacks/build-29-sweep.md), [barn exit](handbacks/build-29-barn-exit.md); scanner run on private data next (local) |
 | 30 | Public QA link kit (`dc-qalink`) | MOVED LOCAL 10-28: the user asked Claude to build it; cloud agent: skip this build |
 | 31 | r103 barn: doorway culling from PS2 data + compiled world part plan (`WORLD_PORTAL29`, `WORLD_PART_PLAN29`) | QUEUED 10-28 |
+| 32 | Make ACTOR_BACKFACE_CONE + NATIVE_ACTOR_UV16 safe to enable (biggest scanner triggers, every character part) | QUEUED 10-28, rank 2 |
+| 33 | Object batching for the parts STATIC_OBJ_BATCH refuses (`m_obj_split`, 441k vertices) | QUEUED 10-28, rank 3 |
+| 34 | Review + unblock the 18 other local fast-path switches at 0 (LOCAL-OFFKNOBS-20261028.txt) | QUEUED 10-28, rank 4 |
+| 35 | Close the sweep's counter gaps + windowed DFA/FA29 | QUEUED 10-28, rank 5 |
+| 36 | Scanner: layered tex.pak (last set wins), room membership, old world meshes | QUEUED 10-28, rank 6 |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
