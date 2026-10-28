@@ -505,3 +505,29 @@ with matching camera/state and300+ drawn-frame windows. Existing HouseWhole27
 Pi benchmark rows are from another earlier session and exact loaded-program
 identity remains unresolved; they do not qualify this candidate. No SD write,
 recipe enablement or publication.
+
+### Answers (owner): controlled OFF follow-up, 2026-10-28
+
+Pinned36643bf8a control compiled rc0/missing0 with full paired overlays.
+After normalizing owned source/output paths, the complete resolved settings
+differ only STATIC_OBJ_BATCH33=1/0; same ALL ON33 QA flags, assets and fixture.
+OFF ELF prefixd42aa3935fa2f82f; exact digest retained locally. Twin mastering
+checks1648 unchanged/19 permitted/0 disallowed files. This does not substitute
+for historical absent/zero complete repacked-image identity.
+
+Both60-second r105/Thompson0x34 cache-interpreter/GDEMU-seed1 arms open/close
+inventory and return to gameplay, SSCERT restored1/backing hashOK and
+WPLAN6720/legacy0, reader0/errors empty/overruns0, owned emulators exited.
+The late gameplay windows both cap at29.9FPS; no speed or hardware benefit
+claimed. Private result/log hashes and raw windows retained in
+owner-allon33-off-20261028/RESULTS.json and RESULTS.md.
+
+Existing TA_HASH transport hashes change under intentional header removal;
+mode3 only drops empty headers and mode4 is hardware count-only, so these
+are not an actual-data effective-header/vertex oracle. Some observer guards
+also alter producer paths. That gate remains distinct from the392-case UI
+host oracle and the current functional smoke. Next: reviewed actual transport
+capture/effective-state normalization with aligned source tick/camera/pose,
+large/blended/near/moving-door/retirement cases, then look/STRICT/memory,
+full-image identity and matched whole-frame console qualification. No SD
+write, recipe promotion or publication.
