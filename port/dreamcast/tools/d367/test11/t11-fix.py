@@ -1451,6 +1451,16 @@ SND28D = os.environ.get('SND28D', '/root/re4data/private/snd28-20261028')
 if os.path.isdir(SND28D + '/em'):
     DATA['snd28'] = {'em/%s.drs' % n: SND28D + '/em/%s.drs' % n for n in (
         'pl01', 'pl02', 'pl06', 'pl07', 'pl0a', 'pl0b', 'pl0d', 'pl0e', 'pl12', 'em2a')}
+# snd28b (lane snd28 round 2, 10-28; data only, no knob): the same --dsp treatment for the remaining runtime-converted
+# banks: em/pl05 pl09 pl0c pl10 pl15, em/em14 and the weapon banks em/wep03-06 08 10 12 14-18 (514 of 542 samples PS2;
+# 28 keep GC, rows in gc_port23/sound-kept-gc.tsv). Files are the 92cec32f release disc's final copies, i.e. after ch2
+# (em14) and wep24 / wep26g / wep05fit25 (wepNN): keep snd28b after them in the DATA line; regenerate if a later set
+# writes one. Store: re4-assets-private/snd28b-20261028 (README-snd28b.txt, provenance.tsv, _map/).
+SND28BD = os.environ.get('SND28BD', '/root/re4data/private/snd28b-20261028')
+if os.path.isdir(SND28BD + '/em'):
+    DATA['snd28b'] = {'em/%s.drs' % n: SND28BD + '/em/%s.drs' % n for n in (
+        'pl05', 'pl09', 'pl0c', 'pl10', 'pl15', 'em14', 'wep03', 'wep04', 'wep05', 'wep06', 'wep08', 'wep10', 'wep12',
+        'wep14', 'wep15', 'wep16', 'wep17', 'wep18')}
 # dropeng26 (lane gcleft26 10-27, no-GameCube-assets rule; data only, no knob): ss/eng/title.snd off the disc. It is a
 # GameCube sound archive the game never reads: src/game/title.cpp:174 reads SS/cmn/title.snd (PS2 PCM since ps2snd24)
 # and nothing names SS/eng/title.snd (sscrn / read.cpp language paths are option.dat / title.dat / ss_*.dat). Proof: the
