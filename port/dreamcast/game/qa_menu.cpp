@@ -82,6 +82,8 @@ int re4dc_qalink_wanted(void);
 void re4dc_qalink_state_text(char* out, unsigned n);
 void re4dc_qalink_counters(unsigned* tx, unsigned* rx, unsigned* drops, unsigned* queued);
 int re4dc_qalink_send(const void* p, unsigned n);
+int re4dc_qalink_send_bulk(const void* p, unsigned n);
+unsigned re4dc_qalink_bulk_skips(void);
 int re4dc_qalink_recv(char* p, unsigned max);
 #endif
 }
@@ -850,7 +852,8 @@ void link_send_parts(char kind, const char* id, const char* text, int len) {
                                              (unsigned) (timer_ms_gettime64() & 0xFFFFFFFFu), p + 1, parts)
                                   : snprintf(b, sizeof(b), "D %s %d/%d\n", id, p + 1, parts);
         memcpy(b + h, text + off, n > 0 ? n : 0);
-        link_send_text(b, h + (n > 0 ? n : 0));
+        if (kind == 'T') re4dc_qalink_send_bulk(b, (unsigned) (h + (n > 0 ? n : 0)));   // telemetry: skipped when backlogged
+        else link_send_text(b, h + (n > 0 ? n : 0));
     }
 }
 void link_telemetry() {
@@ -864,8 +867,8 @@ void link_telemetry() {
     memcpy(t, rows, n);
     unsigned tx, rx, dr, q;
     re4dc_qalink_counters(&tx, &rx, &dr, &q);
-    n += snprintf(t + n, sizeof(t) - n, "link tx=%u rx=%u drops=%u queued=%u cost_us_per_s=%u\n", tx, rx, dr, q,
-                  g_link.cost_last);
+    n += snprintf(t + n, sizeof(t) - n, "link tx=%u rx=%u drops=%u queued=%u skips=%u cost_us_per_s=%u\n", tx, rx, dr,
+                  q, re4dc_qalink_bulk_skips(), g_link.cost_last);
     ++g_link.seq;
     link_send_parts('T', "", t, n);
 }
@@ -882,7 +885,7 @@ void link_log() {   // new RAM log bytes since the last call, at most 640 a seco
         b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
     }
     g_link.log_sent += n;
-    link_send_text(b, h);
+    re4dc_qalink_send_bulk(b, (unsigned) h);   // skipped (those bytes are not sent) when backlogged
 }
 void record_flush() {
     if (g_link.rec_len) link_send_text(g_link.rec_line, g_link.rec_len);
