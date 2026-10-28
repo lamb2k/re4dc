@@ -27,6 +27,7 @@
 #if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
 #error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
 #endif
+static unsigned so23_parts, so23_elig, so23_ticks; // SO23 scratch counter (not committed)
 #ifndef RE4DC_SCENERY_REPLAY_LEAN
 #define RE4DC_SCENERY_REPLAY_LEAN 0
 #endif
@@ -6489,7 +6490,7 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_MIST_CUT)
             if(mistcut::world_part(pass,meta.crc,meta.fnv))continue;
 #endif
-            ++c.parts;part.cull=meta.cull;
+            ++c.parts;part.cull=meta.cull;++so23_parts;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             // Offset belongs to this exact placement/part draw, never its
             // shared texture key, cached header or package metadata.
@@ -6541,7 +6542,7 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
                     x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
-                    x.count=d.chunk_select(cpk+npk);npk+=x.count;
+                    x.count=d.chunk_select(cpk+npk);npk+=x.count;++so23_elig;
                     continue;
                 }
             }
@@ -6601,7 +6602,7 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
-                x.count=d.chunk_select(cpk+npk);npk+=x.count;
+                x.count=d.chunk_select(cpk+npk);npk+=x.count;++so23_elig;
                 continue;
             }
 #endif
@@ -6868,6 +6869,7 @@ extern "C" void re4dc_world_meter_take(unsigned* us_out,unsigned* vtx_out,unsign
         geometry_out[k+3]=unsigned(wmeter::geometry.input_inside[k]);
     }
     wmeter::geometry.clear();
+    if(++so23_ticks==60){re4dc_log("so23: ticks=60 parts=%u elig=%u fall=%u\n",so23_parts,so23_elig,so23_parts-so23_elig);so23_ticks=0;so23_parts=0;so23_elig=0;}
 }
 // The far a world pass draws with under the QA rows: pass 0 the opaque cut, passes 1 / 2 the translucent far (1 = Full: the
 // far before the View distance cut: re4dc_fog_note_far's, already within FOG_FAR / the lake cap).
