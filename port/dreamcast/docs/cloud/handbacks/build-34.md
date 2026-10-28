@@ -627,3 +627,23 @@ full-image and matched console gates pass, SCENERY_PIECE_STATE stays parked.
 Original sources, prior stages and private assets remain; no SD, recipe or
 publication change. Owner can continue independent lifecycle work while this
 profile blocker is open.
+
+### Answers (owner): SCPS absent-to-present actual door entry
+
+The valid current-source control/piece arms each complete a60s cache-
+interpreter/GDEMU1 default-weapon r105->r101 source-button door case.
+Reader0/errors empty/overruns0; hold ends at411 and normal r101 gameplay
+continues at419/480; owned emulators exit. No forced room jump or host keys.
+Candidate reports SCN21 piece r105 no section, then r101 on/parts342.
+At door capture both logs report free812704; that is one observed point,
+not a standard heap/KOS/s30 minimum, leak result or full memory gate.
+
+This establishes absent-to-present entry, NOT retirement/re-entry of an
+already-active SCPS table, movie/texture eviction or check-mode equivalence.
+The cache2 build blocker remains unchanged; no same-input retry, workaround
+or zero mismatch claim. Private run/log/fixture receipts are retained in
+owner-scps34-pairs-20261028/DOOR-RESULTS.json and DOOR-RESULTS.md.
+Next independent local work is fixed-front cache room/material lifetime,
+while awaiting a supported current-composition SCPS check route. All held
+controls stay off; console prerequisites and broader gates remain unchanged.
+No SD/recipe/publication.
