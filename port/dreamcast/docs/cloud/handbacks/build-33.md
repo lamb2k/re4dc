@@ -442,3 +442,28 @@ for arm in ('identity-absent','identity-zero'):
 print('PASS complete GDI/track identity: baseline = absent = zero')
 PY
 ```
+
+## Owner runtime landing, 2026-10-28
+
+Runtime `59abed5a3` merged clean as `36643bf8a`, default 0. The local actual
+UI order oracle passes 392 comparisons in both normal and ASan/UBSan runs
+(leak detection disabled), including the counters/barrier sum. Receipts are
+retained in private `cloud33-host-20261028-1858`. The release recipe builds
+rc=0/missing=0; ELF SHA-256
+`57cf3dd76e07fde48cf903562bb4b9d3ba3458dcc19e3609aa8b5758c5c59b7f`.
+The cloud's 56 target-byte comparisons were not rerun locally; full absent/
+zero repacked-image identity is a distinct pending gate.
+
+The switch is added to ALL ON alongside the guarded actor-format and part
+plan candidates. ALL ON33 from this integration is prepared with QA_LINK=1;
+QA build, loader/standard disc lint and ZIP integrity pass. The prior ALL ON
+discs remain preserved, no SD write or recipe promotion. Next local smoke
+will report actual SOB33 reused/saved bytes and SOB33B barriers, separately
+from unchanged old m_obj_split and static vertex totals. Zero reuse is not
+a performance PASS. Net benefit still needs matched presented windows and
+hardware CPU/frame/GPU evidence; byte reduction alone is not acceptance.
+
+Private overlap/cutout/animated texture, moving props/doors, retirement,
+gameplay/STRICT and memory/stack gates remain pending. The earlier four
+weapon inventory/door results were on ALL ON81028934c, before actor formats
+and this header batching, and do not qualify the newer combined candidate.
