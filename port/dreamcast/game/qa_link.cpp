@@ -263,12 +263,28 @@ void re4dc_qalink_timer_down(void) {
 }  // extern "C"
 
 namespace {
+// link28 (console 10-28: after a hang-up under a big backlog, A never dialled again): the old order shut PPP down first.
+// ppp_shutdown takes libppp's mutex, which the PPP thread held inside sendto -> modem write, waiting for the modem's tx
+// buffer to drain; the hang-up waited 2 s, set OFF with the PPP thread still alive, and every later start refused
+// (g_ppp_running). Now: stop the pump and drop the queue, drop the LINE first (a blocked modem write then discards and
+// returns, so libppp lets the mutex go), then close PPP; a PPP thread still alive after 3.2 s is destroyed (its stack is
+// static), so the state always ends OFF with nothing left running and the next A dials.
 void hang_up() {
-    if (g_sock >= 0) { const int s = g_sock; g_sock = -1; close(s); }
+    const int s = g_sock;
+    g_sock = -1;          // pump() stops (thd_pass checks g_sock)
+    g_tx.clear();         // nothing more to send
+    modem_shutdown();     // the line drops: libppp's blocked modem write returns
+    if (s >= 0) close(s);
     if (g_ppp_init) { ppp_shutdown(); g_ppp_init = false; }
-    modem_shutdown();
     re4dc_qalink_timer_down();
-    for (int i = 0; i < 250 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
+    for (int i = 0; i < 400 && g_ppp_running; ++i) thd_sleep(8);   // the PPP thread leaves when its phase is dead
+    if (g_ppp_running) {
+        kthread_t* t = g_ppp_thd;
+        if (t) thd_destroy(t);
+        g_ppp_thd = nullptr;
+        g_ppp_running = 0;
+        re4dc_log("qalink: PPP thread did not leave; destroyed\n");
+    }
 }
 
 bool dial_once() {
@@ -310,14 +326,18 @@ bool dial_once() {
     return true;
 }
 
-// The dial thread: arg 0 = dial (3 tries), 1 = hang up. Detached; it leaves once the link is up or down.
+// The dial thread: arg 0 = dial (3 tries), 1 = hang up, 2 = hang up, then dial (A on LINE DROPPED, or a start while
+// an old PPP thread is still leaving). Detached; it leaves once the link is up or down.
 void* dial_main(void* arg) {
     g_dial_thd = thd_get_current();
-    if (arg) {
+    const intptr_t mode = (intptr_t) arg;
+    if (mode) {
         hang_up();
         g_state = S_OFF;
         re4dc_log("qalink: hung up\n");
-    } else {
+    }
+    if (mode != 1 && !g_stop) {
+        g_state = S_DIAL;
         bool up = false;
         for (int a = 1; a <= 3 && !g_stop && !up; ++a) {
             g_attempt = a;
@@ -375,11 +395,12 @@ void re4dc_qalink_config(const char* number, const char* host, unsigned port, un
 // Start (dial thread) / stop (a thread hangs up). Both return at once.
 void re4dc_qalink_stop(void);
 int re4dc_qalink_start(void) {
-    if (g_state == S_DROPPED) { re4dc_qalink_stop(); return 0; }   // a dropped line hangs up first
-    if (g_dial_running || g_state == S_UP || g_ppp_running) return 0;   // dialling, up, or still hanging up
-    g_stop = 0; g_err = 0; g_attempt = 0; g_state = S_DIAL;
+    if (g_dial_running || g_state == S_UP) return 0;   // dialling / hanging up already, or up
+    // OFF / FAILED: dial. LINE DROPPED, or an old PPP thread still leaving: hang up first, then dial (one thread).
+    const int mode = (g_state == S_DROPPED || g_ppp_running || g_sock >= 0) ? 2 : 0;
+    g_stop = 0; g_err = 0; g_attempt = 0; g_state = mode ? S_STOPPING : S_DIAL;
     g_rx.clear();
-    if (!spawn_dial(0)) { g_state = S_FAILED; g_err = -30; return -1; }
+    if (!spawn_dial(mode)) { g_state = S_FAILED; g_err = -30; return -1; }
     re4dc_log("qalink: start number=%s port=%u lport=%u\n", g_number, (unsigned) g_port, (unsigned) g_lport);
     return 0;
 }
@@ -404,7 +425,7 @@ void re4dc_qalink_state_text(char* out, unsigned n) {
     case S_UP: snprintf(out, n, "UP %u.%u.%u.%u TO %u.%u.%u.%u", g_ip[0], g_ip[1], g_ip[2], g_ip[3], g_peer[0], g_peer[1],
                         g_peer[2], g_peer[3]); break;
     case S_FAILED: snprintf(out, n, "FAILED (%d) - A: RETRY", g_err); break;
-    case S_DROPPED: snprintf(out, n, "LINE DROPPED - A: HANG UP"); break;
+    case S_DROPPED: snprintf(out, n, "LINE DROPPED - A: REDIAL"); break;
     default: snprintf(out, n, "HANGING UP"); break;
     }
 }

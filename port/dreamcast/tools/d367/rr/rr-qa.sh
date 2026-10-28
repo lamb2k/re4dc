@@ -38,6 +38,9 @@ python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
 python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
 # RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
 if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi
+# RR_QA_LINK_AUTO=1 (lane link28; harness twins only, never a tester disc): /dc/qa/link.txt `auto 1`, the link dials at
+#   the first game tick (KOS squeeze / s30 runs with the link up)
+[ "${RR_QA_LINK_AUTO:-0}" != 1 ] || echo 'auto 1' > "$R/qa/link.txt"
 mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)
@@ -73,7 +76,7 @@ P
 if [ -n "$EVU" ]; then
   F=$T/fullplay
   python3 "$F/fp_iso.py" extract "$R/gdemu/track03.bin" "$R/tree" --manifest "$R/man.json" --ipbin "$R/IP.BIN" | tail -1
-  bash "$F/fp_master.sh" "$R/tree" "$R/man.json" "$R/IP.BIN" "$EVU/_discs/qa" > "$R/logs/master.txt" 2>&1 || { tail -5 "$R/logs/master.txt"; exit 1; }
+  bash "$F/fp_master.sh" "$R/tree" "$R/man.json" "$R/IP.BIN" "$EVU/_discs/${RR_QA_BASE:-qa}" > "$R/logs/master.txt" 2>&1 || { tail -5 "$R/logs/master.txt"; exit 1; }
   tail -1 "$R/logs/master.txt" | cut -c1-200
   rm -rf "${R:?}/tree"
 fi
