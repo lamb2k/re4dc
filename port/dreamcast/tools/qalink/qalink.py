@@ -145,8 +145,9 @@ def do_capture(link, a, words):
     if not label:
         print('capture stop: no open capture (give the label)')
         return 2
-    sec = link.send_and_cut('MARK cap-stop:%s' % label, r' M \d+ cap-start:%s$' % re.escape(label),
-                            r' M \d+ cap-stop:%s$' % re.escape(label))
+    # Any echo of the marker counts (the M datagram, the A answer, the qamark log line, or the Pi C line when the console never echoed): UDP can drop one.
+    mk = r'( M [0-9]+| OK MARK| qamark:| C c[0-9]+ MARK) cap-%s:' + re.escape(label) + '$'
+    sec = link.send_and_cut('MARK cap-stop:%s' % label, mk % 'start', mk % 'stop')
     sec = [s for s in sec if s]
     out = a.out or os.path.join(r'C:\Flycast-Evidence\re4-dreamcast', 'console-' + datetime.date.today().strftime('%Y%m%d'))
     os.makedirs(out, exist_ok=True)
