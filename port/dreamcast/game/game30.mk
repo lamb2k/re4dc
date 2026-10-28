@@ -4076,6 +4076,20 @@ endif
 ifneq ($(PS2_ETS_MATCH),0)
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
 endif
+# PS2_ETS_LIGHT=1 (lane fix-r111-27 2026-10-27; render only, default 0; needs PS2_ETS_MATCH=2): room lights whose etc
+# parent PS2_ETS_MATCH=2 dropped (the torches) are placed from the dropped entry's position + yaw instead of staying
+# at a stale position with a "Lit:calcPos() ETCMODEL PARENT NOT FOUND" log line per light per frame (r111: 10 lights,
+# em17 villagers unlit).
+PS2_ETS_LIGHT ?= 0
+ifneq ($(filter-out 0 1,$(PS2_ETS_LIGHT)),)
+$(error PS2_ETS_LIGHT is 0 or 1)
+endif
+ifeq ($(PS2_ETS_LIGHT),1)
+ifneq ($(PS2_ETS_MATCH),2)
+$(error PS2_ETS_LIGHT=1 needs PS2_ETS_MATCH=2)
+endif
+$(OBJDIR)/src/game/EtcModel.o $(OBJDIR)/src/game/light.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_LIGHT=1
+endif
 # PS2_FIRE_SST=1 (lane purge-audit26 2026-10-26; render only, default 0; needs PS2_ETS_MATCH=2 and DATA pfire26): the
 # torches PS2_ETS_MATCH=2 drops get their PS2 flames back the way PS2 draws them: the PS2 room EFF's fire SST sets
 # (pfire26 writes them into each torch room's ETM et14.eff), registered under owner 0x68 at room entry and started like
@@ -4083,4 +4097,17 @@ endif
 PS2_FIRE_SST ?= 0
 ifneq ($(PS2_FIRE_SST),0)
 $(OBJDIR)/src/game/EtcModel.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_PS2_FIRE_SST=$(PS2_FIRE_SST)
+endif
+# PS2_FIRE_HALO_CUT=1 (lane fix-r111-27 2026-10-27; render only, default 0; needs PS2_FIRE_SST=1): drop the pfire26
+# torch halo records (esp 0x0B, texture 0x79, 2400..4600-unit sprites): on our core texture they drew as a fire tens
+# of metres wide over the view (r111 "terrible fps": several near-full-screen translucent layers per torch in view).
+PS2_FIRE_HALO_CUT ?= 0
+ifneq ($(filter-out 0 1,$(PS2_FIRE_HALO_CUT)),)
+$(error PS2_FIRE_HALO_CUT is 0 or 1)
+endif
+ifeq ($(PS2_FIRE_HALO_CUT),1)
+ifeq ($(PS2_FIRE_SST),0)
+$(error PS2_FIRE_HALO_CUT=1 needs PS2_FIRE_SST=1)
+endif
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_PS2_FIRE_HALO_CUT=1
 endif
