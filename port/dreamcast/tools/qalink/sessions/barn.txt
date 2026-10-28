@@ -1,0 +1,23 @@
+# qalink.py session barn.txt: the r103 farm's first barn, three 20 s sections (inside / by the west wall / 21 m out).
+# python qalink.py --pi re4pi session sessions/barn.txt   -> console-<date>\barn-*.log + .summary.txt
+# Positions (Flycast, lane linkpad28 10-28): inside = barn28's measured spot (floor y 163); the barn's floor spans about
+# x -16700..-10900, z -4460..-210. The doorway itself is not located yet: "barn-wall" stands inside by the west wall
+# facing out; walk Leon to the doorway by hand once, read pos= from a drv row and put it here. "barn-out" is a walkable
+# yard spot on the path to the barn, about 21 m from inside.
+teleport r103
+wait 22
+teleport pos -11000 163 -1000 -1.1
+wait 4
+capture start barn-inside
+wait 20
+capture stop barn-inside
+teleport pos -16400 163 -2300 -1.6
+wait 4
+capture start barn-wall
+wait 20
+capture stop barn-wall
+teleport pos -30520 30 -8422 1.2
+wait 4
+capture start barn-out
+wait 20
+capture stop barn-out
