@@ -578,3 +578,52 @@ CONTROL-PROOF.json and RESULTS.json. Lifecycle/weapon/menu/room/movie/look,
 STRICT, standard s30/KOS/heap, full-image identity and matched console gates
 remain; hold reviewed to record this progress, no promotion. SCPS-only
 control/on/cache2 check remains the next independent local step.
+
+### Answers (owner): actual SCPS pairs and check-profile blocker
+
+Pinned6c6028df6 current-recipe control/piece full programme+overlay builds
+rc0/missing0. Independent switch SCENERY_PIECE_STATE0/1 plus its explicit
+Make-derived ROOMFILE_SCPS parser flag; HDR_CACHE1 and SUBMIT_BATCH1 remain
+unchanged. Identical new SCPS-only room data in both arms. Ext4 mastering
+uses documented FP_ALLOW_EXTRA for exactly r101/r103 room.r4rc and bypasses
+the base cache;1646 files identical,21 allowed programme/overlay/data/fixture
+changes,0 disallowed. Finished bases cross to Windows once. Private stage
+replacement unlinked only the new tree's links before copying new files;
+original source room hashes were verified unchanged after mastering.
+
+Each r101 entry and r103f one-down arm ran60s on cache interpreter/GDEMU1,
+reader0/errors empty/overruns0, normal gameplay and owned emulator exit.
+Candidate admits SCN21 piece room101 parts342 and room103 parts267.
+The logged cumulative PS2HDR frame599 rows are:
+
+| Room | Arm | Hits | Fills | Piece hits |
+|---|---|---:|---:|---:|
+| r101 | control |24928|60|not compiled|
+| r101 | piece |24928|60|24900|
+| r103 | control |20183|25|not compiled|
+| r103 | piece |20183|25|20160|
+
+Counts prove actual admissions/fast-path use, not geometry equivalence or
+time saved; no whole-frame/console benefit claimed. Private exact profiles,
+data, ELF/media/fixture/run/log hashes: owner-scps34-pairs-20261028/
+CONTROL-PROOF.json,DATA-PROOF.json,RESULTS.json and RESULTS.md. This is also
+not the unmodified-data release control needed to price total data overhead.
+
+**BLOCKED: the advertised piece-check arm does not build on this recipe.**
+PS2_WORLD_HDR_CACHE2 with SCENERY_SUBMIT_BATCH1 fails scenery19.mk:65:
+`SCENERY_SUBMIT_BATCH needs TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1 PS2_WORLD_HDR_CACHE=1`.
+The other three prerequisites are1; this is specifically cache mode2 versus
+the existing exact cache1 guard. Owner did not weaken Make or disable current
+batching. Failed profile/log retained in owner-scps34-pairs-20261028 and
+out-ownerpiece34chkrW/build.log. No check binary or zero mismatch result is
+claimed. This is a qualification blocker, not a failed default-off release
+merge. Do not repeat it unchanged at6c6028df6/current source guards.
+
+Cloud follow-up required: supply and qualify a supported current-composition
+check route (or clearly document a separately scoped validation profile and
+its limits); correct the owner command accordingly. Until that and current
+look/lifecycle/movie/texture-eviction/gameplay/STRICT/standard s30/KOS/heap,
+full-image and matched console gates pass, SCENERY_PIECE_STATE stays parked.
+Original sources, prior stages and private assets remain; no SD, recipe or
+publication change. Owner can continue independent lifecycle work while this
+profile blocker is open.
