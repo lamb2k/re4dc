@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""snd28_store.py TREE OVERLAY MAP.json BASE_PROOFS.json STORE PS2DIR  (lane snd28, 2026-10-28)
+"""snd28_store.py TREE OVERLAY MAP.json BASE_CATALOG.json STORE PS2DIR  (lane snd28, 2026-10-28)
 
 Writes data set snd28's store from a `ps2_audio.py banks --dsp` run on a final disc tree:
   STORE/<path>          every overlay file that differs from TREE (same size required)
   STORE/provenance.tsv  one row per catalog member of those files (gc_port23/build_catalog.member_rows):
                           sound-mram / sound-aram of a block with at least one PS2 sample -> ps2 (ps2_sha256 = the
                           PS2 .snd files the samples came from), a block with none -> gc;
-                          any other member -> gc only if BASE_PROOFS (the release candidate's provenance proofs)
-                          already says gc; other members get no row
+                          any other member keeps the provenance the base catalog (the release candidate's
+                          gca/catalog/catalog.json, looked up by kind + sha256 + source, e.g. em/em14.drs#body) gives it: gc -> a gc row,
+                          ps2 -> a ps2 row (ps2_source names the base evidence), unknown -> no row (stays unknown).
+                          Round 2 (10-28): looked up per file, not by sha256 alone (round 1 read proofs.json, where a
+                          shared sha256 could carry another file's provenance)
   STORE/README-snd28.txt  the recipe. Deliberately NOT named RECIPE*: provenance.py would then credit every member
                           without a row (models in the same archives) to PS2. Without a RECIPE the set's level stays
                           unknown, so only the rows above change attribution.
@@ -28,7 +31,8 @@ def main(tree, ov, mapf, proofs, store, ps2dir):
     if store.exists():
         raise SystemExit('store exists: %s' % store)
     mp = json.load(open(mapf))
-    base = {(r['kind'], r['sha256']): r['provenance'] for r in json.load(open(proofs))['entries']}
+    base = {(r['kind'], r['sha256'], r['source'].lower()): (r['provenance'], r.get('evidence', ''))
+            for r in json.load(open(proofs))['entries']}
     rows, files = [], []
     for f in mp['files']:
         rel = f['spec'].split('#')[0]
@@ -50,8 +54,13 @@ def main(tree, ov, mapf, proofs, store, ps2dir):
                 rows.append((kind, ident, o, ps2, ('PS2 USA BIO4DAT.AFS ' + ','.join(f['ps2'])) if mapped else '',
                              '%s: %d of %d samples PS2 (%s); tools/ps2_audio.py banks --dsp' % (
                                  rel, mapped, sum(b['samples'] for b in f['blocks']), src[:200])))
-            elif kind != 'motion' and base.get((kind, o)) == 'gc':
-                rows.append((kind, ident, o, '', '', '%s: unchanged member, gc in the base proofs' % rel))
+            elif kind != 'motion':
+                prov, ev = base.get((kind, o, where.lower()), (None, ''))
+                if prov == 'gc':
+                    rows.append((kind, ident, o, '', '', '%s: unchanged member, gc in the base catalog' % rel))
+                elif prov == 'ps2':
+                    rows.append((kind, ident, o, o, 'carried from the base catalog: ' + ev[:160].replace('	', ' '),
+                                 '%s: unchanged member, ps2 in the base catalog' % rel))
     with open(store / 'provenance.tsv', 'w') as w:
         w.write('kind\tid\toutput_sha256\tps2_sha256\tps2_source\tevidence\n')
         for r in rows:
