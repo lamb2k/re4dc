@@ -5461,6 +5461,18 @@ movie_world::Ledger ps2_movie;
 struct MovieWorldFiles { unsigned mesh=0,side=0,mesh_crc=0,mesh_fnv=0,side_crc=0,side_fnv=0; } ps2_movie_files;
 bool ps2_movie_layout(unsigned room){
     const auto& f=ps2_movie_files;
+#if RE4DC_MOVIE_LAYOUT_GUARD
+    // guards28: the layout ps2_movie_reload reads back (mesh, sidecar, LUT, gather; 32-byte aligned) must fill the
+    // captured extent exactly. The sizes come from the package opened at room entry, so a reconverted world keeps
+    // working without a new row; reload still checks the files' sizes against these before it reads them.
+    const bool room_ok=room==0x11f
+#if RE4DC_MOVIE_WORLD_ARENA_S30
+        || room==0x100
+#endif
+        ;
+    return room_ok && f.mesh && f.side &&
+        ((f.mesh+31u)&~31u)+((f.side+31u)&~31u)+kLutBytes+kGatherBytes==ps2_movie.capacity;
+#endif
     // n256b26 (SCENERY_N256, 256-vertex meshlets, 10-26): the same r11f sidecar, LUT and gather after a 759,648 B mesh.
     // Without this row the s10/s11 movie arena refused the smaller package (terminal=3, 0/265; no heap fallback).
     if(room==0x11f && f.mesh==759648)return f.side==9076 && ps2_movie.capacity==759648U+(811264U-797056U);
@@ -8452,6 +8464,23 @@ extern "C" unsigned re4dc_ps2_mesh_movie_borrow(unsigned id){
         || (ps2w.room==0x100 && id==0x10030)
 #endif
         ;
+#if RE4DC_MOVIE_LAYOUT_GUARD
+    // guards28: one line per refused eligible borrow (once per movie id, arena generation and reason), with the sizes, so a
+    // package the arena can't take shows in every log instead of a silent movie stop.
+    if(supported){
+        const char* why=ps2w.room!=ps2w.want?"room-not-loaded":!ps2_movie_layout(ps2w.room)?"layout":
+            ps2_movie.phase!=movie_world::Phase::ready?"phase":ps2_movie.readers?"readers":!ps2_movie_current()?"not-current":
+            (!ps2w.parts || !ps2w.placements)?"no-world":!ps2_movie_dyn_valid()?"dyn":nullptr;
+        static unsigned last_id,last_gen;static const char* last_why;
+        if(why && (id!=last_id || ps2_movie.generation!=last_gen || why!=last_why)){
+            last_id=id;last_gen=ps2_movie.generation;last_why=why;
+            re4dc_log("MOVIEARENA refuse id=%05x room=%03x why=%s mesh=%u side=%u capacity=%u need=%u gen=%u\n",id,ps2w.room,why,
+                ps2_movie_files.mesh,ps2_movie_files.side,ps2_movie.capacity,
+                ((ps2_movie_files.mesh+31u)&~31u)+((ps2_movie_files.side+31u)&~31u)+kLutBytes+kGatherBytes,ps2_movie.generation);
+        }
+        if(why)return 0;
+    }
+#endif
     if(!supported || ps2w.room!=ps2w.want || !ps2_movie_layout(ps2w.room) ||
        ps2_movie.phase!=movie_world::Phase::ready || ps2_movie.readers || !ps2_movie_current() ||
        !ps2w.parts || !ps2w.placements || !ps2_movie_dyn_valid())return 0;

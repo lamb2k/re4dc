@@ -131,12 +131,27 @@ if dpp:
     add('DROP-PROOF', dpp[-1].startswith('DROP-PROOF PASS'),
         '; '.join([l for l in dpp if not l.startswith(('UNPROVEN', 'DROP-PROOF'))][:8] + [dpp[-1]])[:600])
 
+# SPEED (lane guards28 10-28, full tier): rr/speed/rr-speed.sh, the candidate vs the live release, hwmodel MODELLED ms on
+# cross / bell / farm / house / r11c; FAIL when a scene is slower than max(1 ms, 3%).
+sp = rd(W / 'speed.txt').strip().splitlines()
+if sp:
+    if sp[-1].startswith('SPEED SKIP'):
+        checks.append(('SPEED vs live release', 'SKIP', sp[-1][:200]))
+    else:
+        add('SPEED vs live release', sp[-1].startswith('SPEED PASS'), sp[-1][:400])
+
 extra = {}
 if build_ok and jobs:
     bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')
     # boot
     o = runlog('boot')
     add('boot to title', 'state title=' in o and not bad.search(o), 'title reached' if 'state title=' in o else 'no title line')
+    # MOVIEARENA (lane guards28 10-28): MOVIE_LAYOUT_GUARD=1 logs every refused eligible movie arena borrow (r100 s30,
+    # r11f 11f10/11f11); one such line in any job log means a world package the arena can't take (silent movie stop).
+    ma = []
+    for p in sorted(EVU.glob('*/run-output.txt')):
+        ma += ['%s: %s' % (p.parent.name, l.strip()) for l in rd(p).replace('\x00', '').splitlines() if 'MOVIEARENA refuse' in l]
+    add('MOVIEARENA refused 0', not ma, 'none' if not ma else '; '.join(ma[:4])[:400])
     # h2: s30 cliff movie
     o = runlog('h2')
     m = re.findall(r'route movie terminal=(\d) id=10030 frames=(\d+)/(\d+)[^\n]*', o)

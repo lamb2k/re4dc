@@ -124,7 +124,8 @@ T15_L="PS2_CAST_MERCHANT_LIT=1"
 # lane audio16 (eaf9c6d0, 10-16): ch1 sounds; MUST ship with data snd16 (45-entry aica_str.dat; with 32 every stream goes silent)
 T15_S="AICA_STR_ENT_MAX=48"
 # lane s30movie16 (50a4b793, ChatGPT design bce6fd98 + a9533269): r100 s30 cliff movie plays (retained-world loan, 13-slot ledger)
-T15_M="MOVIE_WORLD_ARENA=1 MOVIE_WORLD_ARENA_S30=1"
+#   guards28 (10-28): MOVIE_LAYOUT_GUARD=1 derives the arena layout from the opened package + logs refused borrows
+T15_M="MOVIE_WORLD_ARENA=1 MOVIE_WORLD_ARENA_S30=1 MOVIE_LAYOUT_GUARD=1"
 # lane doorpause16 (cfa76c2e, 10-16): skip reading the zero padding after converted sound banks (-0.8 s per door at 2 MB/s, exact)
 T15_D="SND_PAD_SKIP=1"
 # lane ganlit16 (de25aabe, user 10-16 "Option a for lighting"): villagers take their colour from the room's lights through
