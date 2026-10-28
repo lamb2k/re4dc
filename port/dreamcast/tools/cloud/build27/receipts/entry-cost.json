@@ -1,0 +1,594 @@
+{
+  "status": "PASS",
+  "baseline": "6be0a66ab59fa597a55aae7379fb09777d357bc1",
+  "scope": "Execute real weapon-module registration prefixes and complete epilogs.\n\nEach module is the unmodified generated/partially linked target object. A\nfixture-only link assigns synthetic addresses to its external imports. Only\nthe three registration cells are mapped; execution stops before OSReport and\nrejects every other imported-service entry. No missing provider is executed as\na success stub. Prolog timing ends at the logging call boundary, before its\nbody and the caller return tail. Epilog timing includes its complete return.\nModule-state reset, disk/assets, weapon creation, fire/reload, sound and frame\nwork are not executed or priced. This is not a final game link.\n",
+  "cases": [
+    {
+      "module": "wep05",
+      "module_id": 67,
+      "item_id": 41,
+      "object_id": 46,
+      "phase": "registration-prefix",
+      "instructions": 14,
+      "peak_stack_bytes": 4,
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 4,
+          "load_accesses": 8,
+          "store_accesses": 4,
+          "load_bytes": 32,
+          "store_bytes": 16,
+          "unique_read_lines": 2,
+          "unique_write_lines": 3,
+          "unique_data_lines": 5,
+          "unique_line_bytes": 160
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 12,
+        "repeated_demand_line_visits": 7
+      },
+      "expected_callback_addresses": [
+        1054800,
+        1052696,
+        1049988
+      ],
+      "log_message": "Wep05 CIVILIAN prolog Ok\n",
+      "module_object_sha256": "aca6cf3c5c0e71f3c463056a17f5eb841da59f348a1e86f37e59ea96ff4b0f17",
+      "fixture_elf_sha256": "1388d48141a7c07a7ffe1cda7daeecfa1778bbf2eaf8fd317d290acd7664616e",
+      "fixture_bindings_sha256": "2559f980a21e4dbf138ef62bd1f32d5b7d89a1cd5f2fdaad8c4dd2540d7ac2a6",
+      "model_cycles": 20,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 16.0,
+        "dep_load": 4.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "49994793931a281ced20799f3922f936c0f1b626657c9880a0df966de4292efa",
+      "cold_icache": {
+        "model_cycles": 52,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "module": "wep05",
+      "module_id": 67,
+      "item_id": 41,
+      "object_id": 46,
+      "phase": "epilog",
+      "instructions": 4,
+      "peak_stack_bytes": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1,
+          "store_instructions": 1,
+          "load_accesses": 1,
+          "store_accesses": 1,
+          "load_bytes": 4,
+          "store_bytes": 4,
+          "unique_read_lines": 1,
+          "unique_write_lines": 1,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 2,
+        "repeated_demand_line_visits": 0
+      },
+      "expected_callback_addresses": [
+        1054800,
+        1052696,
+        1049988
+      ],
+      "log_message": "",
+      "module_object_sha256": "aca6cf3c5c0e71f3c463056a17f5eb841da59f348a1e86f37e59ea96ff4b0f17",
+      "fixture_elf_sha256": "1388d48141a7c07a7ffe1cda7daeecfa1778bbf2eaf8fd317d290acd7664616e",
+      "fixture_bindings_sha256": "2559f980a21e4dbf138ef62bd1f32d5b7d89a1cd5f2fdaad8c4dd2540d7ac2a6",
+      "model_cycles": 4,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 4.0,
+        "dep_load": 0.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "74f5eaaa0897fdb5388d872f88ee6d3e5caa68cefecba072331599dae438619e",
+      "cold_icache": {
+        "model_cycles": 26,
+        "instruction_fills": 1.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "module": "wep06",
+      "module_id": 50,
+      "item_id": 42,
+      "object_id": 49,
+      "phase": "registration-prefix",
+      "instructions": 14,
+      "peak_stack_bytes": 4,
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 4,
+          "load_accesses": 8,
+          "store_accesses": 4,
+          "load_bytes": 32,
+          "store_bytes": 16,
+          "unique_read_lines": 2,
+          "unique_write_lines": 3,
+          "unique_data_lines": 5,
+          "unique_line_bytes": 160
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 12,
+        "repeated_demand_line_visits": 7
+      },
+      "expected_callback_addresses": [
+        1055304,
+        1051240,
+        1052724
+      ],
+      "log_message": "Wep06 GOVERNMENT prolog Ok\n",
+      "module_object_sha256": "608f939c0b728940e87b5dbf41689356feb76470a8e22f1e1b17f3619086b447",
+      "fixture_elf_sha256": "9ae1db36636bb9cc7911d9ffdbd1e582ccd61c4ae4184fc343d586c18fbc6673",
+      "fixture_bindings_sha256": "6e3eb24e3fd69f687e00dd789b68d5d8a797e15f3fcb287d25415ff4bcf90b88",
+      "model_cycles": 20,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 16.0,
+        "dep_load": 4.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "5b813afcab3dc564110ee131b9f0b228db5e001a9b16f3ec565ee69346ef889d",
+      "cold_icache": {
+        "model_cycles": 51,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "module": "wep06",
+      "module_id": 50,
+      "item_id": 42,
+      "object_id": 49,
+      "phase": "epilog",
+      "instructions": 4,
+      "peak_stack_bytes": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1,
+          "store_instructions": 1,
+          "load_accesses": 1,
+          "store_accesses": 1,
+          "load_bytes": 4,
+          "store_bytes": 4,
+          "unique_read_lines": 1,
+          "unique_write_lines": 1,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 2,
+        "repeated_demand_line_visits": 0
+      },
+      "expected_callback_addresses": [
+        1055304,
+        1051240,
+        1052724
+      ],
+      "log_message": "",
+      "module_object_sha256": "608f939c0b728940e87b5dbf41689356feb76470a8e22f1e1b17f3619086b447",
+      "fixture_elf_sha256": "9ae1db36636bb9cc7911d9ffdbd1e582ccd61c4ae4184fc343d586c18fbc6673",
+      "fixture_bindings_sha256": "6e3eb24e3fd69f687e00dd789b68d5d8a797e15f3fcb287d25415ff4bcf90b88",
+      "model_cycles": 4,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 4.0,
+        "dep_load": 0.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "804637f6edce60b75b04ddf8c691360f9c04530b26c2784ea6d4caaf1b7a61ad",
+      "cold_icache": {
+        "model_cycles": 26,
+        "instruction_fills": 1.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "module": "wep12",
+      "module_id": 56,
+      "item_id": 52,
+      "object_id": 37,
+      "phase": "registration-prefix",
+      "instructions": 14,
+      "peak_stack_bytes": 4,
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 4,
+          "load_accesses": 8,
+          "store_accesses": 4,
+          "load_bytes": 32,
+          "store_bytes": 16,
+          "unique_read_lines": 2,
+          "unique_write_lines": 3,
+          "unique_data_lines": 5,
+          "unique_line_bytes": 160
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 12,
+        "repeated_demand_line_visits": 7
+      },
+      "expected_callback_addresses": [
+        1054208,
+        1053404,
+        1049688
+      ],
+      "log_message": "Wep12 tompson prolog Ok\n",
+      "module_object_sha256": "53b0de19467cc615fe57e3421ff0f89003104bc7f998bae8aecc289b0bf2e833",
+      "fixture_elf_sha256": "269999d0151b9ab6d47053cf0b4451014603628cc2b74cf4f788c8697cd006b5",
+      "fixture_bindings_sha256": "6347f54400ad94c3c0f30f6917c59e8da7cf626ede4de0b419255745ee017503",
+      "model_cycles": 20,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 16.0,
+        "dep_load": 4.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "c153f968bf121cbfa860d37b98de82f04a5c3b7bf56a71e10ee90e3d9d5cf6d9",
+      "cold_icache": {
+        "model_cycles": 52,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "module": "wep12",
+      "module_id": 56,
+      "item_id": 52,
+      "object_id": 37,
+      "phase": "epilog",
+      "instructions": 4,
+      "peak_stack_bytes": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1,
+          "store_instructions": 1,
+          "load_accesses": 1,
+          "store_accesses": 1,
+          "load_bytes": 4,
+          "store_bytes": 4,
+          "unique_read_lines": 1,
+          "unique_write_lines": 1,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 2,
+        "repeated_demand_line_visits": 0
+      },
+      "expected_callback_addresses": [
+        1054208,
+        1053404,
+        1049688
+      ],
+      "log_message": "",
+      "module_object_sha256": "53b0de19467cc615fe57e3421ff0f89003104bc7f998bae8aecc289b0bf2e833",
+      "fixture_elf_sha256": "269999d0151b9ab6d47053cf0b4451014603628cc2b74cf4f788c8697cd006b5",
+      "fixture_bindings_sha256": "6347f54400ad94c3c0f30f6917c59e8da7cf626ede4de0b419255745ee017503",
+      "model_cycles": 4,
+      "instruction_runs": 1,
+      "categories": {
+        "base": 4.0,
+        "dep_load": 0.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 0.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "500cc268c9bd8705ae9f5c649e2d28decadc57c6e937724277eaa095f56aa0b1",
+      "cold_icache": {
+        "model_cycles": 26,
+        "instruction_fills": 1.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    }
+  ],
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build27/entry_cost.py": "02b6ce92dfa9c97b982fe3ab733e7903a79976a1cb11e9a32ce97c39eef20376",
+    "port/dreamcast/tools/cloud/build27/module_build.py": "0785f02b8d2f9d69cd3fa0077b0a9324a4e7aa51e843ce2e964e51bf22806e07",
+    "port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+    "port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+    "port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+    "port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e",
+    "port/dreamcast/tools/d367/world_replay_lean/target_run.py": "519937b2c950be305c9c6bc609a7d6d646d9cac8e768a1575f6a72d988715756"
+  },
+  "module_build_sha256": "54b7db0584a3aa0346afacb4071b2cda43082685855e8e6ab61ff881cf7d9909",
+  "bindings": {
+    "_WeaponInitFunc": 131072,
+    "_WeaponMoveFunc": 131076,
+    "_ObjInitFunc": 131136,
+    "_OSReport": 7340032
+  },
+  "model": {
+    "wep05": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/206a5d423cac/build27-entry-frozen/wep05-model/hwsim",
+        "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "wep06": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/206a5d423cac/build27-entry-frozen/wep06-model/hwsim",
+        "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    },
+    "wep12": {
+      "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+      "source": "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+      "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+      "compile_command": [
+        "gcc",
+        "-O2",
+        "-o",
+        "/workspace/scratch/206a5d423cac/build27-entry-frozen/wep12-model/hwsim",
+        "/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+        "-lm"
+      ],
+      "flags": [
+        "--perfect-ic",
+        "--perfect-dc",
+        "--no-dma",
+        "--sq-cost",
+        "0"
+      ],
+      "exact_dynamic_instruction_and_delay_slot_counts": true,
+      "no_hardware_time_or_frame_speedup_claim": true
+    }
+  },
+  "whole_frame_modelled": {
+    "label": "MODELLED",
+    "assumed_other_work_ms": 30.0,
+    "assumed_cpu_mhz": 200,
+    "assumed_calls": {
+      "registration_prefix": 1,
+      "epilog": 1
+    },
+    "priced_cycles": 24,
+    "priced_ms": 0.00012,
+    "total_ms": 30.00012,
+    "scope": "Synthetic switch-tick sensitivity with a fixed unpriced remainder; logging/return tail, reset/load/assets and actual weapon work remain in that assumed remainder. No gain relative to failed/missing-module behavior is claimed."
+  },
+  "memory_controls": {
+    "status": "PASS",
+    "controls": [
+      "fetches excluded; scalar load/store retained",
+      "PC-relative literal classified as data",
+      "data read of current opcode word retained",
+      "delay slot attributed exactly once",
+      "double-register move counted as one 8-byte load",
+      "32-bit effective address wrap",
+      "store queues excluded from cached footprint",
+      "cached PREF counted separately from demand loads"
+    ]
+  },
+  "limitations": "Fixed synthetic global layout; perfect D-cache. Registration prefix stops before OSReport and excludes the caller return tail. Only the complete epilog returns. Imported callbacks are registered but never called. No gameplay/fire/reload/asset service cost, whole-game link or console timing is claimed.",
+  "raw_receipt_sha256": "618427a2b9b49f4827b9cc74d452a475f74ad0bace9456e869bdb3b698ea6480",
+  "compactor_sha256": "087a299b527d1281d90338cccce740b7070ac66ce1f1e1568dade234059bb2e2"
+}

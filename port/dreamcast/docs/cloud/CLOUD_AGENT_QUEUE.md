@@ -319,6 +319,107 @@ Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
 
 
+### 2026-10-28: Build 27 hand-back (`codex/wep-modules-27-20261028`)
+
+Base `6be0a66a`, newest `origin/t15/int` at build start. Build 26 was
+published first as `a8861996`; the base already contains Claude's Build 25
+merge. `WEP_MODULES_27` defaults to 0; no recipe is enabled. No new
+production assembly/linker machinery or game assets are included.
+
+The [full report](BUILD27_WEP_MODULES_20261028.md),
+[wep05/wep06 source audit](BUILD27_WEP05_WEP06_20261028.md), and
+[wep12 source audit](BUILD27_WEP12_20261028.md) document image wiring,
+recovered behavior, source provenance and acceptance boundaries. Complete
+wep05/wep06/wep12 routines were already present; the existing module
+pipeline now admits them as IDs 67/50/56. Their production source is
+unchanged, including real init/fire/reload/motion/effect callbacks. No
+success stubs replace gameplay. Old `WEAPON_WEP05=1` composes without a
+second module or table row. Thompson is logical weapon 12 (`0x0c`),
+item `0x34`, not logical/archive index `0x12`.
+
+Inventory/debug admission checks the recovered character/variant mapping
+before changing selection. The loader rejects an unknown actual module ID
+or a returned `OSLink` failure without the fatal DLL wrapper, publishes its
+linked bit only after success, and retires failed ownership/callbacks.
+The player restores an owned/loadable previous item, else the real
+bare-hands module if available, else an explicit no-weapon state with
+callbacks/archive pointer cleared. Subscreen, quick-select and debug
+callers respect the reverted selection. Existing fatal errors inside
+`routeOverlayLoad` are unchanged: registered overlay-file failures are
+not absent compiled IDs and do not return through `OSLink`.
+
+Generated module sizes (before final linker GC):
+
+| Module | Text | Read-only data | Data | BSS | Allocated total | Max local stack |
+|---|---:|---:|---:|---:|---:|---:|
+| wep05 /67 | 6400 B | 544 B | 0 B | 24 B | 6968 B | 92 B |
+| wep06 /50 | 6888 B | 544 B | 0 B | 24 B | 7456 B | 96 B |
+| wep12 /56 | 5788 B | 590 B | 0 B | 28 B | 6406 B | 96 B |
+
+All three add 20,830 B of module allocation; if old WEP05 is already on,
+only the other 13,862 B is new module allocation. Native entry/state exports
+are exactly seven per module; constructor/common guards pass, and external
+imports are all subsets of baseline wep02+wep11 (no new import names).
+This is generated module/link evidence, not a full private image link.
+
+**Target gates PASS:** 192 exact complete-preprocessor/object comparisons
+across six changed TUs × eight old-WEP05/heap-4/archive-reuse combinations
+× absent/explicit0 × PP/object. Debug/line records are consistently excluded;
+compared bytes are not normalized or stripped. Make flags/object lists
+match. Eight enabled compositions compile/partially link all new APIs and
+real weapon entries; each module ID/object occurs once. Final source and
+dependency hashes match. Public scope mirrors `NMR_POOL_LOD=0` for private
+LOD assets and retains the real prepared KOS_CACHE_P2 header.
+
+Source host checks pass 38 wep05/06 and 24 wep12 cases, normally and with
+ASan/UBSan. Actual equip/cleanup/caller bodies pass four heap-4 × reuse
+arms: 7,840 mapping/bounds comparisons and 138 flow cases per run, including
+unknown actual IDs, returned bind failure, restoration, unavailable bare
+hands, and the debug caller that previously republished a refused selection.
+
+| Actual target piece | Warm / cold-I cycles | Loads / stores | Unique 32-B lines | Observed stack |
+|---|---|---|---|---|
+| wep05 registration prefix | 20 /52 | 8 /4 | 5 | 4 B |
+| wep06 registration prefix | 20 /51 | 8 /4 | 5 | 4 B |
+| wep12 registration prefix | 20 /52 | 8 /4 | 5 | 4 B |
+| Each complete epilog | 4 /26 | 1 /1 | 2 | 0 B |
+
+The registration prefix stops before OSReport and excludes logging/return
+tail. Data-cache misses, module reset/load, creation, fire/reload and device
+services are unpriced. Lines are touched architectural addresses, not
+hardware misses; cold-I is per isolated sequence with perfect D-cache.
+
+For old WEP05=0/heap-4=1, combined module/guard additions are 20,464 B text,
+22,811 B allocated including 152 B BSS (before linker GC). Old WEP05=1
+reduces that to 14,064 /15,775 /104 B; heap-4=0 adds 96 B text, 100 B
+allocated and 4 B BSS to either case. Guard/table portion with heap-4=1
+is 1,388 B text/1,981 B allocated including 76 B BSS. Local frames:
+ReadWepData 568 B, weaponLoad 20 B and arm 28 B unchanged; debugWeapon
+12→20 B; new recovery 48 B and lookup helpers 4 B each. Whole-TU maximum
+frames are unchanged; these are not combined runtime stack peaks.
+
+**Whole-frame MODELLED accounting:** ASSUME 30 ms of all other CPU work
+and one epilog + one registration prefix in a switch tick, at 200 MHz.
+Their 24 warm cycles add 0.000120 ms, for **30.000120 ms MODELLED**.
+This is a bounded control-window accounting example, not equip latency or
+a performance gain over the missing module. Exact evidence and commands:
+[Build27 validation](../../tools/cloud/build27/VALIDATION.md).
+
+**Questions / local gates:**
+
+1. With the fixed sound banks and real archives, check equip/aim/fire/reload
+   for items `0x29`, `0x2a`/`0x2b` and `0x34`, repeated switches, inventory
+   exit, quick select, archive reuse and room transitions in Flycast.
+2. Exercise missing-module admission and late native-bind refusal. Does
+   the owned previous weapon stay coherent across item selection, model,
+   ammunition and sound? Also check the no-previous-loadable-item case;
+   it clears callbacks but may leave unused sound-bank bytes resident.
+3. Run full knob-off image identity, private-route linkage, heap-4/KOS
+   margins and stack/gameplay checks. The added image/module bytes are
+   measured; private archive/body overlap and real frame/device/cache cost
+   remain local. Claude owns merging and enabling.
+
+
 ### 2026-10-28: Build 25 hand-back (`codex/actor-light-fast-only-20261028`)
 
 Base `7acd7d8f` (`origin/t15/int`, including barn28 and link28). `ACTOR_LIGHT_FAST_ONLY=1`, default 0,

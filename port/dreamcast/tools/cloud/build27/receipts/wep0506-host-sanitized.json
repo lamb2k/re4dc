@@ -1,0 +1,101 @@
+{
+  "status": "PASS",
+  "cases": 38,
+  "coverage": [
+    "real registration and placement callbacks",
+    "weapon/model allocation boundaries",
+    "both Government model types",
+    "26 motion mappings and untouched slots",
+    "first shot, last round and repeat-step suppression",
+    "all reload tuning branches and crossing timing",
+    "cartridge transform, random order and allocation refusal"
+  ],
+  "baseline": "6be0a66ab59fa597a55aae7379fb09777d357bc1",
+  "sanitized": true,
+  "scope": "Exercise complete wep05/wep06 source with synthetic weapon services.\n\nThis is a control-flow and callback-contract fixture. The target build validates\nthe real headers, layout, ABI, module symbols and native code. No game assets are\nread, generated or included in this test.\n",
+  "compile_command": [
+    "g++",
+    "-std=c++17",
+    "-O2",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-fno-pie",
+    "-no-pie",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-I/tmp/build27-wep0506-final-sanitized/headers",
+    "-I/workspace/scratch/206a5d423cac/re4dc/port/dreamcast/tools/cloud/build27",
+    "/tmp/build27-wep0506-final-sanitized/wep0506_fixture.cpp",
+    "-o",
+    "/tmp/build27-wep0506-final-sanitized/wep0506_fixture"
+  ],
+  "source_sha256": {
+    "src/wep05/objCivilian.cpp": "26323feef89fc88a8b2b944a8ce3c094a9862a5abcad6b4fdd10f7f3f30b190c",
+    "src/wep05/wep05.cpp": "acc27156cd7936b3fc27b82636dbbfa2e48ee068f880dff5b4e3a6831a62ae01",
+    "src/wep06/wep06.cpp": "b6216d9f9448f70884d5e7d0d1fc741c364e2c9e0d48883f937c8673d7f2665c",
+    "src/wep/pl_handgun.cpp": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029",
+    "config/G4BE08/modules.py": "ea3d9b0259d79c26691fcdb1cd4afb01c327b55a6c27d92026bf2e5eeea43aa5",
+    "config/G4BE08/modules/wep05/rel.json": "bde637a5d7c5e176197a1501ec7c411b34a56502d55c9f710a98b651220d19d1",
+    "config/G4BE08/modules/wep06/rel.json": "66588fdaf2b29ea62aae921e3ff45229cdec3a40a6e1f3cc970276aebec272fc",
+    "config/G4BE08/modules/wep05/splits.txt": "8a0876884b59c0b62f9d729ac0f9e7950acb487cafb2b1ae9836899e2b252923",
+    "config/G4BE08/modules/wep06/splits.txt": "a46318f31d6553cfafe3521c39b40306a6721807b17a800ac450735ccfbf4132",
+    "port/dreamcast/game/tools/gen_modules.py": "563d6b602ed75d63b00b62904d61aa750842490cd6287b7f9e8a338288e73d3d",
+    "include/types.h": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "src/game/obj.cpp": "c206b0b247c06029ee44051deb0db24ccea702ae9534fdaa41dcfc6d0479c601",
+    "port/dreamcast/tools/cloud/build27/weapon_fixture_prefix.hpp": "4cabdd57867e5dee6c5a9204b2ce3a127ecd4d305e086ca658bfabcbb1514177",
+    "port/dreamcast/tools/cloud/build27/wep0506_fixture.cpp.in": "1e2245bf78446fb65a4ad934ffce29024710f4923084890df24b5fcd7700d61d",
+    "port/dreamcast/tools/cloud/build27/wep0506_host.py": "d292e5baec7a3f8199d6ad444e6676b327d281cf1f3b5bef32b7b5aa4be8380b"
+  },
+  "unchanged_production_source": {
+    "src/wep05/objCivilian.cpp": true,
+    "src/wep05/wep05.cpp": true,
+    "src/wep06/wep06.cpp": true,
+    "src/wep/pl_handgun.cpp": true
+  },
+  "generated_source_sha256": "cd63a2fd2b1eb770cc13456bb6570b56d626e81e1cb18505a0db88a3972ca6e3",
+  "host_only_pointer_cast_adaptations": [
+    {
+      "source": "src/wep05/objCivilian.cpp",
+      "from": "(int) this",
+      "to": "(std::intptr_t) this",
+      "count": 1
+    },
+    {
+      "source": "src/wep06/wep06.cpp",
+      "from": "(int) this",
+      "to": "(std::intptr_t) this",
+      "count": 1
+    }
+  ],
+  "port_lint": {
+    "wep05": [
+      {
+        "rule": "value-init",
+        "severity": "error",
+        "file": "src/wep05/objCivilian.cpp",
+        "line": 30,
+        "text": "new (obj) cObjCivilian();"
+      }
+    ],
+    "wep06": [
+      {
+        "rule": "value-init",
+        "severity": "error",
+        "file": "src/wep06/wep06.cpp",
+        "line": 57,
+        "text": "new (obj) cObjGovernment();"
+      }
+    ]
+  },
+  "manual_lint_qualification": "Placement-new value initialization is safe for these cObj classes: cManager::createBack clears storage first; cObjMgr sets serial/id after ObjInitFunc and list insertion follows. There is no cEm subArc input to erase. No direct sparse EmMgr array accesses, hardcoded vptr offsets or file-static asm aliases.",
+  "limits": [
+    "Synthetic class declarations and services are control boundaries, not target layout/ABI proof.",
+    "Host u32 pointer carriers and the validity interval are widened; real SH4 bounds come from include/types.h.",
+    "Model/motion/sound/effect/collision services record calls; no private assets or game tick loop execute.",
+    "PlHandgunMove is a recorded registration target here; its unchanged production body is compiled by the target module gate.",
+    "This fixture makes no gameplay, appearance, whole-frame or hardware timing claim."
+  ]
+}

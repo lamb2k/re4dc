@@ -32,8 +32,15 @@ extern "C" void re4dc_gcasset_retire_archive(const void*);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
 #endif
-#if RE4DC_WEAPON_HEAP4
+#if RE4DC_WEAPON_HEAP4 || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
 #include "item.h"
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+#include "re4dc_wep27.h"
+extern "C" BOOL OSLink(OSModuleHeader*, void*);
+extern void (*WeaponInitFunc)(cModel*);
+extern void (*WeaponMoveFunc)(cPlayer*);
+extern void* PlWepMot[3];
 #endif
 #if !defined(__PPC__)
 #include "re4dc_platform.h"
@@ -128,6 +135,12 @@ u8 oldWepId;
 // File identity distinguishes the per-character tables, even when their mapped weapon numbers agree.
 // Published only after a successful load/link and invalidated before any weapon backing is released.
 static u16 wepResidentFile;
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+int re4dc_wep27_failed;
+#if !RE4DC_WEAPON_HEAP4
+int re4dc_wep_reverted;
+#endif
 #endif
 
 ReadModule EmReadModule[4] __attribute__((aligned(32)));
@@ -1304,12 +1317,189 @@ ReadFile wep_data_klauser[46] = {
     { 0x00, 0x00, 0 }, { 0x00, 0x00, 0 },
 };
 
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+// The same recovered per-character/variant selection as ReadWepData, used
+// before any inventory change or archive retirement. No disc I/O occurs here.
+static ReadFile* wep27_read_file(u32 no, u32 type)
+{
+    if (no >= 46) return NULL;
+    ReadFile* e;
+    switch (pG->pl_type) {
+    case 0:
+    default:
+        if (no == 0x19 || no == 0x1F || no == 0x20 || no == 0x16 || no == 0x17) {
+            no = 0x13;
+        } else if (no == 3 && type == 2) {
+            no = 0x12;
+        } else if (no == 0xB && type > 1) {
+            no = 0x14;
+        } else if (no == 9) {
+            switch (type) {
+            case 1:
+                no = 0x15;
+                break;
+            case 2:
+                no = 0x18;
+                break;
+            }
+        } else if (no == 0xA) {
+            switch (type) {
+            case 1:
+                no = 0x1F;
+                break;
+            case 2:
+                no = 0x20;
+                break;
+            }
+        } else if (no == 0xE && type == 1) {
+            no = 0x19;
+        } else if (no == 0xD && type == 2) {
+            no = 0x1E;
+        }
+        e = &wep_data_leon[no];
+        break;
+    case 2:
+        switch (no) {
+        case 0x13:
+        case 0x16:
+        case 0x17:
+        case 0x19:
+        case 0x1F:
+        case 0x20:
+            no = 0x13;
+            break;
+        }
+        e = &wep_data_ada[no];
+        break;
+    case 3:
+        switch (no) {
+        case 0x13:
+        case 0x16:
+        case 0x17:
+        case 0x19:
+        case 0x1F:
+        case 0x20:
+            no = 0x13;
+            break;
+        }
+        e = &wep_data_hunk[no];
+        break;
+    case 5:
+        switch (no) {
+        case 0x13:
+        case 0x16:
+        case 0x17:
+        case 0x19:
+        case 0x1F:
+        case 0x20:
+            no = 4;
+            break;
+        case 0x0A:
+            no = 5;
+            break;
+        }
+        e = &wep_data_wesker[no];
+        break;
+    case 4:
+        switch (no) {
+        case 0x13:
+        case 0x16:
+        case 0x17:
+        case 0x19:
+        case 0x1F:
+        case 0x20:
+            no = 0x17;
+            break;
+        }
+        e = &wep_data_klauser[no];
+        break;
+    }
+    return e;
+}
+extern "C" int re4dc_weapon27_available(unsigned no, unsigned type)
+{
+    if (!pG) return 0;
+    const ReadFile* e=wep27_read_file(no,type);
+    return e && e->file && e->dll &&
+        re4dc_weapon27_module_file_present(FileTbl[e->dll].name);
+}
+
+// A refused bind has not published WepReadModule's linked bit or called its
+// prolog. Retire the newly read archive/heap block and all stale callbacks.
+static void wep27_refuse_data()
+{
+    ReleaseWepData();
+    WeaponInitFunc=0;
+    WeaponMoveFunc=0;
+    PlWepMot[0]=PlWepMot[1]=PlWepMot[2]=0;
+    pG->pWep=0;
+    re4dc_wep27_failed=1;
+}
+
+// Restore an owned, loadable previous weapon after a direct/debug load or an
+// actual bind refusal. If none remains, publish an explicit no-weapon state;
+// never invoke the rejected module or fabricate a replacement weapon.
+void re4dc_weapon27_revert(int oldNo, int oldType, int no, int type)
+{
+    re4dc_wep_reverted=1;
+    if (oldNo!=no || oldType!=type) {
+        ItemWork* p=ItemMgr.pItems;
+        for (int i=0;i<ItemMgr.nItems;++i,++p) {
+            if (!p->num || !p->id) continue;
+            const u16 id=ItemMgr.weaponId(p);
+            if (WeaponId2WeaponNo(id)!=oldNo || WeaponId2WeaponType(id)!=oldType || !ItemMgr.arm(p)) continue;
+            pG->weapon_no=oldNo;
+            pG->weapon_type=oldType;
+#if RE4DC_WEAPON_HEAP4
+            re4dc_wep_heap4_failed=0;
+#endif
+            ReadWepData(oldNo,oldType);
+            if (!re4dc_wep27_failed
+#if RE4DC_WEAPON_HEAP4
+                && !re4dc_wep_heap4_failed
+#endif
+            ) {
+                pG->bullet_type=ItemMgr.pArm ? ItemMgr.pArm->bullet>>13 : 0;
+                OSReport("weapon module: %x/%x refused; restored %x/%x\n",no,type,oldNo,oldType);
+                return;
+            }
+            break;
+        }
+    }
+    ItemMgr.arm(0);
+    pG->weapon_no=WeaponId2WeaponNo(ItemMgr.m_wep_id);
+    pG->weapon_type=WeaponId2WeaponType(ItemMgr.m_wep_id);
+    pG->bullet_type=0;
+    if (re4dc_weapon27_available(pG->weapon_no,pG->weapon_type)) {
+#if RE4DC_WEAPON_HEAP4
+        re4dc_wep_heap4_failed=0;
+#endif
+        ReadWepData(pG->weapon_no,pG->weapon_type);
+        if (!re4dc_wep27_failed
+#if RE4DC_WEAPON_HEAP4
+            && !re4dc_wep_heap4_failed
+#endif
+        ) return;
+    }
+    wep27_refuse_data();
+    OSReport("weapon module: %x/%x refused; no loadable weapon remains\n",no,type);
+}
+#endif
+
 // Loads the weapon module for weapon `no` / variant `type`: maps the variants onto module numbers
 // (grenades / eggs -> 0x13, the special shotgun / rifles / launcher variants) in the per-character
 // table, skips when it is already loaded (oldWepId), reads it to WEP_DATA_ADDR (Game.pWepBuf for
 // Krauser), links the REL and runs its prolog (which registers WeaponInitFunc). pG->pWep = data.
 void ReadWepData(u32 no, u32 type)
 {
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    re4dc_wep27_failed=0;
+    if (!re4dc_weapon27_available(no,type)) {
+        re4dc_wep27_failed=1;
+        OSReport("weapon module: unavailable weapon %x/%x; load refused\n",no,type);
+        return;
+    }
+#endif
     DvdReadInfo info;
     int req;
     int ret;
@@ -1483,6 +1673,13 @@ void ReadWepData(u32 no, u32 type)
 #endif
     pG->pWep = (void*) info.addr[0][0];
     pModule = (OSModuleHeader*) (*(u32*) (data + 4) + (u32) data);
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    if (!re4dc_weapon27_module_id_present(pModule->id)) {
+        OSReport("weapon module: id %u not in image; equip refused\n",pModule->id);
+        wep27_refuse_data();
+        return;
+    }
+#endif
     size = (u32) pModule - (u32) data;
     bssSize = total - size;
     if (!BitChk16(WepReadModule.flag, 2)) {
@@ -1496,8 +1693,17 @@ void ReadWepData(u32 no, u32 type)
                 TaskSleep(1);
             }
         }
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+        if (OSLink(pModule,bss)!=1) {
+            OSReport("weapon module: native bind refused; equip cancelled\n");
+            wep27_refuse_data();
+            return;
+        }
+        BitOn16(WepReadModule.flag, 2);
+#else
         BitOn16(WepReadModule.flag, 2);
         DLL_Link(pModule, bss);
+#endif
         pModule->prolog();
     } else {
         pModule = NULL;

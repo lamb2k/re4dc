@@ -331,7 +331,7 @@ static void qwTask()
         OSReport("quick weapon: read %u calls %u bytes drive %u us (weapon %x)\n", r1 - r0, (unsigned) (k1 - k0),
                  (unsigned) (b1 - b0), wepNo);
 #endif
-#if RE4DC_WEAPON_HEAP4
+#if RE4DC_WEAPON_HEAP4 || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
         {
             extern int re4dc_wep_reverted;
             if (re4dc_wep_reverted) {
@@ -899,7 +899,7 @@ void SubScreenExit()
                 SndBlkStop(2);
                 pl->weaponRelease();
                 pl->weaponLoad(wepNo, wepType);
-#if RE4DC_WEAPON_HEAP4
+#if RE4DC_WEAPON_HEAP4 || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
                 {
                     extern int re4dc_wep_reverted;   // read.cpp: the equip was reverted (heap 4 short)
                     if (re4dc_wep_reverted) {
