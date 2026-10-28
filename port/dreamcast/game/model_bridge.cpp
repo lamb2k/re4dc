@@ -158,6 +158,13 @@ extern "C" int re4dc_actor_obj_id(const void* model){
 #endif
 #endif
 #endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+// BARN28_DIAG (barn28.mk): kindid << 8 | id of a model (-1 none), for the B28L rows.
+extern "C" int re4dc_b28_model_kind(const void* model){
+    auto* m=(const cModel*)model;
+    return m ? int((unsigned(m->kindid)&255U)<<8|(unsigned(m->id)&255U)) : -1;
+}
+#endif
 extern "C" void re4dc_model_material(const void* object,float u,float v,unsigned flags){
     selected={};mask={};mask_ref=256;mask_same_uv=0;
     if(!object || (flags&4))return; // multi-texture blend needs its own native path

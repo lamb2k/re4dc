@@ -2085,6 +2085,12 @@ inline float leon_gain(const SourceLighting& S) {
 #ifndef RE4DC_GIGANTE_LIGHTS
 #define RE4DC_GIGANTE_LIGHTS 0
 #endif
+#ifndef RE4DC_ACTOR_LIGHT_CAP
+#define RE4DC_ACTOR_LIGHT_CAP 0
+#endif
+#if RE4DC_ACTOR_LIGHT_CAP && !RE4DC_GIGANTE_LIGHTS
+#error ACTOR_LIGHT_CAP needs GIGANTE_LIGHTS (the light fold)
+#endif
 #ifndef RE4DC_LEON_LIGHT_FILL
 #define RE4DC_LEON_LIGHT_FILL 0
 #endif
@@ -2113,6 +2119,10 @@ unsigned gigante_keep(const Re4dcModelPart& p) {
     // STATUE_LIGHTS=2: the r226 statue (cObjRobo, object 0x37) takes the exact 3-light evaluator in build_lights.
     if (id < 0 && re4dc_actor_obj_id(p.model) == 0x37) return 3U;
 #endif
+#if RE4DC_ACTOR_LIGHT_CAP
+    // ACTOR_LIGHT_CAP (barn28.mk): every other model folds the same way (3 strongest lights + ambient share).
+    return 3U;
+#endif
     return 0U;
 }
 #endif
@@ -2133,8 +2143,54 @@ bool leon_part_normal(const float m[12], float N[12]) {
     return true;
 }
 #endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+// BARN28_DIAG (barn28.mk; diagnostic, default 0): parts that leave the fast light fold, by model (enemy id / object
+// id), reason (1 per-vertex colour, 2 diffuse/scale, 3 fourth light) and significant lights; the exact pass adds its
+// vertices. One B28L line per row every 300 actor frames.
+}  // namespace
+extern "C" int re4dc_b28_model_kind(const void* model);
+namespace {
+namespace b28 {
+struct Row { int id, obj; unsigned reason, parts, verts, lights_max, fast_parts; };
+Row rows[48]; unsigned nrows, reason, nlights, cur = 0xffffffffU, last;
+unsigned key(const Re4dcModelPart& p) {
+    const int id = re4dc_b28_model_kind(p.model), obj = 0;
+    for (unsigned i = 0; i < nrows; ++i) if (rows[i].id == id && rows[i].obj == obj && rows[i].reason == reason) return i;
+    if (nrows == 48) return 47;
+    rows[nrows] = Row{id, obj, reason, 0, 0, 0, 0};
+    return nrows++;
+}
+void note(const Re4dcModelPart& p, bool fast) {
+    if (fast) { reason = 0; nlights = 0; }
+    const unsigned i = key(p);
+    if (fast) { ++rows[i].fast_parts; cur = 0xffffffffU; return; }
+    ++rows[i].parts; if (nlights > rows[i].lights_max) rows[i].lights_max = nlights;
+    cur = i;
+}
+void verts(unsigned n) { if (cur < 48) rows[cur].verts += n; }
+bool note_ret(const Re4dcModelPart& p, bool fast) { note(p, fast); return fast; }
+void window(unsigned frame) {
+    if (frame - last < 300) return;
+    for (unsigned i = 0; i < nrows; ++i) {
+        const Row& r = rows[i];
+        re4dc_log("B28L f=%u frames=%u id=%d obj=%d why=%u slow_parts=%u verts=%u lights_max=%u fast_parts=%u\n", frame,
+                  frame - last, r.id, r.obj, r.reason, r.parts, r.verts, r.lights_max, r.fast_parts);
+    }
+    nrows = 0; last = frame;
+}
+}  // namespace b28
+#define B28_WHY(x) (b28::reason = (x))
+#define B28_NOTE(p, v) b28::note_ret((p), (v))
+#else
+#define B28_WHY(x) ((void) 0)
+#define B28_NOTE(p, v) (v)
+#endif
 bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3], Lights& L) {
     const SourceLighting& S = *p.lighting;
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::reason = 0; b28::nlights = 0;
+    for (unsigned i = 0; i < 8; ++i) if (S.mask & (1U << i)) ++b28::nlights;
+#endif
 #if RE4DC_GIGANTE_LIGHTS
     const unsigned keep = gigante_keep(p);
 #endif
@@ -2160,14 +2216,24 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
         caps255 &= scale[c] >= 255.0f;
     }
 #endif
-    if (S.ambient_vertex || S.material_vertex) return false;  // per-vertex colour: slow path
+#if RE4DC_ACTOR_LIGHT_CAP
+    // ACTOR_LIGHT_CAP (user 10-28, no per-vertex fallback): a per-vertex colour record folds with its constant
+    // ambient/material (approximation); B28_WHY still records it.
+    if (S.ambient_vertex || S.material_vertex) B28_WHY(1);
+#else
+    if (S.ambient_vertex || S.material_vertex) { B28_WHY(1); return false; }  // per-vertex colour: slow path
+#endif
     if (!S.enable) {
         L.constant = true;
         L.constant_rgb = (channel(std::min(ambient[0], 1.0f) * scale[0]) << 16) |
                          (channel(std::min(ambient[1], 1.0f) * scale[1]) << 8) | channel(std::min(ambient[2], 1.0f) * scale[2]);
         return true;
     }
-    if (S.diffuse != 2 || !caps255) return false;
+#if RE4DC_ACTOR_LIGHT_CAP
+    if (S.diffuse != 2 || !caps255) B28_WHY(2);  // folds anyway (clamped diffuse, the fast kernel's 1.0x cap)
+#else
+    if (S.diffuse != 2 || !caps255) { B28_WHY(2); return false; }
+#endif
 #if RE4DC_LEON_LIGHT_HEADROOM
     { const float g = leon_gain(S); for (unsigned c = 0; c < 3; ++c) scale[c] *= g; }
     if (hr_half) { for (unsigned c = 0; c < 3; ++c) scale[c] *= 2.0f; L.half_post = true; }
@@ -2231,7 +2297,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
             continue;
         }
 #endif
-        if (L.count == 3) return false;  // fourth significant light: slow path
+        if (L.count == 3) { B28_WHY(3); return false; }  // fourth significant light: slow path
         float* o = L.dir[L.count];
         o[0] = (N[0] * lx + N[4] * ly + N[8] * lz) * f.nq;
         o[1] = (N[1] * lx + N[5] * ly + N[9] * lz) * f.nq;
@@ -2293,6 +2359,30 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
     ++stats.light_sets;
     return true;
 }
+
+#if RE4DC_ACTOR_LIGHT_CAP
+// ACTOR_LIGHT_CAP=1 (barn28.mk; render only, approximation, default 0; user 10-28 "simple lighting that doesn't fall
+// back to per-vertex lighting at all"): no actor part reaches the exact per-vertex evaluator. More than three
+// significant lights fold the three strongest + ambient share (gigante_keep: every model); per-vertex colour records
+// fold with their constant ambient/material; a diffuse/scale record outside the fold's exact conditions folds anyway.
+// Anything still unfolded (no invertible normal basis, ...) draws one flat colour: never the exact evaluator.
+void flat_fallback(const Re4dcModelPart& p, Lights& L) {
+    const SourceLighting& S = *p.lighting;
+    lights_reset(L);
+    L.source = &S;
+    L.constant = true;
+    float rgb[3];
+    for (unsigned c = 0; c < 3; ++c) {
+        float a = S.enable ? S.ambient[c] / 255.0f : 1.0f;
+        if (S.enable) for (unsigned i = 0; i < 8; ++i) if (S.mask & (1U << i)) a += 0.25f * S.lights[i].color[c] / 255.0f;
+        rgb[c] = S.material[c] * std::min(a, 1.0f) * S.tev_scale;
+    }
+    L.constant_rgb = (channel(rgb[0]) << 16) | (channel(rgb[1]) << 8) | channel(rgb[2]);
+}
+#define RE4DC_CAP_EXACT(p, c, L) flat_fallback((p), (L))
+#else
+#define RE4DC_CAP_EXACT(p, c, L) ((void) 0)
+#endif
 
 #if RE4DC_ACTOR_PROBE_LIGHT
 // ACTOR_PROBE_LIGHT=1/2 (crowd.mk; render only; default 0): one light probe per actor per frame. The GX light set that
@@ -4523,6 +4613,9 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #endif
 // Pass 2 (exact, slow): the generic path's per-vertex evaluator.
 void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::verts(n);
+#endif
     static const u8 white[4] = {255, 255, 255, 255};
 #if defined(RE4DC_LEON_SOURCE_LIGHT) && RE4DC_LEON_SOURCE_LIGHT
     float Np[12];
@@ -5241,6 +5334,9 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
     lod_budget = lod_budget_frame;
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::window(frame_serial);
+#endif
 #if defined(RE4DC_ACTOR_LOD_ENTRY) && RE4DC_ACTOR_LOD_ENTRY
     {   // ACTOR_LOD_ENTRY=K (shotfx20.mk; render only, exact triangles): for the first K frames of a room every part
         // drawn has its detail levels built at once (no per-frame budget), so the builds land in the room-entry
@@ -6081,11 +6177,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
-    if (!RE4DC_PART_LIGHTS(p, f, blob->center, lights))
+    if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, lights))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lights.exact_ready)
 #endif
         RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
+        RE4DC_CAP_EXACT(p, blob->center, lights);
+    }
 #if !RE4DC_ACTOR_SETUP_LEAN
     lights.source = p.lighting;
 #endif
@@ -6766,11 +6864,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     G1PC_PART(p, true);
     if (!constant_source || !w.lights_ready || w.lights.source != p.lighting) {
         G1PC_LIGHT(p, f, blob->center);
-        if (!RE4DC_PART_LIGHTS(p, f, blob->center, *lp))
+        if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, *lp))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lp->exact_ready)
 #endif
         RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
+        RE4DC_CAP_EXACT(p, blob->center, *lp);
+        }
 #if !RE4DC_ACTOR_SETUP_LEAN
         lp->source = p.lighting;
 #endif
