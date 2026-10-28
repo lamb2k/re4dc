@@ -560,3 +560,21 @@ Console prerequisites remain explicit disc choice/REMOTE LINK and matching
 camera/state plus600 drawn-frame windows. Complete absent/zero repacked-image
 identity is also pending; source/object receipts are not that gate. No private
 assets or raw dumps committed, no SD write, recipe changes or publication.
+
+### Answers (owner): fixed-front actual private farm pair
+
+Current-source6c6028df6 FRONT_NATIVE1 control/cache programme+overlay pair
+builds rc0/missing0. Identical assets/diagnostic QA settings and r103f one-down
+fixture; after owned output-path normalization only FRONT_TEXOBJ differs0/1.
+The fixture explicitly kills0x12 at its150 checkpoint, not natural combat or
+a full decisions replay. Both60s cache-interpreter/GDEMU1 captures complete,
+reader0/errors empty/overruns0, normal farm gameplay and owned process exit.
+Cache game frame600:5107hits,30builds,0fallbacks,843flushes,0resets,30keys/
+47records; the control compiles out this cache diagnostic. This proves real
+admission, not occurrence of all stale-descriptor mutation cases or speed.
+
+Private exact profiles/run/log/ELF/fixture receipts: owner-front34-20261028/
+CONTROL-PROOF.json and RESULTS.json. Lifecycle/weapon/menu/room/movie/look,
+STRICT, standard s30/KOS/heap, full-image identity and matched console gates
+remain; hold reviewed to record this progress, no promotion. SCPS-only
+control/on/cache2 check remains the next independent local step.

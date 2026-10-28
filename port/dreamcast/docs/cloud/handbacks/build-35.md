@@ -148,3 +148,36 @@ commands before this build moves on to scanner work.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner), 2026-10-28
+
+Docs956e83f06 merged clean asb7c321300 onbd1e1f3cd. Full owner release recipe
+rc0/missing0, ELF SHA-256
+1e93c0fa71ba1af779ca607beb49403b07cc0aa88d9b2553b02bfc98d2c55c19.
+No runtime controls in this step; no new ALL ON build required. Prior ALL ON34
+and audit-only room-tour stages remain preserved. They are different source/
+observer compositions and cannot substitute for matched Build35 arms.
+
+1. Six-group current tour results are pending the runtime. No new group is
+   declared zero, absent or optimized from old counters. The fixed FRONT34
+   farm pair now proves actual front-cache admission5107hits/30builds/
+   0fallbacks at game frame600, but this is not a FA35 six-group capture.
+2. Full/partial window32, skipped/incomplete/outside-tick, reset, pause and
+   saturation-expiry checks remain pending runtime and its host lifecycle
+   oracle. Owner will retain N/used/overflow/reset metadata and separate
+   completed draw-attempt ticks from actual presented scenes and room totals;
+   different units will not be summed as one workload. No speculative ring
+   memory figure is treated as actual BSS or heap acceptance.
+3. Confirmed: retain normal release, existing-audit, gaps and window32 as
+   separate same-source/assets/profile arms after runtime lands. Measure
+   observer CPU, local/total stack and current standard memory floors rather
+   than assigning the observer's cost to an optimization. Keep new diagnostics
+   out of the release recipe; no speed-switch promotion requested or made.
+
+Console prerequisite: user selects the explicit arm and enables REMOTE LINK;
+matching camera/game state and600 drawn ticks per view, complete build/media/
+assets identities, raw rows and final32-entry semantics are required. Current
+live HouseWhole benchmark is not this tour and has not been driven or repurposed.
+Independent private work continues on Build34 SCPS-only control/on/check and
+current cache lifecycles while awaiting the runtime. No private assets, SD
+writes, recipe promotion, release or new lane launch.
