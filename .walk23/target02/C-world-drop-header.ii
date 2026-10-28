@@ -1,0 +1,41 @@
+inline unsigned strip(const pvr_vertex_t* __restrict cache, const std::uint8_t* __restrict idx, unsigned n, unsigned mask,
+                      unsigned cull, Emit&& emit) {
+    if (n < 3) return 0;
+    std::uint8_t plain[256];
+    for (unsigned k = 0; k < n; ++k) plain[k] = std::uint8_t(idx[k] & mask);
+    const unsigned t = n - 2;
+    std::uint8_t keep[256];
+    const float sign = cull == 2 ? 1.0f : -1.0f;
+    {
+        const pvr_vertex_t* a = cache + plain[0];
+        const pvr_vertex_t* b = cache + plain[1];
+        float ax = a->x, ay = a->y, bx = b->x, by = b->y;
+        for (unsigned i = 0; i < t; ++i) {
+            const pvr_vertex_t* c = cache + plain[i + 2];
+            const float cx = c->x, cy = c->y;
+            float area = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+            if (i & 1) area = -area;
+            keep[i] = (sign * area) < 0.0f;
+            ax = bx; ay = by; bx = cx; by = cy;
+        }
+    }
+    for (unsigned i = 0; i < t;) {
+        if (keep[i] == 1) { ++i; continue; }
+        unsigned j = i;
+        while (j < t && keep[j] != 1) ++j;
+        if (i > 0 && j < t && j - i < 3)
+            for (unsigned q = i; q < j; ++q) keep[q] = 2;
+        i = j;
+    }
+    unsigned sent = 0;
+    for (unsigned i = 0; i < t;) {
+        if (!keep[i]) { ++i; continue; }
+        unsigned a = i;
+        while (i < t && keep[i]) ++i;
+        if (a & 1) --a;
+        const unsigned count = i - a + 2;
+        emit(plain + a, count);
+        sent += count;
+    }
+    return sent;
+}

@@ -1,0 +1,218 @@
+00000000 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>:
+   0:	86 2f       	mov.l	r8,@-r15
+   2:	63 68       	mov	r6,r8
+   4:	96 2f       	mov.l	r9,@-r15
+   6:	a6 2f       	mov.l	r10,@-r15
+   8:	73 6a       	mov	r7,r10
+   a:	b6 2f       	mov.l	r11,@-r15
+   c:	43 6b       	mov	r4,r11
+   e:	c6 2f       	mov.l	r12,@-r15
+  10:	d6 2f       	mov.l	r13,@-r15
+  12:	e6 2f       	mov.l	r14,@-r15
+  14:	ac 91       	mov.w	170 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x170>,r1	! 204
+  16:	22 4f       	sts.l	pr,@-r15
+  18:	18 3f       	sub	r1,r15
+  1a:	02 e1       	mov	#2,r1
+  1c:	16 36       	cmp/hi	r1,r6
+  1e:	6d 8f       	bf.s	fc <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xfc>
+  20:	00 ec       	mov	#0,r12
+  22:	54 d0       	mov.l	174 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x174>,r0	! 0 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>
+  24:	f3 69       	mov	r15,r9
+  26:	04 79       	add	#4,r9
+  28:	93 64       	mov	r9,r4
+  2a:	0b 40       	jsr	@r0
+  2c:	fe 78       	add	#-2,r8
+  2e:	a3 60       	mov	r10,r0
+  30:	02 88       	cmp/eq	#2,r0
+  32:	6f 8f       	bf.s	114 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x114>
+  34:	9d f1       	fldi1	fr1
+  36:	90 61       	mov.b	@r9,r1
+  38:	88 28       	tst	r8,r8
+  3a:	91 84       	mov.b	@(1,r9),r0
+  3c:	93 63       	mov	r9,r3
+  3e:	1c 61       	extu.b	r1,r1
+  40:	97 9a       	mov.w	172 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x172>,r10	! 104
+  42:	08 41       	shll2	r1
+  44:	1d f1       	flds	fr1,fpul
+  46:	0c 60       	extu.b	r0,r0
+  48:	8d f8       	fldi0	fr8
+  4a:	1c 31       	add	r1,r1
+  4c:	08 40       	shll2	r0
+  4e:	08 41       	shll2	r1
+  50:	0c 30       	add	r0,r0
+  52:	bc 31       	add	r11,r1
+  54:	08 40       	shll2	r0
+  56:	13 62       	mov	r1,r2
+  58:	bc 30       	add	r11,r0
+  5a:	08 71       	add	#8,r1
+  5c:	04 72       	add	#4,r2
+  5e:	18 f2       	fmov	@r1,fr2
+  60:	03 61       	mov	r0,r1
+  62:	08 70       	add	#8,r0
+  64:	04 71       	add	#4,r1
+  66:	28 f3       	fmov	@r2,fr3
+  68:	08 f5       	fmov	@r0,fr5
+  6a:	02 73       	add	#2,r3
+  6c:	18 f4       	fmov	@r1,fr4
+  6e:	00 e0       	mov	#0,r0
+  70:	fc 3a       	add	r15,r10
+  72:	83 62       	mov	r8,r2
+  74:	00 8b       	bf	78 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x78>
+  76:	01 e2       	mov	#1,r2
+  78:	34 61       	mov.b	@r3+,r1
+  7a:	01 c8       	tst	#1,r0
+  7c:	5c f6       	fmov	fr5,fr6
+  7e:	1c 61       	extu.b	r1,r1
+  80:	6c f1       	fmov	fr6,fr1
+  82:	08 41       	shll2	r1
+  84:	21 f1       	fsub	fr2,fr1
+  86:	1c 31       	add	r1,r1
+  88:	4c f0       	fmov	fr4,fr0
+  8a:	08 41       	shll2	r1
+  8c:	31 f0       	fsub	fr3,fr0
+  8e:	bc 31       	add	r11,r1
+  90:	13 67       	mov	r1,r7
+  92:	08 71       	add	#8,r1
+  94:	04 77       	add	#4,r7
+  96:	18 f5       	fmov	@r1,fr5
+  98:	78 f7       	fmov	@r7,fr7
+  9a:	5c f9       	fmov	fr5,fr9
+  9c:	21 f9       	fsub	fr2,fr9
+  9e:	7c f2       	fmov	fr7,fr2
+  a0:	31 f2       	fsub	fr3,fr2
+  a2:	22 f1       	fmul	fr2,fr1
+  a4:	4d f1       	fneg	fr1
+  a6:	9e f1       	fmac	fr0,fr9,fr1
+  a8:	00 89       	bt	ac <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xac>
+  aa:	4d f1       	fneg	fr1
+  ac:	0d f2       	fsts	fpul,fr2
+  ae:	22 f1       	fmul	fr2,fr1
+  b0:	4c f3       	fmov	fr4,fr3
+  b2:	6c f2       	fmov	fr6,fr2
+  b4:	15 f8       	fcmp/gt	fr1,fr8
+  b6:	29 01       	movt	r1
+  b8:	14 0a       	mov.b	r1,@(r0,r10)
+  ba:	10 42       	dt	r2
+  bc:	2d 8f       	bf.s	11a <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x11a>
+  be:	01 70       	add	#1,r0
+  c0:	00 e1       	mov	#0,r1
+  c2:	02 e7       	mov	#2,r7
+  c4:	13 60       	mov	r1,r0
+  c6:	ac 00       	mov.b	@(r0,r10),r0
+  c8:	01 88       	cmp/eq	#1,r0
+  ca:	28 8d       	bt.s	11e <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x11e>
+  cc:	13 62       	mov	r1,r2
+  ce:	83 63       	mov	r8,r3
+  d0:	86 31       	cmp/hi	r8,r1
+  d2:	18 33       	sub	r1,r3
+  d4:	02 8d       	bt.s	dc <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xdc>
+  d6:	01 73       	add	#1,r3
+  d8:	88 28       	tst	r8,r8
+  da:	00 8b       	bf	de <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xde>
+  dc:	01 e3       	mov	#1,r3
+  de:	10 43       	dt	r3
+  e0:	24 8f       	bf.s	12c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x12c>
+  e2:	23 60       	mov	r2,r0
+  e4:	24 d2       	mov.l	178 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x178>,r2	! 0 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>
+  e6:	00 ec       	mov	#0,r12
+  e8:	00 e7       	mov	#0,r7
+  ea:	fe ee       	mov	#-2,r14
+  ec:	73 60       	mov	r7,r0
+  ee:	ac 01       	mov.b	@(r0,r10),r1
+  f0:	18 21       	tst	r1,r1
+  f2:	33 8b       	bf	15c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x15c>
+  f4:	01 77       	add	#1,r7
+  f6:	76 38       	cmp/hi	r7,r8
+  f8:	f9 8d       	bt.s	ee <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xee>
+  fa:	73 60       	mov	r7,r0
+  fc:	c3 60       	mov	r12,r0
+  fe:	37 97       	mov.w	170 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x170>,r7	! 204
+ 100:	7c 3f       	add	r7,r15
+ 102:	26 4f       	lds.l	@r15+,pr
+ 104:	f6 6e       	mov.l	@r15+,r14
+ 106:	f6 6d       	mov.l	@r15+,r13
+ 108:	f6 6c       	mov.l	@r15+,r12
+ 10a:	f6 6b       	mov.l	@r15+,r11
+ 10c:	f6 6a       	mov.l	@r15+,r10
+ 10e:	f6 69       	mov.l	@r15+,r9
+ 110:	0b 00       	rts
+ 112:	f6 68       	mov.l	@r15+,r8
+ 114:	19 c7       	mova	17c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x17c>,r0
+ 116:	8e af       	bra	36 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x36>
+ 118:	09 f1       	fmov	@r0+,fr1
+ 11a:	ad af       	bra	78 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x78>
+ 11c:	7c f4       	fmov	fr7,fr4
+ 11e:	01 72       	add	#1,r2
+ 120:	26 38       	cmp/hi	r2,r8
+ 122:	16 89       	bt	152 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x152>
+ 124:	de af       	bra	e4 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xe4>
+ 126:	09 00       	nop
+ 128:	d9 af       	bra	de <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xde>
+ 12a:	01 72       	add	#1,r2
+ 12c:	ac 00       	mov.b	@(r0,r10),r0
+ 12e:	01 88       	cmp/eq	#1,r0
+ 130:	fa 8f       	bf.s	128 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x128>
+ 132:	18 21       	tst	r1,r1
+ 134:	f4 8d       	bt.s	120 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x120>
+ 136:	23 63       	mov	r2,r3
+ 138:	18 33       	sub	r1,r3
+ 13a:	76 33       	cmp/hi	r7,r3
+ 13c:	09 8d       	bt.s	152 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x152>
+ 13e:	26 31       	cmp/hi	r2,r1
+ 140:	02 e6       	mov	#2,r6
+ 142:	02 8d       	bt.s	14a <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x14a>
+ 144:	01 73       	add	#1,r3
+ 146:	28 22       	tst	r2,r2
+ 148:	00 8b       	bf	14c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x14c>
+ 14a:	01 e3       	mov	#1,r3
+ 14c:	10 43       	dt	r3
+ 14e:	02 8f       	bf.s	156 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x156>
+ 150:	13 60       	mov	r1,r0
+ 152:	b7 af       	bra	c4 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xc4>
+ 154:	23 61       	mov	r2,r1
+ 156:	01 71       	add	#1,r1
+ 158:	f8 af       	bra	14c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x14c>
+ 15a:	64 0a       	mov.b	r6,@(r0,r10)
+ 15c:	83 61       	mov	r8,r1
+ 15e:	86 37       	cmp/hi	r8,r7
+ 160:	78 31       	sub	r7,r1
+ 162:	73 6b       	mov	r7,r11
+ 164:	02 8d       	bt.s	16c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x16c>
+ 166:	01 71       	add	#1,r1
+ 168:	88 28       	tst	r8,r8
+ 16a:	0d 8b       	bf	188 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x188>
+ 16c:	0c a0       	bra	188 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x188>
+ 16e:	01 e1       	mov	#1,r1
+ 170:	04 02       	mov.b	r0,@(r0,r2)
+ 172:	04 01       	mov.b	r0,@(r0,r1)
+	...
+			174: R_SH_DIR32	_memcpy
+			178: R_SH_DIR32	.text._ZZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjENKUlS2_jE_clES2_j.isra.0
+ 17c:	00 00       	.word 0x0000
+ 17e:	80 bf       	bsr	82 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x82>
+ 180:	ac 03       	mov.b	@(r0,r10),r3
+ 182:	38 23       	tst	r3,r3
+ 184:	03 89       	bt	18e <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x18e>
+ 186:	01 7b       	add	#1,r11
+ 188:	10 41       	dt	r1
+ 18a:	f9 8f       	bf.s	180 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x180>
+ 18c:	b3 60       	mov	r11,r0
+ 18e:	0e 90       	mov.w	1ae <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x1ae>,r0	! 224
+ 190:	73 65       	mov	r7,r5
+ 192:	e9 25       	and	r14,r5
+ 194:	b3 6d       	mov	r11,r13
+ 196:	fe 01       	mov.l	@(r0,r15),r1
+ 198:	58 3d       	sub	r5,r13
+ 19a:	02 7d       	add	#2,r13
+ 19c:	12 64       	mov.l	@r1,r4
+ 19e:	9c 35       	add	r9,r5
+ 1a0:	22 2f       	mov.l	r2,@r15
+ 1a2:	0b 42       	jsr	@r2
+ 1a4:	d3 66       	mov	r13,r6
+ 1a6:	dc 3c       	add	r13,r12
+ 1a8:	f2 62       	mov.l	@r15,r2
+ 1aa:	a4 af       	bra	f6 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0xf6>
+ 1ac:	b3 67       	mov	r11,r7
+ 1ae:	24 02       	mov.b	r2,@(r0,r2)
+
+Disassembly of section .text._ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE:

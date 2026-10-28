@@ -1,0 +1,8 @@
+inline unsigned strip(const pvr_vertex_t* __restrict cache, const std::uint8_t* __restrict idx, unsigned n, unsigned mask,
+                      unsigned cull, Emit&& emit) {
+    if (n < 3) return 0;
+    std::uint8_t plain[256];
+    for (unsigned k = 0; k < n; ++k) plain[k] = std::uint8_t(idx[k] & mask);
+    emit(plain, n);
+    return n;
+}

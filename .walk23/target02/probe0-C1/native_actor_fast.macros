@@ -1,0 +1,2946 @@
+#define HW_TYPE_NAOMI 0xa
+#define _GLIBCXX_DEPRECATED_SUGGEST(ALT) __attribute__ ((__deprecated__ ("use '" ALT "' instead")))
+#define _FEXECSRCH 0x400000
+#define KOS_IMG_FMT_PAL8BPP 0x07
+#define _Nullable 
+#define __strftimelike(fmtarg,firstvararg) __attribute__((__format__ (__strftime__, fmtarg, firstvararg)))
+#define __DBL_MIN_EXP__ (-1021)
+#define _MB_LEN_MAX 1
+#define __cpp_attributes 200809L
+#define __IMPORT 
+#define _GLIBCXX_MAX_SIZE_TYPE_H 1
+#define TAILQ_INIT(head) do { TAILQ_FIRST((head)) = NULL; (head)->tqh_last = &TAILQ_FIRST((head)); QMD_TRACE_HEAD(head); } while (0)
+#define __UINT_LEAST16_MAX__ 0xffff
+#define MUTEX_TYPE_OLDNORMAL 1
+#define RE4DC_TEX_RESIDENT 1
+#define SH4_REG_UBC_BDRB 0xff200018
+#define __cpp_lib_is_invocable 201703L
+#define _SC_NGROUPS_MAX 3
+#define PVR_TA_PM2_UVCLAMP GENMASK(16, 15)
+#define __KOS_FPARG_5_1 "fr9"
+#define LIST_INIT(head) do { LIST_FIRST((head)) = NULL; } while (0)
+#define __PTHREAD_HAVE_RWLOCK_TYPE 1
+#define KOS_INIT_FLAG(flags,mask,func) extern void func(void); void (*func ##_weak)(void) = ((flags) & (mask)) ? func : NULL
+#define __cpp_lib_destroying_delete 201806L
+#define _SC_SPIN_LOCKS 76
+#define TAILQ_INSERT_BEFORE(listelm,elm,field) do { QMD_TAILQ_CHECK_PREV(listelm, field); (elm)->field.tqe_prev = (listelm)->field.tqe_prev; TAILQ_NEXT((elm), field) = (listelm); *(listelm)->field.tqe_prev = (elm); (listelm)->field.tqe_prev = &TAILQ_NEXT((elm), field); QMD_TRACE_ELEM(&(elm)->field); QMD_TRACE_ELEM(&(listelm)->field); } while (0)
+#define _DEV_T_DECLARED 
+#define RE4DC_GC_CENSUS_TRIM 1
+#define _SC_2_VERSION 121
+#define _T_WCHAR_ 
+#define _SC_IPV6 67
+#define RE4DC_SH4ZAM_RENDER 1
+#define _EXT_TYPE_TRAITS 1
+#define _SC_XOPEN_REALTIME 99
+#define EI_NIDENT 16
+#define PVR_TA_PM2_CLAMP BIT(21)
+#define _GCC_MAX_ALIGN_T 
+#define _UINT8_T_DECLARED 
+#define F_CNVT 12
+#define PVR_TA_CMD_TYPE_SHIFT 24
+#define __glibcxx_smart_ptr_for_overwrite 202002L
+#define PVR_TA_PM1_TXRENABLE_SHIFT 25
+#define ACCESSPERMS (S_IRWXU | S_IRWXG | S_IRWXO)
+#define RE4DC_GANADO_STUMP_IDS (9u*RE4DC_ACTOR_GANADO_PS2_STUMP)
+#define __FLT_MAX_EXP__ 128
+#define __INT_FAST8_TYPE__ int
+#define _REENT_CHECK_MISC(ptr) 
+#define _SYS_TYPES_FD_SET 
+#define _SC_EXPR_NEST_MAX 64
+#define __DEFINED_ptrdiff_t 
+#define SIGBUS 10
+#define STAILQ_INIT(head) do { STAILQ_FIRST((head)) = NULL; (head)->stqh_last = &STAILQ_FIRST((head)); } while (0)
+#define __cpp_aggregate_paren_init 201902L
+#define SLIST_INSERT_HEAD(head,elm,field) do { SLIST_NEXT((elm), field) = SLIST_FIRST((head)); SLIST_FIRST((head)) = (elm); } while (0)
+#define PVR_BINSIZE_16 16
+#define RE4DC_TA_DIRECT 1
+#define __CHAR_BIT__ 8
+#define _PSTL_STRING_CONCAT(x,y) x #y
+#define __malloc_like __attribute__((__malloc__))
+#define _TIME_H_ 
+#define __glibcxx_requires_sorted_set_pred(_First1,_Last1,_First2,_Pred) 
+#define _SC_THREAD_SAFE_FUNCTIONS 49
+#define _GLIBCXX_HAVE_LSEEK 1
+#define __PTHREAD_HAVE_CONDATTR_TYPE 1
+#define INIT_MOUSE 0x00010000
+#define SIGTTIN 21
+#define _FOPEN (-1)
+#define _SC_COLL_WEIGHTS_MAX 62
+#define RE4DC_UI_VRAM 1
+#define KOS_IMG_FMT_YUV422 0x08
+#define __glibcxx_ssize 201902L
+#define CLOCK_ENABLED 1
+#define RE4DC_ACTOR_PROBE_LIGHT_LOG 600
+#define _GLIBCXX_END_NAMESPACE_LDBL 
+#define _PSTL_PRAGMA_SIMD_ORDERED_MONOTONIC_2ARGS(PRM1,PRM2) 
+#define _PSTL_VERSION_PATCH (_PSTL_VERSION % 10)
+#define __int32_t_defined 1
+#define RE4DC_TEX_SLOTS 448
+#define stderr _REENT_STDERR(_REENT)
+#define __cpp_static_assert 201411L
+#define va_start(v,l) __builtin_va_start(v,l)
+#define M_SQRTPI 1.77245385090551602792981
+#define _SC_V7_ILP32_OFF32 92
+#define _PSTL_PRAGMA_SIMD_SCAN(PRM) _PSTL_PRAGMA(omp simd reduction(inscan, PRM))
+#define _SYS_REENT_H_ 
+#define __ORDER_LITTLE_ENDIAN__ 1234
+#define PVR_TXRLOAD_FMT_NOTWIDDLE 0x80
+#define INIT_EXPORT 0x00000010
+#define RE4DC_LEON_SOURCE_LIGHT 1
+#define SLIST_FOREACH_FROM_SAFE(var,head,field,tvar) for ((var) = ((var) ? (var) : SLIST_FIRST((head))); (var) && ((tvar) = SLIST_NEXT((var), field), 1); (var) = (tvar))
+#define M_E 2.7182818284590452354
+#define _FCREAT 0x0200
+#define __int_least32_t_defined 1
+#define __sgetc_raw_r(__ptr,__f) (--(__f)->_r < 0 ? __srget_r(__ptr, __f) : (int)(*(__f)->_p++))
+#define __DBL_DENORM_MIN__ double(4.9406564584124654e-324L)
+#define _GLIBCXX_VERBOSE 1
+#define __cpp_lib_launder 201606L
+#define _GLIBCXX_VERBOSE_ASSERT 1
+#define INIT_QUIET 0x00000008
+#define PVR_TA_PM2_DSTENABLE BIT(24)
+#define __glibcxx_sample 201603L
+#define __cpp_lib_transformation_trait_aliases 201304L
+#define __FLT32X_DECIMAL_DIG__ 17
+#define F_RDLCK 1
+#define PVR_TA_PM2_CLAMP_SHIFT 21
+#define __DOTS , ...
+#define __sfeof(p) ((int)(((p)->_flags & __SEOF) != 0))
+#define _GLIBCXX_HAVE_SYS_STAT_H 1
+#define __cpp_binary_literals 201304L
+#define __glibcxx_constexpr_char_traits 201811L
+#define _CPP_TYPE_TRAITS_H 1
+#define _SC_THREAD_PRIO_INHERIT 46
+#define RE4DC_BRIDGE_LEAN 1
+#define PVR_TA_PM2_TXRALPHA BIT(19)
+#define MAXFLOAT 3.40282347e+38F
+#define __cpp_noexcept_function_type 201510L
+#define M_PI 3.14159265358979323846
+#define _GLIBCXX_PACKAGE_NAME "package-unused"
+#define __fsincos(r,s,c) ({ register float __r __asm__("fr10") = r; register float __a __asm__("fr11") = 182.04444443f; __asm__("fmul fr11, fr10\n\t" "ftrc fr10, fpul\n\t" "fsca fpul, dr10\n\t" : "+f" (__r), "+f" (__a) : "0" (__r), "1" (__a) : "fpul"); s = __r; c = __a; })
+#define _KOS_FPARG(n,single) __KOS_FPARG(n,single)
+#define __u_long_defined 
+#define __VALIST __gnuc_va_list
+#define _GLIBCXX_HAVE_DECL_STRNLEN 1
+#define MEM_AREA_CTRL_REG_BASE 0xff000000
+#define _FREAD 0x0001
+#define fast_putc(x,p) (--(p)->_w < 0 ? __swbuf_r(_REENT, (int)(x), p) == EOF : (*(p)->_p = (x), (p)->_p++, 0))
+#define _FEXLOCK 0x0100
+#define _GLIBCXX_USE_C99_CTYPE 1
+#define __DEFINED_wchar_t 
+#define PVR_MODIFIER_NORMAL 1
+#define RE4DC_GANADO_VERTEX_LIT(p) (ganlit_nearest < 0 || crowd_lit((p).model))
+#define _TIME_T_ __int_least64_t
+#define RE4DC_GIGANTE_LIGHTS_TREES 1
+#define __KOS_OPTS_H 
+#define __DC_FMATH_BASE_H 
+#define __DEFINED_size_t 
+#define QUEUE_TYPEOF(type) type
+#define _SC_CPUTIME 63
+#define __UINT_FAST64_MAX__ 0xffffffffffffffffULL
+#define KOS_DEBUG 0
+#define __SIG_ATOMIC_TYPE__ int
+#define RE4DC_PVR_PIPELINE 2
+#define RE4DC_LATE_ACT_CAP 0x08u
+#define _PSTL_PRAGMA_MESSAGE_IMPL(x) _PSTL_PRAGMA(message(_PSTL_STRING_CONCAT(_PSTL_PRAGMA_LOCATION, x)))
+#define __DBL_MIN_10_EXP__ (-307)
+#define __glibcxx_source_location 201907L
+#define PVR_TA_PM2_USIZE GENMASK(5, 3)
+#define __DREAMCAST__ 1
+#define MEM_AREA_UTLB_DATA_ARRAY2_BASE 0xf7800000
+#define _SC_PAGE_SIZE _SC_PAGESIZE
+#define __glibcxx_constexpr_tuple 201811L
+#define _SC_MEMLOCK_RANGE 25
+#define _FASYNC 0x0040
+#define STAILQ_REMOVE(head,elm,type,field) do { QMD_SAVELINK(oldnext, (elm)->field.stqe_next); if (STAILQ_FIRST((head)) == (elm)) { STAILQ_REMOVE_HEAD((head), field); } else { QUEUE_TYPEOF(type) *curelm = STAILQ_FIRST(head); while (STAILQ_NEXT(curelm, field) != (elm)) curelm = STAILQ_NEXT(curelm, field); STAILQ_REMOVE_AFTER(head, curelm, field); } TRASHIT(*oldnext); } while (0)
+#define LIST_EMPTY(head) ((head)->lh_first == NULL)
+#define MATH_ERREXCEPT 2
+#define __u_char_defined 
+#define F_GETFD 1
+#define __GNUC_PATCHLEVEL__ 0
+#define _GLIBCXX_STD_A std
+#define __FLT32_HAS_DENORM__ 1
+#define PVR_TA_PM1_MODIFIERINST_MASK (3 << PVR_TA_PM1_MODIFIERINST_SHIFT)
+#define _GLIBCXX_HAVE_MACHINE_ENDIAN_H 1
+#define S_ISGID 0002000
+#define S_IFBLK _IFBLK
+#define PVR_TA_CMD_UVFMT_MASK (1 << PVR_TA_CMD_UVFMT_SHIFT)
+#define _BSDTYPES_DEFINED 
+#define RE4DC_RENDER_FSAA 1
+#define _GLIBCXX11_DEPRECATED_SUGGEST(ALT) _GLIBCXX_DEPRECATED_SUGGEST(ALT)
+#define __UINT_FAST8_MAX__ 0xffffffffU
+#define _PC_TIMESTAMP_RESOLUTION 20
+#define HW_MEM_16 16777216
+#define __align_down(x,y) __builtin_align_down(x, y)
+#define _GLIBCXX_HAVE_POWL 1
+#define _WCHAR_T_DEFINED 
+#define ARCH_EXIT_RETURN 1
+#define __STDC_CONSTANT_MACROS 
+#define __glibcxx_format_uchar 202311L
+#define RE4DC_PREPARED(L) ((L).prepared_slot.v)
+#define _INTPTR_T_DECLARED 
+#define HW_MEM_32 33554432
+#define __INT_LEAST8_WIDTH__ 8
+#define __UINT_LEAST64_MAX__ 0xffffffffffffffffULL
+#define __cpp_capture_star_this 201603L
+#define _REENT_STRTOK_LAST(ptr) ((ptr)->_new._reent._strtok_last)
+#define __always_inline __inline__ __attribute__((__always_inline__))
+#define _GLIBCXX23_DEPRECATED 
+#define __cpp_lib_is_pointer_interconvertible 201907L
+#define NFDBITS 32
+#define __noinline __attribute__ ((__noinline__))
+#define __signgam_r(ptr) _REENT_SIGNGAM(ptr)
+#define __cpp_impl_coroutine 201902L
+#define PVR_TXRLOAD_8BPP 0x02
+#define __SCCSID(s) struct __hack
+#define S_IXOTH 0000001
+#define _SYS_SIGNAL_H 
+#define _HAVE_INITFINI_ARRAY 1
+#define __cpp_lib_is_final 201402L
+#define _GLIBCXX_TR1_RIEMANN_ZETA_TCC 1
+#define TAILQ_LAST_FAST(head,type,field) (TAILQ_EMPTY(head) ? NULL : __containerof((head)->tqh_last, QUEUE_TYPEOF(type), field.tqe_next))
+#define STAILQ_FOREACH_SAFE(var,head,field,tvar) for ((var) = STAILQ_FIRST((head)); (var) && ((tvar) = STAILQ_NEXT((var), field), 1); (var) = (tvar))
+#define _GLIBCXX26_DEF_VAL_T(T) 
+#define ACTOR_ASM_FSRRA4 "fsrra   fr4\n\t"
+#define RE4DC_ACTOR_CENSUS_SKIP_OBJ00 0
+#define NAME_MAX 256
+#define __UINT_LEAST8_MAX__ 0xff
+#define _ANSIDECL_H_ 
+#define _GLIBCXX_SIZE_T_IS_UINT 1
+#define RE4DC_NATIVE_ACTOR 1
+#define _SC_SYMLOOP_MAX 79
+#define __UINTMAX_TYPE__ long long unsigned int
+#define _GID_T_DECLARED 
+#define _GLIBCXX_USE_C99_STDINT 1
+#define __glibcxx_logical_traits 201510L
+#define _GLIBCXX_NODISCARD [[__nodiscard__]]
+#define _GLIBCXX_USE_C99_FENV 1
+#define _POSIX_THREAD_CPUTIME 200809L
+#define __fitan(x) ({ float __value, __arg = (x); __asm__("lds    %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fdiv   fr1, fr0\n\t" "fmov   fr0,%0" : "=f" (__value) : "r" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define _SC_THREAD_PRIO_PROTECT 47
+#define PVR_TA_CMD_UVFMT_SHIFT 0
+#define ___int64_t_defined 1
+#define _CLOCKID_T_DECLARED 
+#define M_TWOPI (M_PI * 2.0)
+#define __ntohl(_x) __bswap32(_x)
+#define _GLIBCXX_HAVE_SYS_TIME_H 1
+#define PVR_TXRLOAD_FMT_MASK 0x0f
+#define __UINT32_MAX__ 0xffffffffUL
+#define __GXX_EXPERIMENTAL_CXX0X__ 1
+#define RE4DC_PAD_PROMPTS 1
+#define __cpp_lib_void_t 201411L
+#define __SIZE_T 
+#define _GLIBCXX_FULLY_DYNAMIC_STRING 0
+#define TIMEVAL_TO_TIMESPEC(tv,ts) do { (ts)->tv_sec = (tv)->tv_sec; (ts)->tv_nsec = (tv)->tv_usec * 1000; } while (0)
+#define __KOS_FS_H 
+#define __DC_PVR_PVR_TEXTURE_H 
+#define SIGUSR1 30
+#define SIGUSR2 31
+#define __have_longlong64 1
+#define _ATFILE_SOURCE 1
+#define PVR_OBJECT_CLIP 0x0078
+#define __glibcxx_assert(cond) do { if (std::__is_constant_evaluated() && !bool(cond)) std::__glibcxx_assert_fail(); } while (false)
+#define M_PI_2 1.57079632679489661923
+#define SLIST_REMOVE_PREVPTR(prevp,elm,field) do { QMD_SLIST_CHECK_PREVPTR(prevp, elm); *(prevp) = SLIST_NEXT(elm, field); TRASHIT((elm)->field.sle_next); } while (0)
+#define M_PI_4 0.78539816339744830962
+#define __DC_SQ_H 
+#define _PSTL_CPP14_VARIABLE_TEMPLATES_PRESENT 
+#define __fsin(x) ({ float __value, __arg = (x), __scale = 10430.37835f; __asm__("fmul   %2,%1\n\t" "ftrc   %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fmov   fr0,%0" : "=f" (__value), "+&f" (__scale) : "f" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define __cpp_lib_unwrap_ref 201811L
+#define KOS_IMG_INVERTED_X 0x0100
+#define KOS_IMG_INVERTED_Y 0x0200
+#define UINT16_C(x) __UINT16_C(x)
+#define _GLIBCXX_HAVE_MEMALIGN 1
+#define _PSTL_PRAGMA(x) _Pragma(#x)
+#define SLIST_CLASS_HEAD(name,type) struct name { class type *slh_first; }
+#define __NEWLIB_PATCHLEVEL__ 0
+#define _PC_PRIO_IO 10
+#define EXIT_FAILURE 1
+#define RE4DC_SCREEN_H re4dc_screen_hf
+#define __INT_LEAST16_WIDTH__ 16
+#define RE4DC_SCREEN_W re4dc_screen_wf
+#define RE4DC_GANADO_LIT_FILL 0
+#define __SCHAR_MAX__ 0x7f
+#define _Noreturn [[noreturn]]
+#define SH4_REG_UBC_BASRA 0xff000014
+#define SH4_REG_UBC_BASRB 0xff000018
+#define SEEK_DATA 3
+#define PVR_TA_PM2_UVFLIP_MASK (3 << PVR_TA_PM2_UVFLIP_SHIFT)
+#define PVR_RAM_SIZE_MB (hardware_sys_mode(NULL) == HW_TYPE_RETAIL ? 8 : 16)
+#define PVR_SHADE_FLAT 0
+#define __INT64_C(c) c ## LL
+#define _M_LN2 0.693147180559945309417
+#define _GLIBCXX_CONST __attribute__ ((__const__))
+#define PVR_TA_PM1_MODIFIERINST GENMASK(30, 29)
+#define _EXT_NUMERIC_TRAITS 1
+#define _flockfile(fp) 
+#define __glibcxx_make_from_tuple 201606L
+#define PVR_CMD_VERTEX_EOL 0xf0000000
+#define STAILQ_FOREACH_FROM(var,head,field) for ((var) = ((var) ? (var) : STAILQ_FIRST((head))); (var); (var) = STAILQ_NEXT((var), field))
+#define PVR_FB_IL_ADDR 0x0054
+#define __nosanitizeaddress 
+#define RE4DC_ACTOR_LOD_MIN_WORKSPACE (96U * 1024U)
+#define DEFFILEMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
+#define _SC_THREAD_THREADS_MAX 40
+#define EV_NONE 0
+#define _WIDE_ORIENT 1
+#define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
+#define _SC_2_UPE 120
+#define _POSIX_SOURCE 1
+#define __SIZEOF_INT__ 4
+#define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
+#define __INT_LEAST64_MAX__ 0x7fffffffffffffffLL
+#define __PRAGMA_REDEFINE_EXTNAME 1
+#define _GLIBCXX_TR1_SPECIAL_FUNCTION_UTIL_H 1
+#define TRASHIT(x) 
+#define _FAPPEND 0x0008
+#define RE4DC_CHUNK_SUBMIT_H 
+#define __nosanitizememory 
+#define S_IFMT _IFMT
+#define PVR_ISP_VERTBUF_ADDR 0x0020
+#define CLOCK_REALTIME (1)
+#define _SYS__INTSUP_H 
+#define __KOS_INIT_H 
+#define _SC_RE_DUP_MAX 73
+#define SLIST_INSERT_AFTER(slistelm,elm,field) do { SLIST_NEXT((elm), field) = SLIST_NEXT((slistelm), field); SLIST_NEXT((slistelm), field) = (elm); } while (0)
+#define __USER_LABEL_PREFIX__ _
+#define __cpp_lib_is_swappable 201603L
+#define _arch_sub_pristine 1
+#define _SYS_QUEUE_H_ 
+#define _NEWLIB_VERSION_H__ 1
+#define PVR_YUV_ADDR 0x0148
+#define _SC_RTSIG_MAX 15
+#define __glibcxx_three_way_comparison 201907L
+#define UINT8_MAX (__UINT8_MAX__)
+#define UINT_FAST64_MAX (__UINT_FAST64_MAX__)
+#define SHT_PREINIT_ARRAY 16
+#define _GLIBCXX_TR1_ELL_INTEGRAL_TCC 1
+#define _STL_ALGO_H 1
+#define NAN (__builtin_nanf(""))
+#define PVR_TA_CMD_CLRFMT_SHIFT 4
+#define __RESTRICT __restrict__
+#define ___int_least64_t_defined 1
+#define _GLIBCXX_DEBUG_ASSERTIONS_H 1
+#define _RAND48_SEED_0 (0x330e)
+#define _RAND48_SEED_2 (0x1234)
+#define RE4DC_NMR_POOL 1
+#define __FP_FAST_FMAF32 1
+#define APROF_ADD(ph,v) ((void)0)
+#define __FLT32_IS_IEC_60559__ 1
+#define __glibcxx_filesystem 201703L
+#define _GLIBCXX_HAVE_LIMIT_VMEM 0
+#define DBGLOG_LEVEL_SUPPORT 127
+#define MEM_AREA_ITLB_ADDRESS_ARRAY_BASE 0xf2000000
+#define _BSD_SIZE_T_DEFINED_ 
+#define __FLT32_DIG__ 6
+#define __STDC_EMBED_EMPTY__ 2
+#define _SC_TRACE_EVENT_FILTER 84
+#define _GLIBCXX_NUMBERS 1
+#define __FLT_EPSILON__ 1.1920928955078125e-7F
+#define PVR_TA_CMD_MODIFIER BIT(7)
+#define PVR_TXRLOAD_INVERT_Y 0x20
+#define SS_DISABLE 0x2
+#define __GXX_WEAK__ 1
+#define __scanflike(fmtarg,firstvararg) __attribute__((__format__ (__scanf__, fmtarg, firstvararg)))
+#define _RANGES_UTIL_H 1
+#define _TIMER_T_DECLARED 
+#define _IFSOCK 0140000
+#define _GLIBCXX_ALGORITHMFWD_H 1
+#define _GLIBCXX_BEGIN_NAMESPACE_ALGO 
+#define SIGIO 23
+#define _REENT_SIGNGAM(ptr) ((ptr)->_new._reent._gamma_signgam)
+#define _GLIBCXX_HAVE_STRING_H 1
+#define RE4DC_DOOR_FREEZE 1
+#define __DBL_IS_IEC_60559__ 1
+#define PVR_SPECULAR_DISABLE 0
+#define PVR_TA_PM2_FILTER_SHIFT 13
+#define INT_FAST64_MAX (__INT_FAST64_MAX__)
+#define PVR_FB_ADDR 0x0050
+#define RE4DC_ACTOR_UV16 0
+#define _GLIBCXX_USE_CHAR8_T 1
+#define __DC_PVR_PVR_LEGACY_H 
+#define AT_SYMLINK_FOLLOW 0x0004
+#define st_ctime st_ctim.tv_sec
+#define __glibcxx_assume_aligned 201811L
+#define _SC_MEMLOCK 24
+#define _GLIBCXX_USE_C99_STDLIB _GLIBCXX11_USE_C99_STDLIB
+#define __FLT32X_HAS_INFINITY__ 1
+#define __INT32_MAX__ 0x7fffffffL
+#define _GLIBCXX_BEGIN_EXTERN_C extern "C" {
+#define _PSTL_CPP14_INTEGER_SEQUENCE_PRESENT 
+#define __FLT32_NORM_MAX__ 3.4028234663852886e+38F32
+#define PVR_TA_PM2_ALPHA BIT(20)
+#define __INT_WIDTH__ 32
+#define __SIZE_WIDTH__ 32
+#define S_ISVTX 0001000
+#define __SYS_SELECT_H 
+#define SIGEV_NONE 1
+#define __glibcxx_shift 201806L
+#define RE4DC_STALL_DIAG 0
+#define PVR_FB_CFG_1 0x0044
+#define PVR_FB_CFG_2 0x0048
+#define __PTRDIFF_WIDTH__ 32
+#define M_2_PI 0.63661977236758134308
+#define MEM_AREA_ICACHE_DATA_ARRAY_BASE 0xf1000000
+#define _GLIBCXX_HAVE_MODFF 1
+#define __glibcxx_list_remove_return_type 201806L
+#define _GLIBCXX_HAVE_MODFL 1
+#define __DECIMAL_DIG__ 17
+#define LOCK_EX 0x02
+#define PVR_TA_PM2_USIZE_SHIFT 3
+#define RE4DC_DBG_WARP 0
+#define F_DUPFD 0
+#define __FLT64_EPSILON__ 2.2204460492503131e-16F64
+#define _GLIBCXX_HAVE_HYPOTF 1
+#define RE4DC_TA_BIN_DIAG 0
+#define __KOS_REGFIELD_H 
+#define _GLIBCXX_HAVE_HYPOTL 1
+#define __DBL_DIG__ 15
+#define __lockable __lock_annotate(lockable)
+#define __glibcxx_requires_heap(_First,_Last) 
+#define _REENT_MP_RESULT(ptr) ((ptr)->_result)
+#define _SC_2_SW_DEV 119
+#define _PC_FILESIZEBITS 12
+#define ACTOR_POS_ADDR6 "mov     r1,r2\n\t" "shll    r1\n\t" "add     r2,r1\n\t" "shll    r1\n\t"
+#define ACTOR_POS_ADDR8 "shll2   r1\n\t" "shll    r1\n\t"
+#define MEM_AREA_P3_BASE 0xc0000000
+#define INTPTR_MIN (-__INTPTR_MAX__ - 1)
+#define R_386_PC32 2
+#define pvr_sprite_hdr pvr_poly_hdr
+#define __cpp_using_enum 201907L
+#define SHT_INIT_ARRAY 14
+#define PVR_TA_PM1_DEPTHWRITE BIT(26)
+#define __glibcxx_max_b(T,B) (__glibcxx_signed_b (T,B) ? (((((T)1 << (__glibcxx_digits_b (T,B) - 1)) - 1) << 1) + 1) : ~(T)0)
+#define __LDBL_HAS_QUIET_NAN__ 1
+#define INT64_C(x) __INT64_C(x)
+#define PVR_TA_PM1_TXRENABLE_MASK (1 << PVR_TA_PM1_TXRENABLE_SHIFT)
+#define RE4DC_STATS_OBJECT stats_live
+#define _GLIBCXX_HAVE_VFWSCANF 1
+#define RE4DC_ACTOR_LOD_BUDGET 128U
+#define __int16_t_defined 1
+#define __noreturn __attribute__((__noreturn__))
+#define __glibcxx_any 201606L
+#define __NEWLIB_MINOR__ 6
+#define __THROW 
+#define PVR_ISP_START_GO 0xffffffff
+#define _SC_XOPEN_VERSION 106
+#define __glibcxx_requires_heap_pred(_First,_Last,_Pred) 
+#define _GLIBCXX_HAVE_POWF 1
+#define _REENT_CVTBUF(_ptr) ((_ptr)->_cvtbuf)
+#define __KOS_FPARG_6_0 "fr11"
+#define __KOS_FPARG_6_1 "fr10"
+#define L_tmpnam FILENAME_MAX
+#define _REENT_LOCALE(_ptr) ((_ptr)->_locale)
+#define ___int_wchar_t_h 
+#define __GNUC__ 15
+#define __INT32 "l"
+#define __GXX_RTTI 1
+#define offsetof(TYPE,MEMBER) __builtin_offsetof (TYPE, MEMBER)
+#define __cpp_lib_interpolate 201902L
+#define __int_least16_t_defined 1
+#define _GLIBCXX_HAVE_STRERROR_R 1
+#define RE4DC_MV_DEPTH 1200
+#define INT8_C(x) __INT8_C(x)
+#define RE4DC_ACTOR_CROWD_NEAR 2U
+#define LOCK_NB 0x04
+#define APROF_SPAN(name,ph) ((void)0)
+#define _SIGSET_T_DECLARED 
+#define __glibcxx_result_of_sfinae 201210L
+#define __glibcxx_integer_sequence 201304L
+#define __BIGGEST_ALIGNMENT__ 4
+#define F_RGETLK 10
+#define _SC_BC_STRING_MAX 60
+#define __STDC_UTF_16__ 1
+#define RE4DC_LEON_LIGHT_FILL 45
+#define STDERR_FILENO 2
+#define __glibcxx_digits10_b(T,B) (__glibcxx_digits_b (T,B) * 643L / 2136)
+#define __sfileno(p) ((p)->_file)
+#define _INO_T_DECLARED 
+#define _GLIBCXX26_DEPRECATED 
+#define __glibcxx_bind_front 201907L
+#define SLIST_HEAD_INITIALIZER(head) { NULL }
+#define _STL_CONSTRUCT_H 1
+#define __cpp_lib_clamp 201603L
+#define RE4DC_PVR_MID_FENCE 1
+#define __ASMNAME(cname) __XSTRING (__USER_LABEL_PREFIX__) cname
+#define PVR_RAM_INT_TOP (PVR_RAM_INT_BASE + PVR_RAM_SIZE)
+#define __COPYRIGHT(s) struct __hack
+#define __pure __attribute__((__pure__))
+#define _GLIBCXX_HAVE_S_ISREG 1
+#define PVR_TA_CMD_SPECULAR BIT(2)
+#define __glibcxx_is_null_pointer 201309L
+#define PVR_MODIFIER_CHEAP_SHADOW 0
+#define __GNU_VISIBLE 0
+#define EXIT_SUCCESS 0
+#define RE4DC_TA_VERTBUF_KB 2048
+#define _GLIBCXX_PREDEFINED_OPS_H 1
+#define _SC_LEVEL1_ICACHE_SIZE 125
+#define SI_QUEUE 2
+#define SHT_NUM 19
+#define _GLIBCXX_HAVE_GETS 1
+#define LOCK_SH 0x01
+#define __INT_FAST32_MAX__ 0x7fffffff
+#define __STDCPP_MATH_SPEC_FUNCS__ 201003L
+#define _PID_T_DECLARED 
+#define _funlockfile(fp) 
+#define _PC_CHOWN_RESTRICTED 6
+#define __glibcxx_interpolate 201902L
+#define _SC_SIGQUEUE_MAX 18
+#define __cpp_deduction_guides 201907L
+#define __glibcxx_requires_irreflexive(_First,_Last) 
+#define _GLIBCXX_END_NAMESPACE_ALGO 
+#define PVR_TA_PM1_DEPTHCMP_MASK (7 << PVR_TA_PM1_DEPTHCMP_SHIFT)
+#define physadr physadr_t
+#define RE4DC_PROP_GATE 1
+#define LOCK_UN 0x08
+#define __cpp_fold_expressions 201603L
+#define _PSTL_PRAGMA_MESSAGE(x) 
+#define MEM_AREA_UTLB_ADDRESS_ARRAY_BASE 0xf6000000
+#define __glibcxx_requires_partitioned_upper(_First,_Last,_Value) 
+#define _REENT_ASCTIME_BUF(ptr) ((ptr)->_new._reent._asctime_buf)
+#define RE4DC_ACTOR_TRANSACTION 1
+#define _REENT_CHECK_EMERGENCY(ptr) 
+#define __INTPTR_WIDTH__ 32
+#define _SC_THREAD_PRIO_CEILING _SC_THREAD_PRIO_PROTECT
+#define LIST_FOREACH_FROM_SAFE(var,head,field,tvar) for ((var) = ((var) ? (var) : LIST_FIRST((head))); (var) && ((tvar) = LIST_NEXT((var), field), 1); (var) = (tvar))
+#define M_3PI_4 2.3561944901923448370E0
+#define INIT_CONTROLLER 0x00004000
+#define RE4DC_PLAN_ON (re4dc_actor_plan_on != 0)
+#define _GLIBCXX_PACKAGE__GLIBCXX_VERSION "version-unused"
+#define ACTOR_POS_OC "shll2   r2\n\t" "shll2   r2\n\t" "or      r2,r1\n\t"
+#define SI_USER 1
+#define __glibcxx_launder 201606L
+#define _GLIBCXX_PTRDIFF_T_IS_INT 1
+#define PVR_MODIFIER_INCLUDE_LAST_POLY 1
+#define __glibcxx_int_pow2 202002L
+#define __LDBL_HAS_DENORM__ 1
+#define _NEWLIB_STDIO_H 
+#define __NEWLIB_LOCK_INIT 0
+#define _PSTL_PRAGMA_SIMD_REDUCTION(PRM) _PSTL_PRAGMA(omp simd reduction(PRM))
+#define __int_least8_t_defined 1
+#define __cplusplus 202002L
+#define __cpp_ref_qualifiers 200710L
+#define __INT_LEAST32_MAX__ 0x7fffffffL
+#define SIGABRT 6
+#define SS_ONSTACK 0x1
+#define _GCC_WRAP_STDINT_H 
+#define PVR_FOG_TABLE_COLOR 0x00b0
+#define SIGSTKSZ 8192
+#define S_ENFMT 0002000
+#define _PC_REC_XFER_ALIGN 19
+#define _SC_XOPEN_CRYPT 96
+#define PVR_PALETTE_TABLE_BASE 0x1000
+#define _SC_MONOTONIC_CLOCK 69
+#define _GLIBCXX_HAVE_COMPLEX_H 1
+#define __DBL_MAX_EXP__ 1024
+#define __WCHAR_WIDTH__ 32
+#define PVR_TA_PM2_UVCLAMP_MASK (3 << PVR_TA_PM2_UVCLAMP_SHIFT)
+#define TAILQ_FOREACH_REVERSE(var,head,headname,field) for ((var) = TAILQ_LAST((head), headname); (var); (var) = TAILQ_PREV((var), headname, field))
+#define __glibcxx_type_identity 201806L
+#define __BSD_VISIBLE 1
+#define __glibcxx_erase_if 202002L
+#define _SC_OPEN_MAX 4
+#define _VA_LIST_ 
+#define __PTRDIFF_MAX__ 0x7fffffff
+#define TAILQ_INSERT_AFTER(head,listelm,elm,field) do { QMD_TAILQ_CHECK_NEXT(listelm, field); if ((TAILQ_NEXT((elm), field) = TAILQ_NEXT((listelm), field)) != NULL) TAILQ_NEXT((elm), field)->field.tqe_prev = &TAILQ_NEXT((elm), field); else { (head)->tqh_last = &TAILQ_NEXT((elm), field); QMD_TRACE_HEAD(head); } TAILQ_NEXT((listelm), field) = (elm); (elm)->field.tqe_prev = &TAILQ_NEXT((listelm), field); QMD_TRACE_ELEM(&(elm)->field); QMD_TRACE_ELEM(&(listelm)->field); } while (0)
+#define SIGILL 4
+#define SQ_MASK_DEST(dest) ((uint32_t *)(void *) SQ_MASK_DEST_ADDR(dest))
+#define __glibcxx_apply 201603L
+#define _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY 1
+#define RE4DC_ACTOR_CROWD_NEAR_M ((float)(5))
+#define RE4DC_FOLIAGE_OPTION 1
+#define PVR_TXRFMT_ARGB1555 (0 << 27)
+#define __bounded 
+#define _SC_LEVEL2_CACHE_SIZE 131
+#define MEM_AREA_OCACHE_DATA_ARRAY_BASE 0xf5000000
+#define _REENT_RAND48_ADD(ptr) ((ptr)->_new._reent._r48._add)
+#define __cpp_lib_has_unique_object_representations 201606L
+#define FD_CLOEXEC 1
+#define _STDARG_H 
+#define __KOS_LIMITS_H 
+#define _T_WCHAR 
+#define _PC_VDISABLE 8
+#define __LONG_LONG_MAX__ 0x7fffffffffffffffLL
+#define _SC_BARRIERS 56
+#define _SC_XOPEN_LEGACY 98
+#define LIST_INSERT_AFTER(listelm,elm,field) do { QMD_LIST_CHECK_NEXT(listelm, field); if ((LIST_NEXT((elm), field) = LIST_NEXT((listelm), field)) != NULL) LIST_NEXT((listelm), field)->field.le_prev = &LIST_NEXT((elm), field); LIST_NEXT((listelm), field) = (elm); (elm)->field.le_prev = &LIST_NEXT((listelm), field); } while (0)
+#define st_atime st_atim.tv_sec
+#define FEXCL _FEXCL
+#define _POSIX_CPUTIME 200809L
+#define KOS_IMG_FMT_ARGB1555 0x05
+#define SH4_REG_UBC_BBRA 0xff200008
+#define STAT_ATTR_RW (STAT_ATTR_R | STAT_ATTR_W)
+#define __glibcxx_min_b(T,B) (__glibcxx_signed_b (T,B) ? -__glibcxx_max_b (T,B) - 1 : (T)0)
+#define SHT_FINI_ARRAY 15
+#define PVR_CMD_MODIFIER 0x80000000
+#define __lock_annotate(x) 
+#define _REENT_CHECK_TM(ptr) 
+#define __SIZEOF_WINT_T__ 4
+#define __Long long
+#define _GLIBCXX_ASSERT_FAIL(_Condition) std::__glibcxx_assert_fail(__FILE__, __LINE__, __PRETTY_FUNCTION__, #_Condition)
+#define _PTR_TRAITS_H 1
+#define __cpp_lib_sample 201603L
+#define __glibcxx_concepts 202002L
+#define __ftan(x) ({ float __value, __arg = (x), __scale = 10430.37835f; __asm__("fmul   %2,%1\n\t" "ftrc   %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fdiv   fr1, fr0\n\t" "fmov   fr0,%0" : "=f" (__value), "+&f" (__scale) : "f" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define __LONG_LONG_WIDTH__ 64
+#define RE4DC_PAD_PROMPT_MANUAL_ART 1
+#define __LOCK_INIT_RECURSIVE(class,lock) class _LOCK_RECURSIVE_T lock = __NEWLIB_RECURSIVE_LOCK_INIT;
+#define __cpp_initializer_lists 200806L
+#define __glibcxx_requires_can_increment(_First,_Size) 
+#define _GLIBCXX_HAVE_SYS_PARAM_H 1
+#define WINT_MAX (__WINT_MAX__)
+#define UINTPTR_MAX (__UINTPTR_MAX__)
+#define SHF_MASKPROC 0xf0000000
+#define __no_lock_analysis __lock_annotate(no_thread_safety_analysis)
+#define _SYS_FEATURES_H 
+#define _PTRDIFF_T 
+#define _MOVE_H 1
+#define __cpp_hex_float 201603L
+#define _GLIBCXX_MOVE(__val) std::move(__val)
+#define __sem_wait_scoped(sm,l) ___sem_wait_scoped(sm, l)
+#define PVR_VIDEO_CFG 0x00e8
+#define _GLIBCXX_DEBUG_ONLY(_Statement) 
+#define _GLIBCXX_TXN_SAFE 
+#define __FLT_MIN_EXP__ (-125)
+#define _REQUIRES_FREESTANDING_H 1
+#define RE4DC_VIEW_DIST_OPTION 1
+#define PVR_TA_PM1_MODIFIERINST_SHIFT 29
+#define F_GETOWN 5
+#define math_errhandling (_MATH_ERRHANDLING_ERRNO | _MATH_ERRHANDLING_ERREXCEPT)
+#define F_OFD_SETLK 16
+#define __glibcxx_type_trait_variable_templates 201510L
+#define PVR_MODIFIER_EXCLUDE_LAST_POLY 2
+#define __printf0like(fmtarg,firstvararg) 
+#define _GLIBCXX_USE_STD_SPEC_FUNCS 1
+#define _SC_XBS5_LPBIG_OFFBIG _SC_V7_LPBIG_OFFBIG
+#define RE4DC_GANADO_LIGHT_FOLD 1
+#define alloca(size) __builtin_alloca(size)
+#define __glibcxx_byte 201603L
+#define __cpp_lib_bit_cast 201806L
+#define SIGCHLD 20
+#define _GLIBCXX_BEGIN_NAMESPACE_CXX11 namespace __cxx11 {
+#define __cpp_lambdas 200907L
+#define _GLIBCXX_HAVE_SINHF 1
+#define _SC_LEVEL2_CACHE_LINESIZE 133
+#define _GLIBCXX_HAVE_SINHL 1
+#define __datatype_type_tag(kind,type) 
+#define _GLIBCXX_HAVE_SQRTF 1
+#define _GLIBCXX_HAVE_SQRTL 1
+#define MEM_AREA_U0_BASE 0x00000000
+#define _SC_MQ_OPEN_MAX 13
+#define __FP_FAST_FMAF 1
+#define ARCH_ELFDATA ELFDATA2LSB
+#define _GLIBCXX_HAVE_STDALIGN_H 1
+#define NMMGR_LIST_INIT { NULL }
+#define __glibcxx_bounded_array_traits 201902L
+#define INFINITY (__builtin_inff())
+#define PVR_TXRLOAD_VQ_LOAD 0x10
+#define WINT_MIN (__WINT_MIN__)
+#define PVR_TA_PM1_TXRENABLE BIT(25)
+#define PVR_SCALER_CFG_FSAA BIT(16)
+#define TAILQ_PREV(elm,headname,field) (*(((struct headname *)((elm)->field.tqe_prev))->tqh_last))
+#define __MACHINE_ENDIAN_H__ 
+#define STAILQ_HEAD_INITIALIZER(head) { NULL, &(head).stqh_first }
+#define RE4DC_ACTOR_CROWD_MID_M ((float)(12))
+#define _GLIBCXX_HAVE_O_NONBLOCK 1
+#define PVR_RAM_TOP (PVR_RAM_BASE + PVR_RAM_SIZE)
+#define _GLIBCXX_ALGORITHM 1
+#define mat_trans_nodiv(x,y,z,w) { register float __x __asm__("fr0") = (x); register float __y __asm__("fr1") = (y); register float __z __asm__("fr2") = (z); register float __w __asm__("fr3") = (w); __asm__ __volatile__( "ftrv   xmtrx,fv0\n" : "=f" (__x), "=f" (__y), "=f" (__z), "=f" (__w) : "0" (__x), "1" (__y), "2" (__z), "3" (__w) ); x = __x; y = __y; z = __z; w = __w; }
+#define ACTOR_ASM_CLOBBER 
+#define _REENT_RAND48_SEED(ptr) ((ptr)->_new._reent._r48._seed)
+#define __ATTRIBUTE_IMPURE_DATA__ 
+#define FDEFER _FDEFER
+#define RE4DC_GXF_JITTER 1
+#define RE4DC_PART_LIGHTS part_lights
+#define __FLT32X_EPSILON__ 2.2204460492503131e-16F32x
+#define RE4DC_MV_SCALE 50
+#define STAT_TYPE_FILE 1
+#define __glibcxx_bit_cast 201806L
+#define sigismember(what,sig) (((*(what)) & (1<<(sig))) != 0)
+#define __predict_true(exp) __builtin_expect((exp), 1)
+#define S_IFREG _IFREG
+#define fwopen(__cookie,__fn) funopen(__cookie, NULL, __fn, NULL, NULL)
+#define __locks_exclusive(...) __lock_annotate(exclusive_lock_function(__VA_ARGS__))
+#define SEM_INITIALIZER(value) { 1, value }
+#define __FLT64_MIN_EXP__ (-1021)
+#define SLIST_EMPTY(head) ((head)->slh_first == NULL)
+#define _GLIBCXX_USE_C99_INTTYPES_WCHAR_T_TR1 1
+#define _SC_V7_LP64_OFF64 94
+#define PVR_TA_PM2_TXRENV_SHIFT 6
+#define pvr_to_pvr_txr_ptr(addr) to_pvr_txr_ptr(addr)
+#define PVR_RESET_NONE 0x00000000
+#define PVR_TXRFMT_NONTWIDDLED (1 << 26)
+#define RE4DC_TA_OPB_BINS 16
+#define __glibcxx_tuple_element_t 201402L
+#define __GNUC_WIDE_EXECUTION_CHARSET_NAME "UTF-32LE"
+#define _PSTL_CPP17_EXECUTION_POLICIES_PRESENT (_MSC_VER >= 1912 && _MSVC_LANG >= 201703L) || (_GLIBCXX_RELEASE >= 9 && __GLIBCXX__ >= 20190503 && __cplusplus >= 201703L)
+#define _GLIBCXX_PACKAGE_URL ""
+#define RE4DC_PLAN_COMPARE (RE4DC_ACTOR_PLAN == 2)
+#define ELF_SYM_PREFIX "_"
+#define __glibcxx_barrier 201907L
+#define RE4DC_WORKAT_INLINE 1
+#define PVR_PT_ALPHA_REF 0x011c
+#define INIT_LIGHTGUN 0x00020000
+#define STAT_TYPE_SYMLINK 5
+#define __REGISTER_PREFIX__ 
+#define __UINT16_MAX__ 0xffff
+#define _GLIBCXX_WEAK_DEFINITION 
+#define __INTPTR_MAX__ 0x7fffffff
+#define __SL64 0x8000
+#define _PC_NAME_MAX 3
+#define RE4DC_TEX_META_EVICT 1
+#define STAILQ_REMOVE_HEAD_UNTIL(head,elm,field) do { if ((STAILQ_FIRST((head)) = STAILQ_NEXT((elm), field)) == NULL) (head)->stqh_last = &STAILQ_FIRST((head)); } while (0)
+#define _PC_MAX_CANON 1
+#define __glibcxx_requires_non_empty_range(_First,_Last) __glibcxx_assert(_First != _Last)
+#define STAT_ATTR_W 0x02
+#define _REENT_WCSRTOMBS_STATE(ptr) ((ptr)->_new._reent._wcsrtombs_state)
+#define _GLIBCXX_ABI_TAG_CXX11 __attribute ((__abi_tag__ ("cxx11")))
+#define _SC_LEVEL2_CACHE_ASSOC 132
+#define _GLIBCXX_HAVE_ISWBLANK 1
+#define __GNUCLIKE_BUILTIN_STDARG 1
+#define _PSTL_CPP14_MAKE_REVERSE_ITERATOR_PRESENT 
+#define pvr_dr_target(...) __builtin_assume_aligned((void *)((pvr_dr_addr ^= 32)), 32)
+#define __fipr_magnitude_sqr(x,y,z,w) ({ register float __x __asm__(KOS_FPARG(0)) = (x); register float __y __asm__(KOS_FPARG(1)) = (y); register float __z __asm__(KOS_FPARG(2)) = (z); register float __w __asm__(KOS_FPARG(3)) = (w); __asm__ __volatile__( "fipr	fv4,fv4" : "+f" (KOS_SH4_SINGLE_ONLY ? __w : __z) : "f" (__x), "f" (__y), "f" (__z), "f" (__w) ); KOS_SH4_SINGLE_ONLY ? __w : __z; })
+#define __glibcxx_is_aggregate 201703L
+#define _SC_LEVEL1_ICACHE_ASSOC 126
+#define _SC_REALTIME_SIGNALS 29
+#define STAILQ_REMOVE_HEAD(head,field) do { if ((STAILQ_FIRST((head)) = STAILQ_NEXT(STAILQ_FIRST((head)), field)) == NULL) (head)->stqh_last = &STAILQ_FIRST((head)); } while (0)
+#define RE4DC_UI_X(x) ((x) * re4dc_ui_sx)
+#define SIGEV_THREAD 3
+#define FNONBIO _FNONBLOCK
+#define __min_size(x) (x)
+#define __lock_close_recursive(lock) __newlib_lock_close_recursive(&(lock))
+#define __VERSION__ "15.2.0"
+#define S_IFCHR _IFCHR
+#define S_ISFIFO(m) (((m)&_IFMT) == _IFIFO)
+#define HW_REGION_EUROPE 0xC
+#define __UINT64_C(c) c ## ULL
+#define PVR_TA_INIT_GO 0x80000000
+#define FP_SUBNORMAL 3
+#define RE4DC_RIGID_FLAT_PX 12.0f
+#define _INITIALIZER_LIST 
+#define _GLIBCXX_USE_ALLOCATOR_NEW 1
+#define _GLIBCXX_DOXYGEN_ONLY(X) 
+#define RE4DC_MV_OPB_BINS 8
+#define _GLIBCXX_PACKAGE_BUGREPORT ""
+#define STB_WEAK 2
+#define __INT_WCHAR_T_H 
+#define __LARGEFILE_VISIBLE 0
+#define _UNISTD_H_ 
+#define PVR_TXRFMT_BUMP (4 << 27)
+#define __cpp_decltype_auto 201304L
+#define __cpp_lib_robust_nonmodifying_seq_ops 201304L
+#define _PC_REC_INCR_XFER_SIZE 16
+#define _GLIBCXX_HAVE_SYMLINK 1
+#define _GLIBCXX_HAS_NESTED_TYPE(_NTYPE) template<typename _Tp, typename = __void_t<>> struct __has_ ##_NTYPE : false_type { }; template<typename _Tp> struct __has_ ##_NTYPE<_Tp, __void_t<typename _Tp::_NTYPE>> : true_type { };
+#define O_RDWR 2
+#define __unlocks(...) __lock_annotate(unlock_function(__VA_ARGS__))
+#define __GCC_ATOMIC_INT_LOCK_FREE 2
+#define _T_PTRDIFF_ 
+#define _REENT_SIGNAL_BUF(ptr) ((ptr)->_new._reent._signal_buf)
+#define __SSTR 0x0200
+#define _GLIBCXX_BEGIN_NAMESPACE_CONTAINER 
+#define _GLIBCXX_HAVE_IS_CONSTANT_EVALUATED 1
+#define SIGPOLL SIGIO
+#define __glibcxx_execution 201902L
+#define M_INVLN2 1.4426950408889633870E0
+#define RE4DC_ACTOR_CROWD 1
+#define __FLT32_MANT_DIG__ 24
+#define SH4_REG_UBC_BAMRA 0xff200004
+#define SH4_REG_UBC_BAMRB 0xff200010
+#define _SYS_SIZE_T_H 
+#define _STL_HEAP_H 1
+#define __glibcxx_constexpr_functional 201907L
+#define KOS_IMG_FMT_RGB565 0x03
+#define __ARCH_ARCH_H 
+#define _GLIBCXX26_DEPRECATED_SUGGEST(ALT) 
+#define __SIZE_T__ 
+#define RE4DC_LATE_LEON_SOURCE 0x10u
+#define _GLIBCXX14_DEPRECATED_SUGGEST(ALT) _GLIBCXX_DEPRECATED_SUGGEST(ALT)
+#define __SRD 0x0004
+#define _ATEXIT_SIZE 32
+#define __SRW 0x0010
+#define __cpp_lib_is_layout_compatible 201907L
+#define _NOTHROW __attribute__ ((__nothrow__))
+#define __STDINT_EXP(x) __ ##x ##__
+#define __align_up(x,y) __builtin_align_up(x, y)
+#define _GLIBCXX_HAVE_TGMATH_H 1
+#define __compar_fn_t_defined 
+#define __FLT64_NORM_MAX__ 1.7976931348623157e+308F64
+#define _GLIBCXX_USE_GETCWD 1
+#define S_IWRITE 0000200
+#define EI_DATA 5
+#define __KOS_FPARG_5_0 "fr8"
+#define __glibcxx_null_iterators 201304L
+#define PVR_TA_PM2_USIZE_MASK (7 << PVR_TA_PM2_USIZE_SHIFT)
+#define __int_fast32_t_defined 1
+#define NMMGR_TYPE_VFS 0x0010
+#define F_SETFL 4
+#define SIG_UNBLOCK 2
+#define EI_VERSION 6
+#define _MATH_ERRHANDLING_ERRNO MATH_ERRNO
+#define __glibcxx_requires_partitioned_lower(_First,_Last,_Value) 
+#define _STL_ALGOBASE_H 1
+#define __int_least64_t_defined 1
+#define RE4DC_PVR_RECOVER 1
+#define PVR_TA_VERTBUF_POS 0x0138
+#define _GLIBCXX_USE_C99_INTTYPES_TR1 1
+#define __INT32_C(c) c ## L
+#define TAILQ_FIRST(head) ((head)->tqh_first)
+#define RE4DC_PS2_INTERIOR_OWNER 1
+#define __ORDER_PDP_ENDIAN__ 3412
+#define __cpp_nested_namespace_definitions 201411L
+#define RE4DC_RIGID_CHUNK 1
+#define RE4DC_ACTOR_MOVCA 0
+#define __cpp_constinit 201907L
+#define __KOS_FPARG_7_0 "fr10"
+#define __KOS_FPARG_7_1 "fr11"
+#define _Null_unspecified 
+#define BYTE_ORDER _BYTE_ORDER
+#define RWSEM_INITIALIZER { 0, MUTEX_INITIALIZER, SEM_INITIALIZER(1) }
+#define PVR_TA_TEX_MEM_32 0x13000000
+#define _GLIBCXX_HAVE_LIMIT_DATA 0
+#define __SSP_FORTIFY_LEVEL 0
+#define UINT64_MAX (__UINT64_MAX__)
+#define __INT_FAST8_MAX__ 0x7fffffff
+#define __glibcxx_shared_ptr_arrays 201707L
+#define _ANSI_STDARG_H_ 
+#define __UINT_LEAST16_TYPE__ short unsigned int
+#define RAND_MAX __RAND_MAX
+#define KOS_IMG_FMT_PAL4BPP 0x06
+#define F_SETLK 8
+#define RE4DC_TA_MATERIAL_DIAG 0
+#define __INT16_MAX__ 0x7fff
+#define _BSD_SIZE_T_ 
+#define __SIZE_TYPE__ unsigned int
+#define M_2_SQRTPI 1.12837916709551257390
+#define __glibcxx_endian 201907L
+#define __UINT64_MAX__ 0xffffffffffffffffULL
+#define _REENT_INIT_PTR_ZEROED(var) { (var)->_stdin = &__sf[0]; (var)->_stdout = &__sf[1]; (var)->_stderr = &__sf[2]; (var)->_new._reent._rand_next = 1; (var)->_new._reent._r48._seed[0] = _RAND48_SEED_0; (var)->_new._reent._r48._seed[1] = _RAND48_SEED_1; (var)->_new._reent._r48._seed[2] = _RAND48_SEED_2; (var)->_new._reent._r48._mult[0] = _RAND48_MULT_0; (var)->_new._reent._r48._mult[1] = _RAND48_MULT_1; (var)->_new._reent._r48._mult[2] = _RAND48_MULT_2; (var)->_new._reent._r48._add = _RAND48_ADD; }
+#define __FLT_IS_IEC_60559__ 1
+#define _GLIBCXX_HAVE_LIMIT_AS 0
+#define __IEEE_LITTLE_ENDIAN 
+#define QMD_TAILQ_CHECK_TAIL(head,headname) 
+#define PVR_TA_INIT 0x0144
+#define PVR_TXRALPHA_ENABLE 0
+#define _Kmax (sizeof (size_t) << 3)
+#define FWRITE _FWRITE
+#define __GNUCLIKE_BUILTIN_CONSTANT_P 1
+#define _SC_PRIORITIZED_IO 28
+#define INIT_NONE 0x00000000
+#define __cpp_digit_separators 201309L
+#define CLOCK_THREAD_CPUTIME_ID (3)
+#define _SC_V6_ILP32_OFFBIG _SC_V7_ILP32_OFFBIG
+#define _SC_TRACE_LOG 87
+#define ARCH_EXIT_REBOOT 3
+#define _T_SIZE 
+#define __LDBL_EPSILON__ 2.2204460492503131e-16L
+#define INTPTR_MAX (__INTPTR_MAX__)
+#define __UINTMAX_C(c) c ## ULL
+#define _GLIBCXX_USE_LSTAT 1
+#define O_SYNC _FSYNC
+#define _POSIX_C_SOURCE 202405L
+#define _FSHLOCK 0x0080
+#define INIT_SIP 0x00100000
+#define STAILQ_SWAP(head1,head2,type) do { QUEUE_TYPEOF(type) *swap_first = STAILQ_FIRST(head1); QUEUE_TYPEOF(type) **swap_last = (head1)->stqh_last; STAILQ_FIRST(head1) = STAILQ_FIRST(head2); (head1)->stqh_last = (head2)->stqh_last; STAILQ_FIRST(head2) = swap_first; (head2)->stqh_last = swap_last; if (STAILQ_EMPTY(head1)) (head1)->stqh_last = &STAILQ_FIRST(head1); if (STAILQ_EMPTY(head2)) (head2)->stqh_last = &STAILQ_FIRST(head2); } while (0)
+#define __cpp_lib_type_trait_variable_templates 201510L
+#define __htonl(_x) __bswap32(_x)
+#define _SC_SAVED_IDS 6
+#define __htons(_x) __bswap16(_x)
+#define _GLIBCXX17_CONSTEXPR constexpr
+#define __glibcxx_raw_memory_algorithms 201606L
+#define _Static_assert(x,y) static_assert(x, y)
+#define _REENT _impure_ptr
+#define SHT_LOPROC 0x70000000
+#define _GLIBCXX_CXX_CONFIG_H 1
+#define _SC_PRIORITY_SCHEDULING 101
+#define RE4DC_LEON_LIGHT_HEADROOM 1
+#define SIGCONT 19
+#define O_CLOEXEC _FNOINHERIT
+#define _GLIBCXX_EXTERN_TEMPLATE 1
+#define STT_FUNC 2
+#define __trylocks_shared(...) __lock_annotate(shared_trylock_function(__VA_ARGS__))
+#define INT_LEAST64_MAX (__INT_LEAST64_MAX__)
+#define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2
+#define __cpp_sized_deallocation 201309L
+#define __CC_SUPPORTS_WARNING 1
+#define PVR_TXRLOAD_FMT_VQ 0x40
+#define _ANSI_STDDEF_H 
+#define sem_wait_scoped(sm) __sem_wait_scoped((sm), __LINE__)
+#define PVR_TA_PM2_FOG GENMASK(23, 22)
+#define __ATOMIC_RELAXED 0
+#define __nosanitizethread 
+#define _GLIBCXX20_DEPRECATED [[__deprecated__]]
+#define __signed signed
+#define STT_OBJECT 1
+#define PVR_DEPTHWRITE_DISABLE 1
+#define __glibcxx_enable_shared_from_this 201603L
+#define ELFCLASS32 1
+#define INIT_DREAMEYE 0x00200000
+#define SHT_RELA 4
+#define SHT_LOUSER 0x80000000
+#define _GLIBCXX_END_NAMESPACE_VERSION 
+#define __glibcxx_atomic_is_always_lock_free 201603L
+#define _PC_MAX_INPUT 2
+#define _SC_DELAYTIMER_MAX 37
+#define __ntohs(_x) __bswap16(_x)
+#define _IONBF 2
+#define __SH_FPU_ANY__ 1
+#define __FLT64_IS_IEC_60559__ 1
+#define _REENT_MBRLEN_STATE(ptr) ((ptr)->_new._reent._mbrlen_state)
+#define ELFCLASS64 2
+#define __FLT32X_MIN_EXP__ (-1021)
+#define _GLIBCXX_FLOAT_IS_IEEE_BINARY32 1
+#define _GLIBCXX_SYNCHRONIZATION_HAPPENS_BEFORE(A) 
+#define __KOS_FPARG_0_0 "fr5"
+#define __KOS_FPARG_0_1 "fr4"
+#define _INT16_T_DECLARED 
+#define _GLIBCXX_HAVE_ACOSF 1
+#define __INT_FAST16_MAX__ 0x7fffffff
+#define __timer_t_defined 
+#define MEM_AREA_ITLB_DATA_ARRAY1_BASE 0xf3000000
+#define __DBL_EPSILON__ double(2.2204460492503131e-16L)
+#define _GLIBCXX_HAVE_IEEEFP_H 1
+#define __SYS_CONFIG_H__ 
+#define RE4DC_SKIN_PALETTE_LAZY 1
+#define _GLIBCXX_END_NAMESPACE_CXX11 }
+#define INT_LEAST64_MIN (-__INT_LEAST64_MAX__ - 1)
+#define MUTEX_TYPE_DEFAULT MUTEX_TYPE_NORMAL
+#define __FLT64_DIG__ 15
+#define _REENT_EMERGENCY_SIZE 25
+#define __cpp_lib_remove_cvref 201711L
+#define INT32_C(x) __INT32_C(x)
+#define FP_ZERO 2
+#define _GLIBCXX_HAVE_FLOORF 1
+#define _GLIBCXX_HAVE_FLOORL 1
+#define __SEOF 0x0020
+#define F_DUPFD_CLOEXEC 14
+#define EM_ARM 40
+#define __WCHAR_T__ 
+#define RE4DC_MOVIE_WINDOW 1
+#define _CLOCKID_T_ unsigned long
+#define ACTOR_ASM_FIPR4(n) "fipr    fv4," n "\n\t"
+#define PVR_TILEMAT_CFG 0x013c
+#define SHT_HIPROC 0x7fffffff
+#define strtodf strtof
+#define __attribute_pure__ 
+#define __GNUC_EXECUTION_CHARSET_NAME "UTF-8"
+#define ELFCLASSNONE 0
+#define _REENT_CHECK_RAND48(ptr) 
+#define PVR_TEXTURE_MODULO 0x00e4
+#define _TIME_T_DECLARED 
+#define PVR_TA_PM2_FILTER_MASK (3 << PVR_TA_PM2_FILTER_SHIFT)
+#define PVR_TXRLOAD_FMT_TWIDDLED 0x80
+#define __UINT_FAST16_TYPE__ unsigned int
+#define STAILQ_FOREACH_FROM_SAFE(var,head,field,tvar) for ((var) = ((var) ? (var) : STAILQ_FIRST((head))); (var) && ((tvar) = STAILQ_NEXT((var), field), 1); (var) = (tvar))
+#define _GLIBCXX_BITS_STD_ABS_H 
+#define __SERR 0x0040
+#define __glibcxx_nonmember_container_access 201411L
+#define va_end(v) __builtin_va_end(v)
+#define __glibcxx_signed_b(T,B) ((T)(-1) < 0)
+#define _MACHINE__TYPES_H 
+#define PVR_TA_CMD_SPECULAR_MASK (1 << PVR_TA_CMD_SPECULAR_SHIFT)
+#define PVR_MODIFIER_OTHER_POLY 0
+#define SI_MESGQ 5
+#define _VA_LIST_DEFINED 
+#define PVR_TA_PM2_DSTBLEND GENMASK(28, 26)
+#define __INT_LEAST16_MAX__ 0x7fff
+#define PVR_TXRFMT_YUV422 (3 << 27)
+#define _SC_THREAD_DESTRUCTOR_ITERATIONS 53
+#define __warn_references(sym,msg) __asm__(".section .gnu.warning." #sym); __asm__(".asciz \"" msg "\""); __asm__(".previous")
+#define __INT64_MAX__ 0x7fffffffffffffffLL
+#define NMMGR_TYPE_BLOCKDEV 0x0020
+#define _GLIBCXX_MANGLE_SIZE_T j
+#define SHT_HIUSER 0xffffffff
+#define PVR_TA_PM2_MIPBIAS_SHIFT 8
+#define __FLT32_DENORM_MIN__ 1.4012984643248171e-45F32
+#define PVR_SCALER_CFG_VSCALE_FACTOR GENMASK(15, 0)
+#define PVR_BORDER_X 0x00d4
+#define PVR_BORDER_Y 0x00dc
+#define __SIG_ATOMIC_WIDTH__ 32
+#define _GLIBCXX_RELEASE 15
+#define _SC_THREAD_KEYS_MAX 38
+#define __INT_LEAST64_TYPE__ long long int
+#define INT64_MAX (__INT64_MAX__)
+#define __FLT_HAS_INFINITY__ 1
+#define __cpp_lib_byte 201603L
+#define RE4DC_VMU_DIALOG 1
+#define _IFIFO 0010000
+#define _GLIBCXX_HAVE_FCNTL_H 1
+#define __LOCK_INIT(class,lock) class _LOCK_T lock = __NEWLIB_LOCK_INIT;
+#define pvr_dr_commit(addr) sq_flush(addr)
+#define __INT16_TYPE__ short int
+#define PVR_TA_CMD_SPECULAR_SHIFT 2
+#define _GLIBCXX_CSTDINT 1
+#define __asserts_shared(...) __lock_annotate(assert_shared_lock(__VA_ARGS__))
+#define STAT_ATTR_R 0x01
+#define STAILQ_CONCAT(head1,head2) do { if (!STAILQ_EMPTY((head2))) { *(head1)->stqh_last = (head2)->stqh_first; (head1)->stqh_last = (head2)->stqh_last; STAILQ_INIT((head2)); } } while (0)
+#define __OBSOLETE_MATH_DEFAULT 1
+#define G1PC_LIGHT(p,f,c) do { } while (0)
+#define __glibcxx_constexpr_dynamic_alloc 201907L
+#define _BIG_ENDIAN 4321
+#define __glibcxx_clamp 201603L
+#define PVR_TA_PM2_TXRENV_MASK (3 << PVR_TA_PM2_TXRENV_SHIFT)
+#define __glibcxx_requires_irreflexive_pred2(_First,_Last,_Pred) 
+#define RE4DC_TEX_REF_SELFKEY 1
+#define F_WRLCK 2
+#define TAILQ_FOREACH(var,head,field) for ((var) = TAILQ_FIRST((head)); (var); (var) = TAILQ_NEXT((var), field))
+#define LIST_HEAD(name,type) struct name { struct type *lh_first; }
+#define KOS_IMG_FMT_BGR565 0x09
+#define RE4DC_CPU_BACKFACE 1
+#define __lock_release_recursive(lock) __newlib_lock_release_recursive(&(lock))
+#define __cpp_guaranteed_copy_elision 201606L
+#define APROF_COUNT(w,n) ((void)0)
+#define SIGSYS 12
+#define RE4DC_TA_HASH 0
+#define SA_NOCLDSTOP 1
+#define mat_trans_single3_nomod(x,y,z,x2,y2,z2) { register float __x __asm__("fr12") = (x); register float __y __asm__("fr13") = (y); register float __z __asm__("fr14") = (z); __asm__ __volatile__( "fldi1 fr15\n" "ftrv    xmtrx, fv12\n" "fldi1 fr14\n" "fdiv    fr15, fr14\n" "fmul    fr14, fr12\n" "fmul    fr14, fr13\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr15" ); x2 = __x; y2 = __y; z2 = __z; }
+#define PVR_TXRLOAD_SQ 0x2000
+#define _TIMER_T_ unsigned long
+#define __cpp_lib_hypot 201603L
+#define __NULLABILITY_PRAGMA_PUSH 
+#define PVR_TA_PM2_TXRALPHA_MASK (1 << PVR_TA_PM2_TXRALPHA_SHIFT)
+#define SHT_DYNSYM 11
+#define MEM_AREA_P4_BASE 0xe0000000
+#define FP_ILOGBNAN __INT_MAX__
+#define __LITTLE_ENDIAN__ 1
+#define F_SETLKW 9
+#define __cpp_lib_constexpr_algorithms 201806L
+#define __bool_true_false_are_defined 1
+#define _GLIBCXX_HAVE_LDEXPF 1
+#define _GLIBCXX_HAVE_LDEXPL 1
+#define __FLT32_MIN_10_EXP__ (-37)
+#define R_SH_DIR32 1
+#define __aligned(x) __attribute__((__aligned__(x)))
+#define __FLT32X_DIG__ 15
+#define _GLIBCXX_CONCEPTS 1
+#define __UINT16_C(c) c
+#define EM_386 3
+#define _REENT_RAND48_MULT(ptr) ((ptr)->_new._reent._r48._mult)
+#define _NOINLINE __attribute__ ((__noinline__))
+#define HW_REGION_ASIA 0x1
+#define TAILQ_HEAD_INITIALIZER(head) { NULL, &(head).tqh_first, TRACEBUF_INITIALIZER }
+#define INT64_MIN (-__INT64_MAX__ - 1)
+#define RECURSIVE_MUTEX_INITIALIZER { MUTEX_TYPE_RECURSIVE, NULL, 0 }
+#define _PC_REC_MIN_XFER_SIZE 18
+#define _SC_TYPED_MEMORY_OBJECTS 91
+#define _PSTL_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#define _GLIBCXX_NUMERIC_LIMITS 1
+#define __cpp_range_based_for 201603L
+#define __INT_FAST16_WIDTH__ 32
+#define PVR_TA_YUV_CONV 0x10800000
+#define _GLIBCXX_DARWIN_USE_64_BIT_INODE 1
+#define __DBL_HAS_QUIET_NAN__ 1
+#define ELF32_R_SYM(i) ((i) >> 8)
+#define _GLIBCXX_DEBUG_MACRO_SWITCH_H 1
+#define __glibcxx_is_pointer_interconvertible 201907L
+#define PVR_TA_PM2_TXRALPHA_SHIFT 19
+#define _GLIBCXX_FWDREF(_Tp) _Tp&&
+#define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 4
+#define _SC_TRACE_SYS_MAX 89
+#define ___int32_t_defined 1
+#define _SC_AIO_LISTIO_MAX 34
+#define __lock_acquire_recursive(lock) __newlib_lock_acquire_recursive(&(lock))
+#define _IFREG 0100000
+#define _GLIBCXX_MAKE_MOVE_IF_NOEXCEPT_ITERATOR(_Iter) std::__make_move_if_noexcept_iterator(_Iter)
+#define KOS_INIT_FLAG_NONE(flags,mask,func) extern void func(void); void (*func ##_weak)(void) = ((flags) & (mask)) ? NULL : func
+#define PVR_FOG_VERTEX_COLOR 0x00b4
+#define __glibcxx_atomic_wait 201907L
+#define __WCHAR_TYPE__ long int
+#define CLOCK_ALLOWED 1
+#define __SIZEOF_FLOAT__ 4
+#define _GLIBCXX_PACKAGE_TARNAME "libstdc++"
+#define _SC_XOPEN_ENH_I18N 97
+#define __CC_SUPPORTS_INLINE 1
+#define S_ISBLK(m) (((m)&_IFMT) == _IFBLK)
+#define PVR_TA_PM2_DSTENABLE_SHIFT 24
+#define __FLT32X_DENORM_MIN__ 4.9406564584124654e-324F32x
+#define LIST_CONCAT(head1,head2,type,field) do { QUEUE_TYPEOF(type) *curelm = LIST_FIRST(head1); if (curelm == NULL) { if ((LIST_FIRST(head1) = LIST_FIRST(head2)) != NULL) { LIST_FIRST(head2)->field.le_prev = &LIST_FIRST((head1)); LIST_INIT(head2); } } else if (LIST_FIRST(head2) != NULL) { while (LIST_NEXT(curelm, field) != NULL) curelm = LIST_NEXT(curelm, field); LIST_NEXT(curelm, field) = LIST_FIRST(head2); LIST_FIRST(head2)->field.le_prev = &LIST_NEXT(curelm, field); LIST_INIT(head2); } } while (0)
+#define _REENT_MBLEN_STATE(ptr) ((ptr)->_new._reent._mblen_state)
+#define PVR_TA_CMD_TXRENABLE BIT(3)
+#define _GLIBCXX_USE_CXX11_ABI 1
+#define PVR_ISP_TILEMAT_ADDR 0x002c
+#define __cpp_nontype_template_parameter_class 201806L
+#define __cpp_concepts 202002L
+#define __cpp_decltype 200707L
+#define PVR_TA_PM1_DEPTHWRITE_MASK (1 << PVR_TA_PM1_DEPTHWRITE_SHIFT)
+#define _GLIBCXX_HAVE_WCSTOF 1
+#define _GLIBCXX_DEFAULT_ABI_TAG _GLIBCXX_ABI_TAG_CXX11
+#define __INT_FAST64_MAX__ 0x7fffffffffffffffLL
+#define BUFSIZ 1024
+#define INIT_NO_DCLOAD 0x20000000
+#define PVR_TA_PM2_FILTER GENMASK(14, 13)
+#define __GNUCLIKE_BUILTIN_MEMCPY 1
+#define _UINT32_T_DECLARED 
+#define PVR_RESET_TA 0x00000001
+#define __FLT_MAX_10_EXP__ 38
+#define _WCHAR_T_DECLARED 
+#define __DC_PVR_PVR_FOG_H 
+#define R_386_32 1
+#define M_LN10 2.30258509299404568402
+#define _stdin_r(x) _REENT_STDIN(x)
+#define STAT_TYPE_PIPE 3
+#define _PSTL_UDS_PRESENT 
+#define _MACHINE__DEFAULT_TYPES_H 
+#define PVR_TA_CMD_USERCLIP_SHIFT 16
+#define _USE_GDTOA 
+#define _GLIBCXX_HAVE_STRTOF 1
+#define _SC_2_PBS 113
+#define EM_PPC 20
+#define STAILQ_INSERT_TAIL(head,elm,field) do { STAILQ_NEXT((elm), field) = NULL; *(head)->stqh_last = (elm); (head)->stqh_last = &STAILQ_NEXT((elm), field); } while (0)
+#define __glibcxx_requires_partitioned_upper_pred(_First,_Last,_Value,_Pred) 
+#define __weak_reference(sym,alias) __asm__(".weak " #alias); __asm__(".equ " #alias ", " #sym)
+#define __STDCPP_THREADS__ 1
+#define QMD_SAVELINK(name,link) 
+#define mat_trans_single3_nodiv(x,y,z) { register float __x __asm__("fr12") = (x); register float __y __asm__("fr13") = (y); register float __z __asm__("fr14") = (z); __asm__ __volatile__( "fldi1 fr15\n" "ftrv  xmtrx, fv12\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr15" ); x = __x; y = __y; z = __z; }
+#define _stdout_r(x) _REENT_STDOUT(x)
+#define S_ISSOCK(m) (((m)&_IFMT) == _IFSOCK)
+#define __GCC_ATOMIC_CHAR8_T_LOCK_FREE 2
+#define M_SQRT2 1.41421356237309504880
+#define STB_GLOBAL 1
+#define _GLIBCXX23_DEPRECATED_SUGGEST(ALT) 
+#define SIGCLD 20
+#define __lock_try_acquire_recursive(lock) __newlib_lock_try_acquire_recursive(&(lock))
+#define __glibcxx_transformation_trait_aliases 201304L
+#define RE4DC_EVENT_MANAGER_STORAGE_FLAGS 1
+#define __glibcxx_is_invocable 201703L
+#define RE4DC_VRAM_CENSUS 0
+#define _INT32_EQ_LONG 
+#define RE4DC_ACTOR_ASM 1
+#define __alloc_size2(n,x) __attribute__((__alloc_size__(n, x)))
+#define __glibcxx_optional 202106L
+#define _GLIBCXX_HAVE_STDINT_H 1
+#define PVR_CMD_SPRITE 0xA0000000
+#define _SC_THREAD_PRIORITY_SCHEDULING 45
+#define _PSTL_CONFIG_H 
+#define _FVWRITE_IN_STREAMIO 1
+#define _GLIBCXX_USE_DUAL_ABI 1
+#define __ptr_t void *
+#define _GLIBCXX17_INLINE inline
+#define __DBL_MANT_DIG__ 53
+#define ___int_size_t_h 
+#define _GLIBCXX_END_NAMESPACE_LDBL_OR_CXX11 _GLIBCXX_END_NAMESPACE_CXX11
+#define FEXLOCK _FEXLOCK
+#define QMD_TAILQ_CHECK_NEXT(elm,field) 
+#define PVR_BINSIZE_32 32
+#define _GLIBCXX_HAVE_FENV_H 1
+#define _SYS__TIMESPEC_H_ 
+#define _GLIBCXX_HAVE_DIRENT_H 1
+#define _GLIBCXX_TR1_HYPERGEOMETRIC_TCC 1
+#define _GLIBCXX_DEBUG_PEDASSERT(_Condition) 
+#define _HAVE_LONG_DOUBLE 1
+#define __int_fast16_t_defined 1
+#define __UINT_LEAST32_TYPE__ long unsigned int
+#define ___int8_t_defined 1
+#define RE4DC_LATE_WORLD_LOD20 0x01u
+#define SIGKILL 9
+#define FNDELAY _FNDELAY
+#define ACTOR_NRM_CHECK "mov.b   @(3,r3),r0\n\t" "extu.b  r0,r0\n\t" "cmp/eq  %[pal],r0\n\t" "bf      9f\n\t"
+#define __LDBL_MIN_EXP__ (-1021)
+#define _GLIBCXX_HAVE_LOGL 1
+#define _SYS__DEFAULT_FCNTL_H_ 
+#define _IFBLK 0060000
+#define SHT_GROUP 17
+#define _GLIBCXX_HAVE_EXPF 1
+#define __lock_try_acquire(lock) __newlib_lock_try_acquire(&(lock))
+#define _GLIBCXX_HAVE_EXPL 1
+#define __BIT_TYPES_DEFINED__ 1
+#define ___int_least32_t_defined 1
+#define _END_STD_C }
+#define _SC_XBS5_ILP32_OFF32 _SC_V7_ILP32_OFF32
+#define APROF_CLS(c) ((void)0)
+#define stdout _REENT_STDOUT(_REENT)
+#define __WINT_WIDTH__ 32
+#define M_IVLN10 0.43429448190325182765
+#define __cpp_template_auto 201606L
+#define __SMBF 0x0080
+#define __INT_LEAST8_MAX__ 0x7f
+#define _PSTL_PRAGMA_LOCATION " [Parallel STL message]: "
+#define __FLT32X_MAX_10_EXP__ 308
+#define PVR_SCALER_CFG 0x00f4
+#define MEM_AREA_OCACHE_ADDRESS_ARRAY_BASE 0xf4000000
+#define __lock_init_recursive(lock) __newlib_lock_init_recursive(&(lock))
+#define RE4DC_RESIDENT_LIST_CACHE 0
+#define O_RDONLY 0
+#define _SC_2_FORT_RUN 111
+#define TAILQ_HEAD(name,type) struct name { struct type *tqh_first; struct type **tqh_last; TRACEBUF }
+#define __glibcxx_constexpr_complex 201711L
+#define __GXX_CONSTEXPR_ASM__ 1
+#define MUTEX_TYPE_NORMAL 0
+#define _UID_T_DECLARED 
+#define _SC_ATEXIT_MAX 55
+#define PVR_RAM_INT_BASE 0xa4000000
+#define __EXPORT 
+#define __glibcxx_math_constants 201907L
+#define _SIZET_ 
+#define _PC_ALLOC_SIZE_MIN 15
+#define _GLIBCXX_NOEXCEPT_QUAL noexcept (_NE)
+#define _LDBL_EQ_DBL 1
+#define SIGEMT 7
+#define __UINT32_C(c) c ## UL
+#define __UINT8_C(c) c
+#define _GLIBCXX_HAVE_CEILF 1
+#define _GLIBCXX_HAVE_CEILL 1
+#define __FLT64_MAX_EXP__ 1024
+#define KOS_IMG_FMT_RGBA8888 0x10
+#define __glibcxx_requires_irreflexive2(_First,_Last) 
+#define _UINT16_T_DECLARED 
+#define _GLIBCXX26_ALGO_DEF_VAL_T(_Iterator) 
+#define PVR_UVFMT_16BIT 1
+#define PVR_RENDER_ADDR_2 0x0064
+#define RE4DC_FX_MOVE 1
+#define fropen(__cookie,__fn) funopen(__cookie, __fn, NULL, NULL, NULL)
+#define RE4DC_ACTOR_LIGHT_PROBE_API 1
+#define _GLIBCXX_NOTHROW _GLIBCXX_USE_NOEXCEPT
+#define PVR_GUN_POS 0x00c4
+#define _PSTL_EXECUTION_POLICY_DEFS_H 
+#define __glibcxx_ranges 202110L
+#define __cpp_init_captures 201803L
+#define page_count ((_arch_mem_top - page_phys_base) / PAGESIZE)
+#define RE4DC_ACTOR_SKIN_RESERVE 0
+#define _FNOCTTY 0x8000
+#define SIGXCPU 24
+#define _UNBUF_STREAM_OPT 1
+#define MUTEX_TYPE_RECURSIVE 3
+#define _SC_LEVEL1_DCACHE_LINESIZE 130
+#define __CC_SUPPORTS___INLINE__ 1
+#define STAILQ_FIRST(head) ((head)->stqh_first)
+#define _SC_MAPPED_FILES 23
+#define LIST_CLASS_HEAD(name,type) struct name { class type *lh_first; }
+#define _IOLBF 1
+#define RE4DC_UI_HEADERS 1
+#define QMD_TRACE_ELEM(elem) 
+#define _GLIBCXX_USE_ST_MTIM 1
+#define _SC_AIO_MAX 35
+#define PVR_MIPMAP_DISABLE 0
+#define __glibcxx_integer_comparison_functions 202002L
+#define __glibcxx_jthread 201911L
+#define _REENT_MBRTOWC_STATE(ptr) ((ptr)->_new._reent._mbrtowc_state)
+#define PVR_PCLIP_X 0x0068
+#define PVR_PCLIP_Y 0x006c
+#define __cpp_lib_is_null_pointer 201309L
+#define TIMESPEC_TO_TIMEVAL(tv,ts) do { (tv)->tv_sec = (ts)->tv_sec; (tv)->tv_usec = (ts)->tv_nsec / 1000; } while (0)
+#define INIT_MAPLE_ALL INIT_MAPLE_PERIPH
+#define S_IFLNK _IFLNK
+#define P_tmpdir "/tmp"
+#define _Alignof(x) alignof(x)
+#define _SC_CHILD_MAX 1
+#define __INT_LEAST16_TYPE__ short int
+#define SLIST_HEAD(name,type) struct name { struct type *slh_first; }
+#define __FLT32_EPSILON__ 1.1920928955078125e-7F32
+#define INTMAX_MAX (__INTMAX_MAX__)
+#define _GLIBCXX_HAVE_AS_SYMVER_DIRECTIVE 1
+#define QMD_SLIST_CHECK_PREVPTR(prevp,elm) 
+#define EV_CURRENT 1
+#define _PSTL_PRAGMA_DECLARE_REDUCTION(NAME,OP) _PSTL_PRAGMA(omp declare reduction(NAME:OP : omp_out(omp_in)) initializer(omp_priv = omp_orig))
+#define _PSTL_GLUE_ALGORITHM_DEFS_H 
+#define RE4DC_ROOM_RESIDENT 1
+#define __CC_SUPPORTS___INLINE 1
+#define __DEC_EVAL_METHOD__ 2
+#define _SIZE_T 
+#define ACTOR_ASM_FTRV "ftrv    xmtrx,fv0\n\t"
+#define _SC_2_PBS_TRACK 118
+#define __DBL_NORM_MAX__ double(1.7976931348623157e+308L)
+#define __glibcxx_integral_constant_callable 201304L
+#define RE4DC_COARSE_ONE_SUBMIT 1
+#define __cpp_lib_is_aggregate 201703L
+#define _GLIBCXX_STATIC_TZDATA 1
+#define _GLIBCXX_RANGES_BASE_H 1
+#define _GLIBCXX26_RANGE_ALGO_DEF_VAL_T(_I,_P) 
+#define PVR_CHEAP_SHADOW 0x0074
+#define M_LOG10E 0.43429448190325182765
+#define __glibcxx_requires_string(_String) 
+#define __glibcxx_starts_ends_with 201711L
+#define ACTOR_DOT3(a,x,y,z) ((a)[0] * (x) + (a)[1] * (y) + (a)[2] * (z))
+#define __INT16_C(c) c
+#define __INTMAX_WIDTH__ 64
+#define __ATOMIC_ACQ_REL 4
+#define SLIST_SWAP(head1,head2,type) do { QUEUE_TYPEOF(type) *swap_first = SLIST_FIRST(head1); SLIST_FIRST(head1) = SLIST_FIRST(head2); SLIST_FIRST(head2) = swap_first; } while (0)
+#define _GLIBCXX98_USE_C99_WCHAR 1
+#define _NEWLIB_ALLOCA_H 
+#define _ATEXIT_INIT {_NULL, 0, {_NULL}, {{_NULL}, {_NULL}, 0, 0}}
+#define __ORDER_BIG_ENDIAN__ 4321
+#define __NEWLIB_RECURSIVE_LOCK_INIT { (void *)0, 0, 0 }
+#define FCREAT _FCREAT
+#define __UINT64_TYPE__ long long unsigned int
+#define _GLIBCXX_USE_SCHED_YIELD 1
+#define __cpp_alias_templates 200704L
+#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+#define __cpp_constexpr_dynamic_alloc 201907L
+#define __glibcxx_make_unique 201304L
+#define SH4_REG_MMU_PTEA 0xff000034
+#define _SC_GETGR_R_SIZE_MAX 50
+#define _GLIBCXX_HAVE_ATANF 1
+#define RE4DC_UI_Y(y) ((y) * re4dc_ui_sy)
+#define ACTOR_REJECT() return false
+#define __cpp_lib_is_nothrow_convertible 201806L
+#define INTMAX_MIN (-INTMAX_MAX - 1)
+#define _BLKSIZE_T_DECLARED 
+#define SLIST_FOREACH_SAFE(var,head,field,tvar) for ((var) = SLIST_FIRST((head)); (var) && ((tvar) = SLIST_NEXT((var), field), 1); (var) = (tvar))
+#define _STDLIB_H_ 
+#define LIST_FOREACH(var,head,field) for ((var) = LIST_FIRST((head)); (var); (var) = LIST_NEXT((var), field))
+#define _VA_LIST_T_H 
+#define _GLIBCXX_USE_C99_WCHAR _GLIBCXX11_USE_C99_WCHAR
+#define INT_FAST16_MAX (__INT_FAST16_MAX__)
+#define S_ISUID 0004000
+#define __UINT_FAST32_TYPE__ unsigned int
+#define FD_ISSET(n,p) ((p)->fds_bits[(n) / NFDBITS] & (1 << ((n) % NFDBITS)))
+#define O_NOFOLLOW _FNOFOLLOW
+#define __cpp_lib_integral_constant_callable 201304L
+#define __GNUCLIKE___TYPEOF 1
+#define __RCSID(s) struct __hack
+#define ACTOR_ASM_FSRRA3 "fsrra   fr3\n\t"
+#define PVR_VPOS_IRQ 0x00cc
+#define __FLT32X_NORM_MAX__ 1.7976931348623157e+308F32x
+#define pvr_poly_mod_hdr pvr_poly_hdr
+#define __glibcxx_variant 202106L
+#define _SC_XOPEN_UUCP 124
+#define _CONCEPT_CHECK_H 1
+#define __FLT_MAX__ 3.4028234663852886e+38F
+#define __cpp_lib_math_special_functions 201603L
+#define __NEWLIB__ 4
+#define __u_int_defined 
+#define _GLIBCXX_HAVE_STACKTRACE 1
+#define __va_list__ 
+#define __glibcxx_has_unique_object_representations 201606L
+#define RE4DC_PVR_LATCH 2
+#define THD_SCHED_HZ 100
+#define PVR_TA_TEX_MEM 0x11000000
+#define _SC_2_FORT_DEV 110
+#define __caddr_t_defined 
+#define RE4DC_GANADO_LIT 1
+#define __INT32_TYPE__ long int
+#define _SC_TRACE_EVENT_NAME_MAX 85
+#define FASYNC _FASYNC
+#define PVR_TXRFMT_8BPP_PAL(x) ((x) << 25)
+#define HUGE_VAL (__builtin_huge_val())
+#define __SIZEOF_DOUBLE__ 8
+#define _GLIBCXX_TR1_LEGENDRE_FUNCTION_TCC 1
+#define __cpp_lib_endian 201907L
+#define KOS_INIT_FLAGS_ARCH(flags) KOS_INIT_FLAG_NONE(flags, INIT_NO_DCLOAD, dcload_init); KOS_INIT_FLAG_NONE(flags, INIT_NO_DCLOAD, fs_dcload_init_console); KOS_INIT_FLAG_NONE(flags, INIT_NO_DCLOAD, fs_dcload_shutdown); KOS_INIT_FLAG_NONE(flags, INIT_NO_DCLOAD, arch_init_net_dcload_ip); KOS_INIT_FLAG(flags, INIT_NO_DCLOAD, arch_init_net_no_dcload); KOS_INIT_FLAG(flags, INIT_CDROM, cdrom_init); KOS_INIT_FLAG(flags, INIT_CDROM, cdrom_shutdown); KOS_INIT_FLAG(flags, INIT_CDROM, fs_iso9660_init); KOS_INIT_FLAG(flags, INIT_CDROM, fs_iso9660_shutdown); KOS_INIT_FLAG(flags, INIT_CONTROLLER, cont_init); KOS_INIT_FLAG(flags, INIT_CONTROLLER, cont_shutdown); KOS_INIT_FLAG(flags, INIT_KEYBOARD, kbd_init); KOS_INIT_FLAG(flags, INIT_KEYBOARD, kbd_shutdown); KOS_INIT_FLAG(flags, INIT_MOUSE, mouse_init); KOS_INIT_FLAG(flags, INIT_MOUSE, mouse_shutdown); KOS_INIT_FLAG(flags, INIT_LIGHTGUN, lightgun_init); KOS_INIT_FLAG(flags, INIT_LIGHTGUN, lightgun_shutdown); KOS_INIT_FLAG(flags, INIT_VMU, vmu_init); KOS_INIT_FLAG(flags, INIT_VMU, vmu_shutdown); KOS_INIT_FLAG(flags, INIT_VMU, vmu_fs_init); KOS_INIT_FLAG(flags, INIT_VMU, vmu_fs_shutdown); KOS_INIT_FLAG(flags, INIT_PURUPURU, purupuru_init); KOS_INIT_FLAG(flags, INIT_PURUPURU, purupuru_shutdown); KOS_INIT_FLAG(flags, INIT_SIP, sip_init); KOS_INIT_FLAG(flags, INIT_SIP, sip_shutdown); KOS_INIT_FLAG(flags, INIT_DREAMEYE, dreameye_init); KOS_INIT_FLAG(flags, INIT_DREAMEYE, dreameye_shutdown); KOS_INIT_FLAG(flags, INIT_MIE, mie_init); KOS_INIT_FLAG(flags, INIT_MIE, mie_shutdown); KOS_INIT_FLAG(flags, INIT_MIE, mie_init_scan); KOS_INIT_FLAG(flags, INIT_MAPLE_ALL, maple_wait_scan); KOS_INIT_FLAG(flags, INIT_MAPLE_ALL, maple_init); KOS_INIT_FLAG(flags, INIT_MAPLE_ALL, maple_shutdown)
+#define INIT_MALLOCSTATS 0x00000004
+#define RE4DC_PVR_FAST_WAKE 1
+#define __KOS_FPARG_1_0 "fr4"
+#define __KOS_FPARG_1_1 "fr5"
+#define PVR_OPB_CFG 0x0140
+#define sigemptyset(what) (*(what) = 0, 0)
+#define _QUAD_HIGHWORD 1
+#define UINT8_C(x) __UINT8_C(x)
+#define SH4_REG_MMU_PTEL 0xff000004
+#define PVR_RENDER_ADDR 0x0060
+#define __glibcxx_atomic_shared_ptr 201711L
+#define NMMGR_FLAGS_ALIAS 0x00000004
+#define __FLT32X_HAS_QUIET_NAN__ 1
+#define PVR_TA_CMD_USERCLIP GENMASK(17, 16)
+#define __UINTMAX_MAX__ 0xffffffffffffffffULL
+#define _GLIBCXX_MAKE_MOVE_ITERATOR(_Iter) std::make_move_iterator(_Iter)
+#define __SYS_LOCK_H__ 
+#define __CONCAT1(x,y) x ## y
+#define _GLIBCXX17_DEPRECATED [[__deprecated__]]
+#define INT_FAST64_MIN (-__INT_FAST64_MAX__ - 1)
+#define PVR_TA_CMD_MODIFIER_MASK (1 << PVR_TA_CMD_MODIFIER_SHIFT)
+#define __pure2 __attribute__((__const__))
+#define ELFDATA2LSB 1
+#define __DBL_MAX_10_EXP__ 308
+#define __KOS_MUTEX_H 
+#define __hidden __attribute__((__visibility__("hidden")))
+#define __const const
+#define UINT16_MAX (__UINT16_MAX__)
+#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
+#define LIST_NEXT(elm,field) ((elm)->field.le_next)
+#define PVR_RAM_BASE_32_P0 0x05000000
+#define SH4_REG_MMU_PTEH 0xff000000
+#define __glibcxx_atomic_flag_test 201907L
+#define _REENT_INIT(var) { 0, &__sf[0], &__sf[1], &__sf[2], 0, "", _REENT_INIT_RESERVED_1 _NULL, _REENT_INIT_RESERVED_0 _NULL, _NULL, 0, _NULL, _NULL, 0, _NULL, { { _REENT_INIT_RESERVED_2 _NULL, "", {0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, 1, { {_RAND48_SEED_0, _RAND48_SEED_1, _RAND48_SEED_2}, {_RAND48_MULT_0, _RAND48_MULT_1, _RAND48_MULT_2}, _RAND48_ADD }, {0, {0}}, {0, {0}}, {0, {0}}, "", "", 0, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, 0 } }, _REENT_INIT_RESERVED_6_7 _NULL }
+#define PVR_CMD_USERCLIP 0x20000000
+#define SLIST_FOREACH_FROM(var,head,field) for ((var) = ((var) ? (var) : SLIST_FIRST((head))); (var); (var) = SLIST_NEXT((var), field))
+#define RE4DC_GANADO_LIT_NEAREST 0
+#define mat_trans_single(x,y,z) { register float __x __asm__("fr0") = (x); register float __y __asm__("fr1") = (y); register float __z __asm__("fr2") = (z); __asm__ __volatile__( "fldi1	fr3\n" "ftrv	xmtrx,fv0\n" "fldi1	fr2\n" "fdiv	fr3,fr2\n" "fmul	fr2,fr0\n" "fmul	fr2,fr1\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr3" ); x = __x; y = __y; z = __z; }
+#define _SC_THREADS 42
+#define PVR_BLEND_ENABLE 1
+#define FD_CLR(n,p) ((p)->fds_bits[(n) / NFDBITS] &= ~(1 << ((n) % NFDBITS)))
+#define SIG_IGN ((_sig_func_ptr)1)
+#define _GLIBCXX_TR1_MODIFIED_BESSEL_FUNC_TCC 1
+#define _GLIBCXX_HAVE_VWSCANF 1
+#define __KOS_COND_H 
+#define __have_long32 1
+#define __sferror(p) ((int)(((p)->_flags & __SERR) != 0))
+#define __GNUCLIKE_MATH_BUILTIN_RELOPS 
+#define __guarded_by(x) __lock_annotate(guarded_by(x))
+#define ACTOR_FTRV(x,y,z,w) mat_trans_nodiv(x, y, z, w)
+#define RE4DC_ACTOR_PROBE_LIGHT 2
+#define _GLIBCXX_TR1_POLY_HERMITE_TCC 1
+#define __cpp_lib_is_constant_evaluated 201811L
+#define PVR_IL_CFG 0x00d0
+#define SHF_TLS BIT(10)
+#define RE4DC_ATCHK_CACHE 1
+#define __glibcxx_atomic_float 201711L
+#define _REENT_MBSRTOWCS_STATE(ptr) ((ptr)->_new._reent._mbsrtowcs_state)
+#define _SC_2_PBS_CHECKPOINT 115
+#define RE4DC_CENSUS_DEC(pp) do { } while (0)
+#define STAT_ATTR_NONE 0x00
+#define BIT(bit) (1u << (bit))
+#define _REENT_STDIN(_ptr) ((_ptr)->_stdin)
+#define __XSI_VISIBLE 0
+#define PVR_TXRFMT_VQ_DISABLE (0 << 30)
+#define _PSTL_PRAGMA_SIMD_EARLYEXIT 
+#define __throw_exception_again 
+#define TAILQ_INSERT_TAIL(head,elm,field) do { QMD_TAILQ_CHECK_TAIL(head, field); TAILQ_NEXT((elm), field) = NULL; (elm)->field.tqe_prev = (head)->tqh_last; *(head)->tqh_last = (elm); (head)->tqh_last = &TAILQ_NEXT((elm), field); QMD_TRACE_HEAD(head); QMD_TRACE_ELEM(&(elm)->field); } while (0)
+#define __STDC_LIMIT_MACROS 
+#define _GLIBCXX14_DEPRECATED _GLIBCXX_DEPRECATED
+#define _GLIBCXX_INLINE_VERSION 0
+#define _REENT_CVTLEN(_ptr) ((_ptr)->_cvtlen)
+#define __fsqrt(x) ({ float __arg = (x); __asm__("fsqrt %0\n\t" : "=f" (__arg) : "0" (__arg)); __arg; })
+#define PVR_TA_CMD_MODIFIERMODE_MASK (1 << PVR_TA_CMD_MODIFIERMODE_SHIFT)
+#define INIT_MIE 0x00400000
+#define KOS_INIT_FLAG_CALL(func) ({ int ret = 0; if(func ##_weak) { (*func ##_weak)(); ret = 1; } ret; })
+#define __cpp_lib_bool_constant 201505L
+#define _GLIBCXX_DOUBLE_IS_IEEE_BINARY64 1
+#define __LDBL_MIN_10_EXP__ (-307)
+#define __cpp_generic_lambdas 201707L
+#define S_IREAD 0000400
+#define _SC_V7_LPBIG_OFFBIG 95
+#define __CC_SUPPORTS___FUNC__ 1
+#define ___int16_t_defined 1
+#define _ELIDABLE_INLINE static __inline__
+#define __SWID 0x2000
+#define _BEGIN_STD_C extern "C" {
+#define SIG_SETMASK 0
+#define _Thread_local thread_local
+#define _GLIBCXX17_DEPRECATED_SUGGEST(ALT) _GLIBCXX_DEPRECATED_SUGGEST(ALT)
+#define F_GETLK 7
+#define _GLIBCXX_HAS_BUILTIN(B) __has_builtin(B)
+#define __SH_ATOMIC_MODEL_SOFT_GUSA__ 1
+#define __long_double_t long double
+#define RE4DC_ACTOR_CENSUS 0
+#define __RCSID_SOURCE(s) struct __hack
+#define __ARCH_ARGS_H 
+#define STB_LOCAL 0
+#define PVR_TA_OPB_END 0x012c
+#define _REENT_GETDATE_ERR_P(ptr) (&((ptr)->_new._reent._getdate_err))
+#define RE4DC_TEX_CHECK 0
+#define SHT_SYMTAB 2
+#define __FLT_DECIMAL_DIG__ 9
+#define SLIST_REMOVE_HEAD(head,field) do { SLIST_FIRST((head)) = SLIST_NEXT(SLIST_FIRST((head)), field); } while (0)
+#define KOS_SH4_SINGLE_ONLY 0
+#define _GLIBCXX_USE_CHDIR 1
+#define __glibcxx_requires_nonempty() __glibcxx_assert(!this->empty())
+#define _REENT_CHECK_VERIFY 1
+#define MEM_AREA_P0_BASE 0x00000000
+#define _RANGES_ALGO_H 1
+#define _GLIBCXX_HAVE_STDBOOL_H 1
+#define _SYS__TIMEVAL_H_ 
+#define _GLIBCXX11_USE_C99_WCHAR 1
+#define __INT_LEAST64_WIDTH__ 64
+#define O_META 0x2000
+#define __UINT_FAST8_TYPE__ unsigned int
+#define __P(protos) protos
+#define _SC_IOV_MAX 66
+#define __glibcxx_allocator_traits_is_always_equal 201411L
+#define __ATOMIC_RELEASE 3
+#define EI_PAD 9
+#define __cpp_lib_ranges 202110L
+#define RE4DC_DROP_ACTOR(pp,inner,cap) do { } while (0)
+#define _PC_PIPE_BUF 5
+#define _GLIBCXX98_USE_C99_MATH 1
+#define PVR_CMD_VERTEX 0xe0000000
+#define __GNUCLIKE_BUILTIN_NEXT_ARG 1
+#define __builtin_align_up(x,align) ((__typeof__(x))(((__uintptr_t)(x)+((align)-1))&(~((align)-1))))
+#define S_ISCHR(m) (((m)&_IFMT) == _IFCHR)
+#define PVR_TA_PM2_DSTBLEND_SHIFT 26
+#define _STL_PAIR_H 1
+#define _SC_XOPEN_UNIX 105
+#define _NOINLINE_STATIC _NOINLINE static
+#define __FLT32X_MAX_EXP__ 1024
+#define __cpp_nontype_template_parameter_auto 201606L
+#define M_SQRT1_2 0.70710678118654752440
+#define _FNDELAY _FNONBLOCK
+#define _QUAD_LOWWORD 0
+#define O_NOCTTY _FNOCTTY
+#define __unused __attribute__((__unused__))
+#define FMARK _FMARK
+#define _STDBOOL_H 
+#define __glibcxx_requires_sorted_pred(_First,_Last,_Pred) 
+#define __ATOMIC_ACQUIRE 2
+#define __glibcxx_requires_valid_range(_First,_Last) 
+#define __glibcxx_requires_cond(_Cond,_Msg) 
+#define PVR_TA_CMD_SHADE_MASK (1 << PVR_TA_CMD_SHADE_SHIFT)
+#define INIT_FS_ALL (INIT_FS_ROMDISK | INIT_FS_RAMDISK | INIT_FS_PTY | INIT_FS_DEV)
+#define __FLT_MIN__ 1.1754943508222875e-38F
+#define __GCC_IEC_559_COMPLEX 2
+#define PVR_TA_OPB_INIT 0x0164
+#define _PSTL_UDR_PRESENT 
+#define _SC_TIMEOUTS 82
+#define __cpp_aggregate_nsdmi 201304L
+#define _GLIBCXX_THROW(_EXC) 
+#define __UINT_LEAST8_TYPE__ unsigned char
+#define SH4_REG_MMU_TTB 0xff000008
+#define INT_LEAST16_MIN (-__INT_LEAST16_MAX__ - 1)
+#define _GLIBCXX_TR1_EXP_INTEGRAL_TCC 1
+#define ARCH_CODE EM_SH
+#define ELF32_ST_BIND(info) ((info) >> 4)
+#define __flexarr [0]
+#define _SC_LINE_MAX 68
+#define TAILQ_FOREACH_REVERSE_FROM_SAFE(var,head,headname,field,tvar) for ((var) = ((var) ? (var) : TAILQ_LAST((head), headname)); (var) && ((tvar) = TAILQ_PREV((var), headname, field), 1); (var) = (tvar))
+#define _PDP_ENDIAN 3412
+#define __cpp_impl_three_way_comparison 201907L
+#define __INTMAX_C(c) c ## LL
+#define _SC_LEVEL4_CACHE_SIZE 137
+#define quad quad_t
+#define SLIST_CONCAT(head1,head2,type,field) do { QUEUE_TYPEOF(type) *curelm = SLIST_FIRST(head1); if (curelm == NULL) { if ((SLIST_FIRST(head1) = SLIST_FIRST(head2)) != NULL) SLIST_INIT(head2); } else if (SLIST_FIRST(head2) != NULL) { while (SLIST_NEXT(curelm, field) != NULL) curelm = SLIST_NEXT(curelm, field); SLIST_NEXT(curelm, field) = SLIST_FIRST(head2); SLIST_INIT(head2); } } while (0)
+#define _REENT_RAND_NEXT(ptr) ((ptr)->_new._reent._rand_next)
+#define _GLIBCXX_TXN_SAFE_DYN 
+#define O_ACCMODE (O_RDONLY|O_WRONLY|O_RDWR)
+#define _REENT_EMERGENCY(_ptr) ((_ptr)->_emergency)
+#define _PSTL_PRAGMA_DECLARE_SIMD _PSTL_PRAGMA(omp declare simd)
+#define PVR_TA_CMD_CLRFMT_MASK (7 << PVR_TA_CMD_CLRFMT_SHIFT)
+#define FP_NAN 0
+#define __predict_false(exp) __builtin_expect((exp), 0)
+#define ___int_least16_t_defined 1
+#define PVR_TA_PM2_SRCENABLE_SHIFT 25
+#define _COMPARE 
+#define __KOS_INIT_FLAGS_0(flags) const uint32_t __kos_init_flags = (flags); KOS_INIT_FLAG(flags, INIT_NET, arch_init_net); KOS_INIT_FLAG(flags, INIT_NET, net_shutdown); KOS_INIT_FLAG(flags, INIT_NET, eth_init); KOS_INIT_FLAG(flags, INIT_NET, eth_shutdown); KOS_INIT_FLAG(flags, INIT_FS_ALL, fs_init); KOS_INIT_FLAG(flags, INIT_FS_ALL, fs_shutdown); KOS_INIT_FLAG(flags, INIT_FS_ROMDISK, fs_romdisk_init); KOS_INIT_FLAG(flags, INIT_FS_ROMDISK, fs_romdisk_shutdown); KOS_INIT_FLAG(flags, INIT_FS_NULL, fs_null_init); KOS_INIT_FLAG(flags, INIT_FS_NULL, fs_null_shutdown); KOS_INIT_FLAG(flags, INIT_FS_PTY, fs_pty_init); KOS_INIT_FLAG(flags, INIT_FS_PTY, fs_pty_shutdown); KOS_INIT_FLAG(flags, INIT_FS_RAMDISK, fs_ramdisk_init); KOS_INIT_FLAG(flags, INIT_FS_RAMDISK, fs_ramdisk_shutdown); KOS_INIT_FLAG(flags, INIT_FS_RND, fs_rnd_init); KOS_INIT_FLAG(flags, INIT_FS_RND, fs_rnd_shutdown); KOS_INIT_FLAG(flags, INIT_FS_DEV, fs_dev_init); KOS_INIT_FLAG(flags, INIT_FS_DEV, fs_dev_shutdown); KOS_INIT_FLAG(flags, INIT_EXPORT, export_init); KOS_INIT_FLAG(flags, INIT_LIBRARY, library_init); KOS_INIT_FLAG(flags, INIT_LIBRARY, library_shutdown); KOS_INIT_FLAG_NONE(flags, INIT_NO_SHUTDOWN, kos_shutdown); KOS_INIT_FLAGS_ARCH(flags)
+#define __KOS_INIT_FLAGS_1(flags) extern "C" { __KOS_INIT_FLAGS_0(flags); }
+#define __cpp_designated_initializers 201707L
+#define __UINT8_MAX__ 0xff
+#define _PSTL_ASSERT_MSG(_Condition,_Message) __glibcxx_assert(_Condition)
+#define _SC_SEMAPHORES 30
+#define __glibcxx_atomic_value_initialization 201911L
+#define __cpp_unicode_characters 201411L
+#define _GLIBCXX_END_INLINE_ABI_NAMESPACE(X) }
+#define SHF_EXECINSTR BIT(2)
+#define INT16_C(x) __INT16_C(x)
+#define STT_SECTION 3
+#define __WINT_MAX__ 0xffffffffU
+#define _SC_TTY_NAME_MAX 41
+#define INIT_THD_PREEMPT 0x00000000
+#define _REENT_INIT_RESERVED_6_7 
+#define ACTOR_LIGHT_ASM(ADDR,CHECK) "fmov.s  @%[l]+,fr8\n\t" "fmov.s  @%[l]+,fr9\n\t" "fmov.s  @%[l]+,fr10\n\t" "fmov.s  @%[l]+,fr11\n\t" "fmov.s  @%[l]+,fr12\n\t" "fmov.s  @%[l]+,fr13\n\t" "fmov.s  @%[l]+,fr14\n\t" "fmov.s  @%[l]+,fr15\n\t" "fldi0   fr7\n" "1:\n\t" "mov.w   @(2,%[rec]),r0\n\t" "add     %[rs],%[rec]\n\t" ADDR "add     %[nrm],r0\n\t" "mov     r0,r3\n\t" CHECK "mov.b   @r3+,r1\n\t" "mov.b   @r3+,r2\n\t" "lds     r1,fpul\n\t" "mov.b   @r3,r3\n\t" "float   fpul,fr4\n\t" "lds     r2,fpul\n\t" "float   fpul,fr5\n\t" "lds     r3,fpul\n\t" "float   fpul,fr6\n\t" "fmov.s  @%[l]+,fr0\n\t" "fmov.s  @%[l]+,fr1\n\t" "fmov.s  @%[l],fr2\n\t" "add     #-8,%[l]\n\t" ACTOR_ASM_FIPR4("fv8") ACTOR_ASM_FIPR4("fv12") ACTOR_ASM_FIPR4("fv0") "fmov    fr11,fr0\n\t" "fabs    fr0\n\t" "fadd    fr11,fr0\n\t" "fmov    fr15,fr1\n\t" "fabs    fr1\n\t" "fadd    fr15,fr1\n\t" "fmov    fr3,fr2\n\t" "fabs    fr2\n\t" "fadd    fr3,fr2\n\t" "fldi1   fr3\n\t" ACTOR_ASM_FTRV "fmov.s  @%[cap],fr4\n\t" "fcmp/gt fr4,fr0\n\t" "bf      2f\n\t" "fmov    fr4,fr0\n" "2:\n\t" "fcmp/gt fr4,fr1\n\t" "bf      3f\n\t" "fmov    fr4,fr1\n" "3:\n\t" "fcmp/gt fr4,fr2\n\t" "bf      4f\n\t" "fmov    fr4,fr2\n" "4:\n\t" "ftrc    fr0,fpul\n\t" "sts     fpul,r1\n\t" "ftrc    fr1,fpul\n\t" "sts     fpul,r2\n\t" "ftrc    fr2,fpul\n\t" "sts     fpul,r3\n\t" "shll16  r1\n\t" "shll8   r2\n\t" "or      r2,r1\n\t" "or      r3,r1\n\t" "or      %[alpha],r1\n\t" "mov.l   r1,@%[dst]\n\t" "dt      %[n]\n\t" "bf/s    1b\n\t" "add     #32,%[dst]\n" "9:\n\t"
+#define __FLT32_MIN_EXP__ (-125)
+#define INIT_FS_ROMDISK 0x00000020
+#define INT8_MAX (__INT8_MAX__)
+#define UINT_LEAST64_MAX (__UINT_LEAST64_MAX__)
+#define PVR_TXRFMT_PAL8BPP (6 << 27)
+#define TAILQ_NEXT(elm,field) ((elm)->field.tqe_next)
+#define _GLIBCXX_USE_C99_CTYPE_TR1 1
+#define __glibcxx_atomic_ref 201806L
+#define _GLIBCXX23_CONSTEXPR 
+#define SHF_STRINGS BIT(5)
+#define __bswap16(_x) __builtin_bswap16(_x)
+#define _GLIBCXX_USE_WEAK_REF __GXX_WEAK__
+#define __SIZE_MAX__ 0xffffffffU
+#define _IFCHR 0020000
+#define sigfillset(what) (*(what) = ~(0), 0)
+#define BITLL(bit) (1ull << (bit))
+#define PVR_TA_INPUT 0x10000000
+#define __frsqrt(x) ({ float __arg = (x); __asm__("fsrra %0\n\t" : "=f" (__arg) : "0" (__arg)); __arg; })
+#define PVR_BGPLANE_Z 0x0088
+#define __arg_type_tag(arg_kind,arg_idx,type_tag_idx) 
+#define __WCHAR_MAX__ 0x7fffffffL
+#define _SC_2_C_DEV 109
+#define RE4DC_MV_BODY 1700
+#define _SC_LEVEL3_CACHE_LINESIZE 136
+#define INT16_MAX (__INT16_MAX__)
+#define _REENT_TM(ptr) (&(ptr)->_new._reent._localtime_buf)
+#define signgam (*__signgam())
+#define mat_trans_normal3(x,y,z) { register float __x __asm__("fr8") = (x); register float __y __asm__("fr9") = (y); register float __z __asm__("fr10") = (z); __asm__ __volatile__( "fldi0 fr11\n" "ftrv  xmtrx, fv8\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr11" ); x = __x; y = __y; z = __z; }
+#define _WCHAR_T 
+#define _GLIBCXX_USE_LONG_LONG 1
+#define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1 1
+#define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2 1
+#define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4 1
+#define __GCC_ATOMIC_CHAR_LOCK_FREE 2
+#define STAILQ_REMOVE_AFTER(head,elm,field) do { if ((STAILQ_NEXT(elm, field) = STAILQ_NEXT(STAILQ_NEXT(elm, field), field)) == NULL) (head)->stqh_last = &STAILQ_NEXT((elm), field); } while (0)
+#define mat_trans_single3(x,y,z) { register float __x __asm__("fr0") = (x); register float __y __asm__("fr1") = (y); register float __z __asm__("fr2") = (z); __asm__ __volatile__( "fldi1	fr3\n" "ftrv	xmtrx,fv0\n" "fdiv	fr3,fr0\n" "fdiv	fr3,fr1\n" "fdiv	fr3,fr2\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr3" ); x = __x; y = __y; z = __z; }
+#define TAILQ_FOREACH_SAFE(var,head,field,tvar) for ((var) = TAILQ_FIRST((head)); (var) && ((tvar) = TAILQ_NEXT((var), field), 1); (var) = (tvar))
+#define PVR_UNK_0018 0x0018
+#define __glibcxx_memory_resource 201603L
+#define __GCC_IEC_559 2
+#define RE4DC_MV_SHADOWS 1
+#define PVR_FOG_TABLE_BASE 0x0200
+#define _LITTLE_ENDIAN 1234
+#define _IOFBF 0
+#define _OFF_T_DECLARED 
+#define __FLT_EVAL_METHOD__ 0
+#define __requires_shared(...) __lock_annotate(shared_locks_required(__VA_ARGS__))
+#define _SC_NPROCESSORS_CONF 9
+#define _GLIBCXX_PSEUDO_VISIBILITY(V) 
+#define MB_CUR_MAX __locale_mb_cur_max()
+#define KOS_INIT_FLAGS(flags) _KOS_INIT_FLAGS(flags, __kos_cplusplus)
+#define _GLOBAL_REENT (&_impure_data)
+#define _SC_XOPEN_STREAMS 104
+#define _SC_NPROCESSORS_ONLN 10
+#define LIST_REMOVE(elm,field) do { QMD_SAVELINK(oldnext, (elm)->field.le_next); QMD_SAVELINK(oldprev, (elm)->field.le_prev); QMD_LIST_CHECK_NEXT(elm, field); QMD_LIST_CHECK_PREV(elm, field); if (LIST_NEXT((elm), field) != NULL) LIST_NEXT((elm), field)->field.le_prev = (elm)->field.le_prev; *(elm)->field.le_prev = LIST_NEXT((elm), field); TRASHIT(*oldnext); TRASHIT(*oldprev); } while (0)
+#define __bswap64(_x) __builtin_bswap64(_x)
+#define __FLT64_DECIMAL_DIG__ 17
+#define _WINT_T 
+#define _GLIBCXX_SYNCHRONIZATION_HAPPENS_AFTER(A) 
+#define _FNOFOLLOW 0x100000
+#define __glibcxx_bitops 201907L
+#define _GLIBCXX_LT_OBJDIR ".libs/"
+#define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2
+#define INIT_FS_NULL 0x00000100
+#define __SNBF 0x0002
+#define __bswap32(_x) __builtin_bswap32(_x)
+#define _GLIBCXX_USE_NL_LANGINFO_L 1
+#define FNONBLOCK _FNONBLOCK
+#define INT8_MIN (-__INT8_MAX__ - 1)
+#define __glibcxx_invoke 201411L
+#define _REENT_STDERR(_ptr) ((_ptr)->_stderr)
+#define _SC_2_CHAR_TERM 107
+#define LIST_FOREACH_SAFE(var,head,field,tvar) for ((var) = LIST_FIRST((head)); (var) && ((tvar) = LIST_NEXT((var), field), 1); (var) = (tvar))
+#define _SC_TRACE_USER_EVENT_MAX 90
+#define PVR_TA_PM2_SRCENABLE BIT(25)
+#define __cpp_variadic_templates 200704L
+#define G1PC_PART(p,chunk) do { } while (0)
+#define FILEHND_INVALID ((file_t)-1)
+#define __glibcxx_is_final 201402L
+#define _GLIBCXX_USE_C99_COMPLEX_TR1 1
+#define PVR_TA_PM2_TXRENV GENMASK(7, 6)
+#define _SYS__STDINT_H 
+#define PVR_BINSIZE_0 0
+#define PVR_BINSIZE_8 8
+#define RE4DC_TA_OPB_OVERFLOW 3
+#define PVR_UNK_007C 0x007c
+#define INIT_DEFAULT_ARCH (INIT_MAPLE_ALL | INIT_CDROM)
+#define STT_NOTYPE 0
+#define __CC_SUPPORTS_VARADIC_XXX 1
+#define UINT64_C(x) __UINT64_C(x)
+#define _GLIBCXX_HAVE_FABSF 1
+#define PVR_SPANSORT_CFG 0x0030
+#define INT16_MIN (-__INT16_MAX__ - 1)
+#define PVR_UNK_0080 0x0080
+#define SLIST_NEXT(elm,field) ((elm)->field.sle_next)
+#define __FINITE_MATH_ONLY__ 0
+#define _PSTL_PRAGMA_SIMD_INCLUSIVE_SCAN(PRM) _PSTL_PRAGMA(omp scan inclusive(PRM))
+#define __cpp_variable_templates 201304L
+#define __KOS_FPARG(n,single) __KOS_FPARG_ ##n ##_ ##single
+#define PVR_FB_SIZE 0x005c
+#define KOS_INIT_FLAG_ALL(flags,mask,func) extern void func(void); void (*func ##_weak)(void) = ((flags) & (mask)) == (mask) ? func : NULL
+#define PTRDIFF_MAX (__PTRDIFF_MAX__)
+#define PVR_TA_CMD_CLRFMT GENMASK(5, 4)
+#define ERRORCHECK_MUTEX_INITIALIZER { MUTEX_TYPE_ERRORCHECK, NULL, 0 }
+#define PVR_UNK_0098 0x0098
+#define PVR_FOG_DENSITY 0x00b8
+#define _GLIBCXX_USE_WCHAR_T 1
+#define _SC_XBS5_ILP32_OFFBIG _SC_V7_ILP32_OFFBIG
+#define ___sem_wait_scoped(sm,l) semaphore_t *__scoped_sem_ ##l __attribute__((cleanup(__sem_scoped_cleanup))) = sem_wait(sm) ? NULL : (sm)
+#define _SC_SHARED_MEMORY_OBJECTS 31
+#define RE4DC_VRAM_PAGES_VQ_ONLY 1
+#define _GLIBCXX_LDOUBLE_IS_IEEE_BINARY64 1
+#define __LEAST16 "h"
+#define PVR_CLRCLAMP_DISABLE 0
+#define CLK_TCK CLOCKS_PER_SEC
+#define _IFMT 0170000
+#define _GLIBCXX_BEGIN_NAMESPACE_VERSION 
+#define RE4DC_ACTOR_PRELIT 1
+#define SIGFPE 8
+#define __FAST8 
+#define _arch_dreamcast 1
+#define PVR_TA_PM2_ALPHA_MASK (1 << PVR_TA_PM2_ALPHA_SHIFT)
+#define __glibcxx_move_iterator_concept 202207L
+#define _GLIBCXX_TR1_BESSEL_FUNCTION_TCC 1
+#define PVR_TA_PM2_MIPBIAS_MASK (15 << PVR_TA_PM2_MIPBIAS_SHIFT)
+#define TRACEBUF_INITIALIZER 
+#define __LEAST32 "l"
+#define _GLIBCXX_HAVE_FREXPF 1
+#define _GLIBCXX_HAVE_FREXPL 1
+#define __glibcxx_make_obj_using_allocator 201811L
+#define __WCHAR_MIN__ (-__WCHAR_MAX__ - 1)
+#define INT_FAST8_MAX (__INT_FAST8_MAX__)
+#define _LONG_DOUBLE long double
+#define PVR_TXRFMT_VQ_ENABLE (1 << 30)
+#define __CC_SUPPORTS_DYNAMIC_ARRAY_INIT 1
+#define SQ_MASK_DEST_ADDR(dest) (MEM_AREA_SQ_BASE | ((uintptr_t)(dest) & 0x03ffffe0))
+#define _GLIBCXX_PURE __attribute__ ((__pure__))
+#define _MODE_T_DECLARED 
+#define RE4DC_ACTOR_SKIN_OWNER_POOL 0
+#define __glibcxx_constrained_equality 202403L
+#define __INT8_C(c) c
+#define WCHAR_MAX (__WCHAR_MAX__)
+#define _GLIBCXX_HAVE_COSHF 1
+#define _GLIBCXX_HAVE_COSHL 1
+#define NSIG 32
+#define TAILQ_FOREACH_FROM(var,head,field) for ((var) = ((var) ? (var) : TAILQ_FIRST((head))); (var); (var) = TAILQ_NEXT((var), field))
+#define __cpp_variadic_using 201611L
+#define __glibcxx_complex_udls 201309L
+#define __SNLK 0x0001
+#define __STDC__ 1
+#define __int_fast8_t_defined 1
+#define _REENT_INC(_ptr) ((_ptr)->_inc)
+#define EI_ABIVERSION 8
+#define _SC_BC_SCALE_MAX 59
+#define SHF_WRITE BIT(0)
+#define __glibcxx_robust_nonmodifying_seq_ops 201304L
+#define _PSTL_PRAGMA_FORCEINLINE 
+#define __LEAST64 "ll"
+#define __SHRT_MAX__ 0x7fff
+#define __LDBL_MAX__ 1.7976931348623157e+308L
+#define SHN_ABS 0xfff1
+#define _GLIBCXX_USE_C99_COMPLEX _GLIBCXX11_USE_C99_COMPLEX
+#define __DC_PVR_PVR_REGS_H 
+#define _REENT_ERRNO(_ptr) ((_ptr)->_errno)
+#define __cpp_if_constexpr 201606L
+#define SIGTTOU 22
+#define _GLIBCXX_CPU_DEFINES 1
+#define __kos_cplusplus 1
+#define __GNUCLIKE_BUILTIN_VARARGS 1
+#define _GLIBCXX_USE_C99_STDIO _GLIBCXX11_USE_C99_STDIO
+#define PVR_UNK_00A0 0x00a0
+#define __LDBL_IS_IEC_60559__ 1
+#define INIT_PURUPURU 0x00080000
+#define _GLIBCXX_HAVE_STRUCT_DIRENT_D_TYPE 1
+#define TRACEBUF 
+#define MEM_AREA_UTLB_DATA_ARRAY1_BASE 0xf7000000
+#define _GLIBCXX_NOEXCEPT_IF(...) noexcept(__VA_ARGS__)
+#define SIG_BLOCK 1
+#define _GLIBCXX_TR1_POLY_LAGUERRE_TCC 1
+#define SHT_STRTAB 3
+#define RE4DC_PS2_WORLD_DRAW 1
+#define ALLPERMS (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
+#define LIST_FOREACH_FROM(var,head,field) for ((var) = ((var) ? (var) : LIST_FIRST((head))); (var); (var) = LIST_NEXT((var), field))
+#define __SNPT 0x0800
+#define __asserts_exclusive(...) __lock_annotate(assert_exclusive_lock(__VA_ARGS__))
+#define _SSIZE_T_DECLARED 
+#define LIST_PREV(elm,head,type,field) ((elm)->field.le_prev == &LIST_FIRST((head)) ? NULL : __containerof((elm)->field.le_prev, QUEUE_TYPEOF(type), field.le_next))
+#define PVR_BGPLANE_CFG 0x008c
+#define __GCC_ATOMIC_BOOL_LOCK_FREE 2
+#define __alloc_size(x) __attribute__((__alloc_size__(x)))
+#define _SC_THREAD_STACK_MIN 39
+#define __cpp_lib_concepts 202002L
+#define _SC_V6_LP64_OFF64 _SC_V7_LP64_OFF64
+#define _SC_JOB_CONTROL 5
+#define mat_trans_single4(x,y,z,w) { register float __x __asm__("fr0") = (x); register float __y __asm__("fr1") = (y); register float __z __asm__("fr2") = (z); register float __w __asm__("fr3") = (w); __asm__ __volatile__( "ftrv	xmtrx,fv0\n" "fdiv	fr3,fr0\n" "fdiv	fr3,fr1\n" "fdiv	fr3,fr2\n" "fldi1	fr4\n" "fdiv	fr3,fr4\n" "fmov	fr4,fr3\n" : "=f" (__x), "=f" (__y), "=f" (__z), "=f" (__w) : "0" (__x), "1" (__y), "2" (__z), "3" (__w) : "fr4" ); x = __x; y = __y; z = __z; w = __w; }
+#define _KOS_INIT_FLAGS(flags,cp) __KOS_INIT_FLAGS(flags, cp)
+#define _SC_SEM_VALUE_MAX 17
+#define _PC_ASYNC_IO 9
+#define EI_OSABI 7
+#define __result_use_check __attribute__((__warn_unused_result__))
+#define INT_FAST8_MIN (-__INT_FAST8_MAX__ - 1)
+#define PVR_TXRFMT_PAL4BPP (5 << 27)
+#define INIT_LIBRARY 0x00000010
+#define _GLIBCXX_OS_DEFINES 1
+#define __glibcxx_exchange_function 201304L
+#define WCHAR_MIN (__WCHAR_MIN__)
+#define RE4DC_LATE_NODRAW 0x04u
+#define HUGE_VALF (__builtin_huge_valf())
+#define __FLT_EVAL_METHOD_TS_18661_3__ 0
+#define HUGE_VALL (__builtin_huge_vall())
+#define __OPTIMIZE__ 1
+#define RE4DC_TA_DOUBLEBUF 1
+#define PVR_SYNC_STATUS 0x010c
+#define _PSTL_USAGE_WARNINGS 0
+#define _GLIBCXX98_USE_C99_COMPLEX 1
+#define __cpp_inheriting_constructors 201511L
+#define FD_SETSIZE 1024
+#define __LDBL_MAX_EXP__ 1024
+#define PVR_TXRFMT_NONE 0
+#define SIGEV_SIGNAL 2
+#define __printflike(fmtarg,firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+#define KOS_INIT_FLAG_WEAK(func,dft_on) void (*func ##_weak)(void) __weak_symbol = (dft_on) ? func : NULL
+#define __glibcxx_function_requires(...) 
+#define INIT_FS_PTY 0x00000080
+#define UINT_FAST16_MAX (__UINT_FAST16_MAX__)
+#define tzname _tzname
+#define _GLIBCXX_HAVE_LC_MESSAGES 1
+#define __WINT_MIN__ 0U
+#define __KOS_ELF_H 
+#define _SC_SHELL 74
+#define __glibcxx_constexpr_string 201907L
+#define PVR_TXRLOAD_NONBLOCK 0x4000
+#define RE4DC_LEON_SKIN_SLOTS 2
+#define __glibcxx_gcd_lcm 201606L
+#define SHF_LINK_ORDER BIT(7)
+#define __FLT32X_IS_IEC_60559__ 1
+#define __KOS_GCC_PATCHLEVEL__ 2025062800
+#define __glibcxx_boyer_moore_searcher 201603L
+#define __NULLABILITY_PRAGMA_POP 
+#define STAILQ_HEAD(name,type) struct name { struct type *stqh_first; struct type **stqh_last; }
+#define PVR_TA_PM3_TXRFMT GENMASK(30, 21)
+#define PVR_TXRFMT_ARGB4444 (2 << 27)
+#define _FUNCTEXCEPT_H 1
+#define PVR_TXRFMT_RGB565 (1 << 27)
+#define MEM_AREA_P2_BASE 0xa0000000
+#define __cpp_impl_destroying_delete 201806L
+#define _Nonnull 
+#define _GLIBCXX_HAVE_LINK 1
+#define PVR_ALPHA_ENABLE 1
+#define __GCC_ATOMIC_POINTER_LOCK_FREE 2
+#define MEM_AREA_CACHE_MASK 0x1fffffff
+#define O_APPEND _FAPPEND
+#define RE4DC_VRAM_PAGES 1
+#define _INTPTR_EQ_INT 
+#define _SC_POSIX_26_VERSION 140
+#define mutex_lock_scoped(m) __mutex_lock_scoped((m), __LINE__)
+#define FP_NORMAL 4
+#define _SC_2_C_BIND 108
+#define _GLIBCXX_HAVE_LIMIT_FSIZE 0
+#define _GLIBCXX_HAVE_ATAN2F 1
+#define _GLIBCXX_HAVE_ATAN2L 1
+#define F_UNLKSYS 4
+#define _SC_LEVEL3_CACHE_ASSOC 135
+#define __rangeof(type,start,end) (__offsetof(type, end) - __offsetof(type, start))
+#define QMD_LIST_CHECK_HEAD(head,field) 
+#define __glibcxx_constexpr_numeric 201911L
+#define STAT_TYPE_DIR 2
+#define SH4_REG_UBC_BARA 0xff200000
+#define SH4_REG_UBC_BARB 0xff20000c
+#define _DEFAULT_SOURCE 1
+#define __KOS_FPARG_2_0 "fr7"
+#define __KOS_FPARG_2_1 "fr6"
+#define __weak_symbol __attribute__((__weak__))
+#define _REENT_CLEANUP(_ptr) ((_ptr)->__cleanup)
+#define __cpp_aligned_new 201606L
+#define RE4DC_ACTOR_LIGHT_N16 1
+#define _GLIBCXX_INVOKE_H 1
+#define __GNUCLIKE___SECTION 1
+#define SHF_MERGE BIT(4)
+#define _GLIBCXX_HAVE_TANL 1
+#define __glibcxx_syncbuf 201803L
+#define RE4DC_PLAN_ARRAY(T,name,n,off) static_assert((off) % alignof(T) == 0 && (off) + sizeof(T) * (n) <= RE4DC_ACTOR_PLAN_STORE, "actor plan store"); T (&name)[n] = *reinterpret_cast<T(*)[n]>(re4dc_actor_plan_store + (off))
+#define __build_assert(cond) do { (void) sizeof(char [1 - 2*!(cond)]); } while(0)
+#define _NEWLIB_VERSION "4.6.0"
+#define FP_ILOGB0 (-__INT_MAX__)
+#define TMP_MAX 26
+#define __glibcxx_coroutine 201902L
+#define __CONCAT(x,y) __CONCAT1(x,y)
+#define __ISO_C_VISIBLE 2020
+#define __STDC_HOSTED__ 1
+#define _SC_GETPW_R_SIZE_MAX 51
+#define RE4DC_RIGID_CULL_PX 0.75f
+#define __glibcxx_constexpr_vector 201907L
+#define _STDIO_H_ 
+#define _INT8_T_DECLARED 
+#define _SC_2_PBS_MESSAGE 117
+#define RE4DC_TEX_KEEP 1
+#define __INT_LEAST32_WIDTH__ 32
+#define _REENT_WCTOMB_STATE(ptr) ((ptr)->_new._reent._wctomb_state)
+#define RE4DC_TA_GUARD 0
+#define _ATTRIBUTE(attrs) __attribute__ (attrs)
+#define LIST_INSERT_BEFORE(listelm,elm,field) do { QMD_LIST_CHECK_PREV(listelm, field); (elm)->field.le_prev = (listelm)->field.le_prev; LIST_NEXT((elm), field) = (listelm); *(listelm)->field.le_prev = (elm); (listelm)->field.le_prev = &LIST_NEXT((elm), field); } while (0)
+#define NMMGR_TYPE_UNKNOWN 0x0000
+#define PVR_TA_CMD_SHADE_SHIFT 1
+#define RE4DC_FAR_SHELL 1
+#define SIGURG 16
+#define _SC_TZNAME_MAX 20
+#define RE4DC_ATCHK_LIST 1
+#define INIT_NET 0x00000002
+#define _ID_T_DECLARED 
+#define RE4DC_PERF_HUD 0
+#define TIME_UTC 1
+#define PVR_TXRLOAD_DMA 0x8000
+#define RE4DC_GAME 1
+#define PATH_MAX 4096
+#define __cpp_char8_t 202207L
+#define _SC_SPORADIC_SERVER 77
+#define _PSTL_STRING_AUX(x) #x
+#define __SHRT_WIDTH__ 16
+#define SLIST_REMOVE(head,elm,type,field) do { QMD_SAVELINK(oldnext, (elm)->field.sle_next); if (SLIST_FIRST((head)) == (elm)) { SLIST_REMOVE_HEAD((head), field); } else { QUEUE_TYPEOF(type) *curelm = SLIST_FIRST(head); while (SLIST_NEXT(curelm, field) != (elm)) curelm = SLIST_NEXT(curelm, field); SLIST_REMOVE_AFTER(curelm, field); } TRASHIT(*oldnext); } while (0)
+#define __cpp_user_defined_literals 200809L
+#define __lock_release(lock) __newlib_lock_release(&(lock))
+#define __KOS_NMMGR_H 
+#define _GLIBCXX_USE_BUILTIN_TRAIT(BT) _GLIBCXX_HAS_BUILTIN(BT)
+#define _GLIBCXX_BITS_SPECFUN_H 1
+#define _GLIBCXX_BIT 1
+#define _GLIBCXX_HAVE_FMODF 1
+#define __cpp_lib_three_way_comparison 201907L
+#define __LDBL_MIN__ 2.2250738585072014e-308L
+#define SIGQUIT 3
+#define __TMP_FLT_EVAL_METHOD 
+#define PVR_MODIFIER_ENABLE 1
+#define ACTOR_LIGHT_OPERANDS : [rec] "+r"(rec), [n] "+r"(left), [dst] "+r"(d), [l] "+r"(lp) : [rs] "r"(rs), [nrm] "r"(nrm), [cap] "r"(&L.cap), [alpha] "r"(alpha), [pal] "r"(palette) : "r0", "r1", "r2", "r3", "fpul", "fr0", "fr1", "fr2", "fr3", "fr4", "fr5", "fr6", "fr7", "fr8", "fr9", "fr10", "fr11", "fr12", "fr13", "fr14", "fr15", "t", "memory" ACTOR_ASM_CLOBBER
+#define _GLIBCXX_HAVE_FMODL 1
+#define STAILQ_ENTRY(type) struct { struct type *stqe_next; }
+#define __CHAR8_TYPE__ unsigned char
+#define __glibcxx_array_constexpr 201811L
+#define _GLIBCXX_USE_CLOCK_REALTIME 1
+#define __lock_acquire(lock) __newlib_lock_acquire(&(lock))
+#define __DC_PVR_PVR_MISC_H 
+#define __cpp_enumerator_attributes 201411L
+#define _REENT_MP_RESULT_K(ptr) ((ptr)->_result_k)
+#define _WCHAR_T_ 
+#define va_arg(v,l) __builtin_va_arg(v,l)
+#define APROF_FRAME(f) ((void)0)
+#define _STDDEF_H 
+#define _FTRUNC 0x0400
+#define __glibcxx_constexpr_string_view 201811L
+#define __glibcxx_lcm 201606L
+#define MATH_ERRNO 1
+#define __glibcxx_digits_b(T,B) (B - __glibcxx_signed_b (T,B))
+#define __pt_guarded_by(x) __lock_annotate(pt_guarded_by(x))
+#define PVR_YUV_STAT 0x0150
+#define PVR_PALETTE_CFG 0x0108
+#define _PSTL_PRAGMA_SIMD_ORDERED_MONOTONIC(PRM) 
+#define PVR_TA_PM2_FOG_MASK (3 << PVR_TA_PM2_FOG_SHIFT)
+#define __SIZEOF_LONG__ 4
+#define __DC_PVR_H 
+#define FILENAME_MAX 1024
+#define STAILQ_FOREACH(var,head,field) for((var) = STAILQ_FIRST((head)); (var); (var) = STAILQ_NEXT((var), field))
+#define __glibcxx_quoted_string_io 201304L
+#define __glibcxx_requires_can_decrement_range(_First1,_Last1,_First2) 
+#define _IN_PORT_T_DECLARED 
+#define _SYS__TYPES_H 
+#define PXF_BEGIN(p) do { } while (0)
+#define _SYS_STAT_H 
+#define PVR_TA_VERTBUF_START 0x0128
+#define _FMARK 0x0010
+#define O_WRONLY 1
+#define __DC_PVR_PVR_MEM_H 
+#define ACTOR_FSRRA(x) inverse_sqrt(x)
+#define O_EXCL _FEXCL
+#define PVR_TA_OPB_START 0x0124
+#define _PSTL_ALGORITHM_FORWARD_DECLARED 1
+#define __glibcxx_latch 201907L
+#define PVR_TA_PM2_DSTENABLE_MASK (1 << PVR_TA_PM2_DSTENABLE_SHIFT)
+#define _GLIBCXX_HAVE_MACHINE_PARAM_H 1
+#define PVR_TA_PM1_DEPTHCMP GENMASK(31, 29)
+#define O_EXEC _FEXECSRCH
+#define _GLIBCXX_HAVE_LOCALE_H 1
+#define PVR_TEXTURE_CLIP 0x0084
+#define O_MODE_MASK 0x0f
+#define mat_trans_normal3_nomod(x,y,z,x2,y2,z2) { register float __x __asm__("fr8") = (x); register float __y __asm__("fr9") = (y); register float __z __asm__("fr10") = (z); __asm__ __volatile__( "fldi0 fr11\n" "ftrv  xmtrx, fv8\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr11" ); x2 = __x; y2 = __y; z2 = __z; }
+#define S_ISDIR(m) (((m)&_IFMT) == _IFDIR)
+#define _GLIBCXX_HAVE_FABSL 1
+#define __glibcxx_class_requires3(_a,_b,_c,_d) 
+#define _PSTL_PRAGMA_SIMD _PSTL_PRAGMA(omp simd)
+#define __FLT64_MANT_DIG__ 53
+#define __MISC_VISIBLE 1
+#define PVR_PACK_COLOR(a,r,g,b) ( ( ((uint8_t)( (a) * 255 ) ) << 24 ) | ( ((uint8_t)( (r) * 255 ) ) << 16 ) | ( ((uint8_t)( (g) * 255 ) ) << 8 ) | ( ((uint8_t)( (b) * 255 ) ) << 0 ) )
+#define RE4DC_SCREEN_HF (re4dc_screen_hf)
+#define RE4DC_GIGANTE_LIGHTS 1
+#define _SC_TRACE_INHERIT 86
+#define MEM_AREA_ICACHE_ADDRESS_ARRAY_BASE 0xf0000000
+#define _REENT_ASCTIME_SIZE 26
+#define _T_PTRDIFF 
+#define O_RSYNC _FSYNC
+#define __glibcxx_as_const 201510L
+#define _RANGES_CMP_H 1
+#define __cpp_consteval 202211L
+#define __cpp_delegating_constructors 200604L
+#define RE4DC_ACTOR_SKIN_FTRV 1
+#define ACTOR_NRM_ADDR4 "shll2   r0\n\t"
+#define FD_SET(n,p) ((p)->fds_bits[(n) / NFDBITS] |= (1 << ((n) % NFDBITS)))
+#define __FLT_HAS_DENORM__ 1
+#define __SIZEOF_LONG_DOUBLE__ 8
+#define RE4DC_ACTOR_DIRECT 1
+#define PVR_TXRALPHA_DISABLE 1
+#define _CLOCKS_PER_SEC_ 1000000
+#define RE4DC_ACTOR_MATERIAL_RECORD_REVISION 0x20260930u
+#define _SC_ARG_MAX 0
+#define __GNUCLIKE_ASM 3
+#define NMMGR_TYPE_SINGLETON 0x0030
+#define INT_FAST16_MIN (-__INT_FAST16_MAX__ - 1)
+#define RE4DC_ACTOR_LEON_NATIVE_LOOK 1
+#define __cpp_rtti 199711L
+#define _GLIBCXX_USE_CONSTEXPR constexpr
+#define PVR_TA_CMD_USERCLIP_MASK (3 << PVR_TA_CMD_USERCLIP_SHIFT)
+#define EM_SH 42
+#define QMD_IS_TRASHED(x) 0
+#define PVR_BITMAP_Y 0x00f0
+#define SEEK_CUR 1
+#define RE4DC_NEAR_LOD_TAU lod_tau
+#define RE4DC_MV_RANGE_M 15
+#define __INTPTR_TYPE__ int
+#define FSHLOCK _FSHLOCK
+#define _GLIBCXX_NAMESPACE_LDBL 
+#define _GLIBCXX_HAVE_WCHAR_H 1
+#define __UINTPTR_TYPE__ unsigned int
+#define __GNUC_STDC_INLINE__ 1
+#define PVR_MIPMAP_ENABLE 1
+#define STAILQ_CLASS_ENTRY(type) struct { class type *stqe_next; }
+#define _SC_XOPEN_REALTIME_THREADS 102
+#define _GCC_WCHAR_T 
+#define _WANT_IO_C99_FORMATS 1
+#define __glibcxx_incomplete_container_elements 201505L
+#define STT_FILE 4
+#define RE4DC_UI_FRAG_RESERVE 1
+#define __glibcxx_math_spec_funcs 201003L
+#define _GLIBCXX_STDIO_SEEK_CUR 1
+#define _GLIBCXX_USE_MKDIR 1
+#define __cpp_raw_strings 200710L
+#define RE4DC_LEON_LIGHT_TOGGLE 0
+#define RE4DC_VRAM_ROOM_LOG 1
+#define __DBL_HAS_INFINITY__ 1
+#define _GLIBCXX_STDIO_EOF -1
+#define RE4DC_NATIVE_ACTOR_SKIN 1
+#define _PC_SYMLINK_MAX 14
+#define ELFDATA2MSB 2
+#define _KEY_T_DECLARED 
+#define _GLIBCXX_USE_CLOCK_MONOTONIC 1
+#define _GLIBCXX_NAMESPACE_LDBL_OR_CXX11 _GLIBCXX_NAMESPACE_CXX11
+#define __glibcxx_unwrap_ref 201811L
+#define _GLIBCXX_USE_NOEXCEPT noexcept
+#define __glibcxx_requires_subscript(_N) __glibcxx_assert(_N < this->size())
+#define _REENT_MP_P5S(ptr) ((ptr)->_p5s)
+#define _PSTL_PAR_BACKEND_SERIAL 
+#define stdin _REENT_STDIN(_REENT)
+#define _PC_2_SYMLINKS 13
+#define __HAVE_SPECULATION_SAFE_VALUE 1
+#define LIST_CLASS_ENTRY(type) struct { class type *le_next; class type **le_prev; }
+#define _IFDIR 0040000
+#define __FLT_MANT_DIG__ 24
+#define _SC_CLK_TCK 2
+#define PVR_UNK_0110 0x0110
+#define M_LOG2_E _M_LN2
+#define PVR_UNK_0114 0x0114
+#define PVR_UNK_0118 0x0118
+#define _GLIBCXX_HAVE_COSL 1
+#define _ITERATOR_CONCEPTS_H 1
+#define L_ctermid 16
+#define _SYS_UNISTD_H 
+#define __attribute_format_strfmon__(a,b) 
+#define __SH_FPU_DOUBLE__ 1
+#define _PC_REC_MAX_XFER_SIZE 17
+#define __FLT32X_HAS_DENORM__ 1
+#define __INT_FAST16_TYPE__ int
+#define RE4DC_SCREEN_WF (re4dc_screen_wf)
+#define _SIZE_T_DEFINED 
+#define _GLIBCXX_HAVE_GETIPINFO 1
+#define RE4DC_ACTOR_GANADO_PS2_STUMP 0
+#define _RAND48_MULT_0 (0xe66d)
+#define _RAND48_MULT_1 (0xdeec)
+#define _RAND48_MULT_2 (0x0005)
+#define _CLOCK_T_ unsigned long
+#define PVR_TA_PM2_SRCBLEND_MASK (7 << PVR_TA_PM2_SRCBLEND_SHIFT)
+#define _WCHAR_T_DEFINED_ 
+#define _BLKCNT_T_DECLARED 
+#define _UINTMAX_T_DECLARED 
+#define __SOPT 0x0400
+#define _SC_V6_ILP32_OFF32 _SC_V7_ILP32_OFF32
+#define __FLT64_HAS_DENORM__ 1
+#define UINT_LEAST8_MAX (__UINT_LEAST8_MAX__)
+#define PVR_REVISION 0x0004
+#define SHT_REL 9
+#define PVR_TA_PM2_ALPHA_SHIFT 20
+#define _SC_ASYNCHRONOUS_IO 21
+#define FIELD_GET(var,field) (((var) & (field)) >> __builtin_ctz(field))
+#define PVR_UNK_0160 0x0160
+#define PVR_TXR_STRIDE_MULT GENMASK(4, 0)
+#define __cpp_lib_logical_traits 201510L
+#define PVR_TA_PM1_DEPTHCMP_SHIFT 29
+#define SHT_SYMTAB_SHNDX 18
+#define _GLIBCXX_USE_C99_INTTYPES_WCHAR_T 1
+#define _PSTL_PRAGMA_VECTOR_UNALIGNED 
+#define __glibcxx_is_constant_evaluated 201811L
+#define __DC_MEMORY_H 
+#define QMD_TAILQ_CHECK_HEAD(head,field) 
+#define __DEPRECATED 1
+#define RE4DC_ACTOR_CROWD_FLAT 1
+#define _SC_RAW_SOCKETS 70
+#define _FSTDIO 
+#define ELF_SYM_PREFIX_LEN 1
+#define SHT_NOBITS 8
+#define __cpp_rvalue_references 200610L
+#define KOS_IMG_FMT_RGB888 0x01
+#define _SC_THREAD_SPORADIC_SERVER 81
+#define __SOFF 0x1000
+#define __FLT32_MAX__ 3.4028234663852886e+38F32
+#define RE4DC_UI_HANDLES 1
+#define __PTRDIFF_TYPE__ int
+#define _POSIX_TIMERS 200809L
+#define __glibcxx_unordered_map_try_emplace 201411L
+#define __DC_MATRIX_H 
+#define PDP_ENDIAN _PDP_ENDIAN
+#define PVR_GET(REG) (* ( (volatile uint32_t *)( 0xa05f8000 + (REG) ) ) )
+#define S_BLKSIZE 1024
+#define __glibcxx_not_fn 201603L
+#define __glibcxx_shared_timed_mutex 201402L
+#define _GLIBCXX_DEPRECATED __attribute__ ((__deprecated__))
+#define _SC_STREAM_MAX 100
+#define PVR_TA_PM2_VSIZE GENMASK(2, 0)
+#define INIT_MAPLE_PERIPH (INIT_CONTROLLER | INIT_KEYBOARD | INIT_MOUSE | INIT_LIGHTGUN | INIT_VMU | INIT_PURUPURU | INIT_SIP | INIT_DREAMEYE)
+#define __strfmonlike(fmtarg,firstvararg) __attribute__((__format__ (__strfmon__, fmtarg, firstvararg)))
+#define RE4DC_LATE_ACTOR_LOD8 0x02u
+#define _PTRDIFF_T_DECLARED 
+#define __compiler_membar() __asm __volatile(" " : : : "memory")
+#define _SC_2_PBS_LOCATE 116
+#define __requires_unlocked(...) __lock_annotate(locks_excluded(__VA_ARGS__))
+#define sigdelset(what,sig) (*(what) &= ~(1<<(sig)), 0)
+#define __FLT32_HAS_QUIET_NAN__ 1
+#define __GNUG__ 15
+#define SHF_ALLOC BIT(1)
+#define __depr(m) __attribute__((deprecated(m)))
+#define __POSIX_VISIBLE 202405
+#define PVR_BORDER_COLOR 0x0040
+#define __SIZEOF_SIZE_T__ 4
+#define _MATH_H_ 
+#define RE4DC_MV_SIDES 8
+#define __unreachable() __builtin_unreachable()
+#define __DC_VECTOR_H 
+#define __offsetof(type,field) offsetof(type, field)
+#define __GLIBCXX__ 20250808
+#define _PSTL_HIDE_FROM_ABI_PUSH 
+#define O_NONBLOCK _FNONBLOCK
+#define RE4DC_MODEL_DIAG() re4dc_model_diagnostic_enabled()
+#define __cpp_rvalue_reference 200610L
+#define __cpp_nsdmi 200809L
+#define RE4DC_MV_LEN_MAX 1800
+#define SIZE_MAX (__SIZE_MAX__)
+#define PVR_TA_PM2_DSTBLEND_MASK (7 << PVR_TA_PM2_DSTBLEND_SHIFT)
+#define M_LN2HI 6.9314718036912381649E-1
+#define RE4DC_RES_CYCLE_FRAMES 0
+#define PVR_SHADE_GOURAUD 1
+#define _GLIBCXX_STDC_HEADERS 1
+#define RE4DC_ACTOR_STATS_LEAN 1
+#define __cpp_conditional_explicit 201806L
+#define RE4DC_MODEL_DROP_LOG 0
+#define __FLT32_MAX_EXP__ 128
+#define _FSEEK_OPTIMIZATION 1
+#define S_IWUSR 0000200
+#define RE4DC_ACTOR_NO_CLEAR 1
+#define STAILQ_NEXT(elm,field) ((elm)->field.stqe_next)
+#define __cpp_lib_bitops 201907L
+#define SHF_INFO_LINK BIT(6)
+#define __GCC_HAVE_DWARF2_CFI_ASM 1
+#define __ptrvalue 
+#define _GLIBCXX_HOSTED __STDC_HOSTED__
+#define __GXX_ABI_VERSION 1020
+#define __OBSOLETE_MATH __OBSOLETE_MATH_DEFAULT
+#define _GLIBCXX_HAS_GTHREADS 1
+#define __null_sentinel __attribute__((__sentinel__))
+#define _SC_PAGESIZE 8
+#define __SORD 0x2000
+#define RE4DC_AVK RE4DC_ACTOR_VTX_KERNEL
+#define UINT_LEAST16_MAX (__UINT_LEAST16_MAX__)
+#define M_LN2LO 1.9082149292705877000E-10
+#define PVR_SCAN_CLK 0x00d8
+#define __DEVOLATILE(type,var) ((type)(__uintptr_t)(volatile void *)(var))
+#define _SC_READER_WRITER_LOCKS 71
+#define _PC_LINK_MAX 0
+#define __requires_exclusive(...) __lock_annotate(exclusive_locks_required(__VA_ARGS__))
+#define M_LOG2E 1.4426950408889634074
+#define KOS_IMG_NOT_OWNER 0x0400
+#define RE4DC_ACTOR_BAKE_TOLERANCE (1.0f / 32.0f)
+#define __cpp_lib_result_of_sfinae 201210L
+#define HW_TYPE_SET5 0x9
+#define INT_FAST32_MAX (__INT_FAST32_MAX__)
+#define RE4DC_TEX_RESIDENT_RESERVE_KB 256
+#define __SVID_VISIBLE 1
+#define __PTRDIFF_T 
+#define F_RSETLK 11
+#define F_GETFL 3
+#define mat_trans_single3_nodiv_nomod(x,y,z,x2,y2,z2) { register float __x __asm__("fr12") = (x); register float __y __asm__("fr13") = (y); register float __z __asm__("fr14") = (z); __asm__ __volatile__( "fldi1 fr15\n" "ftrv  xmtrx, fv12\n" : "=f" (__x), "=f" (__y), "=f" (__z) : "0" (__x), "1" (__y), "2" (__z) : "fr15" ); x2 = __x; y2 = __y; z2 = __z; }
+#define F_LOCK 1
+#define ACTOR_NRM_ADDR3 "mov     r0,r1\n\t" "shll    r0\n\t" "add     r1,r0\n\t"
+#define PVR_RAM_BASE_64_P0 0x04000000
+#define __DBL_DECIMAL_DIG__ 17
+#define __glibcxx_is_swappable 201603L
+#define POSIX_CLOSE_RESTART 1
+#define INIT_KEYBOARD 0x00008000
+#define __glibcxx_parallel_algorithm 201603L
+#define _GLIBCXX_MOVE_BACKWARD3(_Tp,_Up,_Vp) std::move_backward(_Tp, _Up, _Vp)
+#define __DBL_MIN__ double(2.2250738585072014e-308L)
+#define _VA_LIST 
+#define __PTHREAD_HAVE_ATTR_TYPE 1
+#define ACTOR_POS_ASM(ADDR,CHECK) "fmov.s  @%[k]+,fr7\n\t" "fmov.s  @%[k]+,fr8\n\t" "fmov.s  @%[k]+,fr9\n\t" "fmov.s  @%[k]+,fr10\n\t" "fmov.s  @%[k]+,fr11\n\t" "fmov.s  @%[k]+,fr12\n\t" "fmov.s  @%[k]+,fr13\n\t" "fmov.s  @%[k]+,fr14\n\t" "fmov.s  @%[k]+,fr15\n" "1:\n\t" "mov.w   @%[rec],r1\n\t" ADDR "add     %[pos],r1\n\t" CHECK "mov.w   @r1+,r2\n\t" "mov.w   @(4,%[rec]),r0\n\t" "mov.w   @r1+,r3\n\t" "lds     r2,fpul\n\t" "mov.w   @r1,r2\n\t" "float   fpul,fr0\n\t" "lds     r3,fpul\n\t" "shll2   r0\n\t" "float   fpul,fr1\n\t" "lds     r2,fpul\n\t" "add     %[uv],r0\n\t" "float   fpul,fr2\n\t" "mov.w   @r0+,r2\n\t" "fldi1   fr3\n\t" "mov.w   @r0,r0\n\t" ACTOR_ASM_FTRV "lds     r2,fpul\n\t" "add     %[rs],%[rec]\n\t" "float   fpul,fr5\n\t" "lds     r0,fpul\n\t" "float   fpul,fr6\n\t" "fmul    fr8,fr5\n\t" "fmul    fr10,fr6\n\t" "fadd    fr9,fr5\n\t" "fadd    fr11,fr6\n\t" "fcmp/gt fr3,fr14\n\t" "movt    r2\n\t" "fcmp/gt fr15,fr3\n\t" "rotcl   r2\n\t" "fmul    fr3,fr3\n\t" ACTOR_ASM_FSRRA3 "fmov.s  fr6,@-%[dst]\n\t" "fmov.s  fr5,@-%[dst]\n\t" "fmul    fr3,fr0\n\t" "fmul    fr3,fr1\n\t" "fmov.s  fr3,@-%[dst]\n\t" "fcmp/gt fr0,fr7\n\t" "movt    r1\n\t" "fcmp/gt fr12,fr0\n\t" "rotcl   r1\n\t" "fmov.s  fr1,@-%[dst]\n\t" "fcmp/gt fr1,fr7\n\t" "rotcl   r1\n\t" "fcmp/gt fr13,fr1\n\t" "rotcl   r1\n\t" "fmov.s  fr0,@-%[dst]\n\t" ACTOR_POS_OC "mov.b   r1,@%[oc]\n\t" "add     #1,%[oc]\n\t" "and     r1,%[all]\n\t" "or      r1,%[any]\n\t" "dt      %[n]\n\t" "bf/s    1b\n\t" "add     #52,%[dst]\n" "9:\n\t"
+#define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
+#define STAILQ_INSERT_AFTER(head,tqelm,elm,field) do { if ((STAILQ_NEXT((elm), field) = STAILQ_NEXT((tqelm), field)) == NULL) (head)->stqh_last = &STAILQ_NEXT((elm), field); STAILQ_NEXT((tqelm), field) = (elm); } while (0)
+#define __SIZEOF_POINTER__ 4
+#define RE4DC_RENDER_OPTION 1
+#define RE4DC_CROWD_INVIS_SKIP 1
+#define SIG2STR_MAX 17
+#define _RAND48_ADD (0x000b)
+#define _GLIBCXX14_CONSTEXPR constexpr
+#define INIT_VMU 0x00040000
+#define _array_size_chk(arr) __build_assert_or_zero(!__builtin_types_compatible_p(typeof(arr), typeof(&(arr)[0])))
+#define __fipr(x,y,z,w,a,b,c,d) ({ register float __x __asm__(KOS_FPARG(0)) = (x); register float __y __asm__(KOS_FPARG(1)) = (y); register float __z __asm__(KOS_FPARG(2)) = (z); register float __w __asm__(KOS_FPARG(3)) = (w); register float __a __asm__(KOS_FPARG(4)) = (a); register float __b __asm__(KOS_FPARG(5)) = (b); register float __c __asm__(KOS_FPARG(6)) = (c); register float __d __asm__(KOS_FPARG(7)) = (d); __asm__ __volatile__( "fipr	fv8,fv4" : "+f" (KOS_SH4_SINGLE_ONLY ? __w : __z) : "f" (__x), "f" (__y), "f" (__z), "f" (__w), "f" (__a), "f" (__b), "f" (__c), "f" (__d) ); KOS_SH4_SINGLE_ONLY ? __w : __z; })
+#define RE4DC_TEX_PAYLOAD_CRC 0
+#define __GNUC_MINOR__ 2
+#define __build_assert_or_zero(cond) (sizeof(char [1 - 2*!(cond)]) - 1)
+#define PVR_COLOR_CLAMP_MAX 0x00bc
+#define SIGTRAP 5
+#define PVR_HPOS_IRQ 0x00c8
+#define __glibcxx_requires_irreflexive_pred(_First,_Last,_Pred) 
+#define _GLIBCXX_HAVE_STRINGS_H 1
+#define __nonnull(x) __attribute__((__nonnull__ x))
+#define PVR_TA_PM2_MIPBIAS GENMASK(11, 8)
+#define STAT_UNIQUE_NONE 0
+#define APROF_STOP(name) ((void)0)
+#define _SC_TRACE 83
+#define PVR_YUV_CFG 0x014c
+#define __GNUC_PREREQ__(ma,mi) __GNUC_PREREQ(ma, mi)
+#define _GLIBCXX_CAN_ALIGNAS_DESTRUCTIVE_SIZE 1
+#define O_DSYNC _FSYNC
+#define __int64_t_defined 1
+#define _GLIBCXX_USE_DEPRECATED 1
+#define PVR_TA_PM2_FOG_SHIFT 22
+#define INT_LEAST8_MAX (__INT_LEAST8_MAX__)
+#define RE4DC_ACTOR_LOD_PX ((float)(2))
+#define __cpp_lib_bounded_array_traits 201902L
+#define _GLIBCXX_HAVE_BUILTIN_LAUNDER 1
+#define SH4_REG_UBC_BBRB 0xff200014
+#define __glibcxx_generic_associative_lookup 201304L
+#define PVR_TXRLOAD_4BPP 0x01
+#define __FLT64_MIN_10_EXP__ (-307)
+#define __KOS_FPARG_3_0 "fr6"
+#define __KOS_FPARG_3_1 "fr7"
+#define SH4_REG_MMU_CR 0xff000010
+#define QMD_LIST_CHECK_NEXT(elm,field) 
+#define RE4DC_SCREEN_HALF_HF (re4dc_screen_half_hf)
+#define __glibcxx_to_address 201711L
+#define __volatile volatile
+#define _ATEXIT_DYNAMIC_ALLOC 1
+#define _SC_BC_DIM_MAX 58
+#define TAILQ_FOREACH_REVERSE_FROM(var,head,headname,field) for ((var) = ((var) ? (var) : TAILQ_LAST((head), headname)); (var); (var) = TAILQ_PREV((var), headname, field))
+#define TAILQ_FOREACH_FROM_SAFE(var,head,field,tvar) for ((var) = ((var) ? (var) : TAILQ_FIRST((head))); (var) && ((tvar) = TAILQ_NEXT((var), field), 1); (var) = (tvar))
+#define pvr_mod_hdr pvr_poly_hdr
+#define PVR_TA_PM2_CLAMP_MASK (1 << PVR_TA_PM2_CLAMP_SHIFT)
+#define __glibcxx_requires_sorted_set(_First1,_Last1,_First2) 
+#define SHT_SHLIB 10
+#define __DBL_HAS_DENORM__ 1
+#define __KOS_CDEFS_H 
+#define INT_LEAST32_MAX (__INT_LEAST32_MAX__)
+#define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
+#define __cpp_lib_hardware_interference_size 201703L
+#define __INT8_MAX__ 0x7f
+#define MEM_AREA_P1_BASE 0x80000000
+#define _FDIRECT 0x80000
+#define __FLT32_MIN__ 1.1754943508222875e-38F32
+#define __UINT8_TYPE__ unsigned char
+#define _SC_BC_BASE_MAX 57
+#define RE4DC_PT_BLEND_FIX 1
+#define PVR_COLOR_CLAMP_MIN 0x00c0
+#define __glibcxx_remove_cvref 201711L
+#define S_ISLNK(m) (((m)&_IFMT) == _IFLNK)
+#define _SUSECONDS_T_DECLARED 
+#define __SH4_SINGLE__ 1
+#define INT_LEAST8_MIN (-__INT_LEAST8_MAX__ - 1)
+#define __DC_PVR_PVR_DMA_H 
+#define _SC_TRACE_NAME_MAX 88
+#define FD_ZERO(p) do { int __i; for(__i = 0; __i < FD_SETSIZE / NFDBITS; ++__i) { (p)->fds_bits[__i] = 0; } } while(0)
+#define __KOS_IMG_H 
+#define _PTRDIFF_T_ 
+#define __used __attribute__((__used__))
+#define _GLIBCXX_HAVE_TANHF 1
+#define _GLIBCXX_HAVE_TANHL 1
+#define _GLIBCXX_USE_C99_INTTYPES 1
+#define QMD_LIST_CHECK_PREV(elm,field) 
+#define S_IFDIR _IFDIR
+#define __format_arg(fmtarg) __attribute__((__format_arg__ (fmtarg)))
+#define SLIST_FIRST(head) ((head)->slh_first)
+#define __cpp_lib_type_identity 201806L
+#define __PTHREAD_HAVE_MUTEX_TYPE 1
+#define TAILQ_CLASS_HEAD(name,type) struct name { class type *tqh_first; class type **tqh_last; TRACEBUF }
+#define __glibcxx_map_try_emplace 201411L
+#define pvr_list_type_t pvr_list_t
+#define _GLIBCXX_USE_C99_MATH_FUNCS 1
+#define INT_LEAST32_MIN (-__INT_LEAST32_MAX__ - 1)
+#define __SLBF 0x0001
+#define PVR_UNK_00A8 0x00a8
+#define _INT64_T_DECLARED 
+#define F_UNLCK 3
+#define TAILQ_CLASS_ENTRY(type) struct { class type *tqe_next; class type **tqe_prev; TRACEBUF }
+#define __glibcxx_transparent_operators 201510L
+#define __builtin_is_aligned(x,align) (((__uintptr_t)(x) & ((align) - 1)) == 0)
+#define PVR_TA_PM1_CULLING_SHIFT 27
+#define _REENT_SIGNAL_SIZE 24
+#define __glibcxx_is_layout_compatible 201907L
+#define __GNUC_VA_LIST_COMPATIBILITY 1
+#define __catch(X) if (false)
+#define PVR_TA_PM2_SRCBLEND_SHIFT 29
+#define st_mtime st_mtim.tv_sec
+#define __containerof(x,s,m) ({ const volatile __typeof(((s *)0)->m) *__x = (x); __DEQUALIFY(s *, (const volatile char *)__x - __offsetof(s, m));})
+#define TAILQ_EMPTY(head) ((head)->tqh_first == NULL)
+#define __STRING(x) #x
+#define FP_INFINITE 1
+#define SIGVTALRM 26
+#define _STL_ITERATOR_BASE_TYPES_H 1
+#define F_OFD_GETLK 15
+#define __GNUC_PREREQ(maj,min) ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#define _GLIBCXX_CSTDDEF 1
+#define __unbounded 
+#define __DC_PVR_PVR_HEADER_H 
+#define __glibcxx_chrono 201907L
+#define INIT_CDROM 0x01000000
+#define NMMGR_SYS_MAX 0x10000
+#define _REENT_CHECK_ASCTIME_BUF(ptr) 
+#define __glibcxx_uncaught_exceptions 201411L
+#define F_ULOCK 0
+#define RE4DC_TEX_PKG_SKIP 1
+#define INIT_NO_SHUTDOWN 0x00000400
+#define __glibcxx_destroying_delete 201806L
+#define PVR_TA_PM3_MIPMAP_MASK (1 << PVR_TA_PM3_MIPMAP_SHIFT)
+#define __LDBL_DECIMAL_DIG__ 17
+#define _GLIBCXX_HAVE_HYPOT 1
+#define PVR_TA_CMD_SHADE BIT(1)
+#define _PSTL_VERSION_MINOR ((_PSTL_VERSION % 1000) / 10)
+#define _SC_FSYNC 22
+#define RE4DC_SCREEN_HALF_WF (re4dc_screen_half_wf)
+#define PVR_TA_PM3_TXRFMT_MASK 0xffffffff
+#define PVR_DEPTHWRITE_ENABLE 0
+#define _REENT_WCRTOMB_STATE(ptr) ((ptr)->_new._reent._wcrtomb_state)
+#define __trylocks_exclusive(...) __lock_annotate(exclusive_trylock_function(__VA_ARGS__))
+#define __FLOAT_WORD_ORDER__ __ORDER_LITTLE_ENDIAN__
+#define SIGPROF 27
+#define pvr_poly_ic_hdr pvr_poly_hdr
+#define PVR_BITMAP_X 0x00ec
+#define _SC_SS_REPL_MAX 78
+#define _SYS_CDEFS_H_ 
+#define _MATH_ERRHANDLING_ERREXCEPT 0
+#define _SC_2_LOCALEDEF 112
+#define _STRINGS_H_ 
+#define SIG_ATOMIC_MAX (__STDINT_EXP(INT_MAX))
+#define PVR_TA_VERTBUF_END 0x0130
+#define __FBSDID(s) struct __hack
+#define _PSTL_ASSERT(_Condition) __glibcxx_assert(_Condition)
+#define __glibcxx_requires_string_len(_String,_Len) 
+#define FNOCTTY _FNOCTTY
+#define STAILQ_INSERT_HEAD(head,elm,field) do { if ((STAILQ_NEXT((elm), field) = STAILQ_FIRST((head))) == NULL) (head)->stqh_last = &STAILQ_NEXT((elm), field); STAILQ_FIRST((head)) = (elm); } while (0)
+#define AT_FDCWD -2
+#define __ficos(x) ({ float __value, __arg = (x); __asm__("lds    %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fmov   fr1,%0" : "=f" (__value) : "r" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define _STL_ITERATOR_BASE_FUNCS_H 1
+#define _IFLNK 0120000
+#define PAGEMASK (PAGESIZE - 1)
+#define _SC_MQ_PRIO_MAX 14
+#define _GLIBCXX11_USE_C99_COMPLEX 1
+#define INT32_MAX (__INT32_MAX__)
+#define _READ_WRITE_BUFSIZE_TYPE int
+#define PVR_TA_PM3_MIPMAP_SHIFT 31
+#define RE4DC_RES_MODE 0
+#define __cpp_aggregate_bases 201603L
+#define _SC_THREAD_ATTR_STACKSIZE 44
+#define __glibcxx_addressof_constexpr 201603L
+#define _SC_V7_ILP32_OFFBIG 93
+#define RE4DC_ACTOR_DIR_TOLERANCE (1.0f / 128.0f)
+#define _SC_THREAD_ROBUST_PRIO_INHERIT 122
+#define RE4DC_WARP_LATE_SET() 0
+#define _GLIBCXX_NOEXCEPT noexcept
+#define PVR_TXRFMT_TWIDDLED (0 << 26)
+#define __FLT32_DECIMAL_DIG__ 9
+#define RE4DC_UI_VRAM_RESERVE_KB 64
+#define __glibcxx_constexpr_memory 201811L
+#define __KOS_SEM_H 
+#define __glibcxx_generic_unordered_lookup 201811L
+#define __SCHAR_WIDTH__ 8
+#define LIST_INSERT_HEAD(head,elm,field) do { QMD_LIST_CHECK_HEAD((head), field); if ((LIST_NEXT((elm), field) = LIST_FIRST((head))) != NULL) LIST_FIRST((head))->field.le_prev = &LIST_NEXT((elm), field); LIST_FIRST((head)) = (elm); (elm)->field.le_prev = &LIST_FIRST((head)); } while (0)
+#define PVR_CLRCLAMP_ENABLE 1
+#define PTRDIFF_MIN (-PTRDIFF_MAX - 1)
+#define LIST_SWAP(head1,head2,type,field) do { QUEUE_TYPEOF(type) *swap_tmp = LIST_FIRST(head1); LIST_FIRST((head1)) = LIST_FIRST((head2)); LIST_FIRST((head2)) = swap_tmp; if ((swap_tmp = LIST_FIRST((head1))) != NULL) swap_tmp->field.le_prev = &LIST_FIRST((head1)); if ((swap_tmp = LIST_FIRST((head2))) != NULL) swap_tmp->field.le_prev = &LIST_FIRST((head2)); } while (0)
+#define __FLT32_MAX_10_EXP__ 38
+#define RE4DC_ACTOR_CROWD_MID_PX ((float)(8))
+#define __glibcxx_void_t 201411L
+#define __cpp_lib_int_pow2 202002L
+#define __va_copy(d,s) __builtin_va_copy(d,s)
+#define SIGSEGV 11
+#define _REENT_MP_FREELIST(ptr) ((ptr)->_freelist)
+#define PVR_TA_CMD_TYPE_MASK (7 << PVR_TA_CMD_TYPE_SHIFT)
+#define _GXX_NULLPTR_T 
+#define _SC_MESSAGE_PASSING 27
+#define O_DIR 0x1000
+#define __INT_FAST32_TYPE__ int
+#define _GLIBCXX_BEGIN_NAMESPACE_LDBL_OR_CXX11 _GLIBCXX_BEGIN_NAMESPACE_CXX11
+#define HW_TYPE_RETAIL 0x0
+#define S_IWGRP 0000020
+#define SIG_DFL ((_sig_func_ptr)0)
+#define _GLIBCXX_USE_C99_MATH_TR1 1
+#define _GLIBCXX_USE_C99_MATH _GLIBCXX11_USE_C99_MATH
+#define SIG_ATOMIC_MIN (-__STDINT_EXP(INT_MAX) - 1)
+#define F_OK 0
+#define _PC_PATH_MAX 4
+#define _FNONBLOCK 0x4000
+#define __SAPP 0x0100
+#define _INTMAX_T_DECLARED 
+#define __glibcxx_bool_constant 201505L
+#define F_PI 3.1415926f
+#define __inline inline
+#define _PSTL_VERSION_MAJOR (_PSTL_VERSION / 1000)
+#define __stringify(arg) ""#arg
+#define __INT8 "hh"
+#define INT32_MIN (-__INT32_MAX__ - 1)
+#define _SC_TIMER_MAX 19
+#define _Bool bool
+#define _GLIBCXX_MOVE3(_Tp,_Up,_Vp) std::move(_Tp, _Up, _Vp)
+#define STAILQ_LAST(head,type,field) (STAILQ_EMPTY((head)) ? NULL : __containerof((head)->stqh_last, QUEUE_TYPEOF(type), field.stqe_next))
+#define _SIZE_T_DECLARED 
+#define _BYTE_ORDER _LITTLE_ENDIAN
+#define _SYS__LOCALE_H 
+#define _PC_NO_TRUNC 7
+#define F_SETOWN 6
+#define KOS_FPARG(n) _KOS_FPARG(n, KOS_SH4_SINGLE_ONLY)
+#define PVR_ISP_START 0x0014
+#define __INT8_TYPE__ signed char
+#define __locks_shared(...) __lock_annotate(shared_lock_function(__VA_ARGS__))
+#define SHT_NULL 0
+#define RE4DC_MV_TOP 250
+#define __glibcxx_make_reverse_iterator 201402L
+#define EI_CLASS 4
+#define __ELF__ 1
+#define HW_MEMSIZE (_arch_mem_top - 0x8c000000)
+#define _INT32_T_DECLARED 
+#define RE4DC_FX_SCAN 1
+#define _REENT_CHECK_MP(ptr) 
+#define GENMASK(h,l) ((0xffffffff << (l)) & (0xffffffff >> (31 - (h))))
+#define _SC_VERSION 7
+#define __glibcxx_shared_ptr_weak_type 201606L
+#define F_TLOCK 2
+#define RE4DC_TA_HEADROOM 1
+#define RE4DC_LEON_HEADLESS 1
+#define _GLIBCXX_HAVE_MBSTATE_T 1
+#define __ARCH_INIT_FLAGS_H 
+#define SH4_REG_UBC_BDMRB 0xff20001c
+#define __FLT_RADIX__ 2
+#define PVR_TA_PM1_DEPTHWRITE_SHIFT 26
+#define FNBIO _FNBIO
+#define FTRUNC _FTRUNC
+#define PVR_RESET 0x0008
+#define PVR_ALPHA_DISABLE 0
+#define _GLIBCXX_UTILITY_H 1
+#define KOS_IMG_FMT_ARGB4444 0x04
+#define __GCC_ATOMIC_LLONG_LOCK_FREE 1
+#define _SYS__SIGSET_H_ 
+#define __section(x) __attribute__((__section__(x)))
+#define PVR_ID 0x0000
+#define FIELD_PREP(field,value) (((value) << __builtin_ctz(field)) & (field))
+#define __glibcxx_string_view 201803L
+#define __FLT32X_MIN__ 2.2250738585072014e-308F32x
+#define __alignof_is_defined 1
+#define __SIG_ATOMIC_MAX__ 0x7fffffff
+#define RE4DC_RES_ALTERNATE 1
+#define F_TEST 3
+#define __N(msgid) (msgid)
+#define _GLIBCXX_HAVE_LIMIT_RSS 0
+#define sigaddset(what,sig) (*(what) |= (1<<(sig)), 0)
+#define __is_defined(macro) !__builtin_strcmp(__stringify(macro), "1")
+#define S_IRUSR 0000400
+#define SIGPIPE 13
+#define _SC_THREAD_ROBUST_PRIO_PROTECT 123
+#define _GLIBCXX_HAVE_BUILTIN_HAS_UNIQ_OBJ_REP 1
+#define _SC_THREAD_PROCESS_SHARED 48
+#define __SIZEOF_PTRDIFF_T__ 4
+#define SEEK_SET 0
+#define _WANT_USE_GDTOA 1
+#define CLOCK_DISABLED 0
+#define HW_REGION_UNKNOWN 0x0
+#define PVR_RESET_ALL 0xffffffff
+#define __FLT64_MAX_10_EXP__ 308
+#define _GLIBCXX_VISIBILITY(V) __attribute__ ((__visibility__ (#V)))
+#define __LEAST8 "hh"
+#define _GLIBCXX_HAVE_COSF 1
+#define __glibcxx_chrono_udls 201304L
+#define RE4DC_ACTOR_PLAN_STORE 4096u
+#define _GLIBCXX_HAVE_UTIME_H 1
+#define __FLT32X_MANT_DIG__ 53
+#define _FDEFER 0x0020
+#define ARCH_EXIT_MENU 2
+#define __restrict_arr 
+#define __clock_t_defined 
+#define _TIMEVAL_DEFINED 
+#define SLIST_FOREACH_PREVPTR(var,varp,head,field) for ((varp) = &SLIST_FIRST((head)); ((var) = *(varp)) != NULL; (varp) = &SLIST_NEXT((var), field))
+#define __KOS_RWSEM_H 
+#define DBL_MEM (_arch_mem_top - 0x8d000000)
+#define _REENT_INIT_PTR(var) { memset((var), 0, sizeof(*(var))); _REENT_INIT_PTR_ZEROED(var); }
+#define W_OK 2
+#define SYMLOOP_MAX 16
+#define _SIZE_T_ 
+#define PVR_TA_PM2_UVFLIP_SHIFT 17
+#define PVR_TXRFMT_4BPP_PAL(x) ((x) << 21)
+#define UINT_FAST32_MAX (__UINT_FAST32_MAX__)
+#define O_CREAT _FCREAT
+#define _CLOCK_T_DECLARED 
+#define _WCHAR_T_H 
+#define _PSTL_HIDE_FROM_ABI_POP 
+#define mat_trans_single3_nodivw(x,y,z,w) { register float __x __asm__("fr12") = (x); register float __y __asm__("fr13") = (y); register float __z __asm__("fr14") = (z); register float __w __asm__("fr15") = 1.0f; __asm__ __volatile__( "ftrv  xmtrx, fv12\n" : "=f" (__x), "=f" (__y), "=f" (__z), "=f" (__w) : "0" (__x), "1" (__y), "2" (__z), "3" (__w) ); x = __x; y = __y; z = __z; w = __w; }
+#define __glibcxx_hypot 201603L
+#define RE4DC_GANADO_LIT_TOGGLE 0
+#define __cpp_inline_variables 201606L
+#define _GLIBCXX_HAVE_VSWSCANF 1
+#define __deprecated __attribute__((deprecated))
+#define __glibcxx_node_extract 201606L
+#define _Alignas(x) alignas(x)
+#define MEM_AREA_SQ_BASE 0xe0000000
+#define _GLIBCXX_HAVE_ATANL 1
+#define _REENT_INIT_RESERVED_2 
+#define _REENT_INIT_RESERVED_8 
+#define TAILQ_ENTRY(type) struct { struct type *tqe_next; struct type **tqe_prev; TRACEBUF }
+#define _SC_2_PBS_ACCOUNTING 114
+#define O_DIRECT _FDIRECT
+#define _SC_XBS5_LP64_OFF64 _SC_V7_LP64_OFF64
+#define __INT16 "h"
+#define MINSIGSTKSZ 2048
+#define __FLT_HAS_QUIET_NAN__ 1
+#define _SC_THREAD_ATTR_STACKADDR 43
+#define __glibcxx_is_nothrow_convertible 201806L
+#define PVR_TXRFMT_X32_STRIDE (1 << 25)
+#define _SC_HOST_NAME_MAX 65
+#define PVR_RAM_BASE 0xa5000000
+#define __STDC_EMBED_FOUND__ 1
+#define _PC_SYNC_IO 11
+#define __dead2 __attribute__((__noreturn__))
+#define _GLIBCXX_NORETURN __attribute__ ((__noreturn__))
+#define _SC_SEM_NSEMS_MAX 16
+#define _GLIBCXX20_DEPRECATED_SUGGEST(ALT) _GLIBCXX_DEPRECATED_SUGGEST(ALT)
+#define _POINTER_INT long
+#define MAX_FN_LEN NAME_MAX
+#define _BSD_PTRDIFF_T_ 
+#define __RAND_MAX 0x7fffffff
+#define TAILQ_SWAP(head1,head2,type,field) do { QUEUE_TYPEOF(type) *swap_first = (head1)->tqh_first; QUEUE_TYPEOF(type) **swap_last = (head1)->tqh_last; (head1)->tqh_first = (head2)->tqh_first; (head1)->tqh_last = (head2)->tqh_last; (head2)->tqh_first = swap_first; (head2)->tqh_last = swap_last; if ((swap_first = (head1)->tqh_first) != NULL) swap_first->field.tqe_prev = &(head1)->tqh_first; else (head1)->tqh_last = &(head1)->tqh_first; if ((swap_first = (head2)->tqh_first) != NULL) swap_first->field.tqe_prev = &(head2)->tqh_first; else (head2)->tqh_last = &(head2)->tqh_first; } while (0)
+#define __cpp_unicode_literals 200710L
+#define SIGXFSZ 25
+#define SIGHUP 1
+#define _REENT_SMALL_CHECK_INIT(ptr) 
+#define __glibcxx_math_special_functions 201603L
+#define __STDC_EMBED_NOT_FOUND__ 0
+#define __INT_FAST32_WIDTH__ 32
+#define NULL __null
+#define PVR_TA_PM1_CULLING_MASK (3 << PVR_TA_PM1_CULLING_SHIFT)
+#define __CHAR16_TYPE__ short unsigned int
+#define _GLIBCXX_END_EXTERN_C }
+#define _GLIBCXX_USE_INIT_PRIORITY_ATTRIBUTE 1
+#define _GLIBCXX_NAMESPACE_CXX11 __cxx11::
+#define __INT64 "ll"
+#define AT_SYMLINK_NOFOLLOW 0x0002
+#define BIG_ENDIAN _BIG_ENDIAN
+#define _GLIBCXX_HAVE_SINF 1
+#define _GLIBCXX_HAVE_SINL 1
+#define ACTOR_POS_OPERANDS : [rec] "+r"(rec), [n] "+r"(left), [dst] "+r"(d), [oc] "+r"(oc), [k] "+r"(kp), [all] "+r"(a), [any] "+r"(o) : [rs] "r"(rs), [pos] "r"(pos), [uv] "r"(uv), [pal] "r"(palette) : "r0", "r1", "r2", "r3", "fpul", "fr0", "fr1", "fr2", "fr3", "fr4", "fr5", "fr6", "fr7", "fr8", "fr9", "fr10", "fr11", "fr12", "fr13", "fr14", "fr15", "t", "memory" ACTOR_ASM_CLOBBER
+#define INIT_FS_RND 0x00000200
+#define O_ASYNC 0x0200
+#define _GLIBCXX_USE_C99_FENV_TR1 1
+#define __glibcxx_hardware_interference_size 201703L
+#define __glibcxx_constexpr_algorithms 201806L
+#define _UINT64_T_DECLARED 
+#define __UINT_LEAST32_MAX__ 0xffffffffUL
+#define _SC_LEVEL4_CACHE_LINESIZE 139
+#define __GCC_ATOMIC_LONG_LOCK_FREE 2
+#define _MACHSTDLIB_H_ 
+#define INIT_FS_RAMDISK 0x00000040
+#define PVR_TEXTURE_ENABLE 1
+#define __INT_LEAST8_TYPE__ signed char
+#define _WANT_IO_LONG_LONG 1
+#define APROF_T0(v) ((void)0)
+#define __XSTRING(x) __STRING(x)
+#define __cpp_structured_bindings 201606L
+#define RE4DC_ACTOR_FOG_GATE 1
+#define SEEK_HOLE 4
+#define TIMER_ABSTIME 4
+#define UINTMAX_C(x) __UINTMAX_C(x)
+#define __PMT(args) args
+#define KOS_INIT_ROMDISK(rd) const void *__kos_romdisk = (rd); extern void fs_romdisk_mount_builtin_legacy(void); void (*fs_romdisk_mount_builtin_legacy_weak)(void) = fs_romdisk_mount_builtin_legacy
+#define _SYS_TYPES_H 
+#define __glibcxx_format 202304L
+#define NMMGR_FLAGS_INDEV 0x00000002
+#define _STL_TEMPBUF_H 1
+#define PVR_UVFMT_32BIT 0
+#define SIGSTOP 17
+#define _SC_LEVEL3_CACHE_SIZE 134
+#define _GLIBCXX_DEBUG_ASSERT(_Condition) 
+#define _SC_THREAD_CPUTIME 80
+#define _RANGES_ALGOBASE_H 1
+#define CLOCK_MONOTONIC (4)
+#define __int8_t_defined 1
+#define _FEXCL 0x0800
+#define EI_MAG0 0
+#define EI_MAG2 2
+#define EI_MAG3 3
+#define __FLT64_HAS_QUIET_NAN__ 1
+#define _GLIBCXX_HAVE_WCTYPE_H 1
+#define RE4DC_PRELOAD_LARGE_FIRST 1
+#define __mutex_lock_scoped(m,l) ___mutex_lock_scoped(m, l)
+#define SLIST_INIT(head) do { SLIST_FIRST((head)) = NULL; } while (0)
+#define FSYNC _FSYNC
+#define RE4DC_MANUAL_PACK_PROBE 1
+#define __glibcxx_polymorphic_allocator 201902L
+#define PVR_TXRFMT_POW2_STRIDE (0 << 25)
+#define RE4DC_ACTOR_PL08 1
+#define RE4DC_NATIVE_ACTOR_FAST 1
+#define _SC_LEVEL1_DCACHE_SIZE 128
+#define __try if (true)
+#define RE4DC_D349_RENDERER_STACK 1
+#define FAPPEND _FAPPEND
+#define RE4DC_MV_RADIUS 420
+#define _SIGNAL_H_ 
+#define __builtin_align_down(x,align) ((__typeof__(x))((x)&(~((align)-1))))
+#define __BEGIN_DECLS extern "C" {
+#define __LDBL_MANT_DIG__ 53
+#define ___int_ptrdiff_t_h 
+#define S_IFSOCK _IFSOCK
+#define __LDBL_NORM_MAX__ 1.7976931348623157e+308L
+#define __END_DECLS }
+#define _GLIBCXX_HAVE_INTTYPES_H 1
+#define __FLT64_HAS_INFINITY__ 1
+#define _GLIBCXX_CSTDLIB 1
+#define RE4DC_UI_OVERLAY_SLAB_KB 24
+#define __cpp_template_template_args 201611L
+#define TAILQ_FOREACH_REVERSE_SAFE(var,head,headname,field,tvar) for ((var) = TAILQ_LAST((head), headname); (var) && ((tvar) = TAILQ_PREV((var), headname, field), 1); (var) = (tvar))
+#define KOS_IMG_FMT_ARGB8888 0x02
+#define RE4DC_UI_FRAG_WINDOW 3
+#define __GNUC_VA_LIST 
+#define __SIG_ATOMIC_MIN__ (-__SIG_ATOMIC_MAX__ - 1)
+#define __cpp_nontype_template_args 201911L
+#define STAT_TYPE_NONE 0
+#define TAILQ_INSERT_HEAD(head,elm,field) do { QMD_TAILQ_CHECK_HEAD(head, field); if ((TAILQ_NEXT((elm), field) = TAILQ_FIRST((head))) != NULL) TAILQ_FIRST((head))->field.tqe_prev = &TAILQ_NEXT((elm), field); else (head)->tqh_last = &TAILQ_NEXT((elm), field); TAILQ_FIRST((head)) = (elm); (elm)->field.tqe_prev = &TAILQ_FIRST((head)); QMD_TRACE_HEAD(head); QMD_TRACE_ELEM(&(elm)->field); } while (0)
+#define __cpp_return_type_deduction 201304L
+#define __glibcxx_scoped_lock 201703L
+#define __UINT16_TYPE__ short unsigned int
+#define _GLIBCXX_HAVE_BUILTIN_IS_AGGREGATE 1
+#define __KOS_FPARG_4_0 "fr9"
+#define __KOS_FPARG_4_1 "fr8"
+#define _REENT_CHECK_SIGNAL_BUF(ptr) 
+#define S_IEXEC 0000100
+#define MEM_AREA_ITLB_DATA_ARRAY2_BASE 0xf3800000
+#define PVR_TA_PM3_MIPMAP BIT(31)
+#define __UINTPTR_MAX__ 0xffffffffU
+#define __sh__ 1
+#define __INT_FAST64_WIDTH__ 64
+#define SIGALRM 14
+#define _SC_CLOCK_SELECTION 61
+#define SI_ASYNCIO 4
+#define __NEWLIB_H__ 1
+#define _GLIBCXX_TR1_BETA_FUNCTION_TCC 1
+#define __GNUCLIKE_MATH_BUILTIN_CONSTANTS 
+#define KOS_IMG_FMT_MASK 0xff
+#define __GCC_ATOMIC_TEST_AND_SET_TRUEVAL 128
+#define NMMGR_FLAGS_NEEDSFREE 0x00000001
+#define __FLT_DIG__ 6
+#define __FLT_NORM_MAX__ 3.4028234663852886e+38F
+#define __FLT32_HAS_INFINITY__ 1
+#define _GLIBCXX_CONSTEXPR constexpr
+#define _POSIX_MONOTONIC_CLOCK 200809L
+#define TAILQ_CONCAT(head1,head2,field) do { if (!TAILQ_EMPTY(head2)) { *(head1)->tqh_last = (head2)->tqh_first; (head2)->tqh_first->field.tqe_prev = (head1)->tqh_last; (head1)->tqh_last = (head2)->tqh_last; TAILQ_INIT((head2)); QMD_TRACE_HEAD(head1); QMD_TRACE_HEAD(head2); } } while (0)
+#define __UINT_FAST64_TYPE__ long long unsigned int
+#define __glibcxx_class_requires(_a,_b) 
+#define __cpp_constexpr_in_decltype 201711L
+#define _REENT_INIT_RESERVED_0 
+#define _GLIBCXX_FORWARD(_Tp,__val) std::forward<_Tp>(__val)
+#define STDIN_FILENO 0
+#define _GLIBCXX_HAVE_MEMORY_H 1
+#define __INT_MAX__ 0x7fffffff
+#define S_IXUSR 0000100
+#define _READ_WRITE_RETURN_TYPE int
+#define S_IWOTH 0000002
+#define F_OFD_SETLKW 17
+#define PVR_TA_CMD_MODIFIERMODE_SHIFT 6
+#define _FWRITE 0x0002
+#define ACTOR_POS_CHECK "mov.w   @(6,r1),r0\n\t" "cmp/eq  %[pal],r0\n\t" "bf      9f\n\t"
+#define _GCC_SIZE_T 
+#define _GLIBCXX_USE_NANOSLEEP 1
+#define F_RSETLKW 13
+#define _T_SIZE_ 
+#define mat_trans_single3_nodiv_div(x,y,z,xd,yd,zd) { register float __x __asm__("fr0") = (x); register float __y __asm__("fr1") = (y); register float __z __asm__("fr2") = (z); register float __xd __asm__("fr4"); register float __yd __asm__("fr5"); register float __zd __asm__("fr6"); __asm__ __volatile__( "fldi1 fr3\n" "ftrv  xmtrx, fv0\n" "fmov  fr0, fr4\n" "fmov  fr1, fr5\n" "fmov  fr3, fr7\n" "fldi1 fr6\n" "fdiv    fr7, fr6\n" "fmul    fr6, fr4\n" "fmul    fr6, fr5\n" : "=f" (__x), "=f" (__y), "=f" (__z), "=f" (__xd), "=f" (__yd), "=f" (__zd) : "0" (__x), "1" (__y), "2" (__z) : "fr3" ); x = __x; y = __y; z = __z; xd = __xd; yd = __yd; zd = __zd; }
+#define UINT_FAST8_MAX (__UINT_FAST8_MAX__)
+#define _PSTL_VERSION 17000
+#define SHT_DYNAMIC 6
+#define __alloc_align(x) __attribute__((__alloc_align__(x)))
+#define __u_short_defined 
+#define __ATFILE_VISIBLE 1
+#define PVR_BLEND_DISABLE 0
+#define __INT64_TYPE__ long long int
+#define __array_size(arr) (sizeof(arr) / sizeof((arr)[0]) + _array_size_chk(arr))
+#define CLOCK_PROCESS_CPUTIME_ID (2)
+#define RE4DC_ACTOR_LOG 0
+#define _REENT_SIG_FUNC(_ptr) ((_ptr)->_sig_func)
+#define RE4DC_MV_MAX 12
+#define __glibcxx_to_array 201907L
+#define _SC_AIO_PRIO_DELTA_MAX 36
+#define __glibcxx_integral_traps true
+#define LIST_ENTRY(type) struct { struct type *le_next; struct type **le_prev; }
+#define FOPEN _FOPEN
+#define _SC_PHYS_PAGES 11
+#define _SC_ADVISORY_INFO 54
+#define __strong_reference(sym,aliassym) extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
+#define S_IRGRP 0000040
+#define UINT32_C(x) __UINT32_C(x)
+#define __INT_FAST64_TYPE__ long long int
+#define __glibcxx_requires_can_increment_range(_First1,_Last1,_First2) 
+#define __DBL_MAX__ double(1.7976931348623157e+308L)
+#define RE4DC_ACTOR_PLAN 1
+#define PVR_SPECULAR_ENABLE 1
+#define _SYS_TIMESPEC_H_ 
+#define __ATTRIBUTE_IMPURE_PTR__ 
+#define PVR_TA_CMD_UVFMT BIT(0)
+#define PVR_TA_PM2_SRCENABLE_MASK (1 << PVR_TA_PM2_SRCENABLE_SHIFT)
+#define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2
+#define O_TRUNC _FTRUNC
+#define SH4_REG_UBC_BRCR 0xff200020
+#define INT_FAST32_MIN (-__INT_FAST32_MAX__ - 1)
+#define RE4DC_ACTOR_EXACT_FAST 1
+#define __WINT_TYPE__ unsigned int
+#define _FNOINHERIT 0x40000
+#define __SIZEOF_SHORT__ 2
+#define STDOUT_FILENO 1
+#define RE4DC_MODEL_SLAB_LATCH 1
+#define __glibcxx_to_chars 201611L
+#define __glibcxx_constexpr_iterator 201811L
+#define _SC_AVPHYS_PAGES 12
+#define __KOS_INIT_BASE_H 
+#define EI_MAG1 1
+#define _REENT_IS_NULL(_ptr) ((_ptr) == NULL)
+#define QMD_TAILQ_CHECK_PREV(elm,field) 
+#define __FLT64_MAX__ 1.7976931348623157e+308F64
+#define _GLIBCXX_NOEXCEPT_PARM , bool _NE
+#define STAILQ_EMPTY(head) ((head)->stqh_first == NULL)
+#define _NEW 
+#define PVR_TA_PM2_SRCBLEND GENMASK(31, 29)
+#define __fcos(x) ({ float __value, __arg = (x), __scale = 10430.37835f; __asm__("fmul   %2,%1\n\t" "ftrc   %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fmov   fr1,%0" : "=f" (__value), "+&f" (__scale) : "f" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define __sym_compat(sym,impl,verid) __asm__(".symver " #impl ", " #sym "@" #verid)
+#define EOF (-1)
+#define S_ISREG(m) (((m)&_IFMT) == _IFREG)
+#define SLIST_CLASS_ENTRY(type) struct { class type *sle_next; }
+#define _GLIBCXX_HAVE_LOG10F 1
+#define _GLIBCXX_HAVE_LOG10L 1
+#define SIGTSTP 18
+#define INIT_FS_DEV (INIT_FS_NULL | INIT_FS_RND)
+#define _GLIBCXX_HAVE_LOGF 1
+#define _GLIBCXX_TYPE_TRAITS 1
+#define __glibcxx_tuples_by_type 201304L
+#define __glibcxx_shared_mutex 201505L
+#define __LDBL_MAX_10_EXP__ 308
+#define SHT_PROGBITS 1
+#define _PSTL_PRAGMA_MESSAGE_POLICIES(x) 
+#define __lock_init(lock) __newlib_lock_init(&(lock))
+#define __sym_default(sym,impl,verid) __asm__(".symver " #impl ", " #sym "@@" #verid)
+#define PVR_TA_CMD_MODIFIER_SHIFT 7
+#define SLIST_REMOVE_AFTER(elm,field) do { SLIST_NEXT(elm, field) = SLIST_NEXT(SLIST_NEXT(elm, field), field); } while (0)
+#define _GLIBCXX11_DEPRECATED _GLIBCXX_DEPRECATED
+#define INT_LEAST16_MAX (__INT_LEAST16_MAX__)
+#define RE4DC_RES_MODES 9
+#define FREAD _FREAD
+#define __INT_LEAST32_TYPE__ long int
+#define SLIST_FOREACH(var,head,field) for ((var) = SLIST_FIRST((head)); (var); (var) = SLIST_NEXT((var), field))
+#define _SC_REGEXP 72
+#define __wchar_t__ 
+#define UINT32_MAX (__UINT32_MAX__)
+#define SEEK_END 2
+#define __SIZEOF_WCHAR_T__ 4
+#define _GLIBCXX_USE_TBB_PAR_BACKEND __has_include(<tbb/tbb.h>)
+#define PXF_SPAN(fld,t) do { } while (0)
+#define COND_INITIALIZER { 0 }
+#define _STDALIGN_H 
+#define __UINT_FAST32_MAX__ 0xffffffffU
+#define ELF32_R_TYPE(i) ((uint8_t)(i))
+#define _PSTL_USE_NONTEMPORAL_STORES_IF_ALLOWED 
+#define _GLIBCXX_STD_C std
+#define __glibcxx_string_udls 201304L
+#define _REENT_STDOUT(_ptr) ((_ptr)->_stdout)
+#define __returns_twice __attribute__((__returns_twice__))
+#define _GLIBCXX_USE_C99_STDINT_TR1 1
+#define _STDDEF_H_ 
+#define _SC_MEMORY_PROTECTION 26
+#define RE4DC_NATIVE_ACTOR_SKIN_LAZY 1
+#define ___int_least8_t_defined 1
+#define ACTOR_ASM_FIPR(a) "fipr    " a ",fv4\n\t"
+#define _SC_LOGIN_NAME_MAX 52
+#define _EXCEPTION_DEFINES_H 1
+#define PVR_TA_PM2_UVCLAMP_SHIFT 15
+#define __LONG_MAX__ 0x7fffffffL
+#define _GLIBCXX_STDIO_SEEK_END 2
+#define __UINT_LEAST64_TYPE__ long long unsigned int
+#define __fastcall __attribute__((__fastcall__))
+#define _SC_TIMERS 33
+#define ELF32_ST_TYPE(info) ((info) & 0xf)
+#define __KOS_INIT_FLAGS(flags,cp) __KOS_INIT_FLAGS_ ##cp(flags)
+#define _GLIBCXX26_CONSTEXPR 
+#define _GLIBCXX_HAVE_TANF 1
+#define PVR_MODIFIER_DISABLE 0
+#define _SYS_FCNTL_H_ 
+#define _GLIBCXX_TR1_GAMMA_TCC 1
+#define __DEQUALIFY(type,var) ((type)(__uintptr_t)(const volatile void *)(var))
+#define _GLIBCXX_HAVE_STDLIB_H 1
+#define __LDBL_HAS_INFINITY__ 1
+#define NMMGR_TYPE_SYMTAB 0x0040
+#define PVR_TA_CMD_MODIFIERMODE BIT(6)
+#define AT_REMOVEDIR 0x0008
+#define __glibcxx_requires_sorted(_First,_Last) 
+#define __SWR 0x0008
+#define SIGLOST 29
+#define ELFDATANONE 0
+#define PVR_RESET_ISPTSP 0x00000002
+#define ___mutex_lock_scoped(m,l) mutex_t *__scoped_mutex_ ##l __attribute__((cleanup(__mutex_scoped_cleanup))) = mutex_lock(m) ? NULL : (m)
+#define R_OK 4
+#define __packed __attribute__((__packed__))
+#define __STDC_UTF_32__ 1
+#define __INT_FAST8_WIDTH__ 32
+#define SHT_HASH 5
+#define SHN_UNDEF 0
+#define _REENT_L64A_BUF(ptr) ((ptr)->_new._reent._l64a_buf)
+#define CLOCKS_PER_SEC _CLOCKS_PER_SEC_
+#define __FLT32X_MAX__ 1.7976931348623157e+308F32x
+#define _FNBIO 0x1000
+#define _GLIBCXX_FAST_MATH 0
+#define __glibcxx_class_requires2(_a,_b,_c) 
+#define __glibcxx_class_requires4(_a,_b,_c,_d,_e) 
+#define FOPEN_MAX 20
+#define KOS_INIT_ROMDISK_NONE NULL
+#define _GLIBCXX_USE_C99_COMPLEX_ARC 1
+#define __fallthrough __attribute__((__fallthrough__))
+#define __GCC_DESTRUCTIVE_SIZE 32
+#define _SC_LEVEL1_DCACHE_ASSOC 129
+#define _PSTL_CPP14_2RANGE_MISMATCH_EQUAL_PRESENT 
+#define _STRING_H_ 
+#define __GCC_CONSTRUCTIVE_SIZE 32
+#define __glibcxx_constexpr_utility 201811L
+#define __cpp_lib_shift 201806L
+#define __cpp_runtime_arrays 198712L
+#define _NULL 0
+#define __cpp_namespace_attributes 201411L
+#define __glibcxx_semaphore 201907L
+#define __INTMAX_MAX__ 0x7fffffffffffffffLL
+#define _GLIBCXX_BITS_UNIFORM_INT_DIST_H 
+#define _STL_ITERATOR_H 1
+#define __GNUCLIKE_BUILTIN_VAALIST 1
+#define __size_t__ 
+#define __FLT64_DENORM_MIN__ 4.9406564584124654e-324F64
+#define __DECONST(type,var) ((type)(__uintptr_t)(const void *)(var))
+#define __glibcxx_gcd 201606L
+#define PXF_EXIT(e) do { } while (0)
+#define __FLT_DENORM_MIN__ 1.4012984643248171e-45F
+#define _RAND48_SEED_1 (0xabcd)
+#define _stderr_r(x) _REENT_STDERR(x)
+#define __DC_PVR_PVR_PALETTE_H 
+#define _SC_SYNCHRONIZED_IO 32
+#define UINTMAX_MAX (__UINTMAX_MAX__)
+#define PVR_TEXTURE_DISABLE 0
+#define __cpp_lib_char8_t 201907L
+#define _SC_LEVEL4_CACHE_ASSOC 138
+#define STAT_TYPE_META 4
+#define _SC_XOPEN_SHM 103
+#define __LONG_WIDTH__ 32
+#define O_SEARCH _FEXECSRCH
+#define PVR_TA_PM2_VSIZE_MASK (7 << PVR_TA_PM2_VSIZE_SHIFT)
+#define _UINTPTR_T_DECLARED 
+#define PVR_SET(REG,VALUE) PVR_GET(REG) = (VALUE)
+#define SIG_ERR ((_sig_func_ptr)-1)
+#define _HAVE_CC_INHIBIT_LOOP_TO_LIBCALL 1
+#define KOS_INIT_EARLY(func) void (*__kos_init_early_fn)(void) = (func)
+#define PVR_TA_PM1_CULLING GENMASK(28, 27)
+#define RE4DC_COARSE_GATE_ONCE 1
+#define _GLIBCXX_HAVE_FLOAT_H 1
+#define __CHAR32_TYPE__ long unsigned int
+#define __is_aligned(x,y) __builtin_is_aligned(x, y)
+#define __FAST16 
+#define __exported __attribute__((__visibility__("default")))
+#define PVR_TXRLOAD_16BPP 0x03
+#define UINT_LEAST32_MAX (__UINT_LEAST32_MAX__)
+#define __cpp_constexpr 202002L
+#define __fisin(x) ({ float __value, __arg = (x); __asm__("lds    %1,fpul\n\t" "fsca   fpul,dr0\n\t" "fmov   fr0,%0" : "=f" (__value) : "r" (__arg) : "fpul", "fr0", "fr1"); __value; })
+#define KOS_IMG_FMT(i,d) ( ((i) & 0xffff) | (((d) & 0xffff) << 16) )
+#define _SC_SPAWN 75
+#define PVR_CMD_POLYHDR 0x80840000
+#define RE4DC_WARP_LATE(bits) 0u
+#define INIT_IRQ 0x00000001
+#define SLIST_ENTRY(type) struct { struct type *sle_next; }
+#define M_1_PI 0.31830988618379067154
+#define PVR_TA_CMD_TYPE GENMASK(26, 24)
+#define _GLIBCXX_CMATH 1
+#define __FAST32 
+#define __alignas_is_defined 1
+#define PAGESIZE 4096
+#define SH4_REG_MMU_TEA 0xff00000c
+#define _GLIBCXX_HAVE_SYS_TYPES_H 1
+#define PVR_TA_PM3_TXRFMT_SHIFT 0
+#define __PTHREAD_HAVE_COND_TYPE 1
+#define _GLIBCXX_HAVE_C99_FLT_EVAL_TYPES 1
+#define RE4DC_ACTOR_LOD_WORKSPACE (160U * 1024U)
+#define __FLT_MIN_10_EXP__ (-37)
+#define __time_t_defined 
+#define page_phys_base 0x8c010000
+#define __FLT64_MIN__ 2.2250738585072014e-308F64
+#define LIST_FIRST(head) ((head)->lh_first)
+#define RE4DC_PLAN_ADMIT_LEAN 1
+#define AT_EACCESS 0x0001
+#define __INTMAX_TYPE__ long long int
+#define _GLIBCXX11_USE_C99_MATH 1
+#define TAILQ_LAST(head,headname) (*(((struct headname *)((head)->tqh_last))->tqh_last))
+#define _REENT_MBTOWC_STATE(ptr) ((ptr)->_new._reent._mbtowc_state)
+#define SIGINT 2
+#define O_DIRECTORY _FDIRECTORY
+#define __FAST64 "ll"
+#define MUTEX_TYPE_DESTROYED 4
+#define _SC_V6_LPBIG_OFFBIG _SC_V7_LPBIG_OFFBIG
+#define _FDIRECTORY 0x200000
+#define RE4DC_ACTOR_VTX_KERNEL 1
+#define RE4DC_UI_FRAG_LATCH 1
+#define M_LN2 _M_LN2
+#define SIGIOT 6
+#define _PSTL_PRAGMA_SIMD_EXCLUSIVE_SCAN(PRM) _PSTL_PRAGMA(omp scan exclusive(PRM))
+#define _GLIBCXX_HAVE_ACOSL 1
+#define S_IXGRP 0000010
+#define _GLIBCXX_CSTRING 1
+#define __ATOMIC_CONSUME 1
+#define KOS_IMG_FMT_NONE 0x00
+#define PVR_RENDER_MODULO 0x004c
+#define ARCH_ELFCLASS ELFCLASS32
+#define INIT_DEFAULT (INIT_IRQ | INIT_THD_PREEMPT | INIT_FS_ALL | INIT_DEFAULT_ARCH)
+#define KOS_IMG_FMT_D(x) (((x) >> 16) & 0xffff)
+#define _SC_LEVEL1_ICACHE_LINESIZE 127
+#define KOS_IMG_FMT_I(x) ((x) & 0xffff)
+#define LITTLE_ENDIAN _LITTLE_ENDIAN
+#define _FSBLKCNT_T_DECLARED 
+#define INTMAX_C(x) __INTMAX_C(x)
+#define HW_REGION_US 0x4
+#define _PSTL_STRING(x) _PSTL_STRING_AUX(x)
+#define _GTHREAD_USE_MUTEX_TIMEDLOCK 1
+#define _STDINT_H 
+#define __FILE_defined 
+#define S_IFIFO _IFIFO
+#define SHF_GROUP BIT(9)
+#define _GLIBCXX_HAVE_SYS_RESOURCE_H 1
+#define PVR_TA_PM2_UVFLIP GENMASK(18, 17)
+#define CLOCK_DISALLOWED 0
+#define SI_TIMER 3
+#define __attribute_malloc__ 
+#define PAGESIZE_BITS 12
+#define __sgetc_r(__ptr,__p) __sgetc_raw_r(__ptr, __p)
+#define _GLIBCXX_END_NAMESPACE_CONTAINER 
+#define _GLIBCXX20_CONSTEXPR constexpr
+#define __KOS_TIME_H 
+#define __clockid_t_defined 
+#define RE4DC_BFC_SCOPE(c,id) do {} while (0)
+#define _GLIBCXX_BEGIN_NAMESPACE_LDBL 
+#define __ATOMIC_SEQ_CST 5
+#define __SYS_PTHREADTYPES_H 
+#define _USECONDS_T_DECLARED 
+#define __glibcxx_span 202002L
+#define PVR_RAM_SIZE (PVR_RAM_SIZE_MB*1024*1024)
+#define _SIZE_T_DEFINED_ 
+#define F_SETFD 2
+#define __EXCEPTION_H 1
+#define __UINT32_TYPE__ long unsigned int
+#define __FLT32X_MIN_10_EXP__ (-307)
+#define M_SQRT3 1.73205080756887719000
+#define TAILQ_REMOVE(head,elm,field) do { QMD_SAVELINK(oldnext, (elm)->field.tqe_next); QMD_SAVELINK(oldprev, (elm)->field.tqe_prev); QMD_TAILQ_CHECK_NEXT(elm, field); QMD_TAILQ_CHECK_PREV(elm, field); if ((TAILQ_NEXT((elm), field)) != NULL) TAILQ_NEXT((elm), field)->field.tqe_prev = (elm)->field.tqe_prev; else { (head)->tqh_last = (elm)->field.tqe_prev; QMD_TRACE_HEAD(head); } *(elm)->field.tqe_prev = TAILQ_NEXT((elm), field); TRASHIT(*oldnext); TRASHIT(*oldprev); QMD_TRACE_ELEM(&(elm)->field); } while (0)
+#define ARCH_NAME "Dreamcast"
+#define SIGTERM 15
+#define __int_fast64_t_defined 1
+#define MUTEX_INITIALIZER { MUTEX_TYPE_NORMAL, NULL, 0 }
+#define _GLIBCXX_THROW_OR_ABORT(_EXC) (__builtin_abort(), (void)(_EXC))
+#define __nonnull_all __attribute__((__nonnull__))
+#define _FSYNC 0x2000
+#define __STDC_VERSION_TIME_H__ 202311L
+#define __lock_close(lock) __newlib_lock_close(&(lock))
+#define __PTHREAD_HAVE_BARRIER_TYPE 1
+#define RE4DC_ACTOR_MATERIALS 4
+#define _GLIBCXX_BEGIN_INLINE_ABI_NAMESPACE(X) inline namespace X {
+#define __GNUCLIKE_CTOR_SECTION_HANDLING 1
+#define __cpp_lib_math_constants 201907L
+#define __cpp_lib_parallel_algorithm 201603L
+#define _GLIBCXX_USE_FSEEKO_FTELLO 1
+#define __SIZEOF_LONG_LONG__ 8
+#define _GLIBCXX_HAVE_ASINF 1
+#define _GLIBCXX_HAVE_ASINL 1
+#define _GCC_PTRDIFF_T 
+#define SHT_NOTE 7
+#define __glibcxx_atomic_lock_free_type_aliases 201907L
+#define _IN_ADDR_T_DECLARED 
+#define SIGWINCH 28
+#define QMD_TRACE_HEAD(head) 
+#define __LDBL_DIG__ 15
+#define STAILQ_CLASS_HEAD(name,type) struct name { class type *stqh_first; class type **stqh_last; }
+#define __UINT_FAST16_MAX__ 0xffffffffU
+#define S_IROTH 0000004
+#define va_copy(d,s) __builtin_va_copy(d,s)
+#define _GLIBCXX_PACKAGE_STRING "package-unused version-unused"
+#define _NLINK_T_DECLARED 
+#define __GCC_ATOMIC_SHORT_LOCK_FREE 2
+#define RE4DC_PVR_READY_STRICT 1
+#define PVR_TA_PM2_VSIZE_SHIFT 0
+#define _REENT_INIT_RESERVED_1 
+#define __glibcxx_requires_partitioned_lower_pred(_First,_Last,_Value,_Pred) 
+#define _GLIBCXX_HAVE_UNISTD_H 1
+#define RE4DC_SCENERY_GATE 1
+#define LIST_HEAD_INITIALIZER(head) { NULL }
+#define RE4DC_AVK_RIGID6 1
+#define __fsincosr(r,s,c) ({ register float __r __asm__("fr10") = r; register float __a __asm__("fr11") = 10430.37835f; __asm__("fmul fr11, fr10\n\t" "ftrc fr10, fpul\n\t" "fsca fpul, dr10\n\t" : "+f" (__r), "+f" (__a) : "0" (__r), "1" (__a) : "fpul"); s = __r; c = __a; })
+#define __WCHAR_T 
+#define RE4DC_OT_MASK 1
+#define PVR_TA_OPB_POS 0x0134
+#define X_OK 1

@@ -1,0 +1,38 @@
+00000000 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>:
+   0:	86 2f       	mov.l	r8,@-r15
+   2:	53 68       	mov	r5,r8
+   4:	1a 91       	mov.w	3c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x3c>,r1	! 104
+   6:	22 4f       	sts.l	pr,@-r15
+   8:	18 3f       	sub	r1,r15
+   a:	02 e1       	mov	#2,r1
+   c:	16 35       	cmp/hi	r1,r5
+   e:	13 8f       	bf.s	38 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x38>
+  10:	62 2f       	mov.l	r6,@r15
+  12:	0b d0       	mov.l	40 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x40>,r0	! 0 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>
+  14:	53 66       	mov	r5,r6
+  16:	43 65       	mov	r4,r5
+  18:	f3 64       	mov	r15,r4
+  1a:	0b 40       	jsr	@r0
+  1c:	04 74       	add	#4,r4
+  1e:	f2 61       	mov.l	@r15,r1
+  20:	f3 65       	mov	r15,r5
+  22:	83 66       	mov	r8,r6
+  24:	12 64       	mov.l	@r1,r4
+  26:	07 d1       	mov.l	44 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x44>,r1	! 0 <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0>
+  28:	0b 41       	jsr	@r1
+  2a:	04 75       	add	#4,r5
+  2c:	83 60       	mov	r8,r0
+  2e:	05 97       	mov.w	3c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x3c>,r7	! 104
+  30:	7c 3f       	add	r7,r15
+  32:	26 4f       	lds.l	@r15+,pr
+  34:	0b 00       	rts
+  36:	f6 68       	mov.l	@r15+,r8
+  38:	f8 af       	bra	2c <__ZN5re4dc2bf5stripIZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjEUlS5_jE_EEjPK10pvr_vertexS5_jjjOT_.constprop.0+0x2c>
+  3a:	00 e8       	mov	#0,r8
+  3c:	04 01       	mov.b	r0,@(r0,r1)
+  3e:	09 00       	nop
+	...
+			40: R_SH_DIR32	_memcpy
+			44: R_SH_DIR32	.text._ZZN12_GLOBAL__N_18MeshDraw7bf_sendEPKhjENKUlS2_jE_clES2_j.isra.0
+
+Disassembly of section .text._ZN12_GLOBAL__N_18MeshDraw12chunk_selectEPNS0_4PickE:

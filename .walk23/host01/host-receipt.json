@@ -1,0 +1,61 @@
+{
+  "base": "a2477bd2b4d2dc5354fe1bbcc5b5c6b45312928f",
+  "header_sha256": "83bbb685329e1c15aa4938690acbfc26fbb7f853e9d9a612cad0c01ff27200a2",
+  "native_static_sha256": "0fb8692e623138d8422ed314f1a16ab04db90d5b21f24229d312cbfb114f7fed",
+  "extracted_send_sha256": "240b0e70cefe78b073ff05a90ef9d1f2f25278e12ba91e41ef26e651142f6ca3",
+  "extracted_walk_sha256": "af86acf8a42de416a81fbde758211f914bc45cbf97fc38d2ce8300ef4aba282c",
+  "strip_cases": 1024,
+  "nonfinite_keep_all_cases": 1,
+  "caller_cases": 701,
+  "default_preprocessed_template_identical": true,
+  "commands": [
+    [
+      "g++",
+      "-std=c++20",
+      "-O2",
+      "-shared",
+      "-fPIC",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-I/root/probe/codex-backface-walk23/.walk23/host01",
+      "-I/root/probe/codex-backface-walk23/.walk23/host01/original",
+      "/root/probe/codex-backface-walk23/.walk23/host01/wrapper.cpp",
+      "-o",
+      "/root/probe/codex-backface-walk23/.walk23/host01/original.so"
+    ],
+    [
+      "g++",
+      "-std=c++20",
+      "-O2",
+      "-shared",
+      "-fPIC",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-I/root/probe/codex-backface-walk23/.walk23/host01",
+      "-I/root/probe/codex-backface-walk23/port/dreamcast/room",
+      "/root/probe/codex-backface-walk23/.walk23/host01/wrapper.cpp",
+      "-o",
+      "/root/probe/codex-backface-walk23/.walk23/host01/probe0.so"
+    ],
+    [
+      "g++",
+      "-std=c++20",
+      "-O2",
+      "-shared",
+      "-fPIC",
+      "-fno-fast-math",
+      "-ffp-contract=off",
+      "-I/root/probe/codex-backface-walk23/.walk23/host01",
+      "-I/root/probe/codex-backface-walk23/port/dreamcast/room",
+      "-DRE4DC_BACKFACE_KEEP_ALL=1",
+      "/root/probe/codex-backface-walk23/.walk23/host01/wrapper.cpp",
+      "-o",
+      "/root/probe/codex-backface-walk23/.walk23/host01/keepall.so"
+    ]
+  ],
+  "limits": [
+    "Host-only exact words/order and original-header equivalence; no target-FMAC or hardware claim.",
+    "Actual C caller extracted verbatim; codes and SQ copying use portable faithful stubs. Clip continuation is observed, not a host build of the real clipper.",
+    "n0/1/2 tested only at bf::strip entry; caller stream format requires n>=3. Oversize means n>limit, not count>255."
+  ]
+}
