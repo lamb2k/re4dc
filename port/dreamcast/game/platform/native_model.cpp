@@ -1,3 +1,11 @@
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
+#define DFA26_MODEL_SLOW(reason, n, ...) { DFA26_MODEL_HIT(reason, n) __VA_ARGS__ }
+#else
+#define DFA26_MODEL_HIT(reason, n)
+#define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "include/draw_setup_audit.h"
 #endif
@@ -344,6 +352,9 @@ struct Builder {
 #endif
 #endif
         {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            DFA26_MODEL_HIT(ModelPositionMiss, 1)
+#endif
             const unsigned char* pos=p.positions+vi*p.position_stride;
             const float a=s16(pos)*scale,b=s16(pos+2)*scale,c=s16(pos+4)*scale;
 #if RE4DC_D349_RENDERER_STACK && defined(__sh__)
@@ -393,6 +404,9 @@ struct Builder {
                 shade_serial=batch->shade_generation;shared_hit=shared_shade->serial==shade_serial;}
             float* rgb=shared_shade?shared_shade->rgb:legacy_shade.rgb;
             if(shared_shade?!shared_hit:(legacy_shade.position!=vi || legacy_shade.normal!=ni || legacy_shade.color!=ci)){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ModelShadeMiss, 1)
+#endif
                 bool normal_hit=false;NormalSlot* shared_normal=nullptr;unsigned normal_serial=0;
                 if(retained){shared_normal=&retained->normal;normal_serial=batch->retained_normal_generation;}
                 else if(dense_normal){shared_normal=&batch->normals[local_normal];normal_serial=batch->normal_generation;}
@@ -424,6 +438,9 @@ struct Builder {
                    value->normal==ni && value->color==color_value){
                     rgb[0]=value->rgb[0];rgb[1]=value->rgb[1];rgb[2]=value->rgb[2];++work_stats.static_light_hits;
                 }else {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ModelStaticShadeMiss, 1)
+#endif
                 re4dc::reuse_audit::light();
                 re4dc::render::evaluate_prepared_source_lighting(
                     v.position.world_x,v.position.world_y,v.position.world_z,nx,ny,nz,
@@ -456,6 +473,9 @@ struct Builder {
         pvr_vertex_t out[6];++input;
         const auto crossing=[&](const re4dc::render::RenderVertex& v){return v.position.depth<clip.near_distance || v.position.depth>clip.far_distance;};
         if(crossing(in[0]) || crossing(in[1]) || crossing(in[2]))++work_stats.clipped_triangles;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ModelClipTriangle, 1)
+#endif
         unsigned count=re4dc::render::clip_projected_triangle(in,out,p.cull,clip,nullptr,opacity);
         if(!count)++work_stats.culled_triangles;
         for(unsigned i=0;i<count;++i)if(!append_triangle(out+i*3))return false;
@@ -505,12 +525,12 @@ struct Builder {
 #if RE4DC_D349_RENDERER_STACK
         // Historical direct path: qualify in the final private packet range,
         // then publish the original strip. PVR headers own facing/culling.
-        if(count>packet.capacity)return 0;
+        if(count>packet.capacity)DFA26_MODEL_SLOW(ModelStripCapacity, 1, return 0;)
         if(count>packet.capacity-used){if(!streaming || !flush())return -1;}
         auto* prepared=(pvr_vertex_t*)packet.vertices+used;
 #else
         const unsigned worst=3*(count-2);
-        if(count+worst>packet.capacity-used)return 0;
+        if(count+worst>packet.capacity-used)DFA26_MODEL_SLOW(ModelStripCapacity, 1, return 0;)
         auto* prepared=(pvr_vertex_t*)packet.vertices+packet.capacity-count;
 #endif
         unsigned outside=15;
@@ -539,7 +559,7 @@ struct Builder {
                      v.u,v.v,(alpha<<24)|rgb,v.offset_color};
                 return true;
             });
-        if(!ready){++work_stats.room_strip_fallbacks;RE4DC_PROFILE_COUNT(StripClipFallbacks,1);return 0;}
+        if(!ready){DFA26_MODEL_HIT(ModelStripClip, 1)++work_stats.room_strip_fallbacks;RE4DC_PROFILE_COUNT(StripClipFallbacks,1);return 0;}
         ++work_stats.room_prepared_strips;work_stats.room_prepared_corners+=count;
 #if RE4DC_D349_RENDERER_STACK
         input+=count-2;
@@ -859,6 +879,9 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     }
 #endif
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT && !RE4DC_NATIVE_ACTOR_FAST
+    if(p && !p->static_geometry)re4dc::dfa26::hit(re4dc::dfa26::ModelOldActor);
+#endif
     if(p && !p->static_geometry && re4dc_actor_submit(p))return;
 #endif
 #if RE4DC_KOS_HEAP_CHECK
@@ -949,7 +972,10 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // mode each bounded chunk is consumed once by the existing native owner;
     // no whole-scene copy and no repeated deformation/preparation pass.
     b.streaming=re4dc_model_packet_streaming()!=0;
-    if(!re4dc_model_packet_reserve(p,&b.packet)){re4dc_model_result(2,0,0);return;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!b.streaming)re4dc::dfa26::hit(re4dc::dfa26::ModelNonStreaming);
+#endif
+    if(!re4dc_model_packet_reserve(p,&b.packet)){DFA26_MODEL_HIT(ModelPacketFail, 1)re4dc_model_result(2,0,0);return;}
     const re4dc::render::NativeDrawPlan* plan=nullptr;
 #if RE4DC_MODEL_DRAW_PLANS
     int invalid=0;
@@ -968,22 +994,34 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         if(!ram(p->uv,(plan->max_uv+1)*4) ||
            (((p->alpha_state&256) || (p->lighting && (p->lighting->ambient_vertex || p->lighting->material_vertex))) && !ram(p->colors,(plan->max_color+1)*4))){re4dc_model_result(1,0,0);return;}
     }else {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ModelPlanMiss, 1)
+#endif
         ++work_stats.unprepared_parts;PP_PATH(4);
         if(!b.walk(false)){re4dc_model_result(1,0,0);return;}
     }
 #if RE4DC_D349_RENDERER_STACK
     if(re4dc_model_defer_part(p))return;
     b.batch=acquire_batch(*p);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!b.batch)re4dc::dfa26::hit(re4dc::dfa26::ModelBatchMiss);
+#endif
     if(!b.batch && p->lighting)b.lights=re4dc::render::prepare_actor_lights(*p->lighting);
     b.static_context=b.batch?nullptr:prepare_room_static_lighting(*p);
 #endif
 #if RE4DC_NATIVE_REUSE_AUDIT && RE4DC_D349_RENDERER_STACK
     re4dc::reuse_audit::Scope reuse_audit(*p,plan,b.bounds,b.packet,p->lighting?(b.batch?b.batch->lights.count:b.lights.count):0);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ModelLegacy, 1)
+#endif
     const auto emit=[&](){return plan?b.walk_plan(*plan):b.walk(true);};
     bool okay=emit();
     if(okay && b.used)okay=b.bind();
     if(!okay && b.restart_uv){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ModelUvReplay, 1)
+#endif
         // First binding precedes every publication. Restart only for a verified
         // alternate UV scale, retaining the already selected native texture.
         b.restart_uv=false;b.used=b.input=b.output=b.strip_vertices=0;b.pending_intact=b.pending_reconstructed=0;

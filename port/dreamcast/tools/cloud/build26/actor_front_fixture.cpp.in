@@ -1,0 +1,104 @@
+// Included after the complete production native_actor_fast.cpp.
+// Camera-space depth is +/-1: this is a bounded address/cost fixture, not a
+// general reciprocal-accuracy or production-asset visual qualification.
+extern "C" {
+Re4dcModelPart fixture_part;
+Frame fixture_frame;
+SourceLighting fixture_lighting;
+alignas(32) short fixture_positions[128 * 4];
+alignas(32) signed char fixture_normals[128 * 4];
+alignas(32) float fixture_palette[36];
+alignas(32) u16 fixture_records[128 * 4];
+alignas(32) pvr_vertex_t fixture_cache[132], fixture_output[384];
+alignas(32) u8 fixture_indices[128], fixture_colors[128 * 4], fixture_outcodes[128];
+unsigned fixture_kind, fixture_written;
+void re4dc_model_packet_commit(unsigned) {}
+void re4dc_log(const char*, ...) {}
+}
+
+extern "C" void fixture_prepare(unsigned kind) {
+    fixture_kind = kind;
+    fixture_written = 0;
+    fixture_part = Re4dcModelPart{};
+    fixture_frame = Frame{};
+    fixture_lighting = SourceLighting{};
+    fixture_frame.mode = kind & 1U ? kSkin : kRigid;
+    fixture_frame.q = 0.5f;
+    fixture_frame.nq = 1.0f / 64.0f;
+    fixture_frame.small_normals = true;
+    fixture_frame.positions = reinterpret_cast<const u8*>(fixture_positions);
+    fixture_frame.position_stride = 8;
+    fixture_frame.normals = reinterpret_cast<const u8*>(fixture_normals);
+    fixture_frame.normal_stride = 4;
+    fixture_frame.palette = fixture_palette;
+    fixture_frame.palette_entries = 3;
+    fixture_part.lighting = &fixture_lighting;
+    fixture_part.colors = fixture_colors;
+    fixture_part.alpha_state = 173U | ((kind & 1U) ? 256U : 0U);
+    fixture_part.modelview[0] = fixture_part.modelview[5] = fixture_part.modelview[10] = 1.0f;
+    fixture_part.projection[1] = fixture_part.projection[3] = 1.0f;
+    fixture_part.viewport[2] = 640.0f;
+    fixture_part.viewport[3] = 480.0f;
+    fixture_lighting.normal_matrix[0] = fixture_lighting.normal_matrix[5] = fixture_lighting.normal_matrix[10] = 1.0f;
+    for (unsigned i = 0; i < 3; ++i) {
+        float* p = fixture_palette + i * 12;
+        for (unsigned k = 0; k < 12; ++k) p[k] = 0.0f;
+        p[0] = p[4] = p[8] = 1.0f;
+    }
+    const unsigned pattern = kind >> 1;
+    for (unsigned i = 0; i < 128; ++i) {
+        const bool near = pattern == 2 || (pattern == 1 && i == 0);
+        short* p = fixture_positions + 4 * i;
+        p[0] = short(i % 3U == 0 ? -2 : i % 3U == 1 ? 2 : 0);
+        p[1] = short(i % 3U == 2 ? 2 : -2);
+        p[2] = short(near ? 2 : -2);
+        p[3] = short(i % 3U);
+        fixture_normals[4 * i] = 11;
+        fixture_normals[4 * i + 1] = 23;
+        fixture_normals[4 * i + 2] = 45;
+        fixture_normals[4 * i + 3] = static_cast<signed char>(i % 3U);
+        for (unsigned k = 0; k < 4; ++k) fixture_records[4 * i + k] = u16(i);
+        fixture_indices[i] = u8(i);
+        fixture_colors[4 * i + 3] = u8(80 + i);
+        const u32 alpha = kind & 1U ? 80 + i : 173;
+        fixture_cache[i] = {PVR_CMD_VERTEX,
+            i % 3U == 0 ? 0.0f : i % 3U == 1 ? 640.0f : 320.0f,
+            i % 3U == 2 ? 0.0f : 480.0f, near ? -1.0f : 1.0f,
+            float(i) * .03125f - .5f, .75f - float(i) * .015625f,
+            (alpha << 24) | (0x004070a0U + i * 257U), 0};
+        fixture_outcodes[i] = near ? kOcNear : 0;
+    }
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_run(unsigned n) {
+    Part e{fixture_part, fixture_frame,
+        {fixture_part.projection, fixture_part.viewport},
+        {0.5f, 1000.0f, 640.0f, 480.0f, project, nullptr}};
+    e.clip.context = &e.projection;
+    e.packet = {fixture_output, 384U, 1.0f, 1.0f};
+    e.cache.v = fixture_cache;
+    e.cache.oc = fixture_outcodes;
+    e.colors = fixture_kind & 1U ? fixture_colors : nullptr;
+#if RE4DC_ACTOR_CLIP_FRONT26
+    e.clip_vertices = n;
+#endif
+    const Records r{fixture_records, 4U, 1U, true};
+    const bool ok = e.clip_strip(r, fixture_indices, n);
+    fixture_written = e.used;
+    return ok ? 1U : 0U;
+}
+
+extern "C" const std::uintptr_t fixture_layout[] = {
+    1, sizeof(Part), sizeof(Frame), sizeof(re4dc::render::RenderVertex),
+    reinterpret_cast<std::uintptr_t>(fixture_positions),
+    reinterpret_cast<std::uintptr_t>(fixture_normals),
+    reinterpret_cast<std::uintptr_t>(fixture_palette),
+    reinterpret_cast<std::uintptr_t>(fixture_records),
+    reinterpret_cast<std::uintptr_t>(fixture_cache),
+    reinterpret_cast<std::uintptr_t>(fixture_indices),
+    reinterpret_cast<std::uintptr_t>(fixture_colors),
+    reinterpret_cast<std::uintptr_t>(fixture_outcodes),
+    reinterpret_cast<std::uintptr_t>(fixture_output),
+    reinterpret_cast<std::uintptr_t>(&fixture_written),
+    PVR_CMD_VERTEX, PVR_CMD_VERTEX_EOL, kOcNear,
+};

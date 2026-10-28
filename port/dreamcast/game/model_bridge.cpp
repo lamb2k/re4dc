@@ -1,3 +1,11 @@
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "platform/include/draw_fallback_audit.h"
+#define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
+#define DFA26_MODEL_SLOW(reason, n, ...) { DFA26_MODEL_HIT(reason, n) __VA_ARGS__ }
+#else
+#define DFA26_MODEL_HIT(reason, n)
+#define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
+#endif
 #include "platform/include/gc_asset_motion_unknown.h"
 #include "actor_visibility_diag.h"
 // Recovered commonModelTrans -> existing native frame/packet/texture owner.
@@ -421,6 +429,9 @@ void flush(){
             re4dc_model_submit(&r);
             return;
         }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ModelObjectBatchRefused, q.n)
+#endif
         ++st.refused;
     } else ++st.singles;
     for(unsigned i=0;i<q.n;++i){
@@ -448,7 +459,7 @@ bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
         const Pending& q=S->pend;
         if(!eligible || q.info!=info || q.model!=m || !same(q.rec,p))flush();
     }
-    if(!eligible){if(idx>=d->displist_num)cur_info=nullptr;return false;}
+    if(!eligible){DFA26_MODEL_HIT(ModelObjectBatchSplit, 1)if(idx>=d->displist_num)cur_info=nullptr;return false;}
     Pending& q=S->pend;
     if(!q.on){
         q.on=true;q.rec=p;q.light=*p.lighting;q.rec.lighting=&q.light;

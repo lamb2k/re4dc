@@ -1,6 +1,22 @@
 // Shared verbatim by MeshDraw and ScenerySelector. No include guard: this
 // file supplies the same selection members to both contexts.
     bool chunk_ok()const{
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        using namespace re4dc::dfa26;
+        if(!package.lod()){hit(WorldChunkNoLod);return false;}
+        if(lean::kMode&8U){hit(WorldChunkCheckMode);return false;}
+        if(sg_groups>8U){hit(WorldChunkGroups);return false;}
+#if RE4DC_PS2_PVS
+        if(pvs_set){hit(WorldChunkPvs);return false;}
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+        if(pc_mode){hit(WorldChunkInterior);return false;}
+#endif
+#if RE4DC_QUALITY_ASSETS
+        if(skip_clusters){hit(WorldChunkImpostor);return false;}
+#endif
+        return true;
+#else
         return package.lod() && !(lean::kMode&8U) && sg_groups<=8U
 #if RE4DC_PS2_PVS
             && !pvs_set
@@ -12,6 +28,7 @@
             && !skip_clusters
 #endif
             ;
+#endif
     }
 #if RE4DC_SCENERY_STREAM && RE4DC_SG_SELECT_LEAN && !RE4DC_SCENERY_RECORD_SPLIT && !RE4DC_SCENERY_CONE && \
     !(defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK) && !(defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24) && \

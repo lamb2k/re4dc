@@ -297,6 +297,16 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
     if (!re4dc::render::is_finite(near) || near <= 0 || !(full > cut)) return 0;
 #endif
     const float near_w = near * 1.01f;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    // These are declines and intentional drops, never a software clip path.
+    struct ShellAudit {
+        unsigned refused=st.refused,near_drop=0;
+        ~ShellAudit(){
+            re4dc::dfa26::hit(re4dc::dfa26::WorldShellRefused,st.refused-refused);
+            re4dc::dfa26::hit(re4dc::dfa26::WorldShellNearDrop,near_drop);
+        }
+    } shell_audit;
+#endif
     const float sx = V[2] * .5f * RE4DC_SCREEN_WF / V[2], sy = -V[3] * .5f * RE4DC_SCREEN_HF / V[3];
     const float ox = (V[0] + V[2] * .5f) * RE4DC_SCREEN_WF / V[2], oy = (V[1] + V[3] * .5f) * RE4DC_SCREEN_HF / V[3];
     const unsigned ng = st.h->groups;
@@ -472,6 +482,9 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
                 st.strip_verts += n;
             } else
                 ++st.strips_cut;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(!ok)++shell_audit.near_drop;
+#endif
             p += n;
         }
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT

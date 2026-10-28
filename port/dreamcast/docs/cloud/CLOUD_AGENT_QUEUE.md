@@ -313,6 +313,111 @@ Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here 
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
 
+### 2026-10-28: Build 26 hand-back (`codex/draw-fallback-audit-20261028`)
+
+Base `9a66e3fc` (newest `origin/t15/int` at build start). Build 25 was
+published first as `ee9a5c41`; this build does not silently stack that
+unmerged branch. All new knobs default 0: `DRAW_FALLBACK_AUDIT`,
+`ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26`. No release recipe is enabled.
+No new production SH-4 assembly or linker scripts are used.
+
+The [full report](BUILD26_DRAW_FALLBACK_AUDIT_20261028.md),
+[world inventory](BUILD26_WORLD_AUDIT_20261028.md) and
+[model inventory](BUILD26_MODEL_AUDIT_20261028.md) map triggers, resolved
+recipe values, units, cost evidence and chapter 1–2 reachability. There are
+133 reason bins, including explicit admission declines/drops kept distinct
+from actual slow work. QA Diagnostics and QA_LINK T rows report the last
+completed tick with room/tick/draw-attempt/overflow metadata; menus freeze
+collection, new rooms invalidate stale snapshots, and counters saturate.
+The maximum-value rows occupy 3,424 B; actual formatter/framing fixtures
+pass 14 cases with maximum datagram 1,130 B, also under ASan/UBSan.
+The enlarged `T` snapshot now uses one bounded, resumable producer under the
+audit knob: stable parts retry every 50 ms after bulk refusal, without
+overwriting pending data or changing transport guards. Its 21 backpressure
+cases pass (593 attempts/518 refusals, maximum queued 2,263 B under the
+2,400 B cap), including disconnect/restart; these simulate admission policy,
+not real modem throughput.
+
+The resolved recipe has SELECT_ONLY/REPLAY_LEAN/SUBMIT_BATCH on, but
+SCENERY_SELECT_LEAN2, ACTOR_SETUP_LEAN, ACTOR_BYTES_LEAN, ACTOR_CLIP_REUSE and
+ESP_SETUP_LEAN off. Those are documented as disabled optimizations, not
+mysterious data-triggered declines. Texture full-resolve and upload attempts,
+header rebuilds, queue spill, clipping, native/legacy admission, skinning,
+light and shell/world splits are separately named; bins overlap and units
+must not be summed as a fallback percentage.
+
+Two near-camera candidates are concrete: indexed world clipping borrows the
+authenticated immutable vertex pool instead of gathering it first (exact
+scalar math/packet order), and actor clipping reuses projected vertices for
+wholly-front triangles inside a crossing strip. Actual crossings retain the
+old clipper. The latter is a look approximation at subpixel/culling
+boundaries because cached transform/reciprocal rounding can differ.
+
+**Identity/composition PASS:** 200 exact comparisons cover ten changed
+existing TUs, QA_LINK off/on, all controls absent / each explicitly zero /
+all zero, and complete preprocessed source plus complete target objects.
+Debug records and preprocessor line markers are consistently excluded; no
+normalization of compared bytes. Make flags/object lists match. Seven enabled
+profiles compile and resolve audit hooks, including DSA+XLU+QA_LINK and the
+existing setup/bytes/clip/gather/effect controls. Final dependency hashes
+match. Public target profile mirrors `NMR_POOL_LOD=0` in both arms because
+selected chapter-2 assets are private; full private-image proof stays local.
+
+Actual production host checks pass 61,440 world geometry comparisons,
+128 admission combinations, 640 dispatch cases, and four actor compositions
+×3,940 cases, with ASan/UBSan checks. QA telemetry also preserves the current
+Diagnostics page across background refresh. Source-bound receipts and
+reproduction commands are in [Build26 validation](../../tools/cloud/build26/VALIDATION.md).
+
+| Bounded piece | Warm / cold-I cycles OFF → ON | Loads / stores OFF → ON | Unique 32-B lines OFF → ON | Observed peak stack OFF → ON |
+|---|---|---|---|---|
+| One audit hit (ON only) | 20 / 51 | 5 / 1 | 3 | 0 B |
+| World 64 vertices, three consumed corners | 1686 / 1813 → 140 / 228 | 367 / 209 → 44 / 15 | 116 → 12 | 48 → 44 B |
+| Actor 64 skin vertices, one near vertex, 61 front triangles, reuse off | 99057 / 99758 → 27971 / 29082 | 26942 / 10222 → 7286 / 4634 | 158 → 308 | 720 → 904 B |
+
+The world window excludes decode/clip/TA. The actor window executes actual
+reconstruction and new cached packet writes, but the shared clip callback
+only records inputs and returns zero: old clip maths/output/TA are unpriced.
+Thus the actor footprint increases and its old/new output-write scope differs;
+do not claim an overall traffic improvement. With existing clip reuse on,
+warm actor cost is 40051→28047. Forced all-near controls regress 99057→105925
+(reuse off) and 40051→57569 (reuse on). All figures use perfect D-cache;
+cold-I is isolated per sequence, not a sum of fresh-cold calls per frame.
+
+Production actor fix adds 1160 B text /1163 B allocated; world fix adds
+960 B text/allocated. Both together add 2120 B text, 2123 B allocated and
+0 B BSS. Audit core is 768 B text/5310 B allocated including 1104 B BSS.
+Audit+both fixes+QA_LINK across the measured object set adds 8440 B text,
+21180 B allocated including 9332 B BSS, before linker GC. QA link-pump
+local stack is 2264→2708 B; snap_diag 2280 B unchanged. Actor clip local
+frame 556→684 B (+36 B classifier); world clip 560→572 B. Full measured
+objects/frames are in the report; these are not full-image sizes or runtime
+stack peaks.
+
+**Whole-frame MODELLED sensitivity:** at 200 MHz, ASSUME 30 ms omitted work
+held constant, ten of the actor cases plus 100 world cases above. Priced OFF
+windows total 35.795850 ms including the assumed remainder; both fixes plus
+1000 audit hits and begin/seal total 31.571705 ms (−4.224145 ms MODELLED).
+Audit-only sensitivity is 30 → 30.103155 ms for 1000 hits. The frequencies and
+30 ms remainder are assumptions; no barn/chapter timing or FPS is claimed.
+
+**Questions / limits requiring the owner:**
+
+1. The supplied barn results are aggregate buckets; no per-reason console
+   census or private chapter assets are available here. Please run audit on,
+   both candidate fixes off, and retain matching F26/DSA rows, image and asset
+   hashes. Which reasons actually fire and rank highest by cost? These two
+   clipping fixes are provisional candidates, not a claimed measured top two.
+2. Compare their matched OFF/ON captures and gameplay/still gates, then rank
+   them against other triggers and the inventory's offline-conversion
+   proposals. A last-tick telemetry sample can miss short bursts; collect
+   repeated complete part sets with tick/room identifiers.
+3. After separately merging Build 25, reconcile its light-path overlap and
+   retain its zero fallback invariant. Run full OFF image identity, private
+   compositions, s30/heap/VRAM and hardware timing. Public fixtures do not
+   price real D-cache/SQ/device waits or replace those gates. Claude merges.
+
+
 ### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
 
 Based on `a9fa0b8850f762acbf3ce49e86d7c24394df894b`. The
