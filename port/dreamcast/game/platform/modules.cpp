@@ -155,8 +155,12 @@ MODULE(wep19)
 #if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04 && !(defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL)
 MODULE(wep04)
 #endif
-#if defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05
+#if (defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05) || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
 MODULE(wep05)
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+MODULE(wep06)
+MODULE(wep12)
 #endif
 #if RE4DC_SUBSCREEN && !RE4DC_SUBSCREEN_OVL
 MODULE(Sscrn)
@@ -326,8 +330,12 @@ static const Re4dcModule g_modules[] = {
     MODULE(70, wep04), // WEAPON_WEP04: Blacktail
 #endif
 #endif
-#if defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05
+#if (defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05) || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
     MODULE(67, wep05), // WEAPON_WEP05: weapon 5 (item 0x29)
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    MODULE(50, wep06), // Government / Matilda (item 0x2a, stock variant 0x2b)
+    MODULE(56, wep12), // Thompson (item 0x34)
 #endif
 #if RE4DC_SUBSCREEN_OVL
     {71, "Sscrn", 0, 0, 0, 0, 0, 0, 0},  // sub screen overlay (entry points set per load)
@@ -385,6 +393,27 @@ static int moduleIndex(u32 id)
     }
     return -1;
 }
+
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+// Pure admission checks: no link, state reset, allocation or disc access.
+// An overlay table row counts as present; OSLink remains responsible for its
+// actual load and can still refuse it without publishing weapon callbacks.
+extern "C" int re4dc_weapon27_module_id_present(unsigned id)
+{
+    return moduleIndex(id) >= 0;
+}
+extern "C" int re4dc_weapon27_module_file_present(const char* rel)
+{
+    if (!rel || rel[0]!='r' || rel[1]!='e' || rel[2]!='l' || rel[3]!='/') return 0;
+    for (unsigned i=0;i<kModules;++i) {
+        const char* p=rel+4;
+        const char* name=g_modules[i].name;
+        while (*name && *p==*name) { ++p; ++name; }
+        if (!*name && p[0]=='.' && p[1]=='r' && p[2]=='e' && p[3]=='l' && !p[4]) return 1;
+    }
+    return 0;
+}
+#endif
 
 // RELs linked as one group object (gen_modules.py group_rules, EM10_SHARED=1) share one state
 // span: the pristine .data is captured once for the span, at the first link of any member, and

@@ -18,6 +18,10 @@
 #include "puzzle.h"
 #include "mercenaries.h"
 #include "eprintf.h"
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+#include "re4dc_wep27.h"
+extern "C" void OSReport(const char* fmt, ...);
+#endif
 
 extern "C" {
 void qsort(void* base, u32 n, u32 size, int (*cmp)(const void*, const void*));
@@ -2574,6 +2578,13 @@ int cItemMgr::arm(ItemWork* p)
         goto ng;
     }
     if (ITEM_TYPE(p->id) == 1 || ITEM_TYPE(p->id) == 3 || ITEM_TYPE(p->id) == 6) {
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+        const u16 id=weaponId(p);
+        if (!re4dc_weapon27_available(WeaponId2WeaponNo(id),WeaponId2WeaponType(id))) {
+            OSReport("weapon module: item %x cannot equip (module unavailable)\n",id);
+            return 0;
+        }
+#endif
         pArm = p;
         m_wep_id = weaponId(p);
         pArm->bullet = BULLET(pArm);
@@ -3307,6 +3318,12 @@ void cItemMgr::debugNumDisp(int print_page)
 // Debug: arms weapon `id`, picking one up first when it is not owned (levels untouched).
 void cItemMgr::debugWeapon(int id)
 {
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    if (!re4dc_weapon27_available(WeaponId2WeaponNo(id),WeaponId2WeaponType(id))) {
+        OSReport("weapon module: debug item %x refused (module unavailable)\n",id);
+        return;
+    }
+#endif
     ItemWork* p = searchI(id);
 
     if (p != 0) {

@@ -1,0 +1,192 @@
+// Executes the recovered implementation with the synthetic service boundary.
+#include "@PREFIX@"
+class cObjTompson:public cObjWep {
+public:
+    void init(cModel*) override;
+    void setMotion(cPlayer*) override;
+    void moveFire() override;
+    void moveReload() override;
+    void setCartridge();
+};
+void ObjTompson_init(cObj*);
+#include "@MACHINE@"
+#include "@ENTRY@"
+#include "@OBJECT@"
+
+static unsigned cases;
+static bool near(float a,float b) { return std::fabs(a-b)<0.0001f; }
+static void check_args(const char* name,std::initializer_list<std::intptr_t> args,unsigned at=0) {
+    assert(fixture::call(name,at).args==std::vector<std::intptr_t>(args));
+}
+static void bind(cPlayer& p,cObjTompson& w) {
+    pPL=&p; p.Wep->m_pWep=&w; fixture::created=&w;pG->weapon_no=0x0c;
+}
+
+static void callbacks_and_init() {
+    fixture::reset();
+    wep12_prolog();
+    assert(WeaponInitFunc==Wep12_init && WeaponMoveFunc==PlMachineMove);
+    assert(ObjInitFunc[0x25]==ObjTompson_init);
+    alignas(cObjTompson) std::array<unsigned char,sizeof(cObjTompson)> storage{};
+    ObjInitFunc[0x25](reinterpret_cast<cObj*>(storage.data()));
+    auto* constructed=std::launder(reinterpret_cast<cObjTompson*>(storage.data()));
+    assert(dynamic_cast<cObjTompson*>(static_cast<cObjWep*>(constructed))==constructed);
+    constructed->~cObjTompson();
+    wep12_epilog();
+    assert(ObjInitFunc[0x25]==nullptr);
+    // The recovered epilog clears only its constructor slot; the common equip
+    // lifecycle owns WeaponInitFunc/WeaponMoveFunc replacement.
+    assert(WeaponInitFunc==Wep12_init && WeaponMoveFunc==PlMachineMove);
+    wep12_prolog();assert(ObjInitFunc[0x25]==ObjTompson_init);++cases;
+
+    fixture::reset();cPlayer player;cObjTompson weapon;bind(player,weapon);
+    player.Wep->m_pWep=nullptr;
+    Wep12_init(&player);
+    assert(player.Wep->m_pWep==&weapon && fixture::create_id==0x25);
+    check_args("model.init",{fixture::word(WEP_ARC_PTR(6)),fixture::word(WEP_ARC_PTR(5))});
+    assert(weapon.sub2B4.atari.m_flag==0xfcff && weapon.pParts->pParent==&fixture_bones[10]);
+    assert(weapon.wep.parent==&player && weapon.wep.x24==0x34);
+    assert(weapon.wep.pMotNormal==WEP_ARC_PTR(0x29));
+    assert(fixture::count("motion.reset")==1 && fixture::count("light.init2")==1);
+    assert(fixture::call("light.init2").values==std::vector<float>({0,0,0,500,0,0}));
+    assert(fixture::call("weapon.ability").values==std::vector<float>({5.73f,2.86f,.2864f,.2864f}));
+    check_args("effect.load",{fixture::word(WEP_ARC_PTR(4)),0x46,1});
+    assert(PlWepMot[0]==WEP_ARC_PTR(0x1b) && PlWepMot[1]==WEP_ARC_PTR(0x1f) && PlWepMot[2]==WEP_ARC_PTR(0x21));
+    ++cases;
+
+    fixture::reset();cPlayer failed_player;cObjTompson unchanged;bind(failed_player,unchanged);
+    fixture::create_ok=false;
+    Wep12_init(&failed_player);
+    assert(failed_player.Wep->m_pWep==&unchanged);
+    assert(fixture::count("object.create")==1 && fixture::count("model.init")==0);
+    assert(fixture::count("effect.load")==0 && PlWepMot[0]==nullptr);
+    assert(fixture::count("Wep12_init() cObjWep CREATE FAILED")==1);
+    assert(fixture::count("Wep11_init() wep model init failed.")==1);++cases;
+
+    fixture::reset();cPlayer p;cObjTompson w;fixture::model_ok=false;
+    w.init(&p);
+    assert(fixture::count("model.init")==1 && fixture::count("motion.reset")==0);
+    assert(fixture::count("light.init2")==0 && w.wep.parent==nullptr && w.wep.x24==0);
+    assert(fixture::count("cObjTompson::init() failed.")==1);++cases;
+}
+
+static void object_fire_and_cartridge() {
+    for(int rounds:{0,1}) {
+        fixture::reset();cPlayer p;cObjTompson w;bind(p,w);fixture::bullets=rounds;
+        w.world={1,2,3};w.pos={4,5,6};pG->Status_flg[0]=0x400;
+        auto& hand=fixture_bones[10];
+        const Mtx transform{{0,-1,0,11},{1,0,0,22},{0,0,1,33}};
+        std::memcpy(hand.mat,transform,sizeof transform);
+        fixture::random_values={0,.5f,-1};
+        w.moveFire();
+        assert(w.wep.step==1 && pG->Status_flg[0]==0x00800400);
+        assert(fixture::call("motion.core").args[2]==fixture::word(WEP_ARC_PTR(rounds?0x27:0x2a)));
+        const auto& effect=fixture::call("effect.set");
+        assert(effect.args[4]==0x46 && effect.args[8]==fixture::word(&w));
+        assert(fixture::count("sound")==2);
+        check_args("sound",{2,0,0,0,0});check_args("sound",{2,0x15,0,0,0},1);
+        assert(fixture::call("sound").values==std::vector<float>({1,2,3}));
+        assert(fixture::call("sound",1).values==std::vector<float>({4,5,6}));
+        const auto& cart=fixture::call("cartridge");
+        assert(cart.args==std::vector<std::intptr_t>({fixture::word(WEP_ARC_PTR(0xa)),fixture::word(WEP_ARC_PTR(0xb)),40,3}));
+        const std::array<float,11> expected{35,-194,138.9f,0,0,0,-67.5f,3,45,10,50};
+        for(unsigned i=0;i<expected.size();++i)assert(near(cart.values[i],expected[i]));
+        assert(fixture_cartridge.type==1 && fixture::count("cartridge.effect")==1);
+        const auto& vib=fixture::call("vibration");assert(vib.args[1]==10 && vib.args[2]==1);
+        fixture::clear_calls();w.moveFire();assert(fixture::calls.empty());++cases;
+    }
+    fixture::reset();cPlayer p;cObjTompson w;bind(p,w);fixture::cartridge_ok=false;
+    w.setCartridge();
+    assert(fixture::count("cartridge")==1 && fixture::count("cartridge.effect")==0);
+    assert(fixture_cartridge.type==0);++cases;
+}
+
+static void object_reload_and_motions() {
+    const unsigned motions[]{0x28,0x2b,0x2c},sounds[]{2,0x20,0x21};
+    const float thresholds[]{40,34,28};
+    for(unsigned level=0;level<3;++level) {
+        fixture::reset();cPlayer p;cObjTompson w;bind(p,w);pG->weapon_lv_reload=level;
+        w.moveReload();
+        check_args("motion.set",{fixture::word(WEP_ARC_PTR(motions[level])),0,0,1,0});
+        check_args("sound",{2,sounds[level],0,0,0});
+        assert(w.wep.step==1 && w.wep.seHandle==fixture::snd_result && fixture::count("item.reload")==0);
+        fixture::clear_calls();w.moveReload();
+        assert(fixture::call("motion.cross").values[0]==thresholds[level]);
+        assert(fixture::count("item.reload")==0);
+        fixture::clear_calls();fixture::cross_frame=true;w.moveReload();
+        assert(fixture::count("item.reload")==1 && fixture::bullets==fixture::reload_capacity);
+        fixture::clear_calls();fixture::cross_frame=false;w.moveReload();
+        assert(fixture::count("item.reload")==0);++cases;
+    }
+    fixture::reset();cPlayer p;cObjTompson w;
+    const auto untouched=reinterpret_cast<void*>(0x55550000U);
+    p.pMotTbl.fill(untouched);w.setMotion(&p);
+    const std::pair<unsigned,unsigned> mapping[]={{0,0xd},{2,0x12},{3,0x13},{6,0x16},{7,0x17},
+        {8,0x14},{9,0x15},{0xb,0x18},{0xc,0x19},{0xd,0xe},{0xe,0xf},{0xf,0x10},
+        {0x10,0x11},{0x5b,0x25},{0x57,0x26},{0x52,0x29},{0x39,0x36},{0x3a,0x37},
+        {0x41,0x38},{0x42,0x39},{0x3f,0x34},{0x40,0x35}};
+    auto expected=std::array<void*,128>{};expected.fill(untouched);
+    for(const auto& m:mapping)expected[m.first]=WEP_ARC_PTR(m.second);
+    expected[1]=expected[0x5d]=expected[0x5e]=nullptr;
+    expected[0x3d]=PL_ARC_PTR(pG->pPlayer,0x5d);
+    assert(p.pMotTbl==expected);
+    check_args("body.hand",{fixture::word(WEP_ARC_PTR(0xc))});
+    check_args("hand.right",{1});check_args("hand.left",{2});++cases;
+}
+
+static void machine_states() {
+    fixture::reset();cPlayer p;cObjTompson w;bind(p,w);p.r_no_1=6;p.r_no_2=2;
+    fixture::random_values={0,.5f};
+    PlMachineMove(&p);
+    assert(fixture::count("weapon.trigger")==1 && fixture::bullets==2);
+    assert(fixture::count("bullet.hit")==1 && fixture::call("bullet.hit").args[0]==0x0c);
+    assert(near(fixture::call("bullet.hit").values[0],-265.5f));
+    assert(fixture::call("bullet.hit").values[6]==6000);
+    assert(w.wep.mode==2 && w.wep.step==0 && p.r_no_3==1 && p.m_Work4==1 && p.m_Work5==1);
+    assert(fixture::count("lock.control")==1 && fixture::count("lock.move")==1);
+    assert(fixture::call("motion.blend_set").args[0]==fixture::word(WEP_ARC_PTR(0x1c)));
+    w.moveFire();assert(fixture::count("effect.set")==1 && w.wep.step==1);++cases;
+
+    struct Burst {float frame;bool aim,fire;int bullets;unsigned flags,r1,r2,r3;};
+    const Burst bursts[]={{2.9f,true,true,1,0,6,2,1},{3,true,true,1,0,6,2,0},
+        {3,true,true,0,0,6,1,0},{3,true,false,1,0,6,1,0},
+        {3,false,true,1,0,6,3,0},{3,false,true,1,0x40,0x11,0,0}};
+    for(const auto& b:bursts) {
+        fixture::reset();cPlayer player;cObjTompson weapon;bind(player,weapon);
+        player.r_no_1=6;player.r_no_2=2;player.r_no_3=1;player.frame=b.frame;player.flags_420=b.flags;
+        fixture::aim_held=b.aim;fixture::fire_held=b.fire;fixture::bullets=b.bullets;
+        PlMachineMove(&player);
+        assert(player.r_no_1==b.r1 && player.r_no_2==b.r2 && player.r_no_3==b.r3);
+        assert(fixture::count("weapon.trigger")==0 && fixture::count("lock.move")==1);
+        assert(fixture::count("sound")==unsigned(b.frame>=3 && b.aim && b.fire && !b.bullets));++cases;
+    }
+    const unsigned reload_motions[]{0x1e,0x23,0x24};
+    for(unsigned level=0;level<3;++level) {
+        fixture::reset();cPlayer player;cObjTompson weapon;bind(player,weapon);
+        pG->weapon_lv_reload=level;player.r_no_1=6;player.r_no_2=4;
+        PlMachineMove(&player);
+        assert(fixture::call("motion.core").args[2]==fixture::word(WEP_ARC_PTR(reload_motions[level])));
+        assert(player.r_no_3==1 && player.Wep->knifeStance==1 && weapon.wep.mode==4 && weapon.wep.step==0);
+        fixture::clear_calls();fixture::cross_frame=true;fixture::aim_held=false;
+        PlMachineMove(&player);
+        assert(fixture::call("motion.cross").values[0]==PlReloadEndTbl[0x0c][level]);
+        assert(player.r_no_2==3);++cases;
+    }
+    fixture::reset();cPlayer ready;cObjTompson held;bind(ready,held);ready.r_no_1=6;lockCtr=99;
+    PlMachineMove(&ready);
+    assert(ready.r_no_3==1 && lockCtr==0 && fixture::count("lock.init")==1);
+    assert(fixture::call("motion.blend_set").args[0]==fixture::word(WEP_ARC_PTR(0x1a)));
+    assert(fixture::count("camera.aim")==1);++cases;
+    fixture::reset();cPlayer idle;cObjTompson aimed;bind(idle,aimed);idle.r_no_1=6;idle.r_no_2=1;
+    PlMachineMove(&idle);
+    assert(idle.r_no_3==1 && fixture::call("motion.blend_set").args[0]==fixture::word(WEP_ARC_PTR(0x1b)));
+    assert(fixture::count("player.laser")==1);++cases;
+    fixture::reset();cPlayer down;cObjTompson holstered;bind(down,holstered);down.r_no_1=6;down.r_no_2=3;
+    PlMachineMove(&down);
+    assert(down.r_no_1==0 && down.r_no_2==2 && fixture::call("motion.core").args[2]==fixture::word(WEP_ARC_PTR(0x1d)));++cases;
+}
+
+int main() {
+    callbacks_and_init();object_fire_and_cartridge();object_reload_and_motions();machine_states();
+    std::printf("PASS wep12 actual-source callback/object/machine contracts: %u cases\n",cases);
+}
