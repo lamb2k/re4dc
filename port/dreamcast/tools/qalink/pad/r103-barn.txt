@@ -1,0 +1,6 @@
+# r103 farm: from the yard to the first barn's door and inside (QA link SCRIPT r103-barn; start: TELEPORT r103).
+# Lines: "[+]frame buttons hold [stick=lx,ly]" as the harness fixtures, "goto x z [run] [timeout_s]", "mark label", "wait ticks".
+mark r103-barn-start
+goto -11000 -1000 run 40
+wait 30
+mark r103-barn-inside
