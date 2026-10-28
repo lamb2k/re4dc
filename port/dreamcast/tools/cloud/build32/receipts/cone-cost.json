@@ -1,0 +1,889 @@
+{
+  "status": "PASS",
+  "scope": "Bounded SH-4 cost of the actual Build32 cone admission/near/numeric helpers.\n\nThis is the new guard's overhead floor, not a full before/after actor draw.\nMake-derived actor flags are used; the production helper is included verbatim.\nCold-I is one isolated initially cold instruction cache and perfect D-cache.\nData-line counts are address footprints, not measured misses.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build32/cone_cost.py": "cf25f8cbb176ef1584852ec24a58b3fc1d1efb9c809a71374655f87c26612a37",
+    "port/dreamcast/tools/cloud/build32/cone_cost_fixture.cpp.in": "ed7ceaabd37c8c1dde94277f2efdbf7238a5f2deaa7981dcb6c6638a49309a0b",
+    "port/dreamcast/game/platform/include/actor_cone32.hpp": "7033f9bbefd340f32cfec1eafcc4992f60622c78bff28c61381aeba71adbcad3"
+  },
+  "options": [
+    "DBG_WARP=1",
+    "WARP_AFTER_RESET=1",
+    "QA_MENU=1",
+    "BENCHMARK=0",
+    "PMC_ROW=0",
+    "WORLD_METER=1",
+    "NMR_POOL_LOD=0",
+    "QA_LINK=1",
+    "QA_LINK_REVIEW28=1",
+    "ACTOR_LIGHT_FAST_ONLY=1",
+    "ACTOR_BACKFACE=0",
+    "ACTOR_BACKFACE_CONE=1",
+    "ACTOR_FORMAT32=1",
+    "NATIVE_ACTOR_UV16=1",
+    "COARSE_ONE_SUBMIT=1",
+    "DRAW_FALLBACK_AUDIT=0",
+    "DRAW_SETUP_AUDIT=0",
+    "QA_LINK=0"
+  ],
+  "layout": {
+    "version": 1,
+    "cone_bytes": 16,
+    "eye_bytes": 52,
+    "guard_bytes": 28,
+    "source_bytes": 16
+  },
+  "fixture_sections": {
+    "executable_bytes": 2460,
+    "allocated_bytes": 2668,
+    "zero_fill_bytes": 172
+  },
+  "fixture_sha256": "d981a5c3fa81d7cc77680c4ce7e5655a73eecd924013d74512b8f3541bc4f029",
+  "local_frames": [
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-cone-cost2/fixture.cpp:10:6:void fixture_prepare(unsigned int)",
+      "bytes": 140,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-cone-cost2/fixture.cpp:25:10:unsigned int fixture_guard(unsigned int)",
+      "bytes": 44,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-cone-cost2/fixture.cpp:26:10:unsigned int fixture_test(unsigned int)",
+      "bytes": 16,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-cone-cost2/fixture.cpp:27:10:unsigned int fixture_source(unsigned int)",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-cone-cost2/fixture.cpp:28:1:cpp)",
+      "bytes": 0,
+      "kind": "static"
+    }
+  ],
+  "kernel_symbols": {
+    "fixture_prepare": {
+      "address": 1048576,
+      "bytes": 1028
+    },
+    "fixture_guard": {
+      "address": 1049604,
+      "bytes": 648
+    },
+    "fixture_test": {
+      "address": 1050252,
+      "bytes": 576
+    },
+    "fixture_source": {
+      "address": 1050828,
+      "bytes": 56
+    },
+    "fixture_layout": {
+      "address": 1051052,
+      "bytes": 20
+    }
+  },
+  "model": {
+    "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+    "source": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+    "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+    "compile_command": [
+      "gcc",
+      "-O2",
+      "-o",
+      "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+      "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+      "-lm"
+    ],
+    "flags": [
+      "--perfect-ic",
+      "--perfect-dc",
+      "--no-dma",
+      "--sq-cost",
+      "0"
+    ],
+    "exact_dynamic_instruction_and_delay_slot_counts": true,
+    "no_hardware_time_or_frame_speedup_claim": true
+  },
+  "scenario": {
+    "label": "MODELLED",
+    "cpu_mhz": 200,
+    "assumed_other_ms": 30,
+    "assumed_palette_prepares": 40,
+    "assumed_cone_tests": 200,
+    "whole_frame_ms": 30.5226,
+    "note": "Added helper overhead only. No saved vertices are assumed; this does not estimate complete actor cost or FPS."
+  },
+  "limitations": "Excludes existing matrix composition/inversion, source bridge lookup, table validation, counters, cone construction, skinning/lighting/UV/submission savings, D-cache misses and GPU. Near/condition refusals keep ordinary rendering. This helper has conservative engineering bounds; real hardware raster/pose checks remain required.",
+  "raw_sha256": "3d29794672b2595374925f6cdc147b3cf6cd3d21e02038cc629f90a4f8467b8c",
+  "profile_receipt_sha256": "4ac7545703d2102b9590a4b86c0b9293670375dfd480f4f50d01fb6d18d179e6",
+  "cases": [
+    {
+      "case": "prepare-qualified",
+      "result": 1,
+      "instructions": 992,
+      "peak_stack_bytes": 44,
+      "traffic": {
+        "cached": {
+          "load_instructions": 225,
+          "store_instructions": 106,
+          "load_accesses": 225,
+          "store_accesses": 106,
+          "load_bytes": 900,
+          "store_bytes": 418,
+          "unique_read_lines": 12,
+          "unique_write_lines": 4,
+          "unique_data_lines": 12,
+          "unique_line_bytes": 384
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 331,
+        "repeated_demand_line_visits": 319,
+        "regions": {
+          "stack": {
+            "load_instructions": 127,
+            "store_instructions": 98,
+            "load_accesses": 127,
+            "store_accesses": 98,
+            "load_bytes": 508,
+            "store_bytes": 392,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "literal_or_table": {
+            "load_instructions": 98,
+            "store_instructions": 8,
+            "load_accesses": 98,
+            "store_accesses": 8,
+            "load_bytes": 392,
+            "store_bytes": 26,
+            "unique_read_lines": 10,
+            "unique_write_lines": 2,
+            "unique_data_lines": 10,
+            "unique_line_bytes": 320
+          }
+        }
+      },
+      "model_cycles": 1008,
+      "trace_sha256": "88e2bfd2242ba9a37d6d9ecc4d29c1d7579404388b0113bc66d9294b17656ab4",
+      "cold_icache": {
+        "model_cycles": 1204,
+        "instruction_fills": 18.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/prepare-qualified-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/prepare-qualified.bin"
+        ]
+      }
+    },
+    {
+      "case": "prepare-singular",
+      "result": 0,
+      "instructions": 32,
+      "peak_stack_bytes": 44,
+      "traffic": {
+        "cached": {
+          "load_instructions": 9,
+          "store_instructions": 4,
+          "load_accesses": 9,
+          "store_accesses": 4,
+          "load_bytes": 36,
+          "store_bytes": 13,
+          "unique_read_lines": 4,
+          "unique_write_lines": 2,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 13,
+        "repeated_demand_line_visits": 9,
+        "regions": {
+          "stack": {
+            "load_instructions": 3,
+            "store_instructions": 3,
+            "load_accesses": 3,
+            "store_accesses": 3,
+            "load_bytes": 12,
+            "store_bytes": 12,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "literal_or_table": {
+            "load_instructions": 6,
+            "store_instructions": 1,
+            "load_accesses": 6,
+            "store_accesses": 1,
+            "load_bytes": 24,
+            "store_bytes": 1,
+            "unique_read_lines": 3,
+            "unique_write_lines": 1,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          }
+        }
+      },
+      "model_cycles": 34,
+      "trace_sha256": "6282f9a60f4fa4ac8c6714dbaab25ac494eb667f330115c5d8feb06450442083",
+      "cold_icache": {
+        "model_cycles": 93,
+        "instruction_fills": 4.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/prepare-singular-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/prepare-singular.bin"
+        ]
+      }
+    },
+    {
+      "case": "test-hidden",
+      "result": 1,
+      "instructions": 278,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "cached": {
+          "load_instructions": 55,
+          "store_instructions": 9,
+          "load_accesses": 55,
+          "store_accesses": 9,
+          "load_bytes": 194,
+          "store_bytes": 36,
+          "unique_read_lines": 6,
+          "unique_write_lines": 1,
+          "unique_data_lines": 6,
+          "unique_line_bytes": 192
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 64,
+        "repeated_demand_line_visits": 58,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 36,
+            "store_instructions": 0,
+            "load_accesses": 36,
+            "store_accesses": 0,
+            "load_bytes": 118,
+            "store_bytes": 0,
+            "unique_read_lines": 5,
+            "unique_write_lines": 0,
+            "unique_data_lines": 5,
+            "unique_line_bytes": 160
+          },
+          "stack": {
+            "load_instructions": 19,
+            "store_instructions": 9,
+            "load_accesses": 19,
+            "store_accesses": 9,
+            "load_bytes": 76,
+            "store_bytes": 36,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "model_cycles": 321,
+      "trace_sha256": "54d3484d899289e2d080ba9aebc0e1591ebcd8e3f1daa92b9bb1071aa37fdb10",
+      "cold_icache": {
+        "model_cycles": 519,
+        "instruction_fills": 17.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-hidden-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-hidden.bin"
+        ]
+      }
+    },
+    {
+      "case": "test-facing",
+      "result": 0,
+      "instructions": 244,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "cached": {
+          "load_instructions": 49,
+          "store_instructions": 8,
+          "load_accesses": 49,
+          "store_accesses": 8,
+          "load_bytes": 170,
+          "store_bytes": 32,
+          "unique_read_lines": 6,
+          "unique_write_lines": 1,
+          "unique_data_lines": 6,
+          "unique_line_bytes": 192
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 57,
+        "repeated_demand_line_visits": 51,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 33,
+            "store_instructions": 0,
+            "load_accesses": 33,
+            "store_accesses": 0,
+            "load_bytes": 106,
+            "store_bytes": 0,
+            "unique_read_lines": 5,
+            "unique_write_lines": 0,
+            "unique_data_lines": 5,
+            "unique_line_bytes": 160
+          },
+          "stack": {
+            "load_instructions": 16,
+            "store_instructions": 8,
+            "load_accesses": 16,
+            "store_accesses": 8,
+            "load_bytes": 64,
+            "store_bytes": 32,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "model_cycles": 280,
+      "trace_sha256": "ab88c6b7635207655d7c9f36de2419a327b4179eeeb122927b5eaca724db5824",
+      "cold_icache": {
+        "model_cycles": 486,
+        "instruction_fills": 17.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-facing-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-facing.bin"
+        ]
+      }
+    },
+    {
+      "case": "test-near",
+      "result": 2,
+      "instructions": 108,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "cached": {
+          "load_instructions": 22,
+          "store_instructions": 4,
+          "load_accesses": 22,
+          "store_accesses": 4,
+          "load_bytes": 74,
+          "store_bytes": 16,
+          "unique_read_lines": 4,
+          "unique_write_lines": 1,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 26,
+        "repeated_demand_line_visits": 22,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 18,
+            "store_instructions": 0,
+            "load_accesses": 18,
+            "store_accesses": 0,
+            "load_bytes": 58,
+            "store_bytes": 0,
+            "unique_read_lines": 3,
+            "unique_write_lines": 0,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 4,
+            "load_accesses": 4,
+            "store_accesses": 4,
+            "load_bytes": 16,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "model_cycles": 110,
+      "trace_sha256": "cbeaedeb1789b581e6de11505c566d48c7ca1da182684158cbb518aeb82f2419",
+      "cold_icache": {
+        "model_cycles": 206,
+        "instruction_fills": 7.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-near-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-near.bin"
+        ]
+      }
+    },
+    {
+      "case": "test-no-proof",
+      "result": 3,
+      "instructions": 16,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "cached": {
+          "load_instructions": 4,
+          "store_instructions": 0,
+          "load_accesses": 4,
+          "store_accesses": 0,
+          "load_bytes": 10,
+          "store_bytes": 0,
+          "unique_read_lines": 2,
+          "unique_write_lines": 0,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 4,
+        "repeated_demand_line_visits": 2,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_accesses": 4,
+            "store_accesses": 0,
+            "load_bytes": 10,
+            "store_bytes": 0,
+            "unique_read_lines": 2,
+            "unique_write_lines": 0,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          }
+        }
+      },
+      "model_cycles": 21,
+      "trace_sha256": "e48b8db765cddd496ab54e3179b1ea84a99d04bd4e3267d8e229c283c448ed72",
+      "cold_icache": {
+        "model_cycles": 89,
+        "instruction_fills": 4.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-no-proof-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-no-proof.bin"
+        ]
+      }
+    },
+    {
+      "case": "test-empty",
+      "result": 4,
+      "instructions": 12,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "cached": {
+          "load_instructions": 2,
+          "store_instructions": 0,
+          "load_accesses": 2,
+          "store_accesses": 0,
+          "load_bytes": 5,
+          "store_bytes": 0,
+          "unique_read_lines": 2,
+          "unique_write_lines": 0,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 2,
+        "repeated_demand_line_visits": 0,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 5,
+            "store_bytes": 0,
+            "unique_read_lines": 2,
+            "unique_write_lines": 0,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          }
+        }
+      },
+      "model_cycles": 13,
+      "trace_sha256": "c7253baf7c4d4addea71be06e39fdc519d686c5b778b46e3ce74ac01a32f604a",
+      "cold_icache": {
+        "model_cycles": 54,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-empty-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/test-empty.bin"
+        ]
+      }
+    },
+    {
+      "case": "source-match",
+      "result": 1,
+      "instructions": 19,
+      "peak_stack_bytes": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 0,
+          "load_accesses": 8,
+          "store_accesses": 0,
+          "load_bytes": 30,
+          "store_bytes": 0,
+          "unique_read_lines": 3,
+          "unique_write_lines": 0,
+          "unique_data_lines": 3,
+          "unique_line_bytes": 96
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 8,
+        "repeated_demand_line_visits": 5,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 8,
+            "store_instructions": 0,
+            "load_accesses": 8,
+            "store_accesses": 0,
+            "load_bytes": 30,
+            "store_bytes": 0,
+            "unique_read_lines": 3,
+            "unique_write_lines": 0,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          }
+        }
+      },
+      "model_cycles": 22,
+      "trace_sha256": "c0e5e6a0573a92ddaa223f5e9ee71077c485e9b0422186db2f40420883d50266",
+      "cold_icache": {
+        "model_cycles": 55,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/source-match-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/source-match.bin"
+        ]
+      }
+    },
+    {
+      "case": "source-changed",
+      "result": 0,
+      "instructions": 13,
+      "peak_stack_bytes": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 5,
+          "store_instructions": 0,
+          "load_accesses": 5,
+          "store_accesses": 0,
+          "load_bytes": 20,
+          "store_bytes": 0,
+          "unique_read_lines": 3,
+          "unique_write_lines": 0,
+          "unique_data_lines": 3,
+          "unique_line_bytes": 96
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 5,
+        "repeated_demand_line_visits": 2,
+        "regions": {
+          "literal_or_table": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_accesses": 5,
+            "store_accesses": 0,
+            "load_bytes": 20,
+            "store_bytes": 0,
+            "unique_read_lines": 3,
+            "unique_write_lines": 0,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          }
+        }
+      },
+      "model_cycles": 17,
+      "trace_sha256": "3f0275c7673a92b25504020e19c2ffe06be94561ff523b165f093d4fe2f13b5a",
+      "cold_icache": {
+        "model_cycles": 50,
+        "instruction_fills": 2.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout",
+        "command": [
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/hwsim",
+          "--elf",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/model-address-view.elf",
+          "--out",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/source-changed-cold-icache",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0",
+          "/workspace/scratch/8f775e996324/build32-cone-cost2/model/source-changed.bin"
+        ]
+      }
+    }
+  ]
+}

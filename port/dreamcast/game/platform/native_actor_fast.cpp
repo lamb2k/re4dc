@@ -1,3 +1,7 @@
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+#include "include/actor_format32_uv.hpp"
+extern "C" void re4dc_log(const char*, ...);
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
 #include "include/draw_fallback_audit.h"
 #define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
@@ -92,6 +96,9 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 // rule (room/backface_emit.hpp); "bad" counts triangles a rejected meshlet would have drawn (must stay 0).
 #ifndef RE4DC_ACTOR_BACKFACE_CONE
 #define RE4DC_ACTOR_BACKFACE_CONE 0
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+#include "include/actor_cone32.hpp"
 #endif
 #if RE4DC_ACTOR_BACKFACE_CONE
 extern "C" void re4dc_log(const char* fmt, ...);
@@ -593,6 +600,9 @@ unsigned stripify(const u8* tri, unsigned count, u8* out, unsigned cap, u8* used
 // 4 Ashley: meshlets tested / rejected, vertices / triangles skipped, vertices of the tested parts' meshlets.
 unsigned abc_splits = 0, abc_built = 0, abc_noroom = 0, abc_cones = 0, abc_nocone = 0, abc_bad = 0, abc_log = 0;
 unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+re4dc::cone32::Counters abc32_stats;
+#endif
 #endif
 class Converter {
 public:
@@ -605,6 +615,15 @@ public:
         if (!parse()) return false;
 #if RE4DC_ACTOR_BACKFACE_CONE
         ++abc_conv; if (p.blend == 0) ++abc_conv_op; if (abc_class_of(p.model)) ++abc_conv_mk;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+        // An uncullable or mutable rigid part cannot use a persistent cone.
+        // Keep its original clustering instead of paying split/tail overhead.
+        if (!abc_no_split && p.blend == 0 &&
+            ((p.cull != 1 && p.cull != 2) || (p.material_flags & 4U) || p.depth_mode != 0 ||
+             (p.position_stride == 8 && !p.static_geometry))) {
+            abc_no_split = true; ++abc32_stats.split_skipped;
+        }
+#endif
         if (p.blend == 0 && !abc_no_split) abc_split();  // every opaque actor part (cones are used where the draw culls)
 #endif
         rs = 3U + (constant_color ? 0U : 1U);
@@ -656,7 +675,12 @@ private:
     u8* idx_all = nullptr;
     unsigned idx_used = 0, records = 0;
     u16* rec_tuple = nullptr;  // whole-part LOD windows: record ordinal -> tuple
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    unsigned used = 0, size = 0, meshlets = 0, triangles = 0;
+    unsigned uv_excess = re4dc::format32::kUvCertificateEmpty;
+#else
     unsigned used = 0, size = 0, meshlets = 0, triangles = 0, uv_excess = 0;
+#endif
     float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
     bool any_bounds = false;
     // LOD result (level data written at level_start.. in `out`, relative offsets)
@@ -1046,11 +1070,15 @@ private:
         const bool s16 = (p.flags & 0x80000000U) != 0;
         for (unsigned k = 0; k < 2; ++k) {
             const int x = s16 ? int(*reinterpret_cast<const short*>(t + k * 2)) : int(*reinterpret_cast<const u16*>(t + k * 2));
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv_excess = re4dc::format32::uv_certificate_add(uv_excess, x);
+#else
             unsigned a = unsigned(x < 0 ? -x : x), bits = 0;
             if (!a) continue;
             while (!(a & 1U)) a >>= 1;  // significant bits: trailing zeros dropped
             while (a >> bits) ++bits;
             if (bits > 8 && bits - 8 > uv_excess) uv_excess = bits - 8;
+#endif
         }
     }
     void bounds(BlobHeader& h) const {
@@ -1593,6 +1621,10 @@ struct AbcCone { short c[3]; u16 r; short a[3]; u8 k, pal; };
 static_assert(sizeof(AbcCone) == 16, "abc cone");
 struct AbcTail { u32 tag, meshlets, check, bytes; };  // bytes: stream bytes | class << 24
 constexpr u32 kAbcTag = 0x31434241U;  // "ABC1"
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+constexpr u32 kAbcTag32 = 0x32434241U; // "ABC2": current source identity follows the tail
+static_assert(sizeof(void*) != 4 || sizeof(re4dc::cone32::SourceIdentity) == 16, "SH4 cone source identity");
+#endif
 constexpr float kAbcStep = 1.5707963f / 63.0f;
 u32 abc_check(const u8* stream, unsigned bytes) {
     u32 h = 2166136261U ^ bytes;
@@ -1600,18 +1632,33 @@ u32 abc_check(const u8* stream, unsigned bytes) {
     return h;
 }
 unsigned abc_tail_at(unsigned bytes, unsigned meshlets) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const unsigned header = sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity);
+    if (!meshlets || bytes < header || meshlets > (bytes-header)/sizeof(AbcCone)) return 0;
+    return (bytes-header-meshlets*sizeof(AbcCone)) & ~3U;
+#endif
     const unsigned need = sizeof(AbcTail) + meshlets * sizeof(AbcCone);
     return bytes >= need ? (bytes - need) & ~3U : 0U;
 }
 const AbcCone* abc_table(const u8* stream, unsigned bytes, unsigned* cls = nullptr) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    if (!stream || bytes < sizeof(BlobHeader)) return nullptr;
+#endif
     const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
     const unsigned at = abc_tail_at(bytes, h.meshlets);
     if (!at) return nullptr;
     const AbcTail& t = *reinterpret_cast<const AbcTail*>(stream + at);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    if (t.tag != kAbcTag32 || t.meshlets != h.meshlets || (t.bytes & 0xFFFFFFU) != bytes ||
+        (t.bytes >> 24) > 4U || t.check != abc_check(stream, bytes)) return nullptr;
+    if (cls) *cls = t.bytes >> 24;
+    return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+#else
     if (t.tag != kAbcTag || t.meshlets != h.meshlets || (t.bytes & 0xFFFFFFU) != bytes || t.check != abc_check(stream, bytes))
         return nullptr;
     if (cls) *cls = t.bytes >> 24;
     return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail));
+#endif
 }
 // After a conversion (or a LOD rebuild) in place: size = the blob's bytes. Builds the cones of a split part.
 void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
@@ -1619,6 +1666,11 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
     const unsigned at = abc_tail_at(p.stream_bytes, h.meshlets);
     if (!at || at < ((size + 3U) & ~3U)) { ++abc_noroom; return; }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    // No earlier table survives an unsuccessful rebuild at this location.
+    std::memset(stream + at, 0, sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+    if (p.position_stride == 8 && !p.static_geometry) return;
+#endif
     const u8* pos = nullptr; unsigned count = 0; bool skinned = false;
     if (p.position_stride == 6) {
         Re4dcActorSource src{};
@@ -1630,7 +1682,11 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     const auto* table = reinterpret_cast<const MeshletInfo*>(stream + sizeof(BlobHeader));
     const u16* records = reinterpret_cast<const u16*>(stream + h.rec4 * 4U);
     const LevelInfo* lv = h.levels && h.lod4 ? reinterpret_cast<const LevelInfo*>(stream + h.lod4 * 4U) : nullptr;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+#else
     AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail));
+#endif
     for (unsigned mi = 0; mi < h.meshlets; ++mi) {
         AbcCone& cone = out[mi];
         cone = AbcCone{};
@@ -1664,6 +1720,9 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
                     for (unsigned j = s0; j + 2 <= s1; ++j) {
                         unsigned ia = idx[j] & 127U, ib = idx[j + 1] & 127U;
                         const unsigned ic = idx[j + 2] & 127U;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+                        if (ia >= nv || ib >= nv || ic >= nv) { ok = false; break; }
+#endif
                         if ((j - s0) & 1U) std::swap(ia, ib);
                         float v[3][3];
                         const unsigned ii[3] = {ia, ib, ic};
@@ -1709,6 +1768,12 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     }
     AbcTail& t = *reinterpret_cast<AbcTail*>(stream + at);
     t = {kAbcTag, h.meshlets, abc_check(stream, p.stream_bytes), p.stream_bytes | (std::min(cls, 4U) << 24)};
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const re4dc::cone32::SourceIdentity identity{reinterpret_cast<std::uintptr_t>(p.info),
+        reinterpret_cast<std::uintptr_t>(pos), count, p.position_stride};
+    std::memcpy(stream + at + sizeof(AbcTail), &identity, sizeof(identity));
+    t.tag = kAbcTag32;
+#endif
     ++abc_built;
 }
 #endif
@@ -3436,13 +3501,30 @@ inline void pack_uv16(pvr_vertex_t* v, unsigned n, bool keep_u) {
         vertex_word* w = reinterpret_cast<vertex_word*>(v + i);
         const u32 u = w[4], t = w[5];
         if (keep_u) w[7] = u;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        w[4] = re4dc::format32::uv_pack(u, t);
+#else
         w[4] = ((u + 0x8000U) & 0xFFFF0000U) | ((t + 0x8000U) >> 16);
+#endif
     }
 }
 // With no scroll and a power-of-two image (u_scale 1), u = raw x 2^-k: its
 // bf16 is exact when raw has <= 8 significant bits and otherwise off by up to
 // 2^(excess-1) raw units = 2^(excess-1) x uv_scale x size texels, which must
 // stay within half a texel. Scrolled or padded textures keep 32-bit UV.
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+namespace uv32 {
+re4dc::format32::UvCounters counters;
+#include "include/actor_format32_uv_source.inc"
+void log(unsigned frame) {
+    if (frame % 120U) return;
+    const auto& s=counters;
+    re4dc_log("AF32UV frame=%u parts=%u admitted=%u declined=%u why=legacy:%u,binding:%u,precision:%u,nonfinite:%u,begin:%u,source:%u scanned_records=%u splits=%u path=packet:%u,direct:%u,shared:%u\n",
+        frame,s.parts,s.admitted,s.parts-s.admitted,s.legacy,s.binding,s.precision,s.nonfinite,
+        s.begin_failed,s.source,s.scanned_records,s.splits,s.packet,s.direct,s.shared);
+}
+}
+#endif
 [[maybe_unused]] bool uv16_safe(const Re4dcModelPart& p, const BlobHeader& b) {
     const float uv_scale = (p.flags & 0x80000000U) ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const unsigned excess = uv_excess_bits(b);
@@ -3499,7 +3581,11 @@ void one_tap_put(const pvr_vertex_t* cache, const pvr_vertex_t* v, unsigned n) {
 // The TA rejects area >= 0 for cull 2 (CW) and <= 0 for cull 1, so with s = (cull 2 ? 1 : -1) sign(det A) a meshlet is
 // rejected when s dot(n, p - e) > 0 for every normal n of its cone and every point p of its sphere: with w = c - e and
 // dw = s dot(axis, w), dw cos(theta) - r > sin(theta) sqrt(|w|^2 - dw^2).
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; re4dc::cone32::Guard guard; };
+#else
 struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; };
+#endif
 float abc_tab[128];  // cos(theta_k), sin^2(theta_k)
 bool abc_tab_ready = false;
 bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
@@ -3536,10 +3622,26 @@ bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
     if (!re4dc::render::is_finite(out.e[0]) || !re4dc::render::is_finite(out.e[1]) || !re4dc::render::is_finite(out.e[2]))
         return false;
     out.s = ((cull == 2U) == (det > 0.0f)) ? 1.0f : -1.0f;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const float adj[9] = {c00,c01,c02,c10,c11,c12,c20,c21,c22};
+    if (!re4dc::cone32::prepare(&A[0][0], t, adj, det, out.e, f.near_distance, out.guard)) {
+        ++abc32_stats.numeric; return false;
+    }
+#endif
     out.ok = true;
     return true;
 }
 inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    ++abc32_stats.tested;
+    const auto result = c.k <= 56U ? re4dc::cone32::test(c, eye, eye.guard, abc_tab[c.k], abc_tab[64+c.k])
+                                  : re4dc::cone32::Empty;
+    if (result == re4dc::cone32::Near) ++abc32_stats.near;
+    else if (result == re4dc::cone32::Numeric) ++abc32_stats.numeric;
+    else if (result == re4dc::cone32::Empty) ++abc32_stats.empty;
+    else if (result == re4dc::cone32::Reject) { ++abc32_stats.rejected; return true; }
+    return false;
+#endif
     const float wx = float(c.c[0]) - eye.e[0], wy = float(c.c[1]) - eye.e[1], wz = float(c.c[2]) - eye.e[2];
     const float dw = eye.s * (float(c.a[0]) * wx + float(c.a[1]) * wy + float(c.a[2]) * wz) * (1.0f / 32767.0f);
     const float t = dw * abc_tab[c.k] - float(c.r);
@@ -3550,6 +3652,27 @@ inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
 // The part's cone table when this draw can use it (culling part, skinned or rigid frame, converted in place).
 const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f, unsigned& cls) {
     cls = 0; ++abc_part_calls; if (p.cull == 1 || p.cull == 2) ++abc_part_cull;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    using namespace re4dc::cone32;
+    if ((p.cull != 1 && p.cull != 2) || p.blend != 0 || (p.material_flags & 4U) || p.depth_mode != 0) {
+        abc32_stats.decline(Cull); return nullptr;
+    }
+    if (base != p.stream) { abc32_stats.decline(Transient); return nullptr; }
+    if (f.mode != kSkin && f.mode != kRigid) { abc32_stats.decline(re4dc::cone32::Mode); return nullptr; }
+    const AbcCone* certified = abc_table(base, p.stream_bytes, &cls);
+    if (!certified) { abc32_stats.decline(Table); return nullptr; }
+    SourceIdentity identity;
+    const auto& h = *reinterpret_cast<const BlobHeader*>(base);
+    std::memcpy(&identity, base + abc_tail_at(p.stream_bytes, h.meshlets) + sizeof(AbcTail), sizeof(identity));
+    Re4dcActorSource current{};
+    if ((f.mode == kRigid && (!p.static_geometry || p.position_stride != 8 || p.positions != f.positions)) ||
+        (f.mode == kSkin && p.position_stride != 6) || f.position_stride != 8 ||
+        !re4dc_actor_model_source(p.info, &current) || current.positions != f.positions ||
+        current.position_count != f.position_count || current.position_count != p.position_count ||
+        !identity.matches(p.info, current.positions, current.position_count, p.position_stride)) {
+        abc32_stats.decline(Source); return nullptr;
+    }
+#endif
     if ((p.cull != 1 && p.cull != 2) || base != p.stream || (f.mode != kSkin && f.mode != kRigid)) return nullptr;
     if (!abc_tab_ready) {
         for (unsigned k = 0; k < 64; ++k) {
@@ -3558,7 +3681,12 @@ const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f,
         }
         abc_tab_ready = true;
     }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    ++abc32_stats.admitted;
+    return certified;
+#else
     return abc_table(base, p.stream_bytes, &cls);
+#endif
 }
 #endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
@@ -5372,6 +5500,16 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #if defined(RE4DC_ACTOR_TEST)
         const double t0 = test_now_us();
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_BACKFACE_CONE == 2
+        // The comparison must parse the GX source before the in-place publish.
+        // Both scratch buffers are then reused by the actual conversion.
+        unsigned abc32_plain_records = 0, abc32_plain_meshlets = 0;
+        {
+            Converter plain(p, sort, out, p.stream_bytes, Arena{work, room}, false);
+            plain.abc_no_split = true;
+            if (plain.run()) { abc32_plain_records = plain.record_count(); abc32_plain_meshlets = plain.meshlet_count(); }
+        }
+#endif
         Converter c(p, sort, out, p.stream_bytes, Arena{work, room}, false);
 #if !RE4DC_ACTOR_BACKFACE_CONE
         const bool ok = c.run();
@@ -5400,6 +5538,12 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #if RE4DC_ACTOR_BACKFACE_CONE
             if (cp->split()) abc_build(p, size, abc_class_of(p.model));
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (cp->split() && abc32_plain_meshlets) {
+                abc_rec_split += cp->record_count(); abc_rec_plain += abc32_plain_records;
+                abc_ml_split += cp->meshlet_count(); abc_ml_plain += abc32_plain_meshlets;
+            }
+#else
             if (cp->split()) {  // check build: the same part unsplit, for the record / meshlet growth
                 Converter c3(p, sort, out, p.stream_bytes, Arena{work, room}, false);
                 c3.abc_no_split = true;
@@ -5408,6 +5552,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
                     abc_ml_split += cp->meshlet_count(); abc_ml_plain += c3.meshlet_count();
                 }
             }
+#endif
 #endif
 #endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
@@ -5578,6 +5723,9 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_bytes = memory ? bytes & ~31U : 0;
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    uv32::log(frame_serial);
+#endif
     lod_budget = lod_budget_frame;
 #if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
     b28::window(frame_serial);
@@ -6047,6 +6195,12 @@ void abc_census() {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
         // triangles skipped; totals since the last line
         abc_log = frame_serial;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+        re4dc_log("AC32C frame=%u parts=%u/%u why=%u/%u/%u/%u/%u tested=%u reject=%u near=%u numeric=%u empty=%u split_skipped=%u\n",
+            frame_serial,abc32_stats.admitted,abc32_stats.declined,abc32_stats.why[0],abc32_stats.why[1],
+            abc32_stats.why[2],abc32_stats.why[3],abc32_stats.why[4],abc32_stats.tested,abc32_stats.rejected,
+            abc32_stats.near,abc32_stats.numeric,abc32_stats.empty,abc32_stats.split_skipped);
+#endif
         re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u marks=%u conv=%u/%u/%u parts=%u/%u unsplit=%u rec=%u/%u ml=%u/%u\n",
                   frame_serial, abc_splits, abc_built, abc_noroom, abc_cones, abc_nocone, abc_bad, abc_nmarks, abc_conv,
                   abc_conv_op, abc_conv_mk, abc_part_calls, abc_part_cull, abc_unsplit,
@@ -6415,7 +6569,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    if (!re4dc_model_packet_reserve(&p, &e.packet)) {
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+            RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+#else
     if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_certificate = uv32::checked_certificate(p, *blob);
+    re4dc_model_uv16_request32(uv32_certificate);
+#else
 #if RE4DC_ACTOR_UV16
     // Consumed by the begin call below (direct or packet), whatever its result.
     e.uv16 = uv16_safe(p, *blob);
@@ -6423,10 +6587,14 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const u32 pcw_set = kPcwStripLength6 | (e.uv16 ? kPcwUv16 : 0U), pcw_clear = kPcwStripLength6 | kPcwUv16;
     re4dc_model_next_header_pcw(pcw_set, pcw_clear);
 #endif
+#endif
 #if RE4DC_ACTOR_DIRECT
     Re4dcModelDirect direct{};
     if (re4dc_model_direct_enabled() && re4dc_model_direct_begin(&p, &direct)) {
         if (direct.scratch_capacity < kCacheSlots) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
             // Nothing sent yet beyond the header: an empty part.
             re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0); re4dc_model_result(2, 0, 0); return 1;
         }
@@ -6436,13 +6604,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     } else
 #endif
     {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        re4dc_model_uv16_request32(uv32_certificate);
+#else
 #if RE4DC_ACTOR_UV16
         re4dc_model_next_header_pcw(pcw_set, pcw_clear);
+#endif
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         DFA26_MODEL_HIT(ActorPacketPath, 1)
 #endif
         if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
             RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
             re4dc_model_result(2, 0, 0);
             return 1;
@@ -6451,6 +6626,16 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         e.cache.v = static_cast<pvr_vertex_t*>(e.packet.vertices) + e.packet.capacity;
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_reason = re4dc_model_uv16_result32();
+    e.uv16 = uv32_reason == re4dc::format32::Uv16;
+    if (e.uv16) ++stats.uv16_parts;
+#if RE4DC_ACTOR_DIRECT
+    uv32::counters.note(uv32_reason, e.direct ? 1U : 0U);
+#else
+    uv32::counters.note(uv32_reason, 0U);
+#endif
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
 #endif
@@ -6579,6 +6764,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
             const AbcCone& cn = abc[mi];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (!cn.k) ++abc32_stats.empty;
+#endif
             if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
                 ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
@@ -6742,8 +6930,14 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 // screen rows; once per repeated translation: crowd_tier (the same distance again changes nothing).
 // =2 (check build): every chunk first goes through re4dc_actor_submit, and the TA words both paths emit
 // (headers included) are compared chunk by chunk ("C3CHK" lines); the image draws each chunk twice.
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+#if !RE4DC_ACTOR_DIRECT || !RE4DC_NATIVE_ACTOR_SKIN_LAZY || (defined(RE4DC_TA_GUARD) && RE4DC_TA_GUARD)
+#error "ACTOR_FORMAT32 coarse windows need DIRECT=1 SKIN_LAZY=1 TA_GUARD=0"
+#endif
+#else
 #if !RE4DC_ACTOR_DIRECT || RE4DC_ACTOR_UV16 || !RE4DC_NATIVE_ACTOR_SKIN_LAZY || (defined(RE4DC_TA_GUARD) && RE4DC_TA_GUARD)
 #error "COARSE_ONE_SUBMIT needs NATIVE_ACTOR_DIRECT=1 NATIVE_ACTOR_SKIN_LAZY=1 NATIVE_ACTOR_UV16=0 TA_GUARD=0 (a window is one guarded part)"
+#endif
 #endif
 #if RE4DC_COARSE_GATE_ONCE && (!RE4DC_AVK || !RE4DC_ACTOR_FOG_GATE)
 #error "COARSE_GATE_ONCE needs ACTOR_VTX_KERNEL=1 and ACTOR_FOG_GATE=1 (the kernel's fog gate loop)"
@@ -6902,6 +7096,9 @@ struct OneWindow {
     unsigned motion_accounted=0; // local only; chunks own their accepted records
 #endif
     bool open = false;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    bool uv16 = false;
+#endif
     Re4dcModelDirect direct{};
     std::uint32_t* sq = nullptr;
     unsigned slots = 0, primed = 0;  // the window's slots so far; cache entries whose flags / oargb are primed
@@ -6921,6 +7118,9 @@ void one_close(OneWindow& w) {
 #endif
     re4dc_model_direct_end(w.slots);
     w.open = false; w.slots = 0; w.primed = 0;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    w.uv16 = false;
+#endif
 }
 
 // re4dc_actor_submit() for one chunk, sent into the window (opened here when closed): 1 / 0 as that call
@@ -7176,21 +7376,52 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         for (unsigned mi = 0; mi < blob->meshlets; ++mi) bound += table[mi].n.triangles();
         if (w.slots + 6U * bound > 32767U) one_close(w);
     }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_certificate = uv32::checked_certificate(p, *blob);
+    unsigned uv32_reason = re4dc::format32::BeginFailed;
+    if (w.open) {
+        uv32_reason = re4dc_model_uv16_live32(&p, uv32_certificate);
+        const bool uv32_want = uv32_reason == re4dc::format32::Uv16;
+        if (w.uv16 != uv32_want) { one_close(w); ++uv32::counters.splits; }
+    }
+    const bool uv32_shared = w.open;
+#endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
     if (!w.open) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        if (!re4dc_model_packet_reserve(&p, &e.packet)) {
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+            RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); return 1; }
+#else
         if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); return 1; }
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        re4dc_model_uv16_request32(uv32_certificate);
+#endif
         if (re4dc_model_direct_enabled() && re4dc_model_direct_begin_reserved(&p, &e.packet, &w.direct)) {
             if (w.direct.scratch_capacity < kCacheSlots) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
                 re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0); re4dc_model_result(2, 0, 0); return 1;
             }
             w.open = true; w.sq = w.direct.sq; w.slots = 0; w.primed = 0;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            w.uv16 = re4dc_model_uv16_result32() == re4dc::format32::Uv16;
+#endif
         } else {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
             DFA26_MODEL_HIT(ActorPacketPath, 1)
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            re4dc_model_uv16_request32(uv32_certificate);
+#endif
             if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
                 RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
                 re4dc_model_result(2, 0, 0);
                 return 1;
@@ -7205,6 +7436,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         e.cache.v = static_cast<pvr_vertex_t*>(w.direct.scratch);
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    if (!uv32_shared) uv32_reason = re4dc_model_uv16_result32();
+    e.uv16 = uv32_reason == re4dc::format32::Uv16;
+    if (e.uv16) ++stats.uv16_parts;
+    uv32::counters.note(uv32_reason, uv32_shared ? 2U : (e.direct ? 1U : 0U));
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
 #endif
@@ -7353,6 +7590,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
             const AbcCone& cn = abc[mi];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (!cn.k) ++abc32_stats.empty;
+#endif
             if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
                 ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
@@ -7388,6 +7628,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             continue;
         }
         e.prime(nv);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        if (e.uv16) pack_uv16(e.cache.v, nv, true);
+#endif
         APROF_SPAN(aprof_lit, APROF_LIT);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
         pass_fast_only(e, lights, r, nv);

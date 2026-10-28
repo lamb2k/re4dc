@@ -1,0 +1,28 @@
+#include "@HEADER@"
+struct Cone32Fixture {short c[3];unsigned short r;short a[3];unsigned char k,pal;};
+struct Eye32Fixture {unsigned pal;bool ok;float e[3],s;re4dc::cone32::Guard guard;};
+static float matrix32[9],translation32[3],adj32[9],det32;
+static Cone32Fixture cone32;
+static Eye32Fixture eye32;
+static re4dc::cone32::SourceIdentity source32;
+extern "C" {
+extern const unsigned fixture_layout[]={1,sizeof(Cone32Fixture),sizeof(Eye32Fixture),sizeof(re4dc::cone32::Guard),sizeof(source32)};
+void fixture_prepare(unsigned config){
+    const float matrix[9]={320,0,320,0,-240,240,0,0,1};
+    const float adj[9]={-240,0,76800,0,320,-76800,0,0,-76800};
+    for(unsigned i=0;i<9;++i){matrix32[i]=matrix[i];adj32[i]=adj[i];}
+    translation32[0]=3200000;translation32[1]=2400000;translation32[2]=10000;det32=-76800;
+    eye32.pal=0;eye32.ok=true;eye32.e[0]=eye32.e[1]=0;eye32.e[2]=-10000;eye32.s=-1;
+    cone32={{0,0,0},256,{0,0,-32767},2,0};
+    re4dc::cone32::prepare(matrix32,translation32,adj32,det32,eye32.e,10,eye32.guard);
+    if(config==1)cone32.a[2]=32767;
+    if(config==2)eye32.guard.near=9900;
+    if(config==3)eye32.guard.ready=false;
+    if(config==4)cone32.k=0;
+    if(config==5)det32=0;
+    source32={0x123400,0x567800,128,6};
+}
+unsigned fixture_guard(unsigned){return re4dc::cone32::prepare(matrix32,translation32,adj32,det32,eye32.e,10,eye32.guard);}
+unsigned fixture_test(unsigned){return re4dc::cone32::test(cone32,eye32,eye32.guard,0.9987569212189223f,0.002484612317299295f);}
+unsigned fixture_source(unsigned mismatch){return source32.matches(reinterpret_cast<const void*>(0x123400U),reinterpret_cast<const void*>(0x567800U+mismatch),128,6);}
+}

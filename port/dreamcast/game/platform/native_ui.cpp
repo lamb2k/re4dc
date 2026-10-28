@@ -1,3 +1,6 @@
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+#include "include/actor_format32_uv.hpp"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "include/fallback_audit29.h"
 #endif
@@ -1225,6 +1228,15 @@ constexpr unsigned kModelStaticLightBytes=0;
 constexpr unsigned kModelPreparationBytes=RE4DC_D349_RENDERER_STACK?12288:0;
 constexpr unsigned kModelPacketBytes=kModelSlabBytes-kModelMetadataBytes-kModelStaticLightBytes-kModelDeferredSpillBytes-kModelPreparationBytes;
 pvr_vertex_t* model_packets; unsigned model_used,model_pending; Entry* model_handle;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+re4dc::format32::UvRequest actor_uv32_request;
+struct ActorUv32Binding {
+    Entry* handle=nullptr;
+    unsigned width=0,height=0;
+    float u_scale=0,v_scale=0;
+    bool valid=false;
+} actor_uv32_binding;
+#endif
 #if RE4DC_ACTOR_UV16
 unsigned next_pcw_set,next_pcw_clear; // actors30: re4dc_model_next_header_pcw, one packet_begin
 #endif
@@ -7326,6 +7338,16 @@ extern "C" void* re4dc_model_metadata_storage(unsigned* bytes){
 #if RE4DC_ACTOR_UV16
 extern "C" void re4dc_model_next_header_pcw(unsigned set,unsigned clear){next_pcw_set=set;next_pcw_clear=clear;}
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+extern "C" void re4dc_model_uv16_request32(unsigned certificate){actor_uv32_request.prepare(certificate);}
+extern "C" unsigned re4dc_model_uv16_result32(){return actor_uv32_request.result;}
+extern "C" unsigned re4dc_model_uv16_live32(const Re4dcModelPart* p,unsigned certificate){
+    if(!p || !direct_open || !actor_uv32_binding.valid || actor_uv32_binding.handle!=model_handle)
+        return re4dc::format32::Binding;
+    return re4dc::format32::uv_decide(certificate,(p->flags&0x80000000U)!=0,p->uv_offset,
+        actor_uv32_binding.width,actor_uv32_binding.height,actor_uv32_binding.u_scale,actor_uv32_binding.v_scale);
+}
+#endif
 #if RE4DC_FRONT_NATIVE>=2 && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
 // FRONT_NATIVE=2 group 8 (model_bridge.cpp): the PVR header a part would get, computed without
 // side effects (no texture load, no handle touch, no pass switch, no header cache). A copy of
@@ -7395,6 +7417,12 @@ extern "C" void re4dc_model_texture(const unsigned* key){model_texture=key;}
 namespace { const Re4dcModelPacket* model_reserved=nullptr; }
 #endif
 extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    // Consume before every possible return. A failed/foreign begin cannot
+    // leave an actor-format request for a later unrelated part.
+    const unsigned actor_uv32_pending=actor_uv32_request.take();
+    actor_uv32_binding.valid=false;
+#endif
 #if RE4DC_GC_ASSET_GATE && defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
     gcasset_probe_outer=__builtin_return_address(0);
 #endif
@@ -7606,6 +7634,23 @@ if(!handle){
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     if(rtt_pass){out->u_scale=1.0f;out->v_scale=1.0f;}
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    // All texture overrides and final scales are now known. Only the slab
+    // copy changes; cached headers stay generic. Direct begin sends it after
+    // this function returns, so the actor learns the actual committed format.
+    if(actor_uv32_pending){
+        unsigned width=t.width,height=t.height;
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+        if(rtt_pass){width=rtt_w;height=rtt_h;}
+#endif
+        actor_uv32_request.result=re4dc::format32::uv_decide(actor_uv32_pending&63U,
+            (p->flags&0x80000000U)!=0,p->uv_offset,width,height,out->u_scale,out->v_scale);
+        constexpr unsigned mask=(3U<<18)|1U;
+        const unsigned set=(3U<<18)|(actor_uv32_request.result==re4dc::format32::Uv16?1U:0U);
+        model_packets[model_used].flags=(model_packets[model_used].flags&~mask)|set;
+        actor_uv32_binding={handle,width,height,out->u_scale,out->v_scale,true};
+    }else actor_uv32_request.result=re4dc::format32::NotRequested;
+#endif
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
@@ -7727,6 +7772,12 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 }
 #endif
 extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* out){
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    struct ActorUv32BeginGuard {
+        bool success=false;
+        ~ActorUv32BeginGuard(){if(!success){actor_uv32_request.cancel();actor_uv32_binding.valid=false;}}
+    } actor_uv32_guard;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
 #endif
@@ -7771,6 +7822,9 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
     out->sq=sq+8;out->scratch=packet.vertices;out->scratch_capacity=packet.capacity;
     out->u_scale=packet.u_scale;out->v_scale=packet.v_scale;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    actor_uv32_guard.success=true;
+#endif
     return 1;
 #else
     (void)p;(void)out;return 0;

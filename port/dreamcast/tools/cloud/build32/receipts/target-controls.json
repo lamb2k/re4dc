@@ -1,0 +1,2492 @@
+{
+  "status": "PASS",
+  "scope": "Reusable Make-derived SH-4 compilation and disabled byte-identity gate.\n\nThe default matrix qualifies Build32. --config accepts the same JSON shape as\n--print-config for later isolated builds. Every changed existing translation\nunit is compiled from the archived integration tree and current source with\nnew controls absent and explicitly zero. Complete preprocessed files and\nobjects must match byte for byte. Enabled arms compile production source and\nperform a relocatable link; this does not build a whole game or prove visuals.\nDebug records and preprocessor line markers are consistently omitted. No game\ndata, console, emulator, target cache timing or full-image PASS is claimed.\n",
+  "baseline": "81028934c0c43e13c1b8e108ec50ccac59ed8bab",
+  "config": {
+    "knobs": [
+      "ACTOR_FORMAT32"
+    ],
+    "units": {
+      "native_actor_fast": [
+        "platform/native_actor_fast.o",
+        "platform/native_actor_fast.cpp"
+      ],
+      "native_ui": [
+        "platform/native_ui.o",
+        "platform/native_ui.cpp"
+      ],
+      "coarse_actor": [
+        "coarse_actor.o",
+        "coarse_actor.cpp"
+      ]
+    },
+    "knob_units": {
+      "ACTOR_FORMAT32": [
+        "native_actor_fast",
+        "native_ui"
+      ]
+    },
+    "new_units": [],
+    "off_profiles": {
+      "release": [
+        "NMR_POOL_LOD=0"
+      ],
+      "qa": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1"
+      ],
+      "cone": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "ACTOR_BACKFACE=0",
+        "ACTOR_BACKFACE_CONE=1"
+      ],
+      "cone-check": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "ACTOR_BACKFACE=0",
+        "ACTOR_BACKFACE_CONE=2"
+      ],
+      "legacy-uv": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "NATIVE_ACTOR_UV16=1",
+        "ACTOR_MOVCA=0",
+        "LEON_NATIVE_PIPE=0",
+        "NATIVE_ACTOR_DIRECT=0",
+        "COARSE_ONE_SUBMIT=0",
+        "COARSE_GATE_ONCE=0",
+        "ACTOR_PLAN=0",
+        "ACTOR_TRANSACTION=0",
+        "ACTOR_LEON_NATIVE_LOOK=0",
+        "ACTOR_APPEARANCE_ALIAS=0",
+        "ACTOR_PL08=0",
+        "ACTOR_PL08_PACK=0",
+        "ACTOR_GANADO_APP0_GRIP=0",
+        "ACTOR_PROOF_LEAN=0",
+        "ACTOR_MATERIAL_RECORD=0",
+        "ACTOR_BIND_REUSE=0",
+        "SS_CERT=0",
+        "SS_CERT_PARTNER_CAPACITY=0",
+        "LEON_HAND_POSES=0",
+        "LEON_SOURCE_LIGHT=0",
+        "LEON_LIGHT_HEADROOM=0",
+        "LEON_LIGHT_FILL=0",
+        "CROWD_CULL=0",
+        "CROWD_READOPT=0",
+        "CROWD_READOPT_MEMO=0",
+        "CROWD_FOGSKIP=0",
+        "CROWD_INVIS_SKIP=0",
+        "NATIVE_MODEL_REGISTRY=0",
+        "NATIVE_MODEL_REGISTRY_PACK=0",
+        "NATIVE_MODEL_REGISTRY_TX=0",
+        "NATIVE_MODEL_REGISTRY_PALBOUND=0",
+        "NATIVE_MODEL_REGISTRY_POOL=0",
+        "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=0",
+        "NATIVE_MODEL_REGISTRY_FIRST=0",
+        "NATIVE_MODEL_REGISTRY_LOD=0",
+        "RIGID_CHUNK=0",
+        "PS2_INTERIOR_ACTORS=0",
+        "ENEMY_VIS_CULL=0",
+        "ACTOR_PROBE_LIGHT=0",
+        "PS2_GANADO_F=0",
+        "PS2_GIGANTE=0",
+        "PS2_DELLAGO=0",
+        "PS2_ANIMALS=0",
+        "PS2_CROW=0",
+        "PS2_WOLF=0",
+        "PS2_CAST_MERCHANT=0",
+        "PS2_CAST_MERCHANT_LIT=0",
+        "PS2_CAST_CH1=0",
+        "PS2_CAST_BOAT=0",
+        "PS2_CH1_ENEMY=0",
+        "PS2_ASHLEY=0",
+        "PS2_ASHLEY_ROOMS=0",
+        "CHARBAKE_TOGGLE=0"
+      ]
+    },
+    "on_profiles": {
+      "cone": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "ACTOR_BACKFACE=0",
+        "ACTOR_BACKFACE_CONE=1",
+        "ACTOR_FORMAT32=1"
+      ],
+      "cone-check": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "ACTOR_BACKFACE=0",
+        "ACTOR_BACKFACE_CONE=2",
+        "ACTOR_FORMAT32=1"
+      ],
+      "uv": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "NATIVE_ACTOR_UV16=1",
+        "ACTOR_MOVCA=0",
+        "LEON_NATIVE_PIPE=0",
+        "ACTOR_FORMAT32=1"
+      ],
+      "combined": [
+        "DBG_WARP=1",
+        "WARP_AFTER_RESET=1",
+        "QA_MENU=1",
+        "BENCHMARK=0",
+        "PMC_ROW=0",
+        "WORLD_METER=1",
+        "NMR_POOL_LOD=0",
+        "QA_LINK=1",
+        "QA_LINK_REVIEW28=1",
+        "ACTOR_LIGHT_FAST_ONLY=1",
+        "NATIVE_ACTOR_UV16=1",
+        "ACTOR_MOVCA=0",
+        "LEON_NATIVE_PIPE=0",
+        "ACTOR_BACKFACE=0",
+        "ACTOR_BACKFACE_CONE=1",
+        "ACTOR_FORMAT32=1"
+      ]
+    },
+    "watch_fields": [
+      "QA_MENU",
+      "QA_LINK",
+      "ACTOR_LIGHT_FAST_ONLY",
+      "ACTOR_BACKFACE_CONE",
+      "NATIVE_ACTOR_UV16",
+      "ACTOR_MOVCA",
+      "COARSE_ONE_SUBMIT",
+      "LEON_NATIVE_PIPE",
+      "COARSE_GATE_ONCE",
+      "ACTOR_PLAN",
+      "NATIVE_ACTOR_DIRECT"
+    ],
+    "must_resolve": [
+      "re4dc_model_uv16_request32",
+      "re4dc_model_uv16_result32",
+      "re4dc_model_uv16_live32"
+    ],
+    "required_exports": {
+      "uv": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "combined": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ]
+    },
+    "invalid_values": {
+      "ACTOR_FORMAT32": [
+        "",
+        "2",
+        "0 1"
+      ]
+    },
+    "invalid_compositions": [
+      {
+        "reason": "UV16 word 7 remains reserved for the clipper, incompatible with MOVCA",
+        "options": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "QA_LINK=1",
+          "QA_LINK_REVIEW28=1",
+          "ACTOR_LIGHT_FAST_ONLY=1",
+          "NATIVE_ACTOR_UV16=1",
+          "ACTOR_MOVCA=0",
+          "LEON_NATIVE_PIPE=0",
+          "ACTOR_FORMAT32=1",
+          "ACTOR_MOVCA=1"
+        ]
+      }
+    ]
+  },
+  "config_sha256": "c87249799520cf0a27d1e13196244ab041a7b20cfba86d2fd64d4dcbc5551262",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build32/build_controls.py": "f988b368acb54232544ce16fd7ea0d7f9447df19e9a94baa905a143104ae6fab",
+    "port/dreamcast/tools/cloud/build26/build_controls.py": "66582d44486cd1cbea42f0b5ac423380b4b8395130164ad81f22cbc3a76f1e8f",
+    "port/dreamcast/tools/cloud/build24/build_controls.py": "7b9185a3b8f0ce980a1f9f2f31b5e0fe3c8ec3b285eb64ab45afd3c5c8575a7c",
+    "port/dreamcast/tools/cloud/build18/build_profile.py": "47e787b0820f67e9f3fde33010a67ecddc0814059505204e1afec6d51952927a",
+    "port/dreamcast/tools/d367/ui_draw_lean/build_profile.py": "d9768c80edec4fc2fef9187a883cad2ac1b2f02b4a2c84be313661d4e7ec9ccc",
+    "port/dreamcast/tools/d367/world_submit_spike/build_profile.py": "93d339687cde6c61628b1c73803000616f95768669360bf18ad60258e4ea1aef",
+    "port/dreamcast/tools/d367/world_setup_spike/build_target.py": "a83d3c356db200150d23febc5aa45ae5f7f667005c87f851b4d64883bc96f29e",
+    "port/dreamcast/tools/d367/world_setup_spike/release_profile.py": "76f987d26a783b0ba17345569e685786998c2f52fff468328d0d4e6ce842093b",
+    "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+    "port/dreamcast/tools/d367/test24/release-knobs.txt": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+    "port/dreamcast/tools/d367/rr/recipe.conf": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+    "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+    "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+    "port/dreamcast/game/Makefile": "ebcf4fc09395a8c2700cf657b6521e8bf4c6755875706ad3a3dbdfa9ccbadfd3",
+    "port/dreamcast/game/actor_format32.mk": "fbf58bdec4129640db9840420e10cf7f309f83368f2330184aab7a3e806db054",
+    "port/dreamcast/game/actor_ganado_ps2_stump.mk": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a",
+    "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+    "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+    "port/dreamcast/game/barn28.mk": "0d7f3bdfdfd8e9628c3e67fdd6c286437ad83c3475053885ab2678452542c15f",
+    "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+    "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+    "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+    "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+    "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+    "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+    "port/dreamcast/game/crowd.mk": "db5dcfb0e9ec85d116c222cb266badff62a90df275c50e2a33f0eeb4bbb68fca",
+    "port/dreamcast/game/dbgwarp.mk": "7dabc7487167c8c0ec2d3f583278b650bb1619decf7f8abc663ec74533ed98d1",
+    "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+    "port/dreamcast/game/draw_fallback_audit.mk": "f85ce3c213ea182c92999fbf1c0665532089f75f4ad63eaba852bd17a72ac21b",
+    "port/dreamcast/game/draw_setup_audit.mk": "69465519c474c2db137897dabd822de4dc29234622f5a96dba436b30c2ade7a6",
+    "port/dreamcast/game/effects30.mk": "5d5c82d6bc19483dfc969321d8628e7e879c44a9888ea11d30e25d0d2bc3aba3",
+    "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+    "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+    "port/dreamcast/game/fallback_audit29.mk": "d01e66fb6cc5b76035b6a3b5ef8037b8d84c03fb64e57e8a047bc1567f488c22",
+    "port/dreamcast/game/fallback_scan29.mk": "2e590a292012ca4258fbd0ee27f6c12e6bd3a35203f8e255e63cd5b744ce4a83",
+    "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+    "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+    "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+    "port/dreamcast/game/game30.mk": "ac9f81c61cf45f1dee205c6ff211fdc90387725f36c57b67486e9b0a96244207",
+    "port/dreamcast/game/gc_asset_gate.mk": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd",
+    "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+    "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+    "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+    "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+    "port/dreamcast/game/mendezfx.mk": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167",
+    "port/dreamcast/game/native_model_registry.mk": "b83bf9dde04fc4f75c41f86509ac0bbc6fc505c0ab26b12a3f68ef122db32737",
+    "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+    "port/dreamcast/game/partdump.mk": "abd44d97992217788371885a60c9898d2e00429f0d0e5ef6bfe255abf6773416",
+    "port/dreamcast/game/perf_phase_miss.mk": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6",
+    "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+    "port/dreamcast/game/ps2leon.mk": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137",
+    "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+    "port/dreamcast/game/qalink.mk": "7ce627272ce0df4cfb9ff6d8415b093282a90b5f960a0599a4ded0aa7a460d31",
+    "port/dreamcast/game/qamenu.mk": "8278906026e8836d4027e48f99292fbc0b47eac2f59bbe76dda96dc38f33ba56",
+    "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+    "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+    "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+    "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+    "port/dreamcast/game/scenery19.mk": "155ab311f4161cff82ed453190b840fe2102c561a676f3fe710c52a5731e5eb2",
+    "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+    "port/dreamcast/game/scenery_data_variants.mk": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4",
+    "port/dreamcast/game/scenery_n256.mk": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8",
+    "port/dreamcast/game/scenery_record_split.mk": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c",
+    "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+    "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+    "port/dreamcast/game/t2exact.mk": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2",
+    "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+    "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+    "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+    "port/dreamcast/game/wep_modules27.mk": "8c47364afbafd2d02b445e343cfa43c8ac9a979186076b07a3913fe15c7bd7a5",
+    "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+    "port/dreamcast/game/world_census24_errors.mk": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874",
+    "port/dreamcast/game/world_plan29.mk": "245e8471c064f9195c2c88e13e20913b2448ee2b3c18b741432dced0f8143042",
+    "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+    "port/dreamcast/game/worldopt26.mk": "290b454a0b075fb097b21d9c8566282204dd93e21c7c7e5109e77447261a26e9",
+    "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f",
+    "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67",
+    "port/dreamcast/game/platform/include/gc_asset_gate.h": "4dfbee21becd264b55b249fef6f09bddf654d3168d59501482d82bd8685f64a1",
+    "port/dreamcast/game/platform/include/gc_asset_actor.h": "e601e026a611e339d6caf233d02e932885a4b8163d970471dd88cf6f7315e849",
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": "04be6fb54668d397982ef545c3464e84b96e222b8faabfa7e4c82851c7369b34",
+    "port/dreamcast/game/platform/include/gc_asset_members.h": "558c2baf0d82768e7225d85ca73cc404e493a877910667bf5c082ee9964eec3b",
+    "port/dreamcast/game/platform/include/bfc_class.h": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107",
+    "port/dreamcast/game/platform/include/re4dc_screen.h": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f",
+    "port/dreamcast/game/platform/include/native_actor.hpp": "2c2e225a7184f3b5842409641e0554c1d58229c4f63e7ac035b40fe329cb7dee",
+    "port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "port/dreamcast/game/platform/include/native_ui.h": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+    "port/dreamcast/room/source_lighting.hpp": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.h": "0e9f68c219112d29667f681269211fbf95fd534479ab999d933df08271127974",
+    "port/dreamcast/game/platform/include/actor_native_owner.h": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a",
+    "port/dreamcast/game/platform/include/actor_resource_lease.h": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9",
+    "port/dreamcast/game/platform/include/actor_prof.h": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf",
+    "port/dreamcast/game/platform/include/actor_plan.h": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626",
+    "port/dreamcast/game/platform/include/actor_light_probe.h": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b",
+    "port/dreamcast/game/platform/include/actor_lifetime.h": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+    "port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": "6d77e23c0668904e3dee5feef000a60dadcf0cf9288f5340fa967c6f2208d736",
+    "port/dreamcast/game/platform/include/warp_late.h": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/native_draw_plan.hpp": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405",
+    "port/dreamcast/game/platform/include/ta_direct.hpp": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe",
+    "port/dreamcast/game/platform/include/native_actor_owner_registry.inc": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f",
+    "port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.inc": "b2a3e7ebc020149078b9f9d9635a40ef0868db165729e5a91cbe24264a7dc60e",
+    "port/dreamcast/game/platform/native_actor_rigid.inc": "5885e036f63e23735ddd46057bb1de81861c30d90a8ee01ccafbfc834f6c7fc9",
+    "port/dreamcast/game/platform/chunk_submit.h": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a",
+    "port/dreamcast/game/platform/include/native_actor_owner_submit.inc": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23",
+    "port/dreamcast/game/platform/include/native_actor_owner_runs.inc": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5",
+    "port/dreamcast/game/platform/native_ui.cpp": "1e77f2808bd06cbcb59a61fe3e40489058a4a6b95249d78d7262695bd0c3aca1",
+    "port/dreamcast/game/platform/include/native_event_file.h": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd",
+    "port/dreamcast/game/platform/preload_skip_gcidle.h": "e4282e3055458aad8f968a06cb6e8483967a0c19f7b15838de093435279f0c69",
+    "port/dreamcast/game/platform/preload_skip_gcidle.inc": "c36963537dd7c2339293103288d83a7cb1ee6f551e8f9d912545bc783141e121",
+    "port/dreamcast/game/platform/include/re4dc_vmu.h": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc",
+    "port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98",
+    "port/dreamcast/game/platform/include/gc_asset_audio.h": "d4df30b1f478edc25d570ba4f4c70d9be89305a0d0b2d3df13fc7f0f96656985",
+    "port/dreamcast/game/platform/include/gc_asset_movie.h": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e",
+    "port/dreamcast/game/platform/include/gc_asset_movie_stream.h": "bee23b0136fab7a844f498bf18567fae73597f29c2c45d4da2741d3ad95eb913",
+    "port/dreamcast/game/platform/include/gc_asset_lifecycle.h": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff",
+    "port/dreamcast/game/world_scratch.h": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6",
+    "port/dreamcast/game/platform/include/movie_world_arena.h": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815",
+    "port/dreamcast/game/platform/include/actor_visibility_diag.h": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d",
+    "port/dreamcast/game/platform/include/actor_transaction_diag.h": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca",
+    "port/dreamcast/game/platform/include/ps2_source_world.h": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029",
+    "port/dreamcast/game/platform/include/native_cabin.h": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": "a77de47c842bbc8281b205c7883a42680eabe664f7435c8501f61c94bdae9905",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations_fol24.inc": "175a027ce9f3d3a09b0cfde1fe2e8fab87e92c3a05043229c88c1b259079dbad",
+    "port/dreamcast/game/platform/include/native_ps2_world.h": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411",
+    "port/dreamcast/game/platform/include/re4dc_pad_prompts.h": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59",
+    "port/dreamcast/game/platform/include/re4dc_manual_pages.h": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee",
+    "port/dreamcast/game/platform/include/binocular_art_keys.h": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206",
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "port/dreamcast/game/platform/include/hud_source_mask.h": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b",
+    "port/dreamcast/game/platform/include/native_static.h": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef",
+    "port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "port/dreamcast/game/platform/include/pc_sampler.h": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0",
+    "port/dreamcast/game/platform/include/re4dc_platform.h": "a3d43b28fd78980cb50ac508b6aa816d1efabdc8b62c4c296fa414b71e36524b",
+    "port/dreamcast/room/texture_package.hpp": "6a8990a11daf6ca3b3ae2e30232f2648e8f041dbb583e0037161ad4b84f8c397",
+    "port/dreamcast/room/room_storage.hpp": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0",
+    "port/dreamcast/room/gpu_lifecycle.hpp": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91",
+    "port/dreamcast/game/platform/include/texpack_payload_retry.inc": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38",
+    "port/dreamcast/game/platform/include/texpack_index.inc": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+    "port/dreamcast/game/platform/include/manual_pages_keys.inc": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8",
+    "port/dreamcast/game/platform/include/hud_source_mask_keys.inc": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68",
+    "port/dreamcast/game/platform/fx_none_cut_pack.inc": "502ae15ece814ebf10435c0891d3d3f80273f907879f2f3129c17b06b610a7b4",
+    "port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17",
+    "port/dreamcast/game/platform/include/manual_pages_native.inc": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921",
+    "port/dreamcast/game/platform/include/native_ui_source_world.inc": "b3a12a69f1d0216c348502441bb8d2b866bb3a5952d04d6c73a5260ce8a355c3",
+    "port/dreamcast/game/platform/include/hud_source_mask_native.inc": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755",
+    "port/dreamcast/game/platform/include/native_ui_actor_material.inc": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b",
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2",
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "0f2727427f75a7bf25142bf74cfba3eee88140a4ab119e47150f59f411f61bee",
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481",
+    "port/dreamcast/game/platform/include/native_flashlight_pool.inc": "cc56e2984902582ebf523f648ccbcb608708a1a057bd92af81c8247cf22d527b",
+    "port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512",
+    "port/dreamcast/game/platform/include/native_water_ps2.inc": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a",
+    "port/dreamcast/game/charbake_variants.h": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29",
+    "port/dreamcast/game/coarse_actor.cpp": "b1867d3e08065416422a53f7be98ab6c4bd3ca120547ab2dd758c337680b68b7",
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/types.h": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+    "include/vec.h": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+    "include/camera.h": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/atariInfo.h": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+    "include/main_mem.h": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+    "port/dreamcast/game/public-assets/leon4k_runtime.h": "647a541bd6c4c8f7ca723f6c402190e9b8a5d4a3738c286dc49ad3d9bcf93589",
+    "include/player.h": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/pl_body.h": "ffe21e96fa67adc151204ce5e64c18db91ccc87ee2b3824ad69ab51543cb81d9",
+    "include/math_sub.h": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+    "include/db_log.h": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+    "include/va_ppc.h": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+    "include/pl_wep.h": "0c0bf627c4bbcccd662e1ed39937e394cb102f48855b6cfabaec0695aab42853",
+    "include/obj.h": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768",
+    "include/pendulum.h": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4",
+    "include/main.h": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58",
+    "include/pl_cloth.h": "aa9161837952c327278d158c50c412c69859c9907f973b0d96e173c692514a13",
+    "port/dreamcast/game/coarse_skin.h": "f11f697e630db567720dde819a76ff15d95335187884994246fed0cf09037ed9",
+    "port/dreamcast/game/chunk_find.h": "cfd85fbd8595c16d47287bc70f7d7ce30d03f9aa1a69713d88dcf8f36be72030",
+    "port/dreamcast/game/coarse_actor_owner_leon.inc": "7a50ee3628cd0529c70745837564fea9aa5647b2e32a7f822a899b224f1ef926",
+    "port/dreamcast/game/platform/include/coarse_actor_transaction.h": "ea4a2c3f00ac08f6b4b7c1acb5dbbfe98fbc1ea39ee864ae92ca5e10ac3aa304",
+    "port/dreamcast/game/platform/include/coarse_source_frame.h": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746",
+    "port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49",
+    "port/dreamcast/game/platform/include/coarse_actor_preflight.h": "238c507a5df66357ffb59ac3f16a1ed226778d88ec48f5c7aa24df772eb41679",
+    "port/dreamcast/game/platform/include/coarse_actor_geometry_once.h": "71855740daa83974fb3db00fd91fc32384de1b0b1e8f9db3991ec96aab372118",
+    "port/dreamcast/game/actor_material_owner.h": "d4a64ec26c9409aea7a494f3311d7f4e365f77b64081af65864bb21d6aa794ba",
+    "port/dreamcast/game/platform/include/actor_material_policy.h": "1ceac538e8ea4b7b975637b7638da01e1f707d7d195b761e1a1c525320e905a0",
+    "port/dreamcast/game/public-assets/leon_hair_runs.h": "f2a06510e4a5de5338306b11dc370318379a1bd49730136e5a8ce40129effb34",
+    "port/dreamcast/game/coarse_actor_owner_registry.inc": "e1d4bd67418d151c8a53f860f35d89ab3f7642be3dff42a1aa92823f59219669",
+    "port/dreamcast/game/coarse_actor_geometry_once.inc": "c4c8b6d9acbba9a759a5f8f8a2b85771278db9489b97f69541e7ddbdcd9cc300",
+    "port/dreamcast/game/coarse_actor_pl08_pack.inc": "a0c1db7ac527011c946472071dc5b906bb3fd72ca5b1474b0038d04a74fbdfa3",
+    "port/dreamcast/game/actor_pl08_pack_check.inc": "0e4ead24cdaaf650215a82bc78449fbdffcfa93c09a43d801b903eb822fb0347",
+    "port/dreamcast/game/actor_pl08_pack_identity.inc": "c3a0e8f0da0c9c12b179a04ddded425758aa53511d2c269eb963eee9a44e4403",
+    "port/dreamcast/game/coarse_actor_owner_pl08.inc": "8c5190393eb459ee5cb8ae4c091d33181c407d35a40b078e088cd080f3aae1dc",
+    "port/dreamcast/game/coarse_actor_transaction.inc": "dc7ffae1f7e8b95a2314eddfe073fe9e2c18d803e6bbdf030355bfde59d1fa8f",
+    "port/dreamcast/game/actor_palette_arena.h": "176ba7fdf259b8eff1916ac6059086983bb8c89412e05d6ac61856b08e7aee9a",
+    "port/dreamcast/game/actor_transaction_diag_impl.inc": "0e3913e67ede52582981e5f5a24c1619eb8d5c25076884520a6db5097f976837",
+    "port/dreamcast/game/actor_visibility_diag_impl.inc": "00074483eb735588024eb425ef9887e307d77dc47f3eca19d31e47e2468a0d79",
+    "port/dreamcast/game/coarse_actor_material.inc": "80cdaf6500ff9efa89ab2ba24099cfcaf2ff63d1a4a5b234776343cf51676da3",
+    "port/dreamcast/game/actor_material_records.inc": "2150e6cd0ff5244811286ff10ad272863ec02dead21e5e8b5a5f575f87bce436",
+    "port/dreamcast/game/actor_material_records_pl08.inc": "35a8984116b40ddfdcb16c827cc930893ff43ffa002ca087cc5df442ea25b8b8",
+    "port/dreamcast/game/actor_material_records_pl08_roles.inc": "a2dce5d302e24c57d1bb59b3b4001fa77218b6604935d08ebd65ece724865c40",
+    "port/dreamcast/game/actor_material_records_app0_grip.inc": "9465801aa106a538ed4ce4697c32ba42cf6163976f8320e58cc4d9db5fdb3cd5",
+    "port/dreamcast/game/actor_material_records_pl08_blobs.inc": "0d93902ce93637d8307862ca86ee6e101ddfc9c38beba6527ea2374745bb6151",
+    "port/dreamcast/game/actor_appearance_aliases_ext.inc": "ec2becf99e5719688869b378825fb2dea9228d19d3ce9438353170fdca5e889e",
+    "port/dreamcast/game/actor_lifetime.inc": "c56126ff579fe65cfb20c729c3079d5b37757dbcfee899d3c298be42292440b8",
+    "port/dreamcast/game/actor_swap_park.inc": "7574aa4e9cb83115ec596a860c4d2a4f112579f0d746b290b0921024106e6154",
+    "port/dreamcast/game/coarse_actor_registry_pack.inc": "3919584de9a10fa56237cda1f7710bd6bbe3c407262ab453b26e1e22d8061406",
+    "port/dreamcast/game/coarse_actor_registry_pack_check.inc": "a98dff1eeed695702828d52490f6a7a957f47861cdb358d0926388fb39dfbb17",
+    "port/dreamcast/game/platform/include/gc_asset_actor_compiled.inc": "d2bb2715dc0390f3ae8d5f17064aaa5c810cb7a8097c520e7ec3d7cac697d96d",
+    "port/dreamcast/game/platform/include/gc_asset_actor_select.inc": "01a1c23c13e2efae791e30cd1f0ef9012388c6f58dc9f12da45a961d1fdcb1f4",
+    "port/dreamcast/game/platform/include/actor_cone32.hpp": "7033f9bbefd340f32cfec1eafcc4992f60622c78bff28c61381aeba71adbcad3",
+    "port/dreamcast/game/platform/include/actor_format32_uv.hpp": "af9466d0e0b8a0e2c4f6affb991de49cc5f8f1f5b8ec09d4bfd08280051ae8d6",
+    "port/dreamcast/game/platform/include/actor_format32_uv_source.inc": "f5a2097fb22b39a9c32bb275e1294041f3966d4d0204de167cf1f2f3519f3be5"
+  },
+  "compiler": "sh-elf-g++.real (GCC) 15.2.0",
+  "compiler_sha256": "0607fbaf0a3af5e6ad0a1696628ffba7585c74482a423f805f0575181f7ce8da",
+  "linker": "GNU ld (GNU Binutils) 2.45.1",
+  "kos": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sdk": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "pinned_executable_sha256": {
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-addr2line": "199ea91dd1d5a24f21cf1e4c73fc80e0c433cb3aff7991ffddfc21e802aa199f",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ar": "678f337da2c1fdef6647939042954f388b1d70e458d49a21eab7db1bca0fb8d2",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-as": "0d7aa0c4b358faa256f3dc6be0145b7182d840962175a7df20721105a85e33cd",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-c++": "07bbffddbf0555c49b660287a63a349dc5d85c7b2255cc9b069d86b1043e519d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-c++filt": "8daf09b7d91908943dd52ba8ba45008305991bbcef9dc5015bea758e88e9239c",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-cpp": "3fb0f41c6c7d1cc2f60cb01451ad9651c8d234348603dee91758420dfd772627",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-elfedit": "8594f87caaffebeb2310217e71b61ea77e4e90e6015827ed7ffd3bbaa6784b61",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-g++": "07bbffddbf0555c49b660287a63a349dc5d85c7b2255cc9b069d86b1043e519d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-15.2.0": "267f6c57b3409d609000e6a95df2998e89835f83ecbdf3ea5cf51519c0c88e90",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-ar": "2915aed592c0ee23f703457229f899d18c0ad660558138e1824de4bee6ee311d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-nm": "6b31b9db93407f9868793a5a66c809f097d072d3fe6b0d342f5276b39f80ee1e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc-ranlib": "0b0e56ff35994e080f9faeab6f66016fac30c4dbed3963f0b05240f17d910d60",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcc": "267f6c57b3409d609000e6a95df2998e89835f83ecbdf3ea5cf51519c0c88e90",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov-dump": "822fcd04e0b7b5378ee50564e72a66921a3d86e501616199b7687225b8798c4c",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov-tool": "9046190ee78d2862d2ce2200f373f915a80b8a90fe028acbfe1609332d59ae7a",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gcov": "307eef994ae14fcde4383933a32f9cc23e988273376782b1248cf52e4f129d04",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-gprof": "bc0704a13ba8a96bbac67383687692e5f5519044fda3a97c20df79b6b0057bc7",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ld.bfd": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ld": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-lto-dump": "676f1b0c817908987f1a4c8881184a13ad2c8e8790c480a368955d9bb285e29e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-nm": "ef30252edd525548739bd327736ce3982dc90e27297030d0f7e0dff1571fe3be",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy": "758c807063f9d0b1a46fc07388c36ed6594fc976c3143f1663ff8eddb20d9144",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-objdump": "628cb154e37a5fcd9cf9e21be8df7421cfe96633bd05e90fb04289a7b04404a6",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-ranlib": "fbbc9237eae6102536bf80a4a9fb793240d75e75bfe6addc42380f25d20bd5bf",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-readelf": "e14a9f0c0a86342166707f29ae6abfd64f8b06af27c144508e8d1b78f58fa9c2",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-size": "ce6c4306af7636329b40a45996a81fb1f70b549be6e76166997b27ed176d84ea",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-strings": "4ecdac5dd6144748914762dc5117f6f9078f66adcdac86f95fa1ed52c259898e",
+    "opt/toolchains/dc/sh-elf/bin/sh-elf-strip": "ea01109e168d788cfa10b89489dca09345a177185d8ed50d52bdbb79c7cceeb8",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1": "003ec800828303c334fef579fd917298cc95bc6013b7848519052f1d03382633",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1obj": "b5f7914ba70bff00562ef1e476989cc5f6d45702e0a6f48409314118f2bd93a0",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1objplus": "3db30aa76825bb961c8396ca5a84406dcc3832148f29c693a99f2a39d4e86fac",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus": "015825ba86765ed774abf73986eed6f003cc8c3e60bc9505b5b2e88f00587fb8",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/collect2": "938d23e46badcdca3b91231e2355e9862521843f91511192f1b13ac51653be80",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/g++-mapper-server": "48fc93bb8a68e6a0da6f6f0cd03267b15bfc67eb7b4039a90ca1ef92fc2e2604",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/install-tools/fixincl": "a024328f79aa3a5dca952fe82c5aa87711042c25820d81647e66522edbf75539",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/lto-wrapper": "dbcc9aee1f3ffb1577f3144ac917fd2d9899fab5a86203c62468b8e5552895eb",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/lto1": "16541b69997b0166f40e37f0a274601079645bc6cdaf1c7e4f015f1e11ea11ed",
+    "opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/plugin/gengtype": "041b0314b7bfc7ed8f732501db1c733fb14bf790322e4b2b15b41dbff2839086",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ar": "678f337da2c1fdef6647939042954f388b1d70e458d49a21eab7db1bca0fb8d2",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/as": "0d7aa0c4b358faa256f3dc6be0145b7182d840962175a7df20721105a85e33cd",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ld.bfd": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ld": "f3e9f3eea314d9c1649da68bf637aca1ccede2257df7b4776351d0965c03703d",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/nm": "ef30252edd525548739bd327736ce3982dc90e27297030d0f7e0dff1571fe3be",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/objcopy": "758c807063f9d0b1a46fc07388c36ed6594fc976c3143f1663ff8eddb20d9144",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/objdump": "628cb154e37a5fcd9cf9e21be8df7421cfe96633bd05e90fb04289a7b04404a6",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/ranlib": "fbbc9237eae6102536bf80a4a9fb793240d75e75bfe6addc42380f25d20bd5bf",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/readelf": "e14a9f0c0a86342166707f29ae6abfd64f8b06af27c144508e8d1b78f58fa9c2",
+    "opt/toolchains/dc/sh-elf/sh-elf/bin/strip": "ea01109e168d788cfa10b89489dca09345a177185d8ed50d52bdbb79c7cceeb8"
+  },
+  "off_identity_comparisons": 60,
+  "disabled_identity": [
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "release",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "qa",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "cone-check",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "absent",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "native_actor_fast",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "native_ui",
+      "artifact": "o",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "ii",
+      "identical": true
+    },
+    {
+      "profile": "legacy-uv",
+      "arm": "zero",
+      "unit": "coarse_actor",
+      "artifact": "o",
+      "identical": true
+    }
+  ],
+  "enabled_compiles": [
+    {
+      "profile": "cone",
+      "units": [
+        "native_actor_fast",
+        "native_ui",
+        "coarse_actor"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "cone-check",
+      "units": [
+        "native_actor_fast",
+        "native_ui",
+        "coarse_actor"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "uv",
+      "units": [
+        "native_actor_fast",
+        "native_ui",
+        "coarse_actor"
+      ],
+      "compiled": true
+    },
+    {
+      "profile": "combined",
+      "units": [
+        "native_actor_fast",
+        "native_ui",
+        "coarse_actor"
+      ],
+      "compiled": true
+    }
+  ],
+  "artifacts": {
+    "release-baseline": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "db099a28ed558e8bfd3476e5bfbb2aba5529030be2d27b97e774abb564b50031"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1478595,
+          "sha256": "1248edd651c7589c2e028258f098ecd55f2ef55ee4d8dca2d3a446874d98d725"
+        },
+        "o": {
+          "bytes": 413148,
+          "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+          "executable_bytes": 81726,
+          "allocated_bytes": 394016,
+          "zero_fill_bytes": 153375,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "c20e958622a4177949606a3424bb3f3d52c7d1719b48bfed1e38d5ce37cbe99f"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402723,
+          "sha256": "22025c7d0f3e037696368d32cae3ea38dd23110de472d5eaf80ec5bdb8e8c020"
+        },
+        "o": {
+          "bytes": 189840,
+          "sha256": "c20862937e0fbfb3395c71017ba784308402c6a832234b46144349b2ca29b557",
+          "executable_bytes": 73004,
+          "allocated_bytes": 203356,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "75f8b0dfcd6079be68fff8c8b7ffe094b8d5a70ec46d92fe89d0b1a931c615ee"
+          }
+        }
+      }
+    },
+    "release-absent": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1478595,
+          "sha256": "1248edd651c7589c2e028258f098ecd55f2ef55ee4d8dca2d3a446874d98d725"
+        },
+        "o": {
+          "bytes": 413148,
+          "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+          "executable_bytes": 81726,
+          "allocated_bytes": 394016,
+          "zero_fill_bytes": 153375,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "1da29de2be49b97bdd603f9bc0d8d22feb5b199a43e10a4c7a5761c36f7fd772"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402723,
+          "sha256": "22025c7d0f3e037696368d32cae3ea38dd23110de472d5eaf80ec5bdb8e8c020"
+        },
+        "o": {
+          "bytes": 189840,
+          "sha256": "c20862937e0fbfb3395c71017ba784308402c6a832234b46144349b2ca29b557",
+          "executable_bytes": 73004,
+          "allocated_bytes": 203356,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "cebb798738794192bcf76c499131e4a0c33b9dd885591f6f9f585856909eda3d"
+          }
+        }
+      }
+    },
+    "release-zero": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1171889,
+          "sha256": "d1fc977b4addc18b276421cc2ced0e2c5eb68834a90e19a4463a4fbf07fee778"
+        },
+        "o": {
+          "bytes": 81476,
+          "sha256": "edbe908f5c064e17717ab8ae6a3068cf7f00b0c5c83fdd652100500a66b66d43",
+          "executable_bytes": 50476,
+          "allocated_bytes": 65164,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1478595,
+          "sha256": "1248edd651c7589c2e028258f098ecd55f2ef55ee4d8dca2d3a446874d98d725"
+        },
+        "o": {
+          "bytes": 413148,
+          "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+          "executable_bytes": 81726,
+          "allocated_bytes": 394016,
+          "zero_fill_bytes": 153375,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "1da29de2be49b97bdd603f9bc0d8d22feb5b199a43e10a4c7a5761c36f7fd772"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402723,
+          "sha256": "22025c7d0f3e037696368d32cae3ea38dd23110de472d5eaf80ec5bdb8e8c020"
+        },
+        "o": {
+          "bytes": 189840,
+          "sha256": "c20862937e0fbfb3395c71017ba784308402c6a832234b46144349b2ca29b557",
+          "executable_bytes": 73004,
+          "allocated_bytes": 203356,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "cebb798738794192bcf76c499131e4a0c33b9dd885591f6f9f585856909eda3d"
+          }
+        }
+      }
+    },
+    "qa-baseline": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "db099a28ed558e8bfd3476e5bfbb2aba5529030be2d27b97e774abb564b50031"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "f86e32d73661faba53a8f0a4889d8ff17485c00823826b435219e17c87549d1e"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402964,
+          "sha256": "0335a4c203980fc46ae8239d1ff96dba38ccc6d6f49e101635d671fa14fb7994"
+        },
+        "o": {
+          "bytes": 189996,
+          "sha256": "6c7c23d9906079e8ad4407285bd0759f234a048b1b941182aa40d40953ab5655",
+          "executable_bytes": 73092,
+          "allocated_bytes": 203444,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "e7f7c6e605bc63f063fc78f3744b5f1ea9ad12ed85e6a16c4645389d5d6169cb"
+          }
+        }
+      }
+    },
+    "qa-absent": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402964,
+          "sha256": "0335a4c203980fc46ae8239d1ff96dba38ccc6d6f49e101635d671fa14fb7994"
+        },
+        "o": {
+          "bytes": 189996,
+          "sha256": "6c7c23d9906079e8ad4407285bd0759f234a048b1b941182aa40d40953ab5655",
+          "executable_bytes": 73092,
+          "allocated_bytes": 203444,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "qa-zero": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1172118,
+          "sha256": "fbcef733961aa9eab998c3cef5b0044f1e3a7e90b9712ba2715789a8bac0046b"
+        },
+        "o": {
+          "bytes": 81596,
+          "sha256": "37333538a5a92b1070119cbd761c27fc33cff88cfd9114e37307c9e61cb8cfa6",
+          "executable_bytes": 50540,
+          "allocated_bytes": 65228,
+          "zero_fill_bytes": 13027,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 67,
+            "details_sha256": "cca8c178db8c9009a95ff6c3f0d002bc692516fb386ebfffa547f1bb8c819d20"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402964,
+          "sha256": "0335a4c203980fc46ae8239d1ff96dba38ccc6d6f49e101635d671fa14fb7994"
+        },
+        "o": {
+          "bytes": 189996,
+          "sha256": "6c7c23d9906079e8ad4407285bd0759f234a048b1b941182aa40d40953ab5655",
+          "executable_bytes": 73092,
+          "allocated_bytes": 203444,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "cone-baseline": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1191125,
+          "sha256": "9d590a3796e496741a83ff623d984cde7ea6cee15cdf7f14b8a8a842ee0a7519"
+        },
+        "o": {
+          "bytes": 94784,
+          "sha256": "52275b9b8f407e59fddbe63ee0f008f113814f07ea1cff4ec23339267950ee98",
+          "executable_bytes": 58040,
+          "allocated_bytes": 74185,
+          "zero_fill_bytes": 14224,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 72,
+            "details_sha256": "7ae70b75bde02a44b590ee954ad1e2c49745ac8e7f307cf480ddef0b1d0bb167"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "f86e32d73661faba53a8f0a4889d8ff17485c00823826b435219e17c87549d1e"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "e7f7c6e605bc63f063fc78f3744b5f1ea9ad12ed85e6a16c4645389d5d6169cb"
+          }
+        }
+      }
+    },
+    "cone-absent": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1191125,
+          "sha256": "9d590a3796e496741a83ff623d984cde7ea6cee15cdf7f14b8a8a842ee0a7519"
+        },
+        "o": {
+          "bytes": 94784,
+          "sha256": "52275b9b8f407e59fddbe63ee0f008f113814f07ea1cff4ec23339267950ee98",
+          "executable_bytes": 58040,
+          "allocated_bytes": 74185,
+          "zero_fill_bytes": 14224,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 72,
+            "details_sha256": "58beee100be62af0a1ae08bac59274afb2448463d019c174e6aac27da914abff"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "cone-zero": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1191125,
+          "sha256": "9d590a3796e496741a83ff623d984cde7ea6cee15cdf7f14b8a8a842ee0a7519"
+        },
+        "o": {
+          "bytes": 94784,
+          "sha256": "52275b9b8f407e59fddbe63ee0f008f113814f07ea1cff4ec23339267950ee98",
+          "executable_bytes": 58040,
+          "allocated_bytes": 74185,
+          "zero_fill_bytes": 14224,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 72,
+            "details_sha256": "58beee100be62af0a1ae08bac59274afb2448463d019c174e6aac27da914abff"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "cone-check-baseline": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1192631,
+          "sha256": "0e56553ae60b6d4766750aed291cfdd5686dd7cf7fb1d260e5fa9ffb55d5d20a"
+        },
+        "o": {
+          "bytes": 96016,
+          "sha256": "fad3abfb92e2b6f8cdb3c8bb2ce77607b0d70be84547a72e433e540a5b9f4ca4",
+          "executable_bytes": 58740,
+          "allocated_bytes": 74889,
+          "zero_fill_bytes": 14228,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 73,
+            "details_sha256": "97b1a66f5403eb7466059f3a1a6569b0d4638b3da7ac86b9b9a28c08407d7aff"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "f86e32d73661faba53a8f0a4889d8ff17485c00823826b435219e17c87549d1e"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "e7f7c6e605bc63f063fc78f3744b5f1ea9ad12ed85e6a16c4645389d5d6169cb"
+          }
+        }
+      }
+    },
+    "cone-check-absent": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1192631,
+          "sha256": "0e56553ae60b6d4766750aed291cfdd5686dd7cf7fb1d260e5fa9ffb55d5d20a"
+        },
+        "o": {
+          "bytes": 96016,
+          "sha256": "fad3abfb92e2b6f8cdb3c8bb2ce77607b0d70be84547a72e433e540a5b9f4ca4",
+          "executable_bytes": 58740,
+          "allocated_bytes": 74889,
+          "zero_fill_bytes": 14228,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 73,
+            "details_sha256": "8dea91c84767ccb35a2d4b1a38f612c042348fb53e75d33f55e047f30c9a175c"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "cone-check-zero": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1192631,
+          "sha256": "0e56553ae60b6d4766750aed291cfdd5686dd7cf7fb1d260e5fa9ffb55d5d20a"
+        },
+        "o": {
+          "bytes": 96016,
+          "sha256": "fad3abfb92e2b6f8cdb3c8bb2ce77607b0d70be84547a72e433e540a5b9f4ca4",
+          "executable_bytes": 58740,
+          "allocated_bytes": 74889,
+          "zero_fill_bytes": 14228,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 73,
+            "details_sha256": "8dea91c84767ccb35a2d4b1a38f612c042348fb53e75d33f55e047f30c9a175c"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "legacy-uv-baseline": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1110546,
+          "sha256": "48575bb7b94d568bbec7234797dffe6d54ea8a9187dfe14fd96da0cb194d5a85"
+        },
+        "o": {
+          "bytes": 52848,
+          "sha256": "de107870f3817d0516055bd2826a8b7a090f5054de0dc61479b2b8fdfbb800c3",
+          "executable_bytes": 35580,
+          "allocated_bytes": 40341,
+          "zero_fill_bytes": 3302,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 32,
+            "details_sha256": "965680fd54020f0068b954a49b14a316476ba18267c16e9b911ea850cc1efc61"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1472050,
+          "sha256": "930aad3ce73abe980347af1b8fba02c257a1d501a89ebc6f32440fe0ff7e0551"
+        },
+        "o": {
+          "bytes": 407712,
+          "sha256": "6389bd49a42b61a64ae7512e904e31966ca394eed2b924add653601627b892e8",
+          "executable_bytes": 80172,
+          "allocated_bytes": 390599,
+          "zero_fill_bytes": 151720,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 225,
+            "details_sha256": "24f2b9a050546690246ba0f58781dc9ce5830e3790e0412343c87db394df3c68"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 89562,
+          "sha256": "22e3d8aee0addf1fb0444a802cc29fef4293392accd7acb6de4bbd839ef760e1"
+        },
+        "o": {
+          "bytes": 16352,
+          "sha256": "f4a8f5ba761d158885b62c36550d66aab6a782f946d4f941c8a57040844ed099",
+          "executable_bytes": 2888,
+          "allocated_bytes": 54636,
+          "zero_fill_bytes": 44771,
+          "stack": {
+            "max_bytes": 600,
+            "functions": 4,
+            "details_sha256": "0b1ed317d82fa38aff1b9bf1c337b0d6601f3fa521a529be7562583369154818"
+          }
+        }
+      }
+    },
+    "legacy-uv-absent": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1110546,
+          "sha256": "48575bb7b94d568bbec7234797dffe6d54ea8a9187dfe14fd96da0cb194d5a85"
+        },
+        "o": {
+          "bytes": 52848,
+          "sha256": "de107870f3817d0516055bd2826a8b7a090f5054de0dc61479b2b8fdfbb800c3",
+          "executable_bytes": 35580,
+          "allocated_bytes": 40341,
+          "zero_fill_bytes": 3302,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 32,
+            "details_sha256": "07ccea7a76f559ed038c437713858a3553823b4bbf4ff5b88a6241deac5d38d8"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1472050,
+          "sha256": "930aad3ce73abe980347af1b8fba02c257a1d501a89ebc6f32440fe0ff7e0551"
+        },
+        "o": {
+          "bytes": 407712,
+          "sha256": "6389bd49a42b61a64ae7512e904e31966ca394eed2b924add653601627b892e8",
+          "executable_bytes": 80172,
+          "allocated_bytes": 390599,
+          "zero_fill_bytes": 151720,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 225,
+            "details_sha256": "cb315ae34ef996f368d907558eb3d19322a72c5632f7fd7e08953c72e2490bea"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 89562,
+          "sha256": "22e3d8aee0addf1fb0444a802cc29fef4293392accd7acb6de4bbd839ef760e1"
+        },
+        "o": {
+          "bytes": 16352,
+          "sha256": "f4a8f5ba761d158885b62c36550d66aab6a782f946d4f941c8a57040844ed099",
+          "executable_bytes": 2888,
+          "allocated_bytes": 54636,
+          "zero_fill_bytes": 44771,
+          "stack": {
+            "max_bytes": 600,
+            "functions": 4,
+            "details_sha256": "0b1ed317d82fa38aff1b9bf1c337b0d6601f3fa521a529be7562583369154818"
+          }
+        }
+      }
+    },
+    "legacy-uv-zero": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1110546,
+          "sha256": "48575bb7b94d568bbec7234797dffe6d54ea8a9187dfe14fd96da0cb194d5a85"
+        },
+        "o": {
+          "bytes": 52848,
+          "sha256": "de107870f3817d0516055bd2826a8b7a090f5054de0dc61479b2b8fdfbb800c3",
+          "executable_bytes": 35580,
+          "allocated_bytes": 40341,
+          "zero_fill_bytes": 3302,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 32,
+            "details_sha256": "07ccea7a76f559ed038c437713858a3553823b4bbf4ff5b88a6241deac5d38d8"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1472050,
+          "sha256": "930aad3ce73abe980347af1b8fba02c257a1d501a89ebc6f32440fe0ff7e0551"
+        },
+        "o": {
+          "bytes": 407712,
+          "sha256": "6389bd49a42b61a64ae7512e904e31966ca394eed2b924add653601627b892e8",
+          "executable_bytes": 80172,
+          "allocated_bytes": 390599,
+          "zero_fill_bytes": 151720,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 225,
+            "details_sha256": "cb315ae34ef996f368d907558eb3d19322a72c5632f7fd7e08953c72e2490bea"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 89562,
+          "sha256": "22e3d8aee0addf1fb0444a802cc29fef4293392accd7acb6de4bbd839ef760e1"
+        },
+        "o": {
+          "bytes": 16352,
+          "sha256": "f4a8f5ba761d158885b62c36550d66aab6a782f946d4f941c8a57040844ed099",
+          "executable_bytes": 2888,
+          "allocated_bytes": 54636,
+          "zero_fill_bytes": 44771,
+          "stack": {
+            "max_bytes": 600,
+            "functions": 4,
+            "details_sha256": "0b1ed317d82fa38aff1b9bf1c337b0d6601f3fa521a529be7562583369154818"
+          }
+        }
+      }
+    },
+    "on-cone": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1199312,
+          "sha256": "c6277e8a7b606e8ec2c22791f33421bfcf62a1c6f81f4ecc28d732f484e7db57"
+        },
+        "o": {
+          "bytes": 97948,
+          "sha256": "9831bceb625de1a1e6471388d8c8ba181440f9fbc7477766dba19dd7fe6bd12e",
+          "executable_bytes": 60180,
+          "allocated_bytes": 76489,
+          "zero_fill_bytes": 14276,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 74,
+            "details_sha256": "e967fd71ef2bebe94753c7d51c926caaf0b74272ccd03d2b759e72abbac4f521"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "on-cone-check": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1200997,
+          "sha256": "c164f52485febdc743aac7d30d02847ef88130d04de11695b65962371e1bdfef"
+        },
+        "o": {
+          "bytes": 99176,
+          "sha256": "8bac6d1faf30ee48651e89683ea4833a93c98510441c78f5a748a389f402bd6d",
+          "executable_bytes": 60876,
+          "allocated_bytes": 77189,
+          "zero_fill_bytes": 14280,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 75,
+            "details_sha256": "cb9804371ba885ed48fadc22316e2b14c0d11796df424aeb5c55b3c15cd467bd"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1480843,
+          "sha256": "4f9e54ef4bfe066f7bd822b5998678388d41ff8df4f29f1017fe6ddc24a7e004"
+        },
+        "o": {
+          "bytes": 414772,
+          "sha256": "6126a570143d3ea480618d1e5219c0130a4177bfcdf32be0e2294ea717e4507a",
+          "executable_bytes": 82406,
+          "allocated_bytes": 394805,
+          "zero_fill_bytes": 153384,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 238,
+            "details_sha256": "df69d1a6b2a53f34b14382330545ae4c09296cb2ab6b9aa208957fcc2a3fcf70"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "on-uv": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1186633,
+          "sha256": "65266de4d828a02bfba64a3f4c09e6238b436bd51905578c4a91e114c7d2663c"
+        },
+        "o": {
+          "bytes": 84076,
+          "sha256": "e62c07b784f806bf6fd7957867f908483744ef761e4d114fbf0fdee1b328c6ab",
+          "executable_bytes": 52036,
+          "allocated_bytes": 66960,
+          "zero_fill_bytes": 13079,
+          "stack": {
+            "max_bytes": 2388,
+            "functions": 68,
+            "details_sha256": "0d87ea5c68163afa36fb5378d42270dfa7f0ea3624b37aa1a18814f8a3feb7b0"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1488412,
+          "sha256": "f6d711bb2a1ddce0995af3e9eed76f893a8d93609ad1c13883cd6a714353aad6"
+        },
+        "o": {
+          "bytes": 417700,
+          "sha256": "12994165c39c8d3464a4d6fb343e475b74d358dec39c4275011189dbe1f5e84d",
+          "executable_bytes": 83194,
+          "allocated_bytes": 395633,
+          "zero_fill_bytes": 153416,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 244,
+            "details_sha256": "d53046a82a783c8634961600de230a6835291cdff54f0334809db4f0cdf1e11b"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 402964,
+          "sha256": "0335a4c203980fc46ae8239d1ff96dba38ccc6d6f49e101635d671fa14fb7994"
+        },
+        "o": {
+          "bytes": 189996,
+          "sha256": "6c7c23d9906079e8ad4407285bd0759f234a048b1b941182aa40d40953ab5655",
+          "executable_bytes": 73092,
+          "allocated_bytes": 203444,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    },
+    "on-combined": {
+      "native_actor_fast": {
+        "ii": {
+          "bytes": 1209562,
+          "sha256": "3db5fe7537bb6f778e627a317390a4db61096e326a124785d7ce7cd2b43cc32b"
+        },
+        "o": {
+          "bytes": 100448,
+          "sha256": "797cb9070549fc6d78906b7e225adc0979cabb482f9e6d79a925cc0f843164f8",
+          "executable_bytes": 61704,
+          "allocated_bytes": 78249,
+          "zero_fill_bytes": 14328,
+          "stack": {
+            "max_bytes": 2384,
+            "functions": 75,
+            "details_sha256": "3ed57233effbc63ef69725ce3f5d24d1681923ef4e8acc35a87ca2d3c7a324db"
+          }
+        }
+      },
+      "native_ui": {
+        "ii": {
+          "bytes": 1488412,
+          "sha256": "f6d711bb2a1ddce0995af3e9eed76f893a8d93609ad1c13883cd6a714353aad6"
+        },
+        "o": {
+          "bytes": 417700,
+          "sha256": "12994165c39c8d3464a4d6fb343e475b74d358dec39c4275011189dbe1f5e84d",
+          "executable_bytes": 83194,
+          "allocated_bytes": 395633,
+          "zero_fill_bytes": 153416,
+          "stack": {
+            "max_bytes": 7200,
+            "functions": 244,
+            "details_sha256": "d53046a82a783c8634961600de230a6835291cdff54f0334809db4f0cdf1e11b"
+          }
+        }
+      },
+      "coarse_actor": {
+        "ii": {
+          "bytes": 403281,
+          "sha256": "05ab43f522e113d8b7afeb36effd26fbcb58a9c7bf16e29244237bf447e4a252"
+        },
+        "o": {
+          "bytes": 190172,
+          "sha256": "ff31e4849f02de6a388d955de19355577cbe5d4ec0db41786701fc7ee4cb269c",
+          "executable_bytes": 73212,
+          "allocated_bytes": 203564,
+          "zero_fill_bytes": 105524,
+          "stack": {
+            "max_bytes": 5040,
+            "functions": 137,
+            "details_sha256": "a54f66790fe42d9625e31b1305c9f0a3c1f1a92c5b9f77f20622c47c963914d5"
+          }
+        }
+      }
+    }
+  },
+  "dependency_set_sha256": {
+    "release-baseline": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "release-absent": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "release-zero": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "qa-baseline": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "qa-absent": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "qa-zero": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-baseline": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-absent": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-zero": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-check-baseline": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-check-absent": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "cone-check-zero": {
+      "native_actor_fast": "c51e8ac7f2f0303c120f1e52f83334a08849d41d19d902cf59e14c0eef15058f",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "legacy-uv-baseline": {
+      "native_actor_fast": "6cdb0af729b15d67eaf5986c9bd9c39f219766856b10bbd92fcda10adf7077d2",
+      "native_ui": "1dfac7a1ddee301e2b547b05f14623650f4e43588d964281bcebb33c88745515",
+      "coarse_actor": "70d495c77d025201d569c2017111c42ba11d499dbde0ab2ac26f56a3b640aad4"
+    },
+    "legacy-uv-absent": {
+      "native_actor_fast": "6cdb0af729b15d67eaf5986c9bd9c39f219766856b10bbd92fcda10adf7077d2",
+      "native_ui": "1dfac7a1ddee301e2b547b05f14623650f4e43588d964281bcebb33c88745515",
+      "coarse_actor": "70d495c77d025201d569c2017111c42ba11d499dbde0ab2ac26f56a3b640aad4"
+    },
+    "legacy-uv-zero": {
+      "native_actor_fast": "6cdb0af729b15d67eaf5986c9bd9c39f219766856b10bbd92fcda10adf7077d2",
+      "native_ui": "1dfac7a1ddee301e2b547b05f14623650f4e43588d964281bcebb33c88745515",
+      "coarse_actor": "70d495c77d025201d569c2017111c42ba11d499dbde0ab2ac26f56a3b640aad4"
+    },
+    "on-cone": {
+      "native_actor_fast": "033c955f3dbb345ea8d04fc96ac851ea7688d6c773363bb9947363d10035a9f8",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "on-cone-check": {
+      "native_actor_fast": "033c955f3dbb345ea8d04fc96ac851ea7688d6c773363bb9947363d10035a9f8",
+      "native_ui": "81356984db76ca1d8932ac29b53edc0654aaed2b3756db6f25908d24a0c076b5",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "on-uv": {
+      "native_actor_fast": "40544695a06c43dd8be6eca3208c48b59e64e413f9a6895b920ab6c2ffba14ed",
+      "native_ui": "d68cbef292234cc76eec4c1cdb9a878d5148c51774001c3e37701c00bb0f0e14",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    },
+    "on-combined": {
+      "native_actor_fast": "40544695a06c43dd8be6eca3208c48b59e64e413f9a6895b920ab6c2ffba14ed",
+      "native_ui": "d68cbef292234cc76eec4c1cdb9a878d5148c51774001c3e37701c00bb0f0e14",
+      "coarse_actor": "a228c51ecfdac5bbb5a0a90858dcfeb8606717515aa99e16c2761c366af5d0bd"
+    }
+  },
+  "partial_links": {
+    "on-cone": {
+      "sha256": "8b3136de72f17aefc381ab8a1291fffe791078613677e14cdbd12a4f18b750a0",
+      "checked_symbol_fragments": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "required_exports": [],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-cone-check": {
+      "sha256": "5ee2fd9069e7d7150916802cc29706e660a6181c5d797587bf12152ae3f36f2c",
+      "checked_symbol_fragments": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "required_exports": [],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-uv": {
+      "sha256": "16e9b818ef2d3aeecbc8a1e219b811ee7d6261a01f57206e002c1cf08c72add2",
+      "checked_symbol_fragments": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "required_exports": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    },
+    "on-combined": {
+      "sha256": "3057f73f70a22a2b7a40f11f59a70d9effa6861912ec1c15ff4efc09d1aef3ad",
+      "checked_symbol_fragments": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "required_exports": [
+        "re4dc_model_uv16_request32",
+        "re4dc_model_uv16_result32",
+        "re4dc_model_uv16_live32"
+      ],
+      "new_hooks_resolved": true,
+      "ordinary_game_references_remain": true
+    }
+  },
+  "raw_evidence": {
+    "layout": "SUBRUN/PROFILE-UNIT.{ii,o,d,su}; SUBRUN/build-commands.json and PROFILE/profile.json",
+    "subruns": [
+      {
+        "name": "off-release",
+        "receipt_sha256": "79309f9100149c80460ab01c5986b4d24b2fbfcaa8dcaf315ee486e678d8a1d4",
+        "log_sha256": "9c511aa177051eb790aa457e8406f367138a62247b5f8759e536e84dd84c36aa"
+      },
+      {
+        "name": "off-qa",
+        "receipt_sha256": "96f73a28d16d3b8c43a25b627ae4994faf8aa34a187e4054a2f353f9ed2fb2cc",
+        "log_sha256": "d3f7fd811a8814d3b158932b4c7402ccb1fa249767a265ac0f1296d16fffec71"
+      },
+      {
+        "name": "off-cone",
+        "receipt_sha256": "95a415dd4be27548a892df08752e5ff1d00b7735dd5c7e1ed5c7fa41f05d9d9e",
+        "log_sha256": "329462b5ab6c93cd463cea44e0d1ab7251c20f91686ac367c99d3e0eb9542115"
+      },
+      {
+        "name": "off-cone-check",
+        "receipt_sha256": "c798b09e452a57d38b1fe74646bb20a4d6e81249add85e79e4a32d3052b3ff16",
+        "log_sha256": "7252a4af1397136f8b5262fd6ffc0564749f2c9644b28c0101bbeebe70a0da8e"
+      },
+      {
+        "name": "off-legacy-uv",
+        "receipt_sha256": "65f02e02724d2c7c267b0801a5294fe247bf06eddd6e18493b4f30a96ab47f57",
+        "log_sha256": "09942fc05beee73d569761af725394188bd9f1636cf08cf2110242624bb214c1"
+      },
+      {
+        "name": "on-all",
+        "receipt_sha256": "a011d509710919e2357ff2a8e54beceb95dad3b20d5680dbd8db494ae7050f2f",
+        "log_sha256": "0a2d5efd9bb7c219750b37cc6d7ba79fcfd3c40c3e08e1c41bd36a2873023f55"
+      }
+    ]
+  },
+  "validation_only_overrides": {
+    "NMR_POOL_LOD": 0,
+    "reason": "Private selected LOD input unavailable; same public recipe override in control and candidate"
+  },
+  "full_receipt_sha256": "3d4dedc5b9efb0b93ec16826a447d14a941db53d1fa4088b4fdae774e5f8c35a",
+  "release_defaults": {
+    "ACTOR_FORMAT32": "0",
+    "QA_MENU": "0",
+    "QA_LINK": "0",
+    "ACTOR_LIGHT_FAST_ONLY": "1",
+    "ACTOR_BACKFACE_CONE": "0",
+    "NATIVE_ACTOR_UV16": "0",
+    "ACTOR_MOVCA": "0",
+    "COARSE_ONE_SUBMIT": "1",
+    "LEON_NATIVE_PIPE": "0",
+    "COARSE_GATE_ONCE": "1",
+    "ACTOR_PLAN": "1",
+    "NATIVE_ACTOR_DIRECT": "1"
+  },
+  "make_rejections": [
+    {
+      "knob": "ACTOR_FORMAT32",
+      "value": "",
+      "returncode": 2,
+      "log_sha256": "5ba8f7e99b3fed09316477352f1182e2caad3e134f4a9f1ce4e0e0a0795fc8dd",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-0/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-0/obj/aica-audio.h'\nactor_format32.mk:5: *** ACTOR_FORMAT32 must be one value, 0 or 1.  Stop.\n"
+    },
+    {
+      "knob": "ACTOR_FORMAT32",
+      "value": "2",
+      "returncode": 2,
+      "log_sha256": "c259d65c93d1234fed99c30d823e92c3c4bc9f07ff91d55d4132f47c53c988ff",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-1/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-1/obj/aica-audio.h'\nactor_format32.mk:8: *** ACTOR_FORMAT32 must be 0 or 1.  Stop.\n"
+    },
+    {
+      "knob": "ACTOR_FORMAT32",
+      "value": "0 1",
+      "returncode": 2,
+      "log_sha256": "4402e0618a2d9d63e375f5e5ee580744e826eeb2249723a4d091826ca10cdb75",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-2/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-2/obj/aica-audio.h'\nactor_format32.mk:5: *** ACTOR_FORMAT32 must be one value, 0 or 1.  Stop.\n"
+    },
+    {
+      "reason": "UV16 word 7 remains reserved for the clipper, incompatible with MOVCA",
+      "returncode": 2,
+      "log_sha256": "6e9732776c8e23f5255d84d486ded08141cadca6e299b3fab38b4eef419dc32f",
+      "error": "Makefile:1528: warning: overriding recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-3/obj/aica-audio.h'\nMakefile:1514: warning: ignoring old recipe for target '/workspace/scratch/8f775e996324/build32-target-final/on-all/reject-3/obj/aica-audio.h'\ngame30.mk:2110: *** ACTOR_MOVCA needs NATIVE_ACTOR_UV16=0 (word 7 carries the clipper's u there).  Stop.\n"
+    }
+  ],
+  "qa_size_deltas": {
+    "cone": {
+      "control": "qa-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 9640,
+          "allocated_bytes": 11261,
+          "zero_fill_bytes": 1249,
+          "max_stack_before": 2388,
+          "max_stack_after": 2384
+        },
+        "native_ui": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 120,
+          "allocated_bytes": 120,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 9760,
+        "allocated_bytes": 11381,
+        "zero_fill_bytes": 1249
+      }
+    },
+    "cone-check": {
+      "control": "qa-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 10336,
+          "allocated_bytes": 11961,
+          "zero_fill_bytes": 1253,
+          "max_stack_before": 2388,
+          "max_stack_after": 2384
+        },
+        "native_ui": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 120,
+          "allocated_bytes": 120,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 10456,
+        "allocated_bytes": 12081,
+        "zero_fill_bytes": 1253
+      }
+    },
+    "uv": {
+      "control": "qa-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 1496,
+          "allocated_bytes": 1732,
+          "zero_fill_bytes": 52,
+          "max_stack_before": 2388,
+          "max_stack_after": 2388
+        },
+        "native_ui": {
+          "executable_bytes": 788,
+          "allocated_bytes": 828,
+          "zero_fill_bytes": 32,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 2284,
+        "allocated_bytes": 2560,
+        "zero_fill_bytes": 84
+      }
+    },
+    "combined": {
+      "control": "qa-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 11164,
+          "allocated_bytes": 13021,
+          "zero_fill_bytes": 1301,
+          "max_stack_before": 2388,
+          "max_stack_after": 2384
+        },
+        "native_ui": {
+          "executable_bytes": 788,
+          "allocated_bytes": 828,
+          "zero_fill_bytes": 32,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 120,
+          "allocated_bytes": 120,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 12072,
+        "allocated_bytes": 13969,
+        "zero_fill_bytes": 1333
+      }
+    }
+  },
+  "legacy_cone_guard_size_deltas": {
+    "cone": {
+      "control": "cone-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 2140,
+          "allocated_bytes": 2304,
+          "zero_fill_bytes": 52,
+          "max_stack_before": 2384,
+          "max_stack_after": 2384
+        },
+        "native_ui": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 2140,
+        "allocated_bytes": 2304,
+        "zero_fill_bytes": 52
+      }
+    },
+    "cone-check": {
+      "control": "cone-check-zero",
+      "units": {
+        "native_actor_fast": {
+          "executable_bytes": 2136,
+          "allocated_bytes": 2300,
+          "zero_fill_bytes": 52,
+          "max_stack_before": 2384,
+          "max_stack_after": 2384
+        },
+        "native_ui": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 7200,
+          "max_stack_after": 7200
+        },
+        "coarse_actor": {
+          "executable_bytes": 0,
+          "allocated_bytes": 0,
+          "zero_fill_bytes": 0,
+          "max_stack_before": 5040,
+          "max_stack_after": 5040
+        }
+      },
+      "total": {
+        "executable_bytes": 2136,
+        "allocated_bytes": 2300,
+        "zero_fill_bytes": 52
+      }
+    }
+  }
+}
