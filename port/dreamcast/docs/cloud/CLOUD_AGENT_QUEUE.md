@@ -69,7 +69,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
 | 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed a4ae0c83 (merge of the Build 28 branch), default 0; merged clean, release recipe builds missing 0; report [handbacks/build-28.md](handbacks/build-28.md); console soak on the next QA link disc (local) |
 | 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`) | QUEUED 10-28 |
-| 30 | Public QA link kit for any KallistiOS project + agent skill (`dc-qalink` package, tools/docs only) | QUEUED 10-28 (after 29) |
+| 30 | Public QA link kit (`dc-qalink`) | MOVED LOCAL 10-28: the user asked Claude to build it; cloud agent: skip this build |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -346,6 +346,8 @@ Character drawing costs 63-110 ms per drawn frame there against ~14 ms elsewhere
 **Hand back** in `docs/cloud/handbacks/build-29.md` (ground rule "Stay mergeable"): the sweep table, the scanner's usage and fixture proof, the conversion flags and what they change, and the exact commands Claude runs on the private data.
 
 ### Build 30: a public, generic QA link kit for KallistiOS projects (`dc-qalink`)
+
+**SKIP (10-28): the user asked Claude to build this locally. Do not start it.**
 
 **Why (user, 2026-10-28):** "can we also have the agent create a public package with an agent skill for the qa link in a generic form that others can integrate into their dreamcast kallistios projects with a concise readme?" Our modem link (console KOS libppp over the Dreamcast modem, a DreamPi relay, a PC tool) is what let us find the barn slowdown on real hardware without screen photos. Other homebrew developers can use the same thing.
 
