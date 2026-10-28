@@ -14,6 +14,40 @@
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#if defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG
+#include "include/actor_light_fast_only.h"
+extern "C" int re4dc_actor_model_id(const void* model);
+extern "C" void re4dc_log(const char* fmt, ...);
+extern "C" unsigned re4dc_ui_frame();
+namespace {
+const void* gl28_part; Re4dcActorLight25Colour gl28_colour; unsigned gl28_id, gl28_last;
+unsigned long long gl28_v[64], gl28_a[64], gl28_f[64];
+inline unsigned gl28_lum(unsigned c) { return (((c >> 16) & 255U) * 54U + ((c >> 8) & 255U) * 183U + (c & 255U) * 19U) >> 8; }
+inline unsigned gl28_ch(float x) { const float v = x * 255.0f; return v >= 255.0f ? 255U : v > 0.0f ? unsigned(v) : 0U; }
+void gl28_model_vertex(const Re4dcModelPart& p, unsigned ci, const float* rgb) {
+    if (gl28_part != &p) {
+        gl28_part = &p;
+        re4dc_actor_light25_part_colour(&p, nullptr, &gl28_colour);
+        const int id = re4dc_actor_model_id(p.model);
+        gl28_id = id < 0 ? 63U : unsigned(id) & 63U;
+    }
+    const unsigned act = (gl28_ch(rgb[0]) << 16) | (gl28_ch(rgb[1]) << 8) | gl28_ch(rgb[2]);
+    const unsigned fst = (p.colors && (p.lighting->ambient_vertex || p.lighting->material_vertex))
+        ? re4dc_actor_light25_multiply(gl28_colour, p.colors + ci * 4U) : gl28_colour.rgb;
+    ++gl28_v[gl28_id]; gl28_a[gl28_id] += gl28_lum(act); gl28_f[gl28_id] += gl28_lum(fst);
+    const unsigned frame = re4dc_ui_frame();
+    if (frame - gl28_last < 300U) return;
+    gl28_last = frame;
+    for (unsigned d = 0; d < 64; ++d) {
+        if (!gl28_v[d]) continue;
+        re4dc_log("G28M f=%u id=%02x verts=%u act_lum=%u fast_lum=%u fast_over_act_pct=%u\n", frame, d, unsigned(gl28_v[d]),
+                  unsigned(gl28_a[d] * 100 / gl28_v[d]), unsigned(gl28_f[d] * 100 / gl28_v[d]),
+                  gl28_a[d] ? unsigned(gl28_f[d] * 100 / gl28_a[d]) : 0U);
+        gl28_v[d] = gl28_a[d] = gl28_f[d] = 0;
+    }
+}
+}  // namespace
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -475,6 +509,9 @@ struct Builder {
                 }else {legacy_shade.position=vi;legacy_shade.normal=ni;legacy_shade.color=ci;}
             }else ++work_stats.light_hits;
             v.light_red=rgb[0];v.light_green=rgb[1];v.light_blue=rgb[2];
+#if defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG
+            gl28_model_vertex(p,ci,rgb);
+#endif
             prepared_shade=shared_shade;
         }
 #endif

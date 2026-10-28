@@ -1,6 +1,6 @@
 #pragma once
 /* Build 25. Render-only, default off. The reason order is part of the QA ABI. */
-#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || (defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG)
 enum Re4dcActorLight25Reason {
     RE4DC_AL25_VERTEX_COLOUR,
     RE4DC_AL25_DIFFUSE_SCALE,

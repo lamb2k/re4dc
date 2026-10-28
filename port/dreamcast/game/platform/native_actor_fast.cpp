@@ -53,7 +53,7 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #ifndef RE4DC_ACTOR_LIGHT_FAST_ONLY
 #define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
 #endif
-#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY || (defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG)
 #include "include/actor_light_fast_only.h"
 #endif
 #ifndef RE4DC_ACTOR_CLIP_FRONT26
@@ -2016,7 +2016,7 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
 // in columns 0..2 and ambient x scale in column 3. Same per-object
 // approximation (evaluated at the part centre) as native_actor.cpp.
 struct Lights {
-#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY || (defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG)
     Re4dcActorLight25Colour colour25;
 #endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
@@ -4731,6 +4731,69 @@ void pass_fast_only(Part& e, const Lights& L, const Records& r, unsigned n) {
 }
 #endif
 
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY && defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG
+#include "include/actor_light_fast_only.inc"
+extern "C" void re4dc_log(const char* fmt, ...);
+namespace g28 {
+// GL28_DIAG (lane ganlight28, diagnostic only): Ganado vertices, actual colour vs the fast-only fold's colour, by path
+// (0 constant / probe flat, 1 fast fold per vertex, 2 exact per vertex) and by fast-fold kind (probe or light list).
+unsigned long long verts[64][3][2], act[64][3][2], fst[64][3][2]; unsigned last;
+inline unsigned lum(u32 c) { return (((c >> 16) & 255U) * 54U + ((c >> 8) & 255U) * 183U + (c & 255U) * 19U) >> 8; }
+void meshlet(Part& e, const Lights& L, const Records& r, unsigned n, const Re4dcModelPart& p, const float* centre) {
+    const int id0 = re4dc_actor_model_id(p.model);
+    if (!p.lighting || p.lighting->normal_matrix[3] == 1.0e30f) return;
+    const unsigned id = id0 < 0 ? 63U : unsigned(id0) & 63U;
+    const unsigned path = L.constant ? 0U : L.fast ? 1U : 2U;
+    Lights fast;
+    fast_only_lights(p, e.f, centre, fast);
+    const unsigned k = fast.probe ? 1U : 0U;
+    const bool multiply = e.p.colors && (p.lighting->ambient_vertex || p.lighting->material_vertex);
+    for (unsigned i = 0; i < n; ++i) {
+        act[id][path][k] += lum(e.cache.v[i].argb);
+        fst[id][path][k] += lum(multiply ? re4dc_actor_light25_multiply(fast.colour25, e.p.colors + r.ci(i) * 4U) : fast.constant_rgb);
+    }
+    verts[id][path][k] += n;
+    if (frame_serial - last < 300U) return;
+    last = frame_serial;
+    for (unsigned d = 0; d < 64; ++d) for (unsigned a = 0; a < 3; ++a) for (unsigned b = 0; b < 2; ++b) {
+        if (!verts[d][a][b]) continue;
+        re4dc_log("G28 f=%u id=%02x path=%u probe=%u verts=%u act_lum=%u fast_lum=%u fast_over_act_pct=%u\n",
+                  frame_serial, d, a, b, unsigned(verts[d][a][b]), unsigned(act[d][a][b] * 100 / verts[d][a][b]),
+                  unsigned(fst[d][a][b] * 100 / verts[d][a][b]), act[d][a][b] ? unsigned(fst[d][a][b] * 100 / act[d][a][b]) : 0U);
+        verts[d][a][b] = act[d][a][b] = fst[d][a][b] = 0;
+    }
+}
+}  // namespace g28
+#define G28_MESHLET(e, L, r, n, p, c) g28::meshlet((e), (L), (r), (n), (p), (c))
+#else
+#define G28_MESHLET(e, L, r, n, p, c) ((void) 0)
+#endif
+
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY && defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG
+extern "C" void re4dc_log(const char* fmt, ...);
+namespace g28f {
+unsigned long long verts[64], act[64]; unsigned last;
+inline unsigned lum(u32 c) { return (((c >> 16) & 255U) * 54U + ((c >> 8) & 255U) * 183U + (c & 255U) * 19U) >> 8; }
+void meshlet(Part& e, unsigned n, const Re4dcModelPart& p) {
+    if (!p.lighting || p.lighting->normal_matrix[3] == 1.0e30f) return;
+    const int id0 = re4dc_actor_model_id(p.model);
+    const unsigned id = id0 < 0 ? 63U : unsigned(id0) & 63U;
+    for (unsigned i = 0; i < n; ++i) act[id] += lum(e.cache.v[i].argb);
+    verts[id] += n;
+    if (frame_serial - last < 300U) return;
+    last = frame_serial;
+    for (unsigned d = 0; d < 64; ++d) {
+        if (!verts[d]) continue;
+        re4dc_log("G28F f=%u id=%02x verts=%u act_lum=%u\n", frame_serial, d, unsigned(verts[d]), unsigned(act[d] * 100 / verts[d]));
+        verts[d] = act[d] = 0;
+    }
+}
+}  // namespace g28f
+#define G28F(e, n, p) g28f::meshlet((e), (n), (p))
+#else
+#define G28F(e, n, p) ((void) 0)
+#endif
 #if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Pass 2 (fast directional fold) over a meshlet.
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
@@ -5888,7 +5951,7 @@ extern "C" const void* re4dc_actor_accessory_parent(const void* model);  // mode
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
 extern "C" void re4dc_callprof_part(const void* model, unsigned path);  // model_bridge.cpp
 #endif
-#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY || (defined(RE4DC_GL28_DIAG) && RE4DC_GL28_DIAG)
 extern "C" void re4dc_actor_light25_snapshot(Re4dcActorLight25Stats* out) {
     if (out) *out = light25_stats;
 }
@@ -6591,6 +6654,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
         pass_fast_only(e, lights, r, nv);
+        G28F(e, nv, p);
 #else
         if (lights.constant) {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -6631,6 +6695,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
+        G28_MESHLET(e, lights, r, nv, p, blob->center);
 #if RE4DC_LEON_LIGHT_TOGGLE
         // LEON_LIGHT_TOGGLE mode 1 (PROBE): test 10's 1.0x cap on the 2x textures (the pass ran at full scale)
         if (re4dc_leon_light_mode == 1 && !lights.constant && leon_record(*p.lighting))
@@ -7352,6 +7417,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         APROF_SPAN(aprof_lit, APROF_LIT);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
         pass_fast_only(e, lights, r, nv);
+        G28F(e, nv, p);
 #else
         if (lights.constant) {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -7390,6 +7456,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
+        G28_MESHLET(e, lights, r, nv, p, blob->center);
 #if RE4DC_LEON_LIGHT_TOGGLE
         // LEON_LIGHT_TOGGLE mode 1 (PROBE): test 10's 1.0x cap on the 2x textures (the pass ran at full scale)
         if (re4dc_leon_light_mode == 1 && !lights.constant && leon_record(*p.lighting))

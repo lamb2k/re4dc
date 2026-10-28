@@ -26,3 +26,10 @@ $(error ACTOR_LIGHT_CAP must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_LIGHT_CAP=1
 endif
+
+# GL28_DIAG (lane ganlight28, diagnostic only, not delivered)
+GL28_DIAG ?= 0
+ifeq ($(GL28_DIAG),1)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_GL28_DIAG=1
+$(OBJDIR)/platform/native_model.o: PLATFORM_CPPFLAGS += -DRE4DC_GL28_DIAG=1
+endif
