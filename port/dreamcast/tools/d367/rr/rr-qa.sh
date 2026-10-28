@@ -15,15 +15,18 @@ BIN=$(cd "$(dirname "$0")" && pwd)
 S7=${SHA:0:7}; S8=${SHA:0:8}
 T=$TR/port/dreamcast/tools/d367
 if [ -s "$W/recipe.conf" ]; then . "$W/recipe.conf"; else . "$BIN/recipe.conf"; fi
-L=rr${S7}qrW
+# RR_QA_LP / RR_QA_XON / RR_QA_KEEP (lane link28): a diagnostic QA disc from the same steps (its own label prefix,
+#   extra knobs after the QA ones, and a copy of the gdemu folder kept at RR_QA_KEEP); unset = the rr QA disc.
+LQ=${RR_QA_LP:-rr${S7}q}
+L=${LQ}rW
 O=/root/probe/lanes/route/out-$L
 R=$W/qa
 export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
 export PKG_SRC=$RE4DC_PAYLOAD_ROOT/tree
 rm -rf "${R:?}"; mkdir -p "$R/fix" "$R/logs" "$R/qa"
 if [ ! -s "$O/re4dc-game.elf" ]; then
-  K=$W/kq T=$TR LP=rr${S7}q CH2="$CH2" \
-    XON="QA_MENU=1 QA_LINK=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8" \
+  K=$W/kq T=$TR LP=$LQ CH2="$CH2" \
+    XON="QA_MENU=1 QA_LINK=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8 ${RR_QA_XON:-}" \
     bash "$T/ch2/ch2-build.sh" rW 2>&1 | grep '^rc=' | cut -c1-200 | tee "$R/logs/build.txt"
   grep -q '^rc=0 ' "$R/logs/build.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "QA build failed"; exit 1; }
 fi
@@ -74,6 +77,7 @@ if [ -n "$EVU" ]; then
   tail -1 "$R/logs/master.txt" | cut -c1-200
   rm -rf "${R:?}/tree"
 fi
+[ -z "${RR_QA_KEEP:-}" ] || { rm -rf "${RR_QA_KEEP:?}"; cp -a "$R/gdemu" "$RR_QA_KEEP"; }
 # RR_QA_KEEP_GDEMU=1 (speed/rr-speed-gpu.sh, lane guards28 10-28): keep the disc for the cache-model GPU row
 [ "${RR_QA_KEEP_GDEMU:-0}" = 1 ] || rm -rf "${R:?}/gdemu"
 echo QA_OK

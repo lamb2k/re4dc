@@ -34,6 +34,8 @@ int re4dc_qalink_up(void);
 void re4dc_qalink_state_text(char* out, unsigned n);
 void re4dc_qalink_counters(unsigned* tx, unsigned* rx, unsigned* drops, unsigned* queued);
 int re4dc_qalink_send(const void* p, unsigned n);
+int re4dc_qalink_send_bulk(const void* p, unsigned n);
+unsigned re4dc_qalink_bulk_skips(void);
 int re4dc_qalink_recv(char* p, unsigned max);
 extern volatile unsigned long re4dc_log_head;   // platform/mem.cpp
 }
@@ -123,7 +125,7 @@ void send_log() {   // new RAM log bytes since the last call, at most 640 a seco
         b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
     }
     g_bl.log_sent += n;
-    re4dc_qalink_send(b, (unsigned) h);
+    re4dc_qalink_send_bulk(b, (unsigned) h);   // skipped when backlogged
 }
 
 bool wanted_line(unsigned long at) {
@@ -144,7 +146,7 @@ void send_results() {
     for (int d = 0; d < 3; ++d) {
         unsigned tx, rx, dr, q;
         re4dc_qalink_counters(&tx, &rx, &dr, &q);
-        if (q > 2048) return;   // let the PPP thread drain first
+        if (q > 1024) return;   // let the PPP thread drain first (result rows wait; never skipped)
         char b[1100];
         int h = snprintf(b, sizeof(b), "B %u %lu\n", g_bl.b_seq + 1, g_bl.b_dropped);
         const int h0 = h;
@@ -189,10 +191,10 @@ extern "C" void re4dc_qa_link_bench_tick(void) {
         re4dc_qalink_counters(&tx, &rx, &dr, &q);
         char st[64], t[300];
         re4dc_qalink_state_text(st, sizeof(st));
-        const int n = snprintf(t, sizeof(t), "T %u %u 1/1\nbench scene=%d\nlink %s tx=%u rx=%u drops=%u queued=%u "
+        const int n = snprintf(t, sizeof(t), "T %u %u 1/1\nbench scene=%d\nlink %s tx=%u rx=%u drops=%u queued=%u skips=%u "
                                "cost_us_per_s=%u\n", ++g_bl.seq, (unsigned) (ms & 0xFFFFFFFFu), re4dc_bench_scene_no(),
-                               st, tx, rx, dr, q, g_bl.cost_last);
-        re4dc_qalink_send(t, (unsigned) (n < (int) sizeof(t) ? n : (int) sizeof(t) - 1));
+                               st, tx, rx, dr, q, re4dc_qalink_bulk_skips(), g_bl.cost_last);
+        re4dc_qalink_send_bulk(t, (unsigned) (n < (int) sizeof(t) ? n : (int) sizeof(t) - 1));
         send_log();
     }
     const uint64_t t1 = timer_us_gettime64();

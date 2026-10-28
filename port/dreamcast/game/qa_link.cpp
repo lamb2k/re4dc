@@ -44,6 +44,7 @@
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
+void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));  // os.cpp
 int net_udp_init(void);   // kernel/net/net_udp.c (KOS internal; registers UDP with fs_socket)
 }
 
@@ -51,6 +52,7 @@ namespace {
 enum { S_OFF, S_DIAL, S_PPP, S_UP, S_FAILED, S_DROPPED, S_STOPPING };
 volatile int g_state = S_OFF, g_attempt, g_err, g_stop;
 volatile unsigned g_rate, g_tx_bytes, g_rx_bytes, g_tx_drops, g_modem_tx, g_modem_rx;
+volatile unsigned g_bulk_skips;   // telemetry / log datagrams refused (queue past kBulkCap or KOS below kKosFloor)
 unsigned char g_ip[4], g_peer[4];
 char g_number[24] = "1111111";
 unsigned g_host = 0xFFFFFFFFu;   // network order; 255.255.255.255 = whoever is at the other end of the PPP link
@@ -94,8 +96,13 @@ struct Ring {
 Ring g_tx, g_rx;
 unsigned char g_pkt[1408];   // the PPP thread's datagram buffer
 
-// The PPP thread, link up: queued datagrams out, received ones in. Called between libppp's receive passes, with
-// libppp's mutex released (sendto takes it).
+// The PPP thread, link up: received datagrams in first, then at most ONE queued datagram out. Called between libppp's
+// receive passes, with libppp's mutex released (sendto takes it).
+// link28 (first console session 10-28: commands stopped arriving under heavy telemetry): sendto runs libppp's modem
+// write, which waits while the modem's 1 KiB tx buffer drains (~0.3 s for a full datagram at 33.6 kbps). The old loop
+// sent the whole tx ring in one pass, so libppp never got back to reading the modem: its 1 KiB rx chain buffer
+// overflowed and the Pi's commands were lost while the backlog lasted (queued ~650, rx stuck). One datagram per pass
+// lets libppp read the line between datagrams; the game side keeps the backlog short (re4dc_qalink_send_bulk).
 void pump() {
     if (!modem_is_connected()) {
         g_state = S_DROPPED;
@@ -103,16 +110,6 @@ void pump() {
         return;
     }
     int n;
-    while ((n = g_tx.get(g_pkt, sizeof(g_pkt))) >= 0) {
-        sockaddr_in to;
-        memset(&to, 0, sizeof(to));
-        to.sin_family = AF_INET;
-        to.sin_port = htons(g_port);
-        to.sin_addr.s_addr = g_host;
-        if (sendto(g_sock, g_pkt, n, 0, (sockaddr*) &to, sizeof(to)) == n) g_tx_bytes = g_tx_bytes + n;
-        else g_tx_drops = g_tx_drops + 1;
-        if (!modem_is_connected()) return;
-    }
     for (;;) {
         sockaddr_in from;
         socklen_t fl = sizeof(from);
@@ -125,6 +122,15 @@ void pump() {
             re4dc_log("qalink: peer %u.%u.%u.%u\n", g_peer[0], g_peer[1], g_peer[2], g_peer[3]);
         }
         g_rx.put(g_pkt, (unsigned) n);
+    }
+    if ((n = g_tx.get(g_pkt, sizeof(g_pkt))) >= 0) {
+        sockaddr_in to;
+        memset(&to, 0, sizeof(to));
+        to.sin_family = AF_INET;
+        to.sin_port = htons(g_port);
+        to.sin_addr.s_addr = g_host;
+        if (sendto(g_sock, g_pkt, n, 0, (sockaddr*) &to, sizeof(to)) == n) g_tx_bytes = g_tx_bytes + n;
+        else g_tx_drops = g_tx_drops + 1;
     }
 }
 
@@ -412,6 +418,25 @@ int re4dc_qalink_send(const void* p, unsigned n) {
     if (!g_tx.put(p, n)) { g_tx_drops = g_tx_drops + 1; return 0; }
     return 1;
 }
+// Telemetry / log rows (link28): queued only while the backlog is short (kBulkCap bytes, about 0.7 s of line at
+// 33.6 kbps) and the KOS heap keeps kKosFloor free (chunks + break room); otherwise skipped and counted, so a slow line
+// or a long session never grows the backlog. Answers (re4dc_qalink_send) keep the rest of the ring.
+// The link's KOS use (link28 audit): tx allocates nothing (libppp and net_udp build frames on the stack; the modem chain
+// buffers and the thread stacks are BSS); each received datagram is two KOS mallocs (net_udp packet + data) that the
+// recvfrom loop in pump() frees on the same pass, so the link's KOS use is bounded by one pass of commands.
+int re4dc_qalink_send_bulk(const void* p, unsigned n) {
+    enum { kBulkCap = 2400, kKosFloor = 32768 };
+    if (g_state != S_UP) return 0;
+    bool ok = g_tx.used() + n + 2 <= kBulkCap;
+    if (ok && re4dc_kos_heap_state) {
+        unsigned f = 0, u = 0, b = 0;
+        re4dc_kos_heap_state(&f, &u, &b);
+        ok = f + b >= kKosFloor;
+    }
+    if (!ok) { g_bulk_skips = g_bulk_skips + 1; return 0; }
+    return re4dc_qalink_send(p, n);
+}
+unsigned re4dc_qalink_bulk_skips(void) { return g_bulk_skips; }
 int re4dc_qalink_recv(char* p, unsigned max) {
     const int n = g_rx.get(p, max - 1);
     if (n >= 0) p[n] = 0;
