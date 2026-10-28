@@ -51,6 +51,9 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "include/draw_setup_audit.h"
 extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart*);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
+#endif
 #endif
 // ACTOR_BACKFACE_CONE (backface.mk, lane backface-cone23; render only; default 0: no code). For the models
 // coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_mark), the converter splits each
@@ -2637,6 +2640,16 @@ bool part_lights(const Re4dcModelPart& p, const Frame& f, const float center[3],
 #else
 #define RE4DC_PART_LIGHTS build_lights
 #endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// XM rows: 0 probe, 1 build_lights fold (fast kernel), 2 exact per-vertex evaluator, 3 constant (flat).
+inline unsigned dsa28_light_path(const Lights& L) {
+    if (L.constant) return 3;
+#if RE4DC_ACTOR_PROBE_LIGHT
+    if (L.probe) return 0;
+#endif
+    return L.fast ? 1 : 2;
+}
+#endif
 
 // Light directions of palette entry i (skinned normals): R_i^T l, w = 0,
 // cached per entry for the current part's light set.
@@ -3507,6 +3520,9 @@ struct Part {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     bool dsa_xlu = re4dc_dsa24_model_translucent(&p) != 0;
     unsigned dsa_classified = 0, dsa_overlap = 0;
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    unsigned dsa28_cls = re4dc_dsa28_model_class(&p);
+#endif
     void dsa_strip_overlap(const u8* index, unsigned n) {
         if (!dsa_xlu || n < 3) return;
         dsa_classified += n - 2;
@@ -3565,6 +3581,9 @@ struct Part {
     void put(const pvr_vertex_t* v, unsigned n) {  // prepared vertices (clipped triangles)
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::packet(dsa28_cls, p.cull, v, n, PVR_CMD_VERTEX_EOL);
+#endif
 #endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
@@ -3578,6 +3597,9 @@ struct Part {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
         dsa_strip_overlap(index, n);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::strip(dsa28_cls, p.cull, cache.v, index, n, 127U);
+#endif
 #endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
@@ -3646,6 +3668,9 @@ struct Part {
         if (!room(count)) return false;
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         dsa_known_overlap(triangles);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::meshlet(dsa28_cls, p.cull, cache.v, index, count);
+#endif
 #endif
 #if RE4DC_ACTOR_DIRECT
         if (direct) {
@@ -5821,6 +5846,9 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(part ? part->model : nullptr);
+#endif
     re4dc::dsa24::count(re4dc::dsa24::Parts);
 #endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
@@ -6205,6 +6233,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         lights.constant = true;
         lights.constant_rgb = part_colour(lights);
     }
+#endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
 #endif
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
@@ -6591,6 +6622,9 @@ void one_close(OneWindow& w) {
 int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, const Re4dcActorSource* known_src) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(p.model);
+#endif
     re4dc::dsa24::count(re4dc::dsa24::Parts);
 #endif
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
@@ -6606,6 +6640,9 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(p.model);
+#endif
     re4dc::dsa24::count(re4dc::dsa24::Parts);
 #endif
     if (p.positions) return -1;
@@ -6897,6 +6934,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         lights.constant = true;  // never the window's record: lights.fast is false for constant lighting
         lights.constant_rgb = part_colour(lights);
     }
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
+#endif
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));

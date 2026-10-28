@@ -1092,6 +1092,16 @@ extern "C" void re4dc_callprof_part(const void* model,unsigned path){
     re4dc_callprof_part_key(path,m?(unsigned(m->kindid)<<8|unsigned(m->id)):0xffffU);
 }
 #endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// DRAW_SETUP_AUDIT_XLU (draw_setup_audit.mk): a model's kind/id/type key for the XM rows; 0xffffff when the pointer is
+// not a cModel in main RAM (borrowed views, static packages).
+extern "C" unsigned re4dc_dsa28_model_key(const void* model) {
+    const unsigned a = (unsigned) model & 0x1fffffffU;
+    if (!model || ((unsigned) model & 3U) || a < 0x0c000000U || a >= 0x0d000000U) return 0xffffffU;
+    const cModel* m = static_cast<const cModel*>(model);
+    return (unsigned(m->kindid) & 255u) << 16 | (unsigned(m->id) & 255u) << 8 | (unsigned(m->type) & 255u);
+}
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
 extern "C" unsigned re4dc_propprof_key(const void* model) {
     const cModel* m = static_cast<const cModel*>(model);
