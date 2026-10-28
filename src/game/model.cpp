@@ -951,8 +951,43 @@ void pwckCheck(cModel* self)
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
 #include "el_census.h"   // EL_CENSUS (game30.mk; lane el): the part-world pass census
 #endif
+// NINJA DIAG (throwaway, lane chardraw19; never delivered): bones with unit pos / ang / scale per model id.
+extern "C" void re4dc_log(const char* fmt, ...);
+struct NjB { u32 used; u8 id, type; u32 calls, parts, skip2, upos, uang, uscl, all3, posang, nparts; };
+static NjB njb[64];
+static u32 njbCalls;
+static void njBones(cModel* m)
+{
+    NjB* r = &njb[63];
+    for (int i = 0; i < 64; i++) {
+        if (njb[i].used && njb[i].id == m->id && njb[i].type == m->type) { r = &njb[i]; break; }
+        if (!njb[i].used) { njb[i].used = 1; njb[i].id = m->id; njb[i].type = m->type; r = &njb[i]; break; }
+    }
+    r->calls++;
+    u32 n = 0;
+    for (cParts* p = m->pList; PTR_OK(p); p = p->pList) {
+        n++;
+        r->parts++;
+        if (p->motParts.flags & 2) { r->skip2++; continue; }
+        const bool pos = p->l_mat[0][3] == 0.0f && p->l_mat[1][3] == 0.0f && p->l_mat[2][3] == 0.0f;
+        const bool ang = p->l_mat[0][0] == 1.0f && p->l_mat[0][1] == 0.0f && p->l_mat[0][2] == 0.0f &&
+                         p->l_mat[1][0] == 0.0f && p->l_mat[1][1] == 1.0f && p->l_mat[1][2] == 0.0f &&
+                         p->l_mat[2][0] == 0.0f && p->l_mat[2][1] == 0.0f && p->l_mat[2][2] == 1.0f;
+        const bool scl = p->scale.x == 1.0f && p->scale.y == 1.0f && p->scale.z == 1.0f;
+        r->upos += pos; r->uang += ang; r->uscl += scl; r->all3 += pos && ang && scl; r->posang += pos && ang;
+    }
+    r->nparts = n;
+    if ((++njbCalls & 4095) == 0) {
+        for (int i = 0; i < 64 && njb[i].used; i++)
+            re4dc_log("NJB id=%02x type=%02x calls=%u nparts=%u parts=%u skip2=%u upos=%u uang=%u uscl=%u all3=%u posang=%u\n",
+                      njb[i].id, njb[i].type, njb[i].calls, njb[i].nparts, njb[i].parts, njb[i].skip2, njb[i].upos,
+                      njb[i].uang, njb[i].uscl, njb[i].all3, njb[i].posang);
+        __builtin_memset(njb, 0, sizeof(njb));
+    }
+}
 void cModel::partsWorldCalc()
 {
+    njBones(this);
     cParts* p;
     Vec tmp;
     Vec sc;
