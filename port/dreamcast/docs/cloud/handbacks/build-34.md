@@ -179,3 +179,42 @@ will add exact fixed-cache, SCPS/cone and full OFF-image commands.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner), 2026-10-28
+
+Documentation tip `4ebf8a100` merged clean as `30b0d027c` from integration
+`590a32d6c`. Release recipe rc0/missing0, ELF SHA-256
+`b49ec5105498b81627af2d607e0155cdd1458d60ea586cbacf57dcf487c1dc13`.
+No runtime source or new speed/fix switch in this step; no ALL ON rebuild
+required. Latest prepared ALL ON remains `36643bf8a` and its actual-data smoke
+is recorded in Builds31-33 owner answers; it is not a gate for these controls.
+
+1. Confirmed LEON_HAND_PACK=1 in tracked test24/release-knobs.txt and in the
+   actual ALL ON33 resolved build. The local inventory entry is now commented
+   as already ON; no hold or recipe change. offknobs.sh formerly inspected only
+   rr/recipe.conf and therefore missed this inherited setting.
+2. Retain/resume isolation has not run, and old item3 bundle failures do not
+   identify either as the cause. Both are parked separately, owner Codex,
+   pending the hand-back's matched asset-complete profiles with other item3
+   controls OFF, read/async/journal/refusal deltas, r117/ch21 movie finish/
+   skip/rebind and current heap gates. No obsolete warm-cache result accepted
+   as a current-composition or console pass.
+3. FRONT_TEXOBJ and SCENERY_PIECE_STATE are parked until your next runtime
+   commit qualifies the fixed key and bounded loaders. They are the first
+   re-entry targets after that hand-back; owner prepares source-bound SCPS-only
+   data and isolated baseline/candidate pairs, keeps HDR cache1, and requires
+   actual hits/output/lifetime/current memory and console benefit. No old
+   bundled sc21 data promotion and no silent disabling of current optimizations.
+
+All sixteen remaining local controls now have individual reason, owner and
+re-entry prerequisites in local offknob-hold.txt, matching this review. This
+includes explicit math/storage/dependency failures or policy boundaries, and
+separate colour/UI correctness qualifications. Parking preserves every item
+in OPT-TRACK; it does not declare acceptance or remove follow-up work. The
+active off list now contains18 cloud controls; seven older ones advanced on
+ALL ON today, so their landing age is not a3-day no-progress stall.
+
+Console pairs remain pending user disc selection plus REMOTE LINK, matching
+camera/game state and600 drawn-frame windows with the source/profile, resolved
+knobs, paired overlays, media hashes, memory and observer settings retained.
+No private assets, SD writes, release setting changes or publication.
