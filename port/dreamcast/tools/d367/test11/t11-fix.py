@@ -1440,6 +1440,17 @@ def title27_gate(names, r, rec):
 SND26D = os.environ.get('SND26D', '/root/re4data/private/snd26-20261027')
 if os.path.isdir(SND26D + '/em'):
     DATA['snd26'] = {'em/pl14.drs': SND26D + '/em/pl14.drs', 'bgm/doorse.dat': SND26D + '/bgm/doorse.dat'}
+# snd28 (lane snd28 10-28, OPT-TRACK row 28; data only, no knob): the partner / costume / crow sound banks the runtime
+# converts at load (not prebuilt AIC1: em/pl01 pl02 pl06 pl07 pl0a pl0b pl0d pl0e pl12, em/em2a) carry PS2 PCM,
+# re-encoded IN PLACE as GC DSP-ADPCM with each sample's own coefficients (tools/ps2_audio.py banks --dsp): same sizes,
+# same AICA path and layout, no RAM / ARAM change. 333 of 405 samples PS2; 72 keep GC (no PS2 match, or a silent PS2
+# placeholder VAG; em/pl04.drs unchanged), listed in gc_port23/sound-kept-gc.tsv.
+# Made from the 92cec32f release disc's final files: after cast15 (em2a.drs); regenerate if a later set writes them.
+# Store: re4-assets-private/snd28-20261028 (README-snd28.txt, provenance.tsv by tools/d367/snd28_store.py, _map/).
+SND28D = os.environ.get('SND28D', '/root/re4data/private/snd28-20261028')
+if os.path.isdir(SND28D + '/em'):
+    DATA['snd28'] = {'em/%s.drs' % n: SND28D + '/em/%s.drs' % n for n in (
+        'pl01', 'pl02', 'pl06', 'pl07', 'pl0a', 'pl0b', 'pl0d', 'pl0e', 'pl12', 'em2a')}
 # dropeng26 (lane gcleft26 10-27, no-GameCube-assets rule; data only, no knob): ss/eng/title.snd off the disc. It is a
 # GameCube sound archive the game never reads: src/game/title.cpp:174 reads SS/cmn/title.snd (PS2 PCM since ps2snd24)
 # and nothing names SS/eng/title.snd (sscrn / read.cpp language paths are option.dat / title.dat / ss_*.dat). Proof: the

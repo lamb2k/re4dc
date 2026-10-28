@@ -23,6 +23,8 @@ reported (GC-in-use count).
 
 usage:
   ps2_audio.py banks --tree DISCTREE --ps2 DIR --out OVERLAY [--files spec,...] [--json MAP] [--level gc|ps2] [--jobs N]
+      [--dsp]  (snd28: banks the runtime converts at load keep their GC DSP-ADPCM container; the PS2 PCM is
+                re-encoded into it in place with the sample's own coefficients: same sizes, same AICA path)
   ps2_audio.py streams --tree DISCTREE --ps2 DIR --out OVERLAY [--json MAP]
   ps2_audio.py music --tree DISCTREE --ps2 DIR --out OVERLAY [--json MAP]  (PS2 songs into bio4midi.dat, ps2_music.py)
   ps2_audio.py afs --iso PS2ISO --out DIR [patterns]        (BIO4DAT.AFS entries, default *.snd *.adx)
@@ -399,11 +401,26 @@ def assign(gfeat, pfeat, floor=0.55, reuse=0.80, dtol=0.25):
 
 
 # ---------------------------------------------------------------- GC side
-def gc_blocks(d, base=0):
-    """[(t, mo, ms, ao, header tuple, [(rate, length, sh, img_ofs, img_bytes, loop)])] of the AIC1 banks."""
+def gc_blocks(d, base=0, dsp=False):
+    """[(t, mo, ms, ao, header tuple, [(rate, length, sh, img_ofs, img_bytes, loop)])] of the AIC1 banks.
+    dsp (lane snd28, 10-28): also the banks that are NOT prebuilt (type-2 part still the GC DSP-ADPCM image, converted
+    by audio_aica.cpp blk_begin at load); their header is a dict {'dsp': True, 'coefs': [coef table per sample]}, sh 0,
+    img_ofs the sample's first DSP frame and img_bytes its whole frames (8 bytes per 14 samples)."""
     out = []
     for (t, mo, ms, ao, asz) in ab.sound_blocks(d, base) or []:
         if struct.unpack_from('<I', d, ao)[0] != ab.MAGIC:
+            if dsp:
+                table, samples, coefs = ab.wavetable(d, t, mo, ms)
+                loops = ab.sample_loops(d, t, mo, ms, len(samples))
+                smp, cs = [], []
+                for si, (fmt, rate, offset, length, ai) in enumerate(samples):
+                    p = ao + offset // 2
+                    # the part size is not padded to a whole frame: the last sample's final frame may be cut short
+                    nb = max(0, min((length + 13) // 14 * 8, ao + asz - p))
+                    smp.append((rate, length, 0, p, nb, loops.get(si)))
+                    cs.append(coefs[ai])
+                if smp and all(nb >= 8 * ((length - 1) // 14) + 1 for (_r, length, _s, _p, nb, _lp) in smp):
+                    out.append((t, mo, ms, ao, {'dsp': True, 'coefs': cs}, smp))
             continue
         h = ab.HDR.unpack_from(d, ao)
         cap = h[2]
@@ -418,6 +435,61 @@ def gc_blocks(d, base=0):
             p += nb
         out.append((t, mo, ms, ao, h, smp))
     return out
+
+
+def dsp_encode(x, coef):
+    """s16 list -> GC DSP-ADPCM frames (8 bytes per 14 samples, header byte = predictor << 4 | scale exponent), decoded
+    by aica_banks.dsp_decode / audio_aica.cpp exactly: the history starts at the coef table's yn1 / yn2 like theirs.
+    Per frame: each of the 8 predictor pairs at the scale its open-loop residual needs (and one above), closed-loop
+    quantisation, least squared error wins."""
+    a, (gain, ps, yn1, yn2, lps, ly1, ly2) = coef
+    h1 = yn1 - 65536 if yn1 >= 32768 else yn1
+    h2 = yn2 - 65536 if yn2 >= 32768 else yn2
+    out = bytearray()
+    n = len(x)
+    for f0 in range(0, n, 14):
+        fr = list(x[f0:f0 + 14])
+        fr += [0] * (14 - len(fr))
+        best = None
+        for idx in range(8):
+            c1, c2 = a[2 * idx], a[2 * idx + 1]
+            # open-loop residual on the source itself -> starting scale
+            p1, p2, mx = h1, h2, 0
+            for v in fr:
+                r = v - ((1024 + c1 * p1 + c2 * p2) >> 11)
+                if r < 0:
+                    r = -r
+                if r > mx:
+                    mx = r
+                p2, p1 = p1, v
+            s = 0
+            while s < 12 and mx > 7 * (1 << s):
+                s += 1
+            for sc in (s, s + 1):
+                if sc > 12 or (best is not None and sc > best[0] + 1 and idx):
+                    continue
+                scale = 1 << sc
+                q1, q2, err, nibs = h1, h2, 0, []
+                for v in fr:
+                    pred = (1024 + c1 * q1 + c2 * q2) >> 11
+                    nb = v - pred
+                    nb = (nb + (scale >> 1)) // scale if nb >= 0 else -((-nb + (scale >> 1)) // scale)
+                    nb = -8 if nb < -8 else 7 if nb > 7 else nb
+                    y = nb * scale + pred
+                    y = -32768 if y < -32768 else 32767 if y > 32767 else y
+                    err += (v - y) * (v - y)
+                    if best is not None and err >= best[1]:
+                        break
+                    nibs.append(nb)
+                    q2, q1 = q1, y
+                else:
+                    if best is None or err < best[1]:
+                        best = (sc, err, idx, nibs, q1, q2)
+        sc, err, idx, nibs, h1, h2 = best
+        out.append((idx << 4) | sc)
+        for k in range(0, 14, 2):
+            out.append(((nibs[k] & 0xF) << 4) | (nibs[k + 1] & 0xF))
+    return bytes(out)
 
 
 def ps2_sources(spec, ps2dir):
@@ -442,6 +514,12 @@ def ps2_sources(spec, ps2dir):
         f = os.path.join(ps2dir, c[0])
         if os.path.exists(f) and is_stub(open(f, 'rb').read()):
             c = ['pl00.snd', 'core.snd'] + sorted(x for x in os.listdir(ps2dir) if x.startswith('r1') and x.endswith('.snd'))
+            STUB_SPECS.add(spec)
+        # snd28 (10-28): a partner / costume bank (plNN) whose PS2 bank is a stub (pl02, pl04) or absent (pl07, pl12):
+        # matched by sound like a stub, against the resident, chapter-1 room AND every other PS2 player bank
+        if b.startswith('pl') and (not os.path.exists(f) or spec in STUB_SPECS):
+            c = ['pl00.snd', 'core.snd'] + sorted(x for x in os.listdir(ps2dir) if x.endswith('.snd') and (
+                x.startswith('r1') or (x.startswith('pl') and x != 'pl00.snd')))
             STUB_SPECS.add(spec)
     return [os.path.join(ps2dir, x) for x in c if os.path.exists(os.path.join(ps2dir, x))]
 
@@ -503,7 +581,8 @@ def set_loops(d, mo, ms, t, si, start, length):
 
 
 def convert_spec(args):
-    spec, tree, ps2dir, out, level = args
+    spec, tree, ps2dir, out, level = args[:5]
+    dsp = len(args) > 5 and args[5]
     path, bases = ab.archive_bases(tree, spec)
     d = bytearray(open(path, 'rb').read())
     srcs = ps2_sources(spec, ps2dir)
@@ -514,12 +593,16 @@ def convert_spec(args):
     rep = dict(spec=spec, ps2=[os.path.basename(x) for x in srcs], blocks=[])
     touched = []
     for base in bases:
-        for (t, mo, ms, ao, h, smp) in gc_blocks(bytes(d), base):
-            cap = h[2]
+        for (t, mo, ms, ao, h, smp) in gc_blocks(bytes(d), base, dsp):
+            isdsp = isinstance(h, dict)
+            cap = 0 if isdsp else h[2]
             gfeat = []
-            for (rate, length, sh, p, nb, loop) in smp:
+            for si, (rate, length, sh, p, nb, loop) in enumerate(smp):
                 n = (length + (1 << sh) - 1) >> sh
-                gfeat.append(features(ab.yamaha_decode(bytes(d[p:p + nb]), n), rate >> sh))
+                if isdsp:
+                    gfeat.append(features(ab.dsp_decode(bytes(d[p:p + nb]) + bytes(8), 0, length, h['coefs'][si], None), rate))
+                else:
+                    gfeat.append(features(ab.yamaha_decode(bytes(d[p:p + nb]), n), rate >> sh))
             cross = spec in STUB_SPECS
             pbs = pblocks.get(t, []) if t not in (3, 4) and not cross else [pb for v in pblocks.values() for pb in v]
             got = map_block(bytes(d), t, mo, ms, smp, pbs, gfeat, cross) if pbs else {}
@@ -532,6 +615,12 @@ def convert_spec(args):
                     continue
                 bi, pv, sc, how = got[si]
                 name, pcm, prate, ploop = pbs[bi]['vags'][pv]
+                if isdsp and max(map(abs, pcm), default=0) < 2:
+                    # snd28: the cue resolves to a PS2 placeholder (a silent ~0.02 s VAG in the costume banks); writing
+                    # it would mute a sound the game plays today, so the GC sample stays (listed as kept GC)
+                    row.update(ps2=None, note='PS2 cue VAG %s is silent (placeholder)' % name)
+                    rows.append(row)
+                    continue
                 r_out = rate >> sh
                 n_out = (length + (1 << sh) - 1) >> sh
                 p_out = int(len(pcm) * r_out / prate)
@@ -569,7 +658,7 @@ def convert_spec(args):
                     row['gain'] = round(g, 3)
                 if how_loop:
                     row['loop'] = how_loop
-                enc = ab.yamaha_encode(x)
+                enc = dsp_encode(x, h['coefs'][si]) if isdsp else ab.yamaha_encode(x)
                 enc = enc[:nb] + bytes(nb - min(nb, len(enc)))
                 d[p:p + nb] = enc
                 row['sim'] = round(score(gfeat[si], features(pcm, prate)), 3)
@@ -615,7 +704,7 @@ def cmd_banks(a):
             specs.append(sp)
     # one job per file (container specs of one file run in one job, serially)
     with ProcessPoolExecutor(a.jobs) as ex:
-        reps = list(ex.map(convert_spec, [(s, a.tree, a.ps2, a.out, a.level) for s in specs]))
+        reps = list(ex.map(convert_spec, [(s, a.tree, a.ps2, a.out, a.level, a.dsp) for s in specs]))
     merged = {}
     for r in reps:
         data = r.pop('bytes')
@@ -889,6 +978,7 @@ def main():
     b.add_argument('--json')
     b.add_argument('--level', default='ps2', choices=('gc', 'ps2'))
     b.add_argument('--jobs', type=int, default=4)
+    b.add_argument('--dsp', action='store_true', help='also banks that are not prebuilt: PS2 PCM re-encoded as GC DSP-ADPCM in place (snd28)')
     s = sub.add_parser('streams')
     s.add_argument('--tree', required=True)
     s.add_argument('--ps2', required=True)
