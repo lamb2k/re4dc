@@ -206,6 +206,11 @@ if [ "$TIER" = full ]; then
   if [ $ok = 1 ] && [ "${RR_SPEED:-1}" != 0 ] && [ -n "${RR_SPEED_REF:-}" ]; then
     step speed bash "$BIN/speed/rr-speed.sh" "$RR_SPEED_REF" "$SHA" "$W/speed.txt" "$W/speed" || true
   else echo "SPEED SKIP: RR_SPEED=${RR_SPEED:-1} RR_SPEED_REF=${RR_SPEED_REF:-unset}" > "$W/speed.txt"; fi
+  # SPEED-GPU (guards28 10-28, coordinator decision): QA discs of both commits on the cache-model Flycast, SQ->TA bytes and
+  # TA list bytes per scene, FAIL above +SPEED_GPU_TOL_PCT (5) %. rr/speed/rr-speed-gpu.sh -> $W/speed-gpu.txt.
+  if [ $ok = 1 ] && [ "${RR_SPEED:-1}" != 0 ] && [ -n "${RR_SPEED_REF:-}" ]; then
+    step speed-gpu bash "$BIN/speed/rr-speed-gpu.sh" "$RR_SPEED_REF" "$SHA" "$W/speed-gpu.txt" "$W/speed" || true
+  else echo "SPEED-GPU SKIP: RR_SPEED=${RR_SPEED:-1} RR_SPEED_REF=${RR_SPEED_REF:-unset}" > "$W/speed-gpu.txt"; fi
 else
   [ $ok = 1 ] && { step build-release build_release || ok=0; }
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }

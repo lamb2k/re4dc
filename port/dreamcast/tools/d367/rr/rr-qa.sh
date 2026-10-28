@@ -70,5 +70,6 @@ if [ -n "$EVU" ]; then
   tail -1 "$R/logs/master.txt" | cut -c1-200
   rm -rf "${R:?}/tree"
 fi
-rm -rf "${R:?}/gdemu"
+# RR_QA_KEEP_GDEMU=1 (speed/rr-speed-gpu.sh, lane guards28 10-28): keep the disc for the cache-model GPU row
+[ "${RR_QA_KEEP_GDEMU:-0}" = 1 ] || rm -rf "${R:?}/gdemu"
 echo QA_OK
