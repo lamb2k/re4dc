@@ -3678,6 +3678,7 @@ include fallback_audit29.mk
 include fallback_scan29.mk
 include world_plan29.mk
 include actor_format32.mk
+include static_obj_batch33.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).

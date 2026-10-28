@@ -1,0 +1,463 @@
+// Exact production function bodies are substituted by ui_host.py. External
+// texture/KOS/SQ edges below are controlled instrumentation, not renderer code.
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <new>
+#include <vector>
+
+#define RE4DC_D349_RENDERER_STACK 1
+#define RE4DC_PVR_STREAM 1
+#define RE4DC_TA_DIRECT 1
+#define RE4DC_SCENERY_SUBMIT_BATCH CHECK_BATCH
+#define RE4DC_UI_HANDLES 1
+#define RE4DC_UI_POLY_ORDER 1
+#define RE4DC_PT_BLEND_FIX 1
+#define RE4DC_PS2_WORLD_FOG_SOURCE 1
+#define RE4DC_NATIVE_FOG 1
+#define RE4DC_MV_SHADOWS 1
+#define RE4DC_ACTOR_UV16 1
+#define RE4DC_BRIDGE_LEAN 1
+#define RE4DC_COPY_LEAN 1
+#define RE4DC_SUBSCREEN 1
+#define RE4DC_TA_HASH CHECK_HASH
+#define RE4DC_PROFILE_SCOPE(...) ((void)0)
+#define RE4DC_PROFILE_COUNT(...) ((void)0)
+#define RE4DC_PROFILE_HIGH(...) ((void)0)
+#define RE4DC_DROP(...) ((void)0)
+#define RE4DC_DROP_CLEAR() ((void)0)
+#define RE4DC_GAD_HIT(...) ((void)0)
+#define RE4DC_PART_DUMP_KEY(...) ((void)0)
+#define RE4DC_WHD_ABORT(...) ((void)0)
+#define AVD_EVENT(...) ((void)0)
+#define AVD_IF_EVENT(...) ((void)0)
+#define DFA26_HIT(...) ((void)0);
+#define DFA26_COUNT(counter,...) (++counter)
+#define RE4DC_TSP_W(t) ((t).width)
+#define RE4DC_TSP_H(t) ((t).height)
+#define RE4DC_WRAP_SAFE(p) ((p).wrap_safe)
+#define RE4DC_GCA_MODEL_PREPARE(...) ((void)0)
+#define RE4DC_GCA_MODEL_TEXTURE(...) (++asset_textures)
+#define RE4DC_GCA_MODEL_ACCEPT() (++asset_accepts)
+#define RE4DC_GCA_MODEL_PACKET_ACCEPT(...) (++asset_accepts)
+#define RE4DC_GCA_PACKET(data,bytes,list,consumer) fixture_asset(data,bytes,list)
+
+#include "native_model.h"
+#include "scenery_submit_batch.h"
+#include "static_obj_batch33.hpp"
+using pvr_list_t=unsigned;
+using pvr_ptr_t=void*;
+using pvr_cull_mode_t=unsigned;
+using pvr_blend_mode_t=unsigned;
+using pvr_uv_clamp_t=unsigned;
+constexpr unsigned PVR_LIST_OP_POLY=0,PVR_LIST_TR_POLY=2,PVR_LIST_PT_POLY=4;
+constexpr unsigned PVR_CULLING_NONE=0,PVR_CULLING_CCW=1,PVR_CULLING_CW=2;
+constexpr unsigned PVR_FILTER_BILINEAR=1,PVR_DEPTHCMP_GEQUAL=6,PVR_DEPTHCMP_ALWAYS=7;
+constexpr unsigned PVR_DEPTHWRITE_DISABLE=0,PVR_DEPTHWRITE_ENABLE=1;
+constexpr unsigned PVR_BLEND_SRCALPHA=4,PVR_BLEND_ONE=1,PVR_BLEND_INVSRCALPHA=5,PVR_BLEND_ZERO=0,PVR_BLEND_DESTCOLOR=2;
+constexpr unsigned PVR_TXRENV_MODULATEALPHA=3,PVR_TXRALPHA_ENABLE=1,PVR_TXRALPHA_DISABLE=0;
+constexpr unsigned PVR_UVCLAMP_NONE=0,PVR_UVCLAMP_U=1,PVR_UVCLAMP_V=2;
+constexpr unsigned PVR_UVCLAMP_UV=3;
+constexpr unsigned PVR_FOG_TABLE=0,PVR_FOG_DISABLE=2,PVR_TA_CMD_MODIFIER=0x80;
+constexpr unsigned PVR_CMD_VERTEX=0xe0000000U,PVR_CMD_VERTEX_EOL=0xf0000000U;
+constexpr uintptr_t PVR_TA_INPUT=0x10000000;
+struct pvr_poly_hdr_t { unsigned cmd,words[7]; };
+struct pvr_poly_cxt_t {
+    struct {unsigned culling=0,fog_type=0;} gen;
+    struct {unsigned comparison=0,write=0;} depth;
+    struct {unsigned src=0,dst=0;} blend;
+    struct {unsigned env=0,alpha=0,uv_clamp=0;} txr;
+    unsigned list=0,format=0,width=0,height=0,address=0;
+};
+struct Packet { unsigned flags,word[7]; };
+static_assert(sizeof(Packet)==32);
+struct Key { unsigned crc,fnv; };
+struct Texture { unsigned width=64,height=64,format=0,flags=0; };
+struct Package { Texture texture;unsigned address=0x8000;bool wrap_safe=false;
+    const Texture* textures()const{return &texture;}
+    pvr_ptr_t pvr_texture(unsigned)const{return reinterpret_cast<void*>(uintptr_t(address));}
+};
+struct Entry { bool valid=true;Key key{};unsigned frame=0,model_header_key=~0U;Package package;pvr_poly_hdr_t model_header{}; };
+static Entry entries[8];
+constexpr unsigned kModelPacketBytes=65536,kModelDeferredSpillBytes=0;
+alignas(32) static Packet storage[kModelPacketBytes/32];
+static Packet* model_packets=storage;
+static unsigned model_used,model_pending,frame=100,frame_pvr_calls,frame_pvr_bytes,stream_model_bytes,stream_peak_bytes;
+static unsigned model_peak,model_header_hits,model_header_builds,model_texture_rejects,model_wrap_rejects,model_scale_rebuilds;
+static unsigned model_capacity_rejects,model_state_rejects,model_state_bits[8],model_parts=100;
+static unsigned model_alpha_vertex,model_alpha_material,model_alpha_faded,direct_parts,direct_slots;
+static unsigned next_pcw_set,next_pcw_clear,re4dc_mv_receiver,mv_receivers;
+static unsigned desired_list,stream_list,stream_closed_lists,frame_queue_drops,frame_queue_peak;
+static unsigned asset_textures,asset_accepts,asset_packets,hash_calls,missing,loads,logs;
+static unsigned lock_calls,unlock_calls,scene=1,header_count,vertex_count;
+static bool direct_open,frame_ready=true,stream_aborted,stream_scene=true;
+static bool ui_order=false;
+static bool draining_parts=false,source_draws_finished=false;
+static pvr_list_t draining_list=PVR_LIST_TR_POLY;
+static bool storage_ok=true,load_ok=true,locked=false;
+static Entry* model_handle=nullptr;
+alignas(32) static unsigned char frame_storage[256*1024];
+static unsigned nquad;
+static unsigned nsource,handle_clock=1,handle_reset=1;
+alignas(32) static unsigned sq_storage[8*32770];
+static std::vector<unsigned> effective,returns,pin_events;
+static std::vector<unsigned> logical_packets;
+static std::array<unsigned,8> active_header[5];
+static bool active_valid[5];
+static bool strip_open[5];
+static unsigned last_scene=1;
+static std::FILE* trace_file;
+static bool barrier_seen[re4dc::sob33::BarrierCount];
+
+static void capture(const void* ptr,unsigned bytes){
+    assert(bytes%32==0);
+    const auto* words=static_cast<const unsigned*>(ptr);
+    for(unsigned i=0;i<bytes/4;i+=8){
+        const unsigned* p=words+i;
+        const unsigned type=p[0]>>29;
+        assert(stream_list<5);
+        if(type==4 || type==5){
+            assert(!strip_open[stream_list]);
+            std::copy(p,p+8,active_header[stream_list].begin());
+            active_valid[stream_list]=true;++header_count;
+        }else if(type==7){
+            assert(active_valid[stream_list]);
+            effective.push_back(scene);effective.push_back(stream_list);
+            effective.insert(effective.end(),active_header[stream_list].begin(),active_header[stream_list].end());
+            effective.insert(effective.end(),p,p+8);++vertex_count;
+            strip_open[stream_list]=(p[0]&0x10000000U)==0;
+        }else { assert(false && "Unexpected fixture TA packet"); }
+    }
+}
+static std::uint32_t* sq_lock(void*){assert(!locked);locked=true;++lock_calls;return sq_storage;}
+static void sq_unlock(){assert(locked);locked=false;++unlock_calls;}
+static void sq_flush(std::uint32_t* p){assert(locked);assert(p>=sq_storage&&p+8<=sq_storage+8*32770);capture(p,32);}
+static int pvr_list_finish(){assert(locked);assert(!strip_open[stream_list]);return 0;}
+static int pvr_list_begin(unsigned){assert(locked);return 0;}
+static void re4dc_missing(const char*){++missing;}
+static void re4dc_log(const char*,...){++logs;}
+extern "C" int re4dc_model_diagnostic_enabled(){return 1;}
+static bool ensure_model_storage(){if(!model_packets&&storage_ok)model_packets=storage;return model_packets!=nullptr;}
+static Entry* resolve(const Re4dcUiImage& image,const Re4dcModelPart*,bool){
+    assert(!locked);++loads;if(!load_ok)return nullptr;
+    const auto index=(uintptr_t(image.pixels)>>12)&7;
+    return entries[index].valid?&entries[index]:nullptr;
+}
+static Entry* load(const Re4dcUiImage&,bool,const Key* key){assert(!locked);++loads;if(!load_ok)return nullptr;return &entries[(key->crc-1)&7];}
+static unsigned re4dc_ps2_world_fog(){return 0;}
+static void fixture_asset(const void* data,unsigned bytes,unsigned list){
+    ++asset_packets;logical_packets.push_back(bytes);logical_packets.push_back(list);
+    const auto* p=static_cast<const unsigned*>(data);logical_packets.insert(logical_packets.end(),p,p+bytes/4);
+}
+extern "C" void re4dc_ta_hash(const void*,unsigned){++hash_calls;}
+static void ta_hash_marker(unsigned){}
+static void stream_open();
+static void stream_send(const void*,unsigned);
+static void stream_select(pvr_list_t);
+namespace re4dc::texture { static unsigned pvr_format(const Texture& t){return t.format;} }
+namespace re4dc::profile { enum Kind{SubmitOP,SubmitPT,SubmitTR};struct Scope{explicit Scope(Kind){}}; }
+namespace re4dc::render {
+static void begin_pvr_packet(Packet* p,std::uint32_t& n,const pvr_poly_hdr_t& h){std::memcpy(p,&h,32);n=1;}
+static void submit_pvr(const void* p,unsigned n){assert(locked);capture(p,n);}
+}
+static void pvr_poly_cxt_txr(pvr_poly_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,void* addr,unsigned){
+    *c={};c->list=list;c->format=fmt;c->width=w;c->height=h;c->address=unsigned(uintptr_t(addr));
+}
+static void pvr_poly_compile(pvr_poly_hdr_t* h,const pvr_poly_cxt_t* c){
+    h->cmd=0x80840002U|(c->list<<24);
+    h->words[0]=(c->gen.culling<<24)|(c->depth.comparison<<16)|(c->depth.write<<8)|c->txr.alpha;
+    h->words[1]=(c->gen.fog_type<<28)|(c->blend.src<<24)|(c->blend.dst<<20)|(c->txr.uv_clamp<<18)|(c->width<<8)|c->height;
+    h->words[2]=c->address|(c->format<<26);
+    std::fill(h->words+3,h->words+7,0U);
+}
+@BATCH33_STATE@
+@SOURCES_RESET@
+static void reset_deferred();
+@UI_ORDER_LIST@
+@UI_ORDER_HEADER@
+static void stream_open(){
+    assert(!locked);
+    @OPEN_BARRIER@
+    stream_scene=true;stream_list=desired_list;
+}
+static void close_scene(){
+    assert(!locked&&!direct_open);
+    @CLOSE_BARRIER@
+    stream_scene=false;++scene;std::fill(active_valid,active_valid+5,false);
+}
+static void frame_boundary(){
+    assert(!locked&&!direct_open);
+    @FRAME_BARRIER@
+    ++frame;
+}
+static void retire_boundary(){
+    assert(!locked&&!direct_open);
+    @RETIRE_BARRIER@
+    // Actual retirement reaches these two production reset functions before
+    // clearing owner views; their call anchors are checked by ui_host.py.
+    reset_deferred();sources_reset();
+}
+static void foreign_direct_boundary(unsigned kind){
+    assert(!locked&&!direct_open);
+    if(kind==0){
+        @LEON_BARRIER@
+    }else if(kind==1){
+        @COARSE_BARRIER@
+    }else if(kind==2){
+        @COARSE_MODE_BARRIER@
+    }else if(kind==3){
+        @WORLD_BARRIER@
+    }else{
+        @SKIP_BARRIER@
+    }
+}
+@STREAM_SELECT@
+@STREAM_SEND@
+@SELECT_PASS@
+@RESERVE@
+@BEGIN@
+@COMMIT@
+@ABORT@
+@DIRECT_BEGIN@
+@DIRECT_END@
+@PT_BEGIN@
+@WORLD_PACKET@
+@WORLD_PACKET_CULL@
+
+using SourceLighting=re4dc::render::SourceLighting;
+@QUEUE_TYPES@
+@RESET_DEFERRED@
+extern "C" void* re4dc_model_deferred_storage(unsigned* n){*n=0;return nullptr;}
+extern "C" void re4dc_model_result(unsigned,unsigned,unsigned){}
+@DEFER@
+static const auto kSubscreenQuadTag=reinterpret_cast<DeferredLighting*>(uintptr_t(1));
+constexpr unsigned kSubscreenQuadNode=(sizeof(DeferredPart)+31)&~31U;
+static void submit_fixture(const Re4dcModelPart*);
+extern "C" void re4dc_model_submit(const Re4dcModelPart* p){submit_fixture(p);}
+@FINISH@
+extern "C" void re4dc_model_invalidate_static_lighting(){}
+@INVALIDATE@
+
+static unsigned bits(float f){unsigned v;std::memcpy(&v,&f,4);return v;}
+static Re4dcModelPart part(unsigned id=1,unsigned blend=0,unsigned texture=0){
+    Re4dcModelPart p{};p.model=reinterpret_cast<void*>(uintptr_t(0x1000+id*16));p.info=p.model;p.part=p.model;
+    p.image={reinterpret_cast<void*>(uintptr_t(0x100000+texture*4096)),nullptr,64,64,5,0,0};
+    p.position_count=3;p.position_stride=6;p.cull=2;p.blend=blend;p.depth_mode=blend?1:0;
+    p.source_key[3]=re4dc::sob33::marker(1,blend);p.modelview[0]=1;p.modelview[5]=1;p.modelview[10]=1;p.modelview[3]=float(id);
+    p.uv_offset[0]=float(id)*0.125f;p.alpha_state=blend?192:255;return p;
+}
+static Packet vertex(const Re4dcModelPart& p,unsigned j,bool end){
+    Packet v{};v.flags=end?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
+    v.word[0]=bits(p.modelview[3]+float(j));v.word[1]=bits(float(j)+p.modelview[7]);v.word[2]=bits(0.5f);
+    v.word[3]=bits(p.uv_offset[0]+float(j)*0.25f);v.word[4]=bits(float(j)*0.5f);
+    v.word[5]=0xff000000U|(unsigned(uintptr_t(p.part))&0xffffffU);v.word[6]=0;return v;
+}
+static bool use_direct=true;
+static unsigned emit_count=3;
+static bool abort_after_begin=false;
+static void submit_fixture(const Re4dcModelPart* p){
+    if(use_direct){
+        Re4dcModelDirect d{};const int ok=re4dc_model_direct_begin(p,&d);returns.push_back(ok);if(!ok)return;
+        for(unsigned j=0;j<emit_count;++j){const Packet v=vertex(*p,j,j+1==emit_count);std::memcpy(d.sq+j*8,&v,32);sq_flush(d.sq+j*8);}
+        if(abort_after_begin)re4dc_model_packet_abort();
+        re4dc_model_direct_end(emit_count);
+    }else {
+        Re4dcModelPacket d{};const int ok=re4dc_model_packet_begin(p,&d);returns.push_back(ok);if(!ok)return;
+        assert(emit_count<=d.capacity);
+        for(unsigned j=0;j<emit_count;++j)static_cast<Packet*>(d.vertices)[j]=vertex(*p,j,j+1==emit_count);
+        if(abort_after_begin)re4dc_model_packet_abort();else re4dc_model_packet_commit(emit_count);
+    }
+    pin_events.push_back(entries[(uintptr_t(p->image.pixels)>>12)&7].frame);
+}
+static void foreign(unsigned id){
+    pvr_poly_hdr_t h{};h.cmd=0x82840002U;h.words[2]=0x900000U+id;
+    Packet packets[4];std::memcpy(packets,&h,32);auto p=part(1000+id,1);
+    for(unsigned j=0;j<3;++j)packets[j+1]=vertex(p,j,j==2);
+    stream_send(packets,sizeof(packets));
+}
+static void enqueue_foreign(unsigned id){
+    constexpr unsigned bytes=kSubscreenQuadNode+128;
+    assert(deferred_top>=bytes+8192);deferred_top-=bytes;
+    auto* n=new(frame_storage+deferred_top) DeferredPart{};n->lighting=kSubscreenQuadTag;n->changed[0]=128;
+    auto* p=reinterpret_cast<Packet*>(frame_storage+deferred_top+kSubscreenQuadNode);
+    pvr_poly_hdr_t h{};h.cmd=0x82840002U;h.words[2]=0x900000U+id;std::memcpy(p,&h,32);
+    auto view=part(1000+id,1);for(unsigned j=0;j<3;++j)p[j+1]=vertex(view,j,j==2);
+    if(deferred_last)deferred_last->next=n;else deferred_first=n;deferred_last=n;++deferred_count;
+}
+static std::uint64_t digest(const std::vector<unsigned>& v){std::uint64_t h=1469598103934665603ULL;for(unsigned x:v){h^=x;h*=1099511628211ULL;}return h;}
+static void reset(){
+    assert(!locked&&!direct_open);reset_deferred();retire_boundary();
+    model_packets=storage;model_used=model_pending=0;frame=100;scene=1;frame_pvr_calls=frame_pvr_bytes=0;
+    stream_model_bytes=stream_peak_bytes=model_peak=0;stream_scene=frame_ready=true;stream_aborted=false;
+    desired_list=stream_list=stream_closed_lists=0;draining_parts=source_draws_finished=false;ui_order=false;
+    frame_queue_drops=frame_queue_peak=0;next_pcw_set=next_pcw_clear=re4dc_mv_receiver=0;
+    lock_calls=unlock_calls=header_count=vertex_count=0;asset_textures=asset_accepts=asset_packets=0;
+    direct_parts=direct_slots=0;model_handle=nullptr;storage_ok=load_ok=true;
+    effective.clear();returns.clear();pin_events.clear();logical_packets.clear();std::fill(active_valid,active_valid+5,false);std::fill(strip_open,strip_open+5,false);
+    for(unsigned i=0;i<8;++i){entries[i]={};entries[i].key={i+1,i+17};entries[i].package.address=0x8000+i*4096;}
+    use_direct=true;emit_count=3;abort_after_begin=false;
+#if RE4DC_STATIC_OBJ_BATCH33
+    sob33_stats={};
+#endif
+}
+static void report(unsigned id){
+    assert(!locked&&!direct_open);if(!stream_aborted)for(bool x:strip_open)assert(!x);
+    assert(frame_pvr_bytes==32U*(header_count+vertex_count));
+#if RE4DC_STATIC_OBJ_BATCH33
+    unsigned barrier_sum=0;
+    for(unsigned i=0;i<re4dc::sob33::BarrierCount;++i){barrier_sum+=sob33_stats.barrier_causes[i];barrier_seen[i]|=sob33_stats.barrier_causes[i]!=0;}
+    assert(barrier_sum==sob33_stats.barriers);
+    const unsigned scenario=id%100;
+    const auto has=[&](re4dc::sob33::Barrier cause){assert(sob33_stats.barrier_causes[cause]);};
+    if(scenario==4){has(re4dc::sob33::StreamSend);has(re4dc::sob33::DeferredReset);}
+    if(scenario==5)has(re4dc::sob33::StreamSend);
+    if(scenario==14||scenario==44)has(re4dc::sob33::FrameReset);
+    if(scenario==15)has(re4dc::sob33::SceneBoundary);
+    if(scenario==16)has(re4dc::sob33::ListBoundary);
+    if(scenario==17||scenario==38||scenario==39)has(re4dc::sob33::SourceReset);
+    if(scenario==20&&id>=100)has(re4dc::sob33::EmptyPacket);
+    if(scenario==23||scenario==48)has(re4dc::sob33::PacketAbort);
+    if(scenario>=40&&scenario<=43)has(re4dc::sob33::ForeignDirect);
+    if(scenario>=45&&scenario<=47)has(re4dc::sob33::CustomPacket);
+    if(id%100==0){assert(sob33_stats.category_seen[0]==12);assert(sob33_stats.category_reused[0]==11);}
+    if(id%100>=1&&id%100<=3){const unsigned n=id%100==1?17:id%100==2?65:257;assert(sob33_stats.category_seen[1]==n);assert(sob33_stats.category_reused[1]==n-1);}
+    if(id%100==4){assert(sob33_stats.category_seen[2]==4);assert(sob33_stats.category_reused[2]==2);}
+#endif
+    assert(std::fwrite(&id,4,1,trace_file)==1);
+    for(const auto* v:{&effective,&returns,&pin_events,&logical_packets}){
+        const unsigned n=unsigned(v->size());assert(std::fwrite(&n,4,1,trace_file)==1);
+        if(n)assert(std::fwrite(v->data(),4,n,trace_file)==n);
+    }
+    std::printf("{\"case\":%u,\"semantic\":\"%016llx\",\"vertices\":%u,\"headers\":%u,\"returns\":\"%016llx\",\"pins\":\"%016llx\",\"locks\":%u,\"unlocks\":%u,\"aborted\":%u,\"queue_drops\":%u}\n",
+        id,(unsigned long long)digest(effective),vertex_count,header_count,(unsigned long long)digest(returns),(unsigned long long)digest(pin_events),lock_calls,unlock_calls,unsigned(stream_aborted),frame_queue_drops);
+}
+static void helper_controls(){
+    using namespace re4dc::sob33;
+    unsigned admitted=0;
+    for(unsigned kind=0;kind<4;++kind)for(unsigned id=0;id<256;++id){
+        const bool expected=(kind==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(kind==1&&id==0x21);
+        assert(eligible_class(kind,id)==expected);admitted+=eligible_class(kind,id);
+    }
+    assert(admitted==5);
+    const unsigned base[8]={0x80840002U,0x96000000U,0x2080040U,0x8000,0,0,0,0};
+    auto seed=[&](){Run r;assert(r.begin(base,100,0,0,true)==First);assert(r.finish(100,0,128,3,true));return r;};
+    {auto r=seed();assert(r.begin(base,100,0,128,true)==Reuse);assert(r.finish(100,0,224,3,true));}
+    for(unsigned word=0;word<8;++word)for(unsigned bit=0;bit<32;++bit){
+        auto r=seed();unsigned h[8];std::copy(base,base+8,h);h[word]^=1U<<bit;
+        assert(r.begin(h,100,0,128,true)!=Reuse);
+    }
+    for(unsigned list=0;list<8;++list){auto r=seed();assert(r.begin(base,100,list,128,true)==(list==0?Reuse:Format));}
+    {auto r=seed();assert(r.begin(nullptr,100,0,128,true)==Format);assert(!r.finish(100,0,256,3,true));}
+    {auto r=seed();assert(r.begin(base,100,0,128,false)==Foreign);assert(!r.finish(100,0,256,3,true));}
+    {auto r=seed();assert(r.begin(base,101,0,128,true)==Boundary);assert(r.finish(101,0,256,3,true));}
+    {auto r=seed();assert(r.begin(base,100,0,160,true)==Boundary);assert(r.finish(100,0,288,3,true));}
+    {auto r=seed();r.barrier();assert(r.begin(base,100,0,128,true)==First);}
+    {Run r;assert(r.begin(base,100,0,0,true)==First);assert(r.begin(base,100,0,32,true)==First);}
+    for(unsigned n:{0U,1U,3U,32767U,32768U})for(unsigned complete=0;complete<2;++complete){
+        auto r=seed();assert(r.begin(base,100,0,128,true)==Reuse);
+        const bool expected=n>0&&n<=32767&&complete;
+        assert(r.finish(100,0,128+n*32,n,complete)==expected);
+        assert(r.begin(base,100,0,128+n*32,true)==(expected?Reuse:First));
+    }
+    for(unsigned change=0;change<4;++change){auto r=seed();assert(r.begin(base,100,0,128,true)==Reuse);
+        assert(!r.finish(change==0?101:100,change==1?2:0,change==2?192:change==3?256:224,3,true));}
+    {auto r=seed();assert(!r.finish(100,0,128,3,true));}
+}
+int main(int argc,char** argv){
+    assert(argc==2);trace_file=std::fopen(argv[1],"wb");assert(trace_file);
+    helper_controls();
+    for(unsigned route=0;route<2;++route){
+        for(unsigned scenario=0;scenario<49;++scenario){
+            reset();use_direct=route==0;const unsigned id=route*100+scenario;auto a=part(1),b=part(2);
+            if(scenario==0){for(unsigned i=0;i<12;++i){auto p=part(i+1);submit_fixture(&p);}}
+            else if(scenario<=3){const unsigned n=scenario==1?17:scenario==2?65:257;for(unsigned i=0;i<n;++i){auto p=part(i+1);p.model=p.info=reinterpret_cast<void*>(uintptr_t(0x8000));p.modelview[3]=40;p.source_key[3]=re4dc::sob33::marker(n,0);submit_fixture(&p);}}
+            else if(scenario==4){a=part(1,1);b=part(2,1);assert(defer_part(&a,nullptr)==1);assert(defer_part(&b,nullptr)==1);enqueue_foreign(7);a=part(3,1);assert(defer_part(&a,nullptr)==1);b=part(4,1);assert(defer_part(&b,nullptr)==1);re4dc_model_finish_source_draws();}
+            else if(scenario==36){
+                a=part(1,1);b=part(2,1);b.source_key[3]=re4dc::sob33::marker(65,1);
+                assert(defer_part(&a,nullptr)==1);assert(defer_part(&b,nullptr)==1);
+                assert(restore_view(deferred_first).source_key[3]==a.source_key[3]);
+                assert(restore_view(deferred_first->next).source_key[3]==b.source_key[3]);
+                a.source_key[3]=b.source_key[3]=0;re4dc_model_finish_source_draws();
+            }
+            else if(scenario==37&&use_direct){
+                Re4dcModelDirect d{},nested{};int result=re4dc_model_direct_begin(&a,&d);returns.push_back(result);assert(result);
+                result=re4dc_model_direct_begin(&b,&nested);returns.push_back(result);assert(!result);
+                for(unsigned j=0;j<3;++j){auto v=vertex(a,j,j==2);std::memcpy(d.sq+j*8,&v,32);sq_flush(d.sq+j*8);}
+                re4dc_model_direct_end(3);submit_fixture(&b);
+            }
+            else if(scenario>=45&&scenario<=47){
+                ui_order=true;a.cull=0;a.material_flags=4;a.mask=a.image;a.mask_ref=0;a.mask_same_uv=1;
+                if(scenario!=45){a.depth_mode=1;a.wrap_s=a.wrap_t=1;}
+                b=a;b.part=reinterpret_cast<void*>(uintptr_t(0x4000));submit_fixture(&a);
+                Re4dcModelPacket p{};int ok;
+                if(scenario==45)ok=re4dc_model_pt_begin(1,17,64,64,0,&p);
+                else if(scenario==46)ok=re4dc_ps2_world_packet(1,17,64,64,2,&p);
+                else ok=re4dc_ps2_world_packet_cull(1,17,64,64,2,2,&p);
+                assert(ok);returns.push_back(ok);
+#if RE4DC_STATIC_OBJ_BATCH33
+                assert(!sob33_packet_eligible&&!sob33_run.valid&&!sob33_run.pending);
+#endif
+                for(unsigned j=0;j<3;++j)static_cast<Packet*>(p.vertices)[j]=vertex(b,j,j==2);
+                re4dc_model_packet_commit(3);submit_fixture(&b);
+#if RE4DC_STATIC_OBJ_BATCH33
+                assert(header_count==3&&sob33_stats.decisions[re4dc::sob33::Foreign]==1);
+#endif
+            }
+            else if(scenario==48){
+                use_direct=false;submit_fixture(&a);Re4dcModelPacket p{};
+                const int ok=re4dc_model_packet_begin(&b,&p);assert(ok);returns.push_back(ok);
+                for(unsigned j=0;j<3;++j)static_cast<Packet*>(p.vertices)[j]=vertex(b,j,false);
+                re4dc_model_packet_commit(3);
+#if RE4DC_STATIC_OBJ_BATCH33
+                assert(!sob33_run.valid&&!sob33_run.pending);
+                assert(header_count==2&&sob33_stats.decisions[re4dc::sob33::Format]==1);
+#endif
+                // A deliberately incomplete producer cannot be presented; the
+                // existing abort contract rejects every subsequent begin.
+                re4dc_model_packet_abort();submit_fixture(&a);assert(stream_aborted);
+            }
+            else {
+                submit_fixture(&a);
+                if(scenario==5)foreign(3);
+                if(scenario==6)b.cull=1;
+                if(scenario==7)b.blend=2;
+                if(scenario==8)b.depth_mode=2;
+                if(scenario==9)b.wrap_s=1;
+                if(scenario==10)b.source_key[2]=1;
+                if(scenario==11)b=part(2,0,1);
+                if(scenario==12){b.material_flags=4;b.mask=b.image;b.mask_ref=0;b.mask_same_uv=1;}
+                if(scenario==13)b.source_key[3]=0;
+                if(scenario==14)frame_boundary();
+                if(scenario==15){close_scene();stream_open();}
+                if(scenario==16){stream_select(PVR_LIST_TR_POLY);stream_select(PVR_LIST_OP_POLY);}
+                if(scenario==17)retire_boundary();
+                if(scenario==18)next_pcw_set=1;
+                if(scenario==19)re4dc_mv_receiver=1;
+                if(scenario==20)emit_count=0;
+                if(scenario==21)load_ok=false;
+                if(scenario==22){model_packets=nullptr;storage_ok=false;}
+                if(scenario==23)abort_after_begin=true;
+                if(scenario==24){b.image.width=0;}
+                if(scenario==25){source_draws_finished=true;}
+                if(scenario==26){entries[0].model_header_key=~0U;entries[0].package.address+=4096;}
+                if(scenario==27){use_direct=!use_direct;}
+                if(scenario>=28&&scenario<=35){reinterpret_cast<unsigned*>(&entries[0].model_header)[scenario-28]^=scenario==28?0x100U:1U;}
+                if(scenario==38)sources_reset();
+                if(scenario==39){a=part(5,1);assert(defer_part(&a,nullptr)==1);re4dc_model_invalidate_pending();}
+                if(scenario>=40&&scenario<=44)foreign_direct_boundary(scenario-40);
+                submit_fixture(&b);
+                emit_count=3;load_ok=storage_ok=true;abort_after_begin=false;re4dc_mv_receiver=0;next_pcw_set=next_pcw_clear=0;
+                auto c=part(3);submit_fixture(&c);
+            }
+            report(id);
+        }
+    }
+#if RE4DC_STATIC_OBJ_BATCH33
+    for(bool seen:barrier_seen)assert(seen);
+#endif
+    assert(std::fclose(trace_file)==0);
+}

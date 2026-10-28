@@ -1,3 +1,6 @@
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+#include "platform/include/static_obj_batch33.hpp"
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
 #include "platform/include/draw_fallback_audit.h"
 #define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
@@ -996,6 +999,12 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
         p.serial=m->serial;p.world=&m->mat[0][0];p.view=&pG->Cam.v_mat[0][0];
         p.source_key[0]=part->texId;p.source_key[1]=(part->flags&4)?part->alphaTex:0xff;
     }
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    // The existing deferred view stores all four source-key bytes. Only final
+    // identical TA headers may be joined; each part keeps its own source draw.
+    if(re4dc::sob33::eligible_class(m->kindid,m->id))
+        p.source_key[3]=re4dc::sob33::marker(d->displist_num,p.blend);
 #endif
 #if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
     if(re4dc_portrait_hair(m,info,&p))return;  // coarse_actor.cpp: the PS2 hair for the portrait GameCube hair info

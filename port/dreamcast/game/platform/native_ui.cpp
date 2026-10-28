@@ -1,3 +1,6 @@
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+#include "include/static_obj_batch33.hpp"
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
 #include "include/actor_format32_uv.hpp"
 #endif
@@ -831,14 +834,55 @@ unsigned model_slab_failures=0;
 #endif
 // TEX_RESIDENT deliberately exceeds this bound: TEX_SLOTS-80 more entries (x sizeof(Entry)).
 static_assert(RE4DC_TEX_RESIDENT || sizeof(entries)+sizeof(sources)<=64*sizeof(Entry)+256*sizeof(Source));
+// SOB33_STATE_BEGIN
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+re4dc::sob33::Run sob33_run;
+re4dc::sob33::Stats sob33_stats;
+bool sob33_packet_eligible=false,sob33_direct_candidate=false;
+unsigned char sob33_packet_marker=0;
+inline void sob33_barrier(re4dc::sob33::Barrier cause){
+    sob33_run.barrier();sob33_packet_eligible=false;sob33_direct_candidate=false;
+    sob33_packet_marker=0;
+    ++sob33_stats.barriers;++sob33_stats.barrier_causes[cause];
+}
+void sob33_report(unsigned fr){
+    // Two cumulative rows fit a capture of at least 300 drawn UI frames.
+    if(fr%120)return;
+    const auto& s=sob33_stats;
+    re4dc_log("SOB33 f=%u first=%u reuse=%u foreign=%u format=%u boundary=%u header=%u direct=%u packet=%u op=%u tr=%u pt=%u single=%u/%u large=%u/%u blended=%u/%u completed=%u incomplete=%u empty=%u barriers=%u saved=%u\n",
+        fr,s.decisions[re4dc::sob33::First],s.decisions[re4dc::sob33::Reuse],s.decisions[re4dc::sob33::Foreign],
+        s.decisions[re4dc::sob33::Format],s.decisions[re4dc::sob33::Boundary],s.decisions[re4dc::sob33::Header],
+        s.direct_reused,s.packet_reused,s.list_reused[0],s.list_reused[2],s.list_reused[4],
+        s.category_seen[0],s.category_reused[0],s.category_seen[1],s.category_reused[1],
+        s.category_seen[2],s.category_reused[2],
+        s.completed,s.incomplete,s.empty,s.barriers,(s.direct_reused+s.packet_reused)*32U);
+    // Boundary-call counts (including an already empty receipt), not lost
+    // reuse opportunities. Source includes retirement and pending invalidation.
+    const auto* b=s.barrier_causes;
+    re4dc_log("SOB33B f=%u source=%u deferred=%u frame=%u scene=%u list=%u abort=%u send=%u direct=%u custom=%u empty=%u\n",
+        fr,b[re4dc::sob33::SourceReset],b[re4dc::sob33::DeferredReset],b[re4dc::sob33::FrameReset],
+        b[re4dc::sob33::SceneBoundary],b[re4dc::sob33::ListBoundary],b[re4dc::sob33::PacketAbort],
+        b[re4dc::sob33::StreamSend],b[re4dc::sob33::ForeignDirect],b[re4dc::sob33::CustomPacket],
+        b[re4dc::sob33::EmptyPacket]);
+}
+#endif
+// SOB33_STATE_END
 #if RE4DC_UI_HANDLES
 // One 32-bit clock stamps every event that invalidates a handle: closing an
 // entry (entry_closed[]) and every source descriptor boundary (each sources[]
 // reset, handle_reset). A handle stamped later than both is still exact.
 unsigned entry_closed[kTextureCount]; unsigned handle_clock=1,handle_reset=1,handle_hits,handle_misses,handle_bypass;
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+inline void sources_reset(){sob33_barrier(re4dc::sob33::SourceReset);nsource=0;handle_reset=++handle_clock;}
+#else
 inline void sources_reset(){nsource=0;handle_reset=++handle_clock;}
+#endif
+#else
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+inline void sources_reset(){sob33_barrier(re4dc::sob33::SourceReset);nsource=0;}
 #else
 inline void sources_reset(){nsource=0;}
+#endif
 #endif
 #if RE4DC_TEX_RESIDENT || RE4DC_SUBSCREEN
 // (SUBSCREEN: sub screen images without a converted package are drawn every frame.)
@@ -1143,6 +1187,9 @@ unsigned avd_queue_epoch;
 void actor_fade_queue_reset();
 #endif
 void reset_deferred(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::DeferredReset);
+#endif
 #if defined(RE4DC_ESP_SETUP_BATCH)
     fx_setup_forget(); // queue addresses can be reused after any reset, even within a frame
 #endif
@@ -2399,6 +2446,9 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SceneBoundary);
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_packet_reset();
 #endif
@@ -2510,6 +2560,9 @@ void stream_select(pvr_list_t list){
     desired_list=list;
     if(!stream_scene){stream_open();AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
     if(stream_list==list){AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ListBoundary);
+#endif
     // End the old list once. Never reopen it or replay source ModelRender.
 #if RE4DC_PS2_WORLD_DRAW
     if(stream_closed_lists&(1u<<unsigned(list))){
@@ -2574,7 +2627,16 @@ void post_diag_frame(){
                   post_diag_ui_before,post_diag_ui_frames,post_diag_ui_max,post_diag_op_after,frame);
 }
 #endif
+// SOB33_STREAM_SEND_BEGIN
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+void stream_send33(const void* data,unsigned bytes,unsigned skip_header) {
+    // Asset auditing consumes the complete logical model packet. Only the
+    // physical TA stream and its byte/hash counters omit the repeated header.
+    const void* const logical_data=data;const unsigned logical_bytes=bytes;
+    data=static_cast<const unsigned char*>(data)+skip_header;bytes-=skip_header;
+#else
 void stream_send(const void* data,unsigned bytes) {
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
 #endif
@@ -2594,11 +2656,21 @@ void stream_send(const void* data,unsigned bytes) {
 #endif
     re4dc::render::submit_pvr(data,bytes);
     sq_unlock();
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    RE4DC_GCA_PACKET(logical_data,logical_bytes,unsigned(stream_list),gcasset_packet_consumer);
+#else
     RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),gcasset_packet_consumer);
+#endif
 #if RE4DC_TA_GUARD
     guard_account(1,bytes/32-1); // every call is one header + its vertices
 #endif
 }
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+void stream_send(const void* data,unsigned bytes) {
+    sob33_barrier(re4dc::sob33::StreamSend);stream_send33(data,bytes,0);
+}
+#endif
+// SOB33_STREAM_SEND_END
 #if RE4DC_MV_SHADOWS
 // MV_SHADOWS (game30.mk; mv_shadow.cpp): the frame's shadow volumes go into the opaque modifier volume list, opened
 // once after every other list of a presented scene (a closed list is never reopened). re4dc_mv_emit calls
@@ -2618,6 +2690,9 @@ unsigned blob_sends,blob_bytes;
 void safe_audit_scene(bool present);
 #endif
 void stream_close(bool present) {
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SceneBoundary);
+#endif
     RE4DC_PROFILE_SCOPE(PresentFence);
 #if RE4DC_UI_FRAG_WINDOW==2
     if(frag_discard){present=false;frag_discard=false;} // UI_FRAG_WINDOW: this frame released textures its scene used
@@ -5642,6 +5717,9 @@ void room_change_retire(){
 }  // namespace
 #endif
 extern "C" void re4dc_ui_retire_room(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SourceReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     // Close admission immediately; the final synchronous borrower restores mode.
     re4dc_world_scratch_cancel();
@@ -6296,6 +6374,9 @@ unsigned pace_skipped_frames;   // skipped iterations: frame + this = iterations
 // re4dc_ui_begin; the frame is not begun (frame_ready=false: every emission entry returns before
 // any work, no texture is resolved or uploaded, no preload, no fog), `frame` does not advance.
 extern "C" void re4dc_ui_begin_skip(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::FrameReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_boundary(1,re4dc_ps2_mesh_room());
 #endif
@@ -6489,6 +6570,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes);
 #endif
 extern "C" void re4dc_ui_begin(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_report(frame);sob33_barrier(re4dc::sob33::FrameReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
 #endif
@@ -7417,6 +7501,9 @@ extern "C" void re4dc_model_texture(const unsigned* key){model_texture=key;}
 namespace { const Re4dcModelPacket* model_reserved=nullptr; }
 #endif
 extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_packet_eligible=false;sob33_packet_marker=0;
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     // Consume before every possible return. A failed/foreign begin cannot
     // leave an actor-format request for a later unrelated part.
@@ -7655,9 +7742,15 @@ if(!handle){
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
     RE4DC_GCA_MODEL_PREPARE(p);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_packet_marker=p->source_key[3];sob33_packet_eligible=re4dc::sob33::marked(sob33_packet_marker);
+#endif
     return 1;
 }
 extern "C" void re4dc_model_packet_commit(unsigned count){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    if(!count){++sob33_stats.empty;sob33_barrier(re4dc::sob33::EmptyPacket);}
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
 #endif
@@ -7670,19 +7763,53 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        // The ordinary packet emitter stores exactly one packed-colour
+        // header followed by 32-byte vertices. Incomplete/unknown layouts
+        // retain their header and cannot publish a receipt for the next draw.
+        const bool sob33_layout=model_packets && model_used==0 && model_pending==1 &&
+            count<=kModelPacketBytes/32-1 && stream_scene && !stream_aborted;
+        const bool sob33_eol=sob33_layout && model_packets[model_pending+count-1].flags==PVR_CMD_VERTEX_EOL;
+        re4dc::sob33::Decision sob33_decision;
+        if(sob33_packet_eligible && (!sob33_layout || !sob33_eol)){
+            sob33_run.barrier();sob33_decision=re4dc::sob33::Format;
+            if(sob33_layout && !sob33_eol)++sob33_stats.incomplete;
+        }else sob33_decision=sob33_run.begin(reinterpret_cast<const std::uint32_t*>(model_packets),
+            frame,unsigned(stream_list),frame_pvr_bytes,sob33_packet_eligible && sob33_eol);
+        sob33_stats.begin(sob33_decision,unsigned(stream_list),false,sob33_packet_marker);
+        const unsigned sob33_skip=sob33_decision==re4dc::sob33::Reuse?32U:0U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        if(!sob33_skip)re4dc::wc24::submitted_header(reinterpret_cast<const std::uint32_t*>(model_packets+model_used));
+#endif
+#else
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24 && RE4DC_PVR_STREAM
         re4dc::wc24::submitted_header(reinterpret_cast<const std::uint32_t*>(model_packets+model_used));
+#endif
 #endif
         RE4DC_GCA_MODEL_TEXTURE(model_handle);
         RE4DC_GCA_MODEL_PACKET_ACCEPT(model_packets+model_pending,count);
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        const bool sob33_pending=sob33_run.pending;
+        stream_send33(model_packets,model_used*32,sob33_skip);
+        if(sob33_pending){
+            if(sob33_run.finish(frame,unsigned(stream_list),frame_pvr_bytes,count,
+                sob33_eol && stream_scene && !stream_aborted))++sob33_stats.completed;
+            else ++sob33_stats.incomplete;
+        }
+#else
         stream_send(model_packets,model_used*32);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::count(re4dc::wc24::Corners,count);
 #endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        stream_model_bytes+=model_used*32-sob33_skip;
+#else
         stream_model_bytes+=model_used*32;
+#endif
         if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
         model_used=0; // PVR owns copied packets; reuse the same bounded scratch.
 #endif
@@ -7708,6 +7835,9 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::PacketAbort);
+#endif
 #if RE4DC_WORLD_SCRATCH
     // Close admission immediately; the final synchronous borrower restores mode.
     re4dc_world_scratch_cancel();
@@ -7772,6 +7902,10 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 }
 #endif
 extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_direct_candidate=false;
+    if(!p || !re4dc::sob33::marked(p->source_key[3]))sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     struct ActorUv32BeginGuard {
         bool success=false;
@@ -7809,6 +7943,23 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 #endif
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
     const auto* header=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    const auto sob33_decision=sob33_run.begin(header,frame,unsigned(stream_list),frame_pvr_bytes,
+        sob33_packet_eligible && !stream_aborted);
+    sob33_stats.begin(sob33_decision,unsigned(stream_list),true,sob33_packet_marker);
+    const bool sob33_skip=sob33_decision==re4dc::sob33::Reuse;
+    sob33_direct_candidate=sob33_run.pending;
+    if(!sob33_skip){
+        for(unsigned i=0;i<8;++i)sq[i]=header[i];
+#if RE4DC_TA_HASH
+        re4dc_ta_hash(header,32);
+#endif
+        sq_flush(sq);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::submitted_header(header);
+#endif
+    }
+#else
     for(unsigned i=0;i<8;++i)sq[i]=header[i];
 #if RE4DC_TA_HASH
     re4dc_ta_hash(header,32);
@@ -7817,10 +7968,16 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::submitted_header(header);
 #endif
+#endif
     direct_open=true;
     model_handle->frame=frame; // the header is in the TA: pinned for this scene
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    if(!sob33_skip){++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;}
+    out->sq=sq+(sob33_skip?0:8);out->scratch=packet.vertices;out->scratch_capacity=packet.capacity;
+#else
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
     out->sq=sq+8;out->scratch=packet.vertices;out->scratch_capacity=packet.capacity;
+#endif
     out->u_scale=packet.u_scale;out->v_scale=packet.v_scale;
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     actor_uv32_guard.success=true;
@@ -7863,6 +8020,20 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 #endif
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
     if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    // Marked bridge classes reach the ordinary actor emitter: whole meshlets
+    // carry their terminal index EOL, strip emission forces its last EOL and
+    // clipped triangles end at their third corner. Failure calls packet_abort
+    // before this end; no read from write-only SQ memory is needed. World,
+    // coarse-window and foreign producers clear this candidate at begin.
+    if(sob33_direct_candidate){
+        if(!vertices)++sob33_stats.empty;
+        if(sob33_run.finish(frame,unsigned(stream_list),frame_pvr_bytes,vertices,
+            stream_scene && !stream_aborted))++sob33_stats.completed;
+        else ++sob33_stats.incomplete;
+    }
+    sob33_direct_candidate=false;
+#endif
     model_used=0;
 #else
     (void)vertices;
@@ -7999,6 +8170,9 @@ extern "C" int re4dc_leon_direct_capture(const Re4dcModelPart* p,Re4dcLeonHeader
     return 1;
 }
 extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const Re4dcLeonHeader* h,unsigned vertices,std::uint32_t* sq){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(2);
 #endif
@@ -8143,6 +8317,9 @@ extern "C" int re4dc_coarse_leon_texture_ready(const Re4dcUiImage* image,unsigne
 }
 #endif
 extern "C" std::uint32_t* re4dc_coarse_begin(int fog){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
 #if RE4DC_COARSE >= 2
     static unsigned dbg;
     if(dbg<4 || dbg%600==0)re4dc_log("COARSE2 begin n=%u frame=%u ready=%d scene=%d list=%d desired=%d aborted=%d direct=%d finished=%d\n",
@@ -8189,6 +8366,9 @@ extern "C" std::uint32_t* re4dc_coarse_begin(int fog){
 // area, 32 16-bit UVs (vertex word 4), 64 no depth write (bit 32 builds: R7's sky dome). nullptr: no frame, or
 // the package cannot be loaded.
 extern "C" std::uint32_t* re4dc_coarse_begin_mode(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned mode){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
     if(!frame_ready || stream_aborted || direct_open)return nullptr;
 #if RE4DC_UI_POLY_ORDER && RE4DC_SS_UI_ORDER
     if(ui_order && quads_flushed<nquad)ui_order_flush();
@@ -8250,6 +8430,9 @@ extern "C" void re4dc_coarse_end(unsigned vertices){
 // (/cd/dc/tex/<crc>-<fnv>.re4tex); no source image exists for it.
 extern "C" void re4dc_static_flush_impostors();
 extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,unsigned height,int fog,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket); // no marked source-part begin
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=2;
 #endif
@@ -9454,6 +9637,9 @@ extern "C" int re4dc_leon_owned_tr_idle(const Re4dcModelPart* part){
 extern "C" unsigned re4dc_ps2_world_fog(); // native_ps2_world.cpp: latched at this frame's scenery draw
 #endif
 extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned pass,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket); // may retain the current list
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=1;
 #endif
@@ -9503,6 +9689,9 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
 }
 #if RE4DC_PS2_WORLD_KERNEL==4
 extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned pass,unsigned cull,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=1;
 #endif
@@ -9739,6 +9928,9 @@ extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_ba
     } failed_begin{batch};
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
@@ -10403,6 +10595,9 @@ extern "C" void re4dc_model_finish_source_draws(){
 }
 
 extern "C" void re4dc_model_invalidate_pending(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SourceReset);
+#endif
     re4dc_model_invalidate_static_lighting();
 #if RE4DC_D349_RENDERER_STACK
     if(deferred_first || draining_parts){reset_deferred();stream_aborted=true;}
