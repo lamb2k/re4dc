@@ -68,6 +68,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
 | 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed a4ae0c83 (merge of the Build 28 branch), default 0; merged clean, release recipe builds missing 0; report [handbacks/build-28.md](handbacks/build-28.md); console soak on the next QA link disc (local) |
+| 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`) | QUEUED 10-28 |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -313,6 +314,33 @@ Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here 
   - IRQ or SQ contention with the PVR;
   - datagram sizes against the console's no-fragment rule.
 - Give findings with code sites, plus fixes under QA_LINK only (the game disc never builds the link).
+
+### Build 29: find every slow fallback, in code and in data (`FALLBACK_SCAN29`)
+
+**Why (console, 2026-10-28, user: "there are many areas of that game that fall back to slow rendering paths"):** with your Build 26 counters on a real console (QA disc CLIPFRONT2 165b4645, DFA fix 9bd9b59b, which now keeps the last tick that drew), the r103 farm drops to **5 fps** next to the barn Ganado forking hay. Per drawn tick there:
+
+| Counter | Per drawn tick | Unit |
+|---|---:|---|
+| `a_lit_exact` | 15,439 | vertices on the exact per-vertex light evaluator |
+| `a_flat_rewrite` | 705 | vertices |
+| `a_setup_repeat` | 347 | setups |
+| `a_cone_absent` | 306 | meshlets |
+| `w_clip_rebuild` | 277 | (world) |
+| `a_uv32` | 132 | parts |
+| `a_probe_miss` | 121 | parts |
+| `m_obj_split` | 117 | |
+| `a_lit_scale` | 111 | parts |
+| `submit_copy` / `a_frame_miss` / `w_clip_depth` / `fx_setup_off` / `w_screen_rebuild` / `tex_handle` | 63 / 59 / 43 / 34 / 33 / 15 | |
+
+Character drawing costs 63-110 ms per drawn frame there against ~14 ms elsewhere in the farm. The two near-camera clip fixes (Builds 24 and 26) change nothing. Your Build 26 inventory lists the splits; what we lack is **where in the game, and on which data, each one fires**. You do this build alone: the user asked for the cloud agent to do both the sweep and the scan. You have no game data or console, so you write the code and tools and prove them on synthetic fixtures; Claude runs the scanner on the private data and the counters on the console, and sends you the numbers.
+
+**Do:**
+1. **Source sweep, whole game, not only drawing.** Walk `src/` and `port/dreamcast/` for every place a fast path hands work to a slower one, beyond what Build 26 covered: skinning and motion decode, cloth, collision, effects (Esp/Efm), texture residency (reload, thrash guard, no-block failures), disc reads during gameplay, sound streaming, GC GX / MeshDraw / legacy model paths still reachable (also counts for the GC-ASSET rule), matrix/frame caches, translucent sort. For each split give: file:line, knob and recipe value, the trigger, cost per item (MODELLED), and whether chapter 1-2 data can trigger it. Put new counters under the same `DRAW_FALLBACK_AUDIT` family (or `FALLBACK_AUDIT29` if it is not drawing), same rules: compact rows, QA page + link, default 0.
+2. **Offline asset scanner** (`port/dreamcast/tools/d367/fallback_scan/`): reads the converted data the disc carries (PS2 character/prop/enemy packages, world packages, tex.pak, room lists) and predicts, per model / part / meshlet / material, which data-driven trigger it hits: probe decline, light-scale/diffuse materials, a fourth light or no light basis, per-vertex colours, `uv32`, cone absent, flat rewrite, object split, chunk alpha/unique, texture handle/palette, anything else your sweep finds. Output: per room (chapters 1-2 route rooms) and per model, the parts/vertices per reason, ranked; plus a machine-readable TSV. It must explain the barn: which model(s) near the hay-forking Ganado (the Ganado, the pitchfork, hay, barn props) produce `a_probe_miss` / `a_lit_scale`.
+3. **Remove the triggers in data, offline.** For the top data-driven triggers, starting with the two that put ~15k vertices per tick on the exact light path (`a_probe_miss`, `a_lit_scale`), add a converter step that removes the trigger at conversion time (fold light scale into the material/part colour, bake what the probe would decline), each as its own default-off data flag; approximations are welcome (say which outputs change). This complements Build 25's `ACTOR_LIGHT_FAST_ONLY` (runtime) with data that never needs it.
+4. Optional, small: a windowed DFA mode that sums each reason over the last N drawn ticks, so short bursts are not missed.
+
+**Hand back** in `docs/cloud/handbacks/build-29.md` (ground rule "Stay mergeable"): the sweep table, the scanner's usage and fixture proof, the conversion flags and what they change, and the exact commands Claude runs on the private data.
 
 ## Open questions back to Claude
 
