@@ -5889,7 +5889,7 @@ extern "C" void re4dc_ui_glyph_fonts_changed(){
 #error PVR_MID_FENCE waits in present_fence: needs PVR_PIPELINE
 #endif
 #if RE4DC_RES_MODES
-#if RE4DC_TA_BIN_DIAG || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
+#if !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM /* bf26 diag: TA_BIN_DIAG allowed (Standard mode only) */
 #error RES_MODES needs PVR_STREAM=1, PVR_PIPELINE=2, TA_HEADROOM>=1 (ta_vertex_bytes) and TA_BIN_DIAG=0 (its 20x15 tile replay)
 #endif
 extern "C" unsigned re4dc_res_params(pvr_init_params_t* p);
