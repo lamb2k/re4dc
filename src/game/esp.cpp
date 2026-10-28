@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
 // handed out by cEsp::operator new / PullEsp, returned by PushEsp. EspMove (game loop, after
@@ -646,6 +650,10 @@ int EspMove()
 #endif
                 i += m;
             }
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            if(!use || re4dc_fx_esp_gen!=gen)re4dc::fa29::hit(re4dc::fa29::EspScan);
+#endif
+#line 649
             fxEspMoveOne(sys, i, pause, &cnt);
         }
 #if RE4DC_FX_SCAN == 2

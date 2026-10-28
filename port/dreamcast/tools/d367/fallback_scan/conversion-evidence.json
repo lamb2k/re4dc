@@ -1,0 +1,78 @@
+{
+  "conversion": {
+    "approximation": "captured-pose directional RGB565 bake; live quarter-Lambert color-energy gain per part",
+    "bake_probe_decline": true,
+    "bytes": 2304,
+    "changed": true,
+    "context_sha256": "edaa4a72ffac7a5cfb4e661e44be14975b67173a5de4b3276fda9acccec2be77",
+    "fold_light_scale": true,
+    "input_sha256": "d37a51e585254e93075c027ca3aa6e35ca85e5dfe85e8054d306fa44cd8cd0f7",
+    "output_sha256": "da89b42504fe04ac257efc73c44454533d64c11b9f8fad11e70c9e9bb7d62780",
+    "ownership": "source-model",
+    "parts": [
+      {
+        "baked_record_bytes": 6,
+        "changed": true,
+        "flags": 3,
+        "index": 0,
+        "meshlets": 1,
+        "old_light_scale": true,
+        "old_probe_decline": true,
+        "old_stream_bytes": 2048,
+        "records": 3,
+        "resident_delta_bytes": 0,
+        "stream_sha256": "d8ad9a9ce922dd1d555c8364f479ad50c86a0a9d3dccfd221b85dbfd3f4e0a0e",
+        "triangles": 32,
+        "used_stream_bytes": 288
+      }
+    ],
+    "provenance": "hand-authored synthetic fixture, no game data",
+    "runtime_requires": "FALLBACK_SCAN29=1 NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1 MODEL_STREAM_FIX=1 NATIVE_ACTOR_PRELIT=1; FAST_ONLY not required",
+    "schema": "re4dc.fallback29.convert/1",
+    "source_kind": "PS2-converted-ModelData"
+  },
+  "graft": {
+    "bytes": 3648,
+    "changed": true,
+    "input_member_sha256": "d37a51e585254e93075c027ca3aa6e35ca85e5dfe85e8054d306fa44cd8cd0f7",
+    "input_sha256": "7400203c601274d03e8cd25b3ef0c4420b23f81dc21edab5fafd9df75ec209cd",
+    "key": "package/DVD[0]/ARC[0x4]",
+    "length": 2304,
+    "native_tables": [
+      {
+        "bytes": 2624,
+        "offset": 1024,
+        "unchanged_tables": {
+          "ESQ": 1,
+          "NTR": 1
+        }
+      }
+    ],
+    "offset": 1088,
+    "output_member_sha256": "da89b42504fe04ac257efc73c44454533d64c11b9f8fad11e70c9e9bb7d62780",
+    "output_sha256": "cbd9956eeaa166206f217814762200ca56f4255595e310d447e856c66cb0aa52",
+    "ownership": "source-model; external NMR/GC-source certificates are unsupported",
+    "schema": "re4dc.fallback29.graft/1",
+    "unchanged_nonstream_member_bytes": true,
+    "unchanged_outside_member": true
+  },
+  "member": {
+    "key": "package/DVD[0]/ARC[0x4]",
+    "length": 2304,
+    "member_sha256": "d37a51e585254e93075c027ca3aa6e35ca85e5dfe85e8054d306fa44cd8cd0f7",
+    "offset": 1088,
+    "ownership": "source-model",
+    "package_bytes": 3648,
+    "package_sha256": "7400203c601274d03e8cd25b3ef0c4420b23f81dc21edab5fafd9df75ec209cd",
+    "schema": "re4dc.fallback29.member/1",
+    "source_kind": "PS2-converted-ModelData"
+  },
+  "nonstream_bytes_identical": true,
+  "off_absent_identical": true,
+  "off_zero_identical": true,
+  "package_size_unchanged": true,
+  "schema": "re4dc.fallback29.synthetic-conversion-evidence/1",
+  "scope": "hand-authored public synthetic data; no game assets or console measurements",
+  "source_bytes": 2304,
+  "source_stream_bytes": 2048
+}

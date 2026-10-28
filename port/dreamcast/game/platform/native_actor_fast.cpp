@@ -6,6 +6,10 @@
 #define DFA26_MODEL_HIT(reason, n)
 #define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#include "include/fallback_actor_audit29.hpp"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
@@ -50,6 +54,9 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29
+#include "include/fallback_scan29.hpp"
+#endif
 #ifndef RE4DC_ACTOR_LIGHT_FAST_ONLY
 #define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
 #endif
@@ -2016,6 +2023,10 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
 // in columns 0..2 and ambient x scale in column 3. Same per-object
 // approximation (evaluated at the part centre) as native_actor.cpp.
 struct Lights {
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29
+    const re4dc::fallback29::Bake* scan29_bake = nullptr;
+    unsigned scan29_gain[3]{};
+#endif
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
     Re4dcActorLight25Colour colour25;
 #endif
@@ -2702,6 +2713,14 @@ inline unsigned dsa28_light_path(const Lights& L) {
 #include "include/actor_light_fast_only.inc"
 #undef RE4DC_PART_LIGHTS
 #define RE4DC_PART_LIGHTS fast_only_lights
+#endif
+
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/fallback_scan29_lights.inc"
+#endif
+
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_actor_audit29.inc"
 #endif
 
 #if !RE4DC_ACTOR_LIGHT_FAST_ONLY
@@ -4816,6 +4835,9 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #endif
 // Pass 2 (exact, slow): the generic path's per-vertex evaluator.
 void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_exact_vertices(e.p,n);
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorLightExact, n)
 #endif
@@ -5057,6 +5079,9 @@ void pass_baked(Part& e, const Records& r, unsigned n, const unsigned* scale) {
     }
 }
 
+#endif
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/fallback_scan29_bake.inc"
 #endif
 // LOD: the coarsest level whose error, projected at the bind-pose bounding
 // sphere's nearest depth, is at most lod_tau pixels (0: always level 0).
@@ -6468,6 +6493,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         lights.constant_rgb = part_colour(lights);
     }
 #endif
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    // The offline per-record colours supersede the crowd/rigid flat-colour approximation.
+    if (lights.scan29_bake) lights.constant = false;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_note(p,lights);
+#endif
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
     re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
 #endif
@@ -7221,6 +7253,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         lights.constant = true;  // never the window's record: lights.fast is false for constant lighting
         lights.constant_rgb = part_colour(lights);
     }
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    // The offline per-record colours supersede the crowd/rigid flat-colour approximation.
+    if (lights.scan29_bake) lights.constant = false;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_note(p,lights);
+#endif
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
     re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
 #endif

@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
 #include "include/draw_fallback_audit.h"
 #define DFA26_HIT(reason) ::re4dc::dfa26::hit(::re4dc::dfa26::reason);
@@ -3871,6 +3875,25 @@ void tex_final_refusal(const Re4dcUiImage& image,const Key& key,bool key_valid,
 #define RE4DC_TEX_FINAL_REFUSAL(...)
 #define RE4DC_TEX_REFUSE_RETURN(...) return nullptr
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void fa29_tex_refusal(const Re4dcUiImage&,const Key&,bool,const char* stage,const char* reason,unsigned){
+    using namespace re4dc::fa29;
+    hit(TextureRefusal);
+    if(!std::strcmp(stage,"guard"))hit(TextureGuard);
+    if(!std::strcmp(stage,"slot"))hit(TextureSlot);
+    if(reason && !std::strcmp(reason,"PVR texture allocation failed"))hit(TextureNoBlock);
+    if(reason && (!std::strcmp(reason,"pack-error") || !std::strcmp(reason,"pack-payload-retry")))hit(TexturePack);
+}
+#undef RE4DC_TEX_FINAL_REFUSAL
+#undef RE4DC_TEX_REFUSE_RETURN
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+#define RE4DC_TEX_FINAL_REFUSAL(...) do{fa29_tex_refusal(__VA_ARGS__);tex_final_refusal(__VA_ARGS__);}while(0);
+#else
+#define RE4DC_TEX_FINAL_REFUSAL(...) do{fa29_tex_refusal(__VA_ARGS__);}while(0);
+#endif
+#define RE4DC_TEX_REFUSE_RETURN(...) do{RE4DC_TEX_FINAL_REFUSAL(__VA_ARGS__)return nullptr;}while(0)
+#endif
+#line 3874
 #if RE4DC_TEX_CHECK
 __attribute__((noinline))   // TEX_CHECK: texchk::site is this function's caller
 #endif
@@ -3924,6 +3947,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::TextureMiss);
+#endif
+#line 3927
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
     // FX_EARLY_CUT: an effect picture the PS2 dropped is declined before any eviction, budget test or file I/O.
     if(fxearly_armed && fx_none_key(key,fxearly_room())){
@@ -4016,6 +4043,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         fs_close(f);
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(slot->valid)re4dc::fa29::hit(re4dc::fa29::TextureEvict);
+#endif
+#line 4019
     if(slot->valid){RE4DC_PROFILE_COUNT(TextureEvictions,1);RE4DC_FX_EVICTED();RE4DC_HOLD_EVICTED(*slot);}
     close_entry(*slot); // caller has completed both TA and render fences
     char path[96];RE4DC_TEX_PATH(path,key);
@@ -4083,6 +4114,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         Entry* victim=nullptr;
         for(auto& e:entries) if(&e!=slot && e.valid && !RE4DC_ENTRY_PINNED(e) && !RE4DC_CORE_PINNED(e) && (!victim || e.frame<victim->frame)) victim=&e;
         if(!victim) return false;
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::TextureEvict);
+#endif
+#line 4086
         RE4DC_PROFILE_COUNT(TextureEvictions,1);RE4DC_FX_EVICTED();RE4DC_HOLD_EVICTED(*victim);close_entry(*victim);++reclaimed;return true;
     };
 #if RE4DC_TEX_META_EVICT
@@ -4101,6 +4136,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     };
     for(unsigned tries=0;!ok && tries<8 && slot->package.error() && !std::strcmp(slot->package.error(),"streamed metadata allocation failed") && evict_kos();++tries){
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::TextureMeta);
+#endif
+#line 4104
         ++vram_meta_evicts;
         ok=RE4DC_OPEN_PACKAGE();
     }
@@ -4186,6 +4225,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         // more unreferenced upload and retry; reopening releases the partial
         // allocation (Package refuses to resume a partial upload in place).
         for(const char* e=slot->package.error();!ok && e && !std::strcmp(e,"PVR texture allocation failed") && evict();e=slot->package.error()){
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::TextureReopen);
+#endif
+#line 4189
             ++vram_retries;
             re4dc_log("native UI: fragmented VRAM, evicted and retrying (retries=%u free=%u)\n",vram_retries,(unsigned)pvr_mem_available());
 #if RE4DC_TEX_RESIDENT
@@ -4298,6 +4341,12 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     if(!ok) RE4DC_TEX_FINAL_REFUSAL(image,key,true,refusal_stage,
                                  slot->package.error()?slot->package.error():refusal_reason,refusal_need)
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if !defined(RE4DC_TEX_FINAL_REFUSAL_LOG) || !RE4DC_TEX_FINAL_REFUSAL_LOG
+    if(!ok)fa29_tex_refusal(image,key,true,"upload",slot->package.error(),0);
+#endif
+#endif
+#line 4301
     if(!ok) slot->package.close();
 #if RE4DC_TEX_META_EVICT
     re4dc_log("native UI: bounded upload heap=%d->%d metadata=%u staging=shared-16384 source_allocation=0 kos=%u->%u\n",heap_before,re4dc_ui_heap_free(),slot->package.metadata_bytes(),kos_before,kos_headroom());

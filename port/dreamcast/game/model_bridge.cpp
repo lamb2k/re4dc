@@ -173,6 +173,34 @@ extern "C" int re4dc_b28_model_kind(const void* model){
     return m ? int((unsigned(m->kindid)&255U)<<8|(unsigned(m->id)&255U)) : -1;
 }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+// Read the source declarations only when a new diagnostic row is installed.
+// Unknown chunk/attachment identities stay unknown; never guess a package row.
+extern "C" void re4dc_fa29_actor_identity(const Re4dcModelPart* p,unsigned* tag,unsigned* info_index,unsigned* offset){
+    *tag=*info_index=*offset=~0U;
+    const auto* m=static_cast<const cModel*>(p->model);
+    const auto* info=static_cast<const cModelInfo*>(p->info);
+    if(!m)return;
+    *tag=((unsigned(m->kindid)&255U)<<24)|((unsigned(m->id)&255U)<<16)|
+         ((unsigned(m->type)&255U)<<8)|(unsigned(m->nParts)&255U);
+    const cModelInfo* q=m->pModelInfo;
+    for(unsigned n=0;q && n<1024;++n,q=q->pList){if(q==info){*info_index=n;break;}}
+    if(!info || !info->pData || p->part==p->info)return;
+    const auto* d=info->pData;
+    const uintptr_t base=reinterpret_cast<uintptr_t>(d),part=reinterpret_cast<uintptr_t>(p->part);
+    // Only publish an offset after finding the submitted part in this model's
+    // real part table. A chunk's synthetic view is not an offline source row.
+    const ModelPart* source=d->pParts;
+    for(unsigned n=0;source && n<d->displist_num && n<4096;++n){
+        if(source==p->part){
+            if(part>=base && part-base<16U*1024U*1024U)*offset=unsigned(part-base);
+            break;
+        }
+        if(source->size>1024U*1024U)break;
+        source=reinterpret_cast<const ModelPart*>(reinterpret_cast<const unsigned char*>(source)+sizeof(ModelPart)+source->size);
+    }
+}
+#endif
 extern "C" void re4dc_model_material(const void* object,float u,float v,unsigned flags){
     selected={};mask={};mask_ref=256;mask_same_uv=0;
     if(!object || (flags&4))return; // multi-texture blend needs its own native path

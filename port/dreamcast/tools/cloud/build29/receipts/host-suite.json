@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "tests": 54,
+  "command": [
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "port/dreamcast/tools/d367/fallback_scan",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "source_sha256": {
+    "port/dreamcast/tools/d367/fallback_scan/scan.py": "8bfb5a083400728bc03ff9ab85651f6c0bcbdd1ad6e5ee94122ad90fb59f6aca",
+    "port/dreamcast/tools/d367/fallback_scan/formats.py": "3e9e390741b5fa1ace847780d6e2c4a5314d24d279e0453f8f70e30874ad042f",
+    "port/dreamcast/tools/d367/fallback_scan/convert.py": "703f9d713182a2c73320596dcd58d63b6c3b1ad718ff77322fd2d548b3f654ec",
+    "port/dreamcast/tools/d367/fallback_scan/package.py": "f11c301459363a0b99c4aae2a5cd8bfba71839e9a50291f2a33d26298bbad1f4",
+    "port/dreamcast/tools/d367/fallback_scan/test_scan.py": "63e8fa85a4e9856f4a526baf0554b419c7971216c01f1d5b84437f16f5986c5a",
+    "port/dreamcast/tools/d367/fallback_scan/test_convert.py": "3c5a3febb05333edb940cfc836c403a6790817e5d87207717d7dc24d99c8e437",
+    "port/dreamcast/tools/d367/fallback_scan/test_package.py": "10a66151a10c102a3ccbea484e0b43b00e5d38487de27ac2f327ba4a240fb77d",
+    "port/dreamcast/tools/d367/fallback_scan/test_runtime.py": "e906781ead65b8cbc8093b217b5c67b87f9f1ca1c2255375459f2136b3cc574e",
+    "port/dreamcast/tools/d367/fallback_scan/test_runtime.cpp": "ff91263b862ffaaec5086c690be69ff875399e901010ee498019ea6a5f66fbb4",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "8f91ac38d9eb0e0e7648a7632e2d01503a43da7df242ce9806fc06bfe85e183e",
+    "port/dreamcast/room/source_lighting.cpp": "456cf98468febc9a3b0d1803546957af93de9fa9c5cda9d7bd5bcd63c72a868c",
+    "port/dreamcast/game/platform/include/fallback_scan29_bake.inc": "d5850b4c4ba482d0c2c2127e0ad268487de138f1cb62620ab601a4c8304b7d6c",
+    "port/dreamcast/game/platform/include/fallback_scan29.hpp": "02100f1908533134b3308daf7aa18c795e3ff4dbd83072e00f740b3c5432f78c",
+    "port/dreamcast/game/platform/include/fallback_scan29_lights.inc": "b8d13afba2b4b2399f893323509b0a66120b85cbae3b8f2a39fb1a399d88ac13"
+  },
+  "log_sha256": "20cae20f4df8c5d06b0d20918e97b08059c079209ff922f22d2b00b2a6c0b791",
+  "scope": "Integrated unittest discovery:38 scanner +11 converter +4 archive methods +1 full-production-actor method containing7 configurations. Separate core/QA/actor-attribution sanitizer receipts cover those components.",
+  "warnings": "Existing model_registry synthetic-writer ResourceWarning about file closure; no failing assertion."
+}

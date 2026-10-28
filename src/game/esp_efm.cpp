@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/esp_efm: effect models (Efm) of the effect sequence system (D:/Bio4/Prog/esp_efm.cpp). An
 // effect record whose Id is 0xFC..0xFF creates a model object in ObjMgr instead of a sprite:
 // obj04 (particle model, Id 0xFF; 0xFC uses a scroll model), obj05 (scatter/debris model, 0xFE)
@@ -118,6 +122,10 @@ static __attribute__((noinline, cold)) void fxEfmBuild(cObjMgr* m)
 // EfmDelete's source loop from slot i.
 static __attribute__((noinline, cold)) void fxEfmDeleteFrom(cObjMgr* m, u32 i)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(i<m->nArray)re4dc::fa29::hit(re4dc::fa29::EfmScan,m->nArray-i);
+#endif
+#line 121
     for (; i < m->nArray; i++) {
         cObj* obj = m->workAt(i);
         if (obj) EfmDeleteSub(obj);

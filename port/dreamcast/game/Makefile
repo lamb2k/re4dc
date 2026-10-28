@@ -3674,6 +3674,8 @@ include world_census24_errors.mk
 include perf_phase_miss.mk
 include draw_setup_audit.mk
 include draw_fallback_audit.mk
+include fallback_audit29.mk
+include fallback_scan29.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).

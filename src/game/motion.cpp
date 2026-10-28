@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/motion: skeletal animation playback (D:/Bio4/Prog/motion.cpp). A MotionWork plays a
 // MotionData (per joint: kind byte, Fcc key type, and per-axis Hermite key streams) on a cModel's
 // parts. MotionSetCore starts a motion (optionally through a sequence table of 10.6 fixed-point
@@ -1797,6 +1801,10 @@ bail:
 #if RE4DC_HF_REG == 2
     hfrBail++;
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::HermiteHistory);
+#endif
+#line 2361
     hist[0] = hs0;
     hist[1] = hs1;
     hist[2] = hs2;
@@ -1870,6 +1878,10 @@ int hermiteReg(HermitePrm* prm, Vec* out, u16* hist)
             break;
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::HermiteLayout);
+#endif
+#line 2434
     HFR_RET(hermiteFast(prm, out, hist));
 #undef HFR_RET
 #if RE4DC_HF_REG == 2
