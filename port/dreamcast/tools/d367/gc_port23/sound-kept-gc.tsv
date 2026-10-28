@@ -1,7 +1,8 @@
-# sound-kept-gc.tsv: wavetable samples that keep GameCube PCM (gc_port23/sound_kept_gc.py; 308 rows)
+# sound-kept-gc.tsv: wavetable samples that keep GameCube PCM (gc_port23/sound_kept_gc.py; 303 rows)
 # file	block	sample	reason	owner
 # snd28 10-28: + the runtime-converted banks (ps2_audio.py banks --dsp, store snd28-20261028/_map): 333 of 405 of their samples now PS2 (before: 0), the 72 rows owned snd28 keep GC
 # snd28b 10-28: + pl05/09/0c/10/15, em14, wep03-06/08/10/12/14-18 (store snd28b-20261028/_map): 514 of 542 samples now PS2, the 28 rows owned snd28b keep GC
+# snd28c 10-28: wep03-06/08/10/12/14-18 prebuilt (snd28c-20261028/_map) replace snd28b's rows for them: 134 of 146 samples PS2, 12 rows owned snd28c
 bgm/bio4midi.dat#5	BGM0	3	no PS2 match at matcher floor	gcleft26
 bgm/doorse.dat#0	DOOR	0	no PS2 match at matcher floor	gcleft26
 bgm/doorse.dat#0	DOOR	1	no PS2 match at matcher floor	gcleft26
@@ -149,24 +150,19 @@ em/wep01.drs	WEP	6	no PS2 match at matcher floor	gcleft26
 em/wep01.drs	WEP	11	no PS2 match at matcher floor	gcleft26
 em/wep02.drs	WEP	12	no PS2 match at matcher floor	gcleft26
 em/wep02.drs	WEP	13	no PS2 match at matcher floor	gcleft26
-em/wep03.drs	WEP	7	no PS2 match at matcher floor	snd28b
-em/wep04.drs	WEP	6	no PS2 match at matcher floor	snd28b
-em/wep04.drs	WEP	10	no PS2 match at matcher floor	snd28b
-em/wep05.drs	WEP	9	no PS2 match at matcher floor	snd28b
-em/wep06.drs	WEP	1	no PS2 match at matcher floor	snd28b
+em/wep03.drs	WEP	7	no PS2 match at matcher floor	snd28c
+em/wep04.drs	WEP	6	no PS2 match at matcher floor	snd28c
+em/wep04.drs	WEP	10	no PS2 match at matcher floor	snd28c
+em/wep05.drs	WEP	9	no PS2 match at matcher floor	snd28c
+em/wep06.drs	WEP	1	no PS2 match at matcher floor	snd28c
 em/wep07.drs	WEP	5	no PS2 match at matcher floor	gcleft26
-em/wep08.drs	WEP	6	no PS2 match at matcher floor	snd28b
-em/wep12.drs	WEP	0	no PS2 match at matcher floor	snd28b
-em/wep12.drs	WEP	1	PS2 cue resolves to a silent placeholder VAG	snd28b
-em/wep12.drs	WEP	3	no PS2 match at matcher floor	snd28b
-em/wep12.drs	WEP	4	PS2 cue resolves to a silent placeholder VAG	snd28b
-em/wep14.drs	WEP	11	no PS2 match at matcher floor	snd28b
-em/wep15.drs	WEP	1	no PS2 match at matcher floor	snd28b
-em/wep15.drs	WEP	7	PS2 cue resolves to a silent placeholder VAG	snd28b
-em/wep17.drs	WEP	5	PS2 cue resolves to a silent placeholder VAG	snd28b
-em/wep17.drs	WEP	6	no PS2 match at matcher floor	snd28b
-em/wep17.drs	WEP	9	PS2 cue resolves to a silent placeholder VAG	snd28b
-em/wep18.drs	WEP	7	no PS2 match at matcher floor	snd28b
+em/wep08.drs	WEP	6	no PS2 match at matcher floor	snd28c
+em/wep12.drs	WEP	0	no PS2 match at matcher floor	snd28c
+em/wep12.drs	WEP	3	no PS2 match at matcher floor	snd28c
+em/wep14.drs	WEP	11	no PS2 match at matcher floor	snd28c
+em/wep15.drs	WEP	1	no PS2 match at matcher floor	snd28c
+em/wep17.drs	WEP	6	no PS2 match at matcher floor	snd28c
+em/wep18.drs	WEP	7	no PS2 match at matcher floor	snd28c
 etc/core.das	CORE	14	no PS2 match at matcher floor	gcleft26
 etc/core.das	CORE	18	no PS2 match at matcher floor	gcleft26
 st1/r100.dar	FOOT	34	no PS2 match at matcher floor	gcleft26

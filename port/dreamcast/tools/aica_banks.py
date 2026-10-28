@@ -33,6 +33,8 @@ usage:
       (refilter the prebuilt banks of an existing disc tree with decimate_aa, headers and sizes kept)
   aica_banks.py fit --mirror DISCTREE --file FILE --room rNNN --out FILE2 [--cache DIR] [--json OUT] [--check]
       (prebuild a file's GC room-arena banks into DISCTREE's frozen layout, next to the room's prebuilt banks there)
+  aica_banks.py fitwep --mirror DISCTREE --file FILE --out FILE2 [--cache DIR] [--json OUT] [--check]
+      (prebuild a weapon file's GC WEP block into DISCTREE's frozen WEP slot at the highest cap that fits)
 
 Prebuilt banks are decimated with an anti-alias filter (decimate_aa, FILTER_VERSION 2); the runtime
 converter for banks that are not prebuilt keeps its box average (decimate mirrors it).
@@ -139,8 +141,13 @@ ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r
 # (taken in r100 by em2a's runtime bank), so every weapon but the handgun was silent ("blk 2 ... does not fit").
 # Each bank is built at the highest rate cap whose image fits the planned (or frozen) WEP slot, so the layout and every
 # other bank stay byte-identical. wep20 (TMP + stock) shares wep11's bank, wep21 / wep24 (rifle + scopes) wep09's.
+# snd28 round 3 (10-28, issue #1 again): the weapon banks that still converted at load were silent on every equip
+# ("blk 2 ... does not fit": wep03 / wep04 / wep05 / wep12 / wep18 seen, items 0x25-0x29 / 0x34); every remaining one
+# is prebuilt the same way (the release recipe's copies: fitwep, data set snd28c).
 WEAPONS = ['em/wep01.drs', 'em/wep07.drs', 'em/wep09.drs', 'em/wep11.drs', 'em/wep13.drs', 'em/wep19.drs',
-           'em/wep20.drs', 'em/wep21.drs', 'em/wep24.drs']
+           'em/wep20.drs', 'em/wep21.drs', 'em/wep24.drs',
+           'em/wep03.drs', 'em/wep04.drs', 'em/wep05.drs', 'em/wep06.drs', 'em/wep08.drs', 'em/wep10.drs',
+           'em/wep12.drs', 'em/wep14.drs', 'em/wep15.drs', 'em/wep16.drs', 'em/wep17.drs', 'em/wep18.drs']
 
 RESIDENT = ['etc/core.das','em/pl00.drs', 'em/pl08.drs', 'em/wep02.drs', 'bgm/bio4midi.dat#0', 'bgm/doorse.dat#*']
 ROOMS = {
@@ -1304,6 +1311,44 @@ def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None, ta
     return rep
 
 
+def fit_wep(path_in, path_out, tree, cache_dir, check=False, json_out=None):
+    """Prebuild a weapon file's GC WEP block (block 2) into the frozen WEP slot of an existing disc tree (lane snd28,
+    2026-10-28, issue #1 round 2): the same rule as plan()'s WEAPONS (the highest cap <= pref_cap(2) whose image fits
+    layout[2]); same image, header and filter as `build` / `fit`; every other byte of the file is kept. For a weapon
+    file a data set already rewrote (wep24 models), so the release recipe's banks need no full rebuild."""
+    layout = tree_layout(tree)
+    d = bytearray(open(path_in, 'rb').read())
+    rows = []
+    for (t, mo, ms, ao, asz) in sound_blocks(bytes(d), 0) or []:
+        if t != 2 or struct.unpack_from('<I', d, ao)[0] == MAGIC:
+            continue
+        table, samples, coefs = wavetable(bytes(d), t, mo, ms)
+        fits = [c for c in CAPS if c <= pref_cap(2) and ((bank_bytes(samples, c) + 31) & ~31) <= layout[2]]
+        if not fits:
+            raise SystemExit('fitwep: %s does not fit the WEP slot (%d bytes) even at %d Hz' % (path_in, layout[2], CAPS[-1]))
+        cap = fits[0]
+        loops = sample_loops(bytes(d), t, mo, ms, len(samples))
+        img, worst = cached_convert(cache_dir, bytes(d[ao:ao + asz]), samples, coefs, cap, check, loops)
+        assert len(img) == bank_bytes(samples, cap)
+        blob = HDR.pack(MAGIC, VERSION, cap, len(img), len(samples), fnv1a(table), asz, slot_of(t), 0, *layout,
+                        *([0] * 7)) + img
+        assert len(blob) <= asz, (t, len(blob), asz)
+        d[ao:ao + asz] = blob + bytes(asz - len(blob))
+        rows.append({'block': 'WEP', 'gc_bytes': asz, 'samples': len(samples), 'cap_hz': cap, 'aica_bytes': len(img),
+                     'wep_slot': layout[2], 'max_src_rate': max(s[1] for s in samples),
+                     'adpcm_snr_db': None if worst > 900 else round(worst, 1)})
+        print('  %s WEP %7d GC -> %7d AICA at %5d Hz (slot %d)' % (os.path.basename(path_in), asz, len(img), cap, layout[2]))
+    if not rows:
+        raise SystemExit('fitwep: %s has no GC WEP block' % path_in)
+    os.makedirs(os.path.dirname(os.path.abspath(path_out)), exist_ok=True)
+    with open(path_out, 'wb') as f:
+        f.write(d)
+    if json_out:
+        with open(json_out, 'w') as f:
+            json.dump({'file': path_in, 'layout': layout, 'blocks': rows}, f, indent=1)
+    return rows
+
+
 BANK_EXTS = ('.dar', '.drs', '.das', '.snd', '.dat')
 
 
@@ -1437,7 +1482,7 @@ def merge(mirror, overlay, out):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
-    ap.add_argument('cmd', choices=('plan', 'build', 'merge', 'streams', 'disc', 'reconvert', 'fit'))
+    ap.add_argument('cmd', choices=('plan', 'build', 'merge', 'streams', 'disc', 'reconvert', 'fit', 'fitwep'))
     ap.add_argument('--file', help='fit: the disc file whose GC room-arena banks are prebuilt (e.g. a rebuilt st1/r103.dar)')
     ap.add_argument('--room', help='fit: the ROOMS entry whose other arena banks share the arena')
     ap.add_argument('--tail-blk', type=int, help='fit: mark this block tail-first (BGM0 slot tail; ROUTE_CH21_FULL)')
@@ -1471,6 +1516,11 @@ def main():
         if not (a.file and a.out and a.room):
             raise SystemExit('fit needs --file, --room and --out')
         fit(a.file, a.out, a.mirror, a.room, a.cache, a.check, a.json, a.tail_blk, a.tail_bytes)
+        return 0
+    if a.cmd == 'fitwep':   # --mirror = the disc tree whose frozen layout (WEP slot) is used
+        if not (a.file and a.out):
+            raise SystemExit('fitwep needs --file and --out')
+        fit_wep(a.file, a.out, a.mirror, a.cache, a.check, a.json)
         return 0
     if a.cmd == 'reconvert':
         if not (a.root and a.out):
