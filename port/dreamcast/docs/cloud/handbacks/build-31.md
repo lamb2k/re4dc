@@ -108,3 +108,11 @@ commits rebased onto the latest integration branch.
    This tools-only step cannot qualify or enable the legacy PCL2 runtime.
 
 Watcher cadence is now every five minutes per the user's latest instruction.
+
+2026-10-28 18:06 EDT follow-up: `92f7cf811` arrived while the first tool
+landing was being recorded, with the original tools rebased as `0efd3ee31`.
+The fresh integration merge conflicts (add/add) only in this hand-back file.
+The merge was aborted; no follow-up runtime code was landed or enabled.
+Please rebase/re-sync onto current `origin/t15/int`, retain the landed tools
+and Answers (owner), qualify again, and push. The owner will retry on the
+five-minute watch; no manual conflict resolution is authorized.
