@@ -1,0 +1,19 @@
+# systemd unit for the QA link Pi service (qalink_pi.py). install.sh fills in @USER@ and @HOME@.
+# Separate from DreamPi: it only binds UDP 52040 and TCP 127.0.0.1:52041 and does not order against,
+# require or modify dreampi.service.
+[Unit]
+Description=RE4 Dreamcast QA link service (qalink_pi.py)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@HOME@/qalink
+ExecStart=/usr/bin/python3 @HOME@/qalink/qalink_pi.py serve --log @HOME@/qalink/qalink.log --udp 52040 --control 127.0.0.1:52041
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target

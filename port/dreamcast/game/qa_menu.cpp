@@ -671,7 +671,7 @@ int presets_of(int ch, int* idx) {
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
 // ---------------------------------------------------------------- remote link protocol (QA_LINK; tools/qalink/README.md)
 // Console -> Pi, one UDP datagram each (text; the first line is the header):
-//   T <seq> <ms> <part>/<parts>   telemetry, once a second: the Diagnostics page's rows (DRAW_SETUP_AUDIT rows included)
+//   T <seq> <ms> <part>/<parts>   telemetry, once a second (every 2-3 s on builds with the big audit rows; ~1.3 KB/s cap): the Diagnostics page's rows (DRAW_SETUP_AUDIT rows included)
 //                                 and a "link" row; split into parts of <= 1100 bytes
 //   L <seq> <dropped bytes>       new RAM log lines since the last L (at most 640 bytes a second; the rest is counted)
 //   R <id> <first tick>           RECORD: the wall time of each game tick (us, comma separated), 30 ticks a datagram
@@ -853,7 +853,31 @@ void link_send_parts(char kind, const char* id, const char* text, int len) {
         link_send_text(b, h + (n > 0 ? n : 0));
     }
 }
-void link_telemetry() {
+// DIAG answers go out one part at a time while the transmit queue is short (a 56k line carries ~3 KB/s; the
+// DRAW_SETUP_AUDIT / WORLD_CENSUS24 / WORLD_METER rows make the snapshot 3-8 KB): no part is dropped on a full ring.
+char g_dq[sizeof(g_diag)], g_dq_id[16];
+int g_dq_len, g_dq_part, g_dq_parts;
+constexpr int kDiagPart = 1100;
+void diag_queue(const char* id) {
+    memcpy(g_dq, g_diag, (size_t) g_diag_len);
+    g_dq_len = g_diag_len;
+    g_dq_part = 0;
+    g_dq_parts = g_dq_len ? (g_dq_len + kDiagPart - 1) / kDiagPart : 1;
+    strncpy(g_dq_id, id, sizeof(g_dq_id) - 1);
+}
+bool diag_pump() {   // true while a DIAG answer is still going out
+    if (g_dq_part >= g_dq_parts) return false;
+    unsigned tx, rx, dr, q;
+    re4dc_qalink_counters(&tx, &rx, &dr, &q);
+    if (q > 1500) return true;
+    char b[kDiagPart + 64];
+    const int off = g_dq_part * kDiagPart, n = g_dq_len - off < kDiagPart ? g_dq_len - off : kDiagPart;
+    const int h = snprintf(b, sizeof(b), "D %s %d/%d\n", g_dq_id, g_dq_part + 1, g_dq_parts);
+    if (n > 0) memcpy(b + h, g_dq + off, n);
+    if (re4dc_qalink_send(b, (unsigned) (h + (n > 0 ? n : 0)))) ++g_dq_part;
+    return true;
+}
+int link_telemetry() {
     if (g_link.game) g_link.game();
     snap_diag();
     const char* rows = strchr(g_diag, '\n');   // the stats rows after "RE4DCQA1"
@@ -868,6 +892,7 @@ void link_telemetry() {
                   g_link.cost_last);
     ++g_link.seq;
     link_send_parts('T', "", t, n);
+    return n;
 }
 void link_log() {   // new RAM log bytes since the last call, at most 640 a second
     const unsigned long head = re4dc_log_head, size = sizeof(re4dc_logbuf);
@@ -945,7 +970,7 @@ int link_command(char* line, bool in_menu) {
     if (word_is(cmd, "DIAG")) {
         if (g_link.game) g_link.game();
         snap_diag();
-        link_send_parts('D', id, g_diag, g_diag_len);
+        diag_queue(id);
         return LA_NONE;
     }
     if (word_is(cmd, "RECORD")) {
@@ -1002,9 +1027,12 @@ int link_pump(bool in_menu) {
     char buf[1400];
     for (int k = 0; k < 4 && act == LA_NONE && re4dc_qalink_recv(buf, sizeof(buf)) >= 0; ++k) act = link_command(buf, in_menu);
     const uint64_t ms = t0 / 1000;
-    if (ms >= g_link.next_ms) {
-        g_link.next_ms = ms + 1000;
-        link_telemetry();
+    // Telemetry about 1.3 KB/s at most: a snapshot of B bytes waits max(1 s, B / 1300 s) for the next one (diagnostic
+    // builds with the DRAW_SETUP_AUDIT / census / world rows send every 2-3 s). Held while a DIAG answer goes out.
+    if (!diag_pump() && ms >= g_link.next_ms) {
+        const int bytes = link_telemetry();
+        const uint64_t wait = (uint64_t) bytes * 1000u / 1300u;
+        g_link.next_ms = ms + (wait > 1000 ? wait : 1000);
         link_log();
     }
     const uint64_t t1 = timer_us_gettime64();
