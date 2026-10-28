@@ -362,3 +362,41 @@ refusal, full-image and gameplay gates. Existing explanatory coordinates and
 synthetic cases do not establish private coverage. Current live console is
 on a benchmark scene, so the matched game-QA session awaits intended disc
 selection/redial. No Pi service change or console input was sent this tick.
+
+### Answers (owner): combined actual-data smoke, 2026-10-28
+
+The owner ran one bounded 60-second cache-interpreter/GDEMU-seed1 private
+r105 case on full paired ALL ON33 programme/overlays `36643bf8a`, with
+QA_LINK=1. The fixture arms Thompson0x34 and opens/closes inventory using
+game-side input; no host keys. Original assets remain from the preserved
+ALL ON31 extraction; twin mastering checks1648 unchanged files,19 permitted
+programme/overlay/fixture differences,0 disallowed. This is a fixture image,
+separate from the prepared unmodified console stage `4973e78a`.
+
+Reader exit0, errors empty, overruns0, owned process exited. SSCERT restored1
+and subscreen backing hashOK; gameplay continued, not full byte-restore proof.
+WPLAN29 f480 planned6720/legacy0, loads1/declines0, bytes17215. AF32UV f360
+admitted10206/12861, declined2655 (legacy2295/source360); binding/precision/
+nonfinite/begin0, scanned1550281 records. AC32C f1354 tested11927/rejected2555,
+near/numeric0. These are actual admissions/refusals, not measured frame gains.
+
+SOB33 f480 cumulative reuse201/saved6432 bytes, completed462/incomplete0,
+single346/172, large0/0 and blended0/0. SOB33B barriers55469 with source339,
+deferred655,frame482,scene960,list340,send37676,direct15017, other causes0.
+Large/blended coverage is absent. The old split counts/441k static vertices
+are not removed work. No matched OFF arm or CPU-cost/net timing claim.
+
+Private receipt: owner-allon33-smoke-20261028/RESULTS.json and RESULTS.md,
+with exact run/log hashes and raw counters retained locally. Next independent
+work is a controlled OFF arm and effective-header/vertex/order traces, then
+bounded near/translucent/large/moving-door/retirement cases. Mode2, look,
+STRICT, stack/memory, complete absent/zero repacked identity and matched
+hardware whole-frame acceptance remain pending. Portal remains parked for
+its separate compatible profile and real authored WP29 cells.
+
+Console prerequisite: user selects intended QA disc and establishes REMOTE
+LINK; barn baseline comparison is slot154 ALL ON DIAG versus151 baseline,
+with matching camera/state and300+ drawn-frame windows. Existing HouseWhole27
+Pi benchmark rows are from another earlier session and exact loaded-program
+identity remains unresolved; they do not qualify this candidate. No SD write,
+recipe enablement or publication.
