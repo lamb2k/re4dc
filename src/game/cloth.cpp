@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/cloth.cpp: grid cloth simulation (esp4e sheets): a nx*ny grid of points joined by springs,
 // pulled down by gravity, drawn as triangle strips with the lights of the room.
 
@@ -700,6 +704,10 @@ void clothTrans(Cloth* pCL)
         return;
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::ClothLegacy);
+#endif
+#line 750
     GXSetNumTexGens(1);
     GXLoadTexObj(tex, 0);
     if (tlut != 0) {

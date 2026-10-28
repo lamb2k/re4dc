@@ -1,0 +1,108 @@
+#include <cassert>
+#include <climits>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include "@DC@/game/platform/include/native_model.h"
+#include "@DC@/game/platform/include/fallback_actor_audit29.hpp"
+using re4dc::render::SourceLighting;
+namespace re4dc { namespace fa29 {
+bool fixture_active=true;
+bool collecting() { return fixture_active; }
+} }
+extern "C" void re4dc_fa29_actor_identity(const Re4dcModelPart*,unsigned* tag,unsigned* index,unsigned* offset) {
+    *tag=0x00120018; *index=2; *offset=0x120;
+}
+namespace {
+// The production include reads only these actual Lights members. Full target
+// compilation separately checks it in the real Lights / renderer layouts.
+struct Lights { bool fast=false,constant=false,probe=false; };
+#include "@DC@/game/platform/include/fallback_actor_audit29.inc"
+}
+int main() {
+    using namespace re4dc::fa29actor;
+    SourceLighting light{};
+    light.enable=1; light.material[0]=64; light.ambient[0]=12;
+    Re4dcModelPart part{};
+    part.model=reinterpret_cast<void*>(0x1000); part.info=reinterpret_cast<void*>(0x2000);
+    part.part=reinterpret_cast<void*>(0x2200); part.lighting=&light;
+    part.position_count=321; part.normal_count=123; part.stream_bytes=456;
+    part.source_key[0]=12; part.source_key[1]=255; part.material_flags=3;
+    Lights exact{};
+    fa29_actor_note(part,exact);
+    fa29_actor_exact_vertices(part,128);
+    fa29_actor_note(part,exact);
+    fa29_actor_exact_vertices(part,64);
+    assert(fa29_actor_rows.used==1);
+    Row& row=fa29_actor_rows.rows[0];
+    assert(row.setups==2 && row.exact_setups==2 && row.exact_vertices==192);
+    assert(row.id.positions==321 && row.id.normals==123 && row.id.part_offset==0x120);
+    assert(row.id.source_key==0x0cff0000 && row.context.material==0x40ffffff);
+    assert(row.context.tev_bits==0x3f800000 && row.context.controls==0x00010201);
+    re4dc::fa29::fixture_active=false;
+    fa29_actor_note(part,exact); fa29_actor_exact_vertices(part,999);
+    assert(row.setups==2 && row.exact_vertices==192);
+    re4dc::fa29::fixture_active=true;
+    light.tev_scale=0.5f; fa29_actor_note(part,exact);
+    assert(row.context_changes==1 && row.context.tev_bits==0x3f000000);
+    Lights fold{}; fold.fast=true; fa29_actor_note(part,fold);
+    assert(row.setups==4 && row.exact_setups==3 && row.path==1);
+    Lights flat{}; flat.constant=true; light.enable=0;
+    fa29_actor_note(part,flat); assert(row.setups==4);
+    light.enable=1; fold.probe=true;
+    fa29_actor_note(part,fold);
+#if RE4DC_ACTOR_PROBE_LIGHT
+    assert(row.setups==4);
+#else
+    assert(row.setups==5);
+#endif
+    // One exact pass cannot attach to an unrelated or dropped identity.
+    part.part=reinterpret_cast<void*>(0x9999);
+    fa29_actor_exact_vertices(part,1000); assert(row.exact_vertices==192);
+    for(unsigned i=1;i<Capacity;++i) {
+        part.part=reinterpret_cast<void*>(uintptr_t(0x3000+i));
+        fa29_actor_note(part,exact);
+    }
+    assert(fa29_actor_rows.used==Capacity);
+    part.part=reinterpret_cast<void*>(0x7777); fa29_actor_note(part,exact);
+    assert(fa29_actor_rows.spill==1 && fa29_actor_rows.used==Capacity);
+    fa29_actor_exact_vertices(part,1000); assert(row.exact_vertices==192);
+    part.part=reinterpret_cast<void*>(0x2200);
+    row.setups=row.exact_setups=row.exact_vertices=UINT32_MAX-1;
+    fa29_actor_note(part,exact); fa29_actor_note(part,exact);
+    fa29_actor_exact_vertices(part,128);
+    assert(row.setups==UINT32_MAX && row.exact_vertices==UINT32_MAX && fa29_actor_rows.overflow==1);
+    // Maximum-width fields must survive as complete rows, and short buffers
+    // must refuse visibly rather than silently emitting a truncated record.
+    for(auto& r:fa29_actor_rows.rows) {
+        std::memset(&r,255,sizeof(r));
+    }
+    unsigned bytes=0,longest=0;
+    for(unsigned i=0;i<re4dc_fa29_actor_line_count();++i) {
+        char line[320];
+        const int n=re4dc_fa29_actor_format_line(i,line,sizeof(line));
+        assert(n>0 && unsigned(n)==std::strlen(line));
+        bytes+=unsigned(n)+1; if(unsigned(n)>longest)longest=unsigned(n);
+        char short_line[8];
+        assert(re4dc_fa29_actor_format_line(i,short_line,sizeof(short_line))==-1 && short_line[0]==0);
+    }
+    char out[320];
+    assert(re4dc_fa29_actor_format_line(999,out,sizeof(out))==0);
+    assert(re4dc_fa29_actor_format_line(0,nullptr,sizeof(out))==0);
+    re4dc_fa29_actor_reset();
+    assert(fa29_actor_rows.used==0 && fa29_actor_rows.spill==0 && fa29_actor_rows.overflow==0);
+    assert(re4dc_fa29_actor_line_count()==1);
+    // Source model serial separates reused owner/info/part addresses.
+    part.serial=11; fa29_actor_note(part,exact); fa29_actor_exact_vertices(part,10);
+    part.serial=12; fa29_actor_note(part,exact); fa29_actor_exact_vertices(part,20);
+    assert(fa29_actor_rows.used==2 && fa29_actor_rows.rows[0].exact_vertices==10 &&
+           fa29_actor_rows.rows[1].exact_vertices==20);
+    re4dc_fa29_actor_reset();
+    Lights probe_flat{}; probe_flat.fast=probe_flat.probe=probe_flat.constant=true;
+    light.normal_matrix[7]=1.0e30f;
+    fa29_actor_note(part,probe_flat);
+    assert(fa29_actor_rows.used==1 && fa29_actor_rows.rows[0].path==3);
+    assert(fa29_actor_rows.rows[0].context.controls&0x02000000U);
+    std::printf("{\"status\":\"PASS\",\"probe\":%d,\"capacity\":%u,\"max_rows_bytes\":%u,\"longest_row\":%u}\n",
+                RE4DC_ACTOR_PROBE_LIGHT,unsigned(Capacity),bytes,longest);
+}

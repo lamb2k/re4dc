@@ -1,0 +1,21 @@
+// Actual unchanged core, native KOS IRQ inline instructions, synthetic arguments.
+#include "@DC@/game/fallback_audit29.cpp"
+extern "C" {
+re4dc::fa29::Snapshot fixture_output;
+__attribute__((noinline)) void fixture_hit(unsigned amount) { re4dc::fa29::hit(re4dc::fa29::MotionKeyMiss,amount); }
+__attribute__((noinline)) void fixture_begin(unsigned tick) { re4dc::fa29::begin_tick(tick,0x103); }
+__attribute__((noinline)) void fixture_end(unsigned) { re4dc::fa29::end_tick(); }
+__attribute__((noinline)) unsigned fixture_snapshot(unsigned) { return re4dc::fa29::snapshot(&fixture_output); }
+__attribute__((used)) extern const uintptr_t fixture_layout[]={
+    1,re4dc::fa29::ReasonCount,sizeof(re4dc::fa29::Snapshot),
+    uintptr_t(&re4dc::fa29::state),sizeof(re4dc::fa29::state),
+    uintptr_t(&re4dc::fa29::state.sealed),uintptr_t(re4dc::fa29::state.totals),
+    uintptr_t(re4dc::fa29::state.current),uintptr_t(&re4dc::fa29::state.tick),
+    uintptr_t(&re4dc::fa29::state.room),uintptr_t(&re4dc::fa29::state.ticks),
+    uintptr_t(&re4dc::fa29::state.draws),uintptr_t(&re4dc::fa29::state.overflow),
+    uintptr_t(&re4dc::fa29::state.outside_tick),uintptr_t(&re4dc::fa29::state.sequence),
+    uintptr_t(&re4dc::fa29::state.active),uintptr_t(&re4dc::fa29::state.paused),
+    uintptr_t(&re4dc::fa29::state.have_room),uintptr_t(&re4dc::fa29::state.draw),
+    uintptr_t(&re4dc::fa29::state.valid),uintptr_t(&fixture_output),
+};
+}

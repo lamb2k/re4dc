@@ -1,3 +1,6 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "platform/include/fallback_audit29.h"
+#endif
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK && defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
 #include "platform/include/qa_link_review28.hpp"
 #endif
@@ -290,6 +293,14 @@ unsigned g_diag_page;
 char g_diag[3072];             // the snapshot: "key=value" lines, then LOG and the last log lines
 #endif
 int g_diag_len, g_diag_stats;  // bytes, bytes before LOG
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+// Separate Build29 storage avoids changing the DFA/DSA selection blocks.
+// All consumers below (QR, page and link) use the same complete snapshot.
+char g_fallback_diag29[24576];
+#define g_diag g_fallback_diag29
+extern "C" unsigned re4dc_fa29_actor_line_count(void) __attribute__((weak));
+extern "C" int re4dc_fa29_actor_format_line(unsigned,char*,unsigned) __attribute__((weak));
+#endif
 constexpr int kLogLines = 20, kLogCols = 96;
 char g_log[kLogLines][kLogCols + 1];
 int g_nlog;
@@ -434,6 +445,18 @@ void snap_diag() {
     for(unsigned i=0;i<re4dc::dfa26::line_count();++i){
         char row[192];
         if(re4dc::dfa26::format_line(i,row,sizeof(row))>0)a=addf(a,"%s\n",row);
+    }
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    for(unsigned i=0;i<re4dc::fa29::line_count();++i){
+        char row[192];
+        if(re4dc::fa29::format_line(i,row,sizeof(row))>0)a=addf(a,"%s\n",row);
+    }
+    if(re4dc_fa29_actor_line_count && re4dc_fa29_actor_format_line){
+        for(unsigned i=0;i<re4dc_fa29_actor_line_count();++i){
+            char row[320];
+            if(re4dc_fa29_actor_format_line(i,row,sizeof(row))>0)a=addf(a,"%s\n",row);
+        }
     }
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
@@ -1878,6 +1901,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     re4dc::dfa26::pause();
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::pause();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
 #endif
@@ -1928,6 +1954,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     re4dc::dfa26::resume();
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::resume();
+#endif
     if (!file || !file[0]) return 0;
     snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
     re4dc_log("qa: auto teleport %s\n", g_path);
@@ -1942,6 +1971,9 @@ int re4dc_qa_menu(const char** path) {
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     re4dc::dfa26::pause();
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::pause();
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::pause();
@@ -1974,6 +2006,9 @@ int re4dc_qa_menu(const char** path) {
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     re4dc::dfa26::resume();
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::resume();
 #endif
     re4dc_log("qa: menu closed (%d)\n", a);
     if (a == -1) { *path = g_path; return 1; }

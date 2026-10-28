@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/atari.cpp: the scenario collision ("atari") system. cSat is one collision piece: a SAT
 // file of triangles (floors, slopes, walls; each with a 24-bit attribute word) partitioned into
 // XZ blocks, placed by a matrix. SatMgr holds the room's pieces and the ones objects create,
@@ -426,6 +430,10 @@ void cSatMgr::wallAdjust(Vec* nrm, Vec* oldPos, Vec* pos, f32 r, int flag, int m
 #if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
         lqSame = lqSame && lqN.n != LQM_NOTE_OVER;
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        if(!lqSame)re4dc::fa29::hit(re4dc::fa29::CollisionMemo);
+#endif
+#line 435
 #if RE4DC_LQ_MEMO == 2
         const int lqR = hitCheck(oldPos, pos, &hit, &n, flag, mask);
         lqmPairCount(lqSame, lqSame && lqR != 0);
@@ -998,6 +1006,10 @@ static inline int spwLeaf(cSat* sat, cSatBlock* lf, Vec* lo, Vec* lp, f32 r, int
 {
     if ((u32) lf & 1) {
         cSatBlock* node = (cSatBlock*) ((u32) lf & ~1u);
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::CollisionSphereWalk);
+#endif
+#line 1007
         return blkPolySphereCk(sat, (cSatBlock*) node->idx, lo, lp, r, flag, nrm, mask) != 0;
     }
     return blkPolySphereCkCore(sat, lf, lo, lp, r, flag, nrm, mask) != 0;
@@ -1469,6 +1481,10 @@ static int lineWalkLeaves(cSatBlock* blk, Vec* mid, Vec* dir, Vec* adir, cSatBlo
         }
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(nl<0)re4dc::fa29::hit(re4dc::fa29::CollisionLineWalk);
+#endif
+#line 1478
     return nl;
 }
 // hitCheck2's walk of one piece: mid, dir and |dir| as blkPolyLineCk computes them (its y components are
@@ -1584,6 +1600,10 @@ static int linePieceWalk(LinePieceQ* q, cSatBlock* blk, cSatBlock** leaf)
         }
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(nl<0)re4dc::fa29::hit(re4dc::fa29::CollisionLineWalk);
+#endif
+#line 1593
     return nl;
 }
 #endif

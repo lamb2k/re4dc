@@ -21,6 +21,10 @@ struct PioDriver {
         if (dma && cached(r.buffer)) dcache_inval_range((uintptr_t) r.buffer, bytes);
     }
     int submit(const Request& r, bool dma) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        if(!dma)re4dc::fa29::hit(re4dc::fa29::DiscPioRetry,unsigned(r.count)*2048U);
+#endif
+#line 24
         params.start_sec = r.sector;
         params.num_sec = r.count;
         params.buffer = dma ? (void*) ((uintptr_t) r.buffer & 0x1fffffffu) : r.buffer;

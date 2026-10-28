@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // GX compatibility state for recovered source consumers. Common ID quads now
 // connect directly to native_ui and the shared Package/storage/PVR mechanisms.
 // Remaining GX primitives, 3D materials and effects are still unbound; accepting
@@ -98,10 +102,22 @@ void* GXSetCurrentGXThread(void) { return 0; }
 u32 re4dc_gx_begin_count(void) { return g_stat_begin; }
 u32 re4dc_gx_vertex_count(void) { return g_stat_verts; }
 
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void GXBegin(int type, int vtxfmt, u16 nverts) { re4dc::fa29::hit(re4dc::fa29::GxImmediate,nverts); (void) type; (void) vtxfmt; g_stat_begin++; g_stat_verts += nverts; }
+#else
+#line 101
 void GXBegin(int type, int vtxfmt, u16 nverts) { (void) type; (void) vtxfmt; g_stat_begin++; g_stat_verts += nverts; }
+#endif
+#line 102
 void GXBeginDisplayList(void* list, u32 size) { (void) list; (void) size; }
 u32 GXEndDisplayList(void) { return 0; }
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void GXCallDisplayList(void* list, u32 nbytes) { re4dc::fa29::hit(re4dc::fa29::GxDisplayList,nbytes); (void) list; (void) nbytes; }
+#else
+#line 104
 void GXCallDisplayList(void* list, u32 nbytes) { (void) list; (void) nbytes; }
+#endif
+#line 105
 void GXClearBoundingBox(void) {}
 void GXClearVtxDesc(void) {}
 void GXSetVtxDesc(int attr, int type) { (void) attr; (void) type; }

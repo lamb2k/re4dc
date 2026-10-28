@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // Narrow source-motion key residency adapter. Original FCV/SEQ evaluation stays
 // in motion.cpp; original archive and whole-clip paths remain selectable.
 #include "native_motion.h"
@@ -561,6 +565,11 @@ unsigned* load(Binding& b,unsigned i) {
         bool new_overflow=false;
 #endif
         const unsigned size=word(e+4),bytes=aligned(size);
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::MotionKeyMiss);
+        re4dc::fa29::hit(re4dc::fa29::MotionKeyBytes,size);
+#endif
+#line 564
 #if RE4DC_MOTION_PRESSURE_BYTES
 #if !RE4DC_MOTION_PRESSURE_BACKING
         pressure_room_for(bytes);
@@ -692,6 +701,10 @@ unsigned* load(Binding& b,unsigned i) {
         if(fast>=0 && unsigned(fast)==size) {
             stats.bytes_read+=size;
         } else {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::MotionFastRead);
+#endif
+#line 695
             // Short (the stream request met another GD DMA in flight: "Previous DMA request is in
             // progress") or unaligned: read the whole key again through the storage reader below.
             static unsigned shorts;
@@ -709,6 +722,10 @@ unsigned* load(Binding& b,unsigned i) {
         // Issue #25: a GD read error on hardware stopped the game during the intro ("motion key read"). Read the
         // key again into the same block (fresh arena) up to 3 times before giving up. Error path only.
         for(unsigned retry=1;(result.error || result.size!=size) && retry<=3U;++retry) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::MotionReadRetry);
+#endif
+#line 712
             static unsigned retries;
             if(++retries<=16 || (retries&63)==0)
                 re4dc_log("motion key read retry %u (#%u): %s error=%s got=%u size=%u\n",retry,retries,path,

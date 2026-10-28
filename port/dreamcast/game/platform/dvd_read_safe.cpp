@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // DVD_READ_SAFE=1 (Phase 2 D4, default 0) and its test hook DVD_STUCK_TEST (default 0); built only with one of them.
 //
 // With the full test 7 data and the GC-bake r119 package, r119 after the boss logged "cdrom_stream_request: Previous
@@ -467,6 +471,10 @@ int pio_fill(uint8_t* dst, int lba, size_t pos, size_t size)
 // its stream too) and fill the request from where the stream stood.
 int stream_fallback(void* buffer, size_t size, const char* why)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscStreamRetry,unsigned(size));
+#endif
+#line 470
     latch(why);
     ++g_fb_reads;
     __real_cdrom_stream_stop(false);
@@ -924,6 +932,10 @@ int read_dma(void* buf, uint32_t lba, size_t cnt, const char* what)
 
 int read_pio(void* buf, uint32_t lba, size_t cnt)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscPioRetry,unsigned(cnt)*2048U);
+#endif
+#line 927
     const size_t size = cnt * 2048;
     if ((uintptr_t) buf & 1) return ERR_SYS;
     const bool check = aligned32(buf, size);
@@ -1031,6 +1043,10 @@ extern "C" int __wrap_cdrom_reinit(void)
 #if RE4DC_DISC_READ_FALLBACK || RE4DC_DISC_FAIL_TEST || RE4DC_DISC_READ_VERIFY || RE4DC_DISC_READ_METER
 extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_t cnt, bool dma)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscSectorBytes,unsigned(cnt)*2048U);
+#endif
+#line 1034
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(cnt * 2048, true);
 #endif
@@ -1071,6 +1087,12 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
     if (rv != ERR_OK || !landed(buffer, cnt * 2048)) {
         latch(rv == ERR_OK ? "a DMA sector read reported OK but did not land" : "a DMA sector read failed");
         ++g_fb_dma;
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if RE4DC_DISC_READ_FALLBACK != 3
+        re4dc::fa29::hit(re4dc::fa29::DiscPioRetry,unsigned(cnt)*2048U);
+#endif
+#endif
+#line 1074
 #if RE4DC_DISC_READ_FALLBACK == 3
         rv = v2::read(buffer, sector, cnt, true);
 #else

@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/main: entry point, frame loop, system init and reset handling (D:/Bio4/Prog/main.cpp).
 #include "types.h"
 #include "global.h"
@@ -275,6 +279,10 @@ int main()
 
     systemStartInit();
 RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::reset();
+#endif
+#line 82
     {
         systemRestartInit();
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -313,6 +321,10 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
         }
         TaskExec(0, Title_task, 0);
         for (;;) { WC24_BEGIN() DSA24_BEGIN() DFA26_BEGIN()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#endif
+#line 120
 #if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
             // Determinism trace (LOGIC_TRACE=1 test builds only): the state left by the previous
             // iteration's complete logic + render pass, independent of how long rendering took.
@@ -324,6 +336,14 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
             re4dc_pace_begin();
 #endif
             OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() DFA26_DECISION() // definitive bench_iter boundary: after pace_begin
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if RE4DC_PACE_CATCHUP
+            re4dc::fa29::decision(!re4dc_pace_skipping);
+#else
+            re4dc::fa29::decision(true);
+#endif
+#endif
+#line 131
             StopwatchInit();
             ProcessTickInit(); DSA24_SETUP_BEGIN()
             MWC("top");
@@ -436,6 +456,10 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #endif
             MWC("end");
             ret = systemResetCheck(); WC24_END() DSA24_END() DFA26_END()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::end_tick();
+#endif
+#line 243
             if (ret == 1) {
                 goto RESTART;
             }

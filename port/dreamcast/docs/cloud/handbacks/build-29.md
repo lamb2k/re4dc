@@ -1,0 +1,416 @@
+# Build 29 — whole-game fallback sweep and offline asset scan
+
+Branch: `codex/fallback-scan29-20261028`.
+
+Integration base: `5f104e301f328c56a07ce9f57e3fb94d758d4999` on
+`origin/t15/int`. The final fetch and rebase confirmed this integration tip;
+the complete composed configuration was rebuilt afterward. Its 17 complete
+preprocessed sources and objects match the full qualification run, as recorded
+in [mergeability.json](../../../tools/cloud/build29/receipts/mergeability.json).
+This build has one commit, targets `origin` only, and leaves the queue and
+release defaults to Claude. It introduces no production assembly or linker changes.
+
+## What is delivered
+
+1. A [whole-source sweep](build-29-sweep.md), covering skinning and motion,
+   cloth, collision, effects, texture residency/refusals, gameplay disc reads,
+   sound streaming, GX/legacy dispatch, frame/matrix caches, sorting and
+   adjacent gameplay caches. Its 72 reviewed split groups have current source
+   locations, resolved Make values, triggers, structural MODELLED work/traffic,
+   chapter reachability and counter/scanner coverage. The accompanying corpus
+   manifest and unclassified candidates make the limits inspectable; a
+   keyword search is not a claim that every semantic fallback is proven.
+2. The [offline scanner](../../../tools/d367/fallback_scan/README.md), with
+   ranked room/model reports, part/material/meshlet rows, `barn.tsv`, native
+   ESL spawn inventory, source hashes and a hash-bound context template.
+   It reads the converted disc formats and owning format validators rather
+   than treating a private JSON inventory as the asset input.
+3. Two independent, default-off [conversion options](../../../tools/d367/fallback_scan/CONVERSIONS.md),
+   plus extraction and same-size package grafting. They reuse the existing
+   FE/v3 meshlet/RGB565/BakeBlock format for ordinary source ModelData.
+4. Default-off runtime diagnostics, bounded actor attribution and an adapter
+   for those explicitly converted source streams. Existing DFA rows and the
+   Build 28 immutable multipart link carry the complete diagnostic snapshot.
+5. A focused [r103 barn-exit world audit](build-29-barn-exit.md), covering the
+   newly added outdoor-view target, doorway/cell selection, live camera and
+   draw distance, clip-counter units and per-piece setup. It ranks five
+   default-off proposals and gives exact owner capture commands. These world
+   switches are proposals, not implemented Make assignments.
+
+The final integration update enables `ACTOR_LIGHT_FAST_ONLY=1` in the current
+recipe. Build 25 therefore owns lighting and bypasses the old probe/exact paths
+and this build's bake adapter. The scanner honors that policy. The historical
+barn exact-light observations must be reproduced with their original image's
+recipe; the FAST_ONLY=0 conversion experiment below is a separate variant,
+not an incremental speedup over the current FAST_ONLY=1 release.
+
+For the second target, the current public configuration supplies no doorway
+occlusion in r103. The existing compiled interior cell is r100-only; generic
+PCL2 and PVS need qualified room data. Enabling them also makes surviving parts
+decline fast chunk selection, so a useful portal/table proposal must measure
+survivor setup as well as geometry rejected. The appendix distinguishes this
+source finding from the owner's still-pending world timing attribution.
+
+The r103 figures in the queue motivate this work; they are not measurements
+made here. There are no private game assets or console in this environment.
+**The offending Ganado/tool/hay/prop source keys remain an owner result.**
+The scanner and new attribution rows provide the source binding needed to
+identify them without guessing from an enemy ID or a package's presence.
+
+## Switches, ownership and changed output
+
+| Switch | Default | Requirement and effect |
+|---|---:|---|
+| `FALLBACK_AUDIT29` | 0 | Requires `QA_MENU=1 DRAW_FALLBACK_AUDIT=1`. Adds 33 non-draw reason bins and up to 32 actor attribution rows. With `QA_LINK=1`, also requires `QA_LINK_REVIEW28=1`. |
+| `FALLBACK_SCAN29` | 0 | Requires `NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1 MODEL_STREAM_FIX=1 NATIVE_ACTOR_PRELIT=1`. Admits only the new validated offline tag and compatible live material/light state. |
+| `--fold-light-scale=1` | 0 | Selects captured constant-channel, clamp-diffuse scale declines and bakes the captured material/lighting response into RGB565 records. |
+| `--bake-probe-decline=1` | 0 | Selects explicitly established probe declines and bakes the captured pose/light response. Probe decline alone does not prove the generic exact-light path was selected. |
+
+With both data flags absent or zero, the converter copies any input byte for
+byte without parsing or normalizing it. Enabled conversion keeps the source
+positions, normals, bones, weights, UV/corner indices, ordered triangles,
+degenerates, material bytes and every byte outside the selected original
+stream allocations. A candidate that cannot fit is refused. Package size and
+resident bytes do not grow. The conversion receipt records the context hash;
+grafting validates package/member/converted-output hashes and checks unchanged
+NTR/ESQ offsets, CRCs, extents and referenced bytes. It does not reread the
+separate capture context.
+
+The changed output is **lighting RGB**: RGB565 quantization and a spatial
+pattern baked from the captured pose/directions/attenuation approximation.
+Current animation still moves the original geometry. A per-part RGB energy
+ratio follows current ambient/material/TEV and selected-light colour, including
+flashes, but cannot reproduce new directions, distance attenuation, pose-based
+shading or saturation recovery. Current constant alpha stays exact. An
+admitted bake also supersedes the crowd/rigid flat-colour approximation.
+
+The converter refuses morphs, animated vertex palettes/material policy,
+nonopaque blends, per-vertex alpha, mask/specular/bump material flags,
+invalid/missing capture state and special Leon/headroom markers. The live
+adapter also refuses incompatible state and keeps its offline palette
+immutable while the existing evaluator draws that state. These explicit
+refusals are required behavior, not removed fallbacks. With
+`ACTOR_LIGHT_FAST_ONLY=1`, Build 25 retains ownership; paired production-renderer
+fixtures produce identical output with the new runtime knob off/on.
+
+NMR/compiled casts/coarse actor certificates and GC-ASSET source proofs have
+different owners. This converter deliberately does not rewrite or recertify
+their input facts. Its useful first deployment is a verified ordinary
+source-path PS2 prop/actor member. Two total-frame tradeoffs remain: preencoded
+FE parts cannot join the existing `STATIC_OBJ_BATCH` merged-GX batch, and this
+step emits level-zero original geometry without new LODs or cones. Reduced
+lighting work can be offset by setup, submission or geometry work; measure the
+actual replacement before enabling it.
+
+## Runtime evidence and denominators
+
+FA29 counters use the existing game tick and draw decision. IRQ save/restore
+serializes game, disc and sound-thread updates. A new room resets totals;
+pause stops collection; the last completed tick that attempted drawing is
+retained across skipped ticks. Saturation and work outside an active tick are
+explicit. `FA29T` is a room total including skipped/async work; `FA29D` belongs
+to the last completed drawn tick. Bytes are requested/retry bytes unless the
+row says otherwise, not completed unique payload.
+
+`F29A`, `F29P` and `F29L` add source model kind/ID/type, model-info ordinal,
+validated part offset, source texture selector, counts, material flags and
+latest material/ambient/TEV/control/mask values. The internal lookup key also
+uses the source model serial to separate recycled addresses. `verts=` counts
+actual vertices processed by the exact evaluator; `calls=` and `exact=` count setups. Path
+codes are 0 probe, 1 generic fast/baked-capable setup, 2 exact setup and
+3 constant setup. Successful nonconstant probes are omitted to reserve the
+bounded table for the relevant declines. Overflow is reported as `spill=`;
+it is not silently merged into a different owner.
+
+These actor totals can include the current partial tick when QA pauses; the
+core totals are sealed at the preceding end-tick. Never divide actor counts
+by core `draws` or equate them with last-draw DFA. `changes=0` covers only the
+emitted fields; it says nothing about pose, basis or light vectors. Control
+bit 24 records the Leon source marker and bit 25 the headroom marker. Neither
+these rows nor a BIN provides the complete pose/light capture required for a
+bake. A verified owner must supply that stronger context separately.
+
+The dedicated 24,576-byte snapshot uses an independent new-knob block; old
+DFA/DSA conditions are not widened. Full production formatting, pagination and
+both review28 T/D senders are tested under a 2,400-byte queue cap and repeated
+enqueue refusals. The conservative maximum composition, including OCC,
+uses 24,279 bytes (296 bytes plus the terminating NUL remain). An actual
+maximum-field `snap_diag` composition uses 24,126 bytes. The old non-review D
+sender is not a supported FA29 link configuration. The old T test is only a
+component regression.
+
+## Validation
+
+| Gate | Result |
+|---|---|
+| Complete preprocessing and target objects, knobs absent/explicit zero | **192 byte-identical comparisons**, 16 existing TUs × 3 old-knob profiles × 2 new-knob controls × 2 artifact types |
+| Enabled target configurations | **5 PASS**, including standalone audit, audit+link, scan knob, both knobs+link, and composed DFA/DSA/XLU/FAST_ONLY/clip features; 17 TUs when the core is enabled |
+| Invalid knob/prerequisite assignments | **13 rejected**; release defaults remain zero and omit the diagnostic core object |
+| Integrated host suite | **54 tests PASS**: 38 scanner, 11 converter, 4 package and 1 complete production-renderer method with seven configurations |
+| Actual production renderer and native-model FE dispatcher | Seven renderer configurations pass normally and under ASan/UBSan; existing full native-model dispatch regression also passes under ASan/UBSan |
+| Counter core / actor attribution / QA composition | Normal and ASan/UBSan PASS; 160,000 concurrent core updates, saturation, lifecycle/serial/pause boundaries, complete pagination and bounded T/D transport |
+| Cost fixtures | 14 core, 8 actor and 6 lighting cases PASS on compiled SH-4 instructions |
+
+The [target receipt](../../../tools/cloud/build29/receipts/target-controls.json),
+[integrated host receipt](../../../tools/cloud/build29/receipts/host-suite.json),
+[conversion proof](../../../tools/d367/fallback_scan/conversion-validation.json),
+[actor proof](../../../tools/cloud/build29/receipts/actor-attribution.json) and
+[diagnostic receipts](../../../tools/d367/fallback_scan/AUDIT29.md) retain
+source hashes and reproduction details. LeakSanitizer is disabled because
+this environment prevents its `/proc` task inspection; address and undefined-
+behavior checks remain enabled. The old source-registry writer emits its
+existing file-closure ResourceWarning in synthetic tests; no test fails.
+
+The target gate archives the integration commit independently, derives real
+per-TU flags/headers from Make, and compares complete preprocessed sources and
+complete SH-4 objects. Debug records and preprocessor line markers are disabled
+consistently; there is no body extraction, byte rewriting, source overlay or
+post-build normalization. New blocks preserve original logical `__LINE__`
+values used by recovered allocation diagnostics and KOS scoped-lock names.
+
+The toolchain is GCC 15.2.0 / binutils 2.45.1, KOS
+`804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`, SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`; executable hashes are verified.
+The public target profiles use `NMR_POOL_LOD=0` because private generated LOD
+inputs are unavailable, identically on both sides. This is not a full private
+ELF/overlay/disc identity proof. Enabled partial links resolve every new hook;
+ordinary game/KOS references remain outside that link's scope.
+All five profiles inherit the current recipe's FAST_ONLY=1 policy. The
+FAST_ONLY=0 adapter is separately compiled and linked in the real production-TU
+lighting-cost fixture and exercised by the complete host-renderer matrix.
+
+## MODELLED costs and traffic
+
+All cycle figures execute compiled production routines on bounded synthetic
+inputs and use the existing SH-4 scheduling model. Warm I means perfect
+I-cache; cold I means one initially cold 8 KiB I-cache with the synthetic ELF
+layout. Both assume perfect D-cache. Loads/stores are executed architectural
+accesses and lines are distinct 32-byte addresses, including stack/literals;
+they are not console misses, DRAM transactions or measured milliseconds.
+
+| Piece | Warm I cycles | Cold I cycles | Loads | Stores | 32 B lines | Observed stack B |
+|---|---:|---:|---:|---:|---:|---:|
+| FA29 active hit | 101 | 177 | 21 | 7 | 7 | 20 |
+| FA29 same-room begin | 163 | 258 | 20 | 46 | 10 | 28 |
+| FA29 drawn-tick seal | 271 | 388 | 98 | 83 | 23 | 12 |
+| Actor setup, first of 32 keys | 283 | 604 | 82 | 25 | 21 | 72 |
+| Actor setup, last of 32 keys | 717 | 1,038 | 206 | 25 | 36 | 72 |
+| Add 128 exact vertices, last of 32 keys | 522 | 606 | 151 | 5 | 26 | 16 |
+| New actor row, unknown-owner callback | 365 | 760 | 107 | 56 | 26 | 72 |
+| Unconverted exact-light setup | 936 | 1,471 | 210 | 312 | 55 | 952 |
+| Unconverted exact pass, 128 records | 70,541 | 71,353 | 15,199 | 2,775 | 259 | 920 |
+| Tagged bake setup / live gain | 1,374 | 1,930 | 229 | 99 | 38 | 724 |
+| Baked copy pass, 128 records | 4,590 | 5,051 | 283 | 215 | 195 | 328 |
+| Baked live-flash gain pass, 128 records | 9,069 | 9,527 | 671 | 215 | 195 | 328 |
+
+The [core receipt](../../../tools/d367/fallback_scan/receipts/counter-cost29.json)
+contains 14 cases, the [actor receipt](../../../tools/cloud/build29/receipts/actor-cost.json)
+eight key/lifecycle cases, and the [lighting receipt](../../../tools/cloud/build29/receipts/light-cost.json)
+six 16/128-record cases. Actor attribution uses 2,828 B of BSS. Fresh valid
+model-info/part-table traversal is unpriced; the fresh-row fixture deliberately
+executes the real unknown-owner return. Later rows avoid that traversal.
+
+**Whole frame, MODELLED:** assume 200 MHz, 120 copies of the 128-record lighting
+fixture (15,360 records) and a fixed 30 ms of all omitted work. Then
+`30 + 120 × (setup + pass) / 200000` gives **72.8862 ms** for the
+unconverted exact path, **33.5784 ms** for baked copy and
+**36.2658 ms** for live RGB scaling. This is a synthetic
+sensitivity calculation, not the measured barn distribution or a console
+prediction. Cold-cache phases are separate experiments and cannot be summed
+as a frame. Static-batch/LOD tradeoffs and real D-cache behavior are omitted.
+This lighting fixture explicitly sets `ACTOR_LIGHT_FAST_ONLY=0`; it does not
+estimate a gain over the current release's FAST_ONLY=1 path.
+
+Separately, an assumed 1,000 active FA29 hits plus one begin/seal adds
+0.50717 ms, making **30.50717 ms MODELLED** with the same 30 ms
+background. Adding 120 last-of-32 attribution setup/count pairs adds another
+0.74340 ms, for **31.25057 ms MODELLED**. These
+observer frequencies are assumptions, not room measurements. Diagnostics
+therefore have a cost and must be held constant in a timing comparison.
+The refreshed actor fixture uses the current FAST_ONLY=1 recipe and directly
+invokes the independent vertex-accounting helper. Its assumed count frequency
+does not establish exact-light activity under that recipe.
+
+The lighting fixture uses 128 stored records, a scaled material, one lamp at
+unit distance (the interpreter's qualified reciprocal domain), and unchanged
+geometry/alpha. Both arms run the same current compiled TU; the unconverted
+arm retains the ordinary exact path. The baked pass reads no source positions
+or normals for lighting. The brighter-light case exercises live RGB gain.
+Unexecuted mutable-bake/AVK dependencies are bound to fail-closed addresses:
+entering one aborts the model, rather than substituting a successful stub.
+Real model-kind discovery is separately excluded by the fixture and disclosed
+in its receipt. Deformation, clipping, textures, submission, device waits,
+interrupt delivery and D-cache misses are unpriced.
+
+Complete selected production-TU sizes before final link/garbage collection,
+compared with the same old-knob profile on the integration base:
+
+| New configuration | Executable delta | Allocated delta | BSS delta |
+|---|---:|---:|---:|
+| FA29 over DFA, link off | +3,988 B | +26,406 B | +20,836 B |
+| SCAN29 only, current FAST_ONLY policy | +112 B | +112 B | +0 B |
+| Both knobs over composed DFA/DSA/XLU/FAST_ONLY/link/clip features | +4,088 B | +33,674 B | +28,004 B |
+
+Allocated bytes include code, rodata, data and BSS; do not add BSS again.
+The [production metrics](../../../tools/cloud/build29/receipts/production-metrics.json)
+retain per-TU deltas and changed local frames. These are current-recipe
+FAST_ONLY=1 sizes, not the FAST_ONLY=0 conversion experiment. With SCAN29,
+`re4dc_actor_submit_chunks` grows 592 → 624 B; in the fully composed profile,
+`re4dc_actor_submit` changes 1,016 → 1,008 B. The largest actor TU local frame
+stays 2,388 B. The attribution note has a 72 B local frame; the real source
+identity helper is 8 B. The
+counter core's largest local frame is 60 B. QA's maximum local frame stays
+2,280 B without link / 3,092 B in the composed link profile. The extra snapshot
+and attribution tables are static storage, not new per-frame allocations.
+
+The offline scanner/converter adds zero console work when it is not used.
+Absent/zero runtime knobs have zero target-object, code, data and stack delta
+in the qualified profiles. Compiler local frames and fixture-observed stack
+depths are different measurements; neither proves whole-game/IRQ margins.
+
+## Exact owner workflow on private data
+
+Use new output directories outside the input tree. The following variables
+refer to the owner's existing composed converted disc, Build-Assets and pinned
+toolchain environment; none is supplied by this repository.
+
+```sh
+SCAN=port/dreamcast/tools/d367/fallback_scan
+PRIVATE=/absolute/private/build29
+DISC=/absolute/private/composed-disc-tree
+BUILD_ASSETS=/absolute/private/re4dc-assets
+IMAGE_RECIPE=/absolute/private/exact-source-image/release-knobs.txt
+mkdir -p "$PRIVATE"
+
+# Pin the source image's recipe; build-public otherwise defaults to test24.
+RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$PRIVATE/audit-build" \
+  bash port/dreamcast/build-public.sh \
+  DBG_WARP=1 WARP_AFTER_RESET=1 QA_MENU=1 BENCHMARK=0 PMC_ROW=0 \
+  DRAW_FALLBACK_AUDIT=1 FALLBACK_AUDIT29=1 FALLBACK_SCAN29=0 \
+  QA_LINK=1 QA_LINK_REVIEW28=1
+
+python3 -B "$SCAN/scan.py" "$DISC" --out "$PRIVATE/scan-unbound" \
+  --knobs "$PRIVATE/audit-build/resolved-knobs.txt"
+
+python3 -B "$SCAN/scan.py" "$DISC" --rooms r103 \
+  --out "$PRIVATE/barn-unbound" \
+  --knobs "$PRIVATE/audit-build/resolved-knobs.txt" --strict
+```
+
+Add repeatable `--input` arguments for the exact compiled cast headers and
+standalone replacement packages used in that image. Supply the actual chapter
+route with `--rooms`/`--room-list`; the default r100–r11f selection is not a
+claim that every route asset lives in those rooms. `--strict` exit 1 still
+writes an incomplete report: resolve its rejected/missing inputs instead of
+treating them as zero work. Do not substitute the public recipe's private-off
+character settings for the console image's resolved knobs.
+For the earlier exact-light observation, pin the actual earlier source-image
+recipe. Under the current FAST_ONLY=1 recipe, zero probe/exact rows are expected
+and cannot disprove the earlier observation. Use the separate world-observer
+commands in [the barn-exit appendix](build-29-barn-exit.md) for the ALL ON
+outdoor/stalls comparison, preserving its current lighting policy.
+
+Stage the observer through the existing disc pipeline and capture the same
+r103 viewpoint, animation and nearby actors. Run the already paired review28
+Pi service and PC client; for the owner's configured DreamPi:
+
+```sh
+python3 port/dreamcast/tools/qalink/qalink.py \
+  --pi "$QALINK_PI" --review28 --out "$PRIVATE/barn-capture" capture start barn29
+python3 port/dreamcast/tools/qalink/qalink.py \
+  --pi "$QALINK_PI" --review28 --out "$PRIVATE/barn-capture" send DIAG
+python3 port/dreamcast/tools/qalink/qalink.py \
+  --pi "$QALINK_PI" --review28 --out "$PRIVATE/barn-capture" capture stop barn29
+```
+
+Check multipart completion, room/tick/image identity, overflow and table spill.
+Bind exact source/member/model keys using the template, part offsets, source
+texture bytes, geometry counts, owner/placement and runtime kind/ID. Bind the
+Ganado, attachment, hay and props separately; an ID alone is insufficient.
+Keep missing basis/light/pose facts unknown. A changed or incomplete context
+cannot authorize baking. After producing the owner-verified scanner context:
+
+```sh
+python3 -B "$SCAN/scan.py" "$DISC" --rooms r103 \
+  --out "$PRIVATE/barn-bound" \
+  --knobs "$PRIVATE/audit-build/resolved-knobs.txt" \
+  --context "$PRIVATE/barn-context.json" --strict
+```
+
+Read `barn.tsv` and `by-model.tsv` together with F29P exact vertices, preserving
+their different denominators. Source probe decline can still take generic
+fast lighting. A tag plus enabled knob is a conditional candidate, because
+live-state admission can refuse it. This is how the private run identifies
+which source models actually account for probe/scale/exact work.
+
+For a verified ordinary source-model member, list/extract and capture the full
+bake context before conversion. Use the exact key emitted by `package.py`:
+
+```sh
+SOURCE=/absolute/private/composed-disc-tree/st1/r103.dar
+python3 -B "$SCAN/package.py" list "$SOURCE" > "$PRIVATE/members.json"
+MEMBER_KEY='REPLACE_WITH_EXACT_KEY_FROM_MEMBERS'
+python3 -B "$SCAN/package.py" extract "$SOURCE" "$PRIVATE/source.bin" \
+  --key "$MEMBER_KEY" --receipt "$PRIVATE/member.json"
+
+python3 -B "$SCAN/convert.py" "$PRIVATE/source.bin" "$PRIVATE/folded.bin" \
+  --context "$PRIVATE/bake-context.json" --fold-light-scale=1 \
+  --receipt "$PRIVATE/conversion.json"
+python3 -B "$SCAN/package.py" graft "$SOURCE" "$PRIVATE/folded.bin" \
+  "$PRIVATE/r103-candidate.dar" --member-receipt "$PRIVATE/member.json" \
+  --conversion-receipt "$PRIVATE/conversion.json" --receipt "$PRIVATE/graft.json"
+```
+
+Use separate new outputs with `--bake-probe-decline=1` to isolate the second
+option, then both flags if warranted. The [capture schema and refusal list](../../../tools/d367/fallback_scan/CONVERSIONS.md)
+are part of the command contract. No synthetic example values should be
+filled into missing private light or pose fields.
+
+Stage the grafted package at its original relative disc path, scan that new
+disc tree with a newly hash-bound context, and build its matching runtime:
+
+```sh
+RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$PRIVATE/candidate-build" \
+  bash port/dreamcast/build-public.sh \
+  DBG_WARP=1 WARP_AFTER_RESET=1 QA_MENU=1 BENCHMARK=0 PMC_ROW=0 \
+  DRAW_FALLBACK_AUDIT=1 FALLBACK_AUDIT29=1 FALLBACK_SCAN29=1 \
+  NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1 MODEL_STREAM_FIX=1 NATIVE_ACTOR_PRELIT=1 \
+  ACTOR_LIGHT_FAST_ONLY=0 QA_LINK=1 QA_LINK_REVIEW28=1
+```
+
+Keep the original package and run the same recipe with `FALLBACK_SCAN29=0`
+for the unconverted control. Compare the independently enabled data flags and
+the existing FAST_ONLY policy. Include actual total frame time, exact-light
+vertices, setup/batch/LOD counts, textures, moving views/animation/flashes,
+STRICT gameplay equivalence, GC-ASSET coverage, heap4/KOS/VRAM and stack
+margins, room transitions and the s30 movie return. Run full private image
+identity with both new knobs absent/zero. The cloud gates do not replace those
+acceptance checks and no default is changed here.
+
+## Reproduce the public gates
+
+The [target control script](../../../tools/cloud/build29/build_controls.py)
+accepts the pinned compiler/KOS/SH4ZAM/toolchain receipt paths explicitly:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build29/build_controls.py \
+  --output /tmp/build29-target-new \
+  --baseline 5f104e301f328c56a07ce9f57e3fb94d758d4999 \
+  --sh4-cxx "$SH4_CXX" --kos-root "$KOS_ROOT" --sdk-root "$SH4ZAM_ROOT" \
+  --toolchain-receipt "$TOOLCHAIN_RECEIPT"
+python3 -B -m unittest discover \
+  -s port/dreamcast/tools/d367/fallback_scan -p 'test_*.py' -v
+python3 -B port/dreamcast/tools/d367/fallback_scan/test_audit29.py --sanitize
+python3 -B port/dreamcast/tools/d367/fallback_scan/test_qa29.py \
+  --sanitize --output /tmp/build29-qa-new
+python3 -B port/dreamcast/tools/cloud/build29/actor_attribution_host.py \
+  --sanitize --output /tmp/build29-actor-host-new
+```
+
+`actor_cost.py`, `light_cost.py` and `counter_cost29.py` use `--output`,
+`--sh4-cxx`, `--kos-root` and `--sdk-root`. Their receipts include input/trace
+hashes, warm/cold costs, data traffic and stated fixture exclusions.
+`compact_receipts.py` rejects stale source hashes before retaining reviewable
+target, cost and production-size evidence. The sweep appendix documents
+reproduction of its recipe/corpus manifest. All fixtures are synthetic; no
+game bytes, private contexts or generated game packages belong in Git.

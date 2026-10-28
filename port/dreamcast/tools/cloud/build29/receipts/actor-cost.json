@@ -1,0 +1,879 @@
+{
+  "cases": [
+    {
+      "case": "new-unknown-owner",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 32.0,
+            "model_cycles": 760,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 384,
+          "model_cycles": 365,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "eaf7555f713df6f61e5d22c016daa5d86df1c5b65b34379258d5ce7dca58390b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 107,
+              "load_bytes": 320,
+              "load_instructions": 107,
+              "store_accesses": 56,
+              "store_bytes": 212,
+              "store_instructions": 56,
+              "unique_data_lines": 26,
+              "unique_line_bytes": 832,
+              "unique_read_lines": 25,
+              "unique_write_lines": 8
+            },
+            "demand_line_visits": 163,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 137,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 172,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 69,
+          "model_cycles": 88,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "8f39f870b5643a753b6553b4202e05a4d3ab72a61ebd566807e26372ede28e4b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 27,
+              "load_bytes": 97,
+              "load_instructions": 27,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 10,
+              "unique_line_bytes": 320,
+              "unique_read_lines": 10,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 32,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 22,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "first-of-one",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 26.0,
+            "model_cycles": 604,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 290,
+          "model_cycles": 283,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "b67d93286abf79a744d744f895a8dc2f4f9d196413593e4f87ae74a45843fa34",
+          "traffic": {
+            "cached": {
+              "load_accesses": 82,
+              "load_bytes": 252,
+              "load_instructions": 82,
+              "store_accesses": 25,
+              "store_bytes": 88,
+              "store_instructions": 25,
+              "unique_data_lines": 21,
+              "unique_line_bytes": 672,
+              "unique_read_lines": 21,
+              "unique_write_lines": 5
+            },
+            "demand_line_visits": 107,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 86,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 172,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 69,
+          "model_cycles": 88,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "8f39f870b5643a753b6553b4202e05a4d3ab72a61ebd566807e26372ede28e4b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 27,
+              "load_bytes": 97,
+              "load_instructions": 27,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 10,
+              "unique_line_bytes": 320,
+              "unique_read_lines": 10,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 32,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 22,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "first-of32",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 26.0,
+            "model_cycles": 604,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 290,
+          "model_cycles": 283,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "b67d93286abf79a744d744f895a8dc2f4f9d196413593e4f87ae74a45843fa34",
+          "traffic": {
+            "cached": {
+              "load_accesses": 82,
+              "load_bytes": 252,
+              "load_instructions": 82,
+              "store_accesses": 25,
+              "store_bytes": 88,
+              "store_instructions": 25,
+              "unique_data_lines": 21,
+              "unique_line_bytes": 672,
+              "unique_read_lines": 21,
+              "unique_write_lines": 5
+            },
+            "demand_line_visits": 107,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 86,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 172,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 69,
+          "model_cycles": 88,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "8f39f870b5643a753b6553b4202e05a4d3ab72a61ebd566807e26372ede28e4b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 27,
+              "load_bytes": 97,
+              "load_instructions": 27,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 10,
+              "unique_line_bytes": 320,
+              "unique_read_lines": 10,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 32,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 22,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "last-of32",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 26.0,
+            "model_cycles": 1038,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 724,
+          "model_cycles": 717,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "43af94fb3b9003643d3811de91c12c4456926a19d3ff485cd6effe2959fbb1c7",
+          "traffic": {
+            "cached": {
+              "load_accesses": 206,
+              "load_bytes": 748,
+              "load_instructions": 206,
+              "store_accesses": 25,
+              "store_bytes": 88,
+              "store_instructions": 25,
+              "unique_data_lines": 36,
+              "unique_line_bytes": 1152,
+              "unique_read_lines": 36,
+              "unique_write_lines": 5
+            },
+            "demand_line_visits": 231,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 195,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 606,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 503,
+          "model_cycles": 522,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "39cef5aed5e345ba8ccb55941f465812d6469fa0ad1ac7547be169306a249faf",
+          "traffic": {
+            "cached": {
+              "load_accesses": 151,
+              "load_bytes": 593,
+              "load_instructions": 151,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 26,
+              "unique_line_bytes": 832,
+              "unique_read_lines": 26,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 156,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 130,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "overflow-of32",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 21.0,
+            "model_cycles": 914,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 664,
+          "model_cycles": 645,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "ead1e3863c5fa6c7eca73f6d2577bd65355e59f8626251d4e6ae0b34060eee19",
+          "traffic": {
+            "cached": {
+              "load_accesses": 187,
+              "load_bytes": 682,
+              "load_instructions": 187,
+              "store_accesses": 21,
+              "store_bytes": 72,
+              "store_instructions": 21,
+              "unique_data_lines": 33,
+              "unique_line_bytes": 1056,
+              "unique_read_lines": 33,
+              "unique_write_lines": 4
+            },
+            "demand_line_visits": 208,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 175,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 5.0,
+            "model_cycles": 567,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 490,
+          "model_cycles": 503,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "df1e177dcab9aab7e9d507ee8e4cc2137fb7eb45e10f23ac74e29dfaab5a00eb",
+          "traffic": {
+            "cached": {
+              "load_accesses": 146,
+              "load_bytes": 575,
+              "load_instructions": 146,
+              "store_accesses": 4,
+              "store_bytes": 16,
+              "store_instructions": 4,
+              "unique_data_lines": 25,
+              "unique_line_bytes": 800,
+              "unique_read_lines": 25,
+              "unique_write_lines": 1
+            },
+            "demand_line_visits": 150,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 125,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "paused",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 6.0,
+            "model_cycles": 124,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 34,
+          "model_cycles": 41,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "9197d624d367da8362804e68ffd385af0fd760ae586f132bc2887549b03a469a",
+          "traffic": {
+            "cached": {
+              "load_accesses": 12,
+              "load_bytes": 45,
+              "load_instructions": 12,
+              "store_accesses": 6,
+              "store_bytes": 24,
+              "store_instructions": 6,
+              "unique_data_lines": 5,
+              "unique_line_bytes": 160,
+              "unique_read_lines": 5,
+              "unique_write_lines": 1
+            },
+            "demand_line_visits": 18,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 13,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 3.0,
+            "model_cycles": 69,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 19,
+          "model_cycles": 27,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "82bd5eaf1528b5a69da5ed0c900d7001632a8b34c208ba621ae04f21ea2a6c81",
+          "traffic": {
+            "cached": {
+              "load_accesses": 5,
+              "load_bytes": 17,
+              "load_instructions": 5,
+              "store_accesses": 3,
+              "store_bytes": 12,
+              "store_instructions": 3,
+              "unique_data_lines": 4,
+              "unique_line_bytes": 128,
+              "unique_read_lines": 4,
+              "unique_write_lines": 1
+            },
+            "demand_line_visits": 8,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 4,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "successful-probe",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 6.0,
+            "model_cycles": 146,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 57,
+          "model_cycles": 70,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "3d0c2b19299370391ebd9b92a0d798bc5c6d974ddadce9120ffb7538f1946ae8",
+          "traffic": {
+            "cached": {
+              "load_accesses": 21,
+              "load_bytes": 65,
+              "load_instructions": 21,
+              "store_accesses": 6,
+              "store_bytes": 24,
+              "store_instructions": 6,
+              "unique_data_lines": 8,
+              "unique_line_bytes": 256,
+              "unique_read_lines": 8,
+              "unique_write_lines": 1
+            },
+            "demand_line_visits": 27,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 19,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 172,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 69,
+          "model_cycles": 88,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "8f39f870b5643a753b6553b4202e05a4d3ab72a61ebd566807e26372ede28e4b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 27,
+              "load_bytes": 97,
+              "load_instructions": 27,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 10,
+              "unique_line_bytes": 320,
+              "unique_read_lines": 10,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 32,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 22,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "changed-context",
+      "phases": {
+        "note": {
+          "cold_icache": {
+            "instruction_fills": 27.0,
+            "model_cycles": 649,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 317,
+          "model_cycles": 317,
+          "peak_stack_bytes": 72,
+          "trace_sha256": "aee022c08b8b1fbf14c8ce7a9216ab686fb39350e95bee87add3afb513892a01",
+          "traffic": {
+            "cached": {
+              "load_accesses": 89,
+              "load_bytes": 274,
+              "load_instructions": 89,
+              "store_accesses": 31,
+              "store_bytes": 112,
+              "store_instructions": 31,
+              "unique_data_lines": 21,
+              "unique_line_bytes": 672,
+              "unique_read_lines": 21,
+              "unique_write_lines": 5
+            },
+            "demand_line_visits": 120,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 99,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        },
+        "vertices": {
+          "cold_icache": {
+            "instruction_fills": 7.0,
+            "model_cycles": 172,
+            "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+          },
+          "instructions": 69,
+          "model_cycles": 88,
+          "peak_stack_bytes": 16,
+          "trace_sha256": "8f39f870b5643a753b6553b4202e05a4d3ab72a61ebd566807e26372ede28e4b",
+          "traffic": {
+            "cached": {
+              "load_accesses": 27,
+              "load_bytes": 97,
+              "load_instructions": 27,
+              "store_accesses": 5,
+              "store_bytes": 20,
+              "store_instructions": 5,
+              "unique_data_lines": 10,
+              "unique_line_bytes": 320,
+              "unique_read_lines": 10,
+              "unique_write_lines": 2
+            },
+            "demand_line_visits": 32,
+            "prefetch": {
+              "requests": 0,
+              "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers",
+              "sq_flush_requests": 0,
+              "unique_requested_lines": 0
+            },
+            "repeated_demand_line_visits": 22,
+            "scope": "Observe real opcode data accesses without inventing cache misses.\n\nInstruction fetches are excluded; PC-relative literal loads are data loads.\nThe fixture maps cached RAM at low synthetic addresses, which become the\n0x8c000000 alias only for the pipeline-model ELF. Distinct 32-byte lines are\nworking-set/touch counts, not measured fills or hardware bus transactions.\n",
+            "store_queue": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            },
+            "uncached": {
+              "load_accesses": 0,
+              "load_bytes": 0,
+              "load_instructions": 0,
+              "store_accesses": 0,
+              "store_bytes": 0,
+              "store_instructions": 0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "fixture_sections": {
+    "allocated_bytes": 6640,
+    "executable_bytes": 2208,
+    "zero_fill_bytes": 3896
+  },
+  "fixture_sha256": "33e994e5dd5f691ac063ad31117e414f6cfb8e16431a2650e6dcc1916d09ba55",
+  "layout": {
+    "changes": 64,
+    "row_bytes": 72,
+    "rows": 1052296,
+    "setups": 52,
+    "spill": 1054604,
+    "state_bytes": 2828,
+    "used": 1054600,
+    "version": 1,
+    "vertices": 60
+  },
+  "limitations": "Diagnostic hooks only, not formatted QA transport. No D-cache misses, interrupts, allocator, private models or whole draw. Unknown-owner callback is a lower bound for the first encounter; later rows do not call it. Successful-probe vertices case deliberately invokes the independent accounting helper, which production does not do for a fast probe.",
+  "profile_receipt_sha256": "8b7256541e707f832492b549b73812483e5e8f93eb413b920b8cea472d131636",
+  "raw_receipt_sha256": "04c137f542ef458ab95c911758e2fa33467bf2915963bf0640e7568144b628b5",
+  "scope": "Price real compiled actor attribution with bounded synthetic pointer keys.\n\nFull actor, bridge and FA29 core TUs compile unchanged under Make flags. Existing\nand overflow rows exercise 1/32-key searches. Fresh rows use the real bridge's\nunknown-owner return; valid model-info/part-table traversal remains unpriced.\nWarm/cold-I cycles assume perfect D-cache; data lines are touched addresses.\n",
+  "source_sha256": {
+    "port/dreamcast/game/fallback_audit29.cpp": "ba1fc6c36cc04a5543e60837dd44edc4f7078cdb73d6e2f67ec91d12a59a76ad",
+    "port/dreamcast/game/model_bridge.cpp": "92e4f05cbc20a3a7b1a0ff01c84e62d647fb9f10a4c8eef29ab1149fcb153558",
+    "port/dreamcast/game/platform/include/fallback_actor_audit29.hpp": "3b268eae93f4ce30ae564290f3d9e6200f8859890609707290c3d2cb50e3677a",
+    "port/dreamcast/game/platform/include/fallback_actor_audit29.inc": "b87b46997735b9f2ae349cdc49c8d3d4cca73ae6a1ef47336dc3456aa188b560",
+    "port/dreamcast/game/platform/include/fallback_audit29.def": "35ea6b525c146d19aa63ca406ff00f1efccd4cf367e22de353ca35d7ccc34eb8",
+    "port/dreamcast/game/platform/include/fallback_audit29.h": "996ae3891e6a864d92bb44ed877179d25efdd98ab47cdfd6ec3628f020724a2e",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "8f91ac38d9eb0e0e7648a7632e2d01503a43da7df242ce9806fc06bfe85e183e",
+    "port/dreamcast/tools/cloud/build29/actor_cost.py": "a154627352c19328d58292bcfa4f69e3e24063e0d66282417bbae08bd931baa2",
+    "port/dreamcast/tools/cloud/build29/actor_cost_fixture.cpp.in": "f7b59deee9d735044eba7221ea6b023234571bc0ef3afa7e197c4bd654940084",
+    "port/dreamcast/tools/cloud/build29/build_controls.py": "d96777d9b530ead5dabbe5da3dc40c467708dce811da9354f4e464fce9594320",
+    "port/dreamcast/tools/cloud/build29/light_cost.py": "89665a3365cc2adf3a7c4a515175c590384bdd2a313a9bdae640c7083f02faa2"
+  },
+  "status": "PASS"
+}

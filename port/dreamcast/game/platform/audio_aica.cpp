@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // AICA audio backend (AICA_AUDIO=1; audio_stub.cpp keeps the silent version).
 //
 // The recovered Capcom sound driver (src/game/snd_*.cpp) already runs on the
@@ -1782,6 +1786,10 @@ bool str_cache(u32 fofs, u32 fend)
     u32 len = fend - fofs;
     if (len > kStrCacheBytes) len = kStrCacheBytes / grp * grp;
     u64 t0 = timer_us_gettime64();
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::SoundRead,len);
+#endif
+#line 1785
     bool ok = fs_seek(g_strFile, fofs, SEEK_SET) == (off_t) fofs && fs_read(g_strFile, g_strCache, len) == (ssize_t) len;
     u32 us = (u32) (timer_us_gettime64() - t0);
     S.str_io_us += us;
@@ -1792,6 +1800,10 @@ bool str_cache(u32 fofs, u32 fend)
         g_strCacheOfs = 0xFFFFFFFFu;
         g_strCacheLen = 0;
         re4dc_log("aica: aica_str.dat read failed at %u (+%u)\n", (unsigned) fofs, (unsigned) len);
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::SoundReadFail);
+#endif
+#line 1795
         return false;
     }
     g_strCacheOfs = fofs;
@@ -1900,6 +1912,10 @@ __attribute__((unused)) void* str_main(void*)
                     re4dc_log("aica: t=%u stream underrun: half %u playing, %u written\n", (unsigned) g_nowMs,
                               (unsigned) consumed, (unsigned) s.filled);
                 ++S.str_underruns;
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+                re4dc::fa29::hit(re4dc::fa29::SoundUnderrun,consumed+1-s.filled);
+#endif
+#line 1903
                 s.filled = consumed + 1;
             }
             while (s.filled < consumed + 2 && s.gen == gen && s.state == kStrPlaying) {
@@ -2189,6 +2205,10 @@ unsigned re4dc_aica_stream_started(unsigned long long* t0_us)
 void re4dc_strm_test_frame(void);   // audio_strm.cpp (RE4DC_STRM_TEST)
 void re4dc_audio_frame(void)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(!g_thread && g_axCallback)re4dc::fa29::hit(re4dc::fa29::SoundMainStep);
+#endif
+#line 2192
     if (!g_thread && g_axCallback) audio_step();
     re4dc_strm_test_frame();
 #if RE4DC_AICA_STR_TEST
@@ -2244,6 +2264,10 @@ void re4dc_audio_arq(u32 src, u32 dst, u32 len)
             S.copy_bytes += a1 - a0;
         }
     } else {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::SoundConvert,len);
+#endif
+#line 2247
         conv_chunk((const u8*) src, lo, lo + len);
         S.conv_bytes_in += len;
     }

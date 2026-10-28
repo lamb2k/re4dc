@@ -1,0 +1,31 @@
+{
+  "cases": [
+    {
+      "capacity": 32,
+      "longest_row": 172,
+      "max_rows_bytes": 9156,
+      "probe": 0,
+      "status": "PASS"
+    },
+    {
+      "capacity": 32,
+      "longest_row": 172,
+      "max_rows_bytes": 9156,
+      "probe": 2,
+      "status": "PASS"
+    }
+  ],
+  "leak_detection": false,
+  "raw_receipt_sha256": "8f40b64846053e63f646bb6350d24d0a038171b4523189fd347b4b9898c6b456",
+  "sanitized": true,
+  "scope": "Exercise the production Build29 actor attribution include and formatter.\n\nUses the real model-view/lighting headers; only the source-identity callback and\nthe selected-path Lights view are synthetic. Full production layout and flags\nare checked by build_controls.py, separately. No game assets are used.\n",
+  "source_sha256": {
+    "port/dreamcast/game/platform/include/fallback_actor_audit29.hpp": "3b268eae93f4ce30ae564290f3d9e6200f8859890609707290c3d2cb50e3677a",
+    "port/dreamcast/game/platform/include/fallback_actor_audit29.inc": "b87b46997735b9f2ae349cdc49c8d3d4cca73ae6a1ef47336dc3456aa188b560",
+    "port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "port/dreamcast/room/source_lighting.hpp": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45",
+    "port/dreamcast/tools/cloud/build29/actor_attribution_fixture.cpp.in": "5128adce773b16bba9c08c7cf93ccef654d603792013337e647742e8e2a61e65",
+    "port/dreamcast/tools/cloud/build29/actor_attribution_host.py": "962d7736b8c730c205897feaae3011cc179ec6e29ec793f6f7adf5c3817127f6"
+  },
+  "status": "PASS"
+}
