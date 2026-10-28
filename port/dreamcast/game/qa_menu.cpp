@@ -344,7 +344,8 @@ int scratch_rows(int at) {
 
 void snap_diag() {
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \
+    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
     g_diag_page=0;
 #endif
     int a = 0;
@@ -508,7 +509,8 @@ void draw_qr(const Fb& fb, int page) {
     fb_text(fb, tx, 160, 1, 2, 0x000000, "PHOTO EACH PAGE");
 }
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \
+    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
 unsigned diag_page_rows(const Fb& fb){return fb.h>92?unsigned((fb.h-76)/16):1U;}
 unsigned diag_rows(const Fb& fb,unsigned first,bool paint){
     unsigned cols=fb.w>60?unsigned((fb.w-60)/6):1U;
@@ -1489,7 +1491,8 @@ int run(Menu& m, bool boot) {
         }
 #endif
 #if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
-    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \n    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY) || \
+    (defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT)
         if(m.screen==M_DIAG){
             const unsigned pages=diag_pages(fb);
             if(press&(CONT_DPAD_RIGHT|CONT_DPAD_DOWN)){
