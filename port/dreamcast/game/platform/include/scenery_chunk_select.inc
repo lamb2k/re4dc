@@ -1,6 +1,21 @@
 // Shared verbatim by MeshDraw and ScenerySelector. No include guard: this
 // file supplies the same selection members to both contexts.
     bool chunk_ok()const{
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+        // A proof-qualified portal supplies its own world-grid tests below;
+        // it no longer sends surviving parts through the legacy selector.
+        // Independent old PVS/impostor/check restrictions remain unchanged.
+        if(wp29_wq && pc_mode==1U){
+            if(!package.lod() || (lean::kMode&8U) || sg_groups>8U)return false;
+#if RE4DC_PS2_PVS
+            if(pvs_set)return false;
+#endif
+#if RE4DC_QUALITY_ASSETS
+            if(skip_clusters)return false;
+#endif
+            return true;
+        }
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         using namespace re4dc::dfa26;
         if(!package.lod()){hit(WorldChunkNoLod);return false;}
@@ -43,6 +58,9 @@
         unsigned np=0;
         const auto* cl=package.clusters()+lod.first_cluster;
         for(const auto* const cend=cl+lod.cluster_count;cl!=cend;++cl){
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+            if(wp29_wq && pc::grid_hidden(wp29_wq,cl->bounds_min,cl->bounds_max)>0){++pc::st.clusters;continue;}
+#endif
             float lo[3],hi[3];
             for(unsigned a=0;a<3;++a){lo[a]=float(cl->bounds_min[a]);hi[a]=float(cl->bounds_max[a]);}
             unsigned cin;
@@ -69,6 +87,9 @@
             const unsigned li0=lv.first_meshlet,li1=li0+lv.meshlet_count;
             if(cin==2 || !groups){
                 for(unsigned li=li0;li<li1;++li){
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+                    if(wp29_wq && pc::grid_hidden(wp29_wq,all[li].bounds_min,all[li].bounds_max)>0){++pc::st.meshlets;continue;}
+#endif
                     if(cin!=2){
                         const auto& l=all[li];
                         const re4dc::render::DrawBounds bounds{
@@ -83,6 +104,9 @@
             const std::uint8_t* gsrc=sg+16U*sg_groups*li0;
             for(unsigned li=li0;li<li1;++li,gsrc+=16U*sg_groups){
                 const auto& l=all[li];
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+                if(wp29_wq && pc::grid_hidden(wp29_wq,l.bounds_min,l.bounds_max)>0){++pc::st.meshlets;continue;}
+#endif
                 const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
                 const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
                 const int mk=slean?lean::box_mask_lean(blo,bhi,mvq,lean_am,near,cull_far)
@@ -151,6 +175,9 @@
 #endif
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
             const auto& cl=clusters[c];
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+            if(wp29_wq && pc::grid_hidden(wp29_wq,cl.bounds_min,cl.bounds_max)>0){++pc::st.clusters;continue;}
+#endif
             float lo[3],hi[3];
             for(unsigned a=0;a<3;++a){lo[a]=float(cl.bounds_min[a]);hi[a]=float(cl.bounds_max[a]);}
             unsigned cin;
@@ -183,6 +210,9 @@
                 const auto& l=package.bounds(li); // emit metadata is requested only when needed
 #else
                 const auto& l=all[li];
+#endif
+#if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+                if(wp29_wq && pc::grid_hidden(wp29_wq,l.bounds_min,l.bounds_max)>0){++pc::st.meshlets;continue;}
 #endif
 #if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
 #if RE4DC_SCENERY_RECORD_SPLIT

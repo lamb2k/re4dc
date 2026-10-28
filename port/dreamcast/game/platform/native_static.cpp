@@ -1,6 +1,9 @@
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#include "include/world_part_plan29.hpp"
+#endif
 #include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
@@ -234,6 +237,9 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #include <cstring>
 #include <cstdlib>
 #include "native_static.h"
+#if RE4DC_WORLD_PORTAL29
+#include "include/world_portal29.hpp"
+#endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 #include "include/pvs23_format.hpp"
 #include "include/pvs23_proof.hpp"
@@ -2413,6 +2419,11 @@ inline State& trans_state(){static State none;return none;}
 // render state (pc::st) or the Trans-time actor state.
 inline void setup_state(State& st,const float* view,const float* P,float near){
     st.active=false;st.cell=-1;st.nfr=0;
+#if RE4DC_WORLD_PORTAL29
+    // Actor Trans occurs before any current-image wall receipt. It cannot
+    // borrow portal authority; only the world Render state may select a cell.
+    if(&st!=&pc::st)return;
+#endif
 #if RE4DC_PS2_INTERIOR_CULL==3
     if(select_word!=2U)return;
 #endif
@@ -2493,6 +2504,9 @@ inline int grid_hidden(const float* wq,const std::uint16_t lo[3],const std::uint
 State& trans_state();
 // Frees the cell block (both states inactive: nothing is culled until it is read again).
 inline unsigned unload(){
+#if RE4DC_WORLD_PORTAL29
+    wp29_clear();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_static_invalidate_all();
     if(data.asset_proof.owner)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);
@@ -3036,6 +3050,9 @@ struct MeshDraw : Emitter {
     // PS2_INTERIOR_CULL: pc_mode 0 no test, 1 skip hidden geometry, 2 draw only hidden geometry (the =2 check run);
     // pc_wq: placement affine x grid (world box of a cluster / meshlet); pc_all: the whole placement is hidden.
     unsigned pc_mode=0; const float* pc_wq=nullptr; bool pc_all=false,pc_check=false;
+#endif
+#if RE4DC_WORLD_PORTAL29
+    const float* wp29_wq=nullptr;
 #endif
     // Cluster/meshlet rejection distance: min(projection far, source View far)
     // with RE4DC_NATIVE_FOG, else the projection far. Vertices still clip
@@ -4360,6 +4377,9 @@ struct MeshDraw : Emitter {
 // arrays uninitialized; their guards are false until chunk_select fills them.
 struct ScenerySelector {
     using Pick=MeshDraw::Pick;
+#if RE4DC_WORLD_PORTAL29
+    const float* wp29_wq=nullptr;
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     const re4dc::record_split::RecordView package;
 #else
@@ -5668,6 +5688,9 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#include "include/world_part_plan29_runtime.inc"
+#endif
 #if RE4DC_GC_ASSET_GATE
 void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
 // cast-ps2-25 r16 item 5: the world's sealed manifest as captured at open (gate builds only). A route movie lends the
@@ -5763,6 +5786,9 @@ void ps2_movie_unpublish(){
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::close();
 #endif
     ps2w.package.close();ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.camera=false;
@@ -6450,6 +6476,9 @@ extern "C" void re4dc_ps2_pvs_set(unsigned on){
 extern "C" void re4dc_ps2_pvs_state(unsigned out[4]){
     out[0]=re4dc_ps2_pvs_on;out[1]=pvs::block?1U:0U;out[2]=pvs::cur?1U:0U;out[3]=pvs::bytes;
 }
+#endif
+#if RE4DC_WORLD_PORTAL29
+#include "include/world_portal29_runtime.inc"
 #endif
 #if RE4DC_FAR_SHELL
 #define RE4DC_FAR_SHELL_PART 1
@@ -7428,6 +7457,10 @@ bool ps2_open(){
 #else
     pc::st.ok=PC_ADOPT_PRE(ps2w.room,mh.crc,policySourceCrc,mh.bytes) ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
 #endif
+#if RE4DC_WORLD_PORTAL29
+    // WP29 binds the physical policy and mesh, never a provenance alias.
+    pc::adopt_live(ps2w.room,mh.crc,h.crc,mh.bytes);
+#endif
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
     pc::data.lent=false;
@@ -7566,6 +7599,9 @@ bool ps2_open(){
     {unsigned marked=0;for(unsigned i=0;i<h.parts;++i)marked+=ps2w.parts[i].reserved&1U;
      re4dc_log("PS2VA marked_parts=%u of %u (ARGB4444 vertex alpha, translucent pass)\n",marked,unsigned(h.parts));}
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::open();
+#endif
     return true;
 }
 #if RE4DC_MOVIE_WORLD_ARENA
@@ -7655,6 +7691,9 @@ bool ps2_movie_reload(){
     // Preserve ids, slots, source flags, object/serials, original rest matrices,
     // part witnesses and ordering. Same UI frame can contain source S11 edits.
     dyn::frame=~0u;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::open();
 #endif
     return true;
 }
@@ -8046,6 +8085,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     }
 #endif
+#if RE4DC_WORLD_PORTAL29
+    wp29::begin(pass,P,near,cull_far);
+#endif
 #if RE4DC_PS2_PVS
     pvs::frame(ps2w.view,P,ps2w.viewport,near,cull_far);
     if(!pass){
@@ -8091,6 +8133,9 @@ int ps2_pass(unsigned pass,float zfar){
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+#if RE4DC_WORLD_PORTAL29
+                       unsigned wp29_placement;
+#endif
 #if RE4DC_SCENERY_UV_SNAPSHOT
                        float uv_offset[2];
 #endif
@@ -8204,6 +8249,14 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=e.chunk_emit(cpk+x.first,x.count);
 #endif
             e.end_direct();
+#if RE4DC_WORLD_PORTAL29
+            if(wp29::witness(x.wp29_placement,x.index)){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+                wp29::finish(x.wp29_placement,x.index,result>0,x.key);
+            }
+#endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
             // Logical completion/accounting precedes release. Only actual
@@ -8425,6 +8478,9 @@ int ps2_pass(unsigned pass,float zfar){
         if(!re4dc::render::group_visible(bounds,mv,P,ps2w.viewport,near,cull_far,0)){++c.culled;continue;}
 #endif
         const float grid[12]={mesh.step[0],0,0,mesh.origin[0], 0,mesh.step[1],0,mesh.origin[1], 0,0,mesh.step[2],mesh.origin[2]};
+#if RE4DC_WORLD_PORTAL29
+        wp29::activate();
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
         // 0 no test (no cell, or the placement is inside the house box), 1 test its clusters, 2 wholly hidden.
         unsigned pc_state=0;float pc_wq[21];
@@ -8456,11 +8512,24 @@ int ps2_pass(unsigned pass,float zfar){
             if(n>scale)scale=n;
         }
         const float lod_scale=std::sqrt(scale)*px/lod_div;
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+        unsigned plan_count=mesh.part_count;
+        const auto* plan=wplan29::run(pl.mesh,pass,plan_count);
+        for(unsigned k=0;k<plan_count;++k){
+#else
         for(unsigned k=0;k<mesh.part_count;++k){
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+            const auto* plan_part=plan?plan+k:nullptr;
+            const unsigned index=plan_part?plan_part->index:mesh.first_part+k;
+            const Ps2Part meta=plan_part?re4dc::wp29::metadata<Ps2Part>(*plan_part):ps2w.parts[index];
+            if(plan_part)++wplan29::planned;else ++wplan29::legacy;
+#else
             const unsigned index=mesh.first_part+k;const auto& meta=ps2w.parts[index];
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
             R11fUvScope uvScope(part,pl.placement,pl.mesh,index,pass);
 #endif
@@ -8504,12 +8573,21 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_INTERIOR_CULL
                 d.pc_mode=pc_state?1U:0U;
 #endif
+#if RE4DC_WORLD_PORTAL29
+                d.wp29_wq=pc_state?pc_wq:nullptr;
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+                const unsigned selected_meshlets=plan_part?plan_part->meshlets:pk.parts()[index].meshlet_count;
+#define WP29_MESHLET_COUNT selected_meshlets
+#else
                 const auto& selected_part=pk.parts()[index];
+#define WP29_MESHLET_COUNT selected_part.meshlet_count
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
-                if(d.chunk_ok() && (selected_part.meshlet_count<=kChunkPicks ||
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
                     (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
 #else
-                if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+                if(d.chunk_ok() && WP29_MESHLET_COUNT<=kChunkPicks){
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
                     const bool marked=(meta.reserved&1U)!=0;
@@ -8522,12 +8600,18 @@ int ps2_pass(unsigned pass,float zfar){
                     const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
 #endif
 #include "include/scenery_part_far.inc"
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+                    unsigned key_storage[6];const unsigned (&key)[6]=plan_part?plan_part->key:key_storage;
+                    if(!plan_part){key_storage[0]=meta.crc;key_storage[1]=meta.fnv;key_storage[2]=meta.width;key_storage[3]=meta.height;key_storage[4]=pass;key_storage[5]=meta.cull;}
+                    d.ps2=key;
+#else
                     const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#endif
 #if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
                     if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
 #endif
                     // Preserve the original capacity flush and queue snapshot.
-                    if(nctx==kChunkParts || npk+selected_part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+                    if(nctx==kChunkParts || npk+WP29_MESHLET_COUNT>kChunkPicks){if(chunk_flush()<0)return -1;}
                     ChunkPart& x=cctx[nctx++];
                     std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
 #if RE4DC_SCENERY_UV_SNAPSHOT
@@ -8541,9 +8625,13 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
                     x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
+#if RE4DC_WORLD_PORTAL29
+                    x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#endif
                     x.count=d.chunk_select(cpk+npk);npk+=x.count;
                     continue;
                 }
+#undef WP29_MESHLET_COUNT
             }
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -8576,7 +8664,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #include "include/scenery_part_far.inc"
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+            unsigned key_storage[6];const unsigned (&key)[6]=plan_part?plan_part->key:key_storage;
+            if(!plan_part){key_storage[0]=meta.crc;key_storage[1]=meta.fnv;key_storage[2]=meta.width;key_storage[3]=meta.height;key_storage[4]=pass;key_storage[5]=meta.cull;}
+            d.ps2=key;
+#else
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#endif
 #if RE4DC_SCENERY_PIECE_STATE
             d.piece_slot=piece::pkg==static_cast<const void*>(&pk)?piece::table+index:nullptr;
 #endif
@@ -8585,6 +8679,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
             d.pc_mode=pc_state?1U:0U;d.pc_wq=pc_wq;
+#endif
+#if RE4DC_WORLD_PORTAL29
+            d.wp29_wq=pc_state?pc_wq:nullptr;
 #endif
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
@@ -8609,6 +8706,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
+#if RE4DC_WORLD_PORTAL29
+                x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#endif
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
                 continue;
             }
@@ -8627,6 +8727,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             const int result=d.run();
             d.end_direct(); // before any abort: releases the store queues
+#endif
+#if RE4DC_WORLD_PORTAL29
+            wp29::finish((RE4DC_PS2_AFFINE==pl.affine)?i:~0U,index,result>0,key);
 #endif
 #if RE4DC_PS2_PVS
             d.pvs_finish(result>0);
@@ -9075,6 +9178,11 @@ extern "C" void re4dc_ps2_interior_movie_restore(){
 // view test): 1 when this frame's cell hides the box. 0 unless the PS2 world's pass 0 set the cell up in this same
 // frame (the camera is then this frame's), and 0 for a box touching the house box.
 extern "C" int re4dc_ps2_interior_hidden(const float lo[3],const float hi[3]){
+#if RE4DC_WORLD_PORTAL29
+    // This export can be queried outside the witnessed world pass. Build 31
+    // grants no actor/source-owner culling authority from its Render receipts.
+    (void)lo;(void)hi;return 0;
+#endif
     if(!pc::st.active || pc::st.setup_frame!=re4dc_ui_frame())return 0;
     float c[3],h[3];
     for(unsigned a=0;a<3;++a){c[a]=(lo[a]+hi[a])*0.5f;h[a]=std::fabs(hi[a]-lo[a])*0.5f;}
@@ -9153,6 +9261,17 @@ extern "C" int re4dc_ps2_interior_owner_hidden(const float lo[3],const float hi[
 #endif
 #endif
 extern "C" void re4dc_ps2_mesh_log(unsigned frame){
+#if RE4DC_WORLD_PORTAL29
+    // Cold/periodic observer, including loaded cells that never gain current
+    // source authority. No per-placement logging or hidden early-return gap.
+    re4dc_log("WP29 frame=%u room=%03x loaded=%u candidate=%u active=%u witnesses=%u committed=%u admits=%u declines=%u source=%u scene=%u waits=%u commits=%u loads=%u fails=%u\n",
+        frame,ps2w.room,unsigned(pc::data.block!=nullptr),unsigned(wp29::candidate),unsigned(pc::st.active),
+        pc::wp29_count,wp29::receipts.count,wp29::admitted,wp29::declined,wp29::source_declines,wp29::scene_declines,
+        wp29::waits,wp29::commits,pc::data.loads,pc::data.fails);
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    re4dc_log("WPLAN29 frame=%u bytes=%u planned=%u legacy=%u loads=%u declines=%u\n",frame,wplan29::bytes,wplan29::planned,wplan29::legacy,wplan29::loads,wplan29::declines);
+#endif
     for(unsigned p=0;p<3;++p){
         const auto& c=ps2w.count[p];
         re4dc_log("PS2MESH frame=%u pass=%u placements=%u culled=%u parts=%u native=%u fallback=%u aborts=%u near=%d far=%d cull_far=%d\n",
@@ -9209,6 +9328,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #endif
 #if defined(RE4DC_TRANS_POLICY)
     trans::close();
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::close();
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
