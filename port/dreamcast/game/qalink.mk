@@ -29,6 +29,12 @@ ifneq ($(BENCHMARK),1)
 $(error QA_LINK=1 needs QA_MENU=1 (the QA menu's handlers) or BENCHMARK=1 (qa_link_bench.cpp))
 endif
 endif
+# QA_LINK_KOS_BYTES (lane link28): ARENA_FIT leaves this much more to KOS on link builds (taken from the arena top,
+#   heap 4). The link's KOS use is fixed per session (thread records of the dial / PPP / modem timer threads, the
+#   socket, libppp's login strings: ~2.2 KiB measured at the KOS squeeze r101 fight low point) plus one pass of received
+#   commands; without this the 48 KiB squeeze gate ran out of KOS when the link came up in the r101 fight (link28).
+QA_LINK_KOS_BYTES ?= 4096
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_KOS_BYTES=$(QA_LINK_KOS_BYTES)
 QALINK_PPP_DIR := $(KOS_BASE)/addons/libppp
 QALINK_PPP_OBJS := $(OBJDIR)/qalink/ppp.o $(OBJDIR)/qalink/lcp.o $(OBJDIR)/qalink/pap.o $(OBJDIR)/qalink/ipcp.o \
                    $(OBJDIR)/qalink/ppp_modem.o
