@@ -1007,6 +1007,15 @@ void alive_log_poll()
                                 (unsigned) vis[id]);
         line[len] = 0;
         re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
+#if defined(RE4DC_BARN28_EMDUMP) && RE4DC_BARN28_EMDUMP
+        for (u32 i = 0; i < EmMgr.nArray; i++) {
+            cEm* em = (cEm*) EmMgr.workAt(i);
+            if (!em) continue;
+            re4dc_log("barn28 em i=%u id=%02x alive=%d pos=%d %d %d\n", (unsigned) i, (unsigned) em->id & 0xff,
+                      SceCheckEmAlive(em), (int) em->pos.x, (int) em->pos.y, (int) em->pos.z);
+        }
+        if (pPL) re4dc_log("barn28 pl pos=%d %d %d\n", (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
+#endif
     }
 }
 

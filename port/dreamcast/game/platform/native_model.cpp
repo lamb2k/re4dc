@@ -713,9 +713,48 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 #else
 #define PP_PATH(x) ((void) 0)
 #endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+// BARN28_DIAG (barn28.mk; diagnostic): re4dc_model_submit calls and inclusive microseconds by model (kindid << 8 | id),
+// one B28M line per model every 300 UI frames (the console names the expensive models over QA_LINK).
+extern "C" int re4dc_b28_model_kind(const void* model);
+#include <kos/timer.h>
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char*, ...);
+namespace b28m {
+struct Row { int kind; unsigned calls; uint64_t us; };
+Row rows[24]; unsigned nrows, last, depth;
+struct Scope {
+    int kind; uint64_t t0;
+    explicit Scope(const Re4dcModelPart* p) : kind(-2), t0(0) {
+        if (depth++) return;
+        kind = p ? re4dc_b28_model_kind(p->model) : -1; t0 = timer_us_gettime64();
+        const unsigned fr = re4dc_ui_frame();
+        if (!last) last = fr;
+        if (fr - last >= 300) {
+            for (unsigned i = 0; i < nrows; ++i)
+                re4dc_log("B28M f=%u frames=%u kind=%x calls=%u us=%u\n", fr, fr - last, unsigned(rows[i].kind), rows[i].calls,
+                          unsigned(rows[i].us));
+            nrows = 0; last = fr;
+        }
+    }
+    ~Scope() {
+        --depth;
+        if (kind == -2) return;
+        const uint64_t us = timer_us_gettime64() - t0;
+        unsigned i = 0;
+        while (i < nrows && rows[i].kind != kind) ++i;
+        if (i == nrows) { if (nrows == 24) i = 23; else rows[nrows++] = Row{kind, 0, 0}; }
+        ++rows[i].calls; rows[i].us += us;
+    }
+};
+}  // namespace b28m
+#endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    const b28m::Scope b28m_scope(p);
 #endif
 #if RE4DC_GC_ASSET_GATE
     // Replacement/static paths must supply their own immutable asset proof.

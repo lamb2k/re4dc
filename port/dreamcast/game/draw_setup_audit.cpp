@@ -141,6 +141,10 @@ void finish(uint64_t now){
         window.sequence=++sequence;memcpy(window.identity,key,sizeof(key));
         sealed=window;have_sealed=true;window=Snapshot{};
         char row[240];summary(row,sizeof(row));log_line(row);
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+        // BARN28_DIAG (barn28.mk): every page row in the log too (Flycast runs read the per-path rows).
+        for(unsigned i=0;i<line_count();++i){if(format_line(i,row,sizeof(row))>0)log_line(row);}
+#endif
         // A bounded window summary only. Full per-path/counter data is sealed
         // for the paginated QA/QR display; nothing formats in a drawing loop.
     }
