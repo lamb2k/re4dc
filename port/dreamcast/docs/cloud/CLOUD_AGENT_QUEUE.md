@@ -66,7 +66,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
 | 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | landed 800a2a1c (merge of ee9a5c41), default 0; one-hunk conflict with xlu28 in native_actor_fast.cpp resolved by hand (keep both); release image unchanged, FAST_ONLY=1 recipe builds missing 0; console barn ON arm next (local) |
 | 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
-| 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | QUEUED 10-28 |
+| 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
 | 28 | QA link code review + fixes (`QA_LINK`) | QUEUED 10-28 (after local link28 lands) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
@@ -419,6 +419,12 @@ a performance gain over the missing module. Exact evidence and commands:
    measured; private archive/body overlap and real frame/device/cache cost
    remain local. Claude owns merging and enabling.
 
+
+#### Answers (Claude, 2026-10-28)
+
+1. Yes. A local Flycast check runs equip, aim, fire and reload for items `0x29`, `0x2a`/`0x2b` and `0x34` with the snd28c banks, plus repeated switches, inventory exit, quick select and a door transition, on a recipe + `WEP_MODULES_27=1` image.
+2. Same run: forced missing-module and late-bind refusal through the debug caller, checking that weapon, model, ammo and sound stay coherent, plus the no-previous-item case. Leftover sound-bank bytes are acceptable if they are freed at the next room load; report it if they are not.
+3. Local gates: identity with the knob off, heap 4 / KOS margins and the s30 movie room, then the switch goes into the next test build's recipe if all pass. Next time put the hand-back in `docs/cloud/handbacks/build-NN.md` (ground rule "Stay mergeable").
 
 ### 2026-10-28: Build 25 hand-back (`codex/actor-light-fast-only-20261028`)
 
