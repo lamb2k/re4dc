@@ -3689,6 +3689,55 @@ bool fx_none_cut(const Entry& e){
     if(cut)re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u\n",room,e.key.crc,e.key.fnv,fxnone_cuts);
     return cut;
 }
+#if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+// FX_EARLY_CUT (lane fxcut28, render only; effects30.mk): the FX_PS2_NONE_CUT answer before the texture is loaded.
+// load() asks fx_none_key() on a miss for an effect sprite (fxearly_armed) and returns no entry without opening the
+// package, so a picture the PS2 dropped is never uploaded. The answer per image descriptor (pixels, palette, shape) is
+// kept in a small table stamped like the UI handles (handle_reset: sources reset on room / archive change) and the
+// room, so later frames skip the resolve too. Same table, same answers as fx_none_cut(); same "fx ps2 none cut:" line.
+bool fx_none_key(const Key& key,unsigned room){
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+    bool lib=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(unsigned j=0;j<sizeof(kFxPackRoom)/sizeof(kFxPackRoom[0]);++j){
+        const unsigned r=kFxPackRoom[j];
+        if(!(r==room || (r==0xffffU && !lib)))continue;
+        for(unsigned k=kFxPackBeg[j];k<kFxPackBeg[j+1];++k){
+            const FxPackKey& c=kFxPackKeys[kFxPackIdx[k]];
+            if(c.crc==key.crc && c.fnv==key.fnv)return true;
+        }
+    }
+    return false;
+#else
+    bool lib=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(const auto& c:kFxNoneCut)
+        if(c.crc==key.crc && c.fnv==key.fnv && (c.room==room || (c.room==0xffffU && !lib)))return true;
+    return false;
+#endif
+}
+bool fxearly_armed,fxearly_hit;
+unsigned fxearly_skips,fxearly_refused;   // descriptor-table hits / loads declined in load()
+struct FxEarlyNeg { const void* pixels; const void* palette; unsigned shape,stamp; unsigned short room,palette_bytes; };
+FxEarlyNeg fxearly_neg[32];
+unsigned fxearly_room(){
+    if(fxnone_frame!=frame){re4dc::profile::Source s{};re4dc_profile_source(&s);fxnone_now=s.room&0xffffU;fxnone_frame=frame;}
+    return fxnone_now;
+}
+inline unsigned fxearly_slot(const Re4dcUiImage& i){
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(i.pixels));return ((a>>5)^(a>>11))&31U;
+}
+inline unsigned fxearly_shape(const Re4dcUiImage& i){return i.width|i.height<<11|i.format<<22|(i.palette_format&15U)<<26;}
+bool fxearly_known_cut(const Re4dcUiImage& i){
+    const FxEarlyNeg& n=fxearly_neg[fxearly_slot(i)];
+    return n.pixels && n.pixels==i.pixels && n.palette==i.palette && n.palette_bytes==i.palette_bytes &&
+           n.shape==fxearly_shape(i) && n.stamp>handle_reset && n.room==(unsigned short)fxearly_room();
+}
+void fxearly_remember(const Re4dcUiImage& i){
+    fxearly_neg[fxearly_slot(i)]={i.pixels,i.palette,fxearly_shape(i),++handle_clock,(unsigned short)fxearly_room(),
+                                  (unsigned short)i.palette_bytes};
+}
+#endif
 #endif
 void close_entry(Entry& entry) {
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
@@ -3849,6 +3898,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     for(auto& e:entries) if(e.valid && e.key==key) {entry_hint[hint]=EntryHint(&e-entries+1);RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+#endif
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+    // FX_EARLY_CUT: an effect picture the PS2 dropped is declined before any eviction, budget test or file I/O.
+    if(fxearly_armed && fx_none_key(key,fxearly_room())){
+        fxearly_hit=true;++fxearly_refused;
+        re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u early\n",fxearly_room(),key.crc,key.fnv,fxnone_cuts);
+        return nullptr;
+    }
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     // WORLD_METER: a failed texture-RAM allocation from here on names this key in its VRAMFAIL log line (vram_pages.cpp).
@@ -8468,6 +8525,30 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     // model shows (e.g. the r221 128x128 slot 0) drops its sprites, as the GC copies them only into its buffer.
     if(rtt::capture_slot>=0)return rtt::wanted(rtt::capture_slot)?rtt::capture(s):0;
 #endif
+#if defined(RE4DC_FX_CUT_LOG) && RE4DC_FX_CUT_LOG
+    {   // FX_CUT_LOG (test only): fx_count still holds the previous effect frame's queued sprites here.
+        static unsigned lf=~0U,nf,drawn,opens0;
+        if(lf!=frame){
+            if(lf!=~0U){drawn+=fx_count;++nf;}
+            lf=frame;
+            if(nf==120){
+                unsigned cuts=0,skips=0,refused=0,rskip=0;
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
+                cuts=fxnone_cuts;
+#if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+                skips=fxearly_skips;refused=fxearly_refused;
+#endif
+#endif
+#if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
+                rskip=fx_resident_skips;
+#endif
+                re4dc_log("fx cut log: frame=%u frames=%u drawn=%u none_cuts=%u early_skips=%u early_refused=%u opens=%u missing=%u resident_only=%u\n",
+                          frame,nf,drawn,cuts,skips,refused,load_opens-opens0,fx_missing,rskip);
+                nf=0;drawn=0;opens0=load_opens;
+            }
+        }
+    }
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreBeginFxFrame();
 #else
@@ -8512,6 +8593,10 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     }
 #endif
     if(fx_count>=RE4DC_EFFECT_SPRITE_MAX){++fx_capped;return 0;}
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+    if(fxearly_known_cut(s->image)){++fxearly_skips;++fxnone_cuts;return 0;}   // FX_EARLY_CUT: no resolve
+    fxearly_armed=true;fxearly_hit=false;
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     fx_resident_only=frame-fx_evict_frame<=1 || fx_new_loads>=kFxNewLoads;
 #if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
@@ -8530,9 +8615,17 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreTextureAcquired(s->image,e);
 #endif
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+    fxearly_armed=false;
+    if(!e && fxearly_hit){fxearly_hit=false;fxearly_remember(s->image);++fxnone_cuts;return 0;}
+#endif
     if(!e){++fx_missing;return 0;}
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
+#if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+    if(fx_none_cut(*e)){fxearly_remember(s->image);++fxnone_cuts;return 0;}   // resident already (e.g. drawn elsewhere)
+#else
     if(fx_none_cut(*e)){++fxnone_cuts;return 0;}   // FX_PS2_NONE_CUT: a picture the PS2 dropped
+#endif
 #endif
 #if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
     if(!RE4DC_COVER(e->package))vram_room_gcfx(*e);   // VRAM_ROOM_LOG: a GameCube effect picture (no PS2 conversion)
