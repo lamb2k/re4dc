@@ -6,6 +6,8 @@
 #   <zip dir> -   : zip written to <work>/qa, tested (testzip) and deleted (full tier: the zip step is checked only)
 #   <zip dir> DIR : zip kept as DIR/RE4DC-QA-Test<N>-<sha8>-<date>-GDEMU.zip (rr.sh package)
 #   [evidence]    : also master an fp_master.sh base at <evidence>/_discs/qa for the QA Flycast jobs (rr-jobs.sh full)
+# QA_LINK=1 (lane link28, user 10-28: every test / QA disc carries the remote link; recipe.conf note): the QA menu row
+#   REMOTE LINK dials a DreamPi (tools/qalink/README.md). The game disc never carries it.
 # The QA build out-rr<sha7>qrW is reused when it exists (rr-clean-builds.sh deletes it with the cycle's other builds).
 set -euo pipefail
 W=${1:?work}; TR=${2:?tree}; SHA=${3:?sha}; TN=${4:?test name}; ZD=${5:?zip dir or -}; EVU=${6:-}
@@ -21,7 +23,7 @@ export PKG_SRC=$RE4DC_PAYLOAD_ROOT/tree
 rm -rf "${R:?}"; mkdir -p "$R/fix" "$R/logs" "$R/qa"
 if [ ! -s "$O/re4dc-game.elf" ]; then
   K=$W/kq T=$TR LP=rr${S7}q CH2="$CH2" \
-    XON="QA_MENU=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8" \
+    XON="QA_MENU=1 QA_LINK=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8" \
     bash "$T/ch2/ch2-build.sh" rW 2>&1 | grep '^rc=' | cut -c1-200 | tee "$R/logs/build.txt"
   grep -q '^rc=0 ' "$R/logs/build.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "QA build failed"; exit 1; }
 fi

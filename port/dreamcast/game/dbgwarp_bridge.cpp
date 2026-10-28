@@ -2090,8 +2090,14 @@ void re4dc_warp_room_enter(void)
 }
 
 // ui_bridge.cpp re4dc_room_cycle_poll (top of gameMainLoop, game thread).
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+extern "C" void re4dc_qa_link_bench_tick(void);   // qa_link_bench.cpp (qalink.mk: QA_LINK=1 on a benchmark disc)
+#endif
 void re4dc_warp_poll(void)
 {
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+    re4dc_qa_link_bench_tick();   // the remote link, each game tick (dials on its own with `auto 1`)
+#endif
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
     if (qa_poll()) return;
 #endif

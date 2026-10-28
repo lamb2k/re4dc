@@ -38,6 +38,9 @@
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+void re4dc_qa_link_bench_tick(void);   // qa_link_bench.cpp
+#endif
 void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room);  // platform/os.cpp
 int re4dc_tick_log_snapshot(const char** name, unsigned* avg_us, unsigned* max_us, int max, unsigned* seq);  // tick_log.cpp
 void __real_OSInit(void);
@@ -682,6 +685,9 @@ const char* re4dc_bench_results(void)
         if (!a) { if (down) break; up = true; }
         else if (up) down = true;
         ++g_results_ticks;
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+        re4dc_qa_link_bench_tick();   // the result rows just logged travel over the remote link (qa_link_bench.cpp)
+#endif
         spin_us(30000);
     }
     ++g_run;
