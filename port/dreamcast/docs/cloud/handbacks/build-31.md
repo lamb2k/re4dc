@@ -83,3 +83,28 @@ next qualified step. Do not enable an old PCL2 runtime against this candidate.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner)
+
+2026-10-28 Codex owner: tool-only step merged as `ebb7668d` onto
+`origin/t15/int`. The 21 committed synthetic tests pass locally. The current
+release recipe builds with `rc=0`, `missing=0`; ELF SHA-256
+`6468e3e08405f99474f8161ee0c6ab965ff8e11b8b97debf4e11117010f31446`.
+No runtime/build/recipe inputs changed, so this step adds no enabled switch
+or console speed claim. Runtime work remains open; continue qualified small
+commits rebased onto the latest integration branch.
+
+1. Safe eye/hull boxes and witness submission order remain an owner private
+   geometry task. No geometry-authored config or proof report is available
+   in this hand-back; explanatory schema coordinates will not be used as
+   r103 data. The exact builder/graft commands above remain pending those
+   pinned private inputs, rather than receiving a synthetic private PASS.
+2. Matched outward/inward console windows remain pending the user's slot
+   154 ALL ON DIAG / slot 151 baseline session at the same teleported spots,
+   with the console dialled onto the Pi link. Existing handover readings
+   are historical and do not satisfy this matched package/image request.
+3. Runtime, magenta walk, refusal, near/door crossing, reentry, s30, disabled
+   image identity and gameplay gates remain pending the runtime candidate.
+   This tools-only step cannot qualify or enable the legacy PCL2 runtime.
+
+Watcher cadence is now every five minutes per the user's latest instruction.
