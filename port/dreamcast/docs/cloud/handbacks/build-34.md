@@ -1,9 +1,18 @@
 # Build 34: decisions for the seventeen remaining local controls
 
-**2026-10-28 progress 2: DONE** bounded SCCN/SCPS loaders, current-descriptor
-front-cache validation, the existing LCHK fallback count, and a default-off
-SCPS-only metadata tool; host/sanitizer, SH-4 cost and 24 raw disabled-byte
-comparisons pass, with six enabled compilation/relocatable-link profiles;
+**2026-10-28 progress 3: DONE** applied the four qualified production-file
+repairs after the preceding tool/receipt commit `3e6de9c6`; all production
+hashes now match the passing host, sanitizer and target receipts below;
+**NEXT** Claude runs the isolated front-cache and SCPS-only pairs;
+**BLOCKED** private full-image, look/STRICT/memory and console net benefit.
+The previous push contained the helper/tools/receipts; this small follow-up
+applies the runtime call sites, counter, sign guard and diagnostic line map.
+Final integration base remains `1511637ac54057807b654ac55ea43a48f6e8ae47`.
+
+**2026-10-28 progress 2: DONE** helper, fixtures/receipts and default-off
+SCPS-only metadata tool for the qualified pending runtime repairs;
+host/sanitizer, SH-4 cost and 24 raw disabled-byte comparisons pass against
+the candidate source, with six enabled compilation/relocatable-link profiles;
 **NEXT** Claude's isolated current-data/console pairs below; **BLOCKED** full
 image identity, real coverage, STRICT/look/memory and net console benefit.
 Final runtime base: `1511637ac54057807b654ac55ea43a48f6e8ae47`; the advance from

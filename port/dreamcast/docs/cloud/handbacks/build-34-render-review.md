@@ -1,5 +1,7 @@
 # Build 34 — five render/texture switch decisions
 
+This is the step-1 source/history snapshot. The qualified step-2 repairs and current commands are in [build-34.md](build-34.md).
+
 Audit date: 2026-10-28 UTC. Source baseline: `36643bf8ab5a78c581274f28eca702ae8aa48330` (`origin/t15/int`). This is a source/history review of **SCENERY_DEDUP, SCENERY_PIECE_STATE, TEX_PACK_WINDOW, TEX_PAL32, UI_POLY_ORDER**. No production recipe was changed, and no private assets or console results were available. The Build33 runtime is not a dependency of this review. Paths below are repository-relative; source observations refer to the baseline unless explicitly identified as a historical commit. The SCPS loader fix being prepared by the Build34 runtime agent is separate, and its later qualification must be appended by the main report.
 
 ## Decisions for the aggregate table

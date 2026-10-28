@@ -1,5 +1,7 @@
 # Build 34: six actor and cone controls
 
+This is the step-1 source/history snapshot. The qualified step-2 repairs and current commands are in [build-34.md](build-34.md).
+
 2026-10-28. Read-only audit on the Build 34 checkout based on integration `36643bf8`; Build 33 is now merged. The SCN21 loader and missing character-backend counter repairs below are **NEXT**, not completed evidence. Historical figures are attributed to their original commits/receipts; none is a fresh console measurement.
 
 ## Decisions Claude can use

@@ -236,6 +236,9 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #include <stdio.h>
 #include <cstring>
 #include <cstdlib>
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+#include "include/scn21_validate34.hpp"
+#endif
 #include "native_static.h"
 #if RE4DC_WORLD_PORTAL29
 #include "include/world_portal29.hpp"
@@ -6741,11 +6744,7 @@ void scn21_open(GCASSET_STATIC_ONLY_PARAM){
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
         else if(!ps2w.sg)why="no strip groups";
-        else{
-            std::memcpy(w,sec,16);
-            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
-               len<16U+256U+8U*w[2]*w[3])why="package";
-        }
+        else why=re4dc_scn21::cone(sec,len,ver,h.crc,h.bytes,h.meshlet_count,ps2w.sg_groups,w);
 #if RE4DC_GC_ASSET_GATE
         if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Absent);
         else if(!why && re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCCN,sec,len,ver,fl);
@@ -6762,10 +6761,7 @@ void scn21_open(GCASSET_STATIC_ONLY_PARAM){
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
-        else{
-            std::memcpy(w,sec,16);
-            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
-        }
+        else why=re4dc_scn21::piece(sec,len,ver,h.crc,h.bytes,h.part_count,w);
         if(!why){
 #if RE4DC_GC_ASSET_GATE
             if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
