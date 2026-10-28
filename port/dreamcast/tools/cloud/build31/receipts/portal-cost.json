@@ -1,0 +1,602 @@
+{
+  "status": "PASS",
+  "scope": "Price real SH4 pc::grid_hidden and new portal receipt pieces, synthetic only.\n\nThe production native_static translation unit compiles with Make-derived flags.\nOnly bounded kernels are retained in the fixture ELF. Cold-I means isolated\ninstruction-cache cold with perfect D-cache; data lines are address footprint,\nnot measured cache misses. Loader, proof/source scans, setup and GPU omitted.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build31/portal_cost.py": "eaaf83de5bd2ee7652f08e6d89b58b11ac2a51cf38076fbea7f0a770e8a23638",
+    "port/dreamcast/tools/cloud/build31/portal_cost_fixture.cpp.in": "9d8f78ea0a6dbd027016e7573ef4384457febe1d7d7f83ed360709c3aedb18b2",
+    "port/dreamcast/game/platform/native_static.cpp": "f3272eed62edec66e06e794587bdad785f7460a12776851a19c44c96050f0e75",
+    "port/dreamcast/game/platform/include/world_portal29.hpp": "263437a05d1dace3ae0235d42a179b4a4bccb47972c0dcb82665cb6eab02e578",
+    "port/dreamcast/game/platform/include/world_portal29_cells.inc": "c74319bce9ce9d02b8842fbbdc8652f3e3ba1e75da969b31e56d1cb9e1040c4c",
+    "port/dreamcast/game/platform/include/world_portal29_runtime.inc": "944ef400ec55a205de0eedae870e12ff00f4a56397574f42eb5859ba5749c97a"
+  },
+  "options": [
+    "DBG_WARP=1",
+    "WARP_AFTER_RESET=1",
+    "QA_MENU=1",
+    "BENCHMARK=0",
+    "PMC_ROW=0",
+    "WORLD_METER=1",
+    "NMR_POOL_LOD=0",
+    "QA_LINK=1",
+    "QA_LINK_REVIEW28=1",
+    "PS2_INTERIOR_CULL=1",
+    "PS2_WORLD_DYNAMIC=1",
+    "PS2_WORLD_MESH=1",
+    "PS2_WORLD_ROOMS=2",
+    "MESH_LOD=1",
+    "PS2_PVS=1",
+    "SCENERY_STREAM=0",
+    "SCENERY_CLIP_GATHER=0",
+    "SCENERY_CLIP_INDEXED26=0",
+    "PS2_INTERIOR_CULL=1",
+    "PS2_PVS=1",
+    "PS2_PVS_BATCH_COMPOSE=0",
+    "SCENERY_SUBMIT_BATCH=0",
+    "SCENERY_STREAM=0",
+    "WORLD_PORTAL29=1",
+    "WORLD_PART_PLAN29=0",
+    "DRAW_FALLBACK_AUDIT=0",
+    "DRAW_SETUP_AUDIT=0",
+    "QA_LINK=0"
+  ],
+  "layout": {
+    "version": 1,
+    "frustum_bytes": 108,
+    "state_bytes": 72,
+    "receipts_bytes": 156,
+    "count": 1050408,
+    "tests": 1050632,
+    "frustums": 1050852
+  },
+  "fixture_sections": {
+    "executable_bytes": 1744,
+    "allocated_bytes": 4868,
+    "zero_fill_bytes": 2796
+  },
+  "fixture_sha256": "db92fb074f10e2c9e08fe1d58e78f61358776f3c2da5db085d9a7d5dc063a7dd",
+  "kernel_symbols": {
+    "fixture_prepare": {
+      "address": 1049212,
+      "bytes": 440
+    },
+    "fixture_grid": {
+      "address": 1049652,
+      "bytes": 224
+    },
+    "fixture_commit": {
+      "address": 1049876,
+      "bytes": 32
+    },
+    "fixture_sync_same": {
+      "address": 1049908,
+      "bytes": 48
+    },
+    "fixture_sync_new": {
+      "address": 1049956,
+      "bytes": 48
+    },
+    "fixture_layout": {
+      "address": 1050368,
+      "bytes": 28
+    }
+  },
+  "limitations": "Not full portal runtime or frame. Omits current-source/material proof scans, begin/numeric setup, allocator/I/O/geometry savings/GPU/D-cache misses. Same normalized synthetic frustum is repeated 24 times for the conservative worst admitted count; cold-I not additive as a whole frame.",
+  "raw_receipt_sha256": "936fc78f902da02b7a7088dcb02f7afd967714476e470dca8926c79ba62417ad",
+  "cases": [
+    {
+      "case": "portal1-visible",
+      "result": 0,
+      "instructions": 494,
+      "peak_stack_bytes": 120,
+      "model_cycles": 443,
+      "trace_sha256": "50dc0daa89b89a7430187fd86443b56dec9bfe6e88222e7a032d7cd292fbd997",
+      "cold_icache": {
+        "model_cycles": 668,
+        "instruction_fills": 20.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 118,
+          "store_instructions": 35,
+          "load_accesses": 118,
+          "store_accesses": 35,
+          "load_bytes": 457,
+          "store_bytes": 140,
+          "unique_read_lines": 18,
+          "unique_write_lines": 5,
+          "unique_data_lines": 18,
+          "unique_line_bytes": 576
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 153,
+        "repeated_demand_line_visits": 135
+      }
+    },
+    {
+      "case": "portal1-hidden",
+      "result": 1,
+      "instructions": 416,
+      "peak_stack_bytes": 120,
+      "model_cycles": 369,
+      "trace_sha256": "26265917d285da7f35db13c70169fab5afa8ae97e5c40ff2be6935ee9c01ac37",
+      "cold_icache": {
+        "model_cycles": 578,
+        "instruction_fills": 18.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 95,
+          "store_instructions": 33,
+          "load_accesses": 95,
+          "store_accesses": 33,
+          "load_bytes": 365,
+          "store_bytes": 132,
+          "unique_read_lines": 17,
+          "unique_write_lines": 5,
+          "unique_data_lines": 17,
+          "unique_line_bytes": 544
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 128,
+        "repeated_demand_line_visits": 111
+      }
+    },
+    {
+      "case": "portal24-hidden",
+      "result": 1,
+      "instructions": 2624,
+      "peak_stack_bytes": 120,
+      "model_cycles": 2531,
+      "trace_sha256": "c69edcccec06c1d561824689283aa2250c41b8b5a1bb96c6be5fc09167644f97",
+      "cold_icache": {
+        "model_cycles": 2740,
+        "instruction_fills": 18.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 601,
+          "store_instructions": 102,
+          "load_accesses": 601,
+          "store_accesses": 102,
+          "load_bytes": 2320,
+          "store_bytes": 408,
+          "unique_read_lines": 95,
+          "unique_write_lines": 5,
+          "unique_data_lines": 95,
+          "unique_line_bytes": 3040
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 703,
+        "repeated_demand_line_visits": 608
+      }
+    },
+    {
+      "case": "house-intersection",
+      "result": 4294967295,
+      "instructions": 317,
+      "peak_stack_bytes": 120,
+      "model_cycles": 281,
+      "trace_sha256": "3b5eff7eb19c6b6f2653bed7a905077ff8f4bcf759dcc1f2827c0a2ebcea42a4",
+      "cold_icache": {
+        "model_cycles": 446,
+        "instruction_fills": 14.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 71,
+          "store_instructions": 30,
+          "load_accesses": 71,
+          "store_accesses": 30,
+          "load_bytes": 272,
+          "store_bytes": 120,
+          "unique_read_lines": 14,
+          "unique_write_lines": 5,
+          "unique_data_lines": 14,
+          "unique_line_bytes": 448
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 101,
+        "repeated_demand_line_visits": 87
+      }
+    },
+    {
+      "case": "receipt-first",
+      "result": 1,
+      "instructions": 33,
+      "peak_stack_bytes": 8,
+      "model_cycles": 36,
+      "trace_sha256": "eeaf155f51e73c53abda5c252c9fe9928404f7472072c2e2863f7e8a69625a00",
+      "cold_icache": {
+        "model_cycles": 97,
+        "instruction_fills": 4.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 4,
+          "load_accesses": 8,
+          "store_accesses": 4,
+          "load_bytes": 30,
+          "store_bytes": 16,
+          "unique_read_lines": 4,
+          "unique_write_lines": 2,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 12,
+        "repeated_demand_line_visits": 8
+      }
+    },
+    {
+      "case": "receipt-last256",
+      "result": 256,
+      "instructions": 33,
+      "peak_stack_bytes": 8,
+      "model_cycles": 36,
+      "trace_sha256": "eeaf155f51e73c53abda5c252c9fe9928404f7472072c2e2863f7e8a69625a00",
+      "cold_icache": {
+        "model_cycles": 97,
+        "instruction_fills": 4.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 8,
+          "store_instructions": 4,
+          "load_accesses": 8,
+          "store_accesses": 4,
+          "load_bytes": 30,
+          "store_bytes": 16,
+          "unique_read_lines": 5,
+          "unique_write_lines": 3,
+          "unique_data_lines": 5,
+          "unique_line_bytes": 160
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 12,
+        "repeated_demand_line_visits": 7
+      }
+    },
+    {
+      "case": "receipt-repeat",
+      "result": 256,
+      "instructions": 29,
+      "peak_stack_bytes": 8,
+      "model_cycles": 32,
+      "trace_sha256": "a9b60bfed6a93533dbf1174ae3bcf5c534bd0bc2da15d607d4998b2b28383364",
+      "cold_icache": {
+        "model_cycles": 93,
+        "instruction_fills": 4.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 7,
+          "store_instructions": 2,
+          "load_accesses": 7,
+          "store_accesses": 2,
+          "load_bytes": 26,
+          "store_bytes": 8,
+          "unique_read_lines": 5,
+          "unique_write_lines": 1,
+          "unique_data_lines": 5,
+          "unique_line_bytes": 160
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 9,
+        "repeated_demand_line_visits": 4
+      }
+    },
+    {
+      "case": "receipt-same-image",
+      "result": 256,
+      "instructions": 426,
+      "peak_stack_bytes": 40,
+      "model_cycles": 342,
+      "trace_sha256": "7337b9cf1681af5b8fe8edd74b96f02eba071252f24fb00a8a80636ad2fdf6e4",
+      "cold_icache": {
+        "model_cycles": 472,
+        "instruction_fills": 10.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 72,
+          "store_instructions": 10,
+          "load_accesses": 72,
+          "store_accesses": 10,
+          "load_bytes": 288,
+          "store_bytes": 40,
+          "unique_read_lines": 16,
+          "unique_write_lines": 2,
+          "unique_data_lines": 16,
+          "unique_line_bytes": 512
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 82,
+        "repeated_demand_line_visits": 66
+      }
+    },
+    {
+      "case": "receipt-new-image",
+      "result": 0,
+      "instructions": 263,
+      "peak_stack_bytes": 40,
+      "model_cycles": 245,
+      "trace_sha256": "af150ae7b5c6d38ce477b11fa5909673db2ffd55db046c43f7eeedd6e0959bce",
+      "cold_icache": {
+        "model_cycles": 436,
+        "instruction_fills": 15.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      },
+      "traffic": {
+        "cached": {
+          "load_instructions": 45,
+          "store_instructions": 58,
+          "load_accesses": 45,
+          "store_accesses": 58,
+          "load_bytes": 180,
+          "store_bytes": 208,
+          "unique_read_lines": 12,
+          "unique_write_lines": 8,
+          "unique_data_lines": 16,
+          "unique_line_bytes": 512
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 103,
+        "repeated_demand_line_visits": 87
+      }
+    }
+  ],
+  "local_frames": [
+    {
+      "function": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/game/platform/native_static.cpp:2467:12:int {anonymous}::pc::hidden_state(State&, const float*, const float*)",
+      "bytes": 56,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/game/platform/include/world_portal29.hpp:84:10:void re4dc::portal29::Receipts::clear()",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/game/platform/include/world_portal29.hpp:85:10:void re4dc::portal29::Receipts::sync(unsigned int, unsigned int, unsigned int, const float*)",
+      "bytes": 28,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/game/platform/include/world_portal29.hpp:90:10:void re4dc::portal29::Receipts::commit(unsigned int)",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-portal-cost-final/fixture.cpp:9:6:void fixture_prepare(unsigned int)",
+      "bytes": 84,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-portal-cost-final/fixture.cpp:29:31:int fixture_grid(unsigned int)",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-portal-cost-final/fixture.cpp:30:36:unsigned int fixture_commit(unsigned int)",
+      "bytes": 8,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-portal-cost-final/fixture.cpp:31:36:unsigned int fixture_sync_same(unsigned int)",
+      "bytes": 12,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-portal-cost-final/fixture.cpp:32:36:unsigned int fixture_sync_new(unsigned int)",
+      "bytes": 12,
+      "kind": "static"
+    }
+  ],
+  "scenario": {
+    "label": "MODELLED",
+    "cpu_mhz": 200,
+    "assumed_grid_tests": 100,
+    "assumed_other_work_ms": 30,
+    "single_hidden_grid_whole_frame_ms": 30.1845,
+    "twentyfour_hidden_grid_whole_frame_ms": 31.2655,
+    "note": "Illustrative added grid-test floor only, excludes scene/source/material guards and geometry saving. Not a hardware prediction or full portal runtime budget."
+  }
+}

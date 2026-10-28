@@ -975,6 +975,39 @@ extern "C" void* re4dc_static_alloc(unsigned bytes){
 }
 #endif
 extern "C" void re4dc_static_free(void* data){room_free4(data,"native static package");}
+#if defined(RE4DC_WORLD_PORTAL29) && RE4DC_WORLD_PORTAL29
+// A missing/stale/invalid optional cell must leave all existing backing intact.
+extern "C" void* re4dc_world_portal29_alloc(unsigned bytes){
+    constexpr unsigned floor=96U*1024U;
+    if(bytes>512U*1024U+8192U)return nullptr;
+    const int before=re4dc_static_heap_free();
+    if(before<0 || unsigned(before)<bytes+kAllocationOverhead+sizeof(Room4Cell)+floor)return nullptr;
+#if RE4DC_NATIVE_PKG_HIGH
+    void* p=room_alloc4_high(bytes,"world portal29");
+    if(p && re4dc_static_heap_free()<int(floor)){room_free4(p,"world portal29");return nullptr;}
+    return p;
+#else
+    return nullptr;
+#endif
+}
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+// An optional setup cache must never evict a far shell to find a contiguous
+// block. Use the same room-cell lifetime with a side-effect-free refusal.
+extern "C" void* re4dc_world_part_plan29_alloc(unsigned bytes){
+    constexpr unsigned floor=96U*1024U;
+    if(bytes>64U*1024U+31U)return nullptr;
+    const int before=re4dc_static_heap_free();
+    if(before<0 || unsigned(before)<bytes+kAllocationOverhead+sizeof(Room4Cell)+floor)return nullptr;
+#if RE4DC_NATIVE_PKG_HIGH
+    void* p=room_alloc4_high(bytes,"world part plan29");
+    if(p && re4dc_static_heap_free()<int(floor)){room_free4(p,"world part plan29");return nullptr;}
+    return p;
+#else
+    return nullptr; // mem_alloc's low allocator can evict shell/motion backing.
+#endif
+}
+#endif
 #endif
 
 

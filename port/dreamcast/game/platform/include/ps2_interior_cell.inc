@@ -2,6 +2,9 @@
 // Package: ps2-world.re4mesh sha256 508e5ba2dd1fe9fd14042ecd5acf4c9b3641bec9ec40ec1ac9226ec1d099787c,
 //          ps2-world.r4pw sha256 bea1ade4c3bebe4d483c7ab191c39dbe901d66daa35f350fd5a44a092d179e22.
 // Config cell_r100.json sha256 5093f1296adbc4cf30e681473b6cab8222e779e32232aad5e13f2425a56a3ef8: 170 sub-cells, 1186 portals; 1327989960 sample rays, 13800288 escaped.
+#if RE4DC_WORLD_PORTAL29
+#include "world_portal29_cells.inc"
+#else
 #if RE4DC_PS2_INTERIOR_CELLS
 #include "ps2_interior_cells.inc"
 #else
@@ -16,6 +19,7 @@ constexpr unsigned kPcCellCount=170U,kPcPortalCount=1186U,kPcFileBytes=33256U; /
 #define PC_OUTER_RENDER pc::kPcOuter
 #define PC_ADOPT_PRE(r,m,s,b)
 #define PC_LOAD_HOOK
+#endif
 #endif
 // lane worldopt26: WORLD_SG_CELL hook macro (empty with the knob off).
 #include "worldopt26_sg_cell.inc"
