@@ -1396,6 +1396,17 @@ if os.path.isdir(FONT22BD):
     DATA['font22b'] = {'dc/tex.pak': FONT22BD + '/dc/tex.pak'}
     PAK_DERIVED['font22b'] = FONT22BD + '/pak-derived.json'
     AFTER += [('font22b', 'font22')]
+# leon28 (lane look28 10-28, user "fix it asap": Leon's black wardrobe looked crushed): dc/tex.pak = font22b's pack with
+# Leon's two LEON_LIGHT_HEADROOM atlases rebuilt from the 8-bit PS2 pictures at x2 (rounded, one k-means VQ):
+# ec255e66-76812316 (jacket) and 7506e95f-68cf2211 (no jacket; pl08n25 had pasted the shirt / sleeves at x1, so they drew
+# at half brightness). Same keys, sizes, formats and bytes. Rides with LEON_LIGHT_FILL=100. The LAST tex.pak set;
+# title27_gate checks both keys on the final pack. Store: re4data/private/leon28-20261028 (pkg/ = the packages).
+LEON28D = os.environ.get('LEON28D', '/root/re4data/private/leon28-20261028')
+LEON28_KEYS = ['ec255e66-76812316', '7506e95f-68cf2211']
+if os.path.isdir(LEON28D):
+    DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
+    PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
+    AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
 
 
 def title27_gate(names, r, rec):
@@ -1429,6 +1440,13 @@ def title27_gate(names, r, rec):
                                  'a set after font22b replaced it: rebuild that set on font22b or put font22b last'
                                  % (r['dc/tex.pak'], f_[:17]))
         rec.append('font22b gate: %d Test 22 controller glyph pictures' % len(pk))
+    if 'leon28' in names:
+        pak = tex_merge.read(r['dc/tex.pak'])
+        for n_ in LEON28_KEYS:
+            if pak.get(tuple(int(x, 16) for x in n_.split('-'))) != open('%s/pkg/%s.re4tex' % (LEON28D, n_), 'rb').read():
+                raise SystemExit('leon28: the staged dc/tex.pak (%s) does not hold the leon28 Leon atlas under %s; a set '
+                                 'after leon28 replaced it: rebuild that set on leon28 or put leon28 last' % (r['dc/tex.pak'], n_))
+        rec.append('leon28 gate: %d Leon atlases' % len(LEON28_KEYS))
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
