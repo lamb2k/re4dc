@@ -48,3 +48,16 @@ Edit `recipe.conf` (CH2, DATA, KSETS, data dirs, CH2_REF) in the same landing, t
 - The kit job exports `RC19D` (recipe.conf) for kit-check.sh's zipcheck.
 - QA disc per candidate (standing rule 8, rr-qa.sh): the full tier builds it (QA_MENU=1 warp build of the same recipe,
   dc/qa presets, mkgdi, disc_lint, zip test) and runs QA boot keys, a QA-menu warp to r103 and a GDEMU door103 seed.
+
+## 2026-10-28 (lane guards28)
+
+- **SPEED row (full tier):** `speed/rr-speed.sh <ref> <cand> <out>` builds each commit's own release recipe as a cost arm
+  (rW + PACE_MODE=off PC_SAMPLER_BYTES=8192), runs the five hwmodel benchmark scenes (`speed/warps`: r101 cross, r101 bell,
+  r103 farm mid-fight, r100 house siege, r11c cabin siege; global frames 700:759, 20 traced frames, the perf-24b method),
+  at most 2 Flycasts at once, and judges with `speed/rr_speed.py`: FAIL when any scene is slower than
+  max(1 ms, 3%) (SPEED_TOL_MS / SPEED_TOL_PCT). Reference = `RR_SPEED_REF` in recipe.conf (the live release; cached once
+  per sha in /root/rr/speed/<sha8>). RR_SPEED=0 skips. Numbers are MODELLED CPU only: a GPU-side regression with the CPU
+  flat (Test 24: n256 sent ~23% more vertices, CPU 1-2 ms faster) does not show here; that needs a cache-model Flycast or
+  console row.
+- **MOVIEARENA row (every tier):** with MOVIE_LAYOUT_GUARD=1 (recipe T15_M) the game logs `MOVIEARENA refuse id=.. room=..
+  why=.. mesh=.. side=.. capacity=.. need=..` for every refused eligible movie arena borrow; any such line in any job log fails.

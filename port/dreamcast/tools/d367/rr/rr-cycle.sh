@@ -201,6 +201,11 @@ if [ "$TIER" = full ]; then
   fi
   [ $ok = 1 ] && { step bases bases || ok=0; }
   if [ $ok = 1 ] && [ -n "${CH2_REF:-}" ]; then step trace-arms trace_arms || echo "trace arms failed: decisions not run"; fi
+  # SPEED (lane guards28 10-28): candidate vs the live release (recipe.conf RR_SPEED_REF) on the five hwmodel benchmark
+  # scenes, MODELLED; rr/speed/rr-speed.sh writes $W/speed.txt, rr-judge.py rows it. RR_SPEED=0 skips (row SKIP).
+  if [ $ok = 1 ] && [ "${RR_SPEED:-1}" != 0 ] && [ -n "${RR_SPEED_REF:-}" ]; then
+    step speed bash "$BIN/speed/rr-speed.sh" "$RR_SPEED_REF" "$SHA" "$W/speed.txt" "$W/speed" || true
+  else echo "SPEED SKIP: RR_SPEED=${RR_SPEED:-1} RR_SPEED_REF=${RR_SPEED_REF:-unset}" > "$W/speed.txt"; fi
 else
   [ $ok = 1 ] && { step build-release build_release || ok=0; }
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }

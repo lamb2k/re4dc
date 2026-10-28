@@ -58,7 +58,10 @@ case "${1:-status}" in
     [ "$HERE" != "$(cd "$RR_HOME/bin" 2>/dev/null && pwd)" ] || { echo "rr: run install from a source tree (tools/d367/rr/rr.sh install), not from $RR_HOME/bin"; exit 2; }
     mkdir -p "$RR_HOME/bin" "$RR_HOME/logs" "$RR_HOME/state"
     for f in "$HERE"/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/$(basename "$f")"; done
-    chmod +x "$RR_HOME"/bin/*.sh
+    # speed/ (lane guards28 10-28): the SPEED row's scripts and scene warps
+    mkdir -p "$RR_HOME/bin/speed/warps"
+    for f in "$HERE"/speed/* "$HERE"/speed/warps/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/${f#"$HERE"/}"; done
+    chmod +x "$RR_HOME"/bin/*.sh "$RR_HOME"/bin/speed/*.sh
     ( crontab -l 2>/dev/null | grep -v 'rr-cycle.sh' || true; echo "$CRON" ) | crontab -
     echo "installed $(ls "$RR_HOME/bin" | wc -l) files; cron: $(crontab -l | grep -c rr-cycle.sh) line" ;;
   uninstall)

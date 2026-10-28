@@ -2327,11 +2327,16 @@ $(CABIN_SOURCE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/cabin-source.h -includ
 MOVIE_WORLD_ARENA ?= 0
 # Bounded Chapter 1 extension: full r100s30 borrows the same retained owner.
 MOVIE_WORLD_ARENA_S30 ?= 0
+# guards28 (10-28): 1 = derive the borrow layout from the opened package (mesh + sidecar + LUT + gather == the captured
+# extent) instead of the hard-coded package sizes, and log every refused eligible borrow (MOVIEARENA refuse ...), so a
+# reconverted world can't silently stop the r100 s30 / r11f Mendez movies. 0 = the hard-coded rows (identical image).
+MOVIE_LAYOUT_GUARD ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA %s\n' '$(MOVIE_WORLD_ARENA)' > $@.tmp
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o

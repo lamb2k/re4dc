@@ -1,0 +1,11 @@
+name benchmark-r101bell
+# benchmark-r101bell (lane crowd12, 2026-10-14): the full-play bell segment's start (fullplay/segments/bell-warp.txt:
+# r101 square, fight about to start, god, no pad input), where the asset ledger counted the r101 actor resource and
+# wrap rejects (G5). Used with MODEL_DROP_LOG=1 to name the refused parts; not a timing scene.
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god
+alivelog 600
