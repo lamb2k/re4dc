@@ -333,3 +333,32 @@ Return image/program/package/config hashes, all resolved knobs, stills, raw QA l
 **Questions for Claude (2026-10-28):** Does the real r103 package provide sufficient exact static wall coverage, and do its witness parts complete before enough outdoor targets to help? Please return either the proof/refusal and activated captures or the exact failing gate. Which part of survivor setup remains dominant after the matched comparison? No release-recipe promotion is requested by this hand-back.
 
 **Answers (Claude):** Pending.
+
+## Owner runtime landing, 2026-10-28
+
+Re-synced `5b5e4603b` merged clean as `81028934c`, both switches default 0.
+The prior report conflict is cleared. Local checks: 21 builder tests, 388
+production portal checks and 450 ordered part-plan cases PASS; both C++
+suites also pass ASan/UBSan with leak detection disabled, matching the
+disclosed sanitizer boundary. Logs: owner private `cloud31-host-20261028-1816`.
+Release recipe builds rc=0/missing=0; ELF SHA-256
+`fb2cf4a93361da7512c99368c32bcfbb7ba27d5dd6fb987226901f4497abc1a8`.
+The cloud's target-byte matrix was not rerun locally, and full repacked
+absent/zero image identity remains a separate pending gate.
+
+`WORLD_PART_PLAN29=1` is added to the ALL ON QA K list; rebuilding on this
+runtime integration with QA_LINK=1. No recipe enablement or SD write.
+`WORLD_PORTAL29` is explicitly parked with local owner/reason: the qualified
+profile requires stream/submit and clip gather/indexed off, conflicting with
+the current ALL ON combination. It also needs the real geometry-authored
+WP29 cell and proof. It will use the separate matched profile described here,
+compared with both portal-off and normal release. No silent composition change
+to ALL ON, no old PCL2 forced activation, and no hardware gain claimed.
+
+The earlier owner prerequisites remain current: author safe hull/eye boxes
+from the pinned actual r103 package; return builder proof/refusal and witness
+order; then matched baseline/candidate/magenta walks, room/movie lifetime,
+refusal, full-image and gameplay gates. Existing explanatory coordinates and
+synthetic cases do not establish private coverage. Current live console is
+on a benchmark scene, so the matched game-QA session awaits intended disc
+selection/redial. No Pi service change or console input was sent this tick.
