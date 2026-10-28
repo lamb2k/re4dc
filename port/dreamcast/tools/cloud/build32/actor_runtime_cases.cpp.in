@@ -1,0 +1,152 @@
+// Continuation of the established synthetic Asset and platform fixture.
+unsigned assertions=0, selected_uv=0, selected_cone=0;
+void check_at(bool value,unsigned line){++assertions;if(!value){std::fprintf(stderr,"check failed at generated fixture line %u\n",line);std::abort();}}
+#define require(value) check_at((value),__LINE__)
+void certificate(Asset& a,bool legacy=false){
+    unsigned code=re4dc::format32::kUvCertificateEmpty;
+    for(unsigned i=0;i<a.uv.size();++i){
+        a.uv[i]=std::uint16_t((i*29U)%257U);
+        code=re4dc::format32::uv_certificate_add(code,int(a.uv[i]));
+    }
+    auto& h=*reinterpret_cast<BlobHeader*>(a.stream.data());
+    h.flags=u8((h.flags&0x83U)|((legacy?0U:code)<<2));
+}
+void bind_asset(Asset& a){
+    a.p.static_geometry=1;
+    if(!a.skin){
+        const Re4dcActorSource src{reinterpret_cast<const unsigned char*>(a.positions.data()),
+            reinterpret_cast<const unsigned char*>(a.small?static_cast<const void*>(a.small_normals.data()):static_cast<const void*>(a.wide_normals.data())),
+            a.p.position_count,a.p.normal_count,0U,unsigned(a.small)};
+        sources.push_back({a.p.info,src});
+    }
+    a.bind();
+}
+float as_float(std::uint32_t word){float value;std::memcpy(&value,&word,4);return value;}
+void compare_vertices(const std::vector<std::uint32_t>& before,const std::vector<std::uint32_t>& after,
+                      unsigned width,unsigned height){
+    require(before.size()==after.size());require(before.size()>8);
+    for(unsigned i=8;i+7<before.size();i+=8){
+        require(before[i]==after[i]);
+        for(unsigned k=1;k<=3;++k)require(before[i+k]==after[i+k]);
+        require(before[i+6]==after[i+6]);
+        const float u=as_float(after[i+4]&0xffff0000U),v=as_float(after[i+4]<<16);
+        require(std::fabs(u-as_float(before[i+4]))*float(width)<=0.50001f);
+        require(std::fabs(v-as_float(before[i+5]))*float(height)<=0.50001f);
+    }
+}
+void uv_pair(unsigned kind,unsigned geometry,bool use_direct){
+    start();direct=use_direct;direct_ok=use_direct;
+    Asset a(kind,2,12,0,geometry,true);certificate(a,true);bind_asset(a);
+    require(re4dc_actor_submit(&a.p)==1);require(headers.size()==1 && !(headers[0]&kPcwUv16));
+    const auto baseline=ta;
+    ta.clear();headers.clear();locks=unlocks=0;
+    certificate(a); // Original UV values and all geometry remain the same.
+    require(re4dc_actor_submit(&a.p)==1);require(headers.size()==1 && (headers[0]&kPcwUv16));
+    ++selected_uv;require(locks==unlocks);
+    compare_vertices(baseline,ta,bound_width,bound_height);
+    for(std::size_t at=0;at<calls.size();at+=4)require(calls[at]<10U); // FAST_ONLY emits no light kernel.
+}
+void uv_refusals(){
+    for(unsigned reason=0;reason<4;++reason){
+        start();Asset a(1,1,12);certificate(a);bind_asset(a);
+        if(reason==0)certificate(a,true);
+        if(reason==1)bound_width=512;
+        if(reason==2)bound_width=7;
+        if(reason==3)us=std::numeric_limits<float>::infinity();
+        require(re4dc_actor_submit(&a.p)==1);
+        require(headers.size()==1 && !(headers[0]&kPcwUv16));
+        require(locks==unlocks);
+    }
+    start();Asset a(1,1,12);certificate(a);bind_asset(a);
+    direct_ok=false;begin_ok=false;
+    require(re4dc_actor_submit(&a.p)==1);require(headers.empty());require(request.pending==0);
+    begin_ok=true;Re4dcModelPacket packet{};
+    require(re4dc_model_packet_begin(&a.p,&packet)==1);
+    require(request.result==re4dc::format32::NotRequested && !(headers.back()&kPcwUv16));
+}
+void cone_admission(){
+    start();Asset a(0,2,12);a.p.cull=1;certificate(a);bind_asset(a);
+    const float near=a.p.projection[6]/(a.p.projection[5]-1.f),far=a.p.projection[6]/a.p.projection[5];
+    Frame& f=*prepare_frame(a.p,near,far);unsigned cls=0;
+    const auto* cones=abc_part(a.p,a.p.stream,f,cls);
+    require(cones && cls==1);++selected_cone;
+    AbcEye eye;require(abc_eye(f,a.p.cull,cones[0].pal,eye));require(abc_reject(cones[0],eye));
+    a.p.static_geometry=0;require(!abc_part(a.p,a.p.stream,f,cls));a.p.static_geometry=1;
+    const void* old_info=a.p.info;a.p.info=&f;require(!abc_part(a.p,a.p.stream,f,cls));a.p.info=old_info;
+    auto* h=reinterpret_cast<BlobHeader*>(a.stream.data());
+    auto* tail=reinterpret_cast<AbcTail*>(reinterpret_cast<u8*>(a.stream.data())+abc_tail_at(a.p.stream_bytes,h->meshlets));
+    const auto old_bytes=tail->bytes;tail->bytes=(tail->bytes&0xffffffU)|(7U<<24);require(!abc_table(a.p.stream,a.p.stream_bytes));tail->bytes=old_bytes;
+    tail->tag=kAbcTag;require(!abc_table(a.p.stream,a.p.stream_bytes));tail->tag=kAbcTag32;
+    a.p.blend=1;require(!abc_part(a.p,a.p.stream,f,cls));a.p.blend=0;
+    require(abc_part(a.p,a.p.stream,f,cls));
+    auto near_guard=eye.guard;near_guard.near=1000.f;AbcEye close=eye;close.guard=near_guard;require(!abc_reject(cones[0],close));
+}
+void converter_certificate(){
+    for(unsigned magnitude:{1U,128U,256U,1036U}){
+        start();Asset a(0,1,12);a.p.cull=1;bind_asset(a);
+        std::fill(a.stream.begin(),a.stream.end(),0U);a.p.stream_bytes=512;
+        auto* gx=reinterpret_cast<u8*>(a.stream.data());gx[0]=0x90;gx[1]=0;gx[2]=3;
+        for(unsigned v=0;v<3;++v){
+            gx[3+8*v+1]=u8(v);gx[3+8*v+3]=u8(v);gx[3+8*v+5]=0;gx[3+8*v+7]=u8(v);
+            a.uv[2*v]=u16(magnitude);a.uv[2*v+1]=0;
+        }
+        const unsigned plain_before=abc_rec_plain;
+        const BlobHeader* converted=convert(a.p);
+        require(converted && converted==reinterpret_cast<const BlobHeader*>(a.p.stream));
+        const unsigned expected=re4dc::format32::uv_certificate_add(re4dc::format32::kUvCertificateEmpty,int(magnitude));
+        require(uv_excess_bits(*converted)==expected);
+        require(abc_rec_plain>plain_before); // The =2 reference parsed GX before publication.
+        require(abc_table(a.p.stream,a.p.stream_bytes));
+    }
+}
+void stale_uv_inputs(){
+    for(unsigned style=0;style<3;++style){
+        start();Asset a(1,1,12);certificate(a);bind_asset(a);
+        auto& h=*reinterpret_cast<BlobHeader*>(a.stream.data());
+        const int raw=style==2?-128:1;
+        const unsigned code=re4dc::format32::uv_certificate_add(re4dc::format32::kUvCertificateEmpty,raw);
+        h.flags=u8((h.flags&0x83U)|(code<<2));
+        for(auto& value:a.uv)value=u16(raw);
+        if(style==2)bound_width=bound_height=256;
+        require(re4dc_actor_submit(&a.p)==1);require(headers.back()&kPcwUv16);
+        std::vector<u16> replacement(a.uv.size(),1036);
+        if(style==0)a.p.uv=reinterpret_cast<const u8*>(replacement.data());
+        if(style==1)for(auto& value:a.uv)value=1036;
+        if(style==2)a.p.flags&=~0x80000000U;
+        ta.clear();headers.clear();locks=unlocks=0;
+        require(re4dc_actor_submit(&a.p)==1);
+        require(headers.size()==1 && !(headers[0]&kPcwUv16));
+        require(locks==unlocks);
+    }
+}
+#if RE4DC_COARSE_ONE_SUBMIT
+void grouped_formats(){
+    start();std::array<std::unique_ptr<Asset>,4> assets;
+    std::array<Re4dcActorChunk,4> chunks;
+    for(unsigned i=0;i<4;++i){
+        assets[i]=std::make_unique<Asset>(1,1,12);certificate(*assets[i],i==2);bind_asset(*assets[i]);
+        auto& a=*assets[i];chunks[i]={&a,a.p.stream,a.p.uv,a.p.modelview,a.p.stream_bytes,a.p.position_count,a.p.normal_count};
+    }
+    Re4dcModelPart p=assets[0]->p;
+    require(re4dc_actor_submit_chunks(&p,chunks.data(),chunks.size())==15U);
+    require(locks==unlocks);
+#if RE4DC_COARSE_ONE_SUBMIT == 1
+    require(headers.size()==3); // 16+16 share, legacy32, then16.
+    require((headers[0]&kPcwUv16) && !(headers[1]&kPcwUv16) && (headers[2]&kPcwUv16));
+#else
+    require(headers.size()>=3); // Diagnostic arm emits each individual reference too.
+    require(one_chk.word_mismatch==0 && one_chk.header_mismatch==0 && one_chk.result_mismatch==0);
+#endif
+    selected_uv+=3;
+}
+#endif
+} // namespace check
+int main(){
+    for(unsigned kind:{0U,1U,3U,4U})for(unsigned geometry:{0U,1U,4U})for(bool direct:{false,true})
+        check::uv_pair(kind,geometry,direct);
+    check::uv_refusals();check::cone_admission();check::converter_certificate();check::stale_uv_inputs();
+#if RE4DC_COARSE_ONE_SUBMIT
+    check::grouped_formats();
+#endif
+    std::printf("{\"checks\":%u,\"uv_admitted\":%u,\"cone_admitted\":%u}\n",check::assertions,check::selected_uv,check::selected_cone);
+}

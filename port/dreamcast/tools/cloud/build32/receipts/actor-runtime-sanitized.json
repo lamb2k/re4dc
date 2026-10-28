@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "scope": "Whole production actor TU: Build32 format/header/ownership integration.\n\nThe established hosted AVK and SQ adapters are explicit platform boundaries.\nThe production converter, cone admission, clipping, fast lighting and chunk\nwindow control execute unchanged. Native UI binding is represented by its\nactual pure admission helper and request lifecycle; target compilation/link\nand private hardware tests qualify the real UI implementation separately.\n",
+  "profiles": [
+    {
+      "grouped": 0,
+      "result": {
+        "checks": 4354,
+        "uv_admitted": 24,
+        "cone_admitted": 1
+      },
+      "command_sha256": "d2fc9afa3a103485a08773e35f70fc197f194da0bc77a73f36a578b74d14520d"
+    },
+    {
+      "grouped": 1,
+      "result": {
+        "checks": 4358,
+        "uv_admitted": 27,
+        "cone_admitted": 1
+      },
+      "command_sha256": "910cc3024a97eb047684dfda3de7e4845288b1ae41e7c7e8f3ade4cdc836a230"
+    },
+    {
+      "grouped": 2,
+      "result": {
+        "checks": 4358,
+        "uv_admitted": 27,
+        "cone_admitted": 1
+      },
+      "command_sha256": "f53bac69d3545d96377097f86b32842b427660201f3bdd894139d4f34c1b59cb"
+    }
+  ],
+  "adaptations": {
+    "avk_admission": "#if RE4DC_ACTOR_VTX_KERNEL && defined(__sh__) && RE4DC_ACTOR_ASM && !defined(ACTOR_TEST_XMTRX)",
+    "target_abi_assertions": "static_assert(__builtin_offsetof(AvkPos, matrix) == 28 && __builtin_offsetof(AvkPos, width) == 40 &&\n              __builtin_offsetof(AvkPos, bv) == 68, \"avk_sh4.S AvkPos\");\nstatic_assert(__builtin_offsetof(AvkLight, dirs) == 24 && __builtin_offsetof(AvkLight, alpha) == 36,\n              \"avk_sh4.S AvkLight\");",
+    "meshlet_transport": "Existing production portable copy, including index EOL flags, for SQ and packet.",
+    "strip_transport": "SQ strip copy: all 8 words, final EOL, MOVCA command policy."
+  },
+  "sanitizers": "address,undefined; leak detection disabled for runner /proc restriction",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build32/actor_runtime_host.py": "0b4cc91623bd53b3eed3026e3f71166405d94fb75e7a09a34926c818fa97d38a",
+    "port/dreamcast/tools/cloud/build32/actor_runtime_cases.cpp.in": "a3277268a2512b31423c04432b8f5e593fcf21f2c9502afadcdaffacb9eb4c33",
+    "port/dreamcast/tools/d367/actor_setup_lean/check_runtime.py": "f6f8000e7a879bfc5eb646af3858309c62dff1f8f5831c8f9d2d292da1e7b9ff",
+    "port/dreamcast/tools/d367/actor_setup_lean/fixture_actor.cpp.in": "39af845a9578aebc6a599e6f3417ba8ffe5ab0c6b7d80e889951e98c61661246",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f",
+    "port/dreamcast/game/platform/include/actor_cone32.hpp": "7033f9bbefd340f32cfec1eafcc4992f60622c78bff28c61381aeba71adbcad3",
+    "port/dreamcast/game/platform/include/actor_format32_uv.hpp": "af9466d0e0b8a0e2c4f6affb991de49cc5f8f1f5b8ec09d4bfd08280051ae8d6",
+    "port/dreamcast/game/platform/include/actor_format32_uv_source.inc": "f5a2097fb22b39a9c32bb275e1294041f3966d4d0204de167cf1f2f3519f3be5"
+  }
+}
