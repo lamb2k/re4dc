@@ -3245,6 +3245,8 @@ include effects30.mk
 include pvr_rtt.mk
 # HW_FOG_HAZE (lane hwfog 2026-10-14): the distant camera haze as PVR table fog
 include hwfog.mk
+# gcleft26 (MODEL_PART_DUMP diagnostic; default 0: no effect).
+include partdump.mk
 # D367 scenery30 (PLAN_ADMIT_LEAN, SCENERY_GATE, MODEL_SLAB_LATCH; default off: no effect).
 include scenery30.mk
 # D367 records30 (FRONT_TEXOBJ; default off: no effect).

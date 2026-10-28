@@ -822,6 +822,12 @@ unsigned next_pcw_set,next_pcw_clear; // actors30: re4dc_model_next_header_pcw, 
 #endif
 int model_diagnostic=-1;
 unsigned model_parts,model_invalid,model_resource,model_overflow,model_input,model_output,model_peak,model_presented;
+#if defined(RE4DC_MODEL_PART_DUMP)
+unsigned model_dump_crc,model_dump_fnv;
+#define RE4DC_PART_DUMP_KEY(k) (model_dump_crc=(k).crc,model_dump_fnv=(k).fnv)
+#else
+#define RE4DC_PART_DUMP_KEY(k) ((void)0)
+#endif
 unsigned model_capacity_rejects,model_state_rejects,model_texture_rejects,model_wrap_rejects,model_empty_parts,model_scale_rebuilds;
 unsigned model_state_bits[8];
 unsigned model_alpha_material,model_alpha_vertex,model_alpha_faded;
@@ -6537,7 +6543,7 @@ if(!handle){
     // bit on this part's slab copy only (the cached header stays generic).
     if(re4dc_mv_receiver && list==PVR_LIST_OP_POLY){model_packets[model_used].flags|=PVR_TA_CMD_MODIFIER;++mv_receivers;}
 #endif
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
 #if RE4DC_MESH_TEXTURES
@@ -6583,6 +6589,11 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     }
 }
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_MODEL_PART_DUMP)
+    if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
+        re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);
+    model_dump_crc=model_dump_fnv=0;
+#endif
     if(reason==0){++model_parts;if(!output)++model_empty_parts;}else if(reason==1)++model_invalid;else if(reason==2)++model_resource;else ++model_overflow;
     model_input+=input;model_output+=output;
 }
@@ -6820,7 +6831,7 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
     re4dc_front_header_built(&header,p->alpha_state);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     if(h->scale_rebuild)++model_scale_rebuilds;
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
@@ -7065,7 +7076,7 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=1.0f;out->v_scale=1.0f;
@@ -8100,7 +8111,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -8150,7 +8161,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -8402,7 +8413,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         ui_order_polygon_header(header);
 #endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-        RE4DC_GAD_HIT(handle->key);
+        RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
         if(!stream_scene)stream_open();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -8516,7 +8527,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     model_pending=model_used+count;model_handle=handle;
     if(!stream_scene)stream_open();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
