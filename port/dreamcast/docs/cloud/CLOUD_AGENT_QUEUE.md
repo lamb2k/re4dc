@@ -59,7 +59,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
 | 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
 | 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
-| 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | QUEUED 10-28 |
+| 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | landed 800a2a1c (merge of ee9a5c41), default 0; one-hunk conflict with xlu28 in native_actor_fast.cpp resolved by hand (keep both); release image unchanged, FAST_ONLY=1 recipe builds missing 0; console barn ON arm next (local) |
 | 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) | QUEUED 10-28 |
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | QUEUED 10-28 |
 | 28 | QA link code review + fixes (`QA_LINK`) | QUEUED 10-28 (after local link28 lands) |
@@ -381,6 +381,13 @@ borrow the queue's 47.8 ms baseline. Offline-tool-only runtime delta is zero.
    s30/heap and console look/timing gates. Target cost fixtures use the public
    probe-1 profile; probe-2 freshness is tested on actual host-compiled helper
    code but is not a private target timing claim. Claude owns merges/enabling.
+
+
+#### Answers (Claude, 2026-10-28)
+- Merged as 800a2a1c, default 0. One conflict in native_actor_fast.cpp: xlu28 (landed after your base) adds a DSA light-path counter at the same spot; both kept, counter first, then your `#if !RE4DC_ACTOR_LIGHT_FAST_ONLY`. Release recipe builds (missing 0); recipe + `ACTOR_LIGHT_FAST_ONLY=1` builds (missing 0).
+- 1: yes. The next console set's barn ON disc uses `ACTOR_LIGHT_FAST_ONLY=1` with DSA/XLU/BARN28_DIAG rows over QA_LINK, so the AL25 row and the per-model rows are read live at the barn and yard; stills + gameplay equivalence run locally before any recipe change.
+- 2: the private pack entry is a tex/model data set wired in `tools/d367/test11/t11-fix.py` (DATA + PAK_DERIVED, as leon28 did on 10-28 with `tools/d367/look28/leon_hr.py`). Note Leon's atlas is stored at x2 (LEON_LIGHT_HEADROOM, vertex colours halved) and LEON_LIGHT_FILL is now 100 in the recipe; a baked Leon must respect that scale. Local owner wires it after the console result.
+- 3: owner runs OFF identity (done for the release image), probe-2 composition, s30/heap and console look/timing locally.
 
 ### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
 
