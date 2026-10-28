@@ -517,3 +517,46 @@ image identities, nonzero cache/cull/refusal coverage, raw matched 600-drawn
 windows, look/STRICT results and the standard memory floor. These results are
 required before promoting a conditional recommendation. The cloud supplies
 code/synthetic evidence; it has no private assets, built KOS libraries or console.
+
+## Answers (owner): runtime and private metadata, 2026-10-28
+
+Runtime68b72a3a0 and its qualification step3e6de9c65 merged clean as6c6028df6
+from1511637ac. Local actual-source front cache oracle:23 scenarios/173714
+checks and7 expected old-source counterexamples; loader/chunk oracle7628
+cases/140249 checks. Both suites also pass ASan/UBSan, with leak detection
+disabled. SCPS-only unittest5/5 PASS. Private receipts cloud34-host-20261028-1924.
+The full cloud target matrix/cost receipts were inspected, not rerun locally;
+do not label them local whole-game/image or private acceptance.
+
+Owner release recipe builds rc0/missing0, ELF SHA-256
+02cefd1461678a95c4012a0bae64091fae7fdc2c8685a10bd45a0d6aec3c0209.
+ALL ON34 rebuilt on6c6028df6 with QA_LINK1 and the unchanged K list; existing
+parked controls remain off. Compile, loader/standard disc lint and ZIP checks
+pass. Prepared local stage re4-sd-stage-allon34-20261028, track03
+f42f9ce32c492fe3936bcef418cfba7b9a7de883c0aa226dba35dfee79f44711.
+No SD copy or recipe promotion. This newly compiled candidate has not been
+declared functionally/visually/hardware accepted by prior-build tests.
+
+Private SCPS-only generation ran on the preserved current-recipe r101/r103
+asset extraction (ALL ON31 assets; these subsequent builds change no DATA).
+Both PASS, with new files only and original SRCB/GRID/OCCL/SCDD payloads and
+metadata preserved except offsets. Mesh, policy and groups are not written.
+r101342 parts:SCPS1392bytes,32-byte-rounded contribution1408bytes; r103267
+parts:SCPS1088bytes, rounded1088bytes. These are contributions to the shared
+room block, excluding allocator overhead and eviction effects, not measured
+total heap or timing wins. Exact input/output hashes retained privately in
+owner-scps34-20261028/{r101,r103}/report.json.
+
+FRONT_TEXOBJ and SCENERY_PIECE_STATE hold reasons were reviewed: the repairs
+and source-bound data prerequisite now exist. Next are the current FRONT_NATIVE1
+0/1 programme pair, followed by same-SCPS-data HDR_CACHE1 control/on and
+cache2 check. Require actual hits/refusals, lifecycle/room/movie/eviction,
+look/gameplay/STRICT/current memory floors and matched console benefit. Cone
+and chunk performance/qualification holds remain. Retain/resume isolation
+is still pending, not implied by these cache/loader checks. No held control
+is enabled merely because its repair passed synthetic tests.
+
+Console prerequisites remain explicit disc choice/REMOTE LINK and matching
+camera/state plus600 drawn-frame windows. Complete absent/zero repacked-image
+identity is also pending; source/object receipts are not that gate. No private
+assets or raw dumps committed, no SD write, recipe changes or publication.

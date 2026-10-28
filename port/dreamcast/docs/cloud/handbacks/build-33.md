@@ -531,3 +531,18 @@ capture/effective-state normalization with aligned source tick/camera/pose,
 large/blended/near/moving-door/retirement cases, then look/STRICT/memory,
 full-image identity and matched whole-frame console qualification. No SD
 write, recipe promotion or publication.
+
+### Answers (owner): current combined-build door and UI samples
+
+On source36643bf8a, both STATIC_OBJ_BATCH33=1/0 actual Thompson r105->r101
+source-button door cases pass, freeze released and normal gameplay continuing;
+WPLAN reopens r101 with loads2/declines0. Each bounded60s cache-interpreter/
+GDEMU1 run ends reader0/errors empty/overruns0, owned emulator exited. This
+advances room-retirement/reload coverage, not full-route/movie/STRICT or heap.
+Two extra60s UI-capture runs also finish clean with3 asynchronous samples and
+both buffers per arm. Reviewed inventory equipment/Leon are present, but
+animation/top-label/selection phases differ and no exact source-tick alignment
+exists. No broad look/effective-state equivalence PASS, post-close world-image
+proof or speed claim. Private hashes and scope: owner-allon33-off-20261028/
+FOLLOWUPS.json and FOLLOWUPS.md. No new Flycast observer/build or exactness
+lane introduced; owner continues encounter/look and current cloud fixes.
