@@ -1388,6 +1388,22 @@ CROWD_FLAT ?= 0
 # ACTOR_SKIN_FTRV=1: skinned palette matrices (screen x [R*q | t]) built with FTRV instead of
 # scalar maths (render only, native_actor_fast.cpp skin_position_matrix).
 ACTOR_SKIN_FTRV ?= 0
+# ACTOR_LIGHT_FAST_ONLY=1 (Build 25, render approximation): one live part colour
+# for every native/generic model path; static RGB only multiplies it. No vertex
+# lighting evaluator or runtime relight is compiled. Default 0 preserves source/objects.
+ACTOR_LIGHT_FAST_ONLY ?= 0
+ifneq ($(words $(ACTOR_LIGHT_FAST_ONLY)),1)
+$(error ACTOR_LIGHT_FAST_ONLY must be 0 or 1)
+endif
+ifeq ($(filter $(ACTOR_LIGHT_FAST_ONLY),0 1),)
+$(error ACTOR_LIGHT_FAST_ONLY must be 0 or 1)
+endif
+ifeq ($(ACTOR_LIGHT_FAST_ONLY),1)
+ifneq ($(NATIVE_ACTOR)$(NATIVE_ACTOR_FAST),11)
+$(error ACTOR_LIGHT_FAST_ONLY needs NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_model.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_LIGHT_FAST_ONLY=1
+endif
 # ACTOR_EXACT_FAST=1 (render only; default 1 with ROUTE_CH21=1, else 0: no effect): the actor path's exact per-vertex
 # lighting (parts whose lights do not fold into three directions, e.g. r119's trees under up to eight flickering torch
 # lights: ~46 hw ms a frame) with the per-light constants out of the vertex loop and fsrra for the light distance

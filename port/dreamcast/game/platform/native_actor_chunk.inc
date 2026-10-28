@@ -98,6 +98,7 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
 #endif
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Light once per distinct normal: pass_lights (fast fold) over the chunk's distinct normal indices into a side
 // cache, then each record takes its normal's colour word. A record's lit colour is a function of its normal (and
 // the normal's palette entry) and the part's alpha only, unless the part has per-vertex alpha (e.colors), which
@@ -105,7 +106,9 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
 u8 chunk_nsrc[kMaxVertices];
 u16 chunk_nkey[256];   // open-address table: normal index + 1 (0 = empty)
 u8 chunk_nval[256];
+#endif
 unsigned chunk_backend_meshlets, chunk_backend_fallbacks;
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 struct ChunkLightStats { unsigned records, normals; } chunk_light_stats;
 void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     if (e.colors || !n) { pass_lights(e, L, r, n); return; }
@@ -158,6 +161,8 @@ void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     }
 #endif
 }
+
+#endif
 
 // The chunk sink: today's store-queue window (adapter) or, with CHUNK_SUBMIT, the shared back end (chunk_submit.h v1).
 #if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND

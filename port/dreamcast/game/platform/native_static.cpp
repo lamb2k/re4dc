@@ -1,3 +1,6 @@
+#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.h"
+#endif
 #include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
@@ -2125,9 +2128,14 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
 #endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
     const std::uint32_t* palette=v.package.palette();
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    Re4dcActorLight25Colour light25_colour;
+    re4dc_actor_light25_part_colour(&p,nullptr,&light25_colour);
+#else
     re4dc::render::PreparedSourceLights lights;
     if(p.lighting)lights=re4dc::render::prepare_actor_lights(*p.lighting);
     const float* m=p.modelview;
+#endif
     const auto* lets=v.package.meshlets()+part.first_meshlet;
     // v3 indexed meshlets share their part's pool: light the pool [lo, hi)
     // once (adopt() proved pools disjoint) instead of each meshlet's corners.
@@ -2145,6 +2153,15 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
 #endif
             const std::uint8_t color[4]={std::uint8_t(argb>>16),std::uint8_t(argb>>8),std::uint8_t(argb),std::uint8_t(argb>>24)};
             float rgb[3]={1.0f,1.0f,1.0f};
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+            if(p.lighting){
+                const unsigned value=(p.lighting->ambient_vertex || p.lighting->material_vertex)
+                    ? re4dc_actor_light25_multiply(light25_colour,color) : light25_colour.rgb;
+                rgb[0]=float((value>>16)&255U)/255.0f;
+                rgb[1]=float((value>>8)&255U)/255.0f;
+                rgb[2]=float(value&255U)/255.0f;
+            }
+#else
             if(p.lighting){
                 const float x=mesh.origin[0]+float(corner.x)*mesh.step[0];
                 const float y=mesh.origin[1]+float(corner.y)*mesh.step[1];
@@ -2168,6 +2185,7 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
                     *p.lighting,lights,color,rgb);
 #endif
             }
+#endif
             corner.color=pack1555(rgb,color[3]);
         }
     }

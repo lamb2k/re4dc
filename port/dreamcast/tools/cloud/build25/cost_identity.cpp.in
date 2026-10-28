@@ -1,0 +1,8 @@
+// Separate compilation keeps the real caller's identity branch/call intact.
+// The synthetic identity hook has no game-object backing. Its instructions
+// are counted; the production model_bridge identity lookup cost is unpriced.
+extern "C" {
+volatile int fixture_model_id = 0x40;
+int re4dc_actor_model_id(const void*) { return fixture_model_id; }
+int re4dc_actor_obj_id(const void*) { return -1; }
+}

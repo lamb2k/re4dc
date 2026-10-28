@@ -1,0 +1,12 @@
+{
+  "ambient_rgb": [0.45, 0.45, 0.45],
+  "directional_lights": [
+    {"toward_light": [0.3, 1.0, 0.5], "rgb": [0.55, 0.55, 0.55]}
+  ],
+  "ao_samples": 32,
+  "ao_distance_mm": 400.0,
+  "ao_strength": 0.6,
+  "ao_floor": 0.4,
+  "ray_bias_mm": 0.5,
+  "exclude_occluder_infos": [7]
+}

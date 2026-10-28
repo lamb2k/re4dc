@@ -6,6 +6,9 @@
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.h"
+#endif
 #include "include/gc_asset_members.h"
 #if RE4DC_GC_ASSET_GATE
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void*,const void**);
@@ -165,6 +168,7 @@ struct PreparedModelBatch {
         if(!position_valid || !position.matches(p)){
             position.assign(p);position_valid=true;position_generation=next();retained_position_generation=next();shade_changed=true;++preparation_stats.position_states;
         }else ++preparation_stats.position_state_hits;
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
         if(p.lighting){const auto& source=*p.lighting;
             if(!normal_valid || !normal.matches(p)){
                 normal.assign(p);normal_valid=true;normal_generation=next();retained_normal_generation=next();shade_changed=true;++preparation_stats.normal_states;
@@ -183,6 +187,7 @@ struct PreparedModelBatch {
         // Mutable source RGB has no publication serial yet. Conservatively invalidate
         // it once at the submission boundary, never compare color keys per vertex.
         if(p.lighting && (p.lighting->ambient_vertex || p.lighting->material_vertex))shade_changed=true;
+#endif
         if(shade_changed){shade_generation=next();retained_shade_generation=next();}
     }
 };
@@ -233,6 +238,9 @@ struct Builder {
         pending_intact=pending_reconstructed=0;
     }
     const re4dc::render::DrawPlanBounds* bounds=nullptr;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    Re4dcActorLight25Colour light25_colour{0xFFFFFFU,{65536U,65536U,65536U}};
+#endif
 #if RE4DC_D349_RENDERER_STACK
     re4dc::render::PreparedSourceLights lights{};
     StaticLightContext* static_context=nullptr;
@@ -377,7 +385,18 @@ struct Builder {
         float w=(p.flags&0x80000000U)?s16(uv+2)/256.f:u16(uv+2)/32768.f;
         v.u=(u+p.uv_offset[0])*packet.u_scale;v.v=(w+p.uv_offset[1])*packet.v_scale;
         v.light_red=v.light_green=v.light_blue=1;
-#if RE4DC_D349_RENDERER_STACK
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        // Representation fallback uses the same once-per-part colour. It never
+        // transforms normals or invokes the generic per-vertex evaluator.
+        if(p.lighting){
+            unsigned rgb=light25_colour.rgb;
+            if(p.colors && (p.lighting->ambient_vertex || p.lighting->material_vertex))
+                rgb=re4dc_actor_light25_multiply(light25_colour,p.colors+ci*4U);
+            v.light_red=float((rgb>>16)&255U)/255.0f;
+            v.light_green=float((rgb>>8)&255U)/255.0f;
+            v.light_blue=float(rgb&255U)/255.0f;
+        }
+#elif RE4DC_D349_RENDERER_STACK
         if(p.lighting){
             RE4DC_PROFILE_SCOPE(Lighting);
             auto& legacy_shade=shades[(vi*7+ni*17+ci)&63U];
@@ -974,8 +993,13 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if RE4DC_D349_RENDERER_STACK
     if(re4dc_model_defer_part(p))return;
     b.batch=acquire_batch(*p);
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
     if(!b.batch && p->lighting)b.lights=re4dc::render::prepare_actor_lights(*p->lighting);
     b.static_context=b.batch?nullptr:prepare_room_static_lighting(*p);
+#endif
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    re4dc_actor_light25_part_colour(p,nullptr,&b.light25_colour);
 #endif
 #if RE4DC_NATIVE_REUSE_AUDIT && RE4DC_D349_RENDERER_STACK
     re4dc::reuse_audit::Scope reuse_audit(*p,plan,b.bounds,b.packet,p->lighting?(b.batch?b.batch->lights.count:b.lights.count):0);

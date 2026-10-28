@@ -1,0 +1,121 @@
+// Included after the complete production native_actor_fast.cpp. All light
+// work below calls that translation unit; there is no copied light equation.
+extern "C" {
+Re4dcModelPart fixture_part;
+Frame fixture_frame;
+SourceLighting fixture_source;
+Lights fixture_lights;
+alignas(32) short fixture_positions[128 * 4];
+alignas(32) signed char fixture_normals[128 * 4];
+alignas(32) u16 fixture_records[128 * 4];
+alignas(32) pvr_vertex_t fixture_cache[128];
+alignas(32) u8 fixture_colors[128 * 4];
+float fixture_center[3];
+unsigned fixture_kind, fixture_fold_result;
+unsigned fixture_stats[9];
+float re4dc_screen_wf = 640.0f, re4dc_screen_hf = 480.0f;
+void re4dc_log(const char*, ...) {}
+}
+
+extern "C" void fixture_prepare(unsigned kind) {
+    fixture_kind = kind;
+    fixture_part = Re4dcModelPart{};
+    fixture_frame = Frame{};
+    fixture_source = SourceLighting{};
+    fixture_lights = Lights{};
+    fixture_frame.mode = kRigid;
+    fixture_frame.q = 0.5f;
+    fixture_frame.nq = 1.0f / 64.0f;
+    fixture_frame.small_normals = true;
+    fixture_frame.positions = reinterpret_cast<const u8*>(fixture_positions);
+    fixture_frame.position_stride = 8;
+    fixture_frame.normals = reinterpret_cast<const u8*>(fixture_normals);
+    fixture_frame.normal_stride = 4;
+    fixture_part.lighting = &fixture_source;
+    fixture_part.colors = fixture_colors;
+    fixture_part.model = reinterpret_cast<const void*>(0x123400U);
+    fixture_part.modelview[0] = fixture_part.modelview[5] = fixture_part.modelview[10] = 1.0f;
+    fixture_part.modelview[11] = -32.0f;
+    fixture_source.normal_matrix[0] = fixture_source.normal_matrix[5] = fixture_source.normal_matrix[10] = 1.0f;
+    fixture_source.enable = 1;
+    fixture_source.mask = kind == 2 ? 255U : 7U;
+    fixture_source.diffuse = kind == 3 ? 1U : 2U;
+    fixture_source.material_vertex = kind == 0;
+    for (unsigned c = 0; c < 3; ++c) {
+        fixture_source.ambient[c] = u8(24U + 8U * c);
+        fixture_source.material[c] = kind == 1 || kind == 4 ? u8(128) : u8(255);
+    }
+    if (kind == 4) fixture_source.normal_matrix[3] = 1.0e30f;
+    for (unsigned j = 0; j < 8; ++j) {
+        SourceLight& light = fixture_source.lights[j];
+        // The qualified SH4 interpreter accepts FSRRA(1) only. Unit distance
+        // preserves the deployed exact-fast instruction/address path without
+        // inventing a model for SH4 approximate reciprocal-square-root bits.
+        light.position[2] = -31.0f;
+        light.direction[2] = 1.0f;
+        light.a[0] = 1.0f;
+        light.k[0] = 1.0f;
+        light.k[1] = 0.03125f;
+        light.color[0] = u8(40 + 3 * j);
+        light.color[1] = u8(32 + 2 * j);
+        light.color[2] = u8(24 + j);
+    }
+    for (unsigned i = 0; i < 128; ++i) {
+        fixture_normals[4 * i + 2] = 64;
+        for (unsigned j = 0; j < 4; ++j) fixture_records[4 * i + j] = u16(i);
+        fixture_colors[4 * i] = u8(24 + i);
+        fixture_colors[4 * i + 1] = u8(255 - i);
+        fixture_colors[4 * i + 2] = u8(2 * i);
+        fixture_colors[4 * i + 3] = u8(80 + i);
+        fixture_cache[i].argb = 0xaabbccddU;
+    }
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_fold(unsigned) {
+    fixture_fold_result = RE4DC_PART_LIGHTS(fixture_part, fixture_frame, fixture_center, fixture_lights);
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    if (!fixture_fold_result)
+        RE4DC_PREPARED(fixture_lights) = re4dc::render::prepare_actor_lights(fixture_source);
+#endif
+    return fixture_fold_result;
+}
+
+extern "C" __attribute__((noinline)) unsigned fixture_pass(unsigned n) {
+    Part e{fixture_part, fixture_frame,
+           {fixture_part.projection, fixture_part.viewport},
+           {5.0f, 1000.0f, 640.0f, 480.0f, project, nullptr}};
+    e.cache.v = fixture_cache;
+    e.colors = fixture_colors;
+    e.alpha = 0xab000000U;
+    const Records r{fixture_records, 4U, 0U, true};
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    pass_fast_only(e, fixture_lights, r, n);
+#else
+    // Every fixture deliberately triggers the old exact route. Calling the
+    // old pass directly isolates its per-part/corner cost from draw dispatch.
+    pass_lights_exact(e, fixture_lights, r, n);
+#endif
+    return fixture_cache[0].argb;
+}
+
+extern "C" unsigned fixture_read_stats(unsigned) {
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    static_assert(sizeof(Re4dcActorLight25Stats) == sizeof(fixture_stats));
+    re4dc_actor_light25_snapshot(reinterpret_cast<Re4dcActorLight25Stats*>(fixture_stats));
+#endif
+    return fixture_stats[1];
+}
+
+extern "C" const std::uintptr_t fixture_layout[] = {
+    2, sizeof(Part), sizeof(Frame), sizeof(Lights), sizeof(SourceLighting), sizeof(Re4dcModelPart),
+    reinterpret_cast<std::uintptr_t>(&fixture_part),
+    reinterpret_cast<std::uintptr_t>(&fixture_frame),
+    reinterpret_cast<std::uintptr_t>(&fixture_source),
+    reinterpret_cast<std::uintptr_t>(&fixture_lights),
+    reinterpret_cast<std::uintptr_t>(fixture_positions),
+    reinterpret_cast<std::uintptr_t>(fixture_normals),
+    reinterpret_cast<std::uintptr_t>(fixture_records),
+    reinterpret_cast<std::uintptr_t>(fixture_cache),
+    reinterpret_cast<std::uintptr_t>(fixture_colors),
+    offsetof(pvr_vertex_t, argb), offsetof(Lights, constant_rgb),
+};

@@ -1,6 +1,9 @@
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 #include "platform/include/draw_setup_audit.h"
 #endif
+#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "platform/include/actor_light_fast_only.h"
+#endif
 // QA menu (QA_MENU=1 in qamenu.mk; the tester QA disc only, never a release image). Lane qa20, user 2026-10-20.
 //
 // One general QA disc: a teleporter (chapter -> place, each place a warp rig fixture that sets the story state), the
@@ -262,6 +265,9 @@ QaGame g_game;
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
 char g_diag[8192];             // sealed draw audit + existing rows + log; QR keeps all pages
 unsigned g_diag_page;
+#elif defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+char g_diag[4096];             // light invariant/reason rows + existing rows and log
+unsigned g_diag_page;
 #else
 char g_diag[3072];             // the snapshot: "key=value" lines, then LOG and the last log lines
 #endif
@@ -325,7 +331,8 @@ int scratch_rows(int at) {
 #endif
 
 void snap_diag() {
-#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
     g_diag_page=0;
 #endif
     int a = 0;
@@ -393,6 +400,17 @@ void snap_diag() {
         }else a=addf(a,"world timing/vertices=NA collecting this room/View/PVS window\n");
 #endif
     } else a = addf(a, "ms10=NA\n");
+#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+    {
+        Re4dcActorLight25Stats s{};
+        re4dc_actor_light25_snapshot(&s);
+        a = addf(a, "AL25 lifetime parts=%u fallback=%u MUST=0\n", s.parts, s.fallback_parts);
+        a = addf(a, "AL25 avoided vcolour=%u diffuse_scale=%u lights_over3=%u probe_decline=%u basis=%u\n",
+                 s.avoided[0], s.avoided[1], s.avoided[2], s.avoided[3], s.avoided[4]);
+        a = addf(a, "AL25 vertices flat=%u multiply=%u (avoided != fallback)\n",
+                 s.flat_vertices, s.multiply_vertices);
+    }
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     for(unsigned i=0;i<re4dc::dsa24::line_count();++i){
         char row[240];
@@ -471,7 +489,8 @@ void draw_qr(const Fb& fb, int page) {
     fb_text(fb, tx, 120, 1, 2, 0x000000, "B: BACK");
     fb_text(fb, tx, 160, 1, 2, 0x000000, "PHOTO EACH PAGE");
 }
-#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
 unsigned diag_page_rows(const Fb& fb){return fb.h>92?unsigned((fb.h-76)/16):1U;}
 unsigned diag_rows(const Fb& fb,unsigned first,bool paint){
     unsigned cols=fb.w>60?unsigned((fb.w-60)/6):1U;
@@ -1123,7 +1142,8 @@ int run(Menu& m, bool boot) {
             }
         }
 #endif
-#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#if (defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT) || \
+    (defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY)
         if(m.screen==M_DIAG){
             const unsigned pages=diag_pages(fb);
             if(press&(CONT_DPAD_RIGHT|CONT_DPAD_DOWN)){
