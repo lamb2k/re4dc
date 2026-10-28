@@ -69,6 +69,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
 | 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed a4ae0c83 (merge of the Build 28 branch), default 0; merged clean, release recipe builds missing 0; report [handbacks/build-28.md](handbacks/build-28.md); console soak on the next QA link disc (local) |
 | 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`) | QUEUED 10-28 |
+| 30 | Public QA link kit for any KallistiOS project + agent skill (`dc-qalink` package, tools/docs only) | QUEUED 10-28 (after 29) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -343,6 +344,28 @@ Character drawing costs 63-110 ms per drawn frame there against ~14 ms elsewhere
 **Second console target (10-28, ALL ON disc = every landed speed switch on, Ganados dead):** standing at the r103 barn exit (pos about -27810, 32, -16810), looking OUT through the doorway at the far barn: **10.8 fps**, CPU about 45 ms per frame, graphics chip only 12 ms (13% busy). Same spot facing the stalls: **21.1 fps**, 33 ms. Logic, effects and characters cost the same both ways, so about **12 ms per frame is CPU world drawing of the outdoor view through the door**. Earlier counters at the barn also showed `w_clip_rebuild` 277, `w_clip_depth` 43, `w_screen_rebuild` 33 per drawn tick. In the sweep, cover the world path from inside a building looking out: selection (is anything culled by the doorway / interior cells, PS2_INTERIOR_CELLS is r100-only), draw distance vs the PS2 room camera, near-plane clip rebuilds, and per-piece setup. Propose the top fixes (portal/doorway culling from the PS2 data or an offline per-room visibility table are welcome) as default-off switches. Claude will send the WORLD_METER + DFA rows from a diagnostic disc at this spot.
 
 **Hand back** in `docs/cloud/handbacks/build-29.md` (ground rule "Stay mergeable"): the sweep table, the scanner's usage and fixture proof, the conversion flags and what they change, and the exact commands Claude runs on the private data.
+
+### Build 30: a public, generic QA link kit for KallistiOS projects (`dc-qalink`)
+
+**Why (user, 2026-10-28):** "can we also have the agent create a public package with an agent skill for the qa link in a generic form that others can integrate into their dreamcast kallistios projects with a concise readme?" Our modem link (console KOS libppp over the Dreamcast modem, a DreamPi relay, a PC tool) is what let us find the barn slowdown on real hardware without screen photos. Other homebrew developers can use the same thing.
+
+**Do:**
+- Extract the link into a self-contained package at `port/dreamcast/tools/dc-qalink/`, with nothing from RE4 in it: no game code, assets, names or knobs.
+  - **Console library:** C, for KallistiOS. Covers dial / hang-up / redial, bounded rings, telemetry rows (T), log lines (L), answers (A), marks (M) and a command callback the game registers.
+    - Keep Build 28's hardening: bounded producers, no blocking on the game thread, datagram size under the no-fragment limit, resumable multipart rows.
+    - Keep the KOS footprint documented: bytes, threads, stack.
+  - **Pi relay** (`dc_qalink_pi.py` + a systemd unit) and **PC tool** (`dc_qalink.py`: send, tail, status, capture start/stop with marker cut, session scripts), generalised from qalink_pi.py / qalink.py.
+    - Include the marker-cut lesson from 10-28: any echo of the marker counts, including the relay's own command line, because UDP can drop one.
+  - **A minimal example** KOS program that dials, sends a telemetry row each second and answers PING plus one custom command. It builds with a stock KOS toolchain (Makefile).
+  - **README.md, concise:** what it is, hardware needed (Dreamcast + modem, DreamPi or any pppd box), 5-step setup, the API in one table, the wire format in one table, limits, licence.
+  - **An agent skill** (`SKILL.md` with a name/description front matter, plus any helper scripts).
+    - It teaches a coding agent (Claude Code or similar) to integrate the library into a KOS project, set up the Pi, and drive capture sessions to measure on real hardware.
+    - Keep it generic and short.
+- **Licence:** MIT unless the repo's LICENSE forbids it; say which and why. List third-party pieces (KOS, libppp) with their licences.
+- **Proof:** the library and example compile against a stock KOS toolchain (or the closest you can run; say what you could not). The Pi/PC tools pass unit tests with a fake UDP peer, including loss and reordering. RE4's own link keeps working: either RE4 builds against the kit, or the kit is a clean copy and RE4 is untouched. Say which, and keep RE4 identity with all knobs off.
+- **Don't publish anything:** no new public repo, no release, no posts. Claude asks the user before anything goes public.
+
+**Hand back** in `docs/cloud/handbacks/build-30.md`: the package tree, sizes, what was generalised, test results, and the exact steps to publish it as its own repo when the user says so.
 
 ## Open questions back to Claude
 
