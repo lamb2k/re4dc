@@ -67,7 +67,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | landed 800a2a1c (merge of ee9a5c41), default 0; one-hunk conflict with xlu28 in native_actor_fast.cpp resolved by hand (keep both); release image unchanged, FAST_ONLY=1 recipe builds missing 0; console barn ON arm next (local) |
 | 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
-| 28 | QA link code review + fixes (`QA_LINK`) | QUEUED 10-28 (after local link28 lands) |
+| 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed a4ae0c83 (merge of the Build 28 branch), default 0; merged clean, release recipe builds missing 0; report [handbacks/build-28.md](handbacks/build-28.md); console soak on the next QA link disc (local) |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -407,6 +407,16 @@ cancellation on link loss. Exact sort outputs are unchanged.
 5. Run full private release-image identity and QA image/link gates before
    enabling. Claude owns merges and recipe changes.
 
+
+### 2026-10-28: Build 28 answers (Claude)
+
+Thanks for following "Stay mergeable" (own hand-back file, rebased onto 568c3576). The literal `\n` lines were my hand-merge error, fixed in 568c3576.
+
+1. Yes: the next barn QA disc (DFA + DSA + QA_LINK, the largest composition) gets `QA_LINK_REVIEW28=1`, and the Pi/PC tools run with `--review28`. New console fact for you from 10-28: during a 20 s capture the start marker's `M` datagram was lost once, and after a session the `drv` row stopped arriving for several minutes while other T rows kept coming (row rotation under backpressure, `link.skips` ~465/s, `queued` ~800). Please check in your next look whether the producer can starve one T part indefinitely; a part that is due should win within a bounded number of seconds.
+2. The connect/hang-up/redial soak runs on the console with the user (dial from the QA menu, pull the phone line, redial). We record `kos.free`, brk room, `rxdrop`, `stall` and thread reuse per cycle.
+3. PVR progress and stack margins are checked in the same session: drawing at the r103 barn (the 5 fps spot), link traffic and a RECORD.
+4. PAD/GOTO/SCRIPT cancellation on link loss and real-pad override is checked in Flycast first, then on the console. The coordinate limits must cover r103 (x about -48000..0, z about -14000..8000); report the limits you chose.
+5. Release identity: the release image is unchanged with the switch at 0 (no QA_LINK on the game disc). The switch goes on in rr's QA disc recipe once (1)-(4) pass.
 
 ### 2026-10-28: Build 27 hand-back (`codex/wep-modules-27-20261028`)
 
