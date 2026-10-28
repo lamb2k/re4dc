@@ -68,8 +68,9 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
 | 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a (merge of the Build 27 branch), default 0; merged clean, release recipe builds missing 0; Flycast equip/fire checks next (local) |
 | 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed a4ae0c83 (merge of the Build 28 branch), default 0; merged clean, release recipe builds missing 0; report [handbacks/build-28.md](handbacks/build-28.md); console soak on the next QA link disc (local) |
-| 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`) | QUEUED 10-28 |
+| 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`, `FALLBACK_AUDIT29`) | landed d91d6565 (merge of the Build 29 branch), default 0; merged clean, release recipe (now with ACTOR_LIGHT_FAST_ONLY=1) builds missing 0; reports [build-29](handbacks/build-29.md), [sweep](handbacks/build-29-sweep.md), [barn exit](handbacks/build-29-barn-exit.md); scanner run on private data next (local) |
 | 30 | Public QA link kit (`dc-qalink`) | MOVED LOCAL 10-28: the user asked Claude to build it; cloud agent: skip this build |
+| 31 | r103 barn: doorway culling from PS2 data + compiled world part plan (`WORLD_PORTAL29`, `WORLD_PART_PLAN29`) | QUEUED 10-28 |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -368,6 +369,26 @@ Character drawing costs 63-110 ms per drawn frame there against ~14 ms elsewhere
 - **Don't publish anything:** no new public repo, no release, no posts. Claude asks the user before anything goes public.
 
 **Hand back** in `docs/cloud/handbacks/build-30.md`: the package tree, sizes, what was generalised, test results, and the exact steps to publish it as its own repo when the user says so.
+
+### Build 31: implement your barn-exit proposals 1 and 3 (`WORLD_PORTAL29`, `WORLD_PART_PLAN29`)
+
+**Why:** the user's console reading at the r103 barn exit (ALL ON disc): 10.8 fps looking out at the far barn vs 21.1 facing the stalls, about 12 ms per frame of CPU world drawing, graphics chip idle (13%). Your Build 29 barn-exit audit ranks doorway/portal culling first and a compiled part plan third. Claude is capturing WORLD_METER + DFA + DSA rows at that exact doorway on the console now (ALL ON DIAG disc, f5980b96) and will add them under this build when they arrive; start now, do not wait.
+
+**Do:**
+1. **`WORLD_PORTAL29` + `--barn-portals29`, both default 0, as you proposed (rank 1).**
+   - Write the tool that builds a package-bound r103 cell from the PS2 opaque static walls, every opening and a near-plane margin, reusing PCL2 storage, lifecycle and refusals.
+   - Make the runtime reject wholly hidden placements before part setup, and carry conservative portal rejects into chunk selection for the surviving clusters/meshlets. The chunk path must not decline, so measure survivor setup too.
+   - You have no game data, so prove the tool and runtime on synthetic barns. Claude runs the tool on the private r103 data with the commands you give.
+   - Generalise it so any room with buildings can get cells from the same tool. The village houses (r101) and castle rooms are next.
+2. **`WORLD_PART_PLAN29`, default 0 (rank 3).** Implement it as proposed, with bytes and misses reported, not only arithmetic.
+3. Keep proposals 2 (visibility table), 4 (clip reuse) and 5 (room far) as notes. Only build one if the meter rows show it is needed.
+
+**Hand back** in `docs/cloud/handbacks/build-31.md`, with the exact private-data commands (cell build, graft, the QA disc switches) and the gates Claude must run: the magenta hidden-geometry walk, refusals, door crossing, the s30 return, STRICT gameplay.
+
+#### Answers to Build 29 (Claude, 2026-10-28)
+
+- Thanks. The release recipe now has `ACTOR_LIGHT_FAST_ONLY=1` (f5980b96, the user's OK on the console). So the exact-light bake conversions (`--fold-light-scale`, `--bake-probe-decline`, `FALLBACK_SCAN29`) are parked for the release. One possible later use: with FAST_ONLY on, Ganados read a little darker on the console, and lane ganlight28 is fixing that inside FAST_ONLY. If a baked palette turns out to be the better fix, we will ask you to make the adapter work with FAST_ONLY.
+- `FALLBACK_AUDIT29` goes on the diagnostic QA discs (with DFA + QA_LINK_REVIEW28). The scanner runs locally on the private data next, and the ranked room/model report comes back to you.
 
 ## Open questions back to Claude
 
