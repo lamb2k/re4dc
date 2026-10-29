@@ -884,3 +884,72 @@ continuation slice, not all encoded families or whole EF04 completion.
 **BLOCKED:** No source/host blocker. SDK slot is coordinator-controlled and
 has not been used for this slice. No emulator, mastering, SD/Pi action,
 push/integration, publication or private upload occurred.
+
+### EF04 target qualification and frozen delivery, 2026-10-29
+
+**DONE - TARGET COMPILE/LINK AND DISABLED IDENTITY, opt-in only.**
+Frozen source `1404434c5d319daa5631269317725fb274a670bd` passed the full
+release recipe with the new control absent and explicitly zero (41/42 s,
+rc=0, existing `missing.txt` present and empty). Against the bound runtime
+`064bfa4ea` output, both programmes, all 15 overlays and every one of the 11
+allocated ELF sections match in bytes and section metadata. Debug ELF hashes
+are distinct and are not substituted for this programme/section proof.
+
+The first enabled arm is retained as a real failed build: rc=1 after 26 s,
+no ELF and no `missing.txt`. A newly included source preflight header's
+recovered placement-new shim collided with libstdc++ `<new>` in this platform
+TU. Scoped repair `b77a61a9664ac1c0f414d5ac70e726d38996f4e7` uses the existing
+`PLACEMENT_NEW_DEFINED` guard only inside NATIVE_FE_CONTINUATION; no common
+header or runtime semantics changed. Post-repair normal host390 x4 passed.
+Both absent and zero complete hosted preprocessed byte streams are identical
+between the two frozen source tips (2,222,963 bytes each; SHA256
+`d20719d22a3263e0430a5fa7c335b749d80040eb508f9ea67293ead2b5abb17f`), and
+the affected baseline/absent/zero hosted allocated-code/data/output gate
+passed again. The earlier valid target OFF evidence remains applicable.
+
+The fresh enabled-only retry `ef04oct29v2onrP` on frozen `b77a61a9` passed
+rc=0 in 42 s, with the existing `missing.txt` present and empty. ELF SHA256:
+`e75b2d3a373001d7609b4cb59843df83686055c5fc398296dd107209af62dfac`.
+Recipe-derived explicit overrides were:
+
+```sh
+ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1 \
+NATIVE_ACTOR_SKIN_LAZY=1 ACTOR_SOURCE_SPAN=1 NATIVE_FE_CONTINUATION=1
+```
+
+Actual resolved dependencies remain portrait=1, PS2_LEON=1, PS2 rig=1,
+LEON_LOD=0, transaction=1 and lazy skin=1. Unrelated release dependencies,
+look/LOD selections and guard exclusions are preserved. All 527 C++ compile
+commands in each arm were checked: both new shared-layout definitions are
+absent in OFF and present in ON across game, platform and modules. The actual
+coarse portrait object calls snapshot acquisition and the lower native
+submit; native_model calls the replay entrypoint; native_ui links retirement
+hooks. All new exports link. Target assertions passed for the 72-byte
+descriptor and current 1,408-byte primitive allocation; the linked current
+palette is 1,296 bytes (27 matrices) and the existing reservation object is
+1,032 bytes (512 additional guarded bytes).
+
+The exact current named private headers in PS2_LEON_DIR were hashed before
+launch and bound again after build: runtime
+`2e894b70fe971469765de96b3f6141324b33785e2914b51dcf63b442b4dc4c65`, hair
+`7c28382e175c24bdeb4eedf504dee0f7b5da76d82b4486b6e5e76e14677c76be`, pl08
+identity `c27c02300e55f06be5560855904be11ef4e446106b518def9530d0a2f7f5b17f`.
+They were consumed from their unchanged existing location; no regenerated
+asset or package was substituted. The enabled ELF section deltas including
+FORMAT32/SOURCE_SPAN dependencies are text +8,512, rodata +288 and BSS +1,632
+bytes; these are linked structural costs, not a runtime memory or speed result.
+Private source/header/resolved-compile/link/identity receipts remain in
+`/root/probe/engine-ef04-20261029/release{1,2}`; failed and passing arms remain
+separate. Original source trees and receipts are retained.
+
+**NEXT:** Coordinator integration of the exact qualified public code/test
+bytes with the newest owner documentation prefix preserved. Real current
+portrait artwork, admissions/refusals, effective output, look/STRICT,
+heap/stack/full cost and physical-console acceptance remain separate gates.
+The independently proved host producer/queue/emitter and target compile do
+not establish those live gates or other encoded producer families.
+
+**BLOCKED:** No source, host or target-build blocker for this bounded slice.
+Both runner sessions ended and the coordinator SDK slot was released. No
+emulator, disc mastering, SD/Pi action, asset/package overwrite, publication,
+push/integration or private upload occurred in this worker.
