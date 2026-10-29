@@ -39,7 +39,25 @@ def main():
     cmd=['g++',*flags,'-I',str(PLATFORM/'include'),'-I',str(a.output),str(cpp),'-o',str(binary)]
     run=subprocess.run(cmd,capture_output=True);(a.output/'compile.log').write_bytes(run.stdout+run.stderr);assert run.returncode==0,run.stderr.decode()
     run=subprocess.run([str(binary)],capture_output=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0',UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=1'));(a.output/'run.log').write_bytes(run.stdout+run.stderr);assert run.returncode==0,run.stderr.decode()
+    # Actual new Make hunk plus the exact early static composition guard.
+    config=json.loads((HERE/'portal_completion_profiles.json').read_text());options=config['on_options']
+    guard_source='#ifndef RE4DC_WORLD_PORTAL_COMPLETION'+between(source,'#ifndef RE4DC_WORLD_PORTAL_COMPLETION','#ifndef RE4DC_SCENERY_EMIT_PREFETCH')
+    makefile=a.output/'guard.mk';makefile.write_text('OBJDIR:=unused\ninclude '+str(ROOT/'port/dreamcast/game/world_plan29.mk')+'\nall:\n\t@echo $(WORLD_PORTAL_COMPLETION)\n')
+    guards=[]
+    cases=[('absent',[],True),('zero',['WORLD_PORTAL_COMPLETION=0'],True),('supported',options,True)]
+    cases += [('bad-'+str(i),options+['WORLD_PORTAL_COMPLETION='+v],False) for i,v in enumerate(('','2','-1','0 1'))]
+    cases += [(name,options+[name+'=1'],False) for name in ('SCENERY_STREAM','SCENERY_CLIP_GATHER','SCENERY_CLIP_INDEXED26')]
+    cases += [('missing-portal',options+['WORLD_PORTAL29=0'],False),('missing-compose',options+['PS2_PVS_BATCH_COMPOSE=0'],False)]
+    for name,args,accepted in cases:
+        run_guard=subprocess.run(['make','--no-print-directory','-f',str(makefile),'all',*args],capture_output=True)
+        assert (run_guard.returncode==0)==accepted,(name,run_guard.stderr.decode())
+        guards.append(dict(name=name,accepted=accepted))
+    for name,args,accepted in [('supported',options,True),('legacy-refusal',options+['WORLD_PORTAL_COMPLETION=0'],False),('stream-refusal',options+['SCENERY_STREAM=1'],False)]:
+        definitions=dict(x.split('=',1) for x in args)
+        run_guard=subprocess.run(['g++','-E','-P','-x','c++',*['-DRE4DC_'+k+'='+v for k,v in definitions.items()],'-'],input=guard_source.encode(),capture_output=True)
+        assert (run_guard.returncode==0)==accepted,(name,run_guard.stderr.decode())
+        guards.append(dict(name='source-'+name,accepted=accepted))
     files=[PLATFORM/'native_static.cpp',PLATFORM/'include/world_portal29.hpp',PLATFORM/'include/world_portal29_runtime.inc',HERE/'portal_runtime_fixture.cpp',HERE/'portal_completion_fixture.cpp.in',Path(__file__)]
-    report=dict(status='PASS',scope=__doc__,sanitize=a.sanitize,output=run.stdout.decode(),source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},extracted_sha256={k:hashlib.sha256(v.encode()).hexdigest() for k,v in values.items()})
+    report=dict(status='PASS',scope=__doc__,sanitize=a.sanitize,guards=guards,output=run.stdout.decode(),source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},extracted_sha256={k:hashlib.sha256(v.encode()).hexdigest() for k,v in values.items()})
     (a.output/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(run.stdout.decode(),end='')
 if __name__=='__main__':main()

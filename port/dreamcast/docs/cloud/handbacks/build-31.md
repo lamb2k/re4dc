@@ -1,5 +1,19 @@
 # Build 31: portal culling and world part plan
 
+**2026-10-29 EF08 target checkpoint: DONE** fresh full release absent and
+explicit0 builds at `ec1855b42` pass real rc0, nonempty ELF and existing empty
+missing.txt. The enabled validation arm correctly stopped before ELF at the
+retained early PVS batch guards: native_static lacked propagated TA_DIRECT,
+PS2_WORLD_HDR_CACHE, MESH_FASTPATH and PVR_STREAM facts. Failed output is
+`/root/probe/lanes/route/out-ef08oct29v1onrP`; runner31774/PID1778329 exited1.
+Scoped Make repair now propagates those exact validated Make values only for
+completion1; no guard predicate is relaxed. Host checks cover628 cases plus
+actual Make/source guard cases. **NEXT** coordinator regrants SDK for a fresh
+ON output and actual -dM macro readback, then full OFF/TU identity receipts.
+**BLOCKED** ON target is not yet validated; actual source-bound occluder and
+lifecycle/look/STRICT/memory/cost gates remain open. SDK slot released; no live
+job. Do not retry the unchanged failed label/output.
+
 **2026-10-29 EF08 first completion slice: DONE** source implementation under
 new `WORLD_PORTAL_COMPLETION=0|1` default0, preserving the existing portal-only
 path absent/zero. Selection issues a scene/view/source-generation/material
