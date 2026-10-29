@@ -42,7 +42,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
-| Systemic 2026-10-29 | [Systemic performance handover](HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md) | landed c1e57f036 (b431e453 handover), docs only/defaults unchanged; release build44s/missing0. S0 intake IN PROGRESS, stock memory FAIL and explicit D4/14 held; owner [answers](handbacks/systemic-performance-20261029.md). No Build37 assignment or new acceptance |
+| Systemic 2026-10-29 | [Systemic performance handover](HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md) | landed c1e57f036 (b431e453 handover), docs only/defaults unchanged; release build44s/missing0. S0 intake IN PROGRESS, stock memory FAIL and explicit D4/14 held; owner [answers](handbacks/systemic-performance-20261029.md). No Build37 assignment or new acceptance; S0 normal game source/16 payloads bound; QA final package hashes intact but16/16 retained programme inputs differ, exact final ELF/definitions join OPEN (no runtime failure inferred) |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
 | 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
