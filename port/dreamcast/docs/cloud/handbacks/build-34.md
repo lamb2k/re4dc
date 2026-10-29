@@ -1110,3 +1110,33 @@ host keys/state-out, SD or recipe change. Direct active track01 bytes were
 not retained for these two captures; no separate active-image readback gate
 is claimed. Next: read-only producer/reader contract diagnosis before any
 changed-input retry;75s door/300s h2 remain unrun.
+
+### 2026-10-29 owner: RAM-log publication and raw-RAM visibility audit
+
+A source/ELF/reader audit explains why `overruns=0` is not a record-integrity
+certificate. The captured source6c `re4dc_log_raw` writes one byte, then
+separately reloads/increments/stores the shared volatile head. Current
+LOGIC_TRACE/TA_MATERIAL_DIAG are0; the actual function contains no IRQ mask.
+Its log/head literals are P1 addresses. Captured `arch_main` requests CCR
+0x090d (including copy-back) at startup.
+
+The retained5960-byte `read_log.py` uses Windows ReadProcessMemory against
+Flycast's host RAM mapping, not GDB or a CPU-cache-aware view. It checks
+ring lapping, not row atomicity/cache visibility. Both rings really are64KiB;
+no ring-size mismatch was found. The two logs contain3403/3075 NUL bytes
+despite overrun0.
+
+An offline source-permitted schedule demonstrates a NUL hole without an
+overrun: writer A stores at head0 and is preempted before increment; B
+stores at head0 and advances to1; A resumes and increments current head to2.
+The published two-byte range can then contain B followed by NUL. This is a
+contract counterexample, not proof that this exact schedule occurred.
+Inspected Flycast source also keeps copy-back stores in dirty cache lines
+until writeback, so raw backing RAM is not guaranteed to equal CPU-visible
+cache data. Exact cache-source-to-cstat-binary provenance and live cache/CCR
+state were not retained; no sole-root-cause attribution is claimed.
+
+Both stock memory failures remain held. No numeric repair, parser/guard/log-size
+change, emulator/harness patch, new observer or runtime retry was made.
+Next: source-only coverage check of existing structured QA counter channels
+against the full gate, with missing fields explicit and no substitute acceptance.
