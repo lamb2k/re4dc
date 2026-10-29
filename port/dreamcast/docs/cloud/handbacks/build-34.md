@@ -1734,6 +1734,123 @@ publication/fault/IRQ-duration/visibility follow-on is now cloud-owned. Keep
 LOG_ATOMIC16 default-off and parked outside broad ALL ON pending those gates.
 
 
+## 2026-10-29 recovery: EF16 bounded engine-record publication
+
+**DONE (source and scoped host, partial EF16):** implemented a new independent
+`LOG_RECORD16=0|1` control, default0, on inspected integration
+`d45eb759dd92685255929625e04fae3d7a46bca7`. It requires `LOG_ATOMIC16=1`; only
+`platform/mem.o` receives `RE4DC_LOG_RECORD16=1`. Exact malformed literal values
+and the missing prerequisite are rejected by the actual primary Makefile.
+
+This follows the recovered `473d78578941c190c089b8e2b8b32c8293fd38ca` bounded
+writer contract and the coordinator's explicit narrow producer split. It does
+not implement the proposed pending-record/queue protocol. There is no new ring,
+retained staging slot, reader, reservation cursor, partial-write rule or parser.
+
+### Consumed invariant
+
+The actual `re4dc_log` formatter still completes in its existing 256-byte
+automatic array before appending. The new helper accepts that exact array type
+and publicly names `max_bytes=255`; a bounded length scan and an explicit
+compiler input dependency complete before the IRQ-mask operation. Each copied
+byte precedes its existing volatile head increment through a compiler memory
+barrier, and a second barrier prevents a subsequent byte from moving before
+that publication. The ring header and bytewise observer contract are preserved.
+Maskable writers cannot splice the record because the required LOG_ATOMIC16
+guard also covers all raw/device appends. The original entry SR is restored,
+including callers that entered with IRQs disabled. At most255 ring byte stores
+occur in this producer's guard; this excludes header/IRQ/bookkeeping work and
+is not a target time measurement or a bound on a caller's already-disabled time.
+
+The raw/device byte loop, full supplied length, live source alias behavior and
+whole-call masking remain unchanged. The existing LOG_CRASH_TEST count is
+shared across raw and record entry points in the enabled composition; mixed
+and empty append cases retain one count per call. No fault.cpp production edit
+was needed. Old LOG_ATOMIC behavior and all absent/zero source arms are retained.
+
+The pinned KOS IRQ implementation at
+`804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` saves the whole SR, applies its
+`(mask & 0xefffff0f) | 0xf0` mask and restores the original SR; its inline asm
+uses compiler memory clobbers. The fixture models that mask and restoration.
+This is compiler/ordinary maskable-context reasoning, not NMI or hardware-cache
+safety. No performance improvement is inferred.
+
+### Changed-input validation
+
+From the branch worktree, each output directory must be fresh:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/log_record16_host.py \
+  --output "$EF16_CHANGED_OUTPUT/record-host"
+python3 -B port/dreamcast/tools/cloud/build34/log_record16_host.py \
+  --output "$EF16_CHANGED_OUTPUT/record-sanitizer" --sanitize
+python3 -B port/dreamcast/tools/cloud/build34/log16_host.py \
+  --output "$EF16_CHANGED_OUTPUT/legacy-host"
+git diff --check
+```
+
+**PASS:** the new actual-body fixture passes12 compositions in normal execution
+and12 with ASan/UBSan: record0/1 at8/16/32/64KiB, old diagnostic guard plus new
+guard composition, and two mixed raw/record crash-count arms. Each of the ten
+ordinary arms checks5612 maskable-preemption schedules,2306 entry-SR cases,
+76 live ring/head-source aliases and18 long raw/device cases. Every record
+length0..255, truncation, every maximum-record publication edge, ring wrap and
+32-bit head wrap are covered. Enabled arms also check a fully unterminated
+256-byte array still copies only255 bytes. Pre-mask nested records precede the
+whole record; caller-disabled pending IRQs stay deferred until caller restore.
+Coherent polls preserve exact bytes and existing newline buffering.
+
+**Expected failures remain:** six forced returning synchronous/NMI-style
+reentry witnesses per ordinary arm remain corrupt, both raw and record paths.
+The raw guard still covers131089 byte stores in the largest exercised call;
+that is a witnessed long hold, not a maximum raw length or a latency result.
+No test calls those unsupported schedules safe. ASan/UBSan pass with leak
+detection disabled for the recorded sandbox restriction; no leak check is claimed.
+
+The existing eight-arm selector fixture also passes unchanged, retaining its
+ungarded hole witnesses, all forced-returning failures and long raw masks.
+
+Full production `mem.cpp` and `fault.cpp` preprocessing with `__sh__` and host
+object bytes match baseline/absent/explicit0 across three relevant profiles:
+old/new guard00, guard01, and diagnostic guard+header+crash-test composition.
+That is six full-TU comparisons, eighteen preprocessed arms and eighteen host
+objects. Enabled complete mem.cpp host objects compile with and without the
+crash test. The actual primary Makefile's absent/zero commands match, its
+enabled define appears only on mem.o, and missing prerequisites are rejected.
+These are host declaration stubs/code generation, not SH-4 target binaries.
+
+Local final evidence is retained at `/tmp/ef16-record-normal-3/receipt.json`,
+`/tmp/ef16-record-sanitizer-3/receipt.json` and
+`/tmp/ef16-legacy-normal-1/receipt.json`. The earlier failed fixture assertion
+is also retained: GNU Make normalizes leading assignment whitespace, so the
+corrected test checks that normalized literal1 has identical effective command
+scope. Trailing whitespace, wildcard and other nonliteral values still reject;
+no production guard was relaxed.
+
+### Next and remaining contract
+
+**NEXT:** serialize publication of this bounded source/fixture slice with the
+queue/backlog and existing Build34 handback. Then local builds fresh pinned-SDK
+baseline/absent/explicit0/ON arms with `LOG_ATOMIC16=1` held constant when
+qualifying LOG_RECORD16; inspect actual SH-4 store/head and IRQ-boundary code,
+full programme/15 overlays/allocated-section OFF identity, maximum permitted
+added IRQ hold, and current observer/cache/runtime behavior. Keep the original
+failed memory observation and its judge unchanged.
+
+**OPEN SOURCE CONTRACT:** arbitrary-length raw/device appends are still
+contiguous and lossless with live aliases, and still mask the entire call.
+Bounding that route requires an explicit source-backed producer size/context
+contract or approved partial/retry/defer/full behavior. This slice chooses none
+of those semantics and does not close general returning-fault/NMI safety or
+raw cache/RAM visibility. These are separate remaining EF16 obligations, not a
+private-data prerequisite for independent source work.
+
+Default0, parked LOG_ATOMIC16 outside broad ALLON, all release/private/console
+holds, historical memory FAIL and stopped emails remain. No target compilation,
+runtime/hardware acceptance, integration or enablement is claimed here.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
+
 ## EF16 supporting selector slice, 2026-10-29
 
 **DONE (source + scoped host, partial EF16):** `LOG_ATOMIC16=1` independently

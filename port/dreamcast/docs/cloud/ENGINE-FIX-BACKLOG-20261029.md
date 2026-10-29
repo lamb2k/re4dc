@@ -421,6 +421,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF16. Repair concurrent log publication as a supporting engine fix
 
+**2026-10-29 recovery source delivery:** Bounded255-byte formatted engine record implemented under LOG_RECORD16 default0 with LOG_ATOMIC16 prerequisite; 12 normal and12 sanitizer compositions, full mem/fault OFF and original8-arm guards PASS. Arbitrary raw IRQ hold, returning-fault/NMI and cache qualification remain open. See [Build34](handbacks/build-34.md).
+
 **Gap.** The default logger writes a byte and separately increments a shared head. A preempting writer can overwrite a byte and publish a hole without a reader overrun. Existing atomic mode depends on diagnostic configurations and masks interrupts across the append. Raw emulator RAM visibility is a separate unresolved concern.
 
 **Target.** Published bytes have defined writer serialization, complete record boundaries and visibility with bounded interruption cost.
