@@ -320,6 +320,11 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 #ifndef RE4DC_UI_HANDLES
 #define RE4DC_UI_HANDLES 0
 #endif
+// PS2_UPLOAD_INCARNATION: bind derived PS2 headers to an exact published
+// upload, independent of UI_HANDLES. Zero retains the previous ABI/output.
+#ifndef RE4DC_PS2_UPLOAD_INCARNATION
+#define RE4DC_PS2_UPLOAD_INCARNATION 0
+#endif
 // UI_HEADERS=1 (default off = previous image): each UI/HUD quad's PVR header
 // (texture binding and blend) is compiled once per cache entry and blend mode
 // and reused while the entry lives; the per-frame UI path only writes vertices.
@@ -473,6 +478,11 @@ static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry
 #endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    // Never reset with source tables or room/movie transitions. Exhaustion
+    // permanently disables derived-header reuse for this Entry (zero).
+    std::uint32_t upload_incarnation=1;
+#endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::CheckedAsset asset{};
     unsigned asset_consumers=0;
@@ -3852,7 +3862,18 @@ void fxearly_remember(const Re4dcUiImage& i){
 }
 #endif
 #endif
+// PS2_UPLOAD_ADVANCE_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+void advance_upload_incarnation(Entry& entry) {
+    // Saturate to the nonreusable zero sentinel; never resurrect an old token.
+    if(entry.upload_incarnation)++entry.upload_incarnation;
+}
+#endif
+// PS2_UPLOAD_ADVANCE_END
 void close_entry(Entry& entry) {
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    advance_upload_incarnation(entry); // revoke before any retirement callback
+#endif
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
     fxnone_room[&entry-entries]=0;
 #endif
@@ -4453,7 +4474,12 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     } else gca_tex_disarm();
 #endif
     if(!ok) {RE4DC_TEXCHK_FAIL(key,texchk_why);return nullptr;}
+    // PS2_UPLOAD_PUBLICATION_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    advance_upload_incarnation(*slot); // accepted upload; retries were unpublished
+#endif
     slot->valid=true;slot->key=key;
+    // PS2_UPLOAD_PUBLICATION_END
 #if RE4DC_TEX_RESIDENT
     slot->frame=pin?frame:frame?frame-1:0;
 #else
@@ -9747,8 +9773,8 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 // PS2_WORLD_HDR_CACHE (game30.mk; exact in pixels): the compiled header of each PS2 world material (texture key and
 // size, pass, cull, latched fog) with the Entry it was compiled for. A hit skips the texture lookup (load(): hint,
 // else the TEX_SLOTS scan) and pvr_poly_cxt_txr + pvr_poly_compile. A slot is used only while its Entry is valid,
-// still holds that key and still has the same VRAM address: a closed (evicted, retired) and reloaded upload fails
-// the address test and recompiles, so header words 0..3 are always the ones a compile would give now. Words 4..7:
+// still holds that key and still has the same VRAM address. PS2_UPLOAD_INCARNATION additionally requires the
+// exact published upload: allocator address reuse alone cannot authorize format/mip header words. Words 4..7:
 // KOS pvr_poly_compile never writes them for a header without a modifier volume, so the uncached path sends whatever
 // the stack held there (the PVR ignores them for these packed-colour, non-modifier headers); with this knob both
 // paths send zeros. 32 sets of 4 slots; a miss refills the set's slots in turn.
@@ -9759,7 +9785,20 @@ namespace {
 #endif
 constexpr unsigned kPs2HdrSets=RE4DC_PS2_HDR_SETS,kPs2HdrWays=4;
 static_assert((kPs2HdrSets&(kPs2HdrSets-1U))==0,"PS2_HDR_SETS is a power of two");
+// PS2_UPLOAD_SLOT_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4];
+    std::uint32_t upload_incarnation;
+};
+#else
 struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4]; };
+#endif
+// PS2_UPLOAD_SLOT_END
+#if RE4DC_PS2_UPLOAD_INCARNATION
+bool ps2_hdr_upload_current(const Ps2HdrSlot& slot,const Entry* entry) {
+    return entry && slot.upload_incarnation && slot.upload_incarnation==entry->upload_incarnation;
+}
+#endif
 static_assert(sizeof(pvr_poly_hdr_t)==32);
 Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
 unsigned char ps2_hdr_next[kPs2HdrSets];
@@ -9903,7 +9942,13 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
         const unsigned size=k[2]|k[3]<<16,mode=k[5]<<2|fog<<4|0x100U;
         const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
         for(const auto& slot:ps2_hdr[set])if(slot.mode==mode && slot.crc==k[0] && slot.fnv==k[1] && slot.size==size){
+            // PS2_UPLOAD_READY_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+            if(slot.entry!=resident || slot.texture!=address || !ps2_hdr_upload_current(slot,resident) || std::memcmp(slot.words,&expected,16))return 0;
+#else
             if(slot.entry!=resident || slot.texture!=address || std::memcmp(slot.words,&expected,16))return 0;
+#endif
+            // PS2_UPLOAD_READY_END
         }
     }
 #endif
@@ -10030,7 +10075,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         // this key (the entry / VRAM address test below applies as for any hit)
         if(re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot<=kPs2HdrSets*kPs2HdrWays){
             Ps2HdrSlot& s=(&ps2_hdr[0][0])[*re4dc_ps2_piece_slot-1U];
+            // PS2_UPLOAD_PIECE_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size && ps2_hdr_upload_current(s,s.entry)){hit=&s;++ps2_piece_hits;}
+#else
             if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;++ps2_piece_hits;}
+#endif
+            // PS2_UPLOAD_PIECE_END
         }
         if(!hit)
 #endif
@@ -10046,7 +10097,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         if(!re4dc::rect21::header_dimensions(hit->words[2],RE4DC_TSP_W(resident),RE4DC_TSP_H(resident)))hit=nullptr;
     }
 #endif
+    // PS2_UPLOAD_HIT_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture && ps2_hdr_upload_current(*hit,hit->entry)){
+#else
     if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
+#endif
+    // PS2_UPLOAD_HIT_END
         const Ps2HdrSlot& slot=*hit;
         Entry* const handle=slot.entry;
 #if RE4DC_WORLD_RECT21
@@ -10299,6 +10356,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         Ps2HdrSlot& slot=hit?*hit:ps2_hdr[hdr_set][ps2_hdr_next[hdr_set]++%kPs2HdrWays];
         slot.crc=k[0];slot.fnv=k[1];slot.size=hdr_size;slot.mode=hdr_mode;slot.entry=handle;
         slot.texture=handle->package.pvr_texture(0);
+#if RE4DC_PS2_UPLOAD_INCARNATION
+        slot.upload_incarnation=handle->upload_incarnation;
+#endif
         for(unsigned i=0;i<4;++i)slot.words[i]=hw[i];
         ++ps2_hdr_fills;
 #if RE4DC_SCENERY_PIECE_STATE

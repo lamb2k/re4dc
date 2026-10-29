@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "scope": "Exercise actual texture incarnation boundaries with controlled Package/PVR edges.\n\nEntry layout, close_entry, successful publication, Ps2HdrSlot and the exact\nordinary-hit, SCPS and readiness predicates/fill are compiled from native_ui.cpp.\nThis is a cache/lifecycle boundary fixture, not a full loader/renderer replay,\nGPU fence, real movie playback, visual/STRICT or hardware timing result.\n",
+  "sanitize": false,
+  "rows": [
+    {
+      "name": "incarnation0-handles0",
+      "checks": 96,
+      "stale_counterexamples": 6
+    },
+    {
+      "name": "incarnation0-handles1",
+      "checks": 96,
+      "stale_counterexamples": 6
+    },
+    {
+      "name": "incarnation1-handles0",
+      "checks": 106,
+      "stale_counterexamples": 0
+    },
+    {
+      "name": "incarnation1-handles1",
+      "checks": 106,
+      "stale_counterexamples": 0
+    }
+  ],
+  "make_guards": [
+    {
+      "value": null,
+      "accepted": true
+    },
+    {
+      "value": "0",
+      "accepted": true
+    },
+    {
+      "value": "1",
+      "accepted": true
+    },
+    {
+      "value": "",
+      "accepted": false
+    },
+    {
+      "value": "2",
+      "accepted": false
+    },
+    {
+      "value": "-1",
+      "accepted": false
+    },
+    {
+      "value": "1 1",
+      "accepted": false
+    },
+    {
+      "value": "0 1",
+      "accepted": false
+    }
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_ui.cpp": "03c7ea8955339ef4cfd96b28b2b914d37d4c6ff876ba02a33c29b1647d66c501",
+    "port/dreamcast/game/game30.mk": "5ded7ce32c54452fe0f630eae2ae7a650ffccc6c43e8497c5253e84846b70133",
+    "port/dreamcast/tools/cloud/build34/upload_fixture.cpp.in": "52a5ff69d1fbb2ae7cb81502817f02750bff739abbc08206af77c553a8d4b209",
+    "port/dreamcast/tools/cloud/build34/upload_host.py": "8b78ad41ffdd6283c3f5ebbefb95d1679addfeacb64c85b0bde0e181617c786d"
+  },
+  "extracted_sha256": {
+    "ENTRY": "0a49424e153ee2bb77730e329eabc804993a7be080ddcffb3f98ab4a07c82c83",
+    "ADVANCE": "6788b844538baf5ecb1350f87db7ade22750bb8a14c703fea3b0a70d8e2041a5",
+    "CLOSE": "67b84d7dd8a8b5cc3ff74851b77af8cc6089c79ef1ad5568b3582e4a7da09f67",
+    "SLOT": "324c561144f587935fbf5597d8a88f9d2fee304572e22d472710ca69ed30e4af",
+    "MATCH": "6423aab4d36564f843420c6023cce0fbf923f72b27cb784167fb47376a4bae3b",
+    "PUBLICATION": "eb79b691ac3b4e0854f512491927df136495caa25951884236148bcf6be1487a",
+    "FILL": "e769023c1c8f30fcf8a9835e2313ed95a1e3517f9f2f870629c90d7c9f216f39",
+    "HIT": "1b1c42a6cda6a513d1882ae9c2d2f452455716ea0d3d3b456909b9f74d5de79a",
+    "PIECE": "deef578e4a423f23efc56fd269fd20a20382c6e382f27f35d0d4f024e5c4c53b",
+    "READY": "13e00a5fd5b7ae32a3410637ea669db1ec9ee8c81420c7b1bc359f65bfa4a4ca"
+  }
+}

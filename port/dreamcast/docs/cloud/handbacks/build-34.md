@@ -1,5 +1,46 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+**2026-10-29 EF06 target handback: DONE** first consumed incarnation slice
+implemented and target built (`5f057b2ea` + `0efa52fe8`): four fresh full release
+arms baseline9ee386e3/absent/explicit0/ON pass real rc0, nonempty ELF and existing
+empty missing.txt. Baseline==absent==zero raw programme (3,372,036 bytes), all15
+overlays and all11 allocated ELF sections; debug ELFs differ. Actual release
+Make-derived native_ui complete preprocessing and debug-free object also match
+all three controls. Enabled release links; additional ON TU profiles cover
+handles0, SCPS/cache2 batch0 and PVS readiness batch0. Existing batching/PVS
+exclusion is retained. Host+ASan+UBSan each pass404 assertions plus8 actual
+Make-hunk guard cases; disabled arms reproduce6 stale format/mip cases each,
+enabled arms reject them. At128 header sets, BSS+2,048 bytes; no timing claim.
+Audit finds one static Entry array, no runtime reset/reassignment/placement
+construction, one successful publication, and published closes via close_entry.
+**NEXT** coordinator reviews/merges default-off and advances actual reentry,
+eviction/movie restore, look/STRICT/memory and physical-console acceptance.
+**BLOCKED** those live acceptance/cost checks remain pending; this does not
+close all EF06 or EF15/EF16. SDK slot released; all runner PIDs exited,
+no live exec session. No push/integration/recipe/SD/Pi/emulator action.
+Exact commands, source/recipe/toolchain bindings, scoped rejected profiles and
+[sanitized receipts](../../../tools/cloud/build34/UPLOAD-INCARNATION.md)
+are preserved. Reusable comparison helper is `upload_compare.py` beside it.
+
+**2026-10-29 EF06 first slice: DONE** implemented guarded
+`PS2_UPLOAD_INCARNATION=0|1` (default 0), independent of UI_HANDLES: advance
+before Entry close callbacks and successful upload publication; compare at
+ordinary PS2 header reuse, SCPS hints and opaque readiness; store on refill.
+Exhaustion permanently saturates to nonreusable zero. Existing effective-state,
+format/dimension and conservative refusal checks remain. Actual-source host
+and ASan+UBSan fixtures pass four compositions (incarnation0/1 x handles0/1):
+OFF reproduces six same-Entry/same-address format/mip stale-hit cases per
+handles arm; ON rejects them and tests refill, closed state and exhaustion.
+Receipts: `/root/probe/engine-ef06-20261029/{host2,sanitized2}/upload-host.json`.
+Commands/profile/scope: [UPLOAD-INCARNATION.md](../../../tools/cloud/build34/UPLOAD-INCARNATION.md).
+**NEXT** coordinator-admitted SDK build using `upload_profiles.json`, then
+bound full-programme/overlay disabled identity and current-data lifecycle gates.
+**BLOCKED** target validation is pending the serialized SDK slot, not a source
+blocker; actual eviction/reentry/movie restore, look/STRICT/memory and physical
+console acceptance remain unclaimed. No live exec session/PID; no push,
+integration, recipe/default, SD/Pi or emulator change. This first consumed
+incarnation slice does not close all EF06 acceptance or EF15/EF16.
+
 **2026-10-29 progress 4: DONE** corrected the invalid cache2 command and
 qualified a separately scoped SCPS validation control/on/check profile on
 `7085a2d73d6a3211e3fc6686ed092153bcd76f69`: nine complete SH-4 C++ TU compiles,

@@ -2738,6 +2738,21 @@ endif
 # (perf-20261004 candidate 4).
 # =2 (diagnostic): every hit also runs the uncached lookup + compile and counts a different Entry or header word
 # (PS2HDR log line: checked / mismatched).
+# EF06: exact texture-upload identity, independent of UI_HANDLES. At token
+# exhaustion that Entry uses ordinary recompilation permanently. No promotion.
+PS2_UPLOAD_INCARNATION ?= 0
+ifneq ($(words $(PS2_UPLOAD_INCARNATION)),1)
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifneq ($(PS2_UPLOAD_INCARNATION),$(filter 0 1,$(PS2_UPLOAD_INCARNATION)))
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifeq ($(PS2_UPLOAD_INCARNATION),)
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifeq ($(PS2_UPLOAD_INCARNATION),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_UPLOAD_INCARNATION=1
+endif
 PS2_WORLD_HDR_CACHE ?= 0
 ifneq ($(PS2_WORLD_HDR_CACHE),0)
 ifeq ($(PS2_WORLD_MESH),0)

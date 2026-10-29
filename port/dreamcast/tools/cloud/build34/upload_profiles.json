@@ -1,0 +1,193 @@
+{
+  "knobs": [
+    "PS2_UPLOAD_INCARNATION"
+  ],
+  "units": {
+    "native_ui": [
+      "platform/native_ui.o",
+      "platform/native_ui.cpp"
+    ]
+  },
+  "knob_units": {
+    "PS2_UPLOAD_INCARNATION": [
+      "native_ui"
+    ]
+  },
+  "off_profiles": {
+    "release": [
+      "NMR_POOL_LOD=0"
+    ],
+    "qa": [
+      "DBG_WARP=1",
+      "WARP_AFTER_RESET=1",
+      "QA_MENU=1",
+      "QA_LINK=1",
+      "QA_LINK_REVIEW28=1",
+      "BENCHMARK=0",
+      "PMC_ROW=0",
+      "WORLD_METER=1",
+      "DRAW_SETUP_AUDIT=1",
+      "DRAW_FALLBACK_AUDIT=1",
+      "FALLBACK_AUDIT29=1",
+      "NMR_POOL_LOD=0",
+      "SCENERY_CONE=0",
+      "SCENERY_DEDUP=0",
+      "SCENERY21_AB=0",
+      "PS2_PVS=0",
+      "PS2_PVS_BATCH_COMPOSE=0",
+      "WORLD_PORTAL29=0"
+    ]
+  },
+  "on_profiles": {
+    "release": [
+      "NMR_POOL_LOD=0",
+      "PS2_UPLOAD_INCARNATION=1"
+    ],
+    "header-handles0": [
+      "DBG_WARP=1",
+      "WARP_AFTER_RESET=1",
+      "QA_MENU=1",
+      "QA_LINK=1",
+      "QA_LINK_REVIEW28=1",
+      "BENCHMARK=0",
+      "PMC_ROW=0",
+      "WORLD_METER=1",
+      "DRAW_SETUP_AUDIT=1",
+      "DRAW_FALLBACK_AUDIT=1",
+      "FALLBACK_AUDIT29=1",
+      "NMR_POOL_LOD=0",
+      "SCENERY_CONE=0",
+      "SCENERY_DEDUP=0",
+      "SCENERY21_AB=0",
+      "PS2_PVS=0",
+      "PS2_PVS_BATCH_COMPOSE=0",
+      "WORLD_PORTAL29=0",
+      "PS2_UPLOAD_INCARNATION=1",
+      "SCENERY_SUBMIT_BATCH=0",
+      "PS2_WORLD_HDR_CACHE=1",
+      "SCENERY_PIECE_STATE=0",
+      "UI_HANDLES=0",
+      "FX_CORE_TEX_PREP=0"
+    ],
+    "header-handles1": [
+      "DBG_WARP=1",
+      "WARP_AFTER_RESET=1",
+      "QA_MENU=1",
+      "QA_LINK=1",
+      "QA_LINK_REVIEW28=1",
+      "BENCHMARK=0",
+      "PMC_ROW=0",
+      "WORLD_METER=1",
+      "DRAW_SETUP_AUDIT=1",
+      "DRAW_FALLBACK_AUDIT=1",
+      "FALLBACK_AUDIT29=1",
+      "NMR_POOL_LOD=0",
+      "SCENERY_CONE=0",
+      "SCENERY_DEDUP=0",
+      "SCENERY21_AB=0",
+      "PS2_PVS=0",
+      "PS2_PVS_BATCH_COMPOSE=0",
+      "WORLD_PORTAL29=0",
+      "PS2_UPLOAD_INCARNATION=1",
+      "SCENERY_SUBMIT_BATCH=0",
+      "PS2_WORLD_HDR_CACHE=1",
+      "SCENERY_PIECE_STATE=0",
+      "UI_HANDLES=1"
+    ],
+    "scps-check": [
+      "DBG_WARP=1",
+      "WARP_AFTER_RESET=1",
+      "QA_MENU=1",
+      "QA_LINK=1",
+      "QA_LINK_REVIEW28=1",
+      "BENCHMARK=0",
+      "PMC_ROW=0",
+      "WORLD_METER=1",
+      "DRAW_SETUP_AUDIT=1",
+      "DRAW_FALLBACK_AUDIT=1",
+      "FALLBACK_AUDIT29=1",
+      "NMR_POOL_LOD=0",
+      "SCENERY_CONE=0",
+      "SCENERY_DEDUP=0",
+      "SCENERY21_AB=0",
+      "PS2_PVS=0",
+      "PS2_PVS_BATCH_COMPOSE=0",
+      "WORLD_PORTAL29=0",
+      "SCENERY_SUBMIT_BATCH=0",
+      "SCENERY_PIECE_STATE=1",
+      "PS2_WORLD_HDR_CACHE=2",
+      "PS2_UPLOAD_INCARNATION=1"
+    ],
+    "readiness": [
+      "DBG_WARP=1",
+      "WARP_AFTER_RESET=1",
+      "QA_MENU=1",
+      "QA_LINK=1",
+      "QA_LINK_REVIEW28=1",
+      "BENCHMARK=0",
+      "PMC_ROW=0",
+      "WORLD_METER=1",
+      "DRAW_SETUP_AUDIT=1",
+      "DRAW_FALLBACK_AUDIT=1",
+      "FALLBACK_AUDIT29=1",
+      "NMR_POOL_LOD=0",
+      "SCENERY_CONE=0",
+      "SCENERY_DEDUP=0",
+      "SCENERY21_AB=0",
+      "PS2_PVS=0",
+      "PS2_PVS_BATCH_COMPOSE=0",
+      "WORLD_PORTAL29=0",
+      "PS2_UPLOAD_INCARNATION=1",
+      "SCENERY_PIECE_STATE=0",
+      "PS2_WORLD_HDR_CACHE=1",
+      "PS2_PVS=1",
+      "SCENERY_SUBMIT_BATCH=0"
+    ]
+  },
+  "watch_fields": [
+    "UI_HANDLES",
+    "PS2_WORLD_HDR_CACHE",
+    "SCENERY_PIECE_STATE",
+    "SCENERY_SUBMIT_BATCH",
+    "PS2_PVS",
+    "PS2_PVS_BATCH_COMPOSE",
+    "WORLD_PORTAL29"
+  ],
+  "invalid_compositions": [
+    {
+      "reason": "incarnation supports exactly scalar 0 or 1",
+      "options": [
+        "NMR_POOL_LOD=0",
+        "PS2_UPLOAD_INCARNATION="
+      ]
+    },
+    {
+      "reason": "incarnation supports exactly scalar 0 or 1",
+      "options": [
+        "NMR_POOL_LOD=0",
+        "PS2_UPLOAD_INCARNATION=2"
+      ]
+    },
+    {
+      "reason": "incarnation supports exactly scalar 0 or 1",
+      "options": [
+        "NMR_POOL_LOD=0",
+        "PS2_UPLOAD_INCARNATION=-1"
+      ]
+    },
+    {
+      "reason": "incarnation supports exactly scalar 0 or 1",
+      "options": [
+        "NMR_POOL_LOD=0",
+        "PS2_UPLOAD_INCARNATION=1 1"
+      ]
+    },
+    {
+      "reason": "incarnation supports exactly scalar 0 or 1",
+      "options": [
+        "NMR_POOL_LOD=0",
+        "PS2_UPLOAD_INCARNATION=0 1"
+      ]
+    }
+  ]
+}
