@@ -2,7 +2,7 @@
 
 ## 2026-10-29 EF07: owner-scoped native plan slice
 
-**DONE (source/host; target pending):** `PLAN_OWNER_SCOPED=1` (strict 0/1,
+**DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `PLAN_OWNER_SCOPED=1` (strict 0/1,
 default 0; requires `MODEL_DRAW_PLANS=1`) replaces whole-cache bind/unbind resets
 with existing owner-slot/incarnation identity. Topology entries carry their
 publisher; position bounds carry an independent position publisher. Same-address
@@ -74,10 +74,36 @@ and `off-final.json`; full arms `out-ef07w1offrP` / `out-ef07w1onrP` under
 `c218fe858a48238ce1b667acce890b855277034181f9f88a085949e5b8b8ed20`, ON
 `64392187b1d484360619cd5e009e4c3a234288654ec509a4255e0cd7d3eeede8`.
 
-**NEXT:** under the next coordinator SDK grant, compile the changed
-`native_model` parent/absent/zero/ON arms (`--units native_model`) and one corrected
-full release ON. Retain the original OFF receipt and verify the new affected
-OFF objects still match its bound inputs; the owner implementation is unchanged.
+**Reviewed target DONE (`c92df54c8f4b17e7b27767d61c8adac86da6d07c`):**
+the changed `native_model` parent/absent/zero/ON gate passed two exact disabled
+objects and one enabled compile. Its OFF object also matches the retained
+original matrix; the owner runtime source is unchanged. That closes the affected
+OFF dependency after review without rebuilding the identical full OFF candidate.
+One corrected full recipe ON completed real rc0/41s with nonempty ELF and an
+existing empty `missing.txt`, SHA256
+`b332ed715b64fc3f25382855e1e95ffa51787b7e1b4eeb712404fe351ff57352`.
+The actual normalized resolved fields differ solely by `PLAN_OWNER_SCOPED`
+absent -> 0 -> 1; recipe SHA256 remains `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+
+The [compact target receipt](../../../tools/cloud/build33/receipts/plan-owner-scoped-target.json)
+records both source-bound matrices, full OFF programme/15-overlay/11-allocated-
+section identity, corrected ON, exact compiler/KOS/SH4ZAM/source bindings and
+selected local frames. Complete reviewed evidence is under
+`/root/probe/engine-ef07-20261029-target-r2/`; the corrected full ON is
+`/root/probe/lanes/route/out-ef07w2onrP`. No SDK job remains live.
+
+Target DWARF confirms Owner 16 -> 20 bytes and Entry 32 -> 44. The fixed 32 KiB
+metadata partition therefore uses an 11,264-byte entry table (was 8,192), the
+same 8,192-byte local arena and 13,312 bytes for plans/bounds (was 16,384).
+Source backing is still retained by the existing owners. PreparedModelBatch is
+11,608 bytes inside its existing 12,288-byte workspace. `_end` is OFF
+`8c4170d4`, corrected ON `8c417894` (+1,984 bytes). This is increased metadata /
+code footprint, not a RAM-saving or runtime-headroom result.
+
+**NEXT:** coordinator integration/review default off, then matched runtime
+replacement/reentry/movie-loan/output and complete-cost qualification. The
+existing source-content/mutable-authority boundaries remain; this slice does
+not silently declare the whole EF07 card hardware accepted.
 
 ```bash
 python3 -B port/dreamcast/tools/cloud/build33/plan_owner_target.py \
@@ -92,7 +118,7 @@ object identity/layout and selected stack frames. Full release command follows
 the existing `ch2/ch2-build.sh rP` workflow with the current recipe and the final
 `PLAN_OWNER_SCOPED=0` or `=1` override; retain private input bindings locally.
 
-**BLOCKED (scoped):** waiting for a new SDK slot for the reviewed consumer fix; no target job is live. Runtime owner replacement/reentry/movie-loan output, headroom /
+**BLOCKED (acceptance only):** runtime owner replacement/reentry/movie-loan output, headroom /
 peak source-backing overlap and complete hardware cost remain acceptance gates
 for the optimization. No default promotion, emulator/console run or publication
 is claimed. The existing Build33 and EF05 evidence below retains its own scope.
