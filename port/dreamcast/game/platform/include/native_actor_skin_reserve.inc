@@ -40,3 +40,14 @@ extern "C" int re4dc_actor_skin_reserve(unsigned source_frame,const void* const*
     skin_count=high;
     return 1;
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+#error ACTOR_PRESENTATION32 currently requires the existing shared skin table
+#endif
+extern "C" int re4dc_actor_skin_presentation32_frame(unsigned frame,const void* const* infos,unsigned n) {
+    // The ordinary atomic acquisition can add this actor alongside a live
+    // two-pass owner. A new numeric frame uses reserve's existing retirement.
+    if(frame==skin_frame)return 1;
+    return re4dc_actor_skin_reserve(frame,infos,n);
+}
+#endif

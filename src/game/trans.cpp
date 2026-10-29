@@ -791,7 +791,13 @@ void sourceActorFailure(unsigned reason) {
         re4dc_log("SOURCE_ACTORS_FAIL t=%u reason=%u count=%u\n",
             unsigned(pG->Frame_cnt),reason,sourceActorFailures);
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+void sourceActorPresentation32Retire();
+#endif
 void sourceActorRetire() {
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    sourceActorPresentation32Retire();
+#endif
 #if RE4DC_ACTOR_TRANSACTION
     sourceActorRenderActive=false;
     re4dc_actor_transaction_retire();
@@ -2769,6 +2775,9 @@ void Render()
 #if RE4DC_ACTOR_TRANSACTION
     // RAII clears/restores the gate on normal completion and every early return.
     SourceActorRenderScope sourceActorRenderScope(coarse!=0);
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    SourceActorPresentation32Scope sourceActorPresentation32Scope;
+#endif
 #endif
 #endif
 #if RE4DC_PS2_FX_COMMON_HAZE && RE4DC_PACE_CATCHUP
@@ -3164,10 +3173,18 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
 #endif
 #if RE4DC_ACTOR_TRANSACTION
     if(!flag) {
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+        // Capture before a yielding texture acquisition can retire the owner.
+        // A direct image has no prepared source arrays to fall back to.
+        const bool direct_image=re4dc_actor_presentation32_required(m)!=0;
+#endif
         const int owned=re4dc_actor_transaction_draw(m);
 #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
         // mcheck.mk MCHECK_LEONGC (test builds): the player's model left to the source (GameCube) path.
         if(owned==0 && m==(cModel*)pPL)re4dc_leon_gc_note(m);
+#endif
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+        if(direct_image && owned==0)return;
 #endif
         if(owned<0)return; // caller still restores alpha state and shaderReset
         if(owned>0)info=nullptr; // original postlude still executes below
