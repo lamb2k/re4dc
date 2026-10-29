@@ -29,6 +29,9 @@ extern "C" void re4dc_gcasset_retire_archive(const void*);
 #include "eprintf.h"
 #include "player.h"
 #include "read.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
 #endif
@@ -305,6 +308,9 @@ void ReadAreaData()
             re4dc_missing("invalid prepared native room identities");
             return;
         }
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+        re4dc_front_tpl_bind_room(pG->pRoom, out_data_size);
+#endif
         readTime = StopwatchStop(NULL);
         OSReport("Native room: %s bytes=%u read_us=%u\n", name, out_data_size, readTime);
 #endif

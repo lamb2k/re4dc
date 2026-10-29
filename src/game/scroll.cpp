@@ -14,6 +14,9 @@
 #include "model.h"
 #include "obj.h"
 #include "scroll.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_NATIVE_STATIC
@@ -90,6 +93,9 @@ const u8* SmdGetIdNumPtr()
 // Returns the number of works (0 on failure).
 int SmdInit(cSmd* smd, cSmx* smx, cSmd* comn)
 {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_smd_begin(smd, comn);
+#endif
     if (smd == NULL) {
         pLog->err(0, 0, "ERROR: SMdInit() COMN DATA was NULL");
         pSmd = smd;
@@ -117,6 +123,9 @@ int SmdInit(cSmd* smd, cSmx* smx, cSmd* comn)
 void SmdClear(int mode)
 {
     int i;
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_smd_clear();
+#endif
 
     switch (mode) {
     case 0:
@@ -291,6 +300,9 @@ int SmdSetParam(cObj* obj, SmdWork* w)
     if (pSmdComn != NULL) {
         u8* tbl = (u8*) pSmdComn + pSmdComn->TplTblOfs;
         obj->pModelInfo->addTplAddr(tbl + *(u32*) tbl);
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+        re4dc_front_tpl_smd_publish(obj->pModelInfo, DmyZeroTpl, pSmd, pSmdComn);
+#endif
     }
     if (w->motNo != 0xFF) {
         if (w->flags & 0x40) {
@@ -565,6 +577,9 @@ void BlockDestroy(int blk)
 // The SMD moved in memory by `ofs`: relocates the pointers inside every used bin and tpl.
 void cSmd::slide(int ofs)
 {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_smd_slide(this);
+#endif
     SmdWork* w = getWorkPtr(0);
     int nBin = 0;
     int nTpl;

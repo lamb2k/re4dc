@@ -42,6 +42,9 @@
 #include "snd.h"
 #include "dbmodule.h"
 #include "scroll.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #include "cam_ctrl.h"
 #include "camera.h"
 #include "merchant.h"
@@ -1560,6 +1563,9 @@ void gameRoomMemInit()
 #if defined(RE4DC_GAME) && !defined(__PPC__)
     re4dc_motion_retire_all();
     re4dc_effect_retire_room();
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_retire_room();
+#endif
     re4dc_ui_retire_room();
 #endif
     if (pG->System_flg & 0x200000) {
