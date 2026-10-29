@@ -37,3 +37,29 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=1
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=1
 endif
+
+# EF08: queued portal completion is separately opt-in; legacy portal stays exact.
+WORLD_PORTAL_COMPLETION ?= 0
+ifneq ($(words $(WORLD_PORTAL_COMPLETION)),1)
+$(error WORLD_PORTAL_COMPLETION must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_PORTAL_COMPLETION)),)
+$(error WORLD_PORTAL_COMPLETION must be exactly 0 or 1)
+endif
+ifeq ($(WORLD_PORTAL_COMPLETION),1)
+ifneq ($(WORLD_PORTAL29)$(SCENERY_SUBMIT_BATCH)$(PS2_PVS_BATCH_COMPOSE),111)
+$(error WORLD_PORTAL_COMPLETION needs WORLD_PORTAL29=1 SCENERY_SUBMIT_BATCH=1 PS2_PVS_BATCH_COMPOSE=1)
+endif
+ifneq ($(SCENERY_STREAM)$(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),000)
+$(error WORLD_PORTAL_COMPLETION requires explicit SCENERY_STREAM=0 SCENERY_CLIP_GATHER=0 SCENERY_CLIP_INDEXED26=0)
+endif
+# These facts were formerly UI-only flags or late native_static header
+# defaults. The existing early composition guards must see the actual selected
+# Make values, not undefined zero. PVS_BATCH_COMPOSE already requires each=1.
+WORLD_PORTAL_COMPLETION_FACTS := TA_DIRECT PS2_WORLD_HDR_CACHE MESH_FASTPATH PVR_STREAM
+ifneq ($(strip $(foreach v,$(WORLD_PORTAL_COMPLETION_FACTS),$(if $(filter 1,$($(v))),,bad))),)
+$(error WORLD_PORTAL_COMPLETION requires qualified direct/header/mesh/stream facts at 1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += $(foreach v,$(WORLD_PORTAL_COMPLETION_FACTS),-DRE4DC_$(v)=$($(v)))
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_COMPLETION=1
+endif

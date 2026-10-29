@@ -111,6 +111,15 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #if RE4DC_SCENERY_UV_SNAPSHOT && !RE4DC_SCENERY_CHUNK
 #error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK
 #endif
+#ifndef RE4DC_WORLD_PORTAL_COMPLETION
+#define RE4DC_WORLD_PORTAL_COMPLETION 0
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION != 0 && RE4DC_WORLD_PORTAL_COMPLETION != 1
+#error WORLD_PORTAL_COMPLETION must be 0 or 1
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || RE4DC_SCENERY_STREAM || RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26)
+#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching, without stream/clip extensions
+#endif
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
 #endif
@@ -120,7 +129,7 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #if RE4DC_SCENERY_SUBMIT_BATCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
 #error SCENERY_SUBMIT_BATCH needs the direct PS2 scenery chunk path
 #endif
-#if RE4DC_SCENERY_SUBMIT_BATCH && (RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
+#if RE4DC_SCENERY_SUBMIT_BATCH && ((RE4DC_PS2_PVS && !(RE4DC_WORLD_PORTAL_COMPLETION && RE4DC_WORLD_PORTAL29 && RE4DC_PS2_PVS_BATCH_COMPOSE)) || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
 #error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
 #endif
 #ifndef RE4DC_SCENERY_EMIT_PREFETCH
@@ -8131,6 +8140,9 @@ int ps2_pass(unsigned pass,float zfar){
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
 #if RE4DC_WORLD_PORTAL29
                        unsigned wp29_placement;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                       re4dc::portal29::Ticket wp29_ticket;
+#endif
 #endif
 #if RE4DC_SCENERY_UV_SNAPSHOT
                        float uv_offset[2];
@@ -8236,6 +8248,12 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+            const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
+            const auto& wp29_source=cpkg.parts()[x.index];
+            const bool wp29_whole=re4dc::portal29::whole_source(cpk+x.first,x.count,
+                wp29_source.first_meshlet,wp29_source.meshlet_count);
+#endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
             // Picks are packed even when an intervening part has no picks.
             // Never look beyond this flush or change the selected draw order.
@@ -8244,15 +8262,23 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             const int result=e.chunk_emit(cpk+x.first,x.count);
 #endif
+            // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
 #if RE4DC_WORLD_PORTAL29
             if(wp29::witness(x.wp29_placement,x.index)){
 #if RE4DC_SCENERY_SUBMIT_BATCH
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
+                    wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+                wp29::finish(x.wp29_ticket,completion,x.key);
+#else
                 wp29::finish(x.wp29_placement,x.index,result>0,x.key);
+#endif
             }
 #endif
+            // PORTAL_COMPLETION_FLUSH_END
 #if RE4DC_SCENERY_SUBMIT_BATCH
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
             // Logical completion/accounting precedes release. Only actual
@@ -8623,6 +8649,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_WORLD_PORTAL29
                     x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                    x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
+#endif
 #endif
                     x.count=d.chunk_select(cpk+npk);npk+=x.count;
                     continue;
@@ -8704,6 +8733,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_WORLD_PORTAL29
                 x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
+#endif
 #endif
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
                 continue;
@@ -8725,7 +8757,13 @@ int ps2_pass(unsigned pass,float zfar){
             d.end_direct(); // before any abort: releases the store queues
 #endif
 #if RE4DC_WORLD_PORTAL29
+#if RE4DC_WORLD_PORTAL_COMPLETION
+            // This first completion class proves whole queued source spans.
+            // The legacy immediate producer still draws, but grants no witness.
+            wp29::finish({},re4dc::portal29::Completion::emitted(result,d.submitted,d.input,d.output,false),key);
+#else
             wp29::finish((RE4DC_PS2_AFFINE==pl.affine)?i:~0U,index,result>0,key);
+#endif
 #endif
 #if RE4DC_PS2_PVS
             d.pvs_finish(result>0);
