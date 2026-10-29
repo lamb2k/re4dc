@@ -31,6 +31,19 @@ void OSReport(const char* fmt, ...);
 }
 
 Cloth ClothWk[8];
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+#include <cstdint>
+// Render-only publication identity for the existing fixed cloth pool. Retiring
+// or replacing the same cell during texture I/O cannot revive its old view.
+static unsigned cloth11_incarnation[8]={1,1,1,1,1,1,1,1};
+static unsigned cloth11_slot(const Cloth* p){
+    const auto a=reinterpret_cast<std::uintptr_t>(p),base=reinterpret_cast<std::uintptr_t>(ClothWk);
+    if(a<base || a-base>=sizeof ClothWk || (a-base)%sizeof(Cloth))return 8;
+    return unsigned((a-base)/sizeof(Cloth));
+}
+static unsigned cloth11_epoch(const Cloth* p){const unsigned slot=cloth11_slot(p);return slot<8?cloth11_incarnation[slot]:0;}
+static void cloth11_replace(Cloth* p){const unsigned slot=cloth11_slot(p);if(slot<8 && cloth11_incarnation[slot])++cloth11_incarnation[slot];}
+#endif
 
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
 // CLOTH_NATIVE=1 (effects30.mk; render only, approximation): clothTrans draws through immediate GX, which the Dreamcast
@@ -43,6 +56,7 @@ Cloth ClothWk[8];
 #include <string.h>
 extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
+#include "native_cloth_sheet11.hpp"
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "native_draw_result.hpp"
 #endif
@@ -70,6 +84,13 @@ static re4dc::NativeDrawResult re4dc_cloth_native(Cloth* pCL, cLight** list, Vec
 static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #endif
 {
+#if RE4DC_CLOTH_SHEET11
+    if(cloth11_slot(pCL)>=8)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    // A queued callback may arrive after Destroy/Init. Do not dereference its
+    // texture/grid or enter the recovered GX fallback for a retired pool cell.
+    if(!(pCL->be_flag&1))return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!(pCL->be_flag&0x20))return {re4dc::NativeDrawOutcome::PolicySkip};
+#endif
     const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
@@ -139,6 +160,36 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     PSMTXConcat(pCL->mat, sc, tmp);
     PSMTXConcat(pG->Cam.v_mat, tmp, mv);
     const u32 cols = pCL->divH;
+#if RE4DC_CLOTH_SHEET11
+    if(pCL->divV>50)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    // No simulation writes: preflight source finiteness before the first packet.
+    for(unsigned i=0;i<3;++i)for(unsigned j=0;j<4;++j)if(!__builtin_isfinite(mv[i][j]))return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    const Vec* source=pCL->pVer;const unsigned rows=pCL->divV,source_frame=pG->Frame_cnt,source_epoch=cloth11_epoch(pCL);
+    if(!source_epoch)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    for(unsigned i=0;i<cols*rows;++i)if(!__builtin_isfinite(source[i].x) || !__builtin_isfinite(source[i].y) || !__builtin_isfinite(source[i].z))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    m.cols=cols;m.rows=rows;
+    Re4dcClothMaterial11 material;re4dc::NativeDrawResult stop{re4dc::NativeDrawOutcome::Refused};
+    const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
+        pCL->pVer==source && pCL->divH==cols && pCL->divV==rows;};
+    const int prepared=re4dc_cloth_prepare11(&m,&material,&stop);
+    // Even failed texture I/O may retire/reuse the source. This is terminal,
+    // including zero publication: the source GX fallback must not read it.
+    if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!prepared)return stop;
+    f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
+    auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;}};
+    transform(0,top);
+    for(unsigned row=0;row+1<rows;++row){
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+        transform(row+1,bottom);const Re4dcClothBand11 view{top,bottom,cols,0,row};
+        const auto result=re4dc_cloth_band11(&material,&view);
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
+        if(!progress.add(result))return progress.result;
+        float* previous=top;top=bottom;bottom=previous;
+    }
+    return progress.result;
+#else
     f32 band[2 * 100 * 3];
     m.positions = band;
     m.cols = cols;
@@ -168,6 +219,7 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #else
     return 1;
 #endif
+#endif
 }
 #endif
 
@@ -183,6 +235,9 @@ static f32 D_PARAM = 0.006f;  // unused (the 0.006 word after T_PARAM in .sdata;
 // Boot: marks the 8 cloth works free.
 void ClothInit()
 {
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    for(auto& cloth:ClothWk)cloth11_replace(&cloth);
+#endif
     int i;
 
     for (i = 0; i < 8; i++) {
@@ -214,6 +269,9 @@ static Vec* clothAllocNormal(Vec* dir)
 void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h, void* p_, f32 d, GXTlutObj* tlut_,
                 int flag_)
 {
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    cloth11_replace(this);
+#endif
     Vec zero = {0.0f, 0.0f, 0.0f};
     Vec n = {0.0f, 0.0f, 1.0f};
     Vec* pp;
@@ -291,6 +349,9 @@ void Cloth::SetPosAng(Vec ang, Vec pos_)
 // Frees the grid memory and the work.
 void Cloth::Destroy()
 {
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    cloth11_replace(this);
+#endif
     Mem_free(m_pMem);
     be_flag = 0;
 }

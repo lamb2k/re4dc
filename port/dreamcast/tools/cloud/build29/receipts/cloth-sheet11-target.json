@@ -1,0 +1,690 @@
+{
+  "date": "2026-10-29",
+  "status": "IMPLEMENTED + TARGET VALIDATED bounded slice; default0; acceptance pending",
+  "baseline": "255964fdc7d22a61acff1ef59734a36ec91ebff0",
+  "original_code": "2626ba4f27efb16d089cd97bd585ac00bf6e15a9",
+  "reviewed_code": "9bbff5d26d4f478e865899854811ce30ccb83228",
+  "source_sha256": {
+    "src/game/cloth.cpp": "9f2b4b4ce4d5814600db258c74ed90b0f7dd15bc70775e9e5dc354939fa8384a",
+    "port/dreamcast/game/platform/native_ui.cpp": "03c7ea8955339ef4cfd96b28b2b914d37d4c6ff876ba02a33c29b1647d66c501",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "f5e61016f3b4aba5b80b6ab617f6a4d1d6573477d692e32a1be256d4446335c2",
+    "port/dreamcast/game/platform/include/native_cloth_sheet11.inc": "a346a4e13f9add52b2fb61b640f17712cb44f6dd3487a14a7df99b6b031cb5f4",
+    "port/dreamcast/game/platform/include/native_cloth_sheet11.hpp": "8d6ca9bd47c5394cbc33f0debee304bb487821beefb124579970301de338b319",
+    "port/dreamcast/game/platform/include/cloth_strip_geometry11.hpp": "490b0d8bc3f79284c522721f7ce13ffb20faef67b12cad2d357f71077f0d2b17",
+    "port/dreamcast/game/effects30.mk": "c160b7711192b111e58775ae85c6e09fadb5baa038329014848a3b698e70f61b",
+    "port/dreamcast/tools/cloud/build29/cloth_sheet_target.py": "db622da327ab8860e34ec0379e700cced70723f03d449551ca6b40c39a559f4d"
+  },
+  "toolchain": {
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "compiler_sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+    "kos_head": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "sdk_head": "33fa4850cacb30dd0ad35485ef035526ec4ce782"
+  },
+  "original_matrix": {
+    "release-parent": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_local_frames": []
+      }
+    },
+    "release-absent": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_local_frames": []
+      }
+    },
+    "release-zero": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_local_frames": []
+      }
+    },
+    "dependencies-parent": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "f5edc45b3020adf9fef4437ef0e5f69c4b5b03c4d1a3308d0d0c19c2b751a0e0",
+        "bytes": 415264,
+        "executable_bytes": 82922,
+        "allocated_bytes": 397272,
+        "zero_fill_bytes": 155423,
+        "selected_local_frames": []
+      }
+    },
+    "dependencies-absent": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "f5edc45b3020adf9fef4437ef0e5f69c4b5b03c4d1a3308d0d0c19c2b751a0e0",
+        "bytes": 415264,
+        "executable_bytes": 82922,
+        "allocated_bytes": 397272,
+        "zero_fill_bytes": 155423,
+        "selected_local_frames": []
+      }
+    },
+    "dependencies-zero": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "f5edc45b3020adf9fef4437ef0e5f69c4b5b03c4d1a3308d0d0c19c2b751a0e0",
+        "bytes": 415264,
+        "executable_bytes": 82922,
+        "allocated_bytes": 397272,
+        "zero_fill_bytes": 155423,
+        "selected_local_frames": []
+      }
+    },
+    "dependencies-enabled": {
+      "cloth": {
+        "sha256": "2dc77b8ca682fa023c889d56e225da09c8b10ddc344cafee0434b9686cc2bbd9",
+        "bytes": 15964,
+        "executable_bytes": 7004,
+        "allocated_bytes": 11558,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3972,
+            "kind": "static"
+          }
+        ]
+      },
+      "native_ui": {
+        "sha256": "77cf30cb08963a9d65e096f1d975599119d6e742dac7ae8f21374cc479f1d10c",
+        "bytes": 421232,
+        "executable_bytes": 86566,
+        "allocated_bytes": 400916,
+        "zero_fill_bytes": 155423,
+        "selected_local_frames": [
+          {
+            "function": "include/native_cloth_sheet11.inc:124:36:re4dc::NativeDrawResult re4dc_cloth_band11(const Re4dcClothMaterial11*, const Re4dcClothBand11*)",
+            "bytes": 7436,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_cloth_sheet11.inc:57:16:int re4dc_cloth_prepare11(const Re4dcEffectMesh21*, Re4dcClothMaterial11*, re4dc::NativeDrawResult*)",
+            "bytes": 300,
+            "kind": "static"
+          }
+        ]
+      }
+    }
+  },
+  "original_OFF_checks": [
+    {
+      "arm": "release-absent",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "release-absent",
+      "unit": "native_ui",
+      "exact_object": true
+    },
+    {
+      "arm": "release-zero",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "release-zero",
+      "unit": "native_ui",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-absent",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-absent",
+      "unit": "native_ui",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-zero",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-zero",
+      "unit": "native_ui",
+      "exact_object": true
+    }
+  ],
+  "reviewed_matrix": {
+    "release-parent": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "release-absent": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "release-zero": {
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "dependencies-parent": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "dependencies-absent": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "dependencies-zero": {
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "dependencies-enabled": {
+      "cloth": {
+        "sha256": "2ef6508c8e20e63f153bafd9695d6e729cbd50b0e7222244ec8456e595eea9e2",
+        "bytes": 16184,
+        "executable_bytes": 7112,
+        "allocated_bytes": 11666,
+        "zero_fill_bytes": 4288,
+        "selected_local_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 4004,
+            "kind": "static"
+          }
+        ]
+      }
+    }
+  },
+  "reviewed_OFF_checks": [
+    {
+      "arm": "release-absent",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "release-zero",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-absent",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "dependencies-zero",
+      "unit": "cloth",
+      "exact_object": true
+    }
+  ],
+  "reviewed_OFF_objects_match_original": true,
+  "unchanged_backend_sources": true,
+  "release_OFF_identity": {
+    "baseline": {
+      "directory": "/root/probe/lanes/route/out-enginewave2oct29rP",
+      "elf_sha256": "d1740528a367990207948d8326cda6993c922be8c2f0cdc111499c071b8ef18a",
+      "build_log_sha256": "672b764755f2e51cdbb1904c156869ab704320629399a1c5d5d86da09db7d051",
+      "resolved_knobs_sha256": "77a86193c57b4428b02e4175834bb5c2d0b880a943ea660133197ecc3f364b91",
+      "programme_sha256": "fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1",
+      "programme_bytes": 3372036,
+      "allocated_sections": {
+        ".text": {
+          "type": 1,
+          "flags": 6,
+          "address": 2348875776,
+          "bytes": 2418368,
+          "alignment": 32,
+          "sha256": "493bd6bd73b7f4ade71d667e55b0d74ea811f510b27fee2e7debc1e6132c4471"
+        },
+        ".init": {
+          "type": 1,
+          "flags": 6,
+          "address": 2351294144,
+          "bytes": 54,
+          "alignment": 4,
+          "sha256": "94e32908de4a7f285457807c7b88a44090e9de4aef03268564038629dbc20e2e"
+        },
+        ".fini": {
+          "type": 1,
+          "flags": 6,
+          "address": 2351294200,
+          "bytes": 42,
+          "alignment": 4,
+          "sha256": "67be1a0dd9425b2182b80b41f948579e257fd69e7a1e3ac44420ef5fd5089848"
+        },
+        ".rodata": {
+          "type": 1,
+          "flags": 2,
+          "address": 2351294272,
+          "bytes": 275160,
+          "alignment": 32,
+          "sha256": "dc1ddc2dad47406bed3767745dab0ccde0e2ccb09dd4edc337fed2d789edeacd"
+        },
+        ".eh_frame": {
+          "type": 1,
+          "flags": 2,
+          "address": 2351569432,
+          "bytes": 1340,
+          "alignment": 4,
+          "sha256": "822d881aa1726acf9b91e654d4bc86028c1e892ea47ac019226fdf0511072b58"
+        },
+        ".ctors": {
+          "type": 1,
+          "flags": 3,
+          "address": 2351570900,
+          "bytes": 120,
+          "alignment": 4,
+          "sha256": "1f5cf343348dbe6517702daf476bd918952d28d9129cd5d23975665730aa57ea"
+        },
+        ".dtors": {
+          "type": 1,
+          "flags": 3,
+          "address": 2351571020,
+          "bytes": 8,
+          "alignment": 4,
+          "sha256": "72a4fa3544e43a836ffcb268ce06ccdbc55d44d5e6b1b1c19216a53ea98301fd"
+        },
+        ".data": {
+          "type": 1,
+          "flags": 3,
+          "address": 2351571040,
+          "bytes": 185240,
+          "alignment": 32,
+          "sha256": "6d6e20a5047f3a83d80e584c9477771f2a27b56a0034cdebd3895719081fd9bc"
+        },
+        ".re4dc_char_data": {
+          "type": 1,
+          "flags": 3,
+          "address": 2351756288,
+          "bytes": 490592,
+          "alignment": 32,
+          "sha256": "b4adb8a422a6e5ce1b048c10675c0ef4177d58f6a17988951b4ec09449b8839c"
+        },
+        ".got": {
+          "type": 1,
+          "flags": 3,
+          "address": 2352247800,
+          "bytes": 12,
+          "alignment": 4,
+          "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b"
+        },
+        ".bss": {
+          "type": 8,
+          "flags": 3,
+          "address": 2352247840,
+          "bytes": 851124,
+          "alignment": 32,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "overlays": {
+        "em22.ovl": "6d503797cf0db4016dd1235e597a8379f21b5fb7d3569128531316d79ca6c2fd",
+        "em2b.ovl": "bcc9568360d689f95dfb8b5c06f91027a5451846c1ad61d52a42736ae83274d3",
+        "em2f.ovl": "598e6b2035509aaa0b23fe1318796f4ef44ecf6c82ba0889ea8a903eed1216e7",
+        "em35.ovl": "1fab31ab5a07331873bf3a80d68e4ce4afa54bc38e17d780faeed4d9a9c3d3d9",
+        "em3b.ovl": "4884ceb714458dd7ac2e6f2f461289eeb61efd8311882e27e16b2d2abe691a49",
+        "pl0f.ovl": "e2f4c77cbbc86dc82ccb70d6ea416fc3b612a6f880847eb48098ad88a7dcc1d1",
+        "pl11.ovl": "a5c126e320bd786a3deae5bdfd7c961361eff2f304d42041e9aed3618f67dde3",
+        "pl14.ovl": "d723ee0d8e5caea323b2945698bf9fb2d04f557f0c661bbda9151eb8d8c65900",
+        "sscrn.ovl": "59abe73837bb13ce734a02ccd6f3d4eb0084a3ca6fe7f9113d0c1550022fda88",
+        "st1_0.ovl": "c3a0d4cf65a78c80a3e9b52253233ccc9d33f83784e715bc8cabee259419cb8a",
+        "st1_1.ovl": "8f637068476effd1fcc86848897fe90185ba855ad31bfd240a88b61ff99355b5",
+        "st1_2.ovl": "e59aed067e3b39922a5e86bcb924f38285f434c287a31128612fdeda915c933e",
+        "st1_3.ovl": "e658d27569350b4d3886e35470f3f22034b71c706cffe81fddb395e5597a4495",
+        "st2_0.ovl": "38c3aaa6ad2d848de97b4b79831d292c662c54cd0ac9d7adae112082e2f64e62",
+        "wep04.ovl": "75c1f6013d0efd58f2bb847a5d3e8255ca8d3cc78afe82232d9b3a5ca4e46065"
+      }
+    },
+    "arms": [
+      {
+        "directory": "/root/probe/lanes/route/out-ef11w1relrP",
+        "elf_sha256": "7ffb43a1eb823589ce29516caa2ffa8642bf10afb28ff5074dec624086bbccd4",
+        "build_log_sha256": "277b91cdea7029227f676a023169c9bfc86fe360058a1f683136d10054888d48",
+        "resolved_knobs_sha256": "585c213869925e162c4679bda84432859e9ce126b232e9c611f33c0884fb37c5",
+        "programme_equal": true,
+        "programme_bytes": 3372036,
+        "programme_sha256": "fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1",
+        "allocated_sections_equal": true,
+        "allocated_sections": {
+          ".text": {
+            "type": 1,
+            "flags": 6,
+            "address": 2348875776,
+            "bytes": 2418368,
+            "alignment": 32,
+            "sha256": "493bd6bd73b7f4ade71d667e55b0d74ea811f510b27fee2e7debc1e6132c4471"
+          },
+          ".init": {
+            "type": 1,
+            "flags": 6,
+            "address": 2351294144,
+            "bytes": 54,
+            "alignment": 4,
+            "sha256": "94e32908de4a7f285457807c7b88a44090e9de4aef03268564038629dbc20e2e"
+          },
+          ".fini": {
+            "type": 1,
+            "flags": 6,
+            "address": 2351294200,
+            "bytes": 42,
+            "alignment": 4,
+            "sha256": "67be1a0dd9425b2182b80b41f948579e257fd69e7a1e3ac44420ef5fd5089848"
+          },
+          ".rodata": {
+            "type": 1,
+            "flags": 2,
+            "address": 2351294272,
+            "bytes": 275160,
+            "alignment": 32,
+            "sha256": "dc1ddc2dad47406bed3767745dab0ccde0e2ccb09dd4edc337fed2d789edeacd"
+          },
+          ".eh_frame": {
+            "type": 1,
+            "flags": 2,
+            "address": 2351569432,
+            "bytes": 1340,
+            "alignment": 4,
+            "sha256": "822d881aa1726acf9b91e654d4bc86028c1e892ea47ac019226fdf0511072b58"
+          },
+          ".ctors": {
+            "type": 1,
+            "flags": 3,
+            "address": 2351570900,
+            "bytes": 120,
+            "alignment": 4,
+            "sha256": "1f5cf343348dbe6517702daf476bd918952d28d9129cd5d23975665730aa57ea"
+          },
+          ".dtors": {
+            "type": 1,
+            "flags": 3,
+            "address": 2351571020,
+            "bytes": 8,
+            "alignment": 4,
+            "sha256": "72a4fa3544e43a836ffcb268ce06ccdbc55d44d5e6b1b1c19216a53ea98301fd"
+          },
+          ".data": {
+            "type": 1,
+            "flags": 3,
+            "address": 2351571040,
+            "bytes": 185240,
+            "alignment": 32,
+            "sha256": "6d6e20a5047f3a83d80e584c9477771f2a27b56a0034cdebd3895719081fd9bc"
+          },
+          ".re4dc_char_data": {
+            "type": 1,
+            "flags": 3,
+            "address": 2351756288,
+            "bytes": 490592,
+            "alignment": 32,
+            "sha256": "b4adb8a422a6e5ce1b048c10675c0ef4177d58f6a17988951b4ec09449b8839c"
+          },
+          ".got": {
+            "type": 1,
+            "flags": 3,
+            "address": 2352247800,
+            "bytes": 12,
+            "alignment": 4,
+            "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b"
+          },
+          ".bss": {
+            "type": 8,
+            "flags": 3,
+            "address": 2352247840,
+            "bytes": 851124,
+            "alignment": 32,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "overlays_equal": true,
+        "overlays": {
+          "em22.ovl": "6d503797cf0db4016dd1235e597a8379f21b5fb7d3569128531316d79ca6c2fd",
+          "em2b.ovl": "bcc9568360d689f95dfb8b5c06f91027a5451846c1ad61d52a42736ae83274d3",
+          "em2f.ovl": "598e6b2035509aaa0b23fe1318796f4ef44ecf6c82ba0889ea8a903eed1216e7",
+          "em35.ovl": "1fab31ab5a07331873bf3a80d68e4ce4afa54bc38e17d780faeed4d9a9c3d3d9",
+          "em3b.ovl": "4884ceb714458dd7ac2e6f2f461289eeb61efd8311882e27e16b2d2abe691a49",
+          "pl0f.ovl": "e2f4c77cbbc86dc82ccb70d6ea416fc3b612a6f880847eb48098ad88a7dcc1d1",
+          "pl11.ovl": "a5c126e320bd786a3deae5bdfd7c961361eff2f304d42041e9aed3618f67dde3",
+          "pl14.ovl": "d723ee0d8e5caea323b2945698bf9fb2d04f557f0c661bbda9151eb8d8c65900",
+          "sscrn.ovl": "59abe73837bb13ce734a02ccd6f3d4eb0084a3ca6fe7f9113d0c1550022fda88",
+          "st1_0.ovl": "c3a0d4cf65a78c80a3e9b52253233ccc9d33f83784e715bc8cabee259419cb8a",
+          "st1_1.ovl": "8f637068476effd1fcc86848897fe90185ba855ad31bfd240a88b61ff99355b5",
+          "st1_2.ovl": "e59aed067e3b39922a5e86bcb924f38285f434c287a31128612fdeda915c933e",
+          "st1_3.ovl": "e658d27569350b4d3886e35470f3f22034b71c706cffe81fddb395e5597a4495",
+          "st2_0.ovl": "38c3aaa6ad2d848de97b4b79831d292c662c54cd0ac9d7adae112082e2f64e62",
+          "wep04.ovl": "75c1f6013d0efd58f2bb847a5d3e8255ca8d3cc78afe82232d9b3a5ca4e46065"
+        },
+        "debug_elf_equal": false
+      }
+    ],
+    "status": "PASS"
+  },
+  "dependencies_control_elf_sha256": "28906a94d4c36a6c1477f9df6ff09134583213c45ed9411a20db796ccc966bbe",
+  "reviewed_ON_elf_sha256": "36add09d9203c9d9f1523d71065c79dbcbddc9cfb02cf968ff356d7a2d5ae481",
+  "all_missing_files_exist_empty": true,
+  "resolved_fields": {
+    "normalization": "Exact per-arm output/checkout roots and whitespace only",
+    "base_releaseOFF": [
+      {
+        "field": "CLOTH_SHEET11",
+        "before": null,
+        "after": "0"
+      }
+    ],
+    "releaseOFF_dependencies": [
+      {
+        "field": "NATIVE_DRAW_OUTCOMES",
+        "before": "0",
+        "after": "1"
+      },
+      {
+        "field": "PS2_UPLOAD_INCARNATION",
+        "before": "0",
+        "after": "1"
+      }
+    ],
+    "dependencies_reviewedON": [
+      {
+        "field": "CLOTH_SHEET11",
+        "before": "0",
+        "after": "1"
+      }
+    ]
+  },
+  "recipe_sha256": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+  "end_addresses": {
+    "release_OFF": "8c4170d4",
+    "dependencies": "8c417e74",
+    "reviewed_ON": "8c418334",
+    "sheet_vs_dependencies_bytes": 1216,
+    "bundle_vs_release_bytes": 4704
+  },
+  "host_tests": {
+    "new_suite": 5,
+    "existing_EF03": 5,
+    "existing_strip": 4,
+    "sanitizers": "ASan+UBSan",
+    "supported_widths": [
+      2,
+      99,
+      100
+    ],
+    "explicit_refusal_widths": [
+      101,
+      255
+    ],
+    "caller_proof": "Actual clothTrans routing and source GX loop have zero fallback reads/draws on source revocation, including failed prepare and zero publication"
+  },
+  "local_evidence": {
+    "original": "/root/probe/engine-ef11-20261029-target-r1",
+    "reviewed": "/root/probe/engine-ef11-20261029-target-r2",
+    "corrected_ON": "/root/probe/lanes/route/out-ef11w2onrP"
+  },
+  "limits": [
+    "No asset look, runtime/lifecycle memory, hardware timing/speed or whole-stack/headroom acceptance",
+    "Existing native approximation preserved: source alpha>4, Zwrite, stage0scale-clamp and pTobjA remain unresolved",
+    "Further wide/material/source slices reserved cloud",
+    "Original ON is pre-review only"
+  ]
+}
