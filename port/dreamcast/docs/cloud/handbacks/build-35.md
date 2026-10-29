@@ -461,3 +461,60 @@ Final track03 SHA256
 Stage source/knobs/all6 SHA256SUMS entries read back and checked before the
 independent offline scanner extraction. Prepared only; no new game/link/
 hardware acceptance, release promotion, SD copy or publish.
+
+### Answers (owner): full owner release OFF/repacked-image identity, 2026-10-28 23:22 EDT
+
+Before-runtime basecd25cc5e4 and absent-runtime2061c8380 are preserved full
+normal-release owner builds (QA0/link0/warp0, missing0). A NEW explicit0/0
+2061c8380 full release recipe built49s/rc0/missing0. Recipe/private inputs,
+SDK and epoch retained; absent/zero complete resolved-definition delta0 after
+normalizing ONLY exact owned source/output prefixes. Compared every allocated
+ELF section address/size/type/flags/payload, full nonempty raw programme and
+complete15-overlay sets across all3 arms: exactly equal. New Make metadata
+for base->absent is only FA35/FW35 empty object variables, their zero controls
+and allowed window-value list. No enabled observer or public-data fallback.
+
+Programme3372036B SHA256
+fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1.
+Whole ELF/debug bytes DIFFER; no full ELF byte-identity claim.
+
+Three INDEPENDENT unchanged swap-program.py CLI runs then replaced the raw
+programme plus all15 matching own overlays into one fixed final prepared
+ALL ON35 asset GDI template (source2061c8380, original track03 SHA7d808499).
+The replacements are NORMAL-RELEASE QA0/warp0 programmes, not ALL ON or an
+enabled audit profile. This uses the full owner ch2-build rP recipe/SDK;
+it is not a build-public clean contributor-kit check or fresh release master.
+No original GDI/template bytes were changed. No fixture/asset patch, cache
+hit, timestamp normalization, mask, borrowed replacement image or reused
+finished output was used to obtain identity. New independent copies only.
+
+Each swap read back all16 replaced files and checked layout/overlaps; each
+finished image passes loader AND standard lint, rc0. GDI plus all3 track
+lengths and SHA256 are EXACTLY equal base/absent/zero:
+
+| File | Bytes | SHA256 |
+|---|---:|---|
+|disc.gdi|87|025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f|
+|track01.bin|1058400|058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9|
+|track02.raw|1237152|15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48|
+|track03.bin|1185760800|4b42bf067f4ba84cf1d82284c57080628d5128202e48f0c17b657bbdb92b3b1e|
+
+Read ALL1664 final file payloads from the base repack: its programme and15
+overlays match the own compiled output, all1648 other payloads exactly match
+the fixed source image manifest. Since the other2 GDI/track sets are raw-byte
+identical, that payload result also holds for both. Source manifest SHA
+1b9c8f14e97423e12959eec202cda807b15bd761bd0e440b14db2621b29629f4;
+source image hashes checked unchanged after all3 swaps.
+
+Evidence: owner-audit35-offid-20261028/OFF-EXECUTABLES.json, OFF-IMAGES.json,
+FINAL-PAYLOAD-BINDING.json, full own logs/lint/commands/programmes/GDIs;
+WSL root with the same name retains build/precheck/zero input receipts.
+This closes the scoped normal-release disabled executable/repacked-image
+identity gate on this fixed composed data template. It does not certify the
+QA template's content, contributor kit, public release, route, enabled game/
+link windows, observer CPU/stack/heap, memory floor or hardware acceptance.
+
+NEXT: same-source normal-release/existing-audit/gaps/window32 private enabled
+profiles and actual cost/game/link evidence, retaining normal and existing-
+audit controls separately. No N32 reduction, production log-ring change,
+recipe promotion, SD copy, release publication or console input.
