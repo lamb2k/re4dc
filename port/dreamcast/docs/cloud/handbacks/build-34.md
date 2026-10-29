@@ -647,3 +647,23 @@ Next independent local work is fixed-front cache room/material lifetime,
 while awaiting a supported current-composition SCPS check route. All held
 controls stay off; console prerequisites and broader gates remain unchanged.
 No SD/recipe/publication.
+
+### Answers (owner): fixed-front actual door/material lifetime
+
+Pinned6c6028df6 FRONT_NATIVE1 control/cache default-weapon source-button
+r105->r101 cases both finish60s cache-interpreter/GDEMU1, reader0/errors
+empty/overruns0, normal r101 gameplay and owned process exit. Same assets/
+profile except FRONT_TEXOBJ0/1, no host input or forced room jump.
+Candidate frame600:1011hits/42builds/0fallbacks/520flushes/0resets,
+19keys/175records. Source ftLookup clears room key/record counts on a room
+change; ft_resets increments only on capacity exhaustion. The logged zero
+resets therefore must not be interpreted as no room reset or as complete
+room-lifetime qualification. Preserve that distinction in Build35 counters.
+
+Private hashes/profiles/results: owner-front34-20261028/DOOR-RESULTS.json
+and DOOR-RESULTS.md. Broader aliases/material changes/menu/movie/re-entry/
+texture eviction, look/STRICT/standard-memory and matched console remain.
+Next independent menu/material fixtures are prepared; stock KOS fight/call/
+leave60s checks require dedicated squeeze/watch twins. Its door75s and
+stock h2_300s are not authorized by the current60s limit. No gate waived,
+held control enabled, SD/recipe change or publication.
