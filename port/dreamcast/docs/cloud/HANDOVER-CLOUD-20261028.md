@@ -1,5 +1,16 @@
 # Cloud agent handover, 2026-10-28 (evening)
 
+## Current execution agreement
+
+**SYNC: RE4-PLAN-SYNC-20261029-1202.** Scope is the current-source review7c4c9200 plus all unfinished EF01-EF16 cards. The [queue](CLOUD_AGENT_QUEUE.md) and [full owner task/file matrix](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment) define current ownership and writer handoffs. This agreement supersedes historical first-wave assignments and one-build-at-a-time cloud ordering; preserve their evidence.
+
+Cloud owns ALL public-source/synthetic implementation, with independent workers for EFM identity, collision dirtiness, line traversal, water and frontend now. Actor/world/binding/static/effects/cloth/batches/logger successors are also cloud-assigned, waiting only for their exact current local writer/dependency release. Local finishes frozen EF04/09/11/16 qualification/delivery, then owns private assets/loaded-package binding, actual Flycast/look/gameplay/STRICT/memory/current-cost/console checks and serialized integration/release-recipe builds. No private-input wait blocks unrelated source work. All new simulation continuations are tracked under existing Build29, not renderer EF12 or new Build37+.
+
+Current runtime integration remains064bfa4ea (first EF01/02/03/05/06/07/08 slices); their required remaining scope is open. EF04 is frozen/target-running; EF09 frozen/target-validated/unmerged; EF11 corrected frozen/target-validated/unmerged; EF16 partial selector target-validated/unmerged. Exact delivery commits and live jobs stay in local OWNER-STATUS/ACTIVE and existing build handbacks. None is full enabled or hardware acceptance. Shared files transfer only after an integration SHA and explicit queue release; earlier local statements that a worker finished are not an early cloud write grant.
+
+Preserve default0/absent-zero identity, source pose/material/order/gameplay, fixed budgets, valid existing evidence and frozen release/look/console/media holds. The local owner merges no-ff only after source/target/release/missing/OFF gates and fresh origin-base verification; conflicting source/build failure stays blocked. Compatible ALLON uses QA_LINK=1 after runtime changes, with incompatible or unqualified controls individually parked. Never merge dreamcast-port into t15/int or push bruce. Cloud watch remains every5m; emails remain stopped. A prepared image, parked control or passing synthetic fixture is not accepted real-content or hardware work.
+
+
 The user: "lets give the cloud agent all the work ranked by impact with incremental commits and updates." This file is your work order. `CLOUD_AGENT_QUEUE.md` keeps the full build descriptions and the Status table. Work the list below top to bottom. You are code-only: no game data, no console, no Flycast. Prove everything on synthetic fixtures and give Claude the exact commands to run on the private data and the console.
 
 ## Where things stand (console facts, 10-28)

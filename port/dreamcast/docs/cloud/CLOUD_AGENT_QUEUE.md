@@ -1,5 +1,7 @@
 # Cloud agent queue
 
+**Execution agreement:** RE4-PLAN-SYNC-20261029-1202; latest source review7c4c9200. All source/synthetic work belongs to cloud; current local frozen-slice qualification and exact file releases remain coordinated. Read the current owner assignment below.
+
 The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Follow the latest owner assignment below; independent cloud workers may run concurrently under its file reservations.
 
 **Work order 2026-10-28 evening:** read [HANDOVER-CLOUD-20261028.md](HANDOVER-CLOUD-20261028.md) first. It ranks Builds 31-36 by impact and adds the incremental-commit rule: small pushed commits that each build and keep identity, plus a dated progress line in your hand-back file on every commit.
