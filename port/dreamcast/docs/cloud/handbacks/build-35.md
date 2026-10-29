@@ -411,3 +411,43 @@ live HouseWhole benchmark is not this tour and has not been driven or repurposed
 Independent private work continues on Build34 SCPS-only control/on/check and
 current cache lifecycles while awaiting the runtime. No private assets, SD
 writes, recipe promotion, release or new lane launch.
+
+### Answers (owner): runtime landing and local source/host qualification
+
+842d51676 merged clean as2061c8380 after source/guard review. Both new
+controls remain default0. Locally reran actual-source gap_host, trans_events,
+window_host and window_qa normally and with ASan/UBSan (leaks disabled):
+477 gap cases/92179 checks;105 trans scenarios/689 assertions;6 lifecycle
+profiles/366954 checks;5 QA compositions/45 complete reassemblies with
+maximum-value capacity/transport checks. The4840-byte spare is QA snapshot
+buffer capacity, NOT KOS/whole-game free memory. Exact own logs/artifacts:
+cloud35-host-20261028-2210. Cloud target136 comparisons/6 enabled links/
+16 Make rejects were inspected, not rerun or treated as full game images.
+
+Full owner default-off release recipe rc0/missing0, ELF
+fdf2651068ca318cca5ad89904f53ea09241401b80719efc4659556f028d0f10;
+origin integration base re-fetched/CAS checked before pushing origin only.
+ALL ON QA refresh at source2061c8380 is running with QA_LINK1 and unchanged
+K19. These new controls are observers requiring dedicated audit profiles,
+so they stay0 in performance K/release; normal release/existing-audit/gaps/
+window32 arms remain separate. Old candidates/evidence retained, no SD copy.
+
+1. Six-group actual-game tour is PENDING; no old counters or host fixture
+   zero is transferred into current FA35 event coverage. Capture material/
+   weapon/menu, cloth, effect owner reuse, collision overflow and motion
+   transitions with exact resolved modes and pinned assets/programme.
+2. Partial/full/skipped/incomplete/outside/reset/pause/saturation lifecycle
+   host/QA tests PASS; actual game/link windows remain pending. Draw attempts
+   are not observed GPU presentation, different units are not summed.
+3. Normal-release/existing-audit/gaps/window32 private image, full disabled
+   repacked GDI/track identity and actual linked BSS/stack/observer CPU costs
+   remain owner steps, not inferred from target objects or the earlier plan.
+   Warp/QA keeps64KiB log ring versus16KiB production; keep that framework
+   footprint separate from incremental gaps/window cost. Never shrink it
+   to force a memory pass or silently lower N32.
+
+Console prerequisite: user chooses each explicit arm, establishes REMOTE
+LINK after swaps, holds the matched camera/state for600 completed draw-
+attempt ticks/view and retains full metadata (32 used entries are not a
+600-tick sum). Current HouseWhole session is not that tour; no inputs sent.
+No recipe promotion, SD write or release publication.

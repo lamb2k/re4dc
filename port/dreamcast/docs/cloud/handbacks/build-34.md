@@ -898,3 +898,24 @@ control inputs. Do not shrink/change the log configuration to force a pass.
 Public QA remains link-enabled. Exact definitions/object deltas/symbol and
 source receipts: owner-front34-kos-20261028/ALLON-CONTROL-PREFLIGHT.json.
 No new source/build, observer workaround, SD/recipe/release action.
+
+### Answers (owner): supported validation-profile hand-back landed
+
+546c5b361 merged clean ascd25cc5e4 with the Codex helper, release recipe
+rc0/missing0, ELF25e0b13f7310e3f4e3368e97c3ae880f738ceb7aa419d18b26dab2d5e6976268.
+Owner locally checked CLI/import/syntax and the3-profile JSON. The cloud's
+SH-4 full-TU/C-parser/partial-link/rejection matrix was inspected, not rerun
+or relabelled local runtime acceptance. This hand-back changes tools/docs
+only; no existing Make guard/runtime/recipe changed.
+
+The old production-composition cache2+SUBMIT_BATCH failure remains true.
+New validation-control/on/check is a SEPARATE matched profile, with its
+declared batch/PVS-composition controls off consistently across all3 arms.
+Owner will retain normal release/current production cache1 controls and run
+the new validation triplet on identical SCPS-only r101/r103 data, checking
+compiled counters, comparison/mismatch/admission and private memory/route
+scope. No one-arm workaround or production promotion is inferred. Cloud
+NMR_POOL_LOD0 validation override is not silently transferred to private
+recipe/assets. Existing data/hashes/old failure evidence remain preserved.
+Private live triplet/mode2 results pending; console needs explicit selected
+arm and REMOTE LINK. No SD, recipe, guard or release change.
