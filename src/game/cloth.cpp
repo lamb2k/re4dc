@@ -92,7 +92,11 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     if(!(pCL->be_flag&0x20))return {re4dc::NativeDrawOutcome::PolicySkip};
 #endif
     const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2) {
+#else
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
         return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
 #else
@@ -178,11 +182,55 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
     if(!prepared)return stop;
     f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    if(cols>100){
+    // Source draws row-major strips. Split each row into at most 100-column
+    // strips, sharing the seam column; never finish a whole column tile's rows
+    // before moving to the next tile. The same source cell diagonal survives.
+    for(unsigned row=0;row+1<rows;++row){
+        for(unsigned first=0;first+1<cols;){
+            if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+            const unsigned columns=cols-first<100?cols-first:100;
+            auto transform_tile=[&](unsigned source_row,float* dst){
+                for(unsigned i=0;i<columns;++i){
+                    if(!source_current())return false;
+                    Vec v;PSMTXMultVec(mv,source+source_row*cols+first+i,&v);
+                    dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;
+                }
+                return source_current();
+            };
+            if(!transform_tile(row,top) || !transform_tile(row+1,bottom)){
+                progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;
+            }
+            const Re4dcClothBand11 view{top,bottom,columns,first,row};
+            const auto result=re4dc_cloth_band11(&material,&view);
+            if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
+            if(!progress.add(result))return progress.result;
+            first+=columns-1;
+        }
+    }
+    return progress.result;
+    }
+#endif
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){
+        if(!source_current())return false;
+        Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);
+        dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;
+    }return source_current();};
+    if(!transform(0,top)){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+#else
     auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;}};
     transform(0,top);
+#endif
     for(unsigned row=0;row+1<rows;++row){
         if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+        if(!transform(row+1,bottom)){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+        const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#else
         transform(row+1,bottom);const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#endif
         const auto result=re4dc_cloth_band11(&material,&view);
         if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
         if(!progress.add(result))return progress.result;

@@ -974,6 +974,93 @@ this is not whole-EF11 closure. The SDK session completed and slot is released;
 no live job, source promotion, emulator, media change or publication follows.
 
 
+## 2026-10-29 EF11 Build29: row-major horizontal cloth tiles
+
+**DONE (first wide-width slice).** From current integration `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, `CLOTH_TILES11` is a strict default-off control in `effects30.mk`, requiring the already landed `CLOTH_SHEET11=1`. It adds definitions only to `src/game/cloth.o` and `platform/native_ui.o`. Widths 2–100 retain the existing prepared rolling-row path and one transform per source vertex. Widths 101–255 use the same bounded two-row 100-column workspace, with an overlapping boundary column; each source row is completed left to right before the next row. The existing native `re4dc_cloth_band11` produces each tile using global `first_column` and full source width for UVs, so seam vertices agree, each cell is encountered once, and the source triangle-strip diagonal is retained. No simulation, RNG, callbacks, material policy, frame owner, tessellator or source table changes are made.
+
+Every wide-tile source read checks the fixed cloth pool's incarnation/frame/grid identity before dereference. A retirement during a transform stops before the first packet; after a submitted or queued tile it reports EF03 `PartialAbort` with the existing publication counts and forbids stale GX replay. A later tile's queue refusal likewise returns partial publication. The ≤100 rolling path gains the same per-vertex lifetime check only when the new feature is enabled. Unsupported `pTobjA` remains the prior pre-publication fallback; it is the next separate EF11 material slice.
+
+**Validation.** The cloth production baseline remains pinned to39ed524; the ce38 parent adds the independent default0 EFM integration only. `CLOTH_TILES11_SANITIZE=0 python3 -B port/dreamcast/tests/test_cloth_tiles11.py` passes 3 normal host tests. `ASAN_OPTIONS=detect_leaks=0 CLOTH_TILES11_SANITIZE=1 python3 -B port/dreamcast/tests/test_cloth_tiles11.py` passes 3 ASan/UBSan tests. `ASAN_OPTIONS=detect_leaks=0 python3 -B port/dreamcast/tests/test_native_cloth_sheet11.py` passes all 5 prior EF11 tests, including the historical emitter OFF comparison after its exact old blob was restored to the local Git object store. `git diff --check` passes. The new fixture compiles the actual production `re4dc_cloth_native` source adapter and native sheet band consumer. It checks widths 2, 99, 100, 101 and 255, exact row/tile packet encounter order, UV and projected seam agreement, near-clipped seam cells, source-grid immutability, a single prepared material, row-transform counts, owner retirement before/after first publication, first-tile queue refusal and unsupported second material. Pinned base versus new source/native include preprocessing and host object bytes match with the new control absent and explicitly zero.
+
+The fixture invokes the primary `make -f Makefile -n` with strict empty/multi-token/invalid validation, absent=zero and ON definitions exactly once only on the two affected translation units. Its parse with a temporary empty KOS rules file and `EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1` confirms those same selected commands for `cloth.o`, `native_ui.o` and unaffected `esp_sub.o`. This is a dry-run flag proof, not a target compile.
+
+**Footprint and work.** The existing 2×100×3-float row workspace remains 2,400 bytes; no new static storage is added. Host x86-64 `-O2` source-extracted fixture object `.text` is 14,662→16,182 bytes with the width control ON; `.data` and `.bss` remain 113 and 44,500 bytes in that synthetic fixture. Host `-fstack-usage` reports `re4dc_cloth_native` 3,328→3,456 bytes, while `re4dc_cloth_prepare11` remains 160 bytes and `re4dc_cloth_band11` remains 7,616 bytes. These fixture numbers include synthetic PVR/runtime stubs and are not SH target measurements. For four source rows, ≤100 widths still transform exactly width×4 vertices; width 101 transforms 612 vertices across its 2 tiles and width 255 transforms 1,542 across its 3 tiles. Wide widths previously declined into the GX sink, so no speedup claim is made without target/runtime measurement.
+
+**NEXT.** Qualify the actual `pTobjA` texture-stage operation, alpha/depth/order and material phase as a separate EF11 slice; preserve unsupported fallback until a native representation is proven. Then proceed to remaining EF12 generic effect forms under the owner matrix. The Build29 owner should run affected SH target compiles and private live look, STRICT, current-memory and cost gates before enabling the width control.
+
+**BLOCKED external gates.** This cloud workspace has no `kos-c++`, `sh-elf-g++`, KOS SDK, private Build-Assets or physical console. No SH target object/full-image compile, Flycast look, exact current heap/VRAM or console timing is claimed. No assets, release recipe, SD copy or Pi restart are changed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${CT29_BASE_TREE:?fresh base worktree path}"
+: "${CT29_LOGS:?fresh log directory}"
+: "${CT29_PROGRAMS:?fresh programme directory}"
+: "${CT29_LABEL:?fresh lane label prefix}"
+CT29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$CT29_BASE_TREE" ce38b99649bb61631fe4d4f622313ddc16be7c0f
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$CT29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$CT29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$CT29_BASE_TREE" "${CT29_LABEL}base" ""
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}absent" ""
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}off" "CLOTH_TILES11=0"
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}ctrl" \
+  "EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1 CLOTH_TILES11=0"
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}on" \
+  "EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1 CLOTH_TILES11=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${CT29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${CT29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${CT29_LABEL}offrP" \
+  --output "$CT29_LOGS/cloth-tiles29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+**Material source boundary retained.** `clothTrans` stage 0 uses
+`GX_CS_SCALE_4` (the enum value 2), clamping four times texture × raster color
+and alpha. A non-null `pTobjA` adds a second texture modulation of that clamped
+result using texcoord0, forces standard source-alpha/inverse-source-alpha
+blending, and keeps the source alpha>4/depth policy. It is not equivalent to
+the current single-texture native header. The current tracked `Cloth::Set`
+producer in `cEsp4e::SetFreeWork` supplies a null second texture; `pTobjA`
+itself has no bounded secondary-image owner span, and the current native
+texture package releases its payload after upload. This patch neither infers
+secondary texture contents from an unbounded pointer nor claims that arbitrary
+filtered two-texture modulation can be replaced by texel-wise precomposition.
+General secondary materials remain unsupported, and the existing native
+single-texture alpha/depth/scale approximation remains explicit. That material
+coverage work and EF12 forms remain open. The next independent source slice
+can consume existing SH4ZAM wrappers in bounded row transforms (EF14), without
+changing this material contract or waiting for private look acceptance.
+
+
 ## Answers (owner): 2026-10-29 frozen local source release
 
 EF04/EF09/EF11/EF16 first slices landed at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0` via four clean no-ff merges from8f222fb4. All48 non-handback files match the exact target-qualified delivery blobs; current owner prefixes were preserved and no source conflict was hand-resolved. Combined release rc0, actual nonempty ELF and existing empty missing.txt; all new controls resolved0. Full programme, all15 overlays and every allocated ELF section metadata/payload match bound runtime064bfa4ea. ELF SHA256 `49a40830684f8676336f042fe54c28e20e220f378f6f4ab0fe146e1d2f1bee71`. Fresh-base origin-only push/readback passed.

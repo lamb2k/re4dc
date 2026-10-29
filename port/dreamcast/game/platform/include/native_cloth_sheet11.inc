@@ -58,7 +58,11 @@ extern "C" int re4dc_cloth_prepare11(const Re4dcEffectMesh21* m,Re4dcClothMateri
     if(out)std::memset(out->state,0,sizeof out->state);
     if(!stop)return 0;
     *stop={ClothOutcome11::UnsupportedBeforePublication};
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    if(!m || !out || m->cols<2 || m->cols>255 || m->rows<2 || m->rows>50)return 0;
+#else
     if(!m || !out || m->cols<2 || m->cols>100 || m->rows<2 || m->rows>50)return 0;
+#endif
     // Revoke any previous receipt before a failed prepare can expose it again.
     auto* prepared=new(out->state) ClothPrepared11{};
     if(!frame_ready || stream_aborted || draining_parts){*stop={ClothOutcome11::Refused};return 0;}
