@@ -614,3 +614,32 @@ thread-stack maximum. Other instrumented units, nested callees/recursion,
 interrupt use, runtime heap/KOS floor and CPU/game/link/console gates remain
 pending. Window32 remains unbuilt under the unchanged19GiB disk guard.
 No link/master/image/capture, target-source change, SD or release action.
+
+#### Owner: complete selected event-unit local stack comparison, 2026-10-29
+
+Exact-command RAM-only stack metadata replay now also covers cloth,
+pendulum, trans, espgen, est and at_mod in both completed private profiles.
+All12 additional objects match their originals' allocated and relocation
+sections; original object SHA unchanged. Combined with the preceding6,
+nine units/262 corresponding emitted functions per arm have static compiler
+local-frame estimates. This is selected instrumentation coverage, not a
+whole-program callgraph or total thread/interrupt stack bound.
+
+Ten corresponding functions increase locally (existing-audit -> gaps, B):
+motion_acquire60->68; MakeWeightPalette0->16; EspgenMove56->68;
+EspgenTrans44->52; EspgenDelete56->64; EspDelete44->56;
+atchkCandidates64->68; EmAtCheck408->412; ObjHitCheck84->88;
+EmHitCheck88->96. All other252 corresponding estimates match.
+Do not sum these frames as independent concurrent costs. The previous
+three-unit maxima being unchanged did not mean every function was equal.
+Per-unit maxima cloth3600/3600, pendulum216/216, trans1176/1176,
+espgen352/352, est84/84, at_mod408/412 (existing/gaps B). Audit/QA/motion
+maxima remain60/3092/304B in both arms. Private exact source/object hashes,
+commands and .su rows retained in stack-replay-events/ and combined
+STACK-LOCAL-COMPARISON.json under owner-audit35-enabled-20261028.
+
+Remaining: source-bound nested callchain/interrupt/thread limits, window32
+profile (unbuilt under unchanged19GiB guard), enabled final-image/game/link,
+observer CPU/current memory-floor and console gates. No runtime timing,
+maximum stack or whole-game acceptance inferred; no source change,
+relink/master/capture, SD write or release action.
