@@ -36,20 +36,48 @@ python3 -B port/dreamcast/tests/test_plan_owner_scoped.py
 python3 -B port/dreamcast/tests/test_native_draw_plan.py
 ```
 
-The new suite passes three tests. The actual-production owner/arena fixture runs
+The new suite passes four tests. The actual-production owner/arena fixture runs
 with ASan/UBSan in both `PLAN_ADMIT_LEAN=0` and `=1`: middle deletion in a
 three-owner collision chain, malformed tombstone reinsertion, same-pointer
 reload, unrelated-owner hits, independent position-bound/retained-state stamps,
 leased metadata, cold compaction, 700 replacements, incarnation wrap, aliases,
 256-entry and 44-owner exhaustion, explicit global reset and room retirement.
+The review fixture also forces an early token2 to repeat on incarnation wrap:
+the actual `native_ui::re4dc_model_invalidate_pending` calls the actual
+`native_model::re4dc_model_invalidate_static_lighting`, which rebuilds static
+contexts/values and invokes `PreparedModelBatch::invalidate` before reuse. Its
+position/normal/light/channel validity flags and local domain are all revoked;
+pending source views are discarded. These are the complete current raw stamp
+consumers, so the existing global wrap fence is retained.
+
+Review found that unknown/ambiguous stamps could compare equal in retained
+position/normal/static-light state even though generic native/reference callers
+do not require plan-owner admission. The corrected guarded consumers require
+valid source/array authority; otherwise they miss/recompute. The actual-code
+fixture forces unknown and overlapping ranges and verifies those misses.
 The other tests establish strict Make propagation to exactly owner/model
 consumers and parent/absent/zero host object identity. The existing native draw
 plan suite also passes. These are code/synthetic checks, not recovered-game
 output, lifecycle memory, look or hardware timing evidence.
 
-**NEXT:** run the prepared two-TU Make-derived target gate and full release
-OFF/ON builds under the coordinator's exclusive SDK slot, then compare OFF
-programme, overlays and allocated sections to the bound `77461a84` control.
+**Target checkpoint (original source `72b18fd2f7cfcfdcce3fbc0cd8d5b5aacbfc0273`):**
+public two-TU parent/absent/zero/ON gate passed four exact disabled objects and
+two enabled compiles. Full release OFF0 completed rc0/46s, ON rc0/43s, both with
+nonempty ELF and existing empty `missing.txt`. OFF raw programme, all 15 overlays
+and all 11 allocated ELF sections match the shared bound `77461a84` control;
+whole debug ELF equality is separate. The original ON is retained as pre-review
+output and does not qualify the corrected unknown-stamp consumers.
+
+Original receipts: `/root/probe/engine-ef07-20261029-target-r1/objects/result.json`
+and `off-final.json`; full arms `out-ef07w1offrP` / `out-ef07w1onrP` under
+`/root/probe/lanes/route`. Original OFF ELF SHA256
+`c218fe858a48238ce1b667acce890b855277034181f9f88a085949e5b8b8ed20`, ON
+`64392187b1d484360619cd5e009e4c3a234288654ec509a4255e0cd7d3eeede8`.
+
+**NEXT:** under the next coordinator SDK grant, compile the changed
+`native_model` parent/absent/zero/ON arms (`--units native_model`) and one corrected
+full release ON. Retain the original OFF receipt and verify the new affected
+OFF objects still match its bound inputs; the owner implementation is unchanged.
 
 ```bash
 python3 -B port/dreamcast/tools/cloud/build33/plan_owner_target.py \
@@ -64,8 +92,7 @@ object identity/layout and selected stack frames. Full release command follows
 the existing `ch2/ch2-build.sh rP` workflow with the current recipe and the final
 `PLAN_OWNER_SCOPED=0` or `=1` override; retain private input bindings locally.
 
-**BLOCKED (scoped):** the SDK slot is currently held by the coordinator's
-accepted queue. Runtime owner replacement/reentry/movie-loan output, headroom /
+**BLOCKED (scoped):** waiting for a new SDK slot for the reviewed consumer fix; no target job is live. Runtime owner replacement/reentry/movie-loan output, headroom /
 peak source-backing overlap and complete hardware cost remain acceptance gates
 for the optimization. No default promotion, emulator/console run or publication
 is claimed. The existing Build33 and EF05 evidence below retains its own scope.

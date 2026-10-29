@@ -19,9 +19,14 @@ def existing_fixture():
                 return arg.value.split('int main(){',1)[0]
     raise AssertionError('existing owner harness not found')
 
-def structure(text,name):
-    start=text.index('struct '+name+' {');end=text.index('\n};',start)+3
+def function(text,signature):
+    start=text.index(signature);end=text.index('{',start)+1;depth=1
+    while depth:
+        depth+=(text[end]=='{')-(text[end]=='}');end+=1
     return text[start:end]
+
+def structure(text,name):
+    return function(text,'struct '+name+' {')+';'
 
 class ScopedPlanOwner(unittest.TestCase):
     def test_actual_owner_collisions_replacement_bounds_leases_compaction_and_retirement(self):
@@ -113,6 +118,15 @@ int main(){
  re4dc_model_bind_draw_owner(&keys[1],archives[1],8192,1);assert(!lookup(p[1]));assert(re4dc_model_prepare_draw_plan(&p[1])==1);
  int alias;re4dc_model_bind_draw_owner(&alias,archives[1],8192,0);assert(!lookup(p[1]));
  re4dc_model_unbind_draw_owner(&alias);assert(!lookup(p[1]));assert(re4dc_model_prepare_draw_plan(&p[1])==1);
+ // An unknown/ambiguous stamp is absence of authority, never equality proof.
+ auto unknown=p[1];unknown.part=archives[0]+4096; // no longer a registered topology publisher
+ positions.assign(unknown);normals.assign(unknown);assert(!positions.matches(unknown)&&!normals.matches(unknown));
+ auto* unknown_light=prepare_room_static_lighting(unknown);assert(unknown_light);auto unknown_generation=unknown_light->generation;
+ assert(prepare_room_static_lighting(unknown)->generation!=unknown_generation);
+ int position_alias;re4dc_model_bind_draw_owner(&position_alias,archives[3],8192,0);
+ positions.assign(p[1]);normals.assign(p[1]);assert(!positions.matches(p[1])&&!normals.matches(p[1]));
+ light=prepare_room_static_lighting(p[1]);auto ambiguous_generation=light->generation;
+ assert(prepare_room_static_lighting(p[1])->generation!=ambiguous_generation);re4dc_model_unbind_draw_owner(&position_alias);
  // Fixed table/arena exhaustion selects reference fallback and leaves live
  // entries untouched. Draw-time lookups never compact, parse or allocate.
  re4dc_model_retire_draw_plans();
@@ -148,6 +162,50 @@ int main(){
                     build=subprocess.run([*args,'-DRE4DC_PLAN_ADMIT_LEAN='+str(lean)],capture_output=True,text=True)
                     self.assertEqual(build.returncode,0,build.stderr)
                     run=subprocess.run([str(exe)],capture_output=True,text=True);self.assertEqual(run.returncode,0,run.stdout+run.stderr)
+
+    def test_wrap_reset_revokes_actual_raw_consumers_and_pending_views(self):
+        prefix=existing_fixture().replace('extern "C" void re4dc_model_invalidate_static_lighting(){++lighting_invalidations;}',
+                                        'extern "C" void re4dc_model_invalidate_static_lighting();')
+        prefix=prefix.replace('extern "C" void re4dc_model_invalidate_pending(){}','extern "C" void re4dc_model_invalidate_pending();')
+        model=(GAME/'platform/native_model.cpp').read_text();ui=(GAME/'platform/native_ui.cpp').read_text()
+        types='\n'.join(structure(model,n) for n in ('StaticLightContext','StaticLightValue','StaticLighting','PositionState','NormalState'))
+        invalidate=function(model,'    void invalidate(){position_valid=normal_valid=lights_valid=channels_valid=false;domain=nullptr;}')
+        code=prefix+'\n#include "native_draw_owner_stamp.hpp"\n#include "native_draw_plan_owner.cpp"\n'+types+r'''
+StaticLighting lighting_memory,*static_lighting=&lighting_memory;
+struct RawPreparation {PositionState position;NormalState normal;bool position_valid=true,normal_valid=true,lights_valid=true,channels_valid=true;
+ const void* domain=reinterpret_cast<void*>(1);
+'''+invalidate+r'''
+} raw_preparation,*prepared_batch=&raw_preparation;
+void* deferred_first=nullptr;bool draining_parts=false,stream_aborted=false;
+void reset_deferred(){deferred_first=nullptr;}
+'''+function(model,'extern "C" void re4dc_model_invalidate_static_lighting()')+'\n'+function(ui,'extern "C" void re4dc_model_invalidate_pending()')+r'''
+int main(){alignas(32) unsigned char archive[128]{};int key;
+ re4dc_model_bind_draw_owner(&key,archive,sizeof archive,0);re4dc_model_bind_draw_owner(&key,archive,sizeof archive,0);
+ Re4dcModelPart p{};p.part=archive;p.positions=archive+64;p.normals=archive+96;p.position_count=4;p.normal_count=1;p.position_stride=p.normal_stride=8;
+ re4dc::render::SourceLighting material{};p.lighting=&material;raw_preparation.position.assign(p);raw_preparation.normal.assign(p);
+ auto token=re4dc_model_draw_owner_stamp(archive,32);assert(token.incarnation==2);
+ raw_preparation.position_valid=raw_preparation.normal_valid=raw_preparation.lights_valid=raw_preparation.channels_valid=true;
+ raw_preparation.domain=archive;lighting_memory.contexts[0].part=archive;lighting_memory.contexts[0].generation=2;lighting_memory.values[0].generation=2;
+ owners[token.slot].incarnation=~0U;
+ re4dc_model_bind_draw_owner(&key,archive,sizeof archive,0);
+ // This wrap reaches an early token again. The actual full-reset call chain
+ // revokes the authority flags and both static-light contexts/values first.
+ assert(re4dc_model_draw_owner_stamp(archive,32).incarnation==2);
+ assert(raw_preparation.position.matches(p)&&raw_preparation.normal.matches(p));
+ assert(!raw_preparation.position_valid&&!raw_preparation.normal_valid&&!raw_preparation.lights_valid&&!raw_preparation.channels_valid&&!raw_preparation.domain);
+ assert(!lighting_memory.contexts[0].part&&!lighting_memory.contexts[0].generation&&!lighting_memory.values[0].generation);
+ deferred_first=archive;re4dc_model_invalidate_pending();assert(!deferred_first&&stream_aborted);
+}
+'''
+        with tempfile.TemporaryDirectory(prefix='re4dc-plan-wrap-') as td:
+            tmp=Path(td);(tmp/'kos').mkdir();(tmp/'kos/fs.h').write_text('#pragma once\n#include <sys/types.h>\n#include <cstddef>\n#include <fcntl.h>\nusing file_t=int;\n#define FILEHND_INVALID -1\nfile_t fs_open(const char*,int);ssize_t fs_read(file_t,void*,size_t);ssize_t fs_total(file_t);int fs_close(file_t);\n')
+            (tmp/'kos.h').write_text('#include <kos/fs.h>\n#include <cstdint>\nstd::uint64_t timer_us_gettime64();\n')
+            cpp=tmp/'fixture.cpp';cpp.write_text(code);exe=tmp/'fixture'
+            args=['g++','-std=c++20','-O2','-DRE4DC_MODEL_DRAW_PLANS=1','-DRE4DC_MODEL_STREAM_FIX=1','-DRE4DC_PLAN_OWNER_SCOPED=1','-DRE4DC_D349_RENDERER_STACK=1',
+                  '-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-fsanitize=address,undefined','-fno-pie','-no-pie',
+                  '-I'+str(tmp),'-I'+str(INCLUDE),'-I'+str(GAME/'platform'),'-I'+str(ROOM),str(cpp),str(ROOM/'native_draw_plan.cpp'),str(ROOM/'room_storage.cpp'),'-o',str(exe)]
+            build=subprocess.run(args,capture_output=True,text=True);self.assertEqual(build.returncode,0,build.stderr)
+            run=subprocess.run([str(exe)],capture_output=True,text=True);self.assertEqual(run.returncode,0,run.stdout+run.stderr)
 
     def test_disabled_owner_object_is_identical_to_parent_and_zero(self):
         source=GAME/'platform/native_draw_plan_owner.cpp'

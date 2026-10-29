@@ -31,6 +31,7 @@ sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',required=True,type=Path)
+    parser.add_argument('--units',nargs='+',choices=tuple(UNITS),default=tuple(UNITS))
     parser.add_argument('--baseline',default='77461a84ef85e978e44aab5d936a1b80a2cd93a4')
     parser.add_argument('--sh4-cxx',default='/opt/toolchains/dc/sh-elf/bin/sh-elf-g++',type=Path)
     parser.add_argument('--kos-root',default='/root/work/kos-re4dc-d367',type=Path)
@@ -46,7 +47,7 @@ def main():
     for name,tree,extra in [('parent',base,[]),('absent',ROOT,[]),('zero',ROOT,['PLAN_OWNER_SCOPED=0']),
                             ('enabled',ROOT,['PLAN_OWNER_SCOPED=1'])]:
         flags,receipt,sources=profile.derive(out/name,args.sh4_cxx,args.kos_root,sdk,
-            ['QA_MENU=0','QA_LINK=0','NMR_POOL_LOD=0',*extra],tree=tree,units=tuple(UNITS))
+            ['QA_MENU=0','QA_LINK=0','NMR_POOL_LOD=0',*extra],tree=tree,units=tuple(args.units))
         rows={}
         for unit,source in sources.items():
             guards=[Path(f) for f in flags[unit] if f.endswith('/koscache-p2/require_p2.h')]
@@ -67,7 +68,7 @@ def main():
                         'stack':profile.stack_usage(dest.with_suffix('.su'))}
         arms[name]=rows
     checks=[{'arm':name,'unit':unit,'exact_object':arms[name][unit]['sha256']==arms['parent'][unit]['sha256']}
-            for name in ('absent','zero') for unit in UNITS]
+            for name in ('absent','zero') for unit in args.units]
     paths=[ROOT/'port/dreamcast/game/platform/native_draw_plan_owner.cpp',
            ROOT/'port/dreamcast/game/platform/native_model.cpp',
            ROOT/'port/dreamcast/game/platform/include/native_draw_owner_stamp.hpp',
@@ -76,7 +77,7 @@ def main():
     report={'source_sha256':{str(p.relative_to(ROOT)):sha(p) for p in paths},'baseline':args.baseline,'toolchain':toolchain,'arms':arms,'off_checks':checks,
             'accepted':all(row['exact_object'] for row in checks),'scope':'Public Make-derived affected TUs only; no gameplay, presentation or console timing'}
     (out/'result.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(json.dumps({'accepted':report['accepted'],'off_objects':len(checks),'enabled_objects':len(UNITS),'output':str(out)}))
+    print(json.dumps({'accepted':report['accepted'],'off_objects':len(checks),'enabled_objects':len(args.units),'output':str(out)}))
     return 0 if report['accepted'] else 1
 
 if __name__=='__main__':raise SystemExit(main())

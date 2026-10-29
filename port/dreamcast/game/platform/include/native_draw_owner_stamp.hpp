@@ -5,6 +5,8 @@
 #if RE4DC_PLAN_OWNER_SCOPED
 // Registry publication, not pointer equality, identifies source backing. An
 // unknown/ambiguous range has no immutable-owner authority (slot == ~0U).
+// Wrap uses the existing global reset fence, which revokes every plan and raw
+// prepared position/normal/static-light consumer before tokens can repeat.
 struct Re4dcDrawOwnerStamp {
     unsigned slot=~0U, incarnation=0;
     bool valid() const { return slot!=~0U && incarnation; }

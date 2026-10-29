@@ -103,6 +103,7 @@ StaticLightContext* prepare_room_static_lighting(const Re4dcModelPart& p){
 #endif
     if(slot->part!=p.part || slot->positions!=p.positions || slot->normals!=p.normals ||
 #if RE4DC_PLAN_OWNER_SCOPED
+       !part_owner.valid() || !position_owner.valid() || !normal_owner.valid() ||
        !(slot->part_owner==part_owner) || !(slot->position_owner==position_owner) || !(slot->normal_owner==normal_owner) ||
 #endif
        std::memcmp(slot->modelview,p.modelview,sizeof(p.modelview)) ||
@@ -148,6 +149,7 @@ struct PositionState {
     bool matches(const Re4dcModelPart& p)const {
         return model==p.model && info==p.info && array==p.positions && count==p.position_count &&
 #if RE4DC_PLAN_OWNER_SCOPED
+          source_owner.valid() && array_owner.valid() &&
           source_owner==re4dc_model_draw_owner_stamp(p.part,32) &&
           array_owner==re4dc_model_draw_array_owner(p.positions,p.position_count,p.position_stride) &&
 #endif
@@ -170,6 +172,7 @@ struct NormalState {
 #endif
     bool matches(const Re4dcModelPart& p)const {return model==p.model && info==p.info && array==p.normals && count==p.normal_count &&
 #if RE4DC_PLAN_OWNER_SCOPED
+        source_owner.valid() && array_owner.valid() &&
         source_owner==re4dc_model_draw_owner_stamp(p.part,32) &&
         array_owner==re4dc_model_draw_array_owner(p.normals,p.normal_count,p.normal_stride) &&
 #endif
