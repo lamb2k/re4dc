@@ -1,5 +1,16 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 skin admission qualification
+
+Skin `bdca347c12b52a6522e2d0b3df1b63a6d232dc85` landed `a57be30f3615452d894d917f7fb83efe685fd686` default0.
+
+Each source slice passed existing extracted normal/sanitizer and host-OFF fixtures, then the local pinned SDK full release absent/explicit0/ON gates; cloth additionally has a SHEET11/outcomes/upload dependency-only control. Each arm has existing empty missing.txt and527 actual C++ commands checked for precise consumer flags. Absent/zero programme, all15 overlays and all allocated-section metadata/payloads match the immediately prior bound integration. Clean no-ff merges, fresh-base origin-only push/readback, no conflict resolution.
+
+Combined source `f5ad6fec56370a0a4df59088a1a5c094405160f2`, ALLON K33 with QA_LINK1 and existing SKIN_PALETTE_LAZY1: compile/missing, actual542 global and feature-consumer command checks, loader/standard lint, ZIP and checksums passed. Final raw programme/all15 overlays match SDK. Track03 `4220679b1b9adf7f7e387963a08abd09f002a57bf860b9918fc6d6c87530b617`. PREPARED only: no current water/skin/cloth runtime, output/look, STRICT/gameplay, heap/VRAM/cost/hardware acceptance, recipe promotion or SD copy.
+
+Admission observes capacity before palette allocation without registry/frame/owner mutation, OOM cancels only its ticket, and non-yielding LAZY1 commit publishes the prepared slot. Actual target flags are restricted to trans.cpp/native_actor_fast.cpp; LAZY2 is excluded. No allocator rewind was introduced. Source/synthetic follow-ons remain cloud-owned: full-table existing-lazy replacement, last serial before exhaustion, stale cancellation after a newer ticket, and literal Make pattern-value guard hardening. Demand-driven materialization/current-image presentation and actual lifecycle/memory/cost acceptance remain open; this slice does not complete that continuation.
+
+
 **2026-10-28 progress 2: DONE** guarded cone admission, current-data UV precision checks, mixed-format shared submission and counters; **NEXT** Claude runs the private image/console comparisons below; cloud proceeds to Build 33; **BLOCKED** real character coverage, whole-image identity, raster/appearance and net frame-time acceptance need private assets and hardware.
 
 Branch: `codex/actor-cone-uv16-20261028`, based on

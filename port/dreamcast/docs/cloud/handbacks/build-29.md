@@ -1,5 +1,18 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 bounded water and ordered cloth qualification
+
+Water `0cbb46b1ff89b34d596cd3040953dba4617d6890` landed `c94957e5cfa5564fda776ab0d63cefa4f804f109`; cloth `a0166e96b09cb419b46f02c6cddd6cdfb46f254f` landed `f5ad6fec56370a0a4df59088a1a5c094405160f2`, both default0.
+
+Each source slice passed existing extracted normal/sanitizer and host-OFF fixtures, then the local pinned SDK full release absent/explicit0/ON gates; cloth additionally has a SHEET11/outcomes/upload dependency-only control. Each arm has existing empty missing.txt and527 actual C++ commands checked for precise consumer flags. Absent/zero programme, all15 overlays and all allocated-section metadata/payloads match the immediately prior bound integration. Clean no-ff merges, fresh-base origin-only push/readback, no conflict resolution.
+
+Combined source `f5ad6fec56370a0a4df59088a1a5c094405160f2`, ALLON K33 with QA_LINK1 and existing SKIN_PALETTE_LAZY1: compile/missing, actual542 global and feature-consumer command checks, loader/standard lint, ZIP and checksums passed. Final raw programme/all15 overlays match SDK. Track03 `4220679b1b9adf7f7e387963a08abd09f002a57bf860b9918fc6d6c87530b617`. PREPARED only: no current water/skin/cloth runtime, output/look, STRICT/gameplay, heap/VRAM/cost/hardware acceptance, recipe promotion or SD copy.
+
+WATER scope: real compiled-table adapter, bounded copied rows, validated identity/extent and owner retirement logic. Real package bind producer and retirement caller are still absent; a family string/API alone is not loaded-package authority. Missing texture remains a skip, not TOTAL_REFUSAL. Private six existing main EFF families regenerate24 rows, byte-equal compiled table and schema; extension rows reuse unchanged public input and are not a new private extraction. No raw asset/private manifest is published. Source-only cloud follow-on: finish actual package producer/retirement boundary, preserving current texture/animation/camera/FX state and partial emission behavior. Literal Make-value guard hardening remains needed for pattern values; only exact requested0/1 profiles were qualified.
+
+CLOTH scope: source-row-major bands/tiles, full-width UVs, seam/parity and partial/source-retirement behavior. Existing actual producer still clamps width100; current bound private r100 case is9x10. Synthetic widths through255 are not an actual live wide sheet. Source-only cloud follow-ons: actual wide producer where source calls for it and named pTobjA/alpha>4/normal-Zwrite/4x-stage-clamp/per-vertex-light semantics. Local retains actual output/material/look/lifecycle/cost gates; no forced geometry or coverage claim.
+
+
 ## Answers (owner): 2026-10-29 EFM and line source landings
 
 DONE: EFM `47679acd4824b24b64978ce0252f056a0fa7e2ae` clean no-ff landed `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, then line `00ecd54840c1ffb1dde595618a77a567e8bf2492` clean no-ff landed `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`, both default0. Source/peer review and existing normal/sanitizer/extracted-host OFF gates passed. Each local pinned-SDK absent/explicit0/ON full release links with existing empty missing.txt; each absent/zero programme, all15 overlays and every allocated section metadata/payload match its bound prior integration. Actual527 C++ commands per arm were inspected: EFM ON global to game/platform/room consumers, line ON only atari.cpp. No source conflict was hand-resolved. Fresh-base origin-only push/readback passed after these gates.
