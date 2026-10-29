@@ -3959,25 +3959,18 @@ extern "C" void re4dc_front_tpl_info_changed(const void* info)
     FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
     if (o.info == info) o.info = 0;
 }
-extern "C" void re4dc_front_tpl_palette_changed(const void* tpl)
+extern "C" void re4dc_front_tpl_palette_changed(const void*)
 {
-    bool owned = ftOwnerSpan(tpl, 1);
-    if (!owned) {
-        for (u32 i = 0; i < kFtOwners; ++i) {
-            if (ft_owner_infos[i].life == ft_owner_life &&
-                ft_owner_infos[i].zero_base && ft_owner_infos[i].base == tpl) {
-                owned = true;
-                break;
-            }
-        }
-    }
-    if (owned) {
-        // Relocation and inverse relocation can change any descendant
-        // pointer. Keep the old generation unqualified until SmdSetParam
-        // republishes a complete, bounded descriptor set.
-        ftOwnerNext(ft_owner_life);
-        ftOwnerMutation();
-    }
+    // A different palette can share a nonfirst certified TEXHeader or even a
+    // descriptor array. Its address does not identify every descendant that
+    // calcTplAddr/Offset or slideTplAddr will write. These are cold structural
+    // writers: revoke the whole certified generation before their first
+    // descendant store, regardless of the palette's own archive membership.
+    // Materialize a symbolic set first so a later record refresh cannot alter
+    // the already-selected GX tail/remap.
+    frontTexFlush();
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
 }
 extern "C" void re4dc_front_tpl_header_changed(const void* header)
 {
@@ -6597,6 +6590,12 @@ void CalcTplAddrC8(TEXPalette* tpl)
     if ((s32) tpl->descriptorArray < 0) {
         return;
     }
+#if RE4DC_FRONT_TPL_OWNER
+    // The core/thermo palette can alias a room descendant even though the
+    // palette itself lies outside the certified room. Revoke before touching
+    // its texture and CLUT headers, as the model.cpp TPL writers do.
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     tpl->descriptorArray = (TEXDescriptor*) ((u32) tpl->descriptorArray + (u32) tpl);
     for (i = 0; i < tpl->numDescriptors; i++) {
         TEXDescriptor* td = &tpl->descriptorArray[i];

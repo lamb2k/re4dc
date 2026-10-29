@@ -1372,6 +1372,95 @@ Local next: bind actual final programme/overlays and private packages, choose a 
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
 
+## 2026-10-29 EF15 Build34: structural-writer descendant aliases
+
+### Status and exact scope
+
+Reviewed source continuation on `codex/frontend-owner-20261029`, starting at its published but blocked tip `f90dd0482fc0bd2e4e36acc725c0917f0801d758`. This addresses the concrete source-only owner request published on `bcbff6ef1ae6f2df54503f7dca1b9de308da04ab`; target admission and integration remain with the local owner. Changed files: `src/game/trans.cpp`, `src/game/frontend_tpl_owner34.h`, `port/dreamcast/tools/cloud/build34/front_owner34.py`, and `port/dreamcast/tools/cloud/build34/front_owner34_fixture.cpp.in`. No source simulation, generic binding (`native_ui.cpp`/`native_model.cpp`), defaults, Make rules, private assets, or source TPL field arithmetic changed. `model.cpp` already called the owner notifier before the mutating loops of `calcTplAddr`, `calcTplOffset`, and `slideTplAddr`; its OFF/ON source is unchanged.
+
+### Defect and correction
+
+At f90, the notifier revoked only when the *palette pointer* lay in the certified room or was its special zero base. A different palette outside the room can alias a certified nonfirst `TEXHeader`, descriptor array, or CLUT descendant. The actual `calcTplOffset` loop then modifies shared header data and pointer fields after that notifier silently declines. A qualified cache hit still has the old owner stamp and skips the descriptor comparison. The pinned f90 version in the new regression reproduces a stale symbolic GX object against the uncached current source.
+
+The corrected notifier is invoked only from cold structural TPL writer sites. It first materializes the selected symbolic GX set (`frontTexFlush`), then advances the owner lifetime and mutation serials unconditionally, before any writer's first descendant store. This revokes all certified owner rows regardless of the writer palette's address, while leaving the existing full descriptor comparison and bounded sidecar behavior in place. No per-hit descendant scan or new persistent state is added. The separate actual `CalcTplAddrC8` core/thermo relocation also writes texture and CLUT descendants; it now calls the same notifier after its early already-relocated return and before its first pointer write. Header wrapS/T notifications, publication, room retirement/reentry, sticky serial exhaustion, cache saturation, flush-before-record-refresh, symbolic tail/remap, and unsupported fallback stay on their existing paths.
+
+### Production-bound fixture and checks
+
+```
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34.py
+# PASS: owner 0 normal/sanitized; owner 1 normal/sanitized; pinned f90 stale-control fails as expected
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_identity.py
+# PASS: six production TUs base/absent/explicit-zero preprocessing identical;
+#       host frontend OFF object identical; actual Make flags scoped/dependencies rejected
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_cost.py
+# PASS: host-only owner 0 .text 2278/.bss 30512; owner 1 .text 5569/.bss 34160
+git diff --check
+# clean
+```
+
+The main fixture extracts production `calcTplOffset`, `calcTplAddr`, `CalcTplAddrC8`, the owner/cache consumer, source GX initialization loop, `cModelInfo` set/add producers, and SMD publication block. It adapts only the source's 32-bit pointer-sign and pointer-offset representation to the 64-bit host; its descendant writes and notification calls are the production bodies. An outside palette sharing the *current qualified nonfirst* room header changes that header through `calcTplOffset`. OFF walks the current descriptors; ON now loses its stamp, walks and matches the source. The same fixture runs the inverse writer to restore the header and verifies qualification returns only after a fresh SMD publication. A shared descriptor-array case checks immediate revocation while the pointer is temporarily unreadable, restores it through the inverse writer, and verifies the full comparison before republication. A separate outside C8 palette reaches a CLUT header/data shared by the room descriptor; the source frontend object does not cache CLUT words, but the structural writer still revokes the owner and forces a walk. The fixture continues to test same-address room reload, nonfirst remap, shared wrap writes, foreign info alias, source header side effects, tail/remap materialization, retirement/reentry, malformed spans, count shrink, fallback, and saturation.
+
+The pinned `f90dd048...` old cache implementation is compiled in the same host fixture with the actual structural writer; it retains a nonzero owner stamp and fails the source GX object comparison at the alias. The corrected ON run passes 95,466 checks with 528 descriptor walks in each normal and ASan/UBSan arm; OFF passes 65,631 checks with 424 walks in each arm. The OFF identity script compares actual production `trans`, `model`, `scroll`, `read`, `game`, and `main` preprocessing to the pre-EF15 `4c4794a17c96ce7f22d8c194907475014eea85a4` source, absent and explicit zero; it also compares byte-identical host frontend objects and verifies actual Make command selection for all six TUs. This correction adds no global/BSS store. A host extraction of the owner cache alone measures f90 `.text` 5,665 bytes versus fixed 5,569 bytes, both `.bss` 34,160 and `.data` 16; that excludes the new C8 writer call and is not a target linked footprint.
+
+### Remaining owner gates
+
+This is source and host evidence. The cloud workspace has no KOS/SH4 SDK/compiler or private archive. The local owner must review the new branch tip and run the affected target ON/OFF builds, symbol/linked-memory and program-byte OFF comparison, actual room/alias or conservative absence checks, current-image look/STRICT/lifecycle and console cost/memory gates. The new host alias is a legal state under the f90 certificate; it does not assert that a current private archive contains such an alias. Do not enable `FRONT_TPL_OWNER` or claim full EF15 acceptance on this fix alone.
+
+**2026-10-29 progress:** DONE: source writer correction, actual old-tip failure reproduction, normal/sanitizer consumer parity and scoped OFF identity. NEXT: local target qualification of this corrected tip and serialized integration. BLOCKED: target/private look, lifecycle, complete-image OFF and console gates; the old f90 hold is preserved as historical evidence.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${FAL34_BASE_TREE:?fresh base worktree path}"
+: "${FAL34_LOGS:?fresh log directory}"
+: "${FAL34_PROGRAMS:?fresh programme directory}"
+: "${FAL34_LABEL:?fresh lane label prefix}"
+FAL34_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$FAL34_BASE_TREE" bcbff6ef1ae6f2df54503f7dca1b9de308da04ab
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$FAL34_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$FAL34_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$FAL34_BASE_TREE" "${FAL34_LABEL}base" ""
+candidate_build "$FAL34_CANDIDATE_TREE" "${FAL34_LABEL}absent" ""
+candidate_build "$FAL34_CANDIDATE_TREE" "${FAL34_LABEL}off" "FRONT_TPL_OWNER=0"
+candidate_build "$FAL34_CANDIDATE_TREE" "${FAL34_LABEL}ctrl" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=0"
+candidate_build "$FAL34_CANDIDATE_TREE" "${FAL34_LABEL}on" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${FAL34_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${FAL34_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${FAL34_LABEL}offrP" \
+  --output "$FAL34_LOGS/frontend-alias34-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
 ## 2026-10-29 EF15 Build34: bounded SMD frontend descriptor authority
 
 Source parent in isolated `work-frontend`: `39ed524a3b0a4727148aaa5a45eaaea4d211cede`; default0 public-source slice, packaged after coordinator review. Claimed files: `src/game/trans.cpp` (FtKey/FtRec/frontTexInit, exact wrap publisher/notification); `src/game/model.cpp` (set/add TPL, construct, move/calc/offset/slide address writers); `src/game/scroll.cpp` (SmdInit, SmdSetParam, SmdClear, cSmd::slide); `src/game/read.cpp` (room archive extent bind); `src/game/game.cpp` and `src/game/main.cpp` (retire before backing release); `src/game/frontend_tpl_owner34.h`; `port/dreamcast/game/frontend30.mk`; dedicated `port/dreamcast/tools/cloud/build34/front_owner34_{fixture.cpp.in,py,identity.py,cost.py}`. The existing `frontend30.mk` include consumes the scoped switch.

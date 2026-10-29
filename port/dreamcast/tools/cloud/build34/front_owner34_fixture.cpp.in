@@ -8,6 +8,10 @@
 // production GX loop, cModelInfo::addTplAddr, and the exact SmdSetParam add/
 // publication block. The room/archive and native GX target are host stand-ins.
 static void calcTplAddr(TEXPalette*) {} // already relocated host room image
+static bool host_offsets=false; // target pointer-sign state, adapted for 64-bit fixture addresses
+@MODEL_TPL_ADDR@
+@MODEL_TPL_OFFSET@
+@TRANS_C8@
 @MODEL_ADD@
 @MODEL_SET@
 static TEXPalette zeroTpl{0x0020AF30, 0, nullptr};
@@ -302,7 +306,122 @@ int main() {
     refused("unaligned SMD header rejected");
     roomStart(room);publish(a,room,true);
     draw(a);check(draw(a)==0,"valid room recovers after malformed candidates");
+#endif
 
+    // Actual calcTplOffset/Addr on an outside palette sharing the qualified
+    // room's nonfirst header. The host shim tracks the target's 32-bit offset
+    // sign; the field writes and notifier are the extracted model.cpp bodies.
+    TEXHeader* shared_header=room.add_desc[1].textureHeader;
+    shared_header->unpacked=1;
+    roomStart(room);publish(a,room,true);
+    draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"pre-writer qualified nonfirst header hit");
+#else
+    check(draw(a)>0,"pre-writer reference compares nonfirst header");
+#endif
+    struct External {TEXPalette tpl;TEXDescriptor desc;};
+    External external{};
+    external.tpl.version=0x0020AF30;external.tpl.numDescriptors=1;
+    external.tpl.descriptorArray=&external.desc;
+    external.desc.textureHeader=shared_header;
+    const void* saved_image=shared_header->data;
+    const u32 before_alias_flush=ft_flushes;
+    writer_calcTplOffset(&external.tpl);
+    host_offsets=true;
+    check(shared_header->data!=saved_image && shared_header->unpacked==0,
+          "actual inverse writer changed shared nonfirst header");
+#if RE4DC_FRONT_TPL_OWNER
+    u32 alias_stamp=0;
+#if defined(FRONT_OWNER_OLD_REPRO) && FRONT_OWNER_OLD_REPRO
+    check(ftOwnerCount(&a.info,alias_stamp)!=0 && alias_stamp!=0,
+          "old owner incorrectly remains certified across external writer");
+#else
+    check(ftOwnerCount(&a.info,alias_stamp)==0 && alias_stamp==0,
+          "external header alias revokes certified owner before lookup");
+    check(ft_flushes>before_alias_flush,"structural writer flushes symbolic set before mutation");
+#endif
+#else
+    (void)before_alias_flush;
+#endif
+    check(draw(a)>0,"external nonfirst header writer forces current descriptor walk");
+    writer_calcTplAddr(&external.tpl);
+    host_offsets=false;
+    check(external.desc.textureHeader==shared_header &&
+          shared_header->data==saved_image && shared_header->unpacked==1,
+          "actual forward writer restores shared header");
+    check(draw(a)>0,"restored header remains unqualified until new publication");
+    roomStart(room);publish(a,room,true);draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"room republication restores qualified hit after alias writer");
+#else
+    check(draw(a)>0,"room republication keeps reference comparison");
+#endif
+
+    // Sharing the certified descriptor array can make the room's pointer
+    // temporarily unreadable. Check authority while invalid, then run the
+    // actual inverse writer to restore it before asking the source to draw.
+    TEXHeader* saved_desc_header=room.add_desc[1].textureHeader;
+    TEXPalette descriptor_alias{0x0020AF30,1,&room.add_desc[1]};
+    writer_calcTplOffset(&descriptor_alias);
+    host_offsets=true;
+#if RE4DC_FRONT_TPL_OWNER
+    alias_stamp=0;
+    check(ftOwnerCount(&a.info,alias_stamp)==0 && alias_stamp==0,
+          "external shared descriptor writer revokes before unsafe read");
+#endif
+    writer_calcTplAddr(&descriptor_alias);
+    host_offsets=false;
+    check(room.add_desc[1].textureHeader==saved_desc_header &&
+          shared_header->data==saved_image,"shared descriptor/header roundtrip");
+    check(draw(a)>0,"restored shared descriptor still requires full comparison");
+    roomStart(room);publish(a,room,true);draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"shared descriptor republication qualifies");
+#else
+    check(draw(a)>0,"shared descriptor reference comparison");
+#endif
+
+    // The actual C8 relocation also writes CLUT descendants. The room's
+    // frontend object does not cache CLUT words, yet its certified ownership
+    // must be revoked when an outside C8 palette can reach the shared CLUT.
+    CLUTHeader* clut=(CLUTHeader*)(room.bytes.data()+0x4900);
+    clut->data=room.bytes.data()+0x7800;
+    room.add_desc[1].CLUTHeader=clut;
+    roomStart(room);publish(a,room,true);draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"pre-C8 shared CLUT qualified hit");
+#else
+    check(draw(a)>0,"pre-C8 reference comparison");
+#endif
+    const void* saved_clut=clut->data;
+    struct C8External {TEXPalette tpl;TEXDescriptor desc;TEXHeader header;};
+    C8External c8{};
+    c8.tpl.version=0x0020AF30;c8.tpl.numDescriptors=1;
+    c8.tpl.descriptorArray=(TEXDescriptor*)((std::uintptr_t)&c8.desc-(std::uintptr_t)&c8.tpl);
+    c8.desc.textureHeader=(TEXHeader*)((std::uintptr_t)&c8.header-(std::uintptr_t)&c8.tpl);
+    c8.desc.CLUTHeader=(CLUTHeader*)((std::uintptr_t)clut-(std::uintptr_t)&c8.tpl);
+    c8.header.data=(void*)64;
+    host_offsets=true;
+    writer_CalcTplAddrC8(&c8.tpl);
+    host_offsets=false;
+    check(c8.desc.CLUTHeader==clut && clut->data!=saved_clut,
+          "actual C8 writer reached shared CLUT data");
+#if RE4DC_FRONT_TPL_OWNER
+    alias_stamp=0;
+    check(ftOwnerCount(&a.info,alias_stamp)==0 && alias_stamp==0,
+          "outside C8 CLUT writer revokes certified owner");
+#endif
+    check(draw(a)>0,"outside C8 CLUT writer prevents a qualified no-walk hit");
+    clut->data=(void*)saved_clut;
+    roomStart(room);publish(a,room,true);draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"C8 CLUT republication restores qualified hit");
+#else
+    check(draw(a)>0,"C8 CLUT reference comparison after republication");
+#endif
+
+#if RE4DC_FRONT_TPL_OWNER
     ft_owner_change=~0U;
     room.add_h[1].width+=1;
     re4dc_front_tpl_header_changed(&room.add_h[1]);
