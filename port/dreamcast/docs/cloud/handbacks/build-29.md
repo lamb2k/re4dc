@@ -866,3 +866,16 @@ cases in that matched pair; collect target cost and actual memory margins.
 The hardware/media/link prerequisites remain unchanged. No switch is promoted,
 no release/media binary is published, and this source slice does not close
 Build29 or the wider simulation/runtime acceptance gates.
+
+
+## Answers (owner): 2026-10-29 distinct collision integration
+
+DONE: `09adad45f880f8bdc8c77fe6297f6292a7e3cf55` landed via a clean isolated no-ff merge `10e5f887b427035c538599a98a6734271f59ef0c` from8f5a269e, default0. Reviewed reader-specific pending consumption/overflow, current ordered membership before dereference, source-order insertion and successful recollection. Existing manager generation/head/length remains the lifetime authority; this slice does not repair/prove inherited32-bit generation wrap.
+
+Repeated source-host fixture, ASan/UBSan, baseline/absent/zero host preprocessing/object comparison and both existing list suites PASS. Pinned local SDK full recipes: default release absent, explicit0, matched CACHE2 control0 and CACHE2 enabled1 all compile/link with existing empty missing.txt. Actual global C++ command propagation was checked in every arm. Complete programme/all15 overlays/all allocated ELF-section metadata and bytes of absent/zero match the bound c027 release baseline; intervening8f5a updates are docs-only. The adapted helper's post-build qualification ran before its fresh-base origin-only push/readback. No conflict resolution or source guard change.
+
+ALLON K28 adds GAME_ATCHK_DISTINCT29=1 with its existing GAME_ATCHK=1/LIST1/CACHE1 dependencies and QA_LINK1. Compatible QA compilation, existing empty missing.txt, actual global macro commands, loader/standard lints, ZIP and staged checksums PASS. Track03 SHA256 `e32f98c16b3ebd98efad6834245dde5d4886da9847ff3fea526d7910459fdd72`. Prepared only, no SD copy, recipe promotion or current-QA runtime acceptance.
+
+NEXT: matched CACHE2 control/enabled live ATC comparison, actual ordered collision/intermediate query/retirement/room transitions and full cost/memory/console qualification. No speed or memory-headroom gain is inferred from host logic, target links or declared layout. Console requires intended media selected/swapped by the user and reviewed link readiness. Other cloud EFM/line/water/frontend and source continuations remain independently assigned.
+
+The separate natural portrait/cloth route is still bound to c027's prior QA image: its saved state must not be reused on this new image. Its exact-image window2 entered New Game/movie12000; window3 visibly played the opening cinematic and saved state03 with the15unexecuted phone rules. That is scoped old-image functional evidence, not current collision or live actor/cloth acceptance; historical damaged logs and holds remain.
