@@ -732,3 +732,26 @@ roots and nested libc/fs/interrupt/runtime high-water remain unresolved;
 no total thread-stack, CPU/current memory-floor, window32 or enabled final
 image/game/link/console acceptance inferred. Window32 remains unbuilt under
 19GiB guard. No new link/master/capture, source/recipe change, SD or release.
+
+#### Owner: full saved-object reference inventory, 2026-10-29
+
+Source-only lexical caller candidates were insufficient: inline motion
+Lease headers and module aggregation add references in objects whose source
+does not spell the acquire target. Expanded across all615 saved gaps/window0
+objects using exact raw SH symbol patterns and object section binding;
+68 candidates inspected,66 contain allocated references to the22 sink-owner
+functions.130 text and11 nontext references, all matching R_SH_DIR32 after
+checking all relocation types.21 reference-bearing objects are beyond the
+initial lexical set. Debug/nonallocated relocations are excluded; an initial
+debug-inclusive receipt was superseded and retained, never a callback count.
+
+These are saved-object references, not proven call instructions, linked
+module liveness, executed events or thread roots. The11 allocated nontext
+references stay unresolved table/callback candidates. No caller absence is
+inferred from the earlier lexical subset or an object without a matching
+reference. Full hashes/rows retained in FULL-OBJECT-REFERENCE-INDEX.json and
+summary under owner-audit35-enabled-20261028. Next classify the11 nontext
+uses and remaining external/alternate paths; whole-stack/runtime high-water,
+CPU/current floor and enabled final-image/game/link/console remain pending.
+Window32 remains unbuilt under19GiB guard; no new compile/link/master/
+capture, source/recipe change, SD write or release action.
