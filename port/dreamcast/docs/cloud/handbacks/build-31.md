@@ -484,3 +484,23 @@ universal bound. NEXT: plan incarnation, direct source metadata/record use and
 optional conservative static bounds within existing cap/floor; then target
 identity. BLOCKED: no SDK slot requested/granted; actual private proof/lifecycle/
 look/STRICT/memory/hardware acceptance remain pending. No active job.
+
+
+## EF09 worker, 2026-10-29: plan lifetime and early consumer
+
+DONE: continued past indexed tickets into actual plan incarnation, exact Room4
+allocator-token ownership before payload/free, package token/revision, callback-
+safe publication, direct current metadata reference and optional conservative
+placement boxes consumed before view setup. Base records retain priority under
+64KiB/96KiB-floor; dynamic/root-pose/uncertain cases use the original path and
+queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,101 main
+checks,86,420 lookup cases and450 ordered live-policy cases; completion628 checks
+remain passing under prepared09. Same-gen/address/size stale close leaves the
+foreign replacement intact. Unproven allocator returns are counted and further
+attempts latched for that room generation; no memory-saving claim.
+NEXT: exact target ON plan/compatible portal profiles, baseline/absent/zero
+release+existing plan/portal identity, actual macro readback and full programme/
+overlay/allocated-section gates. BLOCKED: SDK slot not yet granted; private
+cells/proof, live lifecycle/look/STRICT/memory and net hardware cost pending.
+Details/commands: [WORLD-PREPARED09.md](../../../tools/cloud/build31/WORLD-PREPARED09.md).
+No active SDK/emulator/media process; no release/ALLON or shared provider edit.

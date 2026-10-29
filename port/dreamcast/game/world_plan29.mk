@@ -76,5 +76,11 @@ ifeq ($(WORLD_PREPARED09),1)
 ifneq ($(WORLD_PART_PLAN29),1)
 $(error WORLD_PREPARED09 needs WORLD_PART_PLAN29=1)
 endif
-$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PREPARED09=1
+ifneq ($(MOVIE_WORLD_ARENA),1)
+$(error WORLD_PREPARED09 needs MOVIE_WORLD_ARENA=1 for existing room-cell lifetime authority)
+endif
+ifneq ($(STATIC_OBJ_LIFETIME05),1)
+$(error WORLD_PREPARED09 needs STATIC_OBJ_LIFETIME05=1 for room-cell incarnation authority)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_STATIC_OBJ_LIFETIME05=$(STATIC_OBJ_LIFETIME05) -DRE4DC_WORLD_PREPARED09=1
 endif
