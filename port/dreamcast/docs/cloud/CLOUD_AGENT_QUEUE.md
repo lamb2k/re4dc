@@ -42,7 +42,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
-| Systemic 2026-10-29 | [Continuing Builds31-36 handover](HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md) | revision461e8c97 landed60d6aaae3; docs/defaults unchanged, recipe46s/missing0. Continue existing build owners/receipts/gates; optional cross-summary, no separate S0 prerequisite. [Owner response](handbacks/systemic-performance-20261029.md) |
+| Systemic 2026-10-29 | [Engine-fix handover and EF01-EF16 backlog](HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md) | pinned a76aab4b landed9ee386e3e; docs only, release41s/missing0. Implementation-first plan and persistent goal active; user-authorized Sol6.1/High workers implementing EF05/06/03/01 in isolated trees. Existing owners/gates retained; no enabled or hardware acceptance claim. [Owner response](handbacks/systemic-performance-20261029.md) |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
 | 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
