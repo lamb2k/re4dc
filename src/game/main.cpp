@@ -5,6 +5,9 @@
 // game/main: entry point, frame loop, system init and reset handling (D:/Bio4/Prog/main.cpp).
 #include "types.h"
 #include "global.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #include "joy.h"
 
 // .sbss objects in the order the original lays them out (uninitialised globals are emitted in
@@ -817,6 +820,9 @@ void systemSoftReset()
     systemResetCommon();
     re4dc_motion_retire_all();
     re4dc_effect_retire_room();
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_retire_room();
+#endif
     re4dc_ui_retire_room();
 #endif
     ResetDebugAlloc();

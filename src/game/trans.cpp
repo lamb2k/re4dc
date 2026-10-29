@@ -120,6 +120,10 @@ namespace { bool sourceWorldR11fModelBlocked(cModel* model); }
 #include "shadow.h"
 #include "room_tex.h"
 #include "tpl.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#include "scroll.h"
+#endif
 #include "TexRender.h"
 #include "examine.h"
 #include "debug.h"
@@ -400,6 +404,9 @@ void* g_prev_add_tpl_addr;
 // D367 records30 FRONT_TEXOBJ (R1; obj/records30.h, default off = previous image).
 #ifndef RE4DC_FRONT_TEXOBJ
 #define RE4DC_FRONT_TEXOBJ 0
+#endif
+#ifndef RE4DC_FRONT_TPL_OWNER
+#define RE4DC_FRONT_TPL_OWNER 0
 #endif
 #if RE4DC_FRONT_TEXOBJ && RE4DC_FRONT_NATIVE && defined(__sh__)
 static void frontTexFlush();
@@ -2425,6 +2432,9 @@ static void invisReplayRender(cModel* m, int alphaUpdate)
                 }
                 if ((s32) d->flags < 0) {
                     TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                    if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                     wh->wrapT = 1;
                     wh->wrapS = 1;
                 }
@@ -3308,6 +3318,9 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
                 }
                 if ((s32) d->flags < 0) {
                     TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                    if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                     wh->wrapT = 1;
                     wh->wrapS = 1;
                 }
@@ -3472,9 +3485,158 @@ static int frontNativeOk(cModel* m)
 // the FRONT_NATIVE=2 snapshot, or before a new set with fewer objects (whose tail keeps the old
 // objects, as in the source). Swaps with an index outside the set, and sets that do not fit the
 // cache, take the source loop. Render only.
+#if RE4DC_FRONT_TPL_OWNER
+static void frontTexFlush();
+#endif
 namespace {
+#if RE4DC_FRONT_TPL_OWNER
+// Only SMD palettes whose TPL/descriptor/header spans and image-data pointers
+// lie in the current native room archive are certified. The info table is a bounded,
+// direct-mapped sidecar: a collision loses an optimization, never authority.
+struct FtOwnerInfo {
+    const cModelInfo* info;
+    const TEXPalette* base;
+    const TEXPalette* add;
+    const TEXDescriptor* base_desc;
+    const TEXDescriptor* add_desc;
+    u32 base_version, add_version, life;
+    u8 base_count, add_count, zero_base, qualified;
+};
+constexpr u32 kFtOwners = 64;
+FtOwnerInfo ft_owner_infos[kFtOwners];
+const u8* ft_owner_room;
+u32 ft_owner_bytes, ft_owner_life = 1, ft_owner_change = 1;
+const cSmd* ft_owner_smd;
+const cSmd* ft_owner_common;
+bool ft_owner_exhausted;
+
+bool ftOwnerSpan(const void* p, u32 bytes)
+{
+    if (!ft_owner_room || !p || !bytes) return false;
+    const __UINTPTR_TYPE__ base = (__UINTPTR_TYPE__) ft_owner_room;
+    const __UINTPTR_TYPE__ addr = (__UINTPTR_TYPE__) p;
+    if (addr < base) return false;
+    const __UINTPTR_TYPE__ delta = addr - base;
+    return delta <= ft_owner_bytes && bytes <= ft_owner_bytes - delta;
+}
+bool ftOwnerAligned(const void* p, u32 alignment)
+{
+    return (((__UINTPTR_TYPE__) p) & (alignment - 1)) == 0;
+}
+const u8* ftOwnerOffset(const void* origin, u32 offset, u32 bytes)
+{
+    if (!ftOwnerSpan(origin, 1)) return 0;
+    const __UINTPTR_TYPE__ pos = (__UINTPTR_TYPE__) origin - (__UINTPTR_TYPE__) ft_owner_room;
+    if (offset > ft_owner_bytes - pos || bytes > ft_owner_bytes - pos - offset) return 0;
+    return ft_owner_room + pos + offset;
+}
+void ftOwnerNext(u32& serial)
+{
+    if (serial == ~0U) {
+        ft_owner_exhausted = true;  // never reuse an old key or owner token
+    } else {
+        ++serial;
+    }
+}
+void ftOwnerMutation()
+{
+    ftOwnerNext(ft_owner_change);
+}
+void ftOwnerClear()
+{
+    frontTexFlush();  // a retired set can still own the symbolic GX tail
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+    ft_owner_smd = ft_owner_common = 0;
+}
+bool ftOwnerPalette(const TEXPalette* p, u32& count, const TEXDescriptor*& desc)
+{
+    if (!ftOwnerAligned(p, alignof(TEXPalette)) || !ftOwnerSpan(p, sizeof(*p)) ||
+        p->version != 0x0020AF30) return false;
+    count = p->numDescriptors;
+    desc = p->descriptorArray;
+    if (count > 0xF8 || (count && (!ftOwnerAligned(desc, alignof(TEXDescriptor)) ||
+                                  !ftOwnerSpan(desc, count * sizeof(*desc))))) return false;
+    for (u32 i = 0; i < count; ++i) {
+        const TEXHeader* h = desc[i].textureHeader;
+        if (!ftOwnerAligned(h, alignof(TEXHeader)) || !ftOwnerSpan(h, sizeof(*h)) ||
+            !ftOwnerSpan(h->data, 1)) return false;
+    }
+    return true;
+}
+u32 ftOwnerSlot(const void* info)
+{
+    return (u32) (((__UINTPTR_TYPE__) info >> 4) & (kFtOwners - 1));
+}
+u32 ftOwnerStamp(const cModelInfo* info, u32 n)
+{
+    if (ft_owner_exhausted || !ft_owner_common) return 0;
+    const FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info != info || o.life != ft_owner_life || !o.qualified || o.base != info->tpl_addr ||
+        o.add != info->pAddTpl || o.add_count != info->nAddTex ||
+        o.base_count + o.add_count != n) return 0;
+    // These bounded top-level reads catch count shrink and descriptor-array
+    // remaps before a hit; there is no descendant walk on the qualified path.
+    if (!o.zero_base) {
+        if (!ftOwnerSpan(o.base, sizeof(*o.base)) || o.base->version != o.base_version ||
+            o.base->numDescriptors != o.base_count || o.base->descriptorArray != o.base_desc) return 0;
+    } else if (o.base->numDescriptors != 0 || o.base->version != 0x0020AF30) {
+        return 0;
+    }
+    if (!ftOwnerSpan(o.add, sizeof(*o.add)) || o.add->version != o.add_version ||
+        o.add->numDescriptors != o.add_count || o.add->descriptorArray != o.add_desc) return 0;
+    return ft_owner_change;
+}
+u32 ftOwnerRestamp(const cModelInfo* info, u32 n)
+{
+    const u32 stamp=ftOwnerStamp(info,n);
+    if (!stamp) return 0;
+    const FtOwnerInfo& o=ft_owner_infos[ftOwnerSlot(info)];
+    u32 count=0;
+    const TEXDescriptor* desc=0;
+    if (!o.zero_base && (!ftOwnerPalette(o.base,count,desc) ||
+                         count!=o.base_count || desc!=o.base_desc)) return 0;
+    if (!ftOwnerPalette(o.add,count,desc) || count!=o.add_count || desc!=o.add_desc) return 0;
+    return stamp;
+}
+u32 ftOwnerCount(const cModelInfo* info, u32& stamp)
+{
+    stamp = 0;
+    if (ft_owner_exhausted) return 0;
+    const FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info != info || o.life != ft_owner_life) return 0;
+    const u32 n = o.base_count + o.add_count;
+    stamp = ftOwnerStamp(info, n);
+    return stamp ? n : 0;
+}
+void ftOwnerForeign(const cModelInfo* info)
+{
+    const FtOwnerInfo& known = ft_owner_infos[ftOwnerSlot(info)];
+    if (known.info == info && known.life == ft_owner_life) return;
+    if (!ftOwnerSpan(info->tpl_addr, 1) && !ftOwnerSpan(info->pAddTpl, 1)) return;
+    // A foreign info can expose a registered TPL through a base or added
+    // alias. Refuse the entire published generation rather than trusting that
+    // caller to keep the SMD descriptor mutation contract.
+    for (u32 i = 0; i < kFtOwners; ++i) {
+        const FtOwnerInfo& o = ft_owner_infos[i];
+        if (o.life == ft_owner_life && o.qualified &&
+            (o.base == info->tpl_addr || o.add == info->tpl_addr ||
+             o.base == info->pAddTpl || o.add == info->pAddTpl)) {
+            ftOwnerNext(ft_owner_life);
+            ftOwnerMutation();
+            return;
+        }
+    }
+}
+#endif
 struct FtRec { u32 w[4]; };  // GXInitTexObj stub words 0..3 (4..7 are zero)
+#if RE4DC_FRONT_TPL_OWNER
+struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap;
+    u32 owner_stamp;
+};
+#else
 struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap; };
+#endif
 constexpr u32 kFtKeys = 32, kFtRecs = 512;  // r100 fight peak: 21 keys, 394 records
 FtKey ft_keys[kFtKeys];
 FtRec ft_recs[kFtRecs];
@@ -3505,6 +3667,9 @@ FtRec ftRecord(TEXHeader* h, u8 wrap)
     // Preserve the source's header writes even when the packed object matches.
     // Another model can share this header through its added TPL.
     if (wrap) {
+#if RE4DC_FRONT_TPL_OWNER
+        if (h->wrapT != 1 || h->wrapS != 1) re4dc_front_tpl_header_changed(h);
+#endif
         h->wrapT = 1;
         h->wrapS = 1;
     }
@@ -3515,22 +3680,54 @@ FtRec ftRecord(TEXHeader* h, u8 wrap)
     r.w[3] = ((u32) h->wrapS << 8) | (u32) h->wrapT | ((u32) (u8) (h->minLOD == h->maxLOD ? 0 : 1) << 16);
     return r;
 }
+#if RE4DC_FRONT_TPL_OWNER
+const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n, u32 owner_stamp)
+#else
 const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
+#endif
 {
     const u32 room = ((u32) pG->stage_no << 8) | pG->room_no;
     const u8 wrap = (s32) d->flags < 0;
     if (n == 0 || n > 0xF8) {
         return 0;
     }
+#if RE4DC_FRONT_TPL_OWNER
+    if (!owner_stamp) ftOwnerForeign(info);
+    void* data0 = 0;
+    bool have_data0 = false;
+#else
     void* data0 = ftDesc(info, 0)->textureHeader->data;
+#endif
     if (room != ft_room) {
         frontTexFlush();
         ft_room = room;
         ft_nkeys = ft_nrecs = 0;
     }
     for (u32 k = 0; k < ft_nkeys; k++) {
+#if RE4DC_FRONT_TPL_OWNER
+        FtKey& key = ft_keys[k];
+#else
         const FtKey& key = ft_keys[k];
+#endif
+#if RE4DC_FRONT_TPL_OWNER
+        if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap) {
+#else
         if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap && key.data0 == data0) {
+#endif
+#if RE4DC_FRONT_TPL_OWNER
+            if (owner_stamp && key.owner_stamp == owner_stamp) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontHit, 1);
+#endif
+                ++ft_hits;
+                return &key;
+            }
+            if (!have_data0) {
+                data0 = ftDesc(info, 0)->textureHeader->data;
+                have_data0 = true;
+            }
+            if (key.data0 != data0) continue;
+#endif
             // Pointer identity does not certify the remaining descriptors or
             // their current packed fields after same-room reuse/relocation.
             bool same = true;
@@ -3549,6 +3746,9 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
                 for (u32 i = 0; i < n; i++) {
                     ft_recs[key.first + i] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
                 }
+#if RE4DC_FRONT_TPL_OWNER
+                key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
                 re4dc::fa35::hit(re4dc::fa35::FrontBuild, 1);
 #endif
@@ -3556,6 +3756,9 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
                 ++ft_builds;
                 return &key;
             }
+#if RE4DC_FRONT_TPL_OWNER
+            key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
             re4dc::fa35::hit(re4dc::fa35::FrontHit, 1);
 #endif
@@ -3564,6 +3767,9 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
             return &key;
         }
     }
+#if RE4DC_FRONT_TPL_OWNER
+    if (!have_data0) data0 = ftDesc(info, 0)->textureHeader->data;
+#endif
     if (ft_nkeys == kFtKeys || ft_nrecs + n > kFtRecs) {
         frontTexFlush();
         ft_nkeys = ft_nrecs = 0;
@@ -3583,6 +3789,9 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
     for (u32 i = 0; i < n; i++) {
         ft_recs[ft_nrecs++] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
     }
+#if RE4DC_FRONT_TPL_OWNER
+    key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
     if (wrap) {
         // The fix-up rewrote the headers: sets of this TPL cached without it are stale.
         for (u32 k = 0; k + 1 < ft_nkeys; k++) {
@@ -3602,8 +3811,15 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
 // taken symbolically, 0 when the caller must run the source loop (gx->texObj is then current).
 int frontTexInit(cModel* m, cModelInfo* info, ModelData* d)
 {
+#if RE4DC_FRONT_TPL_OWNER
+    u32 owner_stamp;
+    const u32 owned_n = ftOwnerCount(info, owner_stamp);
+    const u32 n = owned_n ? owned_n : ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex;
+    const FtKey* key = ftLookup(info, d, n, owner_stamp);
+#else
     const u32 n = ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex;
     const FtKey* key = ftLookup(info, d, n);
+#endif
     cTexChg* chg = MODEL_EXT(m)->pTexChg;
     if (key && chg) {
         u8 remap[0xF8];
@@ -3655,6 +3871,118 @@ inline const void* frontTexObj(GxWork* gx, u32 id)
     return &gx->texObj[id];
 }
 }
+#if RE4DC_FRONT_TPL_OWNER
+extern "C" void re4dc_front_tpl_bind_room(const void* room, unsigned bytes)
+{
+    ftOwnerClear();
+    ft_owner_room = 0;
+    ft_owner_bytes = 0;
+    if (!room || !bytes || (__UINTPTR_TYPE__) room + bytes < (__UINTPTR_TYPE__) room) return;
+    ft_owner_room = (const u8*) room;
+    ft_owner_bytes = bytes;
+}
+extern "C" void re4dc_front_tpl_retire_room()
+{
+    ftOwnerClear();
+    ft_owner_room = 0;
+    ft_owner_bytes = 0;
+}
+extern "C" void re4dc_front_tpl_smd_begin(const void* smd, const void* common)
+{
+    ftOwnerClear();
+    if (ftOwnerAligned(smd, alignof(cSmd)) && ftOwnerAligned(common, alignof(cSmd)) &&
+        ftOwnerSpan(smd, 16) && ftOwnerSpan(common, 16)) {
+        ft_owner_smd = (const cSmd*) smd;
+        ft_owner_common = (const cSmd*) common;
+    }
+}
+extern "C" void re4dc_front_tpl_smd_clear()
+{
+    frontTexFlush();
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+extern "C" void re4dc_front_tpl_smd_publish(const void* info_ptr, const void* zero_tpl,
+                                                const void* smd, const void* common)
+{
+    if (!info_ptr) return;
+    FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info_ptr)];
+    if (o.info == info_ptr) o.info = 0;
+    if (ft_owner_exhausted || !ft_owner_common ||
+        common != ft_owner_common || !ftOwnerSpan(common, 16)) return;
+    o.info = (const cModelInfo*) info_ptr;
+    o.life = ft_owner_life;
+    o.qualified = 0;
+    const cModelInfo* info = (const cModelInfo*) info_ptr;
+    const cSmd* cs = (const cSmd*) common;
+    const u8* table = ftOwnerOffset(cs, cs->TplTblOfs, sizeof(u32));
+    if (!table || !ftOwnerAligned(table, alignof(u32))) return;
+    const u32 add_ofs = *(const u32*) table;
+    const TEXPalette* add = (const TEXPalette*) ftOwnerOffset(table, add_ofs, sizeof(TEXPalette));
+    if (!add) return;
+    if (info->pAddTpl != add) return;
+    u32 add_count = 0, base_count = 0;
+    const TEXDescriptor *add_desc = 0, *base_desc = 0;
+    if (!ftOwnerPalette(add, add_count, add_desc) || !add_count ||
+        info->nAddTex != add_count) return;
+    const TEXPalette* base = (const TEXPalette*) info->tpl_addr;
+    const bool zero = base == zero_tpl;
+    if (zero) {
+        if (!base || !ftOwnerAligned(base, alignof(TEXPalette)) ||
+            base->version != 0x0020AF30 || base->numDescriptors != 0) return;
+        base_desc = base->descriptorArray;
+    } else if (smd != ft_owner_smd || !ftOwnerPalette(base, base_count, base_desc)) {
+        return;
+    }
+    if (base_count + add_count > 0xF8) return;
+    o.info = info;
+    o.base = base;
+    o.add = add;
+    o.base_desc = base_desc;
+    o.add_desc = add_desc;
+    o.base_count = base_count;
+    o.add_count = add_count;
+    o.base_version = base->version;
+    o.add_version = add->version;
+    o.zero_base = zero;
+    o.qualified = 1;
+    o.life = ft_owner_life;
+}
+extern "C" void re4dc_front_tpl_smd_slide(const void* smd)
+{
+    if (smd == ft_owner_smd || smd == ft_owner_common) {
+        frontTexFlush();
+        ftOwnerNext(ft_owner_life);
+        ftOwnerMutation();
+    }
+}
+extern "C" void re4dc_front_tpl_info_changed(const void* info)
+{
+    FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info == info) o.info = 0;
+}
+extern "C" void re4dc_front_tpl_palette_changed(const void*)
+{
+    // A different palette can share a nonfirst certified TEXHeader or even a
+    // descriptor array. Its address does not identify every descendant that
+    // calcTplAddr/Offset or slideTplAddr will write. These are cold structural
+    // writers: revoke the whole certified generation before their first
+    // descendant store, regardless of the palette's own archive membership.
+    // Materialize a symbolic set first so a later record refresh cannot alter
+    // the already-selected GX tail/remap.
+    frontTexFlush();
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+extern "C" void re4dc_front_tpl_header_changed(const void* header)
+{
+    if (!ftOwnerSpan(header, sizeof(TEXHeader))) return;
+    // This notifier is used only by the source's wrapS/T writes. If a header
+    // was remapped outside the certified image span, do not renew authority.
+    if (!ftOwnerSpan(((const TEXHeader*) header)->data, 1)) ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+#endif
 static void frontTexFlush()
 {
     if (!ft_cur) {
@@ -3794,6 +4122,10 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
                     }
                     if ((s32) d->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
+#line 2417
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -3940,6 +4272,9 @@ static int sceneryGate(cModel* m)
                     }
                     if ((s32) id->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -4240,6 +4575,9 @@ static int propGate(cModel* m, Mtx viewMat)
                     }
                     if ((s32) id->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -6294,6 +6632,12 @@ void CalcTplAddrC8(TEXPalette* tpl)
     if ((s32) tpl->descriptorArray < 0) {
         return;
     }
+#if RE4DC_FRONT_TPL_OWNER
+    // The core/thermo palette can alias a room descendant even though the
+    // palette itself lies outside the certified room. Revoke before touching
+    // its texture and CLUT headers, as the model.cpp TPL writers do.
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     tpl->descriptorArray = (TEXDescriptor*) ((u32) tpl->descriptorArray + (u32) tpl);
     for (i = 0; i < tpl->numDescriptors; i++) {
         TEXDescriptor* td = &tpl->descriptorArray[i];

@@ -12,6 +12,10 @@
 #ifndef RE4DC_OB_DECODE
 #define RE4DC_OB_DECODE 0
 #endif
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+extern "C" void re4dc_water29_retire_archive();
+#endif
+#line 15
 #if RE4DC_EFFECT_BIND_DIAG
 extern "C" { unsigned re4dc_effect_bind_fail_line; }  // file scope: not in the unnamed namespace
 // ocbp line by line (no 16 KB purge-all buffer): write back dirty lines, drop the rest, so the next read is from RAM
@@ -173,6 +177,9 @@ extern "C" void re4dc_effect_unbind(void* archive) {
 }
 extern "C" void re4dc_effect_retire_room() {
     // The source has suspended room updates before replacing the room heap.
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    re4dc_water29_retire_archive();
+#endif
     re4dc_effect_unbind(bindings[5].archive);
 }
 extern "C" void* re4dc_effect_record_ref(void* head,unsigned index) {

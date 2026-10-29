@@ -29,6 +29,9 @@ extern "C" void re4dc_gcasset_retire_archive(const void*);
 #include "eprintf.h"
 #include "player.h"
 #include "read.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
 #endif
@@ -48,6 +51,13 @@ extern void* PlWepMot[3];
 #if defined(RE4DC_EFFECT_BIND_DIAG) && RE4DC_EFFECT_BIND_DIAG
 extern "C" unsigned re4dc_effect_bind_fail_line;  // platform/native_effect.cpp (EFFECT_BIND_DIAG=1)
 extern "C" void re4dc_dcache_purge(const void* p, unsigned n);  // platform/native_effect.cpp (ocbp over the range)
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+extern "C" int re4dc_water29_bind_archive(const void*, unsigned, unsigned);
+static inline int Water29ReadRoomLoaded(const void* archive, unsigned bytes, unsigned room)
+{
+    return re4dc_water29_bind_archive(archive, bytes, room);
+}
 #endif
 
 extern "C" {
@@ -305,7 +315,15 @@ void ReadAreaData()
             re4dc_missing("invalid prepared native room identities");
             return;
         }
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+        re4dc_front_tpl_bind_room(pG->pRoom, out_data_size);
+#endif
         readTime = StopwatchStop(NULL);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+        // The optional W29 member belongs to these exact decoded room bytes.
+        // Malformed or missing members keep the compiled water route available.
+        (void) Water29ReadRoomLoaded(pG->pRoom, out_data_size, pG->room_id);
+#endif
         OSReport("Native room: %s bytes=%u read_us=%u\n", name, out_data_size, readTime);
 #endif
     }
