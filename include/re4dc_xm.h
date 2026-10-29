@@ -32,3 +32,19 @@ void re4dc_zam_xm_dir(const void* src, void* dst);
 #define RE4DC_XM_POINT(m, in, out) PSMTXMultVec((m), (in), (out))
 #define RE4DC_XM_DIR(m, in, out) PSMTXMultVecSR((m), (in), (out))
 #endif
+
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+// Render-only cloth point rows. Both entries preflight the complete input and
+// output envelopes before writing. Count is 1..100; strides are byte strides.
+// Exact in-place input/output is allowed, shifted overlap is refused. The
+// scalar entry preserves the current PSMTXMultVec association for comparison.
+// The XM entry owns XMTRX from its one load through its last FTRV: no callback.
+extern "C" {
+int re4dc_zam_xm_points14_scalar(const float (*matrix)[4],
+    const void* source, unsigned source_bytes, unsigned source_stride,
+    void* output, unsigned output_bytes, unsigned output_stride, unsigned count);
+int re4dc_zam_xm_points14(const float (*matrix)[4],
+    const void* source, unsigned source_bytes, unsigned source_stride,
+    void* output, unsigned output_bytes, unsigned output_stride, unsigned count);
+}
+#endif

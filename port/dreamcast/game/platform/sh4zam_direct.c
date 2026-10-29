@@ -221,3 +221,88 @@ void re4dc_zam_xm_dir(const zvec_t* src, zvec_t* dst)
     dst->y = v.y;
     dst->z = v.z;
 }
+
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+/* Cloth owns a synchronous, callback-free row transform. Fail before the first
+ * store for any malformed envelope. The touched-byte envelopes are deliberately
+ * conservative for strided buffers; matrix overlap is never permitted. The
+ * pinned 33fa485 SH4ZAM load uses 32-bit fmov.s and paired frchg; point3 uses
+ * FTRV with w=1 and leaves FPSCR PR/SZ unchanged under -m4-single. */
+void PSMTXMultVec(const float (*m)[4], const zvec_t* src, zvec_t* dst);
+typedef char xm_points14_vec_is_12_bytes[(sizeof(zvec_t) == 12) ? 1 : -1];
+typedef char xm_points14_row_is_16_bytes[(sizeof(shz_vec4_t) == 16) ? 1 : -1];
+typedef char xm_points14_row_is_16_aligned[(__alignof__(shz_vec4_t) >= 16) ? 1 : -1];
+static int xm_points14_bounds(const float (*m)[4], const void* source,
+    unsigned source_bytes, unsigned source_stride, void* output,
+    unsigned output_bytes, unsigned output_stride, unsigned count)
+{
+    if (!m || !source || !output || !count || count > 100 ||
+        source_stride < sizeof(zvec_t) || output_stride < sizeof(zvec_t) ||
+        (((uintptr_t)m | (uintptr_t)source | (uintptr_t)output |
+          source_stride | output_stride) & 3u)) return 0;
+    const uintptr_t n = (uintptr_t)count - 1u;
+    if (n && (source_stride > (UINTPTR_MAX - sizeof(zvec_t)) / n ||
+              output_stride > (UINTPTR_MAX - sizeof(zvec_t)) / n)) return 0;
+    const uintptr_t source_used = n * source_stride + sizeof(zvec_t);
+    const uintptr_t output_used = n * output_stride + sizeof(zvec_t);
+    if (source_used > source_bytes || output_used > output_bytes) return 0;
+    const uintptr_t ma = (uintptr_t)m, sa = (uintptr_t)source, da = (uintptr_t)output;
+    if (ma > UINTPTR_MAX - 3u * 4u * sizeof(float) ||
+        sa > UINTPTR_MAX - source_used || da > UINTPTR_MAX - output_used) return 0;
+    const uintptr_t me = ma + 3u * 4u * sizeof(float);
+    const uintptr_t se = sa + source_used, de = da + output_used;
+    if ((ma < se && sa < me) || (ma < de && da < me)) return 0;
+    if (sa < de && da < se && !(sa == da && source_stride == output_stride)) return 0;
+    return 1;
+}
+
+static void xm_points14_scalar_run(const float (*m)[4], const void* source,
+    unsigned source_stride, void* output, unsigned output_stride, unsigned count)
+{
+    const unsigned char* src = (const unsigned char*)source;
+    unsigned char* dst = (unsigned char*)output;
+    for (unsigned i = 0; i < count; ++i)
+        PSMTXMultVec(m, (const zvec_t*)(src + i * source_stride),
+                        (zvec_t*)(dst + i * output_stride));
+}
+
+int re4dc_zam_xm_points14_scalar(const float (*m)[4], const void* source,
+    unsigned source_bytes, unsigned source_stride, void* output,
+    unsigned output_bytes, unsigned output_stride, unsigned count)
+{
+    if (!xm_points14_bounds(m, source, source_bytes, source_stride,
+                            output, output_bytes, output_stride, count)) return 0;
+    xm_points14_scalar_run(m, source, source_stride, output, output_stride, count);
+    return 1;
+}
+
+int re4dc_zam_xm_points14(const float (*m)[4], const void* source,
+    unsigned source_bytes, unsigned source_stride, void* output,
+    unsigned output_bytes, unsigned output_stride, unsigned count)
+{
+    if (!xm_points14_bounds(m, source, source_bytes, source_stride,
+                            output, output_bytes, output_stride, count)) return 0;
+    // A 1..3 point row uses the existing scalar reference without acquiring
+    // XMTRX. All other rows own it through the last FTRV below.
+    if (count < 4) {
+        xm_points14_scalar_run(m, source, source_stride, output, output_stride, count);
+        return 1;
+    }
+    const unsigned char* src = (const unsigned char*)source;
+    unsigned char* dst = (unsigned char*)output;
+    /* shz_vec4_t at the pinned SH4ZAM revision has 16-byte alignment.
+     * Mtx only promises float alignment, so materialize typed rows before
+     * acquiring XMTRX rather than aliasing a possibly unaligned Mtx. */
+    shz_vec4_t rows[3];
+    for (unsigned row = 0; row < 3; ++row)
+        rows[row] = shz_vec4_init(m[row][0], m[row][1], m[row][2], m[row][3]);
+    shz_xmtrx_load_rows_3x4(&rows[0], &rows[1], &rows[2]);
+    for (unsigned i = 0; i < count; ++i) {
+        const zvec_t* p = (const zvec_t*)(src + i * source_stride);
+        zvec_t* q = (zvec_t*)(dst + i * output_stride);
+        const shz_vec3_t v = shz_xmtrx_transform_point3(shz_vec3_init(p->x, p->y, p->z));
+        q->x = v.x; q->y = v.y; q->z = v.z;
+    }
+    return 1;
+}
+#endif
