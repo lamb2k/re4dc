@@ -711,3 +711,24 @@ memory-floor and enabled final-image/game/link/console gates remain pending.
 Prior three source/object root edges stay separate. Window32 remains
 unbuilt under19GiB guard; no new link/master/capture, target source change,
 SD write, recipe promotion or release action.
+
+#### Owner: all seven unit-local sink-owner sets, 2026-10-29
+
+The six remaining instrumented gaps/window0 units now have exact-command
+RAM-only compiler graph replays too: cloth, pendulum, trans, espgen, est,
+native_motion. All preserve original allocated/relocation sections and
+original object SHA. Raw compressed graph hashes and originals rechecked
+when combining receipts. Compiler estimated frequencies discarded; inline
+copies assigned to their containing emitted function, not separate stack
+frames. Together with collision:29 compiler sink-caller nodes map to
+exactly22 actual object-reference owners; no missing or additional owner.
+Per-unit node/owner counts: collision11/5, cloth2/2, pendulum4/4, trans6/5,
+espgen3/3, est1/1, motion2/2. This completes this unit-local ownership check.
+
+Combined private evidence COMBINED-UNIT-LOCAL-GRAPH.json; raw/classified
+receipts in callgraph-pilot/ and callgraph-{unit}/ under
+owner-audit35-enabled-20261028. Whole-program external/indirect/alternate
+roots and nested libc/fs/interrupt/runtime high-water remain unresolved;
+no total thread-stack, CPU/current memory-floor, window32 or enabled final
+image/game/link/console acceptance inferred. Window32 remains unbuilt under
+19GiB guard. No new link/master/capture, source/recipe change, SD or release.
