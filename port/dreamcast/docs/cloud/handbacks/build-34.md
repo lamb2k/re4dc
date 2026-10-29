@@ -1371,3 +1371,84 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+## 2026-10-29 EF15 Build34: bounded SMD frontend descriptor authority
+
+Source parent in isolated `work-frontend`: `39ed524a3b0a4727148aaa5a45eaaea4d211cede`; default0 public-source slice, packaged after coordinator review. Claimed files: `src/game/trans.cpp` (FtKey/FtRec/frontTexInit, exact wrap publisher/notification); `src/game/model.cpp` (set/add TPL, construct, move/calc/offset/slide address writers); `src/game/scroll.cpp` (SmdInit, SmdSetParam, SmdClear, cSmd::slide); `src/game/read.cpp` (room archive extent bind); `src/game/game.cpp` and `src/game/main.cpp` (retire before backing release); `src/game/frontend_tpl_owner34.h`; `port/dreamcast/game/frontend30.mk`; dedicated `port/dreamcast/tools/cloud/build34/front_owner34_{fixture.cpp.in,py,identity.py,cost.py}`. The existing `frontend30.mk` include consumes the scoped switch.
+
+### Source change and authority
+
+`FRONT_TPL_OWNER ?= 0` applies a define to only the six touched game translation units and requires `FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1`. The admitted class is common SMD added TPLs loaded in a room archive with a published bounded extent and their active base TPL (room or `DmyZeroTpl`); the owner records the descriptor/header/data spans and source counts. A stable qualified record avoids a descriptor walk in `frontTexInit`. Unknown aliases, foreign/unbounded data, malformed or unaligned spans, and content/address changes use the repaired full comparison. Actual source address writers and five `trans.cpp` wrap sites notify the owner; a wrap-only header write retains authority only while the data span remains in the room. Structural notifications revoke qualification until SMD republishes it; a foreign nonfirst header/data remap remains on the full-walk path even after a subsequent mutation. Shared foreign aliases revoke the room generation. Room release and soft reset retire authority before heap reuse. Existing base-zero selection, `cTexChg` remapping, flush, and tail behavior are preserved. Serial exhaustion disables the fast route.
+
+### Validation performed
+
+Run in `work-frontend`:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34.py
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_identity.py
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_cost.py
+git diff --check
+```
+
+All commands pass on the frozen diff. The production-extract consumer fixture reports `PASS front_owner34 source=aac603cec4fd24e6`. ON/OFF normal and ASan/UBSan produce identical reference outcomes within each profile: OFF checks=37800, hits=8, builds=11, fallbacks=1, flushes=11, descriptor_walks=294; ON checks=67631, hits=22, builds=12, fallbacks=1, flushes=16, descriptor_walks=413. The counts differ because the ON fixture exercises additional authority, remap, and invalidation cases; they are not a speed measurement. Cases include stable no-walk hits, base/added aliases, nonfirst changes, external nonfirst header/data remap plus a second mutation, same-address room reload, wrap, base/add count shrink, descriptor array remap, invalid `cTexChg`, info address reuse, retire/reentry, token exhaustion, and malformed unaligned SMD/table/TPL/descriptor/header spans. The fixture executes extracted current production `frontTexInit`/Ft/cache and source GX init/wrap, model setters, and SMD publisher, with reference GX words, header effects, flush, and tail assertions.
+
+Identity script compares the exact pre-EF15 source with absent and explicit-zero define: all six TU preprocessed outputs are byte-identical; extracted host frontend O2 object is identical at 26,688 bytes, SHA-256 `1c1b3bf96ab552dfed1e3e6fc760f199ad8aa4f8288da3b244cb44fb121adcb7`. Make absent/zero command lines match; ON scopes to six TUs and rejects invalid/dependency modes. Host-only footprint: `.text` 2,278 -> 5,665 (+3,387), `.bss` 30,512 -> 34,160 (+3,648), `.data` 8 -> 16; consumer wrapper stack 368 -> 384; publisher stack 96. Declared 32-bit row layout is 64*36=2,304 owner-row bytes plus 32*4=128 key-extension bytes and at least 25 scalar bytes before target alignment. These are host measurements, not SH-4 binary measurements.
+
+### Next gates and limits
+
+**DONE:** public-source implementation and host review. **NEXT:** exact target and private gates below; remaining actual native binding/source classes continue as separate source slices. The SH target SDK/compiler is unavailable here, so no target compile/link, SH-4 stack/code size, Flycast frame capture, STRICT replay, private asset, or console validation occurred. There is no measured hardware performance gain claim. The next integration gate is a real target build of enabled and OFF profiles followed by private room/model image tests for alias, mutation, reload, wrap, and retirement behavior; capture frame/flush parity and actual descriptor-walk savings. If the production archive can place common SMD TPL data outside the published room extent, that instance is intentionally declined and should be counted rather than silently admitted.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${F34_BASE_TREE:?fresh base worktree path}"
+: "${F34_LOGS:?fresh log directory}"
+: "${F34_PROGRAMS:?fresh programme directory}"
+: "${F34_LABEL:?fresh lane label prefix}"
+F34_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$F34_BASE_TREE" 39ed524a3b0a4727148aaa5a45eaaea4d211cede
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$F34_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$F34_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$F34_BASE_TREE" "${F34_LABEL}base" ""
+candidate_build "$F34_CANDIDATE_TREE" "${F34_LABEL}absent" ""
+candidate_build "$F34_CANDIDATE_TREE" "${F34_LABEL}off" "FRONT_TPL_OWNER=0"
+candidate_build "$F34_CANDIDATE_TREE" "${F34_LABEL}ctrl" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=0"
+candidate_build "$F34_CANDIDATE_TREE" "${F34_LABEL}on" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${F34_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${F34_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${F34_LABEL}offrP" \
+  --output "$F34_LOGS/frontend34-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+**Private frontend follow-up:** choose an actual current-image common-SMD room class, retain its loaded archive size and source owner, and compare native/reference descriptor words, effective UV/wrap/header/flush/tail behavior across base/added aliases, nonfirst descriptor changes, room reentry and same-address reload. Instances outside the certified room extent retain full comparison. Source/host no-walk assertions do not establish the private hit rate or frame gain.

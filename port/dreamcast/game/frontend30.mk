@@ -27,6 +27,29 @@ MESH_DIRECT ?= 0
 HW_LEAN ?= 0
 RELEASE_FLAGS ?= 0
 FRONT_NATIVE ?= 0
+# Build34 EF15: a room/SMD TPL publication token for the FRONT_TEXOBJ cache.
+# Only affected game TUs receive the switch. The original full descriptor
+# comparison remains the path for every unqualified palette pair.
+FRONT_TPL_OWNER ?= 0
+ifneq ($(words $(FRONT_TPL_OWNER)),1)
+$(error FRONT_TPL_OWNER must be exactly 0 or 1)
+endif
+ifeq ($(filter $(FRONT_TPL_OWNER),0 1),)
+$(error FRONT_TPL_OWNER must be 0 or 1)
+endif
+ifeq ($(FRONT_TPL_OWNER),1)
+ifneq ($(FRONT_NATIVE),1)
+$(error FRONT_TPL_OWNER=1 requires FRONT_NATIVE=1)
+endif
+ifneq ($(FRONT_TEXOBJ),1)
+$(error FRONT_TPL_OWNER=1 requires FRONT_TEXOBJ=1)
+endif
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
+$(error FRONT_TPL_OWNER=1 requires RESET_RETIRE_BEFORE_HEAPS=1)
+endif
+$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/model.o $(OBJDIR)/src/game/scroll.o \
+  $(OBJDIR)/src/game/read.o $(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/main.o: GAME_CPPFLAGS += -DRE4DC_FRONT_TPL_OWNER=1
+endif
 # MODEL_PREP_KEEP=1 (perf-20261004 candidate 5; render only, exact; needs FRONT_LEAN=1): FRONT_LEAN's "unchanged
 #   registrations" skip of the draw-plan OT walk (model_asset_bridge.cpp) survives pacing and depth order: a pace-skipped
 #   tick (no model OT) on an idle plan owner neither walks nor replaces the last drawn walk's signature, and the

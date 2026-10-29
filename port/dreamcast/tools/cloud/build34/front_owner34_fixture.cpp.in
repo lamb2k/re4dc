@@ -1,0 +1,315 @@
+@TYPES@
+#include <array>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+// The fixture executes the production Ft cache and frontTexInit, the uncached
+// production GX loop, cModelInfo::addTplAddr, and the exact SmdSetParam add/
+// publication block. The room/archive and native GX target are host stand-ins.
+static void calcTplAddr(TEXPalette*) {} // already relocated host room image
+@MODEL_ADD@
+@MODEL_SET@
+static TEXPalette zeroTpl{0x0020AF30, 0, nullptr};
+#define DmyZeroTpl (&zeroTpl)
+static cSmd* pSmd;
+static cSmd* pSmdComn;
+struct cObj { cModelInfo* pModelInfo; };
+static void scrollAdd(cObj* obj) {
+@SCROLL_ADD@
+}
+static unsigned checks;
+static void check(bool ok, const char* what) {
+    ++checks;
+    if (!ok) { std::fprintf(stderr, "FAIL: %s\n", what); std::exit(31); }
+}
+
+struct Room {
+    alignas(16) std::array<u8, 65536> bytes{};
+    cSmd* smd;
+    cSmd* common;
+    TEXPalette* base;
+    TEXPalette* add;
+    TEXDescriptor* base_desc;
+    TEXDescriptor* add_desc;
+    TEXHeader* base_h;
+    TEXHeader* add_h;
+    Room() {
+        smd=(cSmd*)(bytes.data()+0x100);
+        common=(cSmd*)(bytes.data()+0x200);
+        common->TplTblOfs=0x100;
+        u32* table=(u32*)((u8*)common+common->TplTblOfs);
+        table[0]=0x40;
+        add=(TEXPalette*)((u8*)table+table[0]);
+        base=(TEXPalette*)(bytes.data()+0x1000);
+        base_desc=(TEXDescriptor*)(bytes.data()+0x2000);
+        add_desc=(TEXDescriptor*)(bytes.data()+0x2400);
+        base_h=(TEXHeader*)(bytes.data()+0x3000);
+        add_h=(TEXHeader*)(bytes.data()+0x4000);
+        base->version=add->version=0x0020AF30;
+        base->numDescriptors=2;add->numDescriptors=3;
+        base->descriptorArray=base_desc;add->descriptorArray=add_desc;
+        for(u32 i=0;i<2;++i){
+            base_desc[i].textureHeader=&base_h[i];
+            base_h[i].data=bytes.data()+0x5000+i*64;
+            base_h[i].width=64+i*8;base_h[i].height=32;
+            base_h[i].format=5;base_h[i].wrapS=2;
+        }
+        for(u32 i=0;i<3;++i){
+            add_desc[i].textureHeader=&add_h[i];
+            add_h[i].data=bytes.data()+0x6000+i*64;
+            add_h[i].width=32+i*8;add_h[i].height=16;
+            add_h[i].format=5;add_h[i].wrapS=2;
+        }
+    }
+};
+struct Model {
+    cModelInfo info{};
+    ModelData data{};
+    cModelExt ext{};
+    cTexChg swap{};
+    cModel* model() { return (cModel*)&ext; }
+};
+static GxWork expected;
+static void resetGX() {
+    std::memset(&game,0,sizeof(game));
+    std::memset(&expected,0,sizeof(expected));
+    for(u32 i=0;i<248;++i)for(u32 k=0;k<8;++k)
+        expected.texObj[i].w[k]=game.gxStage.texObj[i].w[k]=0x12300000+i*8+k;
+    std::memset(ft_keys,0,sizeof(ft_keys));
+    std::memset(ft_recs,0,sizeof(ft_recs));
+    ft_nkeys=ft_nrecs=0;ft_room=~0U;ft_cur=nullptr;ft_swapped=0;
+    ft_hits=ft_builds=ft_fallbacks=ft_flushes=ft_resets=0;ft_block=0;
+    game.stage_no=1;game.room_no=3;game.Frame_cnt=10;
+#if RE4DC_FRONT_TPL_OWNER
+    std::memset(ft_owner_infos,0,sizeof(ft_owner_infos));
+    ft_owner_room=nullptr;ft_owner_bytes=0;ft_owner_smd=ft_owner_common=nullptr;
+    ft_owner_life=ft_owner_change=1;ft_owner_exhausted=false;
+#endif
+}
+static void roomStart(Room& r) {
+    pSmd=r.smd;pSmdComn=r.common;
+#if RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_bind_room(r.bytes.data(),(unsigned)r.bytes.size());
+    re4dc_front_tpl_smd_begin(pSmd,pSmdComn);
+    re4dc_front_tpl_smd_clear();
+#endif
+}
+static void publish(Model& m, Room& r, bool zero) {
+    m.info.tpl_addr=zero ? (void*)DmyZeroTpl : (void*)r.base;
+    cObj obj{&m.info};
+    scrollAdd(&obj);
+}
+static unsigned draw(Model& m, bool* accepted_out=nullptr) {
+    const TEXPalette primary=*(TEXPalette*)m.info.tpl_addr;
+    const TEXPalette added=m.info.pAddTpl ? *m.info.pAddTpl : TEXPalette{};
+    const u32 n=primary.numDescriptors+m.info.nAddTex;
+    check(n<=248,"fixture descriptor bound");
+    std::array<TEXHeader,248> old{};
+    std::array<TEXDescriptor,248> pdesc{},adesc{};
+    for(u32 i=0;i<n;++i){
+        TEXDescriptor* d=ftDesc(&m.info,i);old[i]=*d->textureHeader;
+        (i<primary.numDescriptors ? pdesc[i] : adesc[i-primary.numDescriptors]).textureHeader=&old[i];
+    }
+    TEXPalette refbase=primary,refadd=added;
+    refbase.descriptorArray=pdesc.data();refadd.descriptorArray=adesc.data();
+    cModelInfo refinfo=m.info;refinfo.tpl_addr=&refbase;
+    if(m.info.pAddTpl)refinfo.pAddTpl=&refadd;
+    source_init(m.model(),&refinfo,&m.data,&expected);
+    const unsigned before=descriptor_walks;
+    const bool accepted=frontTexInit(m.model(),&m.info,&m.data)!=0;
+    const unsigned walked=descriptor_walks-before;
+    if(!accepted)source_init(m.model(),&m.info,&m.data,GXWORK());
+    for(u32 i=0;i<n;++i)check(std::memcmp(&old[i],ftDesc(&m.info,i)->textureHeader,sizeof(TEXHeader))==0,
+                                "source header side effects");
+    for(u32 i=0;i<248;++i){
+        const u32* got=(const u32*)frontTexObj(GXWORK(),i);
+        for(u32 k=0;k<8;++k){
+            const u32 word=ft_cur && i<ft_cur->count && k>=4 ? 0 : got[k];
+            check(word==expected.texObj[i].w[k],"source GX object/remap/tail");
+        }
+    }
+    if(accepted_out)*accepted_out=accepted;
+    return walked;
+}
+static void flushCompare() {
+    frontTexFlush();
+    check(std::memcmp(GXWORK()->texObj,expected.texObj,sizeof(expected.texObj))==0,
+          "materialized GX words");
+}
+int main() {
+    resetGX();Room room;roomStart(room);
+    Model a,b,foreign;
+    publish(a,room,true);
+    check(draw(a)>0,"first owned build walks descriptors");
+    const u32 builds=ft_builds;
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"qualified hit bypasses descriptor walk");
+#else
+    check(draw(a)>0,"reference hit compares all descriptors");
+#endif
+    check(ft_hits==1 && ft_builds==builds,"stable hit");
+
+    publish(b,room,false);
+    check(draw(b)>0,"room-base plus common-added build");
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(b)==0,"room-base plus common-added qualified hit");
+#else
+    check(draw(b)>0,"reference room-base hit walks");
+#endif
+    room.base->numDescriptors=1;
+    check(draw(b)>0,"base count shrink refuses old no-walk key");
+    room.base->numDescriptors=2;
+    draw(b);
+    // An unowned info using the same added palette never inherits authority.
+    foreign.info.tpl_addr=DmyZeroTpl;
+    foreign.info.pAddTpl=room.add;foreign.info.nAddTex=room.add->numDescriptors;
+    draw(foreign);
+    check(draw(foreign)>0,"foreign alias uses repaired full comparison");
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)>0,"foreign alias revokes shared owner generation");
+#endif
+
+    // Same-address room reload changes a nonfirst packed header and image.
+    room.add_h[1].width=96;
+    room.add_h[1].data=room.bytes.data()+0x7000;
+    roomStart(room);publish(a,room,true);
+    const u32 before_reload=ft_builds;
+    check(draw(a)>0,"same-address reload revalidates");
+    check(ft_builds==before_reload+1,"nonfirst reload rebuilds old key");
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"republished reload earns a new qualified hit");
+#endif
+
+    // A wrapped second model writes the shared added headers; the old unwrapped
+    // key must be checked and rebuilt before its previous symbolic tail is lost.
+    b.data.flags=0x80000000U;
+    publish(b,room,false);
+    draw(a);draw(b);
+    const u32 before_unwrapped=ft_builds;
+    check(draw(a)>0,"shared added wrap invalidates old owner stamp");
+    check(ft_builds==before_unwrapped+1,"unwrapped alias refreshes wrap words");
+    flushCompare();
+
+    // Exercise the extracted production source loop's wrap publisher too.
+    // These bytes represent a new room payload at the same archive address.
+    for(u32 i=0;i<room.add->numDescriptors;++i){
+        room.add_h[i].wrapS=2;room.add_h[i].wrapT=0;
+    }
+    roomStart(room);publish(a,room,true);
+    a.data.flags=0x80000000U;
+#if RE4DC_FRONT_TPL_OWNER
+    const u32 before_source_wrap=ft_owner_change;
+#endif
+    source_init(a.model(),&a.info,&a.data,GXWORK());
+    source_init(a.model(),&a.info,&a.data,&expected);
+#if RE4DC_FRONT_TPL_OWNER
+    check(ft_owner_change>before_source_wrap,"production source wrap publishes mutation");
+#endif
+    flushCompare();
+    a.data.flags=0;
+    draw(a);
+
+    // A descriptor-array remap is caught by the constant-time palette header
+    // check, even before an owner publication is available.
+    TEXDescriptor* alternate=(TEXDescriptor*)(room.bytes.data()+0x2800);
+    std::memcpy(alternate,room.add_desc,3*sizeof(TEXDescriptor));
+    TEXHeader* newheader=(TEXHeader*)(room.bytes.data()+0x4800);
+    *newheader=room.add_h[1];newheader->height=45;
+    alternate[1].textureHeader=newheader;
+    room.add->descriptorArray=alternate;
+    check(draw(a)>0,"descriptor-array remap refuses no-walk hit");
+    room.add_desc=alternate;
+    roomStart(room);publish(a,room,true);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)>0,"remap reload rebuilds");
+    check(draw(a)==0,"remap republish qualifies");
+#endif
+
+    // A notified nonfirst structural remap can leave a valid header/data
+    // outside the room. Full comparison must remain active even after it has
+    // refreshed the cache once; the next external mutation must still build.
+    TEXHeader* inside=room.add_desc[1].textureHeader;
+    std::array<u8,64> foreign_image{};
+    TEXHeader foreign_header=*inside;
+    foreign_header.data=foreign_image.data();
+    room.add_desc[1].textureHeader=&foreign_header;
+#if RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_palette_changed(room.add);
+#endif
+    check(draw(a)>0,"external nonfirst header remap uses full comparison");
+    const u32 before_external=ft_builds;
+    foreign_header.width+=8;
+    check(draw(a)>0,"external descendant never earns no-walk restamp");
+    check(ft_builds==before_external+1,"external second mutation rebuilds");
+    room.add_desc[1].textureHeader=inside;
+    roomStart(room);publish(a,room,true);
+    draw(a);
+#if RE4DC_FRONT_TPL_OWNER
+    check(draw(a)==0,"valid republication restores no-walk hit");
+#endif
+
+    // Source addTplAddr republishes a smaller count; symbolic flush preserves
+    // objects beyond the new set and an invalid swap declines to the source.
+    room.add->numDescriptors=2;
+    publish(a,room,true);
+    check(draw(a)>0,"count shrink changes cache key");
+    a.swap.num=1;a.swap.tbl[0]=0;a.swap.tbl[1]=4;a.ext.pTexChg=&a.swap;
+    bool accepted=true;
+    draw(a,&accepted);check(!accepted,"out-of-range cTexChg fallback");
+    a.ext.pTexChg=nullptr;
+    flushCompare();
+
+#if RE4DC_FRONT_TPL_OWNER
+    // Retirement revokes the record before room memory is reused. A cached
+    // key can survive, but it must use the repaired comparison until republish.
+    re4dc_front_tpl_retire_room();
+    check(draw(a)>0,"retired room cannot take qualified hit");
+    roomStart(room);publish(a,room,true);
+    draw(a);check(draw(a)==0,"reentry can qualify after publication");
+
+    a.info.setTplAddr(room.base);
+    check(draw(a)>0,"model base reassignment revokes prior owner");
+    a.info.setTplAddr(DmyZeroTpl);
+    check(draw(a)>0,"same info address cannot reuse stale owner token");
+    publish(a,room,true);
+    draw(a);check(draw(a)==0,"scroll publisher restores qualification");
+
+    // Each malformed address stays inside the declared room extent. The
+    // publisher must reject it before the first typed/word dereference.
+    auto refused=[&](const char* why) {
+        re4dc_front_tpl_smd_publish(&a.info,DmyZeroTpl,pSmd,pSmdComn);
+        u32 stamp=0;
+        check(ftOwnerCount(&a.info,stamp)==0 && stamp==0,why);
+    };
+    room.common->TplTblOfs=0x101;
+    refused("unaligned common table rejected");
+    room.common->TplTblOfs=0x100;
+    u32* table=(u32*)((u8*)room.common+0x100);
+    table[0]=0x41;
+    a.info.pAddTpl=(TEXPalette*)((u8*)table+0x41);
+    refused("unaligned palette rejected");
+    table[0]=0x40;a.info.pAddTpl=room.add;
+    TEXDescriptor* saved_desc=room.add->descriptorArray;
+    room.add->descriptorArray=(TEXDescriptor*)((u8*)saved_desc+1);
+    refused("unaligned descriptor array rejected");
+    room.add->descriptorArray=saved_desc;
+    TEXHeader* saved_header=room.add_desc[1].textureHeader;
+    room.add_desc[1].textureHeader=(TEXHeader*)((u8*)saved_header+1);
+    refused("unaligned texture header rejected");
+    room.add_desc[1].textureHeader=saved_header;
+    re4dc_front_tpl_smd_begin((u8*)room.smd+1,room.common);
+    refused("unaligned SMD header rejected");
+    roomStart(room);publish(a,room,true);
+    draw(a);check(draw(a)==0,"valid room recovers after malformed candidates");
+
+    ft_owner_change=~0U;
+    room.add_h[1].width+=1;
+    re4dc_front_tpl_header_changed(&room.add_h[1]);
+    check(ft_owner_exhausted,"serial exhaustion is sticky");
+    check(draw(a)>0,"exhausted serial falls back to full comparison");
+#endif
+    flushCompare();
+    std::printf("checks=%u hits=%u builds=%u fallbacks=%u flushes=%u descriptor_walks=%u\n",
+                checks,ft_hits,ft_builds,ft_fallbacks,ft_flushes,descriptor_walks);
+}
