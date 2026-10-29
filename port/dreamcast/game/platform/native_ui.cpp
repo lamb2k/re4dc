@@ -9785,11 +9785,15 @@ namespace {
 #endif
 constexpr unsigned kPs2HdrSets=RE4DC_PS2_HDR_SETS,kPs2HdrWays=4;
 static_assert((kPs2HdrSets&(kPs2HdrSets-1U))==0,"PS2_HDR_SETS is a power of two");
-struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4];
+// PS2_UPLOAD_SLOT_BEGIN
 #if RE4DC_PS2_UPLOAD_INCARNATION
+struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4];
     std::uint32_t upload_incarnation;
-#endif
 };
+#else
+struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4]; };
+#endif
+// PS2_UPLOAD_SLOT_END
 #if RE4DC_PS2_UPLOAD_INCARNATION
 bool ps2_hdr_upload_current(const Ps2HdrSlot& slot,const Entry* entry) {
     return entry && slot.upload_incarnation && slot.upload_incarnation==entry->upload_incarnation;
@@ -9938,11 +9942,13 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
         const unsigned size=k[2]|k[3]<<16,mode=k[5]<<2|fog<<4|0x100U;
         const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
         for(const auto& slot:ps2_hdr[set])if(slot.mode==mode && slot.crc==k[0] && slot.fnv==k[1] && slot.size==size){
-            if(slot.entry!=resident || slot.texture!=address ||
+            // PS2_UPLOAD_READY_BEGIN
 #if RE4DC_PS2_UPLOAD_INCARNATION
-               !ps2_hdr_upload_current(slot,resident) ||
+            if(slot.entry!=resident || slot.texture!=address || !ps2_hdr_upload_current(slot,resident) || std::memcmp(slot.words,&expected,16))return 0;
+#else
+            if(slot.entry!=resident || slot.texture!=address || std::memcmp(slot.words,&expected,16))return 0;
 #endif
-               std::memcmp(slot.words,&expected,16))return 0;
+            // PS2_UPLOAD_READY_END
         }
     }
 #endif
@@ -10069,11 +10075,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         // this key (the entry / VRAM address test below applies as for any hit)
         if(re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot<=kPs2HdrSets*kPs2HdrWays){
             Ps2HdrSlot& s=(&ps2_hdr[0][0])[*re4dc_ps2_piece_slot-1U];
-            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size
+            // PS2_UPLOAD_PIECE_BEGIN
 #if RE4DC_PS2_UPLOAD_INCARNATION
-               && ps2_hdr_upload_current(s,s.entry)
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size && ps2_hdr_upload_current(s,s.entry)){hit=&s;++ps2_piece_hits;}
+#else
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;++ps2_piece_hits;}
 #endif
-            ){hit=&s;++ps2_piece_hits;}
+            // PS2_UPLOAD_PIECE_END
         }
         if(!hit)
 #endif
@@ -10089,11 +10097,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         if(!re4dc::rect21::header_dimensions(hit->words[2],RE4DC_TSP_W(resident),RE4DC_TSP_H(resident)))hit=nullptr;
     }
 #endif
-    if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture
+    // PS2_UPLOAD_HIT_BEGIN
 #if RE4DC_PS2_UPLOAD_INCARNATION
-       && ps2_hdr_upload_current(*hit,hit->entry)
+    if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture && ps2_hdr_upload_current(*hit,hit->entry)){
+#else
+    if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
 #endif
-    ){
+    // PS2_UPLOAD_HIT_END
         const Ps2HdrSlot& slot=*hit;
         Entry* const handle=slot.entry;
 #if RE4DC_WORLD_RECT21

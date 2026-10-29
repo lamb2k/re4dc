@@ -34,11 +34,13 @@ void fill(Ps2HdrSlot& slot,Entry* handle,const unsigned* k,unsigned hdr_size,uns
 }
 bool hit_current(Ps2HdrSlot* hit,Key key){
     @HIT@ return true;
+    }
     return false;
 }
 bool piece_current(Ps2HdrSlot& s,unsigned hdr_mode,unsigned hdr_size,const unsigned* k){
-    @PIECE@ return true;
-    return false;
+    Ps2HdrSlot* hit=nullptr;unsigned ps2_piece_hits=0;
+    @PIECE@
+    return hit==&s;
 }
 bool ready_current(const Ps2HdrSlot& slot,const Entry* resident,pvr_ptr_t address,const unsigned* expected){
     @READY@

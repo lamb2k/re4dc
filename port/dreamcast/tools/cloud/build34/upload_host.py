@@ -21,13 +21,14 @@ def fragments(s):
     return dict(ENTRY=through(s,'struct Entry {','\n};'),
         ADVANCE=between(s,'// PS2_UPLOAD_ADVANCE_BEGIN','// PS2_UPLOAD_ADVANCE_END'),
         CLOSE=extract.function(s,'void close_entry(Entry& entry) {'),
-        SLOT=through(s,'struct Ps2HdrSlot {','\n};'),
+        SLOT=between(s,'// PS2_UPLOAD_SLOT_BEGIN','// PS2_UPLOAD_SLOT_END'),
         MATCH=through(s,'#if RE4DC_PS2_UPLOAD_INCARNATION\nbool ps2_hdr_upload_current','\n#endif'),
         PUBLICATION=between(s,'// PS2_UPLOAD_PUBLICATION_BEGIN','// PS2_UPLOAD_PUBLICATION_END'),
-        FILL=between(s,'        slot.crc=k[0];','        ++ps2_hdr_fills;').join(['        slot.crc=k[0];','']),
-        HIT=through(s,'if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture','    ){')[:-1],
-        PIECE=through(s,'if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size','            ){')[:-1],
-        READY=through(s,'if(slot.entry!=resident || slot.texture!=address ||','std::memcmp(slot.words,&expected,16))return 0;').replace('&expected','expected'))
+        FILL=through(s,'        slot.crc=k[0];','        for(unsigned i=0;i<4;++i)slot.words[i]=hw[i];'),
+        HIT=between(s,'// PS2_UPLOAD_HIT_BEGIN','// PS2_UPLOAD_HIT_END'),
+        PIECE=between(s,'// PS2_UPLOAD_PIECE_BEGIN','// PS2_UPLOAD_PIECE_END'),
+        READY=between(s,'// PS2_UPLOAD_READY_BEGIN','// PS2_UPLOAD_READY_END').replace('&expected','expected'))
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--sanitize',action='store_true');a=p.parse_args()
     a.output.mkdir(parents=True,exist_ok=False);source=UI.read_text();values=fragments(source)

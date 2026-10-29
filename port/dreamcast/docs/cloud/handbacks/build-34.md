@@ -9,7 +9,7 @@ format/dimension and conservative refusal checks remain. Actual-source host
 and ASan+UBSan fixtures pass four compositions (incarnation0/1 x handles0/1):
 OFF reproduces six same-Entry/same-address format/mip stale-hit cases per
 handles arm; ON rejects them and tests refill, closed state and exhaustion.
-Receipts: `/root/probe/engine-ef06-20261029/{host1,sanitized1}/upload-host.json`.
+Receipts: `/root/probe/engine-ef06-20261029/{host2,sanitized2}/upload-host.json`.
 Commands/profile/scope: [UPLOAD-INCARNATION.md](../../../tools/cloud/build34/UPLOAD-INCARNATION.md).
 **NEXT** coordinator-admitted SDK build using `upload_profiles.json`, then
 bound full-programme/overlay disabled identity and current-data lifecycle gates.
