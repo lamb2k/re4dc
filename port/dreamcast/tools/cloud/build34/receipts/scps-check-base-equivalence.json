@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "date": "2026-10-29",
+  "scope": "Documentation-only integration advance; no target rebuild or new runtime acceptance claimed.",
+  "qualified_base": "7085a2d73d6a3211e3fc6686ed092153bcd76f69",
+  "publication_base": "4f9d44437febb2616fc88d530633140eb0f9dfd0",
+  "source_receipt_sha256": "27d7c9864bf068858570220fbcf4d7174e9a30f5c18abe4ed2248e22e12e3644",
+  "qualified_input_count": 227,
+  "all_qualified_input_hashes_match": true,
+  "upstream_changes_intersect_qualified_inputs": false,
+  "upstream_changed_paths": [
+    {
+      "path": "port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md",
+      "before_git_blob": "38b6664500400e27de018322b1e373e479e28a3a",
+      "after_git_blob": "dad034a8eed2dac5b4d4764c1f6b94a35f07c4c0"
+    },
+    {
+      "path": "port/dreamcast/docs/cloud/handbacks/build-33.md",
+      "before_git_blob": "c478eb5159196275fc55280f86cc7e4c036dccc5",
+      "after_git_blob": "6b6bca32997a75ff11874d8d242d92f113ab0e63"
+    },
+    {
+      "path": "port/dreamcast/docs/cloud/handbacks/build-34.md",
+      "before_git_blob": "f21f36d35b81f5b69c71a16be799d35941329f1e",
+      "after_git_blob": "60a35847831dff1b575eedc08f18b7aa61620af5"
+    }
+  ],
+  "preserved_file_sha256": {
+    "port/dreamcast/tools/cloud/build34/scps_check_profile.py": "0952d698f2cf9892c424ddb18bc5578bfbbf39f7a4433b5d86403cfa35aac5fd",
+    "port/dreamcast/tools/cloud/build34/scps_check_profiles.json": "0650cce6b28bd865b553ea7cbc95c550c6f2f9c6413811ee857cfa263d6476d7",
+    "port/dreamcast/tools/cloud/build34/receipts/scps-check-profile.json": "27d7c9864bf068858570220fbcf4d7174e9a30f5c18abe4ed2248e22e12e3644",
+    "port/dreamcast/tools/cloud/build34/receipts/scps-check-target-controls.json": "34ae651d47438a4b8adeb94a3ba487c1567f0c99ac918d799224cf13f20ab25b",
+    "port/dreamcast/tools/cloud/build34/README.md": "5e62860f7b1165a6137a0f3115db3bd3f552db9bc02e6b0f6e745ab85eb0cb73"
+  },
+  "owner_answers": [
+    {
+      "marker": "## Answers (owner), 2026-10-28",
+      "bytes": 2477,
+      "sha256": "a923610aa3ee811d96092573eb4b37c428dc0ba59497e33a9dc79dbe2a98c5e4",
+      "byte_identical": true
+    },
+    {
+      "marker": "## Answers (owner): runtime and private metadata, 2026-10-28",
+      "bytes": 17886,
+      "sha256": "fdb68ad035ee7436f6f7061ed338318a41c7f1d4f78e4326a4e3e6cf949167a6",
+      "byte_identical": true
+    }
+  ]
+}

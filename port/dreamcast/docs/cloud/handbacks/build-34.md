@@ -1,5 +1,15 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+**2026-10-29 progress 4: DONE** corrected the invalid cache2 command and
+qualified a separately scoped SCPS validation control/on/check profile on
+`7085a2d73d6a3211e3fc6686ed092153bcd76f69`: nine complete SH-4 C++ TU compiles,
+three actual C room-parser compiles and three four-TU relocatable links pass;
+the original batching1/cache2 command remains correctly rejected. **NEXT**
+Claude runs the new matched batching0 validation family below, retaining the
+already-built batching1/cache1 timing pair. **BLOCKED** executed check counts,
+private full-image and lifecycle/look/STRICT/memory/console acceptance remain
+owner gates. No runtime, Make guard, release recipe or owner Answer changed.
+
 **2026-10-28 progress 3: DONE** applied the four qualified production-file
 repairs after the preceding tool/receipt commit `3e6de9c6`; all production
 hashes now match the passing host, sanitizer and target receipts below;
@@ -401,9 +411,10 @@ arm34 front-cache FRONT_NATIVE=1 FRONT_TEXOBJ=1
 ```
 
 For SCPS, set `DISC_TREE` to the exact final staged input disc tree and `ROOM`
-to the selected room (start with `r101`, then `r103`). A missing room file or
-unsupported container is a reported blocker; do not fabricate collision,
-placement or other sections. Build identical metadata into both program arms:
+to the selected room. The example uses `r103`; repeat for `r101` with a fresh
+`OUT`. A missing room file or unsupported container is a reported blocker; do
+not fabricate collision, placement or other sections. Build identical metadata
+into every program arm:
 
 ```bash
 ROOM=r103
@@ -411,27 +422,111 @@ python3 -B port/dreamcast/tools/cloud/build34/scps_only.py --scps-only34=1 \
   --mesh "$DISC_TREE/dc/native/$ROOM/ps2-world.re4mesh" \
   --room-file "$DISC_TREE/dc/native/$ROOM/room.r4rc" \
   --out "$OUT/scps/$ROOM/room.r4rc" --report "$OUT/scps/$ROOM/report.json"
-PIECE=(PS2_WORLD_HDR_CACHE=1 SCENERY_CONE=0 SCENERY_DEDUP=0
-       PS2_PVS_BATCH_COMPOSE=0 WORLD_PORTAL29=0)
-for arm in piece-control piece piece-check; do
-  opts=("${PIECE[@]}" SCENERY_PIECE_STATE=0)
-  if [[ "$arm" != piece-control ]]; then opts+=(SCENERY_PIECE_STATE=1); fi
-  if [[ "$arm" == piece-check ]]; then opts+=(PS2_WORLD_HDR_CACHE=2); fi
+PIECE=(SCENERY_CONE=0 SCENERY_DEDUP=0 SCENERY21_AB=0
+       PS2_PVS=0 PS2_PVS_BATCH_COMPOSE=0 WORLD_PORTAL29=0)
+piece34() {
+  local arm=$1; shift
   RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$OUT/program-$arm" \
-    bash port/dreamcast/build-public.sh "${QA[@]}" "${opts[@]}"
+    bash port/dreamcast/build-public.sh "${QA[@]}" "${PIECE[@]}" "$@"
   python3 port/dreamcast/tools/swap-program.py "$GDEMU_ZIP" \
     "$OUT/program-$arm" "$OUT/disc-$arm" \
     --replace "dc/native/$ROOM/room.r4rc=$OUT/scps/$ROOM/room.r4rc"
   python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile loader
   python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile standard
-done
+}
+
+# Current-composition timing pair: keep submit batching1 and cache1 in both.
+piece34 piece-control SCENERY_SUBMIT_BATCH=1 PS2_WORLD_HDR_CACHE=1 SCENERY_PIECE_STATE=0
+piece34 piece SCENERY_SUBMIT_BATCH=1 PS2_WORLD_HDR_CACHE=1 SCENERY_PIECE_STATE=1
+
+# Separately scoped validation family: batching0 is explicit in ALL three arms.
+VALIDATION=(SCENERY_SUBMIT_BATCH=0)
+piece34 piece-validation-control "${VALIDATION[@]}" PS2_WORLD_HDR_CACHE=1 SCENERY_PIECE_STATE=0
+piece34 piece-validation-on "${VALIDATION[@]}" PS2_WORLD_HDR_CACHE=1 SCENERY_PIECE_STATE=1
+piece34 piece-validation-check "${VALIDATION[@]}" PS2_WORLD_HDR_CACHE=2 SCENERY_PIECE_STATE=1
 ```
 
-Require `SCN21 piece ... on`, nonzero `PS2HDR piece_hits`, zero check mismatches,
-unchanged mesh/policy/groups and all other room-section hashes, room/movie
-reopen and texture eviction correctness, current standard-program s30 floor,
-and net console CPU gain. Keep the unmodified release control as well as the
-same-SCPS-data control. The check arm is not a timing arm.
+Use one selected room per fresh `OUT`; repeat with `ROOM=r101` and a new
+output root after `r103`. All five arms use the same generated SCPS input.
+Keep the unmodified-data release control as well as the same-SCPS-data
+control. The current-composition pair retains the owner's qualified cache1/
+batching1 settings; the three validation arms deliberately share batching0.
+Do not compare cache2 timings with either family or treat its result as a
+qualification of the unsupported batching1/cache2 composition.
+
+In `piece-validation-on`, require `SCN21 piece ... on` and nonzero
+`PS2HDR piece_hits`. In `piece-validation-check`, require the same SCPS
+admission plus nonzero `PS2HDR checked` and `mismatched=0`, including cache
+fills/reuses and the requested lifecycle changes. Cache2's existing log
+prints `checked`/`mismatched` instead of `piece_hits`; an absent piece-hit
+field in that arm is not a zero-admission result. The checker compares the
+current texture Entry and compiled header words 0..3 at each cache hit.
+It does not compare vertices, complete frames, gameplay or GPU presentation.
+
+Keep unchanged mesh/policy/groups and all other room-section hashes, room/
+movie reopen and texture eviction correctness, current standard-program s30
+floor, look/STRICT and net console CPU gain as separate acceptance gates.
+The public target compilation below is not an executed check-mode result.
+
+### 2026-10-29 SCPS check-profile correction and qualification
+
+The owner correctly reported that the previous `piece-check` command failed
+`scenery19.mk:65`. `SCENERY_SUBMIT_BATCH=1` requires header cache mode1;
+changing only the cache to mode2 is unsupported. The guards remain intact.
+`PS2_PVS_BATCH_COMPOSE=1` also requires batching1/cache1 and excludes SCPS,
+so the separately scoped validation family explicitly keeps it at 0. PVS,
+portal, cone, dedup and sc21 alternate-data selection remain explicitly off;
+this qualifies the current source's metadata-only path, not an arbitrary
+ALL ON composition. Existing stream/chunk/select/replay/direct/interior
+controls remain enabled as resolved below.
+
+| Resolved setting | Validation control | Validation on | Validation check |
+|---|---:|---:|---:|
+| `SCENERY_PIECE_STATE` | 0 | 1 | 1 |
+| `PS2_WORLD_HDR_CACHE` | 1 | 1 | 2 |
+| `SCENERY_SUBMIT_BATCH` | 0 | 0 | 0 |
+| `PS2_PVS_BATCH_COMPOSE`, `PS2_PVS`, `WORLD_PORTAL29` | 0 | 0 | 0 |
+| `SCENERY_STREAM`, `SCENERY_CHUNK`, `SCENERY_SELECT_ONLY`, `SCENERY_REPLAY_LEAN` | 1 | 1 | 1 |
+| `TA_DIRECT`, `MESH_DIRECT`, `PS2_WORLD_MESH`, `PS2_INTERIOR_CULL` | 1 | 1 | 1 |
+| Make-derived `RE4DC_ROOMFILE_SCPS` | absent | 1 | 1 |
+
+The existing generic Build34 runner compiles the complete `native_static.cpp`,
+`native_ui.cpp` and `ui_bridge.cpp` TUs in all three profiles. The focused
+wrapper additionally expands the real `kos-cc` Make recipe for `room_file.c`
+and compiles it with the pinned SH-4 C compiler; it does not approximate the
+C recipe with C++ flags. All three four-TU relocatable links resolve the
+piece-slot and room-file interfaces. It verifies that mode2 actually compiles
+the checked/mismatched counters, and that the piece counter is present only
+in on/check arms. Two Make probes preserve the current batching1/cache1
+control/on composition; three probes reject the original bad command and
+the two conflicting PVS-composition routes.
+
+This qualification uses GCC 15.2.0/binutils 2.45.1, KOS `804b3195` and SH4ZAM `33fa4850`,
+with the existing public `NMR_POOL_LOD=0` and missing-private-character
+fallbacks applied equally. Those fixture overrides are absent from the
+asset-complete commands above. No complete KOS/game/overlay/image link,
+private assets, runtime cache comparisons or console execution occurred.
+Source and recipes are unchanged, so this command/document correction adds
+zero production code, data, stack, resident memory or runtime work: zero
+warm/cold-I cycles, loads/stores and 32-byte traffic lines; **MODELLED whole-frame
+delta 0 ms**. These zeros describe the correction, not the cache2 observer. Cache2
+itself performs its existing extra lookup/header compilation and is excluded
+from timing acceptance; no new speed claim is made.
+
+Reproduction and the exact frozen source/configuration evidence are in
+`tools/cloud/build34/README.md`,
+`tools/cloud/build34/scps_check_profiles.json`, and the committed
+`receipts/scps-check-profile.json` / `receipts/scps-check-target-controls.json`.
+The owner Answers below remain the record of what ran privately, including
+the original refusal; this follow-up supplies a supported next command.
+
+Final publication base: `4f9d44437febb2616fc88d530633140eb0f9dfd0`
+(`origin/t15/int`). Its advance from qualified `7085a2d7` changes only the
+queue and owner hand-backs. `receipts/scps-check-base-equivalence.json`
+verifies all 227 frozen inputs, unchanged runner/configuration/target
+receipts, and byte-identical owner Answer sections including the newly
+appended results. This equivalence check does not claim another target
+execution or promote the separately scoped validation profile.
 
 The cone remains parked for its recorded regression. If Claude selects a new
 cone experiment after inspecting coverage, use the existing builder against

@@ -118,3 +118,66 @@ existing shared room block, not a separate allocation or total allocator
 cost. It excludes overhead and the existing allocator’s eviction effects.
 Use identical generated room metadata in the program-off/program-on pair;
 the final hand-back gives complete image replacement and capture commands.
+
+## Supported SCPS check profile, 2026-10-29
+
+The owner's original `PS2_WORLD_HDR_CACHE=2` check failed the existing
+`SCENERY_SUBMIT_BATCH=1` prerequisite. The corrected route is a separately
+scoped three-arm validation family. All three arms use
+`SCENERY_SUBMIT_BATCH=0 PS2_PVS_BATCH_COMPOSE=0 PS2_PVS=0 WORLD_PORTAL29=0
+SCENERY_CONE=0 SCENERY_DEDUP=0 SCENERY21_AB=0`. They then select:
+
+| Arm | `SCENERY_PIECE_STATE` | `PS2_WORLD_HDR_CACHE` |
+|---|---:|---:|
+| validation-control | 0 | 1 |
+| validation-on | 1 | 1 |
+| validation-check | 1 | 2 |
+
+Make retains `SCENERY_STREAM=1 SCENERY_CHUNK=1 SCENERY_SELECT_ONLY=1
+SCENERY_REPLAY_LEAN=1 TA_DIRECT=1 MESH_DIRECT=1 PS2_WORLD_MESH=1
+PS2_INTERIOR_CULL=1`. The room parser receives `RE4DC_ROOMFILE_SCPS=1` only
+in the on/check arms, from Make's existing `ROOMFILE_SECTIONS` rule.
+The exact complete public profiles are in `scps_check_profiles.json`.
+
+The original cache1/batching1 control/on pair stays separate for timing and
+current-composition acceptance. No guard or release setting is weakened.
+In cache1-on, require actual piece hits. In cache2-check, the existing log
+prints `checked`/`mismatched` instead of `piece_hits`: require nonzero checks
+and zero mismatches, with SCPS admission. That checker compares the texture
+Entry and header words 0..3 at a cache hit; it does not establish vertex,
+full-image, gameplay, lifetime or console-speed equivalence. Cache2 performs
+extra lookup/header compilation and is not a timing arm.
+
+Reproduce the focused compilation gate from the repository root with a new
+output directory and the same pinned toolchain variables used above:
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build34/scps_check_profile.py \
+  --output "$RE4DC_BUILD34_OUTPUT/scps-check-profile" \
+  --sh4-cxx "$RE4DC_SH4_CXX" \
+  --kos-root "$RE4DC_KOS_ROOT" \
+  --sdk-root "$RE4DC_SH4ZAM_ROOT" \
+  --toolchain-receipt "$RE4DC_TOOLCHAIN_RECEIPT"
+```
+
+On integration `7085a2d73d6a3211e3fc6686ed092153bcd76f69`, all nine complete
+SH-4 C++ TU compiles and three actual C parser compiles pass. The existing
+generic runner handles `native_static.cpp`, `native_ui.cpp`, and
+`ui_bridge.cpp`. The wrapper reads the actual `kos-cc` recipe for
+`platform/room_file.c`, retains its C flags, and uses the sibling pinned
+`sh-elf-gcc`; it does not feed C source through the C++ fixture. Each of the
+three four-TU relocatable links resolves the piece-slot and room-file APIs.
+The compiled symbols establish that mode2 includes its checker counters.
+Two Make acceptance probes retain the current cache1/batching1 pair, and
+three rejection probes retain the original bad command/PVS-composition
+refusals. No complete game or overlay link is claimed.
+
+The records are `receipts/scps-check-profile.json` and
+`receipts/scps-check-target-controls.json`; they bind all consumed source
+hashes, exact Make/compiler options, object/partial-link hashes, local frames
+and the pinned compiler/KOS/SH4ZAM identities. The existing public
+`NMR_POOL_LOD=0` and missing-private-character overrides apply equally in this
+cloud fixture. They are not changes to the owner's asset-complete commands.
+No private data or console check ran. The dated hand-back preserves the
+owner's refusal and gives fresh-output build/master/capture instructions
+for the supported validation family and its remaining acceptance gates.
