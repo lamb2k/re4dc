@@ -1,5 +1,14 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-29 streamed completion recovery target gate resolved
+
+Cloud d780 changed complete-profile/fixture inputs were reviewed and merged no-ff as499638652b04ed9b004c62a53254fc44b4f7761b. The source stream/page/profile normal+ASan/UBSan fixtures passed. Six fresh target arms (release absent/zero, portal ctrl/on, paged ctrl/on) linked with real nonempty ELFs and existing empty missing.txt. Actual resolved controls retain PVR_PIPELINE2, PACE_CATCHUP2, PACE_TRANS_SKIP4063, PACE_STEADY1 and PACE_HOLD_LOG0; clip-gather/indexed and prefetch0. New stream macro is present only on actual native_static ON/pagedON commands. Both release OFF arms match full programme,15 overlays and every allocated section against the bound D13 release. Earlier pipeline1/skipmask1 failures remain retained, resolved by relevant full-profile input rather than guard weakening.
+
+Compatible K35 QA_LINK1 rebuilt on499638652b04ed9b004c62a53254fc44b4f7761b, macro/missing/loader+standard lint/ZIP/checksum gates pass, and final raw programme/all15 overlays match SDK outputs (1664 image files). Track03 99e72b6f3669a97fe7860e879667ff3ac12486d6291d6958c2eeba3280b97f6f. Prepared only; the D13 portrait/cloth runtime results remain tied to their original image. WORLD_PORTAL_STREAM31 and portal parents remain outside broad ALLON: separate clip-OFF profile, authored current-source cells, actual output/look/STRICT/lifetime/full stack+memory/net hardware cost remain open. No media/SD/recipe/release promotion.
+
+World mutation14def passed source/host/sanitizer review, target gate pending. Its older shallow /tmp helper-copy command fails parents[5]; now use the unchanged integrated helper at port/dreamcast/tools/cloud/build31/stream_portal_profile.py (or equivalently deep reviewed path), preserving full release-chain identity and guards. This is a command-path caveat, not a production mutation failure. No arbitrary unannounced mutation authority is inferred.
+
+
 ## Answers (owner): 2026-10-29 streamed portal target profile blocked
 
 Source b4cee62b7544704ee09b10759d228401746bf7e7 reviewed and prepared clean no-ff candidate `54a3e3c92f48e1fbdeece9c6d13871bab7bc6ad3` from `d13e2a459627077680f58edc35eae9bceda34c8f`; **UNPUSHED**. Existing stream/ordered-pages source-extracted normal+ASan/UBSan/guard/actual Make suites pass. Full default and explicit0 release links/missingexists0 and complete programme/all15overlays/all allocated-section identity PASS versus bound cloth integration. This does not qualify enabled stream composition.
@@ -428,6 +437,279 @@ Pi benchmark rows are from another earlier session and exact loaded-program
 identity remains unresolved; they do not qualify this candidate. No SD write,
 recipe enablement or publication.
 
+
+## 2026-10-29 Build31 review7.1: streamed queued portal completion
+
+**2026-10-29 progress: DONE — reviewed public source slice, default0.** Branch `codex/world-stream-20261029`, publication base `a5ac02aecee317c3ac74f1c9e7e2546a40775348`. Published paging `636c5df2` is integrated in that base. The stream diff was reapplied cleanly and its actual producer/consumer fixtures passed again with paging in the same translation unit.
+
+The new `WORLD_PORTAL_STREAM31` control is absent/0 by default and adds no definition or runtime branch then. At 1 it requires `WORLD_PORTAL_COMPLETION=1`, `SCENERY_STREAM=1`, `PS2_PVS_BATCH_COMPOSE=1` and `SCENERY_EMIT_PREFETCH=0`, with both specialized clip controls at 0. The existing PVS composition also requires PVS, chunk/select-only/replay-lean, direct/header/mesh/packet and source preparation facts at 1, and refuses dedup, cone, backface, scratch, diagnostic and unqualified owner variants. `scenery19.mk` now admits `SCENERY_STREAM=1` with `PS2_PVS=1` only for this exact portal stream composition; other stream/PVS combinations still fail. The early `native_static.cpp` compiler guard independently refuses an unsupported combination, including alternate records, direct strips and TA hash. Both clip extensions remain refused by portal completion.
+
+This slice reuses the existing production stream emitter and EF08 completion receipt; it introduces no second emitter, observer, source tracker, geometry budget or portal receipt type. A whole indexed pick transforms directly from its pool and offsets through `vp::transform_sched_ix`; `strips_lean` gathers only if a strip reaches the clipper. The production `pvs_observed` sees transformed cache/outcodes on successful whole picks. The existing `chunk_flush` closes the batch before `wp29::finish`, which accepts only a whole ordered source, positive emit, published output, nonzero equal input/output and zero clip/cull delta. A clipped, culled, empty, refused, partial, reordered or unsubmitted source produces no portal witness. PVS target-hide remains disabled in the qualified composition until source and authored portal proof are both current. Actual source/material/view mutation revocation remains governed by EF08 runtime now; a new in-place mutation publisher is a separate later Build31 slice.
+
+**Host validation DONE.** `python3 -B port/dreamcast/tests/test_world_portal_stream31.py` passes normal and ASan/UBSan. The fixture source-extracts the actual `emit_pick`, `chunk_emit`, `strips_lean`, `lean_flush`, `stream_gather`, `corners`, `pvs_observed`, `pvs_finish` and portal receipt block. It uses the repository's portable `transform_sched_ix`/`transform_sched` and outcode/emit helpers with a host implementation of the SH-4-only strip walker. It verifies every transformed cache word/outcode against a gathered reference and checks an indexed no-clip path never gathers. Cases include indexed and nonindexed whole positive, deferred gather on a clip with no witness, clip zero/negative, screen cull, empty and reordered picks, bind refusal and borrow refusal. PVS observation precedes batch release and portal receipt; PVS commit follows it. The standalone preexisting stream profile without PVS remains admitted. Source guard refusals cover missing/invalid controls and stream, PVS, prefetch, clip, alternate-record, direct-strip and TA-hash violations. The actual primary `make -f Makefile -n` native_static command proves absent/explicit-zero identity, exactly one ON define, and invalid composition rejection. Complete `-E -P` and `-O2 -g0` object bytes of the changed early guard match the pinned baseline in OFF mode. These are scoped guard identities, not full-TU target object identity.
+
+The existing EF08 runtime regression also passes on this source, normal and ASan/UBSan with `--prepared09`: 388 production portal loader/runtime checks and 628 actual runtime/emit/flush completion checks on each arm. `git diff --check` is clean.
+
+**Footprint and gates.** Production changes are only guarded admission in `port/dreamcast/game/platform/native_static.cpp`, `scenery19.mk` and `world_plan29.mk`; there are no new heap/static BSS declarations, pick/context capacity or package changes. ON selects the preexisting streamed producer and EF08 receipt; relative SH-4 code/stack and full-image deltas are unmeasured without target compiler/object. NEXT: target compile/object, code/stack/memory and actual current-image output/look/STRICT/cost on the composed stream/paging source. Ordered-page aggregation and abort are now covered by the host checks below. Specialized clip producer completion and exact in-place mutation publisher/route scratch follow serially. BLOCKED at target/private gates: cloud has no SH-4 compiler/SDK, Build-Assets, private authored wall/cell proof, Flycast capture or physical Dreamcast. No target image, authored portal acceptance or hardware timing is claimed.
+
+
+**Composed paging check DONE.** The fixture also source-extracts the published
+`PageInputs` validation and actual page completion/flush blocks into the stream
+producer harness. It consumes 321 and 641 ordered picks, a 640-pick part whose
+last selector page is empty, refusal in each of the first/second/third pages,
+clipping or source reorder on the first page, and view/material/plan retirement
+during a later batch release. The first pages never publish a whole-part receipt;
+any gap stops later pages and prevents the witness. Positive completion follows
+the final batch close and source validation. This test supplies ordered page
+inputs; the separate actual-selector fixture proves cursor/LOD/counter parity.
+Both composed paths pass normal and ASan/UBSan. The prior selector regression
+also passes normal/sanitizer and its exact OFF object comparisons.
+
+```bash
+python3 -B port/dreamcast/tests/test_world_portal_stream31.py
+python3 -B port/dreamcast/tests/test_world_pages31.py
+```
+
+**NEXT for Claude — exact target composition.** Use the established SDK pins
+KOS `804b3195` plus repository patches, GCC15.2.0/binutils2.45.1/
+newlib4.6.0.20260123 and SH4ZAM `33fa4850cacb30dd0ad35485ef035526ec4ce782`.
+This is the explicitly supported portal profile, not a blanket ALL ON profile.
+The old portal control uses `SCENERY_STREAM=0`; its matched stream candidate
+uses `SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1`. A stream/PVS combination with
+the new selector off is deliberately refused.
+
+```bash
+set -euo pipefail
+: "${WS31_BASE_TREE:?fresh base worktree path}"
+: "${WS31_LOGS:?fresh log directory}"
+: "${WS31_PROGRAMS:?fresh programme directory}"
+: "${WS31_LABEL:?fresh lane label prefix}"
+WS31_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$WS31_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$WS31_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+ws31_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$WS31_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+ws31_build "$WS31_BASE_TREE" "${WS31_LABEL}base" ""
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}absent" ""
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}off" "WORLD_PORTAL_STREAM31=0"
+WS31_PROFILE=$(python3 - <<'PY'
+import json
+from pathlib import Path
+options=json.loads(Path('port/dreamcast/tools/cloud/build31/portal_completion_profiles.json').read_text())['on_options']
+print(' '.join(options))
+PY
+)
+WS31_EXTRA='PS2_WORLD_DRAW=1 COARSE=1 PACE_CATCHUP=2 PACE_TRANS_SKIP=1 TREE_IMPOSTOR=1 NATIVE_MESH=1 PS2_WORLD_PARTS=1 COARSE_SOURCE_OBJECTS=1 COARSE_SCENERY_FALLBACK=1 GAME_ATCHK=1 GAME_ATCHK_LIST=1 PS2_WORLD_LEAN=2 NATIVE_STATIC=1 ROUTE_MOVIES=1 ROUTE_MOVIE_YUV=1 IO_ALIGNED=1 MOVIE_HEAP_EVICT=1 MOTION_OOM_EVICT=1 PVR_PIPELINE=1 SCENERY_EMIT_PREFETCH=0'
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}ctrl" \
+  "$WS31_PROFILE $WS31_EXTRA SCENERY_STREAM=0 WORLD_PORTAL_STREAM31=0"
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}on" \
+  "$WS31_PROFILE $WS31_EXTRA SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1"
+WS31_PAGES='WORLD_PAGES31=1 WORLD_PREPARED09=1 WORLD_PART_PLAN29=1 MOVIE_WORLD_ARENA=1 STATIC_OBJ_LIFETIME05=1'
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}pagesctrl" \
+  "$WS31_PROFILE $WS31_EXTRA $WS31_PAGES SCENERY_STREAM=0 WORLD_PORTAL_STREAM31=0"
+ws31_build "$WS31_CANDIDATE_TREE" "${WS31_LABEL}pageson" \
+  "$WS31_PROFILE $WS31_EXTRA $WS31_PAGES SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${WS31_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${WS31_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${WS31_LABEL}offrP" \
+  --output "$WS31_LOGS/world-stream31-release-off.json"
+```
+
+Retain resolved flags, every build log, actual linked outputs and the matched
+portal/profile pairs separately from release OFF identity. Private authored
+wall/cell bindings remain exactly the earlier EF08 commands and acceptance
+contract in this handback: no target hide without the current authored source
+proof. No new real part above 320, portal coverage, output/look/STRICT, memory,
+console result, release promotion or media publication is claimed here.
+
+## 2026-10-29 Build31: release-matched streamed portal profile repair
+
+**2026-10-29 progress: DONE** reproducible actual-release profile builder and primary Make/target-conditional guard regression; **NEXT** fresh changed-input supported control/ON target arms below; **BLOCKED** SDK/private/console gates only. Source parent `b4cee62b7544704ee09b10759d228401746bf7e7`, synchronized with `14b5c196db699640f7a9f39bc2318df22dc45ade`. Branch `codex/world-stream-20261029`. The runtime stream source is unchanged. This entry supersedes the earlier handback extras PVR_PIPELINE=1 and PACE_TRANS_SKIP=1; the retained failed target controls stay failed.
+
+### Repair
+
+The prior `test_world_portal_stream31.py` Make arm appended
+`PVR_PIPELINE=1 PACE_TRANS_SKIP=1`. That pair is not the current release. The
+actual R21 + route play + Test 15 + rr CH2 chain resolves
+`PVR_PIPELINE=2 PACE_CATCHUP=2 PACE_TRANS_SKIP=4063 PACE_STEADY=1`; Make defaults
+`PACE_HOLD_LOG=0`. `PACE_STEADY=1` makes pipeline 1 fail `pace.mk`. With pipeline
+2 restored, `PACE_TRANS_SKIP=1` can pass Make's nonzero check but fails the
+target-conditional `src/game/trans.cpp` COARSE guard, which requires bit 2048.
+
+The new `port/dreamcast/tools/cloud/build31/stream_portal_profile.py` reads the
+ordered public R21 assignments, route play flags, the Test 15 assignment
+prelude used by `ch2-build.sh`, the literal rr `CH2` appends, and the existing
+`portal_completion_profiles.json` options. It preserves duplicate assignments
+and their last-value-wins order. It accepts the existing Test 15 defaults in a
+controlled shell environment, rejects unexpected recipe syntax, and records
+SHA-256 hashes of the five profile inputs in its JSON output. Only the two
+stream switches are added to the ON arm. The source-only dry run stages empty
+filenames under a temporary parse-only directory for Make's private-data and
+SH4ZAM existence probes; no code compiles against those files. Feature values
+stay matched to the release.
+
+The new `port/dreamcast/tests/test_world_portal_stream_profile31.py` invokes
+the actual primary `Makefile` for `platform/native_static.o` and
+`src/game/trans.o`. It checks absent/explicit-zero command identity, ON and
+paged ON definitions, invalid composition refusals, and the existing standalone
+stream arm. It generates `pace.h` through the actual Make recipe, extracts the
+actual trans compile definitions, and preprocesses the literal COARSE/pacing
+guard from `src/game/trans.cpp`. The existing streamed host test now delegates
+its Make gate to this focused test.
+
+### Reproducible source-only commands
+
+From the worktree root:
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build31/stream_portal_profile.py --output /tmp/build31-stream-profile --mode control > /tmp/build31-stream-control.json
+python3 -B port/dreamcast/tools/cloud/build31/stream_portal_profile.py --output /tmp/build31-stream-profile --mode zero > /tmp/build31-stream-zero.json
+python3 -B port/dreamcast/tools/cloud/build31/stream_portal_profile.py --output /tmp/build31-stream-profile --mode on > /tmp/build31-stream-on.json
+python3 -B port/dreamcast/tests/test_world_portal_stream_profile31.py
+python3 -B port/dreamcast/tests/test_world_portal_stream31.py
+```
+
+Each JSON `chain` is the ordered argv for the actual Make invocation. The
+control chain is release + portal completion options + parse-only path values;
+zero appends `WORLD_PORTAL_STREAM31=0`; ON appends
+`SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1`. The test invokes each as
+`make --no-print-directory -f Makefile -n --assume-old=<output>/obj/modules.mk`
+with `KOS_BASE=<output>/kos-stub`,
+`KOS_LDFLAGS=-T<output>/kos-stub/utils/ldscripts/shlelf.xc`, and
+`<output>/obj/platform/native_static.o` or
+`<output>/obj/src/game/trans.o`. The test creates the empty Make rules and
+modules manifest under its temporary output path. Its `pace.h` step runs the
+actual source-only Make header recipe. The full control/zero/ON chains have
+655/656/657 ordered assignments here; the ON values retain pipeline 2,
+catchup 2, skip mask 4063, and steady 1.
+
+For a private target build after composition, the matched rP command form is
+the existing `ch2-build.sh` chain with the unchanged rr release `CH2` and
+portal options appended; use separate labels/output roots for the two arms:
+
+```bash
+set -euo pipefail
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+PORTAL_OPTIONS=$(python3 -B -c 'import json; print(" ".join(json.load(open("port/dreamcast/tools/cloud/build31/portal_completion_profiles.json"))["on_options"]))')
+RUN_ROOT=$(mktemp -d /tmp/build31-stream-target.XXXXXX)
+stream_target_arm() {
+  local arm="$1" extra="$2" label="stream31$1"
+  local output="$RUN_ROOT/$arm/out-${label}rP"
+  test ! -e "$output"
+  ROUTE_OUT_ROOT="$RUN_ROOT/$arm" ROUTE_PROGRAMS_DIR="$RUN_ROOT/programs-$arm" \
+    ROUTE_PROGRAMS_JSON='' T="$PWD" K="$RUN_ROOT/$arm-logs" LP="$label" \
+    CH2="$CH2 $PORTAL_OPTIONS $extra" \
+    bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+stream_target_arm ctrl 'WORLD_PORTAL_STREAM31=0'
+stream_target_arm on 'SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1'
+stream_target_arm pages 'SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1 WORLD_PAGES31=1 WORLD_PREPARED09=1 WORLD_PART_PLAN29=1 MOVIE_WORLD_ARENA=1 STATIC_OBJ_LIFETIME05=1'
+```
+
+Do not append the stale `PVR_PIPELINE=1` or `PACE_TRANS_SKIP=1` test overrides.
+The two target commands are command forms for the coordinator; they were not
+run in this source-only workspace.
+
+### Evidence and remaining gates
+
+- Dedicated profile test: PASS, including release-matched primary Make control,
+  zero, ON, paged ON, standalone stream, and invalid compositions. The old
+  paired `PVR_PIPELINE=1 PACE_TRANS_SKIP=1` ON profile fails actual primary Make
+  with the steady/pipeline prerequisite. With only `PACE_TRANS_SKIP=1`, actual
+  primary Make emits the trans command, while the literal trans guard fails on
+  missing bit 2048. Current mask 4063 passes that guard. `PACE_CATCHUP=1` fails
+  the actual COARSE Make prerequisite.
+- Full streamed fixture: PASS for source-extracted transform/strip/PVS/receipt
+  and paged aggregation/refusal/mutation in normal and ASan/UBSan modes; early
+  source admission/refusal and OFF preprocessor/object identity pass.
+- `git diff --check`: PASS. The default-off rr recipe and production Make/C++
+  guards are untouched by this profile repair.
+
+The empty parse-only inputs permit Make dry runs and a host preprocessor guard
+check. They do not validate private header contents, target compilation, ELF
+identity, actual image output, authored portal visibility, look, STRICT,
+runtime behavior, cost, Flycast, or Dreamcast hardware.
+
+Changed files in this repair:
+
+- `port/dreamcast/tools/cloud/build31/stream_portal_profile.py` (new)
+- `port/dreamcast/tests/test_world_portal_stream_profile31.py` (new)
+- `port/dreamcast/tests/test_world_portal_stream31.py` (Make gate delegation)
+
+This tools-only correction adds zero runtime code/data/stack or per-frame work. It does not request another unchanged release OFF build: retain the owner’s already-passed b4 OFF results and bind the synchronized source when qualifying these changed controls. Portal controls remain separate from the broad ALLON profile; source completion is not authored-cell or visibility acceptance.
+
+**2026-10-29 progress: DONE** clean synchronization of this reviewed local
+candidate with documentation-only recovery base `d45eb759dd92685255929625e04fae3d7a46bca7`. The previously
+reviewed tip is `4c033a49eb87bb5357d859d82ffebe2e32df03db`; every changed path in this synchronization is under
+`port/dreamcast/docs/`, so production/fixture/Make bytes and prior validation
+scope are unchanged. No runtime check is relabeled as freshly executed.
+**NEXT** origin publication when writes return results, then the named
+changed-input target/private gates in this handback. **BLOCKED** no successful
+GitHub write/ref update is established for this local delivery. Keep earlier
+target failures and dependency/publication holds; this documentation-only merge
+does not enable a control, integrate source, or qualify a whole EF card.
+
+## 2026-10-29 recovery: EF08 complete profile and effective guard proof
+
+Queue Status is published by the sole coordinator in the [live recovery checkpoint](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md#status), alongside this source delivery. Keeping shared Build rows in that one branch prevents competing row edits; this branch retains its existing build handback and card-specific backlog update.
+
+**DONE:** recovered unpublished profile correction
+`4c033a49eb87bb5357d859d82ffebe2e32df03db` and synchronized tip
+`97bc1db77780aef0d0c0ab9dadf69a5fed14f61f`, preserving the original worktree.
+Fresh integration readback is `d45eb759dd92685255929625e04fae3d7a46bca7`.
+The runtime stream implementation remains the published b4cee62b source.
+
+The complete control/zero/ON chains contain655/656/657 ordered Make assignments.
+All retain PVR_PIPELINE=2, PACE_CATCHUP=2, PACE_TRANS_SKIP=4063,
+PACE_STEADY=1 and the effective PACE_HOLD_LOG=0. Stream is0 for control and
+explicit zero, and1 with WORLD_PORTAL_STREAM31=1 for ON. The real-target
+ch2-build command forms immediately above retain actual SDK/private paths;
+the builder CLI's empty temporary paths are explicitly parse-only probes.
+
+Recovery strengthens the fixture by running the literal native_static portal
+guards with the actual primary-Make compiler definitions for ON and paged ON.
+Removing stream completion or adding either unsupported clip mode must reject.
+The fixture also reads STEADY=1 and HOLD_LOG=0 from the actual native_ui command,
+including the Make default that is absent from the ordered assignment list.
+No production source/Make guard or release profile value was weakened or changed.
+
+Fresh commands:
+
+```sh
+python3 -B port/dreamcast/tests/test_world_portal_stream_profile31.py
+python3 -B port/dreamcast/tests/test_world_portal_stream31.py
+git diff --check
+```
+
+PASS: source-extracted normal and ASan/UBSan streamed transforms, strips,
+PVS/receipts and paged completion; refusal/abort/mutation/order boundaries;
+OFF source and host object identity; primary Make control/zero/ON/paged/solo
+definitions and invalid combinations. The enhanced focused profile test passed
+again after the fixture-only edit. Old pipeline1 fails the real steady guard;
+old skipmask1 fails the literal trans.cpp bit2048 guard; catchup1 fails COARSE.
+These failures are retained as negative controls, not relabelled target success.
+
+**NEXT:** local uses the changed complete ctrl/on/pages commands above with
+the pinned SDK and actual private release inputs, binding resolved definitions
+and final outputs to this source. **BLOCKED:** target ELF/control/ON link,
+full programme/overlay identity on the actual candidate, authored-cell proof,
+current-image output/look/STRICT/memory/cost and console qualification are not
+executed in this cloud recovery. This profile/fixture correction adds no runtime
+storage or per-frame work. Portal controls remain outside broad ALLON; no
+qualified clipping, mutation authority or route-scratch claim follows.
 
 ## EF08 worker delivery, 2026-10-29
 

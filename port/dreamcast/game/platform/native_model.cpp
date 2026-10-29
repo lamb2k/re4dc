@@ -18,6 +18,10 @@
 #include "native_actor_continuation.h"
 #endif
 #include "native_draw_owner_stamp.hpp"
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+#include "include/model_prepared_binding34.h"
+#include <type_traits>
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -326,6 +330,21 @@ struct Builder {
     }
 #endif
     bool streaming=false,bound=false,submitted=false,restart_uv=false,resource_failed=false;
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+    const Re4dcModelPreparedBinding34* prepared34=nullptr;
+    const Re4dcModelPart* live34=nullptr;
+    const Re4dcModelPart* snapshot34=nullptr;
+    const re4dc::render::SourceLighting* live_light34=nullptr;
+    const re4dc::render::SourceLighting* snapshot_light34=nullptr;
+    bool current34()const{
+        return !prepared34 ||
+            (live34 && snapshot34 && live34->lighting==live_light34 &&
+             !std::memcmp(live34,snapshot34,sizeof(*live34)) &&
+             (!live_light34 || (snapshot_light34 &&
+                 !std::memcmp(live_light34,snapshot_light34,sizeof(*live_light34)))) &&
+             re4dc_model_packet_prepared_current34(&p,prepared34));
+    }
+#endif
 #if RE4DC_MODEL_POSITION_CACHE
     // Part-local, source-indexed reuse. Never weld equal coordinates or retain
     // source pointers across submissions. UVs/normals keep their own identities.
@@ -338,7 +357,14 @@ struct Builder {
     bool bind(){
         if(bound)return true;
         const float u=packet.u_scale,v=packet.v_scale;
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+        if(!current34() || !(prepared34?re4dc_model_packet_begin_prepared34(&p,&packet,prepared34):
+                                     re4dc_model_packet_begin(&p,&packet)) || !current34()){
+            resource_failed=true;return false;
+        }
+#else
         if(!re4dc_model_packet_begin(&p,&packet)){resource_failed=true;return false;}
+#endif
 #if RE4DC_D349_RENDERER_STACK && defined(__sh__)
         matrix_dirty=true; // texture/storage binding may yield to another task
 #endif
@@ -350,10 +376,17 @@ struct Builder {
     }
     bool flush(){
         if(!streaming || !bind())return false;
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+        if(!current34()){resource_failed=true;return false;}
+#endif
 #if RE4DC_D349_RENDERER_STACK
         ++preparation_stats.packet_flushes;
 #endif
         re4dc_model_packet_commit(used);re4dc::reuse_audit::commit(used);committed_strips();submitted=true;
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+        // A streamed commit may yield before the next source corner is read.
+        if(!current34()){resource_failed=true;return false;}
+#endif
 #if RE4DC_D349_RENDERER_STACK && defined(__sh__)
         matrix_dirty=true;
 #endif
@@ -1071,6 +1104,37 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     }
 #if RE4DC_D349_RENDERER_STACK
     if(re4dc_model_defer_part(p))return;
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+    static_assert(std::is_trivially_destructible<Re4dcModelPart>::value &&
+                  std::is_trivially_destructible<re4dc::render::SourceLighting>::value,
+                  "prepared source snapshots end with their local storage");
+    Re4dcModelPreparedBinding34 prepared34{};
+    alignas(Re4dcModelPart) unsigned char source34_mem[sizeof(Re4dcModelPart)];
+    alignas(re4dc::render::SourceLighting) unsigned char light34_mem[sizeof(re4dc::render::SourceLighting)];
+    struct PreparedLease34 {
+        Re4dcModelPreparedBinding34* token;
+        ~PreparedLease34(){re4dc_model_packet_prepared_release34(token);}
+    } prepared_lease34{&prepared34};
+    if(plan && b.bounds && p->static_geometry){
+        const unsigned colors=(((p->alpha_state&256) ||
+            (p->lighting && (p->lighting->ambient_vertex || p->lighting->material_vertex)))?
+            (plan->max_color+1)*4:0);
+        const int prepared=re4dc_model_packet_prepare34(p,(plan->max_uv+1)*4,colors,&prepared34);
+        if(prepared<0){re4dc_model_result(2,0,0);return;}
+        if(prepared){
+            // The resident peek cannot yield. Snapshot the bridge's selected
+            // material/view/light only for this qualified hit, before the
+            // ordinary packet_begin may do I/O or switch the stream list.
+            auto* const source34=::new(static_cast<void*>(source34_mem)) Re4dcModelPart(*p);
+            auto* const light34=source34->lighting?
+                ::new(static_cast<void*>(light34_mem)) re4dc::render::SourceLighting(*source34->lighting):nullptr;
+            b.prepared34=&prepared34;b.live34=p;b.snapshot34=source34;
+            b.live_light34=source34->lighting;b.snapshot_light34=light34;
+            b.packet.u_scale=prepared34.u_scale;b.packet.v_scale=prepared34.v_scale;
+            if(!b.current34()){re4dc_model_result(2,0,0);return;}
+        }
+    }
+#endif
     b.batch=acquire_batch(*p);
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     if(!b.batch)re4dc::dfa26::hit(re4dc::dfa26::ModelBatchMiss);
@@ -1106,6 +1170,12 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         if(b.submitted)re4dc_model_packet_abort();
         re4dc_model_result(b.resource_failed?2:3,b.input,0);return;
     }
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+    if(!b.current34()){
+        if(b.submitted)re4dc_model_packet_abort();
+        re4dc_model_result(2,b.input,0);return;
+    }
+#endif
     re4dc_model_packet_commit(b.used);re4dc::reuse_audit::commit(b.used);b.committed_strips();re4dc_model_result(0,b.input,b.output);
 }
 

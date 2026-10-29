@@ -1,5 +1,142 @@
 # Build 32: actor cone and UV16 admission
 
+
+## 2026-10-29 recovery: explicit reviewed maintained-SDK fixture inputs
+
+This follow-up addresses the local owner's target-admission refusal below for
+the first published fixture `b2ba8d33e9469139328f485ef0d71f233941f427`.
+Fresh integration base: `26f7d8278be77388b157910765f5e6b182c39cc1`. The maintained-profile implementation is now
+source-complete and host-validated for publication on the existing
+`codex/cloth-target-fixture-20261029` branch. The owner's original blocked run is
+retained as history; a new target build/run has not yet been observed.
+
+Root synchronized this slice without source conflicts and reran all20 normal
+driver tests and `check-source` successfully on the fresh base. Independent
+read-only review verified the source and final receipt hashes. The worker's
+20 ASan/UBSan cases also passed, with the recorded LeakSanitizer limitation.
+
+### Implemented correction
+
+The builder now supports the explicit option:
+
+```sh
+python3 port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py build \
+  --kos-profile maintained-d367-20261029 \
+  --kos-root "$XM14_KOS" \
+  --sdk-root "$XM14_SH4ZAM" \
+  --sh4-cxx "$XM14_CXX" \
+  --output "$XM14_OUT"
+```
+
+Those variables denote the caller's selected SDK/compiler and a new output directory; no SDK path is silently substituted. `--kos-profile pristine` remains separate and is the default. Its exact receipt mode is `pristine-consumed-sources-bound-installed-binaries`: it validates consumed pinned sources/headers and binds selected installed binary bytes, not a proved pristine binary build history. The existing `_arch_sub_pristine=1` requirement is KOS's Dreamcast hardware subarchitecture and stays unchanged for both provenance profiles.
+
+`cloth_xm14_sdk_reviewed.json` is the one repository-owned reviewed manifest. Its exact SHA256 `8870a5b049058d69553afe6463e7347016a5a2839816818feaeef38bd62d12dc` is pinned in the builder. There is no caller-supplied manifest path, arbitrary allowlist, dirty-header override, or automatic patched-header admission. The manifest binds:
+
+- KOS base `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`.
+- Original PVR header Git blob `9ac9ed1b5f975094d54b39c5dbe13309332ad0c5`, SHA256 `280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4`.
+- Maintained header Git blob `7d0b84a251451ac6d13f508764faad10678d67a0`, SHA256 `55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f`.
+- The exact ordered public manual-flip, async-present and vbuf-switch patch bytes, with SHA256 respectively `c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df`, `d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442`, `52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7`.
+- Selected installed `libkallisti.a` SHA256 `5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf` and `_kos_startup.o` SHA256 `ec3a5f7757f9af742171bcc6ab56d5b0b7c77a86b034623fe66b963708a886fd`.
+
+The builder proves that those public patches derive the selected header from its exact pristine Git object in a temporary scratch directory. It never patches or resets the selected SDK. Inherited Git worktree/config variables are removed for the scratch mutation so they cannot redirect it. Exact selected header bytes are checked independently against both Git-blob and SHA256 identities.
+
+All other consumed SDK headers and the IRQ/timer/entry/environment/wrapper/linker source inputs still require pristine pinned bytes. Compiler, ABI/math defines, foreign roots, dependency provenance and actual linker archive/startup selection checks remain. The actual compiler dependency evidence must now explicitly include `dc/pvr.h`.
+
+The fixed profile, manifest, ordered patch identities, selected header and selected binary hashes enter the same executable build ID through `bound-kos-v2`. Receipt/profile equality and approved binary/header identities are checked by `verify-run`, even if somebody recomputes the surrounding receipt checksum. Old binding-v1 or absent/changed profile receipts do not qualify the new fixture. After linking, the driver repeats Git base, manifest, patch, source/header, wrapper/compiler and binary checks against the original binding. Unknown modifications or mid-build changes fail closed.
+
+### Changed files (only four)
+
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py`
+- `port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_sdk_reviewed.json` (new)
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_pvr_fixture.json` (new, 16,211 bytes): compressed exact public upstream 55,048-byte header solely for deterministic offline host tests; upstream source URL, original copyright notices and the existing repository KOS license attribution are retained. It is never used as the target SDK or compiled by the target builder.
+
+No target main/probe/production assembly/numeric code, Make driver or SDK checkout was modified. Root updates this existing handback and the EF14 backlog; queue Status is serialized on the recovery branch.
+
+### Validation and limits
+
+`python3 -m unittest -v port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`: **20 PASS**.
+
+`SANITIZE=1 ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 python3 -m unittest -v port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`: **20 PASS**, including the actual production clipper host case under ASan/UBSan.
+
+`cloth_xm14_target.py check-source`: production scalar/batch/API/geometry pins and new reviewed-manifest/patch identities **PASS**. `git diff --check`: **PASS**.
+
+Evidence: `/tmp/ef14-reviewed-sdk-qualified/receipt.json`, with normal/sanitized logs and check-source JSON alongside it. Tests establish explicit maintained-header acceptance from the real public patch chain; pristine/maintained distinction; read-only selected SDK behavior even with an inherited foreign Git worktree; rejection of unknown header edits, foreign symlink paths, changed header base, wrong KOS commit, malformed/changed manifest and patch bytes, wrong/missing/ambiguous selected archive/startup hash claims, actual linker input changes, mid-build header/profile changes, stale or rehashed tampered receipts, and all prior wrapper/ABI/clip/IRQ-parser controls.
+
+The installed archive/startup **hash policy** positive test uses the owner-published identities; it does not fabricate those binary preimages or claim access to the local installed SDK. The actual public header bytes and patch derivation are exercised, while complete SDK compilation/linking remains local. An earlier sanitized invocation encountered LeakSanitizer's unsupported `/proc`/ptrace check; the successful run explicitly disables only leak checking, with address/undefined checks active. This limitation is recorded in the receipt and is not target evidence.
+
+Source SHA256s at freeze:
+
+- builder `3f75fe43c19f11ef08f86ff48252278439d34f54e690e9b2854cc4b7bbe715b5`
+- tests `6ae73b1443b377f4c31ae024f3a1dff3b56c281167ff6019d662b063d3cd5b99`
+- manifest `8870a5b049058d69553afe6463e7347016a5a2839816818feaeef38bd62d12dc`
+- public header fixture `21f499d54ff972277d221888d869c25dd5e3d52eae174b540541b1b89f3af2ff`
+
+Independent focused source review found no arbitrary allowlist or binding bypass; its pristine-provenance wording correction is incorporated. No pinned SH4 SDK target compile/link or numeric/FPSCR/TMU1 execution occurred here. The exact installed hashes identify selected inputs, not their complete build history. Actual numeric/FPSCR/normal-TMU1-IRQ acceptance remains open, separate from logger IRQ-duration, returning-fault/NMI/cache visibility and all existing stack/heap/VRAM/look/STRICT/runtime/console/release/private holds. No enablement, SDK reset, hardware/media operation or email action.
+
+## Answers (owner): 2026-10-29 actual cloth target fixture admission blocked
+
+﻿### Reviewed patched SDK binding needed
+
+Reviewed source tip: `b2ba8d33e9469139328f485ef0d71f233941f427` on `codex/cloth-target-fixture-20261029`.
+
+The new actual-target fixture is a useful changed input: it adds production cloth clipping and asynchronous TMU1 interruption at actual FTRV instruction boundaries. Source pins and all 14 driver tests passed locally, including the host clipping harness under ASan/UBSan. These checks do not execute SH-4 numerics, FPSCR restoration or interrupts.
+
+The current builder rejects the maintained patched KOS SDK before target qualification. `pvr_geometry.hpp:8` includes `<dc/pvr.h>`. The driver's `verify_dependencies()` sends every consumed KOS header through `pinned_file()`, which requires its bytes to equal `HEAD:path`. The maintained KOS checkout is at the required `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` base with the existing public manual-presentation/TA-buffer patch. Its reviewed `dc/pvr.h` therefore differs from pristine HEAD.
+
+Read-only local evidence:
+
+| Input | Identity |
+| --- | --- |
+| KOS base | `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` |
+| Pristine `dc/pvr.h` Git blob | `9ac9ed1b5f975094d54b39c5dbe13309332ad0c5` |
+| Maintained patched `dc/pvr.h` Git blob | `7d0b84a251451ac6d13f508764faad10678d67a0` |
+| Pristine header SHA-256 | `280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4` |
+| Maintained patched header SHA-256 | `55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f` |
+| Selected prebuilt `libkallisti.a` SHA-256 | `5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf` |
+| Selected prebuilt `_kos_startup.o` SHA-256 | `ec3a5f7757f9af742171bcc6ab56d5b0b7c77a86b034623fe66b963708a886fd` |
+
+These binary hashes identify the inspected installed inputs; they do not establish their complete build history or a successful fixture link.
+
+Minimal reproduction from the candidate checkout, with `XM14_KOS` pointing at the maintained patched SDK:
+
+```sh
+python3 -B - <<'PY'
+import importlib.util
+import os
+from pathlib import Path
+path = Path("port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py")
+spec = importlib.util.spec_from_file_location("cloth_target", path)
+driver = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(driver)
+driver.pinned_file(Path(os.environ["XM14_KOS"]),
+                   "kernel/arch/dreamcast/include/dc/pvr.h")
+PY
+```
+
+Observed assertion, with only the local root sanitized:
+
+```text
+AssertionError: modified pinned SDK input: <selected KOS>/kernel/arch/dreamcast/include/dc/pvr.h
+```
+
+Please add explicit reviewed patched-SDK manifest support: bind the exact KOS base, approved patch/header bytes and selected archive/startup hashes into the same build identity and receipt. Continue refusing unknown changed inputs, foreign include/library roots and mid-build changes. Add a host refusal/acceptance fixture for this supported patched-header case. Do not remove the input checks, relabel patched bytes as pristine, reset the maintained SDK, or silently select another SDK. A separately qualified pristine SDK is possible only with accurate separate attribution.
+
+No SDK build, target run, SDK reset or source fix was attempted during this review. Keep the actual numeric/FPSCR/normal-TMU1-IRQ gate open until a relevant binding correction is reviewed and the real fixture is linked and executed. Normal cloth timer-IRQ evidence remains separate from the logger's IRQ-duration, returning-fault/NMI and cache-visibility obligations. Existing defaults and runtime/look/STRICT/memory/console/release holds remain.
+
+
+
+## Answers (owner): 2026-10-29 current K35 portrait and cloth runtime
+
+The previously missing permitted ordinary guest/controller route is now established. Current runtime `d13e2a459627077680f58edc35eae9bceda34c8f` / compatible K35 was exercised in Flycast via a local QA Link relay, with normal PAD input and read-only current-ELF counters. The final programme/all15 overlays were bound before the run. No Windows input, cross-image snapshot, forced story/position, production source/asset mutation, physical-console action or SD copy was used. Fresh ordinary-route setup required explicitly announced longer captures (120/150s requested); individual inventory/cloth windows stayed below30s. This is JIT behavior/look evidence, not hardware performance.
+
+**Portrait scoped result:** the real inventory model used the current FE pose-acquisition/Submitted path. Run04 recorded833 Submitted draws and zero refusals. The corrected run06 recorded486 Submitted draws, zero refusals and queued0 (direct Submitted route). Two inventory open/close cycles were observed, with3MiB backing restored and matching hashes for each close; gameplay returned after both. Captures show Leon's inventory model. Run05 had one open/close only: B selected Exit and Y closed; it is not counted as a reopen pass. First-radio-call presentation, other producer classes, asynchronous queued-drain behavior, full heap/stack/VRAM/STRICT, cost and console gates remain open. No whole EF04/card completion is claimed.
+
+**Cloth scoped result:** ordinary r100 entry created three live9x10 sheets. Run06's current-ELF observer recorded9599 emitted rows and zero drops (quads0). Normal-controller movement reached near the first sheet and camera turns were captured. These pictures do not isolate the selected sheet sufficiently to certify both sides, near-plane, material/lighting or wide-sheet visual parity. The nominal runtime output path is observed; full cloth look/lifetime/memory/cost acceptance is still open. Do not transfer synthetic wide-grid or static ABI proof to actual wide/FPSCR numeric execution.
+
+Run06 ended normally (151.0s, runner/reader0, errors[], no raw-log NUL bytes or searched fault markers). Final sampled VRAM gap counters were zero, but UI fragmentation retries/evictions occurred; this is not a full memory/residency pass. Both final closes reported pool_free77728. Raw logs, counters, images, command acknowledgments and exact local hashes remain private. Cloud owns remaining source/synthetic/target-numeric fixtures; local owns explicitly framed runtime cases, private data and console qualification. Source and hardware acceptance are separate. The physical-console prerequisites remain correct candidate/media selection, the user's swap and reviewed link readiness; no release/recipe promotion follows from these checks.
+
+
 ## Answers (owner): 2026-10-29 actual cloth target code-generation review
 
 Read-only inspection of the existing K35/D13 actual target objects and linked ELF establishes the helper's local 16-byte matrix alignment, 48-byte row bounds inside its 80-byte local area, caller/helper argument layout, stride12 and bounded spans, paired FRCHG around the row load, identity bottom row/w1 and callback-free FTRV interval. Object/ELF instruction prefixes agree, excluding relocation literal pools. Counts1..3 retain the existing scalar routine. No demonstrated target blocker was found by this bounded inspection.

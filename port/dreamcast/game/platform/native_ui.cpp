@@ -30,6 +30,9 @@
 #include "include/gc_asset_movie.h"
 #include "include/gc_asset_lifecycle.h"
 #include "include/gc_asset_actor.h"
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+#include "include/model_prepared_binding34.h"
+#endif
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
@@ -7473,6 +7476,10 @@ extern "C" unsigned re4dc_model_uv16_live32(const Re4dcModelPart* p,unsigned cer
 // re4dc_model_packet_reserve's state checks and re4dc_model_packet_begin's header build; the
 // compare against the header packet_begin really built for the source part proves the copy.
 extern "C" void re4dc_front_header_built(const void* header,unsigned alpha_state);
+#endif
+#if (RE4DC_FRONT_NATIVE>=2 || (defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34)) && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
+// Read-only resident lookup. A miss leaves binding and any I/O at the old
+// post-geometry packet_begin boundary; this path touches no allocator or file.
 Entry* resolve_peek(const Re4dcUiImage& image,const Re4dcModelPart* masked){
     const Re4dcUiImage* mask=masked?&masked->mask:nullptr;
     unsigned shape,mask_shape=0;
@@ -7486,6 +7493,8 @@ Entry* resolve_peek(const Re4dcUiImage& image,const Re4dcModelPart* masked){
        h.palette_bytes==image.palette_bytes && (!indexed || palette_same(unsigned(&h-handle_table),image)))return &entries[h.entry];
     return nullptr;
 }
+#endif
+#if RE4DC_FRONT_NATIVE>=2 && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
 extern "C" int re4dc_model_header_preview(const Re4dcModelPart* p,void* out){
     if(p->blend>4 || p->cull>2 || p->depth_mode>2 || p->wrap_s>1 || p->wrap_t>1)return 0;
     if((p->material_flags&4) && (!p->mask.pixels || !p->mask_same_uv || p->mask_ref!=0 ||
@@ -7534,6 +7543,111 @@ extern "C" void re4dc_model_texture(const unsigned* key){model_texture=key;}
 // between), so packet_begin takes that reservation instead of repeating it: the same part and owner state give
 // the same result, model_pending and packet fields.
 namespace { const Re4dcModelPacket* model_reserved=nullptr; }
+#endif
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+#if !RE4DC_PLAN_OWNER_SCOPED || !RE4DC_MODEL_DRAW_PLANS || !RE4DC_ACTOR_TRANSACTION || !RE4DC_UI_HANDLES || !RE4DC_PS2_UPLOAD_INCARNATION || !RE4DC_D349_RENDERER_STACK
+#error PREPARED_BINDING34 requires scoped draw plans, texture handles and upload leases
+#endif
+namespace {
+bool prepared_sources34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b,
+                        Re4dcDrawOwnerStamp* capture=nullptr){
+    if(!p || !p->part || !p->stream || !p->positions || !p->normals || !p->uv || !p->image.pixels ||
+       !b->uv_bytes || !p->position_count || !p->normal_count || !p->position_stride || !p->normal_stride ||
+       p->position_count>~0U/p->position_stride || p->normal_count>~0U/p->normal_stride)return false;
+    const void* const ptr[]={p->part,p->stream,p->positions,p->normals,p->uv,p->colors,p->image.pixels,p->image.palette};
+    // max_uv/max_color are the plan's highest *referenced address*, not a
+    // claimed source UV/colour logical count. The old parser remains the
+    // authority for index semantics; these bytes only need archive backing.
+    const unsigned bytes[]={32U,p->stream_bytes,p->position_count*p->position_stride,p->normal_count*p->normal_stride,
+        b->uv_bytes,b->color_bytes,b->pixel_bytes,p->image.palette_bytes};
+    for(unsigned i=0;i<Re4dcModelPreparedBinding34::SpanCount;++i){
+        if(!bytes[i]){
+            if(capture)capture[i]={};
+            else if(b->source[i].valid())return false;
+            continue;
+        }
+        const auto stamp=re4dc_model_draw_owner_stamp(ptr[i],bytes[i]);
+        if(!stamp.valid() || (!capture && !(stamp==b->source[i])))return false;
+        if(capture)capture[i]=stamp;
+    }
+    return true;
+}
+Entry* prepared_entry34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b){
+    if(!b || !b->active || !frame_ready || stream_aborted || direct_open || frame!=b->frame ||
+       draining_parts || (p->material_flags&4) ||
+       b->pass!=unsigned(select_model_pass(p)))return nullptr;
+#if RE4DC_MESH_TEXTURES
+    if(model_texture)return nullptr;
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    unsigned rw=0,rh=0;if(re4dc_rtt_override_texture(&rw,&rh))return nullptr;
+#endif
+    unsigned index=~0U;
+    if(!actor_texture_leases.resolve(b->texture,frame,index) || index!=b->entry || index>=kTextureCount)return nullptr;
+    Entry& e=entries[index];
+    if(!e.valid || !(e.key==Key{b->crc,b->fnv}) || !e.upload_incarnation ||
+       e.upload_incarnation!=b->upload || !e.package.upload_complete() ||
+       e.package.header().texture_count!=1 || !e.package.pvr_texture(0))return nullptr;
+    const auto& t=e.package.textures()[0];
+    if(t.width!=b->width || t.height!=b->height ||
+       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(e.package))return nullptr;
+    return &e;
+}
+}
+extern "C" int re4dc_model_packet_prepared_current34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b){
+    return p && b && prepared_sources34(p,b) &&
+        !std::memcmp(p->part,b->descriptor,sizeof(b->descriptor)) && prepared_entry34(p,b);
+}
+extern "C" void re4dc_model_packet_prepared_release34(Re4dcModelPreparedBinding34* b){
+    if(b){actor_texture_leases.release(b->texture);b->active=0;}
+}
+extern "C" int re4dc_model_packet_prepare34(const Re4dcModelPart* p,unsigned uv_bytes,unsigned color_bytes,
+                                                Re4dcModelPreparedBinding34* out){
+    if(!out || out->active || out->texture.slot || out->texture.serial)return 0;
+    // This first class is an archive-backed rigid part with an ordinary
+    // resident texture. No early I/O widens the source-content interval.
+    if(!p || !p->part || !p->static_geometry || !frame_ready || stream_aborted || direct_open || draining_parts ||
+       (p->material_flags&4) || !actor_texture_leases.available() ||
+       p->stream!=(const unsigned char*)p->part+32 || p->image.format>6 ||
+       p->image.palette || p->image.palette_bytes)return 0;
+#if RE4DC_MESH_TEXTURES
+    if(model_texture)return 0;
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    unsigned rw=0,rh=0;if(re4dc_rtt_override_texture(&rw,&rh))return 0;
+#endif
+    Re4dcModelPreparedBinding34 b{};
+    b.uv_bytes=uv_bytes;b.color_bytes=color_bytes;b.pixel_bytes=image_size(p->image);
+    if(!b.pixel_bytes || !prepared_sources34(p,&b,b.source))return 0;
+    std::memcpy(b.descriptor,p->part,sizeof(b.descriptor));
+    b.frame=frame;b.pass=unsigned(select_model_pass(p));
+    // This existing resident-handle query has no I/O or allocator side effect.
+    // Cold and ambiguous textures retain the original later resolve/replay.
+    Entry* e=resolve_peek(p->image,nullptr);
+    if(!e)return 0;
+    if(frame!=b.frame || !frame_ready || stream_aborted || direct_open || draining_parts ||
+       b.pass!=unsigned(select_model_pass(p)) || !prepared_sources34(p,&b) ||
+       std::memcmp(p->part,b.descriptor,sizeof(b.descriptor)))return -1;
+    if(!e->valid || !e->upload_incarnation || !e->package.upload_complete() ||
+       e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
+    const auto& t=e->package.textures()[0];
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) &&
+       !RE4DC_WRAP_SAFE(e->package))return 0;
+    b.entry=unsigned(e-entries);b.upload=e->upload_incarnation;
+    b.crc=e->key.crc;b.fnv=e->key.fnv;b.width=t.width;b.height=t.height;
+#if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
+    b.u_scale=float(int(p->image.width))/float(int(t.width));
+    b.v_scale=float(int(p->image.height))/float(int(t.height));
+#else
+    b.u_scale=float(p->image.width)/t.width;b.v_scale=float(p->image.height)/t.height;
+#endif
+    if(!actor_texture_leases.acquire(b.entry,frame,b.texture))return -1;
+    b.active=1;
+    if(!re4dc_model_packet_prepared_current34(p,&b)){
+        actor_texture_leases.release(b.texture);return -1;
+    }
+    *out=b;return 1;
+}
 #endif
 extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
@@ -7782,6 +7896,19 @@ if(!handle){
 #endif
     return 1;
 }
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+extern "C" int re4dc_model_packet_begin_prepared34(const Re4dcModelPart* p,Re4dcModelPacket* out,
+                                                      const Re4dcModelPreparedBinding34* prepared){
+    // The ordinary header builder still owns RTT/baked/wrap/pass semantics.
+    // Its second resolve should be a resident handle hit, but may yield after
+    // retirement; compare the actual bound Entry before any packet commit.
+    if(!prepared || !re4dc_model_packet_prepared_current34(p,prepared) ||
+       !re4dc_model_packet_begin(p,out))return 0;
+    return re4dc_model_packet_prepared_current34(p,prepared) &&
+        model_handle==prepared_entry34(p,prepared) &&
+        out->u_scale==prepared->u_scale && out->v_scale==prepared->v_scale;
+}
+#endif
 extern "C" void re4dc_model_packet_commit(unsigned count){
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     if(!count){++sob33_stats.empty;sob33_barrier(re4dc::sob33::EmptyPacket);}

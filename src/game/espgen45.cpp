@@ -676,6 +676,7 @@ static int WaterPs2ExtRoomOn(u32 room)
 
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
 #include "water_layer29.h"
+#include "water_layer29_package.h"
 #include "water_layer29_source.inc"
 extern "C" void re4dc_log(const char* fmt, ...);
 
@@ -710,8 +711,9 @@ static int s_water29_refused;
 static u32 s_water29_admission_refused, s_water29_partial;
 static u32 s_water29_last_log_frame = ~0U;
 static Water29Admission s_water29_last_admission;
+static uint32_t s_water29_archive_incarnation, s_water29_archive_active;
 
-// A future package loader calls this with its owned, source-bound spans.
+// Public span adapter for other qualified owners and their source-bound rows.
 // Publication copies rows, so caller mutation or backing reuse cannot affect
 // the current image's selection or a queued WaterNode.
 extern "C" int re4dc_water29_bind(const Water29Definition* def, unsigned available,
@@ -738,6 +740,50 @@ extern "C" void re4dc_water29_retire(uint32_t owner, uint32_t incarnation)
         s_water29_bound.definition.incarnation == incarnation) {
         s_water29_bound.valid = 0;
     }
+}
+
+// The loaded room archive, rather than an arbitrary row pointer, is the
+// authority for this publication. Each read gets a new token even if the DVD
+// allocator returns the same address. Exhaustion refuses instead of wrapping.
+extern "C" void re4dc_water29_retire_archive()
+{
+    if (s_water29_archive_active) {
+        re4dc_water29_retire(WATER29_ARCHIVE_OWNER, s_water29_archive_active);
+        s_water29_archive_active = 0;
+    }
+    s_water29_refused = 0;
+}
+extern "C" int re4dc_water29_bind_archive(const void* archive, unsigned available, uint32_t room)
+{
+    re4dc_water29_retire_archive();
+    const uint32_t key = Water29RoomEnabled(room) ? Water29SourceKey(room) : 0;
+    if (s_water29_archive_incarnation == ~uint32_t(0)) {
+        s_water29_refused_room = room;
+        s_water29_refused_source = key;
+        s_water29_refused = 1;
+        return WATER29_REFUSED;
+    }
+    const uint32_t incarnation = ++s_water29_archive_incarnation;
+    Water29PackageView member;
+    const Water29Result opened = water29PackageOpen(archive, available, room, key, incarnation, &member);
+    if (opened == WATER29_UNBOUND) return opened;
+    if (opened == WATER29_REFUSED) {
+        s_water29_refused_room = room;
+        s_water29_refused_source = key;
+        s_water29_refused = 1;
+        return opened;
+    }
+    const Water29Result published = water29PackagePublish(&s_water29_bound, &member,
+                                                           &s_water29_bound_view);
+    if (published == WATER29_REFUSED) {
+        s_water29_refused_room = room;
+        s_water29_refused_source = key;
+        s_water29_refused = 1;
+    }
+    if (published == WATER29_BOUND || published == WATER29_NO_WATER) {
+        s_water29_archive_active = incarnation;
+    }
+    return published;
 }
 
 // Adapter: the original room table spans are copied neither at build nor per

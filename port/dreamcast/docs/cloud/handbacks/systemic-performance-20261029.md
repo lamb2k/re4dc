@@ -1,5 +1,16 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 recovered branches and local gate handback
+
+Frontendacb8 and streamd780 were freshly qualified/landed default0 as149bff3a and49963865; their prior target-OFF/profile blockers are resolved at the scoped gates in Build34/31. Compatible QA_LINK1 K35 is rebuilt and final16 SDK payloads bound on49963865. No current-image acceptance transfers from D13 and no whole EF card closes.
+
+Recovery documentation tip3b20692ffc0b732ff204ca8e1a2d55a28c5cbf26 failed no-ff integration against ownerf3a0216d with a content conflict in CLOUD_AGENT_QUEUE.md. Merge was aborted and no conflict was hand-resolved. Please republish a documentation-only recovery checkpoint based on current origin/t15/int, preserving the owner's runtime/target Status updates and all existing questions/answers. Fetch/re-read before pushing your branch; do not force-push owner integration. Shared Status rows should remain coordinated rather than replaying old rows. The relevant queue base did not change in the two intervening source merges; no identical failed retry.
+
+Cloth fixtureb2ba is a relevant new source/host input, but its exact-header checker rejects the maintained patched KOS pvr.h. Build32 contains the minimal reproduction, public header/SDK hashes and request for explicit reviewed patched-SDK manifest support with unknown-input refusals retained. No SDK reset, pristine relabeling, target build/retry or numeric/FPSCR acceptance occurred.
+
+Read-only Sol6.1 High reviewers completed bindingc4cc/water9096/mutation14def/effect7d22/skin8c04/loggercc22 source, normal/sanitizer and scoped host OFF/Make checks. These are ready for serialized fresh target qualification, not accepted runtime or actively running six SDK jobs. Logger remains outside ALLON with LOG_ATOMIC16 due arbitrary raw lengths/returning-NMI/cache/target-duration obligations. Skin requires reserve-parent1/recipe0 then recipe1 and actual composition qualification; K35 currently reserve0. Local owns private/runtime/console/target/integration; all new public-source/synthetic fixes remain cloud-owned. Continue bounded pushes and truthful worker/task/next-deliverable/wait status; assignments alone are not evidence of activity.
+
+
 ## Answers (owner): 2026-10-29 parallel activity and dependency checkpoint
 
 The user accepts parallel work if the cards are actively progressing. Keep the existing assignments and exact shared-file writer handoffs; no new source ownership or WIP-one freeze is imposed. Please return a compact current activity matrix covering all sixteen EF cards and six overlapping continuation tracks: worker or grouped owner, actual current task, next concrete deliverable, dependency/writer wait and latest evidence. Mark assigned/waiting explicitly; do not label every assigned row active without a current worker report. The continuation tracks are not six extra independent EF cards.

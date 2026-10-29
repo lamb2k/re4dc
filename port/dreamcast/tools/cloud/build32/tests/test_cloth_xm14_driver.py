@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Host tests for the fixture's evidence parser; no SH-4 execution is claimed."""
+import base64
 import contextlib
+import copy
 import importlib.util
 import io
 import json
@@ -9,6 +11,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import zlib
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
@@ -22,8 +25,11 @@ DEFINES['__FINITE_MATH_ONLY__'] = '0'
 DEFINES_BODY = '\n'.join(f'#define {key} {value}' for key, value in DEFINES.items())
 LINK_INPUTS = {'/synthetic-sdk/lib/dreamcast/libkallisti.a': 'd' * 64,
                '/synthetic-sdk/lib/dreamcast/_kos_startup.o': 'f' * 64}
-BINDING = dict(version='bound-kos-v1', input_sha256=LINK_INPUTS,
-               sdk_headers_sha256={'/synthetic-sdk/include/kos.h': 'e' * 64},
+BINDING = dict(version='bound-kos-v2', input_sha256=LINK_INPUTS,
+               sdk_profile=DRIVER.sdk_profile(DRIVER.PRISTINE_PROFILE),
+               kos_sources_sha256={DRIVER.PVR_HEADER: DRIVER.PVR_BASE_SHA256},
+               sdk_headers_sha256={'/synthetic-sdk/include/kos.h': 'e' * 64,
+                    '/synthetic-sdk/' + DRIVER.PVR_HEADER: DRIVER.PVR_BASE_SHA256},
                effective_defines=dict(c=DEFINES, cxx=DEFINES))
 IDENTITY = dict(toolchain_binding=BINDING)
 BUILD = DRIVER.sha(json.dumps(IDENTITY, sort_keys=True).encode())
@@ -46,6 +52,7 @@ class DriverTest(unittest.TestCase):
             fields = dict(status='BUILT_NOT_EXECUTED', fixture_version='irq1',
                           fixture_build_id=BUILD, kos=DRIVER.KOS_PIN,
                           sh4zam=DRIVER.SH4ZAM_PIN,
+                          sdk_profile=BINDING['sdk_profile'],
                           toolchain_binding=BINDING, build_identity_inputs=IDENTITY,
                           link_inputs_sha256=LINK_INPUTS)
             fields.update(overrides)
@@ -182,7 +189,7 @@ export KOS_LDFLAGS="-T$KOS_BASE/utils/ldscripts/shlelf.xc $KOS_LIB_PATHS"
             out.mkdir()
             headers = ('include/kos.h', 'include/kos/irq.h',
                        'kernel/arch/dreamcast/include/arch/irq.h',
-                       'kernel/arch/dreamcast/include/arch/timer.h')
+                       'kernel/arch/dreamcast/include/arch/timer.h', DRIVER.PVR_HEADER)
             self.commit_headers(kos, headers)
             self.commit_headers(sdk, ('include/sh4zam/shz_xmtrx.h',))
             deps = [kos / name for name in headers] + [sdk / 'include/sh4zam/shz_xmtrx.h']
@@ -190,7 +197,7 @@ export KOS_LDFLAGS="-T$KOS_BASE/utils/ldscripts/shlelf.xc $KOS_LIB_PATHS"
             good = 'probe.o: ' + ' '.join(map(str, deps)) + '\n'
             depfile.write_text(good)
             cxx = toolchain / 'bin/sh-elf-g++'
-            self.assertEqual(len(DRIVER.verify_dependencies(out, kos, sdk, cxx)), 5)
+            self.assertEqual(len(DRIVER.verify_dependencies(out, kos, sdk, cxx)), 6)
             depfile.write_text(good.replace(str(deps[0]), str(root / 'other-kos/include/kos.h')))
             with self.assertRaises(AssertionError):
                 DRIVER.verify_dependencies(out, kos, sdk, cxx)
@@ -219,6 +226,180 @@ export KOS_LDFLAGS="-T$KOS_BASE/utils/ldscripts/shlelf.xc $KOS_LIB_PATHS"
             library.write_bytes(b'changed after the executable build ID was formed')
             with self.assertRaises(AssertionError):
                 DRIVER.verify_link_inputs(body, out, kos, cxx, binding)
+
+    @staticmethod
+    def public_pvr_header():
+        fixture = json.loads((HERE / 'cloth_xm14_pvr_fixture.json').read_text())
+        data = zlib.decompress(base64.b85decode(fixture['data']))
+        assert fixture['encoding'] == 'zlib-base85' and DRIVER.sha(data) == DRIVER.PVR_BASE_SHA256
+        return data
+
+    def patched_header_repo(self, root):
+        # Real public header/patch bytes in a tiny synthetic Git repository.
+        # This is not a substitute KOS compiler/library or target build.
+        headers = ('include/kos.h', 'include/kos/irq.h',
+                   'kernel/arch/dreamcast/include/arch/irq.h',
+                   'kernel/arch/dreamcast/include/arch/timer.h', DRIVER.PVR_HEADER)
+        self.commit_headers(root, headers)
+        header = root / DRIVER.PVR_HEADER
+        header.write_bytes(self.public_pvr_header())
+        subprocess.run(['git', '-C', str(root), 'add', DRIVER.PVR_HEADER], check=True)
+        subprocess.run(['git', '-C', str(root), '-c', 'user.name=Fixture',
+                        '-c', 'user.email=fixture@example.invalid', 'commit', '-qm',
+                        'exact public pinned PVR header'], check=True)
+        profile = DRIVER.sdk_profile(DRIVER.REVIEWED_PROFILE)
+        for path in DRIVER.reviewed_patches(profile['manifest']):
+            DRIVER.command(['git', 'apply', '--include=' + DRIVER.PVR_HEADER, path], cwd=root)
+        return profile, header, headers
+
+    def test_actual_reviewed_header_patch_chain_is_explicit_and_read_only(self):
+        with tempfile.TemporaryDirectory(prefix='cloth-xm14-reviewed-header-') as scratch:
+            root = Path(scratch)
+            profile, header, _ = self.patched_header_repo(root / 'kos')
+            selected = header.read_bytes()
+            rule = profile['manifest']['headers'][DRIVER.PVR_HEADER]
+            self.assertEqual(DRIVER.git_blob(self.public_pvr_header()), rule['base_git_blob'])
+            self.assertEqual(DRIVER.git_blob(selected), rule['selected_git_blob'])
+            self.assertEqual(DRIVER.sha(selected), rule['selected_sha256'])
+            with self.assertRaises(AssertionError):
+                DRIVER.pinned_file(root / 'kos', DRIVER.PVR_HEADER)  # pristine is separate
+            foreign = root / 'foreign-worktree' / DRIVER.PVR_HEADER
+            foreign.parent.mkdir(parents=True)
+            foreign.write_bytes(b'unrelated checkout must remain untouched')
+            with patch.dict(os.environ, {'GIT_WORK_TREE': str(root / 'foreign-worktree')}):
+                evidence = DRIVER.reviewed_header_evidence(root / 'kos', profile)
+            self.assertEqual(evidence, {DRIVER.PVR_HEADER: rule['selected_sha256']})
+            self.assertEqual(header.read_bytes(), selected)
+            self.assertEqual(foreign.read_bytes(), b'unrelated checkout must remain untouched')
+            header.write_bytes(self.public_pvr_header())
+            with self.assertRaises(AssertionError):  # do not label pristine as maintained
+                DRIVER.pinned_file(root / 'kos', DRIVER.PVR_HEADER, profile)
+
+    def test_reviewed_header_unknown_modifications_foreign_path_and_base_refused(self):
+        with tempfile.TemporaryDirectory(prefix='cloth-xm14-reviewed-refuse-') as scratch:
+            root = Path(scratch)
+            kos = root / 'kos'
+            profile, header, _ = self.patched_header_repo(kos)
+            selected = header.read_bytes()
+            header.write_bytes(selected + b'\n/* unknown local change */\n')
+            with self.assertRaises(AssertionError):
+                DRIVER.pinned_file(kos, DRIVER.PVR_HEADER, profile)
+            header.write_bytes(selected)
+            other = kos / 'include/kos.h'
+            other.write_bytes(other.read_bytes() + b'/* a different dirty header */\n')
+            with self.assertRaises(AssertionError):
+                DRIVER.pinned_file(kos, 'include/kos.h', profile)
+            external = root / 'external-pvr.h'
+            external.write_bytes(selected)
+            header.unlink()
+            header.symlink_to(external)
+            with self.assertRaises(AssertionError):
+                DRIVER.pinned_file(kos, DRIVER.PVR_HEADER, profile)
+            header.unlink()
+            header.write_bytes(selected)
+            subprocess.run(['git', '-C', str(kos), 'add', DRIVER.PVR_HEADER], check=True)
+            subprocess.run(['git', '-C', str(kos), '-c', 'user.name=Fixture',
+                            '-c', 'user.email=fixture@example.invalid', 'commit', '-qm',
+                            'wrong base now records the maintained blob'], check=True)
+            with self.assertRaises(AssertionError):
+                DRIVER.pinned_file(kos, DRIVER.PVR_HEADER, profile)
+            # validate_sdk still requires the actual KOS commit, before any
+            # compiler command; a header-only fixture cannot masquerade as it.
+            (kos / 'Makefile.rules').write_text('')
+            sdk = root / 'sdk';(sdk / 'include/sh4zam').mkdir(parents=True)
+            (sdk / 'include/sh4zam/shz_xmtrx.h').write_text('')
+            cxx = root / 'sh-elf-g++';cxx.write_text('')
+            with self.assertRaisesRegex(AssertionError, 'expected ' + DRIVER.KOS_PIN):
+                DRIVER.validate_sdk(kos, sdk, cxx)
+
+    def test_reviewed_manifest_and_patch_changes_are_not_an_allowlist(self):
+        original = DRIVER.REVIEWED_MANIFEST.read_bytes()
+        manifest = DRIVER.reviewed_manifest(original)
+        for field, value in (('kos_base', '0' * 40), ('profile', 'arbitrary'),
+                             ('headers', {'unknown.h': {'selected_sha256': '0' * 64}})):
+            changed = copy.deepcopy(manifest);changed[field] = value
+            with self.assertRaises(AssertionError):
+                DRIVER.reviewed_manifest(json.dumps(changed).encode())
+        with self.assertRaises(AssertionError):
+            DRIVER.sdk_profile('caller-provided-allowlist')
+        with tempfile.TemporaryDirectory(prefix='cloth-xm14-reviewed-manifest-') as scratch:
+            root = Path(scratch)
+            reviewed = root / 'cloth_xm14_sdk_reviewed.json';reviewed.write_bytes(original)
+            # Read again after the first validated snapshot: changing a manifest
+            # in place cannot survive the post-link profile check.
+            with patch.object(DRIVER, 'HERE', root), patch.object(DRIVER, 'REVIEWED_MANIFEST', reviewed):
+                self.assertEqual(DRIVER.sdk_profile(DRIVER.REVIEWED_PROFILE)['manifest'], manifest)
+                reviewed.write_bytes(original + b' ')
+                with self.assertRaises(AssertionError):
+                    DRIVER.sdk_profile(DRIVER.REVIEWED_PROFILE)
+            for entry in manifest['patches']:
+                target = root / entry['path'];target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes((DRIVER.ROOT / entry['path']).read_bytes())
+            self.assertEqual(len(DRIVER.reviewed_patches(manifest, root)), 3)
+            target.write_bytes(target.read_bytes() + b'\n# unknown patch change\n')
+            with self.assertRaises(AssertionError):
+                DRIVER.reviewed_patches(manifest, root)
+
+    def test_reviewed_archive_startup_hashes_are_exact_selected_inputs(self):
+        profile = DRIVER.sdk_profile(DRIVER.REVIEWED_PROFILE)
+        expected = {'/selected-kos/' + key: value
+                    for key, value in profile['manifest']['built_inputs_sha256'].items()}
+        DRIVER.reviewed_binary_hashes(profile, expected)
+        for name in expected:
+            for changed in ({**expected, name: '0' * 64},
+                            {key: value for key, value in expected.items() if key != name},
+                            {**expected, '/another-kos/' + name.split('/selected-kos/')[1]: expected[name]}):
+                with self.assertRaises(AssertionError):
+                    DRIVER.reviewed_binary_hashes(profile, changed)
+        # These are manifest/hash-policy unit controls, not fabricated binary
+        # preimages or a claim that the installed local binaries were executed.
+
+    def test_reviewed_dependencies_rechecked_after_midbuild_header_change(self):
+        with tempfile.TemporaryDirectory(prefix='cloth-xm14-reviewed-midbuild-') as scratch:
+            root = Path(scratch);kos, sdk, out = (root / name for name in ('kos', 'sdk', 'out'))
+            profile, header, headers = self.patched_header_repo(kos)
+            self.commit_headers(sdk, ('include/sh4zam/shz_xmtrx.h',))
+            out.mkdir()
+            deps = [kos / name for name in headers] + [sdk / 'include/sh4zam/shz_xmtrx.h']
+            (out / 'probe.o.d').write_text('probe.o: ' + ' '.join(map(str, deps)) + '\n')
+            cxx = root / 'toolchain/bin/sh-elf-g++'
+            before = DRIVER.verify_dependencies(out, kos, sdk, cxx, profile)
+            self.assertEqual(before[str(header)], profile['manifest']['headers'][DRIVER.PVR_HEADER]['selected_sha256'])
+            header.write_bytes(header.read_bytes() + b'/* changed after build identity */\n')
+            with self.assertRaises(AssertionError):
+                DRIVER.verify_dependencies(out, kos, sdk, cxx, profile)
+
+    def test_patched_receipt_binding_and_rehashed_tampering(self):
+        profile = DRIVER.sdk_profile(DRIVER.REVIEWED_PROFILE)
+        binding = copy.deepcopy(BINDING)
+        binding['sdk_profile'] = profile
+        binding['input_sha256'] = {'/synthetic-sdk/' + key: value
+                                  for key, value in profile['manifest']['built_inputs_sha256'].items()}
+        selected = profile['manifest']['headers'][DRIVER.PVR_HEADER]['selected_sha256']
+        binding['sdk_headers_sha256']['/synthetic-sdk/' + DRIVER.PVR_HEADER] = selected
+        binding['kos_sources_sha256'][DRIVER.PVR_HEADER] = selected
+        def verify(value, top_profile=None):
+            identity = dict(toolchain_binding=value)
+            identifier = DRIVER.sha(json.dumps(identity, sort_keys=True).encode())
+            return self.verify(LOG.replace(BUILD, identifier), fixture_build_id=identifier,
+                sdk_profile=value['sdk_profile'] if top_profile is None else top_profile,
+                toolchain_binding=value, build_identity_inputs=identity,
+                link_inputs_sha256=value['input_sha256'])
+        self.assertEqual(verify(binding)['kos_profile'], DRIVER.REVIEWED_PROFILE)
+        mutations = []
+        for relative in profile['manifest']['built_inputs_sha256']:
+            changed = copy.deepcopy(binding);changed['input_sha256']['/synthetic-sdk/' + relative] = '0' * 64;mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['sdk_profile']['kos_base'] = '0' * 40;mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['sdk_profile']['manifest_sha256'] = '0' * 64;mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['sdk_profile']['manifest']['headers'] = {};mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['sdk_headers_sha256']['/synthetic-sdk/' + DRIVER.PVR_HEADER] = DRIVER.PVR_BASE_SHA256;mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['kos_sources_sha256'][DRIVER.PVR_HEADER] = DRIVER.PVR_BASE_SHA256;mutations.append(changed)
+        changed = copy.deepcopy(binding);changed['version'] = 'bound-kos-v1';mutations.append(changed)
+        for changed in mutations:
+            with self.assertRaises(AssertionError):
+                verify(changed)  # even a recomputed ID/log cannot broaden the reviewed profile
+        with self.assertRaises(AssertionError):
+            verify(binding, DRIVER.sdk_profile(DRIVER.PRISTINE_PROFILE))
 
     def test_ftrv_offset_binding_uses_opcode_addresses(self):
         example = ('00000000 <_re4dc_zam_xm_points14>:\n'

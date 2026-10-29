@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "profile": "maintained-d367-20261029",
+  "kos_base": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "review": "https://github.com/lamb2k/re4dc/blob/18678f29/port/dreamcast/docs/cloud/handbacks/build-32.md",
+  "scope": "Reviewed consumed patched header and exact selected installed binaries; not complete binary build history, target linking or runtime qualification.",
+  "patches": [
+    {
+      "path": "port/dreamcast/patches/kos-804b319-manual-flip.patch",
+      "sha256": "c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df"
+    },
+    {
+      "path": "port/dreamcast/patches/kos-804b319-async-present.patch",
+      "sha256": "d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442"
+    },
+    {
+      "path": "port/dreamcast/patches/kos-804b319-vbuf-switch.patch",
+      "sha256": "52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7"
+    }
+  ],
+  "headers": {
+    "kernel/arch/dreamcast/include/dc/pvr.h": {
+      "base_git_blob": "9ac9ed1b5f975094d54b39c5dbe13309332ad0c5",
+      "base_sha256": "280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4",
+      "selected_git_blob": "7d0b84a251451ac6d13f508764faad10678d67a0",
+      "selected_sha256": "55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f"
+    }
+  },
+  "built_inputs_sha256": {
+    "lib/dreamcast/libkallisti.a": "5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf",
+    "lib/dreamcast/_kos_startup.o": "ec3a5f7757f9af742171bcc6ab56d5b0b7c77a86b034623fe66b963708a886fd"
+  }
+}

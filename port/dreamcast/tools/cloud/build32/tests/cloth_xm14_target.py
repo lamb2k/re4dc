@@ -14,6 +14,7 @@ import shutil
 import shlex
 import subprocess
 import sys
+import tempfile
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[5]
@@ -22,6 +23,12 @@ SCALAR_SOURCE = ROOT / 'port/dreamcast/game/platform/mtx_sh4.S'
 API_HEADER = ROOT / 'include/re4dc_xm.h'
 KOS_PIN = '804b3195ebd1a06a27cc2b3a5eacf7a2429040a3'
 SH4ZAM_PIN = '33fa4850cacb30dd0ad35485ef035526ec4ce782'
+PRISTINE_PROFILE = 'pristine'
+REVIEWED_PROFILE = 'maintained-d367-20261029'
+REVIEWED_MANIFEST = HERE / 'cloth_xm14_sdk_reviewed.json'
+REVIEWED_MANIFEST_SHA256 = '8870a5b049058d69553afe6463e7347016a5a2839816818feaeef38bd62d12dc'
+PVR_HEADER = 'kernel/arch/dreamcast/include/dc/pvr.h'
+PVR_BASE_SHA256 = '280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4'
 SOURCE_HEAD = 'bbfd3254fe4d94299a4bdbc869dbae92bb5ff978'
 BATCH_HASH = '320be560017cbc2d470af1273b7f735c35486d31a0174c9a57abaabed77cf86f'
 SCALAR_HASH = '5772f23246a2570f11a10e4848346509d0525dcb74230cf75fb8086227306996'
@@ -104,14 +111,117 @@ def validate_sdk(kos, sdk, cxx):
     return prefix
 
 
-def pinned_file(root, relative):
-    """A checkout HEAD alone does not identify the bytes used by a build."""
+def git_blob(data):
+    return hashlib.sha1(f'blob {len(data)}\0'.encode() + data).hexdigest()
+
+
+def reviewed_manifest(data):
+    """Only this checked-in, reviewed manifest can authorize patched inputs."""
+    assert sha(data) == REVIEWED_MANIFEST_SHA256, 'reviewed SDK manifest changed; review and repin'
+    manifest = json.loads(data)
+    assert manifest.get('schema') == 1 and manifest.get('profile') == REVIEWED_PROFILE and \
+        manifest.get('kos_base') == KOS_PIN, 'wrong reviewed SDK manifest/base'
+    return manifest
+
+
+def reviewed_patches(manifest, root=ROOT):
+    paths = []
+    for entry in manifest['patches']:
+        path = (root / entry['path']).resolve()
+        assert path.is_relative_to(root / 'port/dreamcast/patches') and path.is_file(), \
+            f'missing/outside reviewed SDK patch: {path}'
+        assert sha(path.read_bytes()) == entry['sha256'], f'reviewed SDK patch changed: {path}'
+        paths.append(path)
+    return paths
+
+
+def sdk_profile(name):
+    assert name in (PRISTINE_PROFILE, REVIEWED_PROFILE), 'unknown SDK profile'
+    result = dict(id=name, kos_base=KOS_PIN,
+                  mode='pristine-consumed-sources-bound-installed-binaries' if name == PRISTINE_PROFILE else 'reviewed-patched-inputs')
+    if name == REVIEWED_PROFILE:
+        assert REVIEWED_MANIFEST.resolve().is_relative_to(HERE), 'reviewed manifest is outside the fixture'
+        manifest = reviewed_manifest(REVIEWED_MANIFEST.read_bytes())
+        reviewed_patches(manifest)
+        result.update(manifest_sha256=REVIEWED_MANIFEST_SHA256, manifest=manifest)
+    return result
+
+
+def pinned_file(root, relative, profile=None):
+    """Current bytes must be pristine or the one explicitly reviewed header.
+
+    A HEAD or a path allowlist alone grants no patched-input authority.
+    """
+    relative = str(relative)
     path = (root / relative).resolve()
     assert path.is_file() and path.is_relative_to(root), f'missing/outside SDK input: {path}'
     expected = command(['git', '-C', root, 'rev-parse', f'HEAD:{relative}']).strip()
-    actual = command(['git', '-C', root, 'hash-object', path]).strip()
-    assert actual == expected, f'modified pinned SDK input: {path}'
-    return sha(path.read_bytes())
+    data = path.read_bytes()
+    rule = profile.get('manifest', {}).get('headers', {}).get(relative) if profile else None
+    if rule:
+        assert expected == rule['base_git_blob'], f'wrong reviewed SDK base blob: {relative}'
+        assert git_blob(data) == rule['selected_git_blob'] and sha(data) == rule['selected_sha256'], \
+            f'input is not the reviewed patched SDK header: {path}'
+    else:
+        assert git_blob(data) == expected, f'modified pinned SDK input: {path}'
+    return sha(data)
+
+
+def reviewed_header_evidence(kos, profile):
+    """Replay public patches only in scratch; never modify the selected SDK."""
+    hashes = {}
+    if profile['id'] == PRISTINE_PROFILE:
+        hashes[PVR_HEADER] = pinned_file(kos, PVR_HEADER)
+        return hashes
+    manifest = profile['manifest']
+    patches = reviewed_patches(manifest)
+    for relative, rule in manifest['headers'].items():
+        result = subprocess.run(['git', '-C', str(kos), 'show', f'HEAD:{relative}'], capture_output=True)
+        assert result.returncode == 0, f'missing reviewed header base: {relative}'
+        original = result.stdout
+        assert git_blob(original) == rule['base_git_blob'] and sha(original) == rule['base_sha256'], \
+            f'wrong reviewed SDK base header: {relative}'
+        with tempfile.TemporaryDirectory(prefix='cloth-xm14-patch-proof-') as scratch:
+            root = Path(scratch)
+            destination = root / relative
+            destination.parent.mkdir(parents=True)
+            destination.write_bytes(original)
+            # An inherited GIT_WORK_TREE must not redirect these scratch-only
+            # patch operations to the selected SDK or another checkout.
+            patch_env = {key: value for key, value in os.environ.items() if not key.startswith('GIT_')}
+            patch_env.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull)
+            for patch in patches:
+                command(['git', 'apply', '--check', '--include=' + relative, patch], cwd=root, env=patch_env)
+                command(['git', 'apply', '--include=' + relative, patch], cwd=root, env=patch_env)
+            selected = destination.read_bytes()
+            assert git_blob(selected) == rule['selected_git_blob'] and sha(selected) == rule['selected_sha256'], \
+                f'reviewed public patches do not derive the selected header: {relative}'
+        hashes[relative] = pinned_file(kos, relative, profile)
+    return hashes
+
+
+def reviewed_binary_hashes(profile, inputs):
+    """Match the selected installed bytes, not an assertion of build history."""
+    for relative, expected in profile.get('manifest', {}).get('built_inputs_sha256', {}).items():
+        names = [name for name in inputs if name.endswith('/' + relative)]
+        assert len(names) == 1 and inputs[names[0]] == expected, \
+            f'input is not the reviewed installed SDK binary: {relative}'
+
+
+def verify_profile_binding(binding):
+    profile = binding.get('sdk_profile', {})
+    assert isinstance(profile, dict) and profile.get('id') in (PRISTINE_PROFILE, REVIEWED_PROFILE), \
+        'missing or unknown explicit SDK profile'
+    assert profile == sdk_profile(profile['id']), 'SDK profile/manifest does not match the reviewed input'
+    reviewed_binary_hashes(profile, binding['input_sha256'])
+    expected = PVR_BASE_SHA256 if profile['id'] == PRISTINE_PROFILE else \
+        profile['manifest']['headers'][PVR_HEADER]['selected_sha256']
+    headers = binding.get('sdk_headers_sha256', {})
+    names = [name for name in headers if name.endswith('/' + PVR_HEADER)]
+    assert len(names) == 1 and headers[names[0]] == expected, 'SDK header/profile identity mismatch'
+    assert binding.get('kos_sources_sha256', {}).get(PVR_HEADER) == expected, \
+        'SDK source/header binding mismatch'
+    return profile
 
 
 def bound_environment(kos, sdk, cxx):
@@ -160,7 +270,8 @@ def bound_environment(kos, sdk, cxx):
     return env
 
 
-def binding_inputs(kos, sdk, cxx):
+def binding_inputs(kos, sdk, cxx, profile=None):
+    profile = sdk_profile(PRISTINE_PROFILE) if profile is None else profile
     paths = [kos / 'utils/build_wrappers/kos-cc', kos / 'utils/build_wrappers/kos-c++',
              kos / 'environ_base.sh', kos / 'environ_dreamcast.sh',
              kos / 'Makefile.rules', kos / 'utils/ldscripts/shlelf.xc']
@@ -171,6 +282,7 @@ def binding_inputs(kos, sdk, cxx):
                      'kernel/arch/dreamcast/kernel/timer.c',
                      'kernel/arch/dreamcast/kernel/irq.c'):
         source_hashes[relative] = pinned_file(kos, relative)
+    source_hashes.update(reviewed_header_evidence(kos, profile))
     inputs = [cxx, Path(str(cxx).removesuffix('g++') + 'gcc'),
               kos / 'lib/dreamcast/libkallisti.a', kos / 'lib/dreamcast/_kos_startup.o',
               kos / 'utils/ldscripts/shlelf.xc']
@@ -178,8 +290,10 @@ def binding_inputs(kos, sdk, cxx):
         assert path.is_file(), f'missing built SDK input: {path}'
         assert path.resolve().is_relative_to(kos if path.is_relative_to(kos) else cxx.parent.parent), \
             f'build input resolves outside selected SDK: {path}'
-    return dict(version='bound-kos-v1', kos_sources_sha256=source_hashes,
-                input_sha256={str(path.resolve()): sha(path.read_bytes()) for path in inputs})
+    hashes = {str(path.resolve()): sha(path.read_bytes()) for path in inputs}
+    reviewed_binary_hashes(profile, hashes)
+    return dict(version='bound-kos-v2', sdk_profile=profile, kos_sources_sha256=source_hashes,
+                input_sha256=hashes)
 
 
 def effective_defines(body):
@@ -195,7 +309,7 @@ def effective_defines(body):
     return values
 
 
-def verify_dependencies(out, kos, sdk, cxx):
+def verify_dependencies(out, kos, sdk, cxx, profile=None):
     dependencies = set()
     for path in out.glob('*.o.d'):
         body = path.read_text().replace('\\\n', ' ')
@@ -203,7 +317,7 @@ def verify_dependencies(out, kos, sdk, cxx):
         dependencies.update(Path(name).resolve() for name in shlex.split(body.split(':', 1)[1]))
     required = {kos / 'include/kos.h', kos / 'include/kos/irq.h',
                 kos / 'kernel/arch/dreamcast/include/arch/irq.h',
-                kos / 'kernel/arch/dreamcast/include/arch/timer.h',
+                kos / 'kernel/arch/dreamcast/include/arch/timer.h', kos / PVR_HEADER,
                 sdk / 'include/sh4zam/shz_xmtrx.h'}
     assert required <= dependencies, 'actual compiler dependencies do not bind the selected SDK headers'
     hashes = {}
@@ -212,7 +326,7 @@ def verify_dependencies(out, kos, sdk, cxx):
             f'compiler consumed an input outside selected roots: {path}'
         for root in (kos, sdk):
             if path.is_relative_to(root):
-                hashes[str(path)] = pinned_file(root, path.relative_to(root))
+                hashes[str(path)] = pinned_file(root, path.relative_to(root), profile if root == kos else None)
     return hashes
 
 
@@ -250,7 +364,8 @@ def build(args, batch, scalar):
         assert re.fullmatch(r'[A-Za-z0-9_./+-]+', str(path)), \
             f'KOS wrapper/Make paths must use plain shell-safe characters: {path}'
     prefix = validate_sdk(kos, sdk, cxx)
-    binding = binding_inputs(kos, sdk, cxx)
+    profile = sdk_profile(args.kos_profile)
+    binding = binding_inputs(kos, sdk, cxx, profile)
     env = bound_environment(kos, sdk, cxx)
     assert not out.exists(), f'output already exists: {out}'
     out.mkdir(parents=True)
@@ -277,11 +392,12 @@ def build(args, batch, scalar):
     binding['effective_defines'] = {
         name: effective_defines((out / f'effective-{name}-defines.txt').read_text())
         for name in ('c', 'cxx')}
-    binding['sdk_headers_sha256'] = verify_dependencies(out, kos, sdk, cxx)
+    binding['sdk_headers_sha256'] = verify_dependencies(out, kos, sdk, cxx, profile)
     object_disassembly = command([prefix + 'objdump', '-d',
                                   '--disassemble=_re4dc_zam_xm_points14',
                                   out / 'production_batch.o'])
     offsets = ftrv_offsets(object_disassembly)
+    verify_profile_binding(binding)
     fixture_hashes = {path.name: sha(path.read_bytes()) for path in
                       (Path(__file__), HERE / 'cloth_xm14_target.mk',
                        HERE / 'cloth_xm14_main.cpp', HERE / 'cloth_xm14_xm_probe.c')}
@@ -304,7 +420,16 @@ def build(args, batch, scalar):
     # The linked program must use the same archive/startup that entered its ID.
     link_inputs = verify_link_inputs((out / 'cloth_xm14.map').read_text(),
                                      out, kos, cxx, binding)
-    all_sdk_headers = verify_dependencies(out, kos, sdk, cxx)
+    all_sdk_headers = verify_dependencies(out, kos, sdk, cxx, profile)
+    # Repeat the base/profile/source checks after all wrappers and the linker
+    # ran, including the manifest/public patches and selected prebuilt bytes.
+    git_head(kos, KOS_PIN)
+    git_head(sdk, SH4ZAM_PIN)
+    current_profile = sdk_profile(args.kos_profile)
+    assert current_profile == profile, 'SDK profile changed during build'
+    current_binding = binding_inputs(kos, sdk, cxx, current_profile)
+    for name in ('version', 'sdk_profile', 'kos_sources_sha256', 'input_sha256'):
+        assert current_binding[name] == binding[name], f'SDK binding changed during build: {name}'
     for name, expected in binding['sdk_headers_sha256'].items():
         assert all_sdk_headers.get(name) == expected, f'SDK header changed during build: {name}'
     nm = command([prefix + 'nm', '-g', elf])
@@ -334,7 +459,7 @@ def build(args, batch, scalar):
                    fixture_version='irq1', fixture_build_id=build_id,
                    build_identity_inputs=identity,
                    fixture_sha256=fixture_hashes, ftrv_offsets=offsets,
-                   toolchain_binding=binding, link_inputs_sha256=link_inputs,
+                   sdk_profile=profile, toolchain_binding=binding, link_inputs_sha256=link_inputs,
                    all_sdk_headers_sha256=all_sdk_headers,
                    irq_contract='TMU1 async IRQ; actual FTRV PC hits; handler clobbers XMTRX',
                    generated_sha256={name: sha((out / name).read_bytes()) for name in
@@ -342,7 +467,7 @@ def build(args, batch, scalar):
                    elf_sha256=sha(elf.read_bytes()), make_command=make,
                    runtime_verdict='Requires actual SH-4 run; expect CLOTH_XM14_TARGET PASS')
     (out / 'receipt.json').write_text(json.dumps(receipt, indent=2, default=str) + '\n')
-    print(json.dumps(dict(status=receipt['status'], elf=str(elf), sha256=receipt['elf_sha256'])))
+    print(json.dumps(dict(status=receipt['status'], kos_profile=profile['id'], elf=str(elf), sha256=receipt['elf_sha256'])))
 
 
 def verify_run(path, receipt_path):
@@ -354,9 +479,11 @@ def verify_run(path, receipt_path):
     assert receipt.get('kos') == KOS_PIN and receipt.get('sh4zam') == SH4ZAM_PIN, \
         'receipt uses different KOS/SH4ZAM pins'
     binding = receipt.get('toolchain_binding', {})
-    assert binding.get('version') == 'bound-kos-v1' and binding.get('input_sha256') and \
+    assert binding.get('version') == 'bound-kos-v2' and binding.get('input_sha256') and \
         binding.get('sdk_headers_sha256') and receipt.get('link_inputs_sha256'), \
         'receipt lacks verified compiler/header/library binding'
+    profile = verify_profile_binding(binding)
+    assert receipt.get('sdk_profile') == profile, 'receipt SDK profile differs from bound inputs'
     identity = receipt.get('build_identity_inputs', {})
     assert identity.get('toolchain_binding') == binding and \
         sha(json.dumps(identity, sort_keys=True).encode()) == build_id, \
@@ -393,7 +520,7 @@ def verify_run(path, receipt_path):
     assert int(irq[5], 16) == int(irq[7], 16) == int(irq[8], 16) == entry and \
         not int(irq[6], 16) & 0x00380000, 'IRQ FPSCR bank/control restoration failed'
     print(json.dumps(dict(status='TARGET_LOG_PASS', checks=int(matches[0][0]), log=str(path),
-                          fixture_build_id=build_id, ftrv_irq_hits=int(irq[1]),
+                          fixture_build_id=build_id, kos_profile=profile['id'], ftrv_irq_hits=int(irq[1]),
                           log_sha256=sha(path.read_bytes()))))
 
 
@@ -405,6 +532,9 @@ def main():
     verdict.add_argument('--log', type=Path, required=True)
     verdict.add_argument('--receipt', type=Path, required=True)
     target = sub.add_parser('build')
+    target.add_argument('--kos-profile', choices=(PRISTINE_PROFILE, REVIEWED_PROFILE),
+                        default=PRISTINE_PROFILE,
+                        help='explicit input provenance; patched SDK requires the reviewed maintained profile')
     for name in ('output', 'kos-root', 'sdk-root', 'sh4-cxx'):
         target.add_argument('--' + name, type=Path, required=True)
     args = parser.parse_args()
@@ -413,9 +543,11 @@ def main():
         return
     batch, scalar = source_inputs()
     if args.task == 'check-source':
+        sdk_profile(REVIEWED_PROFILE)
         print(json.dumps(dict(status='SOURCE_PIN_PASS', source_head=SOURCE_HEAD,
                               batch_sha256=BATCH_HASH, scalar_sha256=SCALAR_HASH,
-                              api_sha256=API_HASH, geometry_sha256=GEOMETRY_HASHES)))
+                              api_sha256=API_HASH, geometry_sha256=GEOMETRY_HASHES,
+                              reviewed_sdk_manifest_sha256=REVIEWED_MANIFEST_SHA256)))
     else:
         build(args, batch, scalar)
 
