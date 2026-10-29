@@ -130,8 +130,13 @@ static unsigned abc_class_of(const void* model) {
 #endif
 #if RE4DC_NATIVE_FE_CONTINUATION
 #include "include/native_actor_continuation.h"
-#include "include/coarse_actor_geometry_once.h"
 #include <new>
+#if defined(__sh__) && !defined(PLACEMENT_NEW_DEFINED)
+// This platform TU uses libstdc++ <new>, unlike the recovered game's shim.
+// Its placement overload already exists; honor the shared compatibility guard.
+#define PLACEMENT_NEW_DEFINED
+#endif
+#include "include/coarse_actor_geometry_once.h"
 extern "C" void* re4dc_prim_tail(unsigned,unsigned);
 #endif
 #if defined(RE4DC_ACTOR_PROBE_LIGHT) && RE4DC_ACTOR_PROBE_LIGHT
