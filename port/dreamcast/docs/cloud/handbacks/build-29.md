@@ -548,6 +548,66 @@ ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
 
 
+## Cloud progress 2026-10-29: EFM slot-class identity (review 9.1)
+
+**DONE — source candidate, default 0.** Based on published source `e693945933cf088a13782e756fc356008cdba4b8`; fast-forwarded to current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` before freeze. Branch `codex/efm-class-identity-20261029`; coordinator-reviewed source delivery. Owned production changes are `include/cManager.h`, `src/game/esp_efm.cpp`, and the narrowly reserved cObj mapping/backing publication in `port/dreamcast/game/parts_bridge.cpp`; dedicated `port/dreamcast/game/efm_class_identity.mk` and EFM host fixture are new. The coordinator includes the fragment in the top Makefile; production ownership remains otherwise unchanged. The bridge file is the one additional source reservation agreed with the coordinator because cObj's `arrayAlloc`, `arrayFree`, and `prepareWork` are explicit bridge specializations that manager-header hooks cannot observe.
+
+`GAME_EFM_CLASS_IDENTITY=1` keeps the existing 64-entry EFM class index keyed to a separate object-class/mapping incarnation. `cManager<cObj>` publishes before `memClear` and after every constructor attempt (including a failed constructor that leaves new bytes); `create(id)`, `create(id,no)`, and `createBack` are covered. Manager `roomInit`, push and pop, and specialized bridge pool free/alloc/new page publication also invalidate the token. An ordinary deletion does not; the existing `re4dc_alive_gen` still advances for alive-list consumers. The cache continues to include dead mapped class 4/5/9 slots, keep source slot order and filter globals, and refuse its index beyond 64 entries (also when a slot index exceeds `u16`). Both incarnation counters saturate at their terminal `u32` value; reaching either terminal forces the source scan for that call and all subsequent calls, so an earlier token cannot reappear after wrap. Frozen/pushed pools use the source scan. After a callback changes the class epoch, pool, frozen/push state, or nested cache build, the current call resumes the source loop at exactly the next slot. No list, manager layout, allocator budget, or assembly change.
+
+**Host validation DONE.** `python3 -B port/dreamcast/tests/test_efm_class_identity.py` passed in ~8 seconds. It compiles an actual excerpt of production `EfmDelete`/`EfmDeleteSub`, production `cManager` methods, and production `parts_bridge.cpp` against small synthetic object/model stubs. The only header ABI adaptation replaces `cUnit`'s 32-bit sized-delete parameter with host `size_t`; the host uses the bridge `workAt` because its 64-bit pool header cannot use the SH-4 +64 slot offset. Normal and ASan/UBSan builds both pass all 13 source-loop parity scenarios for `RE4DC_FX_SCAN=1` and `=2`: repeated deletion with unchanged class epoch but advanced alive epoch; death/reconstruction at the same slot; failed front/back construction leaving class bytes; same-address pool free/reallocation; new and pinned backing pages; successful front/back creation; push/pop; frozen selector; 65 candidates/refusal; nested delete then create with changed filter globals; callback pool push with exact continuation, and forced class-epoch and build-serial near-exhaustion followed by further mapped-slot mutations. Each case compares candidate visitation order and final mapped object flags/class/core, including source results after nested effects. LeakSanitizer is disabled because this managed executor cannot read `/proc` task entries; ASan and UBSan ran with halt-on-error.
+
+Synthetic repeated-sweep evidence: 9 indexed versus 96 source `EfmDeleteSub` calls for the fixture's three passes over four eight-slot pages; candidate visitation and final state match. This is a call count, not a frame-time or hardware gain. An x86-64 `-O2 -g0` excerpt comparison measured `.text` 592 -> 700 bytes, `.text.unlikely` 252 -> 300 bytes, `.bss` 216 -> 224 bytes, and `EfmDelete` stack-use 48 -> 64 bytes. These host measurements include fixture ABI/data layout and must not be presented as SH-4 size. The production additions are two `u32` words (class epoch and nested build serial, 8 declared target bytes before linker alignment); the existing 64 x `u16` index is unchanged. Target code size, stack and cache-line traffic remain unmeasured. Source diff has 117 insertions/11 deletions in three existing production files, plus the dedicated fragment and fixture (all within scope).
+
+**OFF identity DONE at host scope.** The test compares baseline versus current with `RE4DC_EFM_CLASS_IDENTITY=0` for the real EFM excerpt, manager methods, and bridge. Their complete `-E -P` preprocessor bytes, including whitespace, and complete `-O2 -g0` object bytes match. Object SHA256 prefixes are respectively `4c32efe6a5191650`, `030672eb0d2d10d3`, and `245c2e6ac90d1693`. `make -f Makefile -n` verifies absent and explicit zero produce the same five representative compile commands with no new define, while an explicit empty value is rejected; ON publishes the flag to `esp_efm`, `obj`, a stage REL (`r101`), `parts_bridge`, and `native_static`. All C++ compile rules in this Makefile use `GAME_CPPFLAGS` or `PLATFORM_CPPFLAGS`, including module objects and source re-includes. The coordinator added the top-level include after EF16 landed; the fixture now tests the normal Makefile without a second fragment include.
+
+**NEXT — coordinator review/integration and real comparisons.** The source and shared include are ready for serialized local integration. Rebuild the pinned public target source with absent/zero/ON controls, checking affected translation-unit byte identity with the switch off and SH-4 BSS/stack/code size. The local owner then runs the private release recipe and existing-empty `missing.txt` gate, source/STRICT and room/view/enemy gameplay comparisons, compatible ALL ON QA, Flycast function, actual current-memory overlap, and real-console warm/cold timing. The synthetic 9/96 call count is an incidence hint only; no whole-frame ms claim or knob promotion follows from it.
+
+**BLOCKED only at target/private gates.** No SH-4 SDK/compiler, private Build-Assets/package inputs, Flycast capture, or physical Dreamcast are available in this worker environment. Consequently there is no target object, full image, runtime, current memory, warm/cold I-cache, data-line, MODELLED whole-frame, or console result. No release, media, or SD publication is included in this source delivery.
+
+**Exact local follow-up commands (not executed in cloud):** use the existing
+pinned SDK and private recipe inputs. Public pins are KOS804b3195 plus repository
+patches, GCC15.2.0/binutils2.45.1/newlib4.6.0.20260123 and
+SH4ZAM33fa4850cacb30dd0ad35485ef035526ec4ce782. Set fresh lane-owned paths and
+the ordinary-release output bound to this delivery base:
+
+```bash
+set -euo pipefail
+: "${EFM29_LABEL:?fresh lane label}"
+: "${EFM29_LOGS:?fresh log directory}"
+: "${EFM29_PROGRAMS:?fresh programme directory}"
+: "${EFM29_BASE_OUTPUT:?bound current-base ordinary-release output}"
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export T="$PWD" K="$EFM29_LOGS"
+export ROUTE_PROGRAMS_DIR="$EFM29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+test ! -e "/root/probe/lanes/route/out-${EFM29_LABEL}offrP"
+LP="${EFM29_LABEL}off" CH2="$CH2 GAME_EFM_CLASS_IDENTITY=0" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+for value in 0 1; do
+  label="${EFM29_LABEL}check${value}"
+  test ! -e "/root/probe/lanes/route/out-${label}rP"
+  LP="$label" CH2="$CH2 GAME_FX_SCAN=2 GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_WORKAT_INLINE=1 GAME_ESP_OWNER=1 OBJECT_DEMAND=1 ENEMY_DEMAND=1 GAME_EFM_CLASS_IDENTITY=$value" \
+    bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+done
+for arm in off check0 check1; do
+  O="/root/probe/lanes/route/out-${EFM29_LABEL}${arm}rP"
+  test -s "$O/re4dc-game.elf"
+  test -f "$O/missing.txt"
+  test ! -s "$O/missing.txt"
+done
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "$EFM29_BASE_OUTPUT" \
+  --arm "/root/probe/lanes/route/out-${EFM29_LABEL}offrP" \
+  --output "$EFM29_LOGS/efm29-release-off.json"
+```
+
+The `check0/check1` profiles are the matched source/index comparison pair;
+they are distinct from ordinary-release OFF identity. Keep actual resolved
+definitions and check the existing FX_SCAN2 EFM mismatch counter, callback
+order, creation/deletion and room/pool lifecycle in the same selected runtime.
+Current-image memory/STRICT/look and console cost remain separate gates.
+Cloud proceeds with the assigned world continuation while those gates are local.
+
+
 ## Answers (owner): 2026-10-29 cloud implementation assignment
 
 EF13 water-layer producer/schema/compiled-adapter/current-consumer implementation is assigned to the cloud now, using public source tables and synthetic fixtures. Local EF11 retains cloth/effect include ownership; do not edit those files or effects30.mk. This is a scoped source implementation assignment, not accepted water coverage. Real private packages, live look/gameplay/lifecycle and console cost remain separate owner gates. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.

@@ -85,13 +85,18 @@ u8 GetEfmMoveId(u32 no)
 // when the value is 0). Used to remove the effect models an enemy/effect owner spawned.
 #if defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN && defined(RE4DC_ATCHK_LIST) && RE4DC_ATCHK_LIST &&              \
     defined(RE4DC_WORKAT_INLINE) && RE4DC_WORKAT_INLINE
-// GAME_FX_SCAN (esp.h): EfmDeleteSub acts only on objects with id 4, 5 or 9, and the id of the object
-// behind a slot changes only when ObjMgr creates one there (construct, then the alive-list change
-// that bumps re4dc_alive_gen[2]; slots stay mapped until the pool is freed, which bumps it too).
-// So the slots holding such objects are listed once per generation and EfmDelete runs the source
-// test on them alone, in slot order. When a call changes the alive list (a destroy), the rest of
-// that call is the source loop. Frozen / pushed pools take the source loop.
+// GAME_FX_SCAN (esp.h): EfmDeleteSub acts only on objects with id 4, 5 or 9.
+// GAME_EFM_CLASS_IDENTITY binds this index to object construction and slot mapping instead of
+// alive-list changes. The source slot loop still handles a callback that changes the class index
+// or pool while it runs. Frozen / pushed pools always take the source loop.
 #define FX_EFM 1
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+extern "C" { u32 re4dc_obj_class_gen; }
+#define FX_EFM_GEN re4dc_obj_class_gen
+static u32 fxEfmBuildSerial;
+#else
+#define FX_EFM_GEN re4dc_alive_gen[2]
+#endif
 static u32 fxEfmGen;
 static cObj* fxEfmArr;
 static u32 fxEfmN;
@@ -101,17 +106,24 @@ static __attribute__((noinline, cold)) void fxEfmBuild(cObjMgr* m)
 {
     u32 i;
 
-    fxEfmGen = re4dc_alive_gen[2];
+    fxEfmGen = FX_EFM_GEN;
     fxEfmArr = m->pArray;
     fxEfmN = m->nArray;
     fxEfmCnt = 0;
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    if (fxEfmBuildSerial != ~u32(0)) ++fxEfmBuildSerial;
+#endif
 #if RE4DC_FX_SCAN == 2
     re4dc_fx_chk[FXC_EFM_BUILD]++;
 #endif
     for (i = 0; i < m->nArray; i++) {
         cObj* obj = m->workAt(i);
         if (obj && (obj->id == 4 || obj->id == 5 || obj->id == 9)) {
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            if (fxEfmCnt == 64 || i > 0xffffu) {
+#else
             if (fxEfmCnt == 64) {
+#endif
                 fxEfmCnt = -1;
                 return;
             }
@@ -142,12 +154,30 @@ void EfmDelete(int a, int b, int c)
     g_Core_kind = b;
     g_Core_pEm = (cModel*) c;
 #if defined(FX_EFM)
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    // Exhaustion must never make an old index incarnation appear current again.
+    if (re4dc_obj_class_gen == ~u32(0) || fxEfmBuildSerial == ~u32(0)) {
+        fxEfmDeleteFrom(m, 0);
+        return;
+    }
+#endif
     if (!re4dc_frozen_pools && !m->pArrayPush && m->pArray != 0) {
-        if (fxEfmCnt == -2 || fxEfmGen != re4dc_alive_gen[2] || fxEfmArr != m->pArray || fxEfmN != m->nArray) {
+        if (fxEfmCnt == -2 || fxEfmGen != FX_EFM_GEN || fxEfmArr != m->pArray || fxEfmN != m->nArray) {
             fxEfmBuild(m);
         }
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+        if (fxEfmBuildSerial == ~u32(0)) {
+            fxEfmDeleteFrom(m, 0);
+            return;
+        }
+#endif
         if (fxEfmCnt >= 0) {
-            const u32 g0 = re4dc_alive_gen[2];
+            const u32 g0 = FX_EFM_GEN;
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            const u32 build0 = fxEfmBuildSerial;
+            cObj* const arr0 = m->pArray;
+            const u32 n0 = m->nArray;
+#endif
             int k;
 #if RE4DC_FX_SCAN == 2
             // every slot off the list must be one the source test ignores
@@ -170,8 +200,14 @@ void EfmDelete(int a, int b, int c)
                 i = fxEfmIdx[k];
                 obj = m->workAt(i);
                 if (obj) func(obj);
-                if (re4dc_alive_gen[2] != g0) {
-                    // the alive list changed: the rest of the call is the source loop
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+                if (FX_EFM_GEN != g0 || fxEfmBuildSerial != build0 || m->pArray != arr0 || m->nArray != n0 ||
+                    re4dc_frozen_pools || m->pArrayPush) {
+#else
+                if (FX_EFM_GEN != g0) {
+#endif
+                    // A callback changed the class index or the mapped pool. Resume at precisely
+                    // the next source slot; the callback's writes to g_Core_* remain in effect.
 #if RE4DC_FX_SCAN == 2
                     re4dc_fx_chk[FXC_FALLBACK]++;
 #endif
