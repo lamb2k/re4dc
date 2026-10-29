@@ -1,4 +1,5 @@
 #include "native_model.h"
+#include "native_draw_owner_stamp.hpp"
 #include "re4dc_platform.h"
 #include "../../room/native_draw_plan.hpp"
 #ifndef RE4DC_MODEL_DRAW_PLANS
@@ -24,7 +25,11 @@
 
 namespace {
 constexpr unsigned kEntries=256, kOwners=44;
-struct Owner { const void* key; std::uintptr_t start; unsigned bytes,transient; } owners[kOwners]{};
+struct Owner { const void* key; std::uintptr_t start; unsigned bytes,transient;
+#if RE4DC_PLAN_OWNER_SCOPED
+    unsigned incarnation=0;
+#endif
+} owners[kOwners]{};
 struct Entry {
     const void* stream=nullptr;
     unsigned bytes=0;
@@ -34,11 +39,21 @@ struct Entry {
     const re4dc::render::DrawLocalPlan* locals=nullptr;
     const re4dc::render::DrawPlanBounds* bounds=nullptr;
     const void* bound_positions=nullptr;
+#if RE4DC_PLAN_OWNER_SCOPED
+    unsigned topology_incarnation=0,position_incarnation=0;
+    std::uint8_t topology_owner=255,position_owner=255;
+#endif
 };
 Entry* entries=nullptr;
 re4dc::storage::Arena arena, local_arena;
 constexpr unsigned kLocalMetadataBytes=8192;
 unsigned leases=0; bool reset_pending=false, free_pending=false;
+#if RE4DC_PLAN_OWNER_SCOPED
+// Dead metadata is retained while any caller holds a plan/local/bounds lease.
+// Repack only at the existing no-lease asset-registration boundary.
+bool retired_metadata=false;
+constexpr unsigned kNoOwner=255,kTombstone=254;
+#endif
 Re4dcDrawPlanStats stats{}, previous{};
 unsigned previous_walk_bytes=0,bounds_bytes=0;
 bool assets_dirty=true, asset_update_active=false, local_admission_dirty=true;
@@ -54,28 +69,151 @@ bool contains(const Owner& o,const void* p,unsigned bytes) {
 void reset_now() {
     if(entries)for(unsigned i=0;i<kEntries;++i)entries[i]={};
     arena.reset();local_arena.reset();acquired_locals=nullptr;stats.used=entries?((sizeof(Entry)*kEntries+31)&~31U):0;bounds_bytes=0;acquired_bounds=nullptr;
+#if RE4DC_PLAN_OWNER_SCOPED
+    retired_metadata=false;
+#endif
     reset_pending=false;assets_dirty=true;asset_update_active=false;local_admission_dirty=true;++stats.resets;
     if(free_pending){arena.init(nullptr,0);entries=nullptr;stats.capacity=stats.used=0;free_pending=false;}
 }
+#if RE4DC_PLAN_OWNER_SCOPED
+Re4dcDrawOwnerStamp owner_stamp(const void* p,unsigned bytes){
+    Re4dcDrawOwnerStamp result;
+    for(unsigned i=0;i<kOwners;++i)if(contains(owners[i],p,bytes)){
+        if(result.valid())return {}; // overlapping publishers cannot prove one immutable incarnation
+        result={i,owners[i].incarnation};
+    }
+    return result;
 }
+bool owner_current(unsigned slot,unsigned incarnation){
+    return slot<kOwners && owners[slot].key && owners[slot].incarnation==incarnation;
+}
+void tombstone(Entry& e){
+    if(e.plan || e.bounds)retired_metadata=true;
+    e={};e.topology_owner=kTombstone;
+}
+void invalidate_owner(unsigned slot){
+    if(entries)for(unsigned i=0;i<kEntries;++i){auto& e=entries[i];
+        if(e.stream && e.topology_owner==slot)tombstone(e);
+        else if(e.bounds && e.position_owner==slot){
+            e.bounds=nullptr;e.bound_positions=nullptr;e.position_owner=kNoOwner;
+            e.position_incarnation=0;retired_metadata=true;
+        }
+    }
+    assets_dirty=local_admission_dirty=true;
+}
+bool overlap(const void* a,unsigned an,const void* b,unsigned bn){
+    if(!a || !b || !an || !bn)return false;
+    const auto x=reinterpret_cast<std::uintptr_t>(a),y=reinterpret_cast<std::uintptr_t>(b);
+    return x<=y?y-x<an:x-y<bn;
+}
+void invalidate_overlapping(const void* archive,unsigned bytes){
+    if(entries)for(unsigned i=0;i<kEntries;++i){auto& e=entries[i];
+        if(e.stream && overlap(e.stream,e.bytes,archive,bytes))tombstone(e);
+        else if(e.bounds && overlap(e.bound_positions,(unsigned(e.positions)+1)*e.bound_stride,archive,bytes)){
+            e.bounds=nullptr;e.bound_positions=nullptr;e.position_owner=kNoOwner;
+            e.position_incarnation=0;retired_metadata=true;
+        }
+    }
+}
+void clear_owner(Owner& o){o.key=nullptr;o.start=0;o.bytes=o.transient=0;}
+void compact_metadata(){
+    if(!retired_metadata || !entries || leases || reset_pending)return;
+    // Self-relative plans and bounds can move without decoding source bytes.
+    // Select the next source block in address order: <=512 fixed blocks, no
+    // scratch allocation, per-draw compaction or change to the fixed arena.
+    auto* destination=arena.base();auto cursor=reinterpret_cast<std::uintptr_t>(arena.base());
+    for(;;){
+        Entry* selected=nullptr;bool bound=false;std::uintptr_t first=~std::uintptr_t(0);
+        for(unsigned i=0;i<kEntries;++i){auto& e=entries[i];
+            const auto p=reinterpret_cast<std::uintptr_t>(e.plan),b=reinterpret_cast<std::uintptr_t>(e.bounds);
+            if(p>=cursor && p<first){first=p;selected=&e;bound=false;}
+            if(b>=cursor && b<first){first=b;selected=&e;bound=true;}
+        }
+        if(!selected)break;
+        const unsigned bytes=bound?sizeof(re4dc::render::DrawPlanBounds)+selected->bounds->primitive_count*sizeof(re4dc::render::PrimitiveSphere)
+            :sizeof(re4dc::render::NativeDrawPlan)+selected->plan->primitive_count*sizeof(re4dc::render::DrawPrimitive);
+        const unsigned aligned=(bytes+31U)&~31U;
+        std::memmove(destination,reinterpret_cast<const void*>(first),bytes);
+        if(bound)selected->bounds=reinterpret_cast<const re4dc::render::DrawPlanBounds*>(destination);
+        else selected->plan=reinterpret_cast<const re4dc::render::NativeDrawPlan*>(destination);
+        destination+=aligned;cursor=first+aligned;
+    }
+    arena.rewind(unsigned(destination-arena.base()));bounds_bytes=0;
+    for(unsigned i=0;i<kEntries;++i)if(entries[i].bounds)bounds_bytes+=sizeof(re4dc::render::DrawPlanBounds)+
+        entries[i].bounds->primitive_count*sizeof(re4dc::render::PrimitiveSphere);
+    stats.used=((sizeof(Entry)*kEntries+31)&~31U)+arena.used()+local_arena.used();
+    retired_metadata=false;
+}
+void prepare_owner_bounds(Entry& e,const Re4dcModelPart& p){
+    if(!p.static_geometry || p.position_stride>255)return;
+    const auto owner=re4dc_model_draw_array_owner(p.positions,p.position_count,p.position_stride);
+    if(!owner.valid())return;
+    if(e.bounds && e.bound_positions==p.positions && e.bound_stride==p.position_stride && e.bound_shift==p.shift &&
+       e.position_owner==owner.slot && e.position_incarnation==owner.incarnation)return;
+    if(e.bounds){e.bounds=nullptr;e.bound_positions=nullptr;retired_metadata=true;}
+    unsigned size=sizeof(re4dc::render::DrawPlanBounds)+e.plan->primitive_count*sizeof(re4dc::render::PrimitiveSphere);
+    const bool primitives=size<=8192-bounds_bytes;
+    if(!primitives)size=sizeof(re4dc::render::DrawPlanBounds);
+    if(size>8192-bounds_bytes)return;
+    const auto mark=arena.mark();void* memory=arena.allocate(size);
+    if(!memory)return;
+    e.bounds=re4dc::render::prepare_draw_bounds(memory,size,*e.plan,p.stream,bool(e.colored),p.positions,
+        p.position_stride,std::ldexp(1.f,-int(p.shift)),primitives);
+    if(!e.bounds){arena.rewind(mark);return;}
+    bounds_bytes+=size;e.bound_positions=p.positions;e.bound_stride=p.position_stride;e.bound_shift=p.shift;
+    e.position_owner=std::uint8_t(owner.slot);e.position_incarnation=owner.incarnation;
+}
+#endif
+}
+#if RE4DC_PLAN_OWNER_SCOPED
+extern "C" Re4dcDrawOwnerStamp re4dc_model_draw_owner_stamp(const void* p,unsigned bytes){return owner_stamp(p,bytes);}
+#endif
 extern "C" void re4dc_model_reset_draw_plans() {
+#if RE4DC_PLAN_OWNER_SCOPED
+    for(auto& o:owners)if(o.key && ++o.incarnation==0)o.incarnation=1;
+#endif
     re4dc_model_invalidate_pending();
     if(leases) reset_pending=true; else reset_now();
 }
 extern "C" void re4dc_model_bind_draw_owner(const void* key,void* archive,unsigned bytes,unsigned transient) {
+#if RE4DC_PLAN_OWNER_SCOPED
+    if(!key)return;
+    re4dc_model_invalidate_pending(); // keep source-view/queue lifetime fencing
+    invalidate_overlapping(archive,bytes); // aliased publishers are related, not independent owners
+#else
     re4dc_model_reset_draw_plans();
+#endif
     Owner* slot=nullptr;
     for(auto& o:owners) { if(o.key==key) { slot=&o;break; } if(!o.key && !slot) slot=&o; }
     if(!slot) { re4dc_log("native draw plans: owner capacity exhausted\n"); return; }
+#if RE4DC_PLAN_OWNER_SCOPED
+    invalidate_owner(unsigned(slot-owners));
+    if(++slot->incarnation==0){slot->incarnation=1;re4dc_model_reset_draw_plans();}
+    slot->key=archive && bytes?key:nullptr;slot->start=reinterpret_cast<std::uintptr_t>(archive);
+    slot->bytes=bytes;slot->transient=transient;
+#else
     *slot={archive && bytes?key:nullptr,reinterpret_cast<std::uintptr_t>(archive),bytes,transient};
+#endif
 }
 extern "C" void re4dc_model_retire_draw_plans() {
-    for(auto& o:owners)if(o.transient)o={};
+    for(auto& o:owners)if(o.transient){
+#if RE4DC_PLAN_OWNER_SCOPED
+        clear_owner(o);
+#else
+        o={};
+#endif
+    }
     free_pending=true;re4dc_model_reset_draw_plans();
 }
 extern "C" void re4dc_model_unbind_draw_owner(const void* key) {
+#if RE4DC_PLAN_OWNER_SCOPED
+    if(!key)return;
+    re4dc_model_invalidate_pending();
+    for(auto& o:owners)if(o.key==key){invalidate_owner(unsigned(&o-owners));clear_owner(o);}
+#else
     re4dc_model_reset_draw_plans();
     for(auto& o:owners) if(o.key==key) o={};
+#endif
 }
 static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p,int* invalid,bool install) {
     *invalid=0;acquired_bounds=nullptr;acquired_locals=nullptr;
@@ -85,8 +223,13 @@ static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p
     if(re4dc_actor_stream_encoded(p->stream,p->stream_bytes)){++stats.uncovered;return nullptr;}
 #endif
     if(reset_pending) { ++stats.uncovered;return nullptr; }
+#if RE4DC_PLAN_OWNER_SCOPED
+    const auto topology=owner_stamp(p->part,32),stream_owner=owner_stamp(p->stream,p->stream_bytes);
+    const bool owned=topology.valid() && topology==stream_owner;
+#else
     bool owned=false;
     for(const auto& o:owners) if(contains(o,p->part,32) && contains(o,p->stream,p->stream_bytes)) {owned=true;break;}
+#endif
     if(!owned) {++stats.owner_misses;++stats.uncovered;return nullptr;}
     const unsigned colored=bool(p->flags&0x80000000U);
     if(!entries && !install){++stats.uncovered;return nullptr;}
@@ -108,15 +251,34 @@ static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p
     Entry* entry=nullptr;
     for(unsigned n=0;n<kEntries;++n,slot=(slot+1)&(kEntries-1)) {
         auto& e=entries[slot];
+#if RE4DC_PLAN_OWNER_SCOPED
+        if(!e.stream){
+            if(!entry)entry=&e;
+            if(e.topology_owner!=kTombstone)break;
+            continue;
+        }
+#else
         if(!e.stream) {entry=&e;break;}
+#endif
         if(e.stream==p->stream && e.bytes==p->stream_bytes && e.positions==p->position_count-1 &&
-           e.normals==p->normal_count-1 && e.colored==colored) {
+           e.normals==p->normal_count-1 && e.colored==colored
+#if RE4DC_PLAN_OWNER_SCOPED
+           && e.topology_owner==topology.slot && e.topology_incarnation==topology.incarnation
+#endif
+           ) {
             if(install && asset_update_active && e.reserved<255)++e.reserved;
             if(!e.plan) {++stats.capacity_rejects;++stats.uncovered;return nullptr;}
+#if RE4DC_PLAN_OWNER_SCOPED
+            if(install)prepare_owner_bounds(e,*p);
+#endif
             ++stats.hits;++leases;acquired_locals=e.locals;
             // Topology can be shared; bounds cannot survive a changed source
             // position binding, deformation eligibility or quantization scale.
-            if(p->static_geometry && e.bound_positions==p->positions && e.bound_stride==p->position_stride && e.bound_shift==p->shift)acquired_bounds=e.bounds;
+            if(p->static_geometry && e.bound_positions==p->positions && e.bound_stride==p->position_stride && e.bound_shift==p->shift
+#if RE4DC_PLAN_OWNER_SCOPED
+               && owner_current(e.position_owner,e.position_incarnation)
+#endif
+               )acquired_bounds=e.bounds;
             return e.plan;
         }
     }
@@ -126,13 +288,22 @@ static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p
     *entry={};entry->stream=p->stream;entry->bytes=p->stream_bytes;
     entry->positions=std::uint16_t(p->position_count-1);entry->normals=std::uint16_t(p->normal_count-1);entry->colored=colored;
     entry->reserved=asset_update_active?1:0;
+#if RE4DC_PLAN_OWNER_SCOPED
+    entry->topology_owner=std::uint8_t(topology.slot);entry->topology_incarnation=topology.incarnation;
+#endif
     // Stable negative admission avoids re-decoding an uncacheable part on every
     // lookup. Such parts use the explicit reference path; no LRU disc/CPU churn.
     re4dc::render::DrawPlanRequirements requirements;
     stats.source_bytes+=p->stream_bytes;
     if(!re4dc::render::inspect_draw_plan(p->stream,p->stream_bytes,colored,
              p->position_count,p->normal_count,requirements)) {
-        *entry={};++stats.invalid;*invalid=1;return nullptr;
+
+#if RE4DC_PLAN_OWNER_SCOPED
+        tombstone(*entry);
+#else
+        *entry={};
+#endif
+        ++stats.invalid;*invalid=1;return nullptr;
     }
     const auto mark=arena.mark();
     void* memory=arena.allocate(requirements.bytes);
@@ -140,10 +311,19 @@ static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p
     stats.source_bytes+=p->stream_bytes;
     entry->plan=re4dc::render::prepare_draw_plan(memory,requirements.bytes,p->stream,
                                                p->stream_bytes,colored,requirements);
-    if(!entry->plan) {arena.rewind(mark);*entry={};++stats.invalid;*invalid=1;return nullptr;}
+    if(!entry->plan) {arena.rewind(mark);
+#if RE4DC_PLAN_OWNER_SCOPED
+        tombstone(*entry);
+#else
+        *entry={};
+#endif
+        ++stats.invalid;*invalid=1;return nullptr;}
     // Local descriptors are admitted after the complete source OT walk, so a
     // first-arriving part cannot consume the entire independent local budget.
     local_admission_dirty=true;
+#if RE4DC_PLAN_OWNER_SCOPED
+    prepare_owner_bounds(*entry,*p);
+#else
     bool positions_owned=false;
     for(const auto& o:owners)if(contains(o,p->positions,p->position_count*p->position_stride))positions_owned=true;
     if(p->static_geometry && positions_owned){
@@ -160,6 +340,7 @@ static const re4dc::render::NativeDrawPlan* acquire_plan(const Re4dcModelPart* p
                     entry->bound_stride=p->position_stride;entry->bound_shift=p->shift;}else arena.rewind(bound_mark);}
         }
     }
+#endif
     acquired_bounds=entry->bounds;
     const unsigned table_bytes=(sizeof(Entry)*kEntries+31)&~31U;
     ++stats.installs;++leases;stats.used=table_bytes+arena.used()+local_arena.used();
@@ -185,6 +366,9 @@ extern "C" int re4dc_model_asset_update_idle(){
 #endif
 extern "C" int re4dc_model_begin_asset_update(){
     if(asset_update_active || leases || reset_pending)return 0;
+#if RE4DC_PLAN_OWNER_SCOPED
+    compact_metadata();
+#endif
     asset_update_active=true;
     if(entries)for(unsigned i=0;i<kEntries;++i)entries[i].reserved=0;
     const bool changed=assets_dirty;assets_dirty=false;return changed;
@@ -285,6 +469,9 @@ extern "C" int re4dc_model_owned_source(const void* data,unsigned bytes){
 extern "C" int re4dc_model_prepare_draw_plan(const Re4dcModelPart* p){
     const bool implicit=!asset_update_active;
     if(implicit)re4dc_model_begin_asset_update();
+#if RE4DC_PLAN_OWNER_SCOPED
+    if(implicit && !asset_update_active)return 0;
+#endif
     int invalid=0;const auto* plan=acquire_plan(p,&invalid,true);
     if(plan)re4dc_model_release_draw_plan();
     if(implicit)re4dc_model_finish_asset_update();
@@ -329,6 +516,9 @@ extern "C" int re4dc_model_prepare_draw_plan(const Re4dcModelPart*){return 0;}
 extern "C" void re4dc_model_bind_draw_owner(const void*,void*,unsigned,unsigned) {}
 extern "C" void re4dc_model_retire_draw_plans() {}
 extern "C" void re4dc_model_unbind_draw_owner(const void*) {}
+#if RE4DC_PLAN_OWNER_SCOPED
+extern "C" Re4dcDrawOwnerStamp re4dc_model_draw_owner_stamp(const void*,unsigned){return {};}
+#endif
 extern "C" void re4dc_model_reset_draw_plans() {
     re4dc_model_invalidate_pending();}
 extern "C" const re4dc::render::NativeDrawPlan* re4dc_model_acquire_draw_plan(const Re4dcModelPart*,int* invalid) {*invalid=0;return nullptr;}

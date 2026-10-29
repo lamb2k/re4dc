@@ -1,5 +1,76 @@
 # Build 33: ordered static-object output batches
 
+## 2026-10-29 EF07: owner-scoped native plan slice
+
+**DONE (source/host; target pending):** `PLAN_OWNER_SCOPED=1` (strict 0/1,
+default 0; requires `MODEL_DRAW_PLANS=1`) replaces whole-cache bind/unbind resets
+with existing owner-slot/incarnation identity. Topology entries carry their
+publisher; position bounds carry an independent position publisher. Same-address
+publication advances identity. Ambiguous overlapping publishers refuse immutable
+admission; newly overlapping bytes invalidate related old topology/bounds.
+Unknown mutation invalidation, global arena loans and room retirement retain the
+existing complete reset. No `Re4dcModelPart`/public ABI layout changes and no
+`native_ui.cpp` edits are needed: its current qualified bind/unbind and global
+invalidation adapters remain the producer boundaries.
+
+Replacing owner A tombstones A's topology entries and removes bounds belonging
+to A while other owners retain usable plans. A tombstone cannot terminate an
+open-addressed probe or hide a colliding owner B, including after malformed
+reinstallation. Outstanding plan/local/bounds leases keep their storage until
+returned. Dead plan/bounds metadata is packed only at the existing no-lease
+asset-registration boundary, in address order inside the same fixed arena;
+self-relative metadata moves without re-decoding its source. No heap allocator,
+per-draw compaction or per-draw allocation is added. The 256-entry/44-owner and
+8 KiB local/bounds budgets remain fixed; exhaustion selects the reference path.
+
+The native model's retained position, normal and static-light snapshots consume
+the same source/array stamps, so address equality alone cannot authorize reuse
+across a publication. Existing frame/current-pose and live material/light keys
+remain. Source archive retention and global source-view/queue invalidation still
+follow the existing owner services. This is not a main-RAM saving or a complete
+source-content/mutation authority claim. The entry owner fields consume more of
+the existing fixed metadata slab; target layout and total cost remain to check.
+
+```bash
+python3 -B port/dreamcast/tests/test_plan_owner_scoped.py
+python3 -B port/dreamcast/tests/test_native_draw_plan.py
+```
+
+The new suite passes three tests. The actual-production owner/arena fixture runs
+with ASan/UBSan in both `PLAN_ADMIT_LEAN=0` and `=1`: middle deletion in a
+three-owner collision chain, malformed tombstone reinsertion, same-pointer
+reload, unrelated-owner hits, independent position-bound/retained-state stamps,
+leased metadata, cold compaction, 700 replacements, incarnation wrap, aliases,
+256-entry and 44-owner exhaustion, explicit global reset and room retirement.
+The other tests establish strict Make propagation to exactly owner/model
+consumers and parent/absent/zero host object identity. The existing native draw
+plan suite also passes. These are code/synthetic checks, not recovered-game
+output, lifecycle memory, look or hardware timing evidence.
+
+**NEXT:** run the prepared two-TU Make-derived target gate and full release
+OFF/ON builds under the coordinator's exclusive SDK slot, then compare OFF
+programme, overlays and allocated sections to the bound `77461a84` control.
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build33/plan_owner_target.py \
+  --output "$EF07_FRESH_TARGET_OUT"
+```
+
+`EF07_FRESH_TARGET_OUT` must be new. The helper uses base
+`77461a84ef85e978e44aab5d936a1b80a2cd93a4`, compiler15.2.0,
+`/root/work/kos-re4dc-d367` at `804b3195`, and the initialized pinned SH4ZAM
+submodule. It records actual Make/compiler commands, source/toolchain hashes,
+object identity/layout and selected stack frames. Full release command follows
+the existing `ch2/ch2-build.sh rP` workflow with the current recipe and the final
+`PLAN_OWNER_SCOPED=0` or `=1` override; retain private input bindings locally.
+
+**BLOCKED (scoped):** the SDK slot is currently held by the coordinator's
+accepted queue. Runtime owner replacement/reentry/movie-loan output, headroom /
+peak source-backing overlap and complete hardware cost remain acceptance gates
+for the optimization. No default promotion, emulator/console run or publication
+is claimed. The existing Build33 and EF05 evidence below retains its own scope.
+
+
 **2026-10-28 progress 2: DONE** guarded ordered header coalescing, per-cause
 barrier census, exact/sanitized host oracle and SH-4 identity/cost gates;
 **NEXT** Claude's private comparisons; cloud proceeds to Build 34; **BLOCKED** real coverage,
