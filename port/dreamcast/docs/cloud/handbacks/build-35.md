@@ -843,3 +843,45 @@ the incomplete result held; independent existing/gaps runtime smoke remains
 possible. Front-cache pair, CPU/current-memory/full-stack/look/STRICT gates
 remain pending. Console requires user-selected arm and REMOTE LINK after
 each swap. No source/recipe promotion, SD write or release.
+
+#### Owner: independent profile smokes and separate front-cache pair links, 2026-10-29
+
+Existing-audit and gaps each completed a separate60s interpreter/GDEMU seed1
+r101 functional capture: reader0/errors[]/overruns0, emulator exited. Both
+explicitly report r101 at game frame300 and a header row at599; PPP and local
+relay peer observed. No host keys, savestate, physical Pi/console command or
+recipe/SD change. Active track01 bytes were retained and exactly checked
+against each own base plus common source preset; high track was verified as
+the hardlink to its already-bound own base while active. Own three log/head/
+stage offsets and retained fixture receipts verified. Initial verifier expected
+the optional fourth PCS metadata too; source fp_run intentionally selects
+three offsets, corrected before accepting this proof. Neither smoke is a
+matched600-completed-draw/window comparison or speed/memory acceptance.
+Earlier window32 active-track proof remains unretained, not backfilled.
+
+The separately requested FRONT_NATIVE1/FRONT_TEXOBJ1 cache pair was built
+from a fresh pinned2061 worktree, existing-audit and gaps each43s/rc0/missing0.
+Full1274-field resolved comparison differs only FALLBACK_AUDIT35 and its two
+derived object lists; window0/NMR1/common QA framework retained. Actual trans
+compile commands force generated frontend30.h/records30.h with both cache
+knobs1. These are not -D flags on qa_menu: the initial verifier assumption
+was corrected using the make rules and exact generated-header consumption.
+Gaps native_motion/QA actual commands also carry audit35=1. Both logs64KiB.
+ELF SHA256 existing-audit:
+9906e008606b1ae44989a6df41292d01a559956a18c016fe241d6a93ee288138;
+gaps: aea3f240bcc049fd474e205d173037d10ee8938e60512fd919ef0af81ca162f3.
+Static gaps increment2408 code/constant bytes,0 initialized data,17312 BSS;
+not heap/stack high-water or runtime observer cost.
+
+Source inspection confirms REVIEW28 retains a full immutable DIAG snapshot
+until drain; explicit DIAG preempts telemetry. No supported field-selecting
+DIAG argument was found. The existing automatic QA/QR path and decoder exist,
+but no complete within60s capture variant was qualified. Prior window32
+DIAG4/14 remains HELD; no identical retry, duration exception, source patch or
+custom observer introduced. Next prepare and bind the front pair's own final
+programmes/15 overlays/common data/fixtures before bounded runtime checks.
+Private PROFILE-SMOKE-PROOF and front LINKED-PAIR-PROOF retain full evidence.
+Complete snapshot/600-draw/full-partial-skipped windows, CPU/current memory/
+full-stack/look/STRICT and console gates remain pending. Console still needs
+user-designated enabled arm media and REMOTE LINK after each swap. No runtime
+acceptance for front pair, production promotion, SD write or release.
