@@ -797,3 +797,23 @@ endif
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
 endif
+
+# EF11 bounded source pTobjA class: captured non-mip linear/clamp samplers,
+# current 8x8 RGB565 source spans and exact current uploaded texels. All other
+# secondary materials remain refused. Runtime/readback/look/cost gates are open.
+CLOTH_MATERIAL11 ?= 0
+ifneq ($(words $(CLOTH_MATERIAL11)),1)
+$(error CLOTH_MATERIAL11 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(CLOTH_MATERIAL11)),)
+$(error CLOTH_MATERIAL11 must be 0 or 1)
+endif
+ifeq ($(CLOTH_MATERIAL11),1)
+ifneq ($(CLOTH_SHEET11)$(PLAN_OWNER_SCOPED),11)
+$(error CLOTH_MATERIAL11 needs CLOTH_SHEET11=1 PLAN_OWNER_SCOPED=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+# The existing platform rule consumes this target-specific variable too.
+$(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
+endif
