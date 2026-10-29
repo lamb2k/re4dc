@@ -741,3 +741,128 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+## Cloud progress 2026-10-29: distinct collision-body changes (review 9.2)
+
+**DONE:** implemented the assigned collision slice on
+`codex/collision-distinct-20261029`, rebased to
+`8f5a269e5e06dd4ec02857cf5beb0e71f3c4561b`. The source input was
+`e6939459`; subsequent integration updates were replayed before delivery.
+The exclusive production files are `include/atariInfo.h` and
+`src/game/at_mod.cpp`. The cloud coordinator added
+`game/atchk_distinct29.mk` and its top-level Make include after the local
+EF16 `game30.mk` change landed. No manager lifecycle hook is changed here.
+
+`GAME_ATCHK_DISTINCT29=1` replaces the existing 64-write history with at most
+64 distinct body addresses and independent enemy/object pending bits. A query
+clears only its own successfully applied or recollected changes. Repeated
+toggles cannot exhaust the table by themselves; intermediate queries still see
+the state at that query. A reader that falls behind is conservatively invalidated
+without discarding the other reader's progress. More than 64 distinct pending
+bodies, an oversized source list or a full candidate list retains the source
+fallback. No generation-wrap dependency or dynamic allocation is introduced.
+
+Every noted address is matched to the current generation-bound ordered list
+before dereferencing a body. A proven nonmember is skipped safely, including a
+dead body still executing its move. Insertions/removals preserve source order;
+manager generation/head/length changes rebuild before reuse. The existing
+`GAME_ATCHK_CACHE=2` comparison remains the live reference. The control defaults
+to 0 and requires `GAME_ATCHK`, `GAME_ATCHK_LIST` and `GAME_ATCHK_CACHE`.
+Its definition reaches all game/room/platform consumers of the field wrappers.
+
+**Validation performed:** the production-extracted wrapper/list/candidate
+fixture passes in cache modes 1 and 2, both normally and with ASan/UBSan.
+It covers 257 toggles of one body, 65 distinct bodies, independent reader
+progress, query boundaries, return-to-original changes, ordered mixed updates,
+dead/absent/reused/reordered bodies, candidate/list overflow and a deliberately
+unnoted-write negative control. Both existing alive-list suites pass all eight
+configurations each. LeakSanitizer alone is disabled because this managed
+executor prevents its thread walk; address and undefined-behavior checks run.
+
+`check_atchk_distinct29_off.py --baseline 8f5a269e...` proves baseline,
+absent and explicit-zero preprocessing and **32-bit host excerpt objects**
+byte-identical in both cache modes. Object SHA256s are
+`38c896c7a9946bcd63a259c5fa8cd2f9d7920dba1012ff29585323ad81a8d1e9`
+(cache1) and
+`5a1b87d2949e722f05bb57b0fe697ae5bf830d4122025900b057c0ddfed58a0e`
+(cache2). These are not complete SH-4 objects or image identity claims.
+The real Makefile's dry-run commands select the new definition for
+`at_mod.o`, a room overlay TU and `native_ui.o`; absent/zero omit it.
+An empty KOS rules file was used solely to inspect Make command selection,
+without executing a target compiler.
+
+Reproduce the executed source/host gates from this branch:
+
+```sh
+python3 -B port/dreamcast/tests/test_atchk_distinct29.py
+ASAN_OPTIONS=detect_leaks=0 ATCHK_SANITIZE=1 \
+  python3 -B port/dreamcast/tests/test_atchk_distinct29.py
+python3 -B port/dreamcast/tests/check_atchk_distinct29_off.py \
+  --baseline 8f5a269e5e06dd4ec02857cf5beb0e71f3c4561b
+python3 -B port/dreamcast/tests/test_atlist_capacity.py
+python3 -B port/dreamcast/tests/test_atlist_overflow.py
+git diff --check
+```
+
+**Storage/cost:** the declared 32-bit candidate/tracker fields total 1,130
+bytes versus 1,140 before this switch (two 404-byte candidate records plus
+322 bytes of tracking, versus two 440-byte records plus 260 bytes). Linker
+alignment can change the final delta; this is a layout calculation, not target
+BSS measurement. Tracking performs a bounded linear search over distinct
+addresses; the change avoids repeated-write overflow and full recollection,
+but does not establish a speedup for every low-dirty workload. SH-4 code/stack,
+warm/cold cycles, loads/stores/32-byte lines and whole-frame **MODELLED** delta
+remain unmeasured. No frame-time saving or memory-headroom result is claimed.
+
+**BLOCKED validation inputs:** no SH-4/KOS SDK or initialized SH4ZAM is installed
+in this cloud workspace, and no private recipe inputs or console are available.
+The required public pins remain KOS `804b3195` plus repository patches,
+GCC15.2.0/binutils2.45.1/newlib4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. This holds target/full-image/live
+acceptance only. Cloud continues EF13 water and the other assigned source work.
+
+**NEXT for Claude:** run the existing private release recipe on the exact base
+and candidate, then a matched collision comparison profile. These commands use
+fresh lane-owned paths/labels supplied in `C29_BASE_TREE`, `C29_LOGS`,
+`C29_PROGRAMS` and `C29_LABEL`; the base tree must not already exist. Run
+after the normal pinned SDK environment and private inputs are available:
+
+```bash
+set -euo pipefail
+: "${C29_BASE_TREE:?fresh base worktree path}"
+: "${C29_LOGS:?fresh log directory}"
+: "${C29_PROGRAMS:?fresh programme directory}"
+: "${C29_LABEL:?fresh lane label prefix}"
+C29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$C29_BASE_TREE" 8f5a269e5e06dd4ec02857cf5beb0e71f3c4561b
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$C29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+c29_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$C29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+c29_build "$C29_BASE_TREE" "${C29_LABEL}base" ""
+c29_build "$C29_CANDIDATE_TREE" "${C29_LABEL}off" "GAME_ATCHK_DISTINCT29=0"
+c29_build "$C29_CANDIDATE_TREE" "${C29_LABEL}ctrl" \
+  "GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_ATCHK_CACHE=2 GAME_ATCHK_DISTINCT29=0"
+c29_build "$C29_CANDIDATE_TREE" "${C29_LABEL}on" \
+  "GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_ATCHK_CACHE=2 GAME_ATCHK_DISTINCT29=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${C29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${C29_LABEL}offrP" \
+  --output "$C29_LOGS/collision29-release-off.json"
+```
+
+Keep the matched `ctrl/on` outputs and resolved definitions separate from the
+release OFF identity pair. After a compatible local runtime is selected,
+check `ATC mismatch=0`, ordered collision behavior and retirement/room-change
+cases in that matched pair; collect target cost and actual memory margins.
+The hardware/media/link prerequisites remain unchanged. No switch is promoted,
+no release/media binary is published, and this source slice does not close
+Build29 or the wider simulation/runtime acceptance gates.

@@ -334,39 +334,214 @@ static int atchkCollectList(const AtList* L, int N, cEm** out)
 // bodies before it in list order). The list is unchanged and every other body's test is what it was, so
 // the kept bodies are the list's bodies that pass their test, in list order: what a fresh collection
 // returns. A noted info outside the list's body info addresses (atListBuild: lowest .. highest) is no
-// body of the list and is skipped, and so is a noted info of the range found absent from the list (kept
-// per list generation: while the list is unchanged it stays absent). Dead Ganados leave the enemy alive
-// list but keep running their move, and em10SlopeMove / atari.move flip their m_radius2 test twice a
-// tick: each is walked for once per list generation. More notes than the ring holds, or a kept list that
-// would overflow: collected afresh.
+// body of the list and is skipped. Dead Ganados leave the enemy alive list but keep running their move,
+// and em10SlopeMove / atari.move flip their m_radius2 test twice a tick. The optional distinct-note
+// path coalesces those writes and checks exact list membership before reading a body. A kept list that
+// would overflow is collected afresh. The default ring path retains its
+// own absent set per list generation and recollects after more than 64 historical writes.
 // =2 (check build): every reuse is also collected afresh and compared, the fresh one used ("ATC" lines:
-// skip = notes outside the range, ins / del = bodies applied, absent / known = noted infos of the range
-// found absent by a walk / by the absent set, list / ring / full = collections afresh by reason).
+// skip = notes outside the range, ins / del = bodies applied, list / ring / full = collections afresh by
+// reason; known is default-ring absent reuse, and distinct_overflow is a distinct-reader refusal).
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+// One entry per distinct info since either reader's last successful query. A reader's
+// pending bit is never cleared by the other reader. If the fixed table fills, only
+// readers represented by the selected victim are invalidated; their next query
+// recollects from the current source list. No sequence counter can wrap here.
+#define ATC_DIRTY_MAX 64
+#define ATC_EM 1
+#define ATC_OBJ 2
+static const void* atcDirtyInfo[ATC_DIRTY_MAX];
+static u8 atcDirtyPending[ATC_DIRTY_MAX];
+static u8 atcDirtyN;
+static u8 atcDirtyInvalid;
+static void atcDirtyDrop(u8 readers)
+{
+    atcDirtyInvalid |= readers;
+    int kept = 0;
+    for (int i = 0; i < atcDirtyN; i++) {
+        const u8 pending = atcDirtyPending[i] & ~readers;
+        if (pending != 0) {
+            atcDirtyInfo[kept] = atcDirtyInfo[i];
+            atcDirtyPending[kept++] = pending;
+        }
+    }
+    atcDirtyN = kept;
+}
+static void atcDirtyConsumed(u8 reader)
+{
+    int kept = 0;
+    for (int i = 0; i < atcDirtyN; i++) {
+        const u8 pending = atcDirtyPending[i] & ~reader;
+        if (pending != 0) {
+            atcDirtyInfo[kept] = atcDirtyInfo[i];
+            atcDirtyPending[kept++] = pending;
+        }
+    }
+    atcDirtyN = kept;
+    atcDirtyInvalid &= ~reader;
+}
+extern "C" void re4dcAtariNoteDistinct29(const void* info)
+{
+    u8 readers = (u8) (3 & ~atcDirtyInvalid);
+    if (readers == 0) {
+        return;  // both readers must recollect; later writes are included there
+    }
+    for (int i = 0; i < atcDirtyN; i++) {
+        if (atcDirtyInfo[i] == info) {
+            atcDirtyPending[i] |= readers;
+            return;
+        }
+    }
+    if (atcDirtyN == ATC_DIRTY_MAX) {
+        // Prefer evicting one reader's history. A victim pending for both
+        // requires both to recollect; no old state is applied after refusal.
+        u8 victim = atcDirtyPending[0];
+        for (int i = 1; i < atcDirtyN; i++) {
+            if (atcDirtyPending[i] != 3) {
+                victim = atcDirtyPending[i];
+                break;
+            }
+        }
+        atcDirtyDrop(victim);
+        readers = (u8) (3 & ~atcDirtyInvalid);
+        if (readers == 0) {
+            return;
+        }
+    }
+    atcDirtyInfo[atcDirtyN] = info;
+    atcDirtyPending[atcDirtyN++] = readers;
+}
+#else
 extern "C" {
 u32 re4dc_atari_seq;
 const void* re4dc_atari_dirty[64];
 }
+#endif
+#if !defined(RE4DC_ATCHK_DISTINCT29) || !RE4DC_ATCHK_DISTINCT29
 #define ATC_ABSENT 8
+#endif
 struct AtCand {
     u32 listGen;
+#if !defined(RE4DC_ATCHK_DISTINCT29) || !RE4DC_ATCHK_DISTINCT29
     u32 seq;
+#endif
     cEm* head;
     int N;
     int n;   /* -1: nothing kept */
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+    u8 consumer;
+#else
     int nAbsent;
     const cAtariInfo* absent[ATC_ABSENT];   /* noted infos of the range found absent from the list */
+#endif
     cEm* v[ATCHK_MAX];
 };
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+static AtCand atCandEm = { 0, 0, 0, -1, ATC_EM }, atCandObj = { 0, 0, 0, -1, ATC_OBJ };
+static_assert(sizeof(void*) != 4 || (sizeof(u32) == 4 && sizeof(AtCand) == 404),
+              "distinct candidate cache footprint on a 32-bit target");
+#else
 static AtCand atCandEm = { 0, 0, 0, 0, -1 }, atCandObj = { 0, 0, 0, 0, -1 };
+#endif
 #if RE4DC_ATCHK_CACHE == 2
 extern "C" void re4dc_log(const char* fmt, ...);
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+static u32 atcHit, atcMiss, atcMis, atcNoted, atcSkip, atcList, atcRing, atcFull, atcIns, atcDel, atcAbsent;
+#else
 static u32 atcHit, atcMiss, atcMis, atcNoted, atcSkip, atcList, atcRing, atcFull, atcIns, atcDel, atcAbsent,
     atcKnown;
 #endif
-// Applies every info of the list's range noted since the last reuse to the kept list (1), or 0 when the
-// ring overflowed or the kept list is full.
+#endif
+// Applies each currently relevant note to the kept list (1), or requests fresh
+// collection (0) after a bounded-storage refusal or a full candidate list.
 static int atchkNotedApply(AtCand* C, const AtList* L)
 {
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+    if (atcDirtyInvalid & C->consumer) {
+#if RE4DC_ATCHK_CACHE == 2
+        ++atcRing;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::CollisionDirtyOverflow, 1);
+#endif
+        return 0;
+    }
+    for (int d = 0; d < atcDirtyN; d++) {
+        if (!(atcDirtyPending[d] & C->consumer)) {
+            continue;
+        }
+        const cAtariInfo* a = (const cAtariInfo*) atcDirtyInfo[d];
+        if ((u32) a - L->lo > L->span) {
+#if RE4DC_ATCHK_CACHE == 2
+            ++atcSkip;
+#endif
+            continue;
+        }
+        // A range is only a filter. Do not dereference a retired or unowned
+        // address until an exact member of this list supplies its live owner.
+        int i = 0;
+        while (i < L->n && &L->v[i]->atari != a) {
+            i++;
+        }
+        if (i == L->n) {
+#if RE4DC_ATCHK_CACHE == 2
+            ++atcAbsent;
+#endif
+            // The current AtList is bound to the same manager generation,
+            // head and length as C. This address is proven absent until that
+            // identity changes; never dereference an unowned info.
+            continue;
+        }
+        cEm* m = L->v[i];
+        int k = 0;
+        while (k < C->n && C->v[k] != m) {
+            k++;
+        }
+        const int live = (m->atari.m_flag & 0x200) && m->atari.m_radius2 != 0.0f;
+        if (live == (k < C->n)) {
+#if RE4DC_ATCHK_CACHE == 2
+            ++atcNoted;
+#endif
+            continue;
+        }
+        if (!live) {
+            C->n--;
+            for (; k < C->n; k++) {
+                C->v[k] = C->v[k + 1];
+            }
+#if RE4DC_ATCHK_CACHE == 2
+            ++atcDel;
+#endif
+            continue;
+        }
+        if (C->n == ATCHK_MAX) {
+#if RE4DC_ATCHK_CACHE == 2
+            ++atcFull;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::CollisionCandidateOverflow, 1);
+#endif
+            return 0;
+        }
+        // Count cached candidates before the newly eligible body in source
+        // order, then insert at that position. Equality and ties stay exact.
+        k = 0;
+        for (int j = 0; j < i; j++) {
+            if (k < C->n && L->v[j] == C->v[k]) {
+                k++;
+            }
+        }
+        for (int j = C->n; j > k; j--) {
+            C->v[j] = C->v[j - 1];
+        }
+        C->v[k] = m;
+        C->n++;
+#if RE4DC_ATCHK_CACHE == 2
+        ++atcIns;
+#endif
+    }
+    return 1;
+#else
     const u32 e = re4dc_atari_seq;
     u32 s = C->seq;
     if (e - s > 64) {
@@ -462,6 +637,7 @@ static int atchkNotedApply(AtCand* C, const AtList* L)
     }
     C->seq = e;
     return 1;
+#endif
 }
 static int atchkCandidates(AtCand* C, AtList* L, cEm* head, u32 gen, cEm** out)
 {
@@ -484,14 +660,29 @@ static int atchkCandidates(AtCand* C, AtList* L, cEm* head, u32 gen, cEm** out)
             ++atcMis;
             C->n = -1;
         }
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+        if (C->n >= 0) {
+            atcDirtyConsumed(C->consumer);
+        }
+#endif
         if ((atcHit + atcMiss) % 8192 == 0) {
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+            re4dc_log("ATC hit=%u miss=%u mismatch=%u noted=%u skip=%u ins=%u del=%u absent=%u "
+                      "list=%u distinct_overflow=%u full=%u pending=%u invalid=%u\n", atcHit, atcMiss, atcMis,
+                      atcNoted, atcSkip, atcIns, atcDel, atcAbsent, atcList, atcRing, atcFull,
+                      (u32) atcDirtyN, (u32) atcDirtyInvalid);
+#else
             re4dc_log("ATC hit=%u miss=%u mismatch=%u noted=%u skip=%u ins=%u del=%u absent=%u known=%u list=%u "
                       "ring=%u full=%u seq=%u\n", atcHit, atcMiss, atcMis, atcNoted, atcSkip, atcIns, atcDel,
                       atcAbsent, atcKnown, atcList, atcRing, atcFull, re4dc_atari_seq);
+#endif
         }
         return f;
 #else
         __builtin_memcpy(out, C->v, C->n * sizeof(cEm*));
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+        atcDirtyConsumed(C->consumer);
+#endif
         return C->n;
 #endif
     }
@@ -502,10 +693,16 @@ static int atchkCandidates(AtCand* C, AtList* L, cEm* head, u32 gen, cEm** out)
     C->n = n;
     if (n >= 0) {
         C->listGen = gen;
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+        atcDirtyConsumed(C->consumer);
+#else
         C->seq = re4dc_atari_seq;
+#endif
         C->head = head;
         C->N = N;
+#if !defined(RE4DC_ATCHK_DISTINCT29) || !RE4DC_ATCHK_DISTINCT29
         C->nAbsent = 0;
+#endif
         __builtin_memcpy(C->v, out, n * sizeof(cEm*));
     }
     return n;

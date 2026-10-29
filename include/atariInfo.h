@@ -10,18 +10,26 @@ class cModel;
 // GAME_ATCHK_CACHE (game30.mk; G, collision traversal; exact): at_mod keeps each list's em-em candidates
 // and reuses them while no body's collidable test changed. That test reads m_flag bit 0x200 and
 // m_radius2 != 0, so both fields go through these wrappers (same size, alignment and values): a write
-// that flips the test's part notes the info in a ring (re4dc_atari_dirty, re4dc_atari_seq); a reuse
-// re-tests the noted infos against the kept list. Zeroing a whole info (AtariInfoConstruct) and the rooms'
+// that flips the test's part notes the info; a reuse re-tests the noted infos against the kept list.
+// GAME_ATCHK_DISTINCT29=1 coalesces writes to each info independently for the enemy and object readers.
+// Zeroing a whole info (AtariInfoConstruct) and the rooms'
 // volatile flag helpers note it through RE4DC_ATARI_TOUCH. Copies between infos are deleted (a copy into a
 // local buffer uses a byte copy: the buffer is in no list), and so is taking a field's address: a write
 // through a pointer would pass the wrapper, so every such site fails to compile until it takes the
 // address with __builtin_addressof and notes the info (the flag helpers, the at_mod prefetches).
 extern "C" u32 re4dc_atari_seq;
 extern "C" const void* re4dc_atari_dirty[64];
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+extern "C" void re4dcAtariNoteDistinct29(const void* info);
+#endif
 static inline void re4dcAtariNote(const void* info)
 {
+#if defined(RE4DC_ATCHK_DISTINCT29) && RE4DC_ATCHK_DISTINCT29
+    re4dcAtariNoteDistinct29(info);
+#else
     re4dc_atari_dirty[re4dc_atari_seq & 63] = info;
     ++re4dc_atari_seq;
+#endif
 }
 struct AtFlag16 {
     u16 v;
