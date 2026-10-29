@@ -806,3 +806,40 @@ then bounded game/link/window/CPU/current-memory/full-stack checks. No
 enabled runtime, window semantics, visual/STRICT or console acceptance yet;
 no source/recipe change, SD write or release. Console still needs user arm
 selection and REMOTE LINK after each swap.
+
+#### Owner: matched runtime bases and bounded PPP/DIAG pilot, 2026-10-29
+
+Three fresh runtime bases were extracted from their own verified QA images
+and mastered on ext4 with unchanged fp_master (cache0/prune0). Each has1668
+final payloads: all1664 original files unchanged, including its own programme
+and15 overlays; only one common emulator-local link configuration and three
+inert8192B measurement slots added. Low-track redirected slots were read back
+with the high-track payloads before copying. Identical source r101 preset,
+per-arm own symbols and copied base files verified. No image/SDK rebuild.
+
+Two sequential60s window32 interpreter/GDEMU seed1 pilots completed reader0,
+errors[], emulator exited. Source fp_run unchanged, MODEM_PPP1, no host keys
+or savestate. Local relay only: no physical console/Pi commands. Initial
+pilot's35s command wait ended before the peer appeared around44s; retained
+final relay log proves PPP/telemetry readiness despite its early-poll boolean.
+Separate diagnostic pilot waited for the observed peer: PING returned the
+expected build, MENU opened, DIAG received parts1-4 of14 before the bounded
+capture ended. Complete-response client returned incomplete/rc1. This is a
+transport/capture-budget hold, not a complete snapshot or demonstrated game
+failure. Do not repeat identical inputs or extend the capture duration.
+
+One received row says N=32 used=32 full=1 exact=1 first=476 last=509,
+collecting=0, sums=drawn_only. That is partial-response evidence only: no
+matched600-draw interval, full/partial/skipped-window gate, or cross-arm
+comparison accepted. Unchanged fp_run deletes active capture tracks at
+teardown; direct active track01 readback was not retained. Retained preset,
+runner fixture declarations, own symbols and base1668 final-file proof pass;
+preserve active fixture proof before teardown on the next changed-input run.
+
+Private RUNTIME-BASES/RUNTIME-INPUT-PROOF.json and LINK-PILOT/LINK-DIAG.json
+retain exact commands, sources, hashes and receipts. Next: inspect supported
+snapshot/capture scheduling for a changed-input check within60s, while keeping
+the incomplete result held; independent existing/gaps runtime smoke remains
+possible. Front-cache pair, CPU/current-memory/full-stack/look/STRICT gates
+remain pending. Console requires user-selected arm and REMOTE LINK after
+each swap. No source/recipe promotion, SD write or release.
