@@ -1,54 +1,59 @@
-# Systemic performance: local agent action plan and handover
+# Continuing Builds 31-36: systemic performance action plan and handover
 
-**2026-10-29 progress:** DONE: architecture, ranked action plan, evidence inventory and local execution handover. NEXT: local owner completes S0 intake and starts S1 observation qualification alongside S2 coverage. BLOCKED: enabled performance acceptance requires private inputs and matched console evidence. This document adds no runtime implementation or performance result.
+**2026-10-29 progress 2:** DONE: revised the handover to continue the landed builds and existing local workflow, following the user's direction that this should be an evolution from the current point. NEXT: resume the specific pending owner actions in Builds 28 and 31-36, reuse retained artifacts, and extend coverage incrementally. BLOCKED: the existing private-input and console gates remain as recorded in those handbacks. This is a documentation change.
+
+**2026-10-29 progress 1:** Published the initial detailed plan and evidence inventory as `b431e453`. This revision replaces its separate work-package and reporting structure with direct follow-ups to the existing builds.
 
 **Reviewed integration:** `origin/t15/int` at `66da801e7ff457f84d52c4bb379cdaae7aa07e35`.
 **Handover branch:** `codex/systemic-performance-handover-20261029`.
 **Audience:** the local coordinator and its assigned implementation agents.
-**User request:** solve the recurring causes systemically and create a detailed action plan and handover in GitHub.
+**User direction:** solve recurring causes systemically through an evolution of the work already landed. Continue from the current renderer, converters, tools, evidence and local-agent workflow.
 
-## 1. Mission and execution boundaries
+## 1. Continue from the current implementation
 
-Deliver shared renderer and asset-pipeline improvements that reduce CPU work and memory traffic across eligible game content. Use the barn, village and other demanding scenes to validate common mechanisms. A successful milestone produces a compatible rendering configuration, documented content coverage and measured gains with preserved gameplay.
+Continue the landed Builds 31-36 using the existing renderer, converters, private images, QA tools and owner handbacks. The work below closes their remaining qualification gaps and extends coverage where current evidence identifies a need. The current architecture and accepted results are the starting point.
 
-The repository's existing real NTSC hardware goal is 30 fps, with a planning budget of gameplay <=24 ms, rendering <=6 ms and about 3.33 ms margin. These are targets, not current measurements or a promise that every supplied room already meets them. Preserve the playable menu/New Game -> r100 -> r101 -> r103 route while broadening the coverage inventory. [Repository instructions][A0] [Contributor gates][A1]
+The next deliverable is progress on those open items: a measured part plan, an actual portal proof, qualified actor formats, completed state-cache lifetimes, dependable captures and better source-bound coverage. Carry each accepted improvement into the local owner's existing integration process.
 
-The governing approach is:
+Use this order for every follow-up:
 
-1. Prepare immutable facts during conversion or loading where their ownership and lifetime permit it.
-2. Reject unnecessary render work before selection, setup, transformation and submission.
-3. Preserve required simulation, activation, collision, events, AI, camera state and animation.
-4. Measure complete cost, including validation, cache traffic, memory, retirement and feature interactions.
-5. Keep a correct ordinary rendering path for unsupported, stale or unaffordable inputs.
+1. Identify the specific open item in the latest owner answer.
+2. Reuse its existing implementation, image, fixture, command and receipt while their bound inputs remain valid.
+3. Make the smallest extension or correction that closes the demonstrated gap.
+4. Run the affected checks and record the result in the existing handback.
+5. Broaden the proven mechanism to the next eligible asset or workload class.
 
-Extend the existing native renderer, converters, storage and lifecycle mechanisms. Inspect their contracts and the preserved implementations before proposing a replacement architecture. New SH-4 assembly or linker work requires evidence that removing repeated work, data layout, batching and offline conversion cannot address the problem. [Repository instructions][A0] [Cloud queue][A2]
+The repository's real NTSC hardware goal remains 30 fps, with the existing planning budget of gameplay <=24 ms, rendering <=6 ms and about 3.33 ms margin. These are targets, not current measurements or a promise that every supplied room meets them. Preserve the playable menu/New Game -> r100 -> r101 -> r103 route while extending the existing coverage. [Repository instructions][A0] [Contributor gates][A1]
 
-### Ownership and Git rules
+Preserve required simulation, activation, collision, events, AI, camera state and animation. Retain the ordinary renderer for unsupported, stale or unaffordable inputs. Reuse current conversion, loading, storage, generation and retirement contracts. Moving immutable work earlier is useful only where those existing contracts justify it.
 
-- The local coordinator owns private assets, image composition, source-state comparison, emulator scheduling, console qualification and integration decisions.
-- Implementation agents own bounded source/tool changes and their synthetic/target evidence. They use isolated branches/worktrees and avoid overlapping shared-file edits.
-- Continue from the newest `origin/t15/int`. This task does not redirect work to `dreamcast-port` or `bruce`.
-- Keep new controls default 0; preserve absent/zero source, object and executable identity at the appropriate gates. Use small buildable commits and a dated done/next/blocked line in the assigned handback with every commit.
-- Rebase onto current integration before pushing. Stage only owned files. Preserve owner answers and unrelated edits. The coordinator performs merges.
-- S0-S6 below are work-package labels, not newly allocated Build 37+ assignments. The coordinator may map them to its queue. Agents must not overwrite `CLOUD_AGENT_QUEUE.md` to claim ownership.
-- Keep game data, generated copyrighted assets, disc images, private captures and detailed asset inventories outside Git. Publish code, schemas, synthetic fixtures and sanitized evidence summaries.
-- Preserve the established owner process for recipe promotion, physical media changes and release publication. A documentation or implementation commit does not qualify a release.
-- Honor the local owner's current builder limits and reserve one exclusive emulator/console window. Read-only analysis and independent host work may proceed in parallel. [Repository instructions][A0] [Cloud queue][A2] [Original handover][A3]
+A new cache, asset contract, trace or tool is conditional work: first name the measured problem and explain why the existing mechanism cannot handle it. Prefer extending the current mechanism and its supported control. New SH-4 assembly or linker work still requires evidence that removing repeated work, data layout, batching and offline conversion cannot address the problem. [Repository instructions][A0] [Cloud queue][A2]
 
-## 2. Start here
+### Existing ownership and Git rules
+
+- The local coordinator continues to own private assets, image composition, source-state comparison, emulator scheduling, console qualification and integration.
+- Continue the existing assigned build/lane ownership. Isolate source changes and avoid overlapping shared-file edits; this handover does not require creating another set of lanes.
+- Base new source work on the newest `origin/t15/int`. Preserve the current task's restrictions on `dreamcast-port` and `bruce`.
+- Keep new controls default 0 and preserve the required absent/zero identity. Push small buildable commits, each with a dated done/next/blocked update in its assigned existing handback.
+- Rebase before pushing, stage owned files, and retain owner answers and unrelated edits. The coordinator performs merges.
+- Continue using Build 28 and Builds 31-36 for their follow-ups. The coordinator assigns any genuinely new work or build number through the existing queue; agents do not overwrite `CLOUD_AGENT_QUEUE.md` to claim ownership.
+- Keep game data, generated copyrighted assets, disc images, private captures and detailed asset inventories outside Git. Publish code, synthetic fixtures and sanitized evidence summaries.
+- Follow the established owner process for recipe promotion, physical media and releases. Honor current builder limits and the exclusive emulator/console window. Independent host and read-only work can continue in parallel. [Repository instructions][A0] [Cloud queue][A2] [Original handover][A3]
+
+## 2. Resume the existing handbacks
 
 Read the current versions in this order:
 
 1. [HANDOVER-CLOUD-20261028.md](HANDOVER-CLOUD-20261028.md).
-2. [CLOUD_AGENT_QUEUE.md](CLOUD_AGENT_QUEUE.md), including its current Status rows.
-3. This handover and the latest **Answers (owner)** in Builds 28 and 31-36.
-4. Local `AGENTS.md`, `CLAUDE.md` and the local `re4-dreamcast-d367` skill, if installed, for current paths, active lanes and harness contracts. The current D367 instructions identify older Astra/Sol and cutover assignments as historical. Do not revive an obsolete branch or assignment from those sections.
+2. [CLOUD_AGENT_QUEUE.md](CLOUD_AGENT_QUEUE.md), including its Status rows.
+3. The latest **Answers (owner)** in the build being continued, with this document as a cross-build guide.
+4. The current local `AGENTS.md`, `CLAUDE.md` and `re4-dreamcast-d367` skill, if installed, for actual paths, lane ownership and harness commands.
 
-The source pin above is a reviewed snapshot. At intake, record newer commits and owner answers before deciding that a listed gap remains open.
+Check what has changed since the retained receipts. Preserve the existing local worktree, active processes and private results. Reuse the current source/image pair where valid; record only the changed dependencies or missing evidence. Intake is a brief continuation check, not a new baseline-building milestone.
 
-### Safe intake commands
+### Fetch and read this update
 
-Run in the existing repository, without switching or cleaning its working tree:
+Run in the existing repository:
 
 ```bash
 git remote get-url origin
@@ -64,20 +69,7 @@ git show origin/t15/int:port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md
 git show origin/codex/systemic-performance-handover-20261029:port/dreamcast/docs/cloud/HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md
 ```
 
-Confirm that `origin` is the expected `lamb2k/re4dc` repository. Inspect active local processes and lane ownership before using shared build directories or the emulator. Preserve dirty work.
-
-For a newly assigned implementation lane, use a fresh absolute worktree path and an unused descriptive branch name:
-
-```bash
-set -euo pipefail
-test -n "$SYSTEMIC_WORKTREE"
-test ! -e "$SYSTEMIC_WORKTREE"
-SYSTEMIC_BASE="$(git rev-parse origin/t15/int)"
-git worktree add -b codex/systemic-observation-20261029 \
-  "$SYSTEMIC_WORKTREE" "$SYSTEMIC_BASE"
-```
-
-The observation branch name is an example for S1. Use separate assigned branches for other implementation packages. Read this handover from its remote branch; do not base runtime work on an unmerged documentation branch.
+Confirm `origin` is the expected `lamb2k/re4dc` repository. Use the local owner's existing branch/worktree procedure for an assigned follow-up. Runtime changes remain based on integration; this documentation branch supplies instructions.
 
 ## 3. Evidence carried forward
 
@@ -127,35 +119,22 @@ The recorded real-console cache experiment changed r101 from 49.3 to 57.5 ms whe
 
 Build 36 recursively inventoried supported files in the supplied final image. Its requested room reports were r100-r120 plus r200. The prepared older TOUR28 has 33 chapter 1-2 presets. Neither is a complete room-by-room performance census of the game. Keep three denominators separate: content supplied, content scanned, and runtime states visited. [Build 36][A9] [Build 28][A10]
 
-## 5. Ranked work and dependencies
+## 5. Continue the existing builds
 
-S1 and S2 are enabling work; S3-S5 retain the expected impact order of world, actors, then repeated state. Use the census to revise that order when actual cost contradicts the hypothesis.
+The expected renderer impact order remains **Build 31 world -> Build 32 actors -> Builds 33/34 repeated state**. Finish the open observation work and extend coverage alongside those follow-ups. They support the current improvements; they do not form a new prerequisite project.
 
-| Package | Concrete outcome | Lead responsibility | Can proceed while hardware is unavailable? |
-|---|---|---|---|
-| S0: intake and ledger | Current source/image/recipe/input identities, active ownership and closed/open gates | Local coordinator | Yes |
-| S1: dependable observation | A qualified memory observation contract and complete bounded diagnostic delivery | Local owner plus a narrowly scoped code lane | Source/host work yes; final hardware gates wait |
-| S2: content and workload coverage | Authoritative room manifest, source-bound asset selection and a broad workload ranking | Private-data owner plus tool lane | Static and emulator coverage yes |
-| S3: common world path | Measured part plan, reusable portal data workflow and a qualified compatible producer path | World lane | Builder/source/oracles yes |
-| S4: actor eligibility | Supported converter metadata and justified runtime validation for live costly actors | Actor/converter lane | Source/converter/host work yes |
-| S5: repeated state | Qualified header/cache reuse and only measured upstream extensions | State/submission lane | Source/oracles/lifecycle fixtures yes |
-| S6: integrate and decide | Compatible profile, workload matrix, hardware cost and explicit enable/hold/park decisions | Local coordinator | Prepare evidence; final decisions require their gates |
+| Existing work | Next concrete continuation | Extend only when evidence requires it |
+|---|---|---|
+| Build 31 | Measure the existing part plan and produce the pending real portal proof using the current builder | Extend a specific producer/witness contract if useful hidden work justifies the compatibility change |
+| Build 32 | Complete the existing format comparisons, mode-2 checks and named live-model qualification | Extend the real converter for costly legacy refusals; consider cached validation only if its cost warrants it |
+| Builds 33/34 | Finish effective-state checks, missing target classes, SCPS retirement/reentry and demanding-view timing | Extend upstream setup/batching only for measured residual cost |
+| Builds 28/34/35 | Close the retained memory-observation and incomplete-DIAG questions using the existing tools | Add the smallest missing observation or publication fix needed to answer those questions |
+| Builds 36/28 | Add verified selection context to retained reports and extend the existing room list/tour | Add an optional field or targeted trace only where current loader/F29 evidence cannot resolve a named binding |
+| Local integration | Carry accepted follow-ups into the existing combined candidate and decision process | Recheck only the interactions and gates affected by the changed composition |
 
-Dependency rule: S0 precedes implementation; S1 and S2 proceed independently; S3-S5 may develop against existing contracts while S1 is blocked. Reliable observations and live workload identity are required before performance promotion. S6 uses accepted results from the relevant lanes. Do not make an entire-game census a prerequisite for a provable shared code fix.
+Start each follow-up from its latest owner answer. Keep source/image/recipe/asset identities in the existing receipt and report format. A console or capture hold blocks the acceptance that depends on it; other source, converter and fixture work continues. Whole-game coverage grows incrementally and does not block a provable shared fix.
 
-### S0. Freeze evidence and establish ownership
-
-**First actions**
-
-1. Record current integration, local dirty state and active lane/process ownership.
-2. Inventory retained normal-release, existing-audit, gaps and window32 images, plus the separate front/SCPS validation families.
-3. Bind source SHA, full resolved definitions, toolchain, fixture/save/input script, emulator binary/settings, programme, all overlays, image tracks and supplied asset manifest.
-4. Record which historical receipts remain reusable and which inputs actually changed.
-5. Create the local execution handback and the coverage/experiment ledgers below.
-
-**Done when:** each upcoming experiment names a real control and candidate with exact identities, a single question and a responsible owner. Existing failures remain visible. No image is described merely as "latest" or "ALL ON."
-
-### S1. Repair the observation contract, then complete the snapshot path
+### Builds 28, 34 and 35: finish the existing capture and memory follow-ups
 
 **Memory question:** can the unchanged stock judge receive all required evidence from a source-bound, correctly published and correctly observed stream?
 
@@ -168,8 +147,8 @@ The source/ELF review establishes two risks, not a sole root cause:
 
 **Action sequence**
 
-1. Bind the failed captures to the actual logger machine code, writer contexts, reader, emulator binary and active cache state.
-2. Define the required publication contract: writer serialization, complete records, payload visibility before published head, wrap behavior and reader visibility across cache aliases.
+1. Complete the missing provenance fields in the retained source/ELF/reader audit, especially actual writer contexts, emulator binary and active cache state. Reuse the already-bound source, machine-code and ring-size findings.
+2. Use the retained counterexample to identify the smallest publication or reader-visibility correction needed: writer serialization, complete records, payload visibility before published head and wrap behavior.
 3. Select one changed-input repair experiment that discriminates the identified cause. Keep the stock judge and the fixed observer budget. Use a separate default-off control for a new runtime change.
 4. Prove deliberate writer interleavings, wrap, partial publication and the actual cache visibility mechanism with targeted fixtures. Keep formatting and large copies outside long IRQ-disabled regions; report interruption cost.
 5. Run a bounded matched memory pair, retaining active track01/fixture identity before teardown. Require complete authentic judge inputs and an explicit valid PASS or FAIL from the unchanged judge. A valid memory FAIL can close the observation-contract question while blocking that candidate's memory acceptance.
@@ -180,53 +159,47 @@ Current structured QA rows expose current free/used/brk. They do not supply the 
 **Snapshot question:** can one explicit diagnostic request deliver every part of one immutable snapshot in the supported run envelope?
 
 1. Reuse the qualified stock PPP runner and reviewed CRLF companion. Keep the current observer size.
-2. Record peer arrival, verified PONG, request time, snapshot creation, queue/send events and received parts.
-3. Schedule the request at the earliest verified ready point. The retained pilot reached PPP late in a 60-second run; diagnose scheduling before adding a new capture.
+2. Start with the retained peer/PONG/request/part timings. Add missing queue or snapshot timing only if those existing observations cannot explain the incomplete response.
+3. Adjust the existing command schedule to request at the earliest verified ready point. The retained pilot reached PPP late in a 60-second run; use that finding to define one changed-input follow-up.
 4. Require all advertised consistent parts from one immutable snapshot, correct session/build identity and successful complete-response status. The retained window32 profile advertises 14 parts. Automatic T completeness does not close its explicit D 4/14.
 5. If the supported schedule cannot fit, return the measured transport budget and exact conflicting constraint. Preserve INCOMPLETE; do not silently extend the run or accept partial output.
 
-**Done when:** the relevant observation contract is qualified, the stock memory judge has a valid complete result, the explicit snapshot is complete, and observer CPU/static/stack/runtime headroom limits are recorded. Source and asset lanes continue while any hardware-specific part is held. [Build 34][A7] [Build 35][A8] [Build 28][A10]
+**Record in the existing handbacks:** whether the observation question is closed, the stock judge's valid result, explicit snapshot completeness and the remaining existing observer-cost/stack/headroom gates. Close each item independently as its evidence arrives. Source and asset work continues while a hardware-specific item is held. [Build 34][A7] [Build 35][A8] [Build 28][A10]
 
-### S2. Build an honest content and workload census
+### Builds 36 and 28: extend the existing scan and tour
 
-**A. Establish the universe**
+**Start from retained results.** Build 36 already has `coverage.tsv`, `report.json`, membership details, a context template and the owner's complete input manifest. Build 28 already has a 33-preset tour and session evidence. Continue those artifacts and their formats.
 
-Create an authoritative room/preset manifest from the final composed image, loader/source tables and staging manifest. Reconcile expected rooms against supplied directories and supported launch methods. Keep missing expected rooms in the manifest. A recursive directory list alone cannot establish that the entire game is supplied.
+**Resolve the named gaps needed by the current follow-ups.** The report retains 612 unassigned models, five route gaps (r110, r114, r115, r116, r120), four missing exact ESL archive candidates and 13 unresolved `emleon09` records. The active stage selector 9 names `omake01`; the filename suffix cannot establish a binding. Conditional membership does not establish a live actor.
 
-For each room/state distinguish `supplied`, `scanned`, `supported-launch`, `visited`, `matched` and `accepted`. Record unsupported formats and unavailable game stages explicitly. Keep global players, weapons, items and retained enemy lists in the inventory even when they have no unique room.
+The texture report has 7,375 conditional keys, not zero textures. Add actual room quality and selection context for the targets being measured. Whole-pack replacement differs from duplicate entries within one physical pack. Legacy geometry-only inventory does not establish material, placement or selected-LOD facts. [Build 36][A9]
 
-The scanner has no `--all-rooms` flag. Its default room filter is r100-r11f. Use the verified explicit room list in section 8.1. [Build 36][A9] [Scanner README][A12]
+Use existing discovery, F29 identity rows, loader evidence and the owner's exact source/model/hash context first. Resolve the costly targets in the Build 31-34 runs before attempting to assign every global model to a room. If those tools cannot resolve a specific needed binding, add the smallest optional field or bounded selection event to the existing path. A new general tracing system is not a deliverable of this handover.
 
-**B. Resolve selection with evidence**
+**Broaden scope using the current room list and reports.** Reconcile the requested rooms with the final image, source loader tables and existing staging manifest. Retain expected but missing rooms as coverage gaps. Extend the same list and report when additional supplied rooms are ready. The scanner has no `--all-rooms` flag; omitting `--rooms` selects r100-r11f. Section 8.1 shows the existing explicit-list invocation. [Scanner README][A12]
 
-The current report retains 612 unassigned models, five route gaps (r110, r114, r115, r116, r120), four missing exact ESL archive candidates and 13 unresolved `emleon09` records. The active stage selector 9 names `omake01`; the filename suffix cannot establish a binding. Conditional archive membership does not establish a live actor.
+Keep the goal of coverage across supplied game content visible. Add supplied/scanned/supported-launch/visited/matched status to the existing report or a short adjacent summary where those fields are missing. A folder listing alone does not establish full-game completeness.
 
-Texture selection has 7,375 conditional keys, not zero textures. Actual room Original/Standard quality and lookup state are needed to identify effective variants. Whole-pack replacement is distinct from duplicate entries within one physical pack. Legacy geometry-only inventory does not invent material, placement or selected-LOD facts. [Build 36][A9]
+**Extend the existing tour by workload class.** Use the retained 33-preset tour as the seed. Bind each new or rerun case to its actual image, source, selected actors/materials and runtime denominators. Preserve qualified cases whose inputs still match. Add source-verified states that cover a new renderer boundary or reveal an outlier. Mark unavailable later-game content explicitly.
 
-First reuse existing discovery, F29 identity rows and loader evidence. If they cannot bind costly live selections, add a bounded optional load/selection trace containing room generation, owner/source identity, selected model/appearance, texture-quality choice and retirement. Emit on meaningful selection/lifetime changes; avoid per-vertex logging. Hash names and payloads offline where practical. Bind trace IDs back to exact private source hashes.
+Use the phase timings and reason counters already available. Rank shared causes by measured exclusive cost and relevant workload frequency, keeping MODELLED estimates separate. Refresh a private scan or capture only for changed code, inputs, verified context or room scope.
 
-**C. Expand runtime coverage**
+**Useful next result:** the named assets and rooms needed by the current build follow-ups are bound, the next missing coverage is explicit, and existing reports explain which shared path merits the next improvement. [Build 36][A9] [Build 28][A10]
 
-Start from the retained 33-preset tour as a seed. Bind a refreshed tour to the actual candidate image and source. Add source-verified rooms and representative states; mark unavailable later-game content instead of claiming it was tested.
-
-Collect world/actor/setup/clip/effects/gameplay phase cost where supported, actual reason units, draw-attempt denominators, memory context, asset selection and transitions. Rank shared causes by measured exclusive cost and workload frequency. Keep MODELLED estimates visibly separate.
-
-**Done when:** every expected room has a coverage status, the highest-cost visited workloads are source-bound, selection gaps are explicit, and the next renderer task is justified by an observed shared cause. Unresolved static candidates may remain in the ledger; do not manufacture completeness.
-
-### S3. Complete the shared world path
+### Build 31: qualify the part plan and existing portal workflow
 
 **First reuse and measure the part plan.** It already builds ordered immutable spans once per room. Preserve live material/UV state, camera/placement transforms, texture resolution and submission. Preserve the existing 64 KiB plan cap plus alignment and checked 96 KiB heap floor unless a separately measured budget change is justified.
 
 Compare high-eligibility and low-eligibility scenes. Record plan loads/refusals/bytes, setup cost, total CPU time, room generation, inventory/movie lending and retirement. A high planned-part count is activity, not a gain. [Build 31][A4]
 
-**Then make portal content production repeatable.**
+**Complete the pending portal proof, then extend the proven workflow.**
 
 1. Produce one real package-bound r103 hull/eye configuration and proof with the existing builder.
-2. Generalize candidate discovery and proof reporting across eligible building packages. Automate suggestions; retain explicit authority for safe eye cells and opaque static coverage.
+2. If that proof establishes useful eligible geometry, reuse the same builder/configuration workflow for the next building class. Automate repetitive candidate discovery or reporting only where repeated use demonstrates a need; retain explicit authority for safe eye cells and opaque static coverage.
 3. Preserve cracks, all openings, LOD coverage, margins, dynamic/breakable/cutout exclusions and current-view completed-wall witnesses.
 4. Record every package as eligible, refused with reason, unsupported or not yet assessed. Missing/stale/malformed/complex/heap-short data uses ordinary drawing.
 
-**Resolve producer composition as its own engineering task.** The currently qualified portal profile disables stream/submit batching and the clip gather/indexed paths, along with incompatible source-removing combinations. Trace exactly which producer paths cannot furnish valid completed-wall witnesses. Extend the shared producer contract only where the proof can be preserved. Removing Make guards is not a fix.
+**Extend producer composition only when the proof and measured workload justify it.** The currently qualified portal profile disables stream/submit batching and the clip gather/indexed paths, along with incompatible source-removing combinations. Once a real candidate shows useful exclusions, trace the exact producer path that cannot furnish a valid completed-wall witness. Extend that existing path where its proof can be preserved. Removing Make guards is not a fix.
 
 Use four clearly named comparisons:
 
@@ -241,21 +214,21 @@ A gain against the slower special control must pay back any lost production opti
 
 Visibility tables, more clip reuse and room-far approximations remain conditional follow-ups. Open one only if measured residual phase cost supports it. Keep deliberate distance/appearance reductions separately identified. [Build 31][A4] [Barn source audit][A11] [Portal contract][A13]
 
-### S4. Make actor eligibility a supported asset contract
+### Build 32: qualify existing actor formats and address demonstrated converter gaps
 
-Use actor-heavy matched scenes covering Leon, Ashley, Ganados and El Gigante. Bind actual appearance, motion, lighting, texture state and camera. Compare cone-only, UV16-only and combined arms on the same fast-lighting baseline.
+Continue the existing control, cone, UV16, combined and verification profiles from the Build 32 handback. Reuse their qualified images and fixtures where valid. Use actor-heavy matched scenes covering Leon, Ashley, Ganados and El Gigante, with actual appearance, motion, lighting, texture state and camera bound.
 
 1. Join live refusals to exact selected model/source identities.
 2. If legacy FE3 assets dominate measured cost, recover the real packer, representation, signedness and source lineage. Extend that converter to emit valid metadata. Do not relabel old blobs as certified.
 3. Preserve the repaired UV interval/interpolation and actual bound-texture precision checks, cone quantization/numeric/near checks and ordinary fallback.
-4. Measure repeated source validation before proposing to move it to load time.
-5. Any cached admission needs real allocation extent, owner generation, mutability policy and invalidation on replacement/reload. The current actor API does not provide UV allocation length; pointer equality and RAM containment do not establish immutable ownership. Keep texture-dependent and other live checks at the necessary runtime point.
+4. Complete the existing admission/appearance/timing checks before changing the ownership model. Consider moving source validation earlier only if measured validation cost remains material.
+5. If that evidence justifies cached admission, it needs real allocation extent, owner generation, mutability policy and invalidation on replacement/reload. The current actor API does not provide UV allocation length; pointer equality and RAM containment do not establish immutable ownership. Keep texture-dependent and other live checks at the necessary runtime point.
 
 **Acceptance:** actual admissions on intended targets; exercised mode-2 verification with bad=0; unsupported/mutable/near/cull refusals; seams, clipping, masks/fades, animation, LOD and texture dimension/scale changes; unload/reload; fast-only lighting fallback/exact counters remain zero where required; STRICT/look/memory; net console cost including scans, packing and split growth.
 
 UV16 retains 32-byte CPU SQ slots. Relevant PVR internal fields shrink from 24 to 20 bytes, while CPU validation/packing is added. Do not claim halved CPU output bandwidth. The historical global CPU-backface regression is distinct from guarded actor cones. [Build 32][A5]
 
-### S5. Remove repeated state according to measured cost
+### Builds 33 and 34: finish state reuse and lifecycle qualification
 
 Qualify existing mechanisms before adding a larger batch architecture.
 
@@ -269,9 +242,9 @@ Only if separate setup timings show material residual cost, propose an upstream 
 
 **Acceptance:** effective state and vertex order preserved, actual target classes recorded, foreign/abort/frame/list/scene barriers honored, moving doors/material changes/inventory/reentry/movie boundaries covered, STRICT/look/memory pass and demanding-view console improvement demonstrated. Capped 29.9 FPS arms alone show no gain. [Build 33][A6] [Build 34][A7]
 
-### S6. Integrate, measure and decide
+### Local owner: continue combined qualification and integration
 
-Assemble one compatible candidate only after its component contracts are understood. Recheck interactions that invalidate an earlier receipt, especially actor formats, world producer witnesses, cached headers, ordered transparency and memory lifetimes.
+Continue the owner's existing combined candidate and qualification process. Incorporate accepted follow-ups incrementally. Recheck interactions that invalidate an earlier receipt, especially actor formats, world producer witnesses, cached headers, ordered transparency and memory lifetimes.
 
 Use normal release / existing audit / gaps / window32 to price observation separately. Compare optimizations with identical observation settings, then verify the intended deployment composition. Do not attribute observer overhead to an optimization or subtract an unmeasured estimate.
 
@@ -281,7 +254,7 @@ The coordinator records each mechanism as **enable**, **retain as candidate**, o
 
 ## 6. Validation matrix
 
-Use the broad census to find outliers, then apply focused tests to each changed mechanism. Short emulator checks remain at most one minute per scene under the established project procedure. Continue through a real route for state/lifetime acceptance; a fresh warp does not prove continued-play STRICT. [Contributor gates][A1] [D367 tools][A14]
+Use the existing fixtures and tour results, extending them to expose outliers or exercise a changed boundary. Apply the relevant rows below to each follow-up; unchanged cases keep their valid receipts. Short emulator checks remain at most one minute per scene under the established project procedure. Continue through a real route for state/lifetime acceptance; a fresh warp does not prove continued-play STRICT. [Contributor gates][A1] [D367 tools][A14]
 
 | Workload class | Seed cases | Main questions |
 |---|---|---|
@@ -297,19 +270,19 @@ Use the broad census to find outliers, then apply focused tests to each changed 
 
 For every result retain source/image identities, room and state, camera, enemies/appearance, actual definitions, selected quality, draw/logic/skip denominators, timing scope, observer footprint, memory result, visual/STRICT result and raw private receipt references.
 
-## 7. Ledgers and acceptance rules
+## 7. Extend current records and preserve acceptance rules
 
-The filenames in this section are **proposed local work products**, not existing commands or completed reports.
+Use the existing private receipts, result files, input manifests, hold decisions and Build 28/31-36 handbacks. Link to retained records rather than copying them into a new reporting structure. Add only the missing context needed for the next decision.
 
-### Private evidence set
+| Existing artifact | Useful addition when missing |
+|---|---|
+| Build 36 `coverage.tsv`, `report.json` and owner input manifest | Verified additional rooms/context; supplied/scanned/visited distinction; exact missing source |
+| Build 28 tour/session results | Newly exercised state, actual current image, coherent draw denominator and unavailable presets |
+| Build 31-35 experiment receipts | Specific question, changed input, discriminating observation, bounded run and verdict |
+| Existing owner acceptance/hold records | Measured cost, memory/quality limits and exact remaining gate |
+| Existing build handback | Dated result, receipt references, next action and blocker |
 
-- `scope-manifest.json`: expected rooms/states and their source authorities; supplied/absent content; image and complete input manifest.
-- `coverage.tsv`: one row per room/preset/state with scan, launch, visit, binding and acceptance status.
-- `experiments.tsv`: question, changed input, expected discriminating observation, bounded run count/duration, control/candidate identities, verdict and next action.
-- `feature-decisions.tsv`: mechanism, eligible coverage, measured cost delta, static/runtime/peak memory, correctness/quality, status and remaining gate.
-- `RESULTS.md`: concise findings and unresolved decisions, linked to immutable receipts.
-
-Keep the source/recipe/assets/SDK/emulator/fixture/programme/overlay/track hashes in the ledger. Retain full private reports locally. The public handback contains sanitized counts and hashes, source paths, commands with placeholders and conclusions.
+Keep the source/recipe/assets/SDK/emulator/fixture/programme/overlay/track identities required by the existing gate. Reuse an identity record where it still applies. Full game reports remain private; publish sanitized counts, hashes, source paths, commands and conclusions.
 
 ### Counter semantics
 
@@ -321,26 +294,25 @@ Keep the source/recipe/assets/SDK/emulator/fixture/programme/overlay/track hashe
 - Zero is meaningful only with proven execution and valid capture. Missing rows, missing parts and unvisited states are not zero.
 - Distinguish static eligibility, host correctness, emulator function, MODELLED cost and measured console time. [Build 35][A8] [Build 28][A10]
 
-### Completion criteria
+### When a follow-up is ready for the owner's decision
 
-The milestone is ready for a coordinator decision when:
+Use the build's existing acceptance gates and declared scope:
 
-1. The supplied scope is reconciled with an authoritative manifest; unavailable/unvisited content is explicit.
-2. The highest-cost observed shared causes have an enable/hold/park decision with supporting evidence.
-3. A compatible candidate has matched hardware timing and no unresolved required gameplay, appearance, memory or lifetime failures in its declared scope.
-4. All new default-off controls retain their required identity evidence.
-5. Content generation is reproducible with source-bound metadata, conservative refusals and bounded runtime cost.
-6. Remaining exceptions have named owners and exact next commands or inputs.
+1. The specific open item has a source-bound result; affected identity, correctness, look, memory and lifecycle gates are satisfied or explicitly held.
+2. A performance claim has matched console evidence with its denominator, observer cost and repeat variation.
+3. Relevant coverage and exceptions are stated. Broader unvisited content remains visible without becoming an unrelated prerequisite.
+4. The owner can enable, retain as candidate or park the change using the current decision process.
+5. The existing handback gives the exact next command or missing input for anything unfinished.
 
-This does not require pretending every retail room is available, every counter is exercised or 30 fps has been achieved. Report remaining frame-budget deficits and their measured contributors.
+Continue carrying accepted improvements forward. Report remaining frame-budget deficits and their measured contributors without implying whole-game or 30 fps acceptance.
 
 ## 8. Verified existing commands
 
-These commands were checked against the reviewed source. Private variables must name the actual local inputs. New manifests, runners and trace contracts described above must be implemented or authored first; their names are not existing tool flags.
+These are existing entrypoints collected for convenience. Prefer the exact retained owner command when its source and inputs still match. Private variables must name actual local inputs. Running this entire section is not a new checklist; use only the command needed to close the current build's next gap.
 
 ### 8.1 Scan the explicit supplied scope
 
-Prepare `SYSTEMIC_ROOMS_FILE` with one verified room ID per line, comments allowed. Derive it from the authoritative manifest; keep expected missing rooms. Set all four private variables before running. Output must be new and outside the input tree.
+Reuse the owner's current verified room list, adding source-confirmed rooms only when extending scope. `SYSTEMIC_ROOMS_FILE` is a text view of that list with one room ID per line, comments allowed; it does not require a new manifest system. Keep expected missing rooms. Set all four private variables before running. Output must be new and outside the input tree.
 
 ```bash
 set -euo pipefail
@@ -388,52 +360,11 @@ Existing outputs are `details.tsv`, `by-model.tsv`, `by-room.tsv`, `barn.tsv`, `
 
 Use `--context`, `--room-list` and `--input` only according to their existing source/hash schemas. An untouched context template grants no new authority. `--texpak-layer` means explicit ordered whole-pack replacement, not entry union. [Build 36][A9] [Scanner README][A12]
 
-### 8.2 Preserve a complete unchanged-input manifest
+### 8.2 Reuse the owner's input manifests
 
-Save this small helper as `$PRIVATE_TOOLS_DIR/systemic_input_manifest.py` outside Git. Use a private output path outside the input tree. It records every ordinary input file, not only scanner-recognized formats, and refuses symlinks instead of silently omitting them.
+The completed Build 36 run already retained a complete before/after manifest for 1,664 files. Reuse that evidence for the unchanged extraction. For a new extraction, changed input set or rerun, use the owner's established complete-file manifest command and compare before/after file paths, sizes and SHA-256 values.
 
-```python
-import hashlib
-import json
-from pathlib import Path
-import sys
-
-root = Path(sys.argv[1]).resolve(strict=True)
-output = Path(sys.argv[2]).resolve()
-if not root.is_dir() or output.is_relative_to(root) or output.exists():
-    raise SystemExit("need a directory input and a new output outside it")
-rows = []
-for path in sorted(root.rglob("*")):
-    if path.is_symlink():
-        raise SystemExit(f"unsupported input symlink: {path}")
-    if path.is_file():
-        with path.open("rb") as stream:
-            digest = hashlib.file_digest(stream, "sha256").hexdigest()
-        rows.append({
-            "path": path.relative_to(root).as_posix(),
-            "bytes": path.stat().st_size,
-            "sha256": digest,
-        })
-output.parent.mkdir(parents=True, exist_ok=True)
-with output.open("x", encoding="utf-8", newline="\n") as stream:
-    json.dump(rows, stream, sort_keys=True, indent=2)
-    stream.write("\n")
-```
-
-With Python 3.12, hash before the scan and after it:
-
-```bash
-python3 "$PRIVATE_TOOLS_DIR/systemic_input_manifest.py" \
-  "$PRIVATE_DISC_TREE" "$PRIVATE_EVIDENCE/inputs-before.json"
-# Run section 8.1 here.
-python3 "$PRIVATE_TOOLS_DIR/systemic_input_manifest.py" \
-  "$PRIVATE_DISC_TREE" "$PRIVATE_EVIDENCE/inputs-after.json"
-cmp "$PRIVATE_EVIDENCE/inputs-before.json" "$PRIVATE_EVIDENCE/inputs-after.json"
-sha256sum "$IMAGE_KNOBS" "$SYSTEMIC_ROOMS_FILE" \
-  "$PRIVATE_EVIDENCE/inputs-before.json"
-```
-
-Keep the input tree quiescent for both hashes and the scan. The helper is a proposed handover utility, not a replacement for the scanner or an already-recorded private receipt.
+Record the actual command and manifest hash in the existing private result. Keep input trees quiescent. The scanner's recognized-input hashes do not replace the complete-file check. Do not introduce another hashing utility or report schema where the current one already supplies the evidence. [Build 36][A9]
 
 ### 8.3 Existing room discovery and portal builder
 
@@ -482,7 +413,7 @@ python3 port/dreamcast/tools/qalink/qalink.py \
   --pi "$QALINK_PI" --review28 --out "$PRIVATE_CAPTURE_OUT" send PING
 ```
 
-The following is a reference manual sequence after readiness and selected preset/camera are verified. It does not implement an automatic 600-draw stopping condition. The S2 runner must derive that condition from valid runtime denominators.
+The following is the existing reference manual sequence after readiness and selected preset/camera are verified. It does not implement an automatic 600-draw stopping condition. Use the current session workflow and valid runtime denominators; extend its stopping condition only if needed to close the existing Build 35 interval gate.
 
 ```bash
 set -euo pipefail
@@ -540,34 +471,24 @@ python3 -B port/dreamcast/tools/cloud/build28/companion_contract.py \
 
 The companion base is the owner-verified base for the current 34-case CRLF repair; its older default has a known later-marker comparison mismatch. Use the complete relevant Build 35 suite for changes to other event families. Existing build/public-image, STRICT and KOS commands remain in their linked handbacks and local skill; bind them to the actual private inputs rather than inventing a portable one-command whole-disc rebuild. [Contributor gates][A1] [Build 35][A8] [Build 36][A9] [Build 28][A10] [Build 35 tools][A16]
 
-## 9. First local checkpoint and handback
+## 9. Immediate continuation and handback
 
-Complete these concrete outputs first:
+The first update should report progress in the current build handbacks:
 
-1. Source/image/recipe/input evidence ledger and an explicit closed/open gate list.
-2. One chosen changed-input memory observation experiment, with the contract it will prove.
-3. A supported complete-snapshot schedule with readiness/transport timing and active-image evidence.
-4. The authoritative room manifest and an initial supplied/scanned/visited coverage table.
-5. Named S3-S5 owners, source-file boundaries and the next task each can execute independently.
+1. **Builds 28/34/35:** use the retained pilot to complete the explicit diagnostic response, and choose one concrete changed-input follow-up for the memory observation failure. Keep valid memory FAIL separate from capture failure.
+2. **Build 36:** add the actual owner/appearance/quality context needed for named targets in the pending renderer runs. Keep other unresolved inventory visible. Extend the current room list and tour as additional supplied workloads become ready.
+3. **Build 31:** measure the already-landed part plan and run the pending actual-package portal builder/proof. Use the result to decide the scope and value of a producer-compatibility extension.
+4. **Build 32:** continue existing format/mode-2/look/timing qualification; identify exact costly legacy sources before changing a converter or runtime ownership contract.
+5. **Builds 33/34:** finish the missing effective-state targets, SCPS retirement/reentry and r103 comparison evidence using the supported profiles.
+6. **Local coordinator:** carry accepted results into the current combined candidate and acceptance/hold records.
 
-The coordinator owns `port/dreamcast/docs/cloud/handbacks/systemic-performance-20261029.md` as the consolidated status ledger. Each implementation lane owns a separate handback, such as `systemic-observation-20261029.md`, `systemic-coverage-20261029.md`, `systemic-world-20261029.md`, `systemic-actors-20261029.md` or `systemic-state-20261029.md` in that same directory, unless assigned a numbered build handback. Update the lane's own handback with every implementation commit; the coordinator consolidates outcomes. Use this shape:
+Maintain one assigned writer per existing handback. Helpers return findings to that owner; they do not all edit the same file concurrently. Use a separate follow-up file only if the coordinator's existing lane practice requires it. Every implementation commit still includes the dated progress update required by the queue.
 
-```text
-2026-MM-DD progress: DONE ...; NEXT ...; BLOCKED ...
-Branch / integration base / commit:
-Shared cause and intended scope:
-Changed input and reason:
-Control and candidate identities:
-Implementation and default-off identity:
-Measured cost and denominator:
-Memory, look, STRICT and lifecycle evidence:
-Coverage and explicit exceptions:
-Decision: enable / candidate / park
-Exact next command or required owner input:
-Private receipt identifiers and sanitized hashes:
-```
+In the existing format, record the shared cause, actual changed input, reused receipt identities, affected validation, measured cost/denominator, explicit exceptions and next command. The coordinator may keep a concise cross-build summary linking those handbacks; a new systemic ledger is optional.
 
-When blocked on assets, console media or an owner decision, record the exact missing input and command, then continue an independent work package. Reopen a closed task only when new evidence or changed dependencies justify it.
+**Operating instruction:** continue from the latest owner answers. Close the next concrete gap using the existing mechanism; extend a tool or contract only when current evidence shows what it cannot yet do. Record the result in the existing handback and carry accepted work forward.
+
+When a private input or console result is unavailable, record that exact blocker and continue another already-assigned follow-up. Reopen completed work only when a changed dependency or new finding warrants it.
 
 ## Sources
 
