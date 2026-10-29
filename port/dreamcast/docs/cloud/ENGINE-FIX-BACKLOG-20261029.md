@@ -216,6 +216,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF06. Bind PS2 cached headers to the texture upload incarnation
 
+**2026-10-29 recovery source delivery:** Resident rigid prepared binding recovered; normal/sanitizer poisoned-source gates and scoped OFF checks PASS. Warm positions6-to3 with identical output is host fixture evidence only. Cold/content and target/runtime gates remain open; default0. See [Build34](handbacks/build-34.md).
+
 **Gap.** `Ps2HdrSlot` checks key, size, mode, entry validity and VRAM address. `close_entry` invalidates model/UI headers and UI-handle stamps but not the PS2 slot. A same-entry/same-address reload can satisfy pointer checks despite a new upload representation. This is a concrete stale-hit risk to reproduce with a focused fixture.
 
 **Target.** Compiled header words belong to the exact live texture upload and effective material state.
