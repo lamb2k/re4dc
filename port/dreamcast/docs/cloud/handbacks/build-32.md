@@ -736,3 +736,45 @@ default and does not close every EF02 asset family/acceptance gate.
 slice. Target build awaits the coordinator's slot; live asset/package and
 physical-console acceptance remain distinct pending gates. No emulator,
 disc mastering, SD/Pi action, publication or private upload occurred.
+
+### EF02 current-data target build handback, 2026-10-29
+
+**DONE - TARGET BUILD AND LINKED DATA VALIDATED, opt-in only.** Public source
+commit `a0142b1fd969edbde5f61d9be0254c3c0b81092c` built the current release
+recipe once with the freshly certified, source-bound `a-rig` headers.
+The existing unchanged pl08 package identity was copied into this new
+private fixture directory to satisfy the existing dependency. The original
+source/package/header locations were preserved. The explicit overrides were:
+
+```sh
+PS2_LEON_DIR="$FRESH_BOUND_CERTIFIED_RIG" ACTOR_FORMAT32=1 \
+NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1 NATIVE_ACTOR_SKIN_LAZY=1 \
+ACTOR_SOURCE_SPAN=1
+```
+
+The `rr/recipe.conf -> ch2-build.sh rP` arm `ef02oct29v1certrP` completed
+rc=0 with the existing `missing.txt` empty in 41 seconds. ELF SHA-256:
+`e444ff60320f388f191305822bbdd72c25554895366978ddd1a373e6e90414ad`.
+All 527 logged C++ commands carry the shared source-span layout definition,
+and the actor compile explicitly selects the exact fresh header directory.
+Resolved PS2 rig, hand-pack, hand poses and Ganado LOD remain 1, 1, 1 and 3.
+Other release look/LOD choices and guard exclusions were preserved.
+
+The six compiled main FE streams (roles 0-4 and 7) and hair run zero match
+their fresh generated arrays byte-for-byte in both `coarse_actor.o` and
+the linked ELF. This binds the new certificates to actual target data rather
+than merely an input filename. Roles 5/6 still use the existing hand-pack
+path; their full-header streams are omitted by that unchanged derivation.
+No new hand/costume/package capability or live actor admission is inferred.
+
+**NEXT:** Coordinator integration of this tools-only default-preserving
+change, followed by bound actual-data admissions/refusals, effective output,
+memory, cost and affected runtime/look/STRICT/full-image/console gates.
+Private named-source, tool, header, compiler and linked-array receipts are
+retained separately. Existing runtime acceptance and remaining producer
+families remain open; this is not all-EF02 completion or artwork acceptance.
+
+**BLOCKED:** No source, host, named-input or target-build blocker for this
+slice. No live process remains and the SDK slot was released. No runtime
+source, release recipe, current asset package, emulator, SD/Pi state,
+publication or private upload was changed by the target check.
