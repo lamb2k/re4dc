@@ -9,15 +9,18 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
-## Recovery execution checkpoint: 2026-10-29 17:31 EDT
+## Recovery execution checkpoint: 2026-10-29 17:50 EDT
 
-Integration fetched through GitHub is `d45eb759dd92685255929625e04fae3d7a46bca7`. Preserved unpublished candidates
-exist for the first three priorities and several independent follow-ons. EF15,
-EF08 and EF14 have observed active recovery workers; remaining cards are assigned,
-review-queued or waiting on exact file/producer boundaries. See the [truthful
-16-card and six-track activity matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1731-edt).
-No full-card acceptance follows. Default0, exact disabled identity and local
-runtime/private/console/integration ownership remain unchanged.
+Current integration is `d45eb759dd92685255929625e04fae3d7a46bca7`. EF15/EF08/EF13/EF09/EF06 have verified pushed
+source slices; EF14/EF12/EF04 host-validated slices are frozen for publication.
+Three workers now execute actor presentation, static content/ordered spans and
+bounded logger records. See the [exact branch/SHA ledger and truthful 16-card
+and six-track matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1750-edt).
+Each feature branch carries its card-specific backlog and existing Build
+handback update; root serializes the shared queue Status here. Existing first
+integrations are not repeated. New public-source work does not wait on private
+data; target/private/runtime/console checks and serialized integration remain
+local. No new slice is integrated/enabled/accepted and no full EF card is closed.
 
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 

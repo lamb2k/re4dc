@@ -166,7 +166,7 @@ Local next: bind actual final programme/overlays and private packages, choose a 
 - EF11 delivery `f747dcc0931254e8bcd11521796f69fc6aaf9c02`: `port/dreamcast/game/effects30.mk`; `port/dreamcast/game/platform/include/cloth_strip_geometry11.hpp`; `port/dreamcast/game/platform/include/native_cloth_sheet11.hpp`; `port/dreamcast/game/platform/include/native_cloth_sheet11.inc`; `port/dreamcast/game/platform/include/native_effect_strip21.inc`; `src/game/cloth.cpp`. Its dedicated tests/tools are released with the same delivery.
 - EF16 delivery `c9a58ee0be06b3e184ef1094261b5cf3066fafae`: `port/dreamcast/game/game30.mk`; `port/dreamcast/game/platform/fault.cpp`; `port/dreamcast/game/platform/mem.cpp`. Its dedicated tests/tools are released with the same delivery.
 
-## Cloud recovery activity: 2026-10-29 17:31 EDT
+## Cloud recovery activity: 2026-10-29 17:25 EDT
 
 Agreement RE4-PLAN-SYNC-20261029-1202. The fresh recovery thread read the linked
 recovery handover, current queue, ranked backlog, architecture review and exact
@@ -242,3 +242,84 @@ full local SDK/private/runtime/console gates are not available in this thread.
 These do not block public source work. No whole EF card is accepted. All controls
 remain default0; portal/frontend/log holds and all release/private/look/STRICT/
 memory/console holds remain in force. Local alone performs serialized integration.
+
+## Cloud recovery activity: 2026-10-29 17:50 EDT
+
+Fresh integration readback remains `d45eb759dd92685255929625e04fae3d7a46bca7`. The initial recovery checkpoint
+was published at `26e3edf2badb3c601459db443edecb9a80da7274`; its original timestamp
+has been corrected from 17:31 to its actual 17:25 EDT publication. The preserved
+inventory below remains historical evidence, not current worker status.
+
+Five bounded source slices have been pushed and verified. EF14's target fixture,
+EF12's strip UV consumer and EF04's skin recipe are now host-validated and frozen
+for root publication. An independent EF14 review repaired a real SDK provenance
+gap: the builder now binds the compiler, effective macros, headers, archive,
+startup object and linker inputs actually used. No SH-4 build/run is claimed.
+
+Root is the sole queue/backlog/handback writer and publisher. Queue Status is
+serialized on this recovery branch; each source branch carries its own existing
+Build handback and card-specific backlog update. This avoids competing edits to
+the shared Build29/31/32/34 Status rows. Feature handback additions occupy distinct
+existing sections. Read-only merge checks found frontend+water, stream+mutation,
+and frontend+binding source/document trees compose without conflict; these are
+checks only, not integration. Local alone integrates after all required gates.
+
+### Verified pushed source ledger
+
+| Card | Assigned origin branch | Exact pushed SHA | Remote evidence and state |
+|---|---|---|---|
+| EF15 | `codex/frontend-owner-20261029` | [`acb8bc06cf278161eab54cd8a452b20735dbbbd4`](https://github.com/lamb2k/re4dc/commit/acb8bc06cf278161eab54cd8a452b20735dbbbd4) | Tree `ad07eccbc307f662bdaa736f23e03566046197d7` and ref read back; not integrated/enabled/accepted |
+| EF08 | `codex/world-stream-20261029` | [`d7801970bdcb401ad5d0901c6e2e9820a05ad15e`](https://github.com/lamb2k/re4dc/commit/d7801970bdcb401ad5d0901c6e2e9820a05ad15e) | Tree `cf5dd431cb790b0b1fb72e0439e4a66bccbc24f5` and ref read back; not integrated/enabled/accepted |
+| EF13 | `codex/water-package-20261029` | [`9096f2b8225cccda30c2d99acccb4bf5cbc07686`](https://github.com/lamb2k/re4dc/commit/9096f2b8225cccda30c2d99acccb4bf5cbc07686) | Tree `7eae7601d958019a7ccc858bc3e112c850039b38` and ref read back; not integrated/enabled/accepted |
+| EF09 | `codex/world-mutation-20261029` | [`14def8170a572ac3c993ab6c9ae58d7463331565`](https://github.com/lamb2k/re4dc/commit/14def8170a572ac3c993ab6c9ae58d7463331565) | Tree `7120f92491fde947b00c216dfd6dac0f6a9aff21` and ref read back; not integrated/enabled/accepted |
+| EF06 | `codex/model-binding-20261029` | [`c4cc33463e281aeba440226e993e0cc7343df734`](https://github.com/lamb2k/re4dc/commit/c4cc33463e281aeba440226e993e0cc7343df734) | Tree `4cb6ebd0372c9d0abe131057f8e872cb53874fc9` and ref read back; not integrated/enabled/accepted |
+
+EF15/EF08 tips include documentation-only follow-ups that serialize shared queue
+updates; their validated source is unchanged. Existing failed frontend controls,
+strict full OFF identity and invalid stream-profile controls remain intact.
+
+### Actual worker, task, next deliverable and dependency matrix
+
+| Card | Actual worker/state | Next concrete deliverable | Dependency/wait and evidence boundary |
+|---|---|---|---|
+| EF01 | ef15_recovery ACTIVE within selected actor class | Current cabin Luis owner/pose/extent proofs consumed by existing actor transaction | Integrated span authority reused; no independent broad EF01 closure |
+| EF02 | Assigned; no active producer rewrite | Next uncovered public producer/reader contract | Private regeneration local; no private input blocks an identified public defect |
+| EF03 | Recovered UV/outcome consumer frozen; root publishing | Publish EF12 actual-source queue/refusal regressions | Existing outcomes retained; no replay after publication; other propagation still open |
+| EF04 | Recipe source and recovery fixtures frozen; ef15_recovery ACTIVE on presentation | Publish recipe and implement bounded current-image cabin Luis path | Separate default0 controls; new presentation explicitly parks recipe composition pending joint proof |
+| EF05 | ef08_recovery ACTIVE focused source work | Demonstrable content/sibling authority for an existing static producer | Sole model_bridge/native_model/static-UI writer; unknown mutable content remains uncached |
+| EF06 | Resident binding PUSHED; no active cold-path writer | Local target/OFF qualification; then a demonstrated cold/content contract | Current uploaded lease retained; cold/yielding classes not covered by resident slice |
+| EF07 | Scoped owner first slice integrated; continuation used by active static worker | Existing owner plans consumed through bounded source authority | No duplicate owner cache or lease/probe/wrap redesign |
+| EF08 | Corrected complete profile/guard fixture PUSHED | Local target ctrl/on/pages qualification | Pacing2/2/4063/1/0; portal outside broad ALLON; private cell/runtime gates remain local |
+| EF09 | Real mutation publisher/consumer slice PUSHED | Local target gate; next exact material/placement publisher | Covered package overwrite/loan/retirement is partial, not arbitrary mutation coverage |
+| EF10 | ef08_recovery ACTIVE; still no first integration | Real ordered NativeDrawPlan static span after content proof | EF05 authority and exclusive UI/model ownership; no new raw concatenation |
+| EF11 | Assigned; no active successor | Actual pTobjA alpha/depth/material/light contract | Integrated rolling sheets/tiles remain; correctness does not wait for EF14 runtime |
+| EF12 | Source/fixtures frozen; root publishing | Publish current GX texture matrix strip consumer | Masks/splines/RTT and Esp1b lifetime remain separate source work; private look local |
+| EF13 | Loaded W29 producer/retirement PUSHED | Local package/target/live qualification; next exact uncovered source contract | Private package production and current room/look gates local |
+| EF14 | Source fixture independently reviewed and frozen; root publishing | Publish real clipper/FTRV IRQ/FPSCR fixture and bound SDK receipt | Actual pinned SDK unavailable here; target numeric/IRQ execution remains unrun |
+| EF15 | OFF repair and strict fixtures PUSHED | Local full target default-OFF binary identity | Full programme/allocated sections/15 overlays gate unchanged; control remains default0 |
+| EF16 | ef14_recovery ACTIVE implementation/tests | Bounded <=255-byte formatted record append with exact entry IRQ restoration | Long raw/device append deliberately retains existing behavior; NMI/cache/full logger qualification open |
+
+Only these three current workers are observed executing. Their names describe
+the recovery assignment, not their present card. An assignment is not evidence
+of a running worker. Old execution control/process state remains inaccessible;
+all surviving source worktrees and patches were preserved without modification.
+
+### Six overlapping architecture tracks
+
+| Track | Actual worker/state | Next deliverable | Exact wait |
+|---|---|---|---|
+| Actor admission/preparation/presentation | ef15_recovery ACTIVE; recovered recipe frozen | Cabin Luis current-owner route; root publishes recipe separately | Existing owner/material/pose proofs; no private input prerequisite |
+| Ordered bounded world selection | First slice integrated; no active paging extension | Next demonstrated page-cursor producer | Do not repeat integrated a5ac02ae |
+| Stream then qualified clip completion | Stream profile PUSHED; clip candidate preserved | Local stream integration, then qualified depth-safe clip | Exact stream integration dependency; no replacement stream pipeline |
+| Actual binding before dependent geometry | Resident slice PUSHED; cold work unassigned | Target bound resident route; later exact cold-content authority | Cold/yielding classes retain late binding; static worker owns UI/model now |
+| Precise world mutation authority | Real overwrite/retirement slice PUSHED | Next concrete material/placement producer | No arbitrary mutable-content authority claimed; existing workspace unchanged |
+| Ordered simulation continuations | Source continuations already integrated; no active new defect | Local matched order/gameplay/cost checks; source follow-up when demonstrated | Four existing profiles are not the full crossproduct; no new private-input wait on source |
+
+**DONE:** initial activity checkpoint, preserved old work, five verified pushed
+source slices and three further frozen validated deliveries. **NEXT:** publish
+EF14/EF12/EF04 and continue the three observed source workers. **BLOCKED:** old
+worker control and unavailable pinned target SDK; actual private/runtime/console
+gates remain local. No whole EF card is accepted. All controls remain default0;
+prepared evidence is not runtime/hardware acceptance. All release/private/look/
+gameplay/lifetime/memory/console holds remain, integration is local, emails stopped.
+The previously rejected local status-record update was not applied or retried.
