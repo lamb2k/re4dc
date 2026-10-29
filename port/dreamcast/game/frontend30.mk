@@ -34,7 +34,7 @@ FRONT_TPL_OWNER ?= 0
 ifneq ($(words $(FRONT_TPL_OWNER)),1)
 $(error FRONT_TPL_OWNER must be exactly 0 or 1)
 endif
-ifeq ($(filter $(FRONT_TPL_OWNER),0 1),)
+ifneq ($(filter-out 0 1,$(FRONT_TPL_OWNER)),)
 $(error FRONT_TPL_OWNER must be 0 or 1)
 endif
 ifeq ($(FRONT_TPL_OWNER),1)

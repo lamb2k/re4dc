@@ -1374,6 +1374,15 @@ Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029
 
 ## 2026-10-29 EF15 Build34: structural-writer descendant aliases
 
+**2026-10-29 follow-up progress:** DONE: reject Make pattern values (`%`, `0%`,
+`1%`) for `FRONT_TPL_OWNER`, using literal allowed values as the filter patterns.
+The existing one-word check still rejects empty and multiple-token values.
+`front_owner34_identity.py` passes the actual primary-Make rejection checks,
+six-TU baseline/absent/zero preprocessing and byte-identical host OFF object;
+valid 0/1 compile commands and all runtime sources are unchanged by this guard
+correction. NEXT/BLOCKED: the local target, integration and private qualification
+steps below remain in effect for the corrected branch tip.
+
 ### Status and exact scope
 
 Reviewed source continuation on `codex/frontend-owner-20261029`, starting at its published but blocked tip `f90dd0482fc0bd2e4e36acc725c0917f0801d758`. This addresses the concrete source-only owner request published on `bcbff6ef1ae6f2df54503f7dca1b9de308da04ab`; target admission and integration remain with the local owner. Changed files: `src/game/trans.cpp`, `src/game/frontend_tpl_owner34.h`, `port/dreamcast/tools/cloud/build34/front_owner34.py`, and `port/dreamcast/tools/cloud/build34/front_owner34_fixture.cpp.in`. No source simulation, generic binding (`native_ui.cpp`/`native_model.cpp`), defaults, Make rules, private assets, or source TPL field arithmetic changed. `model.cpp` already called the owner notifier before the mutating loops of `calcTplAddr`, `calcTplOffset`, and `slideTplAddr`; its OFF/ON source is unchanged.

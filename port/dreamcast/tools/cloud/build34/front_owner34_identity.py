@@ -87,6 +87,7 @@ def main():
             assert commands['absent'][tu] == commands['zero'][tu], f'{tu} Make OFF changed'
             assert '-DRE4DC_FRONT_TPL_OWNER=1' in commands['on'][tu], f'{tu} Make ON missing'
         for extra in (['FRONT_TPL_OWNER='], ['FRONT_TPL_OWNER=0 1'], ['FRONT_TPL_OWNER=2'],
+                      ['FRONT_TPL_OWNER=%'], ['FRONT_TPL_OWNER=0%'], ['FRONT_TPL_OWNER=1%'],
                       ['FRONT_TPL_OWNER=1', 'FRONT_TEXOBJ=0'],
                       ['FRONT_TPL_OWNER=1', 'FRONT_NATIVE=0'],
                       ['FRONT_TPL_OWNER=1', 'RESET_RETIRE_BEFORE_HEAPS=0']):
