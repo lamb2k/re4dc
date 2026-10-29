@@ -132,7 +132,7 @@ def validate_context(document):
     return out
 
 
-def classify_part(model, part, context, knobs, textures):
+def classify_part(model, part, context, knobs, textures, texture_selection=None):
     """Rows have exact predicate semantics; several rows can describe one part."""
     light, render = context.get("lighting",{}), context.get("render",{})
     rows = []
@@ -142,6 +142,12 @@ def classify_part(model, part, context, knobs, textures):
         rows.append(dict(reason=reason, status=status or s, knob=knob, recipe_value=knobs.get(knob,"unknown") if knob else "n/a",
                          trigger=trigger, evidence=e))
 
+    if model["kind"] == "R4IM-legacy":
+        add("legacy_world_geometry", None,
+            "validated legacy geometry without stored R4PW material/placement policy",
+            evidence="inventory only; texture keys, pass, cull, placement counts and selected LOD remain unknown",
+            status="inventory")
+        return rows
     if model["kind"] == "R4IM/R4PW":
         lod = knob_int(knobs,"MESH_LOD")
         add("w_mesh_no_lod",lod == 0 if lod is not None else None,
@@ -354,10 +360,19 @@ def classify_part(model, part, context, knobs, textures):
                 status="candidate" if bad_contract else "unknown")
     key = part.get("texture_key")
     if key:
-        tex = textures.get(key)
-        add("tex_missing",tex is None,"referenced texture key absent from supplied tex.pak and loose packages",
-            "TEX_PACK",evidence=key,status="static" if tex is None else "clear")
-        pal = any(t["palette"] for t in tex["entries"]) if tex else None
+        if texture_selection is None:
+            tex = textures.get(key)
+            add("tex_missing",tex is None,"referenced texture key absent from supplied tex.pak and loose packages",
+                "TEX_PACK",evidence=key,status="static" if tex is None else "clear")
+            pal = any(t["palette"] for t in tex["entries"]) if tex else None
+        else:
+            selected = texture_selection.predicate(key)
+            present = selected["present"]
+            add("tex_missing",None if present is None else not present,
+                "referenced texture key absent from eligible runtime texture sources", "TEX_PACK",
+                evidence=key + "; " + selected["selection"] + "; see texture_selection provenance",
+                status="unknown" if present is None else "clear" if present else "static")
+            pal = selected["palette"]
         add("tex_palette",pal,"texture package requires a palette","NATIVE_PALETTE",evidence=key,
             status="static" if pal else None)
         add("tex_handle",None,"runtime texture handle lookup misses current residency/generation",
@@ -374,8 +389,28 @@ def infer_rooms(path, model):
     return sorted(set(matches))
 
 
-def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_inputs=()):
+def world_policy36(path):
+    """Resolve only genuinely absent policy names; a broken present path refuses."""
+    side = path.with_suffix(".r4pw")
+    if side.exists() or side.is_symlink():
+        return side
+    if path.name in ("ps2-sli1.re4mesh", "ps2-sds1.re4mesh", "ps2-world-split.re4mesh", "ps2-dd3.re4mesh") or re.fullmatch(r"ps2-wv[0-9]+\.re4mesh", path.name):
+        side = path.parent / "ps2-world.r4pw"
+    elif path.name == "ps2-world.re4mesh" and path.parent.name == "sc21":
+        side = path.parent.parent / "ps2-world.r4pw"
+    return side if side.exists() or side.is_symlink() else None
+
+
+def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_inputs=(), scan36=0, texpak_layers=()):
+    formats.require(type(scan36) is int and scan36 in (0, 1), "scan36 must be 0 or 1")
+    formats.require(scan36 or not texpak_layers, "--texpak-layer requires --scan36=1")
     knobs = knobs or {}
+    texture_selection = None
+    if scan36:
+        import room_lists36
+        import textures36
+        import world36
+        texture_selection = textures36.Resolver(knobs)
     contexts = validate_context(context) if context else {}
     formats.require(tree.is_dir(), "disc tree does not exist")
     root = tree.resolve()
@@ -393,19 +428,40 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
     paths = [(p,p.relative_to(tree).as_posix()) for p in sorted(tree.rglob("*")) if p.is_file() and
         (p.suffix.lower() in (".dar",".drs",".arc",".bin",".esl",".re4nmr",".re4cp",".re4gl",".re4mesh",".re4tex")
          or p.name.lower() == "tex.pak")]
+    if scan36:
+        pack_path = tree / "dc" / "tex.pak"
+        if (pack_path.exists() or pack_path.is_symlink()) and not pack_path.is_file():
+            paths.append((pack_path, "dc/tex.pak"))
     for p in extra_inputs:
         paths.append((p,"@input/"+p.name))
+    layer_numbers = {}
+    for number, p in enumerate(texpak_layers, 1):
+        rel = f"@texpak-layer/{number:04d}/{p.name}"
+        layer_numbers[rel] = number
+        paths.append((p, rel))
     seen_paths = set()
     for path, rel in paths:
         formats.require(rel not in seen_paths, "duplicate input identity " + rel)
         seen_paths.add(rel)
+        selected_pack = scan36 and (rel == "dc/tex.pak" or rel in layer_numbers)
+        if selected_pack and not path.is_file():
+            texture_selection.failed_pack(rel, "missing or unreadable texture-pack input", layer=layer_numbers.get(rel))
+            continue
         formats.require(path.is_file(), "missing input " + str(path))
-        if not rel.startswith("@input/"):
+        if not rel.startswith("@input/") and rel not in layer_numbers:
             formats.require(path.resolve().is_relative_to(root), "disc input symlink escapes supplied root: " + rel)
-        with path.open("rb") as stream:
-            head = stream.read(80)
+        try:
+            with path.open("rb") as stream:
+                head = stream.read(80)
+        except OSError as exc:
+            if not selected_pack:
+                raise
+            texture_selection.failed_pack(rel, str(exc), layer=layer_numbers.get(rel))
+            continue
         typ = None
-        if head.startswith(b"RE4PAK1\0"): typ="tex.pak"
+        if scan36 and (path.name.lower() == "tex.pak" or rel in layer_numbers): typ="tex.pak"
+        elif scan36 and path.suffix.lower() == ".re4tex": typ="texture"
+        elif head.startswith(b"RE4PAK1\0"): typ="tex.pak"
         elif head.startswith(b"RE4DCTX\0"): typ="texture"
         elif head.startswith(b"RE4NMR1\0"): typ="RE4NMR"
         elif head.startswith(b"RE4PL08\0"): typ="RE4PL08"
@@ -421,23 +477,36 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
             typ="unsupported"
         if typ is None:
             continue
-        data = path.read_bytes()
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            if not selected_pack:
+                raise
+            texture_selection.failed_pack(rel, str(exc), layer=layer_numbers.get(rel))
+            continue
         sources[rel] = dict(path=rel,sha256=formats.sha(data),bytes=len(data),format=typ)
         file_models=[]
+        file_status, file_message = "scanned", ""
         try:
             if typ == "tex.pak":
-                new = formats.parse_texpak(data)
-                for key,value in new.items():
-                    if key in textures:
-                        formats.require(textures[key]["sha256"] == value["sha256"], "duplicate texture key with different payload")
-                textures.update(new)
+                if scan36:
+                    texture_selection.add_pack(rel, data, layer=layer_numbers.get(rel))
+                else:
+                    new = formats.parse_texpak(data)
+                    for key,value in new.items():
+                        if key in textures:
+                            formats.require(textures[key]["sha256"] == value["sha256"], "duplicate texture key with different payload")
+                    textures.update(new)
             elif typ == "texture":
-                m = re.fullmatch(r"([0-9a-f]{8}-[0-9a-f]{8})\.re4tex",path.name.lower())
-                formats.require(m is not None,"loose texture key filename")
-                value = formats.parse_texture(data)
-                if m[1] in textures:
-                    formats.require(textures[m[1]]["sha256"] == value["sha256"],"duplicate texture key with different payload")
-                textures[m[1]]=value
+                if scan36:
+                    texture_selection.add_loose(rel, data)
+                else:
+                    m = re.fullmatch(r"([0-9a-f]{8}-[0-9a-f]{8})\.re4tex",path.name.lower())
+                    formats.require(m is not None,"loose texture key filename")
+                    value = formats.parse_texture(data)
+                    if m[1] in textures:
+                        formats.require(textures[m[1]]["sha256"] == value["sha256"],"duplicate texture key with different payload")
+                    textures[m[1]]=value
             elif typ == "resident": resident = formats.parse_resident(data)
             elif typ == "ESL":
                 spawns.extend(dict(s,source=rel,source_sha256=sources[rel]["sha256"]) for s in formats.parse_esl(data,rel))
@@ -445,19 +514,34 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
             elif typ == "RE4PL08": file_models=[formats.parse_pl08(data)]
             elif typ == "GLP1": file_models=formats.parse_glod(data)["models"]
             elif typ == "R4IM/R4PW":
-                side = path.with_suffix(".r4pw")
-                if not side.is_file() and (path.name in ("ps2-sli1.re4mesh","ps2-sds1.re4mesh",
-                        "ps2-world-split.re4mesh","ps2-dd3.re4mesh") or re.fullmatch(r"ps2-wv[0-9]+\.re4mesh",path.name)):
-                    side = path.parent/"ps2-world.r4pw"
-                if not side.is_file() and path.name == "ps2-world.re4mesh" and path.parent.name == "sc21":
-                    side = path.parent.parent/"ps2-world.r4pw"
-                formats.require(side.is_file(),"missing matching R4PW sidecar")
-                formats.require(side.resolve().is_relative_to(path.parent.resolve() if rel.startswith("@input/") else root),
-                                "R4PW symlink escapes supplied root")
-                side_data=side.read_bytes()
-                side_rel="@input/"+side.name if rel.startswith("@input/") else side.relative_to(tree).as_posix()
-                sources[side_rel]=dict(path=side_rel,sha256=formats.sha(side_data),bytes=len(side_data),format="R4PW")
-                parsed=formats.parse_world(data,side_data)
+                if scan36:
+                    side = world_policy36(path)
+                    side_data = None
+                    if side is not None:
+                        formats.require(side.is_file(), "present R4PW path is not a readable file")
+                        formats.require(side.resolve().is_relative_to(path.parent.resolve() if rel.startswith("@input/") else root),
+                                        "R4PW symlink escapes supplied root")
+                        side_data = side.read_bytes()
+                        side_rel = "@input/" + side.name if rel.startswith("@input/") else side.relative_to(tree).as_posix()
+                        sources[side_rel] = dict(path=side_rel,sha256=formats.sha(side_data),bytes=len(side_data),format="R4PW")
+                    parsed = world36.parse_world(data, side_data)
+                    if parsed["metadata_status"] == "incomplete":
+                        file_status = "partial"
+                        file_message = "; ".join(parsed["limitations"])
+                else:
+                    side = path.with_suffix(".r4pw")
+                    if not side.is_file() and (path.name in ("ps2-sli1.re4mesh","ps2-sds1.re4mesh",
+                            "ps2-world-split.re4mesh","ps2-dd3.re4mesh") or re.fullmatch(r"ps2-wv[0-9]+\.re4mesh",path.name)):
+                        side = path.parent/"ps2-world.r4pw"
+                    if not side.is_file() and path.name == "ps2-world.re4mesh" and path.parent.name == "sc21":
+                        side = path.parent.parent/"ps2-world.r4pw"
+                    formats.require(side.is_file(),"missing matching R4PW sidecar")
+                    formats.require(side.resolve().is_relative_to(path.parent.resolve() if rel.startswith("@input/") else root),
+                                    "R4PW symlink escapes supplied root")
+                    side_data=side.read_bytes()
+                    side_rel="@input/"+side.name if rel.startswith("@input/") else side.relative_to(tree).as_posix()
+                    sources[side_rel]=dict(path=side_rel,sha256=formats.sha(side_data),bytes=len(side_data),format="R4PW")
+                    parsed=formats.parse_world(data,side_data)
                 file_models=parsed["models"]
                 lineage=parsed["lineage"]
                 if lineage:
@@ -482,7 +566,8 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
             elif typ == "ModelData": file_models=[formats.parse_model_bin(data,rel)]
             elif typ == "compiled-cast-header": file_models=[formats.parse_compiled_header(data,rel)]
             else: raise formats.Invalid("unrecognised package magic/adapter")
-            coverage.append(dict(source=rel,format=typ,status="scanned",models=len(file_models),message=""))
+            if not scan36 or typ not in ("tex.pak", "texture"):
+                coverage.append(dict(source=rel,format=typ,status=file_status,models=len(file_models),message=file_message))
         except (ValueError,UnicodeError,IndexError,OSError) as exc:
             coverage.append(dict(source=rel,format=typ,status="rejected",models=0,message=str(exc)))
             continue
@@ -514,6 +599,26 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
     formats.require(set(contexts).issubset(context_used),"context sources missing/rejected: " + ", ".join(sorted(set(contexts)-context_used)))
     for path in sorted(set(room_map)-set(sources)):
         coverage.append(dict(source=path,format="room-list",status="missing",models=0,message="explicitly listed file not scanned"))
+    if scan36:
+        texture_result = texture_selection.finish()
+        textures = texture_result["textures"]
+        coverage.extend(texture_result["coverage"])
+        membership_result = room_lists36.build_memberships(root, models, sources, spawns, rooms)
+        coverage.extend(membership_result["coverage"])
+        for model in models:
+            automatic = membership_result["memberships"].get((model["source"], model["key"]), [])
+            if automatic:
+                by_room = {member["room"]: member for member in automatic}
+                by_room.update({member["room"]: member for member in model["memberships"] if member["room"] != "unassigned"})
+                model["memberships"] = [by_room[room] for room in sorted(by_room)]
+        archive_rooms = collections.defaultdict(set)
+        for item in membership_result["inventory"]:
+            if item["status"] == "candidate":
+                archive_rooms[item["source"]].add(item["room"])
+        for ref in refs:
+            if not ref["rooms"] and ref["source"] in archive_rooms:
+                ref["rooms"] = sorted(archive_rooms[ref["source"]])
+                ref["membership_origin"] = "conditional native ESL archive candidate"
     rows=[]
     for model in models:
         ctx=model["context"]
@@ -521,7 +626,7 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
             pctx=dict(ctx.get("parts",{}).get(part["index"],{}))
             if "model_id" in ctx: pctx["model_id"]=ctx["model_id"]
             if "model_kind" in ctx: pctx["model_kind"]=ctx["model_kind"]
-            reasons=classify_part(model,part,pctx,knobs,textures)
+            reasons=classify_part(model,part,pctx,knobs,textures,texture_selection)
             for member in model["memberships"]:
                 if member["room"] != "unassigned" and member["room"] not in rooms:
                     continue
@@ -531,6 +636,8 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
                     parts=1,vertices=part["vertices"],vertex_basis=part.get("vertex_basis","stored FE records"),
                     corners=part["corners"],meshlets=len(part["meshlets"]),
                     instances=member["instances"])
+                if scan36:
+                    base["membership"] = member
                 rows.extend(dict(base,**reason) for reason in reasons)
                 for let in part["meshlets"]:
                     mesh_base=dict(base,scope="meshlet",meshlet=let["index"],level=let.get("level",model.get("level","")),parts=0,
@@ -549,23 +656,26 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
     for rec in resident:
         room=room_name(rec["room"])
         if room not in rooms: continue
-        missing=rec["key"] not in textures
+        present = texture_selection.predicate(rec["key"])["present"] if scan36 else rec["key"] in textures
+        missing = None if present is None else not present
         rows.append(dict(room=room,source="dc/resident.bin",source_sha256=sources.get("dc/resident.bin",{}).get("sha256",""),
             model="resident",label="room preload list",kind="resident",model_id=None,scope="resident",part="",meshlet="",level="",
-            material=rec["key"],reason="resident_key_missing",status="static" if missing else "clear",parts=0,vertices=0,
+            material=rec["key"],reason="resident_key_missing",status="unknown" if missing is None else "static" if missing else "clear",parts=0,vertices=0,
             corners=0,meshlets=0,instances=None,knob="ROOM_RESIDENT",recipe_value=knobs.get("ROOM_RESIDENT","unknown"),
-            trigger="listed resident key absent from supplied texture packages",evidence=rec["key"]))
+            trigger="listed resident key absent from eligible runtime texture sources" if scan36 else "listed resident key absent from supplied texture packages",evidence=rec["key"]))
     for ref in refs:
         for room in ref["rooms"] or ["unassigned"]:
             if room not in rooms and room != "unassigned": continue
-            missing=ref["key"] not in textures
-            for reason,status in (("archive_texture_missing","static" if missing else "clear"),
+            present = texture_selection.predicate(ref["key"])["present"] if scan36 else ref["key"] in textures
+            missing = None if present is None else not present
+            for reason,status in (("archive_texture_missing","unknown" if missing is None else "static" if missing else "clear"),
                                   ("archive_palette_reference","static" if ref["palette"] else "clear")):
                 rows.append(dict(room=room,source=ref["source"],source_sha256=sources[ref["source"]]["sha256"],
                     model=ref["location"],label="native archive texture reference",kind="texture-reference",model_id=None,scope="texture-reference",
                     part="",meshlet="",level="",material=ref["key"],reason=reason,status=status,parts=0,vertices=0,
                     corners=0,meshlets=0,instances=None,knob="TEX_PACK",recipe_value=knobs.get("TEX_PACK","unknown"),
-                    trigger="R4NREF/R4PREF names texture key",evidence=ref["key"]))
+                    trigger="R4NREF/R4PREF names texture key",evidence=ref["key"] +
+                    ("; " + ref["membership_origin"] if scan36 and "membership_origin" in ref else "")))
     rows.sort(key=lambda r:(r["room"],r["source"],r["model"],str(r["part"]),str(r["meshlet"]),r["reason"]))
     spawn_rows=[dict(s,room=room_name(s["room"])) for s in spawns if room_name(s["room"]) in rooms]
     spawn_rows.sort(key=lambda s:(s["room"],s["source"],s["location"],s["index"]))
@@ -587,6 +697,16 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
                 stream_bytes=p.get("stream_bytes"),material_raw=p.get("material_raw"),
                 source_key_texture_bytes=p.get("source_key_texture_bytes"),vertices=p["vertices"],lighting={},render={}) for p in m["parts"]])
             for m in models if m["source"]==source]))
+    if scan36:
+        # An unfilled template must not promote conditional list membership to
+        # verified owner context on the next run. Keep candidates separately.
+        for source in template["sources"]:
+            by_key = {m["key"]: m for m in models if m["source"] == source["path"]}
+            for model in source["models"]:
+                members = by_key[model["key"]]["memberships"]
+                model["rooms"] = [m["room"] for m in members
+                    if m["room"] != "unassigned" and m["origin"] != "native ESL archive candidate"]
+                model["room_candidates"] = [m for m in members if m["origin"] == "native ESL archive candidate"]
     inventory=[]
     for m in models:
         item={k:v for k,v in m.items() if k not in ("parts","context")}
@@ -596,10 +716,20 @@ def scan_tree(tree, rooms, knobs=None, context=None, room_list=None, extra_input
         for p,out in zip(m["parts"],item["parts"]):
             out["meshlets"]=[{k:v for k,v in q.items() if k != "records"} for q in p["meshlets"]]
         inventory.append(item)
-    return dict(schema=SCHEMA,status="INCOMPLETE" if any(c["status"] != "scanned" for c in coverage) else "SCANNED",
+    result = dict(schema=SCHEMA,status="INCOMPLETE" if any(c["status"] != "scanned" for c in coverage) else "SCANNED",
         scope="static inventory + explicitly hash-bound context; no console measurements",rooms=rooms,rows=rows,
         coverage=sorted(coverage,key=lambda x:(x["source"],x["format"])),sources=[sources[k] for k in sorted(sources)],
         textures=len(textures),models=len(models),model_inventory=inventory,spawn_inventory=spawn_rows,context_template=template)
+    if scan36:
+        result["scan36"] = 1
+        result["textures"] = texture_result["summary"]["definite_keys"]
+        result["texture_selection"] = {key: value for key, value in texture_result.items() if key not in ("textures", "coverage")}
+        referenced_keys = {part["texture_key"] for model in models for part in model["parts"] if part.get("texture_key")}
+        referenced_keys.update(rec["key"] for rec in resident)
+        referenced_keys.update(ref["key"] for ref in refs)
+        result["texture_selection"]["referenced_keys"] = {key: texture_selection.predicate(key) for key in sorted(referenced_keys)}
+        result["room_membership"] = {key: value for key, value in membership_result.items() if key not in ("memberships", "coverage")}
+    return result
 
 
 def aggregate(rows, fields):
@@ -631,6 +761,19 @@ def render_report(result):
         "Several LODs/appearances and source fallback/replacement models may coexist. Visibility, instance multiplicity and active selection remain runtime facts.",
         "An absent reason is not proof of a fast frame. Unknown lighting, view and residency fields stay in details.tsv.","", "## Ranked by room and model", "",
         "| Room | Model | Reason | Status | Parts | Vertices |", "|---|---|---|---|---:|---:|"]
+    if result.get("scan36"):
+        summary = result["texture_selection"]["summary"]
+        lines[0] = "# Build 36 fallback asset scan"
+        lines[3:3] = ["", "## Source selection", "",
+            f"Texture keys: {summary['definite_keys']} definitely present, {summary['conditional_keys']} conditional; "
+            f"{summary['physical_variants']} supplied payload variants, {summary['shadowed_variants']} shadowed variants.",
+            "Ordered texture-pack layers replace whole files. Eligible loose lookup, recipe and live standard-quality room state can change selection. "
+            "The report.json texture_selection records candidate/shadowed source hashes and unresolved predicates; these are not simultaneous resident textures.",
+            "Native ESL memberships bind exact archive paths, source hashes and model keys through the checked-in loader tables. "
+            "They are conditional archive-load candidates across selected or retained story lists, player and costume alternatives. "
+            "All archive BINs remain potential; instances and actual draws are unknown. Details include each membership and report.json contains its full evidence.",
+            "Legacy R4IM geometry is inventory only. Missing material/placement policy stays partial; malformed present or required modern R4PW remains rejected.",
+            ""]
     ranked=aggregate(result["rows"],("room","source","model","label"))
     for r in ranked:
         label=(r["source"]+" :: "+r["label"]).replace("|","\\|")
@@ -661,6 +804,8 @@ def main(argv=None):
     ap.add_argument("--context",type=Path,help="hash-bound runtime lighting/owner context JSON")
     ap.add_argument("--room-list",type=Path,help="explicit room-to-source/model membership JSON")
     ap.add_argument("--input",type=Path,action="append",default=[],help="additional compiled PS2 header/standalone package (repeatable)")
+    ap.add_argument("--scan36",type=int,choices=(0,1),default=0,help="opt-in texture selection, native list membership and legacy world inventory")
+    ap.add_argument("--texpak-layer",type=Path,action="append",default=[],help="ordered whole-pack replacement after tree dc/tex.pak; requires --scan36=1 (repeatable)")
     ap.add_argument("--strict",action="store_true",help="exit 1 for rejected/missing coverage as well as malformed context")
     args=ap.parse_args(argv)
     try:
@@ -670,17 +815,18 @@ def main(argv=None):
         formats.require(rooms,"empty room selection")
         knobs,knob_source=read_knobs(args.knobs)
         result=scan_tree(args.tree,rooms,knobs,json.loads(args.context.read_text()) if args.context else None,
-            json.loads(args.room_list.read_text()) if args.room_list else None,args.input)
+            json.loads(args.room_list.read_text()) if args.room_list else None,args.input,args.scan36,args.texpak_layer)
         result["knob_source"]=knob_source
         result["knobs"]=knobs
         template=result.pop("context_template")
-        reports={"details.tsv":tsv(result["rows"],ROW_FIELDS),
+        row_fields = ROW_FIELDS + (("membership",) if args.scan36 else ())
+        reports={"details.tsv":tsv(result["rows"],row_fields),
                  "by-model.tsv":tsv(aggregate(result["rows"],("room","source","model","label")),
                      ("room","source","model","label","reason","status","parts","vertices","corners","meshlets")),
                  "by-room.tsv":tsv(aggregate(result["rows"],("room",)),
                      ("room","reason","status","parts","vertices","corners","meshlets")),
                  "barn.tsv":tsv([r for r in result["rows"] if r["room"]=="r103" and r["reason"] in
-                     ("a_probe_miss","a_lit_scale","a_lit_exact","a_lit_colour","a_lit_fourth","a_lit_basis")],ROW_FIELDS),
+                     ("a_probe_miss","a_lit_scale","a_lit_exact","a_lit_colour","a_lit_fourth","a_lit_basis")],row_fields),
                  "spawns.tsv":tsv(result["spawn_inventory"],("room","source","source_sha256","location","index","enemy_id",
                      "type","character","set","be_flag","flags","hp","position","rotation_raw","guard_radius","status","active")),
                  "coverage.tsv":tsv(result["coverage"],("source","format","status","models","message")),
