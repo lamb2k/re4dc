@@ -1,0 +1,39 @@
+// Platform boundary: exact primitive-tail allocation, no frame-table backing.
+namespace queue {
+using pvr_list_t=int;
+constexpr int PVR_LIST_OP_POLY=0,PVR_LIST_TR_POLY=2;
+alignas(32) unsigned char frame_storage[32768],spill[8192];
+constexpr unsigned kModelDeferredSpillBytes=sizeof(spill);
+struct Re4dcUiQuad {unsigned words[8];};
+unsigned nquad=0,frame_queue_peak=0,frame_queue_drops=0;
+bool frame_ready=true,stream_aborted=false,spill_ok=true;
+void whfix_drop(unsigned){}
+void stream_select(int p){assert(p==PVR_LIST_TR_POLY);}
+}
+#define AVD_EVENT(...) ((void)0)
+#define RE4DC_PROFILE_SCOPE(...) ((void)0)
+#define RE4DC_PROFILE_COUNT(...) ((void)0)
+#define RE4DC_PROFILE_HIGH(...) ((void)0)
+#define RE4DC_WHD_ABORT(...) ((void)0)
+#define RE4DC_FQ_DROP(...) ((void)0)
+#define DFA26_HIT(...)
+extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
+    *bytes=queue::spill_ok?sizeof(queue::spill):0;return queue::spill_ok?queue::spill:nullptr;
+}
+namespace host {
+std::vector<void*> allocations;
+bool allocation_ok=true,retire_in_begin=false;
+unsigned allocations_made=0,emissions=0,gx_attempts=0,aborts=0;
+re4dc::NativeDrawResult last{re4dc::NativeDrawOutcome::Refused};
+}
+extern "C" void* re4dc_prim_tail(unsigned bytes,unsigned reserve){
+    assert(reserve==16384);if(!host::allocation_ok)return nullptr;
+    void* p=std::aligned_alloc(32,bytes);assert(p);host::allocations.push_back(p);++host::allocations_made;return p;
+}
+extern "C" int re4dc_actor_stream_state(Re4dcActorStreamState* out){
+    if(!queue::frame_ready||queue::stream_aborted)return 0;
+    *out={check::serial,0,0,0};return 1;
+}
+extern "C" unsigned re4dc_actor_stream_begin(const void*,unsigned){return 1;}
+extern "C" void re4dc_actor_stream_end(unsigned,const void*,unsigned){}
+extern "C" void re4dc_bind_actor_frame(){}

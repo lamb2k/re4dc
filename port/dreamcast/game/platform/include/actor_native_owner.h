@@ -4,7 +4,6 @@
 
 // All handles are values. Skin backups belong to the current primitive owner.
 // No pointer returned by these APIs may outlive its source FrameLedger ticket.
-struct Re4dcActorWorkspaceLease { unsigned slot=0,serial=0,epoch=0,bytes=0; };
 struct Re4dcActorSkinBinding {
     const void* info;
     Re4dcActorSource source;
@@ -99,7 +98,11 @@ public:
     // The isolated skin pool derives its maximum from this existing bound.
     static constexpr unsigned MaxOwners=64;
 private:
-    struct Slot { unsigned serial=0,bytes=0; };
+    struct Slot { unsigned serial=0,bytes=0;
+#if RE4DC_NATIVE_FE_CONTINUATION
+        const void* allocation=nullptr;unsigned allocation_bytes=0;
+#endif
+    };
     Slot slots_[MaxOwners]{};
     unsigned serial_=0,maximum_=0;
 public:
@@ -116,6 +119,21 @@ public:
         return t.slot && t.slot<=MaxOwners && t.serial && t.epoch==epoch &&
             slots_[t.slot-1].serial==t.serial && slots_[t.slot-1].bytes==t.bytes;
     }
+#if RE4DC_NATIVE_FE_CONTINUATION
+    // The existing primitive owner supplies this exact allocation. Its value
+    // ticket is checked before any snapshot header/palette can be read.
+    bool bind(const Re4dcActorWorkspaceLease& t,unsigned epoch,const void* p,unsigned bytes){
+        if(!valid(t,epoch) || !p || bytes!=t.bytes || slots_[t.slot-1].allocation)return false;
+        slots_[t.slot-1].allocation=p;slots_[t.slot-1].allocation_bytes=bytes;return true;
+    }
+    bool bound(const Re4dcActorWorkspaceLease& t,unsigned epoch,const void* p)const{
+        return valid(t,epoch) && p && slots_[t.slot-1].allocation==p && slots_[t.slot-1].allocation_bytes==t.bytes;
+    }
+    void retire_bound(){
+        for(auto& s:slots_)if(s.allocation)s={};
+        maximum_=0;for(const auto& s:slots_)if(s.serial && s.bytes>maximum_)maximum_=s.bytes;
+    }
+#endif
     void release(Re4dcActorWorkspaceLease& t){
         if(t.slot && t.slot<=MaxOwners && t.serial && slots_[t.slot-1].serial==t.serial){
             slots_[t.slot-1]={};maximum_=0;

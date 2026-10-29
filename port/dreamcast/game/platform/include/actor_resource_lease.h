@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+struct Re4dcActorWorkspaceLease { unsigned slot=0,serial=0,epoch=0,bytes=0; };
 
 // Separate pending ownership from the cache's existing submitted-scene pin.
 // Token copies cannot double-release or release a reused slot. No serial wraps.
