@@ -755,3 +755,24 @@ uses and remaining external/alternate paths; whole-stack/runtime high-water,
 CPU/current floor and enabled final-image/game/link/console remain pending.
 Window32 remains unbuilt under19GiB guard; no new compile/link/master/
 capture, source/recipe change, SD write or release action.
+
+#### Owner: all eleven overlay-section references classified, 2026-10-29
+
+The11 sections named outside .text are executable overlays, not evidence
+of callback tables. All have SHF_ALLOC|SHF_WRITE|SHF_EXECINSTR (flags7).
+Every target relocation lies within a named function range, with no named
+data-object range covering it. Classified11/11, unresolved section/range0:
+four cloth helper references, six collision references, one SubScreenTask
+reference to EspgenMove. Exact module/function/offset/target/hash rows in
+private OVERLAY-REFERENCE-CLASSIFICATION.json. This classifies relocated
+references within executable function ranges, not actual call instructions
+or runtime execution; mixed overlay section names alone were insufficient.
+
+Source-bound alternate context: SubScreenCall schedules SubScreenExec in
+task slot1, which TaskChains to the indirect module prolog; Sscrn _prolog
+enters SubScreenTask, whose frame loop calls EspgenMove. Preserve this
+separately from ordinary GameTask effect updates. Source hashes retained;
+module-prolog/runtime liveness, all other indirect/external roots, nested
+stack/interrupt/high-water, CPU/current floor and final enabled game/link/
+console gates remain pending. Window32 still unbuilt under19GiB guard.
+No new compile/link/master/capture, source/recipe change, SD or release.
