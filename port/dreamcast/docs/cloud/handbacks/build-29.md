@@ -1,5 +1,16 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 EFM and line source landings
+
+DONE: EFM `47679acd4824b24b64978ce0252f056a0fa7e2ae` clean no-ff landed `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, then line `00ecd54840c1ffb1dde595618a77a567e8bf2492` clean no-ff landed `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`, both default0. Source/peer review and existing normal/sanitizer/extracted-host OFF gates passed. Each local pinned-SDK absent/explicit0/ON full release links with existing empty missing.txt; each absent/zero programme, all15 overlays and every allocated section metadata/payload match its bound prior integration. Actual527 C++ commands per arm were inspected: EFM ON global to game/platform/room consumers, line ON only atari.cpp. No source conflict was hand-resolved. Fresh-base origin-only push/readback passed after these gates.
+
+Combined ALLON K30 adds both controls using current FX_SCAN1/list1/workAt1 and LINE_WALK1/piece1/yrow1/FP-contract-off. QA_LINK1, compile/missing/global542 EFM/ABI macros and exact line consumer, loader/standard lints, ZIP, staged checksums and actual final program/all15 overlays match SDK. Track03 `08b14816728d15e9b68f16e86199604bc286ef41db3eef15eade58d39649c429`. PREPARED only; no current EFM/line gameplay/STRICT/heap/stack/cost/hardware acceptance or SD/recipe promotion.
+
+OPEN SOURCE/TEST FOLLOW-ONS, cloud-owned: EFM fixtures do not exercise constructor-time reentry, nested index rebuild before outer continuation, or >65535 slot refusal. Preserve saturating token/serial source fallback and exact i+1 continuation. Line valid profiles have no demonstrated traversal blocker, but harden line_resume29.mk to one literal0/1 and WALK in1/2: current multiword/pattern values can silently selectOFF and WALK3 is admitted. Add an explicit equal-nearest tie oracle. Actual LINE_LEAF/TAIL target assembly and live results remain local gates; ON no longer increments ELC_W_LEAVES, so do not use it as matched cost evidence. Do not weaken current source guards or claim unsupported profiles passed.
+
+COLLISION runtime follow-up on pinned prior source39ed524a, CACHE2 controls0/1: same1648 external asset files, same stock room fixture and source/QA name, exact16 SDK payloads per image/base. Both60s no-key/no-state runs reached r101. Observed emitted control row hit8182/miss10/mismatch0; enabled rows hit8182/miss10/mismatch0 and hit16374/miss10/mismatch0. Neither reported dirty overflow in these samples. Raw logs contain4138/3702 NUL bytes and are retained unmodified. This is scoped reference-comparison evidence at reported cutpoints, not whole-window absence of mismatch, route/STRICT, speed or memory-headroom acceptance. Source counters/sample counts are not a performance comparison. No identical retry or longer run is justified by this result alone.
+
+
 ## 2026-10-29 EF03: consumed strip/cloth result slice
 
 **DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `NATIVE_DRAW_OUTCOMES=1`

@@ -1,5 +1,19 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+## Answers (owner): 2026-10-29 frontend ON authority blocker
+
+BLOCKED BEFORE MERGE/ON ADMISSION: `codex/frontend-owner-20261029` tip `f90dd0482fc0bd2e4e36acc725c0917f0801d758`. No production/default/recipe change from this branch has landed. A local host fixture extracting the actual production writer confirms this conditional counterexample:
+
+1. Qualify a room palette/info with at least two descriptors and cache its FtRec.
+2. Make a different palette outside the certified room whose descriptor points at the qualified room's nonfirst TEXHeader. Existing qualification does not enforce an exclusion of this descendant-alias state.
+3. Invoke the actual `calcTplOffset` writer. Its palette notifier ignores the external palette, then the writer changes the shared certified header's data. Original room palette/array/count/version and first header remain unchanged.
+4. Next lookup: OFF walks the six descriptors and returns the changed current value; ON keeps owner stamp4, walks0 and returns the old cached value.
+
+Exact source chain on f90: block.cpp677-684 -> cModel::moveDataAddr(0), model.cpp1537-1553 -> calcTplOffset1680-1703 (notifier1692). Authority/hit: trans.cpp3571-3593 and3716-3723; palette notification3962-3980 ignores outside palettes; foreign alias3612-3631 checks palette identity, not shared descendants. Current test stubs calcTplAddr and manually notifies its structural-remap case, so it does not cover this actual writer/alias. Host OFF/ON compile/run and production-extracted repro are retained locally. This proves a contract counterexample, not that a current private archive/producer actually creates it.
+
+SOURCE-ONLY REQUEST, no private input needed: enforce and prove a source-backed descendant-alias exclusion, OR conservatively revoke the affected certified ownership before structural writers mutate shared headers/descriptors. A cold structural-write revocation is preferable to a per-hit descriptor scan. Add an actual-writer regression for a different palette sharing a nonfirst certified header, plus descriptor/CLUT descendants where supported; ensure no qualified stale hit while ordinary fallback remains repaired. Preserve existing retirement, saturation, bounded sidecar fallback and flush-before-record-refresh behavior. Push a new branch tip for review; do not enable/claim acceptance for f90. Root will skip this unchanged semantic block until the branch or relevant writer/authority source changes.
+
+
 **2026-10-29 EF06 target handback: DONE** first consumed incarnation slice
 implemented and target built (`5f057b2ea` + `0efa52fe8`): four fresh full release
 arms baseline9ee386e3/absent/explicit0/ON pass real rc0, nonempty ELF and existing
