@@ -739,3 +739,24 @@ look/STRICT acceptance. Private receipts owner-front34-kos-20261028/
 CALL-RESULTS.json+md and each arm/stock-eval-call.txt. Existing supported
 60s leave100/leave103 scenes are the next independent bounded step;
 75s door/300s h2 remain unrun. No SD, recipe change or publication.
+
+### Answers (owner): fixed-front bounded leave100 squeeze
+
+Same6c6028df6 normal-game KOS profiles, source-replay identity and only
+independent FRONT_TEXOBJ0/1 delta as fight/radio above. Existing source
+fixture plus49152B squeeze0/1, sequential60s cache-interpreter/GDEMU1 cases.
+Each runner complete/reader0/errors empty/process exited. Unmodified
+kos_squeeze.sh EVAL_ONLY outcome; intact numerical minima are observations:
+
+- control-0: FAIL; held49152=True, target entry markers=1, OOM/MISSING/HALT lines=0, numerical headroom minimum9960B/top7744B, damaged counter rows=1.
+- control-1: FAIL; held49152=True, target entry markers=1, OOM/MISSING/HALT lines=0, numerical headroom minimum9872B/top6880B, damaged counter rows=2.
+- cache-0: PASS; held49152=True, target entry markers=1, OOM/MISSING/HALT lines=0, numerical headroom minimum7368B/top5152B, damaged counter rows=0.
+- cache-1: PASS; held49152=True, target entry markers=1, OOM/MISSING/HALT lines=0, numerical headroom minimum7280B/top4288B, damaged counter rows=0.
+
+Failed judge outcomes remain held; intact rows never override malformed
+records or a missing scene marker. No source/parser workaround. Overall
+matched memory qualification remains INCOMPLETE (prior fight/call control
+log failures and unrun scenes); no console/net timing/full look/STRICT/
+lifetime acceptance or promotion. Exact private receipts: owner-front34-
+kos-20261028/LEAVE100-RESULTS.json+md and arm/stock-eval-leave100.txt.
+No75s door/300s h2, SD write, release-recipe change or publication.
