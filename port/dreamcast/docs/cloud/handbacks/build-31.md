@@ -1,5 +1,18 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-29 ordered world pages qualification
+
+Source `636c5df269d8d2e36a25fa621cbb8e3cf185b73c` landed `a5ac02aecee317c3ac74f1c9e7e2546a40775348` default0. Clean no-ff adapted-helper review/host/normal+ASan+UBSan, absent/explicit0/dependency-control/ON full pinned-SDK releases with existing empty missing.txt,527 actual C++ macro checks and full programme/all15overlays/all allocated sections OFF identity against bound prior integration passed. Freshbase origin-only push/readback passed; no conflict resolution.
+
+Compatible ALLON K34 source `a5ac02aecee317c3ac74f1c9e7e2546a40775348` adds WORLD_PAGES31, QA_LINK1. FRONT_TPL_OWNER0/FRONT_TEXOBJ0 retained. Compile/missing,542 actual commands/precise consumers, loader+standard lints, ZIP/checksums and final programme/all15-overlay SDK binding PASS. Track03 `6cf567feb7a5678792cadafbc8c1aac1d1cea27054fea1ffec4bb4541ac0bb84`. PREPARED only: no live current-image output/look/gameplay/STRICT/heap/VRAM/stack/cost/console acceptance, SD copy or recipe promotion.
+
+Matched dependency0 versus page1 actual SH4 size delta `{"linked_main": {"bss": 0, "data": 0, "text": 1248}, "native_static": {"bss": 0, "data": 0, "text": 1252}}` bytes. No BSS addition; automatic cursor/snapshot/call-depth highwater remains unmeasured. Plain extracted selector boundaries319/320/321/641, capacities1/7, lean/general/census, empty final page, ordered abort/refusal/input/receipt cases pass; broader strip-group/cone/record modes/full MeshDraw effective output stay open.
+
+Initial preceding-queue drain before snapshot is a CONDITIONAL CONTRACT/HARDENING GAP, not a demonstrated source blocker: actual batch_close only unlocks SQ/optionally logs; no supported view/material/affine writer retaining the plan was established. If that reentry class is later supported, bind the actual writer and test a nonempty preceding queue. Injected final-page callback tests are adversarial qualification, not occurrence proof.
+
+Current bounded r100/r101/r103 packages still have no stored part>320. No recensus/forced geometry; synthetic paging remains meaningful but actual coverage/lifecycle/memory/cost is pending. Cloud continues assigned stream then qualified clip composition, exact in-place mutation publishers and route scratch. Console checks require intended media selected/swapped by user and reviewed link readiness; existing holds remain.
+
+
 **2026-10-28 progress 3: DONE** runtime follow-up re-synced onto `f4c1af9a1c861de58d56e71fb18d0f4e4e313217`, preserving landed tools and Answers (owner); runtime source is unchanged from the previous qualified follow-up; all 48 OFF comparisons, four enabled compile/link arms and ten rejection probes pass again on the refreshed base; **NEXT** Claude runs the private-image/console commands below; **BLOCKED** private room geometry, full SDK/image identity and hardware acceptance.
 
 Branch: `codex/world-portal-part-plan-20261028`. Current integration base:
