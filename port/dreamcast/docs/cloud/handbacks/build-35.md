@@ -579,3 +579,19 @@ after measured C headroom supports its1GiB allocation budget above reserve.
 Then verify all3 complete profile/object/linked-size deltas. Multi-GB image
 staging remains held. No window32 image, enabled game/link/tour/cost run or
 reduced-N result is accepted. No recipe promotion, SD copy or publication.
+
+#### Owner: exact private linked BSS attribution, 2026-10-29
+
+Re-read both actual private ELFs, checked their saved SHA256, and compared
+every named BSS symbol (including repeated local names as multisets):
+diagnostic storage24->32KiB (+8192), g_review_snapshot25008->33200 (+8192),
+FA29 state600->1528 (+928). Sum17312 equals the complete linked BSS-category
+delta, unattributed delta0. qa_menu.cpp's Snapshot<sizeof(g_diag)+384> binds
+the review-link storage to the diagnostic capacity. Exact private receipt:
+owner-audit35-enabled-20261028/BSS-ATTRIBUTION.json.
+
+Neither full build's object directory contains .su stack-usage receipts;
+missing stack evidence is not a zero or a proven maximum. Stack/callchain,
+heap/KOS floor and observer CPU/game/link acceptance remain pending.
+Window32 remains unbuilt under the unchanged disk guard; no identical retry.
+No target change, buffer/N32 reduction, image, SD or release action.
