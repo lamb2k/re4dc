@@ -1,5 +1,26 @@
 # Build 31: portal culling and world part plan
 
+**2026-10-29 EF08 first completion slice: DONE** source implementation under
+new `WORLD_PORTAL_COMPLETION=0|1` default0, preserving the existing portal-only
+path absent/zero. Selection issues a scene/view/source-generation/material
+bound ticket; actual queued emit/end_direct/batch_close can commit only positive
+whole-source coverage. Queued/empty/refused/partial/aborted/clipped/culled work
+grants none. Same part/placement, package storage/metadata/cell generation and
+current material are checked at flush; observed mutation revokes old receipts.
+Only the existing portal+qualified PVS batch composition's early static guard
+gets an opt-in exception. Stream/clip-gather/indexed and all other exclusions
+remain. Host and sanitizer cover actual runtime/chunk_emit/flush source; original
+portal388 checks are retained. **NEXT** serialized target OFF identity and the
+explicit queued ON profile in `portal_completion_profiles.json`, then authored
+source-bound cells and current-data lifecycle/look/STRICT/memory/cost gates.
+**BLOCKED** target slot is not yet granted; private authored wall/cell geometry
+with matching package/policy identities is absent from this synthetic gate and
+holds actual occlusion/look acceptance only. No SDK/emulator/media job is live.
+This first slice supports only complete stored meshlet spans with every strip
+group and no clip/cull delta; subset/multi-LOD coverage and legacy immediate
+witness qualification remain pending. Source rendering remains the fallback.
+
+
 **2026-10-28 progress 3: DONE** runtime follow-up re-synced onto `f4c1af9a1c861de58d56e71fb18d0f4e4e313217`, preserving landed tools and Answers (owner); runtime source is unchanged from the previous qualified follow-up; all 48 OFF comparisons, four enabled compile/link arms and ten rejection probes pass again on the refreshed base; **NEXT** Claude runs the private-image/console commands below; **BLOCKED** private room geometry, full SDK/image identity and hardware acceptance.
 
 Branch: `codex/world-portal-part-plan-20261028`. Current integration base:

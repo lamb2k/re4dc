@@ -75,6 +75,32 @@ inline bool layout(const unsigned char* b,unsigned n,Layout& out){
     out=h;return true;
 }
 
+#if defined(RE4DC_WORLD_PORTAL_COMPLETION) && RE4DC_WORLD_PORTAL_COMPLETION
+// Selection is not publication. Only positive, complete opaque source coverage
+// may become a witness after the producer has ended and released its SQ lock.
+enum class Outcome : unsigned { Queued, Submitted, Culled, Refused, Partial, Aborted };
+struct Completion {
+    Outcome outcome=Outcome::Queued;
+    bool whole=false;
+    static Completion emitted(int result,bool published,unsigned input,unsigned output,bool whole){
+        if(result<0)return {output?Outcome::Partial:Outcome::Aborted,false};
+        if(!result)return {published?Outcome::Partial:Outcome::Refused,false};
+        if(!published || !output)return {Outcome::Culled,false};
+        if(!whole || !input || input!=output)return {Outcome::Partial,false};
+        return {Outcome::Submitted,true};
+    }
+    bool witnessed()const{return outcome==Outcome::Submitted && whole;}
+};
+struct Ticket { unsigned serial=0,witness=kMaxWitnesses,placement=~0U,part=~0U; };
+// Deliberately narrow whole-source coverage: all stored meshlets, in order,
+// with every strip group present. Multi-LOD/subset coverage needs its own proof.
+template<class Pick> bool whole_source(const Pick* picks,unsigned count,unsigned first,unsigned total){
+    if(!picks || !total || count!=total)return false;
+    for(unsigned i=0;i<count;++i)if(picks[i].let!=first+i || picks[i].nr!=0xffU)return false;
+    return true;
+}
+#endif
+
 // Successful opaque source parts belong to one exact image/camera/generation.
 // A skipped or refused part never commits. A changed key clears every receipt.
 struct Receipts {

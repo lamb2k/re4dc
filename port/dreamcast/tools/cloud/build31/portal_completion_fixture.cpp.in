@@ -1,0 +1,109 @@
+
+// Additional fixture around the production chunk_emit and flush receipt block.
+#define RE4DC_SCENERY_SUBMIT_BATCH 1
+#define RE4DC_SCENERY_REPLAY_LEAN 1
+using Outcome=re4dc::portal29::Outcome;
+using Completion=re4dc::portal29::Completion;
+using Ticket=re4dc::portal29::Ticket;
+static unsigned closes=0,ends=0;
+static bool sq_held=false;
+struct Batch {bool held=false;};
+void re4dc_ps2_world_batch_close(Batch* b){expect(!b->held);sq_held=false;++closes;}
+void re4dc_model_packet_commit(unsigned){}
+void re4dc_model_result(unsigned,unsigned,unsigned){}
+struct MiniEmitter {
+    using Pick=SelectorBase::Pick;
+    struct Uv {float uv_bias[2]{},uv_scale[2]{1,1};}part,batch;
+    unsigned used=0,input=0,output=0,slots=0,primed=0,pvs_pending[3]{};
+    bool bound=false,submitted=false;void* cache=nullptr;
+    int stop=-1,result=1;unsigned delta_input=2,delta_output=2;
+    int emit_pick(const Pick&){
+        if(stop==0)return result;
+        if(stop>0)--stop;
+        submitted=true;input+=delta_input;output+=delta_output;sq_held=true;return 1;
+    }
+    void end_direct(){sq_held=false;++ends;}
+#if 0
+#else
+@CHUNK_EMIT@
+};
+struct TestPart {unsigned wp29_placement=0,index=0;Ticket wp29_ticket;unsigned key[6]{1,2,32,32,0,0};};
+void test_flush(MiniEmitter& e,const TestPart& x,int result,bool wp29_whole,unsigned wp29_clipped,unsigned wp29_culled){
+    struct {Batch batch;} submit_scope;
+@FLUSH@
+}
+static unsigned* material_key(unsigned part,unsigned out[6]){
+    const auto& m=meta[part];out[0]=m.crc;out[1]=m.fnv;out[2]=m.width;out[3]=m.height;out[4]=m.pass;out[5]=m.cull;return out;
+}
+static void reset_completion(){
+    load_good();scene_ok=opaque_ok=source_ok=true;
+    ps2w.storage=reinterpret_cast<void*>(1);ps2w.parts=meta;ps2w.placements=::placements;ps2w.room=0x103;
+    ps2w.view[3]=0;ps2w.projection[1]=1;ps2w.viewport[2]=640;
+    wp29::begin(0,ps2w.projection,10,20000);expect(wp29::candidate);
+}
+int main(){
+    original_checks();
+    SelectorBase::Pick picks[2]{{0,255,0,0,0,{0,0}},{1,255,0,0,0,{0,0}}};
+    expect(re4dc::portal29::whole_source(picks,2,0,2));
+    expect(!re4dc::portal29::whole_source(picks,0,0,2));
+    expect(!re4dc::portal29::whole_source(picks,1,0,2));
+    picks[1].nr=0;expect(!re4dc::portal29::whole_source(picks,2,0,2));picks[1].nr=255;
+    picks[1].let=0;expect(!re4dc::portal29::whole_source(picks,2,0,2));picks[1].let=1;
+    for(unsigned failure=0;failure<21;++failure){
+        reset_completion();unsigned key[6],key1[6];material_key(0,key);material_key(1,key1);
+        const auto ticket=wp29::capture(0,0,key);const auto ticket1=wp29::capture(1,1,key1);
+        expect(ticket.serial && ticket1.serial);wp29::activate();expect(!pc::st.active);
+        for(Outcome status:{Outcome::Queued,Outcome::Culled,Outcome::Refused,Outcome::Partial,Outcome::Aborted}){
+            wp29::finish(ticket,{status,false},key);expect(!wp29::receipts.count);
+        }
+        const auto submitted=Completion::emitted(1,true,2,2,true);expect(submitted.witnessed());
+        if(failure==0)++epoch;
+        if(failure==1)++frame;
+        if(failure==2)++pc::wp29_generation;
+        if(failure==3)ps2w.view[3]=1;
+        if(failure==4)ps2w.projection[1]=2;
+        if(failure==5)ps2w.viewport[2]=320;
+        if(failure==6)ps2w.storage=reinterpret_cast<void*>(2);
+        if(failure==7){static Meta other[2];std::memcpy(other,meta,sizeof(meta));ps2w.parts=other;}
+        if(failure==8){static Placement other[2];std::memcpy(other,placements,sizeof(placements));ps2w.placements=other;}
+        if(failure==9)ps2w.room=0x104;
+        if(failure==10)++meta[0].fnv;
+        if(failure==11)opaque_ok=false;
+        if(failure==12)source_ok=false;
+        if(failure==13)++key[0];
+        if(failure==14){auto old=ticket;++old.serial;wp29::finish(old,submitted,key);expect(!wp29::receipts.count);}
+        else if(failure==19){auto wrong=ticket;++wrong.placement;wp29::finish(wrong,submitted,key);}
+        else if(failure==20){auto wrong=ticket;++wrong.part;wp29::finish(wrong,submitted,key);}
+        else if(failure==15)wp29::finish(ticket,Completion::emitted(1,true,0,0,true),key);
+        else if(failure==16)wp29::finish(ticket,Completion::emitted(1,true,4,2,true),key);
+        else if(failure==17)wp29::finish(ticket,Completion::emitted(1,true,2,2,false),key);
+        else if(failure==18)wp29::finish(ticket,Completion::emitted(-1,true,2,2,true),key);
+        else wp29::finish(ticket,submitted,key);
+        wp29::activate();expect(!pc::st.active && !wp29::receipts.count);
+        if(failure==10)--meta[0].fnv;
+    }
+    reset_completion();unsigned k1[6];material_key(1,k1);
+    TestPart x;x.wp29_ticket=wp29::capture(0,0,x.key);const auto ticket1=wp29::capture(1,1,k1);
+    MiniEmitter empty;expect(empty.chunk_emit(picks,0)==1);test_flush(empty,x,1,false,stats.strips_clipped,stats.strips_culled);
+    expect(!wp29::receipts.count);expect(!sq_held);
+    MiniEmitter partial;partial.stop=1;partial.result=-1;
+    const int pr=partial.chunk_emit(picks,2);expect(pr<0 && partial.output==2);
+    test_flush(partial,x,pr,true,stats.strips_clipped,stats.strips_culled);expect(!wp29::receipts.count);
+    MiniEmitter clipped;const int cr=clipped.chunk_emit(picks,2);const unsigned before_clip=stats.strips_clipped;
+    ++stats.strips_clipped;test_flush(clipped,x,cr,true,before_clip,stats.strips_culled);expect(!wp29::receipts.count);
+    MiniEmitter culled;const int cu=culled.chunk_emit(picks,2);const unsigned before_cull=stats.strips_culled;
+    ++stats.strips_culled;test_flush(culled,x,cu,true,stats.strips_clipped,before_cull);expect(!wp29::receipts.count);
+    MiniEmitter good;const int result=good.chunk_emit(picks,2);expect(result>0 && good.output==4 && sq_held);
+    test_flush(good,x,result,true,stats.strips_clipped,stats.strips_culled);expect(wp29::receipts.count==1 && !sq_held);
+    wp29::activate();expect(!pc::st.active); // target encountered before last witness flush
+    wp29::finish(ticket1,Completion::emitted(1,true,2,2,true),k1);wp29::activate();expect(pc::st.active);
+    ++meta[0].fnv;wp29::activate();expect(!pc::st.active && !wp29::receipts.count);--meta[0].fnv;
+    wp29::activate();expect(!pc::st.active); // observing mutation revoked the old receipt
+    reset_completion();auto stale=wp29::capture(0,0,x.key);wp29::begin(0,ps2w.projection,10,20000);
+    wp29::finish(stale,Completion::emitted(1,true,2,2,true),x.key);expect(!wp29::receipts.count);
+    // Conservatively remain disabled after the independent ticket serial exhausts.
+    wp29::completion_serial=~0U;wp29::begin(0,ps2w.projection,10,20000);expect(!wp29::candidate);
+    wp29::begin(0,ps2w.projection,10,20000);expect(!wp29::candidate && !wp29::completion_serial);
+    pc::unload();expect(allocations==frees);
+    std::printf("portal completion actual runtime/emit/flush: %u checks PASS; closes=%u ends=%u\n",checks,closes,ends);
+}
