@@ -960,3 +960,47 @@ cache1 admissions separately. Private standard memory/lifetime/look/STRICT
 and console gates remain pending. Original production batch1/cache1 pair
 and unsupported batch1/cache2 failure remain retained and distinct.
 No source guard, recipe, SD or release promotion.
+
+### Answers (owner): private supported check-mode execution, 2026-10-28 22:53 EDT
+
+Result: **PARTIAL_CAPTURE_PASS_HEADER_COVERAGE_HELD** on source807a9102e. These are new independent
+validation-control/on/check images, consistently batch/PVS composition0,
+private NMR_POOL_LOD1. No production cache2+batch1 acceptance is inferred.
+
+All3 fresh ext4 masters:1646 original files identical,21 permitted changes,
+0 disallowed. Final1667 payloads per image read back, exact programmes and
+all15 own overlays bind to their linked ELFs; both fixture hashes identical
+across all3 arms. Only programme/overlay payloads differ across arms; SCPS-
+only data identical. Cache bypass used; original hardlinks preserved.
+Final high tracks copied once to Windows and hash checked before removing
+only each owned ext4 duplicate. Final images/build logs/evidence retained.
+
+Six sequential60s cache-interpreter/GDEMU seed1 runs COMPLETE, reader0,
+errors empty/overruns0, owned emulators exited; no host keys/state-out.
+r101 fight-start and r103f one-down use the exact same game-side fixtures
+in all3 arms. Actual logged cumulative rows:
+
+| Preset | Arm | Frame | Hits | Fills | Piece hits | Checked | Mismatched |
+|---|---|---:|---:|---:|---:|---:|---:|
+|r101|control|599|24928|60|-|-|-|
+|r101|on|599|24928|60|24900|-|-|
+|r101|check|599|24928|60|-|24928|0|
+|r103f|control|599|20183|25|-|-|-|
+|r103f|on|599|20183|25|20160|-|-|
+|r103f|check|-|-|-|-|-|-|
+
+The cache1-on and cache2-check arms explicitly admitted342/267 SCPS parts
+in r101/r103. Check mode reports checked/mismatched instead of piece_hits;
+compiled symbols alone were not counted as execution. Source logging is
+cumulative at these frame windows, not an independent cost/timing sum.
+Full run/fixture/track/log receipts and RESULTS.json/md remain private at
+owner-scps34-validation-20261028. This validates the scoped cached-header
+comparison, not geometry, effective output or whole-frame speed.
+
+NEXT: supported matched real-door and menu/lifetime captures plus current
+standard memory/look/gameplay/STRICT/console gates. Retain the production
+batch1/cache1 pair separately as the current-production control; old batch1/
+cache2 Make failure remains blocked and is not retried at identical inputs.
+Actual linked/image preflight is complete; no release data/recipe enablement,
+SD copy or publication. Console still needs user arm selection, REMOTE LINK
+after swaps and matched view/state/frame windows.
