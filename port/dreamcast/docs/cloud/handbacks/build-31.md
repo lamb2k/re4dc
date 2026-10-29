@@ -655,6 +655,8 @@ does not enable a control, integrate source, or qualify a whole EF card.
 
 ## 2026-10-29 recovery: EF08 complete profile and effective guard proof
 
+Queue Status is published by the sole coordinator in the [live recovery checkpoint](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md#status), alongside this source delivery. Keeping shared Build rows in that one branch prevents competing row edits; this branch retains its existing build handback and card-specific backlog update.
+
 **DONE:** recovered unpublished profile correction
 `4c033a49eb87bb5357d859d82ffebe2e32df03db` and synchronized tip
 `97bc1db77780aef0d0c0ab9dadf69a5fed14f61f`, preserving the original worktree.
