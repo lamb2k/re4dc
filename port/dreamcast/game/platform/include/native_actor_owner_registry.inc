@@ -21,6 +21,9 @@ void owned_skin_invalidate_frames(); // definition after the Frame cache
 #endif
 #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
 static int skin_acquire_inner(unsigned& why_,unsigned source_frame,const Re4dcActorSkinBinding* in,unsigned n,Re4dcActorSkinLease* out) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial){why_=6;return 0;}
+#endif
     if(!out || out->serial || out->count || !in || !n || n>kRe4dcActorRoles || source_frame!=skin_frame || owned_skin_serial==UINT32_MAX){why_=1;return 0;}
     unsigned index[kRe4dcActorRoles],high=skin_count;
     for(unsigned k=0;k<n;++k){
@@ -90,6 +93,9 @@ void owned_skin_diag(unsigned why,unsigned source_frame,unsigned n,unsigned role
 #define SKINACQ_REFUSE(why,role,value) return 0
 #endif
 extern "C" int re4dc_actor_skin_acquire(unsigned source_frame,const Re4dcActorSkinBinding* in,unsigned n,Re4dcActorSkinLease* out) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     if(!out || out->serial || out->count || !in || !n || n>kRe4dcActorRoles || source_frame!=skin_frame || owned_skin_serial==UINT32_MAX)SKINACQ_REFUSE(1,0,source_frame!=skin_frame);
     unsigned index[kRe4dcActorRoles],high=skin_count;
     for(unsigned k=0;k<n;++k){
@@ -134,6 +140,9 @@ extern "C" int re4dc_actor_skin_validate(const Re4dcActorSkinLease* lease) {
 extern "C" int re4dc_actor_skin_release(Re4dcActorSkinLease* lease) {
     if(!lease)return 0;
     if(!lease->serial){*lease={};return 1;}
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     if(!re4dc_actor_skin_validate(lease)){
         const unsigned serial=lease->serial;*lease={};
         // Failure still revokes every surviving entry of THIS owner before

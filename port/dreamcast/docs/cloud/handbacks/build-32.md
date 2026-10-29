@@ -1,5 +1,50 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 actual cloth target code-generation review
+
+Read-only inspection of the existing K35/D13 actual target objects and linked ELF establishes the helper's local 16-byte matrix alignment, 48-byte row bounds inside its 80-byte local area, caller/helper argument layout, stride12 and bounded spans, paired FRCHG around the row load, identity bottom row/w1 and callback-free FTRV interval. Object/ELF instruction prefixes agree, excluding relocation literal pools. Counts1..3 retain the existing scalar routine. No demonstrated target blocker was found by this bounded inspection.
+
+This does not execute FTRV or establish numeric equality, FPSCR PR/SZ/bank entry state through interrupts, clipping stability, full stack highwater, live cloth/material output, speed or console acceptance. The compiler's -m4-single option is not a runtime FPSCR proof. Target-executable numeric/FPSCR entry/exit/interruption fixtures remain CLOUD-owned under EF14, using the pinned library and existing ownership pattern. Local will run changed fixtures through target gates; do not repeat unchanged object inspection or infer performance from instruction counts. No source edits, rebuild, emulator capture or private asset reads occurred.
+
+
+## Answers (owner): 2026-10-29 current K35 portrait inputs rebound
+
+Local read-only verification now binds actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its previously verified final programme/all15 overlays to the existing bounded first-call input case. Four named current-image archive/private-input pairs, four current headers and seven linked geometry/weight/UV/run arrays match the prior c027 proof; four ordinary r100/call-route source files are unchanged. Actual current FE continuation/actor-format/span/transaction/fast/lazy/skin-admission/QA-link controls are bound separately. The prior static119-bone/27-weighted-palette association is retained only as an input contract; no live pose or runtime result transfers between images. No private data/manifest/raw array is published.
+
+No named input is missing. Current ordinary NewGame/r100 s40/call0, actual primitive snapshot/queue/drain, changing-pose output/look, close/reentry lifetime, current heap/stack/VRAM, speed and console checks remain pending. Old c027 snapshots are incompatible with K35; inherited no-Windows-input rule retires --keys/F5/state-out. No current permitted ordinary guest/link controller/state route is established, and forced radio/warp/story flags or unchanged menu/movie/failed-memory captures are not substitutes. No build/capture/source/cache/asset mutation occurred.
+
+Do not repeat this binding while input/image hashes are unchanged. Local next may inspect existing target ABI/code generation without changing source or running a duplicate build; actual numeric/FPSCR execution still needs the cloud-owned source fixture and local SDK/runtime gate. All source fixes, material/current-image presentation and bounded skin-reuse continuations stay cloud-owned; look/media/console/release holds remain.
+
+
+## Answers (owner): 2026-10-29 current K35 r100 cloth inputs rebound
+
+Local read-only binding now uses actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its already-verified final programme/all15 overlays, not the old c027 image. Four named r100/Core/native-texture/controller-look inputs match the earlier bounded case; full native texture-pak byte identity preserves the prior key mapping, and the selected EFF/300-byte record/native texture package bytes match. Current Esp4e producer source is unchanged; current cloth code and CLOTH_NATIVE/SHEET11/TILES11/XM_BATCH14/outcome/upload/QA_LINK flags are separately bound. No assets/converter/cache/source/runtime state were modified, and no build/capture was launched. Private bytes/manifests/hashes remain local.
+
+This proves current input availability and the same nominal9x10 case only. It does not prove a loaded owner, active current9x10 instance, batch execution, packet output, visual parity, lifetime, stack/heap/VRAM, speed or console acceptance. Current-image ordinary NewGame/controller route and read-only current-ELF observation remain prerequisites. The old snapshot belongs to c027 and must not be loaded onto K35. Inherited no-Windows-input rule retires keyboard/F5 paths; no permitted guest/link controller/state continuation has yet been established for the ordinary route. Do not substitute historical forced position/warp/god/goto/kill or repeat menu-only/old natural04/failed-memory captures.
+
+The four-input rebind is complete, so do not repeat it while image/input hashes are unchanged. Local next is a supported ordinary guest/link path and existing read-only output observer; source-only numeric/FPSCR fixture work remains cloud-owned. Console/look waits still require the user's intended media selection/swap and reviewed correct-build link readiness. All material, wide-sheet and current-memory/cost acceptance gates remain open.
+
+
+## Answers (owner): 2026-10-29 bounded cloth transform batch qualification
+
+Source `bbfd3254fe4d94299a4bdbc869dbae92bb5ff978` clean no-ff landed `d13e2a459627077680f58edc35eae9bceda34c8f` default0. Source/peer review includes actual pinned SH4ZAM33fa485 row-loader/point API contract. Existing4 host fixture tests pass normal/sanitized paths; their scalar transform/SH4 shims are explicitly host evidence. Pinned SDK absent/explicit0/dependency-control/ON full releases all link/missingexists0;527 actual C++ commands per arm and dedicated CC sh4zam_direct command verify macro only cloth.cpp and sh4zam_direct.c. Complete programme/15overlay/allocated-section OFF identity versus bound simulation integration PASS before freshbase origin-only push/readback.
+
+Matched actual SH4 dependency0 versus batch1 footprint delta `{"cloth": {"bss": 0, "data": 0, "text": -84}, "linked_main": {"bss": 0, "data": 0, "text": 480}, "sh4zam_direct": {"bss": 0, "data": 0, "text": 684}}` bytes; linked main +480 text/data0/BSS0 is not a speed/highwater result and separate object deltas are not additive whole-frame savings. Current compatible ALLON K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` with QA_LINK1 includes this batch: compile/missing,542 actual C++consumer flags plus CC helper, loader/standard lint, ZIP/checksums and actual final programme/all15-overlay SDK binding PASS. Track03 `d885344d8376613c3940ff8e284f8fc038ba98a20158fdf3dfa2a96cb817e3ee`. PREPARED only, no current-image output/look/gameplay/STRICT/memory/FPS/console acceptance or SD/recipe promotion.
+
+Documentary correction: Esp4e SetFreeWork derives/clamps nx2..100/ny2..50 before calling Cloth::Set; Cloth::Set itself accepts its u8 dimensions without that clamp. Existing bound private guidepost case is9x10; widths101/255 remain synthetic and are not a live wide sheet. Actual target alignment/FPSCR/FTRV rounding, affine/cancellation/near-clip stability, per-call stack/current margins and real packets/lifecycle/cost remain named gates. Cloud may add a source-owned target-executable numeric/alignment/FPSCR fixture against the actual pinned API (no new microkernel/asm substitute); local owns SDK/execution/private/current-image qualification. Missing pTobjA/alpha/depth/light and skin-reuse continuations stay open.
+
+
+## Answers (owner): 2026-10-29 skin admission qualification
+
+Skin `bdca347c12b52a6522e2d0b3df1b63a6d232dc85` landed `a57be30f3615452d894d917f7fb83efe685fd686` default0.
+
+Each source slice passed existing extracted normal/sanitizer and host-OFF fixtures, then the local pinned SDK full release absent/explicit0/ON gates; cloth additionally has a SHEET11/outcomes/upload dependency-only control. Each arm has existing empty missing.txt and527 actual C++ commands checked for precise consumer flags. Absent/zero programme, all15 overlays and all allocated-section metadata/payloads match the immediately prior bound integration. Clean no-ff merges, fresh-base origin-only push/readback, no conflict resolution.
+
+Combined source `f5ad6fec56370a0a4df59088a1a5c094405160f2`, ALLON K33 with QA_LINK1 and existing SKIN_PALETTE_LAZY1: compile/missing, actual542 global and feature-consumer command checks, loader/standard lint, ZIP and checksums passed. Final raw programme/all15 overlays match SDK. Track03 `4220679b1b9adf7f7e387963a08abd09f002a57bf860b9918fc6d6c87530b617`. PREPARED only: no current water/skin/cloth runtime, output/look, STRICT/gameplay, heap/VRAM/cost/hardware acceptance, recipe promotion or SD copy.
+
+Admission observes capacity before palette allocation without registry/frame/owner mutation, OOM cancels only its ticket, and non-yielding LAZY1 commit publishes the prepared slot. Actual target flags are restricted to trans.cpp/native_actor_fast.cpp; LAZY2 is excluded. No allocator rewind was introduced. Source/synthetic follow-ons remain cloud-owned: full-table existing-lazy replacement, last serial before exhaustion, stale cancellation after a newer ticket, and literal Make pattern-value guard hardening. Demand-driven materialization/current-image presentation and actual lifecycle/memory/cost acceptance remain open; this slice does not complete that continuation.
+
+
 **2026-10-28 progress 2: DONE** guarded cone admission, current-data UV precision checks, mixed-format shared submission and counters; **NEXT** Claude runs the private image/console comparisons below; cloud proceeds to Build 33; **BLOCKED** real character coverage, whole-image identity, raster/appearance and net frame-time acceptance need private assets and hardware.
 
 Branch: `codex/actor-cone-uv16-20261028`, based on
@@ -800,6 +845,110 @@ ALL ON K24 includes PLAN_OWNER_SCOPED=1 and the first four controls, with QA_LIN
 NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/lifecycle/look/STRICT/heap/stack/full-cost/console gates. Real portal occlusion still needs authored cells and compatible source/view proof. Private console checks require actual intended media selection/swap and reviewed link readiness at the user's console boundary. Frozen release/Pi/media/look holds remain. Independent next native decoder, immutable world preparation and cloth-sheet work proceeds through existing owners; source fixes do not wait for historical QA reconstruction or a broad census.
 
 
+## 2026-10-29 Build32 review5: transactional skin admission
+
+Status: DONE for the first bounded admission slice; NEXT is the deferred recipe and one registry presentation class. This is a public-source, host-validated change prepared for coordinator review/integration. Isolated `work-actor` HEAD at final suite: `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`; the OFF comparison pins original skin source at `39ed524a3b0a4727148aaa5a45eaaea4d211cede`. The coordinator added the single primary Make include and verified actual compile-command scope in the public fixture. Target compilation remains a local gate.
+
+### Change and source proof
+
+The three actual source deferral producers in `src/game/trans.cpp` (`re4dc_skin_defer`, `re4dc_skin_defer_lazy`, `skinDeferPending`) now request a one-at-a-time registry admission ticket before `re4dc_prim_tail`. A full table or owner conflict declines before the primitive cursor advances; the existing caller then follows its source CPU path. On successful admission the producer allocates, copies the eager palette or pending header, and commits the selected registry slot. If the allocator refuses, cancellation clears only this ticket: an earlier lazy entry, an existing inert native-owner reservation, and unrelated owner leases remain intact. A successful lazy replacement preserves latest-Trans-wins semantics; a successful new-frame commit performs the original frame/owner reset then publishes. No allocator rewind is used. Serial exhaustion declines further ticket creation.
+
+The ticket is a sidecar in `native_actor_fast.cpp` and the admission implementation is `platform/include/native_actor_skin_admit32.inc`. Existing owner acquire/register/reserve interfaces reject competing mutations while a ticket is live. Empty-lease release remains successful so an acquisition refused during reentry takes the established `actor_decline`/`leon_decline` source fallback without converting an empty lease into `actor_fail`; a real earlier lease is neither changed nor released until the ticket ends. `SetPrimBuffPtr` and `re4dc_actor_owner_retire` revoke pending tickets before primitive/workspace reuse, so a copied or stale ticket cannot publish even when the source frame or address is reused. The affected current reservation/lease include files carry only guarded hooks. `SKIN_ADMISSION32 ?= 0` in `skin_admit32.mk` requires `ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1`, and defines the feature only for `trans.o` and `native_actor_fast.o`.
+
+The allocation-to-commit proof is source-bounded: current `re4dc_prim_tail` performs a pointer/bounds check and calls `GetPrimBuff`, which aligns and advances one monotonic primitive cursor. A successful tail call does not yield, invoke the actor registry, or run a model callback. The required `SKIN_PALETTE_LAZY=1` pending branch performs only header field writes and `memcpy` between allocation and commit; the eager/lazy variants perform only `memcpy`. `SKIN_PALETTE_LAZY=2` is deliberately rejected by the Make control because its comparison build executes weight and logging work between allocation and registration. `GetPrimBuff` reports an overflow only after a contradictory bounds outcome; admission still never rewinds or assumes a reusable cursor. A forced retirement between allocation and commit refuses publication.
+
+### Exact validation
+
+Run from `work-actor`:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32.py
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32_cost.py
+git diff --check
+```
+
+The first script extracts the actual current `trans.cpp` producers, `GetPrimBuff`/`re4dc_prim_tail`/`SetPrimBuffPtr`, actual skin registry/admission/owner lease interfaces, `re4dc_actor_skin_palette`, lazy resolver, and owner retirement. Only source game data structures, model weight-building work and synthetic assets are host adapters. Both original coupled owner registry and isolated owner pool pass normal and ASan/UBSan: 138 and 129 assertions respectively in each sanitizer mode. Cases exercise real pending/eager/lazy producer and consumer outcomes; table-full refusal with no primitive advance; owner conflict; replacement; old lazy entry and inert reservation across OOM; reentrant register, reserve, acquire and empty/real release; unrelated prior lease validation; frame-switch OOM and success; owner retirement and `SetPrimBuffPtr` stale-ticket refusal; and serial exhaustion. The fixture reports zero primitive-overflow diagnostics. The same script verifies pinned-baseline/absent/explicit-zero preprocessing and host objects byte-identical for both owner variants (host object sizes 28,864 and 27,104 bytes). Fragment and actual primary-Makefile absent/zero commands match; ON defines exactly once only on trans.o and native_actor_fast.o, with native_ui.o unaffected; malformed values and missing prerequisites reject. The script prints `PASS skin_admit32 source=324acb6678aec794 Make control` on the frozen diff.
+
+Host-only production-extract footprint from `skin_admit32_cost.py`: `.text` 4,700 to 6,057 (+1,357 bytes), `.bss` 18,080 to 18,144 (+64 bytes), `.data` unchanged at 8. Host `re4dc_skin_defer_lazy` stack is 32 to 64 bytes, pending wrapper 64 to 128 bytes; admission and commit are 32 bytes each, and primitive tail remains 8. The 32-bit declared ticket layout is 28 bytes, with a 4-byte persistent serial: 32 bytes of declared sidecar fields before target alignment. The +64 `.bss` includes host alignment and code-extract layout; it is not an SH-4 footprint. These figures measure neither frame-time savings nor primitive high-water reduction on real assets.
+
+### Next scope and unavailable gates
+
+The later demand-driven step should keep a bounded recipe for a source-deferred info only when it can reserve a real ordinary registry slot through to its render consumer. The recipe needs model, info, weight pointer/count/layout, frame, and primitive-owner incarnation; an unprovable or full case must keep the current immediate palette path. At the original OT callback, a native-owned consumer can use its separately mapped palette without allocating a source copy; an ordinary native or generic fallback must resolve the source-specific palette and, when needed, materialize source arrays before the walker. The current native `prepare_frame` and generic `re4dc_actor_materialize_lazy` are the exact consumer boundaries to compare; original `commonScreenMatSub` material/UV and pose callback cadence must remain unchanged. A placeholder cannot be treated as a drawable palette. This is design scope only; no deferred-recipe code is included in this first slice.
+
+BLOCKED externally: no SH target compiler/SDK, private model/room assets, Flycast capture, STRICT replay, or console trace is available in this workspace. Next integration checks are target enabled/OFF builds and linked code/stack/storage, followed by private full-registry/conflict/OOM/reentry/retirement images, source/native presentation and callback-cadence comparisons, primitive high-water and materialization counts. No simulated hardware performance gain is claimed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${SA32_BASE_TREE:?fresh base worktree path}"
+: "${SA32_LOGS:?fresh log directory}"
+: "${SA32_PROGRAMS:?fresh programme directory}"
+: "${SA32_LABEL:?fresh lane label prefix}"
+SA32_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$SA32_BASE_TREE" 6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$SA32_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$SA32_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$SA32_BASE_TREE" "${SA32_LABEL}base" ""
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}absent" ""
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}off" "SKIN_ADMISSION32=0"
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}ctrl" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=0"
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}on" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${SA32_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${SA32_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${SA32_LABEL}offrP" \
+  --output "$SA32_LOGS/skin-admission32-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+**Approved next source boundary, 2026-10-29.** The recipe continuation must
+reserve both a registry slot and future primitive capacity. An inert key alone
+does not protect bytes from intervening `GetPrimBuff` calls. Reuse the current
+primitive owner and allocator; initially enroll only an existing reserved
+native-owner key with the same `n*48 + 16 KiB` admission margin. Hold a bounded
+capacity credit honored by every primitive allocation without advancing or
+rewinding the cursor. Resolve the source-layout recipe at the existing palette
+getter/materialization boundary when source fallback actually needs it. Native
+palettes retain their distinct layout and owner leases. Keep the capacity
+credit through all prepublication declines; release it on a definitive
+completed native transaction or primitive retirement, never merely at
+`skin_acquire`. The existing actor transaction result boundary is in scope for
+that single actor writer. Cover interleaved allocations, full/OOM credits,
+same-address retirement, source fallback after native preflight decline, two
+passes and source callback cadence before claiming demand-driven preparation
+or usable primitive capacity. This commit only fixes admission ordering; it
+does not claim those subsequent recipe/presentation changes.
+
+
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
@@ -974,3 +1123,116 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+## 2026-10-29 Build32 EF14: bounded cloth XMTRX point batch
+
+### Scope and integration state
+
+**2026-10-29 progress: DONE — reviewed public source slice, default0.** Branch `codex/cloth-batch-20261029`, publication base `a5ac02aecee317c3ac74f1c9e7e2546a40775348`, which includes EF11 width commit `a0166e96b09cb419b46f02c6cddd6cdfb46f254f`. The batch was reconciled with the exact published wide-tile adapter, then reapplied cleanly onto the current integration. It consumes widths 2–100 and each horizontal tile of wider supported dimensions in row-major order.
+
+Changed files: `include/re4dc_xm.h`, `port/dreamcast/game/platform/sh4zam_direct.c`, `src/game/cloth.cpp`, new `port/dreamcast/game/cloth_xm_batch14.mk`, new `port/dreamcast/tests/test_cloth_xm_batch14.py`, and the top-level `port/dreamcast/game/Makefile` include after its existing effects include. The coordinator added the top-level include and primary-Make fixture proof before the EF11 merge; I resolved only `cloth.cpp` and updated the owned fixture on the EF11 base. No `native_ui.cpp`, `native_model.cpp`, source gameplay, or private assets changed.
+
+### Behavior and authority
+
+The default-off `CLOTH_XM_BATCH14=1` selector requires `CLOTH_SHEET11=1`, `GAME_SH4ZAM=1`, `GAME_SH4ZAM_RENDER_ONLY=1`, and `GAME_SH4ZAM_LOGIC=0`. Its definition reaches only `cloth.o` and `sh4zam_direct.o`. The existing wrappers and global/logic SH4ZAM policies stay unchanged. The ON cloth path calls the bounded new point API for each currently active source row, after texture/material preparation and a source-epoch/frame/pointer/dimension recheck. Each call synchronously preflights matrix, count (1–100), 12-byte vector layout, input/output spans and strides, four-byte pointer/stride alignment, address overflow, matrix overlap, and shifted source/output overlap before writing. Exact in-place input/output with the same stride is supported; count 0 declines without writes. Rows of 1–3 points use the current `PSMTXMultVec` scalar association. Rows of at least four load XMTRX once and perform one FTRV per point; the loop contains no game callback or other XMTRX owner.
+
+The SH4ZAM gitlink pin is `33fa4850cacb30dd0ad35485ef035526ec4ce782`. Its `shz_vec4_t` is a 16-byte-aligned vector type while GameCube `Mtx` only promises float alignment. The new batch copies three matrix rows into typed local `shz_vec4_t` values before XMTRX acquisition, then passes those aligned rows to the pinned `shz_xmtrx_load_rows_3x4` inline; it does not cast a possibly four-byte-aligned `Mtx` to a vector pointer. The pinned SH4 assembly loader uses 32-bit `fmov.s` with paired `frchg`; `shz_xmtrx_transform_point3` uses FTRV with w=1. The existing target compiler must still prove the selected inlines, PR/SZ contract, symbol closure, disassembly, stack, and actual SH4 numeric behavior.
+
+The active cloth adapter still prepares exactly one material, keeps the two-row `2 * 100 * 3 * sizeof(float) = 2400`-byte band workspace, and hands each band to the unchanged `re4dc_cloth_band11` packet consumer. The batch lambda receives the source row, tile first column and bounded tile count; it transforms each top/bottom tile immediately before that tile's packet and never emits all rows of one column tile ahead of later tiles. The source diagonal, seam vertices and UV interpolation remain with EF11's packet consumer. It preserves EF03 terminal retirement before and after first publication: a source epoch change after a yielding prepare or packet send returns `PartialAbort`; no retired source is replayed through GX. A malformed batch envelope before publication returns `UnsupportedBeforePublication` without a partial write; after publication the progress accumulator reports `PartialAbort`. The row transform does not introduce a callback between XMTRX load and the last FTRV. This is a render-only numerical approximation; source simulation/callbacks and material/packet/clip behavior remain in their existing paths.
+
+### Checks executed
+
+From the worktree:
+
+```
+python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 tests, OK
+ASAN_OPTIONS=detect_leaks=0 CLOTH_XM_BATCH14_SANITIZE=1 python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 tests, OK
+python3 -B port/dreamcast/tests/test_cloth_tiles11.py
+# 3 tests, OK, including scalar wide baseline in normal and sanitizer arms
+git diff --check
+# clean
+```
+
+The fixture compiles and consumes the actual production batch block, cloth adapter, native sheet packet renderer, and geometry projection code in both tile-selector 0 and 1 profiles. It checks widths 2, 99, 100, 101 and 255, row/column packet encounter order, exact shared seam vertices/UV, near-plane cell order and clipping, supported wide refusal with tiles0, source immutability, scalar/XM route selection and expected load/FTRV counts per tile, strided numeric agreement on a nontrivial affine transform, exact in-place support, 4-byte-only matrix alignment, output guards, invalid inputs/overlap/overflow with no write or XMTRX load, and source retirement before and after publication. A separate differential arm compiles the same actual adapter and packet consumer with batch0 versus batch1 and compares every emitted packet byte at those five widths and the 101-column near-plane seam. Its normal and ASan/UBSan executions passed. The Make test parses the actual primary game Makefile with its production fragment include, checks absent/zero/one flags on affected and unaffected objects, and rejects empty, wildcard, multiword and inconsistent selector dependencies. Host OFF identity compares the production adapter preprocessed text and compiled object bytes against literal pinned `a0166e96` EF11 width source, with both absent and explicit zero; the guarded C/header additions have literal original prefixes. These are host/object checks, not target program-byte proof.
+
+One-off GCC host `-O2 -fstack-usage` on the extracted production fixture reported `re4dc_zam_xm_points14` 160 bytes (`dynamic,bounded`) and scalar comparison 56 bytes (`dynamic,bounded`). With EF11 tile mode on and the same harness/flags, `re4dc_cloth_native` reported 3,456 bytes at batch0 versus 3,392 at batch1 (static); the corresponding whole harness objects measured `.text` 22,775 versus 23,639 bytes and identical `.bss` 44,436 bytes. The local three typed matrix rows account for 48 bytes of source-level automatic storage; the cloth two-row band remains 2,400 bytes. No new persistent/global runtime store is declared. These host object totals include the test harness and are not target footprints. SH4 stack and link/code-size deltas remain unmeasured.
+
+### Outstanding gates
+
+No KOS/SH4 SDK or target compiler is present in this cloud workspace. The local coordinator must serialize integration, then run affected target ON/OFF builds, inspect symbols/disassembly and PR/SZ/XMTRX ownership, compare target OFF bytes, and measure SH4 stack, memory, frame time, clipping/numerics, source/visual/STRICT behavior, and publication/retirement in the supported emulator/console environment. The public `Cloth::Set` producer still clamps width at 100, and the cited current private sheet is 9×10; the synthetic 101/255 tests prove a bounded consumer, not current live wide source coverage. This slice does not close EF14's separate prepared-skin A→B→A retention or the entire EF11 cloth/material/effect work.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${XM14_BASE_TREE:?fresh base worktree path}"
+: "${XM14_LOGS:?fresh log directory}"
+: "${XM14_PROGRAMS:?fresh programme directory}"
+: "${XM14_LABEL:?fresh lane label prefix}"
+XM14_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$XM14_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$XM14_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$XM14_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$XM14_BASE_TREE" "${XM14_LABEL}base" ""
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}absent" ""
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}off" "CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}ctrl" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=1 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}on" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=1 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${XM14_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${XM14_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${XM14_LABEL}offrP" \
+  --output "$XM14_LOGS/cloth-xm14-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+Also qualify the original narrow sheet consumer with `CLOTH_TILES11=0`:
+
+```bash
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}narrowctrl" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=0 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}narrowon" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=0 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=1"
+/opt/toolchains/dc/sh-elf/bin/sh-elf-nm -C \
+  "/root/probe/lanes/route/out-${XM14_LABEL}onrP/re4dc-game.elf" \
+  > "$XM14_LOGS/cloth-xm14-symbols.txt"
+/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump -d \
+  --disassemble=re4dc_zam_xm_points14 \
+  "/root/probe/lanes/route/out-${XM14_LABEL}onrP/re4dc-game.elf" \
+  > "$XM14_LOGS/cloth-xm14-disassembly.txt"
+```
+
+Inspect the actual aligned-row load, paired `frchg`, PR/SZ entry/exit and
+callback-free FTRV loop, and retain target stack output. Host numerics and
+packet equality do not prove SH4 FTRV bit equality or a frame gain. Source
+simulation remains on its existing scalar route.

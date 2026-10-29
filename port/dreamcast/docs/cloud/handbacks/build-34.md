@@ -1,5 +1,32 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+## Answers (owner): 2026-10-29 corrected frontend blocked on full target OFF identity
+
+Source `a1f5931bf048e5dc36913c8d48af8a871c1bcce8` prepared clean no-ff candidate `beb670579c71b32cd2ac54b7a3305c27e2d0e072` from `a5ac02aecee317c3ac74f1c9e7e2546a40775348`; **UNPUSHED/BLOCKED**. Originalf90 actual-writer stale alias is fixed: exact retained calcTplOffset repro ON stamp4->0/6descriptor walks/current source data equalsOFF. Current source fixture OFF65,631/ON95,466 normal+ASan/UBSan and pinnedf90 negative control pass, including nonfirst shared header/descriptor/C8 CLUT. Six host production-TU preprocessing/host-OFF-object/Make and cost scripts pass. Other reviewed relocation caller classes established no legal SMD alias path; blanket cross-class exclusion remains unproved, not actual private occurrence.
+
+All four pinned-SDK release arms (absent,explicit0,FRONT_TEXOBJ1+owner0 dependency control,owner1) link with existing empty missing.txt and527 actual C++ commands each; ON only trans/model/scroll/read/game/main. **Full OFF gate FAILS** for both absent andzero: same size3,372,036B programme differs, text/data payloads and15overlay hashes differ; metadata/other allocated payloads match. Both absent/zero programme SHA `893ce130aa10184072cf712cd1baad698ef6cdbe6f447f31efc8106d52b7c155` versus baseline `fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`. Original failed receipts/artifacts retained, no judge weakening or build rerun.
+
+Bounded target-object diagnosis:602 other allocated objects match; sole changed section is trans.o `.text._Z11ModelRenderP6cModel`. Target disassembly differs at its0xd8c literal: word0x09a1->0x09a4, loaded at0xcf4/0xd00 and passed along the OSReport/re4dc_halt path. This is a diagnostic-line-like constant, not evidence of a new gameplay difference; it still violates the required full OFF contract. Host script is x86 preprocessing and does not establish the effective target-only halt/profile identity.
+
+SOURCE-ONLY CLOUD REQUEST: preserve pre-EF15 target diagnostic/source-line semantics while disabled, and extend meaningful OFF validation to the effective target halt path so this catches the change. Do not normalize away image bytes, edit the judge, suppress diagnostics or claim this failed gate passed. No local source patch/hand resolution is authorized. Latest tip5532a2a98fda49716c9dd36e4c114890d1c36103 changes only wildcardguard/test/docs after this frozen candidate; it does not change ModelRender runtime, so no blind identical runtime retry. A relevant source/authority or integration change with clear changed input can trigger a fresh unit.
+
+FRONT_TEXOBJ remains explicitly held for lifecycle/look/STRICT/multi-scene RAM/console. FRONT_TPL_OWNER remains unmerged and individually parked outside broad ALLON; no dependency unpark or recipe/SD/media promotion. Actual current-package/lifecycle/look/STRICT/memory/cost/console gates remain pending. This is a target qualification blocker, not overall completion.
+
+
+## Answers (owner): 2026-10-29 frontend ON authority blocker
+
+BLOCKED BEFORE MERGE/ON ADMISSION: `codex/frontend-owner-20261029` tip `f90dd0482fc0bd2e4e36acc725c0917f0801d758`. No production/default/recipe change from this branch has landed. A local host fixture extracting the actual production writer confirms this conditional counterexample:
+
+1. Qualify a room palette/info with at least two descriptors and cache its FtRec.
+2. Make a different palette outside the certified room whose descriptor points at the qualified room's nonfirst TEXHeader. Existing qualification does not enforce an exclusion of this descendant-alias state.
+3. Invoke the actual `calcTplOffset` writer. Its palette notifier ignores the external palette, then the writer changes the shared certified header's data. Original room palette/array/count/version and first header remain unchanged.
+4. Next lookup: OFF walks the six descriptors and returns the changed current value; ON keeps owner stamp4, walks0 and returns the old cached value.
+
+Exact source chain on f90: block.cpp677-684 -> cModel::moveDataAddr(0), model.cpp1537-1553 -> calcTplOffset1680-1703 (notifier1692). Authority/hit: trans.cpp3571-3593 and3716-3723; palette notification3962-3980 ignores outside palettes; foreign alias3612-3631 checks palette identity, not shared descendants. Current test stubs calcTplAddr and manually notifies its structural-remap case, so it does not cover this actual writer/alias. Host OFF/ON compile/run and production-extracted repro are retained locally. This proves a contract counterexample, not that a current private archive/producer actually creates it.
+
+SOURCE-ONLY REQUEST, no private input needed: enforce and prove a source-backed descendant-alias exclusion, OR conservatively revoke the affected certified ownership before structural writers mutate shared headers/descriptors. A cold structural-write revocation is preferable to a per-hit descriptor scan. Add an actual-writer regression for a different palette sharing a nonfirst certified header, plus descriptor/CLUT descendants where supported; ensure no qualified stale hit while ordinary fallback remains repaired. Preserve existing retirement, saturation, bounded sidecar fallback and flush-before-record-refresh behavior. Push a new branch tip for review; do not enable/claim acceptance for f90. Root will skip this unchanged semantic block until the branch or relevant writer/authority source changes.
+
+
 **2026-10-29 EF06 target handback: DONE** first consumed incarnation slice
 implemented and target built (`5f057b2ea` + `0efa52fe8`): four fresh full release
 arms baseline9ee386e3/absent/explicit0/ON pass real rc0, nonempty ELF and existing
@@ -1550,3 +1577,138 @@ enable a release default, publish media, copy to SD, restart the Pi or close
 the sixteen-card backlog.
 
 **Private frontend follow-up:** choose an actual current-image common-SMD room class, retain its loaded archive size and source owner, and compare native/reference descriptor words, effective UV/wrap/header/flush/tail behavior across base/added aliases, nonfirst descriptor changes, room reentry and same-address reload. Instances outside the certified room extent retain full comparison. Source/host no-walk assertions do not establish the private hit rate or frame gain.
+
+## 2026-10-29 EF15 target-OFF source-line correction
+
+Parent: `5532a2a98fda49716c9dd36e4c114890d1c36103` in isolated `work-frontend`, branch `codex/frontend-owner-20261029`. The corrective source changes are restricted to `src/game/trans.cpp` and `port/dreamcast/tools/cloud/build34/front_owner34_identity.py`; this delivery also synchronizes current integration `14b5c196db699640f7a9f39bc2318df22dc45ade` and appends this dated handback. The source `#line 2405` begins the SH-only texture loop. The guarded three-line owner notifier moved the later `HALT()` expansion in `frontNativeModelTrans` from logical line 2465 (`0x09a1`) to 2468 (`0x09a4`) even with `RE4DC_FRONT_TPL_OWNER=0`. An unconditional `#line 2417` immediately after the guard restores the original line at `wh->wrapT` and all following source diagnostics. It changes no runtime control or notifier behavior.
+
+The identity script now preprocesses the actual `__sh__`/non-PPC conditional path with `RE4DC_GAME`, `RE4DC_FRONT_NATIVE=1`, and `RE4DC_FRONT_TEXOBJ=1`. It extracts both exact `OSReport`/`re4dc_halt` macro expansions from the pre-EF15 source, current absent and explicit-zero source, and the pinned pre-fix 5532 source. Base/absent/zero calls match exactly at logical lines 2044 and 2465. The pinned pre-fix control differs at 2468; no constant is normalized. Existing six-TU host preprocessing, extracted OFF object and actual Make command/dependency checks remain in the same script.
+
+**2026-10-29 progress: DONE** source-line correction and a regression check on the actual SH-only preprocessor path, including the failing pre-fix control; **NEXT** local fresh changed-input full target OFF comparison before integration; **BLOCKED** only the pinned SDK/full-image and current-image runtime gates. This supersedes the earlier supplied source for the target diagnostic discrepancy; no previous failed target result is relabelled PASS.
+
+Commands from the candidate checkout:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_identity.py
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34.py --output /tmp/front34-line-identity-host.json
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34.py --output /tmp/front34-line-identity-san.json --sanitize
+git diff --check
+```
+
+All PASS. The frontend fixture reports OFF 65,631 and ON 95,466 checks in both normal and ASan/UBSan runs, with the pinned f90 alias negative control still reproducing stale qualification and the current owner matching source. The OFF extracted host object remains 26,688 bytes, SHA-256 `1c1b3bf96ab552dfed1e3e6fc760f199ad8aa4f8288da3b244cb44fb121adcb7`. The local host preprocessor proves the target-conditional macro contract, not an SH object or linked-image comparison. The target SDK/compiler and private data are absent here. Local owner still must run target OFF absent/zero objects and full image, enabled target build, current-content/lifecycle and hardware gates. No runtime or hardware gain is claimed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${FL34_BASE_TREE:?fresh base worktree path}"
+: "${FL34_LOGS:?fresh log directory}"
+: "${FL34_PROGRAMS:?fresh programme directory}"
+: "${FL34_LABEL:?fresh lane label prefix}"
+FL34_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$FL34_BASE_TREE" 14b5c196db699640f7a9f39bc2318df22dc45ade
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$FL34_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$FL34_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$FL34_BASE_TREE" "${FL34_LABEL}base" ""
+candidate_build "$FL34_CANDIDATE_TREE" "${FL34_LABEL}absent" ""
+candidate_build "$FL34_CANDIDATE_TREE" "${FL34_LABEL}off" "FRONT_TPL_OWNER=0"
+candidate_build "$FL34_CANDIDATE_TREE" "${FL34_LABEL}ctrl" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=0"
+candidate_build "$FL34_CANDIDATE_TREE" "${FL34_LABEL}on" \
+  "FRONT_NATIVE=1 FRONT_TEXOBJ=1 RESET_RETIRE_BEFORE_HEAPS=1 FRONT_TPL_OWNER=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${FL34_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${FL34_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${FL34_LABEL}offrP" \
+  --output "$FL34_LOGS/frontend-line34-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+**2026-10-29 progress: DONE** clean synchronization of this reviewed local
+candidate with documentation-only recovery base `d45eb759dd92685255929625e04fae3d7a46bca7`. The previously
+reviewed tip is `44055a1c2af1f7209559eadcc8396e20eeda3f41`; every changed path in this synchronization is under
+`port/dreamcast/docs/`, so production/fixture/Make bytes and prior validation
+scope are unchanged. No runtime check is relabeled as freshly executed.
+**NEXT** origin publication when writes return results, then the named
+changed-input target/private gates in this handback. **BLOCKED** no successful
+GitHub write/ref update is established for this local delivery. Keep earlier
+target failures and dependency/publication holds; this documentation-only merge
+does not enable a control, integrate source, or qualify a whole EF card.
+
+## 2026-10-29 recovery: EF15 strict target-conditional OFF repair
+
+**DONE:** recovered unpublished `44055a1c2af1f7209559eadcc8396e20eeda3f41`
+and its documentation synchronization `6a607e47bd17935b3154af854fc056c08408abb3`.
+Fresh integration readback is `d45eb759dd92685255929625e04fae3d7a46bca7`.
+The original worktree was left untouched. The existing `#line 2417` correction
+restores the SH-only ModelRender halt diagnostic to2465 (`0x09a1`), preserving
+the diagnostic bytes rather than weakening the comparison. The stale5532
+negative control still expands to2468 (`0x09a4`) and is required to fail.
+
+This recovery also restores exact disabled FtKey/lookup source spelling and
+extends the existing identity fixture to compare all six affected complete
+translation units with `__sh__` enabled, absent and explicit-zero controls,
+under FRONT_NATIVE/FRONT_TEXOBJ profiles0/0,1/0,1/1,2/1. Comparison is byte-exact
+preprocessor output without whitespace or literal normalization. The source
+correction adds no disabled execution, allocation, gameplay or material work.
+
+Fresh commands from the candidate root:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_identity.py
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34_identity.py --base d45eb759dd92685255929625e04fae3d7a46bca7
+python3 -B port/dreamcast/tools/cloud/build34/front_owner34.py
+git diff --check
+```
+
+All PASS. Six-TU host and four-profile SH-conditioned preprocessing match
+base/absent/zero. The extracted OFF host object is26688 bytes with SHA256
+`1c1b3bf96ab552dfed1e3e6fc760f199ad8aa4f8288da3b244cb44fb121adcb7`.
+The actual source-extracted producer/consumer fixture passes normal and
+ASan/UBSan:65631 OFF and95466 ON checks per mode, preserving the f90 stale-alias
+negative control. Actual Make definitions remain scoped and invalid modes
+reject. The current generated fixture source signature is285ce6bf8e389538.
+
+**Evidence correction:** `front_owner34.py` has no argument parser. Historical
+`--output` and `--sanitize` arguments in this handback were ignored; the command
+did not produce those JSON files. Its plain invocation already runs normal
+and sanitizer variants. The fresh results above are observed stdout, not
+invented JSON artifacts.
+
+**NEXT:** local runs changed-input target absent/zero builds from this delivery
+against the freshly bound integration base, retaining the complete programme,
+all allocated ELF sections and all15 overlays judge. In the existing FL34
+command block above, substitute the current base SHA d45eb759 for14b5c196,
+keep fresh unique paths, and retain the actual ctrl/on links and resolved flags.
+No comparison semantics change. **BLOCKED:** this cloud executor lacks the
+initialized pinned SH compiler/SDK, so it has not proved actual target object
+or full-image identity. Source/preprocessor and host results are not substituted
+for that gate. FRONT_TEXOBJ remains parked/default0 and FRONT_TPL_OWNER remains
+outside broad ALLON; private lifetime/look/STRICT/memory/cost/console and all
+release/media holds remain. The bounded code is implemented and being published;
+it is not integrated, enabled, runtime-qualified or accepted.

@@ -3574,6 +3574,8 @@ include dbgwarp.mk
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
 include effects30.mk
+# Default-off bounded SH4ZAM point batch in the prepared cloth row consumer.
+include cloth_xm_batch14.mk
 # PVR_RTT (lane castlerender19 2026-10-19): PVR render-to-texture for TexRenderMng targets (default off: no effect).
 include pvr_rtt.mk
 # HW_FOG_HAZE (lane hwfog 2026-10-14): the distant camera haze as PVR table fog
@@ -3677,10 +3679,16 @@ include perf_phase_miss.mk
 include draw_setup_audit.mk
 include draw_fallback_audit.mk
 include fallback_audit29.mk
+# Default-off bounded continuation for the existing ordered line collision walk.
+include line_resume29.mk
 include fallback_audit35.mk
+# Default-off EFM class/mapping epoch, shared by all manager-header consumers.
+include efm_class_identity.mk
 include fallback_scan29.mk
+include water_layer29.mk
 include world_plan29.mk
 include actor_format32.mk
+include skin_admit32.mk
 include static_obj_batch33.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk

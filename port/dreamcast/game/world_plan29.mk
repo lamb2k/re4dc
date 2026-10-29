@@ -84,3 +84,18 @@ $(error WORLD_PREPARED09 needs STATIC_OBJ_LIFETIME05=1 for room-cell incarnation
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_STATIC_OBJ_LIFETIME05=$(STATIC_OBJ_LIFETIME05) -DRE4DC_WORLD_PREPARED09=1
 endif
+
+# Build31 review6: page a single source part through the existing 320 picks.
+WORLD_PAGES31 ?= 0
+ifneq ($(words $(WORLD_PAGES31)),1)
+$(error WORLD_PAGES31 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_PAGES31)),)
+$(error WORLD_PAGES31 must be exactly 0 or 1)
+endif
+ifeq ($(WORLD_PAGES31),1)
+ifneq ($(SCENERY_CHUNK)$(WORLD_PREPARED09),11)
+$(error WORLD_PAGES31 needs SCENERY_CHUNK=1 WORLD_PREPARED09=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PAGES31=1
+endif

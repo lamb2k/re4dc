@@ -3630,11 +3630,13 @@ void ftOwnerForeign(const cModelInfo* info)
 }
 #endif
 struct FtRec { u32 w[4]; };  // GXInitTexObj stub words 0..3 (4..7 are zero)
-struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap;
 #if RE4DC_FRONT_TPL_OWNER
+struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap;
     u32 owner_stamp;
-#endif
 };
+#else
+struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap; };
+#endif
 constexpr u32 kFtKeys = 32, kFtRecs = 512;  // r100 fight peak: 21 keys, 394 records
 FtKey ft_keys[kFtKeys];
 FtRec ft_recs[kFtRecs];
@@ -3707,11 +3709,11 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
 #else
         const FtKey& key = ft_keys[k];
 #endif
-        if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap
-#if !RE4DC_FRONT_TPL_OWNER
-            && key.data0 == data0
+#if RE4DC_FRONT_TPL_OWNER
+        if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap) {
+#else
+        if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap && key.data0 == data0) {
 #endif
-            ) {
 #if RE4DC_FRONT_TPL_OWNER
             if (owner_stamp && key.owner_stamp == owner_stamp) {
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
@@ -4123,6 +4125,7 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
 #if RE4DC_FRONT_TPL_OWNER
                         if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
 #endif
+#line 2417
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -5862,8 +5865,14 @@ static inline void re4dc_prim_tag(const void* a, u32 size, u32 caller)
     t.addr = (u32) a; t.size = size; t.frame = pG->Frame_cnt; t.caller = caller;
 }
 #endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+extern "C" void re4dc_actor_skin_retire_pending();
+#endif
 void SetPrimBuffPtr()
 {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    re4dc_actor_skin_retire_pending();
+#endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER
     ++sourceWorldPrimGeneration; // invalidates even same-frame/address reuse
 #endif
@@ -6264,12 +6273,23 @@ int re4dc_skin_defer(cModelInfo* info, ModelData* d)
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, info->pPosBuf[pG->vtx_buf_no], n, &admission)) return 0;
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 64 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     memcpy(copy, (const void*) RE4DC_LC_PALETTE, n * 0x30);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    return re4dc_actor_skin_commit(&admission, (const float*) copy);
+#else
     return re4dc_actor_skin_register(pG->Frame_cnt, info, info->pPosBuf[pG->vtx_buf_no], (const float*) copy, n);
+#endif
 }
 
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
@@ -6282,12 +6302,23 @@ int re4dc_skin_defer_lazy(cModelInfo* info, ModelData* d)
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, 0, n, &admission)) return 0;
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 16 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     memcpy(copy, (const void*) RE4DC_LC_PALETTE, n * 0x30);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    return re4dc_actor_skin_commit(&admission, (const float*) copy);
+#else
     return re4dc_actor_skin_register(pG->Frame_cnt, info, 0, (const float*) copy, n);
+#endif
 }
 
 #if RE4DC_SKIN_PALETTE_LAZY
@@ -6344,8 +6375,15 @@ static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxB
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, 0, n, &admission)) return 0;
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 16 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     SkinLazyHead h;
@@ -6373,7 +6411,11 @@ static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxB
     (void) mtxBuilt;
     memcpy(copy, &h, sizeof(h));
 #endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if (!re4dc_actor_skin_commit(&admission, (const float*) copy)) {
+#else
     if (!re4dc_actor_skin_register(pG->Frame_cnt, info, 0, (const float*) copy, n)) {
+#endif
         return 0;
     }
 #if RE4DC_SKIN_PALETTE_LAZY == 2

@@ -11,6 +11,7 @@ sys.dont_write_bytecode = True
 import front_sources as source
 
 BASE = '4c4794a17c96ce7f22d8c194907475014eea85a4'
+PRE_LINE_FIX = '5532a2a98fda49716c9dd36e4c114890d1c36103'
 ROOT = source.ROOT
 GAME = source.DC / 'game'
 TUS = ('trans', 'model', 'scroll', 'read', 'game', 'main')
@@ -45,6 +46,53 @@ def main():
                                      str(ROOT / 'src/game' / (tu + '.cpp'))], GAME)
             print(f'{tu}: base/absent/zero preprocessing identical '
                   f'({len(original)} bytes); ON preprocessing {len(enabled)} bytes')
+
+        # The host preprocessing above does not enter frontNativeModelTrans's
+        # SH-only body. Compare all affected target-conditioned source, without
+        # whitespace/literal normalization, as well as checking the diagnostic
+        # regression below. This uses host cpp with the target conditionals; it
+        # does not replace the target compiler/full allocated-section judge.
+        target_flags = ppflags + ['-D__sh__', '-U__PPC__']
+        for native, texobj in ((0, 0), (1, 0), (1, 1), (2, 1)):
+            profile = target_flags + [f'-DRE4DC_FRONT_NATIVE={native}',
+                                      f'-DRE4DC_FRONT_TEXOBJ={texobj}']
+            for tu in TUS:
+                old = tmp / (tu + '.cpp')
+                original = run(profile + [str(old)], GAME)
+                absent = run(profile + [str(ROOT / 'src/game' / (tu + '.cpp'))], GAME)
+                zero = run(profile + ['-DRE4DC_FRONT_TPL_OWNER=0',
+                                      str(ROOT / 'src/game' / (tu + '.cpp'))], GAME)
+                assert original == absent == zero, \
+                    f'{tu} target-conditioned OFF preprocessing changed ({native=}, {texobj=})'
+            print(f'target-conditioned six-TU base/absent/zero preprocessing identical: '
+                  f'FRONT_NATIVE={native} FRONT_TEXOBJ={texobj}')
+
+        # HALT expands __LINE__ through RE4DC_HALT_STORE in the SH-only body:
+        # a guarded notifier had shifted the diagnostic/target OFF constant
+        # even when ordinary host OFF preprocessing matched.
+        def target_halts(path, extra=()):
+            output = run(target_flags + list(extra) + [str(path)], GAME).decode()
+            assert 'static void frontNativeModelTrans(' in output, 'target frontend path absent'
+            lines = tuple(line.strip() for line in output.splitlines()
+                          if 're4dc_halt("D:/Bio4/Prog/trans.cpp",' in line)
+            assert len(lines) == 2 and all('OSReport("HALT %s(%d)\\n"' in line
+                                           for line in lines), 'target HALT expansion changed'
+            return lines
+
+        base_trans = tmp / 'target-base-trans.cpp'
+        base_trans.write_bytes(run(['git', 'show', f'{args.base}:src/game/trans.cpp']))
+        pre_fix_trans = tmp / 'target-pre-fix-trans.cpp'
+        pre_fix_trans.write_bytes(run(['git', 'show', f'{PRE_LINE_FIX}:src/game/trans.cpp']))
+        base_halts = target_halts(base_trans)
+        pre_fix_halts = target_halts(pre_fix_trans)
+        absent_halts = target_halts(ROOT / 'src/game/trans.cpp')
+        zero_halts = target_halts(ROOT / 'src/game/trans.cpp', ['-DRE4DC_FRONT_TPL_OWNER=0'])
+        assert pre_fix_halts != base_halts and '2468' in pre_fix_halts[1], \
+            'pinned pre-fix target negative control stopped detecting the line shift'
+        assert absent_halts == zero_halts == base_halts and '2465' in base_halts[1], \
+            'target HALT literals differ from pre-EF15 source'
+        print('target __sh__ frontend HALT expansions: base/absent/zero identical; '
+              'pinned pre-fix negative control differs (2468 versus 2465)')
 
         # The extracted real frontend consumer is also compiled to a host
         # object with identical source names and flags in all three OFF arms.

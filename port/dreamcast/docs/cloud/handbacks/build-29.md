@@ -1,5 +1,36 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 simulation review fixtures and literal guards
+
+Source `737c9bf562489c204ef928279ad255bf284efb04` clean no-ff landed `60ca84103c40925781b52eb372cafd950747c232`. Only production changes are line_resume29.mk/water_layer29.mk literal value/dependency guards; runtime C++ consumers/layouts/capacity are unchanged. Current existing strengthened EFM, line and primary-water Make fixtures passed normal/sanitizer/host-OFF/actual Make cases. Release rc0/nonempty ELF/existing empty missing.txt, complete programme/all15overlays/all allocated-section identity against bound a5ac runtime PASS; freshbase origin-only push/readback verified. Existing ON runtime qualification is carried with unchanged C++ blobs/current exact Make selection, not falsely rerun here. No new switch or QA rebuild needed for this guard/fixture-only slice.
+
+Requested EFM constructor-time successful/failed create reentry, nested index rebuild exact slot order/build serial and real65536 slot cache refusal are now asserted in the source fixture. Equal-nearest fixture asserts first polygon/piece owner/normal/hit/visit oracle across64/65. Line matrix is four explicit WALK/PIECE profiles1/0,2/0,1/1,2/2, not a full2x3 product. Actual target LINE_LEAF/TAIL execution/live gameplay/STRICT/current memory/cost/console remain local gates; do not infer cost from ELC_W_LEAVES or close the whole cards. Guard-only frontend5532 is unrelated and does not resolve retained target OFF failure.
+
+
+## Answers (owner): 2026-10-29 bounded water and ordered cloth qualification
+
+Water `0cbb46b1ff89b34d596cd3040953dba4617d6890` landed `c94957e5cfa5564fda776ab0d63cefa4f804f109`; cloth `a0166e96b09cb419b46f02c6cddd6cdfb46f254f` landed `f5ad6fec56370a0a4df59088a1a5c094405160f2`, both default0.
+
+Each source slice passed existing extracted normal/sanitizer and host-OFF fixtures, then the local pinned SDK full release absent/explicit0/ON gates; cloth additionally has a SHEET11/outcomes/upload dependency-only control. Each arm has existing empty missing.txt and527 actual C++ commands checked for precise consumer flags. Absent/zero programme, all15 overlays and all allocated-section metadata/payloads match the immediately prior bound integration. Clean no-ff merges, fresh-base origin-only push/readback, no conflict resolution.
+
+Combined source `f5ad6fec56370a0a4df59088a1a5c094405160f2`, ALLON K33 with QA_LINK1 and existing SKIN_PALETTE_LAZY1: compile/missing, actual542 global and feature-consumer command checks, loader/standard lint, ZIP and checksums passed. Final raw programme/all15 overlays match SDK. Track03 `4220679b1b9adf7f7e387963a08abd09f002a57bf860b9918fc6d6c87530b617`. PREPARED only: no current water/skin/cloth runtime, output/look, STRICT/gameplay, heap/VRAM/cost/hardware acceptance, recipe promotion or SD copy.
+
+WATER scope: real compiled-table adapter, bounded copied rows, validated identity/extent and owner retirement logic. Real package bind producer and retirement caller are still absent; a family string/API alone is not loaded-package authority. Missing texture remains a skip, not TOTAL_REFUSAL. Private six existing main EFF families regenerate24 rows, byte-equal compiled table and schema; extension rows reuse unchanged public input and are not a new private extraction. No raw asset/private manifest is published. Source-only cloud follow-on: finish actual package producer/retirement boundary, preserving current texture/animation/camera/FX state and partial emission behavior. Literal Make-value guard hardening remains needed for pattern values; only exact requested0/1 profiles were qualified.
+
+CLOTH scope: source-row-major bands/tiles, full-width UVs, seam/parity and partial/source-retirement behavior. Existing actual producer still clamps width100; current bound private r100 case is9x10. Synthetic widths through255 are not an actual live wide sheet. Source-only cloud follow-ons: actual wide producer where source calls for it and named pTobjA/alpha>4/normal-Zwrite/4x-stage-clamp/per-vertex-light semantics. Local retains actual output/material/look/lifecycle/cost gates; no forced geometry or coverage claim.
+
+
+## Answers (owner): 2026-10-29 EFM and line source landings
+
+DONE: EFM `47679acd4824b24b64978ce0252f056a0fa7e2ae` clean no-ff landed `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, then line `00ecd54840c1ffb1dde595618a77a567e8bf2492` clean no-ff landed `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`, both default0. Source/peer review and existing normal/sanitizer/extracted-host OFF gates passed. Each local pinned-SDK absent/explicit0/ON full release links with existing empty missing.txt; each absent/zero programme, all15 overlays and every allocated section metadata/payload match its bound prior integration. Actual527 C++ commands per arm were inspected: EFM ON global to game/platform/room consumers, line ON only atari.cpp. No source conflict was hand-resolved. Fresh-base origin-only push/readback passed after these gates.
+
+Combined ALLON K30 adds both controls using current FX_SCAN1/list1/workAt1 and LINE_WALK1/piece1/yrow1/FP-contract-off. QA_LINK1, compile/missing/global542 EFM/ABI macros and exact line consumer, loader/standard lints, ZIP, staged checksums and actual final program/all15 overlays match SDK. Track03 `08b14816728d15e9b68f16e86199604bc286ef41db3eef15eade58d39649c429`. PREPARED only; no current EFM/line gameplay/STRICT/heap/stack/cost/hardware acceptance or SD/recipe promotion.
+
+OPEN SOURCE/TEST FOLLOW-ONS, cloud-owned: EFM fixtures do not exercise constructor-time reentry, nested index rebuild before outer continuation, or >65535 slot refusal. Preserve saturating token/serial source fallback and exact i+1 continuation. Line valid profiles have no demonstrated traversal blocker, but harden line_resume29.mk to one literal0/1 and WALK in1/2: current multiword/pattern values can silently selectOFF and WALK3 is admitted. Add an explicit equal-nearest tie oracle. Actual LINE_LEAF/TAIL target assembly and live results remain local gates; ON no longer increments ELC_W_LEAVES, so do not use it as matched cost evidence. Do not weaken current source guards or claim unsupported profiles passed.
+
+COLLISION runtime follow-up on pinned prior source39ed524a, CACHE2 controls0/1: same1648 external asset files, same stock room fixture and source/QA name, exact16 SDK payloads per image/base. Both60s no-key/no-state runs reached r101. Observed emitted control row hit8182/miss10/mismatch0; enabled rows hit8182/miss10/mismatch0 and hit16374/miss10/mismatch0. Neither reported dirty overflow in these samples. Raw logs contain4138/3702 NUL bytes and are retained unmodified. This is scoped reference-comparison evidence at reported cutpoints, not whole-window absence of mismatch, route/STRICT, speed or memory-headroom acceptance. Source counters/sample counts are not a performance comparison. No identical retry or longer run is justified by this result alone.
+
+
 ## 2026-10-29 EF03: consumed strip/cloth result slice
 
 **DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `NATIVE_DRAW_OUTCOMES=1`
@@ -539,6 +570,110 @@ reproduction of its recipe/corpus manifest. All fixtures are synthetic; no
 game bytes, private contexts or generated game packages belong in Git.
 
 
+## Cloud progress 2026-10-29: resumable ordered line traversal (review 9.3)
+
+**DONE:** source implementation on `codex/line-resume-20261029`, delivery base
+`39ed524a3b0a4727148aaa5a45eaaea4d211cede`. The cloud writer owns only
+`src/game/atari.cpp`, `src/game/line_resume29.h`, the dedicated
+`game/line_resume29.mk` and Build29 line fixtures. The coordinator included
+the fragment in the shared Makefile after the local EF16 delivery landed.
+
+`GAME_LINE_RESUME=1` uses a bounded cursor to deliver overlapping leaves in
+source order directly to the existing polygon consumer. It removes the
+64-leaf gather limit and the whole-chain restart at leaf65. Sixteen pending
+sibling continuations fit in the cursor. At the depth boundary, the cursor
+hands off only the untouched child chain, with the current polygon bitset,
+hit and normal state, then resumes its siblings. A published prefix is never
+replayed. No SAT representation, polygon kernel or assembly is replaced.
+
+PIECE mode retains the original contract-off x/z operation order and rejects
+empty pieces before the y rows/full transforms and polygon-bit clear.
+YROW and current-end reuse remain after admission. The feature defaults0,
+requires `GAME_LINE_WALK=1/2`, and only changes `atari.o` definitions.
+
+**Validation performed:** the frozen production-consumer fixture passed:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build29/test_line_resume29.py
+git diff --check
+```
+
+There are44 compared cases in each of eight normal/ASan+UBSan configurations:
+WALK/PF1 and2; PIECE/YROW0,1 and2. Cases cover64/65/129/150 leaves, zero and
+multiple hits, repeated polygon indices, transformed moving pieces and
+fractional matrices, wall/floor selection, and depths15/16/17/18/33 after an
+already processed prefix. Comparisons include return value, hit/end/winning
+piece/normal, polygon bitset and ordered polygon visits. The ON arm asserts
+one overlap test per traversed block at the tested continuation boundaries.
+
+The fixture extracts production `hitCheck2`, overlap and block/polygon
+consumers. Host shims stand in for the SH-4 gather ABI and polygon intersection
+results; this establishes consumer order/state parity, not target instruction
+or complete collision-kernel validation. In mode2 the OFF reference arm
+actually runs LNW/LWP/LNP comparisons and asserts zero mismatches. ON bypasses
+those gather wrappers; their inactive counters are not counted as evidence.
+YROW comparison remains active in both arms. LeakSanitizer alone is disabled
+for the managed executor's thread-walk limitation; ASan/UBSan remain active.
+
+The same runner proves original-source, absent and explicit-zero preprocessing
+and host object bytes identical in both tested PIECE profiles. Its original
+`e6939459` atari.cpp blob is unchanged at the delivery base. Actual Make
+dry-runs select the new definition only for `atari.o`; absent/zero compile
+commands match, and invalid control/dependency combinations are refused.
+
+**Storage/cost:** no retained allocation or global cursor is added. Nominal
+32-bit cursor size is108 bytes, replacing a256-byte leaf-pointer array at
+these call sites. Deep child handoffs can add nested frames, so this is not a
+whole-stack bound. An extracted x86-64 `-O2 -ffp-contract=off` proxy measured
+text7,886->9,094 bytes, BSS8,232 unchanged, `hitCheck2` local frame832->416,
+`blkPolyLineCk`736->272 and the new runner96 bytes. These include host ABI
+and fixture effects; no SH-4 size, stack, warm/cold cycles, data-line traffic
+or whole-frame **MODELLED** improvement is asserted.
+
+**NEXT / exact local commands:** the public SDK is unavailable in cloud.
+Use the existing pinned SDK (KOS804b3195 plus repository patches,
+GCC15.2.0/binutils2.45.1/newlib4.6.0.20260123 and SH4ZAM33fa4850) and the
+owner's existing private recipe inputs. Supply a fresh label/log/programme
+directory and the retained ordinary-release output bound to delivery base
+39ed524a (including the qualified default-off collision slice):
+
+```bash
+set -euo pipefail
+: "${LINE29_LABEL:?fresh lane label}"
+: "${LINE29_LOGS:?fresh log directory}"
+: "${LINE29_PROGRAMS:?fresh programme directory}"
+: "${LINE29_BASE_OUTPUT:?bound current-base ordinary-release output}"
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export T="$PWD" K="$LINE29_LOGS"
+export ROUTE_PROGRAMS_DIR="$LINE29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+test ! -e "/root/probe/lanes/route/out-${LINE29_LABEL}offrP"
+LP="${LINE29_LABEL}off" CH2="$CH2 GAME_LINE_RESUME=0" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+test ! -e "/root/probe/lanes/route/out-${LINE29_LABEL}onrP"
+LP="${LINE29_LABEL}on" \
+  CH2="$CH2 GAME_LINE_WALK=2 GAME_LINE_WALK_PF=2 GAME_LINE_PIECE=2 GAME_LINE_YROW=2 GAME_LINE_RESUME=1" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+for arm in off on; do
+  O="/root/probe/lanes/route/out-${LINE29_LABEL}${arm}rP"
+  test -s "$O/re4dc-game.elf"
+  test -f "$O/missing.txt"
+  test ! -s "$O/missing.txt"
+done
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "$LINE29_BASE_OUTPUT" \
+  --arm "/root/probe/lanes/route/out-${LINE29_LABEL}offrP" \
+  --output "$LINE29_LOGS/line29-release-off.json"
+```
+
+A matched runtime reference uses the identical ON profile with
+`GAME_LINE_RESUME=0`; retain its resolved definitions separately from release
+OFF identity. Check live ordered collision/STRICT behavior, moving pieces,
+target stack/code and warm/cold cost before enablement. **BLOCKED** remains
+only SH-4/full-image/private-runtime/console acceptance; there is no SDK,
+private asset set or console in this workspace. Cloud continues the assigned
+frontend/world and other source slices. No release default or media changes.
+
+
 ## Answers (owner): 2026-10-29 combined engine integration
 
 DONE: `NATIVE_DRAW_OUTCOMES` first slice merged default off with the other three bounded fixes into `77461a84ef85e978e44aab5d936a1b80a2cd93a4`, using four clean no-ff local integrations from `9e6662c36`. Combined release rc0, missing.txt present/empty; ELF SHA256 `49f12668242e722acfa0fee89514323c4aa7892e64014dcb970eb0473fbee0c3`. All four controls resolve zero; complete programme, all15 overlays and all allocated ELF section metadata/payloads match the bound9ee baseline. Fresh-base check and origin-only push/readback passed. A queue-row selection preflight stopped before the first build, then continued in the same clean merged candidate; no source conflict or failed build was hand-resolved.
@@ -548,9 +683,140 @@ ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
 
 
+## Cloud progress 2026-10-29: EFM slot-class identity (review 9.1)
+
+**DONE — source candidate, default 0.** Based on published source `e693945933cf088a13782e756fc356008cdba4b8`; fast-forwarded to current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` before freeze. Branch `codex/efm-class-identity-20261029`; coordinator-reviewed source delivery. Owned production changes are `include/cManager.h`, `src/game/esp_efm.cpp`, and the narrowly reserved cObj mapping/backing publication in `port/dreamcast/game/parts_bridge.cpp`; dedicated `port/dreamcast/game/efm_class_identity.mk` and EFM host fixture are new. The coordinator includes the fragment in the top Makefile; production ownership remains otherwise unchanged. The bridge file is the one additional source reservation agreed with the coordinator because cObj's `arrayAlloc`, `arrayFree`, and `prepareWork` are explicit bridge specializations that manager-header hooks cannot observe.
+
+`GAME_EFM_CLASS_IDENTITY=1` keeps the existing 64-entry EFM class index keyed to a separate object-class/mapping incarnation. `cManager<cObj>` publishes before `memClear` and after every constructor attempt (including a failed constructor that leaves new bytes); `create(id)`, `create(id,no)`, and `createBack` are covered. Manager `roomInit`, push and pop, and specialized bridge pool free/alloc/new page publication also invalidate the token. An ordinary deletion does not; the existing `re4dc_alive_gen` still advances for alive-list consumers. The cache continues to include dead mapped class 4/5/9 slots, keep source slot order and filter globals, and refuse its index beyond 64 entries (also when a slot index exceeds `u16`). Both incarnation counters saturate at their terminal `u32` value; reaching either terminal forces the source scan for that call and all subsequent calls, so an earlier token cannot reappear after wrap. Frozen/pushed pools use the source scan. After a callback changes the class epoch, pool, frozen/push state, or nested cache build, the current call resumes the source loop at exactly the next slot. No list, manager layout, allocator budget, or assembly change.
+
+**Host validation DONE.** `python3 -B port/dreamcast/tests/test_efm_class_identity.py` passed in ~8 seconds. It compiles an actual excerpt of production `EfmDelete`/`EfmDeleteSub`, production `cManager` methods, and production `parts_bridge.cpp` against small synthetic object/model stubs. The only header ABI adaptation replaces `cUnit`'s 32-bit sized-delete parameter with host `size_t`; the host uses the bridge `workAt` because its 64-bit pool header cannot use the SH-4 +64 slot offset. Normal and ASan/UBSan builds both pass all 13 source-loop parity scenarios for `RE4DC_FX_SCAN=1` and `=2`: repeated deletion with unchanged class epoch but advanced alive epoch; death/reconstruction at the same slot; failed front/back construction leaving class bytes; same-address pool free/reallocation; new and pinned backing pages; successful front/back creation; push/pop; frozen selector; 65 candidates/refusal; nested delete then create with changed filter globals; callback pool push with exact continuation, and forced class-epoch and build-serial near-exhaustion followed by further mapped-slot mutations. Each case compares candidate visitation order and final mapped object flags/class/core, including source results after nested effects. LeakSanitizer is disabled because this managed executor cannot read `/proc` task entries; ASan and UBSan ran with halt-on-error.
+
+Synthetic repeated-sweep evidence: 9 indexed versus 96 source `EfmDeleteSub` calls for the fixture's three passes over four eight-slot pages; candidate visitation and final state match. This is a call count, not a frame-time or hardware gain. An x86-64 `-O2 -g0` excerpt comparison measured `.text` 592 -> 700 bytes, `.text.unlikely` 252 -> 300 bytes, `.bss` 216 -> 224 bytes, and `EfmDelete` stack-use 48 -> 64 bytes. These host measurements include fixture ABI/data layout and must not be presented as SH-4 size. The production additions are two `u32` words (class epoch and nested build serial, 8 declared target bytes before linker alignment); the existing 64 x `u16` index is unchanged. Target code size, stack and cache-line traffic remain unmeasured. Source diff has 117 insertions/11 deletions in three existing production files, plus the dedicated fragment and fixture (all within scope).
+
+**OFF identity DONE at host scope.** The test compares baseline versus current with `RE4DC_EFM_CLASS_IDENTITY=0` for the real EFM excerpt, manager methods, and bridge. Their complete `-E -P` preprocessor bytes, including whitespace, and complete `-O2 -g0` object bytes match. Object SHA256 prefixes are respectively `4c32efe6a5191650`, `030672eb0d2d10d3`, and `245c2e6ac90d1693`. `make -f Makefile -n` verifies absent and explicit zero produce the same five representative compile commands with no new define, while an explicit empty value is rejected; ON publishes the flag to `esp_efm`, `obj`, a stage REL (`r101`), `parts_bridge`, and `native_static`. All C++ compile rules in this Makefile use `GAME_CPPFLAGS` or `PLATFORM_CPPFLAGS`, including module objects and source re-includes. The coordinator added the top-level include after EF16 landed; the fixture now tests the normal Makefile without a second fragment include.
+
+**NEXT — coordinator review/integration and real comparisons.** The source and shared include are ready for serialized local integration. Rebuild the pinned public target source with absent/zero/ON controls, checking affected translation-unit byte identity with the switch off and SH-4 BSS/stack/code size. The local owner then runs the private release recipe and existing-empty `missing.txt` gate, source/STRICT and room/view/enemy gameplay comparisons, compatible ALL ON QA, Flycast function, actual current-memory overlap, and real-console warm/cold timing. The synthetic 9/96 call count is an incidence hint only; no whole-frame ms claim or knob promotion follows from it.
+
+**BLOCKED only at target/private gates.** No SH-4 SDK/compiler, private Build-Assets/package inputs, Flycast capture, or physical Dreamcast are available in this worker environment. Consequently there is no target object, full image, runtime, current memory, warm/cold I-cache, data-line, MODELLED whole-frame, or console result. No release, media, or SD publication is included in this source delivery.
+
+**Exact local follow-up commands (not executed in cloud):** use the existing
+pinned SDK and private recipe inputs. Public pins are KOS804b3195 plus repository
+patches, GCC15.2.0/binutils2.45.1/newlib4.6.0.20260123 and
+SH4ZAM33fa4850cacb30dd0ad35485ef035526ec4ce782. Set fresh lane-owned paths and
+the ordinary-release output bound to this delivery base:
+
+```bash
+set -euo pipefail
+: "${EFM29_LABEL:?fresh lane label}"
+: "${EFM29_LOGS:?fresh log directory}"
+: "${EFM29_PROGRAMS:?fresh programme directory}"
+: "${EFM29_BASE_OUTPUT:?bound current-base ordinary-release output}"
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export T="$PWD" K="$EFM29_LOGS"
+export ROUTE_PROGRAMS_DIR="$EFM29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+test ! -e "/root/probe/lanes/route/out-${EFM29_LABEL}offrP"
+LP="${EFM29_LABEL}off" CH2="$CH2 GAME_EFM_CLASS_IDENTITY=0" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+for value in 0 1; do
+  label="${EFM29_LABEL}check${value}"
+  test ! -e "/root/probe/lanes/route/out-${label}rP"
+  LP="$label" CH2="$CH2 GAME_FX_SCAN=2 GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_WORKAT_INLINE=1 GAME_ESP_OWNER=1 OBJECT_DEMAND=1 ENEMY_DEMAND=1 GAME_EFM_CLASS_IDENTITY=$value" \
+    bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+done
+for arm in off check0 check1; do
+  O="/root/probe/lanes/route/out-${EFM29_LABEL}${arm}rP"
+  test -s "$O/re4dc-game.elf"
+  test -f "$O/missing.txt"
+  test ! -s "$O/missing.txt"
+done
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "$EFM29_BASE_OUTPUT" \
+  --arm "/root/probe/lanes/route/out-${EFM29_LABEL}offrP" \
+  --output "$EFM29_LOGS/efm29-release-off.json"
+```
+
+The `check0/check1` profiles are the matched source/index comparison pair;
+they are distinct from ordinary-release OFF identity. Keep actual resolved
+definitions and check the existing FX_SCAN2 EFM mismatch counter, callback
+order, creation/deletion and room/pool lifecycle in the same selected runtime.
+Current-image memory/STRICT/look and console cost remain separate gates.
+Cloud proceeds with the assigned world continuation while those gates are local.
+
+
 ## Answers (owner): 2026-10-29 cloud implementation assignment
 
 EF13 water-layer producer/schema/compiled-adapter/current-consumer implementation is assigned to the cloud now, using public source tables and synthetic fixtures. Local EF11 retains cloth/effect include ownership; do not edit those files or effects30.mk. This is a scoped source implementation assignment, not accepted water coverage. Real private packages, live look/gameplay/lifecycle and console cost remain separate owner gates. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
+
+
+## 2026-10-29 EF13 Build29: bounded, source-bound compiled water layer adapter
+
+**DONE (first public-source slice).** Against current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` (the unchanged `espgen45.cpp` base blob is `130ffee540ccf28df31b5696312cb6993eac1bd6`), the default-off `WATER_LAYER29` fragment selects only `espgen45.o` and requires `ROUTE_CH13=1` and `WATER_PS2=1`. The primary game Makefile includes `water_layer29.mk` exactly once. The feature adds a versioned `Water29Definition`, explicit room/source-family key and owner/incarnation, a bound count of 32 rows, exact row byte extents, and per-family `Water29SourceBytes` backing with owner/incarnation, alignment and range checks before any row read. Publication uses overlap-safe `memmove` into one bounded store; invalid publications leave the prior bound view and compiled fallback intact. Misaligned or truncated headers, bad version/extents/counts, nonfinite or nonpositive geometry, wrong room/source/owner, misplaced row pointers and disabled room masks are refused. A retired owner/incarnation cannot retire a newly published different incarnation.
+
+The public `water_layer29_source.py` producer reads the already checked-in `water_ps2_table.inc` and `water_ps2_ext.inc`, verifies each row's original EFF-family provenance and contiguous room spans, and emits `water_layer29_source.inc` with version, source key, offset and count. The current `re4dc_water_ps2_rows`, queue, draw and r10b replacement path consume the adapter. One current-room compiled view and the published store view avoid repeated row/numeric validation in the queue and draw hot path. Existing layer encounter order, room/area/display predicates, FX-level filter, texture pattern and vblank phase, transform, color, blend, projection and viewport remain in the production draw loops. `Re4dcWaterLayer -> WaterNode -> water_emit` is unchanged; its native texture resolution and deferred node copy remain authoritative. Definition outcomes are `UNBOUND`, `NO_WATER`, `BOUND` and `REFUSED`; native return outcomes are separately `NOT_ATTEMPTED`, `ADMITTED`, `PARTIAL_REFUSAL` and `TOTAL_REFUSAL`. These native outcomes describe queue/immediate admission, not deferred completion. A fully refused r10b image falls back to its existing native GameCube surface; partial refusal is counted and logged without duplicating already admitted layers.
+
+**Validation.** `python3 port/dreamcast/tools/cloud/build29/water_layer29_fixture.py` passes 4 tests. `ASAN_OPTIONS=detect_leaks=0 WATER29_SANITIZE=1 python3 port/dreamcast/tools/cloud/build29/water_layer29_fixture.py` passes the same 4 tests under ASan/UBSan. The fixture extracts and compiles the actual production source table declarations, generated adapter, selector, draw, queue and replacement functions. It compares effective layer fields and order for feature OFF and ON across the six main rooms, three extension rooms, an unsupported room, three ticks (including animated selection), three FX levels, extension disabled and a main-room mask. It tests source metadata regeneration, malformed provenance, no-water/unbound, header/row-span truncation, version/count overflow, source and owner mismatch, aligned-range rejection before dereference, row mutation/address reuse, retirement, overlapping publication and full/partial native refusal. Its pinned `c027b26e` versus current feature-OFF preprocessing and non-debug host object-byte comparisons pass in the three profiles; the source blob is identical at the latest base. `git diff --check` passes.
+
+With a temporary empty KOS `Makefile.rules` solely for make dry-run parsing, `make -f Makefile -n obj/src/game/espgen45.o KOS_BASE=/tmp/water29-kos ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1` selects `-DRE4DC_WATER_LAYER29=1` alongside the existing water flags. Dry-run comparisons for `espgen45.o`, `espgen.o` and `platform/native_ui.o` show absent control equals explicit zero, while ON affects only `espgen45.o`. Empty, multi-token and invalid controls, missing route and missing WATER_PS2 are rejected. This primary-Makefile proof is part of the fixture. This is Make-selected flag proof, not a target compile.
+
+**Footprint.** Host x86-64 source-extracted `-O2` object with extension ON: `.text` 1829→6575 B, `.data` 12→20 B, `.bss` 6220→10732 B and `.rodata` 1344→3168 B. With extension OFF, `.text` is 1781→4543 B and `.bss` 6220→8268 B. The bound store is 4304 B host and 4288 B under a `g++ -m32 -nostdinc` compile of the actual schema header; with extension OFF it is 1872/1856 B. The 32-bit row sizes are 56 B main and 76 B extension, definition 60 B and view 40 B. Host `-fstack-usage` reports draw 368→528 B with extension ON (368→448 B OFF), water45 queue 8→80 B, new Select 192 B and bind 176 B (extension ON). These are host extracted-source numbers with fixture stubs, not a measured SH target delta; the native WaterNode and tessellator are unchanged. This slice spends fixed memory for source authority and does not claim memory savings.
+
+**NEXT.** The Build29 owner should build the affected SH target object with the pinned public SDK if available, then run the private full-image/overlay OFF identity and compatible ALL ON QA gates. A later source-package slice must establish actual loaded-package row spans/owner retirement at the asset-pipeline boundary and prove additional room definitions from authorized source packages. Compare current visual/look output, deferred completion and texture lifetime, room reentry, clipping/fog/extents, current heap/VRAM and console cost before acceptance.
+
+**BLOCKED external gates.** This cloud workspace has no `sh-elf-g++`, `kos-c++`, KOS SDK or private Build-Assets, and no physical-console/live image. Therefore no SH target compile, full image, private package generation, Flycast look, current-memory or console-timing claim is made. No asset replacement, release/media publication, SD copy or Pi restart is included.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${W29_BASE_TREE:?fresh base worktree path}"
+: "${W29_LOGS:?fresh log directory}"
+: "${W29_PROGRAMS:?fresh programme directory}"
+: "${W29_LABEL:?fresh lane label prefix}"
+W29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$W29_BASE_TREE" 39ed524a3b0a4727148aaa5a45eaaea4d211cede
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$W29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$W29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$W29_BASE_TREE" "${W29_LABEL}base" ""
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}absent" ""
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}off" "WATER_LAYER29=0"
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}ctrl" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=0"
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}on" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${W29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${W29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${W29_LABEL}offrP" \
+  --output "$W29_LOGS/water29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+**Private water follow-up:** bind only definitions generated from the authorized loaded package, with the exact row backing extent and owner/incarnation. Re-run current r10b replacement plus main/extension rooms through the matched images; check partial refusal never replays accepted layers, full refusal preserves the current surface, and same-address reload/retirement cannot reuse old source or upload authority. The public compiled-source adapter and table regeneration are complete; new private room coverage is unclaimed.
 
 
 ## Answers (owner): 2026-10-29 expanded cloud ownership
@@ -728,6 +994,93 @@ this is not whole-EF11 closure. The SDK session completed and slot is released;
 no live job, source promotion, emulator, media change or publication follows.
 
 
+## 2026-10-29 EF11 Build29: row-major horizontal cloth tiles
+
+**DONE (first wide-width slice).** From current integration `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, `CLOTH_TILES11` is a strict default-off control in `effects30.mk`, requiring the already landed `CLOTH_SHEET11=1`. It adds definitions only to `src/game/cloth.o` and `platform/native_ui.o`. Widths 2–100 retain the existing prepared rolling-row path and one transform per source vertex. Widths 101–255 use the same bounded two-row 100-column workspace, with an overlapping boundary column; each source row is completed left to right before the next row. The existing native `re4dc_cloth_band11` produces each tile using global `first_column` and full source width for UVs, so seam vertices agree, each cell is encountered once, and the source triangle-strip diagonal is retained. No simulation, RNG, callbacks, material policy, frame owner, tessellator or source table changes are made.
+
+Every wide-tile source read checks the fixed cloth pool's incarnation/frame/grid identity before dereference. A retirement during a transform stops before the first packet; after a submitted or queued tile it reports EF03 `PartialAbort` with the existing publication counts and forbids stale GX replay. A later tile's queue refusal likewise returns partial publication. The ≤100 rolling path gains the same per-vertex lifetime check only when the new feature is enabled. Unsupported `pTobjA` remains the prior pre-publication fallback; it is the next separate EF11 material slice.
+
+**Validation.** The cloth production baseline remains pinned to39ed524; the ce38 parent adds the independent default0 EFM integration only. `CLOTH_TILES11_SANITIZE=0 python3 -B port/dreamcast/tests/test_cloth_tiles11.py` passes 3 normal host tests. `ASAN_OPTIONS=detect_leaks=0 CLOTH_TILES11_SANITIZE=1 python3 -B port/dreamcast/tests/test_cloth_tiles11.py` passes 3 ASan/UBSan tests. `ASAN_OPTIONS=detect_leaks=0 python3 -B port/dreamcast/tests/test_native_cloth_sheet11.py` passes all 5 prior EF11 tests, including the historical emitter OFF comparison after its exact old blob was restored to the local Git object store. `git diff --check` passes. The new fixture compiles the actual production `re4dc_cloth_native` source adapter and native sheet band consumer. It checks widths 2, 99, 100, 101 and 255, exact row/tile packet encounter order, UV and projected seam agreement, near-clipped seam cells, source-grid immutability, a single prepared material, row-transform counts, owner retirement before/after first publication, first-tile queue refusal and unsupported second material. Pinned base versus new source/native include preprocessing and host object bytes match with the new control absent and explicitly zero.
+
+The fixture invokes the primary `make -f Makefile -n` with strict empty/multi-token/invalid validation, absent=zero and ON definitions exactly once only on the two affected translation units. Its parse with a temporary empty KOS rules file and `EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1` confirms those same selected commands for `cloth.o`, `native_ui.o` and unaffected `esp_sub.o`. This is a dry-run flag proof, not a target compile.
+
+**Footprint and work.** The existing 2×100×3-float row workspace remains 2,400 bytes; no new static storage is added. Host x86-64 `-O2` source-extracted fixture object `.text` is 14,662→16,182 bytes with the width control ON; `.data` and `.bss` remain 113 and 44,500 bytes in that synthetic fixture. Host `-fstack-usage` reports `re4dc_cloth_native` 3,328→3,456 bytes, while `re4dc_cloth_prepare11` remains 160 bytes and `re4dc_cloth_band11` remains 7,616 bytes. These fixture numbers include synthetic PVR/runtime stubs and are not SH target measurements. For four source rows, ≤100 widths still transform exactly width×4 vertices; width 101 transforms 612 vertices across its 2 tiles and width 255 transforms 1,542 across its 3 tiles. Wide widths previously declined into the GX sink, so no speedup claim is made without target/runtime measurement.
+
+**NEXT.** Qualify the actual `pTobjA` texture-stage operation, alpha/depth/order and material phase as a separate EF11 slice; preserve unsupported fallback until a native representation is proven. Then proceed to remaining EF12 generic effect forms under the owner matrix. The Build29 owner should run affected SH target compiles and private live look, STRICT, current-memory and cost gates before enabling the width control.
+
+**BLOCKED external gates.** This cloud workspace has no `kos-c++`, `sh-elf-g++`, KOS SDK, private Build-Assets or physical console. No SH target object/full-image compile, Flycast look, exact current heap/VRAM or console timing is claimed. No assets, release recipe, SD copy or Pi restart are changed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${CT29_BASE_TREE:?fresh base worktree path}"
+: "${CT29_LOGS:?fresh log directory}"
+: "${CT29_PROGRAMS:?fresh programme directory}"
+: "${CT29_LABEL:?fresh lane label prefix}"
+CT29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$CT29_BASE_TREE" ce38b99649bb61631fe4d4f622313ddc16be7c0f
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$CT29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$CT29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$CT29_BASE_TREE" "${CT29_LABEL}base" ""
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}absent" ""
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}off" "CLOTH_TILES11=0"
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}ctrl" \
+  "EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1 CLOTH_TILES11=0"
+candidate_build "$CT29_CANDIDATE_TREE" "${CT29_LABEL}on" \
+  "EFFECT_SPRITES=1 FX_STRIP21=1 CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=1 CLOTH_TILES11=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${CT29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${CT29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${CT29_LABEL}offrP" \
+  --output "$CT29_LOGS/cloth-tiles29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+**Material source boundary retained.** `clothTrans` stage 0 uses
+`GX_CS_SCALE_4` (the enum value 2), clamping four times texture × raster color
+and alpha. A non-null `pTobjA` adds a second texture modulation of that clamped
+result using texcoord0, forces standard source-alpha/inverse-source-alpha
+blending, and keeps the source alpha>4/depth policy. It is not equivalent to
+the current single-texture native header. The current tracked `Cloth::Set`
+producer in `cEsp4e::SetFreeWork` supplies a null second texture; `pTobjA`
+itself has no bounded secondary-image owner span, and the current native
+texture package releases its payload after upload. This patch neither infers
+secondary texture contents from an unbounded pointer nor claims that arbitrary
+filtered two-texture modulation can be replaced by texel-wise precomposition.
+General secondary materials remain unsupported, and the existing native
+single-texture alpha/depth/scale approximation remains explicit. That material
+coverage work and EF12 forms remain open. The next independent source slice
+can consume existing SH4ZAM wrappers in bounded row transforms (EF14), without
+changing this material contract or waiting for private look acceptance.
+
+
 ## Answers (owner): 2026-10-29 frozen local source release
 
 EF04/EF09/EF11/EF16 first slices landed at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0` via four clean no-ff merges from8f222fb4. All48 non-handback files match the exact target-qualified delivery blobs; current owner prefixes were preserved and no source conflict was hand-resolved. Combined release rc0, actual nonempty ELF and existing empty missing.txt; all new controls resolved0. Full programme, all15 overlays and every allocated ELF section metadata/payload match bound runtime064bfa4ea. ELF SHA256 `49a40830684f8676336f042fe54c28e20e220f378f6f4ab0fe146e1d2f1bee71`. Fresh-base origin-only push/readback passed.
@@ -879,3 +1232,93 @@ ALLON K28 adds GAME_ATCHK_DISTINCT29=1 with its existing GAME_ATCHK=1/LIST1/CACH
 NEXT: matched CACHE2 control/enabled live ATC comparison, actual ordered collision/intermediate query/retirement/room transitions and full cost/memory/console qualification. No speed or memory-headroom gain is inferred from host logic, target links or declared layout. Console requires intended media selected/swapped by the user and reviewed link readiness. Other cloud EFM/line/water/frontend and source continuations remain independently assigned.
 
 The separate natural portrait/cloth route is still bound to c027's prior QA image: its saved state must not be reused on this new image. Its exact-image window2 entered New Game/movie12000; window3 visibly played the opening cinematic and saved state03 with the15unexecuted phone rules. That is scoped old-image functional evidence, not current collision or live actor/cloth acceptance; historical damaged logs and holds remain.
+
+## 2026-10-29 Build29: EFM and line source/test follow-ons
+
+**2026-10-29 progress: DONE — reviewed public source/test follow-on, default0 behavior preserved.** Worktree `/workspace/scratch/8f775e996324/work-simulation-review`, branch `codex/simulation-review-20261029`, publication base `a5ac02aecee317c3ac74f1c9e7e2546a40775348`, refreshed from the qualified `5532fa6c` source without changing the runtime consumers. Ownership is confined to `port/dreamcast/tests/efm_identity/fixture.cpp`, `port/dreamcast/game/{line_resume29.mk,water_layer29.mk}`, and `port/dreamcast/tools/cloud/build29/{line_resume29_fixture.cpp,test_line_resume29.py,water_layer29_fixture.py}`. There is no EFM, line or water runtime reimplementation.
+
+**EFM DONE.** The production `esp_efm.cpp`, manager hooks, bridge and saturating token/serial are unchanged. Four added fast-vs-source cases cover the three owner gaps: successful and failed constructor-time `EfmDelete` reentry after the manager's pre-construction class publication; a nested deletion that creates a class slot and rebuilds the index before the outer callback returns, with an explicit slot-visit order showing exact source slot `i+1` continuation; and a class object mapped at slot 65536, which exceeds the `u16` index and forces the bounded 64-entry cache's source-scan fallback. The failing constructor leaves changed class bytes, and the callback sees them before its final manager publication. The nested case checks that the outer call does not replay its processed prefix. Existing generation exhaustion and all other lifecycle cases remain in the suite.
+
+`python3 -B port/dreamcast/tests/test_efm_class_identity.py` passes 17 source/accelerated parity cases for FX_SCAN1 and FX_SCAN2, normal and ASan/UBSan. Its prior exact OFF `-E -P` and `-O2 -g0` object checks still pass for the EFM excerpt, manager methods and bridge; object SHA256 prefixes remain `4c32efe6a5191650`, `030672eb0d2d10d3`, `245c2e6ac90d1693`. The actual primary Make check still proves absent/zero/ON control flags across five representative EFM consumers and refuses empty.
+
+**Line DONE.** `GAME_LINE_RESUME` now validates exactly one literal `0` or `1` using a one-word check and literal `filter-out`; a `%` pattern, multiword, empty or disguised numeric value cannot silently select OFF. Only when resume is 1, `GAME_LINE_WALK` must be exactly one literal `1` or `2`; zero, 3, empty, multiword and pattern values fail. Both valid walk arms retain the same `atari.o` define, and absent/zero retain the exact old compile command. The actual primary `make -f Makefile -n` test covers these accepted/refused values.
+
+The source-extracted production line fixture now has an independent equal-nearest oracle: polygon 63 and polygon 64 intersect at the same distance across the 64/65 leaf boundary, and a polygon in a second piece intersects at that same world point. The source's strict `<` rule must retain the first polygon and first piece, with exact return attribute, normal pointer, owner, hit bits and visit order. `python3 -B port/dreamcast/tools/cloud/build29/test_line_resume29.py` passes all 45 consumer cases in each WALK1/2, PIECE0/1/2, normal and ASan/UBSan arm. Its existing original/absent/explicit-zero complete preprocessor and object identity checks remain exact for both piece profiles. Host objects are 30,776 and 34,184 bytes for those two profiles. The unavailable target assembly's leaf-list ABI is represented by the documented host adapter; no target output claim is made.
+
+**Water Make DONE.** `WATER_LAYER29` now requires one literal `0` or `1` in the primary Make fragment; its former `filter` treated caller-supplied `%` as a wildcard. The existing actual-primary-Make fixture adds `%`, `0%` and `1%` refusal arms. `python3 -B -m unittest port.dreamcast.tools.cloud.build29.water_layer29_fixture.WaterLayer29Test.test_primary_makefile_control` passes. The water runtime and ON dependencies are unchanged.
+
+**Footprint and gates.** The only production edits are the two Make validation changes. They add no runtime code, BSS, heap, stack state, assembly or capacity. The EFM and line suites above were rerun and passed at source base `5532fa6c`; `git diff --check` is clean. NEXT: serialized local integration and target SDK absent/zero/ON link/identity checks; current-image EFM/line gameplay, STRICT, full memory and cost comparisons; actual target LINE_LEAF/TAIL assembly and live result/cost evidence. BLOCKED at target/private gates in this cloud workspace: no SH-4/KOS compiler, private Build-Assets, Flycast capture or physical Dreamcast. The previous published target links remain historical evidence, not freshly rerun for this follow-on.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${SIM29_BASE_TREE:?fresh base worktree path}"
+: "${SIM29_LOGS:?fresh log directory}"
+: "${SIM29_PROGRAMS:?fresh programme directory}"
+: "${SIM29_LABEL:?fresh lane label prefix}"
+SIM29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$SIM29_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$SIM29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$SIM29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$SIM29_BASE_TREE" "${SIM29_LABEL}base" ""
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}absent" ""
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}off" "GAME_LINE_RESUME=0"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}ctrl" \
+  "GAME_LINE_WALK=2 GAME_LINE_PIECE=2 GAME_LINE_RESUME=0"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}on" \
+  "GAME_LINE_WALK=2 GAME_LINE_PIECE=2 GAME_LINE_RESUME=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${SIM29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${SIM29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${SIM29_LABEL}offrP" \
+  --output "$SIM29_LOGS/simulation29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+For the other two unchanged runtime consumers, reuse `candidate_build` from
+that shell and run the exact controls below. The changes in this follow-on
+are fixtures and literal Make parsing; these commands verify that accepted
+controls still reach the intended TUs and link on the pinned SDK.
+
+```bash
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}walk1" \
+  "GAME_LINE_WALK=1 GAME_LINE_PIECE=2 GAME_LINE_RESUME=1"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}efm" \
+  "GAME_FX_SCAN=2 GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_WORKAT_INLINE=1 GAME_ESP_OWNER=1 OBJECT_DEMAND=1 ENEMY_DEMAND=1 GAME_EFM_CLASS_IDENTITY=1"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}water" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1"
+```
+
+The historical `OPEN SOURCE/TEST FOLLOW-ONS` note at the top of this handback
+is retained as the review record. Its constructor/rebuild/u16-slot, exact
+nearest-tie and literal-control tasks are addressed by this dated section.
+Actual LINE_LEAF/TAIL target execution and matched live gameplay/STRICT/cost
+remain separate from the host source adapter, and ELC_W_LEAVES stays an
+unmatched counter for resume ON.

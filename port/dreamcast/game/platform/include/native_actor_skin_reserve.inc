@@ -3,6 +3,9 @@
 // reserve keys; every palette/materialization reader must reject them.
 static_assert(kSkins>=kRe4dcActorSkinKeys && kSkins<=256,"reservation indices must fit the existing skin table");
 extern "C" int re4dc_actor_skin_reserve(unsigned source_frame,const void* const* infos,unsigned n) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     if(!infos || !n || n>kRe4dcActorSkinKeys)return 0;
     for(unsigned k=0;k<n;++k){
         if(!infos[k])return 0;
