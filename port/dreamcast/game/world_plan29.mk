@@ -38,6 +38,16 @@ $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=1
 endif
 
+# Build31: qualify the existing streamed indexed producer with queued portal
+# completion. No clip producer receives a witness under this control.
+WORLD_PORTAL_STREAM31 ?= 0
+ifneq ($(words $(WORLD_PORTAL_STREAM31)),1)
+$(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_PORTAL_STREAM31)),)
+$(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
+endif
+
 # EF08: queued portal completion is separately opt-in; legacy portal stays exact.
 WORLD_PORTAL_COMPLETION ?= 0
 ifneq ($(words $(WORLD_PORTAL_COMPLETION)),1)
@@ -50,8 +60,13 @@ ifeq ($(WORLD_PORTAL_COMPLETION),1)
 ifneq ($(WORLD_PORTAL29)$(SCENERY_SUBMIT_BATCH)$(PS2_PVS_BATCH_COMPOSE),111)
 $(error WORLD_PORTAL_COMPLETION needs WORLD_PORTAL29=1 SCENERY_SUBMIT_BATCH=1 PS2_PVS_BATCH_COMPOSE=1)
 endif
-ifneq ($(SCENERY_STREAM)$(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),000)
-$(error WORLD_PORTAL_COMPLETION requires explicit SCENERY_STREAM=0 SCENERY_CLIP_GATHER=0 SCENERY_CLIP_INDEXED26=0)
+ifneq ($(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),00)
+$(error WORLD_PORTAL_COMPLETION requires explicit SCENERY_CLIP_GATHER=0 SCENERY_CLIP_INDEXED26=0)
+endif
+ifneq ($(SCENERY_STREAM),0)
+ifneq ($(WORLD_PORTAL_STREAM31),1)
+$(error WORLD_PORTAL_COMPLETION with SCENERY_STREAM needs WORLD_PORTAL_STREAM31=1)
+endif
 endif
 # These facts were formerly UI-only flags or late native_static header
 # defaults. The existing early composition guards must see the actual selected
@@ -62,6 +77,15 @@ $(error WORLD_PORTAL_COMPLETION requires qualified direct/header/mesh/stream fac
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += $(foreach v,$(WORLD_PORTAL_COMPLETION_FACTS),-DRE4DC_$(v)=$($(v)))
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_COMPLETION=1
+endif
+ifeq ($(WORLD_PORTAL_STREAM31),1)
+ifneq ($(WORLD_PORTAL_COMPLETION)$(SCENERY_STREAM)$(PS2_PVS_BATCH_COMPOSE),111)
+$(error WORLD_PORTAL_STREAM31 needs WORLD_PORTAL_COMPLETION=1 SCENERY_STREAM=1 PS2_PVS_BATCH_COMPOSE=1)
+endif
+ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),000)
+$(error WORLD_PORTAL_STREAM31 needs SCENERY_EMIT_PREFETCH=0 and both SCENERY_CLIP controls=0)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_STREAM31=1
 endif
 
 # EF09 prepared world facts; absent/zero preserves all preceding paths/layouts.
