@@ -623,3 +623,40 @@ full absent/zero repacked-image identity and actual-data look/STRICT/
 memory/net console qualification remain separate gates. The public target
 helper's two-TU/relocatable matrix is explicitly not a full image test.
 No source/build, private-asset change, SD write, promotion or publication.
+
+### Answers (owner): complete release-profile OFF payload identity
+
+Baseline14f6ef1 is the actual36643bf8a merge first parent. Compared complete
+release rP baseline with candidate absent and explicit STATIC_OBJ_BATCH33=0,
+same recipe blob16c25cb6/assets/SDK/epoch. Fresh baseline/0 builds pass
+rc0/missing0; preserved absent output checked, all15 overlays present.
+This uses the actual private recipe, not the2-TU validation matrix override.
+
+All three3372036-byte executable programmes SHA256
+fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1
+and complete15-overlay sets match exactly. Allocated ELF section addresses,
+sizes/types/flags/content match. Whole ELF files differ; differing section
+payloads are.debug_abbrev/.debug_info/.debug_line/.debug_line_str, so no
+full ELF byte identity is claimed. The raw programme extraction uses a
+seekable file and asserts nonempty bytes; an earlier stdout probe returning
+empty data was discarded before comparison, not used as an identity proof.
+
+Fresh independently mastered ext4 bases use the same original extraction/
+manifest/IP and unchanged existing fp_master/fp_iso helpers, cache DISABLED.
+Each1648 original files unchanged/19 permitted/0disallowed. Across baseline
+versus absent and versus0: all1667 ISO file payloads identical, zero differs.
+Three inert full-play fixture files exist in each arm; this is exact complete
+file-payload identity on fixture bases, not public-disc acceptance.
+
+Raw track02 is identical. Raw track01-template and track03 are NOT identical;
+track03 differing-byte counts7227(absent)/9533(zero). Mastering metadata/
+layout localization remains pending, no raw byte normalization/cache-hit
+PASS or full raw-image identity claim. No same-input rebuild/remaster is
+needed to inspect these retained differences. Private full hashes/offsets/
+resolved/build/manifest receipts: owner-allon33-off-20261028/
+OFF-IDENTITY-BUILDS.json and OFF-IDENTITY-IMAGES.json+md; ext4 originals/
+programmes/masters in owner-batch33-offid-20261028.
+
+Enabled large/blended live coverage, actual effective-header/vertex oracle,
+look/STRICT/current memory/stack/full-route and net whole-frame hardware
+gates remain pending. No source change, SD copy, promotion or publication.
