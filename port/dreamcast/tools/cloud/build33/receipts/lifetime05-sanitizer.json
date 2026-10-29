@@ -1,0 +1,43 @@
+{
+  "verdict": "PASS",
+  "sanitized": true,
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-O1",
+    "-g",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-no-pie",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-unused-function",
+    "-DRE4DC_STATIC_OBJ_BATCH=2",
+    "-DRE4DC_STATIC_OBJ_LIFETIME05=1",
+    "-I",
+    "<TREE>/port/dreamcast/game/platform/include",
+    "<OUT>/fixture.cpp",
+    "-o",
+    "<OUT>/fixture"
+  ],
+  "tests": [
+    "PASS range/epoch refusal before cell header access",
+    "PASS same-frame heap reset, reused address, pending discard",
+    "PASS inactive heap handle refuses pending consumption",
+    "PASS same-generation allocation reuse and stale leave",
+    "PASS reset without leave and stale flush",
+    "PASS OOM/refusal and reset during allocation publication",
+    "PASS retirement during submit drops remaining pending references",
+    "PASS split flush reentry cannot append into replacement State",
+    "PASS mutation beyond byte eight remains uncached/raw",
+    "PASS token exhaustion refuses retained reuse, ordinary allocation survives"
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/model_bridge.cpp": "e6020b0b15a88a487dd343316008363613fb3e5b65002a1f58eec4b5db3f0a55",
+    "port/dreamcast/game/ui_bridge.cpp": "43e9e8d9e1a5691f83c44ed2c3eb7a3976134386d223fb268f255b335b8c2305",
+    "port/dreamcast/tools/cloud/build33/lifetime05_fixture.cpp.in": "55c2a0c3e09762eb7ca1428cb96fb925b7b4a7e25829d7317d789a00281c3657",
+    "port/dreamcast/tools/cloud/build33/lifetime05_host.py": "9d593d9e92907d51b67815314da5f9bd04bd13e142092cf9ae5940c2ffc36023",
+    "port/dreamcast/game/platform/include/static_obj_lifetime05.hpp": "aacd0f4528051f4f3dc26aa0f18f3b871bef69bc8d2a3be8d3203cae6e845b44"
+  }
+}

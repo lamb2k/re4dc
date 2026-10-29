@@ -750,6 +750,18 @@ endif
 # part (model_bridge.cpp sob::), from a copy of the raw GX lists in a heap-4 room cell (freed at room leave).
 # Matrices, poses and lights stay live; any mismatch submits the lists one by one as before. =1 merges only groups
 # whose lighting is centre-independent (exact); =2 also lit groups (lights folded at the merged centre).
+# STATIC_OBJ_LIFETIME05: validate SOB room cells by heap + allocation incarnation.
+# Source content without an authority uses raw lists rather than retained copies.
+STATIC_OBJ_LIFETIME05 ?= 0
+ifneq ($(words $(STATIC_OBJ_LIFETIME05)),1)
+$(error STATIC_OBJ_LIFETIME05 must be 0 or 1)
+endif
+ifeq ($(filter $(STATIC_OBJ_LIFETIME05),0 1),)
+$(error STATIC_OBJ_LIFETIME05 must be 0 or 1)
+endif
+ifeq ($(STATIC_OBJ_LIFETIME05),1)
+$(OBJDIR)/model_bridge.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_STATIC_OBJ_LIFETIME05=1
+endif
 STATIC_OBJ_BATCH ?= 0
 ifneq ($(STATIC_OBJ_BATCH),0)
 $(OBJDIR)/model_bridge.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_STATIC_OBJ_BATCH=$(STATIC_OBJ_BATCH)

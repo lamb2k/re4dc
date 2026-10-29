@@ -1,3 +1,6 @@
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+#include "platform/include/static_obj_lifetime05.hpp"
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
 #include "platform/include/static_obj_batch33.hpp"
 #endif
@@ -364,6 +367,16 @@ State* S=nullptr;
 unsigned seen_frame=~0U,generation=0; bool live=false;
 const void* cur_model=nullptr; const void* cur_info=nullptr; unsigned cur_idx=0;
 struct Stats { unsigned groups,lists,merged,saved,built,refused,singles,lit,log; } st{};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){
+    State* prior=S;
+    S=owner.get();
+    live=re4dc_room4_live_generation(&generation)!=0;
+    if(prior && !S){cur_model=cur_info=nullptr;cur_idx=0;}
+    return S!=nullptr;
+}
+#endif
 inline bool static_class(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -396,9 +409,13 @@ inline bool same(const Re4dcModelPart& a,const Re4dcModelPart& b){
 inline const unsigned char* list_of(const ModelPart* q){return (const unsigned char*)q+0x20;}
 void new_frame(){
     seen_frame=pG->Frame_cnt;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+#else
     unsigned cells,bytes,stale,refused;
     live=re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused)!=0;
     if(S && (!live || S->generation!=generation))S=nullptr;  // a heap-4 reset without a room leave: the cells are gone
+#endif
     if(seen_frame-st.log>=600U){
         st.log=seen_frame;
         re4dc_log("SOBATCH frame=%u groups=%u lists=%u merged=%u saved=%u built=%u refused=%u singles=%u lit=%u entries=%u bytes=%u\n",
@@ -406,6 +423,7 @@ void new_frame(){
             S?S->count:0U,S?S->bytes:0U);
     }
 }
+#if !defined(RE4DC_STATIC_OBJ_LIFETIME05) || !RE4DC_STATIC_OBJ_LIFETIME05
 Entry* find(const Pending& q){
     for(unsigned k=0;k<S->count;++k){
         Entry& e=S->e[k];
@@ -441,8 +459,20 @@ Entry* build(const Pending& q){
     S->bytes+=total;++st.built;
     return &e;
 }
+#endif
 void flush(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    // Submission may reenter room retirement. Keep the record/light off the
+    // room cell, and drop it before touching source pointers after retirement.
+    State* const held=S;
+    const unsigned held_generation=owner.generation,held_incarnation=owner.incarnation;
+    Pending q=S->pend;
+    S->pend.on=false;
+    q.rec.lighting=&q.light;
+#else
     Pending& q=S->pend;
+#endif
     if(!q.on)return;
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     // Held/cached merged groups never borrow the replay caller's current pose.
@@ -452,6 +482,7 @@ void flush(){
     ++st.groups;st.lists+=q.n;
     Re4dcModelPart r=q.rec;
     if(q.n>1){
+#if !defined(RE4DC_STATIC_OBJ_LIFETIME05) || !RE4DC_STATIC_OBJ_LIFETIME05
         Entry* e=find(q);
         if(!e)e=build(q);
         if(e){
@@ -460,18 +491,25 @@ void flush(){
             re4dc_model_submit(&r);
             return;
         }
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         DFA26_MODEL_HIT(ModelObjectBatchRefused, q.n)
 #endif
         ++st.refused;
     } else ++st.singles;
     for(unsigned i=0;i<q.n;++i){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!validate() || S!=held || owner.generation!=held_generation || owner.incarnation!=held_incarnation)return;
+#endif
         r.part=q.parts[i];r.stream=list_of(q.parts[i]);r.stream_bytes=q.parts[i]->size;
         re4dc_model_submit(&r);
     }
 }
 // 1: the part was taken (held, or submitted with its run); 0: the caller submits it.
 bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelPart* part,const Re4dcModelPart& p){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate(); // frame identity cannot authorize a pointer after a same-frame reset
+#endif
     if(pG->Frame_cnt!=seen_frame)new_frame();
     if(m!=cur_model || info!=cur_info){cur_model=m;cur_info=info;cur_idx=0;}
     const unsigned idx=++cur_idx;
@@ -482,14 +520,38 @@ bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
         eligible=RE4DC_STATIC_OBJ_BATCH>=2;
     }
     if(eligible && !S){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        const unsigned expected=generation;
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        // static_alloc may reclaim other packages; establish publication identity
+        // only after it returns, before the first payload write.
+        if(owner.bind(fresh,expected)){S=fresh;memset(S,0,sizeof(State));S->generation=expected;}
+        else {
+            S=nullptr;unsigned now=0;
+            // A returned allocation with token zero (exhaustion) remains an
+            // ordinary valid cell. Return it instead of leaking each refusal.
+            if(re4dc_room4_live_generation(&now) && re4dc_room4_cell_valid(fresh,sizeof(State),now))
+                re4dc_static_free(fresh);
+        }
+        if(!S)eligible=false;
+#else
         S=(State*)re4dc_static_alloc(sizeof(State));
         if(S){memset(S,0,sizeof(State));S->generation=generation;}
         else eligible=false;
+#endif
     }
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    State* const held=S;
+    const unsigned held_generation=owner.generation,held_incarnation=owner.incarnation;
+#endif
     if(S && S->pend.on){
         const Pending& q=S->pend;
         if(!eligible || q.info!=info || q.model!=m || !same(q.rec,p))flush();
     }
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    // flush/submit can retire this room or reenter another object run.
+    if(eligible && (!validate() || S!=held || owner.generation!=held_generation || owner.incarnation!=held_incarnation))eligible=false;
+#endif
     if(!eligible){DFA26_MODEL_HIT(ModelObjectBatchSplit, 1)if(idx>=d->displist_num)cur_info=nullptr;return false;}
     Pending& q=S->pend;
     if(!q.on){
@@ -503,10 +565,18 @@ bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
 }
 // Room leave (ui_bridge.cpp re4dc_room_leave, before re4dc_room4_close): return every cell.
 extern "C" void re4dc_sob_room_leave(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    sob::State* state=sob::owner.get();
+    // Detach pending/global references before free or any possible reentry.
+    sob::owner.clear();sob::S=nullptr;sob::cur_model=sob::cur_info=nullptr;sob::cur_idx=0;
+    sob::live=false;
+    if(state)re4dc_static_free(state); // no persistent copied lists without source authority
+#else
     if(!sob::S)return;
     for(unsigned k=0;k<sob::S->count;++k)re4dc_static_free(sob::S->e[k].buf);
     re4dc_static_free(sob::S);
     sob::S=nullptr;sob::cur_model=nullptr;sob::cur_info=nullptr;
+#endif
 }
 #endif
 #if defined(RE4DC_SOB_DUMP) && RE4DC_SOB_DUMP

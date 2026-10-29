@@ -691,6 +691,14 @@ struct Room4 {
     unsigned live_cells,live_bytes,stale_frees,refused;
 };
 Room4 room4{};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+// Never recycle a token, even across heap rebuilds. Exhaustion refuses reuse,
+// while unrelated room allocations and gameplay continue with token zero.
+unsigned room4_incarnation=0;
+unsigned room4_next_incarnation(){
+    return room4_incarnation==~0U?0U:++room4_incarnation;
+}
+#endif
 #if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
 }
 // GC_CENSUS_TRIM (lane t2exact): sourceActorIdentity (trans.cpp, ~110-170 calls a frame) reads the two words it uses
@@ -710,6 +718,9 @@ void* room_alloc4(unsigned bytes,const char* tag,bool clear){
                                            :mem_alloc(bytes+sizeof(Room4Cell),tag,0,0,4));
     if(!cell)return nullptr;
     *cell={kRoom4Magic,room4.generation,bytes,{}};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    cell->reserved[0]=room4_next_incarnation();
+#endif
     ++room4.live_cells;room4.live_bytes+=bytes;
     return cell+1;
 }
@@ -779,12 +790,15 @@ void* room_alloc4_high(unsigned bytes,const char* tag){
     snprintf(reinterpret_cast<char*>(t)+4,0x1C,"%s(0)",tag);
     auto* rc=reinterpret_cast<Room4Cell*>(p);
     *rc={kRoom4Magic,room4.generation,bytes,{}};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    rc->reserved[0]=room4_next_incarnation();
+#endif
     ++room4.live_cells;room4.live_bytes+=bytes;
     return rc+1;
 }
 #endif
 }
-#if RE4DC_MOVIE_WORLD_ARENA
+#if RE4DC_MOVIE_WORLD_ARENA || (defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05)
 extern "C" int re4dc_room4_live_generation(unsigned* generation){
     *generation=room4.generation;
     return room4.live && memCheckHeapActive(4) && Heap[4].handle>=0;
@@ -797,6 +811,12 @@ extern "C" int re4dc_room4_cell_valid(const void* p,unsigned bytes,unsigned gene
     if(a<lo || a-lo<sizeof(Room4Cell) || a>=hi || (a&31u) || bytes>hi-a)return 0;
     const auto* c=static_cast<const Room4Cell*>(p)-1;
     return c->magic==kRoom4Magic && c->generation==generation && c->bytes<=hi-a && (!bytes || c->bytes==bytes);
+}
+#endif
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned bytes,unsigned generation){
+    if(!re4dc_room4_cell_valid(p,bytes,generation))return 0;
+    return (static_cast<const Room4Cell*>(p)-1)->reserved[0];
 }
 #endif
 // gameRoomMemInit rebuilt heap 4: a new generation of native cells may start.

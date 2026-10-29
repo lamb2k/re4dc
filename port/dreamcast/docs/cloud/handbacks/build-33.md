@@ -685,3 +685,129 @@ owner-allon33-off-20261028/OFF-IDENTITY-METADATA.json+md. No reason to repeat
 identical OFF builds/masters. Enabled large/blended/live order/look/STRICT/
 current memory/full-route and matched whole-frame console gates remain
 separate and pending; no recipe/SD/release change or new acceptance.
+
+
+## EF05 first consumed lifetime slice, 2026-10-29
+
+**DONE (source + host):** `STATIC_OBJ_LIFETIME05=1` retains the SOB heap
+generation and allocation incarnation outside its room-cell `State`. The
+existing room API validates heap generation, active handle, range, alignment,
+exact extent and cell header before the new query reads its token. Both
+ordinary/high room allocation publishers assign the next nonzero token in
+existing `Room4Cell::reserved[0]`; no cell-layout change. Tokens never recycle;
+counter exhaustion publishes zero and refuses retained reuse while ordinary
+allocation/gameplay continue. An unbound fresh SOB cell is returned safely.
+The control defaults to zero and leaves Build33 final-header coalescing intact.
+
+`take` checks on every call, including an unchanged frame counter. `flush`
+validates before touching State, snapshots pending record/lighting off the room
+cell, and rechecks heap/token before every raw-source submission. A split flush
+cannot append into a replacement State after reentry. Leave validates, detaches
+all global/pending references, then frees only the matching live allocation.
+No stale State is read to find its own identity.
+
+Source extents/content-generation authority is not yet supplied by the recovered
+model parser. The enabled slice therefore refuses persistent merged-copy reuse
+and emits the current raw lists through the existing model consumer. Pointer,
+total-size and first-eight-byte matching is retained only in the unchanged OFF
+path. This may lose the old merged-list speed benefit; it is a correctness
+slice, not a measured optimization or a promotion of mode2 lighting behavior.
+
+Run synthetic, production-body boundaries with fresh output directories:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build33/lifetime05_host.py --output "$OUT/host"
+python3 -B port/dreamcast/tools/cloud/build33/lifetime05_host.py --output "$OUT/sanitizer" --sanitize
+```
+
+Both normal and ASan/UBSan runs pass ten groups: range/epoch refusal; same-frame
+reset/reused address/pending discard; invalid heap handle; same-generation
+allocation reuse/stale leave; reset without leave/stale flush; OOM/refusal and
+reset during allocation publication; retirement during submit; split-flush
+reentry; changed byte12 in raw emitted output; token exhaustion with normal
+allocations still usable and refused SOB allocation returned. The fixture
+extracts the actual SOB and ordinary room alloc/free/liveness/validation/token
+functions, using synthetic source records and controlled allocation/submission
+edges. Retired heap storage is protected with `PROT_NONE`. High allocation
+publication is source-inspected but not executed by this host allocator.
+Sanitizers run with leak detection disabled. Source-bound public receipts:
+`tools/cloud/build33/receipts/lifetime05-{host,sanitizer}.json`.
+
+**NEXT:** target release absent/explicit-zero/enabled builds and complete
+disabled programme/overlay/allocated-section identity; source extent/content
+authority before restoring copied-cache hits; then effective output, loading
+overlap, stack/headroom and setup/whole-frame cost on bound actual inputs.
+Coordinator serializes SDK builds and owns integration. No SDK/Flycast/disc,
+publication, SD or Pi action has been performed for this slice yet.
+
+**Remaining EF05 sub-slice:** source inspection finds the same pre-validation
+pattern in diagnostic `sobdump::frame/ensure` (`SOB_DUMP`) and static-bake
+`re4dc_sob_bake_frame/decide/room_leave/skip` (`STATIC_OBJ_BAKE`, requiring
+`PS2_PLACE_GATE`). These are explicitly outside this first bounded SOB commit
+per coordinator scope. They need the same out-of-band identity and fixtures
+for their serialization/rest-copy and placement-callback consumers, including
+allocation/prepare callback reentry. The new knob does not certify them safe.
+
+**BLOCKED only at acceptance:** actual source ownership, bound actual-data
+look/gameplay/STRICT/current memory and whole-frame hardware gates remain open.
+Host success is not target execution, full EF05 completion or a speed claim.
+Existing earlier Build33 receipts retain their exact scope.
+
+
+### EF05 target/OFF gate, 2026-10-29
+
+**DONE (IMPLEMENTED + TARGET BUILD VALIDATED, first SOB slice only):** local
+source commit `5905089fddff31f11fa194b7faa7512d34eb7dae` passes fresh full
+release builds with the control absent, explicit zero and one. All actual
+build logs and nonempty ELF files exist; each `missing.txt` exists and is empty.
+Compiler15.2.0, KOS804b3195 and pinned sh4zam33fa4850; release recipe SHA256
+`66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+The independently built shared control is source9ee386e3. After normalizing
+only owned worktree/output paths, every resolved definition agrees except the
+new `STATIC_OBJ_LIFETIME05` declaration (absent on control,0/0/1 on the arms).
+
+Control/absent/zero have identical complete3372036-byte programmes, SHA256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`;
+all15 overlays and all11 allocated ELF sections agree, including addresses,
+sizes, types, flags, alignment and file-backed content. Both changed objects
+(`model_bridge.o`, `ui_bridge.o`) also match allocated sections for absent and
+zero. Whole ELF files differ; no whole-ELF or raw-disc byte identity is claimed.
+
+Enabled ELF SHA256
+`07eaeecf7d6c201c5becedecf4203ba8f03a1e259b634931a5f4b8b628cbb0a2`.
+Its new counter symbol is4 bytes and out-of-band owner12 bytes; linked BSS is
+32 bytes larger after alignment. Linked `.text` is192 bytes smaller because
+the unsafe retained-copy find/build path is excluded. These are section/symbol
+sizes, not peak heap, stack or timing results. The room-cell header and SOB
+State layout are unchanged; no copied-cache or loading-overlap saving is
+certified. Unknown source content still takes the raw path.
+
+Exact reproduction uses the current release recipe and bound private inputs,
+one fresh label per arm, and a separate programme directory with the shared
+registry disabled:
+
+```sh
+source <(sed 's/\r$//' "$TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+# Repeat with EXTRA unset, STATIC_OBJ_LIFETIME05=0, then =1; unique LP each time.
+K="$LOGS" T="$TREE" LP="$FRESH_LABEL" CH2="$CH2 ${EXTRA:-}" \
+  ROUTE_PROGRAMS_DIR="$PROGRAMS" ROUTE_PROGRAMS_JSON='' \
+  bash "$TREE/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+```
+
+The owner checks fresh output paths before invoking this existing recipe,
+which otherwise removes a same-label output. SDK job finished and build slot
+returned; no live PID/session remains. Private exact builds, hashes, resolved
+settings, actual logs and both comparison receipts are retained in the owner's
+`engine-ef05-target-20261029` evidence. OFF receipt SHA256
+`ee870177c618e4c673c5a026b555bef65192f7101167f0b1d6e1e5b368eb4b74`;
+target bindings/object/footprint receipt SHA256
+`ec1be99e2dd724b83836d53dfe1bcc023f46c61db35991b220e99431a9767022`.
+
+**NEXT:** integrate default-off only through the coordinator's prescribed
+fresh-base process, then continue parser-bound source extents/content identity
+and the explicitly deferred sobdump/sobake lifetime sub-slice above. Reuse of
+copied source content remains disabled in the new arm until authority exists.
+**BLOCKED at actual-data acceptance only:** effective emitted order/output,
+current gameplay/STRICT/look, stack/headroom/loading overlap and total hardware
+cost remain distinct pending gates. No target execution, emulator, mastering,
+publication, SD/Pi action, recipe promotion or full EF05 completion is claimed.
