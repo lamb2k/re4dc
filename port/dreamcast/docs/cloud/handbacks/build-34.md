@@ -1048,3 +1048,38 @@ Next owner step: source-bound actual active-SCPS retirement/re-entry fixture
 and missing farm telemetry diagnosis; no identical blocked farm retry.
 Console still needs user-selected named arms plus REMOTE LINK after swaps
 and matched camera/state/windows. No console inputs were sent.
+
+### Answers (owner): source-bound retirement route pilot held, 2026-10-28 23:14 EDT
+
+Read the actual final-disc native little-endian AEV104 records, not a guessed
+original-ISO route. Their hashes bind to all3 already-qualified images.
+Type1/156-byte records are source-bound by sce_at.h + le_mirror.py.
+r105 door1 reaches r101; r101 door1 returns to r105. r105_checkDoor naturally
+sets door_unlock0 bit02000000 (src/st1/r105.cpp:722-735); r101's callback is
+installed only if it is absent. Reverse-trigger centroid, body/front-probe
+side/height tests follow areaHitCheck_xz4; per-entry movement/actions use the
+unchanged fixture API. No synthetic unlock or room-jump directive was added.
+
+A new four-entry105->101->105->101 control-first fixture was prepared.
+Only the60s disabled control ran: reader0/errors empty/overruns0, exited.
+It positively reached r101 via the real door and recorded entry2/frame1;
+the reverse-trigger move executed at room frame77. Actual return entry3 and
+fresh entry4 were not observed before capture ended. The wrapper stopped;
+ON/check were NOT launched. This is INCOMPLETE ROUTE COVERAGE, not a runtime
+failure, zero-mismatch result or active-SCPS table retirement acceptance.
+
+The full room-enter101 stamp was not intact in the log, while independent
+entry2 placement plus DISCRD from=door establish that entry. Its wrapper's
+full-stamp list must not be misread as only one room reached. Missing rows
+are not reconstructed. No longer capture, identical retry or gating workaround.
+Exact ROUTE-DOOR-AUDIT/ROUNDTRIP-FIXTURE-PROOF/ROUNDTRIP-RESULTS and preserved
+source/run/fixture/log receipts remain private. No data/harness/target change.
+
+Read-only source trace: ui_bridge re4dc_room_leave retires the UI before
+room_file_leave frees/zeros rf; native_static SCPS-open clears old pointers
+and slot words before binding validated new metadata. That code trace is
+not runtime heap, stale-reference, leak or completed lifecycle proof.
+The active-table route and missing farm comparison stay held with owner
+Codex. Independent Build35 private profiles/full disabled-image identity
+remain useful next work. Existing three-arm entry and r101 header results
+retain their narrower scopes. No recipe/SD/release action or console inputs.
