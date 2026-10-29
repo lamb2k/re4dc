@@ -50,9 +50,22 @@ def main():
             assert run.returncode==0,run.stderr.decode()
             row=json.loads(run.stdout);assert row['stale_counterexamples']==(0 if mode else 6)
             rows.append(dict(name=name,**row))
-    paths=[UI,HERE/'upload_fixture.cpp.in',Path(__file__)]
+    # Compile the actual Make knob hunk in isolation: no SDK or private inputs.
+    make_source=(DC/'game/game30.mk').read_text()
+    knob_hunk=between(make_source,'PS2_UPLOAD_INCARNATION ?= 0','PS2_WORLD_HDR_CACHE ?= 0')
+    makefile=a.output/'upload-knob.mk'
+    makefile.write_text('PS2_UPLOAD_INCARNATION ?= 0\n'+knob_hunk+'\nall:\n\t@echo $(PS2_UPLOAD_INCARNATION)\n')
+    guards=[]
+    for value in (None,'0','1','','2','-1','1 1','0 1'):
+        command=['make','--no-print-directory','-f',str(makefile),'all']
+        if value is not None:command.append('PS2_UPLOAD_INCARNATION='+value)
+        run=subprocess.run(command,capture_output=True)
+        accepted=value in (None,'0','1')
+        assert (run.returncode==0)==accepted,(value,run.stdout,run.stderr)
+        guards.append(dict(value=value,accepted=accepted))
+    paths=[UI,DC/'game/game30.mk',HERE/'upload_fixture.cpp.in',Path(__file__)]
     assert source==UI.read_text()
-    report=dict(status='PASS',scope=__doc__,sanitize=a.sanitize,rows=rows,
+    report=dict(status='PASS',scope=__doc__,sanitize=a.sanitize,rows=rows,make_guards=guards,
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         extracted_sha256={k:hashlib.sha256(v.encode()).hexdigest() for k,v in values.items()})
     receipt=a.output/'upload-host.json';receipt.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(dict(status='PASS',rows=rows,receipt=str(receipt))))

@@ -140,7 +140,8 @@
       "PS2_UPLOAD_INCARNATION=1",
       "SCENERY_PIECE_STATE=0",
       "PS2_WORLD_HDR_CACHE=1",
-      "PS2_PVS=1"
+      "PS2_PVS=1",
+      "SCENERY_SUBMIT_BATCH=0"
     ]
   },
   "watch_fields": [
