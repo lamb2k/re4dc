@@ -1083,3 +1083,30 @@ The active-table route and missing farm comparison stay held with owner
 Codex. Independent Build35 private profiles/full disabled-image identity
 remain useful next work. Existing three-arm entry and r101 header results
 retain their narrower scopes. No recipe/SD/release action or console inputs.
+
+### 2026-10-29 owner: reviewed ALL ON34 memory continuation remains held
+
+The seven formerly unexplained profile fields are now source-checked WEP27
+derivations: modules wep05/wep06/wep12, their three wrappers/fourteen
+presentation objects, and the explicit wep06/wep12 audit list. Existing
+common order, same-source ELF pins, own raw programme/15 overlays, symbols,
+fixtures and both65536-byte diagnostic rings were verified. The original
+preliminary failure and aborted capture remain unchanged.
+
+Two fresh sequential60s candidate-only fight captures on source
+`6c6028df6ef31fd1963740e510a460da3568aa96` completed with reader0/errors[] and
+the scene end marker. The unchanged stock EVAL_ONLY judge FAILS both:
+held-amount readback is empty; the fragmented run also has malformed numeric
+counter rows. OOM marker count0 does not turn this into memory acceptance.
+Judge exit0 is not a PASS: the explicit verdict is KOS SQUEEZE GATE FAIL.
+Raw logs, exact judge stdout/stderr and inputs remain retained.
+
+No malformed control was rerun or overridden; no identical candidate retry.
+This is the old6c fixed-observer group, with a64KiB diagnostic ring and
+QA/link0 emulator-only profile, not exact production footprint, current
+ALL ON35, whole scene matrix, STRICT/look/MODELLED/console or release
+acceptance. No new SDK/master, source guard, log-size/parser workaround,
+host keys/state-out, SD or recipe change. Direct active track01 bytes were
+not retained for these two captures; no separate active-image readback gate
+is claimed. Next: read-only producer/reader contract diagnosis before any
+changed-input retry;75s door/300s h2 remain unrun.
