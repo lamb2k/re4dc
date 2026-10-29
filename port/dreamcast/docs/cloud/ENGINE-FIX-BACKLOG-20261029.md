@@ -345,6 +345,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF13. Supply water coverage through the existing layer data contract
 
+**2026-10-29 recovery source delivery:** Recovered actual loaded W29 producer/retirement and strict full-three-TU SH-conditioned OFF fixtures; package5/5 and schema4/4 normal/sanitizer PASS. Target/full-image/private/runtime gates remain local; default0, partial EF13. See [Build29](handbacks/build-29.md).
+
 **Gap.** Water already has `Re4dcWaterLayer -> WaterNode -> water_emit`, including deferred ordering and bounded native geometry. Source selection remains distributed through compiled room/extension tables; absent data and intentionally absent water need distinct meanings.
 
 **Target.** Reuse the native emitter while supplying versioned, source-bound layer definitions through the existing asset pipeline. Preserve current PS2 replacement policy, animation phase and generator/gameplay behavior.
