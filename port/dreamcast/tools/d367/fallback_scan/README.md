@@ -55,6 +55,80 @@ never a successful inventory for their contents. Inputs are never written.
 Output must be a new directory, and input symlinks may not escape their
 explicitly supplied tree.
 
+## Build 36 selection and legacy inventory (default off)
+
+Add `--scan36=1` to enable the Build 36 repairs. With the option absent or
+`--scan36=0`, the existing scanner's nine reports and process results remain
+unchanged, including its existing refusals. No game code or input bytes change.
+
+```sh
+python3 -B port/dreamcast/tools/d367/fallback_scan/scan.py \
+  /private/composed-disc-tree \
+  --out /private/build36-r103 \
+  --rooms r103 \
+  --knobs /private/exact-image/resolved-knobs.txt \
+  --scan36=1 --strict
+```
+
+Use the **composed final disc tree** and its exact resolved recipe. A later
+data set replaces the whole `dc/tex.pak` at that path. Runtime lookup then
+prefers an eligible packed member over loose data. `TEX_RESIDENT` determines
+the loose flat/bucket path; `QUALITY_ASSETS` can select a current room's
+`texlow` path and bypass the pack. Unknown recipe or live quality state keeps
+presence and palette predicates conditional. This is file availability,
+not a prediction of texture-cache residency or successful upload.
+
+If the final pack has not yet been composed, declare **only its actual pack
+replacement order** explicitly. Each supplied file replaces the entire
+previous pack; omitted keys are not inherited from it:
+
+```sh
+python3 -B port/dreamcast/tools/d367/fallback_scan/scan.py \
+  /private/composed-loose-and-room-tree \
+  --out /private/build36-explicit-pack-order \
+  --rooms r103 \
+  --knobs /private/exact-image/resolved-knobs.txt \
+  --scan36=1 \
+  --texpak-layer /private/earlier-data-set/dc/tex.pak \
+  --texpak-layer /private/later-data-set/dc/tex.pak \
+  --strict
+```
+
+This does not compose loose files or room assets. Arbitrary packs found by
+directory discovery or `--input` have no declared destination/order and are
+reported as unselected. Repeated keys **inside one pack index** remain invalid.
+A malformed or unreadable final pack is rejected and its unresolved keys
+remain unknown; an earlier replaced pack does not regain authority.
+
+`report.json/texture_selection` records physical variants, definite and
+conditional keys, selected/possible/shadowed sources, hashes, layer numbers,
+member offsets, and predicates for all referenced keys. The headline texture
+count means definitely present keys, not payload variants or resident handles.
+
+Native `etc/emleon00.esl`–`emleon07.esl` and `etc/omake00.esl`–`omake02.esl`
+can bind global ModelData archives through the current source loader tables.
+The mapping retains exact list/record/hash, player and Ashley-costume
+alternatives, archive path/hash, and scanner model keys. Lists may remain
+selected on room revisits. All BIN members are **archive-load candidates**,
+with unknown instance counts and active appearance. Missing targets, mutable
+non-DLL filenames, core-object IDs, unsupported lists and ambiguous identities
+stay visible in coverage. Source-less GLP1/compiled replacements still need
+owner context. `room_membership` carries the full provenance and source-table
+hashes; enabled `details.tsv` and `barn.tsv` add a `membership` column.
+
+Explicit context and `--room-list` entries override automatic candidates for
+the same room. The unfilled context template keeps automatic rooms in
+informational `room_candidates`, outside `rooms`, so replaying it cannot turn
+conditional list evidence into verified owner context.
+
+Ordinary legacy R4IM v1/v2/v3 packages without R4PW can provide strictly
+validated **geometry-only inventory**. Their material/pass/cull/texture keys,
+placement counts and selected LOD remain unknown; coverage is `partial`, so
+`--strict` exits 1. PS2 owner `0x50`, physical variants, unknown extensions,
+and modern bundles still need their required policy. A present malformed
+sidecar, directory or dangling symlink is a refusal, not an absent optional
+policy. No actor fallback predicates are applied to legacy world geometry.
+
 ## Outputs and denominators
 
 | File | Contents |
@@ -190,9 +264,10 @@ facts. Its schema is `re4dc.fallback29.rooms/1`:
 ```
 
 This is a schema illustration, not an actual game filename or valid hash.
-Global actors remain `unassigned` until package identity or an explicit list
-binds them. ESL files are story-selected alternatives; an ESL ID never
-automatically binds a source archive or establishes a visible actor.
+In the default mode, global actors remain `unassigned` until package identity
+or an explicit list binds them. Build 36 adds the conditional native-list
+mapping described above. An ESL ID alone never establishes archive identity
+or a visible actor.
 
 ## Format coverage and refusals
 
@@ -249,3 +324,22 @@ mixed LE/BE fields, exact member ranges, source-lineage mismatch, recipe and
 lighting unknowns, probe decline versus generic success, live bake refusal,
 chunk semantics, stale-context refusal, missing coverage, symlink rejection,
 deterministic reports and unchanged input hashes.
+
+Build 36 adds 101 tests (texture selection 40, native membership 28, legacy
+worlds 13, end-to-end reports 20) and an actual baseline/absent/zero CLI gate:
+
+```sh
+python3 -B -m unittest discover \
+  -s port/dreamcast/tools/d367/fallback_scan -p 'test_*36.py' -v
+python3 -B port/dreamcast/tests/test_texpack_index.py
+python3 -B port/dreamcast/tools/cloud/build36/verify_identity.py \
+  --base bb5f18e0e3b3fac4c76bd42d0c9d8107385c568c \
+  --out /tmp/build36-off-identity-new.json
+```
+
+The identity checker needs Python with `hashlib.file_digest` and tarfile's
+`data` extraction filter (the checked Python version is in its receipt).
+It compares all nine raw report files and process results across seven
+non-vacuous scenarios, checks input hashes, and refuses changes outside this
+offline scanner/checker and its hand-back. Use a fresh receipt path. The
+committed receipt is in `tools/cloud/build36/receipts/off-identity.json`.
