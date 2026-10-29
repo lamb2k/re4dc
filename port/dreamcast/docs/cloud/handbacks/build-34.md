@@ -919,3 +919,44 @@ NMR_POOL_LOD0 validation override is not silently transferred to private
 recipe/assets. Existing data/hashes/old failure evidence remain preserved.
 Private live triplet/mode2 results pending; console needs explicit selected
 arm and REMOTE LINK. No SD, recipe, guard or release change.
+
+### Answers (owner): supported private validation links, 2026-10-28 22:43 EDT
+
+All three full private QA/observer game links COMPLETE, each44s/rc0/missing0,
+source807a9102e. Private recipe NMR_POOL_LOD1 retained in every arm; cloud
+public fixture override0 was not transferred. SCPS-only r101/r103 files bind
+to unchanged original room and mesh hashes from the final ALL ON35 image.
+No original/private source data was changed.
+
+| Arm | ELF SHA256 | Linked end |
+|---|---|---|
+|control|38475584a9fac32660de641b4a1bfc781ce87c297a2de08dc565e08a7125eb2b|8c470600|
+|on|fd7583252fd3963fbaa986600f0c46f39ee3968cf112192d69f4ebd44dd91994|8c470860|
+|check|b028002a5cb299d94c98a04afb09c68c8b5e03fc978a6a05930591041c852772|8c470ae0|
+
+Full resolved-definition comparison normalizes ONLY the exact owned output
+prefixes: control->on differs SCENERY_PIECE_STATE0->1 and its Make-derived
+ROOMFILE_SCPS parser definition; on->check differs HDR_CACHE1->2 only.
+All three consistently SUBMIT_BATCH0/PVS_BATCH_COMPOSE0/PVS0, NMR_POOL_LOD1,
+QA_MENU1/QA_LINK1/REVIEW28/FA29, both new FA35/window controls0.
+Actual C parser compile commands and final linked symbols checked: SCPS
+slot/piece counter present on+check, absent control; checked/bad counters
+present only check. The check build compiles piece_hits but check mode logs
+checked/bad; do not infer exercised admissions from a compiled symbol.
+
+The initial owner preflight incorrectly expected a piece-slot symbol in
+the disabled control and omitted the compiled piece counter in check mode;
+it failed before writing a PASS. Actual linked symbols/SCPS definition were
+inspected, assertions corrected to their source semantics, and complete
+preflight rerun PASS. This is a proof-tool correction, no target change.
+
+CONTROL-PROOF.json with full definitions, compile commands, symbol/section
+sizes and image/data binding retained at owner-scps34-validation-20261028.
+Linked ends above include code/data/BSS/alignment; not runtime heap/stack
+headroom or observer timing. No new images mastered or game runs executed.
+NEXT: same-data three-arm fixture images, full programme/asset/fixture
+preflight, then bounded r101/r103 captures; report actual checked/bad and
+cache1 admissions separately. Private standard memory/lifetime/look/STRICT
+and console gates remain pending. Original production batch1/cache1 pair
+and unsupported batch1/cache2 failure remain retained and distinct.
+No source guard, recipe, SD or release promotion.
