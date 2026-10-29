@@ -1,0 +1,43 @@
+#include <fstream>
+#include <string>
+namespace check {
+std::vector<u8> read_file(const std::string& name) {
+    std::ifstream in(name,std::ios::binary);require(bool(in));
+    return std::vector<u8>(std::istreambuf_iterator<char>(in),{});
+}
+void produced(const std::string& directory) {
+    const auto pos=read_file(directory+"/info0.pos"),nrm=read_file(directory+"/info0.nrm"),
+        uv=read_file(directory+"/info0.uv"),blob=read_file(directory+"/info0.meshlets");
+    Asset a{3,1,3};a.positions.resize(pos.size()/2);std::memcpy(a.positions.data(),pos.data(),pos.size());
+    a.wide_normals.resize(nrm.size()/2);std::memcpy(a.wide_normals.data(),nrm.data(),nrm.size());
+    a.uv.resize(uv.size()/2);std::memcpy(a.uv.data(),uv.data(),uv.size());
+    a.stream.resize(blob.size()/4);std::memcpy(a.stream.data(),blob.data(),blob.size());
+    a.p.position_count=pos.size()/8;a.p.normal_count=nrm.size()/8;a.p.flags=0;a.p.shift=4;
+    a.p.stream=reinterpret_cast<const u8*>(a.stream.data());a.p.stream_bytes=blob.size();a.used=blob.size();
+    a.p.uv=reinterpret_cast<const u8*>(a.uv.data());a.bind();
+    const Re4dcActorSource src{reinterpret_cast<const u8*>(a.positions.data()),reinterpret_cast<const u8*>(a.wide_normals.data()),
+        a.p.position_count,a.p.normal_count,3,0};
+    const Re4dcActorSkinBinding binding{a.p.info,src,a.palette.data(),3};Re4dcActorSkinLease lease{};
+    require(re4dc_actor_skin_acquire(serial,&binding,1,&lease));
+    a.p.source_span={src.positions,src.normals,unsigned(pos.size()),unsigned(nrm.size()),unsigned(uv.size()),
+        Re4dcActorSourceSpan::U16Q15,lease.serial,lease.frame};
+    require(uv32::prepare_owned(a.p));
+    require(re4dc_actor_submit(&a.p)==1 && !headers.empty());require(locks==unlocks);
+    require(re4dc_actor_skin_release(&lease));
+}
+}
+int main(int argc,char** argv) {
+    using namespace check;require(argc==2);const std::string root=argv[1];
+    const auto expected=read_file(root+"/certificate-oracle.bin");require(expected.size()==131072);
+    for(unsigned v=0;v<65536;++v) {
+        require(re4dc::format32::uv_certificate_add(16,int(v))==expected[v]);
+        require(re4dc::format32::uv_certificate_add(16,int(v)-32768)==expected[65536+v]);
+    }
+    for(const char* name:{"short","near"}) {
+        start();produced(root+"/"+name+"-legacy");const auto before=ta;
+        require(!(headers.back()&kPcwUv16));
+        start();produced(root+"/"+name+"-on");require(headers.back()&kPcwUv16);
+        compare_vertices(before,ta,bound_width,bound_height);
+    }
+    std::printf("{\"checks\":%u,\"offline_submissions\":4,\"exhaustive_codes\":131072,\"near_and_uv_error\":true}\n",assertions);
+}

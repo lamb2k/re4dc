@@ -3,7 +3,7 @@
 existing tools only: character-prototype pack_coarse_actor.py (native arrays, palettes) and the cl lane's fastpath
 build_blob.py / verify_blob.py / patch_header.py (FE/v3 meshlet blobs), as today's play bundle was made.
 
-  pack_arm.py <mesh.json> <out dir> [--today] [--pl08 <leon_pl08_runtime.h>]
+  pack_arm.py <mesh.json> <out dir> [--today] [--pl08 <leon_pl08_runtime.h>] [--format32]
 
 Writes <out>/native (pack output), <out>/blob (meshlets), <out>/ps2leon_runtime.h (namespace leon4k, the
 leon4k_runtime.h API: chunks, weights, signatures, bind + the plan constants the PS2_LEON code reads) and
@@ -19,6 +19,10 @@ leon_hair_runs.h (a check that this pipeline reproduces the play assets).
 --pl08 <slim leon_pl08_runtime.h>: pl08's own roles 0, 1, 8 for the pl08 plan constants (2026-10-11: arm A with the PS2
 pl08 body, pack_pl08.py's output). Default: the frozen GameCube-derived pl08 header (ACTOR_PL08_PACK's
 actor_pl08_pack_identity.inc).
+
+--format32: opt in to newly computed referenced-UV interval certificates and
+bounded plain FE3 validation through the configured fastpath producer. Existing
+assets and default output retain legacy flags. No old flags are relabelled.
 """
 import hashlib, importlib.util, json, re, struct, subprocess, sys, tempfile
 from pathlib import Path
@@ -26,6 +30,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import leon_sources as ls  # noqa: E402
+import actor_format32 as af32  # noqa: E402
 
 PROTO = ls.PROTO
 FAST = PROTO / 'tools/fastpath'
@@ -110,7 +115,7 @@ def run(*cmd):
     return r.stdout
 
 
-def hair_runs(mesh, native, bb, today):
+def hair_runs(mesh, native, bb, today, format32=False):
     """role 7's triangles (mesh order = info7.gx order) -> one blob per material, material 2 first."""
     g = (native / 'info7.gx').read_bytes()
     n = struct.unpack('>H', g[1:3])[0]
@@ -162,12 +167,21 @@ def hair_runs(mesh, native, bb, today):
                 if best is None or cst < best[0]:
                     best = (cst, st, metas, mode, wd)
         cst, st, metas, mode, wd = best
-        blob = bytearray(bb.assemble(ch, metas))
-        blob[2] = flags            # one uv excess for the hair's whole UV array
+        blob = bytearray(bb.assemble(ch, metas, **({'format32_helper': af32} if format32 else {})))
+        if not format32:
+            blob[2] = flags        # legacy whole-array significant-bit excess
         blob[16:32] = bounds       # the full-hair bounds: the fog gate decides the hair as a whole, as today's runs
         blob = bytes(blob) + bytes((-len(blob)) % 32)
         blobs.append(blob)
-        rows.append(dict(material=m, asset_id=29 + len(rows), triangles=len(sel), pinned=len(ch.pinned), seed=mode, w_dist=wd, **st))
+        row = dict(material=m, asset_id=29 + len(rows), triangles=len(sel), pinned=len(ch.pinned), seed=mode, w_dist=wd, **st)
+        if format32:
+            row['format32'] = af32.validate(blob, len((native / 'info7.pos').read_bytes()),
+                len((native / 'info7.nrm').read_bytes()), uvb)
+            row['corners'] = row['format32']['indices']; row['strips'] = row['format32']['strips']
+            row['source_info'] = 7
+            row['source_sha256'] = {s: sha((native / ('info7.' + s)).read_bytes()) for s in ('pos', 'nrm')}
+            row['source_sha256']['uv'] = sha(uvb)
+        rows.append(row)
     out = ['// Private generated (ps2leon pack_arm.py): role 7 drawn as one owned run per hair material, restripified by the\n'
            '// fastpath build_blob.py. No copied positions, normals or weights (they are ps2leon_runtime.h chunk 7).\n'
            '#pragma once\nnamespace leon_hair_runs {\n', byte_array('uv', uvb)]
@@ -182,11 +196,13 @@ def hair_runs(mesh, native, bb, today):
     mask = sum(1 << m for m in {r['material'] for r in rows})
     assert mask in (2, 6), 'hair runs must use material 1, or materials 1 and 2 (mask %#x)' % mask
     out.append('};\nstatic constexpr unsigned role=7,palette_count=%d,run_count=%d,material_mask=%d;\n}\n' % (pal, len(rows), mask))
-    return ''.join(out), dict(uv_entries=len(uvs), flags=flags, runs=rows, tris=tris, uvs=uvs)
+    return ''.join(out), dict(uv_entries=len(uvs), flags=None if format32 else flags, runs=rows, tris=tris, uvs=uvs)
 
 
 def main():
     a = sys.argv[1:]
+    format32 = '--format32' in a
+    a = [x for x in a if x != '--format32']
     today = '--today' in a
     a = [x for x in a if x != '--today']
     pl08_header = None
@@ -198,8 +214,9 @@ def main():
     pca = load('pack_coarse_actor', PROTO / 'tools/pack_coarse_actor.py')
     native, blobd = out / 'native', out / 'blob'
     pca.pack(mesh_path, ls.LEON_SOURCE, native, 'leon4k')
-    print(run(FAST / 'build_blob.py', native, blobd, '--report', out / 'blob-report.json'))
-    print(run(FAST / 'verify_blob.py', blobd, blobd))
+    capability_args = ['--format32-helper', HERE / 'actor_format32.py'] if format32 else []
+    print(run(FAST / 'build_blob.py', native, blobd, '--report', out / 'blob-report.json', *capability_args))
+    print(run(FAST / 'verify_blob.py', blobd, blobd, *capability_args))
     tmp = out / 'runtime.tmp.h'
     print(run(FAST / 'patch_header.py', native / 'leon4k_native.h', blobd, tmp))
     head = tmp.read_text()
@@ -255,7 +272,7 @@ def main():
     (out / 'ps2leon_runtime.h').write_text(text)
     tmp.unlink()
     bb = load('build_blob', FAST / 'build_blob.py')
-    htext, hrep = hair_runs(mesh, native, bb, today)
+    htext, hrep = hair_runs(mesh, native, bb, today, format32)
     (out / 'ps2leon_hair_runs.h').write_text(htext)
     arrays = c_arrays(text)
     data = {k: len(v) for k, v in arrays.items()}
@@ -273,6 +290,12 @@ def main():
                tools={n: sha(p.read_bytes()) for n, p in (('pack_coarse_actor.py', PROTO / 'tools/pack_coarse_actor.py'),
                       ('build_blob.py', FAST / 'build_blob.py'), ('verify_blob.py', FAST / 'verify_blob.py'),
                       ('patch_header.py', FAST / 'patch_header.py'), ('pack_arm.py', Path(__file__)))})
+    if format32:
+        rep['format32'] = dict(helper_sha256=sha((HERE / 'actor_format32.py').read_bytes()),
+            uv_encoding='u16q15', cone_capability=False,
+            source_sha256=sha(ls.LEON_SOURCE.read_bytes()),
+            chunks={str(i): af32.validate(arrays['i%d_gx' % i],len(arrays['i%d_pos' % i]),
+                len(arrays['i%d_nrm' % i]),arrays['i%d_uv' % i]) for i in range(8)})
     if today:
         refa = c_arrays(ref)
         cmp = {}

@@ -651,3 +651,88 @@ native FE fallback, or close all of EF01. The whole EF card remains open.
 No live job remains and the exclusive SDK slot is released. Runtime and
 physical-console acceptance are pending their bound inputs/session; no
 emulator, disc mastering, SD/Pi change, publication or upload occurred.
+
+## EF02 real offline producer correction, 2026-10-29
+
+**DONE - IMPLEMENTED / HOST AND NAMED-INPUT VALIDATED, opt-in only.**
+`ps2leon/pack_arm.py --format32` now requests newly computed referenced-UV
+interval tags from the actual configured owner-local fastpath producer. The
+shared stdlib `ps2leon/actor_format32.py` supplies the same signed/unsigned
+magnitude contract as `actor_format32_uv.hpp`: code `15+e` certifies
+`abs(raw)<=2^e`, for `e=1..16`. The quantized U16/Q15 data and exact declared
+source allocations are the authority. Old significant-bit flags are never
+inputs to this calculation; absent/legacy capability remains absent.
+
+The real private `build_blob.py` and `verify_blob.py` were available and
+corrected under the worker's explicit private-code authority. They take an
+explicit `--format32-helper` path; their default mode preserves legacy
+output. Pre-edit and final code copies/hashes, configured paths and exact
+named inputs are retained in the private handback, outside Git. Their final
+code SHA-256 values are:
+
+- `build_blob.py`: `ec096dfb5c916f8a3141263fb9f842a26c575e96c63a1e3b96edc88509022c1e`
+- `verify_blob.py`: `3d1a68c27b90c63a700496c3249fdbf86ecc905b3879e4e1a39edc5ce4b748c8`
+
+The public wrapper SHA-256 is
+`9a63929885dce7840b33a729b0d0e04e051b0e850b9eb73573b7e436d2b18b8b`;
+the shared helper is
+`12b29f36d5fb5c2f8ba74d2def9051fc419691aebb5ba13d7baeceeb788c1434`.
+These hashes identify code, not private game geometry or performance results.
+
+Enabled source validation checks exact GX/attribute spans, the existing
+optional 32-byte zero padding, count/index limits, FE3 records and all stored
+LOD prefixes/lists. CI, bake and pending-LOD capabilities stay unsupported.
+Fresh assembly also splits strips exceeding the runtime's 64-corner bound
+with an even 62-corner advance, preserving triangle order and winding; if
+the split exceeds the 1,024-index meshlet capacity it refuses. Default
+assembly is unchanged and the input plan is never mutated. Enabled reports
+record actual post-split index/strip counts, source-array hashes, exact UV
+encoding/extents and helper identity. No cone capability is invented.
+
+**Synthetic producer/consumer checks:**
+
+```sh
+python3 port/dreamcast/tests/test_actor_offline32.py \
+  --fastpath "$CONFIGURED_FASTPATH" --legacy-producer "$IMMUTABLE_ORIGINAL_BUILD_BLOB" \
+  --output "$FRESH_OUTPUT" [--sanitize]
+```
+
+Normal and ASan/UBSan (`detect_leaks=0`) each pass 91 producer/validator
+checks and 131,210 assertions in the complete production actor TU. This
+includes 131,072 exhaustive signed/unsigned tag comparisons, four actual
+native submissions from freshly generated legacy/certified short and
+near-clipped blobs, and emitted UV/interpolation error checks. The existing
+charbake decoder and oriented-triangle oracle validate the actual producer
+output; malformed spans, legacy/unknown tags, unsupported mixed formats,
+all three LOD prefix tables, small-normal input, 63/64/65/66/127/128/129/1000
+strip boundaries and 1,024-index refusal are covered. The original private
+producer and corrected default producer emit identical synthetic bytes.
+Host SQ/AVK adapters remain platform boundaries.
+
+**Named regeneration:** Two original, explicitly bound fixtures were rebuilt
+in fresh private output directories: historical `leon-hair-v2 --today` and
+the current release's retained `a-rig` mesh with its original pl08 header.
+The current mesh and pl08 source hashes match the retained release report;
+neither source was edited. Default `a-rig` output reproduces both retained
+release headers byte-for-byte. Certified output changes exactly byte two
+of each of the eight main FE3 blobs and its one hair blob. Every source
+attribute array, allocation length, decoded triangle encounter order,
+winding, bind/source-signature table, material and plan constant is equal.
+The independent configured validator passes legacy-versus-certified output
+for both named fixtures, including coincident hair order/rotation. The
+historical fixture is separate evidence from the current release fixture.
+Original packages and generated assets remain untouched.
+
+**NEXT:** One current-recipe target build against the fresh certified
+`a-rig` headers with the existing FORMAT32/UV16/SOURCE_SPAN controls; then
+actual-data admissions/refusals, effective output, retained/peak memory,
+complete cost and affected look/STRICT/full-image/hardware qualification.
+The current producer still emits level-zero blobs; synthetic stored-LOD
+validation does not admit a new actor LOD producer or change source LOD
+selection. This slice changes no runtime code, package, release recipe or
+default and does not close every EF02 asset family/acceptance gate.
+
+**BLOCKED:** No missing private producer or named input remains for this
+slice. Target build awaits the coordinator's slot; live asset/package and
+physical-console acceptance remain distinct pending gates. No emulator,
+disc mastering, SD/Pi action, publication or private upload occurred.
