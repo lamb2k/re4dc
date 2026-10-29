@@ -204,6 +204,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF04. Reuse validated native decoding beyond actor admission
 
+**2026-10-29 recovery source delivery:** Recovered consumed skin recipe plus required admission correction; 3679 normal/sanitizer assertions and four150-check temporal source-macro arms PASS, exact scoped OFF preserved. Current-image presentation separate; full target/runtime/console gates open, default0. See [Build32](handbacks/build-32.md).
+
 **Gap.** Supported FE decoding and native position continuation already exist: `pass_positions` tries `avk_positions`, then completes remaining records through `positions_asm/positions_c`. They sit inside the actor route's broader admission contract. [native_model.cpp][MODEL] rejects encoded parts only after actor admission/materialization/retry still fails; the old GX walker cannot interpret the replaced bytes. A kernel specialization miss alone is not this rejection.
 
 **Target.** Separate validated format access from the whole-actor admission policy so valid uncovered cases can reuse existing native decoding and emission. Unsupported versions, corrupt spans, current-pose materialization and resource failures remain distinct.

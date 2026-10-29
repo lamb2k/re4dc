@@ -21,6 +21,9 @@ void owned_skin_invalidate_frames(); // definition after the Frame cache
 #endif
 #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
 static int skin_acquire_inner(unsigned& why_,unsigned source_frame,const Re4dcActorSkinBinding* in,unsigned n,Re4dcActorSkinLease* out) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building){why_=6;return 0;}
+#endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     if(skin_admission_pending.serial){why_=6;return 0;}
 #endif
@@ -93,6 +96,9 @@ void owned_skin_diag(unsigned why,unsigned source_frame,unsigned n,unsigned role
 #define SKINACQ_REFUSE(why,role,value) return 0
 #endif
 extern "C" int re4dc_actor_skin_acquire(unsigned source_frame,const Re4dcActorSkinBinding* in,unsigned n,Re4dcActorSkinLease* out) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     if(skin_admission_pending.serial)return 0;
 #endif
@@ -138,6 +144,9 @@ extern "C" int re4dc_actor_skin_validate(const Re4dcActorSkinLease* lease) {
     return 1;
 }
 extern "C" int re4dc_actor_skin_release(Re4dcActorSkinLease* lease) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
     if(!lease)return 0;
     if(!lease->serial){*lease={};return 1;}
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32

@@ -180,6 +180,20 @@ void full_and_oom(){
     CHECK(lookup(keys[0],nullptr,1)!=nullptr && skin_count==count);
 #endif
 }
+void full_existing_lazy_replacement(){
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    reset();ModelData d{};d.weight_palette_num=1;cModelInfo info{};
+    CHECK(re4dc_actor_skin_register(7,&info,nullptr,owner_pal,1));
+    for(unsigned i=0;i<kSkins-1;++i)
+        CHECK(re4dc_actor_skin_register(7,&infos[i],nullptr,owner_pal,1));
+    CHECK(skin_count==kSkins && skins[0].info==&info && skins[0].palette==owner_pal);
+    const u8* before=g_work.prim;
+    CHECK(re4dc_skin_defer_lazy(&info,&d));
+    CHECK(g_work.prim==before+64 && skin_count==kSkins);
+    CHECK(skins[0].info==&info && skins[0].palette && skins[0].palette!=owner_pal);
+    CHECK(lookup(&info,nullptr,1)==skins[0].palette && lookup(&infos[0],nullptr,1)==owner_pal);
+#endif
+}
 void owner_and_reentry(){
     reset();
     CHECK(re4dc_actor_skin_register(7,&infos[0],nullptr,owner_pal,1));
@@ -249,11 +263,35 @@ void retirement_and_frame(){
 void serial_exhaustion(){
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     reset();ModelData d{};d.weight_palette_num=1;cModelInfo info{};
-    skin_admission_serial=~0u;const u8* before=g_work.prim;
-    CHECK(!re4dc_skin_defer_lazy(&info,&d) && g_work.prim==before && skin_count==0);
+    CHECK(re4dc_actor_skin_register(7,&infos[0],nullptr,owner_pal,1));
+    skin_admission_serial=~0u-1;
+    CHECK(re4dc_skin_defer_lazy(&info,&d));
+    CHECK(skin_admission_serial==~0u && lookup(&info,nullptr,1)!=nullptr);
+    CHECK(lookup(&infos[0],nullptr,1)==owner_pal);
+    cModelInfo refused{};
+    const u8* before=g_work.prim;
+    CHECK(!re4dc_skin_defer_lazy(&refused,&d) && g_work.prim==before && skin_count==2);
+    CHECK(lookup(&refused,nullptr,0)==nullptr && lookup(&info,nullptr,1)!=nullptr);
+#endif
+}
+void stale_cancellation(){
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    reset();Re4dcActorSkinAdmission first{},second{};
+    CHECK(re4dc_actor_skin_admit(7,&infos[0],nullptr,1,&first));
+    const auto stale=first;
+    re4dc_actor_skin_cancel(&first);
+    CHECK(!first.serial && !skin_admission_pending.serial);
+    CHECK(re4dc_actor_skin_admit(7,&infos[1],nullptr,1,&second));
+    auto obsolete=stale;
+    re4dc_actor_skin_cancel(&obsolete);
+    CHECK(skin_admission_pending.serial==second.serial && second.serial!=stale.serial);
+    CHECK(re4dc_actor_skin_commit(&second,owner_pal));
+    CHECK(!second.serial && skin_count==1);
+    CHECK(lookup(&infos[1],nullptr,1)==owner_pal && lookup(&infos[0],nullptr,0)==nullptr);
 #endif
 }
 int main(){
-    success_consumers();full_and_oom();owner_and_reentry();retirement_and_frame();serial_exhaustion();
+    success_consumers();full_and_oom();full_existing_lazy_replacement();owner_and_reentry();
+    retirement_and_frame();serial_exhaustion();stale_cancellation();
     std::printf("checks=%u palette_builds=%u prim_errors=%u\n",checks,palette_builds,g_log.errors);
 }

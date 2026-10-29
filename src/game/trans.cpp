@@ -5879,6 +5879,9 @@ void SetPrimBuffPtr()
 #if RE4DC_COARSE_SOURCE_ACTORS
     sourceActorRetire(); // before even the no-buffer return or any storage reuse
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    re4dc_actor_skin_recipe_retire(); // also when prim_cnt==0 or Frame_cnt is unchanged
+#endif
     GxWork* gx = GXWORK();
 
     if (pG->prim_cnt == 0) {
@@ -5908,12 +5911,53 @@ void SetPrimBuffPtr()
 #endif
 }
 
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+static unsigned skin_recipe_credit=0;
+extern "C" unsigned re4dc_prim_recipe_credit(){return skin_recipe_credit;}
+extern "C" unsigned re4dc_prim_recipe_frame(){return pG->Frame_cnt;}
+extern "C" void re4dc_prim_recipe_retire_credit(){skin_recipe_credit=0;}
+static bool re4dc_prim_recipe_room(unsigned* available) {
+    const u8* base=(const u8*)pG->prim_cnt;
+    if(!available || PTR_INVALID(base) || pG->vtx_buf_no>1 ||
+       pG->nPrim>~0u/(pG->vtx_buf_no+1u))return false;
+    const std::uintptr_t begin=reinterpret_cast<std::uintptr_t>(base);
+    const unsigned span=pG->nPrim*(pG->vtx_buf_no+1u);
+    if(begin>~std::uintptr_t(0)-span)return false;
+    const std::uintptr_t end=begin+span;
+    const std::uintptr_t at=reinterpret_cast<std::uintptr_t>(GXWORK()->prim);
+    if(at<begin || at>end)return false;
+    *available=unsigned(end-at);
+    return true;
+}
+extern "C" int re4dc_prim_recipe_release(unsigned bytes) {
+    if(!bytes || (bytes&31u) || bytes>skin_recipe_credit)return 0;
+    skin_recipe_credit-=bytes;return 1;
+}
+// One non-yielding claim transfers an old pending row's credit or adds a
+// descriptor. The admission margin is checked here only; later allocations
+// protect the hard palette credit without charging another 16 KiB per row.
+extern "C" int re4dc_prim_recipe_claim(unsigned descriptor,unsigned old_credit,
+                                        unsigned new_credit,void** allocation) {
+    if(!allocation || (descriptor&31u) || (old_credit&31u) || (new_credit&31u) ||
+       old_credit>skin_recipe_credit || !new_credit)return 0;
+    unsigned room=0;
+    if(!re4dc_prim_recipe_room(&room) || skin_recipe_credit-old_credit>~0u-new_credit)return 0;
+    const unsigned total=skin_recipe_credit-old_credit+new_credit;
+    if(room<descriptor || room-descriptor<total ||
+       room-descriptor-total<16u*1024u)return 0;
+    GxWork* gx=GXWORK();*allocation=gx->prim;
+    gx->prim+=descriptor;skin_recipe_credit=total;
+    return 1;
+}
+#endif
 // Allocates `size` bytes (32-byte aligned) from this frame's primitive buffer; 0 when exhausted.
 void* GetPrimBuff(int size)
 {
     GxWork* gx = GXWORK();
     u8* base = (u8*) pG->prim_cnt;
+#if !defined(RE4DC_SKIN_RECIPE32) || !RE4DC_SKIN_RECIPE32
     u8* limit;
+#endif
     u8* p;
     u8* next;
 
@@ -5921,17 +5965,35 @@ void* GetPrimBuff(int size)
         pLog->err(0, 0, "GetPrimBuff() PTR ERR %08X", base);
         return 0;
     }
-    limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
-    size = (size + 0x1F) / 32 * 32;
-    p = gx->prim;
-    next = p + size;
-    if (limit < next) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    unsigned room=0;
+    if(size<0 || size>0x7fffffff-31 || !re4dc_prim_recipe_room(&room)) {
 #if RE4DC_PRIM_WATER
         ++primw_overflow;
 #endif
         pLog->err(0, 0, "GetPrimBuff() : OVERFLOW");
         return 0;
     }
+#else
+    limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
+#endif
+    size = (size + 0x1F) / 32 * 32;
+    p = gx->prim;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(unsigned(size)>room || skin_recipe_credit>room-unsigned(size)) {
+#else
+    next = p + size;
+    if (limit < next) {
+#endif
+#if RE4DC_PRIM_WATER
+        ++primw_overflow;
+#endif
+        pLog->err(0, 0, "GetPrimBuff() : OVERFLOW");
+        return 0;
+    }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    next=p+size;
+#endif
     gx->prim = next;
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
 #if RE4DC_OT_WALK_CHECK >= 2
@@ -5949,14 +6011,26 @@ void* GetPrimBuff(int size)
 // it never triggers GetPrimBuff's OVERFLOW report. D358: 37% peak use of 312 KiB.
 extern "C" void* re4dc_prim_tail(unsigned bytes, unsigned reserve)
 {
+#if !defined(RE4DC_SKIN_RECIPE32) || !RE4DC_SKIN_RECIPE32
     GxWork* gx = GXWORK();
+#endif
     u8* base = (u8*) pG->prim_cnt;
     if (PTR_INVALID(base)) {
         return 0;
     }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    unsigned room=0;
+    if(bytes>~0u-31u || !re4dc_prim_recipe_room(&room))return 0;
+#else
     u8* limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
+#endif
     u32 size = (bytes + 0x1F) / 32 * 32;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(size>0x7fffffffu || size>room || reserve>room-size ||
+       skin_recipe_credit>room-size-reserve) {
+#else
     if (gx->prim + size + reserve > limit) {
+#endif
 #if RE4DC_PRIM_WATER
         ++primw_declined;
 #endif
@@ -6270,6 +6344,9 @@ extern "C" void* re4dc_prim_tail(unsigned bytes, unsigned reserve);
 int re4dc_skin_defer(cModelInfo* info, ModelData* d)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > (0x7FFFFFFFu - 31u) / 48u) return 0;
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
@@ -6299,6 +6376,9 @@ int re4dc_skin_defer(cModelInfo* info, ModelData* d)
 int re4dc_skin_defer_lazy(cModelInfo* info, ModelData* d)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > (0x7FFFFFFFu - 31u) / 48u) return 0;
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
@@ -6372,12 +6452,23 @@ static void skinLazyBuild(void* w, u32 n, int ext, void* dst)
 static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxBuilt)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > 0xFFFFu) return 0; // SkinLazyHead captures the count in its low half.
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     Re4dcActorSkinAdmission admission{};
     if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, 0, n, &admission)) return 0;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    const unsigned n_ext=n|(d->weight_ext_num>0xFF?0x10000u:0u);
+    const int recipe=re4dc_actor_skin_recipe_claim(&admission,m,d->pWeight,n_ext);
+    if(recipe) {
+        if(recipe<0)re4dc_actor_skin_cancel(&admission);
+        return recipe>0;
+    }
+#endif
 #endif
     void* copy = re4dc_prim_tail(n * 0x30, 16 * 1024);
     if (!copy) {
@@ -6489,6 +6580,26 @@ extern "C" void re4dc_skin_palette_resolve(const float* palette)
     skinLazyBuild(h.w, h.n_ext & 0xFFFF, h.n_ext >> 16, (void*) palette);
 #endif
 }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+extern "C" const float* re4dc_skin_recipe_materialize(const void* model,const void* weight,
+                                                       unsigned n_ext,unsigned frame,unsigned bytes) {
+    if(!model || !weight || !bytes || (bytes&31u) ||
+       !re4dc_prim_recipe_release(bytes))return nullptr;
+    // The reserved credit was removed immediately before the exact allocation.
+    // GetPrimBuff still protects every other live recipe's credit.
+    void* copy=GetPrimBuff(int(bytes));
+    if(!copy) {
+        skin_recipe_credit+=bytes;
+        return nullptr;
+    }
+    SkinLazyHead h;
+    h.magic=kSkinLazyMagic;h.frame=frame;
+    h.m=(cModel*)model;h.w=const_cast<void*>(weight);h.n_ext=n_ext;
+    memcpy(copy,&h,sizeof(h));
+    re4dc_skin_palette_resolve((const float*)copy);
+    return (const float*)copy;
+}
+#endif
 #if RE4DC_LEON_FACE_LAZY
 // LEON_FACE_LAZY's pending job (see the knob note at the top of this file).
 static struct {

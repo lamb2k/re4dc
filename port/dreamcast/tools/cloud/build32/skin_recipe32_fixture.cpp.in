@@ -1,0 +1,346 @@
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
+#include <climits>
+using u8=unsigned char;using u32=std::uint32_t;using f32=float;
+#define RE4DC_PS2_WORLD_SOURCE_OWNER 0
+#define RE4DC_PS2_WORLD_R11F_OWNER 0
+#define RE4DC_COARSE_SOURCE_ACTORS 1
+#define RE4DC_PRIM_WATER 0
+#define RE4DC_OT_WALK_CHECK 0
+#define RE4DC_LEON_SKIN_SLOTS 0
+#define RE4DC_ACTOR_CENSUS 0
+#define RE4DC_PROP_GATE 1
+#define RE4DC_ACTOR_SKIN_DIAG 0
+#define RE4DC_MCHECK_LEONGC 0
+#define RE4DC_WPAL_FAST 0
+#define RE4DC_LEON_FACE_LAZY 0
+#define RE4DC_ACTOR_REPLAY_SKIN 1
+#define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
+#define RE4DC_NATIVE_MODEL_REGISTRY 0
+#define RE4DC_SKIN_CENSUS 0
+#define RE4DC_GC_ASSET_GATE 0
+#define RE4DC_AVK 0
+#define RE4DC_ACTOR_FOG_GATE 0
+#define RE4DC_ACTOR_SOURCE_SPAN 0
+#define DFA26_MODEL_SLOW(Name,Count,Action) do { Action } while(0);
+#define PTR_INVALID(p) (!(p))
+#define PTR_INVALID2(p) (!(p))
+#define U32Set(dst,src) ((dst)=(src))
+#define ATD(...) ((void)0)
+struct Re4dcActorSource{const u8* positions;const u8* normals;unsigned position_count,normal_count,palette_entries,small_normals;};
+struct Re4dcActorSkinBinding{const void* info;Re4dcActorSource source;const float* palette;unsigned entries;};
+struct Re4dcActorSkinBackup{unsigned index;const void* info;const void* positions;const float* palette;unsigned entries,materialized;};
+constexpr unsigned kRe4dcActorRoles=8,kRe4dcActorSkinKeys=64;
+struct Re4dcActorSkinLease{unsigned serial=0,frame=0,count=0;Re4dcActorSkinBackup old[kRe4dcActorRoles]{};};
+struct Re4dcActorSkinAdmission{unsigned serial,frame,slot,entries;const void* info;const void* positions;unsigned provisional;};
+namespace re4dc_actor{struct WorkspaceReservations{static constexpr unsigned MaxOwners=64;};}
+struct Game{void* prim_cnt;unsigned nPrim,vtx_buf_no,Frame_cnt,Stop_flg;};Game game{},*pG=&game;
+struct GxWork{u8* prim;};GxWork work{};GxWork* GXWORK(){return &work;}
+struct Log{unsigned errors=0;template<class...T>void err(int,int,const char*,T...){++errors;}template<class...T>void warn(int,int,const char*,T...){++errors;}}log_state,*pLog=&log_state;
+struct{unsigned skin_registered=0,materialized_infos=0,skinned_parts=0,info_preparations=0,declined=0;}stats;
+extern "C" void re4dc_skin_palette_resolve(const float*);
+extern "C" void re4dc_actor_skin_retire_pending();
+extern "C" int re4dc_actor_skin_register(unsigned,const void*,const void*,const float*,unsigned);
+extern "C" const float* re4dc_actor_skin_palette(const void*,const void*,unsigned*);
+extern "C" int re4dc_skin_materialize(const void*,const float*);
+void sourceActorRetire();
+extern "C" void re4dc_log(const char*,...){}
+// @REGISTRY@
+
+struct Light{unsigned ambient_vertex=0,material_vertex=0,enable=0,attenuation=1;};
+struct Re4dcModelPart{
+    const void* info=nullptr;const u8* positions=nullptr;const u8* normals=nullptr;
+    unsigned position_stride=6,normal_stride=8,position_count=2,normal_count=2,normal_shift=14,shift=0;
+    Light* lighting=nullptr;unsigned alpha_state=0,flags=0;const void* colors=nullptr;
+    unsigned stream_bytes=32;const void* stream=nullptr;const void* uv=nullptr;
+    float modelview[12]{},projection[7]{},viewport[6]{};
+};
+unsigned frame_serial=1;
+// @FRAME@
+unsigned invalidations=0,workspace_retires=0,source_retires=0;
+void owned_skin_invalidate_frames(){++invalidations;for(auto&f:frames)f=Frame{};}
+struct DummyWorkspace{void retire(){++workspace_retires;}}owned_workspace;
+u8* workspace=nullptr;unsigned workspace_bytes=0,workspace_top=0,workspace_end=0;
+// @OWNER_RETIRE@
+void sourceActorRetire(){++source_retires;re4dc_actor_owner_retire();}
+void* frame_table(unsigned bytes){bytes=(bytes+31u)&~31u;if(!workspace || bytes>workspace_end)return nullptr;workspace_end-=bytes;return workspace+workspace_end;}
+float pow2(int i){return std::ldexp(1.0f,i);}
+void screen_rows(const Re4dcModelPart&,float M[3][4]){for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)M[r][c]=float(r*4+c+1);}
+bool ram(const void*p,unsigned){return p;}
+struct OneScreen{bool valid=false;float modelview[12],projection[7],viewport[6],M[3][4];};
+struct OneWindow{OneScreen screen;};
+struct Weight{unsigned value;};struct WeightExt{unsigned value;};
+struct ModelData{u32 weight_ext_num=0,weight_palette_num=2;void* pWeight=nullptr;unsigned nParts=2,nVtx=2,nNrm=2,flags=0,shift=0;void* vtxOrig=nullptr;void* nrmOrig=nullptr;};
+struct ModelTexInfo{unsigned frame=0,anim[2]{0,4},flags=0;float u=0,v=0,su=0,sv=0;};
+struct cModelInfo{void*pPosBuf[2]{};void*pNrmBuf[2]{};ModelData*pData=nullptr;cModelInfo*pList=nullptr;unsigned flagsDC=0,be_flag=8;struct{void*data=nullptr;float rate=0;}shape[5];ModelTexInfo tex;};
+#define MODEL_TEX(info) (&(info)->tex)
+struct cModel{unsigned pose=1,be_flag=0;};
+alignas(32) float lc_palette[4096*12];
+#define RE4DC_LC_PALETTE lc_palette
+std::uintptr_t g_skin_palette=0;
+u32 g_gqr6=0;
+cModel* g_skinLazyMtx=nullptr;u32 g_skinLazyMtxFrame=~0u;int g_skinLazyNow=1;
+unsigned matrix_builds=0,palette_builds=0,skin_calls=0,current_pose=0;
+#if defined(RE4DC_SKIN_RECIPE32_TEMPORAL) && RE4DC_SKIN_RECIPE32_TEMPORAL
+unsigned temporal_events[128]{},temporal_event_words=0;
+void temporal_event(unsigned kind,unsigned value){assert(temporal_event_words+2<=128);temporal_events[temporal_event_words++]=kind;temporal_events[temporal_event_words++]=value;}
+#else
+#define temporal_event(kind,value) ((void)0)
+#endif
+void (*build_reentry)()=nullptr;
+void calcWeightMat(cModel*m){++matrix_builds;current_pose=m->pose;temporal_event(1,m->pose);if(build_reentry)build_reentry();}
+void fill_palette(const unsigned*w,unsigned n,unsigned ext){++palette_builds;temporal_event(2,n|(ext<<16));for(unsigned i=0;i<n*12;++i){u32 bits=0x3F000000u+current_pose*4096u+w[i/12]+i+ext*0x100000u;std::memcpy(lc_palette+i,&bits,4);}}
+void MakeWeightPalette(Weight*w,unsigned n){fill_palette(&w->value,n,0);}
+void MakeWeightPaletteExt(WeightExt*w,unsigned n){fill_palette(&w->value,n,1);}
+void setupGQR6(u32 n){g_gqr6=n;temporal_event(3,n);}
+void CalcSk1_x(void*dst,void*,u32 n){++skin_calls;temporal_event(4,n);const float*p=g_skin_palette?reinterpret_cast<const float*>(g_skin_palette):lc_palette;for(unsigned i=0;i<n*3;++i)static_cast<std::int16_t*>(dst)[i]=std::int16_t(p[0]*100+float(current_pose));}
+void CalcSk1_x2(void*dst,void*,u32 n){++skin_calls;temporal_event(5,n);std::memset(dst,1,n*3);}
+void DCStoreRangeNoSync(void*,unsigned){}
+void ResetShape(cModelInfo*info,void*){temporal_event(6,info->tex.frame);}
+void CalculateShape_new(cModelInfo*,void*,float rate,void*){temporal_event(7,unsigned(rate*16));}
+int re4dc_model_diagnostic_enabled(){return 1;}
+// @LAZY_MTX@
+// @LAZY_HEAD@
+// @UV_MACROS@
+// @FUNCTIONS@
+int re4dc_actor_model_source(const void*key,Re4dcActorSource*out){const auto*i=static_cast<const cModelInfo*>(key);const auto*d=i->pData;*out={static_cast<const u8*>(d->vtxOrig),static_cast<const u8*>(d->nrmOrig),d->nVtx,d->nNrm,d->weight_palette_num,unsigned(bool(d->flags&0x20000000))};return 1;}
+int re4dc_actor_model_buffers(Re4dcModelPart*p){auto*i=static_cast<const cModelInfo*>(p->info);p->positions=static_cast<const u8*>(i->pPosBuf[pG->vtx_buf_no]);p->normals=static_cast<const u8*>(i->pNrmBuf[pG->vtx_buf_no]);return p->positions&&p->normals;}
+// @READERS@
+int propGateNo(unsigned why){return -int(why);}
+int prop_reader(cModelInfo*info){
+// @PROP_PREDICATE@
+return 1;
+}
+int generic_reader(const Re4dcModelPart*p){
+// @NATIVE_PREDICATE@
+return p&&p->positions&&p->normals;
+}
+Frame* one_reader(Re4dcModelPart&p,OneWindow&w){const SkinEntry*se=nullptr;Re4dcActorSource src{};float near_distance=1,far_distance=100;if(!one_qualifies(p,se,src))return nullptr;
+// @ONE_GUARD@
+Frame& f=one_frame(p,near_distance,far_distance,*se,src,w.screen);return &f;
+}
+struct Record{Re4dcActorSkinLease skin;unsigned done=0,passes=1;bool submitted=false;};
+unsigned releases=0,actor_failures=0;bool choose_result=false;
+bool actor_release(Record&r){++releases;return re4dc_actor_skin_release(&r.skin);}
+void actor_fail(){++actor_failures;}
+bool re4dc_actor_transaction_choose(cModel*,unsigned){return choose_result;}
+// @FINALS@
+#line 1 "skin_recipe32_fixture_checks"
+#define CHECK(x) do{if(!(x)){std::fprintf(stderr,"check line %u: %s\n",unsigned(__LINE__),#x);std::abort();}++checks;}while(0)
+unsigned checks=0;
+alignas(32) u8 prim_storage[512*1024],workspace_storage[128*1024];
+alignas(32) float owner_palette[12]{};
+u8 source_positions[32]{},source_normals[32]{};
+Weight* weights=new Weight[4096]{};
+cModelInfo info_keys[130];ModelData data_keys[130];
+Light lighting;
+void reset(unsigned frame=7){
+    for(auto&e:skins)e={};skin_count=0;skin_frame=~0u;
+    for(auto&e:owned_skins)e={};owned_skin_serial=0;owned_submission=false;
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+    owned_skin_high=0;
+#endif
+#if RE4DC_SKIN_ADMISSION32
+    skin_admission_pending={};skin_admission_serial=0;
+#endif
+#if RE4DC_SKIN_RECIPE32
+    skin_recipe_credit=0;skin_recipe_epoch=1;skin_recipe_building=false;
+#endif
+    stats={};matrix_builds=palette_builds=skin_calls=invalidations=workspace_retires=source_retires=0;
+    releases=actor_failures=0;choose_result=false;build_reentry=nullptr;
+    pG->prim_cnt=prim_storage;pG->nPrim=sizeof prim_storage;pG->vtx_buf_no=0;pG->Frame_cnt=frame;pG->Stop_flg=0;work.prim=prim_storage;
+    workspace=workspace_storage;workspace_bytes=sizeof workspace_storage;workspace_top=0;workspace_end=workspace_bytes;
+    g_gqr6=0;g_skin_palette=0;g_skinLazyMtx=nullptr;g_skinLazyMtxFrame=~0u;g_skinLazyNow=1;log_state.errors=0;
+    for(auto&f:frames)f=Frame{};frame_serial=1;frame_victim=0;
+    for(unsigned i=0;i<130;++i){data_keys[i]={};data_keys[i].pWeight=weights;data_keys[i].vtxOrig=source_positions;data_keys[i].nrmOrig=source_normals;info_keys[i]={};info_keys[i].pData=&data_keys[i];}
+    for(unsigned i=0;i<4096;++i)weights[i].value=i*3+7;
+}
+Re4dcModelPart part(cModelInfo*info){Re4dcModelPart p;p.info=info;p.positions=static_cast<const u8*>(info->pPosBuf[0]);p.normals=static_cast<const u8*>(info->pNrmBuf[0]);p.lighting=&lighting;p.stream=source_positions;p.uv=source_normals;p.viewport[2]=640;p.viewport[3]=480;return p;}
+const float* palette(cModelInfo*info,unsigned n){unsigned got=~0u;const float*p=re4dc_actor_skin_palette(info,nullptr,&got);CHECK(got==n);return p;}
+Re4dcActorSkinBinding binding(cModelInfo*info){return {info,{source_positions,source_normals,2,2,1,0},owner_palette,1};}
+#if !RE4DC_ACTOR_SKIN_OWNER_POOL
+void nominate(unsigned count=1){const void*keys[64];for(unsigned i=0;i<count;++i)keys[i]=&info_keys[i];CHECK(re4dc_actor_skin_reserve(pG->Frame_cnt,keys,count));}
+#endif
+void exact_palette(const float*p,cModel&m,unsigned n,unsigned ext=0){for(unsigned i=0;i<n*12;++i){u32 word;std::memcpy(&word,p+i,4);CHECK(word==0x3F000000u+m.pose*4096u+weights[i/12].value+i+ext*0x100000u);}}
+#if defined(RE4DC_SKIN_RECIPE32_TEMPORAL) && RE4DC_SKIN_RECIPE32_TEMPORAL
+void temporal_contract(){
+    reset();nominate(5);cModel a{1},b{20};
+    for(unsigned i=0;i<6;++i){auto&info=info_keys[i];info.flagsDC=2;info.tex.frame=3;info.tex.flags=1;info.tex.u=1.75f;info.tex.v=.25f;info.tex.su=.5f;info.tex.sv=-.5f;}
+    info_keys[0].pList=&info_keys[1];data_keys[1].flags=0x20000000;
+    CHECK(commonScreenMatSub(&a,&info_keys[0])&&commonScreenMatSub(&b,&info_keys[2]));
+    CHECK(!matrix_builds&&!palette_builds&&!skin_calls);
+    // The established lazy contract reads the current pose and captured weight
+    // address at first consumption, even when consumers reverse producer order.
+    a.pose=9;b.pose=27;weights[0].value+=23;
+    const float*pb=palette(&info_keys[2],2);exact_palette(pb,b,2);
+    const float*pa1=palette(&info_keys[1],2);exact_palette(pa1,a,2);
+    const float*pa0=palette(&info_keys[0],2);exact_palette(pa0,a,2);
+    CHECK(matrix_builds==2&&palette_builds==3&&!skin_calls);
+    CHECK(commonScreenMatSub(&a,&info_keys[4]));
+    // A source morph executes its callbacks in place and invalidates the lazy
+    // matrix memo before another model's outstanding descriptor is consumed.
+    b.pose=41;info_keys[3].be_flag|=2;
+    info_keys[3].shape[0]={source_positions,.5f};info_keys[3].shape[2]={source_normals,1.5f};
+    CHECK(commonScreenMatSub(&b,&info_keys[3]));
+    CHECK(matrix_builds==3&&palette_builds==4&&skin_calls==2);
+    CHECK(static_cast<std::int16_t*>(info_keys[3].pPosBuf[0])[0]==std::int16_t(lc_palette[0]*100+b.pose));
+    a.pose=31;const float*pa4=palette(&info_keys[4],2);exact_palette(pa4,a,2);
+    cModel already_resolved{9};CHECK(palette(&info_keys[0],2)==pa0);exact_palette(pa0,already_resolved,2);
+    CHECK(matrix_builds==4&&palette_builds==5&&skin_calls==2);
+    // The source's stop bit suspends UV scrolling; frame animation still runs.
+    pG->Stop_flg=0x08000000;data_keys[5].nParts=1;data_keys[5].weight_palette_num=1;
+    CHECK(commonScreenMatSub(&b,&info_keys[5]));
+    for(unsigned i=0;i<6;++i){const auto&t=info_keys[i].tex;CHECK(!t.frame);CHECK(t.u==(i==5?1.75f:.25f)&&t.v==(i==5?.25f:1.75f));}
+    CHECK(g_gqr6==0x32073207&&matrix_builds==4&&palette_builds==5&&skin_calls==2);
+    const unsigned expected[]={3,0x32073207,3,0x32073207,3,0x20062006,3,0x32073207,
+        1,27,2,2,1,9,2,2,2,2,3,0x32073207,
+        1,41,2,2,3,0x00070007,6,0,7,8,7,24,4,2,3,0x32073207,4,2,1,31,2,2};
+    CHECK(temporal_event_words==sizeof expected/sizeof *expected&&std::memcmp(temporal_events,expected,sizeof expected)==0);
+    std::uint64_t hash=14695981039346656037ull;
+    auto add=[&](const void*p,unsigned bytes){for(unsigned i=0;i<bytes;++i){hash^=static_cast<const u8*>(p)[i];hash*=1099511628211ull;}};
+    add(temporal_events,sizeof expected);
+    for(const float*p:{pb,pa1,pa0,pa4})add(p,2*48);
+    add(info_keys[3].pPosBuf[0],12);add(info_keys[3].pNrmBuf[0],12);
+    for(unsigned i=0;i<6;++i){const auto&t=info_keys[i].tex;add(&t.frame,4);add(&t.u,4);add(&t.v,4);}
+    std::printf("temporal digest=%016llx events=%u matrix=%u palette=%u skin=%u checks=%u\n",static_cast<unsigned long long>(hash),temporal_event_words/2,matrix_builds,palette_builds,skin_calls,checks);
+}
+#endif
+#if RE4DC_SKIN_RECIPE32
+unsigned used(){return unsigned(work.prim-prim_storage);}
+unsigned credit(unsigned n){return (48*n+31)&~31u;}
+SkinEntry row(unsigned i=0){return skins[i];}
+void same_row(const SkinEntry&a,const SkinEntry&b){CHECK(a.info==b.info&&a.positions==b.positions&&a.palette==b.palette&&a.entries==b.entries&&a.materialized==b.materialized);}
+void pending(cModel&m,unsigned i=0){int built=0;CHECK(skinDeferPending(&m,&info_keys[i],&data_keys[i],&built));}
+void producer_and_readers(){
+    reset();nominate();cModel m{3};CHECK(commonScreenMatSub(&m,&info_keys[0]));
+    CHECK(used()==kSkinRecipeBytes&&re4dc_prim_recipe_credit()==credit(2));CHECK(!matrix_builds&&!palette_builds&&!skin_calls);
+    const auto*d=reinterpret_cast<const SkinRecipe*>(skins[0].palette);CHECK(d->model==&m&&d->weight==weights&&d->slot==0&&d->epoch==skin_recipe_epoch&&d->serial==skin_admission_serial);
+    CHECK(reinterpret_cast<std::uintptr_t>(d->model)>UINT32_MAX&&reinterpret_cast<std::uintptr_t>(d->weight)>UINT32_MAX);
+    auto p=part(&info_keys[0]);CHECK(prop_reader(&info_keys[0])==1&&lazy_skin(p));CHECK(!re4dc_actor_skin_rearm(&p));
+    CHECK(used()==kSkinRecipeBytes&&re4dc_prim_recipe_credit()==credit(2));
+    const float*pal=palette(&info_keys[0],2);CHECK(used()==kSkinRecipeBytes+credit(2)&&!re4dc_prim_recipe_credit());exact_palette(pal,m,2);
+    CHECK(palette_builds==1&&matrix_builds==1&&palette(&info_keys[0],2)==pal&&palette_builds==1);
+    Frame*f=prepare_frame(p,1,100);CHECK(f->mode==kSkin&&f->palette==pal&&f->palette!=reinterpret_cast<const float*>(d));
+    CHECK(generic_reader(&p));CHECK(skin_calls==2&&info_keys[0].pPosBuf[0]);CHECK(skins[0].materialized==kSkinRecipeDone);
+    CHECK(prop_reader(&info_keys[0])==-5&&!lazy_skin(p));CHECK(re4dc_actor_skin_rearm(&p)&&p.positions&&skin_count==2);
+    // one_chunk's actual guard must materialize before one_frame captures a palette.
+    reset();nominate();pending(m);p=part(&info_keys[0]);OneWindow w{};
+    f=one_reader(p,w);CHECK(f&&f->mode==kSkin&&f->palette==skins[0].palette&&skins[0].materialized==kSkinRecipeReady);exact_palette(f->palette,m,2);CHECK(!re4dc_prim_recipe_credit());
+    reset();nominate();pending(m);p=part(&info_keys[0]);CHECK(re4dc_actor_materialize_lazy(&p)&&p.positions&&skin_calls==2);CHECK(used()==kSkinRecipeBytes+credit(2)+96);
+    reset();nominate();pending(m);p=part(&info_keys[0]);re4dc_actor_materialize(&p);CHECK(skins[0].materialized==kSkinRecipeDone&&skin_calls==2);CHECK(!palette(&info_keys[0],0));
+    // Unknown states must never be accepted as palettes or already-built geometry.
+    skins[0].materialized=99;p=part(&info_keys[0]);p.positions=nullptr;p.normals=nullptr;
+    CHECK(!re4dc_actor_materialize_lazy(&p)&&!re4dc_actor_skin_rearm(&p)&&!lazy_skin(p)&&!re4dc_actor_skin_lazy_known(p.info));
+    // WeightExt and captured pointers, unaffected by a later ModelData pointer edit.
+    reset();nominate();data_keys[0].weight_ext_num=257;pending(m);data_keys[0].pWeight=weights+10;
+    pal=palette(&info_keys[0],257);exact_palette(pal,m,257,1);CHECK(used()==kSkinRecipeBytes+credit(257));
+}
+void replacement_and_cpu_fallback(){
+    reset();nominate();cModel old{1},fresh{9};pending(old);const auto before=row();const auto descriptor=*reinterpret_cast<const SkinRecipe*>(before.palette);
+    // Hard credit is affordable, but the new admission cannot keep its 16 KiB margin.
+    const unsigned allocated=used();CHECK(GetPrimBuff(int(sizeof prim_storage-used()-credit(2)-128)));
+    const unsigned cursor=used(),held=re4dc_prim_recipe_credit();
+    CHECK(commonScreenMatSub(&fresh,&info_keys[0]));
+    same_row(before,row());CHECK(std::memcmp(&descriptor,before.palette,sizeof descriptor)==0&&re4dc_prim_recipe_credit()==held);
+    CHECK(used()==cursor+64&&info_keys[0].pPosBuf[0]&&info_keys[0].pNrmBuf[0]);CHECK(matrix_builds==1&&palette_builds==1&&skin_calls==2);
+    CHECK(static_cast<std::int16_t*>(info_keys[0].pPosBuf[0])[0]==std::int16_t(lc_palette[0]*100+fresh.pose));
+    auto p=part(&info_keys[0]);CHECK(prop_reader(&info_keys[0])==-5&&!lazy_skin(p));const SkinEntry*se=nullptr;Re4dcActorSource src{};CHECK(!one_qualifies(p,se,src));
+    CHECK(generic_reader(&p)&&palette_builds==1&&skin_calls==2);Frame*f=prepare_frame(p,1,100);CHECK(f->mode==kSource&&!f->palette);
+    CHECK(re4dc_prim_recipe_credit()==held&&allocated==kSkinRecipeBytes);
+    // Geometry OOM fails commonScreenMatSub: the caller cannot publish this model into the OT.
+    reset();nominate();pending(old);const auto saved=row();const unsigned old_credit=re4dc_prim_recipe_credit();
+    CHECK(GetPrimBuff(int(sizeof prim_storage-used()-old_credit)));unsigned published=0;
+    if(commonScreenMatSub(&fresh,&info_keys[0]))++published;
+    CHECK(!published&&!info_keys[0].pPosBuf[0]);same_row(saved,row());CHECK(re4dc_prim_recipe_credit()==old_credit&&!matrix_builds&&!palette_builds);
+    // A successful same-slot replacement reuses the descriptor and transfers exact credit.
+    reset();nominate();pending(old);const auto*address=skins[0].palette;const unsigned at=used();data_keys[0].weight_palette_num=5;pending(fresh);
+    CHECK(used()==at&&skins[0].palette==address&&re4dc_prim_recipe_credit()==credit(5));exact_palette(palette(&info_keys[0],5),fresh,5);
+    // Repeated materialize/re-register cycles may spend >64 descriptors without a side table.
+    reset();nominate();for(unsigned i=0;i<70;++i){pending(fresh);CHECK(palette(&info_keys[0],2));}CHECK(used()==70*(kSkinRecipeBytes+credit(2))&&skin_count==1);
+}
+void allocator_and_margin(){
+    reset();nominate(2);cModel m{2};pending(m);pending(m,1);const unsigned held=2*credit(2),at=used();
+    CHECK(!GetPrimBuff(-1)&&!GetPrimBuff(INT_MAX)&&used()==at&&re4dc_prim_recipe_credit()==held);
+    CHECK(!re4dc_prim_tail(UINT_MAX,0)&&!re4dc_prim_tail(1,UINT_MAX)&&!re4dc_prim_tail(0x80000000u,0)&&used()==at);
+    CHECK(GetPrimBuff(1)&&used()==at+32);CHECK(re4dc_prim_tail(33,17)&&used()==at+96);
+    CHECK(GetPrimBuff(int(sizeof prim_storage-used()-held)));const unsigned end=used();CHECK(end+held==sizeof prim_storage&&!GetPrimBuff(1)&&!re4dc_prim_tail(1,0));
+    // The entire admission margin can be used later; resolves charge no new margin.
+    CHECK(palette(&info_keys[0],2)&&used()==end+credit(2));CHECK(palette(&info_keys[1],2)&&used()==sizeof prim_storage&&!re4dc_prim_recipe_credit());
+    // Integer/address overflow inputs refuse before pointer addition.
+    reset();const auto*saved=work.prim;unsigned room=123;
+    pG->vtx_buf_no=UINT_MAX;CHECK(!GetPrimBuff(32)&&!re4dc_prim_tail(32,0)&&work.prim==saved);
+    pG->vtx_buf_no=1;pG->nPrim=UINT_MAX;CHECK(!re4dc_prim_recipe_room(&room));
+    pG->vtx_buf_no=0;pG->nPrim=64;pG->prim_cnt=reinterpret_cast<void*>(~std::uintptr_t(0)-31);work.prim=static_cast<u8*>(pG->prim_cnt);CHECK(!GetPrimBuff(32)&&!re4dc_prim_tail(32,0));
+    reset();data_keys[0].weight_ext_num=UINT_MAX;int built=0;m={};CHECK(!skinDeferPending(&m,&info_keys[0],&data_keys[0],&built)&&!re4dc_skin_defer_lazy(&info_keys[0],&data_keys[0])&&!re4dc_skin_defer(&info_keys[0],&data_keys[0])&&used()==0&&skin_count==0);
+}
+void full_oom_and_terminals(){
+    reset();cModel m{2};int built=0;
+    for(unsigned i=0;i<kSkins;++i)CHECK(re4dc_actor_skin_register(7,&info_keys[i],nullptr,owner_palette,1));
+    CHECK(!skinDeferPending(&m,&info_keys[kSkins],&data_keys[kSkins],&built)&&used()==0&&!skin_admission_pending.serial);
+    reset();nominate();work.prim=prim_storage+sizeof prim_storage-16384;const unsigned at=used();const auto saved=row();
+    CHECK(!skinDeferPending(&m,&info_keys[0],&data_keys[0],&built)&&used()==at&&!re4dc_prim_recipe_credit());same_row(saved,row());
+    reset();nominate();skin_admission_serial=UINT_MAX;CHECK(!skinDeferPending(&m,&info_keys[0],&data_keys[0],&built)&&!used());
+    reset();nominate();skin_recipe_epoch=UINT_MAX;CHECK(!skinDeferPending(&m,&info_keys[0],&data_keys[0],&built)&&!used());SetPrimBuffPtr();CHECK(skin_recipe_epoch==UINT_MAX);
+    // Real source palette replacements drop only the successfully replaced credit.
+    reset();nominate(2);pending(m);pending(m,1);CHECK(re4dc_actor_skin_register(7,&info_keys[0],nullptr,owner_palette,1));CHECK(re4dc_prim_recipe_credit()==credit(2));
+    reset();nominate(2);pending(m);pending(m,1);Re4dcActorSkinAdmission ticket{};CHECK(re4dc_actor_skin_admit(7,&info_keys[0],nullptr,1,&ticket));CHECK(re4dc_actor_skin_commit(&ticket,owner_palette)&&re4dc_prim_recipe_credit()==credit(2));
+    // Placeholder and a non-nominee stay inert / use the established full-palette path.
+    reset();nominate();auto p=part(&info_keys[0]);CHECK(!palette(&info_keys[0],0)&&!re4dc_actor_skin_lazy_known(p.info)&&!re4dc_actor_materialize_lazy(&p));
+    pending(m,1);CHECK(used()==credit(2)&&!re4dc_prim_recipe_credit());CHECK(palette(&info_keys[1],2));
+}
+void native_completion_and_retire(){
+    cModel m{4};
+    for(bool leon:{false,true})for(unsigned passes:{1u,3u}){
+        reset();nominate();pending(m);Record record;record.passes=passes;auto b=binding(&info_keys[0]);CHECK(re4dc_actor_skin_acquire(7,&b,1,&record.skin));
+        CHECK(re4dc_prim_recipe_credit()==credit(2));const auto saved=record.skin.old[0];
+        CHECK((leon?final_leon(record,1,1):final_general(&record,1,1))==1);
+        if(passes==3){CHECK(record.skin.serial&&releases==0&&re4dc_prim_recipe_credit()==credit(2)&&record.skin.old[0].palette==saved.palette);CHECK((leon?final_leon(record,2,0):final_general(&record,2,0))==1);}
+        CHECK(releases==1&&!record.skin.serial&&!re4dc_prim_recipe_credit()&&!skins[0].info&&!matrix_builds&&!palette_builds&&used()==kSkinRecipeBytes);
+    }
+    // Both actual final blocks refuse stale authority before ordinary release
+    // could restore an old descriptor over a newly nominated source recipe.
+    for(bool leon:{false,true}){
+        reset();nominate();pending(m);Record record;auto b=binding(&info_keys[0]);
+        CHECK(re4dc_actor_skin_acquire(7,&b,1,&record.skin));SetPrimBuffPtr();
+        std::memset(prim_storage,0xA5,256);nominate();pending(m);const auto fresh=row();
+        CHECK((leon?final_leon(record,1,1):final_general(&record,1,1))==-1);
+        CHECK(!releases&&!re4dc_actor_skin_validate(&record.skin)&&re4dc_prim_recipe_credit()==credit(2));
+        same_row(fresh,row());CHECK(!matrix_builds&&!palette_builds);
+    }
+    // Actual pre-choice branch uses ordinary release, retaining the descriptor and credit.
+    reset();nominate();pending(m);Record r;auto b=binding(&info_keys[0]);CHECK(re4dc_actor_skin_acquire(7,&b,1,&r.skin));auto saved=r.skin.old[0];CHECK(pre_choice(&r)==-1&&actor_failures==1&&releases==1);CHECK(skins[0].palette==saved.palette&&re4dc_prim_recipe_credit()==credit(2));exact_palette(palette(&info_keys[0],2),m,2);
+    // Same numeric frame, same primitive address: owner serial revoke precedes overwrite.
+    reset();nominate();pending(m);r={};CHECK(re4dc_actor_skin_acquire(7,&b,1,&r.skin));auto stale=r.skin;unsigned epoch=skin_recipe_epoch;Re4dcActorSkinAdmission ticket{};CHECK(re4dc_actor_skin_admit(7,&info_keys[1],nullptr,2,&ticket));auto copy=ticket;
+    SetPrimBuffPtr();CHECK(source_retires==1&&workspace_retires==1&&skin_recipe_epoch==epoch+1&&!used()&&!re4dc_prim_recipe_credit()&&!re4dc_actor_skin_validate(&stale));
+    std::memset(prim_storage,0xA5,256);CHECK(!re4dc_actor_skin_finish_owner(&stale)&&!re4dc_actor_skin_release(&stale)&&!re4dc_actor_skin_commit(&copy,owner_palette));
+    nominate();pending(m);CHECK(skins[0].materialized==kSkinRecipePending&&re4dc_prim_recipe_credit()==credit(2));CHECK(!re4dc_actor_skin_finish_owner(&stale)&&re4dc_prim_recipe_credit()==credit(2));
+    // No-buffer early return still revokes leases, recipes, credit and epoch.
+    r={};CHECK(re4dc_actor_skin_acquire(7,&b,1,&r.skin));stale=r.skin;epoch=skin_recipe_epoch;pG->prim_cnt=nullptr;SetPrimBuffPtr();CHECK(skin_recipe_epoch==epoch+1&&!re4dc_prim_recipe_credit()&&!re4dc_actor_skin_validate(&stale)&&!re4dc_actor_skin_finish_owner(&stale));
+    // A successful source-frame switch also retires hidden recipes and old owner authority.
+    reset();nominate();pending(m);r={};CHECK(re4dc_actor_skin_acquire(7,&b,1,&r.skin));stale=r.skin;pG->Frame_cnt=8;const void*keys[]={&info_keys[1]};CHECK(re4dc_actor_skin_reserve(8,keys,1));CHECK(!re4dc_prim_recipe_credit()&&!re4dc_actor_skin_validate(&stale)&&skin_frame==8);
+}
+void reentry_probe(){
+    auto b=binding(&info_keys[0]);Re4dcActorSkinLease lease{};Re4dcActorSkinAdmission ticket{};const void*keys[]={&info_keys[1]};
+    CHECK(skin_recipe_building&&!re4dc_actor_skin_register(7,&info_keys[1],nullptr,owner_palette,1));
+    CHECK(!re4dc_actor_skin_admit(7,&info_keys[1],nullptr,1,&ticket)&&!re4dc_actor_skin_acquire(7,&b,1,&lease)&&!re4dc_actor_skin_reserve(7,keys,1));
+    CHECK(!re4dc_actor_skin_release(&lease)&&!re4dc_actor_skin_finish_owner(&lease));
+    auto p=part(&info_keys[0]);CHECK(!re4dc_actor_skin_palette(p.info,nullptr,&p.position_count));
+}
+void reentry_and_geometry_failure(){
+    reset();nominate();cModel m{3};pending(m);build_reentry=reentry_probe;CHECK(palette(&info_keys[0],2)&&palette_builds==1);build_reentry=nullptr;
+    reset();nominate();pending(m);CHECK(GetPrimBuff(int(sizeof prim_storage-used()-credit(2))));auto p=part(&info_keys[0]);re4dc_actor_materialize(&p);CHECK(skins[0].materialized==kSkinRecipeReady&&!info_keys[0].pPosBuf[0]&&!skin_calls&&!re4dc_prim_recipe_credit());CHECK(!re4dc_actor_materialize_lazy(&p));
+}
+#endif
+int main(){
+#if defined(RE4DC_SKIN_RECIPE32_TEMPORAL) && RE4DC_SKIN_RECIPE32_TEMPORAL
+    temporal_contract();
+#elif RE4DC_SKIN_RECIPE32
+    producer_and_readers();replacement_and_cpu_fallback();allocator_and_margin();full_oom_and_terminals();native_completion_and_retire();reentry_and_geometry_failure();
+    std::printf("checks=%u descriptor=%u row=%zu backup=%zu\n",checks,kSkinRecipeBytes,sizeof(SkinEntry),sizeof(Re4dcActorSkinBackup));
+#endif
+}

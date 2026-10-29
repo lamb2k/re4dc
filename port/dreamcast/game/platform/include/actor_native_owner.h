@@ -68,6 +68,10 @@ int re4dc_actor_skin_reserve(unsigned source_frame,const void* const* infos,unsi
 int re4dc_actor_skin_acquire(unsigned,const Re4dcActorSkinBinding*,unsigned,Re4dcActorSkinLease*);
 int re4dc_actor_skin_validate(const Re4dcActorSkinLease*);
 int re4dc_actor_skin_release(Re4dcActorSkinLease*);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+// Call only after the definitive final native pass, before ordinary release.
+int re4dc_actor_skin_finish_owner(Re4dcActorSkinLease*);
+#endif
 int re4dc_actor_owned_source(const void*,unsigned,Re4dcActorSource*);
 void re4dc_actor_owner_retire();
 int re4dc_actor_stream_state(Re4dcActorStreamState*);

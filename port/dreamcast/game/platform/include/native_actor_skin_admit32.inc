@@ -10,6 +10,9 @@ bool skin_admission_matches(const Re4dcActorSkinAdmission* t) {
 }
 extern "C" int re4dc_actor_skin_admit(unsigned frame,const void* info,const void* positions,
                                       unsigned entries,Re4dcActorSkinAdmission* out) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
     if(!out || out->serial || !info || !entries || skin_admission_pending.serial ||
        skin_admission_serial==~0U)return 0;
     const bool current=frame==skin_frame;
@@ -67,20 +70,38 @@ extern "C" void re4dc_actor_skin_retire_pending() {
     skin_admission_pending={};
 }
 extern "C" int re4dc_actor_skin_commit(Re4dcActorSkinAdmission* ticket,const float* palette) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
     if(!skin_admission_matches(ticket) || !palette)return 0;
     const Re4dcActorSkinAdmission p=skin_admission_pending;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    unsigned state=0;
+    if(p.frame==skin_frame && p.slot<skin_count && !p.positions) {
+        SkinEntry& old=skins[p.slot];
+        state=skin_recipe_registration_state(old);
+        if(!skin_recipe_drop(old,p.slot))return 0;
+    }
+#endif
     skin_admission_pending={};
     *ticket={};
     if(p.frame!=skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        skin_recipe_frame_retire();
+#endif
         skin_frame=p.frame;skin_count=0;
     }
     // The ticket excluded every competing register/reserve/acquire and the
     // source allocator path does not yield. This selected slot remains free
     // or is precisely the prior lazy entry we are replacing.
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    skins[p.slot]={p.info,p.positions,palette,p.entries,state};
+#else
     skins[p.slot]={p.info,p.positions,palette,p.entries,0};
+#endif
     if(p.slot>=skin_count)skin_count=p.slot+1;
     ++stats.skin_registered;
     return 1;

@@ -5,7 +5,7 @@ SKIN_ADMISSION32 ?= 0
 ifneq ($(words $(SKIN_ADMISSION32)),1)
 $(error SKIN_ADMISSION32 must be 0 or 1)
 endif
-ifeq ($(filter $(SKIN_ADMISSION32),0 1),)
+ifneq ($(SKIN_ADMISSION32),$(filter 0 1,$(SKIN_ADMISSION32)))
 $(error SKIN_ADMISSION32 must be 0 or 1)
 endif
 ifeq ($(SKIN_ADMISSION32),1)

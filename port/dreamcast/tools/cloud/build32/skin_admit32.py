@@ -101,7 +101,7 @@ def make_control() -> None:
                            input=rules, capture_output=True, text=True,
                            cwd=ROOT / "port/dreamcast/game")
         assert p.returncode == 0 and p.stdout.count("-DRE4DC_SKIN_ADMISSION32=1") == 1, p.stderr
-    for bad in ("2", "", "0 1"):
+    for bad in ("2", "", "0 1", "%", "0%", "1%"):
         assert check(*profile[:-1], "SKIN_ADMISSION32=" + bad).returncode != 0
     for dep in ("ACTOR_TRANSACTION", "NATIVE_ACTOR_FAST", "NATIVE_ACTOR_SKIN_LAZY", "SKIN_PALETTE_LAZY"):
         assert check(*(x for x in profile if not x.startswith(dep + "=")), dep + "=0").returncode != 0
