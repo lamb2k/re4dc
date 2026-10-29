@@ -673,3 +673,46 @@ corrected sheet ON full build. Backend/old controls are unchanged and their
 valid original checks are retained; compare the corrected OFF object to the
 original matrix before reusing those full controls. No SDK retry starts without
 the coordinator slot grant. Material debts and wide-grid refusals above remain.
+
+
+### 2026-10-29 EF11 final target handback
+
+**DONE: IMPLEMENTED + TARGET VALIDATED bounded slice, default0.** Reviewed
+runtime `9bbff5d26d4f478e865899854811ce30ccb83228` passes the cloth-only release /
+dependency parent/absent/zero target recheck (four exact OFF object comparisons)
+and supported ON compile. All four changed cloth OFF objects match the retained
+original matrix. Backend/API/geometry bytes are unchanged, so the original full
+release/dependency controls and backend object checks remain valid.
+
+Corrected full sheet ON: real rc0/42s, nonempty ELF, existing empty missing.txt,
+SHA256 `36add09d9203c9d9f1523d71065c79dbcbddc9cfb02cf968ff356d7a2d5ae481`.
+The original release OFF programme, all15 overlays and all11 allocated ELF
+sections match the bound255/runtime064 control; whole debug ELF equality remains
+separate. After normalizing exact output/checkout roots and whitespace, release
+OFF differs from the control solely by new CLOTH_SHEET11 absent->0. The matched
+dependency control and corrected candidate differ solely by CLOTH_SHEET11 0->1.
+The production OFF/control comparison also enables NATIVE_DRAW_OUTCOMES and
+PS2_UPLOAD_INCARNATION, and is not a one-variable sheet comparison.
+
+[Compact source/target receipt](../../../tools/cloud/build29/receipts/cloth-sheet11-target.json).
+Complete reviewed evidence: `/root/probe/engine-ef11-20261029-target-r2/`;
+corrected full ON: `/root/probe/lanes/route/out-ef11w2onrP`. Original matrices and
+three full arms remain under target-r1 / out-ef11w1{rel,ctrl,on}rP. Recipe SHA256
+is unchanged `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+
+`_end`: releaseOFF8c4170d4, dependency-control8c417e74, reviewedON8c418334:
++1,216 bytes for the sheet versus its matched dependencies; +4,704 bytes for
+the complete dependency+sheet bundle versus production. The cloth sidecar is
+32 linked data bytes. Selected local frames: clothTrans3664->4004 bytes;
+prepare300 and band7436 bytes in the supported target profile. These are local
+frames/linked footprint, not whole-stack bounds, runtime headroom or timing.
+Host5/5 (actual code plus ASan/UBSan) and retained EF03 5/5 / strip4/4 checks
+remain scoped as above. No live look, gameplay, private-input memory/retirement,
+physical-console timing or speed result is claimed.
+
+**NEXT / ownership:** coordinator integration default0 and actual private /
+runtime gates. Further wide-grid, material and effect source implementation is
+reserved to the user-directed cloud source lane after this delivery lands.
+Widths101/255 and the named alpha/depth/TEV/pTobjA material concepts remain open;
+this is not whole-EF11 closure. The SDK session completed and slot is released;
+no live job, source promotion, emulator, media change or publication follows.
