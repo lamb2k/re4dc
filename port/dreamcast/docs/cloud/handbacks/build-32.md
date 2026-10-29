@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 current K35 r100 cloth inputs rebound
+
+Local read-only binding now uses actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its already-verified final programme/all15 overlays, not the old c027 image. Four named r100/Core/native-texture/controller-look inputs match the earlier bounded case; full native texture-pak byte identity preserves the prior key mapping, and the selected EFF/300-byte record/native texture package bytes match. Current Esp4e producer source is unchanged; current cloth code and CLOTH_NATIVE/SHEET11/TILES11/XM_BATCH14/outcome/upload/QA_LINK flags are separately bound. No assets/converter/cache/source/runtime state were modified, and no build/capture was launched. Private bytes/manifests/hashes remain local.
+
+This proves current input availability and the same nominal9x10 case only. It does not prove a loaded owner, active current9x10 instance, batch execution, packet output, visual parity, lifetime, stack/heap/VRAM, speed or console acceptance. Current-image ordinary NewGame/controller route and read-only current-ELF observation remain prerequisites. The old snapshot belongs to c027 and must not be loaded onto K35. Inherited no-Windows-input rule retires keyboard/F5 paths; no permitted guest/link controller/state continuation has yet been established for the ordinary route. Do not substitute historical forced position/warp/god/goto/kill or repeat menu-only/old natural04/failed-memory captures.
+
+The four-input rebind is complete, so do not repeat it while image/input hashes are unchanged. Local next is a supported ordinary guest/link path and existing read-only output observer; source-only numeric/FPSCR fixture work remains cloud-owned. Console/look waits still require the user's intended media selection/swap and reviewed correct-build link readiness. All material, wide-sheet and current-memory/cost acceptance gates remain open.
+
+
 ## Answers (owner): 2026-10-29 bounded cloth transform batch qualification
 
 Source `bbfd3254fe4d94299a4bdbc869dbae92bb5ff978` clean no-ff landed `d13e2a459627077680f58edc35eae9bceda34c8f` default0. Source/peer review includes actual pinned SH4ZAM33fa485 row-loader/point API contract. Existing4 host fixture tests pass normal/sanitized paths; their scalar transform/SH4 shims are explicitly host evidence. Pinned SDK absent/explicit0/dependency-control/ON full releases all link/missingexists0;527 actual C++ commands per arm and dedicated CC sh4zam_direct command verify macro only cloth.cpp and sh4zam_direct.c. Complete programme/15overlay/allocated-section OFF identity versus bound simulation integration PASS before freshbase origin-only push/readback.
