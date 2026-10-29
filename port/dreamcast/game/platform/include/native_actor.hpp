@@ -104,6 +104,13 @@ int re4dc_actor_skin_admit(unsigned frame, const void* info, const void* positio
                            unsigned entries, Re4dcActorSkinAdmission* out);
 int re4dc_actor_skin_commit(Re4dcActorSkinAdmission* ticket, const float* palette);
 void re4dc_actor_skin_cancel(Re4dcActorSkinAdmission* ticket);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+// 1: recipe published; 0: ordinary admission; -1: eligible but refused.
+// The source caller owns the provisional admission on a 0 or -1 result.
+int re4dc_actor_skin_recipe_claim(Re4dcActorSkinAdmission*, const void* model,
+                                  const void* weight, unsigned n_ext);
+void re4dc_actor_skin_recipe_retire();
+#endif
 #endif
 // Registered palette for (info, pPosBuf) or nullptr.
 const float* re4dc_actor_skin_palette(const void* info, const void* position_buffer, unsigned* entries);

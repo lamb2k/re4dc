@@ -1203,7 +1203,12 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     }
     ATD(m,n?(pass==1?18u:19u):17u,n,r->plan.appearance);
     r->submitted|=n!=0;r->done|=pass;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(r->done==r->passes &&
+       (!re4dc_actor_skin_finish_owner(&r->skin) || !actor_release(*r)))return -1;
+#else
     if(r->done==r->passes && !actor_release(*r))return -1;
+#endif
     return 1;
 }
 #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC

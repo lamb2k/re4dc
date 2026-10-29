@@ -1791,6 +1791,12 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
 
 // ----------------------------------------------------------- skin registry --
 struct SkinEntry { const void* info; const void* positions; const float* palette; unsigned entries, materialized; };
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+enum : unsigned {
+    kSkinRecipePending=2, kSkinRecipeNominee=3,
+    kSkinRecipeDone=4, kSkinRecipeReady=5
+};
+#endif
 #if defined(RE4DC_LEON_SKIN_SLOTS) && RE4DC_LEON_SKIN_SLOTS
 // LEON_SKIN_SLOTS=1 (crowd.mk): r119 after movie 11900 registers 64 skins before Leon's transaction asks for its 9
 // (MCHECK_LEONGC: SKINACQ why=4, registry full), which left Leon to the GameCube path.
@@ -1805,6 +1811,13 @@ unsigned skin_count = 0, skin_frame = ~0U;
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
 Re4dcActorSkinAdmission skin_admission_pending{};
 unsigned skin_admission_serial;
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+extern bool skin_recipe_building;
+bool skin_recipe_drop(SkinEntry&,unsigned);
+bool skin_recipe_nominated(const SkinEntry&);
+unsigned skin_recipe_registration_state(const SkinEntry&);
+void skin_recipe_frame_retire();
 #endif
 #if RE4DC_ACTOR_SKIN_OWNER_POOL
 SkinEntry* find_owned_skin(const void* info);
@@ -1840,6 +1853,9 @@ SkinEntry* find_skin(const void* info, const void* positions) {
 #endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
 #include "include/native_actor_skin_admit32.inc"
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+#include "include/native_actor_skin_recipe32.inc"
 #endif
 
 // ---------------------------------------------------------- info context --
@@ -5494,7 +5510,11 @@ bool lazy_skin(const Re4dcModelPart& p) {
     if (!RE4DC_NATIVE_ACTOR_SKIN_LAZY || p.positions || p.position_stride != 6) return false;
     const SkinEntry* e = find_skin(p.info, nullptr);
     Re4dcActorSource src{};
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(e) && re4dc_actor_model_source(p.info, &src) &&
+#else
     return e && !e->materialized && e->palette && e->entries && re4dc_actor_model_source(p.info, &src) &&
+#endif
            src.positions && src.normals && src.position_count == p.position_count &&
            src.normal_count == p.normal_count && bool(src.small_normals) == (p.normal_shift == 6);
 }
@@ -5901,12 +5921,18 @@ extern "C" void re4dc_actor_test_lod_ladder(const float* f) {
 
 extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const void* position_buffer,
                                          const float* palette, unsigned entries) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     if (skin_admission_pending.serial) return 0;
 #endif
     if (frame != skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        skin_recipe_frame_retire();
 #endif
         skin_frame = frame; skin_count = 0;
     }
@@ -5930,7 +5956,13 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
 #if RE4DC_ACTOR_TRANSACTION && !RE4DC_ACTOR_SKIN_OWNER_POOL
             if(owned_skins[unsigned(e-skins)].serial)return 0;
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+            if(skin_recipe_building || !skin_recipe_drop(*e,unsigned(e-skins)))return 0;
+            const unsigned state=skin_recipe_nominated(*e)?kSkinRecipeReady:0u;
+            *e = {info, nullptr, palette, entries, state}; ++stats.skin_registered; return 1;
+#else
             *e = {info, nullptr, palette, entries, 0}; ++stats.skin_registered; return 1;
+#endif
         }
 #if RE4DC_ACTOR_TRANSACTION
     for(unsigned i=0;i<skin_count;++i)if(!skins[i].info
@@ -5954,8 +5986,14 @@ namespace { unsigned* census_mat_row; }  // ACTOR_CENSUS: the current part's row
 extern "C" void re4dc_skin_palette_resolve(const float* palette);  // trans.cpp SKIN_PALETTE_LAZY
 #endif
 extern "C" const float* re4dc_actor_skin_palette(const void* info, const void* position_buffer, unsigned* entries) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    SkinEntry* e = find_skin(info, position_buffer);
+    if (!e || !skin_recipe_readable(*e) ||
+        (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e))) {*entries=0;return nullptr;}
+#else
     const SkinEntry* e = find_skin(info, position_buffer);
     if (!e || e->materialized) { *entries = 0; return nullptr; }
+#endif
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries){*entries=0;return nullptr;} // inert reservation
 #endif
@@ -5971,7 +6009,11 @@ extern "C" const float* re4dc_actor_skin_palette(const void* info, const void* p
 // materialized, so its parts can only draw through the skinned frame (lazy_skin / prepare_frame kSkin) and its gate.
 extern "C" int re4dc_actor_skin_lazy_known(const void* info) {
     const SkinEntry* e = find_skin(info, nullptr);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(e);
+#else
     return e && !e->materialized && e->palette && e->entries;
+#endif
 }
 #if RE4DC_PROP_GATE == 2
 extern "C" { unsigned re4dc_pg_expect, re4dc_pg_fogged; }  // =2 check: parts of a gated model culled at the fog gate
@@ -5980,15 +6022,28 @@ extern "C" { unsigned re4dc_pg_expect, re4dc_pg_fogged; }  // =2 check: parts of
 extern "C" void re4dc_actor_materialize(const Re4dcModelPart* p) {
     if (!p) return;
     SkinEntry* e = find_skin(p->info, p->positions);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!e || !skin_recipe_readable(*e) ||
+        (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e)))return;
+#else
     if (!e || e->materialized) return;
+#endif
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries)return; // no source palette was deferred
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!re4dc_skin_materialize(e->info, e->palette))return;
+#else
     re4dc_skin_materialize(e->info, e->palette);
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    e->materialized=skin_recipe_nominated(*e)?kSkinRecipeDone:1u;
+#else
     e->materialized = 1;
+#endif
     ++stats.materialized_infos;
 #if RE4DC_ACTOR_CENSUS
     if (census_mat_row) *census_mat_row += 1;
@@ -6011,7 +6066,11 @@ extern "C" int re4dc_actor_skin_rearm(Re4dcModelPart* p) {
 #else
         find_skin(p->info, nullptr);
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!e || (e->materialized!=1 && e->materialized!=kSkinRecipeDone) || !e->palette || !e->entries)return 0;
+#else
     if (!e || !e->materialized || !e->palette || !e->entries) return 0;
+#endif
 #if RE4DC_ACTOR_TRANSACTION && !RE4DC_ACTOR_SKIN_OWNER_POOL
     if (owned_skins[unsigned(e - skins)].serial) return 0;
 #endif
@@ -6029,12 +6088,23 @@ extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p) {
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries)return 0; // never materialize a placeholder
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e))return 0;
+    if (!skin_recipe_readable(*e) && e->materialized!=1 &&
+        e->materialized!=kSkinRecipeDone)return 0;
+    if (skin_recipe_readable(*e)) {
+#else
     if (!e->materialized) {
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
 #endif
         if (!re4dc_skin_materialize(e->info, e->palette)) return 0;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        e->materialized=skin_recipe_nominated(*e)?kSkinRecipeDone:1u;
+#else
         e->materialized = 1;
+#endif
         ++stats.materialized_infos;
 #if RE4DC_ACTOR_CENSUS
         if (census_mat_row) *census_mat_row += 1;
@@ -7099,7 +7169,11 @@ bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSour
         return false;
     if (p.positions || p.position_stride != 6) return false;
     se = find_skin(p.info, nullptr);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(se) && re4dc_actor_model_source(p.info, &src) &&
+#else
     return se && !se->materialized && se->palette && se->entries && re4dc_actor_model_source(p.info, &src) &&
+#endif
            src.positions && src.normals && src.position_count == p.position_count &&
            src.normal_count == p.normal_count && bool(src.small_normals) == (p.normal_shift == 6);
 }
@@ -7329,6 +7403,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (re4dc_model_defer_part(&p)) { ++stats.deferred; return 1; }
 #endif
 
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(se->materialized==kSkinRecipePending) {
+        SkinEntry* live=find_skin(p.info,nullptr);
+        if(live!=se || !skin_recipe_materialize(*live)) {++stats.declined;return 0;}
+    }
+#endif
     Frame& f = one_frame(p, near_distance, far_distance, *se, src, w.screen);
 #if RE4DC_ACTOR_FOG_GATE
     if (blob->radius > 0.0f || blob->center[0] != 0.0f || blob->center[1] != 0.0f || blob->center[2] != 0.0f) {

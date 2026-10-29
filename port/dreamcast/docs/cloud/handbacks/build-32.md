@@ -954,6 +954,325 @@ does not claim those subsequent recipe/presentation changes.
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
 
 
+## 2026-10-29 Build32: skin admission review follow-on
+
+**2026-10-29 progress: DONE — reviewed source/test follow-on.** Publication parent `a5ac02aecee317c3ac74f1c9e7e2546a40775348`, isolated branch `codex/skin-review-20261029`, fixture/Make-only change. No registry, allocator or `trans.cpp` runtime change was needed.
+
+The actual producer/registry/consumer extraction now checks three missing transaction boundaries in both ordinary and owner-pool registry layouts:
+
+- At a completely full 64-entry table, a new source lazy palette for an **existing** `(info, nullptr)` entry replaces precisely that slot, advances the primitive cursor by its 64-byte rounded allocation, preserves count 64 and leaves an unrelated entry usable. The previous full-table new-info refusal remains tested.
+- The last available admission serial (`~0U-1` before admission) successfully publishes its palette and retains an unrelated owner. The next request at the saturated `~0U` serial refuses before allocation, with both prior entries still usable.
+- A stale copy of a canceled ticket cannot cancel a later admitted ticket. The later ticket commits normally, and the stale info never appears in the registry.
+
+The `skin_admit32.mk` value check now uses literal `0`/`1` patterns, never the user-supplied value as a Make pattern. The runner rejects empty, `2`, `0 1`, `%`, `0%` and `1%`, and retains the existing affected-TU and primary-Make flag checks. This fixes a control-plane hole only; `SKIN_ADMISSION32` remains default zero.
+
+From `work-skin-review`:
+
+```sh
+python3 port/dreamcast/tools/cloud/build32/skin_admit32.py
+git diff --check
+```
+
+The runner reports `PASS` for pool 0 and pool 1, with normal and ASan/UBSan binaries; 227 and 218 checked assertions respectively. It also proves pinned baseline/absent/explicit-zero preprocessed and host object identity in each layout (29,096 B and 27,336 B objects), the fragment value/prerequisite gate, and actual primary Make target-local flag selection without private asset compilation. Host tests exercise extracted current `native_actor_fast.cpp`, `trans.cpp` and their existing registry/allocator functions with controlled source external edges. SH target compilation, private assets, console/visual/STRICT and hardware timing remain separate gates; this review makes no performance claim.
+
+Owned source diff: `skin_admit32.mk`, `skin_admit32.py`, `skin_admit32_fixture.cpp.in`. The local coordinator owns serialized integration and target qualification; no registry behavior was changed by this review.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${SR32_BASE_TREE:?fresh base worktree path}"
+: "${SR32_LOGS:?fresh log directory}"
+: "${SR32_PROGRAMS:?fresh programme directory}"
+: "${SR32_LABEL:?fresh lane label prefix}"
+SR32_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$SR32_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$SR32_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$SR32_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$SR32_BASE_TREE" "${SR32_LABEL}base" ""
+candidate_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}absent" ""
+candidate_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}off" "SKIN_ADMISSION32=0"
+candidate_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}ctrl" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=0"
+candidate_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}on" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${SR32_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${SR32_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${SR32_LABEL}offrP" \
+  --output "$SR32_LOGS/skin-review32-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+**2026-10-29 coordinator synchronization: work-skin-review.** Source/handback reconciled onto `14b5c196db699640f7a9f39bc2318df22dc45ade`, retaining every current owner prefix. The skin review fixture was rerun: both owner-pool layouts pass normal and ASan/UBSan (227/218 checks), full/last-serial/stale-cancel edges, OFF preprocessed/object identity and actual primary Make literal controls. GitHub publication did not return a result; the coordinator retained this source candidate locally for review and later origin publication.
+
+## 2026-10-29 Build32: demand-selected source palette recipe
+
+**2026-10-29 progress: DONE — default0 consumed recipe, coordinator/peer review
+and post-merge host validation; NEXT — exact target/current-image gates and
+one ledger-independent actor presentation class.** Branch
+`codex/skin-recipe-20261029`, source base `d45eb759dd92685255929625e04fae3d7a46bca7`,
+with the reviewed admission edge commit
+`ae9318784eb4d27de5c734595be5635fafc6d5a7` brought in by a clean merge before
+this commit. That parent's fixtures and dated handback are retained, not
+reimplemented. The coordinator's Make guard additionally refuses trailing-space
+switch values so they cannot silently select OFF. No source conflict was
+hand-resolved.
+
+The architecture follows the existing Build32 decision on
+`codex/cloud-activity-20261029`: use the existing primitive buffer, admission
+ticket, ordinary row and owner lease, preserving callback cadence and source
+fallback. The original worker stopped after a model capacity error; the
+recovery worker preserved and finished its edits. Independent read-only review
+found no blocker in hard-credit accounting, failed replacement, descriptor
+retirement or final-pass release. **BLOCKED:** publication has no successful
+GitHub write/ref update, and the cloud has no initialized pinned target SDK.
+This local commit is not an integrated or target-accepted slice.
+
+### Scope and behavior
+
+The existing reserved ordinary skin-table row now captures a sparse `SkinRecipe` descriptor in the current primitive buffer. It retains full typed model and weight pointers, count/WeightExt layout, source frame, admission serial, primitive incarnation and ordinary slot. `SkinEntry` and public `Re4dcActorSkinBackup` keep their prior fields and ABI. The positions key is unchanged; there is no per-slot BSS recipe array, new heap, pointer encoded into an unsigned field, owner-pool enablement, new production diagnostic counter or runtime data/threshold change.
+
+`skinDeferPending` takes the existing one-at-a-time admission ticket. A qualifying nominated row atomically allocates its descriptor and reserves hard palette credit. Replacing a still-pending recipe reuses its descriptor and atomically transfers old credit to new credit. A failed claim changes neither its prior row, descriptor nor hard credit and cancels only the provisional admission. Unreserved rows retain the existing full lazy-palette allocation path. Nomination is retained in the existing materialized state tag through a source materialize/re-register cycle; a row emptied by completed native ownership does not implicitly become a nominee again.
+
+Admission checks descriptor bytes + NEW aggregate palette credit + the existing 16 KiB producer headroom. Every `GetPrimBuff` and `re4dc_prim_tail` allocation protects all hard credit. Both allocators check negative/overflowing sizes and available integer address space before signed rounding or pointer addition in the enabled path. Materialization removes only its own hard credit, allocates its exact aligned source palette through the same cursor, writes the existing `SkinLazyHead` and calls the unchanged source resolver/builder. It requires no new 16 KiB margin. Failure does not rewind the cursor.
+
+Current ordinary row and primitive/frame authority precede any descriptor dereference. Palette/materialize/lazy/one-chunk readers resolve a pending descriptor before using it as a matrix palette. Eligibility and propGate recognize it without allocating. Rearm accepts only real materialized palettes; placeholders and unknown states refuse. If generic geometry allocation fails after palette creation, the row remains a real, readable palette and is not falsely marked geometry-complete.
+
+`SetPrimBuffPtr` first performs existing admission retirement and `sourceActorRetire`, which revokes current owner serials, then scrubs recipes and clears aggregate credit, then advances the saturating primitive epoch, before backing address reuse. This runs even for `prim_cnt==0` and repeated numeric `Frame_cnt`. Successful registry frame replacement likewise revokes old owners before clearing recipes/credit. A descriptor epoch is never the first proof for reading reused memory.
+
+Both normal actor and Leon-pipe definitive final-pass blocks call `re4dc_actor_skin_finish_owner` before ordinary release. The finish hook validates the current lease/frame/owner serial/slots, validates all saved recipes as a batch, releases matching credit and scrubs each matching `lease.old` backup before release can restore it. Earlier passes and pre-choice decline use their existing behavior and retain source recipe credit. Epoch and admission/owner serial exhaustion conservatively refuse further authority; nothing wraps.
+
+The enabled Make profile requires `SKIN_ADMISSION32=1 ACTOR_TRANSACTION=1 ACTOR_SKIN_RESERVE=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 COARSE_SOURCE_ACTORS=1 ACTOR_SKIN_OWNER_POOL=0`. LAZY2 and owner-pool are disabled-compatibility profiles. Only `trans.o`, `native_actor_fast.o` and `coarse_actor.o` receive the recipe flag. Native UI/model production files are not edited. The primary Makefile consumes `skin_recipe32.mk` after `static_obj_batch33.mk`, once `skin_admit32.mk` has established the admission settings. Recovery moved only this include position to avoid competing with the independently published binding fragment; effective profile commands are rechecked.
+
+### Failed same-key replacement and actual source fallback
+
+The fixture calls the complete extracted `commonScreenMatSub`, not just a direct recipe helper. After an earlier recipe, it consumes admission headroom with legitimate primitive allocation. A second pose's recipe claim then refuses while geometry still fits. The source CPU pass builds the new pose and installs non-null current position/normal arrays. The old lazy row, descriptor bytes and hard credit remain exactly unchanged.
+
+The test includes the actual source caller predicates: propGate rejects when `info->pPosBuf[vtx_buf_no] != 0`; `native_model.cpp` calls lazy materialization only for `!p->positions`; `prepare_frame` queries `(info,p.positions)`; lazy/one-chunk eligibility rejects a part with current arrays. Consequently this real fallback does not consume the preserved old `(info,nullptr)` recipe as its new pose. No descriptor-invalidating refusal state was introduced. When even geometry allocation fails, `commonScreenMatSub` returns zero and the fixture's publication branch remains unexecuted.
+
+### Validation and reproduction
+
+From the candidate worktree:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build32/skin_recipe32.py
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32.py
+git diff --check
+```
+
+Final results after the clean edge-parent merge and coordinator rerun:
+
+- New recipe suite: **3,661 assertions** in both normal and combined ASan/UBSan execution. Host descriptor allocation 64 bytes, ordinary row 32 bytes, public backup 40 bytes.
+- Actual `commonScreenMatSub`, pending/eager/lazy producers, allocator/claim/release, registry/admission/reservation/shared lease acquire/validate/release, source lazy build/resolver and materializer, palette/materialize/lazy/rearm functions, `lazy_skin`, `one_qualifies`, `prepare_frame`, `one_frame`, the actual recipe guard from `one_chunk`, both actual normal/Leon final completion blocks and the actual pre-choice release branch are extracted into one fixture.
+- Full-width heap weight and stack model pointers exceed 32 bits and round-trip through the actual descriptor. Exact source palette words are checked for ordinary and WeightExt layouts against controlled deterministic math boundaries. Captured weight-pointer semantics survive a later `ModelData` pointer change.
+- Cases cover table full; descriptor OOM; same-slot successful/failed replacement; source CPU fallback; source geometry OOM; 70 materialize/re-register cycles in one primitive frame; non-nominee legacy path; placeholder/unknown state refusal; register/commit credit transfer; competing tail/GetPrimBuff allocation; full consumption of the admission margin followed by successful protected palette resolves; negative/signed-rounding/unsigned/address overflow refusal; terminal admission serial/epoch; one/two passes in BOTH final completion blocks; pre-choice release; same-frame reset, copied stale lease/ticket and overwritten backing bytes; zero primitive base retirement; frame replacement; and registry/read reentry during a build.
+- Pinned pre-recipe baseline `d45eb759dd92685255929625e04fae3d7a46bca7`, candidate absent and explicit zero have **byte-identical extracted preprocessing and objects** in shared LAZY1 (70,952-byte host object), owner-pool LAZY1 (69,400), and shared LAZY2 (68,560). LAZY2 is tested on its original non-admission comparison profile because the admission control itself already requires LAZY1.
+- Complete `trans.cpp` preprocessing with actual public headers, `__sh__`, frontend enabled and source-actor/admission dependencies is byte-identical baseline/absent/zero (**287,928 bytes**). Both actual source HALT expansions also remain identical ON/OFF; the final source diagnostic retains the baseline `__LINE__` semantics. No source diagnostic was masked to force equality.
+- 32-bit freestanding host data-model compile passes assertions `SkinEntry=20`, backup `=24`, descriptor `=32`. This is a layout proxy, **not SH-4 compilation**.
+- Fragment Make checks reject `%`, `0%`, `1%`, `2`, empty, negative, lists unknown values and trailing-space values; reject every missing profile dependency, owner-pool and LAZY2. Primary Make dry-run commands are absent/zero identical; ON sets the recipe definition exactly once on the three intended TUs and never native_ui. A clearly labeled empty generated-header prerequisite is used only to expand the coarse compile command; no private data or asset code is compiled.
+- Existing admission regression remains passing: shared registry normal/ASan+UBSan **227 assertions** each, pool **218** each; original admission pinned-base/absent/zero preprocessing and object identity retained (29,096 / 27,336 host bytes), zero unexpected primitive diagnostics.
+- Final recipe source digest printed by the suite: `d4afffc0d499836f`; admission source digest: `a4d4345f3020edb0`. `git diff --check` passes.
+
+Host fixture boundaries are explicit. SDK/render operations and model matrix/weight arithmetic are deterministic adapters. The production `skinLazyBuild` copy/layout, lazy resolver and materializer bodies are extracted. The pre-existing target-only materializer stores its palette pointer in `u32`; the host fixture widens **that single legacy cast** and its host storage to `uintptr_t`, without changing production. New recipe and public lease code compile verbatim with full host pointers. Normal/Leon final completion blocks compile verbatim around a narrow actor release boundary; the complete game transaction/renderer is not host-linked. Thus palette-word checks establish routing/capture/build/copy equivalence at the controlled math boundary, not independent validation of all recovered model arithmetic or raster output.
+
+### Storage account and acceptance limits
+
+| Case | Expected 32-bit primitive cost | 64-bit fixture primitive cost |
+| --- | --- | --- |
+| One newly published pending recipe | 32-byte descriptor; hard credit `align32(48*n)` remains unspent | 64-byte descriptor; same hard credit |
+| No-read definitive native completion | Descriptor only; credit released | Descriptor only; credit released |
+| First source palette read | Descriptor + `align32(48*n)` | Descriptor + `align32(48*n)` |
+| Source geometry fallback | Above, plus established source vertex/normal bytes | Above, plus established source vertex/normal bytes |
+| Successful still-pending replacement | Reuses descriptor; transfers credit | Reuses descriptor; transfers credit |
+| Repeated materialize/re-register | Each new descriptor remains physically spent until primitive retirement | Same, with 64-byte descriptors |
+
+The source plan's existing batch is bounded to 64 nominated keys; the table's 64/80/112 slot options are unchanged. At 64 simultaneously live recipes descriptor storage is 2,048 bytes on SH-4, 4,096 on this host. Cumulative descriptors can exceed 64 (the test reaches 70) and are bounded by primitive capacity, not a separately claimed 2 KiB frame-wide cap. Fixed authoritative recipe state is one initialized unsigned epoch, one unsigned aggregate hard-credit word and one bool build guard. No new diagnostic counters are linked. Exact target `.text/.data/.bss` and alignment remain unmeasured.
+
+A two-entry example costs 96 source palette bytes in the previous lazy path. The new no-read native case spends 32 SH-4 descriptor bytes; the source-palette case spends 128. This is a per-case storage calculation, not a measured hit rate or net route saving. Real primitive high-water, native-discard/materialization/retirement counts, cumulative descriptor bytes, allocator refusal behavior, linked memory/KOS headroom and time still need the current image.
+
+No initialized pinned SH-4 SDK/toolchain is present here. No complete target object/full programme/overlay link, target stack or allocation map, private assets, emulator/physical console, gameplay/STRICT trace, raster comparison, current-image class census or hardware timing is claimed. The later ledger-independent current-image presentation extension is outside this completed recipe slice. Defaults, frozen recipe, release media, SD and Pi remain unchanged.
+
+### Exact next target commands for Claude
+
+
+The local SDK pins are KOS `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`
+plus the repository patches, GCC 15.2.0, binutils 2.45.1,
+newlib 4.6.0.20260123, and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. From the candidate checkout with
+that SDK and the existing authorized private recipe inputs, run serially with
+fresh absolute paths and a fresh label. These commands create private build
+outputs and disable the shared programme-registry update. They do not stage
+release media or change a recipe.
+
+```bash
+set -euo pipefail
+: "${SR32_BASE_TREE:?fresh absent absolute baseline worktree path}"
+: "${SR32_OUT_ROOT:?fresh absent absolute build output root}"
+: "${SR32_LOGS:?fresh absent absolute log directory}"
+: "${SR32_PROGRAMS:?fresh absent absolute programme directory}"
+: "${SR32_LABEL:?fresh lane label prefix}"
+SR32_CANDIDATE_TREE="$(git rev-parse --show-toplevel)"
+test ! -e "$SR32_BASE_TREE"
+test ! -e "$SR32_OUT_ROOT"
+test ! -e "$SR32_LOGS"
+test ! -e "$SR32_PROGRAMS"
+git worktree add --detach "$SR32_BASE_TREE" d45eb759dd92685255929625e04fae3d7a46bca7
+mkdir -p "$SR32_OUT_ROOT" "$SR32_LOGS" "$SR32_PROGRAMS"
+source <(tr -d '\r' < "$SR32_CANDIDATE_TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+export ROUTE_OUT_ROOT="$SR32_OUT_ROOT"
+export ROUTE_PROGRAMS_DIR="$SR32_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+SR32_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="$SR32_OUT_ROOT/out-${label}rP"
+  test ! -e "$output"
+  test ! -e "$SR32_PROGRAMS/candidate-route${label}rP"
+  T="$tree" K="$SR32_LOGS" LP="$label" XON='' CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+SR32_build "$SR32_BASE_TREE" "${SR32_LABEL}base" ''
+SR32_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}absent" ''
+SR32_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}zero" 'SKIN_RECIPE32=0'
+SR32_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}ctrl" \
+  'SKIN_ADMISSION32=1 ACTOR_TRANSACTION=1 ACTOR_SKIN_RESERVE=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 COARSE_SOURCE_ACTORS=1 ACTOR_SKIN_OWNER_POOL=0 SKIN_RECIPE32=0'
+SR32_build "$SR32_CANDIDATE_TREE" "${SR32_LABEL}on" \
+  'SKIN_ADMISSION32=1 ACTOR_TRANSACTION=1 ACTOR_SKIN_RESERVE=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 COARSE_SOURCE_ACTORS=1 ACTOR_SKIN_OWNER_POOL=0 SKIN_RECIPE32=1'
+python3 -B "$SR32_CANDIDATE_TREE/port/dreamcast/tools/cloud/build34/upload_compare.py" \
+  --baseline "$SR32_OUT_ROOT/out-${SR32_LABEL}baserP" \
+  --arm "$SR32_OUT_ROOT/out-${SR32_LABEL}absentrP" \
+  --arm "$SR32_OUT_ROOT/out-${SR32_LABEL}zerorP" \
+  --output "$SR32_LOGS/skin-recipe32-release-off.json"
+```
+
+Retain the actual resolved compiler commands, build logs and existing empty
+`missing.txt` for every arm. The OFF comparison covers the complete programme,
+all 15 overlays, and allocated-section metadata and bytes; debug-ELF file
+differences alone are not the identity criterion. Keep the dependency-only
+`ctrl` and enabled `on` pair separate from release identity. Record target
+stack, text/data/BSS and current memory margins from the actual artifacts;
+host layouts do not substitute for them. Cloud must synchronize the candidate
+and baseline again if serialized integration changes source. Current-image
+look/gameplay, STRICT, material/lifetime behavior and physical-console cost
+remain local gates. No release default or media action follows from a pass.
+
+Verify the recipe definition only on `trans.o`, `native_actor_fast.o` and
+`coarse_actor.o`, with all required source hooks resolved. The established
+release builder supplies its existing native-skin/coarse/render prerequisites;
+the control and ON arms append the explicit recipe profile above. Keep
+owner-pool/LAZY2 as disabled compatibility checks, not enabled recipe classes.
+On the current image compare actual source/native/pre-choice, one/two-pass,
+retirement and allocation-failure behavior. Record cumulative descriptor bytes,
+materialization incidence and primitive high-water separately from hard credit.
+The later current-image presentation extension still requires a real selected
+registry class and current owner/pose/material authority; this palette recipe
+alone does not supply that presentation record or close EF01/04/14.
+
+## 2026-10-29 recovery: EF04 consumed skin recipe and temporal source cadence
+
+**DONE (source and host, partial EF04):** recovered the complete unpublished
+`601030e0f15ad67a60624f8fc1f8a2101b89fd8e` recipe candidate in a new worktree on
+current integration `d45eb759dd92685255929625e04fae3d7a46bca7`. Its source includes
+the prerequisite admission corrections from
+`ae9318784eb4d27de5c734595be5635fafc6d5a7`; do not treat those as a separately
+integrated prerequisite or apply that source twice. The later preserved
+`4fde6b4c6c32547d21fe10ef2af649e15c6182f8` skin-review tip is a documentation sync,
+not an ancestor of the recipe tip. Old worktrees and all tips remain preserved.
+
+The recovered production implementation is unchanged by this recovery. It
+records the existing bounded current source palette recipe, defers expensive
+palette construction until a real read, reserves the existing primitive credit,
+and releases it only after current lease/frame/owner validation. Both ordinary
+actor and Leon final-pass completion use the existing finish-owner boundary.
+Failure must not restore stale source descriptors over a new recipe or consume
+its credit. No second actor pipeline, allocator or palette lifetime is added.
+
+The new recovery fixture extracts the actual `SKIN_LAZY_MTX` source macro and
+exercises baseline, absent, explicit0 and enabled temporal execution. It changes
+pose weights before the first real read, checks source matrix/palette/skin order,
+UV/morph/GQR and material callback cadence, and exercises memo invalidation.
+It also checks stale final completion in both actual normal/Leon blocks. Those
+new assertions preserve the source finish-failure short circuit deliberately;
+they do not weaken a failed lease into restoration or pretend a stale pose is
+current. All new temporal coverage is in the dedicated fixture/driver.
+
+### Recovery validation
+
+```
+python3 -B port/dreamcast/tools/cloud/build32/skin_recipe32.py
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32.py
+git diff --check
+```
+
+**PASS:** recipe normal and ASan/UBSan executions each pass 3,679 assertions.
+The four temporal arms each pass 150 assertions and produce the identical
+`bc27dc7337d856f0` digest: 21 source callback events, four matrix builds, five
+palette actions and two skin actions. The existing admission suite remains
+227 assertions for shared registry and 218 for owner pool in both normal and
+sanitizer modes. Runtime-source digest remains `d4afffc0d499836f`; admission
+source digest remains `a4d4345f3020edb0`.
+
+After adding the executable source-macro coverage, current extracted OFF host
+objects are 71,504 / 70,040 / 69,104 bytes for the three supported comparison
+profiles and remain byte-identical baseline/absent/explicit0 within each arm.
+These supersede the older fixture-object sizes recorded above, not target
+sizes. Complete `trans.cpp` SH-conditioned preprocessing remains exactly
+287,928 bytes and both HALT expansions preserve their baseline values.
+Actual primary Make absent/zero commands, literal/dependency rejection and
+three-TU enabled flag scope pass. The 32-bit freestanding layout proxy remains
+20-byte row / 24-byte backup / 32-byte descriptor; it is not SH-4 compilation.
+
+The earlier detailed storage, pointer-widening and deterministic-math fixture
+boundaries still apply. These tests establish the actual source callback and
+recipe/lease ordering at the declared host boundary; they do not establish
+private current-image class coverage, complete recovered arithmetic, raster
+output, target cost or net memory savings.
+
+**NEXT:** local pinned-SDK baseline/absent/explicit0/dependency-control/ON builds
+using the retained commands above, complete programme/15 overlays/allocated
+section OFF comparison, and actual target flag/stack/storage inspection. Then
+current-image source/native/fallback/one-two-pass/retirement/OOM qualification
+and private look/gameplay/STRICT/memory/console cost checks. The separate new
+current-image presentation slice is active cloud work; it is not supplied by
+this recipe alone and its initial combined profile will remain guarded until
+composition is proven.
+
+**BLOCKED:** only the named target/private/runtime/console qualification lane.
+No such build or execution occurred in this cloud environment. Default0,
+owner-pool/LAZY2 restrictions, release and all previous acceptance holds remain.
+This delivery is implemented and host-validated, not integrated, enabled,
+runtime-accepted or whole-card complete. Queue Status is maintained by the
+coordinator on the recovery branch; local alone performs integration.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
+
 ## EF04 bounded portrait native continuation, 2026-10-29
 
 **DONE - SOURCE AND HOST, scoped opt-in; target qualification pending.**
