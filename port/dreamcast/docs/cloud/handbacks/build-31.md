@@ -564,3 +564,20 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+
+## Answers (owner): 2026-10-29 bounded current-package capacity check
+
+Current source c027b26e, compatible ALLON K27. A bounded local check of the actual final image's standard .re4mesh/.r4pw inputs found:
+
+| Room | Parts | Stored meshlets | Placements | Largest stored part | Parts >320 |
+|---|---:|---:|---:|---:|---:|
+| r101 | 342 | 1830 | 223 | 97 | 0 |
+| r100 | 304 | 1967 | 283 | 51 | 0 |
+| r103 | 267 | 1448 | 134 | 41 | 0 |
+
+The final ALLON image and stock fixture base have identical primary geometry bytes; current loader range/header/body-CRC checks and resolved standard-variant controls were bound. Existing r101 source-log counts agree. r100/r103 observations are package-only. No real >320 continuation witness exists in these three checked packages. This does not remove the source-demonstrated capacity defect or its synthetic paging obligation, and does not establish selected visibility, no lost parts, live digest, full memory, output equivalence or console timing. No broad census or authored-cell regeneration was run.
+
+The distinct stock QA60 fixture reached r101 and source logs report the prepared plan admitted223 bounds/22951B, with planned39929 and declines0 by globalframe600. The r103 QA-menu endpoint was not observed. Source review shows its trigger requires300 consecutive eligible free-play polls and resets on any failed predicate; globalframe600 does not establish that interval. Damaged raw logs remain private and unchanged, so no absence-of-fault or memory PASS is inferred. No identical retry, guard change or source defect claim follows from this missing endpoint.
+
+Cloud continues the assigned ordered paging/whole-part completion, precise mutation and stream/clip source work using meaningful synthetic boundary fixtures; independent implementation does not wait for a private oversized example. Local retains actual package/lifecycle/output/look/memory/cost/console gates. All controls/defaults and file-writer ownership remain as the existing handoff.
