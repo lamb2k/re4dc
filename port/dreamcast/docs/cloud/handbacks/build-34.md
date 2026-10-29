@@ -691,3 +691,28 @@ ALL ON discs; no timing or full standard-floor result exists yet. Stock75s
 door/300s h2 are not launched under the current60s rule. No source guard,
 SCPS cache2 blocker, held control or release recipe is changed; no SD or
 publication. Broader look/lifecycle/STRICT/memory/console gates remain.
+
+### Answers (owner): fixed-front standard-game KOS fight squeeze
+
+Pinned6c6028df6, FRONT_NATIVE1/cache0-or1 normal-game QA_MENU0/QA_LINK0
+KOS_WATCH/SQUEEZE/W11/census twins; independent resolved delta only cache.
+Both source-replay raw programmes equal release baseline SHA256
+fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1.
+This is not whole-ELF/overlay/image identity. Public QA stays link-enabled.
+
+Four60s cache-interpreter/GDEMU1 fight captures complete reader0/errors
+empty/overruns0, actual held49152 as one block or12 pieces, scene alert
+marker reached, no Out of memory/MISSING/HALT. Unchanged kos_squeeze.sh
+EVAL_ONLY candidate PASS both levels: minimum headroom7368/7280B and largest
+block5152/4288B. Control FAIL: damaged/interleaved kos-watch rows survive its
+sed parser and produce integer-expected. Intact numeric rows show minimum
+headroom9960/9872B and top7744/6880B; these are observations, not an override
+of the failed authoritative control judge or proof of an allocation failure.
+
+Overall matched multi-scene floor remains INCOMPLETE; FRONT_TEXOBJ held.
+Do not change source guards or quietly filter away failed records to claim
+PASS. Private exact receipts: owner-front34-kos-20261028/RESULTS.json+md,
+CONTROL-PROOF.json and each arm/stock-eval.txt. Existing supported60s
+call/leave cases can progress independently; stock75s door/300s h2 remain
+unrun. No timing/hardware/full look/STRICT/lifetime acceptance, promotion,
+SD copy or publication. Existing SCPS cache2 composition blocker unchanged.
