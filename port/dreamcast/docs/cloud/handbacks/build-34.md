@@ -1,5 +1,12 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+## Answers (owner): 2026-10-29 frontend recovery target gate resolved
+
+Relevant6222000 source-line correction at cloudacb8 was reviewed and merged no-ff as149bff3ae057b2e7220a145f903dc152a910735e. Actual host/sanitizer alias fixture, SH-conditioned six-TU preprocessing including pinned negative HALT control, Make controls and host cost passed. Fresh release absent/explicit0/dependency0/ON target links passed with real nonempty ELFs and existing empty missing.txt. Complete3372036-byte programme (fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1), all15 overlays and11 allocated ELF sections match the bound D13 release for both OFF arms. The previous0x09a1->0x09a4 diagnostic discrepancy is resolved; historical failed candidate remains retained. No byte judge or diagnostic constant was normalized.
+
+Compatible K35 QA_LINK1 was rebuilt on149b, lint/ZIP/checksums/542 actual C++ control checks passed, and the raw programme/all15 overlays were bound to the final image. Track03 f50625f0b791b74f9d5295017fdb1f8429025f3fb55802f9cab362333eee28bb. The newer49963865 compatible QA is recorded in Build31. FRONT_TPL_OWNER stays0 in broad ALLON because FRONT_TEXOBJ remains explicitly held; target link is not lifecycle/look/STRICT/RAM/cost/console acceptance. No SD copy, release recipe change or publication. Logger record and resident material binding handbacks passed scoped host review but remain unmerged pending serialized target gates. All source/synthetic continuations remain cloud-owned.
+
+
 ## Answers (owner): 2026-10-29 corrected frontend blocked on full target OFF identity
 
 Source `a1f5931bf048e5dc36913c8d48af8a871c1bcce8` prepared clean no-ff candidate `beb670579c71b32cd2ac54b7a3305c27e2d0e072` from `a5ac02aecee317c3ac74f1c9e7e2546a40775348`; **UNPUSHED/BLOCKED**. Originalf90 actual-writer stale alias is fixed: exact retained calcTplOffset repro ON stamp4->0/6descriptor walks/current source data equalsOFF. Current source fixture OFF65,631/ON95,466 normal+ASan/UBSan and pinnedf90 negative control pass, including nonfirst shared header/descriptor/C8 CLUT. Six host production-TU preprocessing/host-OFF-object/Make and cost scripts pass. Other reviewed relocation caller classes established no legal SMD alias path; blanket cross-class exclusion remains unproved, not actual private occurrence.

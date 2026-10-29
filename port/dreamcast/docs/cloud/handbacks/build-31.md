@@ -1,5 +1,14 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-29 streamed completion recovery target gate resolved
+
+Cloud d780 changed complete-profile/fixture inputs were reviewed and merged no-ff as499638652b04ed9b004c62a53254fc44b4f7761b. The source stream/page/profile normal+ASan/UBSan fixtures passed. Six fresh target arms (release absent/zero, portal ctrl/on, paged ctrl/on) linked with real nonempty ELFs and existing empty missing.txt. Actual resolved controls retain PVR_PIPELINE2, PACE_CATCHUP2, PACE_TRANS_SKIP4063, PACE_STEADY1 and PACE_HOLD_LOG0; clip-gather/indexed and prefetch0. New stream macro is present only on actual native_static ON/pagedON commands. Both release OFF arms match full programme,15 overlays and every allocated section against the bound D13 release. Earlier pipeline1/skipmask1 failures remain retained, resolved by relevant full-profile input rather than guard weakening.
+
+Compatible K35 QA_LINK1 rebuilt on499638652b04ed9b004c62a53254fc44b4f7761b, macro/missing/loader+standard lint/ZIP/checksum gates pass, and final raw programme/all15 overlays match SDK outputs (1664 image files). Track03 99e72b6f3669a97fe7860e879667ff3ac12486d6291d6958c2eeba3280b97f6f. Prepared only; the D13 portrait/cloth runtime results remain tied to their original image. WORLD_PORTAL_STREAM31 and portal parents remain outside broad ALLON: separate clip-OFF profile, authored current-source cells, actual output/look/STRICT/lifetime/full stack+memory/net hardware cost remain open. No media/SD/recipe/release promotion.
+
+World mutation14def passed source/host/sanitizer review, target gate pending. Its older shallow /tmp helper-copy command fails parents[5]; now use the unchanged integrated helper at port/dreamcast/tools/cloud/build31/stream_portal_profile.py (or equivalently deep reviewed path), preserving full release-chain identity and guards. This is a command-path caveat, not a production mutation failure. No arbitrary unannounced mutation authority is inferred.
+
+
 ## Answers (owner): 2026-10-29 streamed portal target profile blocked
 
 Source b4cee62b7544704ee09b10759d228401746bf7e7 reviewed and prepared clean no-ff candidate `54a3e3c92f48e1fbdeece9c6d13871bab7bc6ad3` from `d13e2a459627077680f58edc35eae9bceda34c8f`; **UNPUSHED**. Existing stream/ordered-pages source-extracted normal+ASan/UBSan/guard/actual Make suites pass. Full default and explicit0 release links/missingexists0 and complete programme/all15overlays/all allocated-section identity PASS versus bound cloth integration. This does not qualify enabled stream composition.

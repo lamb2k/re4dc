@@ -1,5 +1,57 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 actual cloth target fixture admission blocked
+
+﻿### Reviewed patched SDK binding needed
+
+Reviewed source tip: `b2ba8d33e9469139328f485ef0d71f233941f427` on `codex/cloth-target-fixture-20261029`.
+
+The new actual-target fixture is a useful changed input: it adds production cloth clipping and asynchronous TMU1 interruption at actual FTRV instruction boundaries. Source pins and all 14 driver tests passed locally, including the host clipping harness under ASan/UBSan. These checks do not execute SH-4 numerics, FPSCR restoration or interrupts.
+
+The current builder rejects the maintained patched KOS SDK before target qualification. `pvr_geometry.hpp:8` includes `<dc/pvr.h>`. The driver's `verify_dependencies()` sends every consumed KOS header through `pinned_file()`, which requires its bytes to equal `HEAD:path`. The maintained KOS checkout is at the required `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` base with the existing public manual-presentation/TA-buffer patch. Its reviewed `dc/pvr.h` therefore differs from pristine HEAD.
+
+Read-only local evidence:
+
+| Input | Identity |
+| --- | --- |
+| KOS base | `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` |
+| Pristine `dc/pvr.h` Git blob | `9ac9ed1b5f975094d54b39c5dbe13309332ad0c5` |
+| Maintained patched `dc/pvr.h` Git blob | `7d0b84a251451ac6d13f508764faad10678d67a0` |
+| Pristine header SHA-256 | `280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4` |
+| Maintained patched header SHA-256 | `55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f` |
+| Selected prebuilt `libkallisti.a` SHA-256 | `5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf` |
+| Selected prebuilt `_kos_startup.o` SHA-256 | `ec3a5f7757f9af742171bcc6ab56d5b0b7c77a86b034623fe66b963708a886fd` |
+
+These binary hashes identify the inspected installed inputs; they do not establish their complete build history or a successful fixture link.
+
+Minimal reproduction from the candidate checkout, with `XM14_KOS` pointing at the maintained patched SDK:
+
+```sh
+python3 -B - <<'PY'
+import importlib.util
+import os
+from pathlib import Path
+path = Path("port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py")
+spec = importlib.util.spec_from_file_location("cloth_target", path)
+driver = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(driver)
+driver.pinned_file(Path(os.environ["XM14_KOS"]),
+                   "kernel/arch/dreamcast/include/dc/pvr.h")
+PY
+```
+
+Observed assertion, with only the local root sanitized:
+
+```text
+AssertionError: modified pinned SDK input: <selected KOS>/kernel/arch/dreamcast/include/dc/pvr.h
+```
+
+Please add explicit reviewed patched-SDK manifest support: bind the exact KOS base, approved patch/header bytes and selected archive/startup hashes into the same build identity and receipt. Continue refusing unknown changed inputs, foreign include/library roots and mid-build changes. Add a host refusal/acceptance fixture for this supported patched-header case. Do not remove the input checks, relabel patched bytes as pristine, reset the maintained SDK, or silently select another SDK. A separately qualified pristine SDK is possible only with accurate separate attribution.
+
+No SDK build, target run, SDK reset or source fix was attempted during this review. Keep the actual numeric/FPSCR/normal-TMU1-IRQ gate open until a relevant binding correction is reviewed and the real fixture is linked and executed. Normal cloth timer-IRQ evidence remains separate from the logger's IRQ-duration, returning-fault/NMI and cache-visibility obligations. Existing defaults and runtime/look/STRICT/memory/console/release holds remain.
+
+
+
 ## Answers (owner): 2026-10-29 current K35 portrait and cloth runtime
 
 The previously missing permitted ordinary guest/controller route is now established. Current runtime `d13e2a459627077680f58edc35eae9bceda34c8f` / compatible K35 was exercised in Flycast via a local QA Link relay, with normal PAD input and read-only current-ELF counters. The final programme/all15 overlays were bound before the run. No Windows input, cross-image snapshot, forced story/position, production source/asset mutation, physical-console action or SD copy was used. Fresh ordinary-route setup required explicitly announced longer captures (120/150s requested); individual inventory/cloth windows stayed below30s. This is JIT behavior/look evidence, not hardware performance.
