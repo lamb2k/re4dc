@@ -913,11 +913,9 @@ new world_mutation31.hpp and dedicated host/reload/target guard fixtures.
 No workspace cap, allocator budget, simulation, release recipe or source order
 change is introduced. Target code/stack cost has not been measured.
 
-The recovery fixes one fixture dependency: world_mutation31_target.py accepts
-an explicit reviewed --profile-builder, and rebinds its ROOT/DC/profile reads to
-this candidate. It cannot silently test another checkout's recipes. Before the
-EF08 helper integrates, obtain its exact published source without copying a
-competing implementation into this branch:
+The recovery driver accepts an explicit reviewed --profile-builder and rebinds
+its ROOT/DC/profile reads to this candidate. The EF08 helper is now integrated,
+so these commands use the default repository path. No helper copy is needed:
 
 ```sh
 python3 -B port/dreamcast/tools/cloud/build31/world_mutation31_host.py --output /tmp/world-mutation31-recovery3-normal
@@ -927,10 +925,9 @@ python3 -B port/dreamcast/tests/test_world_pages31.py
 git diff --check
 ```
 
-Use fresh nonexistent output directories. Recovery used the identical reviewed
-helper in its separate worktree rather than a fabricated installed dependency.
-The runtime slice is based on current integration and does not transplant
-unmerged stream or clip producer code.
+Use fresh nonexistent output directories. The initial recovery used the reviewed
+helper in its separate worktree; the current synchronized branch uses the landed
+helper and stream source directly. No unmerged clip producer is transplanted.
 
 PASS normal and ASan/UBSan: prepared current-source and general room paths49
 checks each with6 allocations/frees; portal61 checks with6 allocations/frees;
