@@ -45,32 +45,62 @@
             ;
 #endif
     }
+#if RE4DC_WORLD_PAGES31
+    using ChunkCursor=re4dc::page31::Cursor;
+    using ChunkPage=re4dc::page31::Page;
+#endif
 #if RE4DC_SCENERY_STREAM && RE4DC_SG_SELECT_LEAN && !RE4DC_SCENERY_RECORD_SPLIT && !RE4DC_SCENERY_CONE && \
     !(defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK) && !(defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24) && \
     !(defined(RE4DC_SCENERY_SELECT_LEAN2) && RE4DC_SCENERY_SELECT_LEAN2)
     // SCENERY_STREAM: chunk_select below for this configuration as one tight loop: the same tests, expressions and
     // picks (box_class / box_mask_lean / sg_select_lean, or the knob-off functions under the runtime switch; the same LOD
     // rule), with the diagnostic counters dropped and the runtime switch read once per part.
+#if RE4DC_WORLD_PAGES31
+    __attribute__((noinline)) ChunkPage chunk_select(Pick* out,unsigned capacity,ChunkCursor& cursor){
+#else
     __attribute__((noinline)) unsigned chunk_select(Pick* out){
+#endif
         const auto& lod=package.part_lods()[part_index];
         const auto* levels=package.levels();const auto* all=package.meshlets();
         const bool groups=sg && lean_am,box2=(lean::kMode&2U) && lean_am,slean=re4dc_sg_lean_on!=0;
         unsigned np=0;
+#if RE4DC_WORLD_PAGES31
+        if(!cursor.started){cursor.cluster=lod.first_cluster;cursor.started=true;}
+        for(unsigned c=cursor.cluster;c<lod.first_cluster+lod.cluster_count;++c){
+            if(np==capacity)return {np,false};
+            const auto* cl=package.clusters()+c;
+            unsigned cin,li0,li1;
+            if(cursor.active){cin=cursor.classification;li0=cursor.meshlet;li1=cursor.end;}
+            else {
+#else
         const auto* cl=package.clusters()+lod.first_cluster;
         for(const auto* const cend=cl+lod.cluster_count;cl!=cend;++cl){
+#endif
 #if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+#if RE4DC_WORLD_PAGES31
+            if(wp29_wq && pc::grid_hidden(wp29_wq,cl->bounds_min,cl->bounds_max)>0){++pc::st.clusters;
+                cursor.cluster=c+1;
+                continue;}
+#else
             if(wp29_wq && pc::grid_hidden(wp29_wq,cl->bounds_min,cl->bounds_max)>0){++pc::st.clusters;continue;}
+#endif
 #endif
             float lo[3],hi[3];
             for(unsigned a=0;a<3;++a){lo[a]=float(cl->bounds_min[a]);hi[a]=float(cl->bounds_max[a]);}
+#if !RE4DC_WORLD_PAGES31
             unsigned cin;
+#endif
             if(lean_inside)cin=2;
             else if(box2)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
             else {
                 const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
                 cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
             }
+#if RE4DC_WORLD_PAGES31
+            if(!cin){cursor.cluster=c+1;continue;}
+#else
             if(!cin)continue;
+#endif
             float depth=-mvq[11],radius=0;
             for(unsigned a=0;a<3;++a){
                 depth-=mvq[8+a]*(lo[a]+hi[a])*0.5f;
@@ -84,9 +114,18 @@
             if(ps2)level=re4dc::room::nonempty_lod(levels+cl->first_level,cl->level_count,level);
 #endif
             const auto& lv=levels[cl->first_level+level];
+#if RE4DC_WORLD_PAGES31
+            li0=lv.first_meshlet;li1=li0+lv.meshlet_count;
+            cursor.classification=std::uint8_t(cin);cursor.meshlet=li0;cursor.end=li1;cursor.active=true;
+            }
+#else
             const unsigned li0=lv.first_meshlet,li1=li0+lv.meshlet_count;
+#endif
             if(cin==2 || !groups){
                 for(unsigned li=li0;li<li1;++li){
+#if RE4DC_WORLD_PAGES31
+                    if(np==capacity){cursor.meshlet=li;return {np,false};}
+#endif
 #if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
                     if(wp29_wq && pc::grid_hidden(wp29_wq,all[li].bounds_min,all[li].bounds_max)>0){++pc::st.meshlets;continue;}
 #endif
@@ -99,10 +138,16 @@
                     }
                     Pick& pk=out[np++];pk.let=std::uint16_t(li);pk.nr=0xffU;
                 }
+#if RE4DC_WORLD_PAGES31
+                cursor.active=false;cursor.cluster=c+1;
+#endif
                 continue;
             }
             const std::uint8_t* gsrc=sg+16U*sg_groups*li0;
             for(unsigned li=li0;li<li1;++li,gsrc+=16U*sg_groups){
+#if RE4DC_WORLD_PAGES31
+                if(np==capacity){cursor.meshlet=li;return {np,false};}
+#endif
                 const auto& l=all[li];
 #if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
                 if(wp29_wq && pc::grid_hidden(wp29_wq,l.bounds_min,l.bounds_max)>0){++pc::st.meshlets;continue;}
@@ -135,12 +180,23 @@
                     pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                 }
             }
+#if RE4DC_WORLD_PAGES31
+            cursor.active=false;cursor.cluster=c+1;
+#endif
         }
+#if RE4DC_WORLD_PAGES31
+        return {np,true};
+#else
         return np;
+#endif
     }
 #else
     // Picks appended at out (room for part.meshlet_count); returns how many.
+#if RE4DC_WORLD_PAGES31
+    __attribute__((noinline)) ChunkPage chunk_select(Pick* out,unsigned capacity,ChunkCursor& cursor){
+#else
     __attribute__((noinline)) unsigned chunk_select(Pick* out){
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
         unsigned wc_indexed=0,wc_plain=0,wc_empty=0;
@@ -153,6 +209,9 @@
 #endif
         const bool groups=sg && lean_am;
         unsigned np=0;
+#if RE4DC_WORLD_PAGES31
+        bool page_complete=true;
+#endif
 #if RE4DC_SCENERY_CONE
         // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
         // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
@@ -173,21 +232,44 @@
             }
         }
 #endif
+#if RE4DC_WORLD_PAGES31
+        if(!cursor.started){cursor.cluster=lod.first_cluster;cursor.started=true;}
+        for(unsigned c=cursor.cluster;c<lod.first_cluster+lod.cluster_count;++c){
+            if(np==capacity){page_complete=false;goto page31_done;}
+#else
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
+#endif
             const auto& cl=clusters[c];
+#if RE4DC_WORLD_PAGES31
+            unsigned cin,li0,li1;
+            if(cursor.active){cin=cursor.classification;li0=cursor.meshlet;li1=cursor.end;}
+            else {
+#endif
 #if RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL!=2
+#if RE4DC_WORLD_PAGES31
+            if(wp29_wq && pc::grid_hidden(wp29_wq,cl.bounds_min,cl.bounds_max)>0){++pc::st.clusters;
+                cursor.cluster=c+1;
+                continue;}
+#else
             if(wp29_wq && pc::grid_hidden(wp29_wq,cl.bounds_min,cl.bounds_max)>0){++pc::st.clusters;continue;}
+#endif
 #endif
             float lo[3],hi[3];
             for(unsigned a=0;a<3;++a){lo[a]=float(cl.bounds_min[a]);hi[a]=float(cl.bounds_max[a]);}
+#if !RE4DC_WORLD_PAGES31
             unsigned cin;
+#endif
             if(lean_inside){cin=2;++lean::st.skipped;}
             else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
             else {
                 const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
                 cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
             }
+#if RE4DC_WORLD_PAGES31
+            if(!cin){++stats.clusters_culled;cursor.cluster=c+1;continue;}
+#else
             if(!cin){++stats.clusters_culled;continue;}
+#endif
             if(cin==2)++lean::st.cl_inside;
             ++stats.clusters_visible;
             float depth=-mvq[11],radius=0;
@@ -204,8 +286,16 @@
 #endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
+#if RE4DC_WORLD_PAGES31
+            li0=lv.first_meshlet;li1=li0+lv.meshlet_count;
+            cursor.classification=std::uint8_t(cin);cursor.meshlet=li0;cursor.end=li1;cursor.active=true;
+            }
+            for(unsigned li=li0;li<li1;++li){
+                if(np==capacity){cursor.meshlet=li;page_complete=false;goto page31_done;}
+#else
             for(unsigned i=0;i<lv.meshlet_count;++i){
                 const unsigned li=lv.first_meshlet+i;
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
                 const auto& l=package.bounds(li); // emit metadata is requested only when needed
 #else
@@ -385,12 +475,22 @@
                 if(!pk.nr)++wc_empty;
 #endif
             }
+#if RE4DC_WORLD_PAGES31
+            cursor.active=false;cursor.cluster=c+1;
+#endif
         }
+#if RE4DC_WORLD_PAGES31
+page31_done:
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::count(re4dc::wc24::PickedIndexed,wc_indexed);
         re4dc::wc24::count(re4dc::wc24::PickedPlain,wc_plain);
         re4dc::wc24::count(re4dc::wc24::PickedEmpty,wc_empty);
 #endif
+#if RE4DC_WORLD_PAGES31
+        return {np,page_complete};
+#else
         return np;
+#endif
     }
 #endif
