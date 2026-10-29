@@ -1802,6 +1802,10 @@ constexpr unsigned kSkins = 64;
 #endif
 SkinEntry skins[kSkins];
 unsigned skin_count = 0, skin_frame = ~0U;
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+Re4dcActorSkinAdmission skin_admission_pending{};
+unsigned skin_admission_serial;
+#endif
 #if RE4DC_ACTOR_SKIN_OWNER_POOL
 SkinEntry* find_owned_skin(const void* info);
 SkinEntry* find_ordinary_skin(const void* info, const void* positions) {
@@ -1833,6 +1837,9 @@ SkinEntry* find_skin(const void* info, const void* positions) {
 #include "include/native_actor_skin_reserve.inc"
 #endif
 #endif
+#endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+#include "include/native_actor_skin_admit32.inc"
 #endif
 
 // ---------------------------------------------------------- info context --
@@ -5894,6 +5901,9 @@ extern "C" void re4dc_actor_test_lod_ladder(const float* f) {
 
 extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const void* position_buffer,
                                          const float* palette, unsigned entries) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if (skin_admission_pending.serial) return 0;
+#endif
     if (frame != skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
