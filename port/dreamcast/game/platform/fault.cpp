@@ -6,6 +6,9 @@
 #include <kos/dbgio.h>
 #include <arch/irq.h>
 #include <stdio.h>
+#if defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16
+#include <errno.h>
+#endif
 
 #include "re4dc_platform.h"
 
@@ -20,6 +23,12 @@ static int ringFlush(void) { return 0; }
 static int ringWriteBuffer(const uint8_t* data, int len, int xlat)
 {
     (void) xlat;
+#if defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16
+    // KOS dbgio handlers return -1 and set errno on failure. Do not turn a
+    // negative signed device length into a huge unsigned masked append.
+    if (len < 0) { errno = EINVAL; return -1; }
+    if (!data && len) { errno = EFAULT; return -1; }
+#endif
     re4dc_log_raw((const char*) data, (unsigned long) len);
     return len;
 }

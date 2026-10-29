@@ -192,10 +192,12 @@ unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
 
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
 // preemptive thread (the aica sequencer's "aica: t=... note" lines) cannot splice its text into the
-// middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). Release builds keep the plain loop.
+// middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). LOG_ATOMIC16 independently
+// selects the same guard. Raw debug chunks are not bounded by re4dc_log's formatting buffer:
+// the whole supplied length remains inside the mask, pending a target IRQ-duration qualification.
 void re4dc_log_raw(const char* data, unsigned long len)
 {
-#if RE4DC_LOG_ATOMIC
+#if RE4DC_LOG_ATOMIC || (defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16)
     const int irq = irq_disable();
 #endif
 #if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
@@ -209,7 +211,7 @@ void re4dc_log_raw(const char* data, unsigned long len)
         re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = *data++;
         re4dc_log_head++;
     }
-#if RE4DC_LOG_ATOMIC
+#if RE4DC_LOG_ATOMIC || (defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16)
     irq_restore(irq);
 #endif
 #if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST

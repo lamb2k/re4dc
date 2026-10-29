@@ -1723,6 +1723,20 @@ ifeq ($(GAME_COL_PREFETCH),1)
 $(OBJDIR)/src/game/atari.o: GAME_CPPFLAGS += -DRE4DC_COL_PREFETCH=1
 endif
 
+# LOG_ATOMIC16: independently select the existing whole-append publication guard.
+# Default 0; no truncation/chunking or raw-reader/cache contract change. Arbitrary
+# dbgio chunk length still determines masked work; target IRQ-latency gate open.
+LOG_ATOMIC16 ?= 0
+ifneq ($(words $(LOG_ATOMIC16)),1)
+$(error LOG_ATOMIC16 must be 0 or 1)
+endif
+ifeq ($(filter $(LOG_ATOMIC16),0 1),)
+$(error LOG_ATOMIC16 must be 0 or 1)
+endif
+ifeq ($(LOG_ATOMIC16),1)
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_ATOMIC16=1
+endif
+
 ifeq ($(LOGIC_TRACE),1)
 PLATFORM_OBJS += $(OBJDIR)/logic_trace.o
 # One uninterruptible append per re4dc_log call (platform/mem.cpp), so other threads' log lines

@@ -1204,3 +1204,72 @@ DONE: `PS2_UPLOAD_INCARNATION` first slice merged default off with the other thr
 ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with QA_LINK=1 and all four controls resolved1, passed compile, existing empty missing.txt, loader/standard disc lint with zero violations, ZIP test and staged checksums. Track03 is1,185,760,800 bytes, SHA256 `e70b865a2f55469f2c279094e3a9a86d4576efe22869da0d76f8e464be902c62`. This is a prepared private QA artifact, not a runtime/look/STRICT/memory/timing or physical-console acceptance result. Nothing was copied to SD.
 
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
+
+
+## EF16 supporting selector slice, 2026-10-29
+
+**DONE (source + scoped host, partial EF16):** `LOG_ATOMIC16=1` independently
+selects the existing whole-call raw-log IRQ guard, OR'd with the old diagnostic
+`RE4DC_LOG_ATOMIC` control. Default0. Valid append bytes, volatile head steps,
+ring/header/formatting and supplied length remain unchanged; no truncation,
+chunk splitting, new ring, reservation scheme, reader or judge change. The
+existing256-byte formatter already runs before the raw append guard.
+
+Under the new control only, `fault.cpp::ringWriteBuffer` rejects negative
+signed lengths with `-1`/`errno=EINVAL`, and null plus positive length with
+`-1`/`EFAULT`, before any unsigned conversion or append. Null plus zero remains
+valid and returns0. The actual pinned KOS `include/kos/dbgio.h` callback
+contract requires `-1` plus errno for an error. Valid input still returns the
+whole supplied length. Old diagnostic behavior is preserved when the new
+control is absent/zero.
+
+The prior writer evidence remains applicable: unmodified initial `mem.cpp`
+SHA256 `2d3176564400dcc023f9d0864df99f3e9e124becdeef0fb4106bd2f164c9c36c`
+matches the retained failed-profile source. The real stdio/debug callback has
+arbitrary chunk length; `dbgio_printf`'s1024-byte buffer and `re4dc_log`'s256-byte
+buffer are not universal writer bounds. Raw ring size does not bound append
+work. No new inventory or attribution of either old capture's root cause.
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/host"
+python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/sanitizer" --sanitize
+```
+
+Both normal and ASan/UBSan runs qualify eight source-body compositions:
+old/new guard00/01/10/11 times16KiB/64KiB rings. Each has44 baseline cases and
+132 controlled maskable-preemption interleavings over ring and32-bit-head
+wraps, with lengths10..131089. Every guarded arm preserves132 exact source
+concatenations; unguarded arms corrupt132/132, including100(16KiB) or112(64KiB)
+literal NUL-hole witnesses. Final ring state and head agree with the reference
+oracle, and coherent incremental polls retain their exact newline buffering.
+The fixture uses actual raw append, device callback, logAppend and formatter
+function bodies. Its32-bit head proxy injects at store/head publication edges;
+host header/layout is not target ABI or a raw Flycast RAM-view qualification.
+
+**Expected counterexamples are retained:** forcing synchronous/NMI-style
+reentry despite IRQ masking corrupts all three tested schedules for every
+composition. This is an adversarial host counterexample, not a claim the exact
+fault schedule occurred. An IRQ guard is not a synchronous-fault/NMI-safe
+publication contract. Already-disabled IRQ input is restored disabled; zero,
+header, standard formatter-outside-guard and new device errno paths pass.
+Selector values0/1 parse, while empty/2/`0 1`/-1 are rejected.
+
+The largest tested guard covers131089 loop byte stores, exceeding both ring
+sizes. These counts exclude header/IRQ/formatting instructions and are not
+target latency or a worst-case work bound. No cap, prefix skipping or partial
+record acceptance was introduced to hide this limitation. Public source-bound
+receipts: `tools/cloud/build34/receipts/log16-{host,sanitizer}.json`; sanitizer
+leak detection disabled, address/undefined checks fatal.
+
+**NEXT:** build release absent/explicit-zero/enabled with exact source/settings
+and affected mem/fault target preprocessing/object identities. Then define a
+source-supported writer/length/fault contract and measure actual worst allowed
+IRQ-disabled duration on target before declaring the guard suitable. Any
+changed publication or visibility scheme needs its own failure-boundary proof.
+**BLOCKED at suitability/observation acceptance:** arbitrary-length IRQ work,
+forced fault/NMI reentry, actual target worst duration and raw cache/RAM
+visibility remain open. The selector is parked outside broad ALL ON pending
+that contract. No runtime/emulator, original failed memory-capture retry,
+reconstruction, parser relaxation, false memory PASS, publication, SD or Pi
+action is authorized by this slice. It does not complete EF16 or block other
+ready engine work. Original memory-observation failures remain intact.

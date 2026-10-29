@@ -1,0 +1,112 @@
+#include <array>
+#include <cassert>
+#include <cerrno>
+#include <cstdint>
+#include <cstdio>
+#include <cstdarg>
+#include <cstring>
+#include <string>
+#include <vector>
+
+constexpr unsigned RE4DC_LOG_SIZE=TEST_RING_SIZE;
+#define RE4DC_LOG_RING_HDR 1
+#define RE4DC_LOG_CRASH_TEST 0
+struct Ring {unsigned long magic=0,nmagic=0,size=0,pad[5]{};std::array<char,RE4DC_LOG_SIZE> buf{};} re4dc_logring;
+#define re4dc_logbuf re4dc_logring.buf
+bool irq_enabled=true,armed=false,pending=false,forced=false;
+unsigned depth=0,trigger=0,position=0,max_mask_stores=0,disable_calls=0;
+std::vector<unsigned> masked_work;
+std::uint32_t reader_shown=0;
+std::string partial,lines;
+unsigned partial_polls=0,complete_lines=0;
+const std::string nested="irq=7\n";
+void append(const char*,unsigned long);
+void poll();
+void inject(){append(nested.data(),nested.size());}
+void before_increment(){
+    if(depth==1 && armed && ++position==trigger){
+        armed=false;if(irq_enabled || forced)inject();else pending=true;
+    }
+    if(!irq_enabled)for(auto& work:masked_work)++work;
+}
+struct Head {
+    std::uint32_t value=0;
+    operator std::uint32_t() const volatile{return value;}
+    void operator++(int) volatile{before_increment();value=value+1;poll();}
+};
+volatile Head re4dc_log_head;
+void poll(){
+    const auto end=std::uint32_t(re4dc_log_head);
+    while(reader_shown!=end){
+        const char ch=re4dc_logbuf[reader_shown%RE4DC_LOG_SIZE];++reader_shown;partial+=ch;
+        if(ch=='\n'){lines+=partial;partial.clear();++complete_lines;}
+    }
+    if(!partial.empty())++partial_polls;
+}
+int irq_disable(){int old=irq_enabled;irq_enabled=false;masked_work.push_back(0);++disable_calls;return old;}
+void irq_restore(int old){
+    assert(!masked_work.empty());if(masked_work.back()>max_mask_stores)max_mask_stores=masked_work.back();masked_work.pop_back();
+    irq_enabled=old;if(irq_enabled && pending){pending=false;inject();}
+}
+@RAW@
+@CALLBACK@
+@APPEND@
+int re4dc_log_console=0;
+unsigned formatting_calls=0;
+int observed_vsnprintf(char* p,size_t n,const char* fmt,va_list ap){
+    assert(masked_work.empty());++formatting_calls;return vsnprintf(p,n,fmt,ap);
+}
+#define vsnprintf observed_vsnprintf
+@LOG@
+#undef vsnprintf
+void append(const char* p,unsigned long n){++depth;re4dc_log_raw(p,n);--depth;}
+void reset(std::uint32_t start){
+    assert(masked_work.empty());re4dc_logring={};re4dc_log_head.value=start;reader_shown=start;
+    irq_enabled=true;armed=pending=forced=false;depth=position=trigger=max_mask_stores=disable_calls=0;
+    partial.clear();lines.clear();partial_polls=complete_lines=0;
+}
+std::array<char,RE4DC_LOG_SIZE> reference(std::uint32_t start,const std::string& s){
+    std::array<char,RE4DC_LOG_SIZE> r{};for(char ch:s){r[start%RE4DC_LOG_SIZE]=ch;++start;}return r;
+}
+int main(){
+    constexpr bool serialized=RE4DC_LOG_ATOMIC || RE4DC_LOG_ATOMIC16;
+    unsigned baseline=0,maskable=0,exact=0,corrupt=0,holes=0,sync_counterexamples=0,largest_masked=0,invalid=0;
+    for(unsigned len:{10U,64U,255U,256U,1023U,4096U,8192U,65535U,65536U,65537U,131089U}){
+        std::string outer(len-1,'x');outer+='\n';
+        for(std::uint32_t start:{0U,RE4DC_LOG_SIZE-4,RE4DC_LOG_SIZE-1,0xfffffffcU}){
+            reset(start);append(outer.data(),outer.size());
+            assert(re4dc_logbuf==reference(start,outer) && lines==outer && complete_lines==1 && partial.empty() && irq_enabled);
+            assert(std::uint32_t(re4dc_log_head)==std::uint32_t(start+len));
+            assert(re4dc_logring.magic==0x5A53474CU && std::uint32_t(re4dc_logring.nmagic)==~0x5A53474CU && re4dc_logring.size==RE4DC_LOG_SIZE);
+            if(max_mask_stores>largest_masked)largest_masked=max_mask_stores;
+            ++baseline;
+            for(unsigned cut:{1U,len/2,len}){
+                reset(start);armed=true;trigger=cut;append(outer.data(),outer.size());poll();
+                assert(std::uint32_t(re4dc_log_head)==std::uint32_t(start+len+nested.size()));
+                assert(irq_enabled && !pending && !armed && masked_work.empty());
+                if(serialized){assert(re4dc_logbuf==reference(start,outer+nested) && lines==outer+nested && partial.empty() && complete_lines==2);++exact;}
+                else {assert(lines+partial!=outer+nested);++corrupt;if((lines+partial).find('\0')!=std::string::npos)++holes;}
+                ++maskable;
+            }
+        }
+    }
+    // IRQ masking cannot certify arbitrary synchronous/NMI-style reentry.
+    // Force a nested writer at the same store/head boundary even while masked.
+    for(unsigned cut:{1U,5U,10U}){
+        reset(0xfffffffcu);forced=true;armed=true;trigger=cut;append("abcdefghi\n",10);
+        assert(lines+partial!="abcdefghi\n"+nested && (lines+partial).find('\0')!=std::string::npos);++sync_counterexamples;
+    }
+    reset(0);irq_enabled=false;append("FAULT\n",6);assert(!irq_enabled && lines=="FAULT\n" && masked_work.empty());
+    reset(19);assert(ringWriteBuffer(nullptr,0,1)==0 && std::uint32_t(re4dc_log_head)==19 && irq_enabled);
+#if RE4DC_LOG_ATOMIC16
+    reset(19);errno=0;assert(ringWriteBuffer(nullptr,-1,0)==-1 && errno==EINVAL);
+    assert(std::uint32_t(re4dc_log_head)==19 && !re4dc_logring.magic && !disable_calls);++invalid;
+    errno=0;assert(ringWriteBuffer(nullptr,1,1)==-1 && errno==EFAULT);
+    assert(std::uint32_t(re4dc_log_head)==19 && !re4dc_logring.magic && !disable_calls);++invalid;
+#endif
+    reset(0);assert(ringWriteBuffer((const uint8_t*)"device\n",7,1)==7 && lines=="device\n");
+    reset(0);std::string long_line(1024,'f');re4dc_log("%s",long_line.c_str());
+    assert(formatting_calls==1 && std::uint32_t(re4dc_log_head)==255 && partial==std::string(255,'f') && irq_enabled);
+    std::printf("{\"ring\":%u,\"old_guard\":%u,\"new_guard\":%u,\"baseline\":%u,\"maskable_cases\":%u,\"exact\":%u,\"corrupt\":%u,\"hole_witnesses\":%u,\"forced_sync_counterexamples\":%u,\"largest_tested_masked_stores\":%u,\"invalid_device_cases\":%u,\"zero_irq_state_formatting\":\"PASS\"}\n",
+        RE4DC_LOG_SIZE,RE4DC_LOG_ATOMIC,RE4DC_LOG_ATOMIC16,baseline,maskable,exact,corrupt,holes,sync_counterexamples,largest_masked,invalid);
+}
