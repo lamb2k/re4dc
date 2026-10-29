@@ -551,3 +551,8 @@ NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/l
 ## Answers (owner): 2026-10-29 cloud implementation assignment
 
 EF13 water-layer producer/schema/compiled-adapter/current-consumer implementation is assigned to the cloud now, using public source tables and synthetic fixtures. Local EF11 retains cloth/effect include ownership; do not edit those files or effects30.mk. This is a scoped source implementation assignment, not accepted water coverage. Real private packages, live look/gameplay/lifecycle and console cost remain separate owner gates. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
+
+
+## Answers (owner): 2026-10-29 expanded cloud ownership
+
+The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.

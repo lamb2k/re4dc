@@ -1209,3 +1209,8 @@ NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/l
 ## Answers (owner): 2026-10-29 cloud implementation assignment
 
 EF15 frontend TPL descriptor owner/generation reuse is assigned to the cloud after EF13, using public loader/frontend source and synthetic descriptors. Preserve the repaired full-comparison path for all unqualified classes. Local EF16 retains mem/fault/game30.mk; its bounded-IRQ/cache/fault limitations remain open. This assignment is not runtime, memory, timing or hardware acceptance. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
+
+
+## Answers (owner): 2026-10-29 expanded cloud ownership
+
+The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.

@@ -1,18 +1,18 @@
 # Cloud agent queue
 
-The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Work top to bottom, one build at a time.
+The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Follow the latest owner assignment below; independent cloud workers may run concurrently under its file reservations.
 
 **Work order 2026-10-28 evening:** read [HANDOVER-CLOUD-20261028.md](HANDOVER-CLOUD-20261028.md) first. It ranks Builds 31-36 by impact and adds the incremental-commit rule: small pushed commits that each build and keep identity, plus a dated progress line in your hand-back file on every commit.
 
-## Owner assignment 2026-10-29: cloud implementation without private data
+## Owner assignment 2026-10-29: all source-only implementation to cloud
 
-The user has asked the cloud agent to implement work from the systemic handover that needs no local/private data access. **Do EF13 water layers first (existing Build29), then EF15 frontend descriptor generations (existing Build34), one branch at a time.** Read the [exact assignment and file reservations](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from the newest `origin/t15/int`; do not base implementation on the unmerged handover branch. The latest fetched handover is still a76aab4b; the owner will pick up the forthcoming revision. These are concrete producer-to-consumer code tasks, not a request for another audit, census or planning-only handover. No Build37+ is created.
+**Latest user direction:** the cloud worker takes all remaining implementation that can be done without local/private data, and parallelizes independent files. The new [current-source architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) at `7c4c9200` is now integrated. Read the [complete assignment and scheduling matrix](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment) first. This supersedes the earlier water-then-frontend-only assignment and the old one-build-at-a-time work order for independent cloud workers. Start ready water/EFM/collision-dirty/line work in parallel if workers are available; frontend is also independently ready with its exact ownership boundary. One writer per shared file, one SDK/build slot per worktree, coordinator-serialized handback merges.
 
-Local workers currently own EF04 actor continuation, EF09 world preparation and EF11 cloth; supporting EF16 is target-validated but not integrated. Their exact file reservations below prevent collisions. Keep all existing reports and owner answers. This assignment supersedes the older Builds31-36 work order for new cloud implementation; original release/console/look holds remain.
+Cloud owns remaining public-source/synthetic implementation across EF01-EF16 plus the new actor/world/material/simulation continuations. Local workers finish only their already-frozen EF04/09/11/16 slices, target qualification and delivery; do not duplicate those patches. Their shared files transfer to cloud after landing and explicit release in this queue. Local ownership then covers private package production/binding, private look/gameplay/runtime/memory checks, final integration/release-recipe builds, ALL ON preparation and user-dependent hardware gates. Missing private inputs hold only those checks, never independent source implementation. No Build37+ is created; existing build handbacks remain reporting homes.
 
 ## Ground rules (every build)
 
-- **Base:** the newest `origin/t15/int`. Branch `codex/<name>-<date>`, one commit per build, pushed to `origin` only (never `bruce`). Claude does all merges.
+- **Base:** the newest `origin/t15/int`. Branch `codex/<name>-<date>`, one branch per assigned slice and small buildable commits, pushed to `origin` only (never `bruce`). The local coordinator does all merges. Independent source tasks may run concurrently under the latest file reservations; shared-file writes and integration stay serialized.
 - **Knob:** each build adds a new knob, default 0. With the knob absent or 0, the preprocessed source and objects match `t15/int`.
 - **Approximations are welcome** (project rule, 10-19). Prefer the faster approximate form when there is one, as its own switch. Say which outputs change. We run the gameplay-equivalence and look gates here.
 - **Hand-back report:**
@@ -48,7 +48,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
-| Systemic 2026-10-29 | [Engine-fix handover and EF01-EF16 backlog](HANDOVER-SYSTEMIC-PERFORMANCE-20261029.md) | runtime first slices EF01/02/03/05/06/07/08 integrated default-preserving at064bfa4ea, owner docs255964fdc. Local EF04/09/11 in progress; EF16 partial target-validated/unmerged. CLOUD ASSIGNED: EF13 then EF15, public source and synthetic fixtures only; [exact work and ownership](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). No enabled/hardware acceptance claim. |
+| Systemic 2026-10-29 | [Current architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) and [EF backlog](ENGINE-FIX-BACKLOG-20261029.md) | new7c4c9200 review integrated; cloud ASSIGNED all remaining public-source/synthetic implementation, including new actor/world/binding/simulation continuations. [Full matrix/file handoffs](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Local frozen EF04/09/11/16 finish qualification/delivery; then cloud owns their source follow-ons. Private/runtime/console gates remain local. No enabled/hardware acceptance claim. |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
 | 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
