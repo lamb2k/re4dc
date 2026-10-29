@@ -1,5 +1,7 @@
 # Engine fixes after Builds 31-36: local agent handover
 
+**2026-10-29 progress 5:** DONE: reviewed integration `255964fdc7d22a61acff1ef59734a36ec91ebff0` after the first EF slices and published [current-source architecture findings](SOURCE-ARCHITECTURE-REVIEW-20261029.md). NEXT: continue from the landed implementations with the ranked actor/world/binding fixes and the named simulation continuations. Existing budgets remain constraints; a new global budget/census is not a prerequisite. This commit changes documentation only.
+
 **2026-10-29 progress 4:** DONE: clarified the destination as aligned Dreamcast-native semantics and composition across converted assets, current game state and rendering. The backlog now maps source concepts to existing native contracts and EF owners. NEXT: implement those requirements through the current slices, retaining deliberate visual policies and the existing native architecture.
 
 **2026-10-29 progress 3:** DONE: turned the audit into a ranked [engine-fix backlog][BACKLOG] and changed the execution order to architecture/source analysis, bounded implementation, correctness/coverage validation, then performance comparison. NEXT: implement ready data, ownership and dispatch corrections; extend native coverage using the current renderer and SH4ZAM integration. Console and private-input gaps hold only the checks that require them. This commit changes documentation; the proposed engine fixes are not yet implemented.
@@ -8,14 +10,15 @@
 
 **2026-10-29 progress 1:** Initial handover `b431e453` collected the analysis, existing results and local commands. Its emphasis on qualification was too restrictive for source-demonstrated architectural fixes; the instructions below supersede that sequencing.
 
-**Reviewed integration:** `origin/t15/int` at `df7a42a5e4fa1316ca8f245b6d7feab023e7eddf`. Runtime source was reviewed at `10f13fdc`; later commits only change documentation and owner notes.
+**Latest source review:** `origin/t15/int` at `255964fdc7d22a61acff1ef59734a36ec91ebff0`; [source architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md).
+**Original audit base:** `df7a42a5e4fa1316ca8f245b6d7feab023e7eddf`, with runtime reviewed at `10f13fdc`. First slices of EF01/02/03/05/06/07/08 have since integrated; use the current queue for acceptance status.
 **Handover branch:** `codex/systemic-performance-handover-20261029`.
 **Audience:** the local coordinator and its assigned implementation agents.
 **User direction:** the audit should reveal conceptual defects, establish the right native data model and improve SH4ZAM/Dreamcast renderer coverage. The next deliverable is engine fixes that evolve the current implementation.
 
 ## 1. Implementation now, comparison afterward
 
-Use [ENGINE-FIX-BACKLOG-20261029.md][BACKLOG] as the implementation queue. It contains sixteen concrete items with source locations, intended contracts, dependencies, small implementation slices and post-change checks.
+Use [ENGINE-FIX-BACKLOG-20261029.md][BACKLOG] and its [current-source continuation](SOURCE-ARCHITECTURE-REVIEW-20261029.md) for implementation scope. The sixteen initial cards retain their owners and dependencies; the continuation distinguishes already-landed first slices, unfinished contracts and additional actor/simulation work.
 
 A missing source extent, invalid ownership check, stale-cache counterexample, ambiguous submission result or incompatible producer contract is enough to begin a bounded correction. Fix the contract identified in source, validate it, and compare the resulting candidate. A new FPS capture, complete game census or reconstructed historical QA image is not permission to write the fix.
 
@@ -63,7 +66,9 @@ These findings justify implementation without asserting how often each occurs or
 
 ## 3. Start the engine work in this order
 
-Use the priority and dependency tables in the backlog. EF identifiers are references, not new Build 37+ assignments. Keep existing build/lane owners; the coordinator assigns any new work through the current queue.
+Use the priority and dependency tables in the backlog and the ranked continuation in the [current-source review](SOURCE-ARCHITECTURE-REVIEW-20261029.md). EF identifiers are references, not new Build 37+ assignments. Keep existing build/lane owners; the coordinator assigns any new work through the current queue.
+
+**Current continuation:** first bounded EF01/02/03/05/06/07/08 slices are integrated. The table below describes the continuing card scope and dependencies; do not repeat its already-landed first output. The next concrete choices are transactional skin preparation and actor presentation authority, bounded world selection, EF08 stream/clip completion, actual material binding before dependent geometry, and EF09 mutation/preparation authority. Separate EFM/collision continuations follow through assigned simulation ownership.
 
 | Execution order | First concrete output | Subsequent work |
 |---|---|---|
@@ -76,16 +81,18 @@ Use the priority and dependency tables in the backlog. EF identifiers are refere
 
 Independent rows may proceed concurrently, but edits to `native_ui.cpp`, `native_model.cpp`, `model_bridge.cpp` and shared headers need one assigned writer at a time. EF01 can proceed alongside the first three correctness slices. EF08/EF09 can begin from existing fixtures without waiting for private portal geometry.
 
-### First commits to make reviewable
+### Next commits to make reviewable
 
-For each assigned item, choose the smallest producer-to-consumer slice that leaves a working feature:
+Choose the smallest current producer-to-consumer slice under an assigned owner. Keep unfinished existing EF04/11/12 coverage moving alongside independent architecture work.
 
-- **EF03:** introduce internal outcomes without breaking the public ABI, then propagate one existing strip/cloth route. Distinguish policy skip from resource refusal and partial output. Fallback is allowed only before publication.
-- **EF05:** publish the SOB allocation incarnation out of band, check it before every state consumption/retirement dereference, and invalidate pending references. Add same-frame reset/reuse coverage before expanding source-content reuse.
-- **EF06:** introduce upload incarnation at texture replacement/close/publication and check it in one existing PS2 header path. Cover same-entry/same-VRAM-address reuse with changed format or mip state.
-- **EF01:** add exact guarded spans and owner/mutation information to one current actor producer and consumer together. Preserve the disabled ABI/output and the existing conservative path.
+- **Actor preparation:** reuse an applicable skin-key reservation or reserve admission before taking primitive-tail palette storage, then publish. On refusal release only this attempt's provisional reservation, retaining earlier owner reservations and existing entries. Exercise registry-full, owner-conflict and allocation refusal.
+- **Actor presentation:** generalize the existing ledger-independent Leon presentation record to one selected registry class, with explicit current-pose/material authority and unchanged source state-update cadence.
+- **EF09 world selection:** give the current selector a capacity and continuation cursor; page surviving meshlets in source order through existing storage. Preserve whole-part completion across pages.
+- **EF08 composition:** extend the current receipt through streamed output, then qualified clip variants. Retain draw-all behavior until the actual producer can prove completion.
+- **Prepared binding:** resolve actual native texture layout and upload incarnation before UV-dependent emission, using current texture leases and packet ownership.
+- **Further world/simulation work:** follow the review's mutation authority and indexing/traversal slices. Do not replace manager, collision or rendering systems.
 
-Every code commit remains buildable, has the relevant meaningful check, and updates its assigned handback. Avoid an unused abstract interface commit that no real producer consumes.
+Every code commit remains buildable, has the relevant meaningful check, and updates its assigned handback. Preserve default-off and absent/zero identity. Avoid an unused abstract interface commit that no real producer consumes.
 
 ### Supporting work stays supporting
 

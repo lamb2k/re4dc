@@ -1,10 +1,13 @@
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
+**2026-10-29 progress 3:** DONE: reviewed current integration after the first EF01/02/03/05/06/07/08 slices and published [the source architecture continuation](SOURCE-ARCHITECTURE-REVIEW-20261029.md). NEXT: transactional actor preparation, presentation authority, bounded world selection, producer composition and prepared binding; then the named simulation continuations. Keep current memory/frame targets. Another global budgeting pass is not a prerequisite.
+
 **2026-10-29 progress 2:** DONE: made PS2/source-to-native semantic alignment and cross-system composition explicit completion requirements, reusing the established native conversion architecture. NEXT: carry required material, source identity, pose and lifetime meaning through the existing EF slices. The sixteen entries are the first implementation wave, not a declaration of complete game coverage.
 
 **2026-10-29 progress:** DONE: translated the source audit into implementable engine fixes, with explicit data/ownership/dispatch contracts and comparisons after implementation. NEXT: start the ready correctness and data-model changes below through the existing local build owners. This document contains proposed fixes, not claims that they are implemented.
 
-**Reviewed integration:** `origin/t15/int` at `df7a42a5e4fa1316ca8f245b6d7feab023e7eddf`. Runtime source was checked at `10f13fdc`; subsequent commits only change documentation, including the local owner's continuation notes. The cited runtime findings still apply.
+**Latest source review:** `origin/t15/int` at `255964fdc7d22a61acff1ef59734a36ec91ebff0`; see [current integrated status and remaining architecture](SOURCE-ARCHITECTURE-REVIEW-20261029.md). The cards below preserve their original motivation; their first slices are not all still pending.
+**Original audit base:** `df7a42a5e4fa1316ca8f245b6d7feab023e7eddf`, with runtime checked at `10f13fdc`.
 **User direction:** the audit's purpose was to find conceptual problems so the engine has the right data model and SH4ZAM/native Dreamcast renderer coverage. The next output is engine fixes.
 
 ## 1. Implementation rule
@@ -103,7 +106,7 @@ EF identifiers are backlog references, not newly assigned cloud Build numbers. U
 | EF15 | P2 | Versioned frontend texture descriptor reuse | Full descriptor walk still required on each hit | Existing TPL load/mutation ownership |
 | EF16 | Supporting | Safe concurrent log publication | Source-permitted corruption counterexample | Actual writer/reader contract |
 
-Start independent small EF03, EF05 and EF06 correctness slices, and EF01's bounded data-interface slice. EF08/EF09 source work can proceed using existing fixtures while private portal data is prepared. Keep shared-file ownership serial where necessary. The ordering is not a requirement to finish every P0 item before starting independent P1 work.
+The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the current queue and [continuation review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) to select the next slice. Continue unfinished card scope instead of repeating those first implementations. EF08/EF09 work can proceed using existing fixtures while private portal data is prepared. Keep shared-file ownership serial where necessary. The ordering is not a requirement to finish every P0 item before starting independent P1 work.
 
 ## 4. Implementation cards
 
@@ -407,6 +410,23 @@ The current owner QA-provenance hold affects reuse of that particular final QA i
 Build 25 fast lighting, Build 31's conservative cell/plan foundations, Build 32's corrected runtime UV math, Build 33's final header coalescing, Build 34's repaired parser/frontend checks, Build 35's scoped OFF-image identity and CRLF recovery, and Build 36's completed scan remain starting points.
 
 Keep documented holds on optional visibility-table, extra clip-reuse, room-far and parked controls until the coordinator reprioritizes them. This backlog gives concrete source-level engine work to do now; it is not a blanket instruction to enable every off switch or suppress required refusals.
+
+## 8. Current-source continuation after the first slices
+
+The [2026-10-29 architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) supplies pinned source, causal chains, small implementation slices and comparisons. It confirms that architecture remains the next phase. Preserve the existing memory/frame targets while correcting these relationships.
+
+| Continuation | Relationship to this backlog |
+|---|---|
+| Current-image actor presentation independent of a particular source-preparation ledger | Actor lifecycle extension beside EF01/03/04; generalize the existing Leon presentation mechanism while retaining valid pose/state authority |
+| Registry admission before palette allocation; defer representation-specific preparation | Actor lifecycle beside EF01/04/14; reuse reservations, early tickets, current palette arena and leases |
+| Resumable ordered world selection instead of the whole-part 320-meshlet admission limit | Concrete EF09 slice, with EF03 partial-output handling and EF08 whole-part receipt aggregation |
+| Portal completion through stream and qualified clip producers | Finish EF08; keep unsupported guards until the corresponding contract exists |
+| Precise source/material mutation authority and prepared placement/witness relationships | Finish EF09; preserve dynamic/current-view checks |
+| Actual native material binding before UV-dependent emission | Existing texture/packet-owner extension beside EF04/06/11/12; EF06's upload token alone does not move this preparation boundary |
+| EFM slot-class incarnation, distinct collision-body dirtiness, resumable line queries | Three additional bounded simulation continuations for coordinator assignment; they are not renderer EF12 or claims of incorrect gameplay |
+| Route-specific world scratch and prepared skin-table retention | Lower-priority EF09/14 policy work; compare within current workspace before proposing additional capacity |
+
+These are continuations and explicit newly found scope, not new Build-number assignments. The coordinator keeps existing build ownership and records any additional assignment in the current queue. Current source establishes the architectural opportunities; runtime frequency and performance benefit are determined after implementation. Keep the existing EF04/11/12/13 material and primitive coverage obligations active.
 
 ## Sources
 
