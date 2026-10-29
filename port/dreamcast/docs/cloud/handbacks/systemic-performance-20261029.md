@@ -1,5 +1,20 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 actor presentation actual-target compile blocker
+
+Actor5ff2a056 merged cleanly into fresh candidatec288c8c968ec3254322023e22cb5d747400e19f4 from owner5b171f62; the existing source normal/sanitizer/Leon0+2/legacy/OFF/Make fixtures passed. Release absent/explicit0 and dependency-only target builds linked, but the enabled bones96/recipe0 full target build fails. No enabled ELF or missing.txt exists, bones128 arms were not reached, and the full-OFF judge was not reached. Candidate/worktree/logs are retained; nothing from the actor branch was pushed and no local source correction was made.
+
+Actual compiler errors in platform/include/source_actor_presentation32.inc:
+- line52: invalid cast from s32 (long int) to uintptr_t (unsigned int) in reinterpret_cast<std::uintptr_t>(pG->prim_cnt).
+- line60: no matching assignment from the brace-enclosed initializer list for SourceActorPresentation32.
+
+The actual public include/global.h:143 declares pG->prim_cnt as s32; the host actor_presentation32_fixture.cpp.in:40 instead declares it void*. That fixture type mismatch lets the invalid target cast pass the host tests. The failing operand is the primitive cursor, not the room identifier. The following initializer error is also retained; it has not been dismissed or locally patched to test a presumed cause.
+
+Cloud source task: correct primitive-identity conversion for the actual SH-4 integer cursor representation without losing zero/address/replacement/incarnation checks, use the production scalar type in the fixture, and add a regression covering the integer cursor and existing authority/refusal cases. Re-run the real supported target compile after source correction. Preserve the explicit presentation/skin recipe exclusion, registry96/128 supported profiles, current identity/texture/material/pose and no stale fallback behavior. Do not weaken guards, change private data or claim target/runtime PASS from the host pointer stub. Owner will review a changed source tip and repeat fresh target gates; no identical failed retry.
+
+Current integrated runtime remains b2c6cde32 with compatible K40 QA_LINK1 prepared and all16 final SDK payloads bound. Logger controls0, recipe1/presentation0; no actor landing, enabled actor QA, current-image Flycast, SD, recipe/default change, release publication or console acceptance. Cabin/look/route/console holds remain. Other unchanged source/tool corrections (cloth-material323b selector, fixtureedf scratch Git, recovery035 raw WIP packaging) retain their existing requests. All new public-source/synthetic implementation remains cloud-owned; local private/runtime work continues independently.15/16 primary first slices, EF10 awaits first;0 whole-card signoffs.
+
+
 ## Answers (owner): 2026-10-29 narrow logger record target qualification
 
 Sourcecc2234b8 landed no-ff asb2c6cde32b2189dec2a0cf782387fc5bc195a569, LOG_RECORD16 default0. The actual merged candidate passed12 ordinary host compositions and12 sanitizer compositions, preserving the forced returning fault/NMI counterexamples as expected failures. Four fresh full-recipe SH-4 arms passed: release absent/explicit0, LOG_ATOMIC16=1 with record0 and the matched parent1/record1. Each linked a nonempty ELF with existing empty missing.txt; precise new define scope is mem.cpp only. Both release OFF programmes, all15 overlays and all allocated sections match bound D13. Additional diagnostic/header/crash/trim/parent-fixed OFF compatibility and target runtime obligations remain open; this four-arm matrix is not a full cross-product.
