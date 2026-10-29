@@ -978,3 +978,33 @@ image or emulator repeat, source/asset/SD/recipe/release change. Next close
 the remaining static window BSS layout attribution from retained link maps,
 then plan the outstanding supported runtime lifecycle/view gates while
 preserving the explicit DIAG4/14 and console waits.
+
+#### Owner: retained ELF BSS coverage ledger, 2026-10-29
+
+No linker maps were retained. Read the two unchanged ELF32-SH files directly,
+enumerating every allocated NOBITS section and every named nonzero object/
+NOTYPE symbol range in it. Count overlapping aliases once by taking the union.
+The section sum exactly matches the retained GNU BSS category in both arms:
+
+| Profile | Allocated NOBITS | Named-range union | Uncovered allocated ranges |
+|---|---:|---:|---:|
+| gaps/window0 |1,071,200|1,068,392|2,808|
+| gaps/window32 |1,102,240|1,099,444|2,796|
+| delta |31,040|31,052|-12|
+
+Thus the earlier category-minus-named-symbol residual is quantitatively
+reconciled:31,052 named bytes minus12 fewer uncovered-range bytes gives
+31,040 additional allocated BSS bytes. Both complete section ranges and all
+named/uncovered address intervals are retained privately. Their semantic
+classification as padding versus unnamed storage is unproven without input
+layout evidence. Uncovered ranges remain allocated RAM; this is no reclaimed
+heap, smaller allocation or KOS floor claim. No relink solely to obtain maps.
+
+Private WINDOW-BSS-COVERAGE-LEDGER.json pins unchanged ELF hashes and records
+the full address ledger. No source/SDK/emulator/image repeat or asset change.
+This closes byte reconciliation only; full stack/call-path, current heap,
+CPU/high-water, partial/lifecycle/marked600-draw, look/STRICT and console
+qualification remain pending. DIAG4/14 and absent window32 active-track proof
+remain held. Next review remaining stack-path coverage and supported runtime
+prerequisites using retained graph/stack receipts; do not manufacture a full
+bound from local compiler frames or add overlapping costs. No SD/release.
