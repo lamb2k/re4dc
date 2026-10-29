@@ -1607,6 +1607,34 @@ static int linePieceWalk(LinePieceQ* q, cSatBlock* blk, cSatBlock** leaf)
     return nl;
 }
 #endif
+#if defined(RE4DC_LINE_RESUME) && RE4DC_LINE_RESUME
+#include "line_resume29.h"
+
+// Consume one entry already returned at piece admission, then resume at the
+// exact next block. A deep node's child chain has not been touched yet; the
+// existing polygon walk handles it with this piece's current polyBit/hit state.
+static int lineResume29Run(cSat* sat, LineResume29* q, int kind, cSatBlock* step, Vec* a, Vec* b,
+                           int flag, int mask, Vec* hit, u32* pn)
+{
+    int ret = 0;
+    do {
+        int r;
+        if (kind == 1) {
+            r = blkPolyLineCkCore(sat, step, a, b, flag, mask, hit, pn);
+        } else {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::CollisionLineWalk);
+#endif
+            r = blkPolyLineCk(sat, (cSatBlock*) step->idx, a, b, flag, mask, hit, pn);
+        }
+        if (r) {
+            ret = r;
+        }
+        kind = lineResume29Next(q, &step);
+    } while (kind);
+    return ret;
+}
+#endif
 #endif
 
 // Segment a-b against every active piece. The nearest hit goes to hit (world) and `attr`
@@ -1664,6 +1692,68 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
             ELC_W(ELC_W_ALIVE, 1);
 #endif
 #if defined(RE4DC_LINE_WALK) && RE4DC_LINE_WALK
+#if defined(RE4DC_LINE_RESUME) && RE4DC_LINE_RESUME
+            LineResume29 walk;
+            cSatBlock* first;
+            int firstKind;
+#if defined(RE4DC_LINE_PIECE) && RE4DC_LINE_PIECE
+            // The piece kernel's x/z rows suffice for early rejection. Keep
+            // YROW's full-end and current-end work below for admitted pieces.
+            Vec qa;
+            Vec qb;
+            pq.m = sat->imat;
+            lineResume29XZ(sat->imat, pos0, &pq.lax, &pq.laz);
+            lineResume29XZ(sat->imat, pos1, &pq.lbx, &pq.lbz);
+            qa.x = pq.lax;
+            qa.y = 0.0f;
+            qa.z = pq.laz;
+            qb.x = pq.lbx;
+            qb.y = 0.0f;
+            qb.z = pq.lbz;
+            lineResume29Begin(&walk, blk, &qa, &qb);
+#else
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, pos0, &la);
+            RE4DC_XM_POINT(sat->imat, pos1, &lb);
+            lineResume29Begin(&walk, blk, &la, &lb);
+#endif
+            firstKind = lineResume29Next(&walk, &first);
+            if (firstKind == 0) {
+                continue;
+            }
+#if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
+            ELC_W(ELC_W_WALKED, 1);
+#endif
+#if defined(RE4DC_LINE_PIECE) && RE4DC_LINE_PIECE
+#if defined(RE4DC_LINE_YROW) && RE4DC_LINE_YROW
+            la.x = pq.lax;
+            la.y = lyrRow1(sat->imat, pos0);
+            la.z = pq.laz;
+            lb.x = pq.lbx;
+            lb.y = lyrRow1(sat->imat, pos1);
+            lb.z = pq.lbz;
+#if RE4DC_LINE_YROW == 2
+            {
+                Vec ra;
+                Vec rb;
+                RE4DC_XM_LOAD(sat->imat);
+                RE4DC_XM_POINT(sat->imat, pos0, &ra);
+                RE4DC_XM_POINT(sat->imat, pos1, &rb);
+                if (__builtin_memcmp(&ra, &la, 12) != 0 || __builtin_memcmp(&rb, &lb, 12) != 0) {
+                    ++lyrMis;
+                }
+                if (++lyrCalls % 8192 == 0) {
+                    re4dc_log("LYR calls=%u mismatch=%u curmis=%u tmpmis=%u\n", lyrCalls, lyrMis, lyrCurMis, lyrTmpMis);
+                }
+            }
+#endif
+#else
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, pos0, &la);
+            RE4DC_XM_POINT(sat->imat, pos1, &lb);
+#endif
+#endif
+#else
 #if defined(RE4DC_LINE_PIECE) && RE4DC_LINE_PIECE
             cSatBlock* leaf[LNW_MAX];
             pq.m = sat->imat;
@@ -1712,6 +1802,7 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
                 continue;
             }
 #endif
+#endif
             memclr_asm(polyBit, (sat->polygon_num >> 3) + 1);
 #if defined(RE4DC_LINE_PIECE) && RE4DC_LINE_PIECE && defined(RE4DC_LINE_YROW) && RE4DC_LINE_YROW
             if (curP1) {
@@ -1732,6 +1823,9 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
 #else
             PSMTXMultVec(sat->imat, &cur, &lcur);
 #endif
+#if defined(RE4DC_LINE_RESUME) && RE4DC_LINE_RESUME
+            r = lineResume29Run(sat, &walk, firstKind, first, &la, &lb, flag, mask, &lcur, &pn);
+#else
             if (nl > 0) {
                 r = 0;
                 for (int k = 0; k < nl; k++) {
@@ -1743,6 +1837,7 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
             } else {
                 r = blkPolyLineCk(sat, blk, &la, &lb, flag, mask, &lcur, &pn);
             }
+#endif
 #else
             memclr_asm(polyBit, (sat->polygon_num >> 3) + 1);
             RE4DC_XM_LOAD(sat->imat);
@@ -1834,6 +1929,16 @@ int blkPolyLineCk(cSat* sat, cSatBlock* blk, Vec* pos0, Vec* pos1, int flag, int
     mid.y = 0.0f;
 #if defined(RE4DC_LINE_WALK) && RE4DC_LINE_WALK
     if (new_line_check != 0) {
+#if defined(RE4DC_LINE_RESUME) && RE4DC_LINE_RESUME
+        LineResume29 walk;
+        cSatBlock* first;
+        lineResume29BeginBounds(&walk, blk, &mid, &dir, &adir);
+        const int firstKind = lineResume29Next(&walk, &first);
+        if (firstKind == 0) {
+            return 0;
+        }
+        return lineResume29Run(sat, &walk, firstKind, first, pos0, pos1, flag, mask, hit, pn);
+#else
         cSatBlock* leaf[LNW_MAX];
         const int nl = lineWalkLeaves(blk, &mid, &dir, &adir, leaf);
         if (nl >= 0) {
@@ -1845,6 +1950,7 @@ int blkPolyLineCk(cSat* sat, cSatBlock* blk, Vec* pos0, Vec* pos1, int flag, int
             }
             return ret;
         }
+#endif
     }
 #endif
     while (blk) {

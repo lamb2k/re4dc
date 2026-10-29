@@ -539,6 +539,110 @@ reproduction of its recipe/corpus manifest. All fixtures are synthetic; no
 game bytes, private contexts or generated game packages belong in Git.
 
 
+## Cloud progress 2026-10-29: resumable ordered line traversal (review 9.3)
+
+**DONE:** source implementation on `codex/line-resume-20261029`, delivery base
+`39ed524a3b0a4727148aaa5a45eaaea4d211cede`. The cloud writer owns only
+`src/game/atari.cpp`, `src/game/line_resume29.h`, the dedicated
+`game/line_resume29.mk` and Build29 line fixtures. The coordinator included
+the fragment in the shared Makefile after the local EF16 delivery landed.
+
+`GAME_LINE_RESUME=1` uses a bounded cursor to deliver overlapping leaves in
+source order directly to the existing polygon consumer. It removes the
+64-leaf gather limit and the whole-chain restart at leaf65. Sixteen pending
+sibling continuations fit in the cursor. At the depth boundary, the cursor
+hands off only the untouched child chain, with the current polygon bitset,
+hit and normal state, then resumes its siblings. A published prefix is never
+replayed. No SAT representation, polygon kernel or assembly is replaced.
+
+PIECE mode retains the original contract-off x/z operation order and rejects
+empty pieces before the y rows/full transforms and polygon-bit clear.
+YROW and current-end reuse remain after admission. The feature defaults0,
+requires `GAME_LINE_WALK=1/2`, and only changes `atari.o` definitions.
+
+**Validation performed:** the frozen production-consumer fixture passed:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build29/test_line_resume29.py
+git diff --check
+```
+
+There are44 compared cases in each of eight normal/ASan+UBSan configurations:
+WALK/PF1 and2; PIECE/YROW0,1 and2. Cases cover64/65/129/150 leaves, zero and
+multiple hits, repeated polygon indices, transformed moving pieces and
+fractional matrices, wall/floor selection, and depths15/16/17/18/33 after an
+already processed prefix. Comparisons include return value, hit/end/winning
+piece/normal, polygon bitset and ordered polygon visits. The ON arm asserts
+one overlap test per traversed block at the tested continuation boundaries.
+
+The fixture extracts production `hitCheck2`, overlap and block/polygon
+consumers. Host shims stand in for the SH-4 gather ABI and polygon intersection
+results; this establishes consumer order/state parity, not target instruction
+or complete collision-kernel validation. In mode2 the OFF reference arm
+actually runs LNW/LWP/LNP comparisons and asserts zero mismatches. ON bypasses
+those gather wrappers; their inactive counters are not counted as evidence.
+YROW comparison remains active in both arms. LeakSanitizer alone is disabled
+for the managed executor's thread-walk limitation; ASan/UBSan remain active.
+
+The same runner proves original-source, absent and explicit-zero preprocessing
+and host object bytes identical in both tested PIECE profiles. Its original
+`e6939459` atari.cpp blob is unchanged at the delivery base. Actual Make
+dry-runs select the new definition only for `atari.o`; absent/zero compile
+commands match, and invalid control/dependency combinations are refused.
+
+**Storage/cost:** no retained allocation or global cursor is added. Nominal
+32-bit cursor size is108 bytes, replacing a256-byte leaf-pointer array at
+these call sites. Deep child handoffs can add nested frames, so this is not a
+whole-stack bound. An extracted x86-64 `-O2 -ffp-contract=off` proxy measured
+text7,886->9,094 bytes, BSS8,232 unchanged, `hitCheck2` local frame832->416,
+`blkPolyLineCk`736->272 and the new runner96 bytes. These include host ABI
+and fixture effects; no SH-4 size, stack, warm/cold cycles, data-line traffic
+or whole-frame **MODELLED** improvement is asserted.
+
+**NEXT / exact local commands:** the public SDK is unavailable in cloud.
+Use the existing pinned SDK (KOS804b3195 plus repository patches,
+GCC15.2.0/binutils2.45.1/newlib4.6.0.20260123 and SH4ZAM33fa4850) and the
+owner's existing private recipe inputs. Supply a fresh label/log/programme
+directory and the retained ordinary-release output bound to delivery base
+39ed524a (including the qualified default-off collision slice):
+
+```bash
+set -euo pipefail
+: "${LINE29_LABEL:?fresh lane label}"
+: "${LINE29_LOGS:?fresh log directory}"
+: "${LINE29_PROGRAMS:?fresh programme directory}"
+: "${LINE29_BASE_OUTPUT:?bound current-base ordinary-release output}"
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export T="$PWD" K="$LINE29_LOGS"
+export ROUTE_PROGRAMS_DIR="$LINE29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+test ! -e "/root/probe/lanes/route/out-${LINE29_LABEL}offrP"
+LP="${LINE29_LABEL}off" CH2="$CH2 GAME_LINE_RESUME=0" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+test ! -e "/root/probe/lanes/route/out-${LINE29_LABEL}onrP"
+LP="${LINE29_LABEL}on" \
+  CH2="$CH2 GAME_LINE_WALK=2 GAME_LINE_WALK_PF=2 GAME_LINE_PIECE=2 GAME_LINE_YROW=2 GAME_LINE_RESUME=1" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+for arm in off on; do
+  O="/root/probe/lanes/route/out-${LINE29_LABEL}${arm}rP"
+  test -s "$O/re4dc-game.elf"
+  test -f "$O/missing.txt"
+  test ! -s "$O/missing.txt"
+done
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "$LINE29_BASE_OUTPUT" \
+  --arm "/root/probe/lanes/route/out-${LINE29_LABEL}offrP" \
+  --output "$LINE29_LOGS/line29-release-off.json"
+```
+
+A matched runtime reference uses the identical ON profile with
+`GAME_LINE_RESUME=0`; retain its resolved definitions separately from release
+OFF identity. Check live ordered collision/STRICT behavior, moving pieces,
+target stack/code and warm/cold cost before enablement. **BLOCKED** remains
+only SH-4/full-image/private-runtime/console acceptance; there is no SDK,
+private asset set or console in this workspace. Cloud continues the assigned
+frontend/world and other source slices. No release default or media changes.
+
+
 ## Answers (owner): 2026-10-29 combined engine integration
 
 DONE: `NATIVE_DRAW_OUTCOMES` first slice merged default off with the other three bounded fixes into `77461a84ef85e978e44aab5d936a1b80a2cd93a4`, using four clean no-ff local integrations from `9e6662c36`. Combined release rc0, missing.txt present/empty; ELF SHA256 `49f12668242e722acfa0fee89514323c4aa7892e64014dcb970eb0473fbee0c3`. All four controls resolve zero; complete programme, all15 overlays and all allocated ELF section metadata/payloads match the bound9ee baseline. Fresh-base check and origin-only push/readback passed. A queue-row selection preflight stopped before the first build, then continued in the same clean merged candidate; no source conflict or failed build was hand-resolved.
