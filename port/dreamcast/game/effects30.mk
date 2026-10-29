@@ -754,3 +754,16 @@ endif
 endif
 $(OBJDIR)/src/game/filter06.o $(OBJDIR)/src/game/espgen44.o: GAME_CPPFLAGS += -DRE4DC_RAIN_R10C_DIAG=1
 endif
+
+# EF03: internal native strip/cloth outcomes. Public int entrypoints retain ABI.
+NATIVE_DRAW_OUTCOMES ?= 0
+ifneq ($(filter-out 0 1,$(NATIVE_DRAW_OUTCOMES)),)
+$(error NATIVE_DRAW_OUTCOMES is 0 or 1)
+endif
+ifeq ($(NATIVE_DRAW_OUTCOMES),1)
+ifneq ($(FX_STRIP21),1)
+$(error NATIVE_DRAW_OUTCOMES needs FX_STRIP21=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
+endif

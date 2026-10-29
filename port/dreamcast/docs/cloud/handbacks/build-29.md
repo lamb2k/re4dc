@@ -1,5 +1,128 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## 2026-10-29 EF03: consumed strip/cloth result slice
+
+**DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `NATIVE_DRAW_OUTCOMES=1`
+(default 0; requires `FX_STRIP21=1`) carries explicit submitted, queued,
+culled, policy-skip, unsupported-before-publication, refused and partial-abort
+outcomes through the existing quad/mesh FIFO and actual source strip/cloth
+adapters. The old `int` symbols retain their ABI. Their routing/count values
+remain insufficient as coverage proof; new consumers use `NativeDrawResult`.
+
+The source defects were concrete: the strip adapter returned handled after an
+ignored quad refusal, and cloth ignored every band result while its mesh emitter
+lost clipped-cell failures. A producer now stops on its first failure. An earlier
+accepted FIFO node or submitted packet turns that failure into partial-abort;
+a whole-producer fallback is forbidden after that publication. Every accepted
+mesh row pins its texture even when a later row fails. Queue sizes, allocation
+services, FIFO packet layout, pass order and source simulation remain unchanged.
+Queued means copied ownership accepted by the existing FIFO, not a promise of
+presentation after a later frame abort. Unsupported/refused before publication
+permit existing source routing; the Dreamcast GX geometry sink still does not
+provide visual coverage. This slice does not restore those unsupported families.
+
+Host checks (actual production include and extracted source functions):
+
+```bash
+python3 -B port/dreamcast/tests/test_native_draw_outcomes.py
+python3 -B port/dreamcast/tests/test_effect_strip21.py
+```
+
+The new suite passes 5 tests: strict Make control/three-consumer propagation;
+parent/absent/zero native-emitter object identity; all seven outcomes and actual
+header/vertex/FIFO order; source `EspStrip_draw_poly` refusal and no duplicate
+fallback after publication; actual cloth band aggregation and first-error stop.
+ASan/UBSan packet fixtures cover texture/cap/queue refusal, selection failure,
+post-send abort, intact-row and near-clipped-cell partial publication, texture
+pins, and the existing r200-tail selection branch. The existing strip suite
+passes 4 tests, retaining its 261,120 source UV/order comparisons. Its fixture
+needed two current-production compatibility definitions (queue margin and the
+existing GC-asset send wrapper); renderer behavior was not changed for that fix.
+
+The broader existing `test_fx_r200_entry_cap.py` passed its first 50 cases /
+128,729 assertions, then its absent-arm scaffold failed to compile because it
+omits the existing unrelated `DFA26_HIT` macro. That is not a passing full-suite
+receipt and no production failure is inferred from that stale fixture.
+
+**Target checks DONE (2026-10-29):** runtime source commit
+`cd57337c9747f8182487c625ae0895dd39315f80`. The Make-derived SH-4 gate compiled
+`native_ui`, `esp_sub` and `cloth` in parent/absent/zero/ON arms; all six disabled
+objects are byte-identical to base `9ee386e3`. The enabled three objects compile.
+The selected public profile, flags, compiler/KOS/SH4ZAM hashes and source hashes
+are recorded separately from the full release recipe in the
+[compact target receipt](../../../tools/cloud/build29/receipts/native-draw-outcomes-target.json).
+
+The actual current release recipe (`rr/recipe.conf` SHA256
+`66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`)
+built in OFF0 and ON arms, each real rc=0 in 41 seconds with a nonempty ELF and
+an existing empty `missing.txt`. The shared fresh base9ee release control was
+reused, not rebuilt. After normalizing only each exact output/checkout root and
+whitespace, the base/OFF resolved fields differ solely by the new absent-to-0
+knob; OFF/ON differ solely by 0-to-1. `CLOTH_NATIVE=1` is already in that recipe.
+
+- OFF ELF SHA256: `6aa2fc222fbf1dc61d934205e489b36e4edf08ebca7c8672f65e1bf32e9b2138`.
+- ON ELF SHA256: `3fdea8e3e6ac7d754fffaffe227139f309eb21827e1bd176c294e90d4989622e`.
+- OFF raw programme: 3,372,036 bytes, SHA256
+  `fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`,
+  identical to base; all 15 overlays and all 11 allocated ELF sections
+  (metadata and payload) also match. Whole debug ELFs differ.
+- `_end`: OFF `8c4170d4`, ON `8c417674` (+1,440 bytes). Selected public-profile
+  local frames include mesh 7,200 -> 7,260 bytes and `clothTrans` 3,600 -> 3,664;
+  these are not whole-stack bounds, runtime headroom or hardware cost.
+
+The local complete receipts are under
+`/root/probe/engine-ef03-20261029-target-r3/`: `objects/result.json`,
+`off-final.json`, and `resolved-normalized.json`. Full arms are
+`/root/probe/lanes/route/out-ef03w3offrP` and `out-ef03w3onrP`. Their logs retain
+actual commands and definitions. Setup attempts r1/r2 stopped before compilation
+(path spelling and archive/profile directory collision); they are not runtime
+failures. The target helper's defaults were corrected before the passing r3 run.
+
+Reproduce the public three-TU gate while holding the coordinator's SDK slot:
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build29/native_draw_outcomes_target.py \
+  --output "$EF03_FRESH_TARGET_OUT"
+```
+
+The helper uses base `9ee386e3ef8d46bcd7ae8586d2064cd1ae22864e`, the
+installed SH-4 compiler and `/root/work/kos-re4dc-d367` at `804b3195`. It needs
+an initialized pinned SH4ZAM submodule and a fresh output directory. Reproduce
+an enabled full recipe arm with actual existing private build inputs:
+
+```bash
+set -euo pipefail
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+T="$PWD"
+K="$EF03_FRESH_BUILD_LOGS"
+export T K
+export ROUTE_PROGRAMS_DIR="$EF03_FRESH_PROGRAMS_DIR" ROUTE_PROGRAMS_JSON=''
+test ! -e "/root/probe/lanes/route/out-${EF03_LABEL}rP"
+LP="$EF03_LABEL" CH2="$CH2 NATIVE_DRAW_OUTCOMES=1" \
+  bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
+O="/root/probe/lanes/route/out-${EF03_LABEL}rP"
+test -s "$O/re4dc-game.elf"
+test -f "$O/missing.txt"
+test ! -s "$O/missing.txt"
+```
+
+`EF03_FRESH_TARGET_OUT`, `EF03_FRESH_BUILD_LOGS`, `EF03_FRESH_PROGRAMS_DIR` and
+`EF03_LABEL` must name new lane-owned outputs/label. OFF uses the identical
+recipe with `NATIVE_DRAW_OUTCOMES=0`. Build34's existing `upload_compare.py`
+compares those full OFF bytes to the bound baseline; retain the compact receipt's
+exact distinction between whole debug ELF and allocated executable identity.
+
+**NEXT:** coordinator review/integration default off, then EF03 family-wide
+native coverage and GX attribution as the next bounded slice. EF11 wide sheets /
+`pTobjA` materials and EF12 effect-family restoration remain open. No universal
+GX interpreter or new renderer was added.
+
+**BLOCKED (scoped acceptance only):** source-clock/material/look/lifecycle and
+physical-console acceptance need actual supported game inputs and the existing
+owner/human gates. No Flycast or hardware run, gameplay/look acceptance, speed
+win, family-coverage closure, default promotion or publication is claimed.
+The SDK slot is released with no live job.
+
 Branch: `codex/fallback-scan29-20261028`.
 
 Integration base: `5f104e301f328c56a07ce9f57e3fb94d758d4999` on

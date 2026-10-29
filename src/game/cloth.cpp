@@ -43,6 +43,9 @@ Cloth ClothWk[8];
 #include <string.h>
 extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#include "native_draw_result.hpp"
+#endif
 // Conservative view test of a sheet's bounding sphere (top-row centre, width + hanging height) in view space:
 // behind the camera, beyond 40 m, or outside a 1.6 / 1.3 slope frustum (wider than the game's 4:3 view).
 static int re4dc_cloth_visible(const Cloth* pCL)
@@ -61,12 +64,24 @@ static int re4dc_cloth_visible(const Cloth* pCL)
     }
     return 1;
 }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+static re4dc::NativeDrawResult re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
+#else
 static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
+#endif
 {
     const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#else
         return 0;
+#endif
     }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    if(!pCL->pVer)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    re4dc::NativeDrawProgress progress;
+#endif
     Re4dcEffectMesh21 m;
     memset(&m, 0, sizeof(m));
     m.image.pixels = (const void*) to[0];
@@ -142,9 +157,17 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
             }
         }
         m.v_top = row * m.v_step;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        if(!progress.add(re4dc_effect_mesh21_result(&m)))return progress.result;
+#else
         re4dc_effect_mesh21(&m);
+#endif
     }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    return progress.result;
+#else
     return 1;
+#endif
 }
 #endif
 
@@ -714,7 +737,12 @@ void clothTrans(Cloth* pCL)
 #endif
     GXSetChanMatColor(4, pCL->color);
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    const auto native_result=re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r);
+    if (!native_result.fallback_allowed()) {
+#else
     if (re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r)) {
+#endif
         return;
     }
 #endif

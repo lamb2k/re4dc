@@ -86,11 +86,13 @@ namespace re4dc::texture {unsigned pvr_format(const Texture&){return 0x40000000;
 #define RE4DC_COVER_H(p,h) (h)
 #define RE4DC_TSP_W(t) ((t).width)
 #define RE4DC_TSP_H(t) ((t).height)
+#define RE4DC_FX_QUEUE_MARGIN 8192
 #define RE4DC_FQ_DROP(a,b) (++drops)
 Entry* resolve(const Re4dcUiImage&,const void* mask,bool pin){assert(!mask&&pin);++opens;return missing?nullptr:&entry;}
 void* re4dc_model_deferred_storage(unsigned* n){*n=spill_available?sizeof(spill):0;return spill_available?spill:nullptr;}
 void stream_select(unsigned list){assert(list==PVR_LIST_TR_POLY);}
 void stream_send(const void* data,unsigned bytes){assert(bytes<=sizeof(sent));std::memcpy(sent,data,bytes);sent_bytes=bytes;sent_colors.push_back(reinterpret_cast<const pvr_vertex_t*>(data)[1].argb);}
+void gcasset_fx_stream_send(const void* p,unsigned n){stream_send(p,n);}
 void pvr_poly_cxt_txr(pvr_poly_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,const void* ptr,unsigned filter){
  assert(list==PVR_LIST_TR_POLY&&fmt==0x40000000&&w==64&&h==64&&ptr==spill&&filter==PVR_FILTER_BILINEAR);*c={};}
 void pvr_poly_compile(pvr_poly_hdr_t* p,const pvr_poly_cxt_t* c){*p={};p->words[0]=c->blend.src;p->words[1]=c->blend.dst;
