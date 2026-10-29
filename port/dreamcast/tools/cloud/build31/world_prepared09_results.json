@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "date": "2026-10-29",
+  "qualified_tip": "625bf80999f32ae611e6597ce49158cd25767c08",
+  "runtime_make_commit": "3ded42ac079580bc010489e53c25bc12fb02ad67",
+  "baseline_commit": "255964fdc7d22a61acff1ef59734a36ec91ebff0",
+  "baseline_output": "/root/probe/lanes/route/out-enginewave2oct29rP",
+  "compiler": "sh-elf-g++ (GCC) 15.2.0",
+  "kos_commit": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sh4zam_commit": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "runner_session": 29536,
+  "runner_pid": 1918610,
+  "tu_session": 62931,
+  "tu_pid": 1944733,
+  "all_jobs_exited": true,
+  "arms": {
+    "absent": {
+      "directory": "/root/probe/lanes/route/out-ef09oct29v1absentrP",
+      "elf_sha256": "3b74571a4dedbd31354ea66e1b0576bdb0bef599d4de5bd0eb924ce039eaa12a",
+      "build_log_sha256": "dda2615b2d6e702d02e5ee215ebc5938d009372ee9c63275e7dc3600892e2fa8",
+      "resolved_knobs_sha256": "ff2c1b767a8917249f23b1e64deee73d945e9dc1c1fd76f992c07f2f5fa5912b",
+      "missing_txt_present_empty": true
+    },
+    "zero": {
+      "directory": "/root/probe/lanes/route/out-ef09oct29v1zerorP",
+      "elf_sha256": "afc1eda6077e463ee29717015d64754abcbf2bbe747c7e04a4a5ceb222111fe0",
+      "build_log_sha256": "cbfdb47fc6db46e8e919b5d70889170684fe6f5a47a41cf8befe2a051399ed1b",
+      "resolved_knobs_sha256": "2cfb53fadfaee09c5c72a6c9de477377230411f8aa29870058cba874c67cc03d",
+      "missing_txt_present_empty": true
+    },
+    "plan": {
+      "directory": "/root/probe/lanes/route/out-ef09oct29v1planrP",
+      "elf_sha256": "a4ab3cc442812e22720caa9147cfa989d6c17dc92ab35083942f17fe11f38010",
+      "build_log_sha256": "af1d65d734243fed447af634bd92721a58e890b3563da2bc6d1e29a20ec4e892",
+      "resolved_knobs_sha256": "a0aa58779cfe313b6683b0bc1ca407d4ad3c15878044e2d9aa1b159038b9b641",
+      "missing_txt_present_empty": true
+    },
+    "portal": {
+      "directory": "/root/probe/lanes/route/out-ef09oct29v1portalrP",
+      "elf_sha256": "b8de7492b96556e3068e96461196d11d215ed448bf0537c76a6293f5d9a1fd6b",
+      "build_log_sha256": "e1a5f52bb6f04614898a2c55de572a57103370bf223c7540704f2da688db3e5a",
+      "resolved_knobs_sha256": "79357071139eb5e6cbee50573238e975b2cc97d72cb47f16dbb651307c2de23f",
+      "missing_txt_present_empty": true
+    }
+  },
+  "off": {
+    "programme_sha256": "fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1",
+    "programme_bytes": 3372036,
+    "overlays": 15,
+    "allocated_sections": 11,
+    "programme_overlay_allocated_equal": true,
+    "normalized_make_difference": {},
+    "normalization": "Exact arm output root and tree root only; new WORLD_PREPARED09=0 removed. No other knob omission."
+  },
+  "tu_rows": [
+    {
+      "profile": "release",
+      "artifact": "ii",
+      "bytes": 1064620,
+      "sha256": "304ad612ba92301a55947e186427c9e38c3d0dad0811dedc155ab30a212ca357",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "release",
+      "artifact": "o",
+      "bytes": 179948,
+      "sha256": "e34c981e5181adf7f737200fe9c8a7ead4b60e0d5a97c341d5c886b9ad341028",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "existing-plan",
+      "artifact": "ii",
+      "bytes": 1071457,
+      "sha256": "084041abcb0ce83ee28c4c6f73cb7bdbe7cd8ee9331191629e1f37021a42086a",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "existing-plan",
+      "artifact": "o",
+      "bytes": 184840,
+      "sha256": "2c3aa2b52a3b45eab9e29a7114d0f60a290241b2a1fd2c8a44d6d186ec8fef0c",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "solo-portal",
+      "artifact": "ii",
+      "bytes": 1101490,
+      "sha256": "37a3fb0379afdb3b211ec31e595f4dbf1c3d1fc9c1b15c78b4f43d474cfc78e2",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "solo-portal",
+      "artifact": "o",
+      "bytes": 212796,
+      "sha256": "978f96f9f4612a061368696ba830f317baad76f1d506060de61158af66613e92",
+      "baseline_absent_zero_equal": true
+    }
+  ],
+  "on_facts": {
+    "plan": {
+      "WORLD_PREPARED09": "1",
+      "WORLD_PART_PLAN29": "1",
+      "MOVIE_WORLD_ARENA": "1",
+      "STATIC_OBJ_LIFETIME05": "1"
+    },
+    "portal": {
+      "WORLD_PREPARED09": "1",
+      "WORLD_PART_PLAN29": "1",
+      "MOVIE_WORLD_ARENA": "1",
+      "STATIC_OBJ_LIFETIME05": "1",
+      "WORLD_PORTAL29": "1",
+      "WORLD_PORTAL_COMPLETION": "1",
+      "PS2_PVS_BATCH_COMPOSE": "1",
+      "SCENERY_SUBMIT_BATCH": "1",
+      "SCENERY_STREAM": "0",
+      "SCENERY_CLIP_GATHER": "0",
+      "SCENERY_CLIP_INDEXED26": "0",
+      "TA_DIRECT": "1",
+      "PS2_WORLD_HDR_CACHE": "1",
+      "MESH_FASTPATH": "1",
+      "PVR_STREAM": "1"
+    }
+  },
+  "host": {
+    "plan_checks": 7107,
+    "lookup_cases": 86420,
+    "worst_tuple_comparisons": 10,
+    "ordered_policy_cases": 450,
+    "completion_checks": 628,
+    "normal_and_asan_ubsan_pass": true,
+    "controlled_allocation_balance": "17/17 after actual owner retirement",
+    "leak_inspection": false
+  },
+  "matched_plan_native_static_object_delta_bytes": {
+    "text": 2128,
+    "rodata": 85,
+    "data": 12,
+    "bss": 44
+  },
+  "local_stack_bytes": {
+    "existing_plan_ps2_pass": 9012,
+    "plan_ps2_pass": 9020,
+    "old_plan_open": 116,
+    "prepared_plan_open": 252,
+    "prepared_current": 24,
+    "portal_validation_ps2_pass": 10272
+  },
+  "scope": "Explicit plan and compatible portal validation profiles only. No default/ALLON promotion, real cell proof, runtime lifecycle/look/STRICT, whole-stack/headroom, console timing or memory acceptance. New source/synthetic follow-ons are cloud-owned.",
+  "local_receipts": [
+    "/root/probe/engine-ef09-20261029/target1/receipt.json",
+    "/root/probe/engine-ef09-20261029/target1/off-final.json",
+    "/root/probe/engine-ef09-20261029/target1/storage.json",
+    "/root/probe/engine-ef09-20261029/plan-host7/receipt.json",
+    "/root/probe/engine-ef09-20261029/plan-sanitized7/receipt.json",
+    "/root/probe/engine-ef09-20261029/completion-host1/receipt.json",
+    "/root/probe/engine-ef09-20261029/completion-sanitized2/receipt.json"
+  ],
+  "receipt_sha256": {
+    "/root/probe/engine-ef09-20261029/target1/receipt.json": "6cf4292427b1cb4a572b5612cfe1beb9452846a838c2ff1b899d35ab04ce19be",
+    "/root/probe/engine-ef09-20261029/target1/off-final.json": "7b3b3b3d064296bf535549cf0df4a6c3beb1896a99cd6c3951326806929c28fb",
+    "/root/probe/engine-ef09-20261029/target1/storage.json": "6b5d8d3de28543225f3b3002dc8795f73833799eb3bca76422c8092d13e82aaf"
+  }
+}

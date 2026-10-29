@@ -5,6 +5,9 @@
 #include <cstdint>
 #include <cstring>
 #include <limits>
+#if defined(RE4DC_WORLD_PREPARED09) && RE4DC_WORLD_PREPARED09
+#include <cmath>
+#endif
 
 namespace re4dc { namespace wp29 {
 struct Span { std::uint32_t first,count; };
@@ -75,6 +78,38 @@ inline bool compile(void* memory,unsigned capacity,const Package& pk,const Meta*
     }
     return cursor==out.records;
 }
+#if defined(RE4DC_WORLD_PREPARED09) && RE4DC_WORLD_PREPARED09
+// Optional trailing storage never displaces ordered part records. A zero count
+// means bounds are unavailable; normal placement setup remains authoritative.
+struct PlacementBounds { float center[3]{},half[3]{-1.0f,0,0}; };
+static_assert(sizeof(PlacementBounds)==24);
+struct BoundsLayout { unsigned offset=0,count=0,bytes=0; };
+inline BoundsLayout optional_bounds(unsigned record_bytes,unsigned count,unsigned budget){
+    if(record_bytes>budget || !count || count>(budget-record_bytes)/sizeof(PlacementBounds))return {record_bytes,0,record_bytes};
+    return {record_bytes,count,record_bytes+count*unsigned(sizeof(PlacementBounds))};
+}
+// This is the existing world_box expression chain, with half extents expanded
+// one representable step. The portal's existing numerical/slack proof remains
+// mandatory; nonfinite/uncertain boxes are not an early-rejection capability.
+inline PlacementBounds placement_bounds(const float* m,const float* lo,const float* hi){
+    PlacementBounds out;
+    if(!m || !lo || !hi)return out;
+    for(unsigned a=0;a<3;++a)if(!std::isfinite(lo[a]) || !std::isfinite(hi[a]) || lo[a]>hi[a])return out;
+    for(unsigned r=0;r<3;++r){
+        if(!std::isfinite(m[4*r+3]))return PlacementBounds{};
+        out.center[r]=m[4*r+3];out.half[r]=0;
+        for(unsigned a=0;a<3;++a){
+            if(!std::isfinite(m[4*r+a]))return PlacementBounds{};
+            const float mc=(lo[a]+hi[a])*0.5f,mh=(hi[a]-lo[a])*0.5f;
+            out.center[r]+=m[4*r+a]*mc;out.half[r]+=std::fabs(m[4*r+a])*mh;
+        }
+        out.half[r]=std::nextafter(out.half[r],std::numeric_limits<float>::infinity());
+        if(!std::isfinite(out.center[r]) || !std::isfinite(out.half[r]) || out.half[r]<0 ||
+           std::fabs(out.center[r])+out.half[r]>1000000.0f)return PlacementBounds{};
+    }
+    return out;
+}
+#endif
 template<class Meta> inline Meta metadata(const Record& r){
     return Meta{r.key[0],r.key[1],std::uint16_t(r.key[2]),std::uint16_t(r.key[3]),
                 r.original_pass,std::uint8_t(r.key[5]),r.texture,r.flags};
