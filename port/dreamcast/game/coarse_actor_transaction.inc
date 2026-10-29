@@ -414,16 +414,33 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #endif
         for(float f:part.mv)if(!coarse_finite(f))return actor_decline(*r,failed);
         part.chunk={info,c.stream.data,c.uv.data,part.mv,unsigned(c.stream.size),c.position_count,c.normal_count};
+#if RE4DC_ACTOR_SOURCE_SPAN
+        if(!re4dc_actor::source_span(c,part.chunk.source_span))return actor_decline(*r,failed);
+#endif
         bindings[order]={info,part.source,palettes[i],c.palette_count};
         // Expand materials in this role's source order, not texture-key order.
         for(unsigned j=0;j<p.run_count;++j)if(p.runs[j].role==i) {
             const auto& run=p.runs[j];auto& draw=r->runs[r->run_count++];
             draw.chunk={info,run.stream.data,run.uv.data,part.mv,unsigned(run.stream.size),c.position_count,c.normal_count};
+#if RE4DC_ACTOR_SOURCE_SPAN
+            auto run_input=c;run_input.uv=run.uv;run_input.stream=run.stream;
+            if(!re4dc_actor::source_span(run_input,draw.chunk.source_span))return actor_decline(*r,failed);
+#endif
             draw.material=run.material;
         }
         ++order;
     }
     if(!re4dc_actor_skin_acquire(frame.frame,bindings,order,&r->skin)){ATD(m,14,order,0);return actor_decline(*r,failed);}
+#if RE4DC_ACTOR_SOURCE_SPAN
+    // Every refresh/mutation/re-LOD retires owned records first. Each new skin
+    // lease gets a never-reused serial, even on same-address/same-frame reuse.
+    for(unsigned i=0;i<r->count;++i) {
+        auto& a=r->part[i].chunk.source_span;a.owner_serial=r->skin.serial;a.owner_frame=r->skin.frame;
+    }
+    for(unsigned j=0;j<r->run_count;++j) {
+        auto& a=r->runs[j].chunk.source_span;a.owner_serial=r->skin.serial;a.owner_frame=r->skin.frame;
+    }
+#endif
     auto& b=r->base;b.model=m;b.position_stride=6;b.normal_stride=6;b.normal_shift=14;b.shift=4;
 #if RE4DC_NMR_SHIFT
     b.shift=registry_position_shift(p.appearance);

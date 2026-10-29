@@ -3515,6 +3515,9 @@ inline void pack_uv16(pvr_vertex_t* v, unsigned n, bool keep_u) {
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
 namespace uv32 {
 re4dc::format32::UvCounters counters;
+#if RE4DC_ACTOR_SOURCE_SPAN
+#include "include/actor_source_span.inc"
+#endif
 #include "include/actor_format32_uv_source.inc"
 void log(unsigned frame) {
     if (frame % 120U) return;
@@ -3522,6 +3525,10 @@ void log(unsigned frame) {
     re4dc_log("AF32UV frame=%u parts=%u admitted=%u declined=%u why=legacy:%u,binding:%u,precision:%u,nonfinite:%u,begin:%u,source:%u scanned_records=%u splits=%u path=packet:%u,direct:%u,shared:%u\n",
         frame,s.parts,s.admitted,s.parts-s.admitted,s.legacy,s.binding,s.precision,s.nonfinite,
         s.begin_failed,s.source,s.scanned_records,s.splits,s.packet,s.direct,s.shared);
+#if RE4DC_ACTOR_SOURCE_SPAN
+    re4dc_log("ASPAN f=%u preparations=%u hits=%u geometry_records=%u cache_bytes=%u span_bytes=%u\n",
+        frame,span_preparations,span_hits,span_records,unsigned(sizeof(span_entries)),unsigned(sizeof(Re4dcActorSourceSpan)));
+#endif
 }
 }
 #endif
@@ -5461,6 +5468,11 @@ bool lazy_skin(const Re4dcModelPart& p) {
 }
 
 bool qualifies(const Re4dcModelPart& p) {
+#if RE4DC_ACTOR_SOURCE_SPAN
+    // A published bounded view must never fall through to an unbounded FE
+    // transform. Unknown views retain the existing conservative route.
+    if(p.source_span.owner_serial && !uv32::prepare_owned(p))return false;
+#endif
     return p.lighting && p.alpha_state <= 511 &&
            (!(p.alpha_state & 256) || ((p.flags & 0x80000000U) && p.colors)) &&
            ((!p.lighting->ambient_vertex && !p.lighting->material_vertex) || ((p.flags & 0x80000000U) && p.colors)) &&
@@ -6949,6 +6961,9 @@ namespace {
 // qualifies() for a part without arrays (positions == nullptr: its array term is lazy_skin()), keeping
 // lazy_skin()'s registry entry and source for one_frame().
 bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSource& src) {
+#if RE4DC_ACTOR_SOURCE_SPAN
+    if(p.source_span.owner_serial && !uv32::prepare_owned(p))return false;
+#endif
     if (!(p.lighting && p.alpha_state <= 511 &&
           (!(p.alpha_state & 256) || ((p.flags & 0x80000000U) && p.colors)) &&
           ((!p.lighting->ambient_vertex && !p.lighting->material_vertex) || ((p.flags & 0x80000000U) && p.colors)) &&
@@ -7773,6 +7788,9 @@ extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* part, const Re4dcA
         const Re4dcActorChunk& c = chunks[i];
         p.info = c.info; p.part = c.info; p.stream = c.stream; p.stream_bytes = c.stream_bytes; p.uv = c.uv;
         p.position_count = c.position_count; p.normal_count = c.normal_count;
+#if RE4DC_ACTOR_SOURCE_SPAN
+        p.source_span=c.source_span;
+#endif
         std::memcpy(p.modelview, c.modelview, sizeof(p.modelview));
     };
 #if RE4DC_COARSE_ONE_SUBMIT == 2

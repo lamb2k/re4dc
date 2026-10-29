@@ -3,6 +3,12 @@
 // No retained pointer proof, allocation, source write or changed geometry.
 unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
     using namespace re4dc::format32;
+#if RE4DC_ACTOR_SOURCE_SPAN
+    if(p.source_span.owner_serial) {
+        unsigned certificate=kUvSourceDeclined;
+        return prepare_owned(p,&certificate)?certificate:kUvSourceDeclined;
+    }
+#endif
     const unsigned code = uv_excess_bits(b), exponent = uv_certificate_exponent(code);
     if (!exponent) return code; // Legacy/preconverted data declines without a scan.
     if (!p.uv || p.stream != reinterpret_cast<const u8*>(&b) || p.stream_bytes < sizeof(BlobHeader))

@@ -6,6 +6,9 @@ namespace {
 void owned_run_load(Re4dcModelPart& p,const Re4dcActorDrawRun& r,const Re4dcActorOwnedMaterial& m) {
     const auto& c=r.chunk;p.info=c.info;p.part=c.info;p.stream=c.stream;p.stream_bytes=c.stream_bytes;
     p.uv=c.uv;p.position_count=c.position_count;p.normal_count=c.normal_count;
+#if RE4DC_ACTOR_SOURCE_SPAN
+    p.source_span=c.source_span;
+#endif
     std::memcpy(p.modelview,c.modelview,sizeof(p.modelview));
     p.image=m.image;p.mask=m.mask;p.material_flags=m.material_flags;p.blend=m.blend;p.depth_mode=m.depth_mode;
     p.mask_ref=m.mask_ref;p.mask_same_uv=m.mask_same_uv;p.wrap_s=m.wrap_s;p.wrap_t=m.wrap_t;
