@@ -1,5 +1,14 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 effect target and compatible K38 QA
+
+Source7d22a913 landed no-ff as70a243f3cd085ee21502d4785fe91eea9400bda3, EFFECT_UV12 default0. The actual merged candidate passed12 source/host/sanitizer tests and four fresh full-recipe target arms: release absent, explicit0, dependency0 and ON. Every target arm linked with a nonempty ELF and existing empty missing.txt. The new define is scoped to production esp_sub.cpp; actual enabled commands retain -ffp-contract=off and reject fast/finite-only/unsafe math. Both release OFF programmes, all15 overlays and every allocated section match bound D13. These checks establish source and build behavior, not speed or runtime acceptance.
+
+Compatible ALL ON QA now includes EFFECT_UV12 in K38 with QA_LINK=1. On70a243f3cd085ee21502d4785fe91eea9400bda3, 542 actual C++ scopes, the cloth C helper, missing0, loader/standard lint, ZIP and checksums passed. Final staged programme and all15 overlays match this SDK build; track03 SHA256 f1f19d2e2edbf2b984a18e40142622c180adb4538634ae60939ae18f107e547c. No SD copy, release-recipe/default change, current-image Flycast run or console acceptance occurred. Earlier D13 portrait/cloth observations remain scoped to that earlier image.
+
+This supplies EF12's first integrated slice:15 of16 primary EF cards now have first slices, EF10 awaits its first, and0 whole cards are accepted. Local next is actual loaded effect incidence, source/material/lifetime/order/look/STRICT/current memory and matched cost; cloud owns remaining mask/spline/RTT and source-material classes. Skin8c04, loggercc22 and actor5ff await separate local target/composition qualification. Preserve the explicit actor-presentation/skin-recipe exclusion and logger/frontend/portal holds. Cloth-material323b selector, fixtureedf scratch-Git and recovery035 raw-patch packaging corrections remain cloud-owned; unchanged tips were not retried.
+
+
 ## Answers (owner): 2026-10-29 next recovery checkpoint and current local gate state
 
 Bindingc4cc and water9096 are now target/full-release-OFF-qualified default0 landings db01f44e and26f7d827; compatible K36 QA_LINK1 is prepared and final16 SDK payloads bound on26f7. Exact scoped limits/actual target stack accounting and private one-room W29 preparation are in current Build34/29 Answers. No whole-card signoff or release promotion.

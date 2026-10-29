@@ -1,5 +1,14 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 effect target and compatible K38 QA
+
+Source7d22a913 landed no-ff as70a243f3cd085ee21502d4785fe91eea9400bda3, EFFECT_UV12 default0. The actual merged candidate passed12 source/host/sanitizer tests and four fresh full-recipe target arms: release absent, explicit0, dependency0 and ON. Every target arm linked with a nonempty ELF and existing empty missing.txt. The new define is scoped to production esp_sub.cpp; actual enabled commands retain -ffp-contract=off and reject fast/finite-only/unsafe math. Both release OFF programmes, all15 overlays and every allocated section match bound D13. These checks establish source and build behavior, not speed or runtime acceptance.
+
+Compatible ALL ON QA now includes EFFECT_UV12 in K38 with QA_LINK=1. On70a243f3cd085ee21502d4785fe91eea9400bda3, 542 actual C++ scopes, the cloth C helper, missing0, loader/standard lint, ZIP and checksums passed. Final staged programme and all15 overlays match this SDK build; track03 SHA256 f1f19d2e2edbf2b984a18e40142622c180adb4538634ae60939ae18f107e547c. No SD copy, release-recipe/default change, current-image Flycast run or console acceptance occurred. Earlier D13 portrait/cloth observations remain scoped to that earlier image.
+
+This supplies EF12's first integrated slice:15 of16 primary EF cards now have first slices, EF10 awaits its first, and0 whole cards are accepted. Local next is actual loaded effect incidence, source/material/lifetime/order/look/STRICT/current memory and matched cost; cloud owns remaining mask/spline/RTT and source-material classes. Skin8c04, loggercc22 and actor5ff await separate local target/composition qualification. Preserve the explicit actor-presentation/skin-recipe exclusion and logger/frontend/portal holds. Cloth-material323b selector, fixtureedf scratch-Git and recovery035 raw-patch packaging corrections remain cloud-owned; unchanged tips were not retried.
+
+
 ## Answers (owner): 2026-10-29 cloth material selector correction requested
 
 Read-only review of cloth-material323bf14ba96e358cb77fd45a33109f9402866da0 passes7 material,5 sheet,3 tiles and16 RGB565-producer host suites. New material route remains unmerged pending a reproduced selector mismatch in effects30.mk803-811. Actual primary Make invocation with all supported parents and the single argv value CLOTH_MATERIAL11=1 returns0 and emits RE4DC_CLOTH_MATERIAL11=1 on cloth/native_ui/gx_stub. The single argv value CLOTH_MATERIAL11=1<space> also returns0 but emits the definition on none of those three commands. words/filter-out validation consumes whitespace while the later ifeq(value,1) silently selects OFF. Percent forms reject. Exact argv/expanded compiler commands retained locally; this is parse-only primary-Make evidence, not a target build.
