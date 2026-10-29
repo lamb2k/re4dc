@@ -90,6 +90,21 @@ void re4dc_model_next_header_pcw(unsigned set, unsigned clear);
 // caller may skip. `frame` is pG->Frame_cnt (constant from Trans to Render).
 int re4dc_actor_skin_register(unsigned frame, const void* info, const void* position_buffer,
                               const float* palette, unsigned entries);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+// One non-yielding source palette allocation at a time. A provisional ticket
+// claims capacity without replacing a prior lazy/owner entry or advancing the
+// primitive buffer. Cancel only this ticket after an allocation refusal.
+struct Re4dcActorSkinAdmission {
+    unsigned serial, frame, slot, entries;
+    const void* info;
+    const void* positions;
+    unsigned provisional;
+};
+int re4dc_actor_skin_admit(unsigned frame, const void* info, const void* position_buffer,
+                           unsigned entries, Re4dcActorSkinAdmission* out);
+int re4dc_actor_skin_commit(Re4dcActorSkinAdmission* ticket, const float* palette);
+void re4dc_actor_skin_cancel(Re4dcActorSkinAdmission* ticket);
+#endif
 // Registered palette for (info, pPosBuf) or nullptr.
 const float* re4dc_actor_skin_palette(const void* info, const void* position_buffer, unsigned* entries);
 // trans.cpp: run the source's own CalcSk1_x/_x2 for a registered info into

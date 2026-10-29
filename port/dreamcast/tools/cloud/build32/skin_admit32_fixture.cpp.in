@@ -1,0 +1,259 @@
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
+
+using u8=unsigned char;
+using u32=std::uint32_t;
+#define RE4DC_PS2_WORLD_SOURCE_OWNER 0
+#define RE4DC_PS2_WORLD_R11F_OWNER 0
+#define RE4DC_COARSE_SOURCE_ACTORS 0
+#define RE4DC_PRIM_WATER 0
+#define RE4DC_OT_WALK_CHECK 0
+#define RE4DC_LEON_SKIN_SLOTS 0
+#define RE4DC_ACTOR_CENSUS 0
+#define RE4DC_PROP_GATE 0
+#define RE4DC_ACTOR_SKIN_DIAG 0
+#define RE4DC_MCHECK_LEONGC 0
+#define RE4DC_WPAL_FAST 0
+#define RE4DC_LEON_FACE_LAZY 0
+#define DFA26_MODEL_SLOW(Name, Count, Action) do { Action } while(0);
+#define PTR_INVALID(p) (!(p))
+#define U32Set(dst, src) ((dst)=(src))
+
+struct Re4dcActorSource {
+    const unsigned char* positions;
+    const unsigned char* normals;
+    unsigned position_count,normal_count,palette_entries,small_normals;
+};
+struct Re4dcActorSkinBinding {
+    const void* info;
+    Re4dcActorSource source;
+    const float* palette;
+    unsigned entries;
+};
+struct Re4dcActorSkinBackup {
+    unsigned index;
+    const void* info;
+    const void* positions;
+    const float* palette;
+    unsigned entries,materialized;
+};
+constexpr unsigned kRe4dcActorRoles=8,kRe4dcActorSkinKeys=64;
+struct Re4dcActorSkinLease {
+    unsigned serial=0,frame=0,count=0;
+    Re4dcActorSkinBackup old[kRe4dcActorRoles]{};
+};
+namespace re4dc_actor { struct WorkspaceReservations {static constexpr unsigned MaxOwners=64;}; }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+struct Re4dcActorSkinAdmission {
+    unsigned serial,frame,slot,entries;
+    const void* info;
+    const void* positions;
+    unsigned provisional;
+};
+#endif
+
+struct Game {void* prim_cnt;unsigned nPrim,vtx_buf_no,Frame_cnt;};
+Game g_game{},*pG=&g_game;
+struct GxWork {u8* prim;};
+GxWork g_work{};
+GxWork* GXWORK(){return &g_work;}
+struct Log {unsigned errors=0;template<class... T>void err(int,int,const char*,T...){++errors;}};
+Log g_log{},*pLog=&g_log;
+struct {unsigned skin_registered=0,materialized_infos=0;} stats;
+unsigned invalidations=0,workspace_retires=0;
+extern "C" void re4dc_skin_palette_resolve(const float*);
+extern "C" void re4dc_actor_skin_retire_pending();
+
+// @REGISTRY@
+
+void owned_skin_invalidate_frames(){++invalidations;}
+struct DummyWorkspace {void retire(){++workspace_retires;}} owned_workspace;
+u8* workspace=nullptr;
+unsigned workspace_bytes=0,workspace_top=0,workspace_end=0;
+// @OWNER_RETIRE@
+
+struct cModel{};
+struct cModelInfo{void* pPosBuf[2]{};};
+struct ModelData {u32 weight_ext_num=0,weight_palette_num=0;void* pWeight=nullptr;};
+alignas(32) float lc_palette[256*12];
+#define RE4DC_LC_PALETTE lc_palette
+int re4dc_model_diagnostic_enabled(){return 1;}
+// @LAZY_HEAD@
+cModel* g_skinLazyMtx=nullptr;
+u32 g_skinLazyMtxFrame=~0u;
+unsigned matrix_builds=0,palette_builds=0;
+void calcWeightMat(cModel*){++matrix_builds;}
+void skinLazyBuild(void* w,u32 n,int ext,void* dst){
+    ++palette_builds;
+    for(u32 i=0;i<n*12;++i)static_cast<float*>(dst)[i]=float(i+1)+float(ext)*1000+float(reinterpret_cast<std::uintptr_t>(w)&15);
+}
+// @FUNCTIONS@
+
+#define CHECK(x) do{if(!(x)){std::fprintf(stderr,"check failed: %s\n",#x);std::abort();}++checks;}while(0)
+unsigned checks=0;
+alignas(32) u8 prim_storage[128*1024];
+int infos[256]{};
+alignas(32) float owner_pal[12]{};
+unsigned char positions[32]{},normals[32]{};
+
+void reset(unsigned frame=7){
+    for(auto& e:skins)e={};
+    skin_count=0;skin_frame=~0u;
+    for(auto& e:owned_skins)e={};
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+    owned_skin_high=0;
+#endif
+    owned_skin_serial=0;owned_submission=false;
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    skin_admission_pending={};skin_admission_serial=0;
+#endif
+    stats={};invalidations=workspace_retires=matrix_builds=palette_builds=0;
+    g_skinLazyMtx=nullptr;g_skinLazyMtxFrame=~0u;g_log.errors=0;
+    pG->prim_cnt=prim_storage;pG->nPrim=sizeof prim_storage;pG->vtx_buf_no=0;pG->Frame_cnt=frame;
+    g_work.prim=prim_storage;
+    for(unsigned i=0;i<256*12;++i)lc_palette[i]=float(i+3);
+}
+const float* lookup(const void* info,const void* pos,unsigned expected){
+    unsigned n=~0u;const float* p=re4dc_actor_skin_palette(info,pos,&n);
+    CHECK(n==expected);return p;
+}
+Re4dcActorSkinBinding binding(const void* info){
+    return {info,{positions,normals,2,2,1,0},owner_pal,1};
+}
+void success_consumers(){
+    reset();
+    cModel model{};cModelInfo info{};ModelData d{};int weight=13,mtx=0;
+    d.weight_palette_num=2;d.pWeight=&weight;
+    const u8* before=g_work.prim;
+    CHECK(skinDeferPending(&model,&info,&d,&mtx)==1);
+    CHECK(g_work.prim==before+96);
+    CHECK(skin_count==1 && stats.skin_registered==1);
+    const float* p=lookup(&info,nullptr,2);
+    CHECK(p && palette_builds==1 && matrix_builds==1);
+    CHECK(p[1]>p[0]);
+    CHECK(lookup(&info,nullptr,2)==p && palette_builds==1);
+    d.weight_palette_num=1;
+    before=g_work.prim;
+    CHECK(re4dc_skin_defer_lazy(&info,&d)==1);
+    CHECK(g_work.prim==before+64 && skin_count==1 && stats.skin_registered==2);
+    CHECK(lookup(&info,nullptr,1)!=p);
+    info.pPosBuf[0]=positions;
+    before=g_work.prim;
+    CHECK(re4dc_skin_defer(&info,&d)==1);
+    CHECK(g_work.prim==before+64 && skin_count==2 && stats.skin_registered==3);
+    CHECK(lookup(&info,positions,1)!=nullptr);
+}
+void full_and_oom(){
+    reset();ModelData d{};d.weight_palette_num=1;int weight=0;d.pWeight=&weight;
+    for(unsigned i=0;i<kSkins;++i)CHECK(re4dc_actor_skin_register(7,&infos[i],nullptr,owner_pal,1));
+    CHECK(skin_count==kSkins);
+    const u8* before=g_work.prim;
+    cModelInfo info{};cModel model{};int mtx=0;
+    CHECK(!skinDeferPending(&model,&info,&d,&mtx));
+    CHECK(g_work.prim==before && !lookup(&info,nullptr,0));
+    CHECK(lookup(&infos[0],nullptr,1)==owner_pal);
+    reset();
+    CHECK(re4dc_actor_skin_register(7,&info,nullptr,owner_pal,1));
+    g_work.prim=prim_storage+sizeof prim_storage-16*1024;
+    before=g_work.prim;
+    CHECK(!re4dc_skin_defer_lazy(&info,&d));
+    CHECK(g_work.prim==before && lookup(&info,nullptr,1)==owner_pal);
+    CHECK(stats.skin_registered==1);
+    g_work.prim=prim_storage;
+#if !RE4DC_ACTOR_SKIN_OWNER_POOL
+    const void* keys[]={&infos[32]};
+    CHECK(re4dc_actor_skin_reserve(7,keys,1));
+    unsigned n=99;
+    CHECK(re4dc_actor_skin_palette(keys[0],nullptr,&n)==nullptr && n==0);
+    const unsigned count=skin_count;
+    g_work.prim=prim_storage+sizeof prim_storage-16*1024;
+    before=g_work.prim;
+    CHECK(!re4dc_skin_defer_lazy((cModelInfo*)keys[0],&d));
+    CHECK(g_work.prim==before && skin_count==count);
+    CHECK(skins[1].info==keys[0] && !skins[1].palette);
+    g_work.prim=prim_storage;
+    CHECK(re4dc_skin_defer_lazy((cModelInfo*)keys[0],&d));
+    CHECK(lookup(keys[0],nullptr,1)!=nullptr && skin_count==count);
+#endif
+}
+void owner_and_reentry(){
+    reset();
+    CHECK(re4dc_actor_skin_register(7,&infos[0],nullptr,owner_pal,1));
+    auto b=binding(&infos[0]);Re4dcActorSkinLease prior{};
+    CHECK(re4dc_actor_skin_acquire(7,&b,1,&prior));
+    CHECK(re4dc_actor_skin_validate(&prior));
+    cModelInfo* same=(cModelInfo*)&infos[0];ModelData d{};d.weight_palette_num=1;
+    const u8* before=g_work.prim;
+    CHECK(!re4dc_skin_defer_lazy(same,&d));
+    CHECK(g_work.prim==before && re4dc_actor_skin_validate(&prior));
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission ticket{};
+    CHECK(re4dc_actor_skin_admit(7,&infos[1],nullptr,1,&ticket));
+    CHECK(!re4dc_actor_skin_register(7,&infos[2],nullptr,owner_pal,1));
+    Re4dcActorSkinLease empty{};
+    auto other=binding(&infos[3]);
+    CHECK(!re4dc_actor_skin_acquire(7,&other,1,&empty));
+    CHECK(re4dc_actor_skin_release(&empty)); // actor_decline/leon_decline may clean an empty lease
+    CHECK(!re4dc_actor_skin_release(&prior)); // a real earlier owner is never revoked by reentry
+    CHECK(re4dc_actor_skin_validate(&prior));
+#if !RE4DC_ACTOR_SKIN_OWNER_POOL
+    const void* keys[]={&infos[4]};
+    CHECK(!re4dc_actor_skin_reserve(7,keys,1));
+#endif
+    re4dc_actor_skin_cancel(&ticket);
+    CHECK(re4dc_actor_skin_validate(&prior));
+    CHECK(re4dc_actor_skin_release(&prior));
+    CHECK(!re4dc_actor_skin_validate(&prior));
+    CHECK(lookup(&infos[0],nullptr,1)==owner_pal);
+#endif
+}
+void retirement_and_frame(){
+    reset();ModelData d{};d.weight_palette_num=1;int weight=0;d.pWeight=&weight;
+    CHECK(re4dc_actor_skin_register(7,&infos[0],nullptr,owner_pal,1));
+    auto b=binding(&infos[0]);Re4dcActorSkinLease prior{};
+    CHECK(re4dc_actor_skin_acquire(7,&b,1,&prior));
+    cModelInfo info{};
+    g_work.prim=prim_storage+sizeof prim_storage-16*1024;
+    const u8* before=g_work.prim;
+    pG->Frame_cnt=8;
+    CHECK(!re4dc_skin_defer_lazy(&info,&d)); // OOM must not switch frames or revoke prior owner
+    CHECK(g_work.prim==before && skin_frame==7 && re4dc_actor_skin_validate(&prior));
+    g_work.prim=prim_storage;
+    CHECK(re4dc_skin_defer_lazy(&info,&d)); // success now replaces the frame atomically
+    CHECK(skin_frame==8 && skin_count==1 && !re4dc_actor_skin_validate(&prior));
+    CHECK(lookup(&info,nullptr,1)!=nullptr);
+    reset();
+    CHECK(re4dc_actor_skin_register(7,&infos[0],nullptr,owner_pal,1));
+    prior={};b=binding(&infos[0]);CHECK(re4dc_actor_skin_acquire(7,&b,1,&prior));
+    pG->Frame_cnt=8;
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission ticket{};
+    CHECK(re4dc_actor_skin_admit(8,&info,nullptr,1,&ticket));
+    auto copy=ticket;
+    re4dc_actor_owner_retire(); // same-address workspace replacement
+    CHECK(!re4dc_actor_skin_commit(&ticket,owner_pal));
+    CHECK(!re4dc_actor_skin_commit(&copy,owner_pal));
+    CHECK(!re4dc_actor_skin_validate(&prior) && skin_frame==7);
+    CHECK(lookup(&info,nullptr,0)==nullptr);
+    ticket={};CHECK(re4dc_actor_skin_admit(8,&info,nullptr,1,&ticket));
+    SetPrimBuffPtr(); // primitive backing reuse, even if frame/address reused
+    CHECK(!re4dc_actor_skin_commit(&ticket,owner_pal) && skin_frame==7);
+#endif
+    CHECK(re4dc_skin_defer_lazy(&info,&d));
+    CHECK(skin_frame==8 && skin_count==1 && lookup(&info,nullptr,1)!=nullptr);
+}
+void serial_exhaustion(){
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    reset();ModelData d{};d.weight_palette_num=1;cModelInfo info{};
+    skin_admission_serial=~0u;const u8* before=g_work.prim;
+    CHECK(!re4dc_skin_defer_lazy(&info,&d) && g_work.prim==before && skin_count==0);
+#endif
+}
+int main(){
+    success_consumers();full_and_oom();owner_and_reentry();retirement_and_frame();serial_exhaustion();
+    std::printf("checks=%u palette_builds=%u prim_errors=%u\n",checks,palette_builds,g_log.errors);
+}

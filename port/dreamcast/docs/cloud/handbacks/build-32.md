@@ -800,6 +800,110 @@ ALL ON K24 includes PLAN_OWNER_SCOPED=1 and the first four controls, with QA_LIN
 NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/lifecycle/look/STRICT/heap/stack/full-cost/console gates. Real portal occlusion still needs authored cells and compatible source/view proof. Private console checks require actual intended media selection/swap and reviewed link readiness at the user's console boundary. Frozen release/Pi/media/look holds remain. Independent next native decoder, immutable world preparation and cloth-sheet work proceeds through existing owners; source fixes do not wait for historical QA reconstruction or a broad census.
 
 
+## 2026-10-29 Build32 review5: transactional skin admission
+
+Status: DONE for the first bounded admission slice; NEXT is the deferred recipe and one registry presentation class. This is a public-source, host-validated change prepared for coordinator review/integration. Isolated `work-actor` HEAD at final suite: `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`; the OFF comparison pins original skin source at `39ed524a3b0a4727148aaa5a45eaaea4d211cede`. The coordinator added the single primary Make include and verified actual compile-command scope in the public fixture. Target compilation remains a local gate.
+
+### Change and source proof
+
+The three actual source deferral producers in `src/game/trans.cpp` (`re4dc_skin_defer`, `re4dc_skin_defer_lazy`, `skinDeferPending`) now request a one-at-a-time registry admission ticket before `re4dc_prim_tail`. A full table or owner conflict declines before the primitive cursor advances; the existing caller then follows its source CPU path. On successful admission the producer allocates, copies the eager palette or pending header, and commits the selected registry slot. If the allocator refuses, cancellation clears only this ticket: an earlier lazy entry, an existing inert native-owner reservation, and unrelated owner leases remain intact. A successful lazy replacement preserves latest-Trans-wins semantics; a successful new-frame commit performs the original frame/owner reset then publishes. No allocator rewind is used. Serial exhaustion declines further ticket creation.
+
+The ticket is a sidecar in `native_actor_fast.cpp` and the admission implementation is `platform/include/native_actor_skin_admit32.inc`. Existing owner acquire/register/reserve interfaces reject competing mutations while a ticket is live. Empty-lease release remains successful so an acquisition refused during reentry takes the established `actor_decline`/`leon_decline` source fallback without converting an empty lease into `actor_fail`; a real earlier lease is neither changed nor released until the ticket ends. `SetPrimBuffPtr` and `re4dc_actor_owner_retire` revoke pending tickets before primitive/workspace reuse, so a copied or stale ticket cannot publish even when the source frame or address is reused. The affected current reservation/lease include files carry only guarded hooks. `SKIN_ADMISSION32 ?= 0` in `skin_admit32.mk` requires `ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1`, and defines the feature only for `trans.o` and `native_actor_fast.o`.
+
+The allocation-to-commit proof is source-bounded: current `re4dc_prim_tail` performs a pointer/bounds check and calls `GetPrimBuff`, which aligns and advances one monotonic primitive cursor. A successful tail call does not yield, invoke the actor registry, or run a model callback. The required `SKIN_PALETTE_LAZY=1` pending branch performs only header field writes and `memcpy` between allocation and commit; the eager/lazy variants perform only `memcpy`. `SKIN_PALETTE_LAZY=2` is deliberately rejected by the Make control because its comparison build executes weight and logging work between allocation and registration. `GetPrimBuff` reports an overflow only after a contradictory bounds outcome; admission still never rewinds or assumes a reusable cursor. A forced retirement between allocation and commit refuses publication.
+
+### Exact validation
+
+Run from `work-actor`:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32.py
+python3 -B port/dreamcast/tools/cloud/build32/skin_admit32_cost.py
+git diff --check
+```
+
+The first script extracts the actual current `trans.cpp` producers, `GetPrimBuff`/`re4dc_prim_tail`/`SetPrimBuffPtr`, actual skin registry/admission/owner lease interfaces, `re4dc_actor_skin_palette`, lazy resolver, and owner retirement. Only source game data structures, model weight-building work and synthetic assets are host adapters. Both original coupled owner registry and isolated owner pool pass normal and ASan/UBSan: 138 and 129 assertions respectively in each sanitizer mode. Cases exercise real pending/eager/lazy producer and consumer outcomes; table-full refusal with no primitive advance; owner conflict; replacement; old lazy entry and inert reservation across OOM; reentrant register, reserve, acquire and empty/real release; unrelated prior lease validation; frame-switch OOM and success; owner retirement and `SetPrimBuffPtr` stale-ticket refusal; and serial exhaustion. The fixture reports zero primitive-overflow diagnostics. The same script verifies pinned-baseline/absent/explicit-zero preprocessing and host objects byte-identical for both owner variants (host object sizes 28,864 and 27,104 bytes). Fragment and actual primary-Makefile absent/zero commands match; ON defines exactly once only on trans.o and native_actor_fast.o, with native_ui.o unaffected; malformed values and missing prerequisites reject. The script prints `PASS skin_admit32 source=324acb6678aec794 Make control` on the frozen diff.
+
+Host-only production-extract footprint from `skin_admit32_cost.py`: `.text` 4,700 to 6,057 (+1,357 bytes), `.bss` 18,080 to 18,144 (+64 bytes), `.data` unchanged at 8. Host `re4dc_skin_defer_lazy` stack is 32 to 64 bytes, pending wrapper 64 to 128 bytes; admission and commit are 32 bytes each, and primitive tail remains 8. The 32-bit declared ticket layout is 28 bytes, with a 4-byte persistent serial: 32 bytes of declared sidecar fields before target alignment. The +64 `.bss` includes host alignment and code-extract layout; it is not an SH-4 footprint. These figures measure neither frame-time savings nor primitive high-water reduction on real assets.
+
+### Next scope and unavailable gates
+
+The later demand-driven step should keep a bounded recipe for a source-deferred info only when it can reserve a real ordinary registry slot through to its render consumer. The recipe needs model, info, weight pointer/count/layout, frame, and primitive-owner incarnation; an unprovable or full case must keep the current immediate palette path. At the original OT callback, a native-owned consumer can use its separately mapped palette without allocating a source copy; an ordinary native or generic fallback must resolve the source-specific palette and, when needed, materialize source arrays before the walker. The current native `prepare_frame` and generic `re4dc_actor_materialize_lazy` are the exact consumer boundaries to compare; original `commonScreenMatSub` material/UV and pose callback cadence must remain unchanged. A placeholder cannot be treated as a drawable palette. This is design scope only; no deferred-recipe code is included in this first slice.
+
+BLOCKED externally: no SH target compiler/SDK, private model/room assets, Flycast capture, STRICT replay, or console trace is available in this workspace. Next integration checks are target enabled/OFF builds and linked code/stack/storage, followed by private full-registry/conflict/OOM/reentry/retirement images, source/native presentation and callback-cadence comparisons, primitive high-water and materialization counts. No simulated hardware performance gain is claimed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${SA32_BASE_TREE:?fresh base worktree path}"
+: "${SA32_LOGS:?fresh log directory}"
+: "${SA32_PROGRAMS:?fresh programme directory}"
+: "${SA32_LABEL:?fresh lane label prefix}"
+SA32_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$SA32_BASE_TREE" 6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$SA32_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$SA32_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$SA32_BASE_TREE" "${SA32_LABEL}base" ""
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}absent" ""
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}off" "SKIN_ADMISSION32=0"
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}ctrl" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=0"
+candidate_build "$SA32_CANDIDATE_TREE" "${SA32_LABEL}on" \
+  "ACTOR_TRANSACTION=1 NATIVE_ACTOR_FAST=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 SKIN_ADMISSION32=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${SA32_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${SA32_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${SA32_LABEL}offrP" \
+  --output "$SA32_LOGS/skin-admission32-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+**Approved next source boundary, 2026-10-29.** The recipe continuation must
+reserve both a registry slot and future primitive capacity. An inert key alone
+does not protect bytes from intervening `GetPrimBuff` calls. Reuse the current
+primitive owner and allocator; initially enroll only an existing reserved
+native-owner key with the same `n*48 + 16 KiB` admission margin. Hold a bounded
+capacity credit honored by every primitive allocation without advancing or
+rewinding the cursor. Resolve the source-layout recipe at the existing palette
+getter/materialization boundary when source fallback actually needs it. Native
+palettes retain their distinct layout and owner leases. Keep the capacity
+credit through all prepublication declines; release it on a definitive
+completed native transaction or primitive retirement, never merely at
+`skin_acquire`. The existing actor transaction result boundary is in scope for
+that single actor writer. Cover interleaved allocations, full/OOM credits,
+same-address retirement, source fallback after native preflight decline, two
+passes and source callback cadence before claiming demand-driven preparation
+or usable primitive capacity. This commit only fixes admission ordering; it
+does not claim those subsequent recipe/presentation changes.
+
+
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
