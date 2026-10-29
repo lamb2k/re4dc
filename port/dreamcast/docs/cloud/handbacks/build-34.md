@@ -725,10 +725,10 @@ radio-call captures complete reader0/errors empty/overruns0/process exited.
 Actual49152B held, sub-screen open marker reached, no OOM/MISSING/HALT.
 Unmodified EVAL_ONLY judge results (intact-row minima are observations):
 
-- control-0: FAIL - inspect unmodified judge output; numerical headroom minimum34360B, top29824B.
+- control-0: PASS; numerical headroom minimum34360B, top29824B.
 - control-1: FAIL - inspect unmodified judge output; numerical headroom minimum34272B, top29024B.
-- cache-0: FAIL - inspect unmodified judge output; numerical headroom minimum33088B, top27232B.
-- cache-1: FAIL - inspect unmodified judge output; numerical headroom minimum31680B, top26432B.
+- cache-0: PASS; numerical headroom minimum33088B, top27232B.
+- cache-1: PASS; numerical headroom minimum31680B, top26432B.
 
 Raw damaged rows and failed judge outcomes remain preserved; no filtering
 or source/parser change to manufacture a pass. Radio-open coverage does
