@@ -3677,6 +3677,8 @@ include perf_phase_miss.mk
 include draw_setup_audit.mk
 include draw_fallback_audit.mk
 include fallback_audit29.mk
+# Default-off bounded continuation for the existing ordered line collision walk.
+include line_resume29.mk
 include fallback_audit35.mk
 # Default-off EFM class/mapping epoch, shared by all manager-header consumers.
 include efm_class_identity.mk
