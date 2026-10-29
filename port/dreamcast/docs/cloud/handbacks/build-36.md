@@ -391,3 +391,26 @@ Next owner step: source-bound membership/lighting contexts for named live
 targets, preserving these incomplete inventories. Independent supported
 SCPS triplet and Build35 observer qualification continue separately.
 No code correction requested from this scan; no recipe, SD or release action.
+
+### 2026-10-29 owner follow-up: emleon09 source selector context
+
+The retained final image source is `2061c8380848695373714437d20462ef2b8a118d`.
+Its `src/game/stage.cpp` `emlist_name[11]` table (lines168-172) contains
+`emleon00` through `emleon07`, then `omake00` through `omake02`.
+`getEmListName(9)` selects `etc/omake01.esl`, **not** `etc/emleon09.esl`.
+`readEmList` obtains its filename through that table (lines323-341).
+The basename suffix09 therefore cannot serve as numeric selector9 or an
+invented named-stage alias.
+
+All13 retained `emleon09` inventory rows match the image input's source hash.
+Their decoded r101 room tags do not prove that the stage loader selected this
+file, or that those actors were live. The file is absent from this particular
+source selector table; this is not a global unreachable-data claim.
+Keep these rows unresolved/conditional. Do not drop them, bind them by name,
+or turn the strict INCOMPLETE result into acceptance.
+
+This follow-up read one source/input and the existing small spawn table;
+the completed1664-input scan and large reports were not repeated or edited.
+No scanner/runtime code change, SDK build, guest, recipe, SD or release action.
+Actual owner/appearance/quality/lighting context still needs a named live
+target and matching source/archive/capture evidence.
