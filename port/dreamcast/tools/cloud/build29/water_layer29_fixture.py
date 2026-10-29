@@ -300,7 +300,9 @@ class WaterLayer29Test(unittest.TestCase):
             for i, command in enumerate(commands[2]):
                 self.assertEqual(command.count("-DRE4DC_WATER_LAYER29=1"), int(i == 0))
             for extra in (["WATER_LAYER29="], ["WATER_LAYER29=0 1"],
-                          ["WATER_LAYER29=2"], ["WATER_LAYER29=1", "ROUTE_CH13=0"],
+                          ["WATER_LAYER29=2"], ["WATER_LAYER29=%"],
+                          ["WATER_LAYER29=0%"], ["WATER_LAYER29=1%"],
+                          ["WATER_LAYER29=1", "ROUTE_CH13=0"],
                           ["WATER_LAYER29=1", "WATER_PS2=0"]):
                 self.assertNotEqual(run(extra).returncode, 0, extra)
 
