@@ -1,5 +1,14 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+## Answers (owner): 2026-10-29 resident binding target and QA
+
+Sourcec4cc3346 landed no-ff asdb01f44eef11843e1d336f150bb3ae79119ecc2d, PREPARED_BINDING34 default0. Source/normal/sanitizer/host OFF+Make tests passed again on the actual merged candidate. Four fresh target arms (release absent/zero, dependency0/ON) linked with nonempty ELFs and existing empty missing.txt; exact new macro scoped to native_model/native_ui. Both release OFF programmes,15 overlays and every allocated section match bound D13. Additional compatibility/live gates are not implied.
+
+Matched actual SH-4 dependency0/ON accounting: linked text+4352 bytes, static data/BSS unchanged. Direct re4dc_model_submit prologue allocation plus saved registers grows5740 to6684 bytes (+944); this excludes dynamic alignment and the call chain, and is not a whole-stack/headroom PASS. Host warm references6->3 are not measured cycles or FPS. Real cold/resident UV/header/order, actual source/content authority, lifetime, current memory and net console cost remain open.
+
+Compatible QA adds PREPARED_BINDING34 to K36, QA_LINK1. On db01f44e,542 actual C++ scopes, missing0, both lints, ZIP/checksums and final raw programme/all15overlays pass (track0389128bc8e69820bcebf140a6816525e4df20cdca41f2ae32a0da73128146364b). Current26f7 QA retains K36. No current-image execution, SD, release-default or recipe promotion follows. Cloud owns content-authority/cold/other-class source continuations; local owns affected runtime and full-memory gates.
+
+
 ## Answers (owner): 2026-10-29 frontend recovery target gate resolved
 
 Relevant6222000 source-line correction at cloudacb8 was reviewed and merged no-ff as149bff3ae057b2e7220a145f903dc152a910735e. Actual host/sanitizer alias fixture, SH-conditioned six-TU preprocessing including pinned negative HALT control, Make controls and host cost passed. Fresh release absent/explicit0/dependency0/ON target links passed with real nonempty ELFs and existing empty missing.txt. Complete3372036-byte programme (fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1), all15 overlays and11 allocated ELF sections match the bound D13 release for both OFF arms. The previous0x09a1->0x09a4 diagnostic discrepancy is resolved; historical failed candidate remains retained. No byte judge or diagnostic constant was normalized.

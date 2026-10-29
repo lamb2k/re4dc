@@ -1,5 +1,14 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 actual water loader target and one private package
+
+Source9096f2b8 landed no-ff as26f7d8278be77388b157910765f5e6b182c39cc1, WATER_LAYER29 default0. Source/package/layer normal+ASan/UBSan fixtures passed on the actual merged candidate. Four fresh target arms (release absent/zero, dependency0/ON) linked with nonempty ELFs and existing empty missing.txt. Actual new macro is checked on precisely espgen45/read/native_effect; full release OFF programme,15overlays and allocated sections match bound D13. Extra extension/diagnostic/compatibility profiles and runtime gates remain distinct pending obligations.
+
+Compatible K36 QA_LINK1 rebuilt on26f7d8278be77388b157910765f5e6b182c39cc1; updated three-TU water macro scopes,542 C++ checks, missing0, loader+standard lint, ZIP/checksums and final16 image/SDK payloads pass. Track03 16b728f39f1770d3c780e62f51ae32a92c861fa179d51fa304d50be6d593c156. QA assets were not replaced with a W29 test package.
+
+One bounded private r107 preparation now uses the existing named EFF rather than repeating the six-family extraction. Its two rows regenerate exactly to the reviewed source table. The actual original room DAR is byte-bound to final current26f7 QA. In a separate ext4 sandbox, the reviewed producer appended a168-byte W29 member, preserved the original file, validated all85 NTR pointed ranges after rebasing, and preserved other member bytes/order. This selected room has no ESQ table; it is not an actual ESQ rebase witness. No asset bytes, private manifest, geometry values or private hashes are published. The package is PREPARED, not loaded or accepted, and is not installed into QA/SD/release assets. Actual room loading/owner incarnation, reentry/retirement/partial outcomes, loaded texture/material/look/STRICT/full memory/cost/console remain open. All source fixes remain cloud-owned.
+
+
 ## Answers (owner): 2026-10-29 current K35 portrait and cloth runtime
 
 The previously missing permitted ordinary guest/controller route is now established. Current runtime `d13e2a459627077680f58edc35eae9bceda34c8f` / compatible K35 was exercised in Flycast via a local QA Link relay, with normal PAD input and read-only current-ELF counters. The final programme/all15 overlays were bound before the run. No Windows input, cross-image snapshot, forced story/position, production source/asset mutation, physical-console action or SD copy was used. Fresh ordinary-route setup required explicitly announced longer captures (120/150s requested); individual inventory/cloth windows stayed below30s. This is JIT behavior/look evidence, not hardware performance.
