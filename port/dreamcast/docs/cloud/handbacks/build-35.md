@@ -885,3 +885,25 @@ Complete snapshot/600-draw/full-partial-skipped windows, CPU/current memory/
 full-stack/look/STRICT and console gates remain pending. Console still needs
 user-designated enabled arm media and REMOTE LINK after each swap. No runtime
 acceptance for front pair, production promotion, SD write or release.
+
+#### Owner: separate front pair final image binding, 2026-10-29
+
+The FRONT_NATIVE1/FRONT_TEXOBJ1 existing-audit/gaps final QA image pair is
+prepared and payload-bound. Own raw ELF programmes and all15 own overlays
+were exported from the two qualified2061 links. Two independent unchanged
+swap-program invocations used the already-verified fixed QA data control;
+loader and standard lint0 on both. Every final file read back:1664 per image,
+own programme/all15 overlays exact,1648 other payloads identical to the common
+control and across arms. Source control4 raw files remain unchanged. No SDK
+or QA master repeated; no normalization of images or private data change.
+
+Private front20261029 IMAGE-INPUTS/MATCHED-IMAGES retain source, helper,
+programme/overlay and final-payload hashes plus commands and lint receipts.
+This is final image binding, not executed front-cache/audit reason coverage.
+Next derive matched per-case warp/pad/link bases and verify their redirected
+low-track fixtures plus all original payloads; retain active track01 proof
+before teardown on subsequent bounded runs. Existing window32 DIAG4/14 hold
+and missing active-track proof remain unchanged. No600-draw/snapshot/window/
+CPU/current-memory/full-stack/look/STRICT or console acceptance, production
+promotion, SD copy or release. Console needs selected enabled arm media and
+REMOTE LINK after each swap. Both image jobs are finished; do not duplicate.
