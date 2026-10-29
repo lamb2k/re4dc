@@ -175,6 +175,9 @@ extern "C" void GXGetViewportv(f32*);
 static GXColor s_effect_col; // ChannelSet's final material colour (GXSetChanMatColor)
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "effect_strip_uv21.hpp"
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#include "native_draw_result.hpp"
+#endif
 // No sprite eligibility, billboard bound or callback substitution for strips.
 extern "C" int re4dc_esp_strip21_eligible(cEsp* esp){
     const s8 part=(s8)esp->m_Parts_no;
@@ -185,24 +188,31 @@ extern "C" void re4dc_esp_strip21_color(GXColor color){s_effect_col=color;}
 #if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
 extern "C" int re4dc_fx_essential_strip_cut(const cEsp* esp);   // FX_TRIM Essential: trails / ribbons not drawn
 #endif
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#define RE4DC_STRIP21_RETURN(state,legacy) return {re4dc::NativeDrawOutcome::state}
+extern "C" re4dc::NativeDrawResult re4dc_esp_strip21_draw_result(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
+    if(!esp || !corners)RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#else
+#define RE4DC_STRIP21_RETURN(state,legacy) return legacy
 extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
-    if(!re4dc_esp_strip21_eligible(esp))return 0;
+#endif
+    if(!re4dc_esp_strip21_eligible(esp))RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
 #if defined(RE4DC_FX_TRIM) && RE4DC_FX_TRIM
-    if(re4dc_fx_essential_strip_cut(esp))return 1;
+    if(re4dc_fx_essential_strip_cut(esp))RE4DC_STRIP21_RETURN(PolicySkip,1);
 #endif
     EspTexWk* work=&g_pEspSys->Esp_tex_tbl[esp->m_Tex_id];
-    if(work->Owner==0xD2 || !work->pTpl || esp->m_Ptn_no>=work->pTpl->numDescriptors)return 0;
+    if(work->Owner==0xD2 || !work->pTpl || esp->m_Ptn_no>=work->pTpl->numDescriptors)RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
     // EspTexSet's matrix is source state. Only its proven identity registration
     // is qualified; custom texture matrices require their separate contract.
     for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)
-        if(work->mtx[r][c]!=(r==c?1.0f:0.0f))return 0;
+        if(work->mtx[r][c]!=(r==c?1.0f:0.0f))RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
     const TEXDescriptor* descriptor=TEXGet(work->pTpl,esp->m_Ptn_no);
-    if(!descriptor || !descriptor->textureHeader)return 0;
+    if(!descriptor || !descriptor->textureHeader)RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
     const TEXHeader* h=descriptor->textureHeader;
     Re4dcEffectQuad q{};q.image={h->data,NULL,h->width,h->height,h->format,0xffffffffU,0};
     if(descriptor->CLUTHeader){q.image.palette=descriptor->CLUTHeader->data;
         q.image.palette_format=descriptor->CLUTHeader->format;q.image.palette_bytes=descriptor->CLUTHeader->numEntries*2;}
-    re4dc::effect_strip21::UV uv[4];if(!re4dc::effect_strip21::source_uv(no,repeat,direction,esp->m_Tool_flg,uv))return 0;
+    re4dc::effect_strip21::UV uv[4];if(!re4dc::effect_strip21::source_uv(no,repeat,direction,esp->m_Tool_flg,uv))RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
     const unsigned order[4]={0,1,3,2};for(unsigned i=0;i<4;++i){q.positions[i][0]=corners[order[i]].x;
         q.positions[i][1]=corners[order[i]].y;q.positions[i][2]=corners[order[i]].z;q.u[i]=uv[i].u;q.v[i]=uv[i].v;}
     unsigned r=s_effect_col.r,g=s_effect_col.g,b=s_effect_col.b,a=s_effect_col.a;
@@ -211,8 +221,19 @@ extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,in
     q.color=(a<<24)|(r<<16)|(g<<8)|b;q.src=esp->xA5&7;q.dst=esp->xA6&7;
     q.wrap_s=h->wrapS;q.wrap_t=h->wrapT;
     RE4DC_GXF_GET_PROJECTION(q.projection);RE4DC_GXF_GET_VIEWPORT(q.viewport);
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    return re4dc_effect_quad_result(&q);
+#else
     re4dc_effect_quad(&q);return 1; // admitted source family; queue refusal drops only this segment
+#endif
 }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
+    // This is routing ownership, never proof that a refused GX sink renders.
+    return !re4dc_esp_strip21_draw_result(esp,no,corners,repeat,direction).fallback_allowed();
+}
+#endif
+#undef RE4DC_STRIP21_RETURN
 #endif
 
 #if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
