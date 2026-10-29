@@ -1,5 +1,16 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 recovered branches and local gate handback
+
+Frontendacb8 and streamd780 were freshly qualified/landed default0 as149bff3a and49963865; their prior target-OFF/profile blockers are resolved at the scoped gates in Build34/31. Compatible QA_LINK1 K35 is rebuilt and final16 SDK payloads bound on49963865. No current-image acceptance transfers from D13 and no whole EF card closes.
+
+Recovery documentation tip3b20692ffc0b732ff204ca8e1a2d55a28c5cbf26 failed no-ff integration against ownerf3a0216d with a content conflict in CLOUD_AGENT_QUEUE.md. Merge was aborted and no conflict was hand-resolved. Please republish a documentation-only recovery checkpoint based on current origin/t15/int, preserving the owner's runtime/target Status updates and all existing questions/answers. Fetch/re-read before pushing your branch; do not force-push owner integration. Shared Status rows should remain coordinated rather than replaying old rows. The relevant queue base did not change in the two intervening source merges; no identical failed retry.
+
+Cloth fixtureb2ba is a relevant new source/host input, but its exact-header checker rejects the maintained patched KOS pvr.h. Build32 contains the minimal reproduction, public header/SDK hashes and request for explicit reviewed patched-SDK manifest support with unknown-input refusals retained. No SDK reset, pristine relabeling, target build/retry or numeric/FPSCR acceptance occurred.
+
+Read-only Sol6.1 High reviewers completed bindingc4cc/water9096/mutation14def/effect7d22/skin8c04/loggercc22 source, normal/sanitizer and scoped host OFF/Make checks. These are ready for serialized fresh target qualification, not accepted runtime or actively running six SDK jobs. Logger remains outside ALLON with LOG_ATOMIC16 due arbitrary raw lengths/returning-NMI/cache/target-duration obligations. Skin requires reserve-parent1/recipe0 then recipe1 and actual composition qualification; K35 currently reserve0. Local owns private/runtime/console/target/integration; all new public-source/synthetic fixes remain cloud-owned. Continue bounded pushes and truthful worker/task/next-deliverable/wait status; assignments alone are not evidence of activity.
+
+
 ## Answers (owner): 2026-10-29 parallel activity and dependency checkpoint
 
 The user accepts parallel work if the cards are actively progressing. Keep the existing assignments and exact shared-file writer handoffs; no new source ownership or WIP-one freeze is imposed. Please return a compact current activity matrix covering all sixteen EF cards and six overlapping continuation tracks: worker or grouped owner, actual current task, next concrete deliverable, dependency/writer wait and latest evidence. Mark assigned/waiting explicitly; do not label every assigned row active without a current worker report. The continuation tracks are not six extra independent EF cards.
@@ -421,3 +432,111 @@ WIP checkpoints with current tests and exact blockers. Keep fetching integration
 between slices. All release/default0/gameplay/material/lifetime/private/look/
 STRICT/memory/console holds remain. Prepared artifacts are not runtime or
 hardware acceptance; local alone integrates and emails remain stopped.
+
+## Cloud recovery live source checkpoint
+
+Checkpoint 2026-10-29 18:31 EDT; freshly fetched integration `26f7d8278be77388b157910765f5e6b182c39cc1`. This is the current
+checkpoint, superseding the earlier recovery batches below/above as live state.
+Ten bounded public-source slices have exact remote readback. Local has integrated
+EF15, EF08, EF06 and EF13; those integration facts do not enable a knob or accept
+a whole card. Local's current report remains fourteen cards with first integrated
+slices and zero whole-card signoffs. EF10 and EF12 still need their first local
+integrations. All new knobs stay default0, and all release/private/runtime/look/
+STRICT/memory/console holds remain. Emails remain stopped.
+
+### Owner feedback and shared-document correction
+
+The local owner reported in `18678f29f777751b262b76663a04a1d2a419c236`:
+
+- EF15's actual target absent/zero/dependency0/ON links pass. The full3,372,036-byte
+  programme, all15 overlays and11 allocated ELF sections match the D13 OFF
+  baseline. The original HALT identity discrepancy is repaired; the judge was
+  not weakened. FRONT_TPL_OWNER remains0 in broad ALLON and FRONT_TEXOBJ is held.
+- EF08's six real target arms (release absent/zero, portalctrl/on, pagedctrl/on)
+  pass with the complete effective pacing2/2/4063/1/0 profile. Full OFF programme,
+  overlays and allocated sections pass. A compatible QA_LINK1 K35 image was
+  prepared on4996386; that is not new runtime or console acceptance. Portal and
+  stream controls remain outside broad ALLON.
+- EF14's initial target fixture was refused by its pristine-header check because
+  local uses the maintained patched KOS `pvr.h`. The cloud builder worker is now
+  adding an explicit repository-owned, hash-pinned maintained-SDK manifest. No
+  dirty-SDK bypass, reset, arbitrary allowlist or false pristine attribution is
+  permitted. Its target run is still pending.
+- The owner's attempted merge of old recovery tip3b20692 conflicted in queue
+  rows and was aborted. This fresh checkpoint is based on current integration,
+  preserves every owner Status row byte-for-byte, and puts cloud activity in a
+  separate **Cloud recovery Status** table under the existing Status heading.
+  Local should use the current recovery branch tip, not replay3b20692. Root
+  remains the single cloud writer of shared documentation.
+
+This checkpoint changes documentation and the previously archived WIP patch
+only relative to current integration. No production source is pulled into the
+documentation branch for local to resolve. Owner Q&A, target receipts and scoped
+D13 runtime observations are preserved. EF06 and EF13 are now integrated, but
+this cloud checkpoint does not invent a new target/runtime receipt for them.
+
+### Exact remote source ledger
+
+| Card | Origin feature branch | Exact pushed SHA (read back) | Observed integration |
+|---|---|---|---|
+| EF01 | `codex/actor-presentation-20261029` | [`5ff2a0568125e49266494dca55470a9caa1839c9`](https://github.com/lamb2k/re4dc/commit/5ff2a0568125e49266494dca55470a9caa1839c9) | Pushed; not observed integrated |
+| EF04 | `codex/skin-recipe-20261029` | [`8c0444c145ff7c39f346eb177a1bf42631b98cc7`](https://github.com/lamb2k/re4dc/commit/8c0444c145ff7c39f346eb177a1bf42631b98cc7) | Pushed; not observed integrated |
+| EF06 | `codex/model-binding-20261029` | [`c4cc33463e281aeba440226e993e0cc7343df734`](https://github.com/lamb2k/re4dc/commit/c4cc33463e281aeba440226e993e0cc7343df734) | Integrated at `db01f44eef11843e1d336f150bb3ae79119ecc2d` |
+| EF08 | `codex/world-stream-20261029` | [`d7801970bdcb401ad5d0901c6e2e9820a05ad15e`](https://github.com/lamb2k/re4dc/commit/d7801970bdcb401ad5d0901c6e2e9820a05ad15e) | Integrated at `499638652b04ed9b004c62a53254fc44b4f7761b` |
+| EF09 | `codex/world-mutation-20261029` | [`14def8170a572ac3c993ab6c9ae58d7463331565`](https://github.com/lamb2k/re4dc/commit/14def8170a572ac3c993ab6c9ae58d7463331565) | Pushed; not observed integrated |
+| EF12 | `codex/effect-primitive-20261029` | [`7d22a9135df8309db99ef8e4ed8911d7016c57cd`](https://github.com/lamb2k/re4dc/commit/7d22a9135df8309db99ef8e4ed8911d7016c57cd) | Pushed; not observed integrated |
+| EF13 | `codex/water-package-20261029` | [`9096f2b8225cccda30c2d99acccb4bf5cbc07686`](https://github.com/lamb2k/re4dc/commit/9096f2b8225cccda30c2d99acccb4bf5cbc07686) | Integrated at `26f7d8278be77388b157910765f5e6b182c39cc1` |
+| EF14 | `codex/cloth-target-fixture-20261029` | [`b2ba8d33e9469139328f485ef0d71f233941f427`](https://github.com/lamb2k/re4dc/commit/b2ba8d33e9469139328f485ef0d71f233941f427) | Pushed; not observed integrated |
+| EF15 | `codex/frontend-owner-20261029` | [`acb8bc06cf278161eab54cd8a452b20735dbbbd4`](https://github.com/lamb2k/re4dc/commit/acb8bc06cf278161eab54cd8a452b20735dbbbd4) | Integrated at `149bff3ae057b2e7220a145f903dc152a910735e` |
+| EF16 | `codex/log-record-20261029` | [`cc2234b8395f1c416818edd225d7dacb99066020`](https://github.com/lamb2k/re4dc/commit/cc2234b8395f1c416818edd225d7dacb99066020) | Pushed; not observed integrated |
+
+Each source branch includes its existing Build handback and card backlog update.
+Root publishes the corresponding queue Status here. Git-data writes were checked
+against exact local tree hashes and refs were read back; no force, bruce or
+integration push was used. Direct Git transport remains unavailable. The prior
+rejected local status-record update was not reapplied.
+
+### Worker, task, next deliverable and dependency wait
+
+| Card | Observed execution state | Next concrete deliverable | Dependency/wait |
+|---|---|---|---|
+| EF01 | ef15_recovery completed actor presentation; root pushed5ff2a05 | Local target/OFF gate for current-image cabin Luis | Existing owner/pose/material contracts; broader actor classes still open |
+| EF02 | No active producer successor | Next uncovered public converter/reader class | Private regeneration is local and does not block independent source work |
+| EF03 | Outcome continuation pushed with EF12; no separate active successor | Actual target and remaining route outcome propagation | Prefix/abort behavior preserved; no replay after publication |
+| EF04 | Skin recipe pushed; actor presentation also pushed | Local target gates; joint recipe/presentation proof if enabled together | Combined ON deliberately rejected until joint credit proof |
+| EF05 | Static source frozen; root synchronizing current base | Exact current-call content witness and ownership handback | Integrated lifetime alone never certifies interior immutability |
+| EF06 | Resident binding integrateddb01f44 | Local target/runtime gate; next demonstrated cold authority | Resident-only scope; no cold-content or private appearance acceptance |
+| EF07 | Earlier source integrated; consumed by static successor | Composition review against fresh resident binding | Existing scope/lease probes reused, not duplicated |
+| EF08 | Stream integrated4996386; root executing recovered clip | Publish resynchronized original qualified clip with actual-source receipts | Stream-before-clip dependency is now satisfied; target/run gates remain local |
+| EF09 | Actual package mutation/retirement pushed | Correct deep-path target command and next exact publisher | Shallow /tmp profile-helper copy is invalid; use integrated repository helper |
+| EF10 | Static source frozen,18 normal+18 sanitizer groups PASS | Root attach primary Make include, compose with binding and publish | No first integration; actual SH-4 stack/headroom/cost gate open |
+| EF11 | ef14_recovery ACTIVE in sole cloth/material/producer scope | Neutral8x8 RGB565 material through actual converter/package/upload/FIFO | Public source only; final source-TEV fixture, base sync and publication pending |
+| EF12 | Current texture-matrix strip pushed; no active successor | Local target gate; remaining mask/spline/RTT/Esp1b source scope | No first integration yet; no retained instance certificate |
+| EF13 | Loaded W29 producer/retirement integrated26f7d82 | Local package/target/current-room qualification | Private input/look/runtime gates remain local |
+| EF14 | ef08_recovery ACTIVE on maintained-SDK manifest; ef15 reviews | Explicit reviewed patch/profile binding and refusal fixtures | Actual SH-4 numeric/FPSCR/TMU receipt remains pending local SDK build/run |
+| EF15 | OFF source repair integrated149bff3; actual full target OFF PASS | Remaining lifecycle/current-TPL runtime and console qualification | FRONT_TEXOBJ held; no broader frontend acceptance |
+| EF16 | Bounded formatted record pushed; no active arbitrary-raw writer | Local target ordering/IRQ duration; explicit general-raw continuation | Long live-alias raw calls remain whole-call masked; returning-fault/NMI/cache open |
+
+### Six overlapping architecture tracks
+
+| Track | Observed worker/state | Next deliverable | Dependency/wait |
+|---|---|---|---|
+| Actor admission/preparation/presentation | Recipe and presentation pushed | Local target identity plus broader source classes | Current owner/pose/material; combined controls guarded |
+| Ordered bounded world selection | Existing pages integrated; static frozen | Current ordered2..16 opaque plans with exact witness | Oversize witness conservatively declines; no persistent topology hit |
+| Stream then qualified clip | Stream integrated; root recovered clip active | Original13109de source resync and bounded publication | Normal/sanitizer, actual Make/native guard and OFF checks now rerun PASS |
+| Actual binding before geometry | Binding integrated; ef15 static review next | Composed static/current-binding source proof | No cold-content guarantee; nested host stack19792 is not full SH-4 bound |
+| Precise world mutation | Publisher slice pushed; next publisher unassigned | Concrete material/placement source authority | Unknown mutable content conservative; target gate local |
+| Ordered simulation continuations | Earlier EFM/collision/line integrated; no new active defect | Local matched semantics/order/cost receipts | Existing four profiles do not prove the full cross-product |
+
+The three named recovery workers are observable. Old worker control/process state
+is inaccessible, so old assignments are not called active. Old worktrees remain
+untouched and preserved source was reused. Root owns publication, all shared
+documents and primary Make includes. ef08 owns the fixture builder; ef14 owns
+cloth/material/convert_tpl; ef15's current review is read-only. Static is frozen
+for root integration and the recovered clip has its exclusive source writer.
+Prepared artifacts and host fixtures are not target, runtime or hardware acceptance.
+
+**NEXT:** publish static and recovered clip slices, then the maintained-SDK fixture
+correction and bounded cloth/material slice with their actual tests or honest WIP
+limits. Fetch integration between slices. No private-data wait is being used to
+defer an independently implementable public-source contract.

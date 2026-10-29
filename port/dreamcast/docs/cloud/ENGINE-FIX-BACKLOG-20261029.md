@@ -1,5 +1,10 @@
 Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
 
+## Owner recovery gates 2026-10-29 18:15 EDT
+
+RE4-PLAN-SYNC-20261029-1202: EF15 frontend ownership now target/full-OFF-qualified and integrated149bff3a; EF08 stream completion corrected target profile integrated49963865 after six arms. Compatible K35 QA on49963865 prepared/16payloads bound; both frontend and portal parent holds remain. This makes14 of16 primary cards have first integrated slices,0 whole-card signoffs; EF10 and EF12 still await their first landings. Recoverydocs3b queue conflict and clothfixtureb2 patched-SDK header binding remain blocked; other reviewed source slices await target gates. Exact limits and cloud action requests are in current Build31/32/34/systemic Answers(owner).
+
+
 ## Owner runtime checkpoint 2026-10-29 17:54 EDT
 
 RE4-PLAN-SYNC-20261029-1202: the permitted current-image ordinary guest PADRead/NewGame plus local QA Link route is established. EF04 has scoped real inventory portrait Submitted486/refused0 and two matching-hash3MiB backing open/close cycles; first radio/async/whole-card acceptance stays open. EF11/14 nominal r100 live9x10 cloth output is observed (9599 rows/drop0); selected-sheet both-side/near-plane/material/wide visual parity and target numeric/FPSCR/full memory/cost/console are open. See current Answers(owner) in build29/build32. All new public-source/synthetic implementation remains cloud-owned, and newly published recovery/frontend/world-stream/model-binding/mutation/water handbacks await serialized local review. No default, frozen release scope, hardware acceptance or SD state changed.
@@ -14,18 +19,18 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
-## Recovery execution checkpoint: 2026-10-29 17:58 EDT
+## Recovery execution checkpoint: 2026-10-29 18:31 EDT
 
-All three priority deliveries and six additional bounded slices have verified
-pushed SHAs. Integration is still `f3a0216d43406555c655947f247acc8f02e5ca0d`; none of those new slices is integrated,
-enabled or accepted. Actor presentation, static ordered spans and actual cloth
-material work have three observed active workers. The remaining dependent clip
-candidate is durably preserved as WIP with its stream-integration hold intact.
-See the [exact remote ledger, sixteen-card activity and six-track matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-publication-batch-2).
-Source branches carry their existing Build handbacks and card backlog updates;
-root serializes queue Status here. Public-source contracts do not wait for
-private data. Default0, required full target OFF identity, gameplay/material/
-lifetime contracts and all local release/private/runtime/console holds remain.
+Fresh integration `26f7d8278be77388b157910765f5e6b182c39cc1` includes EF15, EF08, EF06 and EF13 recovery deliveries.
+EF15 full target OFF and EF08 six target profile/OFF checks passed locally. Ten
+source slices have verified pushed SHAs, including current-image actor presentation.
+Static source is frozen for composition/publication; recovered clip is executing
+after its stream dependency landed. Observed workers implement the explicit
+maintained-SDK EF14 fixture manifest and bounded cloth/material public producer.
+See the [exact ledger and full live matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-live-source-checkpoint).
+Fourteen cards have first integrations; zero whole-card signoffs. EF10/EF12 still
+need first integrations. New knobs remain default0; all required disabled identity,
+gameplay/material/lifetime and release/private/runtime/look/console holds remain.
 
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
@@ -234,6 +239,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF06. Bind PS2 cached headers to the texture upload incarnation
 
+**2026-10-29 recovery source delivery:** Resident rigid prepared binding recovered; normal/sanitizer poisoned-source gates and scoped OFF checks PASS. Warm positions6-to3 with identical output is host fixture evidence only. Cold/content and target/runtime gates remain open; default0. See [Build34](handbacks/build-34.md).
+
 **Gap.** `Ps2HdrSlot` checks key, size, mode, entry validity and VRAM address. `close_entry` invalidates model/UI headers and UI-handle stamps but not the PS2 slot. A same-entry/same-address reload can satisfy pointer checks despite a new upload representation. This is a concrete stale-hit risk to reproduce with a focused fixture.
 
 **Target.** Compiled header words belong to the exact live texture upload and effective material state.
@@ -265,6 +272,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 **Code.** `Owner/Entry/bind/unbind/reset_now/acquire_plan` in [native_draw_plan_owner.cpp][PLAN_OWNER]; current source invalidation in [native_ui.cpp][UI] and retained preparation in [native_model.cpp][MODEL].
 
 ### EF08. Complete portal witnesses across the primary world producers
+
+**2026-10-29 recovery source delivery:** Corrected complete655/656/657-assignment stream profile and effective primary-Make/native guard fixtures PASS, pacing2/2/4063/1/0; target ctrl/on/pages links remain local. Portal stays outside broad ALLON; no integration or acceptance claimed. See [Build31](handbacks/build-31.md).
 
 **Gap.** Build 31's portal path is tied to producer combinations that exclude stream/submit batching and clip gather/indexed paths. Visibility completion authority does not yet compose across those existing producers.
 
@@ -349,6 +358,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF13. Supply water coverage through the existing layer data contract
 
+**2026-10-29 recovery source delivery:** Recovered actual loaded W29 producer/retirement and strict full-three-TU SH-conditioned OFF fixtures; package5/5 and schema4/4 normal/sanitizer PASS. Target/full-image/private/runtime gates remain local; default0, partial EF13. See [Build29](handbacks/build-29.md).
+
 **Gap.** Water already has `Re4dcWaterLayer -> WaterNode -> water_emit`, including deferred ordering and bounded native geometry. Source selection remains distributed through compiled room/extension tables; absent data and intentionally absent water need distinct meanings.
 
 **Target.** Reuse the native emitter while supplying versioned, source-bound layer definitions through the existing asset pipeline. Preserve current PS2 replacement policy, animation phase and generator/gameplay behavior.
@@ -381,6 +392,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 **Code.** [sh4zam_direct.c][SHZ_DIRECT], [sh4zam_skin.c][SHZ_SKIN], [re4dc_xm.h][XM], [game30.mk][MAKE], [trans.cpp][TRANS] and [native_actor_fast.cpp][ACTOR]. Keep the pinned library unless a separately justified API extension is needed.
 
 ### EF15. Version eligible frontend texture descriptor sets
+
+**2026-10-29 recovery source delivery:** Implemented source repair preserves halt2465 and exact six-TU SH-conditioned absent/zero preprocessing; normal/sanitizer and old-failure controls PASS. Actual target full OFF identity remains mandatory/local; not integrated/enabled/accepted. See [Build34](handbacks/build-34.md).
 
 **Gap.** Build 34 repaired `ftLookup` by checking full current descriptors. Every hit still walks all descriptors and reconstructs their packed GX words because pointer identity does not certify their contents. That repeated descriptor validation is visible from source; immutability/version authority must be established for each eligible source class.
 

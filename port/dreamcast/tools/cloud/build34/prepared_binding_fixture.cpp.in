@@ -1,0 +1,229 @@
+#include "native_model.h"
+#include "model_prepared_binding34.h"
+#include "native_draw_plan.hpp"
+#include "pvr_geometry.hpp"
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#ifdef __SANITIZE_ADDRESS__
+#include <sanitizer/asan_interface.h>
+#endif
+
+using re4dc::render::NativeDrawPlan;
+constexpr unsigned kTextureCount=64;
+struct Key { unsigned crc,fnv; bool operator==(const Key& b)const{return crc==b.crc && fnv==b.fnv;} };
+struct Texture { unsigned width=128,height=64; };
+struct Package {
+    Texture t{};
+    struct Header { unsigned texture_count=1; } h{};
+    bool uploaded=true;
+    bool upload_complete()const{return uploaded;}
+    const Header& header()const{return h;}
+    const Texture* textures()const{return &t;}
+    void* pvr_texture(unsigned)const{return uploaded?(void*)this:nullptr;}
+};
+struct Entry { Package package{};Key key{0x1234,0x5678};unsigned frame=0;bool valid=true;unsigned upload_incarnation=1; };
+Entry entries[kTextureCount];
+re4dc_actor::TextureLeases<kTextureCount> actor_texture_leases;
+using HandleEntry=unsigned char;
+@HANDLE@
+Handle handle_table[256]{};
+unsigned handle_reset=0,entry_closed[kTextureCount]{};
+bool palette_same(unsigned,const Re4dcUiImage&){return true;}
+@HANDLE_SHAPE@
+@PEEK@
+bool frame_ready=true,stream_aborted=false,direct_open=false,draining_parts=false;
+unsigned frame=1,owner_incarnation=1,loads=0,begins=0,commits=0,aborts=0,status=99,input=0,output=0;
+unsigned after_load=0,after_begin=0,after_commit=0,packet_capacity=2048;
+bool streaming=false;
+Re4dcModelPart* live_part=nullptr;
+re4dc::render::SourceLighting* live_light=nullptr;
+Entry* model_handle=nullptr;
+struct Archive {
+    alignas(32) unsigned char part[32]{};
+    alignas(32) unsigned char stream[64]{};
+    alignas(32) short positions[3][4]{{-2,-2,0,0},{2,-2,0,0},{0,2,0,0}};
+    alignas(32) signed char normals[3][4]{{0,0,64,0},{0,0,64,0},{0,0,64,0}};
+    alignas(32) unsigned short uv[3][2]{{0,0},{32768,0},{0,32768}};
+    alignas(32) unsigned char pixels[2048]{};
+} archive;
+static void retire_source_backing(){
+    ++owner_incarnation;
+#ifdef __SANITIZE_ADDRESS__
+    __asan_poison_memory_region(&archive,sizeof(archive));
+#endif
+}
+static void restore_source_backing(){
+#ifdef __SANITIZE_ADDRESS__
+    __asan_unpoison_memory_region(&archive,sizeof(archive));
+#endif
+    owner_incarnation=1;
+}
+extern "C" Re4dcDrawOwnerStamp re4dc_model_draw_owner_stamp(const void* p,unsigned bytes){
+    const auto a=(std::uintptr_t)p,b=(std::uintptr_t)&archive;
+    return owner_incarnation && a>=b && a-b<=sizeof(archive) && bytes<=sizeof(archive)-(a-b)?
+        Re4dcDrawOwnerStamp{1,owner_incarnation}:Re4dcDrawOwnerStamp{};
+}
+int select_model_pass(const Re4dcModelPart*){return 0;}
+#define RE4DC_WRAP_SAFE(x) true
+@IMAGE_SIZE@
+Entry* resolve(const Re4dcUiImage& image,const Re4dcModelPart*,bool){
+    ++loads;
+    if(after_load==1)archive.part[0]^=1;
+    if(after_load==2)++owner_incarnation;
+    if(after_load==3)entries[0].upload_incarnation++;
+    if(after_load==4 && live_part)live_part->wrap_s^=1;
+    if(after_load==5 && live_light)live_light->tev_scale+=1;
+    if(after_load==6)++frame;
+    if(after_load==7)retire_source_backing();
+    unsigned shape=0;assert(handle_shape(image,shape,true));
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(image.pixels));
+    const unsigned slot=((a>>5)^(a>>13)^(shape>>11))&255U;
+    handle_table[slot]={image.pixels,image.palette,nullptr,nullptr,shape,0,2,0,(unsigned short)image.palette_bytes};
+    return &entries[0];
+}
+@PREPARED@
+static pvr_vertex_t packet[2048];
+static std::vector<pvr_vertex_t> published;
+extern "C" int re4dc_model_diagnostic_enabled(){return 1;}
+extern "C" int re4dc_model_packet_reserve(const Re4dcModelPart*,Re4dcModelPacket* p){
+    *p={packet,packet_capacity,.75f,.75f};return 1;
+}
+extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* part,Re4dcModelPacket* p){
+    ++begins;model_handle=resolve(part->image,nullptr,false);
+    if(after_begin==1)archive.part[0]^=1;
+    if(after_begin==2)++owner_incarnation;
+    if(after_begin==3)entries[0].upload_incarnation++;
+    *p={packet,packet_capacity,.375f,.75f};return 1;
+}
+#if RE4DC_PREPARED_BINDING34
+@WRAPPER@
+#endif
+extern "C" void re4dc_model_packet_commit(unsigned n){
+    ++commits;published.insert(published.end(),packet,packet+n);
+    if(after_commit==1)++owner_incarnation;
+    if(after_commit==2)retire_source_backing();
+}
+extern "C" int re4dc_model_packet_streaming(){return streaming;}
+extern "C" void re4dc_model_packet_abort(){++aborts;published.clear();}
+extern "C" void re4dc_model_result(unsigned r,unsigned i,unsigned o){status=r;input=i;output=o;}
+extern "C" int re4dc_model_defer_part(const Re4dcModelPart*){return 0;}
+static std::vector<unsigned char> plan_memory,bounds_memory;
+static const re4dc::render::DrawPlanBounds* bounds=nullptr;
+extern "C" const re4dc::render::DrawPlanBounds* re4dc_model_acquired_bounds(){return bounds;}
+extern "C" const re4dc::render::DrawLocalPlan* re4dc_model_acquired_locals(){return nullptr;}
+extern "C" void re4dc_model_release_draw_plan(){}
+extern "C" const NativeDrawPlan* re4dc_model_acquire_draw_plan(const Re4dcModelPart* p,int* invalid){
+    re4dc::render::DrawPlanRequirements r;
+    *invalid=!re4dc::render::inspect_draw_plan(p->stream,p->stream_bytes,false,p->position_count,p->normal_count,r);
+    if(*invalid)return nullptr;
+    plan_memory.resize(r.bytes+32);
+    auto* plan=re4dc::render::prepare_draw_plan(plan_memory.data(),plan_memory.size(),p->stream,p->stream_bytes,false,r);
+    assert(plan);bounds_memory.resize(256);
+    bounds=re4dc::render::prepare_draw_bounds(bounds_memory.data(),bounds_memory.size(),*plan,p->stream,false,
+        p->positions,p->position_stride,1,true);
+    assert(bounds);return plan;
+}
+extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){*bytes=0;return nullptr;}
+extern "C" void* re4dc_model_retained_storage(unsigned* bytes){*bytes=0;return nullptr;}
+alignas(32) unsigned char preparation[12288];
+extern "C" void* re4dc_model_preparation_storage(unsigned* bytes){*bytes=sizeof(preparation);return preparation;}
+int pvr_prim(const void*,std::size_t){assert(false);return -1;}
+
+int main(){
+    archive.stream[0]=0x90;archive.stream[1]=0;archive.stream[2]=3;
+    for(unsigned i=0;i<3;++i){archive.stream[3+i*6]=0;archive.stream[4+i*6]=i;
+        archive.stream[5+i*6]=archive.stream[6+i*6]=0;
+        archive.stream[7+i*6]=0;archive.stream[8+i*6]=i;}
+    Re4dcModelPart p{};
+    p.part=archive.part;p.stream=archive.stream;p.stream_bytes=21;
+    p.positions=(const unsigned char*)archive.positions;p.normals=(const unsigned char*)archive.normals;
+    p.uv=(const unsigned char*)archive.uv;p.position_count=3;p.normal_count=1;
+    p.position_stride=8;p.normal_stride=4;p.normal_shift=6;
+    struct SourceModel { unsigned kindid=2; } source_model;
+    struct SourceData { unsigned shapeOfs=0; } source_data;
+    struct SourceInfo { unsigned be_flag=0; } source_info;
+    const bool rigid=true;
+    auto* m=&source_model;auto* d=&source_data;auto* info=&source_info;
+    @STATIC_ASSIGN@
+    assert(p.static_geometry==1);
+    p.image={archive.pixels,nullptr,48,48,0,0xffffffffU,0};
+    p.modelview[0]=p.modelview[5]=p.modelview[10]=1;p.modelview[11]=-10;
+    p.projection[1]=p.projection[3]=1;p.projection[5]=-1.f/99;p.projection[6]=-100.f/99;
+    p.viewport[2]=640;p.viewport[3]=480;p.viewport[5]=1;
+    live_part=&p;
+    auto run=[&](){status=99;loads=begins=commits=aborts=0;published.clear();
+        re4dc_model_preparation_frame();const auto before=re4dc_model_work_stats()->position_references;
+        re4dc_model_submit(&p);return re4dc_model_work_stats()->position_references-before;};
+    const unsigned cold=run();
+    assert(status==0 && commits==1 && loads==1 && begins==1 && cold==6);
+    const auto cold_output=published;
+    const unsigned transformed=run();
+#if RE4DC_PREPARED_BINDING34
+    assert(status==0 && commits==1 && loads==1 && begins==1 && transformed==3);
+#else
+    assert(status==0 && commits==1 && loads==1 && begins==1 && transformed==6);
+#endif
+    assert(published.size()==3 && published[1].u==.375f && published[2].v==.75f);
+    assert(cold_output.size()==published.size() &&
+           !std::memcmp(cold_output.data(),published.data(),published.size()*sizeof(pvr_vertex_t)));
+    const auto expected=published;
+    unsigned long long hash=1469598103934665603ULL;
+    for(const unsigned char byte:std::vector<unsigned char>((const unsigned char*)expected.data(),
+          (const unsigned char*)expected.data()+expected.size()*sizeof(pvr_vertex_t)))
+        hash=(hash^byte)*1099511628211ULL;
+    p.modelview[11]=10;run();
+    assert(status==0 && published.empty() && loads==0);
+    p.modelview[11]=-10;
+#if RE4DC_PREPARED_BINDING34
+    Re4dcModelPart no_part=p;no_part.part=nullptr;
+    Re4dcModelPreparedBinding34 no_part_binding{};
+    assert(re4dc_model_packet_prepare34(&no_part,12,0,&no_part_binding)==0 && !no_part_binding.active);
+    source_model.kindid=1;@STATIC_ASSIGN@
+    const unsigned not_static=run();
+    assert(status==0 && not_static==6 && published.size()==expected.size() &&
+           !std::memcmp(published.data(),expected.data(),expected.size()*sizeof(pvr_vertex_t)));
+    source_model.kindid=2;@STATIC_ASSIGN@
+    owner_incarnation=0;const unsigned fallback=run();
+    assert(status==0 && fallback==6 && published.size()==expected.size() &&
+           !std::memcmp(published.data(),expected.data(),expected.size()*sizeof(pvr_vertex_t)));
+    owner_incarnation=1;
+    Re4dcActorTextureLease held[64]{};
+    for(auto& h:held)assert(actor_texture_leases.acquire(0,frame,h));
+    const unsigned full_fallback=run();
+    assert(status==0 && full_fallback==6 && published.size()==expected.size() &&
+           !std::memcmp(published.data(),expected.data(),expected.size()*sizeof(pvr_vertex_t)));
+    for(auto& h:held)actor_texture_leases.release(h);
+    for(unsigned mutation=1;mutation<=3;++mutation){
+        after_load=mutation;run();assert(status==2 && commits==0 && published.empty());
+        after_load=0;archive.part[0]=0;owner_incarnation=1;entries[0].upload_incarnation=1;
+    }
+    after_load=4;run();assert(status==2 && commits==0 && published.empty());
+    after_load=0;p.wrap_s=0;
+    re4dc::render::SourceLighting light{};light.tev_scale=1;
+    p.lighting=&light;live_light=&light;after_load=5;
+    run();assert(status==2 && commits==0 && published.empty());
+    after_load=0;p.lighting=nullptr;live_light=nullptr;
+    after_load=6;run();assert(status==2 && commits==0 && published.empty());
+    after_load=0;frame=1;
+    // The next current check must reject the replaced owner before reading
+    // the old source prefix or payload, even when its former memory faults.
+    after_load=7;run();restore_source_backing();after_load=0;
+    assert(status==2 && commits==0 && published.empty());
+    for(unsigned mutation=1;mutation<=3;++mutation){
+        after_begin=mutation;run();assert(status==2 && commits==0 && published.empty());
+        after_begin=0;archive.part[0]=0;owner_incarnation=1;entries[0].upload_incarnation=1;
+    }
+    std::memcpy(archive.stream+21,archive.stream,21);p.stream_bytes=42;
+    packet_capacity=4;streaming=true;after_commit=1;
+    run();assert(status==2 && commits==1 && aborts==1 && published.empty());
+    owner_incarnation=1;after_commit=2;
+    run();restore_source_backing();
+    assert(status==2 && commits==1 && aborts==1 && published.empty());
+    after_commit=0;streaming=false;packet_capacity=2048;p.stream_bytes=21;owner_incarnation=1;
+#endif
+    std::printf("PASS prepared=%u cold_references=%u warm_references=%u culled_loads=0 output=%zu hash=%016llx\n",
+                unsigned(RE4DC_PREPARED_BINDING34),cold,transformed,expected.size(),hash);
+}
