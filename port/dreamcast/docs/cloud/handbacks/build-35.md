@@ -1008,3 +1008,47 @@ qualification remain pending. DIAG4/14 and absent window32 active-track proof
 remain held. Next review remaining stack-path coverage and supported runtime
 prerequisites using retained graph/stack receipts; do not manufacture a full
 bound from local compiler frames or add overlapping costs. No SD/release.
+
+#### Owner: window-consumer local frames and compiled kernel-stack attributes, 2026-10-29
+
+The prior nine-unit local-frame comparison covered existing-audit/gaps with
+window0. Closed that coverage gap with the actual retained commands for
+the four window consumers: three window0 and four window32 metadata-only
+RAM compilations. Added only -fstack-usage and moved temporary outputs;
+every allocated/relocation section matches its original object, and original
+objects remain unchanged. Initial attempt stopped before compiler launch
+because SDK environment was not loaded; resumed after the same project
+kos-env/wrapper setup as the recorded build, retaining that failed-start
+receipt. No candidate relink or SDK-library rebuild.
+
+| Unit | Window0 functions/local maximum B | Window32 functions/local maximum B |
+|---|---:|---:|
+| draw_fallback_audit |11 /48|11 /8|
+| fallback_audit29 |14 /60|14 /64|
+| fallback_window35 |not compiled|10 /64|
+| qa_menu |53 /3092|53 /3092|
+
+All emitted window-profile frame records are static. Matched fa29::end_tick
+local estimate increases8->20B. Added/removed source-location entries can
+reflect inlining; the lower unit maximum is not claimed as saved stack.
+Never sum these maxima into a whole-thread bound or a runtime gain.
+
+Independently inspected all five retained QA ELFs (three main/two front).
+Actual _thd_init loads65536 for the kernel-thread stack-size attribute,
+forms its pointer from runtime __arch_mem_top minus65536, and passes that
+attribute to _thd_create_ex. Source-field layout and exact instructions/
+literal-pool reads bound; function744B and every ELF hash retained unchanged.
+This closes compiled-configuration binding previously source-only. It does
+not establish actual top-of-memory value, runtime capacity/high-water or
+headroom. The separate12KiB native-slot floor and8/4/4KiB modem workers
+are distinct stack classes, not amounts to add to one synchronous budget.
+
+Private stack-replay-window32/RESULTS, WINDOW-STACK-LOCAL-COMPARISON and
+MAIN-STACK-CONFIGURATION-ELF-PROOF retain full provenance. Seven unit-local
+graphs and22 emitted audit owners still do not prove complete external/
+indirect/recursive/libc/fs/IRQ paths or whole-thread bounds. Runtime
+high-water/current heap, CPU, partial/collecting/lifecycle/marked600-draw,
+look/STRICT/console gates and DIAG4/14 remain pending. No runtime repeat,
+source/asset/recipe/SD/release change. Consolidate these remaining prerequisites
+and audit existing handover coverage before starting further work; preserve
+already-prepared L4 tour and explicit console/look/release waits.
