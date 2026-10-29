@@ -523,3 +523,131 @@ with matching camera/state and300+ drawn-frame windows. Existing HouseWhole27
 Pi benchmark rows are from another earlier session and exact loaded-program
 identity remains unresolved; they do not qualify this candidate. No SD write,
 recipe enablement or publication.
+
+## EF01 owned-source span slice, 2026-10-29
+
+**DONE - IMPLEMENTED / HOST VALIDATED, default off.** `ACTOR_SOURCE_SPAN=1`
+extends the existing `ChunkInput -> Re4dcActorChunk -> owned_run_load ->
+Re4dcModelPart` path. The real NMR package parser already publishes logical
+position/normal, UV and FE stream extents into `ChunkInput`; compiled actor
+arrays supply `sizeof` extents through the same interface. The transaction
+now preserves those exact extents after its existing immutable chunk proof.
+No extent comes from a largest referenced index or a physical RAM address.
+
+The metadata names the source position/normal allocations, UV byte count,
+explicit U16/Q15 or S16/Q8 interpretation, and the existing skin lease's
+serial/frame. The never-reused serial authenticates an immutable borrow only
+while that lease remains current. Owner validation precedes every source
+read and every memo hit. Current source positions/normals and counts must
+still match the registered owner. Replacement, re-LOD and mutation require
+the existing owned-record retirement before a new lease is acquired; no
+cross-frame content certificate or new package generation is invented.
+
+Preparation bounds every level-zero position/normal/UV reference and every
+stored LOD's record prefix and index lists, including unselected LODs. A
+16-entry bounded memo reuses that proof only for the exact descriptor and
+current owner incarnation. Invalid geometry refuses before emission. A UV
+precision tag that disagrees with otherwise bounded current values retains
+UV32. Legacy tags also retain UV32. Unknown/mutable/unowned inputs keep the
+existing per-draw current-record scan. Vertex-colour, mutable bake and
+pending-LOD formats remain excluded from this first immutable slice.
+Current pose/palette, texture dimensions/scales, scroll and material state
+remain live draw inputs and are absent from the reusable UV range proof.
+
+The new knob is zero by default; zero/absent add no Make definitions. Enabled
+builds require `ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1
+NATIVE_ACTOR_SKIN_LAZY=1`. `GAME_CPPFLAGS` and `PLATFORM_CPPFLAGS` receive the
+same layout guard. SH-4 static assertions require 32 bytes per added span
+and 1,024 bytes for the memo; the owned record adds
+`32*(1 + role_count + run_count)` bytes before existing header rounding
+(1,024 bytes at nine roles and 22 runs). Other stored part/chunk values also
+grow by 32 bytes each. These are layout costs, not measured runtime peaks or
+memory savings. `ASPAN` reports preparations, memo hits, geometry records and
+these storage sizes for a later bound actual-data comparison.
+
+**Host checks:**
+
+```sh
+python3 port/dreamcast/tests/test_actor_source_span.py --output "$FRESH_NORMAL"
+python3 port/dreamcast/tests/test_actor_source_span.py --sanitize --output "$FRESH_SANITIZED"
+python3 port/dreamcast/tools/cloud/build32/actor_runtime_host.py --output "$FRESH_REGRESSION"
+```
+
+The new whole-production-actor-TU fixture passes 214 assertions with each of
+the ordinary and isolated skin owner implementations (428 per mode), normal
+and ASan/UBSan (`detect_leaks=0`). Cases cover exact/truncated allocations,
+bad geometry references, logical extent preservation despite a single UV
+reference, signedness changes, legacy and unsupported record formats,
+all three stored LOD tables/prefixes, same-pointer mutation after revocation,
+same-frame stale serials, expired frames, live texture scale, actual owned
+run loading and native submission. Freed source storage after retirement
+proves the owner-before-dereference order under ASan. Nine malformed or
+incompatible Make profiles refuse, and absent/zero produce identical empty
+new flags. The existing Build32 whole-TU regression passes
+4,354 / 4,358 / 4,358 assertions for its three grouped modes.
+Existing host SQ/AVK adapters remain explicit platform boundaries.
+
+**NEXT:** Full release-recipe absent/zero/ON target builds, with exact
+resolved definitions, programme/overlay identity for absent/zero against the
+shared pinned `9ee386e3` baseline, and enabled layout/object checks. The
+coordinator serializes the SDK slot. Then collect actual-data admissions,
+scan/reuse counts, retained/peak metadata, equivalent output and total actor
+cost with a bound comparison control. This slice does not close EF01,
+EF02 producer correction, EF04 general native FE fallback, or any runtime,
+look, STRICT, full-image or physical-console acceptance gate.
+
+**BLOCKED:** Target execution awaits only the coordinator's build slot;
+source/host work is complete for this bounded slice. No private inputs,
+disc mastering, emulator session, release change, SD/Pi action or upload.
+
+### EF01 target build handback, 2026-10-29
+
+**DONE - TARGET BUILD VALIDATED, default off.** Code commit
+`d6a53024def32c1c8f94411114206b44a2cb83c8` built from a clean isolated tree
+with pinned SH4ZAM `33fa4850cacb30dd0ad35485ef035526ec4ce782`. Three fresh
+full `rP` release-recipe arms (absent, explicit zero, enabled) passed rc=0,
+empty `missing.txt`, in 42 seconds each. The enabled arm appends
+`ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1
+NATIVE_ACTOR_SKIN_LAZY=1 ACTOR_SOURCE_SPAN=1` to the unchanged current
+`rr/recipe.conf -> ch2-build.sh rP` chain. Private programme registries and
+fresh output labels kept other lanes' artifacts separate.
+
+Current baseline dependencies were read back as transaction=1,
+skin-lazy=1, PL08=1 and isolated-skin-owner-pool=0. All 527 logged C++
+compilation commands per arm were audited, including game/platform and
+generated module/overlay stubs: every enabled command carries the same
+`RE4DC_ACTOR_SOURCE_SPAN=1` layout definition; every absent/zero command
+omits it. Both global CPPFLAGS contain precisely that appended layout
+definition. The existing transaction's level-zero-only admission and all
+unrelated exclusions remain unchanged.
+
+Against the shared clean pinned `9ee386e3` release baseline, both absent and
+zero preserve the complete raw programme, all 15 overlays and all 11
+allocated ELF sections. The programme is 3,372,036 bytes, SHA-256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`.
+Ten selected layout-dependent game/platform objects also preserve every
+allocated section. Debug ELF files differ and are not claimed identical.
+The enabled ELF SHA-256 is
+`58fa448c42f221b1be9b4f6a261d1e74811f276e8eb6819780e0e68f3db12409`.
+
+Target assertions confirm 32-byte metadata and the memo symbol is exactly
+1,024 bytes. The combined FORMAT32/UV16/SOURCE_SPAN enabled profile changes
+text by +4,800 bytes, rodata by +256 and BSS by +1,120 relative to the release
+baseline. These combined-profile deltas do not isolate EF01 cost or measure
+retained primitive memory/peak loading overlap. No runtime performance or
+memory-saving result follows from them.
+
+Final exact-code normal and ASan/UBSan fixtures both pass 214 assertions for
+each of the ordinary and isolated owner implementations; the existing
+three-mode Build32 regression remains 13,070 assertions passed.
+
+**NEXT:** Actual-data bounded-span admissions/refusals, scan/reuse and live
+metadata measurements, effective output comparison, and the affected
+runtime/look/STRICT/full-image/hardware gates. This first slice does not
+enable legacy certificate semantics, CI/bake/pending-LOD authority, general
+native FE fallback, or close all of EF01. The whole EF card remains open.
+
+**BLOCKED:** No source/build blocker for integrating this default-off slice.
+No live job remains and the exclusive SDK slot is released. Runtime and
+physical-console acceptance are pending their bound inputs/session; no
+emulator, disc mastering, SD/Pi change, publication or upload occurred.

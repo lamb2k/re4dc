@@ -115,6 +115,9 @@ int re4dc_actor_skin_rearm(Re4dcModelPart* p);
 struct Re4dcActorChunk {
     const void* info; const unsigned char* stream; const unsigned char* uv; const float* modelview;
     unsigned stream_bytes, position_count, normal_count;
+#if RE4DC_ACTOR_SOURCE_SPAN
+    Re4dcActorSourceSpan source_span{};
+#endif
 };
 extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* p, const Re4dcActorChunk* chunks, unsigned n);
 

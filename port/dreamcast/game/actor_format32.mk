@@ -4,6 +4,24 @@ ACTOR_FORMAT32 ?= 0
 ifneq ($(words $(ACTOR_FORMAT32)),1)
 $(error ACTOR_FORMAT32 must be one value, 0 or 1)
 endif
+
+# EF01 first consumed slice: immutable owned FE geometry and exact UV spans.
+# This changes shared part/chunk layouts, so every game/platform TU agrees.
+# Zero adds no definitions and retains the previous ABI.
+ACTOR_SOURCE_SPAN ?= 0
+ifneq ($(words $(ACTOR_SOURCE_SPAN)),1)
+$(error ACTOR_SOURCE_SPAN must be one value, 0 or 1)
+endif
+ifeq ($(filter $(ACTOR_SOURCE_SPAN),0 1),)
+$(error ACTOR_SOURCE_SPAN must be 0 or 1)
+endif
+ifeq ($(ACTOR_SOURCE_SPAN),1)
+ifneq ($(ACTOR_FORMAT32)$(NATIVE_ACTOR_UV16)$(ACTOR_TRANSACTION)$(NATIVE_ACTOR_SKIN_LAZY),1111)
+$(error ACTOR_SOURCE_SPAN needs ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1 NATIVE_ACTOR_SKIN_LAZY=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_ACTOR_SOURCE_SPAN=1
+PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_SOURCE_SPAN=1
+endif
 ifeq ($(filter $(ACTOR_FORMAT32),0 1),)
 $(error ACTOR_FORMAT32 must be 0 or 1)
 endif
