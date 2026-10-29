@@ -1,3 +1,12 @@
+#ifndef RE4DC_WORLD_PREPARED09
+#define RE4DC_WORLD_PREPARED09 0
+#endif
+#if RE4DC_WORLD_PREPARED09 != 0 && RE4DC_WORLD_PREPARED09 != 1
+#error WORLD_PREPARED09 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PREPARED09 && (!RE4DC_WORLD_PART_PLAN29 || !RE4DC_MOVIE_WORLD_ARENA || !RE4DC_STATIC_OBJ_LIFETIME05)
+#error WORLD_PREPARED09 needs WORLD_PART_PLAN29, MOVIE_WORLD_ARENA and STATIC_OBJ_LIFETIME05 room-cell authority
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -8265,7 +8274,13 @@ int ps2_pass(unsigned pass,float zfar){
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
 #if RE4DC_WORLD_PORTAL29
+#if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL_COMPLETION
+            // capture already resolved membership. The exact ticket is checked
+            // again by finish after direct/batch release; no second search.
+            if(x.wp29_ticket.serial){
+#else
             if(wp29::witness(x.wp29_placement,x.index)){
+#endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif
@@ -8443,6 +8458,33 @@ int ps2_pass(unsigned pass,float zfar){
         // Capture this with mvq; fresh source state can change before queued replay.
         const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #endif
+// WORLD_PREPARED09_EARLY_BEGIN
+#if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL==1 && RE4DC_PS2_WORLD_DYNAMIC
+        {
+            const auto* early=wplan29::bounds(i,wplan29::bound_incarnation);
+            bool immutable=early && RE4DC_PS2_AFFINE==pl.affine && dyn::ids && dyn::nids==ps2w.nplacements && pl.placement<dyn::nids;
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+            immutable=immutable && !re4dc_source_world_group_claimed();
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+            immutable=immutable && !r11fNativeClaimed();
+#endif
+            if(immutable){
+                const unsigned id=dyn::ids[pl.placement];
+                immutable=id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone;
+            }
+            if(immutable){
+                wp29::activate();
+                if(pc::st.active){
+                    bool inside=true;
+                    for(unsigned a=0;a<3;++a)inside=inside && early->center[a]-early->half[a]>=PC_OUTER_RENDER[a] &&
+                        early->center[a]+early->half[a]<=PC_OUTER_RENDER[3+a];
+                    if(!inside && pc::hidden(early->center,early->half)>0){++pc::st.placements;continue;}
+                }
+            }
+        }
+#endif
+// WORLD_PREPARED09_EARLY_END
 #if RE4DC_PS2_WORLD_LEAN
 #if RE4DC_SKY_ANY
         const bool lean_sky=re4dc_sky_mode() && ps2_sky_row(ps2w.room,pl.placement); // sky rows: their own far, no pretest
@@ -8537,6 +8579,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
         unsigned plan_count=mesh.part_count;
         const auto* plan=wplan29::run(pl.mesh,pass,plan_count);
+#if RE4DC_WORLD_PREPARED09
+        const unsigned plan_incarnation=wplan29::bound_incarnation;
+#endif
         for(unsigned k=0;k<plan_count;++k){
 #else
         for(unsigned k=0;k<mesh.part_count;++k){
@@ -8545,9 +8590,18 @@ int ps2_pass(unsigned pass,float zfar){
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
 #if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
             const auto* plan_part=plan?plan+k:nullptr;
             const unsigned index=plan_part?plan_part->index:mesh.first_part+k;
+#if RE4DC_WORLD_PREPARED09
+            const auto& meta=ps2w.parts[index];
+#else
             const Ps2Part meta=plan_part?re4dc::wp29::metadata<Ps2Part>(*plan_part):ps2w.parts[index];
+#endif
             if(plan_part)++wplan29::planned;else ++wplan29::legacy;
 #else
             const unsigned index=mesh.first_part+k;const auto& meta=ps2w.parts[index];
@@ -8634,6 +8688,11 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                     // Preserve the original capacity flush and queue snapshot.
                     if(nctx==kChunkParts || npk+WP29_MESHLET_COUNT>kChunkPicks){if(chunk_flush()<0)return -1;}
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
                     ChunkPart& x=cctx[nctx++];
                     std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
 #if RE4DC_SCENERY_UV_SNAPSHOT
@@ -8718,6 +8777,11 @@ int ps2_pass(unsigned pass,float zfar){
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
 #endif
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
 #if RE4DC_SCENERY_UV_SNAPSHOT
@@ -8742,6 +8806,11 @@ int ps2_pass(unsigned pass,float zfar){
             }
 #endif
             if(chunk_flush()<0)return -1;
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
 #if RE4DC_PS2_INTERIOR_CULL==2

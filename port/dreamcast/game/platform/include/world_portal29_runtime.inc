@@ -148,15 +148,25 @@ bool same_scene(){
 }
 bool witness(unsigned placement,unsigned part){
     if(!pc::wp29_witnesses)return false;
+#if RE4DC_WORLD_PREPARED09
+    return re4dc::portal29::witness_index(pc::wp29_witnesses,pc::wp29_count,placement,part)!=re4dc::portal29::kMaxWitnesses;
+#else
     for(unsigned q=0;q<pc::wp29_count;++q){const auto& w=pc::wp29_witnesses[q];
         if(w.placement==placement && w.part==part)return true;}
     return false;
+#endif
 }
 #if RE4DC_WORLD_PORTAL_COMPLETION
 re4dc::portal29::Ticket capture(unsigned placement,unsigned part,const unsigned* key){
     if(!completion_serial || !same_scene() || !material_matches(part,key))return {};
+#if RE4DC_WORLD_PREPARED09
+    const unsigned q=re4dc::portal29::witness_index(pc::wp29_witnesses,pc::wp29_count,placement,part);
+    if(q!=re4dc::portal29::kMaxWitnesses)return {completion_serial,q,placement,part};
+#else
     for(unsigned q=0;q<pc::wp29_count;++q){const auto& w=pc::wp29_witnesses[q];
         if(w.placement==placement && w.part==part)return {completion_serial,q,placement,part};}
+
+#endif
     return {};
 }
 void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Completion& completion,const unsigned* key){

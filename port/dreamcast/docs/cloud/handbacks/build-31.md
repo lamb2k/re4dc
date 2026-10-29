@@ -476,3 +476,76 @@ NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/l
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
+
+
+## EF09 worker, 2026-10-29: indexed receipt slice
+
+DONE: guarded WORLD_PREPARED09 default0, requiring the existing part plan;
+resolve membership by bounded binary search over the loader-validated sorted
+witness table and consume the existing exact ticket at queued flush. No new
+allocation or visibility authority. Exhaustive N=0..256 tuple tests measure a
+worst case of10 comparisons including final match, not an eight-comparison
+universal bound. NEXT: plan incarnation, direct source metadata/record use and
+optional conservative static bounds within existing cap/floor; then target
+identity. BLOCKED: no SDK slot requested/granted; actual private proof/lifecycle/
+look/STRICT/memory/hardware acceptance remain pending. No active job.
+
+
+## EF09 worker, 2026-10-29: plan lifetime and early consumer
+
+DONE: continued past indexed tickets into actual plan incarnation, exact Room4
+allocator-token ownership before payload/free, package token/revision, callback-
+safe publication, direct current metadata reference and optional conservative
+placement boxes consumed before view setup. Base records retain priority under
+64KiB/96KiB-floor; dynamic/root-pose/uncertain cases use the original path and
+queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,107 main
+checks,86,420 lookup cases and450 ordered live-policy cases; completion628 checks
+remain passing under prepared09. Same-gen/address/size stale close leaves the
+foreign replacement intact. Unproven allocator returns are counted and further
+attempts latched for that room generation; no memory-saving claim.
+NEXT: exact target ON plan/compatible portal profiles, baseline/absent/zero
+release+existing plan/portal identity, actual macro readback and full programme/
+overlay/allocated-section gates. BLOCKED: SDK slot not yet granted; private
+cells/proof, live lifecycle/look/STRICT/memory and net hardware cost pending.
+Details/commands: [WORLD-PREPARED09.md](../../../tools/cloud/build31/WORLD-PREPARED09.md).
+No active SDK/emulator/media process; no release/ALLON or shared provider edit.
+
+EF09 fixture continuation, 2026-10-29: DONE added same-address foreign-payload
+ASan poisoning and reentry during free as well as allocation. Old plan/index/
+bounds reject the poisoned replacement; free reentry preserves the newer
+publication. Current main checks7,107 and controlled allocation balance17/17
+pass normal and sanitized. Runtime/source bytes remain exactly `3ded42ac0`.
+NEXT target admission; BLOCKED unchanged live acceptance gates, no active job.
+
+EF09 qualification fixture, 2026-10-29: DONE the literal record-access guard
+aborts before reading the ASan-poisoned recycled payload; all four call sites
+are present. Main checks7,107 and17/17 allocation balance pass normal/sanitized.
+Runtime/Make remain frozen at3ded42ac0. NEXT local target qualification only;
+new paging, broader portal composition and mutation/scratch follow-ons belong
+to the cloud under the user's updated ownership instruction. No active job.
+
+
+## EF09 worker, 2026-10-29: frozen target qualification DONE
+
+DONE: runtime/Make3ded42ac0 with qualified test/docs625bf8099 passed four serial
+full builds: absent, explicit0, enabled plan, compatible portal; each rc0,
+nonempty ELF and existing empty missing.txt. Full OFF programme/15 overlays/
+all11 allocated section metadata+payload match bound255964fdc/runtime064.
+Entire normalized resolved Make state is equal except new default0 name and
+exact own output/tree roots. Actual native_static complete ii/g0 identity passes
+release, existing-plan and solo-portal source profiles; actual ON -dM facts/
+Make bindings pass both enabled profiles. Host/sanitizer7107+86420(max10)+450,
+prepared completion628 retained. Helper/config/binding results are committed in
+build31; [details](../../../tools/cloud/build31/WORLD-PREPARED09.md).
+
+Matched plan native_static adds2128 text/85 rodata/12 data/44 BSS bytes; local
+ps2_pass9012->9020 and open116->252 bytes. Optional bounds24B/placement remain
+secondary within64KiB plan/96KiB heap-floor admission. Counted unproven returns
+and enabled-provider costs remain memory acceptance inputs, not savings.
+NEXT: owner integration of this bounded slice, cloud-owned source/synthetic
+paging/composition/mutation/scratch follow-ons. BLOCKED acceptance only: authored
+private cells/proof, current look/STRICT/lifecycle, whole-stack/heap and net
+console cost. Queued matrices/UV/material keys remain copied; live policies and
+dynamic/uncertain fallback remain. No default/ALLON promotion. SDK session29536/
+PID1918610 and TU session62931/PID1944733 exited; slot released. No emulator,
+media, push, integration or provider edits. Original frozen trees preserved.
