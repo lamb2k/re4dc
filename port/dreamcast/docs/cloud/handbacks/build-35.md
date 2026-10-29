@@ -643,3 +643,25 @@ profile (unbuilt under unchanged19GiB guard), enabled final-image/game/link,
 observer CPU/current memory-floor and console gates. No runtime timing,
 maximum stack or whole-game acceptance inferred; no source change,
 relink/master/capture, SD write or release action.
+
+#### Owner: thread-root and configured-stack precheck, 2026-10-29
+
+Pinned private source2061 game-poll trace: GameTask -> gameMainLoop ->
+re4dc_room_cycle_poll -> re4dc_warp_poll -> qa_poll -> re4dc_qa_link_tick ->
+link_pump(false). In-game menu also calls link_pump(true). Scheduler creates
+native tasks via OSCreateThread/threadEntry using each task's configured
+stack; TaskChain replaces the current slot. Both actual scheduler objects'
+GetStackSize disassembly returns0x3000 (12KiB), independent of slot.
+Both saved ELF hashes rechecked; linked modem BSS stacks are separate
+dial8192/PPP4096/timer4096B. Do not assign the modem worker capacity to
+synchronous game-thread QA diagnostics or infer free headroom from sizes.
+
+KOS source default main/kernel64KiB is only a source default here; compiled
+library configuration and runtime high-water are not bound by this check.
+Remaining: complete instrumentation-site caller/root ledger, boot/menu
+alternate roots, indirect/nested libc/fs/formatting callees, interrupts and
+runtime high-water. No total callchain or thread-stack acceptance inferred.
+Private source/object/ELF hashes and exact direct-site evidence retained:
+owner-audit35-enabled-20261028/THREAD-ROOT-PRECHECK.json. Window32 still
+unbuilt under19GiB guard; no target change, new compile/link/master/capture,
+SD write or release action.
