@@ -4,6 +4,9 @@
 #ifndef RE4DC_ACTOR_SOURCE_SPAN
 #define RE4DC_ACTOR_SOURCE_SPAN 0
 #endif
+#ifndef RE4DC_NATIVE_FE_CONTINUATION
+#define RE4DC_NATIVE_FE_CONTINUATION 0
+#endif
 #if RE4DC_ACTOR_SOURCE_SPAN
 struct Re4dcActorSourceSpan {
     const unsigned char* positions=nullptr;
