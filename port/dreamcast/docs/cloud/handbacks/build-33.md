@@ -597,3 +597,29 @@ the zero-coverage house view or manufacture a game-data admission from a
 host fixture. Prior392-case host oracle, current actual-data order/look/
 STRICT/memory/full-image and whole-frame console gates remain distinct.
 No source/build, private-asset change, SD write, promotion or publication.
+
+### Answers (owner): constructor-to-named-model cross-check
+
+Read-only source36643bf8a constructor map covers77 ETC IDs and79 literal
+primary/alternate BIN names for the marked kind0 door/box/rack/window
+families. In the already bounded primary-DAR placement inventory it maps
+38 doors,197 boxes,15 racks and39 windows. Positions remain private; these
+are source/placement links, not live model or render admission counters.
+
+Case-insensitive cross-check against the older Scan29 by-model m_obj_split
+candidate snapshot matches15 named models/178 rows; all178 report one part,
+so that matched subset provides no above16-part target. The other64 named
+BINs are not classified by this match. The snapshot may omit/incompletely
+parse models, includes old asset bindings and repeated archive sources;
+these totals are not unique live objects or proof large classes are absent.
+Actual current ModelData displist_num/material and live bridge binding
+remain pending. The indirect kind1/21 path is still separately unmapped.
+
+Private exact mapping, snapshot SHA, placements and negative selection are
+retained in owner-allon33-off-20261028/MODEL-MAP-AUDIT.json. No speculative
+large/blended view, data injection, repeated zero-coverage house run or new
+observer is launched. Existing host392-case oracle,56 target comparisons,
+full absent/zero repacked-image identity and actual-data look/STRICT/
+memory/net console qualification remain separate gates. The public target
+helper's two-TU/relocatable matrix is explicitly not a full image test.
+No source/build, private-asset change, SD write, promotion or publication.
