@@ -1089,3 +1089,116 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+## 2026-10-29 Build32 EF14: bounded cloth XMTRX point batch
+
+### Scope and integration state
+
+**2026-10-29 progress: DONE — reviewed public source slice, default0.** Branch `codex/cloth-batch-20261029`, publication base `a5ac02aecee317c3ac74f1c9e7e2546a40775348`, which includes EF11 width commit `a0166e96b09cb419b46f02c6cddd6cdfb46f254f`. The batch was reconciled with the exact published wide-tile adapter, then reapplied cleanly onto the current integration. It consumes widths 2–100 and each horizontal tile of wider supported dimensions in row-major order.
+
+Changed files: `include/re4dc_xm.h`, `port/dreamcast/game/platform/sh4zam_direct.c`, `src/game/cloth.cpp`, new `port/dreamcast/game/cloth_xm_batch14.mk`, new `port/dreamcast/tests/test_cloth_xm_batch14.py`, and the top-level `port/dreamcast/game/Makefile` include after its existing effects include. The coordinator added the top-level include and primary-Make fixture proof before the EF11 merge; I resolved only `cloth.cpp` and updated the owned fixture on the EF11 base. No `native_ui.cpp`, `native_model.cpp`, source gameplay, or private assets changed.
+
+### Behavior and authority
+
+The default-off `CLOTH_XM_BATCH14=1` selector requires `CLOTH_SHEET11=1`, `GAME_SH4ZAM=1`, `GAME_SH4ZAM_RENDER_ONLY=1`, and `GAME_SH4ZAM_LOGIC=0`. Its definition reaches only `cloth.o` and `sh4zam_direct.o`. The existing wrappers and global/logic SH4ZAM policies stay unchanged. The ON cloth path calls the bounded new point API for each currently active source row, after texture/material preparation and a source-epoch/frame/pointer/dimension recheck. Each call synchronously preflights matrix, count (1–100), 12-byte vector layout, input/output spans and strides, four-byte pointer/stride alignment, address overflow, matrix overlap, and shifted source/output overlap before writing. Exact in-place input/output with the same stride is supported; count 0 declines without writes. Rows of 1–3 points use the current `PSMTXMultVec` scalar association. Rows of at least four load XMTRX once and perform one FTRV per point; the loop contains no game callback or other XMTRX owner.
+
+The SH4ZAM gitlink pin is `33fa4850cacb30dd0ad35485ef035526ec4ce782`. Its `shz_vec4_t` is a 16-byte-aligned vector type while GameCube `Mtx` only promises float alignment. The new batch copies three matrix rows into typed local `shz_vec4_t` values before XMTRX acquisition, then passes those aligned rows to the pinned `shz_xmtrx_load_rows_3x4` inline; it does not cast a possibly four-byte-aligned `Mtx` to a vector pointer. The pinned SH4 assembly loader uses 32-bit `fmov.s` with paired `frchg`; `shz_xmtrx_transform_point3` uses FTRV with w=1. The existing target compiler must still prove the selected inlines, PR/SZ contract, symbol closure, disassembly, stack, and actual SH4 numeric behavior.
+
+The active cloth adapter still prepares exactly one material, keeps the two-row `2 * 100 * 3 * sizeof(float) = 2400`-byte band workspace, and hands each band to the unchanged `re4dc_cloth_band11` packet consumer. The batch lambda receives the source row, tile first column and bounded tile count; it transforms each top/bottom tile immediately before that tile's packet and never emits all rows of one column tile ahead of later tiles. The source diagonal, seam vertices and UV interpolation remain with EF11's packet consumer. It preserves EF03 terminal retirement before and after first publication: a source epoch change after a yielding prepare or packet send returns `PartialAbort`; no retired source is replayed through GX. A malformed batch envelope before publication returns `UnsupportedBeforePublication` without a partial write; after publication the progress accumulator reports `PartialAbort`. The row transform does not introduce a callback between XMTRX load and the last FTRV. This is a render-only numerical approximation; source simulation/callbacks and material/packet/clip behavior remain in their existing paths.
+
+### Checks executed
+
+From the worktree:
+
+```
+python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 tests, OK
+ASAN_OPTIONS=detect_leaks=0 CLOTH_XM_BATCH14_SANITIZE=1 python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 tests, OK
+python3 -B port/dreamcast/tests/test_cloth_tiles11.py
+# 3 tests, OK, including scalar wide baseline in normal and sanitizer arms
+git diff --check
+# clean
+```
+
+The fixture compiles and consumes the actual production batch block, cloth adapter, native sheet packet renderer, and geometry projection code in both tile-selector 0 and 1 profiles. It checks widths 2, 99, 100, 101 and 255, row/column packet encounter order, exact shared seam vertices/UV, near-plane cell order and clipping, supported wide refusal with tiles0, source immutability, scalar/XM route selection and expected load/FTRV counts per tile, strided numeric agreement on a nontrivial affine transform, exact in-place support, 4-byte-only matrix alignment, output guards, invalid inputs/overlap/overflow with no write or XMTRX load, and source retirement before and after publication. A separate differential arm compiles the same actual adapter and packet consumer with batch0 versus batch1 and compares every emitted packet byte at those five widths and the 101-column near-plane seam. Its normal and ASan/UBSan executions passed. The Make test parses the actual primary game Makefile with its production fragment include, checks absent/zero/one flags on affected and unaffected objects, and rejects empty, wildcard, multiword and inconsistent selector dependencies. Host OFF identity compares the production adapter preprocessed text and compiled object bytes against literal pinned `a0166e96` EF11 width source, with both absent and explicit zero; the guarded C/header additions have literal original prefixes. These are host/object checks, not target program-byte proof.
+
+One-off GCC host `-O2 -fstack-usage` on the extracted production fixture reported `re4dc_zam_xm_points14` 160 bytes (`dynamic,bounded`) and scalar comparison 56 bytes (`dynamic,bounded`). With EF11 tile mode on and the same harness/flags, `re4dc_cloth_native` reported 3,456 bytes at batch0 versus 3,392 at batch1 (static); the corresponding whole harness objects measured `.text` 22,775 versus 23,639 bytes and identical `.bss` 44,436 bytes. The local three typed matrix rows account for 48 bytes of source-level automatic storage; the cloth two-row band remains 2,400 bytes. No new persistent/global runtime store is declared. These host object totals include the test harness and are not target footprints. SH4 stack and link/code-size deltas remain unmeasured.
+
+### Outstanding gates
+
+No KOS/SH4 SDK or target compiler is present in this cloud workspace. The local coordinator must serialize integration, then run affected target ON/OFF builds, inspect symbols/disassembly and PR/SZ/XMTRX ownership, compare target OFF bytes, and measure SH4 stack, memory, frame time, clipping/numerics, source/visual/STRICT behavior, and publication/retirement in the supported emulator/console environment. The public `Cloth::Set` producer still clamps width at 100, and the cited current private sheet is 9×10; the synthetic 101/255 tests prove a bounded consumer, not current live wide source coverage. This slice does not close EF14's separate prepared-skin A→B→A retention or the entire EF11 cloth/material/effect work.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${XM14_BASE_TREE:?fresh base worktree path}"
+: "${XM14_LOGS:?fresh log directory}"
+: "${XM14_PROGRAMS:?fresh programme directory}"
+: "${XM14_LABEL:?fresh lane label prefix}"
+XM14_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$XM14_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$XM14_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$XM14_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$XM14_BASE_TREE" "${XM14_LABEL}base" ""
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}absent" ""
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}off" "CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}ctrl" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=1 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}on" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=1 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${XM14_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${XM14_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${XM14_LABEL}offrP" \
+  --output "$XM14_LOGS/cloth-xm14-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+Also qualify the original narrow sheet consumer with `CLOTH_TILES11=0`:
+
+```bash
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}narrowctrl" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=0 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=0"
+candidate_build "$XM14_CANDIDATE_TREE" "${XM14_LABEL}narrowon" \
+  "CLOTH_SHEET11=1 CLOTH_TILES11=0 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 GAME_SH4ZAM_LOGIC=0 CLOTH_XM_BATCH14=1"
+/opt/toolchains/dc/sh-elf/bin/sh-elf-nm -C \
+  "/root/probe/lanes/route/out-${XM14_LABEL}onrP/re4dc-game.elf" \
+  > "$XM14_LOGS/cloth-xm14-symbols.txt"
+/opt/toolchains/dc/sh-elf/bin/sh-elf-objdump -d \
+  --disassemble=re4dc_zam_xm_points14 \
+  "/root/probe/lanes/route/out-${XM14_LABEL}onrP/re4dc-game.elf" \
+  > "$XM14_LOGS/cloth-xm14-disassembly.txt"
+```
+
+Inspect the actual aligned-row load, paired `frchg`, PR/SZ entry/exit and
+callback-free FTRV loop, and retain target stack output. Host numerics and
+packet equality do not prove SH4 FTRV bit equality or a frame gain. Source
+simulation remains on its existing scalar route.

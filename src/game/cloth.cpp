@@ -57,6 +57,9 @@ static void cloth11_replace(Cloth* p){const unsigned slot=cloth11_slot(p);if(slo
 extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
 #include "native_cloth_sheet11.hpp"
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+#include "re4dc_xm.h"
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "native_draw_result.hpp"
 #endif
@@ -182,6 +185,17 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
     if(!prepared)return stop;
     f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+    // Preparation can yield. Check source ownership before and after each
+    // callback-free XMTRX batch. The tile start/count bound both row buffers.
+    auto transform_batch=[&](unsigned source_row,unsigned first,unsigned count,float* dst)->int{
+        if(!source_current())return -1;
+        const Vec* input=source+source_row*cols+first;
+        if(!re4dc_zam_xm_points14(mv,input,count*sizeof(Vec),sizeof(Vec),
+                                   dst,count*3*sizeof(float),3*sizeof(float),count))return 0;
+        return source_current()?1:-1;
+    };
+#endif
 #if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
     if(cols>100){
     // Source draws row-major strips. Split each row into at most 100-column
@@ -191,6 +205,12 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
         for(unsigned first=0;first+1<cols;){
             if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
             const unsigned columns=cols-first<100?cols-first:100;
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+            int transformed=transform_batch(row,first,columns,top);
+            if(transformed==1)transformed=transform_batch(row+1,first,columns,bottom);
+            if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+                re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+#else
             auto transform_tile=[&](unsigned source_row,float* dst){
                 for(unsigned i=0;i<columns;++i){
                     if(!source_current())return false;
@@ -202,6 +222,7 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
             if(!transform_tile(row,top) || !transform_tile(row+1,bottom)){
                 progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;
             }
+#endif
             const Re4dcClothBand11 view{top,bottom,columns,first,row};
             const auto result=re4dc_cloth_band11(&material,&view);
             if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
@@ -212,7 +233,12 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     return progress.result;
     }
 #endif
-#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+    auto transform=[&](unsigned row,float* dst)->int{return transform_batch(row,0,cols,dst);};
+    int transformed=transform(0,top);
+    if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+        re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+#elif defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
     auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){
         if(!source_current())return false;
         Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);
@@ -225,7 +251,12 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #endif
     for(unsigned row=0;row+1<rows;++row){
         if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
-#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+        transformed=transform(row+1,bottom);
+        if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+            re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+        const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#elif defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
         if(!transform(row+1,bottom)){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
         const Re4dcClothBand11 view{top,bottom,cols,0,row};
 #else
