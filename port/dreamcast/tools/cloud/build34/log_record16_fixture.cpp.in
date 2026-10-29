@@ -1,0 +1,234 @@
+#include <array>
+#include <cassert>
+#include <cerrno>
+#include <cstdint>
+#include <cstdio>
+#include <cstdarg>
+#include <cstring>
+#include <string>
+#include <vector>
+#include "log_record16.hpp"
+
+constexpr unsigned RE4DC_LOG_SIZE = TEST_RING_SIZE;
+#define RE4DC_LOG_RING_HDR 1
+struct Ring {
+    unsigned long magic = 0, nmagic = 0, size = 0, pad[5]{};
+    std::array<char, RE4DC_LOG_SIZE> buf{};
+} re4dc_logring;
+#define re4dc_logbuf re4dc_logring.buf
+
+constexpr unsigned enabled_sr = 0x40000001, disabled_sr = 0x400000f1;
+unsigned sr = enabled_sr, depth = 0, position = 0, trigger = 0;
+bool armed = false, pending = false, forced = false, nested_record = false;
+bool format_preempt = false;
+std::vector<unsigned> mask_stores;
+unsigned max_mask_stores = 0, disable_calls = 0, formatting_calls = 0;
+unsigned halt_calls = 0, raw_calls = 0, record_calls = 0;
+std::uint32_t reader_shown = 0;
+std::string observed, partial, complete;
+const std::string nested = "irq=7\n";
+void append_raw(const char*, unsigned long);
+void append_record(const std::string&);
+void poll();
+void inject() {
+    if (nested_record) append_record(nested);
+    else append_raw(nested.data(), nested.size());
+}
+void before_increment() {
+    if (depth == 1 && armed && ++position == trigger) {
+        armed = false;
+        if ((sr & 0xf0) != 0xf0 || forced) inject();
+        else pending = true;
+    }
+    if ((sr & 0xf0) == 0xf0) for (auto& work : mask_stores) ++work;
+}
+struct Head {
+    std::uint32_t value = 0;
+    operator std::uint32_t() const volatile { return value; }
+    void operator++(int) volatile {
+        before_increment(); value = value + 1; poll();
+    }
+};
+static_assert(sizeof(Head) == 4);
+volatile Head re4dc_log_head;
+void poll() {
+    const auto end = std::uint32_t(re4dc_log_head);
+    while (reader_shown != end) {
+        const char byte = re4dc_logbuf[reader_shown % RE4DC_LOG_SIZE];
+        ++reader_shown; observed += byte; partial += byte;
+        if (byte == '\n') { complete += partial; partial.clear(); }
+    }
+}
+int irq_disable() {
+    const int old = int(sr); sr = (sr & 0xefffff0f) | 0xf0;
+    mask_stores.push_back(0); ++disable_calls; return old;
+}
+void irq_restore(int old) {
+    assert(!mask_stores.empty());
+    if (mask_stores.back() > max_mask_stores) max_mask_stores = mask_stores.back();
+    mask_stores.pop_back(); sr = unsigned(old);
+    if ((sr & 0xf0) != 0xf0 && pending) { pending = false; inject(); }
+}
+void re4dc_halt(const char* file, int line) {
+    assert(std::strcmp(file, "LOG_CRASH_TEST") == 0 && line == RE4DC_LOG_CRASH_TEST);
+    ++halt_calls;
+}
+#if RE4DC_LOG_RECORD16 && RE4DC_LOG_CRASH_TEST
+@CRASH@
+#endif
+@RAW@
+@CALLBACK@
+#if RE4DC_LOG_RECORD16
+@RECORD@
+#else
+@APPEND@
+#endif
+int re4dc_log_console = 0;
+int observed_vsnprintf(char* dst, size_t n, const char* fmt, va_list ap) {
+    // The caller may already have IRQs disabled; the logger has not masked yet.
+    assert(mask_stores.empty()); ++formatting_calls;
+    const int result = vsnprintf(dst, n, fmt, ap);
+    if (depth == 1 && format_preempt) { format_preempt = false; inject(); }
+    return result;
+}
+#define vsnprintf observed_vsnprintf
+@LOG@
+#undef vsnprintf
+
+void append_raw(const char* data, unsigned long len) {
+    ++depth; ++raw_calls; re4dc_log_raw(data, len); --depth;
+}
+void append_record(const std::string& line) {
+    ++depth; ++record_calls; re4dc_log("%s", line.c_str()); --depth;
+}
+void reset(std::uint32_t start, unsigned entry = enabled_sr) {
+    assert(mask_stores.empty()); re4dc_logring = {}; re4dc_log_head.value = start;
+    reader_shown = start; sr = entry; depth = position = trigger = 0;
+    armed = pending = forced = nested_record = format_preempt = false;
+    max_mask_stores = disable_calls = 0; observed.clear(); partial.clear(); complete.clear();
+}
+std::array<char, RE4DC_LOG_SIZE> reference(std::uint32_t start, const std::string& bytes) {
+    std::array<char, RE4DC_LOG_SIZE> result{};
+    for (char byte : bytes) { result[start % RE4DC_LOG_SIZE] = byte; ++start; }
+    return result;
+}
+void exact(std::uint32_t start, const std::string& bytes, unsigned entry = enabled_sr) {
+    assert(observed == bytes);
+    assert(complete + partial == bytes && re4dc_logbuf == reference(start, bytes));
+    assert(std::uint32_t(re4dc_log_head) == std::uint32_t(start + bytes.size()));
+    assert(sr == entry && mask_stores.empty());
+    assert(re4dc_logring.magic == 0x5A53474CU &&
+           std::uint32_t(re4dc_logring.nmagic) == ~0x5A53474CU && re4dc_logring.size == RE4DC_LOG_SIZE);
+}
+
+int main() {
+#if RE4DC_LOG_CRASH_TEST
+    reset(0);
+    append_record("first\n"); assert(halt_calls == 0);
+    append_raw("second\n", 7); assert(halt_calls == 0);
+    append_record(""); assert(halt_calls == 1);
+    append_raw(nullptr, 0); assert(halt_calls == 1);
+    exact(0, "first\nsecond\n");
+    std::puts("{\"crash_mixed_append_count\":\"PASS\"}");
+    return 0;
+#endif
+    unsigned records = 0, interleavings = 0, disabled = 0, aliases = 0, long_raw = 0;
+    unsigned forced_witnesses = 0, largest_record_mask = 0, largest_raw_mask = 0;
+    for (unsigned n = 0; n <= re4dc::log_record16::max_bytes; ++n) {
+        std::string line(n, 'r'); if (n) line.back() = '\n';
+        for (std::uint32_t start : {0U, RE4DC_LOG_SIZE - 3, 0xfffffffcU}) {
+            reset(start); append_record(line); exact(start, line);
+            assert(disable_calls == 1 && max_mask_stores == n); ++records;
+            if (max_mask_stores > largest_record_mask) largest_record_mask = max_mask_stores;
+            for (unsigned entry : {0x40000041U, disabled_sr, 0x500000f1U}) {
+                reset(start, entry); append_record(line); exact(start, line, entry);
+                assert(disable_calls == 1 && max_mask_stores == n); ++disabled;
+            }
+            if (!n) continue;
+            for (unsigned cut : {1U, (n + 1) / 2, n}) for (bool kind : {false, true}) {
+                reset(start); armed = true; trigger = cut; nested_record = kind;
+                append_record(line); exact(start, line + nested);
+                assert(!armed && !pending && disable_calls == 2);
+                assert(max_mask_stores == (n > nested.size() ? n : nested.size()));
+                ++interleavings;
+            }
+        }
+    }
+    // Every store/publication edge of the maximum-length record, with both
+    // maskable raw and formatted nested producers and ring/head wrap.
+    std::string maximum(254, 'm'); maximum += '\n';
+    for (std::uint32_t start : {RE4DC_LOG_SIZE - 1, 0xffffff80U})
+        for (unsigned cut = 1; cut <= maximum.size(); ++cut) for (bool kind : {false, true}) {
+            reset(start); armed = true; trigger = cut; nested_record = kind;
+            append_record(maximum); exact(start, maximum + nested); ++interleavings;
+        }
+    reset(0); append_record(std::string(2048, 'f')); exact(0, std::string(255, 'f'));
+    assert(max_mask_stores == 255); ++records;
+    for (bool kind : {false, true}) {
+        // A writer before the record mask precedes the entire record.
+        reset(RE4DC_LOG_SIZE - 2); format_preempt = true; nested_record = kind;
+        append_record(maximum); exact(RE4DC_LOG_SIZE - 2, nested + maximum);
+        assert(!format_preempt); ++interleavings;
+        // A caller-disabled mask stays closed until that caller restores it.
+        reset(0xfffffffcU, disabled_sr); armed = true; trigger = 1; nested_record = kind;
+        append_record(maximum); exact(0xfffffffcU, maximum, disabled_sr);
+        assert(pending && !armed);
+        sr = enabled_sr; pending = false; inject();
+        exact(0xfffffffcU, maximum + nested); ++disabled;
+    }
+#if RE4DC_LOG_RECORD16
+    // The actual helper's array type and scan bound do not rely on a terminator.
+    reset(0); char unterminated[re4dc::log_record16::capacity];
+    std::memset(unterminated, 'u', sizeof(unterminated));
+    logAppendRecord16(unterminated); exact(0, std::string(255, 'u')); ++records;
+#endif
+    for (unsigned n : {256U, 1023U, 65535U, 65536U, 65537U, 131089U})
+        for (std::uint32_t start : {0U, RE4DC_LOG_SIZE - 1, 0xfffffffcU}) {
+            std::string bytes(n, 'b'); bytes.back() = '\n'; reset(start);
+            assert(ringWriteBuffer(reinterpret_cast<const uint8_t*>(bytes.data()), int(n), 1) == int(n));
+            exact(start, bytes); assert(max_mask_stores == n); ++long_raw;
+            if (n > largest_raw_mask) largest_raw_mask = n;
+        }
+    // Valid live ring aliases: bytewise copying can propagate an overwritten
+    // source byte. A bulk copy, snapshot or last-ring-size shortcut differs.
+    for (unsigned offset : {0U, 1U, 7U, RE4DC_LOG_SIZE - 17})
+        for (unsigned count : {1U, 17U, RE4DC_LOG_SIZE - offset})
+            for (std::uint32_t start : {offset + 1, RE4DC_LOG_SIZE - 2, 0xfffffffcU}) {
+                reset(start);
+                for (unsigned i = 0; i < RE4DC_LOG_SIZE; ++i) re4dc_logbuf[i] = char('A' + i % 23);
+                auto expected = re4dc_logbuf; auto next = start; std::string bytes;
+                for (unsigned i = 0; i < count; ++i) {
+                    const char byte = expected[offset + i]; bytes += byte;
+                    expected[next % RE4DC_LOG_SIZE] = byte; ++next;
+                }
+                append_raw(re4dc_logbuf.data() + offset, count);
+                assert(re4dc_logbuf == expected && std::uint32_t(re4dc_log_head) == next && observed == bytes);
+                assert(max_mask_stores == count && sr == enabled_sr); ++aliases;
+            }
+    // A raw source may read the head's own object representation as it changes.
+    for (std::uint32_t start : {0U, 0xfeU, 0xfffeU, 0xfffffffcU})
+        for (unsigned offset = 0; offset < 4; ++offset) for (unsigned count = 1; count <= 4 - offset; ++count) {
+            reset(start); auto next = start; std::string bytes;
+            for (unsigned i = 0; i < count; ++i) {
+                bytes += reinterpret_cast<const char*>(&next)[offset + i]; ++next;
+            }
+            const auto* value = const_cast<const std::uint32_t*>(&re4dc_log_head.value);
+            append_raw(reinterpret_cast<const char*>(value) + offset, count);
+            exact(start, bytes); ++aliases;
+        }
+    // Retain the unsupported returning synchronous/NMI schedule as a failing
+    // publication witness; ordinary IRQ masking cannot certify this context.
+    for (bool record : {false, true}) for (unsigned cut : {1U, 5U, 10U}) {
+        reset(0xfffffffcU); forced = true; armed = true; trigger = cut;
+        if (record) append_record("abcdefghi\n"); else append_raw("abcdefghi\n", 10);
+        assert(observed != "abcdefghi\n" + nested && observed.find('\0') != std::string::npos);
+        ++forced_witnesses;
+    }
+    reset(19); errno = 0;
+    assert(ringWriteBuffer(nullptr, -1, 0) == -1 && errno == EINVAL && !disable_calls);
+    errno = 0; assert(ringWriteBuffer(nullptr, 1, 0) == -1 && errno == EFAULT && !disable_calls);
+    assert(ringWriteBuffer(nullptr, 0, 1) == 0 && std::uint32_t(re4dc_log_head) == 19);
+    std::printf("{\"ring\":%u,\"old_guard\":%u,\"record\":%u,\"records\":%u,\"maskable_interleavings\":%u,\"entry_sr_cases\":%u,\"raw_aliases\":%u,\"long_raw\":%u,\"forced_returning_counterexamples\":%u,\"maximum_record_stores\":%u,\"largest_raw_stores\":%u,\"formatting_calls\":%u}\n",
+        RE4DC_LOG_SIZE, RE4DC_LOG_ATOMIC, RE4DC_LOG_RECORD16, records, interleavings,
+        disabled, aliases, long_raw, forced_witnesses, largest_record_mask, largest_raw_mask, formatting_calls);
+}

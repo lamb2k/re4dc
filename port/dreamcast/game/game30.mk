@@ -1737,6 +1737,22 @@ ifeq ($(LOG_ATOMIC16),1)
 $(OBJDIR)/platform/mem.o $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_ATOMIC16=1
 endif
 
+# LOG_RECORD16: source-ordered publication of re4dc_log's <=255-byte record.
+# Formatting/length scan precede masking; raw/device appends retain their
+# arbitrary-length whole-call guard. No latency, cache or NMI-safety claim.
+LOG_RECORD16 ?= 0
+ifneq ($(LOG_RECORD16),0)
+ifneq ($(LOG_RECORD16),1)
+$(error LOG_RECORD16 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(LOG_RECORD16),1)
+ifneq ($(LOG_ATOMIC16),1)
+$(error LOG_RECORD16 requires LOG_ATOMIC16=1)
+endif
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_RECORD16=1
+endif
+
 ifeq ($(LOGIC_TRACE),1)
 PLATFORM_OBJS += $(OBJDIR)/logic_trace.o
 # One uninterruptible append per re4dc_log call (platform/mem.cpp), so other threads' log lines

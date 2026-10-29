@@ -14,6 +14,12 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+#if !defined(RE4DC_LOG_ATOMIC16) || !RE4DC_LOG_ATOMIC16
+#error LOG_RECORD16 requires LOG_ATOMIC16
+#endif
+#include "include/log_record16.hpp"
+#endif
 #if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
 extern "C" void re4dc_halt(const char*, int);
 #endif
@@ -190,6 +196,15 @@ char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
 int re4dc_log_console = 1;
 unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
 
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16 && defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+// Both entry points still count as one append for the existing crash test.
+static void logCrashAppend16()
+{
+    static unsigned long calls;
+    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
+}
+#endif
+
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
 // preemptive thread (the aica sequencer's "aica: t=... note" lines) cannot splice its text into the
 // middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). LOG_ATOMIC16 independently
@@ -217,15 +232,53 @@ void re4dc_log_raw(const char* data, unsigned long len)
 #if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
     // LOG_CRASH_TEST=N (test arm only): halt to the crash screen after the N-th log append, so its log rows can be
     // checked on a play image (LOG_PLAY_KB). (A misaligned store does not fault under Flycast.)
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+    logCrashAppend16();
+#else
     static unsigned long calls;
     if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
 #endif
+#endif
 }
 
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+// Only the formatter's automatic array can enter this path. Formatting and
+// this bounded length scan finish before masking. The record remains contiguous
+// with respect to maskable writers because LOG_ATOMIC16 also guards raw writes.
+static void logAppendRecord16(const char (&line)[re4dc::log_record16::capacity])
+{
+    unsigned long len = 0;
+    while (len < re4dc::log_record16::max_bytes && line[len]) ++len;
+    // Complete the length dependency before KOS's inline IRQ-mask assembly.
+    __asm__ __volatile__("" : : "r"(len) : "memory");
+    const int irq = irq_disable();
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    if (!re4dc_logring.magic) {
+        re4dc_logring.size = RE4DC_LOG_SIZE;
+        re4dc_logring.nmagic = ~0x5A53474CUL;
+        re4dc_logring.magic = 0x5A53474CUL;
+    }
+#endif
+    for (unsigned long i = 0; i < len; ++i) {
+        re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = line[i];
+        // Compiler publication only: do not move this byte after its head, or
+        // a later byte before the preceding publication. Cache/raw-RAM and
+        // returning synchronous-fault/NMI safety are separate unresolved gates.
+        __asm__ __volatile__("" ::: "memory");
+        re4dc_log_head++;
+        __asm__ __volatile__("" ::: "memory");
+    }
+    irq_restore(irq);
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    logCrashAppend16();
+#endif
+}
+#else
 static void logAppend(const char* s)
 {
     re4dc_log_raw(s, strlen(s));
 }
+#endif
 
 void re4dc_set_stage(unsigned long stage)
 {
@@ -239,7 +292,11 @@ void re4dc_log(const char* fmt, ...)
     va_start(ap, fmt);
     vsnprintf(line, sizeof(line), fmt, ap);
     va_end(ap);
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+    logAppendRecord16(line);
+#else
     logAppend(line);
+#endif
     if (re4dc_log_console) {
         fputs(line, stdout);
     }
