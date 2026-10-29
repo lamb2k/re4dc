@@ -369,6 +369,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF15. Version eligible frontend texture descriptor sets
 
+**2026-10-29 recovery source delivery:** Implemented source repair preserves halt2465 and exact six-TU SH-conditioned absent/zero preprocessing; normal/sanitizer and old-failure controls PASS. Actual target full OFF identity remains mandatory/local; not integrated/enabled/accepted. See [Build34](handbacks/build-34.md).
+
 **Gap.** Build 34 repaired `ftLookup` by checking full current descriptors. Every hit still walks all descriptors and reconstructs their packed GX words because pointer identity does not certify their contents. That repeated descriptor validation is visible from source; immutability/version authority must be established for each eligible source class.
 
 **Target.** A known immutable/versioned TPL and added-TPL set can reuse validated descriptors in O(1). Mutable or unowned sources retain the repaired full comparison.

@@ -10,6 +10,9 @@
 #endif
 #include "atari.h"
 #include "model.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #include "motion.h"
 #include "global.h"
 #include "db_log.h"
@@ -1346,6 +1349,9 @@ cModelInfo::cModelInfo() : cUnit(1)
 // Sets (and relocates) the texture palette.
 void cModelInfo::setTplAddr(void* tpl)
 {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_info_changed(this);
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION
     re4dc_actor_info_retire(this);
 #endif
@@ -1361,6 +1367,9 @@ void cModelInfo::setTplAddr(void* tpl)
 // Sets an additional texture palette (nAddTex textures appended to the model's texture indices).
 void cModelInfo::addTplAddr(void* tpl)
 {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_info_changed(this);
+#endif
     pAddTpl = (TEXPalette*) tpl;
     calcTplAddr((TEXPalette*) tpl);
     nAddTex = pAddTpl->numDescriptors;
@@ -1533,6 +1542,9 @@ void cModel::moveDataAddr(int ofs)
         return;
     }
     for (info = pModelInfo; info; info = info->pList) {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+        re4dc_front_tpl_info_changed(info);
+#endif
         if (ofs != 0) {
             info->pData = (ModelData*) ((u8*) info->pData + ofs);
             info->tpl_addr = (u8*) info->tpl_addr + ofs;
@@ -1649,6 +1661,9 @@ void calcTplAddr(TEXPalette* tpl)
     if ((int) tpl->descriptorArray < 0) {
         return;
     }
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     tpl->descriptorArray = (TEXDescriptor*) ((u32) tpl->descriptorArray + (u32) tpl);
     for (i = 0; i < tpl->numDescriptors; i++) {
         if (tpl->descriptorArray[i].textureHeader != NULL) {
@@ -1673,6 +1688,9 @@ void calcTplOffset(TEXPalette* tpl)
     if ((int) tpl->descriptorArray >= 0) {
         return;
     }
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     for (i = 0; i < tpl->numDescriptors; i++) {
         if (tpl->descriptorArray[i].textureHeader != NULL) {
             if (tpl->descriptorArray[i].textureHeader->unpacked != 0) {
@@ -1693,6 +1711,9 @@ void slideTplAddr(void* p, int ofs)
 #endif
 
     TEXPalette* tpl = (TEXPalette*) p;
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     u32 i;
 
     if ((int) tpl->descriptorArray >= 0) {
@@ -2012,6 +2033,9 @@ void cModInfoMgr::log(const char* fmt, ...)
 // Unit construction: placement-new of cModelInfo.
 int cModInfoMgr::construct(cModelInfo* p, u32 id)
 {
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_info_changed(p);
+#endif
     new (p) cModelInfo;
     return 1;
 }
