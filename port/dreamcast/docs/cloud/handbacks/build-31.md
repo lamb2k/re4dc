@@ -1,5 +1,28 @@
 # Build 31: portal culling and world part plan
 
+**2026-10-29 EF08 target handback: DONE** first queued completion slice is
+implemented and target built (`ec1855b42` + scoped Make repair `f5383c0dc`).
+Fresh release absent/explicit0 and explicit validation ON pass real rc0,
+nonempty ELF and existing empty missing.txt. Baseline77461==absent==zero raw
+programme3,372,036B, all15 overlays and all11 allocated ELF sections; debug ELFs
+differ. Release and existing solo-portal complete preprocessed/-g0 TU identity
+also pass. Actual ON -dM readback verifies20 required1 facts and3 stream/clip0
+facts, with the4 propagated facts bound to exact resolved Make values. Original
+failedON and initial fixture-only default omission remain preserved.
+Host+ASan+UBSan each pass628 checks plus15 Make/source guard cases. Actual
+production chunk_emit/end_direct/batch_close/receipt source is exercised with
+controlled edges. Completion storage symbols total6,165 B BSS+8 B data before
+alignment; queue ticket16B×48. ON local ps2_pass frame10,256B is not whole-stack
+or runtime headroom evidence. **NEXT** coordinator review/default-off landing,
+then geometry-authored PKG/CFG and matching cells/proof, real lifecycle/magenta/
+look/STRICT/memory/net hardware cost. **BLOCKED** those live acceptance gates
+remain pending; this first full-source-span class does not close all EF08.
+Stream/clip-gather/indexed/subset/multi-LOD and legacy immediate witness
+qualification remain excluded. SDK slot released, all runner PIDs exited,
+no live exec session. No emulator/media/push/integration/ALL ON change.
+Exact profiles, commands, missing private inputs and sanitized receipts:
+[PORTAL-COMPLETION.md](../../../tools/cloud/build31/PORTAL-COMPLETION.md).
+
 **2026-10-29 EF08 target checkpoint: DONE** fresh full release absent and
 explicit0 builds at `ec1855b42` pass real rc0, nonempty ELF and existing empty
 missing.txt. The enabled validation arm correctly stopped before ELF at the

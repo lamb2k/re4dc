@@ -57,7 +57,7 @@ def main():
         run_guard=subprocess.run(['g++','-E','-P','-x','c++',*['-DRE4DC_'+k+'='+v for k,v in definitions.items()],'-'],input=guard_source.encode(),capture_output=True)
         assert (run_guard.returncode==0)==accepted,(name,run_guard.stderr.decode())
         guards.append(dict(name='source-'+name,accepted=accepted))
-    files=[PLATFORM/'native_static.cpp',PLATFORM/'include/world_portal29.hpp',PLATFORM/'include/world_portal29_runtime.inc',HERE/'portal_runtime_fixture.cpp',HERE/'portal_completion_fixture.cpp.in',Path(__file__)]
+    files=[PLATFORM/'native_static.cpp',PLATFORM/'include/world_portal29.hpp',PLATFORM/'include/world_portal29_runtime.inc',HERE/'portal_runtime_fixture.cpp',HERE/'portal_completion_fixture.cpp.in',ROOT/'port/dreamcast/game/world_plan29.mk',HERE/'portal_completion_profiles.json',Path(__file__)]
     report=dict(status='PASS',scope=__doc__,sanitize=a.sanitize,guards=guards,output=run.stdout.decode(),source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},extracted_sha256={k:hashlib.sha256(v.encode()).hexdigest() for k,v in values.items()})
     (a.output/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(run.stdout.decode(),end='')
 if __name__=='__main__':main()
