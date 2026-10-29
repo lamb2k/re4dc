@@ -1496,6 +1496,8 @@ does not enable a control, integrate source, or qualify a whole EF card.
 
 ## 2026-10-29 recovery: EF15 strict target-conditional OFF repair
 
+Queue Status is published by the sole coordinator in the [live recovery checkpoint](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md#status), alongside this source delivery. Keeping shared Build rows in that one branch prevents competing row edits; this branch retains its existing build handback and card-specific backlog update.
+
 **DONE:** recovered unpublished `44055a1c2af1f7209559eadcc8396e20eeda3f41`
 and its documentation synchronization `6a607e47bd17935b3154af854fc056c08408abb3`.
 Fresh integration readback is `d45eb759dd92685255929625e04fae3d7a46bca7`.
