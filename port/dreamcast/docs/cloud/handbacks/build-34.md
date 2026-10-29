@@ -1004,3 +1004,13 @@ cache2 Make failure remains blocked and is not retried at identical inputs.
 Actual linked/image preflight is complete; no release data/recipe enablement,
 SD copy or publication. Console still needs user arm selection, REMOTE LINK
 after swaps and matched view/state/frame windows.
+
+#### Farm header-coverage hold clarification (owner, 22:55 EDT)
+
+r103f CHECK has zero captured PS2HDR markers/checked/mismatched rows, not a
+malformed row that can be reconstructed. Other explicit game frames reached
+658, so lack of reaching599 is not an established explanation. Actual SCPS
+admission267 was observed; header comparison count/mismatch result remains
+UNKNOWN. Emission, collection or path selection cause is not established.
+No identical farm retry or zero-mismatch claim. Next independent real-door
+triplet exercises a different lifecycle scope and cannot replace this hold.
