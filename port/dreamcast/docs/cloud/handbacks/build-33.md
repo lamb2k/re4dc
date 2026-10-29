@@ -568,3 +568,32 @@ aligned look/STRICT/gameplay, memory/stack, full-image identity and matched
 whole-frame console gates remain pending. Private exact receipts in
 owner-allon33-off-20261028/HOUSE-PROOF.json and HOUSE-RESULTS.json+md.
 No bespoke observer, SD copy, recipe promotion or publication.
+
+### Answers (owner): source-bound class and placement selection
+
+Read-only audit pinned36643bf8a clarifies the next actual-data gate.
+static_obj_batch33.hpp marks only kind0 IDs41/43/45/46 and kind1 ID21;
+em.cpp constructors identify the four kind0 classes as door/box/rack/window.
+The bridge marker uses ModelData displist_num (single1/large>16) and live
+info blend_mode; Scan29's broad m_obj_split totals cannot establish that a
+placed model reaches this marked submit path. Ordinary room geometry is
+outside this marker set. The kind1/21 initializer is indirect; no asset
+name or live class coverage is inferred for it.
+
+EtcModelSet maps etc IDs52/53 to window variants13/14; emwindow.cpp sets
+blend_mode2 for those variants, and et00.cpp names et5200/et5300.bin.
+The window variant is the loader's flag argument, not the ETS slot byte.
+
+The preserved master extraction's 29 primary DAR payloads parsed 460 ETS records, zero parser errors, and no etc52/53 placements.
+This is a narrow negative placement inventory: other DAR payloads/room
+blocks, runtime-created models and other ways to set blend_mode were not
+excluded. It neither certifies blended coverage nor proves no blended work.
+All source/helper and DAR hashes, placements/coordinates and parser scope
+remain private in owner-allon33-off-20261028/PLACEMENT-AUDIT.json.
+
+Next: bind an eligible actual model's displist count/material and live
+placement/caller before a new bounded large/blended capture. Do not repeat
+the zero-coverage house view or manufacture a game-data admission from a
+host fixture. Prior392-case host oracle, current actual-data order/look/
+STRICT/memory/full-image and whole-frame console gates remain distinct.
+No source/build, private-asset change, SD write, promotion or publication.
