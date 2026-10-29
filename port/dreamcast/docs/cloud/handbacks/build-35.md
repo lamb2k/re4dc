@@ -595,3 +595,22 @@ missing stack evidence is not a zero or a proven maximum. Stack/callchain,
 heap/KOS floor and observer CPU/game/link acceptance remain pending.
 Window32 remains unbuilt under the unchanged disk guard; no identical retry.
 No target change, buffer/N32 reduction, image, SD or release action.
+
+#### Owner: selected function-local stack metadata, 2026-10-29
+
+Replayed the exact saved compiler commands for fallback_audit29.cpp,
+qa_menu.cpp and platform/native_motion.cpp in both completed private arms,
+adding only -fstack-usage and redirecting output into RAM temporary storage.
+Each replay's allocated sections and relocation section bytes match its
+original object; originals remain SHA-unchanged. All reported functions in
+these six receipts have static compiler estimates. Largest function-local
+values in each arm are respectively60B(format_line),3092B(link_pump), and
+304B(load); qa snap_diag is2280B in both. No local-maximum increase in these
+three units is observed. Private exact commands/source/object hashes and
+per-function .su rows: owner-audit35-enabled-20261028/stack-replay/.
+
+This is selected function-local metadata, not a whole-program call-chain or
+thread-stack maximum. Other instrumented units, nested callees/recursion,
+interrupt use, runtime heap/KOS floor and CPU/game/link/console gates remain
+pending. Window32 remains unbuilt under the unchanged19GiB disk guard.
+No link/master/image/capture, target-source change, SD or release action.
