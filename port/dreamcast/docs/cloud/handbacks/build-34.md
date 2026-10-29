@@ -781,3 +781,25 @@ log failures and unrun scenes); no console/net timing/full look/STRICT/
 lifetime acceptance or promotion. Exact private receipts: owner-front34-
 kos-20261028/LEAVE103-RESULTS.json+md and arm/stock-eval-leave103.txt.
 No75s door/300s h2, SD write, release-recipe change or publication.
+
+### Answers (owner): memory-control observer footprint clarification
+
+Full resolved-definition preflight compared existing6c6028df6 release with
+the same-source FRONT34 control. Besides the declared warp/KOS/check/census
+diagnostics, DBG_WARP adds only dbgwarp_bridge.o to the three recorded
+object lists (common order unchanged). LOG_TRIM changes49152->0: Makefile
+LOG_PLAY_KB16 applies the16KiB ring only for DBG_WARP0/QA_MENU0, while warp/
+test images intentionally retain64KiB. Actual ELF nm verifies re4dc_logbuf
+sizes0x4000 release versus0x10000 control, an extra49152B log ring only.
+Do not infer the total heap or whole-frame delta from that buffer size.
+
+Therefore earlier QA_MENU0/QA_LINK0 KOS twins are normal-game recipe plus
+observers, not exact production-footprint images. Source replay identity
+and bounded functional/headroom observations remain as reported; no memory
+gate is upgraded. Reuse captures only as matched fixed-observer controls,
+with identical candidate diagnostic/log composition and explicit footprint
+scope; retain failed/malformed outcomes and do not rerun identical blocked
+control inputs. Do not shrink/change the log configuration to force a pass.
+Public QA remains link-enabled. Exact definitions/object deltas/symbol and
+source receipts: owner-front34-kos-20261028/ALLON-CONTROL-PREFLIGHT.json.
+No new source/build, observer workaround, SD/recipe/release action.
