@@ -1,0 +1,125 @@
+// Actual ps2_movie_reload body is inserted below. All unrelated features are
+// disabled so controlled reads exercise the package publisher itself.
+#define RE4DC_WORLD_MUTATION31 1
+#define RE4DC_PS2_WORLD_SOURCE_OWNER 1
+#define RE4DC_WORLD_PART_PLAN29 1
+#define RE4DC_GC_ASSET_GATE 0
+#define RE4DC_PS2_WORLD_R11F_OWNER 0
+#define RE4DC_SCENERY21_AB 0
+#define RE4DC_SCENERY_DEDUP 0
+#define RE4DC_PS2_PVS 0
+#define RE4DC_PS2_PASS_MASK 0
+#define RE4DC_MESH_FASTPATH 0
+#define RE4DC_PS2_WORLD_DYNAMIC 0
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <climits>
+#include "world_mutation31.hpp"
+namespace re4dc { namespace room {struct CompactVertex12 {};}
+    namespace render {inline bool is_finite(float f){return std::isfinite(f);}}
+}
+struct Ps2Part {std::uint32_t crc,fnv;std::uint16_t width,height;std::uint8_t pass,cull,texture,reserved;};
+struct Ps2Placement {std::uint16_t mesh,placement;float affine[12];};
+struct Ps2Head {char magic[4];std::uint32_t version,placements,parts,meshes,crc,reserved[2];};
+static_assert(sizeof(Ps2Part)==16 && sizeof(Ps2Placement)==52 && sizeof(Ps2Head)==32);
+struct MeshHeader {unsigned part_count=1,mesh_count=1;};
+struct Package {
+    MeshHeader h;bool adopted=false;
+    bool adopt(unsigned char*,unsigned,bool,bool){adopted=true;return true;}
+    const MeshHeader& header()const{return h;}
+    void close(){adopted=false;}
+};
+struct World {
+    Package package;unsigned char* storage=nullptr;unsigned bytes=0,room=0x200,want=0x200;
+    const Ps2Part* parts=nullptr;const Ps2Placement* placements=nullptr;unsigned nplacements=0;
+    const std::uint32_t* lut=nullptr;re4dc::room::CompactVertex12* gather=nullptr;bool camera=true;
+}ps2w;
+unsigned sourceWorldPackageGeneration=1,sourceWorldSidecarCrc=0;
+bool sourceWorldPackagePublished=false;
+const void* sourceWorldPackageStorage=nullptr;
+unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorldPackageCell=0;
+static unsigned room_generation=7,cell=55;
+extern "C" int re4dc_room4_live_generation(unsigned* out){*out=room_generation;return 1;}
+extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned bytes,unsigned generation){
+    return generation==room_generation && p==ps2w.storage && bytes==ps2w.bytes?cell:0;
+}
+@PUBLISHER@
+
+#include "movie_world_arena_lifecycle.inc"
+movie_world::Ledger ps2_movie;
+struct MovieWorldFiles {unsigned mesh=0,side=0,mesh_crc=0,mesh_fnv=0,side_crc=0,side_fnv=0;}ps2_movie_files;
+constexpr unsigned kLutBytes=0,kGatherBytes=0;
+struct MovieWorldRead {MovieWorldRead(){++ps2_movie.readers;}~MovieWorldRead(){--ps2_movie.readers;}};
+struct Re4dcIoScope {};
+static unsigned reads=0,mesh_writes=0,side_writes=0,opens=0;
+static bool fail_side=false;
+static unsigned char mesh_file[128],side_file[sizeof(Ps2Head)+sizeof(Ps2Part)+sizeof(Ps2Placement)];
+using file_t=int;
+constexpr file_t FILEHND_INVALID=-1;
+constexpr int O_RDONLY=0;
+file_t fs_open(const char* path,int){return std::strstr(path,"re4mesh")?1:std::strstr(path,"r4pw")?2:FILEHND_INVALID;}
+int fs_close(file_t){return 0;}
+int fs_total(file_t f){return f==1?int(sizeof(mesh_file)):f==2?int(sizeof(side_file)):-1;}
+bool read_package(file_t f,unsigned char* target,unsigned n,int){
+    // The true caller must revoke before the first byte of either file.
+    assert(!worldPackageCurrent() && !sourceWorldPackagePublished && !sourceWorldSidecarCrc);
+    ++reads;
+    if(f==1){assert(n==sizeof(mesh_file));++mesh_writes;std::memcpy(target,mesh_file,n);return true;}
+    assert(f==2 && n==sizeof(side_file));++side_writes;
+    if(fail_side){std::memcpy(target,side_file,n/2);return false;}
+    std::memcpy(target,side_file,n);return true;
+}
+unsigned ps2_crc32(const unsigned char* p,unsigned n){
+    unsigned sum=0;for(unsigned i=0;i<n;++i)sum=(sum+p[i])*33U;return sum;
+}
+bool ps2_movie_current(){return ps2_movie.base==ps2w.storage && ps2_movie.capacity==ps2w.bytes;}
+bool ps2_movie_layout(unsigned){return ps2_movie.capacity==256;}
+namespace wplan29 {void open(){assert(worldPackageCurrent() && sourceWorldSidecarCrc);++opens;}}
+@RELOAD@
+
+int main(){
+    alignas(32) static unsigned char storage[256]{};
+    ps2w.storage=storage;ps2w.bytes=sizeof(storage);
+    ps2_movie.base=storage;ps2_movie.capacity=sizeof(storage);
+    ps2_movie.phase=movie_world::Phase::returning;
+    for(unsigned i=0;i<sizeof(mesh_file);++i)mesh_file[i]=std::uint8_t(i*3U);
+    Ps2Head h{};std::memcpy(h.magic,"R4PW",4);h.version=1;h.placements=h.parts=h.meshes=1;
+    Ps2Part part{1,2,32,32,0,0,1,0};Ps2Placement placement{};
+    placement.affine[0]=placement.affine[5]=placement.affine[10]=1.0f;
+    std::memcpy(side_file,&h,sizeof(h));
+    std::memcpy(side_file+sizeof(h),&part,sizeof(part));
+    std::memcpy(side_file+sizeof(h)+sizeof(part),&placement,sizeof(placement));
+    h.crc=ps2_crc32(side_file+sizeof(h),sizeof(side_file)-sizeof(h));
+    std::memcpy(side_file,&h,sizeof(h));
+    ps2_movie_files={unsigned(sizeof(mesh_file)),unsigned(sizeof(side_file)),
+        ps2_crc32(mesh_file,sizeof(mesh_file)),movie_world::fnv(mesh_file,sizeof(mesh_file)),
+        ps2_crc32(side_file,sizeof(side_file)),movie_world::fnv(side_file,sizeof(side_file))};
+    sourceWorldSidecarCrc=h.crc;assert(worldPackagePublish() && worldPackageCurrent());
+    const unsigned first=sourceWorldPackageGeneration;
+    assert(ps2_movie_reload() && reads==2 && mesh_writes==1 && side_writes==1);
+    assert(sourceWorldPackageGeneration==first+1 && worldPackageCurrent());
+    assert(sourceWorldSidecarCrc==h.crc && opens==1 && ps2w.parts && ps2w.placements);
+    // Mesh changes at the same address fail the sealed full-file identity.
+    mesh_file[4]^=1;const unsigned old=sourceWorldPackageGeneration;
+    assert(!ps2_movie_reload() && sourceWorldPackageGeneration==old+1);
+    assert(!worldPackageCurrent() && !sourceWorldSidecarCrc && opens==1);
+    mesh_file[4]^=1;
+    // A short second read leaves the mesh fully and sidecar partly overwritten.
+    fail_side=true;const unsigned partial=sourceWorldPackageGeneration;
+    assert(!ps2_movie_reload() && sourceWorldPackageGeneration==partial+1);
+    assert(!worldPackageCurrent() && !sourceWorldSidecarCrc && opens==1);
+    fail_side=false;const unsigned retry=sourceWorldPackageGeneration;
+    assert(ps2_movie_reload() && sourceWorldPackageGeneration==retry+1);
+    assert(worldPackageCurrent() && sourceWorldSidecarCrc==h.crc && opens==2);
+    // Terminal cannot publish even when every file and cell check succeeds.
+    worldPackageRevoke();sourceWorldPackageGeneration=UINT_MAX-1;
+    assert(worldPackagePublish());const unsigned before=opens;
+    assert(!ps2_movie_reload() && sourceWorldPackageGeneration==UINT_MAX);
+    assert(!worldPackageCurrent() && !sourceWorldSidecarCrc && opens==before);
+    assert(!ps2_movie_reload() && sourceWorldPackageGeneration==UINT_MAX);
+    std::printf("mutation31 actual movie reload: reads=%u mesh=%u side=%u opens=%u PASS\n",
+        reads,mesh_writes,side_writes,opens);
+}

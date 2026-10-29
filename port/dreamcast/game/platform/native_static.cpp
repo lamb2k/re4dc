@@ -19,6 +19,18 @@
 #if RE4DC_WORLD_PAGES31
 #include "include/world_page31.hpp"
 #endif
+#ifndef RE4DC_WORLD_MUTATION31
+#define RE4DC_WORLD_MUTATION31 0
+#endif
+#if RE4DC_WORLD_MUTATION31 != 0 && RE4DC_WORLD_MUTATION31 != 1
+#error WORLD_MUTATION31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_MUTATION31 && (!RE4DC_WORLD_PREPARED09 || !RE4DC_WORLD_PAGES31 || !RE4DC_MOVIE_WORLD_ARENA)
+#error WORLD_MUTATION31 needs WORLD_PREPARED09, WORLD_PAGES31 and MOVIE_WORLD_ARENA
+#endif
+#if RE4DC_WORLD_MUTATION31
+#include "include/world_mutation31.hpp"
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -3022,6 +3034,10 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses compared, mismatches
 unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
 #endif
+#if RE4DC_WORLD_MUTATION31
+extern unsigned sourceWorldPackageGeneration;
+bool worldPackageSelectionCurrent(unsigned);
+#endif
 struct MeshDraw : Emitter {
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT && RE4DC_MESH_FASTPATH
     void dsa_index_overlap(const std::uint8_t* indices,unsigned n)const{
@@ -3059,6 +3075,12 @@ struct MeshDraw : Emitter {
 #endif
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
     re4dc::room::CompactVertex12* gather_pool; // mesh view's v3 gather buffer (nullptr: v1/v2)
+#if RE4DC_WORLD_MUTATION31
+    unsigned mutation_epoch=0; // zero for non-world MeshDraw callers
+    bool mutation_current()const{
+        return !mutation_epoch || worldPackageSelectionCurrent(mutation_epoch);
+    }
+#endif
 #if RE4DC_PS2_PVS
     // (after the four members MeshDraw{...} initializes by position) PS2_PVS: this frame's visible set (nullptr: no
     // set) and the instance number of this part's first cluster in it (pvs::base + pvs::poff)
@@ -3096,6 +3118,9 @@ struct MeshDraw : Emitter {
 #if RE4DC_PS2_PVS
     unsigned pvs_placement=~0U,pvs_pending[3]={~0U,~0U,0};
     void pvs_finish(bool success){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())success=false;
+#endif
         if(success && pvs_pending[2] && ps2)re4dc_pvs23_commit(pvs_placement,part_index,pvs_pending,ps2);
         pvs_pending[2]=0;
     }
@@ -3841,6 +3866,9 @@ struct MeshDraw : Emitter {
              ,bool known=false // PS2_WORLD_LEAN bit 2: the meshlet's cluster (or placement) is inside every plane
 #endif
             ){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
 #endif
@@ -3896,15 +3924,24 @@ struct MeshDraw : Emitter {
         wc_phase.phase(re4dc::wc24::Other);
 #endif
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
         ++stats.batches;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_MESH_FASTPATH
         // A slab too small to lend the cache behaves like any other
         // capacity failure: generic fallback, or abort once published.
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_PS2_STRIP_GROUPS
         sg_whole=known || !sg_mask;
         if(known)sg_mask=0;
@@ -3921,6 +3958,9 @@ struct MeshDraw : Emitter {
             const unsigned n=*s++;
             const int result=strip(base,batch,s,n);
             if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
             s+=n;
         }
         return 1;
@@ -3936,6 +3976,9 @@ struct MeshDraw : Emitter {
         const auto& lod=package.part_lods()[part_index];
         const auto* clusters=package.clusters();const auto* levels=package.levels();
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
 #if RE4DC_QUALITY_ASSETS
             if(skip_clusters && c-lod.first_cluster<64U && ((skip_clusters>>(c-lod.first_cluster))&1U))continue;
 #endif
@@ -3989,6 +4032,9 @@ struct MeshDraw : Emitter {
             const auto* lets=package.meshlets()+lv.first_meshlet;
 #endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1;
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
                 if(pc_state<0){
                     const bool hid=pc::grid_hidden(pc_wq,lets[i].bounds_min,lets[i].bounds_max)>0;
@@ -4001,7 +4047,13 @@ struct MeshDraw : Emitter {
                 const int result=draw(lets[i]);
 #endif
                 if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1; // before the retained level's next loop condition
+#endif
             }
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1; // before the retained LOD's next loop condition
+#endif
         }
         return 1;
     }
@@ -4107,18 +4159,27 @@ struct MeshDraw : Emitter {
     // SCENERY_EMIT_PREFETCH_MEMBERS_END
 #endif
     int emit_pick(const Pick& pk){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
         namespace vp=re4dc::vp;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Other);
 #endif
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1; // texture bind may yield before package reads
+#endif
         ++stats.batches;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1; // scratch borrow may yield too
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
         const auto& l=package.emit(pk.let);
 #else
@@ -4265,6 +4326,9 @@ struct MeshDraw : Emitter {
 #else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
 #endif
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         DsaStaticPart dsa_part(input,output,dsa_xlu());
 #if RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_MESH_CLASSIFY
@@ -4291,6 +4355,9 @@ struct MeshDraw : Emitter {
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1; // before next package prefetch
+#endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
             // Two selected headers ahead; one payload ahead. The current
             // transform plus its strips supplies the lead time. following is
@@ -4311,6 +4378,9 @@ struct MeshDraw : Emitter {
             }
 #endif
             const int r=emit_pick(pk[i]);if(r<=0)return r;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         if(used){
             const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
@@ -4355,6 +4425,9 @@ struct MeshDraw : Emitter {
 #endif
 #endif
         streaming=re4dc_model_packet_streaming()!=0;
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_HW_LEAN
         set_clip();
 #else
@@ -4370,6 +4443,9 @@ struct MeshDraw : Emitter {
         if(package.lod()){
             const int result=draw_clusters();
             if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
         }else
 #endif
         {
@@ -4384,6 +4460,9 @@ struct MeshDraw : Emitter {
             for(unsigned i=0;i<part.meshlet_count;++i){
                 const int result=draw(lets[i]);
                 if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1; // before the retained part's next loop condition
+#endif
             }
         }
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
@@ -5807,6 +5886,9 @@ bool ps2_movie_layout(unsigned room){
 }
 struct MovieWorldRead { MovieWorldRead(){++ps2_movie.readers;} ~MovieWorldRead(){--ps2_movie.readers;} };
 bool ps2_movie_blocked(){if(!ps2_movie.unavailable())return false;++ps2_movie.blocked;return true;}
+#if RE4DC_WORLD_MUTATION31
+void worldPackageRevoke();
+#endif
 bool ps2_movie_current(){
     unsigned gen=0;
     return re4dc_room4_live_generation(&gen) && gen==ps2_movie.generation &&
@@ -5814,6 +5896,10 @@ bool ps2_movie_current(){
         re4dc_room4_cell_valid(ps2_movie.base,ps2_movie.capacity,gen);
 }
 void ps2_movie_unpublish(){
+#if RE4DC_WORLD_MUTATION31
+    // The movie may reuse this exact address immediately after unpublication.
+    worldPackageRevoke();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world();
 #endif
@@ -5833,8 +5919,43 @@ void ps2_movie_unpublish(){
 #endif
 }
 #endif
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
 unsigned sourceWorldPackageGeneration=1,sourceWorldSidecarCrc;
+#endif
+#if RE4DC_WORLD_MUTATION31
+bool sourceWorldPackagePublished=false;
+const void* sourceWorldPackageStorage=nullptr;
+unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorldPackageCell=0;
+inline bool worldPackageCurrent(){
+    unsigned generation=0;
+    return re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&
+        sourceWorldPackageStorage==ps2w.storage && sourceWorldPackageBytes==ps2w.bytes &&
+        sourceWorldPackageCell && re4dc_room4_live_generation(&generation) &&
+        generation==sourceWorldPackageRoomGeneration &&
+        re4dc_room4_cell_incarnation(sourceWorldPackageStorage,sourceWorldPackageBytes,generation)==sourceWorldPackageCell;
+}
+inline bool worldPackageSelectionCurrent(unsigned selected){
+    return selected && selected==sourceWorldPackageGeneration && worldPackageCurrent();
+}
+inline void worldPackageRevoke(){
+    re4dc::world_mutation31::revoke(sourceWorldPackageGeneration,sourceWorldPackagePublished);
+    sourceWorldPackageStorage=nullptr;sourceWorldPackageBytes=sourceWorldPackageRoomGeneration=sourceWorldPackageCell=0;
+    sourceWorldSidecarCrc=0;
+}
+inline bool worldPackagePublish(){
+    unsigned generation=0;
+    sourceWorldPackageStorage=ps2w.storage;sourceWorldPackageBytes=ps2w.bytes;
+    sourceWorldPackageRoomGeneration=0;sourceWorldPackageCell=0;
+    if(re4dc_room4_live_generation(&generation)){
+        sourceWorldPackageRoomGeneration=generation;
+        sourceWorldPackageCell=re4dc_room4_cell_incarnation(ps2w.storage,ps2w.bytes,generation);
+    }
+    if(!sourceWorldPackageCell){sourceWorldPackagePublished=false;sourceWorldSidecarCrc=0;return false;}
+    if(!re4dc::world_mutation31::publish(sourceWorldPackageGeneration,sourceWorldPackagePublished)){
+        sourceWorldSidecarCrc=0;return false;
+    }
+    return true;
+}
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
 // PS2_VERTEX_ALPHA (game30.mk): the ARGB4444 halves of a marked part's corner colour, laid out as vp::build_lut's
@@ -7080,6 +7201,11 @@ bool ps2_open(){
     if(ps2w.storage)return true;
 #endif
     if(ps2w.attempted)return false;
+#if RE4DC_WORLD_MUTATION31
+    // Revoke before an allocator can return the former package address and
+    // before any attempted read into it, including a subsequently failed open.
+    worldPackageRevoke();
+#endif
     ps2w.attempted=true;
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::payload_retire(ps2w.asset_proof);gcasset_world_seal.have=false;
@@ -7365,7 +7491,9 @@ bool ps2_open(){
     r11fSidecarCrc=h.crc;
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if !RE4DC_WORLD_MUTATION31
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
+#endif
     sourceWorldSidecarCrc=h.crc;
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
@@ -7626,12 +7754,20 @@ bool ps2_open(){
      re4dc_log("PS2VA marked_parts=%u of %u (ARGB4444 vertex alpha, translucent pass)\n",marked,unsigned(h.parts));}
 #endif
 #if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackagePublish()){ps2_free();return false;}
+#endif
     wplan29::open();
 #endif
     return true;
 }
 #if RE4DC_MOVIE_WORLD_ARENA
 bool ps2_movie_reload(){
+#if RE4DC_WORLD_MUTATION31
+    // This call may overwrite either retained file and then fail. Revoke even
+    // when the subsequent layout/open/read/CRC check refuses restoration.
+    worldPackageRevoke();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world(); // mesh/R4PW alone cannot renew prepared sidecars
 #endif
@@ -7713,12 +7849,18 @@ bool ps2_movie_reload(){
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
 #endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER && RE4DC_WORLD_MUTATION31
+    sourceWorldSidecarCrc=h.crc;
+#endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     // Preserve ids, slots, source flags, object/serials, original rest matrices,
     // part witnesses and ordering. Same UI frame can contain source S11 edits.
     dyn::frame=~0u;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
 #endif
 #if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackagePublish())return false;
+#endif
     wplan29::open();
 #endif
     return true;
@@ -7927,6 +8069,12 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_WORLD_MUTATION31
+    // A failed in-place reload can leave the old package object's pointers
+    // intact until unpublication. Never enter a prepared or ordinary read.
+    if(!worldPackageCurrent()){re4dc_model_packet_abort();return -1;}
+    const unsigned draw_package_generation=sourceWorldPackageGeneration;
+#endif
 #if RE4DC_ROOT_POSE_REFUSAL_DIAG
     dyn::root_reports(); // bounded emission before any direct/chunk/SQ ownership
 #endif
@@ -8218,6 +8366,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_PVS
                        unsigned placement;
 #endif
+#if RE4DC_WORLD_MUTATION31
+                       std::uint8_t source_pass,source_texture,source_flags;
+#endif
                        std::uint8_t cull; bool marked; std::uint8_t sky; };
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
@@ -8230,6 +8381,11 @@ int ps2_pass(unsigned pass,float zfar){
     unsigned active_page_index=0,active_page_plan=0;
 #endif
     auto chunk_flush=[&]()->int{
+#if RE4DC_WORLD_MUTATION31
+        if(!worldPackageSelectionCurrent(draw_package_generation)){
+            re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+        }
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
 #endif
@@ -8270,6 +8426,9 @@ int ps2_pass(unsigned pass,float zfar){
         // changing the shared renderer's part-reference layout or hot methods.
         re4dc::room::MeshPart replay_part{};
         MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+#if RE4DC_WORLD_MUTATION31
+        e.mutation_epoch=draw_package_generation;
+#endif
         e.alpha=0xff000000U;e.direct=true;e.lean_part=true;
         e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
         e.streaming=re4dc_model_packet_streaming()!=0;e.set_clip();
@@ -8279,6 +8438,20 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
+#if RE4DC_WORLD_MUTATION31
+            // A queued part can outlive a bind/flush callback. Verify the
+            // package cell and every live material field before package or
+            // cached-key dereference. Unknown edits refuse this queued run.
+            if(!worldPackageSelectionCurrent(draw_package_generation) || x.index>=cpkg.header().part_count){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+            const auto& live=ps2w.parts[x.index];
+            if(live.crc!=x.key[0] || live.fnv!=x.key[1] || live.width!=x.key[2] ||
+               live.height!=x.key[3] || live.cull!=x.key[5] || live.pass!=x.source_pass ||
+               live.texture!=x.source_texture || live.reserved!=x.source_flags){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
             part.cull=x.cull;
 #if RE4DC_SCENERY_UV_SNAPSHOT
             part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
@@ -8303,6 +8476,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],ps2w.lut,ps2w.gather};
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
+#endif
+#if RE4DC_WORLD_MUTATION31
+            e.mutation_epoch=draw_package_generation;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
 #endif
@@ -8342,6 +8518,11 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
 #if RE4DC_WORLD_PAGES31
             // PAGE31_POST_EMIT_BEGIN
             if(active_page){
@@ -8350,7 +8531,11 @@ int ps2_pass(unsigned pass,float zfar){
                 // may run a source callback, so validate only after this close.
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif
-                bool current=wplan29::current(active_page_plan) &&
+                bool current=
+#if RE4DC_WORLD_MUTATION31
+                    worldPackageSelectionCurrent(draw_package_generation) &&
+#endif
+                    wplan29::current(active_page_plan) &&
                     active_page_inputs->current(ps2w.parts[active_page_index],active_page_affine);
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
                 if(!re4dc_source_world_binding_valid()){
@@ -8382,6 +8567,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+#if RE4DC_WORLD_MUTATION31
+                // Batch release may run a named package writer. Recheck
+                // before completion reads the retained source part below.
+                if(!worldPackageSelectionCurrent(draw_package_generation)){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
 #endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
 #if RE4DC_WORLD_PAGES31
@@ -8428,6 +8620,11 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
 #endif
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
             if(result==0)re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
 #endif
@@ -8462,6 +8659,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if RE4DC_WORLD_MUTATION31
+        if(!worldPackageSelectionCurrent(draw_package_generation)){re4dc_model_packet_abort();++c.aborts;return -1;}
+#endif
 #if RE4DC_PS2_PVS
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
         // Qualification mode ONLY: internal pvs::cur still authenticates source
@@ -8705,6 +8905,11 @@ int ps2_pass(unsigned pass,float zfar){
         const unsigned plan_incarnation=wplan29::bound_incarnation;
 #endif
         for(unsigned k=0;k<plan_count;++k){
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #else
         for(unsigned k=0;k<mesh.part_count;++k){
 #endif
@@ -8719,6 +8924,12 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             const auto* plan_part=plan?plan+k:nullptr;
             const unsigned index=plan_part?plan_part->index:mesh.first_part+k;
+#if RE4DC_WORLD_MUTATION31
+            if(plan_part && (index>=pk.header().part_count ||
+                !re4dc::wp29::matches(*plan_part,ps2w.parts[index],pass))){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #if RE4DC_WORLD_PREPARED09
             const auto& meta=ps2w.parts[index];
 #else
@@ -8758,6 +8969,11 @@ int ps2_pass(unsigned pass,float zfar){
             if(!re4dc_source_world_uv(pl.placement,pl.mesh,index,pass,part.uv_offset)){
                 re4dc_source_world_binding_failed();++c.aborts;return -1;
             }
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #endif
 #if RE4DC_SCENERY_SELECT_ONLY
             {
@@ -8855,6 +9071,9 @@ int ps2_pass(unsigned pass,float zfar){
                     x.placement=pvs_source_placement;
 #endif
                     x.marked=marked;x.first=npk;
+#if RE4DC_WORLD_MUTATION31
+                    x.source_pass=meta.pass;x.source_texture=meta.texture;x.source_flags=meta.reserved;
+#endif
 #if RE4DC_SKY_ANY
                     x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
@@ -8878,7 +9097,11 @@ int ps2_pass(unsigned pass,float zfar){
                         active_page_index=index;active_page_plan=plan_incarnation;
                         if(chunk_flush()<0)return -1; // never retry a published prefix
                         active_page=nullptr;
-                        if(!wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                        if(
+#if RE4DC_WORLD_MUTATION31
+                           !worldPackageSelectionCurrent(draw_package_generation) ||
+#endif
+                           !wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
                             re4dc_model_packet_abort();++c.aborts;return -1;
                         }
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -8915,6 +9138,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             MeshDraw d{{part,{},near,far},pk,pk.parts()[index],ps2w.lut,ps2w.gather};
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
+#endif
+#if RE4DC_WORLD_MUTATION31
+            d.mutation_epoch=draw_package_generation;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
 #if RE4DC_PS2_PVS
@@ -9008,6 +9234,9 @@ int ps2_pass(unsigned pass,float zfar){
                 x.placement=pvs_source_placement;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
+#if RE4DC_WORLD_MUTATION31
+                x.source_pass=meta.pass;x.source_texture=meta.texture;x.source_flags=meta.reserved;
+#endif
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
@@ -9031,7 +9260,11 @@ int ps2_pass(unsigned pass,float zfar){
                     active_page_index=index;active_page_plan=plan_incarnation;
                     if(chunk_flush()<0)return -1; // no replay after a submitted page
                     active_page=nullptr;
-                    if(!wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                    if(
+#if RE4DC_WORLD_MUTATION31
+                       !worldPackageSelectionCurrent(draw_package_generation) ||
+#endif
+                       !wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
                         re4dc_model_packet_abort();++c.aborts;return -1;
                     }
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -9075,6 +9308,11 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=d.run();
             d.end_direct(); // before any abort: releases the store queues
 #endif
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #if RE4DC_WORLD_PORTAL29
 #if RE4DC_WORLD_PORTAL_COMPLETION
             // This first completion class proves whole queued source spans.
@@ -9108,9 +9346,17 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
             if(pc_state){
+#if RE4DC_WORLD_MUTATION31
+                if(!worldPackageSelectionCurrent(draw_package_generation)){
+                    re4dc_model_packet_abort();++c.aborts;return -1;
+                }
+#endif
                 // The check run: only the hidden clusters / meshlets, opaque magenta, untextured and unfogged.
                 MeshDraw k{{part,{},near,far},pk,pk.parts()[index],ps2w.lut,ps2w.gather};
                 k.alpha=0xff000000U;k.vertex_alpha=false;k.cull_far=cull_far;k.direct=true;
+#if RE4DC_WORLD_MUTATION31
+                k.mutation_epoch=draw_package_generation;
+#endif
                 k.part_index=index;k.lod_scale=lod_scale;
                 std::memcpy(k.mvq,mvq,sizeof(mvq));std::memcpy(k.mv,mvq,sizeof(mvq));
                 k.ps2=key;k.pc_mode=2;k.pc_wq=pc_wq;k.pc_all=pc_state==2;k.pc_check=true;
@@ -9642,6 +9888,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if RE4DC_WORLD_MUTATION31
+    worldPackageRevoke();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     ++wc24_generation;
 #endif
@@ -9664,7 +9913,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
     r11fPackageAdvance();
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if !RE4DC_WORLD_MUTATION31
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
+#endif
     sourceWorldSidecarCrc=0;
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS

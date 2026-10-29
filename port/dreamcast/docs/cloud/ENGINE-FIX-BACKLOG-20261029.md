@@ -266,6 +266,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF09. Finish the immutable/live split in world preparation
 
+**2026-10-29 recovery source delivery:** Recovered real package overwrite/loan/retirement authority with normal/sanitizer,21 guard and13 effective-profile checks PASS. Partial mutation scope; arbitrary material/placement authority and target/live gates remain open. WORLD_MUTATION31 default0. See [Build31](handbacks/build-31.md).
+
 **Gap.** The existing plan prepares ordered 32-byte records, but the pass reconstructs temporary part metadata and copies placement matrices/keys into queued contexts. Portal witness membership is searched repeatedly. Placement modelview/frustum work also precedes the portal placement rejection.
 
 **Target.** Immutable part relationships, witness membership and eligible static world bounds are prepared once in the existing room lifetime. Live source presence, material/UV changes, camera state and completion remain current.

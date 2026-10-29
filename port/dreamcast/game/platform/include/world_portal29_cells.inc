@@ -11,7 +11,11 @@ unsigned wp29_count=0,wp29_generation=0;
 extern "C" void* re4dc_world_portal29_alloc(unsigned);
 inline void wp29_clear(){
     wp29_witnesses=nullptr;wp29_count=0;houses=nullptr;kPcHouseCount=0;
+#if RE4DC_WORLD_MUTATION31
+    if(wp29_generation!=~0U)++wp29_generation; // terminal never revives a proof
+#else
     if(!++wp29_generation)++wp29_generation;
+#endif
 }
 inline const float* house_of(int cell){
     for(unsigned k=0;k<kPcHouseCount;++k)
@@ -25,6 +29,9 @@ template<class D,class S> inline bool load_cells(D& data,S& st,S& tst,unsigned f
     if(data.block)return true;
     if(!st.ok)return false;
     wp29_clear();
+#if RE4DC_WORLD_MUTATION31
+    if(wp29_generation==~0U){st.ok=false;return false;}
+#endif
     const int before=re4dc_static_heap_free();const char* why=nullptr;
     char path[40];::snprintf(path,sizeof(path),"/cd/dc/native/r%03x/interior.cell",live_room&0xfffU);
     const file_t file=fs_open(path,O_RDONLY);

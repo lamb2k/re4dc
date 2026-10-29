@@ -99,3 +99,19 @@ $(error WORLD_PAGES31 needs SCENERY_CHUNK=1 WORLD_PREPARED09=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PAGES31=1
 endif
+
+# EF09/07: named PS2 package overwrite/loan authority for prepared pages and
+# portal receipts. Its lifetime is the existing package generation, extended to
+# every room only while this switch is enabled. No new resident allocation.
+WORLD_MUTATION31 ?= 0
+ifneq ($(WORLD_MUTATION31),0)
+ifneq ($(WORLD_MUTATION31),1)
+$(error WORLD_MUTATION31 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(WORLD_MUTATION31),1)
+ifneq ($(WORLD_PREPARED09)$(WORLD_PAGES31)$(MOVIE_WORLD_ARENA),111)
+$(error WORLD_MUTATION31 needs WORLD_PREPARED09=1 WORLD_PAGES31=1 MOVIE_WORLD_ARENA=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_MUTATION31=1
+endif
