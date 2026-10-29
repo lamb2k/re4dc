@@ -941,3 +941,40 @@ Marked/paused600-draw interval, full/partial/skipped-window semantics, all
 reason-group coverage, CPU/current memory/full-stack/look/STRICT and console
 gates remain pending. Console requires designated enabled-arm media,
 REMOTE LINK after each swap, and matched preset/camera/completed draw ticks.
+
+#### Owner: coherent main-profile replay and serialized reason schema, 2026-10-29
+
+Qualified CRLF reader730d8f910 replays the retained main-profile journals
+without changing their bytes or rerunning the emulator. Existing-audit,
+gaps and window32 readiness each yield one complete automatic T snapshot
+plus one incomplete T. Packet counts23/24/23 are all parsed; old reader
+parsed0. Window32 explicit-DIAG journal has21 parsed packets,0 complete T,
+and exactly D parts1-4 of14: that hold is unchanged.
+
+Compare complete snapshots with the exact source FA29/FA35 registries:
+controls serialize only33 reasons each in totals/last-draw rows; enabled
+main/front serialize all91, including all58 additions in each totals and
+last-draw/window schema. No missing/extra reason keys. Front-gap cumulative
+fields include nonzero cache hit/build/flush, cloth spring/chain, mapped
+effects, collision fast-list, motion and deferred-skin activity. This is
+field/observed-activity evidence, not all-branch execution or rates; zeros
+are not taken as proof that an alternative was exercised. No overlapping
+reason totals were added or divided by drawn ticks.
+
+One coherent window32 automatic snapshot reports N=used=32, full=exact=1,
+first418/last452, saturation0, collecting0 and paused0. Its metadata reports
+logic287/draws278/skipped9/incomplete0/count_overflow0; span_logic35 and
+span_skip3. Cross-collector draws agree, and35-3=32 with inclusive418..452
+span35. This is an internally consistent full rolling-window/skip-denominator
+observation. It is not independent per-reason exclusion validation, the
+matched600-draw view gate, partial/collecting/pause/resume/reset/saturation
+qualification, or CPU/current heap/full-stack/look/STRICT/console acceptance.
+
+Private CRLF-MAIN-REPLAY and COHERENT-REASON-SCHEMA-AND-WINDOW-METADATA retain
+raw hashes, source-registry hashes, exact small integer fields and limits.
+All observations are offline from the retained captures; earlier window32
+active track01 proof remains unretained and is not backfilled. No SDK,
+image or emulator repeat, source/asset/SD/recipe/release change. Next close
+the remaining static window BSS layout attribution from retained link maps,
+then plan the outstanding supported runtime lifecycle/view gates while
+preserving the explicit DIAG4/14 and console waits.
