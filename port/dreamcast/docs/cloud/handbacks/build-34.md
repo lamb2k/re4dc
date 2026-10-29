@@ -667,3 +667,27 @@ Next independent menu/material fixtures are prepared; stock KOS fight/call/
 leave60s checks require dedicated squeeze/watch twins. Its door75s and
 stock h2_300s are not authorized by the current60s limit. No gate waived,
 held control enabled, SD/recipe change or publication.
+
+### Answers (owner): fixed-front default inventory/material pair
+
+Same6c6028df6 FRONT_NATIVE1/cache0-or1 programme pair and identical default
+r105 menu fixture. Each60s cache-interpreter/GDEMU1 capture completes with
+reader0/errors empty/overruns0, inventory closes and gameplay continues;
+owned processes exit, no host input/state-out. SSCERT restored1 with
+archives2/2,assets5/5,infos19/19; backing restored2903552bytes, own hashOK,
+pool_free475808 both. Hashes differ between programmes; these are within-arm
+restore checks, not cross-arm byte identity or a full memory oracle.
+
+The bounded cache case logs its initial frame178 cache row, not a post-menu
+frame600 checkpoint. Do not infer zero hits or completed mutation coverage.
+Prior farm/door admission counts remain separate evidence. Private exact
+receipts: owner-front34-20261028/INVENTORY-RESULTS.json and RESULTS.md.
+
+Next independent memory work uses existing standard-recipe KOS watch/
+squeeze/W11 twins and supported60s scenes, with source replay identity and
+the fixed-front control/cache delta. These private game-memory twins use
+normal QA_MENU0/QA_LINK0 composition, separate from link-enabled public QA/
+ALL ON discs; no timing or full standard-floor result exists yet. Stock75s
+door/300s h2 are not launched under the current60s rule. No source guard,
+SCPS cache2 blocker, held control or release recipe is changed; no SD or
+publication. Broader look/lifecycle/STRICT/memory/console gates remain.
