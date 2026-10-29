@@ -15,6 +15,9 @@
 #include <cstring>
 #include <unordered_map>
 #include <limits>
+#ifdef __SANITIZE_ADDRESS__
+#include <sanitizer/asan_interface.h>
+#endif
 static unsigned checks=0;
 #define CHECK(x) do{++checks;assert(x);}while(0)
 struct Ps2Part {std::uint32_t crc,fnv;std::uint16_t width,height;std::uint8_t pass,cull,texture,reserved;};
@@ -31,7 +34,7 @@ static unsigned heap_limit=1024*1024,heap_used=0,heap_overhead=0,fail_at=0,attem
 struct Cell {unsigned bytes,charged,generation,token;};
 static std::unordered_map<void*,Cell> blocks;
 static unsigned room_generation=7,package_generation=7,source_cell_token=10000,next_cell_token=0;static bool room_live=true,zero_cell_token=false;
-static void (*after_allocate)()=nullptr;static void* returned_candidate=nullptr;
+static void (*after_allocate)()=nullptr;static void (*before_free)()=nullptr;static void* returned_candidate=nullptr;
 extern "C" int re4dc_room4_live_generation(unsigned* out){*out=room_generation;return room_live;}
 extern "C" int re4dc_room4_cell_valid(const void* p,unsigned bytes,unsigned generation){
     if(!room_live || generation!=room_generation)return 0;
@@ -52,7 +55,7 @@ extern "C" void* re4dc_world_part_plan29_alloc(unsigned bytes){
     if(after_allocate){returned_candidate=p;std::memset(p,0x5a,bytes);auto fn=after_allocate;after_allocate=nullptr;fn();}
     return p;
 }
-void re4dc_static_free(void* p){if(!p)return;if(verify_close)verify_revoked();auto it=blocks.find(p);assert(it!=blocks.end());heap_used-=it->second.charged;blocks.erase(it);std::free(p);++frees;}
+void re4dc_static_free(void* p){if(!p)return;if(verify_close)verify_revoked();if(before_free){auto fn=before_free;before_free=nullptr;fn();}auto it=blocks.find(p);assert(it!=blocks.end());heap_used-=it->second.charged;blocks.erase(it);std::free(p);++frees;}
 void re4dc_log(const char*,...){}
 #include "world_part_plan29_runtime.inc"
 void verify_revoked(){CHECK(!wplan29::current(leased_token));}
@@ -87,6 +90,7 @@ static const Ps2Part* metadata_address(const re4dc::wp29::Record* plan,unsigned 
 static void external_retire_all(){for(auto cell:blocks){std::free(cell.first);++frees;}blocks.clear();heap_used=0;}
 static void reset_heap(){wplan29::close();CHECK(blocks.empty());++room_generation;package_generation=room_generation;++source_cell_token;heap_limit=1024*1024;heap_overhead=fail_at=0;verify_close=false;zero_cell_token=false;}
 static void reenter_open(){wplan29::close();wplan29::open();}
+static void reenter_free(){wplan29::open();}
 
 int main(){
     using namespace re4dc::wp29;
@@ -133,9 +137,19 @@ int main(){
     leased_token=wplan29::bound_incarnation;void* foreign=wplan29::allocation;
     auto& foreign_cell=blocks.at(foreign);const unsigned old_cell=foreign_cell.token;
     foreign_cell.token=++next_cell_token;CHECK(foreign_cell.token!=old_cell);
-    std::memset(foreign,0x6b,foreign_cell.bytes);CHECK(!wplan29::current(leased_token));
+    std::memset(foreign,0x6b,foreign_cell.bytes);
+#ifdef __SANITIZE_ADDRESS__
+    __asan_poison_memory_region(foreign,foreign_cell.bytes);
+#endif
+    CHECK(!wplan29::current(leased_token));count=123;CHECK(!wplan29::run(0,0,count) && count==123);CHECK(!wplan29::bounds(1,leased_token));
     unsigned freed_before=frees;wplan29::close();CHECK(frees==freed_before && blocks.count(foreign));
+#ifdef __SANITIZE_ADDRESS__
+    __asan_unpoison_memory_region(foreign,foreign_cell.bytes);
+#endif
     re4dc_static_free(foreign);CHECK(!blocks.count(foreign));
+    reset_heap();wplan29::open();void* retiring=wplan29::allocation;before_free=reenter_free;
+    wplan29::open();CHECK(wplan29::records && wplan29::allocation!=retiring && blocks.size()==1);
+    CHECK(wplan29::current(wplan29::bound_incarnation));
     // An allocator callback may publish a newer plan. The outer call must
     // neither overwrite its globals nor write through its returned old buffer.
     reset_heap();after_allocate=reenter_open;wplan29::open();

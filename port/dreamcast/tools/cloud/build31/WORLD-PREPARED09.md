@@ -1,7 +1,7 @@
 # EF09 prepared world facts
 
 WORLD_PREPARED09 is default0. Enabled use requires the existing part plan,
-MOVIE_WORLD_ARENA1 and STATIC_OBJ_LIFETIME051 so allocator identity comes from
+`MOVIE_WORLD_ARENA=1` and `STATIC_OBJ_LIFETIME05=1` so allocator identity comes from
 the existing Room4 producer. No new resource manager, renderer or asset format.
 Absent/zero preserves the preceding source branches, plan layout and guards.
 
@@ -57,7 +57,7 @@ python3 port/dreamcast/tools/cloud/build31/portal_completion_host.py --prepared0
 
 Use fresh output directories. Actual production plan lifecycle, direct metadata
 consumer, early-consumer block and literal original world_box are compiled with
-controlled allocator/source/portal edges. Current suite:7,101 main checks,
+controlled allocator/source/portal edges. Current suite:7,106 main checks,
 86,420 indexed lookups and450 ordered live-policy cases, plus Make guards.
 It covers same-generation same-address cell replacement, stale close, heap reset,
 source/package change, callback reentry before write, token0/exhaustion, optional

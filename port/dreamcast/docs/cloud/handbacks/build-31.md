@@ -493,7 +493,7 @@ allocator-token ownership before payload/free, package token/revision, callback-
 safe publication, direct current metadata reference and optional conservative
 placement boxes consumed before view setup. Base records retain priority under
 64KiB/96KiB-floor; dynamic/root-pose/uncertain cases use the original path and
-queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,101 main
+queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,106 main
 checks,86,420 lookup cases and450 ordered live-policy cases; completion628 checks
 remain passing under prepared09. Same-gen/address/size stale close leaves the
 foreign replacement intact. Unproven allocator returns are counted and further
@@ -504,3 +504,10 @@ overlay/allocated-section gates. BLOCKED: SDK slot not yet granted; private
 cells/proof, live lifecycle/look/STRICT/memory and net hardware cost pending.
 Details/commands: [WORLD-PREPARED09.md](../../../tools/cloud/build31/WORLD-PREPARED09.md).
 No active SDK/emulator/media process; no release/ALLON or shared provider edit.
+
+EF09 fixture continuation, 2026-10-29: DONE added same-address foreign-payload
+ASan poisoning and reentry during free as well as allocation. Old plan/index/
+bounds reject the poisoned replacement; free reentry preserves the newer
+publication. Current main checks7,106 and controlled allocation balance17/17
+pass normal and sanitized. Runtime/source bytes remain exactly `3ded42ac0`.
+NEXT target admission; BLOCKED unchanged live acceptance gates, no active job.
