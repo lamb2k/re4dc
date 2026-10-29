@@ -716,3 +716,26 @@ CONTROL-PROOF.json and each arm/stock-eval.txt. Existing supported60s
 call/leave cases can progress independently; stock75s door/300s h2 remain
 unrun. No timing/hardware/full look/STRICT/lifetime acceptance, promotion,
 SD copy or publication. Existing SCPS cache2 composition blocker unchanged.
+
+### Answers (owner): fixed-front bounded radio-call squeeze
+
+Same6c6028df6 normal-game profiles, source replay identity and cache0/1
+delta as the fight qualification above. Four60s cache-interpreter/GDEMU1
+radio-call captures complete reader0/errors empty/overruns0/process exited.
+Actual49152B held, sub-screen open marker reached, no OOM/MISSING/HALT.
+Unmodified EVAL_ONLY judge results (intact-row minima are observations):
+
+- control-0: FAIL - inspect unmodified judge output; numerical headroom minimum34360B, top29824B.
+- control-1: FAIL - inspect unmodified judge output; numerical headroom minimum34272B, top29024B.
+- cache-0: FAIL - inspect unmodified judge output; numerical headroom minimum33088B, top27232B.
+- cache-1: FAIL - inspect unmodified judge output; numerical headroom minimum31680B, top26432B.
+
+Raw damaged rows and failed judge outcomes remain preserved; no filtering
+or source/parser change to manufacture a pass. Radio-open coverage does
+not establish close/restoration/long-soak acceptance. Overall matched
+multi-scene floor remains INCOMPLETE due fight control logging failures
+and pending scenes. FRONT_TEXOBJ held; no timing/hardware/full lifetime/
+look/STRICT acceptance. Private receipts owner-front34-kos-20261028/
+CALL-RESULTS.json+md and each arm/stock-eval-call.txt. Existing supported
+60s leave100/leave103 scenes are the next independent bounded step;
+75s door/300s h2 remain unrun. No SD, recipe change or publication.
