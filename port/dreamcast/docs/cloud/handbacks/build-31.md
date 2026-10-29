@@ -887,6 +887,89 @@ behavior. Paging correctness does not itself authorize stream/clip witnesses.
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
 
 
+## 2026-10-29 recovery: EF09 bounded package overwrite and retirement authority
+
+Queue Status is published by the sole coordinator in the [live recovery checkpoint](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md#status), alongside this source delivery. Keeping shared Build rows in that one branch prevents competing row edits; this branch retains its existing build handback and card-specific backlog update.
+
+**DONE:** preserved the old dirty candidate and recovered it into an independent
+worktree on d45eb759dd92685255929625e04fae3d7a46bca7. Production bytes were retained
+after focused review and fresh synthetic validation. WORLD_MUTATION31 remains0.
+This is a partial EF09 source delivery, not complete arbitrary content/material
+mutation authority and not a claim of whole-card acceptance.
+
+The real ps2_open, ps2_movie_unpublish, ps2_movie_reload and
+re4dc_ps2_mesh_retire publishers revoke the existing package publication token
+before overwrites, movie borrowing and retirement. Publication requires current
+room generation and the exact live allocation cell; the generation saturates
+instead of wrapping into reusable authority. Existing prepared plans, queued
+draws, pages, source-world consumers and portal receipts consume this token.
+Failed same-address reload cannot preserve a prepared record or completed
+witness. Protected queued material fields still receive live comparisons;
+unknown arbitrary mutations do not gain an immutable-content certificate.
+
+Recovered scope: native_source_world.inc; world_part_plan29.hpp/runtime.inc;
+world_portal29_cells.inc/runtime.inc; native_static.cpp; world_plan29.mk;
+new world_mutation31.hpp and dedicated host/reload/target guard fixtures.
+No workspace cap, allocator budget, simulation, release recipe or source order
+change is introduced. Target code/stack cost has not been measured.
+
+The recovery driver accepts an explicit reviewed --profile-builder and rebinds
+its ROOT/DC/profile reads to this candidate. The EF08 helper is now integrated,
+so these commands use the default repository path. No helper copy is needed:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build31/world_mutation31_host.py --output /tmp/world-mutation31-recovery3-normal
+python3 -B port/dreamcast/tools/cloud/build31/world_mutation31_host.py --output /tmp/world-mutation31-recovery3-sanitized --sanitize
+python3 -B port/dreamcast/tools/cloud/build31/world_mutation31_target.py --output /tmp/world-mutation31-recovery3-target
+python3 -B port/dreamcast/tests/test_world_pages31.py
+git diff --check
+```
+
+Use fresh nonexistent output directories. The initial recovery used the reviewed
+helper in its separate worktree; the current synchronized branch uses the landed
+helper and stream source directly. No unmerged clip producer is transplanted.
+
+PASS normal and ASan/UBSan: prepared current-source and general room paths49
+checks each with6 allocations/frees; portal61 checks with6 allocations/frees;
+legacy portal12 checks; actual r200 consumer; actual extracted movie-reload
+function12 reads with successful/failed replacement, retry and exhaustion.
+Strict literal/Make guards21 cases and full release-chain guards13 refusal cases
+pass; absent/zero compiler commands and extracted prepared/legacy/completion
+preprocessed and host-object bytes are identical. Existing page regression
+passes stream0/1, census, normal/sanitizer, ordered boundaries and Make modes.
+
+**NEXT:** local target compilation/full absent-zero programme, allocated sections
+and overlays; enabled image and real overwrite/loan/reentry/mutation output.
+Cloud continues precise material/placement/witness publishers and route scratch
+as separate bounded contracts. **BLOCKED:** target/private/current-image
+look/STRICT/memory/cost/console gates remain local and unrun. This candidate
+does not remove unsupported portal guards, qualify clip routes or enable ALLON.
+
+## 2026-10-29 recovery: EF09 integrated profile helper command correction
+
+**DONE:** source-base synchronization to `26f7d8278be77388b157910765f5e6b182c39cc1` and correction of the earlier
+shallow `/tmp/stream_portal_profile31.*.py` command. That old command failed during
+import because the helper derives its repository root from `parents[5]`, before
+the mutation driver can rebind its source paths. The failure is retained here;
+it was a handback reproduction defect, not a target PASS.
+
+The corrected commands above use the now-integrated helper at its actual
+repository path, with no `--profile-builder` override or unmerged parent. Run
+from this candidate's repository root and choose fresh nonexistent output
+directories. Root executed all three after synchronization:49 prepared,61 portal,
+12 legacy checks, actual r200/movie source consumer and21 guards PASS in normal
+and ASan/UBSan runs; the release-chain actual Make/C++ driver passed13 refusal
+profiles with effective pacing2/2/4063/1/0. Its missing PACE_HOLD_LOG assignment
+resolves to the Make default0. The script named `_target.py` is a source/effective
+Make/preprocessor fixture; it does not compile or run a SH-4 target.
+
+No mutation production behavior changed in this follow-up. Existing guarded
+source was merged cleanly with the integrated stream source; current source
+fixtures were rerun. Actual target full-OFF/link/private/runtime/console gates,
+arbitrary material/placement publisher coverage and default0 remain unchanged.
+The branch is a fast-forward of published14def8170a572ac3c993ab6c9ae58d7463331565;
+local alone integrates it. No recipe, SDK or email action.
+
 ## EF09 worker, 2026-10-29: indexed receipt slice
 
 DONE: guarded WORLD_PREPARED09 default0, requiring the existing part plan;

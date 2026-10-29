@@ -114,4 +114,13 @@ template<class Meta> inline Meta metadata(const Record& r){
     return Meta{r.key[0],r.key[1],std::uint16_t(r.key[2]),std::uint16_t(r.key[3]),
                 r.original_pass,std::uint8_t(r.key[5]),r.texture,r.flags};
 }
+#if defined(RE4DC_WORLD_MUTATION31) && RE4DC_WORLD_MUTATION31
+// A prepared record's cell lifetime does not certify live material edits.
+// Read each current field before using a cached key or pass span.
+template<class Meta> inline bool matches(const Record& r,const Meta& m,unsigned pass){
+    return r.key[0]==m.crc && r.key[1]==m.fnv && r.key[2]==m.width && r.key[3]==m.height &&
+        r.key[4]==pass && r.key[5]==m.cull && r.original_pass==m.pass &&
+        r.texture==m.texture && r.flags==m.reserved;
+}
+#endif
 }}

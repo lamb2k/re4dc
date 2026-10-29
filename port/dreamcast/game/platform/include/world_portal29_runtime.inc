@@ -4,6 +4,14 @@ namespace wp29 {
 re4dc::portal29::Receipts receipts;
 re4dc::pvsproof::Certificate numeric_cert{};
 unsigned validated_generation=~0U,view_frame=~0U,scene=~0U;
+#if RE4DC_WORLD_MUTATION31
+unsigned validated_package_generation=0;
+bool package_pass_current(){
+    return worldPackageCurrent() && pc::wp29_generation!=~0U &&
+        validated_generation==pc::wp29_generation &&
+        validated_package_generation==sourceWorldPackageGeneration;
+}
+#endif
 unsigned admitted=0,declined=0,commits=0,source_declines=0,scene_declines=0,waits=0;
 bool valid=false,candidate=false;
 float view_key[27]{};
@@ -14,14 +22,23 @@ const void* completion_storage=nullptr;
 const void* completion_parts=nullptr;
 const void* completion_placements=nullptr;
 unsigned completion_generation=~0U,completion_room=~0U,completion_count=0;
+#if RE4DC_WORLD_MUTATION31
+unsigned completion_package_generation=0;
+#endif
 unsigned completion_keys[re4dc::portal29::kMaxWitnesses][6]{};
 bool material_matches(unsigned part,const unsigned* key){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current())return false;
+#endif
     if(!key || !ps2w.parts || part>=ps2w.package.header().part_count)return false;
     const auto& m=ps2w.parts[part];
     return key[0]==m.crc && key[1]==m.fnv && key[2]==m.width && key[3]==m.height &&
            key[4]==m.pass && key[5]==m.cull;
 }
 bool completion_sources_current(){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current() || completion_package_generation!=sourceWorldPackageGeneration)return false;
+#endif
     if(completion_count>re4dc::portal29::kMaxWitnesses || !completion_storage || completion_storage!=ps2w.storage || completion_parts!=ps2w.parts ||
        completion_placements!=ps2w.placements || completion_generation!=pc::wp29_generation ||
        completion_room!=ps2w.room || completion_count!=pc::wp29_count || !pc::wp29_witnesses)return false;
@@ -30,6 +47,9 @@ bool completion_sources_current(){
     return true;
 }
 void completion_begin(){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current()){receipts.clear();completion_serial=0;return;}
+#endif
     // Existing receipt bits may cross opaque->later passes only for exactly
     // the same source/material state. A same-address reload gets a new cell epoch.
     if(!completion_sources_current())receipts.clear();
@@ -39,6 +59,9 @@ void completion_begin(){
     if(!exhausted)++completion_serial;else completion_serial=0;
     completion_storage=ps2w.storage;completion_parts=ps2w.parts;completion_placements=ps2w.placements;
     completion_generation=pc::wp29_generation;completion_room=ps2w.room;completion_count=pc::wp29_count;
+#if RE4DC_WORLD_MUTATION31
+    completion_package_generation=sourceWorldPackageGeneration;
+#endif
     for(unsigned q=0;q<completion_count;++q){
         const auto& m=ps2w.parts[pc::wp29_witnesses[q].part];auto* key=completion_keys[q];
         key[0]=m.crc;key[1]=m.fnv;key[2]=m.width;key[3]=m.height;key[4]=m.pass;key[5]=m.cull;
@@ -47,6 +70,9 @@ void completion_begin(){
 #endif
 
 bool sources(){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current())return false;
+#endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
     if(pc::wp29_count>re4dc::portal29::kMaxWitnesses)return false;
 #endif
@@ -71,6 +97,9 @@ bool sources(){
     return true;
 }
 bool numeric_bounds(){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current())return false;
+#endif
     numeric_cert={};numeric_cert.margin_mm=64U;
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
@@ -97,12 +126,22 @@ bool numeric_bounds(){
 }
 void begin(unsigned pass,const float* P,float near,float far){
     pc::st.active=false;candidate=false;valid=false;
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent() || pc::wp29_generation==~0U){receipts.clear();++source_declines;return;}
+#endif
     unsigned epoch[2];
     if(!pc::data.block || !re4dc_pvs23_scene(epoch) || epoch[0]!=re4dc_ui_frame()){
         receipts.clear();++scene_declines;return;
     }
+#if RE4DC_WORLD_MUTATION31
+    if(validated_generation!=pc::wp29_generation || validated_package_generation!=sourceWorldPackageGeneration){
+#else
     if(validated_generation!=pc::wp29_generation){
+#endif
         receipts.clear();validated_generation=pc::wp29_generation;
+#if RE4DC_WORLD_MUTATION31
+        validated_package_generation=sourceWorldPackageGeneration;
+#endif
         if(!numeric_bounds()){validated_generation=~0U;++declined;return;}
     }
     float key[27];std::memcpy(key,ps2w.view,48);std::memcpy(key+12,P,28);
@@ -134,6 +173,9 @@ void begin(unsigned pass,const float* P,float near,float far){
 bool same_scene(){
     unsigned epoch[2];
 #if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current()){valid=false;receipts.clear();return false;}
+#endif
     const bool current=valid && re4dc_pvs23_scene(epoch) && epoch[0]==view_frame && epoch[1]==scene &&
            pc::wp29_generation==receipts.generation && std::memcmp(ps2w.view,view_key,48)==0 &&
            std::memcmp(ps2w.projection,view_key+12,28)==0 && std::memcmp(ps2w.viewport,view_key+19,24)==0 &&
@@ -141,12 +183,25 @@ bool same_scene(){
     if(!current){valid=false;receipts.clear();}
     return current;
 #else
+#if RE4DC_WORLD_MUTATION31
+    const bool current=valid && package_pass_current() && re4dc_pvs23_scene(epoch) &&
+           epoch[0]==view_frame && epoch[1]==scene && pc::wp29_generation==receipts.generation &&
+           std::memcmp(ps2w.view,view_key,48)==0 &&
+           std::memcmp(ps2w.projection,view_key+12,28)==0 &&
+           std::memcmp(ps2w.viewport,view_key+19,24)==0;
+    if(!current){valid=false;receipts.clear();}
+    return current;
+#else
     return valid && re4dc_pvs23_scene(epoch) && epoch[0]==view_frame && epoch[1]==scene &&
            pc::wp29_generation==receipts.generation && std::memcmp(ps2w.view,view_key,48)==0 &&
            std::memcmp(ps2w.projection,view_key+12,28)==0 && std::memcmp(ps2w.viewport,view_key+19,24)==0;
 #endif
+#endif
 }
 bool witness(unsigned placement,unsigned part){
+#if RE4DC_WORLD_MUTATION31
+    if(!package_pass_current())return false;
+#endif
     if(!pc::wp29_witnesses)return false;
 #if RE4DC_WORLD_PREPARED09
     return re4dc::portal29::witness_index(pc::wp29_witnesses,pc::wp29_count,placement,part)!=re4dc::portal29::kMaxWitnesses;
@@ -175,11 +230,18 @@ void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Complet
     const auto& w=pc::wp29_witnesses[ticket.witness];
     if(w.placement!=ticket.placement || w.part!=ticket.part || !material_matches(w.part,key) || std::memcmp(completion_keys[ticket.witness],key,6U*sizeof(unsigned)) ||
        !re4dc_pvs23_opaque_ready(key,re4dc::vp::kCacheSlots+64U))return;
+#if RE4DC_WORLD_MUTATION31
+    if(!same_scene() || !sources() || !material_matches(w.part,key) ||
+       std::memcmp(completion_keys[ticket.witness],key,6U*sizeof(unsigned)))return;
+#endif
     receipts.commit(ticket.witness);++commits;
 }
 #else
 void finish(unsigned placement,unsigned part,bool success,const unsigned* key){
     if(!success || !same_scene() || !sources() || !re4dc_pvs23_opaque_ready(key,re4dc::vp::kCacheSlots+64U))return;
+#if RE4DC_WORLD_MUTATION31
+    if(!same_scene() || !sources())return;
+#endif
     for(unsigned q=0;q<pc::wp29_count;++q){const auto& w=pc::wp29_witnesses[q];
         if(w.placement==placement && w.part==part){receipts.commit(q);++commits;}}
 }

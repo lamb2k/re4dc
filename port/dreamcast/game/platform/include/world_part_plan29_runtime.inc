@@ -5,6 +5,13 @@ extern "C" unsigned re4dc_room4_cell_incarnation(const void*,unsigned,unsigned);
 #if RE4DC_WORLD_PREPARED09 && RE4DC_PS2_WORLD_SOURCE_OWNER
 extern unsigned sourceWorldPackageGeneration;
 #endif
+#if RE4DC_WORLD_MUTATION31 && !RE4DC_PS2_WORLD_SOURCE_OWNER
+extern unsigned sourceWorldPackageGeneration;
+#endif
+#if RE4DC_WORLD_MUTATION31
+extern bool sourceWorldPackagePublished;
+bool worldPackageCurrent();
+#endif
 namespace wplan29 {
 using re4dc::wp29::Record;
 extern "C" void* re4dc_world_part_plan29_alloc(unsigned);
@@ -21,11 +28,14 @@ const void* bound_placements=nullptr;
 const re4dc::wp29::PlacementBounds* placement_boxes=nullptr;
 unsigned box_count=0,allocation_bytes=0,allocation_generation=0,allocation_incarnation=0,bound_storage_incarnation=0;
 unsigned refused_generation=~0U,unproven_return_bytes=0;
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
 unsigned bound_package_generation=0;
 #endif
 bool current(unsigned token){
     unsigned generation=0;
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent() || bound_package_generation!=sourceWorldPackageGeneration)return false;
+#endif
     return token && token==incarnation && token==bound_incarnation && records && allocation &&
            re4dc_room4_live_generation(&generation) && generation==allocation_generation &&
            allocation_incarnation && re4dc_room4_cell_incarnation(allocation,allocation_bytes,generation)==allocation_incarnation &&
@@ -33,7 +43,7 @@ bool current(unsigned token){
            re4dc_room4_cell_incarnation(bound_storage,ps2w.bytes,generation)==bound_storage_incarnation &&
            bound_parts==ps2w.parts && bound_mesh==ps2w.package.parts() &&
            bound_placements==ps2w.placements && bound_placements_count==ps2w.nplacements && bound_room==ps2w.room
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER && !RE4DC_WORLD_MUTATION31
            && bound_package_generation==sourceWorldPackageGeneration
 #endif
            ;
@@ -62,6 +72,13 @@ void close(){
 #if RE4DC_WORLD_PREPARED09
 void open(){
     close();
+#if RE4DC_WORLD_MUTATION31
+    // The package may have been overwritten at the same address. Refuse
+    // before measure(), parts(), or any prepared payload write.
+    if(!worldPackageCurrent()){
+        ++declines;return;
+    }
+#endif
     // A free callback may already have published a replacement. Do not
     // overwrite that newer owner when the outer call resumes.
     if(allocation || records)return;
@@ -82,7 +99,7 @@ void open(){
     const unsigned expected_plan=incarnation,expected_room=ps2w.room,expected_count=ps2w.nplacements,expected_bytes=ps2w.bytes;
     const void* expected_storage=ps2w.storage;const auto* expected_parts=ps2w.parts;
     const auto* expected_mesh=ps2w.package.parts();const auto* expected_placements=ps2w.placements;
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
     const unsigned expected_package=sourceWorldPackageGeneration;
 #endif
     unsigned package_token=0;
@@ -99,12 +116,15 @@ void open(){
         extra=re4dc::wp29::optional_bounds(layout.bytes,ps2w.nplacements,budget);
         const auto publication_current=[&](){
             unsigned now=0;
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageCurrent())return false;
+#endif
             return incarnation==expected_plan && !allocation && !records && re4dc_room4_live_generation(&now) && now==generation &&
                 ps2w.storage==expected_storage && ps2w.bytes==expected_bytes && ps2w.parts==expected_parts &&
                 ps2w.package.parts()==expected_mesh && ps2w.placements==expected_placements &&
                 ps2w.room==expected_room && ps2w.nplacements==expected_count &&
                 re4dc_room4_cell_incarnation(expected_storage,expected_bytes,generation)==package_token
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
                 && sourceWorldPackageGeneration==expected_package
 #endif
                 ;
@@ -143,7 +163,7 @@ void open(){
             bound_parts=ps2w.parts;bound_mesh=ps2w.package.parts();meshes=layout.meshes;bytes=requested;
             bound_storage=ps2w.storage;bound_storage_incarnation=package_token;bound_placements=ps2w.placements;
             bound_placements_count=ps2w.nplacements;bound_room=ps2w.room;
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
             bound_package_generation=sourceWorldPackageGeneration;
 #endif
             placement_boxes=boxes;box_count=extra.count;bound_incarnation=incarnation;++loads;break;
