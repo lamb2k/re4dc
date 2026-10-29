@@ -1,5 +1,12 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 actual cloth target code-generation review
+
+Read-only inspection of the existing K35/D13 actual target objects and linked ELF establishes the helper's local 16-byte matrix alignment, 48-byte row bounds inside its 80-byte local area, caller/helper argument layout, stride12 and bounded spans, paired FRCHG around the row load, identity bottom row/w1 and callback-free FTRV interval. Object/ELF instruction prefixes agree, excluding relocation literal pools. Counts1..3 retain the existing scalar routine. No demonstrated target blocker was found by this bounded inspection.
+
+This does not execute FTRV or establish numeric equality, FPSCR PR/SZ/bank entry state through interrupts, clipping stability, full stack highwater, live cloth/material output, speed or console acceptance. The compiler's -m4-single option is not a runtime FPSCR proof. Target-executable numeric/FPSCR entry/exit/interruption fixtures remain CLOUD-owned under EF14, using the pinned library and existing ownership pattern. Local will run changed fixtures through target gates; do not repeat unchanged object inspection or infer performance from instruction counts. No source edits, rebuild, emulator capture or private asset reads occurred.
+
+
 ## Answers (owner): 2026-10-29 current K35 portrait inputs rebound
 
 Local read-only verification now binds actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its previously verified final programme/all15 overlays to the existing bounded first-call input case. Four named current-image archive/private-input pairs, four current headers and seven linked geometry/weight/UV/run arrays match the prior c027 proof; four ordinary r100/call-route source files are unchanged. Actual current FE continuation/actor-format/span/transaction/fast/lazy/skin-admission/QA-link controls are bound separately. The prior static119-bone/27-weighted-palette association is retained only as an input contract; no live pose or runtime result transfers between images. No private data/manifest/raw array is published.

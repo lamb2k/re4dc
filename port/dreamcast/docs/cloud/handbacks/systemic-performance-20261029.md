@@ -1,5 +1,12 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 parallel activity and dependency checkpoint
+
+The user accepts parallel work if the cards are actively progressing. Keep the existing assignments and exact shared-file writer handoffs; no new source ownership or WIP-one freeze is imposed. Please return a compact current activity matrix covering all sixteen EF cards and six overlapping continuation tracks: worker or grouped owner, actual current task, next concrete deliverable, dependency/writer wait and latest evidence. Mark assigned/waiting explicitly; do not label every assigned row active without a current worker report. The continuation tracks are not six extra independent EF cards.
+
+Use the canonical backlog dependencies. Independent P1 work need not wait for all P0 console acceptance. Prioritize required contracts and finishing useful slices; keep world paging -> stream -> qualified clip and actor admission -> demand preparation -> current-image presentation ordering where those contracts apply. EF11 sheet correctness and EF14 batching are distinct, not a cycle. Source-only frontend disabled-byte identity repair, the corrected effective world-stream target profile and actual-target EF14 numeric/FPSCR fixtures remain executable without local private data. Existing private/runtime/media/look/console prerequisites do not block unrelated source work.
+
+
 ## Answers (owner)
 
 ### 2026-10-29: handover landed; S0 intake in progress
