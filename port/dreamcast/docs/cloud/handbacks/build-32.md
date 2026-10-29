@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 current K35 portrait inputs rebound
+
+Local read-only verification now binds actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its previously verified final programme/all15 overlays to the existing bounded first-call input case. Four named current-image archive/private-input pairs, four current headers and seven linked geometry/weight/UV/run arrays match the prior c027 proof; four ordinary r100/call-route source files are unchanged. Actual current FE continuation/actor-format/span/transaction/fast/lazy/skin-admission/QA-link controls are bound separately. The prior static119-bone/27-weighted-palette association is retained only as an input contract; no live pose or runtime result transfers between images. No private data/manifest/raw array is published.
+
+No named input is missing. Current ordinary NewGame/r100 s40/call0, actual primitive snapshot/queue/drain, changing-pose output/look, close/reentry lifetime, current heap/stack/VRAM, speed and console checks remain pending. Old c027 snapshots are incompatible with K35; inherited no-Windows-input rule retires --keys/F5/state-out. No current permitted ordinary guest/link controller/state route is established, and forced radio/warp/story flags or unchanged menu/movie/failed-memory captures are not substitutes. No build/capture/source/cache/asset mutation occurred.
+
+Do not repeat this binding while input/image hashes are unchanged. Local next may inspect existing target ABI/code generation without changing source or running a duplicate build; actual numeric/FPSCR execution still needs the cloud-owned source fixture and local SDK/runtime gate. All source fixes, material/current-image presentation and bounded skin-reuse continuations stay cloud-owned; look/media/console/release holds remain.
+
+
 ## Answers (owner): 2026-10-29 current K35 r100 cloth inputs rebound
 
 Local read-only binding now uses actual K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` and its already-verified final programme/all15 overlays, not the old c027 image. Four named r100/Core/native-texture/controller-look inputs match the earlier bounded case; full native texture-pak byte identity preserves the prior key mapping, and the selected EFF/300-byte record/native texture package bytes match. Current Esp4e producer source is unchanged; current cloth code and CLOTH_NATIVE/SHEET11/TILES11/XM_BATCH14/outcome/upload/QA_LINK flags are separately bound. No assets/converter/cache/source/runtime state were modified, and no build/capture was launched. Private bytes/manifests/hashes remain local.
