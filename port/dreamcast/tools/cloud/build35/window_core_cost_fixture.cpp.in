@@ -1,0 +1,23 @@
+// The actual standalone window translation unit; only address metadata follows.
+#include "@DC@/game/fallback_window35.cpp"
+#include <cstddef>
+extern "C" {
+__attribute__((used)) extern const uintptr_t fixture_window_layout[]={
+    1,sizeof(re4dc::fw35::Window),sizeof(re4dc::fw35::Window::Row),
+    re4dc::fw35::Window::Capacity,re4dc::fw35::Window::Reasons,
+    uintptr_t(&re4dc::fw35::window),uintptr_t(re4dc::fw35::window.rows),
+    offsetof(re4dc::fw35::Window::Row,ordinal),offsetof(re4dc::fw35::Window::Row,tick),
+    offsetof(re4dc::fw35::Window::Row,flags),uintptr_t(re4dc::fw35::window.sums),
+    uintptr_t(&re4dc::fw35::window.logic),uintptr_t(&re4dc::fw35::window.draws),
+    uintptr_t(&re4dc::fw35::window.skipped),uintptr_t(&re4dc::fw35::window.incomplete),
+    uintptr_t(&re4dc::fw35::window.room),uintptr_t(&re4dc::fw35::window.tick),
+    uintptr_t(&re4dc::fw35::window.last_tick),uintptr_t(&re4dc::fw35::window.outside_room),
+    uintptr_t(&re4dc::fw35::window.epoch),uintptr_t(&re4dc::fw35::window.next),
+    uintptr_t(&re4dc::fw35::window.used),uintptr_t(&re4dc::fw35::window.overflow_rows),
+    uintptr_t(&re4dc::fw35::window.reset_cause),uintptr_t(&re4dc::fw35::window.active),
+    uintptr_t(&re4dc::fw35::window.paused),uintptr_t(&re4dc::fw35::window.have_room),
+    uintptr_t(&re4dc::fw35::window.counter_overflow),
+    uintptr_t(&re4dc::fw35::begin_tick),uintptr_t(&re4dc::fw35::end_tick),
+    uintptr_t(&re4dc::fw35::reset),uintptr_t(&re4dc::fw35::pause),uintptr_t(&re4dc::fw35::resume)
+};
+}

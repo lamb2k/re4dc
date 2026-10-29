@@ -301,6 +301,13 @@ char g_fallback_diag29[24576];
 extern "C" unsigned re4dc_fa29_actor_line_count(void) __attribute__((weak));
 extern "C" int re4dc_fa29_actor_format_line(unsigned,char*,unsigned) __attribute__((weak));
 #endif
+#if (defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35) || (defined(RE4DC_FALLBACK_WINDOW35) && RE4DC_FALLBACK_WINDOW35)
+// The full max-value gap/window + DSA/actor snapshot needs 27,927 bytes.
+// All QA consumers and the frozen link copy use this one bounded capacity.
+char g_fallback_diag35[32768];
+#undef g_diag
+#define g_diag g_fallback_diag35
+#endif
 constexpr int kLogLines = 20, kLogCols = 96;
 char g_log[kLogLines][kLogCols + 1];
 int g_nlog;

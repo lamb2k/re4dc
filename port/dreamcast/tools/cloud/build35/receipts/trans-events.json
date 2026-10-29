@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "scope": "Run Build35 events in extracted production texture and skin decision bodies.\n\nThe complete commonScreenMatSub body and all three native texture-init blocks\nrun against explicit allocator/defer/matrix/skinning edge doubles. Palette\ntests execute their production admission/event prefixes, not matrix arithmetic.\nNo private data, whole-game replay, target timing or image proof is claimed.\n",
+  "sanitize": false,
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build35/trans_events.py": "43f38d5b104ca43febb42f54ddd9a65141dec261be8505b46621ef5805dd6967",
+    "port/dreamcast/tools/cloud/build35/trans_front_events.cpp.in": "284a56ddae7e283356e4e4bab3292d3882220aabc176503249a799190ccfe102",
+    "port/dreamcast/tools/cloud/build35/trans_skin_events.cpp.in": "02e747e37c0a6a8392a1c4141cd25c9f46ebacea19c08d489c6cb1fa77d77866",
+    "src/game/trans.cpp": "35692d255e416068683a0572fa456e626451c8ac98832ef5abab79adcff092d2",
+    "port/dreamcast/game/platform/gx_stub.cpp": "4bd41b2ecc331f467f040324ef6b9a1dc18e55fe3fec0f49b4633d55c20a3817",
+    "port/dreamcast/game/platform/misc.cpp": "a3b02bf83573dec4d2f2f2152cc018541f8d586c47cb397200daf374449ba4a5",
+    "include/tpl.h": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+    "include/trans.h": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "port/dreamcast/tools/cloud/build34/front_sources.py": "5c501b718bdd116d1f0c75b983b7376e32612cbf2e6b6db3d78495d1e688f743",
+    "port/dreamcast/tools/cloud/build34/front_fixture_types.hpp.in": "42836d7886eb9b59114ed3f90a1a9afe1e5dfa92b73e5a3623c1391f75c036a9",
+    "port/dreamcast/game/platform/include/fallback_audit35.h": "67f6c09e62643b850606714cf57887a704a8ad6e1b3a9553734b5295a88bac51",
+    "port/dreamcast/game/platform/include/fallback_audit35.def": "17ca00f5e0253ac81eb8d20567771f748c91896d3b4fa40e8d632f2f4f83946e",
+    "port/dreamcast/game/platform/include/fallback_audit29.h": "046a42677062dc64b6aeda8e38e4ec3fc3354f3007ce0f5dca814f64e5c23b33",
+    "port/dreamcast/game/platform/include/fallback_audit29.def": "35ea6b525c146d19aa63ca406ff00f1efccd4cf367e22de353ca35d7ccc34eb8"
+  },
+  "extraction_sha256": {
+    "TYPES": "31200c69d198c7fe27913c53ac674b4aed09153123df82983392680848015a46",
+    "CALLERS": "30a54ba6060c09dbbfebe55c19842b7359ed7ba3a932033c9becc74c0bd4dde6",
+    "UV": "7e9e2a7bc6f0b55da00813d7ef950dea028e1df5ff3ae163fb7fe5ac4863b65b",
+    "SKIN": "e853074c0ecd1b82f56af7d41667bedd1834fb7080b56f5553510196ba8b0f52",
+    "PALETTE": "9832c353ff41207f0ef30a33b0830c88535e09a7cb16b277a1da3b32d251b786"
+  },
+  "profiles": [
+    {
+      "profile": "front-off",
+      "definitions": [
+        "RE4DC_FRONT_TEXOBJ=0"
+      ],
+      "cases": 1,
+      "checks": 2
+    },
+    {
+      "profile": "front-on",
+      "definitions": [
+        "RE4DC_FRONT_TEXOBJ=1"
+      ],
+      "cases": 8,
+      "checks": 37
+    },
+    {
+      "profile": "skin-l1-p1-f1-n1-c0",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=1",
+        "RE4DC_SKIN_PALETTE_LAZY=1",
+        "RE4DC_LEON_FACE_LAZY=1",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=0"
+      ],
+      "cases": 15,
+      "checks": 105
+    },
+    {
+      "profile": "skin-l1-p1-f1-n1-c1",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=1",
+        "RE4DC_SKIN_PALETTE_LAZY=1",
+        "RE4DC_LEON_FACE_LAZY=1",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=1"
+      ],
+      "cases": 15,
+      "checks": 105
+    },
+    {
+      "profile": "skin-l1-p0-f0-n1-c0",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=1",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=0"
+      ],
+      "cases": 11,
+      "checks": 72
+    },
+    {
+      "profile": "skin-l1-p0-f0-n1-c1",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=1",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=1"
+      ],
+      "cases": 11,
+      "checks": 72
+    },
+    {
+      "profile": "skin-l0-p0-f0-n1-c0",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=0",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=0"
+      ],
+      "cases": 11,
+      "checks": 74
+    },
+    {
+      "profile": "skin-l0-p0-f0-n1-c1",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=0",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=1",
+        "RE4DC_SKIN_CENSUS=1"
+      ],
+      "cases": 11,
+      "checks": 74
+    },
+    {
+      "profile": "skin-l0-p0-f0-n0-c0",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=0",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=0",
+        "RE4DC_SKIN_CENSUS=0"
+      ],
+      "cases": 11,
+      "checks": 74
+    },
+    {
+      "profile": "skin-l0-p0-f0-n0-c1",
+      "definitions": [
+        "RE4DC_NATIVE_ACTOR_SKIN_LAZY=0",
+        "RE4DC_SKIN_PALETTE_LAZY=0",
+        "RE4DC_LEON_FACE_LAZY=0",
+        "RE4DC_NATIVE_ACTOR_SKIN=0",
+        "RE4DC_SKIN_CENSUS=1"
+      ],
+      "cases": 11,
+      "checks": 74
+    }
+  ],
+  "cases": 105,
+  "checks": 689,
+  "limits": "External allocation, matrix arithmetic and rendering edges are doubles. Palette prefixes stop before arithmetic; the complete production TU is compiled separately on SH-4. ASan leak inspection is disabled because sandbox /proc traversal is unavailable."
+}

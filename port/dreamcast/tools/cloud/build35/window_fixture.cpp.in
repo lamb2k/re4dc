@@ -1,0 +1,171 @@
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <deque>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
+
+static std::recursive_mutex irq_mutex;
+static thread_local unsigned irq_depth;
+static unsigned actor_resets;
+extern "C" int irq_disable(){irq_mutex.lock();return int(irq_depth++);}
+extern "C" void irq_restore(int previous){assert(irq_depth==unsigned(previous)+1);--irq_depth;irq_mutex.unlock();}
+extern "C" void re4dc_fa29_actor_reset(){++actor_resets;}
+#include "draw_fallback_audit.cpp"
+#include "fallback_audit29.cpp"
+#include "fallback_window35.cpp"
+#if RE4DC_FALLBACK_AUDIT35
+#include "platform/include/fallback_audit35.h"
+#endif
+static std::uint64_t checks;
+static void check(bool condition){++checks;if(!condition){std::fprintf(stderr,"failed check %llu\n",static_cast<unsigned long long>(checks));std::abort();}}
+namespace d=re4dc::dfa26;namespace f=re4dc::fa29;namespace w=re4dc::fw35;
+
+static void begin(unsigned tick,unsigned room,bool draw=true){
+    d::begin_tick(tick,room);f::begin_tick(tick,room);d::decision(draw);f::decision(draw);
+}
+static void end(){d::end_tick();f::end_tick();check(!irq_depth);}
+static void reset(){d::reset();f::reset();check(!irq_depth);}
+static std::string rows(){
+    std::string text;char line[192];
+    for(unsigned bank=0;bank<2;++bank){
+        const auto count=bank?f::line_count():d::line_count();
+        for(unsigned i=0;i<count;++i){
+            int n=bank?f::format_line(i,line,sizeof(line)):d::format_line(i,line,sizeof(line));
+            check(n>0 && unsigned(n)==std::strlen(line) && n<192);text+=line;text+='\n';
+        }
+    }
+    return text;
+}
+static void actual_collectors(){
+    reset();check(!w::available());check(rows().find("collecting=1")!=std::string::npos);
+    f::hit(f::MotionKeyMiss,11);end();check(!w::available());
+    begin(UINT32_MAX,0x103);d::hit(d::TextureShape,2);f::hit(f::MotionKeyMiss,7);end();
+    check(w::window.used==1 && w::window.sums[d::TextureShape]==2 && w::fa_sum(f::MotionKeyMiss)==7);
+    check(w::window.first_draw_tick()==UINT32_MAX && w::window.last_draw_tick()==UINT32_MAX);
+    d::Snapshot ds{};f::Snapshot fs{};check(d::snapshot(&ds) && f::snapshot(&fs));
+    check(ds.tick==UINT32_MAX && fs.draw_tick==UINT32_MAX);
+    f::hit(f::SoundRead,13);begin(0,0x103,false);d::hit(d::TextureShape,100);f::hit(f::MotionKeyMiss,100);end();
+    check(w::window.used==1 && w::window.sums[d::TextureShape]==2 && w::fa_sum(f::MotionKeyMiss)==7);
+    check(w::window.logic==2 && w::window.draws==1 && w::window.skipped==1 && w::window.span_logic()==2);
+    check(w::window.outside_room==1 && w::fa_sum(f::SoundRead)==0);
+    check(f::snapshot(&fs) && fs.totals[f::MotionKeyMiss]==107 && fs.last_draw[f::MotionKeyMiss]==7);
+    end();check(w::window.logic==2); // duplicate end does not duplicate retained lastdraw
+    begin(1,0x103);f::hit(f::MotionKeyMiss,999);begin(2,0x103);f::hit(f::MotionKeyMiss,3);end();
+    check(w::window.incomplete==1 && w::window.logic==3);
+    const unsigned expected_used=RE4DC_FALLBACK_WINDOW35==1?1:2;
+    check(w::window.used==expected_used);
+    check(w::fa_sum(f::MotionKeyMiss)==(RE4DC_FALLBACK_WINDOW35==1?3:10));
+    // Pause discards the partial current tick, freezes rows, and ignores hits.
+    begin(3,0x103);f::hit(f::SoundRead,111);d::pause();f::pause();
+    check(w::window.incomplete==2 && w::window.paused);
+    const auto frozen=rows();begin(4,0x104);f::hit(f::MotionKeyMiss,333);end();
+    check(rows()==frozen);
+    d::resume();f::resume();check(!w::available() && rows().find("collecting=1")!=std::string::npos);
+    check(rows().find("FA29T")!=std::string::npos); // room totals retain old all-logic context
+    begin(5,0x103);f::hit(f::MotionKeyMiss,17);end();check(w::fa_sum(f::MotionKeyMiss)==17 && w::window.logic==1);
+    // A new room resets the ring immediately, before its first completed draw.
+    begin(6,0x104,false);check(!w::available());end();check(!w::available() && w::window.skipped==1);
+    begin(7,0x104);end();check(w::available() && w::window.room==0x104 && w::fa_sum(f::MotionKeyMiss)==0);
+    reset();begin(10,0x103);d::hit(d::TextureShape,UINT32_MAX);d::hit(d::TextureShape);
+    f::hit(f::MotionKeyMiss,UINT32_MAX);f::hit(f::MotionKeyMiss);end();
+    check(!w::window.exact() && w::window.overflow_rows==1);
+    for(unsigned i=0;i<RE4DC_FALLBACK_WINDOW35;++i){begin(11+i,0x103);f::hit(f::MotionKeyMiss,1);end();}
+    check(w::window.exact() && !w::window.overflow_rows && w::fa_sum(f::MotionKeyMiss)==RE4DC_FALLBACK_WINDOW35);
+    check(f::snapshot(&fs) && fs.overflow==1); // sticky room saturation does not poison the window
+    reset();begin(1,0x103);f::hit(f::MotionKeyMiss,UINT32_MAX);end();
+    begin(2,0x103);f::hit(f::MotionKeyMiss,1);end();
+    check(w::window.exact() && !w::window.overflow_rows); // only room total overflowed this time
+    reset();begin(100,0x103);
+    for(unsigned i=0;i<d::ReasonCount;++i)d::hit(d::Reason(i),i+1);
+    for(unsigned i=0;i<f::ReasonCount;++i)f::hit(f::Reason(i),i+2);
+    f::hit(f::Reason(-1));f::hit(f::Reason(f::ReasonCount));f::hit(f::MotionKeyMiss,0);
+    end();
+    for(unsigned i=0;i<d::ReasonCount;++i)check(w::window.sums[i]==i+1);
+    for(unsigned i=0;i<f::ReasonCount;++i)check(w::fa_sum(i)==i+2);
+#if RE4DC_FALLBACK_AUDIT35
+    begin(101,0x103);re4dc::fa35::hit(re4dc::fa35::MotionProbes,123);end();
+    check(w::fa_sum(f::MotionProbes)==123+(RE4DC_FALLBACK_WINDOW35==1?0:unsigned(f::MotionProbes)+2));
+#endif
+    // Worker hits use the existing serialized collector. Only active hits
+    // enter the drawn current vector; post-end writes leave capture immutable.
+    reset();begin(200,0x103);std::vector<std::thread> workers;
+    for(unsigned k=0;k<4;++k)workers.emplace_back([]{for(unsigned i=0;i<2000;++i)f::hit(f::SoundRead,13);});
+    for(auto& thread:workers){thread.join();}
+    end();check(w::fa_sum(f::SoundRead)==104000);
+    const auto captured=rows();workers.clear();
+    for(unsigned k=0;k<4;++k)workers.emplace_back([]{for(unsigned i=0;i<2000;++i)f::hit(f::SoundRead,17);});
+    for(auto& thread:workers){thread.join();}
+    check(rows()==captured);
+    begin(201,0x103,false);end();check(w::window.outside_room==8000 && w::fa_sum(f::SoundRead)==104000);
+    // Worst counter values fit every existing192-byte QA row, including sums.
+    reset();
+    for(unsigned tick=0;tick<RE4DC_FALLBACK_WINDOW35;++tick){
+        begin(tick,0xffffffffU);
+        for(unsigned i=0;i<d::ReasonCount;++i)d::hit(d::Reason(i),UINT32_MAX);
+        for(unsigned i=0;i<f::ReasonCount;++i)f::hit(f::Reason(i),UINT32_MAX);
+        end();
+    }
+    check(w::window.exact());
+    const auto maximum=std::uint64_t(RE4DC_FALLBACK_WINDOW35)*UINT32_MAX;
+    for(unsigned i=0;i<d::ReasonCount;++i)check(w::window.sums[i]==maximum);
+    for(unsigned i=0;i<f::ReasonCount;++i)check(w::fa_sum(i)==maximum);
+    check(rows().find("="+std::to_string(maximum))!=std::string::npos);
+    w::window.logic=w::window.draws=w::window.skipped=w::window.incomplete=UINT64_MAX;
+    w::window.counter_overflow=true;rows();
+    char line[192];
+    for(unsigned bank=0;bank<2;++bank){
+        const unsigned n=bank?f::line_count():d::line_count();
+        for(unsigned i=0;i<n;++i){
+            check((bank?f::format_line(i,line,1):d::format_line(i,line,1))==-1 && line[0]==0);
+        }
+        check((bank?f::format_line(n,line,sizeof(line)):d::format_line(n,line,sizeof(line)))==-1);
+        check((bank?f::format_line(0,nullptr,1):d::format_line(0,nullptr,1))==-1);
+        check((bank?f::format_line(0,line,0):d::format_line(0,line,0))==-1);
+    }
+    reset();check(!w::available() && !w::window.have_room);
+}
+
+template<unsigned N> static void pure_ring(){
+    using Ring=w::Ring<2,3,N>;Ring ring;
+    struct Row{std::array<std::uint32_t,5> items;std::uint64_t ordinal;unsigned tick,flags;};
+    std::deque<Row> reference;
+    std::uint64_t logic=0,draws=0,skips=0;
+    unsigned random=0x12345678;
+    for(unsigned step=0;step<1500;++step){
+        if(step%131==130){ring.pause();ring.resume();reference.clear();logic=draws=skips=0;check(!ring.available());}
+        const unsigned room=step/300;
+        if(!ring.have_room || room!=ring.room){reference.clear();logic=draws=skips=0;}
+        ring.begin(0xfffffff0U+step,room);
+        std::array<std::uint32_t,5> values;
+        for(auto& value:values){random=random*1664525U+1013904223U;value=random;}
+        const bool draw=(step%4)!=1;const unsigned flags=step%37==0?1:0;
+        check(ring.end(draw,values.data(),values.data()+2,flags,step));++logic;
+        if(draw){++draws;reference.push_back({values,logic,0xfffffff0U+step,flags});if(reference.size()>N)reference.pop_front();}
+        else ++skips;
+        check(ring.logic==logic && ring.draws==draws && ring.skipped==skips && ring.used==reference.size());
+        for(unsigned i=0;i<5;++i){std::uint64_t sum=0;for(const auto& row:reference)sum+=row.items[i];check(ring.sums[i]==sum);}
+        const unsigned bad=std::count_if(reference.begin(),reference.end(),[](const Row& row){return row.flags!=0;});
+        check(ring.overflow_rows==bad && ring.exact()==(!reference.empty() && !bad));
+        if(!reference.empty())check(ring.first_draw_tick()==reference.front().tick && ring.last_draw_tick()==reference.back().tick &&
+            ring.span_logic()==logic-reference.front().ordinal+1 && ring.span_skipped()==ring.span_logic()-reference.size());
+        check(!ring.end(draw,values.data(),values.data()+2,flags,step));
+    }
+    ring.reset();std::uint32_t values[5]={1,2,3,4,5};
+    ring.begin(1,1);ring.begin(2,1);check(ring.incomplete==1);
+    check(!ring.end(true,nullptr,values,0,0) && ring.incomplete==2 && !ring.logic);
+    ring.begin(3,1);check(ring.end(true,values,values+2,0,0));
+    ring.logic=UINT64_MAX;ring.begin(4,1);check(!ring.end(true,values,values+2,0,0) && ring.counter_overflow && !ring.exact());
+    ring.reset();check(!ring.counter_overflow && !ring.available());
+}
+int main(){
+    actual_collectors();pure_ring<1>();pure_ring<3>();pure_ring<32>();pure_ring<64>();
+    std::printf("{\"status\":\"PASS\",\"checks\":%llu,\"N\":%u,\"dfa_reasons\":%u,\"fa_reasons\":%u,\"window_bytes\":%u,\"row_bytes\":%u,\"actor_resets\":%u,\"worker_hits\":16000}\n",
+        static_cast<unsigned long long>(checks),unsigned(RE4DC_FALLBACK_WINDOW35),unsigned(d::ReasonCount),unsigned(f::ReasonCount),
+        unsigned(sizeof(w::window)),unsigned(sizeof(w::Window::Row)),actor_resets);
+}

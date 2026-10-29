@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 // game/espgen: the effect controller ("ESP_CTRL") pool (D:/Bio4/Prog/espgen.cpp). A controller is
 // an EspgenWork (0xC8 bytes) driven by id-indexed Move/Trans/SetFreeWork/Destruct tables: ids
 // 0x00..0x3F are the generic controllers (00 emitter, 01 lens flare, 02 path emitter, 10 sequence
@@ -533,6 +537,12 @@ int EspgenMove()
     {
         const int use = fxEgReady();
         const u32 gen = fxEgGen;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        u32 fa35_scan = 0;
+        bool fa35_stale = false;
+        re4dc::fa35::hit(use ? re4dc::fa35::EgMoveMapped : re4dc::fa35::EgMoveMiss);
+#endif
+#line 589
 #if RE4DC_FX_SCAN == 2
         re4dc_fx_chk[FXC_EG_MOVE]++;
 #endif
@@ -552,8 +562,20 @@ int EspgenMove()
 #endif
                 i += m;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            if (!use || fxEgGen != gen) {
+                ++fa35_scan;
+                if (use) fa35_stale = true;
+            }
+#endif
+#line 608
             fxEgMoveOne(&base[i], pause, &cnt);
         }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::EgMoveScan, fa35_scan);
+        if (fa35_stale) re4dc::fa35::hit(re4dc::fa35::EgMoveStale, 1);
+#endif
+#line 610
 #if RE4DC_FX_SCAN == 2
         if (!use || fxEgGen != gen) {
             re4dc_fx_chk[FXC_FALLBACK]++;
@@ -561,7 +583,16 @@ int EspgenMove()
 #endif
     }
 #else
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    re4dc::fa35::hit(re4dc::fa35::EgMoveOff, 1);
+#endif
+#line 617
     for (i = 0, w = base; i < nEspgen; i++, w++) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        ++fa35_scan;
+#endif
+#line 618
         if (w->flag & 2) {
             w->flag &= ~3;
         } else if (EspgenIsActive(w)) {
@@ -583,6 +614,10 @@ int EspgenMove()
             }
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EgMoveScan, fa35_scan);
+#endif
+#line 639
 #endif
     if (pG->Debug_flg[3] & 0x8000) {
         eprintf(472, 216, 0, 0, "%d", cnt);
@@ -641,6 +676,12 @@ int EspgenTrans()
     EspgenWork* base = EspgenArray;
     const int use = fxEgReady();   // only occupied slots can be active
     const u32 gen = fxEgGen;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    bool fa35_stale = false;
+    re4dc::fa35::hit(use ? re4dc::fa35::EgTransMapped : re4dc::fa35::EgTransMiss);
+#endif
+#line 697
     u32 i;
 
 #if RE4DC_FX_SCAN == 2
@@ -662,8 +703,20 @@ int EspgenTrans()
 #endif
             i += m;
         }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        if (!use || fxEgGen != gen) {
+            ++fa35_scan;
+            if (use) fa35_stale = true;
+        }
+#endif
+#line 718
         fxEgTransOne(&base[i]);
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EgTransScan, fa35_scan);
+    if (fa35_stale) re4dc::fa35::hit(re4dc::fa35::EgTransStale, 1);
+#endif
+#line 720
 #if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
 #if RE4DC_PACE_TRANS_SKIP
     if (!re4dc_esp_logic_only || re4dc_espgen_draw_pass)
@@ -675,11 +728,20 @@ int EspgenTrans()
 #else
 int EspgenTrans()
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    re4dc::fa35::hit(re4dc::fa35::EgTransOff, 1);
+#endif
+#line 731
     EspgenWork* w;
     u32 i;
     u32 max;
 
     for (i = 0, w = EspgenArray; i < nEspgen; i++, w++) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        ++fa35_scan;
+#endif
+#line 736
         EspgenTransFunc func;
 
         if (!EspgenIsActive(w)) {
@@ -715,6 +777,10 @@ int EspgenTrans()
             pLog->err(0, 0, "ESP_CTRL : CTRL_ID[%x] is invalid.", w->id);
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EgTransScan, fa35_scan);
+#endif
+#line 771
 #if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
 #if RE4DC_PACE_TRANS_SKIP
     if (!re4dc_esp_logic_only || re4dc_espgen_draw_pass)
@@ -762,6 +828,12 @@ void EspgenDelete(int a, int b, int c)
     EspgenWork* base = EspgenArray;
     const int use = fxEgReady();
     const u32 gen = fxEgGen;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    bool fa35_stale = false;
+    re4dc::fa35::hit(use ? re4dc::fa35::EgDeleteMapped : re4dc::fa35::EgDeleteMiss);
+#endif
+#line 818
     u32 i;
 
 #if RE4DC_FX_SCAN == 2
@@ -783,18 +855,39 @@ void EspgenDelete(int a, int b, int c)
 #endif
             i += m;
         }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        if (!use || fxEgGen != gen) {
+            ++fa35_scan;
+            if (use) fa35_stale = true;
+        }
+#endif
+#line 839
         if (fxEgDelHit(&base[i], a, b, c)) {
             PushEspgen(&base[i]);
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EgDeleteScan, fa35_scan);
+    if (fa35_stale) re4dc::fa35::hit(re4dc::fa35::EgDeleteStale, 1);
+#endif
+#line 843
 }
 #else
 void EspgenDelete(int a, int b, int c)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    re4dc::fa35::hit(re4dc::fa35::EgDeleteOff, 1);
+#endif
+#line 847
     EspgenWork* w;
     u32 i;
 
     for (i = 0, w = EspgenArray; i < nEspgen; i++, w++) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        ++fa35_scan;
+#endif
+#line 851
         if ((w->flag & 1) && !(w->flag & 2)) {
             if (a != 0 && w->info.Core_flg != a) {
                 continue;
@@ -808,6 +901,10 @@ void EspgenDelete(int a, int b, int c)
             PushEspgen(w);
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EgDeleteScan, fa35_scan);
+#endif
+#line 864
 }
 #endif
 

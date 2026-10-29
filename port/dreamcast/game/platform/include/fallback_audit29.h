@@ -10,6 +10,11 @@ enum Reason {
 #define FA29_REASON(symbol, label, unit) symbol,
 #include "fallback_audit29.def"
 #undef FA29_REASON
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#define FA35_REASON(symbol, label, unit) symbol,
+#include "fallback_audit35.def"
+#undef FA35_REASON
+#endif
     ReasonCount
 };
 struct Snapshot {
