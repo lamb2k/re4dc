@@ -350,3 +350,9 @@ rejecting observed reset/room discontinuities. No sums of overlapping costs.
 Private FINAL-AUDIT, build binding, before/after hashes and runbook backup
 retained. No console tour, new coherent hardware acceptance, SD write or
 release; prior direct console observations retain their original scope.
+
+## Answers (owner)
+
+### 2026-10-29 owner: unchanged public-stock PPP runner on matched Ashley diagnostics
+
+The retained old perf-cache runner (SHA256453f2a47c...) ignores RE4DC_MODEM_PPP. Its two new source2061 Ashley diagnostic captures had no network override: modem connected, PPP failed, no local relay peer. The unchanged public stock fp_run.py (c01ffd72f..., exact source2061 and current integration bytes) already honors that variable by writing DCNet=no. The captured executable SHA matched the prior working QA35 case. Fresh changed-input control/candidate checks used that public runner with the same exact disc bases, executable, own symbols and retained active track01 hashes; no SDK/master or game/harness/parser/observer/emulator patch. Each distinct60s interpreter/GDEMU1 run completed reader0/errors[]/exited, entered r117 and reached frame300. Both brought PPP up and reached the local emulated relay after44.629/44.149s from relay start. The already-qualified public CRLF reader assembled8 automatic telemetry snapshots per arm, with0 incomplete/conflicting/expired/malformed or duplicate parts. Old failed captures remain failed. This closes the local stock-runner input mismatch, not hardware validation: the live Pi/console session was untouched, review28 Pi maintenance and console soak/tour remain pending. Raw RAM-log damage and all Ashley actual-draw/look/interaction/STRICT/memory/performance/console/release gates remain explicitly separate. No SD/release action.
