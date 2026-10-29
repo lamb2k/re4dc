@@ -16,6 +16,9 @@ def main():
  values={'EARLY':source[start:end],'WORLD_BOX':extract.function(source,'inline void world_box(')}
  at=source.index('            const auto* plan_part=plan?plan+k:nullptr;');stop=source.index('            if(plan_part)++wplan29::planned;else ++wplan29::legacy;',at)+len('            if(plan_part)++wplan29::planned;else ++wplan29::legacy;')
  values['METADATA']=source[at:stop]
+ guard=source.rindex('#if RE4DC_WORLD_PREPARED09',0,at);guard_end=source.index('#endif',guard)+len('#endif')
+ values['RECORD_GUARD']=source[guard:guard_end]
+ assert 're4dc_model_packet_abort' in values['RECORD_GUARD'] and source.count('if(plan && !wplan29::current(plan_incarnation))')==4
  fixture=(HERE/'world_prepared09_fixture.cpp.in').read_text()
  for k,v in values.items():fixture=fixture.replace('@'+k+'@',v)
  cpp=a.output/'prepared.cpp';cpp.write_text(fixture)

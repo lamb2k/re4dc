@@ -493,7 +493,7 @@ allocator-token ownership before payload/free, package token/revision, callback-
 safe publication, direct current metadata reference and optional conservative
 placement boxes consumed before view setup. Base records retain priority under
 64KiB/96KiB-floor; dynamic/root-pose/uncertain cases use the original path and
-queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,106 main
+queued matrix/UV/key copies remain. Actual-source host+ASan/UBSan pass7,107 main
 checks,86,420 lookup cases and450 ordered live-policy cases; completion628 checks
 remain passing under prepared09. Same-gen/address/size stale close leaves the
 foreign replacement intact. Unproven allocator returns are counted and further
@@ -508,6 +508,13 @@ No active SDK/emulator/media process; no release/ALLON or shared provider edit.
 EF09 fixture continuation, 2026-10-29: DONE added same-address foreign-payload
 ASan poisoning and reentry during free as well as allocation. Old plan/index/
 bounds reject the poisoned replacement; free reentry preserves the newer
-publication. Current main checks7,106 and controlled allocation balance17/17
+publication. Current main checks7,107 and controlled allocation balance17/17
 pass normal and sanitized. Runtime/source bytes remain exactly `3ded42ac0`.
 NEXT target admission; BLOCKED unchanged live acceptance gates, no active job.
+
+EF09 qualification fixture, 2026-10-29: DONE the literal record-access guard
+aborts before reading the ASan-poisoned recycled payload; all four call sites
+are present. Main checks7,107 and17/17 allocation balance pass normal/sanitized.
+Runtime/Make remain frozen at3ded42ac0. NEXT local target qualification only;
+new paging, broader portal composition and mutation/scratch follow-ons belong
+to the cloud under the user's updated ownership instruction. No active job.

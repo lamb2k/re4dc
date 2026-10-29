@@ -57,7 +57,7 @@ python3 port/dreamcast/tools/cloud/build31/portal_completion_host.py --prepared0
 
 Use fresh output directories. Actual production plan lifecycle, direct metadata
 consumer, early-consumer block and literal original world_box are compiled with
-controlled allocator/source/portal edges. Current suite:7,106 main checks,
+controlled allocator/source/portal edges. Current suite:7,107 main checks,
 86,420 indexed lookups and450 ordered live-policy cases, plus Make guards.
 It covers same-generation same-address cell replacement, stale close, heap reset,
 source/package change, callback reentry before write, token0/exhaustion, optional

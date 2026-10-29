@@ -82,6 +82,13 @@ int placement_setup(unsigned target,bool moved=false){
     }
     return 0;
 }
+static unsigned packet_aborts=0;
+void re4dc_model_packet_abort(){++packet_aborts;}
+static int guarded_record_index(const re4dc::wp29::Record* plan,unsigned plan_incarnation){
+    struct {unsigned aborts=0;}c;
+@RECORD_GUARD@
+    return plan?int(plan->index):0;
+}
 static const Ps2Part* metadata_address(const re4dc::wp29::Record* plan,unsigned k){
     Mesh mesh;
 @METADATA@
@@ -135,6 +142,7 @@ int main(){
     room_live=false;CHECK(!wplan29::current(wplan29::bound_incarnation));room_live=true;
     // Same-generation/address/size recycling is distinct from a heap reset.
     leased_token=wplan29::bound_incarnation;void* foreign=wplan29::allocation;
+    const auto* foreign_record=wplan29::records;
     auto& foreign_cell=blocks.at(foreign);const unsigned old_cell=foreign_cell.token;
     foreign_cell.token=++next_cell_token;CHECK(foreign_cell.token!=old_cell);
     std::memset(foreign,0x6b,foreign_cell.bytes);
@@ -142,6 +150,7 @@ int main(){
     __asan_poison_memory_region(foreign,foreign_cell.bytes);
 #endif
     CHECK(!wplan29::current(leased_token));count=123;CHECK(!wplan29::run(0,0,count) && count==123);CHECK(!wplan29::bounds(1,leased_token));
+    unsigned aborts_before=packet_aborts;CHECK(guarded_record_index(foreign_record,leased_token)==-1 && packet_aborts==aborts_before+1);
     unsigned freed_before=frees;wplan29::close();CHECK(frees==freed_before && blocks.count(foreign));
 #ifdef __SANITIZE_ADDRESS__
     __asan_unpoison_memory_region(foreign,foreign_cell.bytes);
