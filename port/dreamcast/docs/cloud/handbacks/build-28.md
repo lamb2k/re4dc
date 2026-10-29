@@ -315,3 +315,38 @@ unchanged, old companion/captures retained, no emulator rerun or payload/row
 normalization. Prior zero summary is unusable, not evidence of zero telemetry.
 These automatic snapshots do not clear explicit DIAG4/14, marked600-draw,
 window semantics, matched camera/frame, CPU/memory or console gates.
+
+#### Owner: prepared L4 tour audit and live relay prerequisite, 2026-10-29
+
+Audited the existing TOUR28 stage, source f4c1af9a (after Build28 merge).
+All8 original manifest entries pass; raw programme/all15 overlays match its
+retained build and required resolved QA/FA29/REVIEW28 flags are1. The session
+covers exactly all33 image-menu presets in order, each25s settle/15s capture.
+No rebuild or duplicate tour package. This is an older fixed diagnostic,
+not current ALL ON/Test24b acceptance.
+
+Found the operator instructions omitted --review28. Original instructions/
+manifest backed up, images and original session retained byte-identical.
+Corrected the runbook and future generator, staged a qualified730d8f910 PC
+companion set and an explicit-run wrapper. New9-entry stage manifest passes;
+wrapper parses and actual metadata-only preflight fails closed before tour
+commands. -Run also requires the expected TOUR28/f4c1af9a PONG, and final
+ranking eligibility requires33 summaries with at least2 coherent samples
+each. Returned0/prepared media still is not gameplay/performance acceptance.
+
+Read-only Pi check: service active in legacy mode; installed CLI rejects
+--review28. Legacy STATUS reports a console last heard0s. Preserve that live
+session: no service/file change, restart or gameplay input was performed.
+The remaining prerequisite is backed-up qualified Pi companion/service
+maintenance at an appropriate console boundary, then user selects TOUR28,
+enters its initial preset/free play and redials REMOTE LINK. The old boot
+menu need not service game commands; status alone does not prove disc identity.
+
+Pinned f4 FA29 source shows pause/resume and capture MARK do not reset room
+totals. They include loading/skipped/asynchronous work. Summary means are
+not15s counts or per-draw frequencies: ranking requires same-room monotonic
+nonoverflow counter deltas, actual denominators and separate reason units,
+rejecting observed reset/room discontinuities. No sums of overlapping costs.
+Private FINAL-AUDIT, build binding, before/after hashes and runbook backup
+retained. No console tour, new coherent hardware acceptance, SD write or
+release; prior direct console observations retain their original scope.
