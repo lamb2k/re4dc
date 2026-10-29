@@ -9,18 +9,6 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
-## Recovery execution checkpoint: 2026-10-29 17:31 EDT
-
-**EF15 bounded source delivery:** Implemented source repair preserves halt2465 and exact six-TU SH-conditioned absent/zero preprocessing; normal/sanitizer and old-failure controls PASS. Actual target full OFF identity remains mandatory/local; not integrated/enabled/accepted.
-
-Integration fetched through GitHub is `d45eb759dd92685255929625e04fae3d7a46bca7`. Preserved unpublished candidates
-exist for the first three priorities and several independent follow-ons. EF15,
-EF08 and EF14 have observed active recovery workers; remaining cards are assigned,
-review-queued or waiting on exact file/producer boundaries. See the [truthful
-16-card and six-track activity matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1731-edt).
-No full-card acceptance follows. Default0, exact disabled identity and local
-runtime/private/console/integration ownership remain unchanged.
-
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
 ## Current execution agreement
@@ -375,6 +363,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 **Code.** [sh4zam_direct.c][SHZ_DIRECT], [sh4zam_skin.c][SHZ_SKIN], [re4dc_xm.h][XM], [game30.mk][MAKE], [trans.cpp][TRANS] and [native_actor_fast.cpp][ACTOR]. Keep the pinned library unless a separately justified API extension is needed.
 
 ### EF15. Version eligible frontend texture descriptor sets
+
+**2026-10-29 recovery source delivery:** Implemented source repair preserves halt2465 and exact six-TU SH-conditioned absent/zero preprocessing; normal/sanitizer and old-failure controls PASS. Actual target full OFF identity remains mandatory/local; not integrated/enabled/accepted. See [Build34](handbacks/build-34.md).
 
 **Gap.** Build 34 repaired `ftLookup` by checking full current descriptors. Every hit still walks all descriptors and reconstructs their packed GX words because pointer identity does not certify their contents. That repeated descriptor validation is visible from source; immutability/version authority must be established for each eligible source class.
 

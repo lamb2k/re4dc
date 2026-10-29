@@ -1233,172 +1233,6 @@ ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
 
 
-## Answers (owner): 2026-10-29 cloud implementation assignment
-
-EF15 frontend TPL descriptor owner/generation reuse is assigned to the cloud after EF13, using public loader/frontend source and synthetic descriptors. Preserve the repaired full-comparison path for all unqualified classes. Local EF16 retains mem/fault/game30.mk; its bounded-IRQ/cache/fault limitations remain open. This assignment is not runtime, memory, timing or hardware acceptance. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
-
-
-## Answers (owner): 2026-10-29 expanded cloud ownership
-
-The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
-
-
-### EF16 delivery packaging, 2026-10-29
-
-The current published Build34 notes above are preserved in full. The appended
-EF16 source/host/target results below are the frozen qualified delivery
-`aa14031678e10c5a746178966a7510f34d592af9`, packaged on published base
-`e693945933cf088a13782e756fc356008cdba4b8`. All seven non-document payload
-files remain byte-for-byte identical to that frozen delivery; source was not
-hand-resolved or changed. Existing qualification retains its stated scope;
-no extra SDK/test run is asserted for this documentation packaging. Bounded
-publication/fault/IRQ-duration/visibility follow-on is now cloud-owned. Keep
-LOG_ATOMIC16 default-off and parked outside broad ALL ON pending those gates.
-
-
-## EF16 supporting selector slice, 2026-10-29
-
-**DONE (source + scoped host, partial EF16):** `LOG_ATOMIC16=1` independently
-selects the existing whole-call raw-log IRQ guard, OR'd with the old diagnostic
-`RE4DC_LOG_ATOMIC` control. Default0. Valid append bytes, volatile head steps,
-ring/header/formatting and supplied length remain unchanged; no truncation,
-chunk splitting, new ring, reservation scheme, reader or judge change. The
-existing256-byte formatter already runs before the raw append guard.
-
-Under the new control only, `fault.cpp::ringWriteBuffer` rejects negative
-signed lengths with `-1`/`errno=EINVAL`, and null plus positive length with
-`-1`/`EFAULT`, before any unsigned conversion or append. Null plus zero remains
-valid and returns0. The actual pinned KOS `include/kos/dbgio.h` callback
-contract requires `-1` plus errno for an error. Valid input still returns the
-whole supplied length. Old diagnostic behavior is preserved when the new
-control is absent/zero.
-
-The prior writer evidence remains applicable: unmodified initial `mem.cpp`
-SHA256 `2d3176564400dcc023f9d0864df99f3e9e124becdeef0fb4106bd2f164c9c36c`
-matches the retained failed-profile source. The real stdio/debug callback has
-arbitrary chunk length; `dbgio_printf`'s1024-byte buffer and `re4dc_log`'s256-byte
-buffer are not universal writer bounds. Raw ring size does not bound append
-work. No new inventory or attribution of either old capture's root cause.
-
-```sh
-python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/host"
-python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/sanitizer" --sanitize
-```
-
-Both normal and ASan/UBSan runs qualify eight source-body compositions:
-old/new guard00/01/10/11 times16KiB/64KiB rings. Each has44 baseline cases and
-132 controlled maskable-preemption interleavings over ring and32-bit-head
-wraps, with lengths10..131089. Every guarded arm preserves132 exact source
-concatenations; unguarded arms corrupt132/132, including100(16KiB) or112(64KiB)
-literal NUL-hole witnesses. Final ring state and head agree with the reference
-oracle, and coherent incremental polls retain their exact newline buffering.
-The fixture uses actual raw append, device callback, logAppend and formatter
-function bodies. Its32-bit head proxy injects at store/head publication edges;
-host header/layout is not target ABI or a raw Flycast RAM-view qualification.
-
-**Expected counterexamples are retained:** forcing synchronous/NMI-style
-reentry despite IRQ masking corrupts all three tested schedules for every
-composition. This is an adversarial host counterexample, not a claim the exact
-fault schedule occurred. An IRQ guard is not a synchronous-fault/NMI-safe
-publication contract. Already-disabled IRQ input is restored disabled; zero,
-header, standard formatter-outside-guard and new device errno paths pass.
-Selector values0/1 parse, while empty/2/`0 1`/-1 are rejected.
-
-The largest tested guard covers131089 loop byte stores, exceeding both ring
-sizes. These counts exclude header/IRQ/formatting instructions and are not
-target latency or a worst-case work bound. No cap, prefix skipping or partial
-record acceptance was introduced to hide this limitation. Public source-bound
-receipts: `tools/cloud/build34/receipts/log16-{host,sanitizer}.json`; sanitizer
-leak detection disabled, address/undefined checks fatal.
-
-**NEXT:** build release absent/explicit-zero/enabled with exact source/settings
-and affected mem/fault target preprocessing/object identities. Then define a
-source-supported writer/length/fault contract and measure actual worst allowed
-IRQ-disabled duration on target before declaring the guard suitable. Any
-changed publication or visibility scheme needs its own failure-boundary proof.
-**BLOCKED at suitability/observation acceptance:** arbitrary-length IRQ work,
-forced fault/NMI reentry, actual target worst duration and raw cache/RAM
-visibility remain open. The selector is parked outside broad ALL ON pending
-that contract. No runtime/emulator, original failed memory-capture retry,
-reconstruction, parser relaxation, false memory PASS, publication, SD or Pi
-action is authorized by this slice. It does not complete EF16 or block other
-ready engine work. Original memory-observation failures remain intact.
-
-
-### EF16 target/OFF gate, 2026-10-29
-
-**DONE (partial selector/device slice, TARGET BUILD VALIDATED):** source
-`aa5f4b549a1d7816815fcd5ba8100a0d7ea88b24` passes three fresh full release
-builds, control absent/explicit0/1. Each actual build log and nonempty ELF
-exists, and each `missing.txt` exists and is empty. Shared control is runtime
-064bfa4e/source-compatible255964fd; original mem/fault source bytes are checked
-against255964fd before target preprocessing. Control ELF SHA256
-`d1740528a367990207948d8326cda6993c922be8c2f0cdc111499c071b8ef18a`.
-
-Compiler15.2.0, KOS804b3195, pinned sh4zam33fa4850, epoch1760000000; recipe
-SHA256 `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
-After normalizing only owned worktree/output paths, all resolved definitions
-agree except new `LOG_ATOMIC16` (undeclared on control,0/0/1 on the arms).
-Release's old diagnostic atomic macro is absent, so ON really selects the new
-independent guard. Actual captured Make commands through the original KOS
-wrapper/environment preprocess full `mem.cpp` and `fault.cpp` with `-E -P`;
-control/absent/zero results are byte identical, as are allocated sections of
-both complete target objects. Four disabled source/object comparisons pass.
-
-Control/absent/zero complete3372036-byte programmes match SHA256
-`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`;
-all15 overlays and all11 allocated ELF sections match addresses, sizes, types,
-flags, alignment and file-backed payloads. Whole ELF files differ; no whole-ELF
-or raw-disc identity claim. Enabled ELF SHA256
-`d45cddafead843415c29970ac896b52b0e1850a9a4c9e61e99cc39401c30ffe7`.
-Linked `.text` grows64 bytes; BSS/data sizes are unchanged. This is code/storage
-accounting, not execution, IRQ duration, cache visibility or memory acceptance.
-
-Exact build command shape, using bound private inputs and fresh labels:
-
-```sh
-source <(sed 's/\r$//' "$TREE/port/dreamcast/tools/d367/rr/recipe.conf")
-# Unique FRESH_LABEL for each: EXTRA unset, LOG_ATOMIC16=0, LOG_ATOMIC16=1.
-K="$LOGS" T="$TREE" LP="$FRESH_LABEL" CH2="$CH2 ${EXTRA:-}" \
-  ROUTE_PROGRAMS_DIR="$PROGRAMS" ROUTE_PROGRAMS_JSON='' \
-  bash "$TREE/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
-```
-
-Fresh output guards precede invocation of this existing recipe, which otherwise
-removes a same-label directory. SDK runner completed0 and slot was released;
-no live job remains. Actual source/build/resolved/preprocessor/object receipts
-remain in private `engine-ef16-target-20261029` evidence. OFF identity receipt
-SHA256 `3e9c9250788a5caa3123d3b362ed1e50519efd776e3fe818e7eb94fed63533ad`;
-affected-TU receipt SHA256
-`2305aa8d2db9328b8d66e5abda3f2fedaf02ef870e5924dd52512c8227f098e0`.
-
-**NEXT / PARKED (owner):** retain this independent selector default-off and
-outside broad ALL ON. Before suitability, define a source-supported maximum
-append/fault contract, address the retained forced synchronous/NMI publication
-counterexamples, and measure actual worst allowed IRQ-disabled duration on
-target. Actual RAM/cache visibility is a separate unresolved gate. A byte-work
-count, target compilation or final ring equality cannot close those checks.
-**BLOCKED at observer acceptance only:** no emulator/capture, unchanged failed
-memory-judge retry, reader/parser relaxation, reconstructed value, memory PASS,
-hardware timing or whole EF16 completion is claimed. Original failed captures
-and their exact judge semantics remain preserved; independent engine work
-continues while this supporting candidate stays parked.
-
-
-## Answers (owner): 2026-10-29 frozen local source release
-
-EF04/EF09/EF11/EF16 first slices landed at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0` via four clean no-ff merges from8f222fb4. All48 non-handback files match the exact target-qualified delivery blobs; current owner prefixes were preserved and no source conflict was hand-resolved. Combined release rc0, actual nonempty ELF and existing empty missing.txt; all new controls resolved0. Full programme, all15 overlays and every allocated ELF section metadata/payload match bound runtime064bfa4ea. ELF SHA256 `49a40830684f8676336f042fe54c28e20e220f378f6f4ab0fe146e1d2f1bee71`. Fresh-base origin-only push/readback passed.
-
-Compatible ALLON K27 adds NATIVE_FE_CONTINUATION=1, WORLD_PREPARED09=1 and CLOTH_SHEET11=1, with QA_LINK=1. Compilation, existing empty missing.txt, actual global ABI macros across542 C++ commands, affected consumer flags, loader/standard disc lint (zero violations), ZIP test and staged checksums passed. Private QA track03 SHA256 `97c00661821b5577fb987cc597ea1469877a6f9ed8321c1371cd038a92c78fd5`. Prepared only: no current-image gameplay/look/STRICT/full-memory/cost or hardware acceptance and no SD copy. LOG_ATOMIC16 remains0 and individually parked outsideALLON pending bounded IRQ/fault/NMI/cache qualification. WORLD_PORTAL29/WORLD_PORTAL_COMPLETION remain0 in this broad profile; supported separate-profile proof and composition work remain open.
-
-EF04 original failed ON target remains retained; only the guarded placement-new repair was requalified. EF11 source retirement after failed or successful preparation is terminal even before publication, with no stale GX fallback. EF09 uses existing allocator authority outside a candidate before read/free, bounded optional facts and copied queue records. EF16 is only a selector for the existing whole-call guard plus invalid fault-length/null handling; it is not a bounded or NMI-safe logger and does not repair the historical failed memory capture. These scoped results do not close their EF cards.
-
-Cloud ownership takes effect at this exact integrated source SHA. Do not redo these first slices. Continue the all-source assignment below: transactional/demand skin preparation, current-image actor class presentation, ordered world pages/whole-part completion, stream then qualified clip composition, real mutation publishers, prepared actual binding, static content/spans, wide/material-correct cloth and remaining effects, useful batches/skin reuse and bounded logger. The independent water/frontend/EFM/collision/line assignments remain ready. Local delivery-file holds are removed; actual source producer dependencies and one-writer-per-file reservations still apply, especially native_ui/native_model and actor shared headers. Local data is not a prerequisite for independent source/synthetic work.
-
-Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
-
-Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
-
 ## 2026-10-29 EF15 Build34: structural-writer descendant aliases
 
 **2026-10-29 follow-up progress:** DONE: reject Make pattern values (`%`, `0%`,
@@ -1712,3 +1546,169 @@ for that gate. FRONT_TEXOBJ remains parked/default0 and FRONT_TPL_OWNER remains
 outside broad ALLON; private lifetime/look/STRICT/memory/cost/console and all
 release/media holds remain. The bounded code is implemented and being published;
 it is not integrated, enabled, runtime-qualified or accepted.
+
+## Answers (owner): 2026-10-29 cloud implementation assignment
+
+EF15 frontend TPL descriptor owner/generation reuse is assigned to the cloud after EF13, using public loader/frontend source and synthetic descriptors. Preserve the repaired full-comparison path for all unqualified classes. Local EF16 retains mem/fault/game30.mk; its bounded-IRQ/cache/fault limitations remain open. This assignment is not runtime, memory, timing or hardware acceptance. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
+
+
+## Answers (owner): 2026-10-29 expanded cloud ownership
+
+The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
+
+
+### EF16 delivery packaging, 2026-10-29
+
+The current published Build34 notes above are preserved in full. The appended
+EF16 source/host/target results below are the frozen qualified delivery
+`aa14031678e10c5a746178966a7510f34d592af9`, packaged on published base
+`e693945933cf088a13782e756fc356008cdba4b8`. All seven non-document payload
+files remain byte-for-byte identical to that frozen delivery; source was not
+hand-resolved or changed. Existing qualification retains its stated scope;
+no extra SDK/test run is asserted for this documentation packaging. Bounded
+publication/fault/IRQ-duration/visibility follow-on is now cloud-owned. Keep
+LOG_ATOMIC16 default-off and parked outside broad ALL ON pending those gates.
+
+
+## EF16 supporting selector slice, 2026-10-29
+
+**DONE (source + scoped host, partial EF16):** `LOG_ATOMIC16=1` independently
+selects the existing whole-call raw-log IRQ guard, OR'd with the old diagnostic
+`RE4DC_LOG_ATOMIC` control. Default0. Valid append bytes, volatile head steps,
+ring/header/formatting and supplied length remain unchanged; no truncation,
+chunk splitting, new ring, reservation scheme, reader or judge change. The
+existing256-byte formatter already runs before the raw append guard.
+
+Under the new control only, `fault.cpp::ringWriteBuffer` rejects negative
+signed lengths with `-1`/`errno=EINVAL`, and null plus positive length with
+`-1`/`EFAULT`, before any unsigned conversion or append. Null plus zero remains
+valid and returns0. The actual pinned KOS `include/kos/dbgio.h` callback
+contract requires `-1` plus errno for an error. Valid input still returns the
+whole supplied length. Old diagnostic behavior is preserved when the new
+control is absent/zero.
+
+The prior writer evidence remains applicable: unmodified initial `mem.cpp`
+SHA256 `2d3176564400dcc023f9d0864df99f3e9e124becdeef0fb4106bd2f164c9c36c`
+matches the retained failed-profile source. The real stdio/debug callback has
+arbitrary chunk length; `dbgio_printf`'s1024-byte buffer and `re4dc_log`'s256-byte
+buffer are not universal writer bounds. Raw ring size does not bound append
+work. No new inventory or attribution of either old capture's root cause.
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/host"
+python3 -B port/dreamcast/tools/cloud/build34/log16_host.py --output "$OUT/sanitizer" --sanitize
+```
+
+Both normal and ASan/UBSan runs qualify eight source-body compositions:
+old/new guard00/01/10/11 times16KiB/64KiB rings. Each has44 baseline cases and
+132 controlled maskable-preemption interleavings over ring and32-bit-head
+wraps, with lengths10..131089. Every guarded arm preserves132 exact source
+concatenations; unguarded arms corrupt132/132, including100(16KiB) or112(64KiB)
+literal NUL-hole witnesses. Final ring state and head agree with the reference
+oracle, and coherent incremental polls retain their exact newline buffering.
+The fixture uses actual raw append, device callback, logAppend and formatter
+function bodies. Its32-bit head proxy injects at store/head publication edges;
+host header/layout is not target ABI or a raw Flycast RAM-view qualification.
+
+**Expected counterexamples are retained:** forcing synchronous/NMI-style
+reentry despite IRQ masking corrupts all three tested schedules for every
+composition. This is an adversarial host counterexample, not a claim the exact
+fault schedule occurred. An IRQ guard is not a synchronous-fault/NMI-safe
+publication contract. Already-disabled IRQ input is restored disabled; zero,
+header, standard formatter-outside-guard and new device errno paths pass.
+Selector values0/1 parse, while empty/2/`0 1`/-1 are rejected.
+
+The largest tested guard covers131089 loop byte stores, exceeding both ring
+sizes. These counts exclude header/IRQ/formatting instructions and are not
+target latency or a worst-case work bound. No cap, prefix skipping or partial
+record acceptance was introduced to hide this limitation. Public source-bound
+receipts: `tools/cloud/build34/receipts/log16-{host,sanitizer}.json`; sanitizer
+leak detection disabled, address/undefined checks fatal.
+
+**NEXT:** build release absent/explicit-zero/enabled with exact source/settings
+and affected mem/fault target preprocessing/object identities. Then define a
+source-supported writer/length/fault contract and measure actual worst allowed
+IRQ-disabled duration on target before declaring the guard suitable. Any
+changed publication or visibility scheme needs its own failure-boundary proof.
+**BLOCKED at suitability/observation acceptance:** arbitrary-length IRQ work,
+forced fault/NMI reentry, actual target worst duration and raw cache/RAM
+visibility remain open. The selector is parked outside broad ALL ON pending
+that contract. No runtime/emulator, original failed memory-capture retry,
+reconstruction, parser relaxation, false memory PASS, publication, SD or Pi
+action is authorized by this slice. It does not complete EF16 or block other
+ready engine work. Original memory-observation failures remain intact.
+
+
+### EF16 target/OFF gate, 2026-10-29
+
+**DONE (partial selector/device slice, TARGET BUILD VALIDATED):** source
+`aa5f4b549a1d7816815fcd5ba8100a0d7ea88b24` passes three fresh full release
+builds, control absent/explicit0/1. Each actual build log and nonempty ELF
+exists, and each `missing.txt` exists and is empty. Shared control is runtime
+064bfa4e/source-compatible255964fd; original mem/fault source bytes are checked
+against255964fd before target preprocessing. Control ELF SHA256
+`d1740528a367990207948d8326cda6993c922be8c2f0cdc111499c071b8ef18a`.
+
+Compiler15.2.0, KOS804b3195, pinned sh4zam33fa4850, epoch1760000000; recipe
+SHA256 `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+After normalizing only owned worktree/output paths, all resolved definitions
+agree except new `LOG_ATOMIC16` (undeclared on control,0/0/1 on the arms).
+Release's old diagnostic atomic macro is absent, so ON really selects the new
+independent guard. Actual captured Make commands through the original KOS
+wrapper/environment preprocess full `mem.cpp` and `fault.cpp` with `-E -P`;
+control/absent/zero results are byte identical, as are allocated sections of
+both complete target objects. Four disabled source/object comparisons pass.
+
+Control/absent/zero complete3372036-byte programmes match SHA256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`;
+all15 overlays and all11 allocated ELF sections match addresses, sizes, types,
+flags, alignment and file-backed payloads. Whole ELF files differ; no whole-ELF
+or raw-disc identity claim. Enabled ELF SHA256
+`d45cddafead843415c29970ac896b52b0e1850a9a4c9e61e99cc39401c30ffe7`.
+Linked `.text` grows64 bytes; BSS/data sizes are unchanged. This is code/storage
+accounting, not execution, IRQ duration, cache visibility or memory acceptance.
+
+Exact build command shape, using bound private inputs and fresh labels:
+
+```sh
+source <(sed 's/\r$//' "$TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+# Unique FRESH_LABEL for each: EXTRA unset, LOG_ATOMIC16=0, LOG_ATOMIC16=1.
+K="$LOGS" T="$TREE" LP="$FRESH_LABEL" CH2="$CH2 ${EXTRA:-}" \
+  ROUTE_PROGRAMS_DIR="$PROGRAMS" ROUTE_PROGRAMS_JSON='' \
+  bash "$TREE/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+```
+
+Fresh output guards precede invocation of this existing recipe, which otherwise
+removes a same-label directory. SDK runner completed0 and slot was released;
+no live job remains. Actual source/build/resolved/preprocessor/object receipts
+remain in private `engine-ef16-target-20261029` evidence. OFF identity receipt
+SHA256 `3e9c9250788a5caa3123d3b362ed1e50519efd776e3fe818e7eb94fed63533ad`;
+affected-TU receipt SHA256
+`2305aa8d2db9328b8d66e5abda3f2fedaf02ef870e5924dd52512c8227f098e0`.
+
+**NEXT / PARKED (owner):** retain this independent selector default-off and
+outside broad ALL ON. Before suitability, define a source-supported maximum
+append/fault contract, address the retained forced synchronous/NMI publication
+counterexamples, and measure actual worst allowed IRQ-disabled duration on
+target. Actual RAM/cache visibility is a separate unresolved gate. A byte-work
+count, target compilation or final ring equality cannot close those checks.
+**BLOCKED at observer acceptance only:** no emulator/capture, unchanged failed
+memory-judge retry, reader/parser relaxation, reconstructed value, memory PASS,
+hardware timing or whole EF16 completion is claimed. Original failed captures
+and their exact judge semantics remain preserved; independent engine work
+continues while this supporting candidate stays parked.
+
+
+## Answers (owner): 2026-10-29 frozen local source release
+
+EF04/EF09/EF11/EF16 first slices landed at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0` via four clean no-ff merges from8f222fb4. All48 non-handback files match the exact target-qualified delivery blobs; current owner prefixes were preserved and no source conflict was hand-resolved. Combined release rc0, actual nonempty ELF and existing empty missing.txt; all new controls resolved0. Full programme, all15 overlays and every allocated ELF section metadata/payload match bound runtime064bfa4ea. ELF SHA256 `49a40830684f8676336f042fe54c28e20e220f378f6f4ab0fe146e1d2f1bee71`. Fresh-base origin-only push/readback passed.
+
+Compatible ALLON K27 adds NATIVE_FE_CONTINUATION=1, WORLD_PREPARED09=1 and CLOTH_SHEET11=1, with QA_LINK=1. Compilation, existing empty missing.txt, actual global ABI macros across542 C++ commands, affected consumer flags, loader/standard disc lint (zero violations), ZIP test and staged checksums passed. Private QA track03 SHA256 `97c00661821b5577fb987cc597ea1469877a6f9ed8321c1371cd038a92c78fd5`. Prepared only: no current-image gameplay/look/STRICT/full-memory/cost or hardware acceptance and no SD copy. LOG_ATOMIC16 remains0 and individually parked outsideALLON pending bounded IRQ/fault/NMI/cache qualification. WORLD_PORTAL29/WORLD_PORTAL_COMPLETION remain0 in this broad profile; supported separate-profile proof and composition work remain open.
+
+EF04 original failed ON target remains retained; only the guarded placement-new repair was requalified. EF11 source retirement after failed or successful preparation is terminal even before publication, with no stale GX fallback. EF09 uses existing allocator authority outside a candidate before read/free, bounded optional facts and copied queue records. EF16 is only a selector for the existing whole-call guard plus invalid fault-length/null handling; it is not a bounded or NMI-safe logger and does not repair the historical failed memory capture. These scoped results do not close their EF cards.
+
+Cloud ownership takes effect at this exact integrated source SHA. Do not redo these first slices. Continue the all-source assignment below: transactional/demand skin preparation, current-image actor class presentation, ordered world pages/whole-part completion, stream then qualified clip composition, real mutation publishers, prepared actual binding, static content/spans, wide/material-correct cloth and remaining effects, useful batches/skin reuse and bounded logger. The independent water/frontend/EFM/collision/line assignments remain ready. Local delivery-file holds are removed; actual source producer dependencies and one-writer-per-file reservations still apply, especially native_ui/native_model and actor shared headers. Local data is not a prerequisite for independent source/synthetic work.
+
+Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
+
+Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
