@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 bounded cloth transform batch qualification
+
+Source `bbfd3254fe4d94299a4bdbc869dbae92bb5ff978` clean no-ff landed `d13e2a459627077680f58edc35eae9bceda34c8f` default0. Source/peer review includes actual pinned SH4ZAM33fa485 row-loader/point API contract. Existing4 host fixture tests pass normal/sanitized paths; their scalar transform/SH4 shims are explicitly host evidence. Pinned SDK absent/explicit0/dependency-control/ON full releases all link/missingexists0;527 actual C++ commands per arm and dedicated CC sh4zam_direct command verify macro only cloth.cpp and sh4zam_direct.c. Complete programme/15overlay/allocated-section OFF identity versus bound simulation integration PASS before freshbase origin-only push/readback.
+
+Matched actual SH4 dependency0 versus batch1 footprint delta `{"cloth": {"bss": 0, "data": 0, "text": -84}, "linked_main": {"bss": 0, "data": 0, "text": 480}, "sh4zam_direct": {"bss": 0, "data": 0, "text": 684}}` bytes; linked main +480 text/data0/BSS0 is not a speed/highwater result and separate object deltas are not additive whole-frame savings. Current compatible ALLON K35 source `d13e2a459627077680f58edc35eae9bceda34c8f` with QA_LINK1 includes this batch: compile/missing,542 actual C++consumer flags plus CC helper, loader/standard lint, ZIP/checksums and actual final programme/all15-overlay SDK binding PASS. Track03 `d885344d8376613c3940ff8e284f8fc038ba98a20158fdf3dfa2a96cb817e3ee`. PREPARED only, no current-image output/look/gameplay/STRICT/memory/FPS/console acceptance or SD/recipe promotion.
+
+Documentary correction: Esp4e SetFreeWork derives/clamps nx2..100/ny2..50 before calling Cloth::Set; Cloth::Set itself accepts its u8 dimensions without that clamp. Existing bound private guidepost case is9x10; widths101/255 remain synthetic and are not a live wide sheet. Actual target alignment/FPSCR/FTRV rounding, affine/cancellation/near-clip stability, per-call stack/current margins and real packets/lifecycle/cost remain named gates. Cloud may add a source-owned target-executable numeric/alignment/FPSCR fixture against the actual pinned API (no new microkernel/asm substitute); local owns SDK/execution/private/current-image qualification. Missing pTobjA/alpha/depth/light and skin-reuse continuations stay open.
+
+
 ## Answers (owner): 2026-10-29 skin admission qualification
 
 Skin `bdca347c12b52a6522e2d0b3df1b63a6d232dc85` landed `a57be30f3615452d894d917f7fb83efe685fd686` default0.

@@ -1,5 +1,12 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 simulation review fixtures and literal guards
+
+Source `737c9bf562489c204ef928279ad255bf284efb04` clean no-ff landed `60ca84103c40925781b52eb372cafd950747c232`. Only production changes are line_resume29.mk/water_layer29.mk literal value/dependency guards; runtime C++ consumers/layouts/capacity are unchanged. Current existing strengthened EFM, line and primary-water Make fixtures passed normal/sanitizer/host-OFF/actual Make cases. Release rc0/nonempty ELF/existing empty missing.txt, complete programme/all15overlays/all allocated-section identity against bound a5ac runtime PASS; freshbase origin-only push/readback verified. Existing ON runtime qualification is carried with unchanged C++ blobs/current exact Make selection, not falsely rerun here. No new switch or QA rebuild needed for this guard/fixture-only slice.
+
+Requested EFM constructor-time successful/failed create reentry, nested index rebuild exact slot order/build serial and real65536 slot cache refusal are now asserted in the source fixture. Equal-nearest fixture asserts first polygon/piece owner/normal/hit/visit oracle across64/65. Line matrix is four explicit WALK/PIECE profiles1/0,2/0,1/1,2/2, not a full2x3 product. Actual target LINE_LEAF/TAIL execution/live gameplay/STRICT/current memory/cost/console remain local gates; do not infer cost from ELC_W_LEAVES or close the whole cards. Guard-only frontend5532 is unrelated and does not resolve retained target OFF failure.
+
+
 ## Answers (owner): 2026-10-29 bounded water and ordered cloth qualification
 
 Water `0cbb46b1ff89b34d596cd3040953dba4617d6890` landed `c94957e5cfa5564fda776ab0d63cefa4f804f109`; cloth `a0166e96b09cb419b46f02c6cddd6cdfb46f254f` landed `f5ad6fec56370a0a4df59088a1a5c094405160f2`, both default0.

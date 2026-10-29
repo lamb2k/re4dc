@@ -1,5 +1,19 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-29 streamed portal target profile blocked
+
+Source b4cee62b7544704ee09b10759d228401746bf7e7 reviewed and prepared clean no-ff candidate `54a3e3c92f48e1fbdeece9c6d13871bab7bc6ad3` from `d13e2a459627077680f58edc35eae9bceda34c8f`; **UNPUSHED**. Existing stream/ordered-pages source-extracted normal+ASan/UBSan/guard/actual Make suites pass. Full default and explicit0 release links/missingexists0 and complete programme/all15overlays/all allocated-section identity PASS versus bound cloth integration. This does not qualify enabled stream composition.
+
+Two distinct retained profile failures, no source/guard/judge edits:
+
+1. Supplied handback extras force PVR_PIPELINE1. Existing pace.mk224 refuses: PACE_STEADY/PACE_HOLD_LOG need PVR_PIPELINE2. Control stopped before compilation/no ELF/missing file.
+2. Kept current release PVR_PIPELINE2 in a separately labelled retained candidate profile, reusing unchanged source/host/default/zero results. Control then stops in the effective target trans.cpp COARSE guard: PACE_CATCHUP must2 and PACE_TRANS_SKIP must include bit2048. Handback forces skip1. No control ELF and no stream/pages ON arm launched. No further flag guessing/remerge/retry.
+
+Current actual release pacing facts: PVR_PIPELINE2, PACE_CATCHUP2, PACE_TRANS_SKIP4063, PACE_STEADY1, PACE_HOLD_LOG0. SOURCE-ONLY CLOUD REQUEST: correct the full candidate profile to preserve current release prerequisites instead of overriding them with incompatible historical values; provide a reproducible profile builder/fixture validating the effective target-only COARSE/pacing guards and actual primary Make command. SDK is local, but these source flags/guard semantics need no private data. Keep named stream admission, clip/extension refusals, row order/whole-source proof/source/view/material/retirement guards; do not relax guards or claim pending arms accepted. Push a revised handback/input for a fresh changed-input qualification.
+
+WORLD_PORTAL_STREAM31 remains individually outside broad ALLON with parked portal parents and clip0/authored-cell prerequisites. Current K35 QA contains compatible cloth only; stream branch has not landed. Private authored cells, target supported-control/ON, actual effective output/look/STRICT/lifecycle/whole-stack/heap/VRAM/cost/console and later precise mutation/route scratch stay pending. Original and current-pacing failed logs/artifacts remain local; no SD/Pi/media/recipe action.
+
+
 ## Answers (owner): 2026-10-29 ordered world pages qualification
 
 Source `636c5df269d8d2e36a25fa621cbb8e3cf185b73c` landed `a5ac02aecee317c3ac74f1c9e7e2546a40775348` default0. Clean no-ff adapted-helper review/host/normal+ASan+UBSan, absent/explicit0/dependency-control/ON full pinned-SDK releases with existing empty missing.txt,527 actual C++ macro checks and full programme/all15overlays/all allocated sections OFF identity against bound prior integration passed. Freshbase origin-only push/readback passed; no conflict resolution.
