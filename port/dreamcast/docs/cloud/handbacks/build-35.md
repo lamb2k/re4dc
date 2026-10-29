@@ -907,3 +907,37 @@ and missing active-track proof remain unchanged. No600-draw/snapshot/window/
 CPU/current-memory/full-stack/look/STRICT or console acceptance, production
 promotion, SD copy or release. Console needs selected enabled arm media and
 REMOTE LINK after each swap. Both image jobs are finished; do not duplicate.
+
+#### Owner: front runtime bases, farm smokes and coherent journal replay, 2026-10-29
+
+Both front-cache1 runtime bases COMPLETE: unchanged fp_master on ext4 with
+cache0/prune0,1668 final payloads each. All1664 original own-image files exact,
+including raw programme/all15 own overlays; only common emulator-local link
+configuration and three inert8192B redirected slots added. Low/high tracks
+read back together. Copied base hashes, own log/head/stage symbols, common
+source r101/r103f presets verified. No duplicate SDK link or QA master.
+
+Independent existing-audit/gaps r103f farm captures each60s interpreter/
+GDEMU seed1: reader0/errors[]/overruns0/exited; actual room103 frame300, PPP
+and local relay peer observed. Active track01 bytes retained and exactly
+checked, high track verified as own qualified-base hardlink while active.
+Neither run has a PS2HDR frame599 row; no zero/comparison inference and no
+change to the separate held SCPS farm result. No host keys/state or physical
+Pi/console input, recipe promotion, SD write or release.
+
+Windows CRLF packet-journal bug found/fixed in the opt-in REVIEW28 companion
+(see Build28 owner answer and34-test current-base receipt). Original reader
+silently ignored all24 X28 records per arm. Corrected strict reader replays
+the same unchanged journals into two complete automatic telemetry snapshots
+per arm. Control retains one incomplete snapshot; gaps none. No new emulator
+run, reconstructed interleaved row or manufactured zero. Numeric summaries
+are cumulative automatic samples, not matched-frame timing or600-draw totals.
+
+Private front RUNTIME-BASES/PROFILE-SMOKE-PROOF/CRLF-REPLAY-PROOF and source
+receipts retained. Next replay corrected reader over retained main-profile
+journals before considering any changed-input measurement run. Explicit
+window32 DIAG4/14 stays HELD; absent active-track proof is not backfilled.
+Marked/paused600-draw interval, full/partial/skipped-window semantics, all
+reason-group coverage, CPU/current memory/full-stack/look/STRICT and console
+gates remain pending. Console requires designated enabled-arm media,
+REMOTE LINK after each swap, and matched preset/camera/completed draw ticks.

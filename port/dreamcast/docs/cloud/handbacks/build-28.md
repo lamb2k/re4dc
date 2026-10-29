@@ -287,3 +287,31 @@ Per the user's explicit hand-back request, a concise dated summary and these
 questions are also linked under **Open questions back to Claude** in the
 queue. The full report is kept here to follow the later standalone-handback
 layout; the queue Status table is left to Claude.
+
+#### Owner: Windows packet-journal CRLF reader, 2026-10-29
+
+The local Windows relay writes CRLF text records. log_lines reads binary and
+removes only LF; journal_packet formerly left the terminal CR in its base64
+field and strict decoding silently ignored every X28 record. This produced
+a misleading zero-snapshot summary despite actual recorded telemetry.
+journal_packet now strips only the text-record CR/LF terminator before
+splitting. The encoded datagram, its internal newlines, strict base64 decoding,
+datagram/part bounds and coherent multipart assembly remain unchanged.
+No game-side code, scheduling, protocol or legacy default client changes.
+
+Three new cases cover LF/CRLF file-read multipart summaries, exact datagram
+and capture-marker identity with payload-internal CRLF, and rejection of
+embedded base64 whitespace/invalid/oversized packets. New CRLF cases reproduce
+on the old reader; final actual companion suite34/34 PASS with explicit
+--base c528a4dc7d0cf47e6c71486a7c2cfe9cb2940266. The historical default568c
+legacy comparison differs from later marker fixes; that initial run remains
+recorded separately, not reported as a pass. Current-base AST/code identity
+for unchanged legacy clients passes. This is host tooling only; no SDK rebuild.
+
+Offline replay of unchanged retained Windows journals:24 X28 packets per arm,
+old parser accepted0/fixed parser24; two complete automatic T snapshots each.
+Control retains one incomplete T snapshot; gaps none. Raw journal hashes
+unchanged, old companion/captures retained, no emulator rerun or payload/row
+normalization. Prior zero summary is unusable, not evidence of zero telemetry.
+These automatic snapshots do not clear explicit DIAG4/14, marked600-draw,
+window semantics, matched camera/frame, CPU/memory or console gates.

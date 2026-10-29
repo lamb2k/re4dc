@@ -453,7 +453,8 @@ def send_command(control, command, timeout):
 
 
 def journal_packet(line):
-    fields = line.rstrip("\n").split(" ", 2)
+    # The service text log uses CRLF on Windows; the base64 datagram stays exact.
+    fields = line.rstrip("\r\n").split(" ", 2)
     if len(fields) != 3 or fields[1] != "X28":
         return None
     try:

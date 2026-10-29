@@ -165,6 +165,35 @@ class ReplyCases(unittest.TestCase):
 
 
 class SummaryCases(unittest.TestCase):
+    def test_crlf_file_journal_summary(self):
+        packets = ["T 1 99 1/2\nFA35 count=", "T 1 99 2/2\n7\n"]
+        expected = q.summarize([journal(packet) for packet in packets])
+        self.assertEqual(expected[0], "complete telemetry snapshots: 1")
+        with tempfile.TemporaryDirectory() as folder:
+            for ending in ("\n", "\r\n"):
+                with self.subTest(ending=repr(ending)):
+                    path = Path(folder) / "qalink.log"
+                    path.write_bytes(ending.join(journal(packet) for packet in packets).encode() + ending.encode())
+                    self.assertEqual(q.summarize(q.log_lines(str(path))), expected)
+
+    def test_crlf_journal_retains_datagram_and_capture_identity(self):
+        token = "abcdef012345:barn"
+        payload = "T 1 99 1/1\nvalue=7\r\n"
+        lines = [journal(packet) + "\r\n" for packet in
+                 ("M 1 cap-start:" + token, payload, "M 2 cap-stop:" + token)]
+        self.assertEqual(q.journal_packet(lines[1])[1], payload)
+        self.assertEqual(q.capture_cut(lines, token), lines)
+        self.assertEqual(q.summarize(lines)[0], "complete telemetry snapshots: 1")
+
+    def test_crlf_journal_keeps_strict_payload_validation(self):
+        valid = journal("T 1 99 1/1\nx=7")
+        stamp, kind, encoded = valid.split(" ", 2)
+        for bad in (encoded[:4] + "\r" + encoded[4:], encoded + "*", "!!!!"):
+            with self.subTest(bad=bad):
+                self.assertIsNone(q.journal_packet(stamp + " " + kind + " " + bad + "\r\n"))
+        oversized = journal("T 1 99 1/1\n" + "x" * q.MAX_DATAGRAM) + "\r\n"
+        self.assertIsNone(q.journal_packet(oversized))
+
     def test_exact_split_numeric_token_and_newline(self):
         payload = "fps=6\n" + " " * 1088 + "ms10 total=51.2\ndrv q=2\n"
         parts = [payload[i:i + 1100] for i in range(0, len(payload), 1100)]
