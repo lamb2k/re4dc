@@ -518,3 +518,20 @@ NEXT: same-source normal-release/existing-audit/gaps/window32 private enabled
 profiles and actual cost/game/link evidence, retaining normal and existing-
 audit controls separately. No N32 reduction, production log-ring change,
 recipe promotion, SD copy, release publication or console input.
+
+#### Post-gate storage disposition (owner, 2026-10-28 23:33 EDT)
+
+AFTER all3 independent swaps/lints/raw-image comparisons and finished-payload
+proof passed, the two owned redundant absent/zero high tracks were replaced
+with hard links to the equal base track. All logical paths/lengths/hashes
+remain readable and were rechecked. Pre-dedup independent CLI commands,
+logs and manifests remain; links were NOT used to obtain an identity PASS.
+POST-GATE-DEDUP.json records this space-only disposition. Original source
+template/private assets/unrelated evidence were untouched.
+
+C free18.17GiB at2026-10-28T23:33:02.4609833-04:00; further heavy builds and
+multi-GB enabled-profile staging are HELD pending sufficient headroom above
+the workspace reserve. Owner Codex, five-minute read-only cloud checks
+continue. Source/profile planning can continue without large allocation.
+No broad Windows prune, unrelated app restart or private-asset deletion.
+Root fstrim reports Linux trim only; no Windows recovery is inferred.
