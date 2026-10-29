@@ -7,6 +7,18 @@
 #if RE4DC_WORLD_PREPARED09 && (!RE4DC_WORLD_PART_PLAN29 || !RE4DC_MOVIE_WORLD_ARENA || !RE4DC_STATIC_OBJ_LIFETIME05)
 #error WORLD_PREPARED09 needs WORLD_PART_PLAN29, MOVIE_WORLD_ARENA and STATIC_OBJ_LIFETIME05 room-cell authority
 #endif
+#ifndef RE4DC_WORLD_PAGES31
+#define RE4DC_WORLD_PAGES31 0
+#endif
+#if RE4DC_WORLD_PAGES31 != 0 && RE4DC_WORLD_PAGES31 != 1
+#error WORLD_PAGES31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PAGES31 && (!RE4DC_SCENERY_CHUNK || !RE4DC_WORLD_PREPARED09)
+#error WORLD_PAGES31 needs SCENERY_CHUNK and WORLD_PREPARED09 source lifetime authority
+#endif
+#if RE4DC_WORLD_PAGES31
+#include "include/world_page31.hpp"
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -8144,6 +8156,53 @@ int ps2_pass(unsigned pass,float zfar){
     std::memcpy(part.projection,P,sizeof(part.projection));std::memcpy(part.viewport,ps2w.viewport,sizeof(part.viewport));
     part.alpha_state=255;part.source_key[2]=1;
 #if RE4DC_SCENERY_CHUNK
+    // A page flush may bind or yield. Keep the source/view/material inputs for
+    // this one logical part; a changed input aborts rather than replaying a
+    // prefix that may already have reached the TA.
+#if RE4DC_WORLD_PAGES31
+    // PAGE31_INPUTS_BEGIN
+    struct ChunkPageInputs {
+        float view[12],projection[7],viewport[6],affine[12];
+        Ps2Part meta;
+        const void* lut;const void* gather;
+#if RE4DC_PS2_STRIP_GROUPS
+        const void* sg;unsigned groups;
+#if RE4DC_SG_SELECT_LEAN
+        unsigned lean_on;
+#endif
+#endif
+        unsigned frame;
+        void capture(const Ps2Part& source,const float* matrix){
+            meta=source;lut=ps2w.lut;gather=ps2w.gather;
+#if RE4DC_PS2_STRIP_GROUPS
+            sg=ps2w.sg;groups=ps2w.sg_groups;
+#if RE4DC_SG_SELECT_LEAN
+            lean_on=re4dc_sg_lean_on;
+#endif
+#endif
+            frame=re4dc_ui_frame();
+            std::memcpy(view,ps2w.view,sizeof(view));
+            std::memcpy(projection,ps2w.projection,sizeof(projection));
+            std::memcpy(viewport,ps2w.viewport,sizeof(viewport));
+            std::memcpy(affine,matrix,sizeof(affine));
+        }
+        bool current(const Ps2Part& source,const float* matrix)const{
+            return frame==re4dc_ui_frame() && !std::memcmp(&meta,&source,sizeof(meta)) &&
+                !std::memcmp(view,ps2w.view,sizeof(view)) &&
+                !std::memcmp(projection,ps2w.projection,sizeof(projection)) &&
+                !std::memcmp(viewport,ps2w.viewport,sizeof(viewport)) &&
+                !std::memcmp(affine,matrix,sizeof(affine)) && lut==ps2w.lut && gather==ps2w.gather
+#if RE4DC_PS2_STRIP_GROUPS
+                && sg==ps2w.sg && groups==ps2w.sg_groups
+#if RE4DC_SG_SELECT_LEAN
+                && lean_on==re4dc_sg_lean_on
+#endif
+#endif
+                ;
+        }
+    };
+    // PAGE31_INPUTS_END
+#endif
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
@@ -8163,6 +8222,13 @@ int ps2_pass(unsigned pass,float zfar){
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
+#if RE4DC_WORLD_PAGES31
+    re4dc::page31::Part* active_page=nullptr;
+    bool active_page_last=false;
+    const ChunkPageInputs* active_page_inputs=nullptr;
+    const float* active_page_affine=nullptr;
+    unsigned active_page_index=0,active_page_plan=0;
+#endif
     auto chunk_flush=[&]()->int{
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
@@ -8257,6 +8323,9 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if RE4DC_WORLD_PAGES31
+            if(active_page)active_page->selected(cpk+x.first,x.count);
+#endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
             const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
             const auto& wp29_source=cpkg.parts()[x.index];
@@ -8273,6 +8342,36 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
+#if RE4DC_WORLD_PAGES31
+            // PAGE31_POST_EMIT_BEGIN
+            if(active_page){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                // end_direct can leave the borrowed batch SQ held. Unlocking it
+                // may run a source callback, so validate only after this close.
+                re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+                bool current=wplan29::current(active_page_plan) &&
+                    active_page_inputs->current(ps2w.parts[active_page_index],active_page_affine);
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                if(!re4dc_source_world_binding_valid()){
+                    re4dc_source_world_binding_failed();current=false;
+                }
+#endif
+                if(!current){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
+                // Each page restarts MeshDraw, so a later bind/borrow refusal
+                // can return zero even after an earlier page reached the TA.
+                // A paged source cannot fall back or continue after that gap.
+                if(result<=0){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
+            }
+            // PAGE31_POST_EMIT_END
+#endif
+#if RE4DC_WORLD_PAGES31
+            if(active_page && x.count)active_page->emitted(result,e.submitted,e.input,e.output);
+#endif
 #if RE4DC_WORLD_PORTAL29
 #if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL_COMPLETION
             // capture already resolved membership. The exact ticket is checked
@@ -8285,11 +8384,34 @@ int ps2_pass(unsigned pass,float zfar){
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+                if(active_page && (stats.strips_clipped!=wp29_clipped || stats.strips_culled!=wp29_culled))
+                    active_page->whole=false;
+                if(!active_page || active_page_last){
+                    const auto completion=re4dc::portal29::Completion::emitted(
+                        active_page?active_page->result():result,
+                        active_page?active_page->published:e.submitted,
+                        active_page?active_page->input:e.input,
+                        active_page?active_page->output:e.output,
+                        active_page?active_page->complete(wp29_source.first_meshlet):
+                            wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+                    wp29::finish(x.wp29_ticket,completion,x.key);
+                }
+#else
                 const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
                     wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
                 wp29::finish(x.wp29_ticket,completion,x.key);
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+                if(!active_page || active_page_last)
+                    wp29::finish(x.wp29_placement,x.index,
+                        active_page?active_page->positive && active_page->published && active_page->input &&
+                            active_page->input==active_page->output &&
+                            active_page->complete(cpkg.parts()[x.index].first_meshlet):result>0,x.key);
 #else
                 wp29::finish(x.wp29_placement,x.index,result>0,x.key);
+#endif
 #endif
             }
 #endif
@@ -8660,10 +8782,21 @@ int ps2_pass(unsigned pass,float zfar){
 #define WP29_MESHLET_COUNT selected_part.meshlet_count
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_WORLD_PAGES31
                 if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (plan && re4dc::page31::indexable(pk.parts()[index].first_meshlet,WP29_MESHLET_COUNT)) ||
                     (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
 #else
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (plan && re4dc::page31::indexable(pk.parts()[index].first_meshlet,WP29_MESHLET_COUNT)))){
+#else
                 if(d.chunk_ok() && WP29_MESHLET_COUNT<=kChunkPicks){
+#endif
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
                     const bool marked=(meta.reserved&1U)!=0;
@@ -8687,7 +8820,26 @@ int ps2_pass(unsigned pass,float zfar){
                     if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
 #endif
                     // Preserve the original capacity flush and queue snapshot.
+#if RE4DC_WORLD_PAGES31
+                    const bool paged=WP29_MESHLET_COUNT>kChunkPicks;
+                    if(nctx==kChunkParts || npk==kChunkPicks || npk+(paged?kChunkPicks:WP29_MESHLET_COUNT)>kChunkPicks || (paged && nctx)){
+                        if(chunk_flush()<0)return -1;
+                    }
+                    if(paged && !wplan29::current(plan_incarnation)){
+                        re4dc_model_packet_abort();++c.aborts;return -1;
+                    }
+                    ChunkPageInputs page_inputs;
+                    if(paged)page_inputs.capture(meta,RE4DC_PS2_AFFINE);
+                    re4dc::page31::Cursor page_cursor{};
+                    re4dc::page31::Part page_part(pk.parts()[index].first_meshlet,pk.parts()[index].meshlet_count);
+                    bool page_done=false;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                    re4dc::portal29::Ticket page_ticket{};
+#endif
+                    do {
+#else
                     if(nctx==kChunkParts || npk+WP29_MESHLET_COUNT>kChunkPicks){if(chunk_flush()<0)return -1;}
+#endif
 #if RE4DC_WORLD_PREPARED09
             if(plan && !wplan29::current(plan_incarnation)){
                 re4dc_model_packet_abort();++c.aborts;return -1;
@@ -8709,10 +8861,44 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_WORLD_PORTAL29
                     x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+                    if(paged && page_cursor.started)x.wp29_ticket=page_ticket;
+                    else {x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);if(paged)page_ticket=x.wp29_ticket;}
+#else
                     x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
 #endif
 #endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                    const auto page=d.chunk_select(cpk+npk,kChunkPicks-npk,page_cursor);
+                    x.count=page.count;npk+=x.count;page_done=page.done;
+                    if(paged){
+                        active_page=&page_part;active_page_last=page_done;
+                        active_page_inputs=&page_inputs;active_page_affine=RE4DC_PS2_AFFINE;
+                        active_page_index=index;active_page_plan=plan_incarnation;
+                        if(chunk_flush()<0)return -1; // never retry a published prefix
+                        active_page=nullptr;
+                        if(!wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                            re4dc_model_packet_abort();++c.aborts;return -1;
+                        }
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                        if(!re4dc_source_world_binding_valid()){
+                            re4dc_source_world_binding_failed();++c.aborts;return -1;
+                        }
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                        if(!page_done && page_ticket.serial){
+                            const auto now=wp29::capture(page_ticket.placement,index,key);
+                            if(now.serial!=page_ticket.serial || now.witness!=page_ticket.witness){
+                                re4dc_model_packet_abort();++c.aborts;return -1;
+                            }
+                        }
+#endif
+                    }
+                    } while(paged && !page_done);
+#else
                     x.count=d.chunk_select(cpk+npk);npk+=x.count;
+#endif
                     continue;
                 }
 #undef WP29_MESHLET_COUNT
@@ -8771,12 +8957,42 @@ int ps2_pass(unsigned pass,float zfar){
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
 #if !RE4DC_SCENERY_SELECT_ONLY
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_WORLD_PAGES31
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (plan && re4dc::page31::indexable(d.part.first_meshlet,d.part.meshlet_count)) ||
+                (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#else
             if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
                 (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (plan && re4dc::page31::indexable(d.part.first_meshlet,d.part.meshlet_count)))){
 #else
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
 #endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                const bool paged=d.part.meshlet_count>kChunkPicks;
+                if(nctx==kChunkParts || npk==kChunkPicks || npk+(paged?kChunkPicks:d.part.meshlet_count)>kChunkPicks || (paged && nctx)){
+                    if(chunk_flush()<0)return -1;
+                }
+                if(paged && !wplan29::current(plan_incarnation)){
+                    re4dc_model_packet_abort();++c.aborts;return -1;
+                }
+                ChunkPageInputs page_inputs;
+                if(paged)page_inputs.capture(meta,RE4DC_PS2_AFFINE);
+                re4dc::page31::Cursor page_cursor{};
+                re4dc::page31::Part page_part(d.part.first_meshlet,d.part.meshlet_count);
+                bool page_done=false;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                re4dc::portal29::Ticket page_ticket{};
+#endif
+                do {
+#else
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+#endif
 #if RE4DC_WORLD_PREPARED09
             if(plan && !wplan29::current(plan_incarnation)){
                 re4dc_model_packet_abort();++c.aborts;return -1;
@@ -8798,10 +9014,44 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_WORLD_PORTAL29
                 x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+                if(paged && page_cursor.started)x.wp29_ticket=page_ticket;
+                else {x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);if(paged)page_ticket=x.wp29_ticket;}
+#else
                 x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
 #endif
 #endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                const auto page=d.chunk_select(cpk+npk,kChunkPicks-npk,page_cursor);
+                x.count=page.count;npk+=x.count;page_done=page.done;
+                if(paged){
+                    active_page=&page_part;active_page_last=page_done;
+                    active_page_inputs=&page_inputs;active_page_affine=RE4DC_PS2_AFFINE;
+                    active_page_index=index;active_page_plan=plan_incarnation;
+                    if(chunk_flush()<0)return -1; // no replay after a submitted page
+                    active_page=nullptr;
+                    if(!wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                        re4dc_model_packet_abort();++c.aborts;return -1;
+                    }
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                    if(!re4dc_source_world_binding_valid()){
+                        re4dc_source_world_binding_failed();++c.aborts;return -1;
+                    }
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                    if(!page_done && page_ticket.serial){
+                        const auto now=wp29::capture(page_ticket.placement,index,key);
+                        if(now.serial!=page_ticket.serial || now.witness!=page_ticket.witness){
+                            re4dc_model_packet_abort();++c.aborts;return -1;
+                        }
+                    }
+#endif
+                }
+                } while(paged && !page_done);
+#else
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
+#endif
                 continue;
             }
 #endif

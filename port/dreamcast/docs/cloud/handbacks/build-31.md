@@ -473,6 +473,106 @@ ALL ON K24 includes PLAN_OWNER_SCOPED=1 and the first four controls, with QA_LIN
 NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/lifecycle/look/STRICT/heap/stack/full-cost/console gates. Real portal occlusion still needs authored cells and compatible source/view proof. Private console checks require actual intended media selection/swap and reviewed link readiness at the user's console boundary. Frozen release/Pi/media/look holds remain. Independent next native decoder, immutable world preparation and cloth-sheet work proceeds through existing owners; source fixes do not wait for historical QA reconstruction or a broad census.
 
 
+## 2026-10-29 Build31 review6: bounded world selector pages
+
+**DONE — public source candidate, default 0.** Based on current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` (EF09/EF08 source owners already integrated; the preceding pin added the bounded current-package answer). The worktree fast-forwarded through independent EFM and line integration to `6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02`, without overlapping world edits. Worktree `/workspace/scratch/8f775e996324/work-world`, branch `codex/world-pages-20261029`; coordinator reviewed and packaged the first source slice. Sole world changes are `port/dreamcast/game/platform/native_static.cpp`, `platform/include/scenery_chunk_select.inc`, `platform/include/world_page31.hpp`, `world_plan29.mk`, and dedicated `tests/world_pages31/selector_fixture.cpp` / `tests/test_world_pages31.py`.
+
+`WORLD_PAGES31=1` requires existing `SCENERY_CHUNK=1` and `WORLD_PREPARED09=1`; absent/0 emits no define. The shared selector's lean and general implementations now accept an output capacity and retain the next cluster, chosen LOD meshlet range, next meshlet and cluster classification. Full pages stop before another source meshlet's visibility/strip-group/cone work. On resume, completed clusters and meshlets are not revisited and cluster visibility/LOD/stat side effects are not repeated. The existing 320-pick array and 48 queued contexts remain the same size. Parts with at most 320 stored meshlets keep the queued path. A larger part pages only with a current prepared plan and a representable `u16` meshlet span; otherwise the existing legacy source draw remains the fallback. The two active selection routes flush preceding queued parts, then flush each ordered page before selecting the next. Any active page result of zero or less aborts the logical pass after batch release, including a later-page bind/borrow refusal that returns zero because each page uses a fresh emitter. Changed plan/source input also aborts. Neither case replays an already submitted prefix through the legacy draw.
+
+A page input snapshot checks the current frame, 16-byte material record, view/projection/viewport, placement affine, LUT/gather and strip-group backing, group count and lean switch after each page flush. The existing prepared plan incarnation and source-world binding checks remain active; an EF08 portal ticket is captured on the first page and reused only while its scene/witness remains current. For active pages, `chunk_flush` closes the borrowed SubmitBatch after `end_direct`, then checks plan/input/binding authority before any portal receipt; a final-page mutation aborts without publishing a witness. In-place package content authority beyond the currently published EF09 token remains a later Build31 mutation slice; this candidate does not claim a new mutation publisher.
+
+For a qualified portal completion, page picks are folded in source order into one logical part proof, and submitted/input/output counters and clip/cull outcomes are aggregated. `wp29::finish` runs only after the final page and its SQ release. A final zero-pick page does not erase already submitted coverage. Any missing, reordered, clipped, refused, unsubmitted or partially aborted page cannot create a whole-part witness. The older portal path is conservatively gated on complete ordered coverage for paged parts. Nonpaged completion and zero-result fallback follow their previous paths.
+
+**Host validation DONE.** `python3 -B port/dreamcast/tests/test_world_pages31.py` passes normal and ASan/UBSan builds for both the lean stream selector and the general selector, plus the general selector with census side effects enabled. It compiles the actual shared production selector twice in one fixture, as the unpaged source and the bounded candidate. For 319, 320, 321 and 641 stored meshlets with zero, one or all surviving, plus cluster and LOD boundaries, a final empty page, small capacities (1 and 7), and a stop after a published first page, selected pick order and every cluster/meshlet visit and statistic agree with the source. Canary guards verify no write beyond capacity. The fixture also exercises the production `page31::Part` proof with actual `portal29::Completion` for complete, refusal, clipped and duplicate outcomes. Both actual production page call sites and the post-emit flush guard are source-extracted and compiled with bounded host shims in normal and sanitizer builds. They check two ordered pages, zero-result refusal on the first and second page with frame abort and no next page/receipt, and view/material/plan changes during final emission without prefix replay. A second source-extracted fixture compiles the actual portal receipt block and verifies first- and second-page zero-result refusal, and that final-emission view, material, plan, strip-switch or affine mutation leaves no witness after lock release. A batch-close callback that changes the view is checked as a separate final-page failure, before publication. The production page-input guard is also compiled against mutation cases for each protected field. LeakSanitizer is disabled for this managed executor's `/proc` restriction; ASan and UBSan used halt-on-error.
+
+**OFF identity DONE at host selector scope.** Baseline/current complete `-E -P` bytes and `-O2 -g0` object bytes match for both shared-selector variants. SHA256 prefixes (preprocessor/object) are general `140bf24b75d34e74` / `2a2d489e49da959a`, lean `fa396cec5ae7e728` / `92b076b9433da6e2`. The Make fragment test confirms absent and explicit zero produce identical flags, ON defines the control for `native_static.o`, and empty/invalid values are rejected. A separate `make -f Makefile -n` check of the actual `native_static.o` compile command under the qualified portal/prepared profile confirms absent/zero command identity and exactly one ON define. `git diff --check` is clean. These are host and actual Make-selection proofs, not a complete SH-4 TU or final-image identity receipt.
+
+**Footprint and gates.** No new heap or static BSS, no new pick/context capacity, and no package format or asset change. The page cursor, aggregate and input snapshot are per-call stack state only; SH-4 stack and code-size deltas are unmeasured without a target object. The snapshot is used only for a larger admitted part. NEXT: coordinator review and target absent/zero/ON full-TU/object identity, code/stack and memory check; separate private authored >320 and current-image output/look/STRICT/cost evidence. The owner's bounded current r100/r101/r103 package check found no >320 part; the synthetic boundary is therefore the only current paging witness. Stream and qualified clip portal completion, then exact in-place mutation publisher and route-scratch authority, are later serial world slices under this same writer. BLOCKED at target/private gates: this cloud environment has no SH-4 compiler/SDK, Build-Assets, Flycast capture or physical Dreamcast; no target image, private package, hardware timing, full memory, or gameplay acceptance is claimed.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${WP31_BASE_TREE:?fresh base worktree path}"
+: "${WP31_LOGS:?fresh log directory}"
+: "${WP31_PROGRAMS:?fresh programme directory}"
+: "${WP31_LABEL:?fresh lane label prefix}"
+WP31_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$WP31_BASE_TREE" 6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$WP31_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$WP31_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$WP31_BASE_TREE" "${WP31_LABEL}base" ""
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}absent" ""
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}off" "WORLD_PAGES31=0"
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}ctrl" \
+  "SCENERY_CHUNK=1 WORLD_PREPARED09=1 WORLD_PART_PLAN29=1 NATIVE_PKG_HIGH=1 PS2_WORLD_MESH=1 MOVIE_WORLD_ARENA=1 STATIC_OBJ_LIFETIME05=1 WORLD_PAGES31=0"
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}on" \
+  "SCENERY_CHUNK=1 WORLD_PREPARED09=1 WORLD_PART_PLAN29=1 NATIVE_PKG_HIGH=1 PS2_WORLD_MESH=1 MOVIE_WORLD_ARENA=1 STATIC_OBJ_LIFETIME05=1 WORLD_PAGES31=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${WP31_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${WP31_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${WP31_LABEL}offrP" \
+  --output "$WP31_LOGS/world-pages31-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+**Additional exact local portal arm.** This is a separate profile from the
+release OFF pair above and keeps the current EF08 exclusions. With the same
+shell function and fresh labels:
+
+```bash
+WP31_PORTAL=$(python3 -c 'import json; print(" ".join(json.load(open("port/dreamcast/tools/cloud/build31/world_prepared09_profiles.json"))["profiles"]["portal"]))')
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}portalctrl" \
+  "$WP31_PORTAL WORLD_PAGES31=0"
+candidate_build "$WP31_CANDIDATE_TREE" "${WP31_LABEL}portalon" \
+  "$WP31_PORTAL WORLD_PAGES31=1"
+```
+
+Inspect the full native_static target compile for enabled/direct/selector-only
+and ordinary selection configurations, and retain code/stack-size results.
+The current local r100/r101/r103 inventory contains no >320 stored-meshlet
+part, so it cannot by itself qualify the boundary. Claude needs one authorized
+package containing such a part, or a target synthetic package with 319, 320,
+321 and 641 stored meshlets, plus zero/one/all survivors. Preserve that exact
+package and camera with the image. Verify the final-empty page, first/later
+resource refusal, source mutation at emit and SQ release, and absence of
+partial portal receipts or prefix replay. This request is a specific package
+boundary check, not a new global census.
+
+**NEXT source slice:** qualify the real indexed `SCENERY_STREAM` emitter with
+`SCENERY_EMIT_PREFETCH=0`, including PVS source observation. The current Make
+guards reject STREAM with PS2_PVS, while composed completion requires PVS=1;
+relax only the newly proved composed profile after actual emitter fixtures.
+Unqualified clip/indexed combinations keep their current guard and draw-all
+behavior. Paging correctness does not itself authorize stream/clip witnesses.
+
+
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
