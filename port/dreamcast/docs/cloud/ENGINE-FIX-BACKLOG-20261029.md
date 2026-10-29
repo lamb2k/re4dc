@@ -1,5 +1,10 @@
 Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
 
+## Owner runtime checkpoint 2026-10-29 17:54 EDT
+
+RE4-PLAN-SYNC-20261029-1202: the permitted current-image ordinary guest PADRead/NewGame plus local QA Link route is established. EF04 has scoped real inventory portrait Submitted486/refused0 and two matching-hash3MiB backing open/close cycles; first radio/async/whole-card acceptance stays open. EF11/14 nominal r100 live9x10 cloth output is observed (9599 rows/drop0); selected-sheet both-side/near-plane/material/wide visual parity and target numeric/FPSCR/full memory/cost/console are open. See current Answers(owner) in build29/build32. All new public-source/synthetic implementation remains cloud-owned, and newly published recovery/frontend/world-stream/model-binding/mutation/water handbacks await serialized local review. No default, frozen release scope, hardware acceptance or SD state changed.
+
+
 ## Current owner checkpoint: 2026-10-29 target review and dependency order
 
 Runtime is D13 (`d13e2a459627077680f58edc35eae9bceda34c8f`), compatible K35 QA is prepared; older first-wave runtime and pending-local-delivery paragraphs below are historical. Thirteen of sixteen EF cards have integrated code/first slices; EF10/EF12 await first landings and EF15 remains unmerged. No whole EF card is fully signed off. Current cloth/portrait named input bindings and cloth target static ABI review are complete within their bounded scopes, not live or hardware acceptance.
@@ -9,18 +14,18 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
-## Recovery execution checkpoint: 2026-10-29 17:50 EDT
+## Recovery execution checkpoint: 2026-10-29 17:58 EDT
 
-Current integration is `d45eb759dd92685255929625e04fae3d7a46bca7`. EF15/EF08/EF13/EF09/EF06 have verified pushed
-source slices; EF14/EF12/EF04 host-validated slices are frozen for publication.
-Three workers now execute actor presentation, static content/ordered spans and
-bounded logger records. See the [exact branch/SHA ledger and truthful 16-card
-and six-track matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1750-edt).
-Each feature branch carries its card-specific backlog and existing Build
-handback update; root serializes the shared queue Status here. Existing first
-integrations are not repeated. New public-source work does not wait on private
-data; target/private/runtime/console checks and serialized integration remain
-local. No new slice is integrated/enabled/accepted and no full EF card is closed.
+All three priority deliveries and six additional bounded slices have verified
+pushed SHAs. Integration is still `f3a0216d43406555c655947f247acc8f02e5ca0d`; none of those new slices is integrated,
+enabled or accepted. Actor presentation, static ordered spans and actual cloth
+material work have three observed active workers. The remaining dependent clip
+candidate is durably preserved as WIP with its stream-integration hold intact.
+See the [exact remote ledger, sixteen-card activity and six-track matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-publication-batch-2).
+Source branches carry their existing Build handbacks and card backlog updates;
+root serializes queue Status here. Public-source contracts do not wait for
+private data. Default0, required full target OFF identity, gameplay/material/
+lifetime contracts and all local release/private/runtime/console holds remain.
 
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
