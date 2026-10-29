@@ -1,0 +1,56 @@
+@COMMON@
+struct Vec {float x,y,z;};
+using Mtx=float[3][4];
+static void PSVECSubtract(const Vec*a,const Vec*b,Vec*c){*c={a->x-b->x,a->y-b->y,a->z-b->z};}
+static float PSVECMag(const Vec*a){return std::sqrt(a->x*a->x+a->y*a->y+a->z*a->z);}
+static void PSVECScale(const Vec*a,Vec*c,float scale){*c={a->x*scale,a->y*scale,a->z*scale};}
+static void PSVECAdd(const Vec*a,const Vec*b,Vec*c){*c={a->x+b->x,a->y+b->y,a->z+b->z};}
+float K_PARAM=7.5f,G_PARAM=0.5f;
+struct Cloth {u8 divH,divV;float Wgap,Hgap;Vec*pVer;Vec*pSpd;void calcSpeed(float);void calcSpeedSrc(float);};
+@SPRINGS@
+struct cModel {};
+struct PenAtWork;
+struct PenParts;
+struct PenCloth {int Num;unsigned Flag;float WindSin;};
+#define PPC_REG(x)
+static float GlobalWindAdd=0.75f;
+static unsigned rng_calls;
+static float fRand0_1(){++rng_calls;return 0.25f;}
+static float limit_angle(float x){while(x>3.14159265f)x-=6.28318531f;return x;}
+#define LIMIT_ANGLE(x) limit_angle(x)
+// Exact admission prefixes through the first external floor query. The full
+// chain physics is outside this event-boundary fixture's claim.
+@CHAINS@
+@SKIP@
+int main(){
+    char name[80];
+    for(auto dims: {std::array<unsigned,2>{0,0},{0,3},{1,1},{2,2},{3,4},{8,7},{16,16},{65,33},{255,2}}){
+        for(unsigned seed=0;seed<3;++seed){
+            unsigned n=dims[0]*dims[1];
+            std::snprintf(name,sizeof(name),"spring-%ux%u-seed%u",dims[0],dims[1],seed);begin(name);
+            std::vector<Vec> pos(std::max(1U,n)),spd(std::max(1U,n));
+            for(unsigned i=0;i<n;++i){pos[i]={float(i%std::max(1U,dims[0]))*(1.0f+seed),float(i/dims[0])*2.25f,float(int(i%7)-3)*0.1f};spd[i]={float(i%3)*0.2f,-0.25f,float(i%5)*-0.15f};}
+            auto before=spd;
+            Cloth c{u8(dims[0]),u8(dims[1]),1.5f,2.0f,pos.data(),spd.data()};c.calcSpeed(0.9f);
+            const unsigned source=RE4DC_CLOTH_SPRING==0||(RE4DC_CLOTH_SPRING==2&&n<=2048);
+            const unsigned fast=RE4DC_CLOTH_SPRING!=0;
+            EXPECT(ClothSpringSource,source);EXPECT(ClothSpringFast,fast);EXPECT(ClothPoints,n*(source+fast));
+            for(unsigned i=0;i<n;++i){CHECK(std::isfinite(spd[i].x));CHECK(std::isfinite(spd[i].y));CHECK(std::isfinite(spd[i].z));}
+            for(unsigned i=1;i+1<dims[0]&&dims[1];++i)CHECK(std::memcmp(&before[i],&spd[i],sizeof(Vec))==0);
+            done(hash_bytes(spd.data(),n*sizeof(Vec)));
+        }
+    }
+    void(*move[])(cModel*,PenCloth*)={PenClothMove,PenClothMove2,PenClothMove3};
+    for(unsigned m=0;m<3;++m)for(int links:{0,1,8,37}){
+        std::snprintf(name,sizeof(name),"chain-prefix-%u-links%d",m,links);begin(name);
+        PenCloth c{links,0,0.5f};auto before=c;move[m](nullptr,&c);
+        EXPECT(ClothChainMove,links!=0);EXPECT(ClothChainLinks,links);CHECK(std::memcmp(&c,&before,sizeof(c))==0);done(hash_bytes(&c,sizeof(c)));
+    }
+    for(int links:{0,1,16})for(unsigned flag:{0U,0x40U})for(float wind:{0.0f,3.1f}){
+        std::snprintf(name,sizeof(name),"skip-links%d-flag%u-wind%.1f",links,flag,wind);begin(name);
+        PenCloth c{links,flag,wind};rng_calls=0;PenClothSkipTick(&c);
+        EXPECT(ClothChainSkip,links!=0);CHECK(rng_calls==unsigned(links!=0&&!(flag&0x40)));
+        CHECK(c.WindSin==(rng_calls?limit_angle(wind+0.25f*GlobalWindAdd):wind));
+        done(hash_word(hash_bytes(&c,sizeof(c)),rng_calls));
+    }
+}

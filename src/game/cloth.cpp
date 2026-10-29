@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
@@ -335,6 +339,11 @@ static u8 clothDnOk[256];   // the spring below row i-1's point j: 0 not compute
 #if !(defined(RE4DC_CLOTH_SPRING) && RE4DC_CLOTH_SPRING == 1)
 void Cloth::calcSpeed(f32 damping)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothSpringSource, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothPoints, unsigned(divH) * unsigned(divV));
+#endif
+#line 341
     Vec v;
     Vec* p = pVer;
     Vec* s = pSpd;
@@ -426,6 +435,11 @@ static u32 clothChkCalls, clothChkMis, clothChkBig;
 #endif
 void Cloth::calcSpeed(f32 damping)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothSpringFast, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothPoints, unsigned(divH) * unsigned(divV));
+#endif
+#line 432
 #if RE4DC_CLOTH_SPRING == 2
     const u32 npt = (u32) divH * divV;
     const int chk = npt <= 2048;

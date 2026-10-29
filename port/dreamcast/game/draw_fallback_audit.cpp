@@ -1,6 +1,9 @@
 #include "platform/include/draw_fallback_audit.h"
 #include <cstdio>
 #include <cstring>
+#if defined(RE4DC_FALLBACK_WINDOW35) && RE4DC_FALLBACK_WINDOW35
+#include "platform/include/fallback_window35.h"
+#endif
 
 namespace re4dc { namespace dfa26 {
 bool active=false;
@@ -51,6 +54,10 @@ void reset() { active=false; paused=false; valid=false; have_room=false; sequenc
 bool snapshot(Snapshot* out) { if (!valid || !out) return false; *out=sealed; return true; }
 const char* label(Reason reason) { return labels[reason]; }
 const char* unit(Reason reason) { return units[reason]; }
+#if defined(RE4DC_FALLBACK_WINDOW35) && RE4DC_FALLBACK_WINDOW35
+unsigned line_count() { return fw35::dfa_line_count(); }
+int format_line(unsigned row, char* out, unsigned capacity) { return fw35::dfa_format_line(row,out,capacity); }
+#else
 unsigned line_count() { return valid?1U+(ReasonCount+3U)/4U:1U; }
 int format_line(unsigned row, char* out, unsigned capacity) {
     if (!out || !capacity || row>=line_count()) return -1;
@@ -72,4 +79,5 @@ int format_line(unsigned row, char* out, unsigned capacity) {
     if (n<0 || unsigned(n)>=capacity) { out[capacity-1]=0; return -1; }
     return n;
 }
+#endif
 } }

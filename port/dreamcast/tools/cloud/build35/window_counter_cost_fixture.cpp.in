@@ -1,0 +1,33 @@
+// Actual collector implementation and KOS IRQ instructions, with address-only
+// fixture metadata. The measured production function sections must be byte
+// identical to a separately compiled production object.
+#include "@DC@/game/fallback_audit29.cpp"
+#include "@DC@/game/platform/include/draw_fallback_audit.h"
+namespace re4dc { namespace dfa26 {
+bool active;
+uint32_t live[ReasonCount], overflow;
+} }
+extern "C" {
+re4dc::fa29::Snapshot fixture_output;
+__attribute__((used)) extern const uintptr_t fixture_layout[]={
+    1,re4dc::fa29::ReasonCount,sizeof(re4dc::fa29::Snapshot),
+    uintptr_t(&re4dc::fa29::state),sizeof(re4dc::fa29::state),
+    uintptr_t(&re4dc::fa29::state.sealed),uintptr_t(re4dc::fa29::state.totals),
+    uintptr_t(re4dc::fa29::state.current),uintptr_t(&re4dc::fa29::state.tick),
+    uintptr_t(&re4dc::fa29::state.room),uintptr_t(&re4dc::fa29::state.ticks),
+    uintptr_t(&re4dc::fa29::state.draws),uintptr_t(&re4dc::fa29::state.overflow),
+    uintptr_t(&re4dc::fa29::state.outside_tick),uintptr_t(&re4dc::fa29::state.sequence),
+    uintptr_t(&re4dc::fa29::state.active),uintptr_t(&re4dc::fa29::state.paused),
+    uintptr_t(&re4dc::fa29::state.have_room),uintptr_t(&re4dc::fa29::state.draw),
+    uintptr_t(&re4dc::fa29::state.valid),uintptr_t(&fixture_output),
+    re4dc::dfa26::ReasonCount,uintptr_t(re4dc::dfa26::live),uintptr_t(&re4dc::dfa26::overflow),
+#if RE4DC_FALLBACK_WINDOW35
+    uintptr_t(&re4dc::fa29::window_tick_overflow),
+#else
+    0,
+#endif
+    uintptr_t(&re4dc::fa29::hit),uintptr_t(&re4dc::fa29::begin_tick),
+    uintptr_t(&re4dc::fa29::end_tick),uintptr_t(&re4dc::fa29::snapshot),
+    uintptr_t(&re4dc::fa29::reset),uintptr_t(&re4dc::fa29::pause),uintptr_t(&re4dc::fa29::resume)
+};
+}

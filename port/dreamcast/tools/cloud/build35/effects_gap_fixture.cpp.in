@@ -1,0 +1,127 @@
+@COMMON@
+#define RE4DC_WATER45_NATIVE 0
+#define RE4DC_WATER_PS2 0
+#define ESPGEN_APP_ID 4
+struct Info {u32 Core_flg,Core_kind,Core_pEm;};
+struct EspgenWork {u32 flag,id;Info info;};
+using EspgenMoveFunc=void(*)(EspgenWork*);
+using EspgenTransFunc=void(*)(EspgenWork*);
+using EspgenDestructFunc=void(*)(EspgenWork*);
+static EspgenWork eg_pool[320],*EspgenArray=eg_pool;
+static u32 nEspgen;
+static struct Global {u32 Status_flg[2],Debug_flg[4];} global,*pG=&global;
+static unsigned errors,displayed,actions;
+static struct Logger {void err(int,int,const char*,unsigned){++errors;}} logger,*pLog=&logger;
+static void eprintf(int,int,int,int,const char*,unsigned n){displayed=n;}
+static u32 GetEspgenIdMax(){return 6;}
+static void memclr_asm(void*p,unsigned n){std::memset(p,0,n);}
+static unsigned long re4dcFxCtz(unsigned long v){CHECK(v!=0);return __builtin_ctzl(v);}
+enum {FXC_EG_MOVE,FXC_EG_DEL,FXC_ESP_DEL,FXC_MIS_EG,FXC_MIS_ESP,FXC_FALLBACK,FXC_COUNT};
+static unsigned re4dc_fx_chk[FXC_COUNT];
+extern "C" {int re4dc_esp_logic_only=0;}
+@ACTIVE@
+#if RE4DC_FX_SCAN
+@EGMAP@
+#endif
+static std::vector<unsigned> action_trace;
+static bool invalidate_eg;
+static void eg_action(EspgenWork*w){
+    ++actions;action_trace.push_back(unsigned(w-eg_pool));
+#if RE4DC_FX_SCAN
+    if(invalidate_eg){FX_EG_STALE();invalidate_eg=false;}
+#endif
+}
+static void Espgen01_Trans(EspgenWork*w){eg_action(w);}
+static void Espgen45_Trans(EspgenWork*w){eg_action(w);}
+static EspgenMoveFunc EspgenMoveTbl[4]={eg_action,eg_action,eg_action,eg_action},EspgenMoveTblApp[2]={eg_action,eg_action};
+static EspgenTransFunc EspgenTransTbl[4]={eg_action,Espgen01_Trans,nullptr,eg_action},EspgenTransTblApp[2]={eg_action,Espgen45_Trans};
+static EspgenDestructFunc EspgenDestructTbl[4]={eg_action,eg_action,eg_action,eg_action},EspgenDestructTblApp[2]={eg_action,eg_action};
+@PUSH@
+#if RE4DC_FX_SCAN
+@MOVEONE@
+@TRANSONE@
+@DELHIT@
+#if RE4DC_FX_SCAN == 2
+@DELSKIP@
+#endif
+#endif
+@MOVE@
+@TRANS@
+@DELETE@
+
+struct cModel {u32 serial;};
+struct cEsp {u32 m_Be_flg;Info info;cModel*m_pMod;u32 m_Guid_pMod;u8 padding[308];};
+static_assert(sizeof(cEsp)==0x150,"fixture preserves the source byte stride");
+struct cEspSystem {u8*pEspBuf;u32 nEsp;};
+static cEsp esp_pool[64];static cEspSystem sys{reinterpret_cast<u8*>(esp_pool),64},*g_pEspSys=&sys;
+static unsigned short re4dc_esp_own[64];
+static unsigned long re4dc_esp_own_valid,re4dc_fx_esp_gen,re4dc_fx_esp_ownmap[64][32];
+static unsigned espOwnCalls,espOwnSkips,espOwnMis,espOwnRecounts;
+static bool esp_ready,invalidate_esp;
+@OWNERHASH@
+@OWNER@
+static int re4dc_fx_esp_ready(){return esp_ready;}
+static void PushEsp(cEsp*e){
+    ++actions;action_trace.push_back(unsigned(e-esp_pool));e->m_Be_flg=0;
+    const unsigned b=re4dcEspOwnB(e->info.Core_pEm),i=unsigned(e-esp_pool);
+    CHECK(re4dc_esp_own[b]>0);--re4dc_esp_own[b];re4dc_fx_esp_ownmap[b][i>>5]&=~(1UL<<(i&31));
+    if(invalidate_esp){++re4dc_fx_esp_gen;invalidate_esp=false;}
+}
+@ESPDELETE@
+
+static void setup_eg(unsigned n,unsigned scenario){
+    std::memset(eg_pool,0,sizeof eg_pool);global={};nEspgen=n;errors=displayed=actions=0;action_trace.clear();
+    std::fill(re4dc_fx_chk,re4dc_fx_chk+FXC_COUNT,0);invalidate_eg=scenario==2||scenario==3;
+    if(n){
+        for(unsigned i:{3U,12U,31U,n-1})if(i<n){eg_pool[i]={1,unsigned(i%2),{1,2,3}};}
+        if(scenario==3){std::memset(eg_pool,0,sizeof eg_pool);eg_pool[n-1]={1,1,{1,2,3}};}
+        if(scenario==4)std::memset(eg_pool,0,sizeof eg_pool);
+    }
+#if RE4DC_FX_SCAN
+    fxEgValid=0;fxEgArr=nullptr;fxEgN=0;fxEgGen=0;re4dc_fx_eg_ok=0;
+    std::fill(re4dc_fx_eg_occ,re4dc_fx_eg_occ+FX_EG_WORDS,0);
+#endif
+}
+static unsigned eg_result(){
+    unsigned h=hash_bytes(eg_pool,sizeof eg_pool);for(auto i:action_trace)h=hash_word(h,i);
+    h=hash_word(h,errors);return hash_word(h,displayed);
+}
+int main(){
+    char name[96];
+    for(unsigned op=0;op<3;++op)for(unsigned scenario=0;scenario<6;++scenario){
+        const unsigned n=scenario==0?0:scenario==1?320:64;
+        std::snprintf(name,sizeof(name),"eg-op%u-scenario%u-n%u",op,scenario,n);begin(name);setup_eg(n,scenario);
+        std::vector<unsigned> expected;for(unsigned i=0;i<n;++i)if(eg_pool[i].flag&1)expected.push_back(i);
+        if(op==0)CHECK(EspgenMove()==1);else if(op==1)CHECK(EspgenTrans()==1);else EspgenDelete(1,2,3);
+        CHECK(action_trace==expected);CHECK(errors==0);
+        const unsigned scan=RE4DC_FX_SCAN?(n>256?n:scenario==2?n-4:0):n;
+        const unsigned mapped=RE4DC_FX_SCAN&&n<=256,miss=RE4DC_FX_SCAN&&n>256,stale=RE4DC_FX_SCAN&&scenario==2;
+        if(op==0){EXPECT(EgMoveScan,scan);EXPECT(EgMoveMapped,mapped);EXPECT(EgMoveMiss,miss);EXPECT(EgMoveStale,stale);EXPECT(EgMoveOff,!RE4DC_FX_SCAN);CHECK(displayed==expected.size());}
+        if(op==1){EXPECT(EgTransScan,scan);EXPECT(EgTransMapped,mapped);EXPECT(EgTransMiss,miss);EXPECT(EgTransStale,stale);EXPECT(EgTransOff,!RE4DC_FX_SCAN);}
+        if(op==2){EXPECT(EgDeleteScan,scan);EXPECT(EgDeleteMapped,mapped);EXPECT(EgDeleteMiss,miss);EXPECT(EgDeleteStale,stale);EXPECT(EgDeleteOff,!RE4DC_FX_SCAN);for(auto i:expected)CHECK(eg_pool[i].flag==3);}
+        CHECK(re4dc_fx_chk[FXC_MIS_EG]==0);done(eg_result());
+    }
+    cModel model{47},other{48};
+    for(unsigned scenario=0;scenario<8;++scenario){
+        std::snprintf(name,sizeof(name),"esp-scenario%u",scenario);begin(name);
+        std::memset(esp_pool,0,sizeof esp_pool);std::memset(re4dc_fx_esp_ownmap,0,sizeof re4dc_fx_esp_ownmap);
+        actions=0;action_trace.clear();std::fill(re4dc_fx_chk,re4dc_fx_chk+FXC_COUNT,0);
+        const unsigned owner=0x110,foreign=0x220;unsigned query=scenario==1?0:scenario==4?0x330:owner;
+        for(unsigned i:{2U,11U,34U,63U}){auto&e=esp_pool[i];e.m_Be_flg=1;e.info={1,2,i==34?foreign:owner};e.m_pMod=&model;e.m_Guid_pMod=model.serial;}
+        if(scenario==5){std::memset(esp_pool,0,sizeof esp_pool);esp_pool[63].m_Be_flg=1;esp_pool[63].info={1,2,owner};esp_pool[63].m_pMod=&model;esp_pool[63].m_Guid_pMod=model.serial;}
+        if(scenario==6)esp_pool[11].m_Guid_pMod=46;
+        if(scenario==7)esp_pool[11].m_pMod=&other;
+        espOwnRecount(&sys);for(unsigned i=0;i<64;++i)if(esp_pool[i].m_Be_flg&1)re4dc_fx_esp_ownmap[re4dcEspOwnB(esp_pool[i].info.Core_pEm)][i>>5]|=1UL<<(i&31);
+        esp_ready=scenario!=2;invalidate_esp=scenario==3||scenario==5;re4dc_fx_esp_gen=1;
+        std::vector<unsigned> expected;
+        for(unsigned i=0;i<64;++i){auto&e=esp_pool[i];if((e.m_Be_flg&1)&&(!query||e.info.Core_pEm==query)&&e.m_pMod==&model&&e.m_Guid_pMod==model.serial)expected.push_back(i);}
+        EspDelete(1,2,query,&model);CHECK(action_trace==expected);for(auto i:expected)CHECK(esp_pool[i].m_Be_flg==0);
+        const bool empty=scenario==4&&(RE4DC_FX_SCAN||RE4DC_ESP_OWNER);
+        const unsigned scan=empty?0:!RE4DC_FX_SCAN||scenario==1||scenario==2?64:scenario==3?61:0;
+        EXPECT(EspDeleteScan,scan);EXPECT(EspDeleteEmpty,empty);EXPECT(EspDeleteOff,!RE4DC_FX_SCAN);
+        EXPECT(EspDeleteOwnerZero,scenario==1);EXPECT(EspDeleteMapped,RE4DC_FX_SCAN&&scenario!=1&&scenario!=2&&!empty);
+        EXPECT(EspDeleteMiss,RE4DC_FX_SCAN&&scenario==2);EXPECT(EspDeleteStale,RE4DC_FX_SCAN&&scenario==3);
+        CHECK(re4dc_fx_chk[FXC_MIS_ESP]==0);CHECK(espOwnMis==0);
+        unsigned h=2166136261U;for(auto i:action_trace)h=hash_word(h,i);for(auto&e:esp_pool)h=hash_word(h,e.m_Be_flg);done(h);
+    }
+}

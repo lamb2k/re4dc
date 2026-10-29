@@ -1,5 +1,12 @@
 # Build 35: missing audit events and rolling drawn-tick windows
 
+**2026-10-29 progress 2: DONE** default-off six-gap instrumentation, independent
+exact N=1..64 drawn-attempt windows, bounded complete QA transport and the
+source-bound host/target qualification below; **NEXT** Claude's matched-state
+coverage/observer-cost tour, then cloud Build 36; **BLOCKED** asset-complete
+image identity, full-game memory/STRICT/look and console overhead need the
+exact owner commands in this hand-back. Release recipes remain unchanged.
+
 **2026-10-28 progress 1: DONE** source-gap mapping and the bounded collector
 contract below; **NEXT** default-off instrumentation, exact ring/lifecycle
 fixtures, target disabled identity and enabled build/cost qualification;
@@ -23,7 +30,7 @@ and Snapshot layouts agree. This does not require `SKIN_CENSUS=1`.
 | Cloth simulation | `src/game/cloth.cpp`, common player/enemy chain routines in `pendulum.cpp` | Spring fast/source calls, grid points, chain calls/links and skipped chains. Simulation remains required; a scalar algorithm is not a rendering fallback. |
 | Front texture objects | `src/game/trans.cpp` | Cache hit/build/refusal/source calls, flushed textures, resets; include Build 34's refreshed descriptor path. Do not infer net benefit from hit count. |
 | Espgen / EspDelete scans | `src/game/espgen.cpp`, `est.cpp` | Scalar slots visited separately for move/transform/delete; distinguish mapped calls, unavailable maps, generation changes, compile-off paths, zero-owner query and empty results. No effects are skipped by the observer. |
-| Collision body-list overflow | `src/game/at_mod.cpp` | Alive-list builds, alive/cached/candidate/dirty overflow refusals, source collection calls and actual source/fast list passes. Counts do not mean unique entities or dropped collision candidates. |
+| Collision body-list overflow | `src/game/at_mod.cpp` | Alive-list builds, alive/cached/candidate/dirty overflow refusals, source collection calls and source/fast list runs (one invocation of a three-phase list pipeline). Counts do not mean unique entities or dropped collision candidates. |
 | Motion index | `platform/native_motion.cpp` | Binary versus linear searches, records probed, found/missing/unbound calls. `MOTION_INDEX=0` selects linear search; a failed binary search is not a runtime linear fallback. |
 | Skin census-only paths | `src/game/trans.cpp` | Deferred/failure/CPU/morph infos and their vertices, ordinary/extended palette matrices. A source-skin pass and an admission failure remain distinct; no source output changes. |
 
@@ -31,7 +38,7 @@ The initial registry has 58 named events with explicit units, appended after
 the 33 stable Build 29 reasons. The 133 DFA reasons retain their existing
 order. Instrumentation batches event totals where practical rather than
 calling the shared collector for every vertex or scanned record. The runtime
-step will bind the exact final registry and actual-source event tests.
+qualification below binds the final registry and actual-source event tests.
 
 ## Exact rolling-window contract
 
@@ -60,19 +67,185 @@ No wrapped or saturated number is advertised as an exact sum.
 
 Window mode replaces the previous single-drawn-tick display rows with F26W
 and FA29W sums, retaining FA29T room totals and the legacy Snapshot APIs.
-The existing QA snapshot/192-byte rows will be tested at maximum values;
-there is no planned duplicate full dump or unbounded log in a hot loop.
+The existing QA snapshot/192-byte rows are tested at maximum values. The
+qualified runtime follow-up below records the required bounded capacity
+increase; there is no duplicate full dump or unbounded log in a hot loop.
 The ring's merge/reset work runs after restoring interrupts. All old bodies
 remain literal under the new control's disabled branch for byte identity.
 
-## Step 1 identity and cost
+## Historical step 1 identity and cost (docs-only commit)
 
-This commit changes only this report. Runtime/Make/image inputs are unchanged;
+The first commit changed only this report. Its runtime/Make/image inputs were unchanged;
 added warm/cold-I cycles, loads/stores, 32-byte lines, code, stack and resident
-bytes are **0**. **MODELLED whole-frame delta: 0 ms**. Runtime overhead, enabled
-memory and full-image acceptance are not inferred from the plan. The following
-commands start with an existing-collector baseline; candidate commands become
-usable only after the qualified runtime follow-up lands.
+bytes were **0**. **MODELLED whole-frame delta for that commit: 0 ms**. These
+historical figures do not describe the runtime follow-up. Its overhead,
+enabled memory and acceptance limits are recorded next.
+
+## Runtime qualification (step 2)
+
+Tested target baseline: `b7c321300a12de206c692793d4b3e41ffec03d27`
+(including the first design hand-back). Final rebased integration base:
+`4f9d44437febb2616fc88d530633140eb0f9dfd0`. Its only changes are the queue and
+owner Answers in Build 33/34/35 Markdown, all preserved here. The final
+baseline-equivalence receipt verifies all 178 consumed baseline inputs and
+192 candidate inputs unchanged; SHA256
+`55289419b8678bc19d573758044c4906fe1743af09d62398e1c93d0d5eafd862`.
+Both controls remain
+default 0. There is no new production assembly, linker-script change or allocation.
+The collector uses the existing IRQ-safe FA29 hit path and stable reason IDs;
+all header consumers receive the same appended registry definition.
+
+The final gap registry has 58 reasons. The positive face-skin deferral was a
+real missing path found during review and is now included in deferred infos
+and vertices. Failed allocations/pointer checks do not count CPU skinning
+that never happened. `skin_trans_morph` is a subset of executed CPU work.
+Front resets mean capacity recycling; room changes have the existing reset
+behavior. Effect stale events require an actual scalar slot after generation
+change. `mot_probes` includes the binary equality probe. These are observation
+changes only; no simulation or rendering algorithm is replaced.
+
+### Source-bound evidence
+
+| Gate | Result and scope |
+|---|---|
+| Motion/cloth/collision/effect events | 20 legacy configurations, 477 cases / 92,179 assertions per normal/sanitized run; all 42 non-trans reasons exercised. Actual OFF/ON action results/order/state match. Chain moves execute admission prefixes; skip-tick, spring, search, list/cache/pipeline and effect walks use actual bodies with controlled external edges. |
+| Texture/skin events | 10 profiles, 105 cases / 689 assertions each in normal and ASan/UBSan runs. Complete `commonScreenMatSub`, all three native texture-init blocks and actual cache helpers; palette admission/event prefixes only, with arithmetic and external allocation/defer/skin edges explicitly doubled. |
+| Ring and actual collectors | 6 profiles, 366,954 assertions per normal/sanitized run. Every DFA/FA29/FA35 reason, N=1/3/32/64, exact oracle sums, skip/incomplete/outside work, worker serialization, tick wrap, pause/resume/room/restart and saturation expiry. |
+| Complete QA capacity/delivery | 5 profiles and 45 complete transport reassemblies per normal/sanitized run, including backpressure/refusal. Actual formatting/paging/snapshot bodies, actor/DSA/XLU/OCC rows at maximum values and all new reasons. |
+| SH-4 disabled identity | **136 byte-identical comparisons**, raw complete preprocessor output and objects, absent/explicit-zero, across release, QA with old auditors off, DFA-only and DFA+FA29. Disabled Make definitions/object/link selection also match. |
+| SH-4 enabled profiles | **6 compile/relocatable-link profiles**: current gaps, scalar alternatives, comparison/census/front cache, independent window N=1, combined N=32, maximum N=64. New hook references resolve. |
+| Registry/ABI definitions | All 22 direct FA29/FA35 C++ header consumers are covered. Make-expanded flags across 24 affected/legacy targets carry the gap definition exactly once; the window definition is limited to its 4 collector/QA targets. |
+| Invalid compositions | **16 Make rejections**: empty/multiple/invalid values, N outside 1..64, missing old collectors and unsupported reviewed-link composition. |
+
+The current/census/scalar target alternatives keep pre-existing composition
+constraints: palette-off profiles also set `LEON_FACE_LAZY=0 PROP_GATE=0`;
+the existing actor-skin-lazy mode stays on because the current coarse actor
+composition requires it. Host event tests separately cover eager and disabled
+native skin. These are fixture overrides, not recipe changes.
+
+The target receipt binds 192 source/build inputs to GCC 15.2, binutils 2.45.1,
+KOS `804b3195` and SH4ZAM `33fa4850`. Its SHA256 is
+`0b2e17ec1583a668283272a1a1ea5828d81bb2d326c0f4ad6d42cd0c549e5c3f`.
+Raw commands, preprocessor files, objects, dependency closures and local-frame
+records are referenced by the compact committed receipt in
+`tools/cloud/build35/receipts/target-controls.json`. Debug records and
+preprocessor line markers are consistently omitted; source whitespace and
+legacy diagnostic `__LINE__` expansions are not normalized away.
+The independent `registry-propagation.json` receipt binds that target result
+and all affected Make targets; SHA256
+`2a47ebb62bc4cde15e61a440c6e340e6b7d43de713f2ce31d341fde854442f9a`.
+
+No complete game/KOS-library/overlay link was available in cloud. The public
+fixture uses `NMR_POOL_LOD=0` equally in control and candidate because the
+generated private asset is unavailable. Sanitizers do not test console
+timing; leak inspection is disabled for unavailable sandbox `/proc` traversal.
+The two event suites together cover all 58 new reasons in 582 cases / 92,868
+assertions per normal/sanitized run. Exact event semantics and commands are in
+`tools/cloud/build35/HOOKS.md` and `README.md`.
+
+### Code, stack and bounded resident storage
+
+These are compiled object deltas against matching old QA+DFA+FA29 inputs.
+Allocated sections include code, data and BSS; they are not independent
+quantities to add. Local compiler stack frames are not whole call-chain peaks.
+
+| Profile / compiled scope | Executable bytes added | Allocated-section bytes added | BSS bytes added |
+|---|---:|---:|---:|
+| Gap counters, 10 TUs | 1,172 | 19,867 | 17,312 |
+| Window only, 166 reasons / N=1, 4 collector/QA TUs | 1,956 | 20,689 | 18,468 |
+| Combined, 224 reasons / N=32, all 11 changed/new TUs | 3,092 | 53,104 | 48,364 |
+| Combined N=64, 4 collector/QA TUs only | 1,944 | 81,140 | 77,548 |
+
+The N=64 row excludes the seven gap TUs from its text total. The seven gap
+objects are byte-identical between the complete gaps-only and combined N=32
+arms, and add no BSS. Their normal-recipe text deltas are cloth +28, pendulum
++88, trans +232, espgen +272, est +136, collision +288 and motion +104 bytes.
+The only TU maximum-frame increase among them is collision 408→412 bytes;
+some smaller hot functions grow while the TU maximum stays unchanged:
+ordinary weight palette 0→16, effect move 56→68, transform 44→52, controller
+delete 56→64, effect delete 44→56 and motion acquire 60→68 bytes. The new window
+TU maximum local frame is 64 bytes, ring seal 40; FA29 end-tick grows 8→20 and
+its formatter 60→64. QA's maximum local frame stays 3,092 bytes.
+
+Actual ring-object BSS is **2,080 B** for 166 reasons/N=1, **31,048 B** for
+224/N=32 and **60,232 B** for 224/N=64. The gap registry adds 928 B of collector
+arrays; the window adds a 4-byte per-tick overflow flag. No heap-4 or KOS heap
+allocation is introduced. These static bytes still consume console RAM and
+must pass the owner's full-image memory-floor check.
+
+Capacity testing found the old 24,576-byte QA snapshot insufficient even with
+gaps-only. Either new control now independently selects **32,768 bytes**.
+The largest actual generated snapshot is 27,774 B. Reserving all 3,071 bytes
+of the existing non-audit formatter and checking a tail sentinel yields a
+27,927-byte conservative content bound; with the NUL terminator, 4,840 B
+remain. Every new/old DFA/FA29 row fits its 192-byte scratch. A pre-existing
+196-byte actor/DSA row uses its separate larger scratch. The selected snapshot
+grows 8,192 B and the enabled link's immutable transport copy grows another
+8,192 B: **16,384 B total**, already included in the BSS table. This bounded
+increase prevents silent truncation; no second full diagnostic dump is added.
+
+### Compiled cycles and traffic
+
+The source-bound SH-4 cost gate passes **118 cases across five arms**. Actual
+production executable sections match the address-metadata fixtures before
+execution. It uses the real KOS status-register IRQ instructions and linked
+copy/clear routines; no new model opcode qualification or production assembly
+was needed. Every observed ring update runs after IRQ restoration.
+The compact `receipts/window-cost.json` retains all numeric cases/IRQ segments,
+source bindings and shared command/flag tables; SHA256
+`5e926d82bd2eafc680f5e205e794b33a71bf12dc80ba64c554a268cc9b738716`.
+
+All figures here are **MODELLED**, with perfect data cache. Cold-I means one
+initially cold 8 KiB instruction cache in the synthetic ELF layout. Loads and
+stores are retired memory instructions, including literals/stack; 32-byte
+lines are distinct operand addresses, not measured fills. Scope is callee
+entry to return, excluding caller argument setup/call instructions, local
+scan/probe accumulators, formatting/transport and the optional actor-reset
+callback. Complete methodology and all paths are in `tools/cloud/build35/WINDOW.md`.
+
+| Case | Warm / cold-I cycles | Loads / stores | Distinct 32-byte lines | Observed stack |
+|---|---:|---:|---:|---:|
+| Existing 33-reason active hit | 88 / 153 | 19 / 6 | 6 | 16 B |
+| New 91-reason active hit, window 0 | 90 / 154 | 20 / 6 | 6 | 16 B |
+| Combined N32 active hit | 106 / 184 | 27 / 6 | 6 | 16 B |
+| Combined N32 same-room begin | 295 / 473 | 36 / 108 | 22 | 24 B |
+| Combined N32 full drawn seal, including ring | 5,398 / 5,706 | 1,620 / 1,345 | 162 | 60 B nested |
+| Ring replacement alone, after IRQ restore | 4,877 / 5,064 | 1,396 / 1,144 | 123 | 40 B |
+| Ring completed skipped tick | 56 / 137 | 17 / 12 | 7 | 40 B |
+| Ring reset of sums/metadata | 928 / 973 | 4 / 469 | 61 | 0 B |
+
+One replacement reads 5,564 and writes 4,573 bytes through actual memory
+instructions. Ring reset writes 1,864 bytes independent of N. N64 has the
+same bounded per-admission/reset instruction/traffic results, with the larger
+static footprint above; physical cache placement can still differ. The
+combined seal's IRQ-protected portion reads 830 and writes 778 bytes and
+models 468 warm cycles, versus old33's 366/314 bytes and 236 cycles. These
+isolated protected-segment models do not predict interrupt latency.
+
+For an explicit sensitivity example, assume **1,000 active hit invocations**,
+one same-room begin and one full drawn seal per frame at 200 MHz. The combined
+collector/window pieces model **0.558465 ms**. With an assumed **30 ms of other
+work**, the **MODELLED whole frame is 30.558465 ms**. The old33 observer at the
+same assumed call count models 0.442035 ms, giving an equal-frequency delta of
+0.116430 ms. Ten thousand assumed calls give 5.328465 ms of combined observer
+work. This is not an estimate of actual added hook frequency, full observer
+cost or console frame time. Do not sum cold-I cases as a frame prediction.
+
+### Approximation and remaining gates
+
+Window sums use exact 64-bit integer arithmetic; no statistical sampling or
+numeric approximation is introduced. Input saturation, incomplete ticks and
+unobserved GPU presentation are labeled rather than treated as exact work.
+The observer adds CPU and resident-memory cost. Counter amounts have different
+units, overlap and often batch many items into one `hit` invocation; summing
+their values cannot estimate collector calls or milliseconds.
+
+The host/target gates do not establish private-scene coverage, look/STRICT,
+full absent/zero images or a console performance gain. Use release,
+existing-audit, gaps and window32 controls at matched state/camera; return
+resolved switches, all raw rows and full memory figures. Keep N=64 as a
+capacity test until its static RAM cost is accepted. The exact owner commands
+below are the next step; no optimization promotion is requested.
 
 ## Exact commands for Claude
 
@@ -100,15 +273,22 @@ arm35() {
 }
 arm35 existing-audit
 
-# After the runtime follow-up lands; preserve all other knobs/data in both arms.
+# Preserve all other knobs/data in each matched pair.
 arm35 gaps FALLBACK_AUDIT35=1 FALLBACK_WINDOW35=0
 arm35 window32 FALLBACK_AUDIT35=1 FALLBACK_WINDOW35=32
+
+# The main recipe has FRONT_TEXOBJ=0: cache-specific reasons stay zero there.
+# This separate pair exercises the Build 34 cache with identical cache settings.
+arm35 front-existing FRONT_NATIVE=1 FRONT_TEXOBJ=1
+arm35 front-gaps FRONT_NATIVE=1 FRONT_TEXOBJ=1 FALLBACK_AUDIT35=1 FALLBACK_WINDOW35=0
 ```
 
 Run `python3 ~/qalink/qalink_pi.py serve --review28` on the Pi, boot the
 explicitly selected arm and establish REMOTE LINK. Record existing-audit,
-gaps and window32 at identical game state/camera, with at least 600 drawn
-ticks per view; the last 32 are the rolling sample, not a 600-tick total.
+gaps and window32 at identical game state/camera, with at least 600 completed
+draw-attempt ticks per view; the last 32 are the rolling sample, not a
+600-tick total. Repeat the front-cache pair for its additional reachable
+reasons; other compile-time alternatives can legitimately remain zero.
 
 ```bash
 ARM=window32
@@ -119,7 +299,7 @@ ql status
 ql send MENU
 ql capture start "$VIEW"
 ql send RESUME
-read -r -p 'Run the matched state for at least 600 drawn ticks, then press Enter: '
+read -r -p 'Run at least 600 completed draw-attempt ticks in the matched state, then press Enter: '
 ql send MENU
 ql send DIAG
 ql capture stop "$VIEW"
@@ -131,8 +311,58 @@ archive/key transitions. Retain all rows, explicit N/used/overflow/reset and
 denominator metadata, source/resolved definitions, SDK/assets/recipe identity,
 ELF/all-overlays/GDI/tracks, and complete build/missing-symbol logs. Compare
 observer CPU/heap cost separately from the optimizations being observed.
-The runtime follow-up will add exact host, target and full absent/zero image
-commands before this build moves on to scanner work.
+Host and target commands are in `tools/cloud/build35/README.md`. The complete
+absent/zero image gate below remains an owner action with the built SDK/assets.
+
+### Complete disabled-image identity
+
+Set `BASE_TREE` to a clean checkout of the final integration base recorded
+with the runtime qualification above, and initialize its pinned submodule.
+Use identical absolute SDK, recipe/assets, source GDEMU image and epoch in
+all three arms. This gate uses the unchanged release composition rather than
+the diagnostic `QA` array above.
+
+```bash
+git -C "$BASE_TREE" submodule update --init -- port/dreamcast/game/third_party/sh4zam
+identity35() {
+  local tree=$1 arm=$2; shift 2
+  RELEASE_KNOBS="$IMAGE_RECIPE" ASSETS="$BUILD_ASSETS" OUT="$OUT/program-$arm" \
+    bash "$tree/port/dreamcast/build-public.sh" "$@"
+  python3 port/dreamcast/tools/swap-program.py "$GDEMU_ZIP" \
+    "$OUT/program-$arm" "$OUT/disc-$arm"
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile loader
+  python3 port/dreamcast/tools/d367/disc_lint.py "$OUT/disc-$arm/disc.gdi" --profile standard
+}
+identity35 "$BASE_TREE" identity-base
+identity35 "$PWD" identity-absent
+identity35 "$PWD" identity-zero FALLBACK_AUDIT35=0 FALLBACK_WINDOW35=0
+python3 - "$OUT" <<'PY'
+from pathlib import Path
+import hashlib, shlex, sys
+root = Path(sys.argv[1])
+def manifest(arm):
+    path = root / ('disc-' + arm)
+    gdi = path / 'disc.gdi'
+    names = {'disc.gdi'} | {shlex.split(line)[4]
+                           for line in gdi.read_text().splitlines()[1:] if line.strip()}
+    result = {}
+    for name in sorted(names):
+        h = hashlib.sha256()
+        with (path / name).open('rb') as stream:
+            for block in iter(lambda: stream.read(1 << 20), b''):
+                h.update(block)
+        result[name] = h.hexdigest()
+    return result
+baseline = manifest('identity-base')
+for arm in ('identity-absent', 'identity-zero'):
+    assert manifest(arm) == baseline, arm
+print('PASS: complete repacked GDI and every track match baseline/absent/zero')
+PY
+```
+
+Retain all ELF/overlay hashes and missing-symbol logs as well as this complete
+image identity. Source/object equality in cloud is not a claim that the
+asset-complete game or image was linked there.
 
 ## Questions
 

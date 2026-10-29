@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 // game/trans.cpp: the model renderer. ModelTrans registers a model in the ordering tables,
 // commonScreenMatSub skins its vertices into the primitive buffer, ModelRender / commonModelTrans
 // set up the TEV stages of every material and submit the display lists.
@@ -1999,6 +2003,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             if (g_skinLazyNow) {
                 // SKIN_PALETTE_LAZY: registered with its copy reserved, built at the first render read.
                 if (skinDeferPending(m, info, d, &dc_mtx_built)) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1862
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -2007,6 +2016,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                     }
                     continue;
                 }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+#endif
+#line 1870
                 goto dc_skin_cpu;  // not deferred: the CPU pass below builds the palette (dc_palette_built 0)
             }
 #endif
@@ -2027,7 +2041,13 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             {
                 const int ok = re4dc_skin_defer_lazy(info, d);
                 if (ok) { ++skincen_def; skincen_defv += d->nVtx; } else { ++skincen_fail; skincen_failv += d->nVtx; }
+#line 1890
                 if (ok) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1891
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -2041,6 +2061,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
 #else
             if (re4dc_skin_defer_lazy(info, d)) {
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1904
                 info->pPosBuf[pG->vtx_buf_no] = 0;
                 info->pNrmBuf[pG->vtx_buf_no] = 0;
                 setupGQR6(0x32073207);
@@ -2049,6 +2074,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                 }
                 continue;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+            re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+#endif
+#line 1912
         }
 #if RE4DC_SKIN_PALETTE_LAZY
     dc_skin_cpu:
@@ -2090,6 +2120,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                 return 0;  // the eager pass's PTR ERR (logged there)
             }
             if (face) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1953
                 continue;
             }
         }
@@ -2158,17 +2193,38 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
         {
             int re4dc_skin_defer(cModelInfo* info, ModelData* d);
             if (!(info->be_flag & 2) && re4dc_skin_defer(info, d)) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 2021
                 setupGQR6(0x32073207);
                 if (d->flags & 0x20000000) {
                     setupGQR6(0x20062006);
                 }
                 continue;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            if (!(info->be_flag & 2)) {
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+            }
+#endif
+#line 2027
         }
 #endif
 #if defined(__sh__)
         dc_stamp=re4dc_model_source_stamp();
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::SkinCpu, 1);
+        re4dc::fa35::hit(re4dc::fa35::SkinCpuVertices, nVtx);
+        if (info->be_flag & 2) {
+            re4dc::fa35::hit(re4dc::fa35::SkinMorph, 1);
+            re4dc::fa35::hit(re4dc::fa35::SkinMorphVertices, nVtx);
+        }
+#endif
+#line 2032
 #if RE4DC_SKIN_CENSUS
         ++skincen_cpu; skincen_cpuv += nVtx;
         if (info->be_flag & 2) { ++skincen_morph; skincen_morphv += nVtx; }
@@ -2445,6 +2501,10 @@ static int MakeWeightPaletteExt(WeightExt* w0, int n)
     u32 wa = (u32) w0;
 #define w ((WeightExt*) wa)
 
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (n > 0) re4dc::fa35::hit(re4dc::fa35::PaletteExtended, unsigned(n));
+#endif
+#line 2308
     for (i = 0; i < n; i++, wa += sizeof(WeightExt)) {
         Mtx m;
         f32 total;
@@ -2506,6 +2566,10 @@ static int MakeWeightPalette(Weight* w0, int n)
         pLog->err(0, 0, "MakeWeightPalette() PTR ERR");
         return 0;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (n > 0) re4dc::fa35::hit(re4dc::fa35::PaletteOrdinary, unsigned(n));
+#endif
+#line 2369
 #if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM && defined(__sh__)
     // SKIN_SH4ZAM 0x20 (game30.mk; render only): the entries built in XMTRX (shz_xmtrx_init_zero + shz_xmtrx_blend per
     // weight, platform/sh4zam_skin.c), stored transposed as the loop below stores them.
@@ -3485,9 +3549,17 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
                 for (u32 i = 0; i < n; i++) {
                     ft_recs[key.first + i] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
                 }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontBuild, 1);
+#endif
+#line 2228
                 ++ft_builds;
                 return &key;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::FrontHit, 1);
+#endif
+#line 2231
             ++ft_hits;
             return &key;
         }
@@ -3495,6 +3567,10 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
     if (ft_nkeys == kFtKeys || ft_nrecs + n > kFtRecs) {
         frontTexFlush();
         ft_nkeys = ft_nrecs = 0;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::FrontReset, 1);
+#endif
+#line 2238
         ++ft_resets;
     }
     FtKey& key = ft_keys[ft_nkeys++];
@@ -3515,6 +3591,10 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
             }
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::FrontBuild, 1);
+#endif
+#line 2258
     ++ft_builds;
     return &key;
 }
@@ -3544,6 +3624,10 @@ int frontTexInit(cModel* m, cModelInfo* info, ModelData* d)
     }
     if (!key) {
         frontTexFlush();
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::FrontRefuse, 1);
+#endif
+#line 2287
         ++ft_fallbacks;
         return 0;
     }
@@ -3576,6 +3660,10 @@ static void frontTexFlush()
     if (!ft_cur) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::FrontFlush, ft_cur->count);
+#endif
+#line 2319
     GxWork* gx = GXWORK();
     const FtRec* r = ft_recs + ft_cur->first;
     for (u32 i = 0; i < ft_cur->count; i++) {
@@ -3690,6 +3778,10 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
             if (!frontTexInit(m, info, d))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2405
                 for (i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;
@@ -3832,6 +3924,10 @@ static int sceneryGate(cModel* m)
             if (!frontTexInit(m, info, id))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2547
                 for (u32 i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;
@@ -4128,6 +4224,10 @@ static int propGate(cModel* m, Mtx viewMat)
             if (!frontTexInit(m, info, id))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2843
                 for (u32 i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;

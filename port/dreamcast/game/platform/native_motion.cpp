@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "include/fallback_audit35.h"
+#endif
+#line 1
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "include/fallback_audit29.h"
 #endif
@@ -1050,11 +1054,21 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     return 1;
 }
 extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    unsigned fa35_probes = 0;
+    bool fa35_bound = false;
+    if (!header) re4dc::fa35::hit(re4dc::fa35::MotionUnbound, 1);
+#endif
+#line 1036
     if(!header)return 0;
 #if !RE4DC_MOTION_LEASE_LEAN
     const auto started=timer_us_gettime64();
 #endif
     Locked guard;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (!stats.metadata_bytes) re4dc::fa35::hit(re4dc::fa35::MotionUnbound, 1);
+#endif
+#line 1041
     if(!stats.metadata_bytes)return 0;
     const auto p=reinterpret_cast<std::uintptr_t>(header);
     for(unsigned bno=0;bno<kArchives;++bno) {
@@ -1064,17 +1078,50 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
 #endif
         auto base=reinterpret_cast<std::uintptr_t>(b.archive);
         if(!base || p<base || p-base>=b.bytes)continue;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        fa35_bound = true;
+#endif
+#line 1050
 #if RE4DC_MOTION_INDEX
         // GAME_MOTION_INDEX (design-logic P4): re4dc_motion_bind accepts a table only when the record
         // offsets are strictly increasing (off<=prev rejects it), so the offsets are unique and sorted
         // and a binary search finds the one record the linear scan finds (8 probes instead of up to
         // 255 unaligned word() reads per acquire). The lease, pins, stats and load() are unchanged.
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::MotionBinary, 1);
+#endif
+#line 1055
         unsigned lo=0,hi=b.count;const unsigned want=unsigned(p-base);
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        while(lo<hi) { ++fa35_probes; const unsigned mid=(lo+hi)>>1;if(word(record(b,mid))<want)lo=mid+1;else hi=mid; }
+#else
+#line 1056
         while(lo<hi) { const unsigned mid=(lo+hi)>>1;if(word(record(b,mid))<want)lo=mid+1;else hi=mid; }
+#endif
+#line 1057
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        if (lo < b.count) ++fa35_probes;
+#endif
+#line 1057
         for(unsigned i=lo;i<b.count && i==lo;++i)if(word(record(b,i))==want) {
 #else
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::MotionLinear, 1);
+#endif
+#line 1059
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        for(unsigned i=0;i<b.count;++i)if((++fa35_probes,word(record(b,i)))==p-base) {
+#else
+#line 1059
         for(unsigned i=0;i<b.count;++i)if(word(record(b,i))==p-base) {
 #endif
+#line 1060
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::MotionFound, 1);
+            re4dc::fa35::hit(re4dc::fa35::MotionProbes, fa35_probes);
+#endif
+#line 1061
             *table=load(b,i);auto& s=b.slots[i];
 #if RE4DC_MOTION_USAGE_LOG
             if(b.seen && !b.seen[i]) { b.seen[i]=1;re4dc_log("motion use: archive=%u entry=%u bytes=%u hot=%u\n",b.bytes,i,word(record(b,i)+4),word(record(b,i)+16)); }
@@ -1095,6 +1142,11 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
             return bno*256+i+1;
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(fa35_bound ? re4dc::fa35::MotionMissing : re4dc::fa35::MotionUnbound);
+    re4dc::fa35::hit(re4dc::fa35::MotionProbes, fa35_probes);
+#endif
+#line 1081
     return 0;
 }
 extern "C" void re4dc_motion_release(int token) {

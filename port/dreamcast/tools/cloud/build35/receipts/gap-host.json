@@ -1,0 +1,3379 @@
+{
+  "status": "PASS",
+  "sanitize": false,
+  "scope": "Execute the actual Build35 gap-hook source with controlled external edges.\n\nAudit OFF/ON must preserve semantic results and callbacks exactly. Counter\nexpectations use observed operations and explicit admission/refusal cases.\nThis does not execute a game route or qualify console cost/geometry.\n",
+  "cases": 477,
+  "checks": 92179,
+  "compositions": [
+    {
+      "kind": "motion",
+      "options": {
+        "RE4DC_MOTION_INDEX": 0,
+        "RE4DC_MOTION_LEASE_LEAN": 0
+      },
+      "cases": 20,
+      "checks": 280,
+      "event_totals": {
+        "MotionLinear": 12,
+        "MotionProbes": 924,
+        "MotionFound": 6,
+        "MotionMissing": 6,
+        "MotionUnbound": 8
+      },
+      "results": [
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 936563086,
+          "oracle_sha256": "64bfb669052b86184b7e26977a74af0016b614c081b5d3560fc3b914d5bbeff2"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 958334506,
+          "oracle_sha256": "5fa6d4ea35969778dfe11755b4ce006d2907018ddd2fec820683a010a44046b6"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 3046419635,
+          "oracle_sha256": "acff5f4d7e1126dd9f1f5e18144c4a90e5017f177357cb77a86c3580df7a6651"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "175605daf065d057d597e8e855ed5eb4a7c0731d341c6b2489da2cc097974273"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "a01efbc6d53caa714157510b1ff5d5c91d5cc0c1e9544885475394ef58268916"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "dd7457ae257eede9457630bd0f7ced2e0799768a704b9145a11a708eac87874d"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        },
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 936563086,
+          "oracle_sha256": "64bfb669052b86184b7e26977a74af0016b614c081b5d3560fc3b914d5bbeff2"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 3081824939,
+          "oracle_sha256": "8545c84ffe007acd082fb9c04ecbd76a8d232f7fcd5dc9dca9862892b9cb7595"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 1721882012,
+          "oracle_sha256": "3b2e5de8d9d37f218844f842ded768a4eff03ad1fa44eabbc7df8ae6b8d912f0"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1000211047,
+          "oracle_sha256": "8580d13718046c3e5cb7b2af36f14264c9ed8c91ccdddd497d2be293226272ea"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1000211047,
+          "oracle_sha256": "cae842b2d4e7c0a87ab91876318f566d502f6968295220f89f1bf950e1b40906"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "dd7457ae257eede9457630bd0f7ced2e0799768a704b9145a11a708eac87874d"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        }
+      ]
+    },
+    {
+      "kind": "motion",
+      "options": {
+        "RE4DC_MOTION_INDEX": 0,
+        "RE4DC_MOTION_LEASE_LEAN": 1
+      },
+      "cases": 20,
+      "checks": 280,
+      "event_totals": {
+        "MotionLinear": 12,
+        "MotionProbes": 924,
+        "MotionFound": 6,
+        "MotionMissing": 6,
+        "MotionUnbound": 8
+      },
+      "results": [
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 936563086,
+          "oracle_sha256": "64bfb669052b86184b7e26977a74af0016b614c081b5d3560fc3b914d5bbeff2"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 958334506,
+          "oracle_sha256": "5fa6d4ea35969778dfe11755b4ce006d2907018ddd2fec820683a010a44046b6"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 3046419635,
+          "oracle_sha256": "acff5f4d7e1126dd9f1f5e18144c4a90e5017f177357cb77a86c3580df7a6651"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "175605daf065d057d597e8e855ed5eb4a7c0731d341c6b2489da2cc097974273"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "a01efbc6d53caa714157510b1ff5d5c91d5cc0c1e9544885475394ef58268916"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "dd7457ae257eede9457630bd0f7ced2e0799768a704b9145a11a708eac87874d"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        },
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 936563086,
+          "oracle_sha256": "64bfb669052b86184b7e26977a74af0016b614c081b5d3560fc3b914d5bbeff2"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 3081824939,
+          "oracle_sha256": "8545c84ffe007acd082fb9c04ecbd76a8d232f7fcd5dc9dca9862892b9cb7595"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 1721882012,
+          "oracle_sha256": "3b2e5de8d9d37f218844f842ded768a4eff03ad1fa44eabbc7df8ae6b8d912f0"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1000211047,
+          "oracle_sha256": "8580d13718046c3e5cb7b2af36f14264c9ed8c91ccdddd497d2be293226272ea"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1000211047,
+          "oracle_sha256": "cae842b2d4e7c0a87ab91876318f566d502f6968295220f89f1bf950e1b40906"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "dd7457ae257eede9457630bd0f7ced2e0799768a704b9145a11a708eac87874d"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        }
+      ]
+    },
+    {
+      "kind": "motion",
+      "options": {
+        "RE4DC_MOTION_INDEX": 1,
+        "RE4DC_MOTION_LEASE_LEAN": 0
+      },
+      "cases": 20,
+      "checks": 280,
+      "event_totals": {
+        "MotionBinary": 12,
+        "MotionProbes": 65,
+        "MotionFound": 6,
+        "MotionMissing": 6,
+        "MotionUnbound": 8
+      },
+      "results": [
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 1011902490,
+          "oracle_sha256": "a3f4efdcf18231300550829dc7b0b1d4ab40dc9ea0b0d2617740ba19039ce606"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 641741649,
+          "oracle_sha256": "9e04099024242da88f7be472df52e832c50aa1f9f22b631268a9d84c36b25901"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 1844086991,
+          "oracle_sha256": "b53b87c73fb48dbf07c990aef7d4b6f420a0dec762fd11ca5cc28ae30033ffd2"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1010953721,
+          "oracle_sha256": "502bd59fffb815b7b9d0d874d17c3975ecfd352d9ee91fcda620a888c706fdce"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 2935185011,
+          "oracle_sha256": "ce1cf787edf56f101e3416a6766e6f938f81599ad385453936d6dfaf44416eda"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "38da283a0f7057a313828eb2b70d1bb535031f9b8b1565968853d28c1db89bd1"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        },
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 1829572518,
+          "oracle_sha256": "a8331f505414cfa92300e83576e2090f394c7b6d57ed67f1030b411caeaaef05"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 3504210668,
+          "oracle_sha256": "ddc5f71ca6470b8180e986ef0901189698bb3de163c8b17ed8c4f5f58f7c29f5"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 871330578,
+          "oracle_sha256": "0aa6de9d9f1f45df3867003b65a8c04c4b07c285de6c9e66cb9383497a00f055"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1457458437,
+          "oracle_sha256": "5be1fc939fd82a6d66980230bca9569b22062aa7d2c7e3971b3f91cb9fe3b898"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "20554482112b3092eea332c3896882d47d5198ee4f2899c1d0aac352042fde32"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "38da283a0f7057a313828eb2b70d1bb535031f9b8b1565968853d28c1db89bd1"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        }
+      ]
+    },
+    {
+      "kind": "motion",
+      "options": {
+        "RE4DC_MOTION_INDEX": 1,
+        "RE4DC_MOTION_LEASE_LEAN": 1
+      },
+      "cases": 20,
+      "checks": 280,
+      "event_totals": {
+        "MotionBinary": 12,
+        "MotionProbes": 65,
+        "MotionFound": 6,
+        "MotionMissing": 6,
+        "MotionUnbound": 8
+      },
+      "results": [
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 1011902490,
+          "oracle_sha256": "a3f4efdcf18231300550829dc7b0b1d4ab40dc9ea0b0d2617740ba19039ce606"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 641741649,
+          "oracle_sha256": "9e04099024242da88f7be472df52e832c50aa1f9f22b631268a9d84c36b25901"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 1844086991,
+          "oracle_sha256": "b53b87c73fb48dbf07c990aef7d4b6f420a0dec762fd11ca5cc28ae30033ffd2"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1010953721,
+          "oracle_sha256": "502bd59fffb815b7b9d0d874d17c3975ecfd352d9ee91fcda620a888c706fdce"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 2935185011,
+          "oracle_sha256": "ce1cf787edf56f101e3416a6766e6f938f81599ad385453936d6dfaf44416eda"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "38da283a0f7057a313828eb2b70d1bb535031f9b8b1565968853d28c1db89bd1"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        },
+        {
+          "case": "first",
+          "checks": 16,
+          "semantic": 1829572518,
+          "oracle_sha256": "a8331f505414cfa92300e83576e2090f394c7b6d57ed67f1030b411caeaaef05"
+        },
+        {
+          "case": "middle",
+          "checks": 16,
+          "semantic": 3504210668,
+          "oracle_sha256": "ddc5f71ca6470b8180e986ef0901189698bb3de163c8b17ed8c4f5f58f7c29f5"
+        },
+        {
+          "case": "last",
+          "checks": 16,
+          "semantic": 871330578,
+          "oracle_sha256": "0aa6de9d9f1f45df3867003b65a8c04c4b07c285de6c9e66cb9383497a00f055"
+        },
+        {
+          "case": "missing-between",
+          "checks": 14,
+          "semantic": 1457458437,
+          "oracle_sha256": "5be1fc939fd82a6d66980230bca9569b22062aa7d2c7e3971b3f91cb9fe3b898"
+        },
+        {
+          "case": "missing-above",
+          "checks": 14,
+          "semantic": 1513928430,
+          "oracle_sha256": "20554482112b3092eea332c3896882d47d5198ee4f2899c1d0aac352042fde32"
+        },
+        {
+          "case": "null",
+          "checks": 12,
+          "semantic": 0,
+          "oracle_sha256": "fc2c1a9692bce8c8976396eea0c81a06de49c4bcf1469c423e9ffb2c288f9c83"
+        },
+        {
+          "case": "no-metadata",
+          "checks": 12,
+          "semantic": 620918998,
+          "oracle_sha256": "7c80d6f684344d16192f8d1943b53d88b10caadda04e9733528b41a3038e0792"
+        },
+        {
+          "case": "outside",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "5586eb0cf98063925f4cacefa8c81e6f47ab98a9f626dd49b6882e1cc25d7548"
+        },
+        {
+          "case": "empty-binding",
+          "checks": 14,
+          "semantic": 620918998,
+          "oracle_sha256": "38da283a0f7057a313828eb2b70d1bb535031f9b8b1565968853d28c1db89bd1"
+        },
+        {
+          "case": "held-binding",
+          "checks": 13,
+          "semantic": 620918998,
+          "oracle_sha256": "f7f3d11f7c84d98451be0f01f22639b6dbe61f53b8d82dcad3871a3d6d9c4570"
+        }
+      ]
+    },
+    {
+      "kind": "cloth",
+      "options": {
+        "RE4DC_CLOTH_SPRING": 0
+      },
+      "cases": 51,
+      "checks": 28100,
+      "event_totals": {
+        "ClothSpringSource": 27,
+        "ClothPoints": 8952,
+        "ClothChainMove": 9,
+        "ClothChainLinks": 138,
+        "ClothChainSkip": 8
+      },
+      "results": [
+        {
+          "case": "spring-0x0-seed0",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "7893974f68fe1f317641c5fefba50e2c5ab4d82c420a225701da30f1fe2f251c"
+        },
+        {
+          "case": "spring-0x0-seed1",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "334e7dab481195d2b651b3d59ea14bd6dc206e97a864188a4002f1197b95f659"
+        },
+        {
+          "case": "spring-0x0-seed2",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "0917944a4cb4dab60a47f83c09526fc882a0eb3df253fc3021d51bf398812aab"
+        },
+        {
+          "case": "spring-0x3-seed0",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "7e5f392e14f8489ee8486f693d91f69b3d0dd9e6f1efe3ba5e3d18f82e3706a3"
+        },
+        {
+          "case": "spring-0x3-seed1",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "c9dd8287a868d2e12e2bc923374efd37a54e9e0abd14298db26468e6becf2779"
+        },
+        {
+          "case": "spring-0x3-seed2",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "e620c9df0cc7f4478fe93baa0a4392d5b7f75308c6d8f935bc1267f8b17c87e1"
+        },
+        {
+          "case": "spring-1x1-seed0",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "974b3e3ad6eb79c536b25b0cf0b1241d5011c1a328168f4ead8560904a259e3d"
+        },
+        {
+          "case": "spring-1x1-seed1",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "e075d9a198371e7d7d58907f7c6cb3d492a1cb5b621ac0f84a408c4283e5eab1"
+        },
+        {
+          "case": "spring-1x1-seed2",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "016c6fe7ad4a3818496448fdd52aa1c910d9f27ab3bf423099cb2227afff1bba"
+        },
+        {
+          "case": "spring-2x2-seed0",
+          "checks": 17,
+          "semantic": 4129977537,
+          "oracle_sha256": "b482b9ac50b8f3968eb3c2368f712adeec92edd2764f7b5327eb5abeacd4b831"
+        },
+        {
+          "case": "spring-2x2-seed1",
+          "checks": 17,
+          "semantic": 2383854737,
+          "oracle_sha256": "2c9e35cf3a9e245be42a194fde18dfdc06f38c344f46cb90862414122bfc1c10"
+        },
+        {
+          "case": "spring-2x2-seed2",
+          "checks": 17,
+          "semantic": 1769016735,
+          "oracle_sha256": "06785078d020ec93375357a23afcd3da3850d3138abea5198a5e4697d917ce81"
+        },
+        {
+          "case": "spring-3x4-seed0",
+          "checks": 42,
+          "semantic": 30265083,
+          "oracle_sha256": "a8fa41ba1e06260c4f7126ec944e96e11f9ad90d883bf096828b77a8cb327220"
+        },
+        {
+          "case": "spring-3x4-seed1",
+          "checks": 42,
+          "semantic": 3383387533,
+          "oracle_sha256": "6b281c6fc5f1f2e4a1232f83e05404b094f22f73806fbf753f4c61eeb52bc68d"
+        },
+        {
+          "case": "spring-3x4-seed2",
+          "checks": 42,
+          "semantic": 763524302,
+          "oracle_sha256": "fd3923d91d2aa2d4b69712b828e9a832288b1cdcbb42761417654409eefbee2e"
+        },
+        {
+          "case": "spring-8x7-seed0",
+          "checks": 179,
+          "semantic": 3153320131,
+          "oracle_sha256": "62dda4328ae799990968a92c2eb067c07300bc926d6fedf4cad56f999f1a26f4"
+        },
+        {
+          "case": "spring-8x7-seed1",
+          "checks": 179,
+          "semantic": 2985563417,
+          "oracle_sha256": "cbb7ed6134213ff494560264ae31822b2434fa3feb7319dcdd2bfa2403bbdec6"
+        },
+        {
+          "case": "spring-8x7-seed2",
+          "checks": 179,
+          "semantic": 62525348,
+          "oracle_sha256": "744693eba936d330ba750a6cae82f73ae7e09f2d7a53c0ae54824e76cc281df5"
+        },
+        {
+          "case": "spring-16x16-seed0",
+          "checks": 787,
+          "semantic": 2492287274,
+          "oracle_sha256": "f640c177f8560f80a540b71aee5c4c57e114579201189f6606f658ed91c29042"
+        },
+        {
+          "case": "spring-16x16-seed1",
+          "checks": 787,
+          "semantic": 2050810278,
+          "oracle_sha256": "a82fdfd1e138553b3bd963c3c7cb817b051c5a8dbda3c225c32dc6a9bb0eb1b0"
+        },
+        {
+          "case": "spring-16x16-seed2",
+          "checks": 787,
+          "semantic": 51305233,
+          "oracle_sha256": "5c97bbb26bb35a24ff49bc2d762e66e90dc063c5ed6fa360abb63abfa2e474a5"
+        },
+        {
+          "case": "spring-65x33-seed0",
+          "checks": 6503,
+          "semantic": 455040934,
+          "oracle_sha256": "05ebb99ea0b8a061f524ccc87e9097cf377c49d81350eeb0cc8f8e236a305164"
+        },
+        {
+          "case": "spring-65x33-seed1",
+          "checks": 6503,
+          "semantic": 1916959121,
+          "oracle_sha256": "cea439408f2a092e665ed3fe22913a2726a368725f3024355c0be04ad1d84ef1"
+        },
+        {
+          "case": "spring-65x33-seed2",
+          "checks": 6503,
+          "semantic": 2589619266,
+          "oracle_sha256": "9eb8e40db6c13623e192b66ced88c907ee7a0b769f3d62b8b1b0c05c82e0a0c2"
+        },
+        {
+          "case": "spring-255x2-seed0",
+          "checks": 1788,
+          "semantic": 3196795942,
+          "oracle_sha256": "85763b82a29d2133c19c5b6b7bedd4e75402b2c66d953c51158aa5fb9db03643"
+        },
+        {
+          "case": "spring-255x2-seed1",
+          "checks": 1788,
+          "semantic": 3829380167,
+          "oracle_sha256": "45aaf561d2a79a426708399705a4749e674b786663f7b698756bab525d062c4a"
+        },
+        {
+          "case": "spring-255x2-seed2",
+          "checks": 1788,
+          "semantic": 1369970923,
+          "oracle_sha256": "5a33d1983acdb8c53658fdcc98e7aa425d3da8235bb6a3e060b80bdad951377e"
+        },
+        {
+          "case": "chain-prefix-0-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "82fda1a2e65883504c39ee82526f239c15d4ec7a827bd11c02a4309fb56d5ac9"
+        },
+        {
+          "case": "chain-prefix-0-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "3533db64466ab9e2c3a3c2983fe2419e891552a3e62956d35fcee36751000b26"
+        },
+        {
+          "case": "chain-prefix-0-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "2de412c85ad97b9d53489a470616400e8f5589c513dddbc907f458751eb375aa"
+        },
+        {
+          "case": "chain-prefix-0-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "7bcdfb582ce1ae49025c3e20e8126dfd70fe98c96b5d0e92891b3757ff929d27"
+        },
+        {
+          "case": "chain-prefix-1-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "34e44f2ac07ed2d1fbe887b2a7561d0e81b13ba844e010030eb36231e5b9fe4e"
+        },
+        {
+          "case": "chain-prefix-1-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "426ca74c90a61e4fcb0d8fc4b5fceccd137ffc18452d59a3901c855522e74016"
+        },
+        {
+          "case": "chain-prefix-1-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "173bd6e9c6bf115a9055b321e1c42988856b7104818a5fa42100eaa14bfca687"
+        },
+        {
+          "case": "chain-prefix-1-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "0b29e1f7d0549b8c30dd0873803902e64cdf19a04bce7558e291858b68f407ad"
+        },
+        {
+          "case": "chain-prefix-2-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "fbfbeec498df5cf5fd83da704d48f41e034c76dcdb194def58e1c3f10fd414c9"
+        },
+        {
+          "case": "chain-prefix-2-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "eb8c162d4d7bd1132d91d730b6aeba4a672572f8294f8128c995b92b5293ba0b"
+        },
+        {
+          "case": "chain-prefix-2-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "ef795c0cbe8da465ffbb8798b2bde923ea963e7bc073a6a39f4b0d37eb4f9eb8"
+        },
+        {
+          "case": "chain-prefix-2-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "5fe1401a76d5b3712bc1daa8e50ffbefc80e63fa68418c9c9556de5c7d443767"
+        },
+        {
+          "case": "skip-links0-flag0-wind0.0",
+          "checks": 3,
+          "semantic": 3658441455,
+          "oracle_sha256": "fd1dad171f71052809d2c10f66e1f591a1996e877b3108be66c02383ababa9c5"
+        },
+        {
+          "case": "skip-links0-flag0-wind3.1",
+          "checks": 3,
+          "semantic": 1897221433,
+          "oracle_sha256": "a4877471a76d9f283b2178267e2502f8c10c8e5b0035c83a23b9891f85b9dec5"
+        },
+        {
+          "case": "skip-links0-flag64-wind0.0",
+          "checks": 3,
+          "semantic": 742367151,
+          "oracle_sha256": "8c9a6b720ffe94a62b0cefc014d657ff7cf97f956d4b9f3e21c40110e853f25f"
+        },
+        {
+          "case": "skip-links0-flag64-wind3.1",
+          "checks": 3,
+          "semantic": 2352154873,
+          "oracle_sha256": "8f56dcaf5aa0a495ccb04409bfa0844ec7d9f5f0db8daf0d1af6802a000356ba"
+        },
+        {
+          "case": "skip-links1-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 235767285,
+          "oracle_sha256": "53662d745b412f02751fcc9fd101aaf38984b18f7aa9cbad145a469f0ba925a2"
+        },
+        {
+          "case": "skip-links1-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 12622899,
+          "oracle_sha256": "bed32de607631d668aebdc2e5a83e86b5e356f3313e05c0b3e35d4f16995be1f"
+        },
+        {
+          "case": "skip-links1-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 4113236620,
+          "oracle_sha256": "d938ce220ea7710787561d40391a067b7d6fd0319082c9fe242cec89003b390d"
+        },
+        {
+          "case": "skip-links1-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 1059243618,
+          "oracle_sha256": "ff237585cc2e61e66620b1873ff44c2b0457d2d96af3f25d4df4eb2d3bab53a1"
+        },
+        {
+          "case": "skip-links16-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 4247275854,
+          "oracle_sha256": "817c1d122e3e8c2fcc2fe74d5699fda14da8d49b499cb2dc12492f829bfa90d9"
+        },
+        {
+          "case": "skip-links16-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 3663839292,
+          "oracle_sha256": "27854ecadce0377c69d229b510a7a11cec709aa70e307aa9bcbe42ba740c3b02"
+        },
+        {
+          "case": "skip-links16-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 2643030495,
+          "oracle_sha256": "a48f394d15c260ce4231b3105e7b85d76b69f0a26e66606a47262b865282c37a"
+        },
+        {
+          "case": "skip-links16-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 349804585,
+          "oracle_sha256": "00f9617ef246b352a4bd8d36b888a6337b33658a809707aa5be94bb3b5a5403e"
+        }
+      ]
+    },
+    {
+      "kind": "cloth",
+      "options": {
+        "RE4DC_CLOTH_SPRING": 1
+      },
+      "cases": 51,
+      "checks": 28100,
+      "event_totals": {
+        "ClothSpringFast": 27,
+        "ClothPoints": 8952,
+        "ClothChainMove": 9,
+        "ClothChainLinks": 138,
+        "ClothChainSkip": 8
+      },
+      "results": [
+        {
+          "case": "spring-0x0-seed0",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "ea01deeca8cead5ef1a768e0112f2b59d09db31f24a086bf1eae15ea2468cbef"
+        },
+        {
+          "case": "spring-0x0-seed1",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "9b8bb6b8ec008577acab1a8da5d84e38513e68f88320a707e796092cefaa2c04"
+        },
+        {
+          "case": "spring-0x0-seed2",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "e257a46997a054e8bdbe06cd20f9b5c833c544c762f51655c714d95ea1ee5e46"
+        },
+        {
+          "case": "spring-0x3-seed0",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "cc7d643d392991f7570ce6d0618b8f7e4e9ba033c6dddee7e6442c96d351b7da"
+        },
+        {
+          "case": "spring-0x3-seed1",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "3c846688bcd33bed997ccb8d3e32ece8115de059d6b26a232ca3452e7c1aafc2"
+        },
+        {
+          "case": "spring-0x3-seed2",
+          "checks": 5,
+          "semantic": 2166136261,
+          "oracle_sha256": "af14d1b57c156b52d2eda851444178e35d38e9cfbf753444188661ee5ca774f3"
+        },
+        {
+          "case": "spring-1x1-seed0",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "e2e35be7c30696d2951b1b3768a53c3a1bca5a521134986a5b53a8ea9948050b"
+        },
+        {
+          "case": "spring-1x1-seed1",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "d35f06e79f06cc6dfe706f2891a3443ee88f0416fc41201ba34d3a752c05485a"
+        },
+        {
+          "case": "spring-1x1-seed2",
+          "checks": 8,
+          "semantic": 2297680876,
+          "oracle_sha256": "73a87a04f6b8b593a9378eec0b52f53afad8ec6bf64693d15c4f6937a54af7a9"
+        },
+        {
+          "case": "spring-2x2-seed0",
+          "checks": 17,
+          "semantic": 4129977537,
+          "oracle_sha256": "210a6ece7d590e444de9b02d64f908134fb279b42731c160bb18440580ae4653"
+        },
+        {
+          "case": "spring-2x2-seed1",
+          "checks": 17,
+          "semantic": 2383854737,
+          "oracle_sha256": "e4a1b2acde813ff8d64c3a4215de336f2ad47ca1ef2baccf045a325e0ede4ccd"
+        },
+        {
+          "case": "spring-2x2-seed2",
+          "checks": 17,
+          "semantic": 1769016735,
+          "oracle_sha256": "11898fe94d1e19b0798b48fcc5eed7d6b085591c1357003381a3210219dc9676"
+        },
+        {
+          "case": "spring-3x4-seed0",
+          "checks": 42,
+          "semantic": 30265083,
+          "oracle_sha256": "a7d8119989b085b9a626e08d8636e8666ea04d2b7960575f9c94066dd6a1fca4"
+        },
+        {
+          "case": "spring-3x4-seed1",
+          "checks": 42,
+          "semantic": 3383387533,
+          "oracle_sha256": "42541d7dbe5eb4324dfe0e0f681d2a726c662b0e9194f7e200bbe74b03cea429"
+        },
+        {
+          "case": "spring-3x4-seed2",
+          "checks": 42,
+          "semantic": 763524302,
+          "oracle_sha256": "326058539c97e3677e95bb0c05df3b7a9200ba7d47df122dbee0d3cf33274d03"
+        },
+        {
+          "case": "spring-8x7-seed0",
+          "checks": 179,
+          "semantic": 3153320131,
+          "oracle_sha256": "b6a024d57f77acabc95f69b6196e0b0890cf64947925f4b8dc34f0a14cc55eec"
+        },
+        {
+          "case": "spring-8x7-seed1",
+          "checks": 179,
+          "semantic": 2985563417,
+          "oracle_sha256": "06ac6eb7df1a2a6cdae01101ef94693aba540696b4c6c5da3095147cfab42521"
+        },
+        {
+          "case": "spring-8x7-seed2",
+          "checks": 179,
+          "semantic": 62525348,
+          "oracle_sha256": "235ac806db66b44a4041cca16243f95a89ef7bada22490f1c5e5fc69e690371a"
+        },
+        {
+          "case": "spring-16x16-seed0",
+          "checks": 787,
+          "semantic": 2492287274,
+          "oracle_sha256": "71021cade6a88c94279cae32a1528db8f18cbe7e36264ec8e6f0fadfe18daca6"
+        },
+        {
+          "case": "spring-16x16-seed1",
+          "checks": 787,
+          "semantic": 2050810278,
+          "oracle_sha256": "a8b5c6af7823af6e7aa2e64da8cc88880d36f74109b9e27c437b7e025a1dc41e"
+        },
+        {
+          "case": "spring-16x16-seed2",
+          "checks": 787,
+          "semantic": 51305233,
+          "oracle_sha256": "b06c2d3f830061a858d8e535d0937f3b811a4c2e93f71e67c45380472e12b3fa"
+        },
+        {
+          "case": "spring-65x33-seed0",
+          "checks": 6503,
+          "semantic": 455040934,
+          "oracle_sha256": "94f91209b8b61fd173a3654196538d6a167a0cdb249df25534f4dfecad46f614"
+        },
+        {
+          "case": "spring-65x33-seed1",
+          "checks": 6503,
+          "semantic": 1916959121,
+          "oracle_sha256": "9a99332b88cb6b9dadc3d68e3c9778e1e7854d70e594c051a7cdf42d9a29bb2d"
+        },
+        {
+          "case": "spring-65x33-seed2",
+          "checks": 6503,
+          "semantic": 2589619266,
+          "oracle_sha256": "924fc8f7f2871bbbbc2d1084ea14b7b0b3b9d36120df82e54c58103d6115195a"
+        },
+        {
+          "case": "spring-255x2-seed0",
+          "checks": 1788,
+          "semantic": 3196795942,
+          "oracle_sha256": "ab2a970da5554f5dbbb520c95ec040f4bcb6a143778552e32ebd3e9a9343a03c"
+        },
+        {
+          "case": "spring-255x2-seed1",
+          "checks": 1788,
+          "semantic": 3829380167,
+          "oracle_sha256": "dc46a9b22d02cefbbcfca2e6296e63c40eee1adf6160b83e9002ad100c25fc4b"
+        },
+        {
+          "case": "spring-255x2-seed2",
+          "checks": 1788,
+          "semantic": 1369970923,
+          "oracle_sha256": "8abc411347bcfcdbed308745e2eda76125d764e1b1bd5833de221d36b8c67a85"
+        },
+        {
+          "case": "chain-prefix-0-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "82fda1a2e65883504c39ee82526f239c15d4ec7a827bd11c02a4309fb56d5ac9"
+        },
+        {
+          "case": "chain-prefix-0-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "3533db64466ab9e2c3a3c2983fe2419e891552a3e62956d35fcee36751000b26"
+        },
+        {
+          "case": "chain-prefix-0-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "2de412c85ad97b9d53489a470616400e8f5589c513dddbc907f458751eb375aa"
+        },
+        {
+          "case": "chain-prefix-0-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "7bcdfb582ce1ae49025c3e20e8126dfd70fe98c96b5d0e92891b3757ff929d27"
+        },
+        {
+          "case": "chain-prefix-1-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "34e44f2ac07ed2d1fbe887b2a7561d0e81b13ba844e010030eb36231e5b9fe4e"
+        },
+        {
+          "case": "chain-prefix-1-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "426ca74c90a61e4fcb0d8fc4b5fceccd137ffc18452d59a3901c855522e74016"
+        },
+        {
+          "case": "chain-prefix-1-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "173bd6e9c6bf115a9055b321e1c42988856b7104818a5fa42100eaa14bfca687"
+        },
+        {
+          "case": "chain-prefix-1-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "0b29e1f7d0549b8c30dd0873803902e64cdf19a04bce7558e291858b68f407ad"
+        },
+        {
+          "case": "chain-prefix-2-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "fbfbeec498df5cf5fd83da704d48f41e034c76dcdb194def58e1c3f10fd414c9"
+        },
+        {
+          "case": "chain-prefix-2-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "eb8c162d4d7bd1132d91d730b6aeba4a672572f8294f8128c995b92b5293ba0b"
+        },
+        {
+          "case": "chain-prefix-2-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "ef795c0cbe8da465ffbb8798b2bde923ea963e7bc073a6a39f4b0d37eb4f9eb8"
+        },
+        {
+          "case": "chain-prefix-2-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "5fe1401a76d5b3712bc1daa8e50ffbefc80e63fa68418c9c9556de5c7d443767"
+        },
+        {
+          "case": "skip-links0-flag0-wind0.0",
+          "checks": 3,
+          "semantic": 3658441455,
+          "oracle_sha256": "fd1dad171f71052809d2c10f66e1f591a1996e877b3108be66c02383ababa9c5"
+        },
+        {
+          "case": "skip-links0-flag0-wind3.1",
+          "checks": 3,
+          "semantic": 1897221433,
+          "oracle_sha256": "a4877471a76d9f283b2178267e2502f8c10c8e5b0035c83a23b9891f85b9dec5"
+        },
+        {
+          "case": "skip-links0-flag64-wind0.0",
+          "checks": 3,
+          "semantic": 742367151,
+          "oracle_sha256": "8c9a6b720ffe94a62b0cefc014d657ff7cf97f956d4b9f3e21c40110e853f25f"
+        },
+        {
+          "case": "skip-links0-flag64-wind3.1",
+          "checks": 3,
+          "semantic": 2352154873,
+          "oracle_sha256": "8f56dcaf5aa0a495ccb04409bfa0844ec7d9f5f0db8daf0d1af6802a000356ba"
+        },
+        {
+          "case": "skip-links1-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 235767285,
+          "oracle_sha256": "53662d745b412f02751fcc9fd101aaf38984b18f7aa9cbad145a469f0ba925a2"
+        },
+        {
+          "case": "skip-links1-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 12622899,
+          "oracle_sha256": "bed32de607631d668aebdc2e5a83e86b5e356f3313e05c0b3e35d4f16995be1f"
+        },
+        {
+          "case": "skip-links1-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 4113236620,
+          "oracle_sha256": "d938ce220ea7710787561d40391a067b7d6fd0319082c9fe242cec89003b390d"
+        },
+        {
+          "case": "skip-links1-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 1059243618,
+          "oracle_sha256": "ff237585cc2e61e66620b1873ff44c2b0457d2d96af3f25d4df4eb2d3bab53a1"
+        },
+        {
+          "case": "skip-links16-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 4247275854,
+          "oracle_sha256": "817c1d122e3e8c2fcc2fe74d5699fda14da8d49b499cb2dc12492f829bfa90d9"
+        },
+        {
+          "case": "skip-links16-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 3663839292,
+          "oracle_sha256": "27854ecadce0377c69d229b510a7a11cec709aa70e307aa9bcbe42ba740c3b02"
+        },
+        {
+          "case": "skip-links16-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 2643030495,
+          "oracle_sha256": "a48f394d15c260ce4231b3105e7b85d76b69f0a26e66606a47262b865282c37a"
+        },
+        {
+          "case": "skip-links16-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 349804585,
+          "oracle_sha256": "00f9617ef246b352a4bd8d36b888a6337b33658a809707aa5be94bb3b5a5403e"
+        }
+      ]
+    },
+    {
+      "kind": "cloth",
+      "options": {
+        "RE4DC_CLOTH_SPRING": 2
+      },
+      "cases": 51,
+      "checks": 28148,
+      "event_totals": {
+        "ClothSpringFast": 27,
+        "ClothSpringSource": 24,
+        "ClothPoints": 11469,
+        "ClothChainMove": 9,
+        "ClothChainLinks": 138,
+        "ClothChainSkip": 8
+      },
+      "results": [
+        {
+          "case": "spring-0x0-seed0",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "d04723a64427f95b9e61f5e664bc8fa8af336b103c42d44f5b4eef6c2ee8fa75"
+        },
+        {
+          "case": "spring-0x0-seed1",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "476c796c20f25061f5acbac816421dda22f696ce77d3d23c16608d443115147f"
+        },
+        {
+          "case": "spring-0x0-seed2",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "bd6222f9b30f96934f851894a34c1840ae34459f8878de08dc48f144f0489882"
+        },
+        {
+          "case": "spring-0x3-seed0",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "58d88476bc1d81198b52a752acb0b3a231262f13388a2dddf6f30e0c5763e557"
+        },
+        {
+          "case": "spring-0x3-seed1",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "319accd7aa0c40447765b7365b2144cb263fc4df897ac419f89adf9a2701c302"
+        },
+        {
+          "case": "spring-0x3-seed2",
+          "checks": 7,
+          "semantic": 2166136261,
+          "oracle_sha256": "800a2b450a3f4831fe58b7cd6dfc97fd72178095370f8730ad34854f37bd44aa"
+        },
+        {
+          "case": "spring-1x1-seed0",
+          "checks": 10,
+          "semantic": 2297680876,
+          "oracle_sha256": "4c645e5f6c042ac91c53a014630bfd0dedb4567f96cd8e102949741b37d386f0"
+        },
+        {
+          "case": "spring-1x1-seed1",
+          "checks": 10,
+          "semantic": 2297680876,
+          "oracle_sha256": "d44819cc80a1cb281cb76a928a87f2d5e208a53d53aef5e3e26b01240f829248"
+        },
+        {
+          "case": "spring-1x1-seed2",
+          "checks": 10,
+          "semantic": 2297680876,
+          "oracle_sha256": "9319626a28c59652230d0520e4852783118aa086ebfe248c1f3e2ab5124b78c8"
+        },
+        {
+          "case": "spring-2x2-seed0",
+          "checks": 19,
+          "semantic": 4129977537,
+          "oracle_sha256": "6350d1fb01c2f71a1139cf5d7031fd02e892fa37d173d3dc9989c6cebdeb11e5"
+        },
+        {
+          "case": "spring-2x2-seed1",
+          "checks": 19,
+          "semantic": 2383854737,
+          "oracle_sha256": "3cb5d32a9384a5e926935a1080ab348841a50d023aaddc99f2a709045d4b9faf"
+        },
+        {
+          "case": "spring-2x2-seed2",
+          "checks": 19,
+          "semantic": 1769016735,
+          "oracle_sha256": "5534b6e2faf3142417cad2f103a726ecd870c2980949ac454b9e330a98436261"
+        },
+        {
+          "case": "spring-3x4-seed0",
+          "checks": 44,
+          "semantic": 30265083,
+          "oracle_sha256": "abefd3bc71f112046bf1545e9f885ee16e5ea33af73c0791796450959c3d4e6c"
+        },
+        {
+          "case": "spring-3x4-seed1",
+          "checks": 44,
+          "semantic": 3383387533,
+          "oracle_sha256": "dac959b7a96649171f78f87084933a31445e8580a7f3befcb45fd7347f33cd3a"
+        },
+        {
+          "case": "spring-3x4-seed2",
+          "checks": 44,
+          "semantic": 763524302,
+          "oracle_sha256": "b30c75ca2c55c7f84674f03585e7ce25fb86a36f7eebbad109caeed51b97df4a"
+        },
+        {
+          "case": "spring-8x7-seed0",
+          "checks": 181,
+          "semantic": 3153320131,
+          "oracle_sha256": "c64860fce87c3db7adec1b9216f99996ce3d3f905a3913bdfbef5f5c5288dac2"
+        },
+        {
+          "case": "spring-8x7-seed1",
+          "checks": 181,
+          "semantic": 2985563417,
+          "oracle_sha256": "14983a24803dea6f03848eb42d83aa46626ef3dfb2547c33dcf03c6f51e80442"
+        },
+        {
+          "case": "spring-8x7-seed2",
+          "checks": 181,
+          "semantic": 62525348,
+          "oracle_sha256": "06f3e50dff3d5d6aa8a9e6286b65e3c50291bf281670a29f8c376da16626cf0d"
+        },
+        {
+          "case": "spring-16x16-seed0",
+          "checks": 789,
+          "semantic": 2492287274,
+          "oracle_sha256": "85423536aaacb1508ae66b97edd21ca2922b8b6c92b0cebb5389e87007e68b25"
+        },
+        {
+          "case": "spring-16x16-seed1",
+          "checks": 789,
+          "semantic": 2050810278,
+          "oracle_sha256": "987b4bfbba28ba4014ce854600ba895d0d1d9269724da674adf464dbfaf7db6b"
+        },
+        {
+          "case": "spring-16x16-seed2",
+          "checks": 789,
+          "semantic": 51305233,
+          "oracle_sha256": "db575dc54655154c48ff23469dd015eee028bcb68033cba8d600c069a594a12e"
+        },
+        {
+          "case": "spring-65x33-seed0",
+          "checks": 6503,
+          "semantic": 455040934,
+          "oracle_sha256": "94f91209b8b61fd173a3654196538d6a167a0cdb249df25534f4dfecad46f614"
+        },
+        {
+          "case": "spring-65x33-seed1",
+          "checks": 6503,
+          "semantic": 1916959121,
+          "oracle_sha256": "9a99332b88cb6b9dadc3d68e3c9778e1e7854d70e594c051a7cdf42d9a29bb2d"
+        },
+        {
+          "case": "spring-65x33-seed2",
+          "checks": 6503,
+          "semantic": 2589619266,
+          "oracle_sha256": "924fc8f7f2871bbbbc2d1084ea14b7b0b3b9d36120df82e54c58103d6115195a"
+        },
+        {
+          "case": "spring-255x2-seed0",
+          "checks": 1790,
+          "semantic": 3196795942,
+          "oracle_sha256": "bdc1ba46cfe9b546fd16db0f80240027e65327143f7dc6fc6501ead8f6807ea1"
+        },
+        {
+          "case": "spring-255x2-seed1",
+          "checks": 1790,
+          "semantic": 3829380167,
+          "oracle_sha256": "884b1f1f0a1a2f27c560da7d4680da49a418b13bf88449f630fecc46dbb8d5da"
+        },
+        {
+          "case": "spring-255x2-seed2",
+          "checks": 1790,
+          "semantic": 1369970923,
+          "oracle_sha256": "f0db08af586b289cfa8a5074164079623af5bfb99f1ee5ca629b3d77086b33b9"
+        },
+        {
+          "case": "chain-prefix-0-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "82fda1a2e65883504c39ee82526f239c15d4ec7a827bd11c02a4309fb56d5ac9"
+        },
+        {
+          "case": "chain-prefix-0-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "3533db64466ab9e2c3a3c2983fe2419e891552a3e62956d35fcee36751000b26"
+        },
+        {
+          "case": "chain-prefix-0-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "2de412c85ad97b9d53489a470616400e8f5589c513dddbc907f458751eb375aa"
+        },
+        {
+          "case": "chain-prefix-0-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "7bcdfb582ce1ae49025c3e20e8126dfd70fe98c96b5d0e92891b3757ff929d27"
+        },
+        {
+          "case": "chain-prefix-1-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "34e44f2ac07ed2d1fbe887b2a7561d0e81b13ba844e010030eb36231e5b9fe4e"
+        },
+        {
+          "case": "chain-prefix-1-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "426ca74c90a61e4fcb0d8fc4b5fceccd137ffc18452d59a3901c855522e74016"
+        },
+        {
+          "case": "chain-prefix-1-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "173bd6e9c6bf115a9055b321e1c42988856b7104818a5fa42100eaa14bfca687"
+        },
+        {
+          "case": "chain-prefix-1-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "0b29e1f7d0549b8c30dd0873803902e64cdf19a04bce7558e291858b68f407ad"
+        },
+        {
+          "case": "chain-prefix-2-links0",
+          "checks": 3,
+          "semantic": 4080827768,
+          "oracle_sha256": "fbfbeec498df5cf5fd83da704d48f41e034c76dcdb194def58e1c3f10fd414c9"
+        },
+        {
+          "case": "chain-prefix-2-links1",
+          "checks": 5,
+          "semantic": 4121938729,
+          "oracle_sha256": "eb8c162d4d7bd1132d91d730b6aeba4a672572f8294f8128c995b92b5293ba0b"
+        },
+        {
+          "case": "chain-prefix-2-links8",
+          "checks": 5,
+          "semantic": 1604301680,
+          "oracle_sha256": "ef795c0cbe8da465ffbb8798b2bde923ea963e7bc073a6a39f4b0d37eb4f9eb8"
+        },
+        {
+          "case": "chain-prefix-2-links37",
+          "checks": 5,
+          "semantic": 822883917,
+          "oracle_sha256": "5fe1401a76d5b3712bc1daa8e50ffbefc80e63fa68418c9c9556de5c7d443767"
+        },
+        {
+          "case": "skip-links0-flag0-wind0.0",
+          "checks": 3,
+          "semantic": 3658441455,
+          "oracle_sha256": "fd1dad171f71052809d2c10f66e1f591a1996e877b3108be66c02383ababa9c5"
+        },
+        {
+          "case": "skip-links0-flag0-wind3.1",
+          "checks": 3,
+          "semantic": 1897221433,
+          "oracle_sha256": "a4877471a76d9f283b2178267e2502f8c10c8e5b0035c83a23b9891f85b9dec5"
+        },
+        {
+          "case": "skip-links0-flag64-wind0.0",
+          "checks": 3,
+          "semantic": 742367151,
+          "oracle_sha256": "8c9a6b720ffe94a62b0cefc014d657ff7cf97f956d4b9f3e21c40110e853f25f"
+        },
+        {
+          "case": "skip-links0-flag64-wind3.1",
+          "checks": 3,
+          "semantic": 2352154873,
+          "oracle_sha256": "8f56dcaf5aa0a495ccb04409bfa0844ec7d9f5f0db8daf0d1af6802a000356ba"
+        },
+        {
+          "case": "skip-links1-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 235767285,
+          "oracle_sha256": "53662d745b412f02751fcc9fd101aaf38984b18f7aa9cbad145a469f0ba925a2"
+        },
+        {
+          "case": "skip-links1-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 12622899,
+          "oracle_sha256": "bed32de607631d668aebdc2e5a83e86b5e356f3313e05c0b3e35d4f16995be1f"
+        },
+        {
+          "case": "skip-links1-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 4113236620,
+          "oracle_sha256": "d938ce220ea7710787561d40391a067b7d6fd0319082c9fe242cec89003b390d"
+        },
+        {
+          "case": "skip-links1-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 1059243618,
+          "oracle_sha256": "ff237585cc2e61e66620b1873ff44c2b0457d2d96af3f25d4df4eb2d3bab53a1"
+        },
+        {
+          "case": "skip-links16-flag0-wind0.0",
+          "checks": 4,
+          "semantic": 4247275854,
+          "oracle_sha256": "817c1d122e3e8c2fcc2fe74d5699fda14da8d49b499cb2dc12492f829bfa90d9"
+        },
+        {
+          "case": "skip-links16-flag0-wind3.1",
+          "checks": 4,
+          "semantic": 3663839292,
+          "oracle_sha256": "27854ecadce0377c69d229b510a7a11cec709aa70e307aa9bcbe42ba740c3b02"
+        },
+        {
+          "case": "skip-links16-flag64-wind0.0",
+          "checks": 4,
+          "semantic": 2643030495,
+          "oracle_sha256": "a48f394d15c260ce4231b3105e7b85d76b69f0a26e66606a47262b865282c37a"
+        },
+        {
+          "case": "skip-links16-flag64-wind3.1",
+          "checks": 4,
+          "semantic": 349804585,
+          "oracle_sha256": "00f9617ef246b352a4bd8d36b888a6337b33658a809707aa5be94bb3b5a5403e"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 0,
+        "RE4DC_ATCHK_LIST": 0,
+        "RE4DC_ATCHK_CACHE": 0,
+        "RE4DC_ATLIST_OVERFLOW": 0,
+        "RE4DC_ATLIST_512": 0
+      },
+      "cases": 11,
+      "checks": 608,
+      "event_totals": {
+        "CollisionSource": 18
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 9,
+          "semantic": 33008312,
+          "oracle_sha256": "0433d96d0ca86f63b3e17c361a572bdc2ffedcef3ffb1c21bc96fcbcef666d58"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 16,
+          "semantic": 2808788399,
+          "oracle_sha256": "de36251db58ae10837cd3d32eaffbca10c0a55bf73ad2905ddca076ab2052c0a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 201,
+          "semantic": 3309848855,
+          "oracle_sha256": "e86c8ffd5769a21b81f179a97ad891ac63b874854a8859edf81d2af482a4906f"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 110,
+          "semantic": 789326470,
+          "oracle_sha256": "211bf033b1bebb1d25cf2fcf9af065910aec403f4fdf8218d453050b6b51949c"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 110,
+          "semantic": 154903446,
+          "oracle_sha256": "40387db4f5e9121e13d9621b34a9017eb4a0c74028274679ecd0a1f599ba851d"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 38,
+          "semantic": 2218406988,
+          "oracle_sha256": "fe97c609835fa01d484504f8898e5de254cd5b871c723e8d7847f08d8be33718"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 38,
+          "semantic": 3536860346,
+          "oracle_sha256": "1ec7011fb25e3c3512e8fbd35f2b869cbf92a558d9a50c8aec0a45c1993c88e3"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 38,
+          "semantic": 909661728,
+          "oracle_sha256": "f12edadc20b2a4a2ffe1943cd0f277807b029f506b79ec3cecc5bb431747cf43"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 38,
+          "semantic": 1683335546,
+          "oracle_sha256": "e97ae8095518e6af98db620a0dbf85856ec31783966b237b7e19ca0d47422161"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 0,
+        "RE4DC_ATCHK_CACHE": 0,
+        "RE4DC_ATLIST_OVERFLOW": 0,
+        "RE4DC_ATLIST_512": 0
+      },
+      "cases": 11,
+      "checks": 627,
+      "event_totals": {
+        "CollisionCandidateOverflow": 2,
+        "CollisionCollectSource": 17,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 11,
+          "semantic": 33008312,
+          "oracle_sha256": "34d1057106beab12d4b58661b4bb6c02a0344d09cafe5e41a4ccface766285b8"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 18,
+          "semantic": 2808788399,
+          "oracle_sha256": "ff981ee1ec861d1387796e2f2cbd37471af46a52ecf3ff4feeb329328aa0962f"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 203,
+          "semantic": 3309848855,
+          "oracle_sha256": "911d8bb2ccf5971d6450d4809d97539e93e3f4469edbe24d439c39510d642ead"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 112,
+          "semantic": 789326470,
+          "oracle_sha256": "c51f0295dda321f9a61c08c0bf23a7a0a7b42bbcd487ea9eb453cd6f160e3288"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 113,
+          "semantic": 154903446,
+          "oracle_sha256": "14b821db3e97eac5bad0a40e45f025b7f1299535ea6b683349f5f775a8c56912"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 40,
+          "semantic": 2218406988,
+          "oracle_sha256": "d22f3db0cddc4fc9e66c25f5ff3e41c918a906c9b5b26054629f4c5a7bd94692"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 40,
+          "semantic": 3536860346,
+          "oracle_sha256": "3be2761f076cd12bcdd666cb22b0f63e88e47a8c97455537d25c654624e7b8be"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 40,
+          "semantic": 909661728,
+          "oracle_sha256": "0eb6ece15123af6156fe1b4ab899a7f9a034c6f13e7744076e748f8c808d3a8d"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 40,
+          "semantic": 1683335546,
+          "oracle_sha256": "5b77a6eb8d4da7fa58f7f04dee918372b1cc93f7ef54ce314b1d53c57d53793d"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 1,
+        "RE4DC_ATCHK_CACHE": 0,
+        "RE4DC_ATLIST_OVERFLOW": 0,
+        "RE4DC_ATLIST_512": 0
+      },
+      "cases": 12,
+      "checks": 663,
+      "event_totals": {
+        "CollisionAliveBuild": 18,
+        "CollisionAliveOverflow": 7,
+        "CollisionCandidateOverflow": 2,
+        "CollisionCollectSource": 6,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 13,
+          "semantic": 33008312,
+          "oracle_sha256": "cd55d5dc4cfb35f835c9d79de4f89caa55c615685f109483cce36d0156f74c80"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 20,
+          "semantic": 2808788399,
+          "oracle_sha256": "18ebd605b714cd9dc514d86aedfb6fc324143964368674f4b479e9a409f9391a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 205,
+          "semantic": 3309848855,
+          "oracle_sha256": "e32f3f67dbb9bf990a89afedd2d51d96ca1cd5fb7b1bbcb7a67121644d607dc0"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 114,
+          "semantic": 789326470,
+          "oracle_sha256": "a9fb140de435843569a5b907f045afdb3256c03c2a8e9751f4bfda9714c34419"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 115,
+          "semantic": 154903446,
+          "oracle_sha256": "71118cfda5ea9dfef7640bfb1f069d1d6ade282687468ad1b7a01a3f93e3e3f9"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 42,
+          "semantic": 2218406988,
+          "oracle_sha256": "c9c43d04e847cde396727c57c9c05cd850ff84185ab6f58ec08974cf30a6a187"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 46,
+          "semantic": 3536860346,
+          "oracle_sha256": "6110c5198911937e5c8effe38135764757e29dc110fbe01e6b4090cbbc0729a2"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 46,
+          "semantic": 909661728,
+          "oracle_sha256": "28bdaa97b8b3aeae76125cd9d59452e75db01e782f113d524691f9926a3298e6"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 46,
+          "semantic": 1683335546,
+          "oracle_sha256": "18831da83d9657127976c53507137978a0b89eb1c3257ad893325d339d262da6"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        },
+        {
+          "case": "negative-cache-repeat",
+          "checks": 6,
+          "semantic": 4294967295,
+          "oracle_sha256": "61930a1e7da74b3d3744893a2ff7e4f0c9b0330b6caee31ec1a50833fe82d680"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 1,
+        "RE4DC_ATCHK_CACHE": 0,
+        "RE4DC_ATLIST_OVERFLOW": 1,
+        "RE4DC_ATLIST_512": 0
+      },
+      "cases": 12,
+      "checks": 662,
+      "event_totals": {
+        "CollisionAliveBuild": 17,
+        "CollisionAliveOverflow": 6,
+        "CollisionCachedOverflow": 1,
+        "CollisionCandidateOverflow": 2,
+        "CollisionCollectSource": 6,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 13,
+          "semantic": 33008312,
+          "oracle_sha256": "cd55d5dc4cfb35f835c9d79de4f89caa55c615685f109483cce36d0156f74c80"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 20,
+          "semantic": 2808788399,
+          "oracle_sha256": "18ebd605b714cd9dc514d86aedfb6fc324143964368674f4b479e9a409f9391a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 205,
+          "semantic": 3309848855,
+          "oracle_sha256": "e32f3f67dbb9bf990a89afedd2d51d96ca1cd5fb7b1bbcb7a67121644d607dc0"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 114,
+          "semantic": 789326470,
+          "oracle_sha256": "a9fb140de435843569a5b907f045afdb3256c03c2a8e9751f4bfda9714c34419"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 115,
+          "semantic": 154903446,
+          "oracle_sha256": "71118cfda5ea9dfef7640bfb1f069d1d6ade282687468ad1b7a01a3f93e3e3f9"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 42,
+          "semantic": 2218406988,
+          "oracle_sha256": "c9c43d04e847cde396727c57c9c05cd850ff84185ab6f58ec08974cf30a6a187"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 46,
+          "semantic": 3536860346,
+          "oracle_sha256": "6110c5198911937e5c8effe38135764757e29dc110fbe01e6b4090cbbc0729a2"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 46,
+          "semantic": 909661728,
+          "oracle_sha256": "28bdaa97b8b3aeae76125cd9d59452e75db01e782f113d524691f9926a3298e6"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 46,
+          "semantic": 1683335546,
+          "oracle_sha256": "18831da83d9657127976c53507137978a0b89eb1c3257ad893325d339d262da6"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        },
+        {
+          "case": "negative-cache-repeat",
+          "checks": 5,
+          "semantic": 4294967295,
+          "oracle_sha256": "c529f2a64dbd758d6cdd09b65de7028e65a6906defbc8b617fb5d41396f755c1"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 1,
+        "RE4DC_ATCHK_CACHE": 1,
+        "RE4DC_ATLIST_OVERFLOW": 1,
+        "RE4DC_ATLIST_512": 0
+      },
+      "cases": 14,
+      "checks": 670,
+      "event_totals": {
+        "CollisionAliveBuild": 17,
+        "CollisionAliveOverflow": 6,
+        "CollisionCachedOverflow": 1,
+        "CollisionCandidateOverflow": 3,
+        "CollisionDirtyOverflow": 1,
+        "CollisionCollectSource": 6,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 13,
+          "semantic": 33008312,
+          "oracle_sha256": "cd55d5dc4cfb35f835c9d79de4f89caa55c615685f109483cce36d0156f74c80"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 20,
+          "semantic": 2808788399,
+          "oracle_sha256": "18ebd605b714cd9dc514d86aedfb6fc324143964368674f4b479e9a409f9391a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 205,
+          "semantic": 3309848855,
+          "oracle_sha256": "e32f3f67dbb9bf990a89afedd2d51d96ca1cd5fb7b1bbcb7a67121644d607dc0"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 114,
+          "semantic": 789326470,
+          "oracle_sha256": "a9fb140de435843569a5b907f045afdb3256c03c2a8e9751f4bfda9714c34419"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 115,
+          "semantic": 154903446,
+          "oracle_sha256": "71118cfda5ea9dfef7640bfb1f069d1d6ade282687468ad1b7a01a3f93e3e3f9"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 42,
+          "semantic": 2218406988,
+          "oracle_sha256": "c9c43d04e847cde396727c57c9c05cd850ff84185ab6f58ec08974cf30a6a187"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 46,
+          "semantic": 3536860346,
+          "oracle_sha256": "6110c5198911937e5c8effe38135764757e29dc110fbe01e6b4090cbbc0729a2"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 46,
+          "semantic": 909661728,
+          "oracle_sha256": "28bdaa97b8b3aeae76125cd9d59452e75db01e782f113d524691f9926a3298e6"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 46,
+          "semantic": 1683335546,
+          "oracle_sha256": "18831da83d9657127976c53507137978a0b89eb1c3257ad893325d339d262da6"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        },
+        {
+          "case": "negative-cache-repeat",
+          "checks": 5,
+          "semantic": 4294967295,
+          "oracle_sha256": "c529f2a64dbd758d6cdd09b65de7028e65a6906defbc8b617fb5d41396f755c1"
+        },
+        {
+          "case": "dirty-ring-overflow",
+          "checks": 4,
+          "semantic": 0,
+          "oracle_sha256": "65da602fcf3e1d49df48885d72b55f95614b31e41a1a58636d411113cd2b9023"
+        },
+        {
+          "case": "candidate-insertion-overflow",
+          "checks": 4,
+          "semantic": 96,
+          "oracle_sha256": "2ee34fdadc44dd37545d4516a6b79675f2f4e50357457686d39bd265aad3bee7"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 1,
+        "RE4DC_ATCHK_CACHE": 1,
+        "RE4DC_ATLIST_OVERFLOW": 1,
+        "RE4DC_ATLIST_512": 1
+      },
+      "cases": 14,
+      "checks": 662,
+      "event_totals": {
+        "CollisionAliveBuild": 17,
+        "CollisionAliveOverflow": 2,
+        "CollisionCachedOverflow": 1,
+        "CollisionCandidateOverflow": 3,
+        "CollisionDirtyOverflow": 1,
+        "CollisionCollectSource": 2,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 13,
+          "semantic": 33008312,
+          "oracle_sha256": "cd55d5dc4cfb35f835c9d79de4f89caa55c615685f109483cce36d0156f74c80"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 20,
+          "semantic": 2808788399,
+          "oracle_sha256": "18ebd605b714cd9dc514d86aedfb6fc324143964368674f4b479e9a409f9391a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 205,
+          "semantic": 3309848855,
+          "oracle_sha256": "e32f3f67dbb9bf990a89afedd2d51d96ca1cd5fb7b1bbcb7a67121644d607dc0"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 114,
+          "semantic": 789326470,
+          "oracle_sha256": "a9fb140de435843569a5b907f045afdb3256c03c2a8e9751f4bfda9714c34419"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 115,
+          "semantic": 154903446,
+          "oracle_sha256": "71118cfda5ea9dfef7640bfb1f069d1d6ade282687468ad1b7a01a3f93e3e3f9"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 42,
+          "semantic": 2218406988,
+          "oracle_sha256": "c9c43d04e847cde396727c57c9c05cd850ff84185ab6f58ec08974cf30a6a187"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 42,
+          "semantic": 3536860346,
+          "oracle_sha256": "9d15ec1774791fa81b8fdc7a1772a6d73c8cc34267d292b48d57cec24a2974fa"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 42,
+          "semantic": 909661728,
+          "oracle_sha256": "baa9b14b1c49f735a3613794f0053c59f5cf0c26da6c41dab6ccc570b6a993b7"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 46,
+          "semantic": 1683335546,
+          "oracle_sha256": "18831da83d9657127976c53507137978a0b89eb1c3257ad893325d339d262da6"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        },
+        {
+          "case": "negative-cache-repeat",
+          "checks": 5,
+          "semantic": 4294967295,
+          "oracle_sha256": "c529f2a64dbd758d6cdd09b65de7028e65a6906defbc8b617fb5d41396f755c1"
+        },
+        {
+          "case": "dirty-ring-overflow",
+          "checks": 4,
+          "semantic": 0,
+          "oracle_sha256": "65da602fcf3e1d49df48885d72b55f95614b31e41a1a58636d411113cd2b9023"
+        },
+        {
+          "case": "candidate-insertion-overflow",
+          "checks": 4,
+          "semantic": 96,
+          "oracle_sha256": "2ee34fdadc44dd37545d4516a6b79675f2f4e50357457686d39bd265aad3bee7"
+        }
+      ]
+    },
+    {
+      "kind": "collision",
+      "options": {
+        "RE4DC_ATCHK": 1,
+        "RE4DC_ATCHK_LIST": 2,
+        "RE4DC_ATCHK_CACHE": 2,
+        "RE4DC_ATLIST_OVERFLOW": 1,
+        "RE4DC_ATLIST_512": 1
+      },
+      "cases": 14,
+      "checks": 662,
+      "event_totals": {
+        "CollisionAliveBuild": 17,
+        "CollisionAliveOverflow": 2,
+        "CollisionCachedOverflow": 1,
+        "CollisionCandidateOverflow": 3,
+        "CollisionDirtyOverflow": 1,
+        "CollisionCollectSource": 2,
+        "CollisionSource": 3,
+        "CollisionFast": 15
+      },
+      "results": [
+        {
+          "case": "pipeline-0-0-0-0",
+          "checks": 13,
+          "semantic": 33008312,
+          "oracle_sha256": "cd55d5dc4cfb35f835c9d79de4f89caa55c615685f109483cce36d0156f74c80"
+        },
+        {
+          "case": "pipeline-8-4-7-3",
+          "checks": 20,
+          "semantic": 2808788399,
+          "oracle_sha256": "18ebd605b714cd9dc514d86aedfb6fc324143964368674f4b479e9a409f9391a"
+        },
+        {
+          "case": "pipeline-96-96-96-96",
+          "checks": 205,
+          "semantic": 3309848855,
+          "oracle_sha256": "e32f3f67dbb9bf990a89afedd2d51d96ca1cd5fb7b1bbcb7a67121644d607dc0"
+        },
+        {
+          "case": "pipeline-97-97-4-4",
+          "checks": 114,
+          "semantic": 789326470,
+          "oracle_sha256": "a9fb140de435843569a5b907f045afdb3256c03c2a8e9751f4bfda9714c34419"
+        },
+        {
+          "case": "pipeline-4-4-97-97",
+          "checks": 115,
+          "semantic": 154903446,
+          "oracle_sha256": "71118cfda5ea9dfef7640bfb1f069d1d6ade282687468ad1b7a01a3f93e3e3f9"
+        },
+        {
+          "case": "pipeline-320-12-320-17",
+          "checks": 42,
+          "semantic": 2218406988,
+          "oracle_sha256": "c9c43d04e847cde396727c57c9c05cd850ff84185ab6f58ec08974cf30a6a187"
+        },
+        {
+          "case": "pipeline-321-12-321-17",
+          "checks": 42,
+          "semantic": 3536860346,
+          "oracle_sha256": "9d15ec1774791fa81b8fdc7a1772a6d73c8cc34267d292b48d57cec24a2974fa"
+        },
+        {
+          "case": "pipeline-512-12-512-17",
+          "checks": 42,
+          "semantic": 909661728,
+          "oracle_sha256": "baa9b14b1c49f735a3613794f0053c59f5cf0c26da6c41dab6ccc570b6a993b7"
+        },
+        {
+          "case": "pipeline-513-12-513-17",
+          "checks": 46,
+          "semantic": 1683335546,
+          "oracle_sha256": "18831da83d9657127976c53507137978a0b89eb1c3257ad893325d339d262da6"
+        },
+        {
+          "case": "actor-no-collision",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8935a82d04ad0f76a7e136f174c347962bd5ebc7cb555408a311040270a4227f"
+        },
+        {
+          "case": "actor-zero-radius",
+          "checks": 5,
+          "semantic": 3232245027,
+          "oracle_sha256": "8edcde7468357e0506aa41cb98c2a1a9eac64690d319e35c1ec3de4792c173a5"
+        },
+        {
+          "case": "negative-cache-repeat",
+          "checks": 5,
+          "semantic": 4294967295,
+          "oracle_sha256": "c529f2a64dbd758d6cdd09b65de7028e65a6906defbc8b617fb5d41396f755c1"
+        },
+        {
+          "case": "dirty-ring-overflow",
+          "checks": 4,
+          "semantic": 0,
+          "oracle_sha256": "65da602fcf3e1d49df48885d72b55f95614b31e41a1a58636d411113cd2b9023"
+        },
+        {
+          "case": "candidate-insertion-overflow",
+          "checks": 4,
+          "semantic": 96,
+          "oracle_sha256": "2ee34fdadc44dd37545d4516a6b79675f2f4e50357457686d39bd265aad3bee7"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 0,
+        "RE4DC_ESP_OWNER": 0,
+        "RE4DC_PACE_TRANS_SKIP": 0
+      },
+      "cases": 26,
+      "checks": 344,
+      "event_totals": {
+        "EgMoveScan": 576,
+        "EgTransScan": 576,
+        "EgDeleteScan": 576,
+        "EspDeleteScan": 512,
+        "EgMoveOff": 6,
+        "EgTransOff": 6,
+        "EgDeleteOff": 6,
+        "EspDeleteOff": 8,
+        "EspDeleteOwnerZero": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "e2e320abfe69fde227daf87aafc01ff78a9efcc3cb93d6e3006675b54e1c1634"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "f72d8471217d858cc565da40408c7505dc2dd208f46c812fef9f8b2c63438549"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "bc9a55b564bb7104d431981cf9e94c398fc949f260c858efa124401ca0df1af9"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 12,
+          "semantic": 2186585857,
+          "oracle_sha256": "792cd85a72a476ced8525f89d0ea212fe377c6bc3b4e7cc1656ce7e499a349e9"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "0365de9521a4296ccfe85af70119957920db25671e6467a40e2ec1c95ac124fd"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "1ddab0270ba62a306a782ad526dbd421a4b0efb51effe6f1d17067520cdc5b4e"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "02524815200bdbcc4a24c9f2743881a7638c2ba99ff3ddf11d9e19754f0866b4"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "a02443e7a6d2122fef85bf612965ff69c571e81001294dfe3f32521e992fcf59"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "6846922f6d77f16f259f410c17c5cb67bef5b234756d11d8d2c32f2247478859"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 11,
+          "semantic": 2169808238,
+          "oracle_sha256": "1e29bd862b4c955e52a7ac301519f8e18a5f93ca429c2199310b203d606f2ad0"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "57bbf34009ebb5ea564e6364b9d02c32490753b1c54792427956f6440126568e"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "056b47368852a9050d5e202ba6958cb9a97fbdff60b47f5664cf0eb31d596946"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "39af5488b50dfe7354597b6deb791f6d48756e89e3997c9befef4d83f9ebfea9"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "7c6b195afed43cca505816df9f49027d88eff18cf6dd8e36cfde4721ad0618a1"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "5b965e9bc79ecb7f0f33a306bb40c7b36daf2d768094a53e6ad5a5060ef334cf"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 11,
+          "semantic": 1721129912,
+          "oracle_sha256": "dd9ca1fa39eda53283390f6143704c7264acc2b1ba9fffc094c55c7ef9166fa7"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "3ff783c30d600779e888202b0b11fc874220cdf662116f889d852067ae26dc37"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "4e3d4f398cce064c4d1c3de816b835f73560ddff2664b13d7de8b964c677e45f"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "aa7fd76994479375d7316ad5d0016094ce0a9c1614eb6af09281d6e40c147acc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 21,
+          "semantic": 2114902277,
+          "oracle_sha256": "fbed4c0c334a2a0f32ba796f1c60969db440e275c36c7184b0d9501be780beab"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "646f50744ddc83b8b2d7d77aa96519f5a59a26a8c073d5e973797c6a64a720ed"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "8337caa4d8c069e0769fa11ade913ccbd49a1b8055c61cd0883c547d1668e67b"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 12,
+          "semantic": 1509677865,
+          "oracle_sha256": "85216059785102fbd552bf4271e39eabb2cc382ecde9d08db4525da2e51e9a7a"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 14,
+          "semantic": 2566844046,
+          "oracle_sha256": "2d5883acd97e7ee9be876cc7d13d315b92c61b0bc259ad88f544734c0ad8cbd6"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "6fdcf07ca5596149915c30a017ed15d1672a4659d414fa9baa7ee812809d3d42"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "50d1698f92e66c755c587420051492dc43fe274430cd45dc78fda5682d4ae5ff"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 0,
+        "RE4DC_ESP_OWNER": 1,
+        "RE4DC_PACE_TRANS_SKIP": 0
+      },
+      "cases": 26,
+      "checks": 344,
+      "event_totals": {
+        "EgMoveScan": 576,
+        "EgTransScan": 576,
+        "EgDeleteScan": 576,
+        "EspDeleteScan": 448,
+        "EgMoveOff": 6,
+        "EgTransOff": 6,
+        "EgDeleteOff": 6,
+        "EspDeleteOff": 8,
+        "EspDeleteOwnerZero": 1,
+        "EspDeleteEmpty": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "e2e320abfe69fde227daf87aafc01ff78a9efcc3cb93d6e3006675b54e1c1634"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "f72d8471217d858cc565da40408c7505dc2dd208f46c812fef9f8b2c63438549"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "bc9a55b564bb7104d431981cf9e94c398fc949f260c858efa124401ca0df1af9"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 12,
+          "semantic": 2186585857,
+          "oracle_sha256": "792cd85a72a476ced8525f89d0ea212fe377c6bc3b4e7cc1656ce7e499a349e9"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "0365de9521a4296ccfe85af70119957920db25671e6467a40e2ec1c95ac124fd"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "1ddab0270ba62a306a782ad526dbd421a4b0efb51effe6f1d17067520cdc5b4e"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "02524815200bdbcc4a24c9f2743881a7638c2ba99ff3ddf11d9e19754f0866b4"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "a02443e7a6d2122fef85bf612965ff69c571e81001294dfe3f32521e992fcf59"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "6846922f6d77f16f259f410c17c5cb67bef5b234756d11d8d2c32f2247478859"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 11,
+          "semantic": 2169808238,
+          "oracle_sha256": "1e29bd862b4c955e52a7ac301519f8e18a5f93ca429c2199310b203d606f2ad0"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "57bbf34009ebb5ea564e6364b9d02c32490753b1c54792427956f6440126568e"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "056b47368852a9050d5e202ba6958cb9a97fbdff60b47f5664cf0eb31d596946"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "39af5488b50dfe7354597b6deb791f6d48756e89e3997c9befef4d83f9ebfea9"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "7c6b195afed43cca505816df9f49027d88eff18cf6dd8e36cfde4721ad0618a1"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "5b965e9bc79ecb7f0f33a306bb40c7b36daf2d768094a53e6ad5a5060ef334cf"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 11,
+          "semantic": 1721129912,
+          "oracle_sha256": "dd9ca1fa39eda53283390f6143704c7264acc2b1ba9fffc094c55c7ef9166fa7"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "3ff783c30d600779e888202b0b11fc874220cdf662116f889d852067ae26dc37"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "4e3d4f398cce064c4d1c3de816b835f73560ddff2664b13d7de8b964c677e45f"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "aa7fd76994479375d7316ad5d0016094ce0a9c1614eb6af09281d6e40c147acc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 21,
+          "semantic": 2114902277,
+          "oracle_sha256": "fbed4c0c334a2a0f32ba796f1c60969db440e275c36c7184b0d9501be780beab"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "646f50744ddc83b8b2d7d77aa96519f5a59a26a8c073d5e973797c6a64a720ed"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "8337caa4d8c069e0769fa11ade913ccbd49a1b8055c61cd0883c547d1668e67b"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 12,
+          "semantic": 1509677865,
+          "oracle_sha256": "317d5d292455a37f0ce63fdb44114d079aa0f4a0bba012d6369ddd8db67228a8"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 14,
+          "semantic": 2566844046,
+          "oracle_sha256": "2d5883acd97e7ee9be876cc7d13d315b92c61b0bc259ad88f544734c0ad8cbd6"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "6fdcf07ca5596149915c30a017ed15d1672a4659d414fa9baa7ee812809d3d42"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "50d1698f92e66c755c587420051492dc43fe274430cd45dc78fda5682d4ae5ff"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 0,
+        "RE4DC_ESP_OWNER": 2,
+        "RE4DC_PACE_TRANS_SKIP": 1
+      },
+      "cases": 26,
+      "checks": 344,
+      "event_totals": {
+        "EgMoveScan": 576,
+        "EgTransScan": 576,
+        "EgDeleteScan": 576,
+        "EspDeleteScan": 448,
+        "EgMoveOff": 6,
+        "EgTransOff": 6,
+        "EgDeleteOff": 6,
+        "EspDeleteOff": 8,
+        "EspDeleteOwnerZero": 1,
+        "EspDeleteEmpty": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "e2e320abfe69fde227daf87aafc01ff78a9efcc3cb93d6e3006675b54e1c1634"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "f72d8471217d858cc565da40408c7505dc2dd208f46c812fef9f8b2c63438549"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "bc9a55b564bb7104d431981cf9e94c398fc949f260c858efa124401ca0df1af9"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 12,
+          "semantic": 2186585857,
+          "oracle_sha256": "792cd85a72a476ced8525f89d0ea212fe377c6bc3b4e7cc1656ce7e499a349e9"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "0365de9521a4296ccfe85af70119957920db25671e6467a40e2ec1c95ac124fd"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 12,
+          "semantic": 2167663389,
+          "oracle_sha256": "1ddab0270ba62a306a782ad526dbd421a4b0efb51effe6f1d17067520cdc5b4e"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "02524815200bdbcc4a24c9f2743881a7638c2ba99ff3ddf11d9e19754f0866b4"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "a02443e7a6d2122fef85bf612965ff69c571e81001294dfe3f32521e992fcf59"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "6846922f6d77f16f259f410c17c5cb67bef5b234756d11d8d2c32f2247478859"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 11,
+          "semantic": 2169808238,
+          "oracle_sha256": "1e29bd862b4c955e52a7ac301519f8e18a5f93ca429c2199310b203d606f2ad0"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "57bbf34009ebb5ea564e6364b9d02c32490753b1c54792427956f6440126568e"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 11,
+          "semantic": 2100552913,
+          "oracle_sha256": "056b47368852a9050d5e202ba6958cb9a97fbdff60b47f5664cf0eb31d596946"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "39af5488b50dfe7354597b6deb791f6d48756e89e3997c9befef4d83f9ebfea9"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "7c6b195afed43cca505816df9f49027d88eff18cf6dd8e36cfde4721ad0618a1"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "5b965e9bc79ecb7f0f33a306bb40c7b36daf2d768094a53e6ad5a5060ef334cf"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 11,
+          "semantic": 1721129912,
+          "oracle_sha256": "dd9ca1fa39eda53283390f6143704c7264acc2b1ba9fffc094c55c7ef9166fa7"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "3ff783c30d600779e888202b0b11fc874220cdf662116f889d852067ae26dc37"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 14,
+          "semantic": 248459697,
+          "oracle_sha256": "4e3d4f398cce064c4d1c3de816b835f73560ddff2664b13d7de8b964c677e45f"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "aa7fd76994479375d7316ad5d0016094ce0a9c1614eb6af09281d6e40c147acc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 21,
+          "semantic": 2114902277,
+          "oracle_sha256": "fbed4c0c334a2a0f32ba796f1c60969db440e275c36c7184b0d9501be780beab"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "646f50744ddc83b8b2d7d77aa96519f5a59a26a8c073d5e973797c6a64a720ed"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "8337caa4d8c069e0769fa11ade913ccbd49a1b8055c61cd0883c547d1668e67b"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 12,
+          "semantic": 1509677865,
+          "oracle_sha256": "317d5d292455a37f0ce63fdb44114d079aa0f4a0bba012d6369ddd8db67228a8"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 14,
+          "semantic": 2566844046,
+          "oracle_sha256": "2d5883acd97e7ee9be876cc7d13d315b92c61b0bc259ad88f544734c0ad8cbd6"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "6fdcf07ca5596149915c30a017ed15d1672a4659d414fa9baa7ee812809d3d42"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 16,
+          "semantic": 3206792120,
+          "oracle_sha256": "50d1698f92e66c755c587420051492dc43fe274430cd45dc78fda5682d4ae5ff"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 1,
+        "RE4DC_ESP_OWNER": 1,
+        "RE4DC_PACE_TRANS_SKIP": 0
+      },
+      "cases": 26,
+      "checks": 375,
+      "event_totals": {
+        "EgMoveScan": 380,
+        "EgTransScan": 380,
+        "EgDeleteScan": 380,
+        "EspDeleteScan": 189,
+        "EgMoveMapped": 5,
+        "EgTransMapped": 5,
+        "EgDeleteMapped": 5,
+        "EspDeleteMapped": 5,
+        "EgMoveMiss": 1,
+        "EgTransMiss": 1,
+        "EgDeleteMiss": 1,
+        "EspDeleteMiss": 1,
+        "EgMoveStale": 1,
+        "EgTransStale": 1,
+        "EgDeleteStale": 1,
+        "EspDeleteStale": 1,
+        "EspDeleteOwnerZero": 1,
+        "EspDeleteEmpty": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "65179fb6ce86531fb76138a5f67418155e023c67eef074ea6a2852c2bb789ae4"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "83189c6fffad895f2377c464026949f9d5e70b5216f22e8bcdb5528fe0084843"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 14,
+          "semantic": 2167663389,
+          "oracle_sha256": "76fc66fe1522f311cc5f57ebb17fc21b0141580c3efe6f519ecfe15faa7bbc07"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 13,
+          "semantic": 2186585857,
+          "oracle_sha256": "c5c62218cbb5e3edb47e4f5efc564be0588f75879e56282b3370a68a6629f6e5"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "3aee65eadc8c2f40e3e578d708fbd7ce66870db00ab4538e872be0c6c4ddbda1"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 16,
+          "semantic": 2167663389,
+          "oracle_sha256": "8c2bbb95c2d74b8890061f4653a31a2f5284b5763a89ddc18d7a01ea1539e89f"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "197a72ffd1b3800d3f49ace6bc8e81a490ff0a12dd8cc278bb7b1dd66bc36205"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "1526cc035687f1de934246bb8593fc9786d038fd01494b3a08a1e9469208aa2f"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 13,
+          "semantic": 2100552913,
+          "oracle_sha256": "b3f8438e4fcae6be6288d65c03f88858e56b8b0b7794511f87a9fbf7c05e3540"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 12,
+          "semantic": 2169808238,
+          "oracle_sha256": "9c057dc005f555111fbada82186588c10e49caa692b8ef8ddf37040e7048e186"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "07152a0c7daecc159673fd2199c7804feb30ac3c3c80a9cdae6fc62060426691"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 15,
+          "semantic": 2100552913,
+          "oracle_sha256": "ca54e4d3963746d151c0431324b8656129d859c9d905f34a9666c7dfb8009978"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "663bcb25f02b1868c6bf6a8a9493b97188fd3de29941a9d991f0091380b632b6"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "69f47754311a26bb7f7a2d31a744181fd2c3cfbf54b5d8b3ea1b3b5a2f33decf"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 16,
+          "semantic": 248459697,
+          "oracle_sha256": "942fef1752af63772850e2bd164d6491bfbd5a0d0ab39f9f278486b1eb4c2cb3"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 12,
+          "semantic": 1721129912,
+          "oracle_sha256": "85c2ef42b420b0aaf4c4df4ce15c291c1b25d999dbe60c242769a018884940bd"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "62d04bc8ed04d432c2fe626807862b1da363930a144bd96635358e0abadb7da8"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 18,
+          "semantic": 248459697,
+          "oracle_sha256": "5495fcbba689348a31812c1f7b5a17e5e68e7277426201fe9c37335420e97a46"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 21,
+          "semantic": 378609750,
+          "oracle_sha256": "7f1a43f14ba68cc24a5f98812c9da5845e78520af140af5903553627a83c0dfc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 20,
+          "semantic": 2114902277,
+          "oracle_sha256": "1bbc6d8f49d3e2acb3ca269dfcb0175419efd6cce2b24fe35ffe2e02ab6317be"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "1f12d613ff629ba163481cf4530eddcba7b6347981cb361be13e1fe2e820d157"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 20,
+          "semantic": 378609750,
+          "oracle_sha256": "e948364c25abf380bd88f95e0eba1ce12f7eab0d6dd326be55e01841b7a9ba90"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 11,
+          "semantic": 1509677865,
+          "oracle_sha256": "2e1a02efae161ffe670921efa25703c0d8c5e0294d1e333f99914f63054a6100"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 15,
+          "semantic": 2566844046,
+          "oracle_sha256": "002b39fb54737c98df0e091f05dfc4825291cd23cfa65498a31a04631343f74e"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "c118a48e8fc29f63d86041d4d28e3629f017f14a287f62554aab5bc9b15362a9"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "d7a800ee8a11529d8ec906798d5d419e8d9181f1ce5966c3a80f2c397d2ac9f2"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 1,
+        "RE4DC_ESP_OWNER": 1,
+        "RE4DC_PACE_TRANS_SKIP": 1
+      },
+      "cases": 26,
+      "checks": 375,
+      "event_totals": {
+        "EgMoveScan": 380,
+        "EgTransScan": 380,
+        "EgDeleteScan": 380,
+        "EspDeleteScan": 189,
+        "EgMoveMapped": 5,
+        "EgTransMapped": 5,
+        "EgDeleteMapped": 5,
+        "EspDeleteMapped": 5,
+        "EgMoveMiss": 1,
+        "EgTransMiss": 1,
+        "EgDeleteMiss": 1,
+        "EspDeleteMiss": 1,
+        "EgMoveStale": 1,
+        "EgTransStale": 1,
+        "EgDeleteStale": 1,
+        "EspDeleteStale": 1,
+        "EspDeleteOwnerZero": 1,
+        "EspDeleteEmpty": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "65179fb6ce86531fb76138a5f67418155e023c67eef074ea6a2852c2bb789ae4"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "83189c6fffad895f2377c464026949f9d5e70b5216f22e8bcdb5528fe0084843"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 14,
+          "semantic": 2167663389,
+          "oracle_sha256": "76fc66fe1522f311cc5f57ebb17fc21b0141580c3efe6f519ecfe15faa7bbc07"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 13,
+          "semantic": 2186585857,
+          "oracle_sha256": "c5c62218cbb5e3edb47e4f5efc564be0588f75879e56282b3370a68a6629f6e5"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "3aee65eadc8c2f40e3e578d708fbd7ce66870db00ab4538e872be0c6c4ddbda1"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 16,
+          "semantic": 2167663389,
+          "oracle_sha256": "8c2bbb95c2d74b8890061f4653a31a2f5284b5763a89ddc18d7a01ea1539e89f"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "197a72ffd1b3800d3f49ace6bc8e81a490ff0a12dd8cc278bb7b1dd66bc36205"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "1526cc035687f1de934246bb8593fc9786d038fd01494b3a08a1e9469208aa2f"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 13,
+          "semantic": 2100552913,
+          "oracle_sha256": "b3f8438e4fcae6be6288d65c03f88858e56b8b0b7794511f87a9fbf7c05e3540"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 12,
+          "semantic": 2169808238,
+          "oracle_sha256": "9c057dc005f555111fbada82186588c10e49caa692b8ef8ddf37040e7048e186"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "07152a0c7daecc159673fd2199c7804feb30ac3c3c80a9cdae6fc62060426691"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 15,
+          "semantic": 2100552913,
+          "oracle_sha256": "ca54e4d3963746d151c0431324b8656129d859c9d905f34a9666c7dfb8009978"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "663bcb25f02b1868c6bf6a8a9493b97188fd3de29941a9d991f0091380b632b6"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "69f47754311a26bb7f7a2d31a744181fd2c3cfbf54b5d8b3ea1b3b5a2f33decf"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 16,
+          "semantic": 248459697,
+          "oracle_sha256": "942fef1752af63772850e2bd164d6491bfbd5a0d0ab39f9f278486b1eb4c2cb3"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 12,
+          "semantic": 1721129912,
+          "oracle_sha256": "85c2ef42b420b0aaf4c4df4ce15c291c1b25d999dbe60c242769a018884940bd"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "62d04bc8ed04d432c2fe626807862b1da363930a144bd96635358e0abadb7da8"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 18,
+          "semantic": 248459697,
+          "oracle_sha256": "5495fcbba689348a31812c1f7b5a17e5e68e7277426201fe9c37335420e97a46"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 21,
+          "semantic": 378609750,
+          "oracle_sha256": "7f1a43f14ba68cc24a5f98812c9da5845e78520af140af5903553627a83c0dfc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 20,
+          "semantic": 2114902277,
+          "oracle_sha256": "1bbc6d8f49d3e2acb3ca269dfcb0175419efd6cce2b24fe35ffe2e02ab6317be"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "1f12d613ff629ba163481cf4530eddcba7b6347981cb361be13e1fe2e820d157"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 20,
+          "semantic": 378609750,
+          "oracle_sha256": "e948364c25abf380bd88f95e0eba1ce12f7eab0d6dd326be55e01841b7a9ba90"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 11,
+          "semantic": 1509677865,
+          "oracle_sha256": "2e1a02efae161ffe670921efa25703c0d8c5e0294d1e333f99914f63054a6100"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 15,
+          "semantic": 2566844046,
+          "oracle_sha256": "002b39fb54737c98df0e091f05dfc4825291cd23cfa65498a31a04631343f74e"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "c118a48e8fc29f63d86041d4d28e3629f017f14a287f62554aab5bc9b15362a9"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "d7a800ee8a11529d8ec906798d5d419e8d9181f1ce5966c3a80f2c397d2ac9f2"
+        }
+      ]
+    },
+    {
+      "kind": "effects",
+      "options": {
+        "RE4DC_FX_SCAN": 2,
+        "RE4DC_ESP_OWNER": 1,
+        "RE4DC_PACE_TRANS_SKIP": 1
+      },
+      "cases": 26,
+      "checks": 375,
+      "event_totals": {
+        "EgMoveScan": 380,
+        "EgTransScan": 380,
+        "EgDeleteScan": 380,
+        "EspDeleteScan": 189,
+        "EgMoveMapped": 5,
+        "EgTransMapped": 5,
+        "EgDeleteMapped": 5,
+        "EspDeleteMapped": 5,
+        "EgMoveMiss": 1,
+        "EgTransMiss": 1,
+        "EgDeleteMiss": 1,
+        "EspDeleteMiss": 1,
+        "EgMoveStale": 1,
+        "EgTransStale": 1,
+        "EgDeleteStale": 1,
+        "EspDeleteStale": 1,
+        "EspDeleteOwnerZero": 1,
+        "EspDeleteEmpty": 1
+      },
+      "results": [
+        {
+          "case": "eg-op0-scenario0-n0",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "65179fb6ce86531fb76138a5f67418155e023c67eef074ea6a2852c2bb789ae4"
+        },
+        {
+          "case": "eg-op0-scenario1-n320",
+          "checks": 12,
+          "semantic": 233715229,
+          "oracle_sha256": "83189c6fffad895f2377c464026949f9d5e70b5216f22e8bcdb5528fe0084843"
+        },
+        {
+          "case": "eg-op0-scenario2-n64",
+          "checks": 14,
+          "semantic": 2167663389,
+          "oracle_sha256": "76fc66fe1522f311cc5f57ebb17fc21b0141580c3efe6f519ecfe15faa7bbc07"
+        },
+        {
+          "case": "eg-op0-scenario3-n64",
+          "checks": 13,
+          "semantic": 2186585857,
+          "oracle_sha256": "c5c62218cbb5e3edb47e4f5efc564be0588f75879e56282b3370a68a6629f6e5"
+        },
+        {
+          "case": "eg-op0-scenario4-n64",
+          "checks": 12,
+          "semantic": 832097229,
+          "oracle_sha256": "3aee65eadc8c2f40e3e578d708fbd7ce66870db00ab4538e872be0c6c4ddbda1"
+        },
+        {
+          "case": "eg-op0-scenario5-n64",
+          "checks": 16,
+          "semantic": 2167663389,
+          "oracle_sha256": "8c2bbb95c2d74b8890061f4653a31a2f5284b5763a89ddc18d7a01ea1539e89f"
+        },
+        {
+          "case": "eg-op1-scenario0-n0",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "197a72ffd1b3800d3f49ace6bc8e81a490ff0a12dd8cc278bb7b1dd66bc36205"
+        },
+        {
+          "case": "eg-op1-scenario1-n320",
+          "checks": 11,
+          "semantic": 166604753,
+          "oracle_sha256": "1526cc035687f1de934246bb8593fc9786d038fd01494b3a08a1e9469208aa2f"
+        },
+        {
+          "case": "eg-op1-scenario2-n64",
+          "checks": 13,
+          "semantic": 2100552913,
+          "oracle_sha256": "b3f8438e4fcae6be6288d65c03f88858e56b8b0b7794511f87a9fbf7c05e3540"
+        },
+        {
+          "case": "eg-op1-scenario3-n64",
+          "checks": 12,
+          "semantic": 2169808238,
+          "oracle_sha256": "9c057dc005f555111fbada82186588c10e49caa692b8ef8ddf37040e7048e186"
+        },
+        {
+          "case": "eg-op1-scenario4-n64",
+          "checks": 11,
+          "semantic": 832097229,
+          "oracle_sha256": "07152a0c7daecc159673fd2199c7804feb30ac3c3c80a9cdae6fc62060426691"
+        },
+        {
+          "case": "eg-op1-scenario5-n64",
+          "checks": 15,
+          "semantic": 2100552913,
+          "oracle_sha256": "ca54e4d3963746d151c0431324b8656129d859c9d905f34a9666c7dfb8009978"
+        },
+        {
+          "case": "eg-op2-scenario0-n0",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "663bcb25f02b1868c6bf6a8a9493b97188fd3de29941a9d991f0091380b632b6"
+        },
+        {
+          "case": "eg-op2-scenario1-n320",
+          "checks": 14,
+          "semantic": 2375648945,
+          "oracle_sha256": "69f47754311a26bb7f7a2d31a744181fd2c3cfbf54b5d8b3ea1b3b5a2f33decf"
+        },
+        {
+          "case": "eg-op2-scenario2-n64",
+          "checks": 16,
+          "semantic": 248459697,
+          "oracle_sha256": "942fef1752af63772850e2bd164d6491bfbd5a0d0ab39f9f278486b1eb4c2cb3"
+        },
+        {
+          "case": "eg-op2-scenario3-n64",
+          "checks": 12,
+          "semantic": 1721129912,
+          "oracle_sha256": "85c2ef42b420b0aaf4c4df4ce15c291c1b25d999dbe60c242769a018884940bd"
+        },
+        {
+          "case": "eg-op2-scenario4-n64",
+          "checks": 10,
+          "semantic": 832097229,
+          "oracle_sha256": "62d04bc8ed04d432c2fe626807862b1da363930a144bd96635358e0abadb7da8"
+        },
+        {
+          "case": "eg-op2-scenario5-n64",
+          "checks": 18,
+          "semantic": 248459697,
+          "oracle_sha256": "5495fcbba689348a31812c1f7b5a17e5e68e7277426201fe9c37335420e97a46"
+        },
+        {
+          "case": "esp-scenario0",
+          "checks": 21,
+          "semantic": 378609750,
+          "oracle_sha256": "7f1a43f14ba68cc24a5f98812c9da5845e78520af140af5903553627a83c0dfc"
+        },
+        {
+          "case": "esp-scenario1",
+          "checks": 20,
+          "semantic": 2114902277,
+          "oracle_sha256": "1bbc6d8f49d3e2acb3ca269dfcb0175419efd6cce2b24fe35ffe2e02ab6317be"
+        },
+        {
+          "case": "esp-scenario2",
+          "checks": 18,
+          "semantic": 378609750,
+          "oracle_sha256": "1f12d613ff629ba163481cf4530eddcba7b6347981cb361be13e1fe2e820d157"
+        },
+        {
+          "case": "esp-scenario3",
+          "checks": 20,
+          "semantic": 378609750,
+          "oracle_sha256": "e948364c25abf380bd88f95e0eba1ce12f7eab0d6dd326be55e01841b7a9ba90"
+        },
+        {
+          "case": "esp-scenario4",
+          "checks": 11,
+          "semantic": 1509677865,
+          "oracle_sha256": "2e1a02efae161ffe670921efa25703c0d8c5e0294d1e333f99914f63054a6100"
+        },
+        {
+          "case": "esp-scenario5",
+          "checks": 15,
+          "semantic": 2566844046,
+          "oracle_sha256": "002b39fb54737c98df0e091f05dfc4825291cd23cfa65498a31a04631343f74e"
+        },
+        {
+          "case": "esp-scenario6",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "c118a48e8fc29f63d86041d4d28e3629f017f14a287f62554aab5bc9b15362a9"
+        },
+        {
+          "case": "esp-scenario7",
+          "checks": 19,
+          "semantic": 3206792120,
+          "oracle_sha256": "d7a800ee8a11529d8ec906798d5d419e8d9181f1ce5966c3a80f2c397d2ac9f2"
+        }
+      ]
+    }
+  ],
+  "covered_reasons": [
+    "ClothChainLinks",
+    "ClothChainMove",
+    "ClothChainSkip",
+    "ClothPoints",
+    "ClothSpringFast",
+    "ClothSpringSource",
+    "CollisionAliveBuild",
+    "CollisionAliveOverflow",
+    "CollisionCachedOverflow",
+    "CollisionCandidateOverflow",
+    "CollisionCollectSource",
+    "CollisionDirtyOverflow",
+    "CollisionFast",
+    "CollisionSource",
+    "EgDeleteMapped",
+    "EgDeleteMiss",
+    "EgDeleteOff",
+    "EgDeleteScan",
+    "EgDeleteStale",
+    "EgMoveMapped",
+    "EgMoveMiss",
+    "EgMoveOff",
+    "EgMoveScan",
+    "EgMoveStale",
+    "EgTransMapped",
+    "EgTransMiss",
+    "EgTransOff",
+    "EgTransScan",
+    "EgTransStale",
+    "EspDeleteEmpty",
+    "EspDeleteMapped",
+    "EspDeleteMiss",
+    "EspDeleteOff",
+    "EspDeleteOwnerZero",
+    "EspDeleteScan",
+    "EspDeleteStale",
+    "MotionBinary",
+    "MotionFound",
+    "MotionLinear",
+    "MotionMissing",
+    "MotionProbes",
+    "MotionUnbound"
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_motion.cpp": "813a266947d5466b1f0e0c926883124cfdaefab74d0aaeb522affbfe92f73921",
+    "port/dreamcast/game/platform/include/fallback_audit35.def": "17ca00f5e0253ac81eb8d20567771f748c91896d3b4fa40e8d632f2f4f83946e",
+    "port/dreamcast/tools/cloud/build35/motion_gap_fixture.cpp.in": "e060384e1ffb41ff7df90696f9634d10db30906580eb2f888ac05bf42840a0ad",
+    "port/dreamcast/tools/cloud/build35/gap_common.hpp.in": "c220253c88b8e25ecbce2b001fc5812fa5e121041e023f071f7458cd2d79504e",
+    "port/dreamcast/tools/cloud/build35/gap_host.py": "6f5bbd6f1347d71d5828cedb49701542d1a515597a56de196758482a1454ec33",
+    "src/game/cloth.cpp": "554c45f953ea86f501dff91936e8eaca723e35e5a982098af6845e545fcabfd5",
+    "src/game/pendulum.cpp": "17d0c1f68a6bb74451cc94caae6660053860f9aef4b9d6f3f6ee3852134ef3a7",
+    "port/dreamcast/tools/cloud/build35/cloth_gap_fixture.cpp.in": "d795ac96e6b751af6fa50fe23d2b451f6506825772a69c320e61e18414f4af04",
+    "src/game/at_mod.cpp": "83aaa57ca740da4df3093c1b5cdab8b779c4df928f999c3325655d77ae0ece15",
+    "port/dreamcast/tools/cloud/build35/collision_gap_fixture.cpp.in": "5f0c2e4f9b4727935b5b17ee7f6ff1de5ae2781cc88ee57b8837ab2621ee5f30",
+    "src/game/espgen.cpp": "9b8c9c5854431de364cdf3e925141c4529a6051a770fdd77d344c48ce43cb696",
+    "src/game/est.cpp": "c6a628664ea33891f9fac73a8092e2598056570505146faf2a943a5c9d3c1b50",
+    "include/esp.h": "a02bdcd8632113b4c2e7b099ea90cfefea9c7f0f1c779b31e354dfd634e0e1ba",
+    "port/dreamcast/tools/cloud/build35/effects_gap_fixture.cpp.in": "465de025df8a42c0441332e380bca5218619ad043e47885436491eea1c2de246"
+  },
+  "limits": "Controlled external bindings and action callbacks. Full game, console timing and whole-image identity remain separate gates.",
+  "full_receipt_sha256": "679fa3f1e39c4b1c3b1673e013cc480952804c73bdaf3bdaefdcdde76326c012",
+  "compact_receipt": "Retains every profile and per-case semantic checksum/check count plus a SHA256 of each full result (canonical sorted-key JSON with compact separators). Event totals and reason coverage remain explicit."
+}

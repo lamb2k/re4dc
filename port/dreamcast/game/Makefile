@@ -3675,6 +3675,7 @@ include perf_phase_miss.mk
 include draw_setup_audit.mk
 include draw_fallback_audit.mk
 include fallback_audit29.mk
+include fallback_audit35.mk
 include fallback_scan29.mk
 include world_plan29.mk
 include actor_format32.mk

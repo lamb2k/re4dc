@@ -1,0 +1,66 @@
+@COMMON@
+#define RE4DC_MOTION_BOUNDED_R11F 1
+#define RE4DC_SUBSCREEN 1
+#define RE4DC_MOTION_USAGE_LOG 0
+#define RE4DC_MOTION_RESUME 0
+static constexpr unsigned kArchives=2;
+struct Slot {unsigned pins;};
+struct Binding {void* archive;unsigned bytes,count;bool bounded;Slot slots[256];u8 records[256][20];};
+static Binding bindings[kArchives];
+static u8 archives[kArchives][8192];
+static unsigned tables[kArchives][256][2];
+static struct {unsigned metadata_bytes,pinned_bytes,peak_pinned_bytes;std::uint64_t worst_wait_us;} stats;
+static unsigned locks,unlocks,owners,loads,index_reads,clock35;
+static bool hold;
+struct Locked {Locked(){++locks;}~Locked(){++unlocks;}void retain_lease(){++owners;}};
+static void owner_add(){++owners;}
+static std::uint64_t timer_us_gettime64(){return ++clock35;}
+static const u8* record(const Binding& b,unsigned i){return b.records[i];}
+static unsigned word(const u8* p){
+    for(const auto& b:bindings){
+        const auto a=reinterpret_cast<std::uintptr_t>(p),base=reinterpret_cast<std::uintptr_t>(b.records);
+        if(a>=base&&a<base+sizeof b.records&&(a-base)%20==0)++index_reads;
+    }
+    u32 value;std::memcpy(&value,p,4);return value;
+}
+static unsigned* load(Binding& b,unsigned i){++loads;return tables[&b-bindings][i];}
+
+@ACQUIRE@
+
+static void reset(unsigned count){
+    std::memset(bindings,0,sizeof bindings);stats={};locks=unlocks=owners=loads=index_reads=clock35=0;hold=false;
+    stats.metadata_bytes=128;
+    for(unsigned k=0;k<kArchives;++k){
+        auto& b=bindings[k];b.archive=archives[k];b.bytes=sizeof archives[k];b.count=count;
+        for(unsigned i=0;i<count;++i){u32 off=16*(i+1),bytes=64+i;std::memcpy(b.records[i],&off,4);std::memcpy(b.records[i]+4,&bytes,4);}
+    }
+}
+int main(){
+    const char* names[]={"first","middle","last","missing-between","missing-above","null","no-metadata","outside","empty-binding","held-binding"};
+    for(unsigned count:{8U,255U})for(unsigned test=0;test<10;++test){
+        begin(names[test]);reset(count);unsigned index=0,archive=0,expected=1;
+        if(test==1)index=count/2;
+        if(test==2){index=count-1;archive=1;}
+        const void* query=archives[archive]+16*(index+1);
+        if(test<=2)expected=archive*256+index+1;
+        else expected=0;
+        if(test==3)query=archives[0]+17;
+        if(test==4)query=archives[0]+16*(count+1);
+        if(test==5)query=nullptr;
+        if(test==6)stats.metadata_bytes=0;
+        if(test==7)query=reinterpret_cast<const void*>(std::uintptr_t(1));
+        if(test==8){bindings[0].count=0;query=archives[0]+16;}
+        if(test==9){hold=true;bindings[0].bounded=true;}
+        unsigned* result=nullptr;const unsigned token=re4dc_motion_acquire(query,&result);
+        CHECK(token==expected);CHECK(locks==unlocks);CHECK(loads==unsigned(expected!=0));CHECK(owners==unsigned(expected!=0));
+        if(expected){CHECK(result==tables[archive][index]);CHECK(bindings[archive].slots[index].pins==1);CHECK(stats.pinned_bytes==64+index);}
+        else CHECK(result==nullptr&&stats.pinned_bytes==0);
+        EXPECT(MotionProbes,index_reads);EXPECT(MotionFound,expected!=0);
+        const bool unbound=test==5||test==6||test==7||test==9;
+        EXPECT(MotionUnbound,unbound);EXPECT(MotionMissing,!expected&&!unbound);
+        EXPECT(MotionBinary,RE4DC_MOTION_INDEX&&!unbound);EXPECT(MotionLinear,!RE4DC_MOTION_INDEX&&!unbound);
+        unsigned semantic=hash_word(token,loads);semantic=hash_word(semantic,index_reads);semantic=hash_word(semantic,stats.pinned_bytes);
+        semantic=hash_word(semantic,owners);semantic=hash_word(semantic,locks);semantic=hash_word(semantic,unlocks);
+        done(semantic);
+    }
+}

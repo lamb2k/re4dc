@@ -1,0 +1,73 @@
+@TYPES@
+#include <array>
+#include <memory>
+#include <vector>
+@CALLERS@
+struct Set {
+    std::array<TEXHeader,248> headers{};
+    std::array<TEXDescriptor,248> descriptors{};
+    TEXPalette tpl{};cModelInfo info{};ModelData data{};cModelExt model{};cTexChg change{};
+    Set(unsigned count,unsigned seed=1) {
+        for(unsigned i=0;i<248;++i){
+            headers[i].data=reinterpret_cast<void*>(std::uintptr_t(0x8c100000+seed*0x4000+i*32));
+            headers[i].width=64;headers[i].height=32;headers[i].format=5;
+            descriptors[i].textureHeader=&headers[i];
+        }
+        tpl.numDescriptors=count;tpl.descriptorArray=descriptors.data();info.tpl_addr=&tpl;
+    }
+    cModel* m(){return reinterpret_cast<cModel*>(&model);}
+};
+static void reset(const char* name){
+    clear_events(name);std::memset(&game,0,sizeof(game));
+#if RE4DC_FRONT_TEXOBJ
+    std::memset(ft_keys,0,sizeof(ft_keys));std::memset(ft_recs,0,sizeof(ft_recs));
+    ft_nkeys=ft_nrecs=0;ft_room=~0U;ft_cur=nullptr;ft_swapped=0;
+    ft_hits=ft_builds=ft_fallbacks=ft_flushes=ft_resets=0;
+#endif
+}
+int main(){
+    reset("three-original-source-caller-blocks");{
+        Set a(3);caller0(a.m(),&a.info,&a.data);caller1(a.m(),&a.info,&a.data);caller2(a.m(),&a.info,&a.data);
+#if RE4DC_FRONT_TEXOBJ
+        expect(FrontBuild,1);expect(FrontHit,2);expect(FrontSource,0);check(total()==3,"no extra events on hits");
+#else
+        expect(FrontSource,3);check(total()==3,"one source event per original caller");
+#endif
+    }
+#if RE4DC_FRONT_TEXOBJ
+    reset("build-hit-refresh-flush");{
+        Set a(3);check(frontTexInit(a.m(),&a.info,&a.data),"initial build");
+        expect(FrontBuild,1);check(total()==1,"single build event");
+        check(frontTexInit(a.m(),&a.info,&a.data),"stable hit");expect(FrontHit,1);
+        a.headers[1].width=128;check(frontTexInit(a.m(),&a.info,&a.data),"descriptor refresh");
+        expect(FrontBuild,2);expect(FrontFlush,3);
+        frontTexFlush();frontTexFlush();expect(FrontFlush,6);check(total()==9,"flush counts textures, repeated idle flush is silent");
+    }
+    reset("refused-swap-three-source-arms");{
+        Set a(3);a.change.num=1;a.change.tbl[0]=0;a.change.tbl[1]=4;a.model.pTexChg=&a.change;
+        caller0(a.m(),&a.info,&a.data);caller1(a.m(),&a.info,&a.data);caller2(a.m(),&a.info,&a.data);
+        expect(FrontBuild,1);expect(FrontHit,2);expect(FrontRefuse,3);expect(FrontSource,3);check(total()==9,"cache lookup hit and caller refusal coexist");
+    }
+    reset("zero-count-refusal");{
+        Set a(0);caller0(a.m(),&a.info,&a.data);expect(FrontRefuse,1);expect(FrontSource,1);check(total()==2,"zero descriptor source call");
+    }
+    reset("smaller-set-materialization");{
+        Set a(5),b(2,2);frontTexInit(a.m(),&a.info,&a.data);frontTexInit(b.m(),&b.info,&b.data);
+        expect(FrontBuild,2);expect(FrontFlush,5);check(total()==7,"materialized previous set size");
+    }
+    reset("key-capacity-reset");{
+        std::vector<std::unique_ptr<Set>> sets;
+        for(unsigned i=0;i<33;++i){sets.emplace_back(new Set(2,i+1));auto& s=*sets.back();frontTexInit(s.m(),&s.info,&s.data);}
+        expect(FrontBuild,33);expect(FrontReset,1);expect(FrontFlush,2);check(total()==36,"one bounded key reset");
+    }
+    reset("record-capacity-reset");{
+        Set a(248),b(248,2),c(20,3);frontTexInit(a.m(),&a.info,&a.data);frontTexInit(b.m(),&b.info,&b.data);frontTexInit(c.m(),&c.info,&c.data);
+        expect(FrontBuild,3);expect(FrontReset,1);expect(FrontFlush,248);check(total()==252,"one bounded record reset");
+    }
+    reset("room-reset-is-not-capacity-reset");{
+        Set a(3);frontTexInit(a.m(),&a.info,&a.data);++game.room_no;frontTexInit(a.m(),&a.info,&a.data);
+        expect(FrontBuild,2);expect(FrontFlush,3);expect(FrontReset,0);check(total()==5,"front reset label means capacity pressure");
+    }
+#endif
+    std::printf("{\"cases\":%u,\"checks\":%u}\n",cases,checks);
+}

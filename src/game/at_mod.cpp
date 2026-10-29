@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 // game/at_mod.cpp: character-to-character collision and the hit box ("yarare") setup. EmAtCheck
 // pushes a character's cAtariInfo body (cylinder or yaw-aligned box) out of every other
 // character's and object's body by push priority; EmHitCheck / ObjHitCheck trace a line against
@@ -137,6 +141,10 @@ void YarareAddCube(cEm* em, YARARE_INFO* box, f32 x, f32 y, f32 z, f32 w, f32 h,
 #define ATCHK_MAX 96
 static int atchkCollect(cEm* head, cEm** out)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::CollisionCollectSource, 1);
+#endif
+#line 140
     int n = 0;
     for (cEm* m = head; m != 0; m = (cEm*) m->pNext) {
         cEm* nx = (cEm*) m->pNext;
@@ -145,6 +153,10 @@ static int atchkCollect(cEm* head, cEm** out)
         }
         if ((m->atari.m_flag & 0x200) && m->atari.m_radius2 != 0.0f) {
             if (n == ATCHK_MAX) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::CollisionCandidateOverflow, 1);
+#endif
+#line 148
                 return -1;
             }
             out[n++] = m;
@@ -190,6 +202,10 @@ static u32 atlSync, atlRebuild, atlOvf, atlMis, atlMaxN, atlVisits;
 #endif
 static int atListBuild(AtList* L, cEm* head, u32 gen)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::CollisionAliveBuild, 1);
+#endif
+#line 193
     int n = 0;
 #if defined(RE4DC_ATCHK_CACHE) && RE4DC_ATCHK_CACHE
     u32 lo = 0xFFFFFFFFu;
@@ -199,6 +215,10 @@ static int atListBuild(AtList* L, cEm* head, u32 gen)
     L->gen = gen;
     for (cEm* m = head; m != 0; m = (cEm*) m->pNext) {
         if (n == ATLIST_MAX) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::CollisionAliveOverflow, 1);
+#endif
+#line 202
             L->n = -1;
 #if !defined(RE4DC_ATLIST_OVERFLOW) || !RE4DC_ATLIST_OVERFLOW
             L->head = 0;
@@ -247,6 +267,10 @@ static inline int atListSync(AtList* L, cEm* head, u32 gen)
             return atListBuild(L, head, gen);
         }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::CollisionCachedOverflow, 1);
+#endif
+#line 250
         return -1;
     }
 #endif
@@ -291,6 +315,10 @@ static int atchkCollectList(const AtList* L, int N, cEm** out)
         }
         if ((m->atari.m_flag & 0x200) && m->atari.m_radius2 != 0.0f) {
             if (n == ATCHK_MAX) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::CollisionCandidateOverflow, 1);
+#endif
+#line 294
                 return -1;
             }
             out[n++] = m;
@@ -345,6 +373,10 @@ static int atchkNotedApply(AtCand* C, const AtList* L)
 #if RE4DC_ATCHK_CACHE == 2
         ++atcRing;
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::CollisionDirtyOverflow, 1);
+#endif
+#line 348
         return 0;
     }
     const u32 lo = L->lo;
@@ -395,6 +427,10 @@ static int atchkNotedApply(AtCand* C, const AtList* L)
 #if RE4DC_ATCHK_CACHE == 2
             ++atcFull;
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::CollisionCandidateOverflow, 1);
+#endif
+#line 398
             return 0;
         }
         cEm* const* v = L->v;
@@ -500,6 +536,10 @@ static int atchkCollectObj(cEm** out)
 #endif
 static void atchkPasses(cEm* em, cEm** v, int n)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::CollisionFast, 1);
+#endif
+#line 503
     int i;
     for (i = 0; i < n; i++) {
         v[i]->atari.getPos(v[i], &v[i]->atari.m_Pos);
@@ -540,6 +580,10 @@ void EmAtCheck(cEm* em)
         }
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::CollisionSource, 1);
+#endif
+#line 543
     for (m = EmMgr.pAlive; m != 0; m = (cEm*) m->pNext) {
         if ((m->atari.m_flag & 0x200) && m->atari.m_radius2 != 0.0f) {
             m->atari.getPos(m, &m->atari.m_Pos);
@@ -558,6 +602,10 @@ void EmAtCheck(cEm* em)
 #if defined(RE4DC_ATCHK) && RE4DC_ATCHK
 objects:
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::CollisionSource, 1);
+#endif
+#line 561
     for (m = (cEm*) ObjMgr.pAlive; m != 0; m = (cEm*) m->pNext) {
         if ((m->atari.m_flag & 0x200) && m->atari.m_radius2 != 0.0f) {
             m->atari.getPos(m, &m->atari.m_Pos);
