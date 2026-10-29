@@ -599,3 +599,55 @@ look, STRICT, full-image or physical-console acceptance gate.
 **BLOCKED:** Target execution awaits only the coordinator's build slot;
 source/host work is complete for this bounded slice. No private inputs,
 disc mastering, emulator session, release change, SD/Pi action or upload.
+
+### EF01 target build handback, 2026-10-29
+
+**DONE - TARGET BUILD VALIDATED, default off.** Code commit
+`d6a53024def32c1c8f94411114206b44a2cb83c8` built from a clean isolated tree
+with pinned SH4ZAM `33fa4850cacb30dd0ad35485ef035526ec4ce782`. Three fresh
+full `rP` release-recipe arms (absent, explicit zero, enabled) passed rc=0,
+empty `missing.txt`, in 42 seconds each. The enabled arm appends
+`ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1
+NATIVE_ACTOR_SKIN_LAZY=1 ACTOR_SOURCE_SPAN=1` to the unchanged current
+`rr/recipe.conf -> ch2-build.sh rP` chain. Private programme registries and
+fresh output labels kept other lanes' artifacts separate.
+
+Current baseline dependencies were read back as transaction=1,
+skin-lazy=1, PL08=1 and isolated-skin-owner-pool=0. All 527 logged C++
+compilation commands per arm were audited, including game/platform and
+generated module/overlay stubs: every enabled command carries the same
+`RE4DC_ACTOR_SOURCE_SPAN=1` layout definition; every absent/zero command
+omits it. Both global CPPFLAGS contain precisely that appended layout
+definition. The existing transaction's level-zero-only admission and all
+unrelated exclusions remain unchanged.
+
+Against the shared clean pinned `9ee386e3` release baseline, both absent and
+zero preserve the complete raw programme, all 15 overlays and all 11
+allocated ELF sections. The programme is 3,372,036 bytes, SHA-256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`.
+Ten selected layout-dependent game/platform objects also preserve every
+allocated section. Debug ELF files differ and are not claimed identical.
+The enabled ELF SHA-256 is
+`58fa448c42f221b1be9b4f6a261d1e74811f276e8eb6819780e0e68f3db12409`.
+
+Target assertions confirm 32-byte metadata and the memo symbol is exactly
+1,024 bytes. The combined FORMAT32/UV16/SOURCE_SPAN enabled profile changes
+text by +4,800 bytes, rodata by +256 and BSS by +1,120 relative to the release
+baseline. These combined-profile deltas do not isolate EF01 cost or measure
+retained primitive memory/peak loading overlap. No runtime performance or
+memory-saving result follows from them.
+
+Final exact-code normal and ASan/UBSan fixtures both pass 214 assertions for
+each of the ordinary and isolated owner implementations; the existing
+three-mode Build32 regression remains 13,070 assertions passed.
+
+**NEXT:** Actual-data bounded-span admissions/refusals, scan/reuse and live
+metadata measurements, effective output comparison, and the affected
+runtime/look/STRICT/full-image/hardware gates. This first slice does not
+enable legacy certificate semantics, CI/bake/pending-LOD authority, general
+native FE fallback, or close all of EF01. The whole EF card remains open.
+
+**BLOCKED:** No source/build blocker for integrating this default-off slice.
+No live job remains and the exclusive SDK slot is released. Runtime and
+physical-console acceptance are pending their bound inputs/session; no
+emulator, disc mastering, SD/Pi change, publication or upload occurred.
