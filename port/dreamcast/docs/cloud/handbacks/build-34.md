@@ -1273,3 +1273,63 @@ that contract. No runtime/emulator, original failed memory-capture retry,
 reconstruction, parser relaxation, false memory PASS, publication, SD or Pi
 action is authorized by this slice. It does not complete EF16 or block other
 ready engine work. Original memory-observation failures remain intact.
+
+
+### EF16 target/OFF gate, 2026-10-29
+
+**DONE (partial selector/device slice, TARGET BUILD VALIDATED):** source
+`aa5f4b549a1d7816815fcd5ba8100a0d7ea88b24` passes three fresh full release
+builds, control absent/explicit0/1. Each actual build log and nonempty ELF
+exists, and each `missing.txt` exists and is empty. Shared control is runtime
+064bfa4e/source-compatible255964fd; original mem/fault source bytes are checked
+against255964fd before target preprocessing. Control ELF SHA256
+`d1740528a367990207948d8326cda6993c922be8c2f0cdc111499c071b8ef18a`.
+
+Compiler15.2.0, KOS804b3195, pinned sh4zam33fa4850, epoch1760000000; recipe
+SHA256 `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+After normalizing only owned worktree/output paths, all resolved definitions
+agree except new `LOG_ATOMIC16` (undeclared on control,0/0/1 on the arms).
+Release's old diagnostic atomic macro is absent, so ON really selects the new
+independent guard. Actual captured Make commands through the original KOS
+wrapper/environment preprocess full `mem.cpp` and `fault.cpp` with `-E -P`;
+control/absent/zero results are byte identical, as are allocated sections of
+both complete target objects. Four disabled source/object comparisons pass.
+
+Control/absent/zero complete3372036-byte programmes match SHA256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`;
+all15 overlays and all11 allocated ELF sections match addresses, sizes, types,
+flags, alignment and file-backed payloads. Whole ELF files differ; no whole-ELF
+or raw-disc identity claim. Enabled ELF SHA256
+`d45cddafead843415c29970ac896b52b0e1850a9a4c9e61e99cc39401c30ffe7`.
+Linked `.text` grows64 bytes; BSS/data sizes are unchanged. This is code/storage
+accounting, not execution, IRQ duration, cache visibility or memory acceptance.
+
+Exact build command shape, using bound private inputs and fresh labels:
+
+```sh
+source <(sed 's/\r$//' "$TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+# Unique FRESH_LABEL for each: EXTRA unset, LOG_ATOMIC16=0, LOG_ATOMIC16=1.
+K="$LOGS" T="$TREE" LP="$FRESH_LABEL" CH2="$CH2 ${EXTRA:-}" \
+  ROUTE_PROGRAMS_DIR="$PROGRAMS" ROUTE_PROGRAMS_JSON='' \
+  bash "$TREE/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+```
+
+Fresh output guards precede invocation of this existing recipe, which otherwise
+removes a same-label directory. SDK runner completed0 and slot was released;
+no live job remains. Actual source/build/resolved/preprocessor/object receipts
+remain in private `engine-ef16-target-20261029` evidence. OFF identity receipt
+SHA256 `3e9c9250788a5caa3123d3b362ed1e50519efd776e3fe818e7eb94fed63533ad`;
+affected-TU receipt SHA256
+`2305aa8d2db9328b8d66e5abda3f2fedaf02ef870e5924dd52512c8227f098e0`.
+
+**NEXT / PARKED (owner):** retain this independent selector default-off and
+outside broad ALL ON. Before suitability, define a source-supported maximum
+append/fault contract, address the retained forced synchronous/NMI publication
+counterexamples, and measure actual worst allowed IRQ-disabled duration on
+target. Actual RAM/cache visibility is a separate unresolved gate. A byte-work
+count, target compilation or final ring equality cannot close those checks.
+**BLOCKED at observer acceptance only:** no emulator/capture, unchanged failed
+memory-judge retry, reader/parser relaxation, reconstructed value, memory PASS,
+hardware timing or whole EF16 completion is claimed. Original failed captures
+and their exact judge semantics remain preserved; independent engine work
+continues while this supporting candidate stays parked.
