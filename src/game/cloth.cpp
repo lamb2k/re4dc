@@ -84,6 +84,13 @@ static re4dc::NativeDrawResult re4dc_cloth_native(Cloth* pCL, cLight** list, Vec
 static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #endif
 {
+#if RE4DC_CLOTH_SHEET11
+    if(cloth11_slot(pCL)>=8)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    // A queued callback may arrive after Destroy/Init. Do not dereference its
+    // texture/grid or enter the recovered GX fallback for a retired pool cell.
+    if(!(pCL->be_flag&1))return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!(pCL->be_flag&0x20))return {re4dc::NativeDrawOutcome::PolicySkip};
+#endif
     const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
@@ -163,17 +170,22 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
         return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
     m.cols=cols;m.rows=rows;
     Re4dcClothMaterial11 material;re4dc::NativeDrawResult stop{re4dc::NativeDrawOutcome::Refused};
-    if(!re4dc_cloth_prepare11(&m,&material,&stop))return stop;
-    // Texture I/O has completed. No source pointer is held by the prepared material.
-    if(cloth11_epoch(pCL)!=source_epoch || pG->Frame_cnt!=source_frame || pCL->pVer!=source || pCL->divH!=cols || pCL->divV!=rows)
-        return {re4dc::NativeDrawOutcome::Refused};
+    const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
+        pCL->pVer==source && pCL->divH==cols && pCL->divV==rows;};
+    const int prepared=re4dc_cloth_prepare11(&m,&material,&stop);
+    // Even failed texture I/O may retire/reuse the source. This is terminal,
+    // including zero publication: the source GX fallback must not read it.
+    if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!prepared)return stop;
     f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
     auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;}};
     transform(0,top);
     for(unsigned row=0;row+1<rows;++row){
-        if(cloth11_epoch(pCL)!=source_epoch || pG->Frame_cnt!=source_frame){progress.add({re4dc::NativeDrawOutcome::Refused});return progress.result;}
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
         transform(row+1,bottom);const Re4dcClothBand11 view{top,bottom,cols,0,row};
-        if(!progress.add(re4dc_cloth_band11(&material,&view)))return progress.result;
+        const auto result=re4dc_cloth_band11(&material,&view);
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
+        if(!progress.add(result))return progress.result;
         float* previous=top;top=bottom;bottom=previous;
     }
     return progress.result;

@@ -75,6 +75,10 @@ int main(){
         epoch_start=source.index('#if defined(RE4DC_CLOTH_SHEET11)',source.index('Cloth ClothWk[8]'))
         epoch_end=source.index('\n#endif',epoch_start)+len('\n#endif');epochs=source[epoch_start:epoch_end]
         destroy=old.function(source,'void Cloth::Destroy()');init=old.function(source,'void ClothInit()')
+        routing_start=source.index('\n#if defined(RE4DC_CLOTH_NATIVE)',source.index('    GXSetChanMatColor(4, pCL->color);'))
+        routing_end=source.index('\n#if defined(RE4DC_FALLBACK_AUDIT29)',routing_start)
+        routing=source[routing_start:routing_end]
+        fallback=old.function(source,'    for (i = 0; i < pCL->divV - 1; i++)')
         stub,code=packet_harness()
         code=code.replace('Entry* resolve(', 'void source_hook();\nEntry* resolve(').replace('++opens;return missing?', '++opens;source_hook();return missing?')
         code+=r'''
@@ -83,44 +87,63 @@ using u32=unsigned;using f32=float;using Mtx=float[3][4];struct Vec{float x,y,z;
 struct Color{unsigned char r,g,b,a;};struct cLight{Color DispCol;unsigned xD;float Radius;Vec World;};
 struct Env{Color AmbientScr{255,255,255,255};};struct LightManager{Env e;Env* getEnvPtr(){return &e;}} LightMgr;
 struct Global{struct{Mtx v_mat;}Cam;unsigned Frame_cnt;}global_value,*pG=&global_value;
-struct Cloth{void* tex;void* pTobjA;unsigned divH,divV;void* tlut;unsigned x74;Color color;float Scale;Mtx mat;Vec* pVer;void* m_pMem;unsigned be_flag;void Destroy();};
+struct Cloth{void* tex;void* pTobjA;unsigned divH,divV;void* tlut;unsigned x74;Color color;float Scale;Mtx mat;Vec* pVer;Vec* pNor;void* m_pMem;unsigned be_flag;void Destroy();};
 Cloth ClothWk[8];
 '''+epochs+r'''
 unsigned retirement_before=0;
 void Mem_free(void*){assert(cloth11_epoch(&ClothWk[0])!=retirement_before);}
 '''+destroy+'\n'+init+r'''
-unsigned transforms=0;bool retire_on_load=false;
-void source_hook(){if(retire_on_load){retirement_before=cloth11_epoch(&ClothWk[0]);ClothWk[0].Destroy();}}
+unsigned transforms=0;bool retire_on_load=false,fail_after_retire=false,frame_on_load=false,retire_transform=false,row_retired=false;
+void source_hook(){if(retire_on_load){retirement_before=cloth11_epoch(&ClothWk[0]);ClothWk[0].Destroy();if(fail_after_retire)missing=true;}if(frame_on_load)++pG->Frame_cnt;}
 void PSMTXScale(Mtx m,float,float,float){std::memset(m,0,sizeof(Mtx));m[0][0]=m[1][1]=m[2][2]=1;}
 void PSMTXConcat(const Mtx,const Mtx,Mtx out){PSMTXScale(out,1,1,1);}
-void PSMTXMultVec(const Mtx,const Vec* p,Vec* out){++transforms;*out=*p;}
+void PSMTXMultVec(const Mtx,const Vec* p,Vec* out){assert(!row_retired);++transforms;*out=*p;
+ if(retire_transform&&transforms==4){retirement_before=cloth11_epoch(&ClothWk[0]);ClothWk[0].Destroy();++entry.upload_incarnation;row_retired=true;}}
 float GetDistance3(Vec*,Vec*){return 0;}
 void projection(float* out){auto q=quad();std::memcpy(out,q.projection,sizeof q.projection);}
 void viewport(float* out){auto q=quad();std::memcpy(out,q.viewport,sizeof q.viewport);}
 #define RE4DC_GXF_GET_PROJECTION(p) projection(p)
 #define RE4DC_GXF_GET_VIEWPORT(p) viewport(p)
 '''+adapter+r'''
+unsigned fallback_reads=0,fallback_draws=0;
+void GXBegin(unsigned primitive,unsigned,unsigned){assert(primitive==0x98);++fallback_draws;}
+void GXPosition3f32(float,float,float){++fallback_reads;}
+void GXNormal3f32(float,float,float){}void GXTexCoord2f32(float,float){}
+void actual_cloth_caller(Cloth* pCL,cLight** lights,Vec* pos,float size){
+ struct{struct{cLight* pLight[8];}LightInfo;Vec pos;}model{};
+ std::memcpy(model.LightInfo.pLight,lights,sizeof model.LightInfo.pLight);model.pos=*pos;float r=size;int i,j,k,t;
+'''+routing+'\n'+fallback+r'''
+}
 void fresh_source(){reset();source_draws_finished=true;stream_aborted=false;frame_ready=true;draining_parts=false;direct_open=false;
- missing=false;spill_available=true;entry.valid=true;entry.upload_incarnation=1;compiles=opens=transforms=0;retire_on_load=false;pG->Frame_cnt=frame;}
+ missing=false;spill_available=true;entry.valid=true;entry.upload_incarnation=1;compiles=opens=transforms=0;retire_on_load=fail_after_retire=frame_on_load=retire_transform=row_retired=false;fallback_reads=fallback_draws=0;pG->Frame_cnt=frame;ClothWk[0].be_flag=0x31;}
 int main(){using Outcome=re4dc::NativeDrawOutcome;cLight* lights[8]{};Vec pos{};unsigned tex[]={1,(64<<16)|64,14,0};
  for(unsigned width:{2U,99U,100U,101U,255U}){fresh_source();std::vector<Vec> grid(width*4);
   for(unsigned r=0;r<4;++r)for(unsigned col=0;col<width;++col)grid[r*width+col]={float(col)*.001f,float(r),-10};
-  auto original=grid;auto& c=ClothWk[0];c={};c.tex=tex;c.divH=width;c.divV=4;c.pVer=grid.data();c.Scale=1;c.color={128,64,32,192};
+  auto original=grid;auto& c=ClothWk[0];c={};c.tex=tex;c.divH=width;c.divV=4;c.pVer=grid.data();c.be_flag=0x31;c.Scale=1;c.color={128,64,32,192};
   auto result=re4dc_cloth_native(&c,lights,&pos,1);
   if(width<=100){assert(result.outcome==Outcome::Submitted&&result.submitted==3&&transforms==width*4&&opens==1&&compiles==1);}
   else assert(result.outcome==Outcome::UnsupportedBeforePublication&&!transforms&&!opens);
   assert(!std::memcmp(original.data(),grid.data(),grid.size()*sizeof(Vec)));
  }
- fresh_source();Vec grid[8];for(unsigned i=0;i<8;++i)grid[i]={float(i%2),float(i/2),-10};auto& c=ClothWk[0];c={};c.tex=tex;c.divH=2;c.divV=4;c.pVer=grid;c.Scale=1;c.color={255,255,255,255};
+ fresh_source();Vec grid[8];for(unsigned i=0;i<8;++i)grid[i]={float(i%2),float(i/2),-10};auto& c=ClothWk[0];c={};c.tex=tex;c.divH=2;c.divV=4;c.pVer=grid;c.be_flag=0x31;c.Scale=1;c.color={255,255,255,255};
  missing=true;auto result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::Refused&&!transforms&&!deferred_count);
- fresh_source();retire_on_load=true;result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::Refused&&!transforms&&!deferred_count);
+ fresh_source();retire_on_load=true;result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::PartialAbort&&!result.fallback_allowed()&&!transforms&&!deferred_count);
+ Vec normals[8]{};c.pNor=normals;
+ for(unsigned failing_load:{0U,1U}){fresh_source();retire_on_load=true;fail_after_retire=failing_load;actual_cloth_caller(&c,lights,&pos,1);
+  assert(!fallback_reads&&!fallback_draws&&!transforms&&!deferred_count);}
+ fresh_source();frame_on_load=true;actual_cloth_caller(&c,lights,&pos,1);assert(!fallback_reads&&!fallback_draws&&!transforms&&!deferred_count);
+ fresh_source();retire_transform=true;actual_cloth_caller(&c,lights,&pos,1);assert(!fallback_reads&&!fallback_draws&&transforms==4&&!deferred_count);
+ fresh_source();retirement_before=cloth11_epoch(&c);c.Destroy();actual_cloth_caller(&c,lights,&pos,1);assert(!fallback_reads&&!fallback_draws&&!transforms&&!opens);
+ fresh_source();c.be_flag=1;actual_cloth_caller(&c,lights,&pos,1);assert(!fallback_reads&&!fallback_draws&&!transforms&&!opens);
+ // Ordinary resource refusal retains a valid source and its previous routing.
+ fresh_source();missing=true;actual_cloth_caller(&c,lights,&pos,1);assert(fallback_reads==12&&fallback_draws==3&&!transforms);
  fresh_source();grid[7].x=std::numeric_limits<float>::quiet_NaN();result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::UnsupportedBeforePublication&&!transforms&&!opens);grid[7].x=1;
  fresh_source();source_draws_finished=false;deferred_top=16384+kEffectQuad21Node+5*32;spill_available=false;
  result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::PartialAbort&&result.queued==1&&!result.fallback_allowed()&&transforms==6&&deferred_count==1&&opens==1&&compiles==1);
  fresh_source();c.pTobjA=&c;result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::UnsupportedBeforePublication&&!transforms&&!opens);c.pTobjA=nullptr;
  fresh_source();Cloth foreign=c;result=re4dc_cloth_native(&foreign,lights,&pos,1);assert(result.outcome==Outcome::UnsupportedBeforePublication&&!opens&&!transforms);
  assert(!cloth11_epoch(reinterpret_cast<Cloth*>(reinterpret_cast<unsigned char*>(ClothWk)+1)));
- auto slot=cloth11_slot(&c);cloth11_incarnation[slot]=~0U;cloth11_replace(&c);assert(!cloth11_epoch(&c));cloth11_replace(&c);assert(!cloth11_epoch(&c));ClothInit();assert(!cloth11_epoch(&c));
+ auto slot=cloth11_slot(&c);cloth11_incarnation[slot]=~0U;cloth11_replace(&c);assert(!cloth11_epoch(&c));cloth11_replace(&c);assert(!cloth11_epoch(&c));ClothInit();assert(!cloth11_epoch(&c));c.be_flag=0x31;
  result=re4dc_cloth_native(&c,lights,&pos,1);assert(result.outcome==Outcome::UnsupportedBeforePublication);
 }
 '''

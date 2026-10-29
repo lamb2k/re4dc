@@ -636,3 +636,40 @@ current supported asset look, runtime retirement/reentry/pressure and complete
 cost/headroom/hardware acceptance remain pending. No whole-EF11 closure,
 default promotion, emulator/console run, publication or source-material coverage
 claim is made by this checkpoint.
+
+
+### 2026-10-29 EF11 review: terminal source revocation
+
+**DONE (reviewed source/host; corrected target pending):** source revocation is
+terminal even with zero packets published. Always check the pool incarnation,
+source frame, grid pointer and dimensions after material preparation, including
+when preparation failed, before considering an ordinary preflight result.
+Revocation uses EF03 PartialAbort (possibly zero accepted packets), so the actual
+clothTrans routing cannot enter its source GX walk through retired/reused data.
+Recheck before row reads and after band submission/refusal; accepted counts are
+preserved. A callback reaching an already retired pool cell stops before texture
+or grid dereference; a live cell with its draw bit cleared is explicit PolicySkip.
+Ordinary supported-source resource refusal retains its previous routing.
+
+The new suite remains 5/5. Its actual clothTrans routing block and recovered GX
+strip loop are now instrumented: simulated successful/failed texture-I/O
+retirement, source-frame revocation, already retired callbacks and a band refusal
+following source retirement produce zero fallback reads/draws. Missing texture
+with a still-valid source reaches the old source loop, distinguishing that case.
+
+Original source `2626ba4f27efb16d089cd97bd585ac00bf6e15a9` completed its original
+matrix before this review: 8 exact release/dependency OFF object comparisons,
+two enabled objects, and full release OFF / dependency control / original sheet
+ON all rc0/41s, nonempty ELF and existing empty missing.txt. Original release OFF
+raw programme, 15 overlays and 11 allocated ELF sections match bound base
+`255964fdc7d22a61acff1ef59734a36ec91ebff0`. Full original ON remains pre-review
+and does not qualify the corrected source lifetime handling. Receipts/outputs
+are retained under `/root/probe/engine-ef11-20261029-target-r1/` and
+`/root/probe/lanes/route/out-ef11w1{rel,ctrl,on}rP`.
+
+**NEXT:** coordinator-granted narrow target recheck: cloth-only release /
+dependency parent/absent/zero plus supported ON (`--units cloth`), then one
+corrected sheet ON full build. Backend/old controls are unchanged and their
+valid original checks are retained; compare the corrected OFF object to the
+original matrix before reusing those full controls. No SDK retry starts without
+the coordinator slot grant. Material debts and wide-grid refusals above remain.
