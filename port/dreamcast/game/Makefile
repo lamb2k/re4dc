@@ -3574,6 +3574,7 @@ include dbgwarp.mk
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
 include effects30.mk
+include effect_uv12.mk
 # Default-off bounded SH4ZAM point batch in the prepared cloth row consumer.
 include cloth_xm_batch14.mk
 # PVR_RTT (lane castlerender19 2026-10-19): PVR render-to-texture for TexRenderMng targets (default off: no effect).
