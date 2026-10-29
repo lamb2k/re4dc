@@ -748,6 +748,154 @@ Cloud proceeds with the assigned world continuation while those gates are local.
 EF13 water-layer producer/schema/compiled-adapter/current-consumer implementation is assigned to the cloud now, using public source tables and synthetic fixtures. Local EF11 retains cloth/effect include ownership; do not edit those files or effects30.mk. This is a scoped source implementation assignment, not accepted water coverage. Real private packages, live look/gameplay/lifecycle and console cost remain separate owner gates. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
 
 
+## 2026-10-29 EF13 Build29 follow-up: loaded room W29 member and retirement
+
+**2026-10-29 progress: DONE** loaded-package producer, actual load/retirement adapter, source review and normal/sanitizer fixtures on `14b5c196db699640f7a9f39bc2318df22dc45ade`; **NEXT** exact pinned target/private binding commands below; **BLOCKED** SDK/private/current-image/console acceptance only. Branch `codex/water-package-20261029`. The first compiled-table schema remains the unchanged fallback. This follow-up gives the *actual loaded decoded room archive* an optional `W29` tagged member. The public producer `water_package29.py` derives its row bytes from the checked-in generated water tables, verifies each room's EFF-family provenance and source key through `water_layer29_source.py`, then appends one canonical version-1 W29 member to a composed native `.dar`. It writes only when `--enable-water29` is explicit, never edits the input and rejects duplicate W29, malformed tag/offset/native-table layouts or reserved header bytes, native-table rows crossing their member extent, input/output hardlink aliases and 32-bit payload/container overflow. Its narrow append operation in the existing `dar_graft.py` uses the established tagged member helper and `ps2_objects.remap_native_tables` to preserve unknown members and rebase ESQ/NTR absolute references and payload-size words. Existing graft replacement behavior remains unchanged.
+
+The guarded `ReadAreaData` hook runs after effect/UI admission and before source tagged-file relocation. It passes `pG->pRoom`, the DVD-reported decoded `out_data_size`, and the current room to `re4dc_water29_bind_archive`. The water-only parser bounds the archive count, offsets, exactly one W29 member, fixed 56-byte header, version, room, source-family key, 32-row limit, canonical row offsets/extents and empty-extension origin, trailing padding and row CRC *before* any row read. Each row is then copied by `memcpy` into a typed local for numeric validation; accepted rows are copied into the existing bounded `Water29Store` before `water29Publish` and the unchanged selector/queue/draw consume them. No typed row is read from the raw DVD buffer. W29 missing is `UNBOUND`; malformed/foreign/truncated W29 is `REFUSED`; both retain the compiled supported fallback. A deliberately authored no-water member is distinct. Archive publication assigns a nonwrapping room-load incarnation rather than trusting a serialized token. Existing `re4dc_effect_retire_room`, called before the room heap is replaced and on soft reset, now retires the active water incarnation before unbinding the effect archive. Same-address reload cannot reuse the old authority; queued WaterNodes still own their copied records. Missing member plus disabled control changes no existing water behavior. No new room or private-content coverage is claimed.
+
+**Controls and files.** `WATER_LAYER29=0` remains the default. Its existing dedicated fragment retains the integrated literal-value validation, and selects the definition for exactly `src/game/espgen45.o`, `src/game/read.o`, and `platform/native_effect.o`; `platform/native_ui.o` and other TUs do not receive it. Owned changes are `src/game/espgen45.cpp`, `src/game/read.cpp`, new `src/game/water_layer29_package.h`, `port/dreamcast/game/platform/native_effect.cpp`, `port/dreamcast/game/water_layer29.mk`, `port/dreamcast/tools/d367/graft/dar_graft.py`, new `port/dreamcast/tools/d367/water/water_package29.py`, and new `port/dreamcast/tools/cloud/build29/water_package29_fixture.py`. No top-level Make, native_ui/model, trans, tessellator, queue, texture loader, table values, or shared handback was edited.
+
+**Validation.** From this worktree, `python3 -B port/dreamcast/tools/cloud/build29/water_package29_fixture.py` passes 4/4 normal tests; `ASAN_OPTIONS=detect_leaks=0 WATER29_SANITIZE=1 python3 -B port/dreamcast/tools/cloud/build29/water_package29_fixture.py` passes the same 4/4 under ASan/UBSan. The prior `water_layer29_fixture.py` passes 4/4 normal and 4/4 under the same sanitizer setting. The new fixture makes an actual synthetic DAR, runs the public producer, checks unknown member bytes and rebased ESQ/NTR references, and runs the extracted production read hook, schema binder, selector, draw and effect retirement hook. Compiled and package-bound native-layer call streams match for both main and extension rooms; the fixture compares all selected row bytes with the compiled tables, including the 14-row extension. It covers mutation after publication, same-address row replacement and incarnation change, old-token retirement, a deliberately unaligned decoded buffer, checksum-valid invalid numeric data, malformed version/room/key/CRC/extents/offset/empty-extension origin, duplicate and absent W29, no-water, reserved-header and overflow refusal, native-table row spill, output hardlink alias and existing whole-tag graft replacement. Primary-Make dry runs prove absent and explicit zero commands identical, ON exactly the three affected objects, and empty/`%`/multi-token/invalid controls rejected. Pinned `14b5c196db699640f7a9f39bc2318df22dc45ade` baseline versus current feature-OFF preprocessing and host object bytes match for the new read/native-effect excerpts; the prior fixture retains the extracted production espgen45 selector/draw/queue OFF comparison to `c027b26e`. `git diff --check` passes. With `g++ -std=c++17 -O2 -w -fstack-usage` on the source-extracted espgen45 object, ON baseline at `a5ac02a` versus package candidate: ext OFF `size` text/data/BSS 6887/16/8268 -> 9415/16/8300 bytes; ext ON 10831/20/10732 -> 14319/20/10732 bytes. New archive bind reports 448-byte host stack with extension OFF and 624 bytes ON (`dynamic,bounded` in the host `.su` report). These are host extracted-source measurements, not SH target costs or a memory saving.
+
+**NEXT / local owner gates.** No `kos-c++`/pinned SH-4 SDK or private Build-Assets was present in this cloud workspace, so a primary-Make dry run is only flag-selection proof. Build the three affected SH target objects, compare the private complete OFF image/overlays to the accepted release, then build the compatible ALL ON QA image with the matched private package. Actual generator inputs stay private; the local command shape for one authorized room is:
+
+```sh
+(
+set -eu
+: "${AUTHORIZED_WORLDFX_CACHE:?set the authorized worldfx cache path}"
+: "${AUTHORIZED_PS2_IMAGE:?set the authorized PS2 image path}"
+: "${PRIVATE_STAGE:?set the existing private output directory}"
+: "${REVIEWED_WATER29_SOURCE_INC:?set the reviewed metadata output path}"
+: "${COMPOSED_R107_DAR:?set the final composed r107 archive path}"
+: "${STAGED_R107_DAR:?set the staged r107 archive output path}"
+: "${PINNED_KOS_BASE:?set the pinned KOS SDK path}"
+python3 port/dreamcast/tools/d367/water/water_ps2_table.py --cache "$AUTHORIZED_WORLDFX_CACHE" --out "$PRIVATE_STAGE/water_ps2_table.inc"
+python3 port/dreamcast/tools/d367/water/water_ps2_ext.py --iso "$AUTHORIZED_PS2_IMAGE" --out "$PRIVATE_STAGE/water_ps2_ext.inc"
+python3 port/dreamcast/tools/d367/water/water_layer29_source.py --main "$PRIVATE_STAGE/water_ps2_table.inc" --ext "$PRIVATE_STAGE/water_ps2_ext.inc" --out "$REVIEWED_WATER29_SOURCE_INC"
+python3 port/dreamcast/tools/d367/water/water_package29.py --enable-water29 --input "$COMPOSED_R107_DAR" --output "$STAGED_R107_DAR" --room r107 --main "$PRIVATE_STAGE/water_ps2_table.inc" --ext "$PRIVATE_STAGE/water_ps2_ext.inc"
+make -C port/dreamcast/game obj/src/game/espgen45.o obj/src/game/read.o obj/platform/native_effect.o ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1 KOS_BASE="$PINNED_KOS_BASE"
+)
+```
+
+That metadata output must be reviewed and installed at the compiled adapter boundary, with current room masks, before any new family may bind; this candidate only authorizes the existing nine public families. Stage W29 after the final composed room package has been selected, preserve its source receipt, and verify ESQ/NTR bindings, room reentry, partial native refusal, texture lifetime, look, STRICT/gameplay, heap/VRAM and console cost on the matched private image. The exact full-release commands follow; actual image hashes, target object sizes and hardware measurements remain local results; no source-only test claims them.
+
+Coordinator review additionally restored native_effect.cpp diagnostic line identity with `#line 15` after the new guarded declaration. Full-TU SH-conditional preprocessing is equal at absent/zero with EFFECT_BIND_DIAG=0 and =1; removing that line directive is a failing negative control. This closes the same class of OFF diagnostic drift found in frontend work without hiding or normalizing constants.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${WP29_BASE_TREE:?fresh base worktree path}"
+: "${WP29_LOGS:?fresh log directory}"
+: "${WP29_PROGRAMS:?fresh programme directory}"
+: "${WP29_LABEL:?fresh lane label prefix}"
+WP29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$WP29_BASE_TREE" 14b5c196db699640f7a9f39bc2318df22dc45ade
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$WP29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$WP29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$WP29_BASE_TREE" "${WP29_LABEL}base" ""
+candidate_build "$WP29_CANDIDATE_TREE" "${WP29_LABEL}absent" ""
+candidate_build "$WP29_CANDIDATE_TREE" "${WP29_LABEL}off" "WATER_LAYER29=0"
+candidate_build "$WP29_CANDIDATE_TREE" "${WP29_LABEL}ctrl" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=0"
+candidate_build "$WP29_CANDIDATE_TREE" "${WP29_LABEL}on" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${WP29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${WP29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${WP29_LABEL}offrP" \
+  --output "$WP29_LOGS/water-package29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+No target warm/cold-I cycle or cache-line cost and no MODELLED whole-frame gain is claimed. The adapter extends the existing source-data path; it does not add private room coverage by itself.
+
+**2026-10-29 progress clarification:** the legacy espgen45 OFF fixture compiles the extracted production selector, draw and queue bodies with controlled dependencies; it is not a complete target translation-unit or linked-image comparison. The new full native_effect preprocessing diagnostic check is separately identified above. Normal and ASan/UBSan W29 package tests passed again after synchronization and the line-identity correction. Target/full-image acceptance remains pending.
+
+**2026-10-29 progress: DONE** clean synchronization of this reviewed local
+candidate with documentation-only recovery base `d45eb759dd92685255929625e04fae3d7a46bca7`. The previously
+reviewed tip is `c7db82a73b154911589149779b720ebaf7272d9f`; every changed path in this synchronization is under
+`port/dreamcast/docs/`, so production/fixture/Make bytes and prior validation
+scope are unchanged. No runtime check is relabeled as freshly executed.
+**NEXT** origin publication when writes return results, then the named
+changed-input target/private gates in this handback. **BLOCKED** no successful
+GitHub write/ref update is established for this local delivery. Keep earlier
+target failures and dependency/publication holds; this documentation-only merge
+does not enable a control, integrate source, or qualify a whole EF card.
+
+## 2026-10-29 recovery: EF13 actual loaded W29 package
+
+**Coordinator mergeability correction:** the water load hook now runs immediately after the load-time clock stamp and before OSReport/tagged-file relocation, still after effect/UI admission. This separates it from the frontend ownership hook at the same loader boundary without transplanting that unmerged feature. Optional W29 parsing is excluded from the native-read timing diagnostic; gameplay/material/lifetime order is retained. Fresh package suites PASS5/5 normal and5/5 ASan/UBSan after this source edit, including exact full-three-TU SH-conditioned absent/zero preprocessing. No target or live claim is added.
+
+Queue Status is published by the sole coordinator in the [live recovery checkpoint](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md#status), alongside this source delivery. Keeping shared Build rows in that one branch prevents competing row edits; this branch retains its existing build handback and card-specific backlog update.
+
+**DONE:** recovered source ebc938408692e9d35a89f31d1878e5d83237bf98 and
+tip20bcbb830ff89e587b8602dbbc42854a14299399 without changing old worktrees.
+The current integration comparison is d45eb759dd92685255929625e04fae3d7a46bca7.
+Reviewed the actual opt-in DAR producer, loaded decoded extent hook, bounded
+copied rows, current-room/source-key checks, nonwrapping load incarnation,
+same-address reload and effect-retirement caller. No additional production
+defect was found in this bounded recovered slice; the compiled-table fallback
+and WATER_LAYER29 default0 remain unchanged.
+
+Recovery adds strict complete-TU SH-conditioned absent/zero preprocessing for
+espgen45.cpp, read.cpp and native_effect.cpp using actual primary-Make object
+definitions, extension0/1 and effective diagnostic0/1. The diagnostic arms set
+DISC_READ_FALLBACK=3 because the current Make rule nests EFFECT_BIND_DIAG there;
+assertions require the intended macro on the actual affected commands. This
+prevents an inert diagnostic control from being counted as coverage.
+
+Fresh validation, all PASS:
+
+```sh
+python3 -B port/dreamcast/tools/cloud/build29/water_package29_fixture.py
+ASAN_OPTIONS=detect_leaks=0 WATER29_SANITIZE=1 python3 -B port/dreamcast/tools/cloud/build29/water_package29_fixture.py
+python3 -B port/dreamcast/tools/cloud/build29/water_layer29_fixture.py
+ASAN_OPTIONS=detect_leaks=0 WATER29_SANITIZE=1 python3 -B port/dreamcast/tools/cloud/build29/water_layer29_fixture.py
+git diff --check
+```
+
+Package/load/consumer/retirement:5/5 normal and5/5 ASan/UBSan. Existing schema
+and consumer:4/4 normal and4/4 sanitizer. Actual synthetic DAR/member rebasing,
+load/retire hooks, compiled/package parity, copied lifetime, old-token retirement,
+malformed/foreign/truncated/checksum/numeric refusal and deliberate no-water are
+covered. LeakSanitizer is disabled for the recorded sandbox /proc limitation;
+address/undefined checks are retained.
+
+**NEXT:** local compiles the three affected SH objects, runs the complete
+programme/allocated-section/overlay absent-zero judge, and binds a matched actual
+W29 package before current-image lifecycle/look/STRICT/memory/cost/console gates.
+Use the existing WP29 command block with fresh paths and base d45eb759 instead
+of its historical14b5c196. **BLOCKED:** pinned SDK and private/runtime gates only.
+Host preprocessing with SH conditionals is not target compilation. This slice
+does not add a new private room, change defaults, publish media or close EF13.
+
 ## 2026-10-29 EF13 Build29: bounded, source-bound compiled water layer adapter
 
 **DONE (first public-source slice).** Against current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` (the unchanged `espgen45.cpp` base blob is `130ffee540ccf28df31b5696312cb6993eac1bd6`), the default-off `WATER_LAYER29` fragment selects only `espgen45.o` and requires `ROUTE_CH13=1` and `WATER_PS2=1`. The primary game Makefile includes `water_layer29.mk` exactly once. The feature adds a versioned `Water29Definition`, explicit room/source-family key and owner/incarnation, a bound count of 32 rows, exact row byte extents, and per-family `Water29SourceBytes` backing with owner/incarnation, alignment and range checks before any row read. Publication uses overlap-safe `memmove` into one bounded store; invalid publications leave the prior bound view and compiled fallback intact. Misaligned or truncated headers, bad version/extents/counts, nonfinite or nonpositive geometry, wrong room/source/owner, misplaced row pointers and disabled room masks are refused. A retired owner/incarnation cannot retire a newly published different incarnation.
