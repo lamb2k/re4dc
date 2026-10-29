@@ -253,6 +253,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF08. Complete portal witnesses across the primary world producers
 
+**2026-10-29 recovery source delivery:** Corrected complete655/656/657-assignment stream profile and effective primary-Make/native guard fixtures PASS, pacing2/2/4063/1/0; target ctrl/on/pages links remain local. Portal stays outside broad ALLON; no integration or acceptance claimed. See [Build31](handbacks/build-31.md).
+
 **Gap.** Build 31's portal path is tied to producer combinations that exclude stream/submit batching and clip gather/indexed paths. Visibility completion authority does not yet compose across those existing producers.
 
 **Target.** Immediate and queued producers report exact part/placement, room/package generation, scene/view identity and actual completed opaque coverage. Queued, clipped-away, partial or aborted work grants no false authority.
