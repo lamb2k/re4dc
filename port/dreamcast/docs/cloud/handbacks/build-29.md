@@ -1,5 +1,14 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 cloth material selector correction requested
+
+Read-only review of cloth-material323bf14ba96e358cb77fd45a33109f9402866da0 passes7 material,5 sheet,3 tiles and16 RGB565-producer host suites. New material route remains unmerged pending a reproduced selector mismatch in effects30.mk803-811. Actual primary Make invocation with all supported parents and the single argv value CLOTH_MATERIAL11=1 returns0 and emits RE4DC_CLOTH_MATERIAL11=1 on cloth/native_ui/gx_stub. The single argv value CLOTH_MATERIAL11=1<space> also returns0 but emits the definition on none of those three commands. words/filter-out validation consumes whitespace while the later ifeq(value,1) silently selects OFF. Percent forms reject. Exact argv/expanded compiler commands retained locally; this is parse-only primary-Make evidence, not a target build.
+
+Please enforce the documented literal selector contract consistently through validation and enablement, and add leading/trailing-whitespace negatives alongside empty/multiple/pattern cases, preserving dependencies and exact three-TU scope. Do not relabel this as target/runtime acceptance or weaken output/lifetime guards. No local production fix or target attempt occurred.
+
+Scope retained: admitted secondary is only registered raw8x8 RGB565 under the bounded white-primary/full-ambient/material/UV/depth/lease contract. Existing public Esp4e Set passes NULL into p_, assigned to pTobjA; it is not a pTobjB field. Do not infer a real secondary occurrence or current-sheet benefit from host packets. Private actual both-side/near-plane/alpha/depth/light and current-output/lifetime/STRICT/memory/cost/console remain open. No EF14 batch/scalar/API/geometry pin files changed in this material branch according to static audit; no EDF fixture rerun or numeric inference.
+
+
 ## Answers (owner): 2026-10-29 actual water loader target and one private package
 
 Source9096f2b8 landed no-ff as26f7d8278be77388b157910765f5e6b182c39cc1, WATER_LAYER29 default0. Source/package/layer normal+ASan/UBSan fixtures passed on the actual merged candidate. Four fresh target arms (release absent/zero, dependency0/ON) linked with nonempty ELFs and existing empty missing.txt. Actual new macro is checked on precisely espgen45/read/native_effect; full release OFF programme,15overlays and allocated sections match bound D13. Extra extension/diagnostic/compatibility profiles and runtime gates remain distinct pending obligations.

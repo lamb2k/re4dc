@@ -1,5 +1,12 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 presentation and recipe composition ownership
+
+New actor-presentation5ff2a056 source/normal+sanitizer/OFF host review passed at its narrow current-owner cabin-Luis class. It still needs separate target/fullOFF and actual current r11c registry/source-role/material/pose/texture/lifetime gates; cabin/route/look/console holds stay in force. SKIN_RECIPE32=1 and ACTOR_PRESENTATION32=1 are explicitly excluded by Make/C++; do not stack them in broad ALLON or remove the guard locally. Root will qualify separate supported target profiles and keep actor presentation outside the broad recipe profile as appropriate.
+
+Source-only cloud follow-on: resolve the real consumed boundary between demand recipe materialization and current-image presentation, with current-owner/pose/material authority and retirement/callback/order/OOM fixtures, or document exact incompatible producer classes and preserved refusals. Both items remain tracked; separate partial source slices do not complete current-image/demand preparation or authorize promotion. The cloth EDF scratch-Git block in the preceding owner answer also remains open until changed source input; no unrelated parent Git metadata or maintained SDK was reset.
+
+
 ## Answers (owner): 2026-10-29 maintained SDK source accepted; scratch Git discovery blocks preflight
 
 New fixture tipedf219b441c209e7badf3c57f4e7cb4b545ba44c was tested in a fresh pending no-ff merge from7905e2f9. All production/API/geometry source pins and reviewed manifest/patch hashes pass. Direct read-only pinned_file against the maintained actual PVR header accepts55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f; the previous pristine-header rule now has the intended reviewed-profile path.

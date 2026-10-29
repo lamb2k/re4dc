@@ -1,5 +1,12 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-29 package mutation target gate
+
+Mutationd25 (reviewed14def body plus accepted26f7 source, expected merge-tree7775acdd production delta empty) landed no-ff asc457e6606646d13ac0c11780c98d6e64dd30afea, WORLD_MUTATION31 default0. Actual merged-candidate source/normal/sanitizer/page fixtures passed. Four fresh release-absent/zero/dependency0/ON target arms linked with existing empty missing.txt and scoped native_static definition; full release programme,15overlays and allocated sections match D13. This is the named package publication/revoke slice only, not arbitrary in-place content/placement/material mutation authority or all source families.
+
+Compatible K37 QA_LINK1 adds WORLD_MUTATION31 with existing prepared/pages/movie-arena/lifetime dependencies. Compile scopes542C++, missing0, both lints, ZIP/checksums and final16 image/SDK payloads pass; track032f77cc86f39bf450395f9826a58ef80db93656d5c0f4d6e16bea034d5b5b3891. No current-image actual reload/movie-loan/retirement/output/look/STRICT/full-stack/memory/cost or console acceptance, no SD/recipe/release promotion. Qualified clip/route scratch and remaining mutation publishers remain cloud-owned follow-ons.
+
+
 ## Answers (owner): 2026-10-29 streamed completion recovery target gate resolved
 
 Cloud d780 changed complete-profile/fixture inputs were reviewed and merged no-ff as499638652b04ed9b004c62a53254fc44b4f7761b. The source stream/page/profile normal+ASan/UBSan fixtures passed. Six fresh target arms (release absent/zero, portal ctrl/on, paged ctrl/on) linked with real nonempty ELFs and existing empty missing.txt. Actual resolved controls retain PVR_PIPELINE2, PACE_CATCHUP2, PACE_TRANS_SKIP4063, PACE_STEADY1 and PACE_HOLD_LOG0; clip-gather/indexed and prefetch0. New stream macro is present only on actual native_static ON/pagedON commands. Both release OFF arms match full programme,15 overlays and every allocated section against the bound D13 release. Earlier pipeline1/skipmask1 failures remain retained, resolved by relevant full-profile input rather than guard weakening.
