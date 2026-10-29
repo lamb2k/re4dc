@@ -518,3 +518,29 @@ are present. Main checks7,107 and17/17 allocation balance pass normal/sanitized.
 Runtime/Make remain frozen at3ded42ac0. NEXT local target qualification only;
 new paging, broader portal composition and mutation/scratch follow-ons belong
 to the cloud under the user's updated ownership instruction. No active job.
+
+
+## EF09 worker, 2026-10-29: frozen target qualification DONE
+
+DONE: runtime/Make3ded42ac0 with qualified test/docs625bf8099 passed four serial
+full builds: absent, explicit0, enabled plan, compatible portal; each rc0,
+nonempty ELF and existing empty missing.txt. Full OFF programme/15 overlays/
+all11 allocated section metadata+payload match bound255964fdc/runtime064.
+Entire normalized resolved Make state is equal except new default0 name and
+exact own output/tree roots. Actual native_static complete ii/g0 identity passes
+release, existing-plan and solo-portal source profiles; actual ON -dM facts/
+Make bindings pass both enabled profiles. Host/sanitizer7107+86420(max10)+450,
+prepared completion628 retained. Helper/config/binding results are committed in
+build31; [details](../../../tools/cloud/build31/WORLD-PREPARED09.md).
+
+Matched plan native_static adds2128 text/85 rodata/12 data/44 BSS bytes; local
+ps2_pass9012->9020 and open116->252 bytes. Optional bounds24B/placement remain
+secondary within64KiB plan/96KiB heap-floor admission. Counted unproven returns
+and enabled-provider costs remain memory acceptance inputs, not savings.
+NEXT: owner integration of this bounded slice, cloud-owned source/synthetic
+paging/composition/mutation/scratch follow-ons. BLOCKED acceptance only: authored
+private cells/proof, current look/STRICT/lifecycle, whole-stack/heap and net
+console cost. Queued matrices/UV/material keys remain copied; live policies and
+dynamic/uncertain fallback remain. No default/ALLON promotion. SDK session29536/
+PID1918610 and TU session62931/PID1944733 exited; slot released. No emulator,
+media, push, integration or provider edits. Original frozen trees preserved.

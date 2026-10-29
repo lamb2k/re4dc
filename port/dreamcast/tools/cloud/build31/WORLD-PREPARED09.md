@@ -72,3 +72,42 @@ portal/batching are explicit separate validation compositions. Current source
 cells and geometry-authored CFG/PKG/portal-proof.json are still needed for real
 occlusion/magenta/look acceptance, together with reset/reentry/movie, STRICT,
 full memory and net console cost. No broad ALLON or default promotion is made.
+
+
+## Target qualification, 2026-10-29
+
+Frozen runtime/Make `3ded42ac0`, qualified test/docs tip `625bf8099`:
+absent, explicit0, enabled plan and compatible portal full release builds all
+returned rc0 with nonempty ELF and existing empty missing.txt. Baseline is
+`255964fdc` / runtime064, output `out-enginewave2oct29rP`. Compiler GCC15.2.0,
+KOS804b3195 and pinned sh4zam33fa4850. The exact serial runner is retained as
+world_prepared09_release.sh; it was invoked once with session29536/PID1918610,
+then exited. It uses a private programme registry and fresh guarded labels.
+
+Full OFF programme,15 overlays and all11 allocated ELF sections match baseline.
+The entire resolved Make state matches after replacing only exact output/tree
+roots and removing new WORLD_PREPARED09=0. Complete native_static preprocessed
+source and debug-free object match baseline/absent/zero under release, existing
+plan and solo-portal source compositions. These extra source profiles are TU
+checks, not separate full recipe builds. Enabled plan/portal actual -dM values
+match selected Make facts, including allocator dependencies and retained portal
+stream/clip exclusions. Exact commands are in the local target receipt and the
+qualification helper is world_prepared09_target.py. It ran once, session62931/
+PID1944733; all jobs exited and SDK slot was released.
+
+Matched native_static existing-plan OFF versus prepared planON adds2128 text,
+85 rodata,12 data and44 BSS bytes. Local compiler stack reports ps2_pass9012 to
+9020 bytes, plan open116 to252 bytes, current24 bytes. Compatible portal local
+ps2_pass is10272 bytes under a different composition. These are storage/local
+frame facts, not whole call-chain/heap/stack acceptance or speed claims. Enabled
+dependencies also have costs; full plan ELF BSS is128 bytes above release OFF.
+Optional bounds24 bytes per placement use only remaining plan budget. Unknown
+allocator attribution can retain a counted return until real owner retirement;
+no net memory reduction is claimed.
+
+Results and binding hashes: world_prepared09_results.json. Local full receipts
+remain under /root/probe/engine-ef09-20261029/target1 and host/sanitized directories.
+No emulator, assets, media or integration was performed. NEXT source/synthetic
+paging/composition/mutation/scratch follow-ons belong to cloud after integration;
+private authored cell proof, live reset/reentry/movie, look/STRICT, full memory
+and net console cost remain separate acceptance gates.
