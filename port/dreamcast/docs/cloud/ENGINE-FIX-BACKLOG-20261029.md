@@ -1,5 +1,14 @@
 Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
 
+## Current owner checkpoint: 2026-10-29 target review and dependency order
+
+Runtime is D13 (`d13e2a459627077680f58edc35eae9bceda34c8f`), compatible K35 QA is prepared; older first-wave runtime and pending-local-delivery paragraphs below are historical. Thirteen of sixteen EF cards have integrated code/first slices; EF10/EF12 await first landings and EF15 remains unmerged. No whole EF card is fully signed off. Current cloth/portrait named input bindings and cloth target static ABI review are complete within their bounded scopes, not live or hardware acceptance.
+
+The section3 dependency table remains authoritative: priorities are ranked, not a strict sequence requiring every P0 to finish before independent P1 work. Required producer/consumer contracts gate dependent slices, not unrelated source implementation or all predecessor console signoff. Current world follow-ons are paging -> stream completion -> qualified clipping; initial non-stream portal work already exists. EF11 correctness does not wait for EF14 acceleration; the EF14 cloth application consumes EF11 sheets. Keep one writer per shared file. EF16 is supporting work and does not gate EF01-EF15 source implementation.
+
+All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
+
+
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
 ## Current execution agreement
@@ -238,6 +247,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 **Code.** `Owner/Entry/bind/unbind/reset_now/acquire_plan` in [native_draw_plan_owner.cpp][PLAN_OWNER]; current source invalidation in [native_ui.cpp][UI] and retained preparation in [native_model.cpp][MODEL].
 
 ### EF08. Complete portal witnesses across the primary world producers
+
+**2026-10-29 recovery source delivery:** Corrected complete655/656/657-assignment stream profile and effective primary-Make/native guard fixtures PASS, pacing2/2/4063/1/0; target ctrl/on/pages links remain local. Portal stays outside broad ALLON; no integration or acceptance claimed. See [Build31](handbacks/build-31.md).
 
 **Gap.** Build 31's portal path is tied to producer combinations that exclude stream/submit batching and clip gather/indexed paths. Visibility completion authority does not yet compose across those existing producers.
 

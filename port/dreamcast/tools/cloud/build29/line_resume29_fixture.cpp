@@ -227,9 +227,15 @@ static int caseRun(const char* name, cSatBlock* root0, cSatBlock* root1, int att
     std::vector<AtPoly> polys0(256), polys1(256);
     std::vector<Vec> norm0(256), norm1(256);
     for (int i = 0; i < 256; ++i) {
-        u32 attr = attrMode == 0 ? 0 : (i == 7 || i == 63 || i == 64 || i == 70 || i == 100 || i == 135 ? u32(i + 1) : 0);
-        polys0[i] = {u16(i), u16(i), i == 7 ? 0.7f : (i == 64 ? 0.2f : (i == 100 ? 0.4f : 0.9f)), attr};
-        polys1[i] = {u16(i), u16(i), i == 7 ? 0.1f : 0.5f, attr};
+        const u32 attr = attrMode == 0 ? 0 : attrMode == 2 ?
+            (i == 63 || i == 64 ? u32(i + 1) : 0) :
+            (i == 7 || i == 63 || i == 64 || i == 70 || i == 100 || i == 135 ? u32(i + 1) : 0);
+        const u32 attr1 = attrMode == 2 ? (i == 7 ? 1008U : 0U) : attr;
+        const f32 t0 = attrMode == 2 && (i == 63 || i == 64) ? 0.25f :
+            i == 7 ? 0.7f : (i == 64 ? 0.2f : (i == 100 ? 0.4f : 0.9f));
+        const f32 t1 = attrMode == 2 && i == 7 ? 0.25f : i == 7 ? 0.1f : 0.5f;
+        polys0[i] = {u16(i), u16(i), t0, attr};
+        polys1[i] = {u16(i), u16(i), t1, attr1};
         norm0[i] = {float(i), 1, 0};
         norm1[i] = {float(i), 2, 0};
     }
@@ -265,6 +271,13 @@ static int caseRun(const char* name, cSatBlock* root0, cSatBlock* root1, int att
             if (norm == &norm0[i]) normIndex = i;
             if (norm == &norm1[i]) normIndex = 1000 + i;
         }
+    }
+    if (attrMode == 2) {
+        // Equal nearest intersections at leaves 64/65 and again in piece 2:
+        // the source's strict '<' retains the first polygon and first piece.
+        assert(!direct && root1 && ret == 64 && normIndex == 63 && pBypassAt == &sats[0]);
+        assert(bits(hit.x) == bits(2.5f) && bits(hit.y) == bits(1.0f) && bits(hit.z) == bits(0.0f));
+        assert(visits.size() == 73 && visits[63] == 63 && visits[64] == 64 && visits[65] == 1000);
     }
 #if RE4DC_LINE_RESUME && RE4DC_LINE_PIECE
     if (!root0 && !root1 && fullTransforms != 0) std::abort();
@@ -313,6 +326,7 @@ int main()
     cSatBlock* moving0 = blocks.chain(70);
     cSatBlock* moving1 = blocks.chain(72);
     caseRun("moving-two", moving0, moving1, 1, 0x40, false);
+    caseRun("equal-nearest-65-two-pieces", blocks.chain(65), blocks.chain(8), 2, 0x40, false);
     caseRun("fractional-xz", blocks.chain(129), nullptr, 1, 0x40, false, true);
     caseRun("wall-filter", blocks.leaf(7, false, true), nullptr, 1, 0x80, false);
     caseRun("floor-filter", blocks.leaf(7, false, true), nullptr, 1, 0x40, false);

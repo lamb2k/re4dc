@@ -91,9 +91,44 @@ def run_arm(tmp: Path, mode: str, piece: int, sanitize: bool, check: bool) -> st
     return result.stdout
 
 
+def make_flags(tmp: Path) -> None:
+    kos = tmp / "kos-stub"
+    kos.mkdir()
+    (kos / "Makefile.rules").write_text("")
+    game = ROOT / "port/dreamcast/game"
+
+    def command(resume=None, walk="1"):
+        args = ["make", "-f", "Makefile", "-n", f"KOS_BASE={kos}",
+                f"GAME_LINE_WALK={walk}"]
+        if resume is not None:
+            args.append(f"GAME_LINE_RESUME={resume}")
+        args.append("obj/src/game/atari.o")
+        result = subprocess.run(args, cwd=game, text=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        commands = [line for line in result.stdout.splitlines()
+                    if line.startswith("kos-c++") and "src/game/atari.cpp" in line]
+        return result.returncode, commands, result.stdout
+
+    absent, zero, one, two = (command(v, w) for v, w in
+                              ((None, "1"), ("0", "1"), ("1", "1"), ("1", "2")))
+    assert absent[0] == zero[0] == one[0] == two[0] == 0
+    assert absent[1] == zero[1] and len(one[1]) == len(two[1]) == 1
+    assert "RE4DC_LINE_RESUME" not in absent[1][0]
+    assert one[1][0].count("-DRE4DC_LINE_RESUME=1") == 1
+    assert two[1][0].count("-DRE4DC_LINE_RESUME=1") == 1
+    for value in ("", "00", "2", "0 1", "%", "x1"):
+        result = command(value)
+        assert result[0] != 0 and "GAME_LINE_RESUME must be exactly 0 or 1" in result[2], value
+    for value in ("", "0", "3", "1 2", "%"):
+        result = command("1", value)
+        assert result[0] != 0 and "GAME_LINE_RESUME=1 needs GAME_LINE_WALK exactly 1 or 2" in result[2], value
+    print("actual Make line control absent/zero identity, ON WALK1/2, literal invalid refusals pass")
+
+
 def main() -> None:
     with tempfile.TemporaryDirectory(prefix="line-resume29-") as td:
         tmp = Path(td)
+        make_flags(tmp)
         candidate = production_source(SOURCE.read_text(), True)
         base_text = subprocess.check_output(["git", "show", "e693945933cf088a13782e756fc356008cdba4b8:src/game/atari.cpp"], cwd=ROOT, text=True)
         baseline = production_source(base_text, False)

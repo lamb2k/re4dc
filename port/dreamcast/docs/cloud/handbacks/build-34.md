@@ -1,5 +1,18 @@
 # Build 34: decisions for the seventeen remaining local controls
 
+## Answers (owner): 2026-10-29 corrected frontend blocked on full target OFF identity
+
+Source `a1f5931bf048e5dc36913c8d48af8a871c1bcce8` prepared clean no-ff candidate `beb670579c71b32cd2ac54b7a3305c27e2d0e072` from `a5ac02aecee317c3ac74f1c9e7e2546a40775348`; **UNPUSHED/BLOCKED**. Originalf90 actual-writer stale alias is fixed: exact retained calcTplOffset repro ON stamp4->0/6descriptor walks/current source data equalsOFF. Current source fixture OFF65,631/ON95,466 normal+ASan/UBSan and pinnedf90 negative control pass, including nonfirst shared header/descriptor/C8 CLUT. Six host production-TU preprocessing/host-OFF-object/Make and cost scripts pass. Other reviewed relocation caller classes established no legal SMD alias path; blanket cross-class exclusion remains unproved, not actual private occurrence.
+
+All four pinned-SDK release arms (absent,explicit0,FRONT_TEXOBJ1+owner0 dependency control,owner1) link with existing empty missing.txt and527 actual C++ commands each; ON only trans/model/scroll/read/game/main. **Full OFF gate FAILS** for both absent andzero: same size3,372,036B programme differs, text/data payloads and15overlay hashes differ; metadata/other allocated payloads match. Both absent/zero programme SHA `893ce130aa10184072cf712cd1baad698ef6cdbe6f447f31efc8106d52b7c155` versus baseline `fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`. Original failed receipts/artifacts retained, no judge weakening or build rerun.
+
+Bounded target-object diagnosis:602 other allocated objects match; sole changed section is trans.o `.text._Z11ModelRenderP6cModel`. Target disassembly differs at its0xd8c literal: word0x09a1->0x09a4, loaded at0xcf4/0xd00 and passed along the OSReport/re4dc_halt path. This is a diagnostic-line-like constant, not evidence of a new gameplay difference; it still violates the required full OFF contract. Host script is x86 preprocessing and does not establish the effective target-only halt/profile identity.
+
+SOURCE-ONLY CLOUD REQUEST: preserve pre-EF15 target diagnostic/source-line semantics while disabled, and extend meaningful OFF validation to the effective target halt path so this catches the change. Do not normalize away image bytes, edit the judge, suppress diagnostics or claim this failed gate passed. No local source patch/hand resolution is authorized. Latest tip5532a2a98fda49716c9dd36e4c114890d1c36103 changes only wildcardguard/test/docs after this frozen candidate; it does not change ModelRender runtime, so no blind identical runtime retry. A relevant source/authority or integration change with clear changed input can trigger a fresh unit.
+
+FRONT_TEXOBJ remains explicitly held for lifecycle/look/STRICT/multi-scene RAM/console. FRONT_TPL_OWNER remains unmerged and individually parked outside broad ALLON; no dependency unpark or recipe/SD/media promotion. Actual current-package/lifecycle/look/STRICT/memory/cost/console gates remain pending. This is a target qualification blocker, not overall completion.
+
+
 ## Answers (owner): 2026-10-29 frontend ON authority blocker
 
 BLOCKED BEFORE MERGE/ON ADMISSION: `codex/frontend-owner-20261029` tip `f90dd0482fc0bd2e4e36acc725c0917f0801d758`. No production/default/recipe change from this branch has landed. A local host fixture extracting the actual production writer confirms this conditional counterexample:

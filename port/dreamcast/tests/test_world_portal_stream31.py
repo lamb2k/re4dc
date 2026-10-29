@@ -2,7 +2,6 @@
 """Public host gates for the opt-in streamed world portal completion class."""
 from pathlib import Path
 import importlib.util
-import json
 import os
 import subprocess
 import tempfile
@@ -11,8 +10,6 @@ ROOT = Path(__file__).resolve().parents[3]
 BASE = "6e1e5a0638d10bd7a59670a61e2f4b1f9a536e02"
 NATIVE = ROOT / "port/dreamcast/game/platform/native_static.cpp"
 TEMPLATE = ROOT / "port/dreamcast/tests/world_portal_stream31/producer_fixture.cpp.in"
-PROFILE = ROOT / "port/dreamcast/tools/cloud/build31/portal_completion_profiles.json"
-GAME = ROOT / "port/dreamcast/game"
 
 
 def run(args, **kw):
@@ -248,64 +245,11 @@ def source_guards(tmp):
 
 
 def make_commands(tmp):
-    kos = tmp / "kos-stub"
-    kos.mkdir()
-    (kos / "Makefile.rules").write_text("")
-    options = json.loads(PROFILE.read_text())["on_options"]
-    extras = ["PS2_WORLD_DRAW=1", "COARSE=1", "PACE_CATCHUP=2", "PACE_TRANS_SKIP=1",
-              "TREE_IMPOSTOR=1", "NATIVE_MESH=1", "PS2_WORLD_PARTS=1",
-              "COARSE_SOURCE_OBJECTS=1", "COARSE_SCENERY_FALLBACK=1", "GAME_ATCHK=1",
-              "GAME_ATCHK_LIST=1", "PS2_WORLD_LEAN=2", "NATIVE_STATIC=1",
-              "ROUTE_MOVIES=1", "ROUTE_MOVIE_YUV=1", "IO_ALIGNED=1",
-              "MOVIE_HEAP_EVICT=1", "MOTION_OOM_EVICT=1", "PVR_PIPELINE=1"]
-    base = ["make", "-f", "Makefile", "-n", f"KOS_BASE={kos}", *options, *extras]
-    def command(overrides, accepted):
-        process = subprocess.run([*base, *overrides, "obj/platform/native_static.o"],
-                                 cwd=GAME, text=True, stdout=subprocess.PIPE,
-                                 stderr=subprocess.STDOUT)
-        assert (process.returncode == 0) == accepted, (overrides, process.stdout[-3000:])
-        if not accepted:
-            return ""
-        lines = [line for line in process.stdout.splitlines() if line.startswith("kos-c++")
-                 and "platform/native_static.cpp" in line]
-        assert len(lines) == 1
-        return lines[0]
-    old = command([], True)
-    zero = command(["WORLD_PORTAL_STREAM31=0"], True)
-    assert old == zero and "RE4DC_WORLD_PORTAL_STREAM31" not in old
-    stream = ["SCENERY_STREAM=1", "WORLD_PORTAL_STREAM31=1"]
-    on = command(stream, True)
-    assert on.count("-DRE4DC_WORLD_PORTAL_STREAM31=1") == 1
-    assert on.count("-DRE4DC_SCENERY_STREAM=1") == 1
-    paged = command([*stream, "WORLD_PAGES31=1", "WORLD_PREPARED09=1",
-                     "WORLD_PART_PLAN29=1", "MOVIE_WORLD_ARENA=1", "STATIC_OBJ_LIFETIME05=1"], True)
-    assert paged.count("-DRE4DC_WORLD_PAGES31=1") == 1
-    assert paged.count("-DRE4DC_WORLD_PORTAL_STREAM31=1") == 1
-    for values in (["SCENERY_STREAM=1"], ["WORLD_PORTAL_STREAM31=1"],
-                   [*stream, "SCENERY_CLIP_GATHER=1"],
-                   [*stream, "SCENERY_CLIP_INDEXED26=1"],
-                   [*stream, "SCENERY_EMIT_PREFETCH=1"],
-                   [*stream, "PS2_PVS_BATCH_COMPOSE=0"],
-                   [*stream, "WORLD_PORTAL_COMPLETION=0"],
-                   [*stream, "WORLD_PORTAL_STREAM31="],
-                   [*stream, "WORLD_PORTAL_STREAM31=%"],
-                   [*stream, "WORLD_PORTAL_STREAM31=0 1"],
-                   [*stream, "WORLD_PORTAL_STREAM31=2"]):
-        command(values, False)
-    # The previously admitted standalone streaming profile (without PVS or
-    # portal completion) is still admitted with the new control at zero.
-    solo = dict(option.split("=", 1) for option in options)
-    solo.update(PS2_PVS="0", PS2_PVS_BATCH_COMPOSE="0", WORLD_PORTAL29="0",
-                WORLD_PORTAL_COMPLETION="0", SCENERY_STREAM="1")
-    process = subprocess.run(["make", "-f", "Makefile", "-n", f"KOS_BASE={kos}",
-                              *[f"{key}={value}" for key, value in solo.items()], *extras,
-                              "WORLD_PORTAL_STREAM31=0", "obj/platform/native_static.o"],
-                             cwd=GAME, text=True, stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT)
-    assert process.returncode == 0, process.stdout[-3000:]
-    assert "-DRE4DC_SCENERY_STREAM=1" in process.stdout
-    assert "RE4DC_WORLD_PORTAL_STREAM31" not in process.stdout
-    print("actual primary Make absent/zero/stream ON and invalid composition pass")
+    path = ROOT / "port/dreamcast/tests/test_world_portal_stream_profile31.py"
+    spec = importlib.util.spec_from_file_location("world_stream_profile31_test", path)
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    gate.check(tmp)
 
 
 def main():
