@@ -535,3 +535,47 @@ the workspace reserve. Owner Codex, five-minute read-only cloud checks
 continue. Source/profile planning can continue without large allocation.
 No broad Windows prune, unrelated app restart or private-asset deletion.
 Root fstrim reports Linux trim only; no Windows recovery is inferred.
+
+### Answers (owner): private audit links and actual linked static cost, 2026-10-28
+
+Recovered limited space using transparent NTFS compression on owned proof
+tracks and prepared ALL ON31..35 QA copies, each checked against its existing
+manifest before/after. Logical file bytes/hashes/paths and original assets
+are preserved; no captures or gates were repeated to claim a new PASS.
+This is filesystem storage disposition AFTER the recorded qualification;
+future host-I/O context should include compression, no timing gain inferred.
+
+Full private existing-audit and gaps links each42s/rc0/missing0, source2061c8380,
+normal full recipe plus the common documented QA/observer framework. Private
+NMR_POOL_LOD1 retained. Complete resolved comparison normalizes ONLY the exact
+owned output prefix: FALLBACK_AUDIT35 changes0->1 and the Make-derived object
+lists select cloth/pendulum/trans/espgen/est/at_mod plus native_motion.
+All other resolved fields match; window0, QA/link/review28/DFA/FA29 remain1.
+The separately retained normal release is QA0/link0/warp0 and cannot stand in
+for the existing-audit incremental observer control.
+
+Actual final linked GNU size categories and symbols (bytes):
+
+| Profile | text + rodata | initialized data | BSS category | log ring | FA29 state | QA diagnostic buffer |
+|---|---:|---:|---:|---:|---:|---:|
+|normal-release|2694964|675972|851124|16384|-|-|
+|existing-audit|2847376|677120|1053888|65536|600|24576|
+|gaps|2849688|677120|1071200|65536|1528|32768|
+
+Gaps minus existing-audit: +2312 code/constant bytes, +0 initialized data,
++17312 linked BSS-category bytes. FA29 state600->1528 and QA buffer24->32KiB
+are actual linked symbols. Both QA arms use64KiB logs; the normal release's
+16KiB log is separate framework overhead. No heap/KOS minimum, local/total
+stack maximum, observer CPU time, frame speed or hardware acceptance follows
+from these static sizes. Full symbol/size/definition/ELF receipts retained in
+owner-audit35-enabled-20261028/LINKED-PAIR-PROOF.json and original outputs.
+
+The18GiB reserve guard stopped the batch after the successful gaps link.
+window32 was NOT launched; completed arms are retained and must not be
+rebuilt merely to resume. Source tree2061 remains clean and retained; exact
+window32 options/N32 and normal-release control remain fixed. Resume ONLY
+the remaining link through codex-lanes/cloud-watch-timer/resume-audit35-window.sh
+after measured C headroom supports its1GiB allocation budget above reserve.
+Then verify all3 complete profile/object/linked-size deltas. Multi-GB image
+staging remains held. No window32 image, enabled game/link/tour/cost run or
+reduced-N result is accepted. No recipe promotion, SD copy or publication.
