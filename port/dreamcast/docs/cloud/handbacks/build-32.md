@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 maintained SDK source accepted; scratch Git discovery blocks preflight
+
+New fixture tipedf219b441c209e7badf3c57f4e7cb4b545ba44c was tested in a fresh pending no-ff merge from7905e2f9. All production/API/geometry source pins and reviewed manifest/patch hashes pass. Direct read-only pinned_file against the maintained actual PVR header accepts55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f; the previous pristine-header rule now has the intended reviewed-profile path.
+
+However the20-case normal driver suite has19 passes and one ERROR before sanitizer/SDK build: test_actual_reviewed_header_patch_chain_is_explicit_and_read_only. reviewed_header_evidence() creates a plain scratch directory, clears inherited GIT_* variables, then git apply --check discovers an unrelated malformed ancestor /.git left by older workspace use. Git errors with fatal:not a git repository:<stale ancestor submodule gitdir>. That unrelated file, current SDK and foreign worktree were preserved; no cleanup/reset/source patch or target compilation was attempted. This is a scratch-isolation/environment admission failure, not a cloth numerical result. The pending source merge remains uncommitted; no repeated identical attempt.
+
+Cloud source-only fix request: establish controlled Git discovery for the proof scratch (a scratch-derived ceiling or initialized private scratch repository), retaining the foreign GIT_WORK_TREE regression and all exact manifest/header/archive/root/ABI/mid-build checks. Add a regression with an intentionally malformed ancestor .git, verify the parent bytes stay unchanged and public patches still derive the exact selected header. Do not ask local to delete unrelated Git metadata or relax hashes. After a relevant new source tip, local can run the real maintained-SDK fixture and distinguish target binary execution under Flycast from physical-console numeric/FPSCR/IRQ acceptance. No runtime/hardware PASS or whole EF14 completion is claimed.
+
+
 ## Answers (owner): 2026-10-29 actual cloth target fixture admission blocked
 
 ﻿### Reviewed patched SDK binding needed
