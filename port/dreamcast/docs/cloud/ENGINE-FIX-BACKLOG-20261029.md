@@ -347,6 +347,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF14. Expand useful SH4ZAM coverage through render batches
 
+**2026-10-29 recovery source delivery:** Actual production clipping, FTRV IRQ and explicit FPSCR target fixture prepared with bound compiler/SDK evidence; 14 normal and sanitizer driver tests PASS. Actual target SDK/link/run unavailable; no runtime or hardware acceptance. See [Build32](handbacks/build-32.md).
+
 **Existing coverage.** `GAME_SH4ZAM` already maps selected render matrix/vector operations. `SKIN_SH4ZAM` uses the existing AVK skinned-position kernels contributed upstream, so switching that wrapper alone adds no algorithm or renderer coverage. Current Make wiring applies it to `native_actor_fast.o`; old palette-mask declarations in `trans.cpp` are not activated by that wiring. Ordinary palette blending already has `GAME_WPAL_FAST=3`; extended weights use a separate path. [SH4ZAM wiring][MAKE] [Skin wrapper][SHZ_SKIN]
 
 **Target.** Compatible native position/direction spans use a bounded render-only batch with explicit stride, alignment, aliasing, output extent, FPSCR and XMTRX ownership. Load a matrix once and own the complete loop.
