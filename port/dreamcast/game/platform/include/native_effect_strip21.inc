@@ -332,3 +332,7 @@ extern "C" int re4dc_effect_mesh21(const Re4dcEffectMesh21* m){
 #endif
 
 #undef RE4DC_FX21_RETURN
+
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+#include "native_cloth_sheet11.inc"
+#endif

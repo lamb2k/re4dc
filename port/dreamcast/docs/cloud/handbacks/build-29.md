@@ -546,3 +546,93 @@ DONE: `NATIVE_DRAW_OUTCOMES` first slice merged default off with the other three
 ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with QA_LINK=1 and all four controls resolved1, passed compile, existing empty missing.txt, loader/standard disc lint with zero violations, ZIP test and staged checksums. Track03 is1,185,760,800 bytes, SHA256 `e70b865a2f55469f2c279094e3a9a86d4576efe22869da0d76f8e464be902c62`. This is a prepared private QA artifact, not a runtime/look/STRICT/memory/timing or physical-console acceptance result. Nothing was copied to SD.
 
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
+
+
+## 2026-10-29 EF11: consumed bounded cloth sheet, source/host checkpoint
+
+**DONE (source/host; target pending):** `CLOTH_SHEET11=1` (strict 0/1,
+default 0) requires `CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1
+PS2_UPLOAD_INCARNATION=1`. Existing `Esp4e::SetFreeWork` creates a pool-backed,
+single-texture grid capped at 100 columns / 50 rows and passes `pTobjA=NULL`.
+That real `clothTrans -> re4dc_cloth_native` consumer now prepares one native
+material before geometry publication and submits two rolling rows through the
+existing effect FIFO. The old mesh/public ABI is unchanged.
+
+The prepared material is a frame-scoped 256-byte opaque receipt. It retains no
+source grid/pixel pointers, pins the existing Entry upload and checks Entry
+validity, exact nonzero EF06 upload incarnation, current frame and stream owner
+before each band/publication. Texture/header preparation happens once; clipped
+cells use the same prepared header. Known source/dimension/projection/material
+and texture refusals occur before the first packet. Subsequent queue/capacity /
+owner refusal is explicit EF03 partial-abort, never a whole-sheet fallback.
+
+Two fixed 100-column rows transform each source point once for an admitted
+complete sheet. Triangle strips and bands remain in source row order. Near-plane
+cells now emit `(TL,BL,TR)` then `(TR,BL,BR)` through the existing clipper. The old
+quad helper used the opposite diagonal and changed noncoplanar cloth UV/geometry.
+Source UV progression, strip parity, existing native blend/depth/header policy
+and packet order are preserved. A render-only 32-byte incarnation sidecar for
+`ClothWk[8]` revokes before Set/Destroy/Init mutation/free; range/alignment and
+nonzero identity are checked before use, after texture I/O and before every row.
+Wrap stays exhausted at zero, including after Init. No Cloth ABI, simulation,
+normal/spring/wind/RNG algorithm or source grid byte is changed.
+
+```bash
+python3 -B port/dreamcast/tests/test_native_cloth_sheet11.py
+python3 -B port/dreamcast/tests/test_native_draw_outcomes.py
+python3 -B port/dreamcast/tests/test_effect_strip21.py
+```
+
+The new actual-code suite passes five tests, using ASan/UBSan. It exercises the
+real source helper and backend: widths 2/99/100; explicit before-publication
+refusal for 101/255; exactly rows*columns transform calls and one texture/header
+preparation; source-array identity; actual Destroy/Init hooks during simulated
+texture-I/O reuse; pool membership/alignment and zero-token exhaustion; missing
+texture, frame/upload/Entry refusal, first/later queue pressure and no duplicate
+fallback. A captured actual source strip loop supplies the noncoplanar near-clip
+triangle oracle; the old diagonal is explicitly rejected. Packet tests include
+the r200-tail branch. Strict Make dependencies/two-consumer propagation and
+parent/absent/zero host emitter object identity pass. Existing EF03 5/5 and strip
+4/4 checks pass. These are synthetic source/host results, not live look or speed.
+
+**NEXT:** hold the coordinator's SDK slot, run the prepared Make-derived
+cloth/native_ui release and dependency-enabled OFF/ON profiles, then full release
+OFF, dependency control and candidate ON builds. A fresh output is required:
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build29/cloth_sheet_target.py \
+  --output "$EF11_FRESH_TARGET_OUT"
+```
+
+The helper uses base `255964fdc7d22a61acff1ef59734a36ec91ebff0`, the installed
+compiler15.2.0, pinned KOS and initialized SH4ZAM. Full build overrides are
+`CLOTH_SHEET11=0` for release OFF;
+`NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 CLOTH_SHEET11=0` for the matched
+existing-native control; and the same dependencies plus `CLOTH_SHEET11=1` for
+the candidate. Do not attribute dependency-bundle footprint/cost to this slice.
+The current runtime recipe and private build inputs remain unchanged.
+
+**Required unresolved concepts:** this preserves the existing native cloth
+approximation, not complete source material equivalence. Source normal cloth
+uses alpha `>4` and enabled Z-write; the current native translucent header has
+no equivalent alpha test and disables Z-write. The source's stage0 RGB/alpha
+multiply-by-four then clamp is also not represented by that simple native
+modulation. `pTobjA` adds same-UV stage1 RGB/alpha modulation of the clamped
+previous result and selects ordinary alpha blending. Texture-product
+precomposition and framebuffer multipass are not generally equivalent. Existing
+`model_mask_key` / `resolve(...masked...)` packages implement a distinct
+color/mask operation; they cannot be relabeled as this cloth operation. Future
+material correction must use a source-bound certified operation through the
+existing package/material path or a separately proven native route.
+
+Widths above100 remain explicitly unsupported in this first slice. Follow with
+row-major horizontal tiles sharing one boundary column and global UVs; do not
+reorder an entire translucent sheet tile-major or claim transform-once wide grids
+without a bounded row workspace. EF14 batching can later consume the row helper
+through existing matrix wrappers; no assembly or new renderer is introduced.
+
+**BLOCKED (scoped):** SDK slot not yet granted. Target layout/OFF identity,
+current supported asset look, runtime retirement/reentry/pressure and complete
+cost/headroom/hardware acceptance remain pending. No whole-EF11 closure,
+default promotion, emulator/console run, publication or source-material coverage
+claim is made by this checkpoint.
