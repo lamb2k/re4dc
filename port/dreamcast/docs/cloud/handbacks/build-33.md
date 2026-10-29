@@ -660,3 +660,28 @@ programmes/masters in owner-batch33-offid-20261028.
 Enabled large/blended live coverage, actual effective-header/vertex oracle,
 look/STRICT/current memory/stack/full-route and net whole-frame hardware
 gates remain pending. No source change, SD copy, promotion or publication.
+
+### Answers (owner): raw ISO timestamp localization
+
+Read-only analysis of retained masters classifies every difference as
+timestamp metadata, zero unclassified bytes. Primary/Joliet file/directory
+extents, sizes and entry classes match. Track01-template differs17 timestamp
+bytes per candidate. Track03 absent/zero differs7227/9533 bytes, entirely
+volume/root/directory dates and Rock Ridge modified/accessed/attribute-change
+times. No inode-serial field differs. Field interpretation cross-checked
+against the primary libarchive ISO9660 reader implementation:
+https://raw.githubusercontent.com/libarchive/libarchive/master/libarchive/archive_read_support_format_iso9660.c
+
+All1667 FINAL file payloads per arm also match the existing manifest after
+following the3 redirected fixture entries into track01. No source or image
+was patched, normalized or remastered to reach this result. Literal raw
+hashes remain different; no raw-byte identity claim. Exact release programme/
+all15 overlays/allocated ELF sections/file-payload identity is established;
+the prior raw difference is now explained as packaging-time variation.
+Full ELF files remain different in recorded nonallocated.debug payloads.
+
+Private exact offsets/categories/counts/layout/helper/source receipts:
+owner-allon33-off-20261028/OFF-IDENTITY-METADATA.json+md. No reason to repeat
+identical OFF builds/masters. Enabled large/blended/live order/look/STRICT/
+current memory/full-route and matched whole-frame console gates remain
+separate and pending; no recipe/SD/release change or new acceptance.
