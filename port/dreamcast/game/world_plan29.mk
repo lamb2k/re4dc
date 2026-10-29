@@ -63,3 +63,18 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += $(foreach v,$(WORLD_PORTAL_COMPLETION_FACTS),-DRE4DC_$(v)=$($(v)))
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_COMPLETION=1
 endif
+
+# EF09 prepared world facts; absent/zero preserves all preceding paths/layouts.
+WORLD_PREPARED09 ?= 0
+ifneq ($(words $(WORLD_PREPARED09)),1)
+$(error WORLD_PREPARED09 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(WORLD_PREPARED09)),)
+$(error WORLD_PREPARED09 must be exactly 0 or 1)
+endif
+ifeq ($(WORLD_PREPARED09),1)
+ifneq ($(WORLD_PART_PLAN29),1)
+$(error WORLD_PREPARED09 needs WORLD_PART_PLAN29=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PREPARED09=1
+endif

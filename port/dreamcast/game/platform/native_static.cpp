@@ -1,3 +1,12 @@
+#ifndef RE4DC_WORLD_PREPARED09
+#define RE4DC_WORLD_PREPARED09 0
+#endif
+#if RE4DC_WORLD_PREPARED09 != 0 && RE4DC_WORLD_PREPARED09 != 1
+#error WORLD_PREPARED09 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PREPARED09 && !RE4DC_WORLD_PART_PLAN29
+#error WORLD_PREPARED09 needs WORLD_PART_PLAN29
+#endif
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -8265,7 +8274,13 @@ int ps2_pass(unsigned pass,float zfar){
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
 #if RE4DC_WORLD_PORTAL29
+#if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL_COMPLETION
+            // capture already resolved membership. The exact ticket is checked
+            // again by finish after direct/batch release; no second search.
+            if(x.wp29_ticket.serial){
+#else
             if(wp29::witness(x.wp29_placement,x.index)){
+#endif
 #if RE4DC_SCENERY_SUBMIT_BATCH
                 re4dc_ps2_world_batch_close(&submit_scope.batch);
 #endif

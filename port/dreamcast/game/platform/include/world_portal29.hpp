@@ -8,6 +8,25 @@
 namespace re4dc::portal29 {
 constexpr unsigned kMarker=0x39325057U,kMaxWitnesses=256U,kHeader=64U;
 struct Witness { std::uint32_t placement,part; };
+#if defined(RE4DC_WORLD_PREPARED09) && RE4DC_WORLD_PREPARED09
+// layout() authenticates strict tuple ordering. Reuse that immutable table as
+// the bounded index; no per-frame or per-placement lookup allocation.
+inline unsigned witness_index(const Witness* table,unsigned count,unsigned placement,unsigned part,unsigned* comparisons=nullptr){
+    if(!table || !count || count>kMaxWitnesses)return kMaxWitnesses;
+    unsigned lo=0,hi=count;
+    while(lo<hi){
+        const unsigned mid=lo+(hi-lo)/2U;const auto& w=table[mid];
+        if(comparisons)++*comparisons;
+        if(w.placement<placement || (w.placement==placement && w.part<part))lo=mid+1U;
+        else hi=mid;
+    }
+    if(lo<count){
+        if(comparisons)++*comparisons;
+        if(table[lo].placement==placement && table[lo].part==part)return lo;
+    }
+    return kMaxWitnesses;
+}
+#endif
 struct Layout {
     unsigned room=0,mesh_crc=0,policy_crc=0,mesh_bytes=0;
     unsigned cells=0,portals=0,houses=0,witnesses=0,proof_offset=0,bytes=0;

@@ -471,3 +471,16 @@ EF02's real public/private producer correction remains explicit opt-in; actual c
 ALL ON K24 includes PLAN_OWNER_SCOPED=1 and the first four controls, with QA_LINK=1. WORLD_PORTAL_COMPLETION stays0 with WORLD_PORTAL29=0: its supported compose profile requires STREAM/clip extensions off and private authored-cell proof. It is parked with reason/owner instead of forced into an incompatible stack. Fresh private QA source064bfa4e passes compile, existing empty missing.txt, loader+standard disc lint, ZIP test and staged checksums; track03 SHA256 `387fa0007eb91934905d07c30083c1a52df3e08b9f13d30487084b44c525aee6`. Prepared only; no SD copy or current-QA gameplay/look/STRICT/memory/speed/hardware acceptance. The prior77461 QA's separate45s no-input stock capture reached its menu, with all16 runtime payloads bound; damaged512-NUL raw log remains unmodified. That menu observation is not a scene-draw or memory PASS and is not transferred to this new image.
 
 NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/lifecycle/look/STRICT/heap/stack/full-cost/console gates. Real portal occlusion still needs authored cells and compatible source/view proof. Private console checks require actual intended media selection/swap and reviewed link readiness at the user's console boundary. Frozen release/Pi/media/look holds remain. Independent next native decoder, immutable world preparation and cloth-sheet work proceeds through existing owners; source fixes do not wait for historical QA reconstruction or a broad census.
+
+
+## EF09 worker, 2026-10-29: indexed receipt slice
+
+DONE: guarded WORLD_PREPARED09 default0, requiring the existing part plan;
+resolve membership by bounded binary search over the loader-validated sorted
+witness table and consume the existing exact ticket at queued flush. No new
+allocation or visibility authority. Exhaustive N=0..256 tuple tests measure a
+worst case of10 comparisons including final match, not an eight-comparison
+universal bound. NEXT: plan incarnation, direct source metadata/record use and
+optional conservative static bounds within existing cap/floor; then target
+identity. BLOCKED: no SDK slot requested/granted; actual private proof/lifecycle/
+look/STRICT/memory/hardware acceptance remain pending. No active job.
