@@ -690,3 +690,24 @@ caller/root paths remains pending, as do nested/interrupt/runtime-stack,
 CPU/current memory-floor and enabled image/game/link/console qualification.
 Window32 remains unbuilt under19GiB guard. No target source/recipe change,
 new compilation/link/master/capture, SD write or release action.
+
+#### Owner: collision-unit compiler graph, 2026-10-29
+
+An exact-command gaps/window0 collision-unit replay added only compiler IPA
+graph metadata and RAM output redirection. Allocated/relocation sections
+match the original object, original SHA unchanged; raw graph290699B retained
+compressed with hash. Eleven direct compiler sink-caller nodes, after
+assigning inline copies to their containing emitted function, resolve to
+exactly the same5 owners as actual object sink-reference sections:
+atchkCandidates, atchkPasses, EmAtCheck, EmHitCheck, ObjHitCheck. No missing
+or additional owner in this unit. Compiler estimated frequencies discarded;
+inline helper frames are not summed on top of their containing frame.
+
+Private raw and classified receipts: owner-audit35-enabled-20261028/
+callgraph-pilot/{RESULTS.json,at_mod.cgraph.gz,COLLISION-LOCAL-GRAPH.json}.
+This binds unit-local sink ownership only. Whole-program/alternate roots,
+indirect callees, libc/fs/interrupt stack and runtime high-water, CPU/current
+memory-floor and enabled final-image/game/link/console gates remain pending.
+Prior three source/object root edges stay separate. Window32 remains
+unbuilt under19GiB guard; no new link/master/capture, target source change,
+SD write, recipe promotion or release action.
