@@ -5,7 +5,7 @@ WATER_LAYER29 ?= 0
 ifneq ($(words $(WATER_LAYER29)),1)
 $(error WATER_LAYER29 must be exactly 0 or 1)
 endif
-ifeq ($(filter $(WATER_LAYER29),0 1),)
+ifneq ($(filter-out 0 1,$(WATER_LAYER29)),)
 $(error WATER_LAYER29 must be exactly 0 or 1)
 endif
 ifeq ($(WATER_LAYER29),1)

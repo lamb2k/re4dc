@@ -180,6 +180,32 @@ static Outcome failed_and_back(bool fast) {
     if (fast) { assert(r.builds == 1); assert(r.effects.size() == 2); }
     return r;
 }
+static void construct_reenter(cObj*) {
+    on_construct = nullptr;
+    active_delete(99,0,0); // observe the new class before construct returns
+}
+static Outcome constructor_reentry(bool fast, bool failed) {
+    reset(24);
+    make_at(1,4,1);
+    execute(fast,99); clear_trace(); const u32 build0 = fxEfmBuildSerial;
+    active_delete = fast ? EfmDelete : source_delete;
+    ObjMgr.fail_construct = failed;
+    on_construct = construct_reenter;
+    cObj* made = failed ? ObjMgr.create(5) : ObjMgr.create(5,9);
+    on_construct = nullptr;
+    if (failed) assert(!made);
+    else {assert(made); made->efm05.core.flg = 2;}
+    execute(fast,99);
+    Outcome r = outcome(build0);
+    assert(r.effects.size() == 4);
+    const unsigned at = failed ? 0 : 1;
+    assert(std::get<0>(r.effects[at]) == (failed ? 0 : 9) &&
+           std::get<1>(r.effects[at]) == 5 && std::get<2>(r.effects[at]) == 0);
+    assert(std::get<0>(r.effects[at+2]) == (failed ? 0 : 9) &&
+           std::get<2>(r.effects[at+2]) == (failed ? 0 : 2));
+    if (fast) assert(r.builds == 2); // inside constructor and after its final publication
+    return r;
+}
 static Outcome pool_reuse(bool fast) {
     reset(24);
     make_at(1,4,1);
@@ -272,6 +298,28 @@ static Outcome nested(bool fast) {
     if (fast) assert(r.builds == 1);
     return r;
 }
+static void rebuild_before_resume(cObj*) {
+    on_push = nullptr;
+    make_at(6,4,7);
+    active_delete(7,0,0); // rebuilds the index before the outer callback returns
+}
+static Outcome nested_rebuild(bool fast) {
+    reset(24);
+    make_at(1,4,1); make_at(9,5,7); make_at(18,9,1);
+    execute(fast,99); clear_trace(); const u32 build0 = fxEfmBuildSerial;
+    active_delete = fast ? EfmDelete : source_delete;
+    on_push = rebuild_before_resume;
+    active_delete(1,0,0);
+    on_push = nullptr;
+    Outcome r = outcome(build0);
+    std::vector<u32> slots;
+    for (const Effect& e : r.effects) slots.push_back(std::get<0>(e));
+    assert((slots == std::vector<u32>{1,1,6,9,18,6,9,18}));
+    // The first 1 is the outer visit, the second the nested visit. The outer
+    // continuation starts at source slot 2 even after the nested index rebuild.
+    if (fast) assert(r.builds == 1);
+    return r;
+}
 static void swap_pool_on_push(cObj*) {
     on_push = nullptr;
     assert(ObjMgr.arrayPush(16));
@@ -324,6 +372,18 @@ static Outcome serial_exhaustion(bool fast) {
     if (fast) assert(r.builds == 1);
     return r;
 }
+static Outcome unrepresentable_slot(bool fast) {
+    reset(65537);
+    make_at(65536,4,1);
+    clear_trace(); const u32 build0 = fxEfmBuildSerial;
+    execute(fast,99);
+    execute(fast,1);
+    Outcome r = outcome(build0);
+    assert(r.effects.size() == 2);
+    assert(std::get<0>(r.effects[0]) == 65536 && std::get<0>(r.effects[1]) == 65536);
+    if (fast) {assert(fxEfmCnt == -1); assert(r.builds == 1);}
+    return r;
+}
 
 int main() {
     const Outcome fast_repeat = repeated(true), source_repeat = repeated(false);
@@ -331,6 +391,8 @@ int main() {
     assert(fast_repeat.all_calls == 9 && source_repeat.all_calls == 96);
     same(reconstruct(true), reconstruct(false));
     same(failed_and_back(true), failed_and_back(false));
+    same(constructor_reentry(true,false), constructor_reentry(false,false));
+    same(constructor_reentry(true,true), constructor_reentry(false,true));
     same(pool_reuse(true), pool_reuse(false));
     same(map_new_page(true), map_new_page(false));
     same(create_variants(true), create_variants(false));
@@ -338,11 +400,13 @@ int main() {
     same(frozen(true), frozen(false));
     same(too_many(true), too_many(false));
     same(nested(true), nested(false));
+    same(nested_rebuild(true), nested_rebuild(false));
     same(callback_pool_swap(true), callback_pool_swap(false));
+    same(unrepresentable_slot(true), unrepresentable_slot(false));
     same(class_exhaustion(true), class_exhaustion(false));
     same(serial_exhaustion(true), serial_exhaustion(false));
     ObjMgr.arrayFree();
     for (const Block& b : blocks) std::free(b.p);
-    std::puts("EFM identity: 13 source/accelerated cases pass");
+    std::puts("EFM identity: 17 source/accelerated cases pass");
     std::puts("Synthetic repeated sweep: 9 indexed / 96 source EfmDeleteSub calls");
 }

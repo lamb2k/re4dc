@@ -1225,3 +1225,93 @@ ALLON K28 adds GAME_ATCHK_DISTINCT29=1 with its existing GAME_ATCHK=1/LIST1/CACH
 NEXT: matched CACHE2 control/enabled live ATC comparison, actual ordered collision/intermediate query/retirement/room transitions and full cost/memory/console qualification. No speed or memory-headroom gain is inferred from host logic, target links or declared layout. Console requires intended media selected/swapped by the user and reviewed link readiness. Other cloud EFM/line/water/frontend and source continuations remain independently assigned.
 
 The separate natural portrait/cloth route is still bound to c027's prior QA image: its saved state must not be reused on this new image. Its exact-image window2 entered New Game/movie12000; window3 visibly played the opening cinematic and saved state03 with the15unexecuted phone rules. That is scoped old-image functional evidence, not current collision or live actor/cloth acceptance; historical damaged logs and holds remain.
+
+## 2026-10-29 Build29: EFM and line source/test follow-ons
+
+**2026-10-29 progress: DONE — reviewed public source/test follow-on, default0 behavior preserved.** Worktree `/workspace/scratch/8f775e996324/work-simulation-review`, branch `codex/simulation-review-20261029`, publication base `a5ac02aecee317c3ac74f1c9e7e2546a40775348`, refreshed from the qualified `5532fa6c` source without changing the runtime consumers. Ownership is confined to `port/dreamcast/tests/efm_identity/fixture.cpp`, `port/dreamcast/game/{line_resume29.mk,water_layer29.mk}`, and `port/dreamcast/tools/cloud/build29/{line_resume29_fixture.cpp,test_line_resume29.py,water_layer29_fixture.py}`. There is no EFM, line or water runtime reimplementation.
+
+**EFM DONE.** The production `esp_efm.cpp`, manager hooks, bridge and saturating token/serial are unchanged. Four added fast-vs-source cases cover the three owner gaps: successful and failed constructor-time `EfmDelete` reentry after the manager's pre-construction class publication; a nested deletion that creates a class slot and rebuilds the index before the outer callback returns, with an explicit slot-visit order showing exact source slot `i+1` continuation; and a class object mapped at slot 65536, which exceeds the `u16` index and forces the bounded 64-entry cache's source-scan fallback. The failing constructor leaves changed class bytes, and the callback sees them before its final manager publication. The nested case checks that the outer call does not replay its processed prefix. Existing generation exhaustion and all other lifecycle cases remain in the suite.
+
+`python3 -B port/dreamcast/tests/test_efm_class_identity.py` passes 17 source/accelerated parity cases for FX_SCAN1 and FX_SCAN2, normal and ASan/UBSan. Its prior exact OFF `-E -P` and `-O2 -g0` object checks still pass for the EFM excerpt, manager methods and bridge; object SHA256 prefixes remain `4c32efe6a5191650`, `030672eb0d2d10d3`, `245c2e6ac90d1693`. The actual primary Make check still proves absent/zero/ON control flags across five representative EFM consumers and refuses empty.
+
+**Line DONE.** `GAME_LINE_RESUME` now validates exactly one literal `0` or `1` using a one-word check and literal `filter-out`; a `%` pattern, multiword, empty or disguised numeric value cannot silently select OFF. Only when resume is 1, `GAME_LINE_WALK` must be exactly one literal `1` or `2`; zero, 3, empty, multiword and pattern values fail. Both valid walk arms retain the same `atari.o` define, and absent/zero retain the exact old compile command. The actual primary `make -f Makefile -n` test covers these accepted/refused values.
+
+The source-extracted production line fixture now has an independent equal-nearest oracle: polygon 63 and polygon 64 intersect at the same distance across the 64/65 leaf boundary, and a polygon in a second piece intersects at that same world point. The source's strict `<` rule must retain the first polygon and first piece, with exact return attribute, normal pointer, owner, hit bits and visit order. `python3 -B port/dreamcast/tools/cloud/build29/test_line_resume29.py` passes all 45 consumer cases in each WALK1/2, PIECE0/1/2, normal and ASan/UBSan arm. Its existing original/absent/explicit-zero complete preprocessor and object identity checks remain exact for both piece profiles. Host objects are 30,776 and 34,184 bytes for those two profiles. The unavailable target assembly's leaf-list ABI is represented by the documented host adapter; no target output claim is made.
+
+**Water Make DONE.** `WATER_LAYER29` now requires one literal `0` or `1` in the primary Make fragment; its former `filter` treated caller-supplied `%` as a wildcard. The existing actual-primary-Make fixture adds `%`, `0%` and `1%` refusal arms. `python3 -B -m unittest port.dreamcast.tools.cloud.build29.water_layer29_fixture.WaterLayer29Test.test_primary_makefile_control` passes. The water runtime and ON dependencies are unchanged.
+
+**Footprint and gates.** The only production edits are the two Make validation changes. They add no runtime code, BSS, heap, stack state, assembly or capacity. The EFM and line suites above were rerun and passed at source base `5532fa6c`; `git diff --check` is clean. NEXT: serialized local integration and target SDK absent/zero/ON link/identity checks; current-image EFM/line gameplay, STRICT, full memory and cost comparisons; actual target LINE_LEAF/TAIL assembly and live result/cost evidence. BLOCKED at target/private gates in this cloud workspace: no SH-4/KOS compiler, private Build-Assets, Flycast capture or physical Dreamcast. The previous published target links remain historical evidence, not freshly rerun for this follow-on.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${SIM29_BASE_TREE:?fresh base worktree path}"
+: "${SIM29_LOGS:?fresh log directory}"
+: "${SIM29_PROGRAMS:?fresh programme directory}"
+: "${SIM29_LABEL:?fresh lane label prefix}"
+SIM29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$SIM29_BASE_TREE" a5ac02aecee317c3ac74f1c9e7e2546a40775348
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$SIM29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$SIM29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$SIM29_BASE_TREE" "${SIM29_LABEL}base" ""
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}absent" ""
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}off" "GAME_LINE_RESUME=0"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}ctrl" \
+  "GAME_LINE_WALK=2 GAME_LINE_PIECE=2 GAME_LINE_RESUME=0"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}on" \
+  "GAME_LINE_WALK=2 GAME_LINE_PIECE=2 GAME_LINE_RESUME=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${SIM29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${SIM29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${SIM29_LABEL}offrP" \
+  --output "$SIM29_LOGS/simulation29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+
+For the other two unchanged runtime consumers, reuse `candidate_build` from
+that shell and run the exact controls below. The changes in this follow-on
+are fixtures and literal Make parsing; these commands verify that accepted
+controls still reach the intended TUs and link on the pinned SDK.
+
+```bash
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}walk1" \
+  "GAME_LINE_WALK=1 GAME_LINE_PIECE=2 GAME_LINE_RESUME=1"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}efm" \
+  "GAME_FX_SCAN=2 GAME_ATCHK=1 GAME_ATCHK_LIST=1 GAME_WORKAT_INLINE=1 GAME_ESP_OWNER=1 OBJECT_DEMAND=1 ENEMY_DEMAND=1 GAME_EFM_CLASS_IDENTITY=1"
+candidate_build "$SIM29_CANDIDATE_TREE" "${SIM29_LABEL}water" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1"
+```
+
+The historical `OPEN SOURCE/TEST FOLLOW-ONS` note at the top of this handback
+is retained as the review record. Its constructor/rebuild/u16-slot, exact
+nearest-tie and literal-control tasks are addressed by this dated section.
+Actual LINE_LEAF/TAIL target execution and matched live gameplay/STRICT/cost
+remain separate from the host source adapter, and ELC_W_LEAVES stays an
+unmatched counter for resume ON.
