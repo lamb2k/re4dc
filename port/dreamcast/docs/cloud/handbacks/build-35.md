@@ -776,3 +776,33 @@ module-prolog/runtime liveness, all other indirect/external roots, nested
 stack/interrupt/high-water, CPU/current floor and final enabled game/link/
 console gates remain pending. Window32 still unbuilt under19GiB guard.
 No new compile/link/master/capture, source/recipe change, SD or release.
+
+#### Owner: window32 link and matched enabled QA images complete, 2026-10-29
+
+Headroom rose above the unchanged guard (cause unverified). Only the missing
+window32 arm was built;44s/rc0/missing0. Retained existing-audit/gaps controls
+not rebuilt. Full3-QA-profile proof PASS, source2061/NMR1/N32 retained;
+gaps->window differs only window/derived object lists, four actual consumers
+have window32/audit35 definitions. Window ELF SHA256:
+deacb41ceba7843178a2249c88873932e07d763c481f3d795c393b0cfade6247.
+Increment2176 code/constant,0 data,31040 GNU BSS. Ring symbol31048B plus4B
+overflow flag; category-minus-symbol delta-12B remains unattributed here,
+not assumed padding or runtime heap/headroom.
+
+Fresh recipe DATA/control QA master passed loader+standard lint and ZIP
+integrity. Two independent unchanged swap-program runs produced gaps/window
+QA images from this fixed control. All3 have1664 final file payloads read:
+own raw ELF programme/all15 own overlays exact;1648 other payloads identical
+across arms,36 default QA/pad files common. Source control4 raw files remain
+unchanged. Harness caches are scrambled CD programmes; explicit decode
+matches each raw ELF programme, while actual GDEMU images stay raw and
+unchanged. Initial raw-vs-scrambled cache check failed before acceptance;
+the format contract was verified before resuming preparation.
+
+Private THREE-PROFILE-LINK-PROOF.json and enabled20261029 Windows evidence
+IMAGE-INPUTS/MATCHED-IMAGES.json retain full hashes/commands/readbacks.
+Next: matched per-case warp/pad/link fixtures and finished fixture binding,
+then bounded game/link/window/CPU/current-memory/full-stack checks. No
+enabled runtime, window semantics, visual/STRICT or console acceptance yet;
+no source/recipe change, SD write or release. Console still needs user arm
+selection and REMOTE LINK after each swap.
