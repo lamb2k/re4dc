@@ -400,3 +400,63 @@ with matching camera/state and300+ drawn-frame windows. Existing HouseWhole27
 Pi benchmark rows are from another earlier session and exact loaded-program
 identity remains unresolved; they do not qualify this candidate. No SD write,
 recipe enablement or publication.
+
+
+## EF08 worker delivery, 2026-10-29
+
+**2026-10-29 EF08 target handback: DONE** first queued completion slice is
+implemented and target built (`ec1855b42` + scoped Make repair `f5383c0dc`).
+Fresh release absent/explicit0 and explicit validation ON pass real rc0,
+nonempty ELF and existing empty missing.txt. Baseline77461==absent==zero raw
+programme3,372,036B, all15 overlays and all11 allocated ELF sections; debug ELFs
+differ. Release and existing solo-portal complete preprocessed/-g0 TU identity
+also pass. Actual ON -dM readback verifies20 required1 facts and3 stream/clip0
+facts, with the4 propagated facts bound to exact resolved Make values. Original
+failedON and initial fixture-only default omission remain preserved.
+Host+ASan+UBSan each pass628 checks plus15 Make/source guard cases. Actual
+production chunk_emit/end_direct/batch_close/receipt source is exercised with
+controlled edges. Completion storage symbols total6,165 B BSS+8 B data before
+alignment; queue ticket16B×48. ON local ps2_pass frame10,256B is not whole-stack
+or runtime headroom evidence. **NEXT** coordinator review/default-off landing,
+then geometry-authored PKG/CFG and matching cells/proof, real lifecycle/magenta/
+look/STRICT/memory/net hardware cost. **BLOCKED** those live acceptance gates
+remain pending; this first full-source-span class does not close all EF08.
+Stream/clip-gather/indexed/subset/multi-LOD and legacy immediate witness
+qualification remain excluded. SDK slot released, all runner PIDs exited,
+no live exec session. No emulator/media/push/integration/ALL ON change.
+Exact profiles, commands, missing private inputs and sanitized receipts:
+[PORTAL-COMPLETION.md](../../../tools/cloud/build31/PORTAL-COMPLETION.md).
+
+**2026-10-29 EF08 target checkpoint: DONE** fresh full release absent and
+explicit0 builds at `ec1855b42` pass real rc0, nonempty ELF and existing empty
+missing.txt. The enabled validation arm correctly stopped before ELF at the
+retained early PVS batch guards: native_static lacked propagated TA_DIRECT,
+PS2_WORLD_HDR_CACHE, MESH_FASTPATH and PVR_STREAM facts. Failed output is
+`/root/probe/lanes/route/out-ef08oct29v1onrP`; runner31774/PID1778329 exited1.
+Scoped Make repair now propagates those exact validated Make values only for
+completion1; no guard predicate is relaxed. Host checks cover628 cases plus
+actual Make/source guard cases. **NEXT** coordinator regrants SDK for a fresh
+ON output and actual -dM macro readback, then full OFF/TU identity receipts.
+**BLOCKED** ON target is not yet validated; actual source-bound occluder and
+lifecycle/look/STRICT/memory/cost gates remain open. SDK slot released; no live
+job. Do not retry the unchanged failed label/output.
+
+**2026-10-29 EF08 first completion slice: DONE** source implementation under
+new `WORLD_PORTAL_COMPLETION=0|1` default0, preserving the existing portal-only
+path absent/zero. Selection issues a scene/view/source-generation/material
+bound ticket; actual queued emit/end_direct/batch_close can commit only positive
+whole-source coverage. Queued/empty/refused/partial/aborted/clipped/culled work
+grants none. Same part/placement, package storage/metadata/cell generation and
+current material are checked at flush; observed mutation revokes old receipts.
+Only the existing portal+qualified PVS batch composition's early static guard
+gets an opt-in exception. Stream/clip-gather/indexed and all other exclusions
+remain. Host and sanitizer cover actual runtime/chunk_emit/flush source; original
+portal388 checks are retained. **NEXT** serialized target OFF identity and the
+explicit queued ON profile in `portal_completion_profiles.json`, then authored
+source-bound cells and current-data lifecycle/look/STRICT/memory/cost gates.
+**BLOCKED** target slot is not yet granted; private authored wall/cell geometry
+with matching package/policy identities is absent from this synthetic gate and
+holds actual occlusion/look acceptance only. No SDK/emulator/media job is live.
+This first slice supports only complete stored meshlet spans with every strip
+group and no clip/cull delta; subset/multi-LOD coverage and legacy immediate
+witness qualification remain pending. Source rendering remains the fallback.

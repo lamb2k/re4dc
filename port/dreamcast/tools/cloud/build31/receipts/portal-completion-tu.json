@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "scope": "Actual full release-derived native_static commands: baseline/absent/zero complete preprocessed source and debug-free object identity in release and existing solo-portal source compositions. ON actual -dM macro readback and Make-value binding; not runtime or complete call-chain stack proof.",
+  "rows": [
+    {
+      "profile": "release",
+      "artifact": "ii",
+      "bytes": 1064620,
+      "sha256": "304ad612ba92301a55947e186427c9e38c3d0dad0811dedc155ab30a212ca357",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "release",
+      "artifact": "o",
+      "bytes": 179948,
+      "sha256": "e34c981e5181adf7f737200fe9c8a7ead4b60e0d5a97c341d5c886b9ad341028",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "solo-portal",
+      "artifact": "ii",
+      "bytes": 1101490,
+      "sha256": "37a3fb0379afdb3b211ec31e595f4dbf1c3d1fc9c1b15c78b4f43d474cfc78e2",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "profile": "solo-portal",
+      "artifact": "o",
+      "bytes": 212796,
+      "sha256": "978f96f9f4612a061368696ba830f317baad76f1d506060de61158af66613e92",
+      "baseline_absent_zero_equal": true
+    }
+  ],
+  "on_facts": {
+    "WORLD_PORTAL_COMPLETION": "1",
+    "WORLD_PORTAL29": "1",
+    "PS2_PVS": "1",
+    "PS2_PVS_BATCH_COMPOSE": "1",
+    "SCENERY_SUBMIT_BATCH": "1",
+    "SCENERY_CHUNK": "1",
+    "SCENERY_SELECT_ONLY": "1",
+    "SCENERY_REPLAY_LEAN": "1",
+    "TA_DIRECT": "1",
+    "MESH_DIRECT": "1",
+    "PS2_WORLD_MESH": "1",
+    "PS2_WORLD_HDR_CACHE": "1",
+    "PS2_STRIP_GROUPS": "1",
+    "MESH_FASTPATH": "1",
+    "MESH_VP_SCHED": "1",
+    "HW_LEAN": "1",
+    "PVR_STREAM": "1",
+    "D349_RENDERER_STACK": "1",
+    "PS2_WORLD_SOURCE_OWNER": "1",
+    "PS2_WORLD_SOURCE_TEX_PREP": "1",
+    "SCENERY_STREAM": "0",
+    "SCENERY_CLIP_GATHER": "0",
+    "SCENERY_CLIP_INDEXED26": "0"
+  },
+  "source_sha256": "4c025235eeb58b26eb8849aa8101ae014907710590332220c840f3919e989a13",
+  "baseline": "77461a84",
+  "runtime_commit": "f5383c0dca4bfdc2fbcd019c0f3bcb361aadec87",
+  "on_command_sha256": "873a8a158758e2249dcc84ae2b7be722ab4827bded0b5a04d3705fb5a69d12bd"
+}

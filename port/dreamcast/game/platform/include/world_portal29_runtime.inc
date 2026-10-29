@@ -8,7 +8,48 @@ unsigned admitted=0,declined=0,commits=0,source_declines=0,scene_declines=0,wait
 bool valid=false,candidate=false;
 float view_key[27]{};
 
+#if RE4DC_WORLD_PORTAL_COMPLETION
+unsigned completion_serial=0;
+const void* completion_storage=nullptr;
+const void* completion_parts=nullptr;
+const void* completion_placements=nullptr;
+unsigned completion_generation=~0U,completion_room=~0U,completion_count=0;
+unsigned completion_keys[re4dc::portal29::kMaxWitnesses][6]{};
+bool material_matches(unsigned part,const unsigned* key){
+    if(!key || !ps2w.parts || part>=ps2w.package.header().part_count)return false;
+    const auto& m=ps2w.parts[part];
+    return key[0]==m.crc && key[1]==m.fnv && key[2]==m.width && key[3]==m.height &&
+           key[4]==m.pass && key[5]==m.cull;
+}
+bool completion_sources_current(){
+    if(completion_count>re4dc::portal29::kMaxWitnesses || !completion_storage || completion_storage!=ps2w.storage || completion_parts!=ps2w.parts ||
+       completion_placements!=ps2w.placements || completion_generation!=pc::wp29_generation ||
+       completion_room!=ps2w.room || completion_count!=pc::wp29_count || !pc::wp29_witnesses)return false;
+    for(unsigned q=0;q<completion_count;++q)
+        if(!material_matches(pc::wp29_witnesses[q].part,completion_keys[q]))return false;
+    return true;
+}
+void completion_begin(){
+    // Existing receipt bits may cross opaque->later passes only for exactly
+    // the same source/material state. A same-address reload gets a new cell epoch.
+    if(!completion_sources_current())receipts.clear();
+    // Zero is permanently exhausted. No frame/room/movie reset restores it.
+    static bool exhausted=false;
+    if(completion_serial==~0U)exhausted=true;
+    if(!exhausted)++completion_serial;else completion_serial=0;
+    completion_storage=ps2w.storage;completion_parts=ps2w.parts;completion_placements=ps2w.placements;
+    completion_generation=pc::wp29_generation;completion_room=ps2w.room;completion_count=pc::wp29_count;
+    for(unsigned q=0;q<completion_count;++q){
+        const auto& m=ps2w.parts[pc::wp29_witnesses[q].part];auto* key=completion_keys[q];
+        key[0]=m.crc;key[1]=m.fnv;key[2]=m.width;key[3]=m.height;key[4]=m.pass;key[5]=m.cull;
+    }
+}
+#endif
+
 bool sources(){
+#if RE4DC_WORLD_PORTAL_COMPLETION
+    if(pc::wp29_count>re4dc::portal29::kMaxWitnesses)return false;
+#endif
     if(!pc::data.block || !pc::wp29_witnesses || !pc::wp29_count || !ps2w.storage ||
        !ps2w.parts || !ps2w.package.lod() || !dyn::ids || dyn::nids!=ps2w.nplacements ||
        pc::kPcRoom!=ps2w.room)return false;
@@ -76,6 +117,11 @@ void begin(unsigned pass,const float* P,float near,float far){
     ++declined;return;
 #else
     if(!sources()){++source_declines;return;}
+#if RE4DC_WORLD_PORTAL_COMPLETION
+    completion_begin();
+    receipts.sync(epoch[0],epoch[1],pc::wp29_generation,key);
+    if(!completion_serial){++declined;return;}
+#endif
     // Always rebuild from this pass's actual camera. Never borrow Trans actor
     // state or a previous frame's eye; current source receipts are separate.
     pc::setup(ps2w.view,P,near);
@@ -87,9 +133,18 @@ void begin(unsigned pass,const float* P,float near,float far){
 }
 bool same_scene(){
     unsigned epoch[2];
+#if RE4DC_WORLD_PORTAL_COMPLETION
+    const bool current=valid && re4dc_pvs23_scene(epoch) && epoch[0]==view_frame && epoch[1]==scene &&
+           pc::wp29_generation==receipts.generation && std::memcmp(ps2w.view,view_key,48)==0 &&
+           std::memcmp(ps2w.projection,view_key+12,28)==0 && std::memcmp(ps2w.viewport,view_key+19,24)==0 &&
+           completion_sources_current();
+    if(!current){valid=false;receipts.clear();}
+    return current;
+#else
     return valid && re4dc_pvs23_scene(epoch) && epoch[0]==view_frame && epoch[1]==scene &&
            pc::wp29_generation==receipts.generation && std::memcmp(ps2w.view,view_key,48)==0 &&
            std::memcmp(ps2w.projection,view_key+12,28)==0 && std::memcmp(ps2w.viewport,view_key+19,24)==0;
+#endif
 }
 bool witness(unsigned placement,unsigned part){
     if(!pc::wp29_witnesses)return false;
@@ -97,11 +152,28 @@ bool witness(unsigned placement,unsigned part){
         if(w.placement==placement && w.part==part)return true;}
     return false;
 }
+#if RE4DC_WORLD_PORTAL_COMPLETION
+re4dc::portal29::Ticket capture(unsigned placement,unsigned part,const unsigned* key){
+    if(!completion_serial || !same_scene() || !material_matches(part,key))return {};
+    for(unsigned q=0;q<pc::wp29_count;++q){const auto& w=pc::wp29_witnesses[q];
+        if(w.placement==placement && w.part==part)return {completion_serial,q,placement,part};}
+    return {};
+}
+void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Completion& completion,const unsigned* key){
+    if(!completion.witnessed() || !ticket.serial || ticket.serial!=completion_serial || !same_scene() ||
+       !sources() || ticket.witness>=pc::wp29_count)return;
+    const auto& w=pc::wp29_witnesses[ticket.witness];
+    if(w.placement!=ticket.placement || w.part!=ticket.part || !material_matches(w.part,key) || std::memcmp(completion_keys[ticket.witness],key,6U*sizeof(unsigned)) ||
+       !re4dc_pvs23_opaque_ready(key,re4dc::vp::kCacheSlots+64U))return;
+    receipts.commit(ticket.witness);++commits;
+}
+#else
 void finish(unsigned placement,unsigned part,bool success,const unsigned* key){
     if(!success || !same_scene() || !sources() || !re4dc_pvs23_opaque_ready(key,re4dc::vp::kCacheSlots+64U))return;
     for(unsigned q=0;q<pc::wp29_count;++q){const auto& w=pc::wp29_witnesses[q];
         if(w.placement==placement && w.part==part){receipts.commit(q);++commits;}}
 }
+#endif
 // Called before each placement's portal test, outside any queued SQ ownership.
 // A failed source part, gate change, package/movie generation or scene change
 // removes culling immediately. No target order or source draw is rearranged.
