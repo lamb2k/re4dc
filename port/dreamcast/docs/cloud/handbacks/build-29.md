@@ -60,6 +60,323 @@ OPEN SOURCE/TEST FOLLOW-ONS, cloud-owned: EFM fixtures do not exercise construct
 COLLISION runtime follow-up on pinned prior source39ed524a, CACHE2 controls0/1: same1648 external asset files, same stock room fixture and source/QA name, exact16 SDK payloads per image/base. Both60s no-key/no-state runs reached r101. Observed emitted control row hit8182/miss10/mismatch0; enabled rows hit8182/miss10/mismatch0 and hit16374/miss10/mismatch0. Neither reported dirty overflow in these samples. Raw logs contain4138/3702 NUL bytes and are retained unmodified. This is scoped reference-comparison evidence at reported cutpoints, not whole-window absence of mismatch, route/STRICT, speed or memory-headroom acceptance. Source counters/sample counts are not a performance comparison. No identical retry or longer run is justified by this result alone.
 
 
+## 2026-10-29 EF12 Build29: consumed GX texture matrix on native strips
+
+**2026-10-29 progress: DONE — default0 source slice, root review and bounded
+host validation; NEXT — pinned target/current-image qualification and the next
+source primitive family.** Branch `codex/effect-primitive-20261029`, source base
+`d45eb759dd92685255929625e04fae3d7a46bca7`. This commit preserves and completes
+the interrupted worker's edits under the recorded EF12 architecture decision
+(`codex/cloud-activity-20261029`, decision commit `3c9dceb`). It is a narrow
+extension of the existing strip adapter, clipper and FIFO, with no new renderer.
+The cloud's GitHub write calls were interrupted without a result; publication
+and integration are unconfirmed. A local source commit is not a target build
+or runtime acceptance.
+
+### Files and behavior
+
+Owned production files are `src/game/esp_sub.cpp`, new
+`port/dreamcast/game/platform/include/effect_uv12.hpp`, and new
+`port/dreamcast/game/effect_uv12.mk`. Dedicated fixture is new
+`port/dreamcast/tests/test_effect_uv12.py`. The primary Makefile includes the new fragment immediately after
+`effects30.mk`.
+No native UI/model/actor/static source was edited.
+
+`EFFECT_UV12` defaults to literal `0`; only literal `0` or `1` is accepted.
+ON requires `FX_STRIP21=1 NATIVE_DRAW_OUTCOMES=1 EFFECT_SPRITES=1` and adds
+`-DRE4DC_EFFECT_UV12=1` only to `src/game/esp_sub.o`. Empty, lists, negative,
+unknown, `%`, `0%`, `1%` and trailing-space values are refused. The Make test
+uses the actual primary Makefile and compiler recipes, with a temporary empty
+KOS rules file for dry-run evaluation.
+
+The actual `EspTexSet` calls `GXLoadTexMtxImm(mtx,0x1e,1)`, loading two rows.
+Actual `cEsp::CommonStateSet` calls `GXSetTexCoordGen(0,1,4,0x1e)` and supplies
+ST11. For newly admitted matrices the helper copies exactly the first eight
+finite coefficients and applies
+
+```
+s' = m00*s + m01*t + m02 + m03
+t' = m10*s + m11*t + m12 + m13
+```
+
+The existing full 3x4 identity comparison still determines the legacy class.
+Its old material admission and UV behavior are preserved. Outside that legacy
+class, the unloaded third row has no effect on capture/transform, including
+NaN/Inf there; there is no perspective division or post-normalization. Each
+transformed UV must be finite before the adapter calls any native draw function.
+The existing `effect_strip21::source_uv` mirror/repeat/signed16 behavior remains
+the input. Transform precedes the unchanged native clipper and original quad
+diagonal. Current pattern/header/current EspTexWk are read on each call.
+
+New matrix admission is limited to existing eligible Esp01/Esp02 strips with
+single-texture RGB565 (`format==4`), no CLUT, header wrapS=wrapT=0, source uniform
+alpha >1, no RGB or alpha boost flags (`0x80|0x20000`), and exact blend fields
+`xA5==4`, `xA6==5`. Inherited eligibility keeps `xA4==1` and rejects the special
+part classes, lit/mask/spline/capture flags and source capture state. The actual
+source CommonStateSet fixture verifies no depth writes (`GXSetZMode(1,3,0)`);
+the native packet still uses GEQUAL/no depth write. Other formats/materials stay
+refused for the new class. These restrictions avoid widening the source alpha
+cutoff contract or equating TPL header wrap with source texture-object clamp.
+
+The convention was already independently checked by the coordinator against Dolphin at
+`3eb30c7620b4475b2e0404228ba0d2b238a132f1`, software
+`TransformUnit.cpp` (`MultiplyVec2Mat24`/`TransformTexCoordRegular`) and generated
+`VertexShaderGen.cpp`. This patch imports no Dolphin implementation. No actual
+nonidentity source writer or private-room incidence is established here; no
+claim that this restores a named room, all EF12 materials, or whole EF12 follows.
+
+### Meaningful fixture and final results
+
+The new fixture compiles actual extracted `EspTexSet`, `cEsp::CommonStateSet`
+and `EspStrip_draw_poly`, captures GX matrix load, texgen setup and raw source
+UV/positions, and independently transforms those captured ST11 values. It does
+not compare the helper against another invocation of itself. Actual adapter
+output flows into real `native_effect_strip21.inc`, real strip geometry and
+`room/pvr_geometry.cpp`; PVR/texture resolution/storage edges are synthetic.
+Checks compare final queued/direct packet UVs, source vertex order/diagonal,
+header blend/alpha/clamp/depth, and outcomes. Near-plane intersection UVs and
+depth are independently calculated from the captured source triangle edges.
+These are synthetic CPU/packet checks, not hardware raster or visual evidence.
+
+Coverage includes legacy identity, rotation/scale/skew/negative scale/translation,
+column2-only offsets, every unloaded-row entry poisoned, every loaded entry
+tested with NaN/+Inf/-Inf, finite-entry arithmetic overflow refused before any
+native call, source alpha2 boundary, live pattern and matrix changes, equal
+effect identities selecting different current texture work, narrow material
+refusals, noncoplanar diagonal, near clipping, queued/direct/cull/policy-skip/
+refusal/partial outcomes, actual source caller fallback on refusal, and no GX
+replay after terminal partial publication. Each normal and ASan+UBSan executable
+also runs all 261,120 repeat/slice/direction/mirror combinations through the
+actual GX oracle with a nonidentity matrix.
+
+OFF evidence is explicitly two different checks:
+
+* Complete actual `esp_sub.cpp` preprocessing (`-E -P`, real production headers)
+  equals baseline `d45eb759` with EFFECT_UV12 absent and explicit0, across
+  `__sh__` absent/present × NATIVE_DRAW_OUTCOMES0/1. Production diagnostic
+  constants are not normalized. Existing source #line anchors suffice.
+* Extracted actual adapter plus real packet implementation produce identical
+  host `-O2 -g0 -ffp-contract=off` objects for baseline/absent/zero. Extraction
+  boundaries pin fixture-only assertion filenames/lines, so the new guard
+  lines cannot perturb synthetic fixture assertions. This is not a complete
+  target-TU object or whole-programme identity claim.
+
+The actual primary Make-derived esp_sub ON recipe with
+`GAME_FP_CONTRACT=off` contains `-ffp-contract=off` and no `-ffinite-math-only`,
+`-ffast-math` or `-funsafe-math-optimizations`. Normal/sanitized optimized tests
+exercise the nonfinite/overflow refusals under those finite-safe settings.
+Arbitrary externally overridden compiler flags are not qualified.
+
+Final command from the worktree root:
+
+```bash
+ASAN_OPTIONS=detect_leaks=0 python3 -B -m unittest \
+  port.dreamcast.tests.test_effect_uv12 \
+  port.dreamcast.tests.test_effect_strip21 \
+  port.dreamcast.tests.test_native_draw_outcomes.NativeDrawOutcomes.test_make_control_is_strict_default_off_and_reaches_all_consumers \
+  port.dreamcast.tests.test_native_draw_outcomes.NativeDrawOutcomes.test_actual_packets_all_outcomes_and_partial_publication \
+  port.dreamcast.tests.test_native_draw_outcomes.NativeDrawOutcomes.test_actual_strip_adapter_propagates_refusal_to_real_source_caller \
+  port.dreamcast.tests.test_native_draw_outcomes.NativeDrawOutcomes.test_actual_cloth_source_aggregates_bands_and_stops_after_failure
+git diff --check
+```
+
+Result: **11 tests PASS, 12.375s**; whitespace check clean. The dedicated EF12
+suite has 3 tests and runs both normal and combined ASan+UBSan executables.
+Temporary compilation/packet outputs were under fresh `/tmp/re4dc-effect-uv12-*`
+directories and were removed by TemporaryDirectory. No generated game data or
+target outputs are present in the patch.
+
+Prior wider command `python3 -B -m unittest port.dreamcast.tests.test_effect_uv12
+port.dreamcast.tests.test_effect_strip21 port.dreamcast.tests.test_native_draw_outcomes`
+ran12 tests and failed4/error1: four old sanitizer tests attempted LeakSanitizer
+and failed `/proc/.../task` / ptrace runtime restrictions; the historical
+`test_disabled_actual_emitter_objects_match_parent_and_explicit_zero` references
+`9ee386e3...:native_effect_strip21.inc`, whose historical commit/path objects
+were initially missing from this cloud's partial object store. The coordinator subsequently
+imported the exact public commit/path tree/blob objects read-only, verifying
+blob `ecb8fabdc6793ba253c91bc4b42d13899c097ff2`, without changing any branch,
+index or worktree. The retained historical OFF regression was then run separately:
+
+```bash
+ASAN_OPTIONS=detect_leaks=0 python3 -B -m unittest \
+  port.dreamcast.tests.test_native_draw_outcomes.NativeDrawOutcomes.test_disabled_actual_emitter_objects_match_parent_and_explicit_zero
+```
+
+Result: **1 test PASS, 1.619s**. Thus all12 tests from the wider run pass in the
+final11-test batch plus this restored historical baseline test. The LeakSanitizer
+environment limitation remains separate from successful ASan+UBSan execution;
+no leak-check result is claimed. No existing regression source or historical
+identity gate was weakened.
+An exploratory full host-TU object compile was infeasible because the recovered
+source needs a 32-bit ABI and its target allocation declarations; it was not
+counted as target evidence. Complete source preprocessing did succeed.
+
+### Storage, automatic work and remaining gates
+
+There is no retained source pointer/identity, new cache, registry, allocation,
+BSS/global state, capacity, source update, texture backing, or queue format.
+The ON adapter introduces a local 32-byte Matrix24, identity bool, and temporary
+float results; the legacy identity path does not initialize/copy Matrix24.
+Capture fully writes its8 entries before use. Compiler stack layout/slot reuse,
+whole-call-stack peak, linked footprint and target cycle cost are unmeasured.
+No claim of a32-byte target stack increase or speedup follows from the source.
+The existing quad/native clip/FIFO automatic arrays remain unchanged.
+
+NEXT local gates: pinned-SDK absent/zero/ON compilation/link and flags, full
+programme/all15 overlays/allocated sections OFF identity, enabled SH-4 finite
+refusal/control and stack/object inspection, current loaded-input occurrence,
+live look/gameplay/STRICT, complete memory margins/cost and physical console.
+The cloud has no initialized private SDK/asset/runtime path; no target build,
+hardware timing, raster or private-room coverage was attempted. Default remains0.
+
+### Exact next target commands for Claude
+
+
+The local SDK pins are KOS `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`
+plus the repository patches, GCC 15.2.0, binutils 2.45.1,
+newlib 4.6.0.20260123, and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. From the candidate checkout with
+that SDK and the existing authorized private recipe inputs, run serially with
+fresh absolute paths and a fresh label. These commands create private build
+outputs and disable the shared programme-registry update. They do not stage
+release media or change a recipe.
+
+```bash
+set -euo pipefail
+: "${EF12_BASE_TREE:?fresh absent absolute baseline worktree path}"
+: "${EF12_OUT_ROOT:?fresh absent absolute build output root}"
+: "${EF12_LOGS:?fresh absent absolute log directory}"
+: "${EF12_PROGRAMS:?fresh absent absolute programme directory}"
+: "${EF12_LABEL:?fresh lane label prefix}"
+EF12_CANDIDATE_TREE="$(git rev-parse --show-toplevel)"
+test ! -e "$EF12_BASE_TREE"
+test ! -e "$EF12_OUT_ROOT"
+test ! -e "$EF12_LOGS"
+test ! -e "$EF12_PROGRAMS"
+git worktree add --detach "$EF12_BASE_TREE" d45eb759dd92685255929625e04fae3d7a46bca7
+mkdir -p "$EF12_OUT_ROOT" "$EF12_LOGS" "$EF12_PROGRAMS"
+source <(tr -d '\r' < "$EF12_CANDIDATE_TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+export ROUTE_OUT_ROOT="$EF12_OUT_ROOT"
+export ROUTE_PROGRAMS_DIR="$EF12_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+EF12_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="$EF12_OUT_ROOT/out-${label}rP"
+  test ! -e "$output"
+  test ! -e "$EF12_PROGRAMS/candidate-route${label}rP"
+  T="$tree" K="$EF12_LOGS" LP="$label" XON='' CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+EF12_build "$EF12_BASE_TREE" "${EF12_LABEL}base" ''
+EF12_build "$EF12_CANDIDATE_TREE" "${EF12_LABEL}absent" ''
+EF12_build "$EF12_CANDIDATE_TREE" "${EF12_LABEL}zero" 'EFFECT_UV12=0'
+EF12_build "$EF12_CANDIDATE_TREE" "${EF12_LABEL}ctrl" \
+  'GAME_FP_CONTRACT=off FX_STRIP21=1 NATIVE_DRAW_OUTCOMES=1 EFFECT_SPRITES=1 EFFECT_UV12=0'
+EF12_build "$EF12_CANDIDATE_TREE" "${EF12_LABEL}on" \
+  'GAME_FP_CONTRACT=off FX_STRIP21=1 NATIVE_DRAW_OUTCOMES=1 EFFECT_SPRITES=1 EFFECT_UV12=1'
+python3 -B "$EF12_CANDIDATE_TREE/port/dreamcast/tools/cloud/build34/upload_compare.py" \
+  --baseline "$EF12_OUT_ROOT/out-${EF12_LABEL}baserP" \
+  --arm "$EF12_OUT_ROOT/out-${EF12_LABEL}absentrP" \
+  --arm "$EF12_OUT_ROOT/out-${EF12_LABEL}zerorP" \
+  --output "$EF12_LOGS/effect-uv12-release-off.json"
+```
+
+Retain the actual resolved compiler commands, build logs and existing empty
+`missing.txt` for every arm. The OFF comparison covers the complete programme,
+all 15 overlays, and allocated-section metadata and bytes; debug-ELF file
+differences alone are not the identity criterion. Keep the dependency-only
+`ctrl` and enabled `on` pair separate from release identity. Record target
+stack, text/data/BSS and current memory margins from the actual artifacts;
+host layouts do not substitute for them. Cloud must synchronize the candidate
+and baseline again if serialized integration changes source. Current-image
+look/gameplay, STRICT, material/lifetime behavior and physical-console cost
+remain local gates. No release default or media action follows from a pass.
+
+For the enabled pair, verify the new definition only on `esp_sub.o`,
+`-ffp-contract=off`, and no finite-only/fast-math override. Compare complete raw
+target preprocessing and objects in affected disabled profiles, inspect enabled
+finite-refusal code and actual stack output, and bind any live occurrence to
+the current loaded inputs. No nonidentity private-room incidence is claimed.
+
+**Remaining EF12 public source:** the actual Esp1b producer/deformation and
+draw order, instance retirement authority, safe cold texture preparation,
+mask/spline/RTT and additional material contracts. `re4dc_fx_esp_gen` currently
+does not advance at every live Pull/Push, so it is not proof of an Esp1b
+instance lifetime at a reused address. A generic billboard bound cannot stand
+in for the actual GetPosXY geometry. Extend the existing owner and copied FIFO
+contracts; the current UV slice neither implements nor certifies those families.
+Private visual/gameplay/STRICT/memory/cost and console results remain local.
+
+## 2026-10-29 recovery: EF12 current strip texture matrix source slice
+
+**DONE:** recovered and reviewed the existing unpublished implementation commit
+`0637f65763b13991730444bc2bc49bb623febeb9` in an independent worktree, preserving
+the former workspace. Its parent and current inspected integration are
+`d45eb759dd92685255929625e04fae3d7a46bca7`. The preceding bounded source architecture
+decision remains `3c9dcebd42d20fa4baa2ac66905526e5ed7248c6`: consume the actual GX
+two-row matrix on ST11 in the Esp01/Esp02 strip adapter, then use the existing
+quad clipping/FIFO path. No new renderer or instance cache is introduced.
+
+Review confirmed the implementation retains the full-identity legacy class and
+default0 behavior, and adds only the bounded unboosted RGB565/no-palette/clamped
+single-texture class with current alpha/blend/depth restrictions. It copies the
+two loaded rows by value, includes both constant columns, refuses nonfinite or
+overflowing transformed UVs before native publication, and retains the exact
+source repeat/mirror/signed conversion and quad diagonal. It reads current
+source texture work and pattern on each call. It does not claim a retained
+effect-instance lifetime certificate or any newly proven private occurrence.
+
+**Recovery fixture addition:** the same source-instance address now selects a
+different supported effect ID, texture owner/palette/pattern and current matrix
+while an earlier packet remains queued. The new output must reflect current
+source values, and the earlier packet must remain byte-identical. A subsequent
+transformed primitive that hits the effect cap must refuse without losing that
+queued prefix. Exhausted primary/spill queue storage also refuses the transformed
+primitive before publication. These cases run with the actual adapter and native
+packet implementation in both normal and ASan/UBSan executables.
+
+No production defect was found in this narrowly defined recovered source slice.
+Recovery changes only its dedicated fixture; the existing production adapter,
+helper, dedicated Make fragment and already-serialized primary Make include are
+retained. No native_ui/native_model/cloth/instance lifecycle production file was
+edited in this recovery.
+
+### Repeated validation
+
+```
+ASAN_OPTIONS=detect_leaks=0 python3 -B -m unittest \
+  port.dreamcast.tests.test_effect_uv12 \
+  port.dreamcast.tests.test_effect_strip21 \
+  port.dreamcast.tests.test_native_draw_outcomes
+git diff --check
+```
+
+**PASS: all 12 tests together, 13.938 seconds; whitespace check clean.** This
+includes normal and ASan/UBSan actual-source GX oracle/packet tests; all 261,120
+repeat/slice/direction/mirror combinations; new source-reuse/queue cases; source
+clipping/wrap/material/refusal/partial cases; full actual `esp_sub.cpp` absent
+and explicit0 preprocessing across SH/non-SH and outcomes0/1; identical host
+adapter objects; actual primary Make-derived flag/guard checks; and the retained
+historical emitter OFF identity test. The latter's recovered historical objects
+are present, so no fixture or identity gate was bypassed. LeakSanitizer remains
+disabled for the already-recorded sandbox `/proc` limitation; ASan/UBSan passed.
+
+**NEXT:** publish this bounded source/fixture slice for serialized local target
+qualification. The existing changed-input Build29 commands remain applicable:
+pinned-SDK absent/explicit0/ON builds, effective finite-safe compiler flags,
+complete programme/15 overlays/allocated-section OFF identity, then actual
+current-input look/gameplay/STRICT/memory/cost/console qualification. No target
+compile, full target binary identity or hardware execution is claimed here.
+
+**BLOCKED:** those target/private/runtime acceptance gates only. Default remains0.
+Generic effect owner/primitive/material completion, named mask/spline/RTT routes
+and the separately identified Esp1b shape/retirement contract remain open EF12
+source work. This slice does not sign off the whole card or lift existing holds.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
+
 ## 2026-10-29 EF03: consumed strip/cloth result slice
 
 **DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `NATIVE_DRAW_OUTCOMES=1`

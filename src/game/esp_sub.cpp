@@ -175,6 +175,12 @@ extern "C" void GXGetViewportv(f32*);
 static GXColor s_effect_col; // ChannelSet's final material colour (GXSetChanMatColor)
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
 #include "effect_strip_uv21.hpp"
+#if defined(RE4DC_EFFECT_UV12) && RE4DC_EFFECT_UV12
+#if !RE4DC_NATIVE_DRAW_OUTCOMES || !RE4DC_EFFECT_SPRITES
+#error EFFECT_UV12 needs NATIVE_DRAW_OUTCOMES=1 and EFFECT_SPRITES=1
+#endif
+#include "effect_uv12.hpp"
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "native_draw_result.hpp"
 #endif
@@ -202,17 +208,42 @@ extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,in
 #endif
     EspTexWk* work=&g_pEspSys->Esp_tex_tbl[esp->m_Tex_id];
     if(work->Owner==0xD2 || !work->pTpl || esp->m_Ptn_no>=work->pTpl->numDescriptors)RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#if defined(RE4DC_EFFECT_UV12) && RE4DC_EFFECT_UV12
+    // Keep the existing full-identity class unchanged. For new admissions only,
+    // copy the two rows actually loaded by EspTexSet; row 2 cannot affect ST11.
+    bool legacy_identity=true;
+    for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)
+        if(work->mtx[r][c]!=(r==c?1.0f:0.0f))legacy_identity=false;
+    re4dc::effect_uv12::Matrix24 tex_matrix;
+    if(!legacy_identity && !re4dc::effect_uv12::capture(work->mtx,tex_matrix))
+        RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#else
     // EspTexSet's matrix is source state. Only its proven identity registration
     // is qualified; custom texture matrices require their separate contract.
     for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)
         if(work->mtx[r][c]!=(r==c?1.0f:0.0f))RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#endif
     const TEXDescriptor* descriptor=TEXGet(work->pTpl,esp->m_Ptn_no);
     if(!descriptor || !descriptor->textureHeader)RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
     const TEXHeader* h=descriptor->textureHeader;
+#if defined(RE4DC_EFFECT_UV12) && RE4DC_EFFECT_UV12
+    // RGB565 has no sampled alpha for the source's alpha > 1 test. The old
+    // identity route retains its historical material admission exactly.
+    if(!legacy_identity && (h->format!=4 || descriptor->CLUTHeader || h->wrapS || h->wrapT ||
+        s_effect_col.a<=1 || (esp->m_Tool_flg&(0x80|0x20000)) || esp->xA5!=4 || esp->xA6!=5))
+        RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#endif
     Re4dcEffectQuad q{};q.image={h->data,NULL,h->width,h->height,h->format,0xffffffffU,0};
     if(descriptor->CLUTHeader){q.image.palette=descriptor->CLUTHeader->data;
         q.image.palette_format=descriptor->CLUTHeader->format;q.image.palette_bytes=descriptor->CLUTHeader->numEntries*2;}
     re4dc::effect_strip21::UV uv[4];if(!re4dc::effect_strip21::source_uv(no,repeat,direction,esp->m_Tool_flg,uv))RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+#if defined(RE4DC_EFFECT_UV12) && RE4DC_EFFECT_UV12
+    if(!legacy_identity)for(unsigned i=0;i<4;++i){
+        float s,t;if(!re4dc::effect_uv12::transform(tex_matrix,uv[i].u,uv[i].v,s,t))
+            RE4DC_STRIP21_RETURN(UnsupportedBeforePublication,0);
+        uv[i].u=s;uv[i].v=t;
+    }
+#endif
     const unsigned order[4]={0,1,3,2};for(unsigned i=0;i<4;++i){q.positions[i][0]=corners[order[i]].x;
         q.positions[i][1]=corners[order[i]].y;q.positions[i][2]=corners[order[i]].z;q.u[i]=uv[i].u;q.v[i]=uv[i].v;}
     unsigned r=s_effect_col.r,g=s_effect_col.g,b=s_effect_col.b,a=s_effect_col.a;

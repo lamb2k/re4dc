@@ -338,6 +338,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF12. Add native primitive/material coverage below effect sprite shortcuts
 
+**2026-10-29 recovery source delivery:** Recovered current GX texture-matrix strip consumer; all12 normal/sanitizer source/outcome tests and strict OFF checks PASS. Current-source reuse, queued-prefix and exhausted-storage regressions added. Partial effect coverage; target/private/runtime gates open, default0. See [Build29](handbacks/build-29.md).
+
 **Gap.** Sprite and strip specializations accept limited source families, flags, blend modes and texture mappings. Nonidentity texture transforms, mask/spline and capture-dependent paths do not all have a complete generic native route. Actual private frequency remains unknown; source-defined unsupported routes are enough to implement adapters.
 
 **Target.** A native effect primitive carries current positions, per-corner UVs, texture mapping, color/alpha, depth/blend/cull, exact source owner/record identity and any supported mask/capture operation. Preserve the required material operation and current source-selected phase. The efficient billboard is a specialization of that route.
