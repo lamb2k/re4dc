@@ -665,3 +665,28 @@ Private source/object/ELF hashes and exact direct-site evidence retained:
 owner-audit35-enabled-20261028/THREAD-ROOT-PRECHECK.json. Window32 still
 unbuilt under19GiB guard; no target change, new compile/link/master/capture,
 SD write or release action.
+
+#### Owner: source sites, compiled references and boot exclusion, 2026-10-29
+
+Pinned source ledger enumerates85 FA35 call expressions across all7
+instrumented runtime units, mentioning all58 defined reason keys. This
+includes composition-disabled branches; it is not executed event coverage.
+The actual gaps objects have22 text sections referencing the shared FA29
+hit sink; existing-audit has2 pre-existing sections. All corresponding
+function symbols occur in their own final ELFs. Relocation literals are
+not call counts, distinct source sites, execution frequency or reachability.
+Section names were bound through each actual object symbol table before
+final ELF lookup, preserving SH ABI symbol prefixes; initial unbound-name
+lookup was superseded and retained, not used as an absence result.
+
+Boot/menu distinction: __wrap_OSInit enters run(m,true); the remote
+link_pump(true) call there is guarded !boot, so that boot-menu path excludes
+it. In-game menu and game poll remain synchronous game-task paths as
+previously traced. Private source/object/ELF hashes, every source call and
+compiled referencing section retained in SITE-REFERENCE-LEDGER.json under
+owner-audit35-enabled-20261028. This source/reference ledger is complete for
+the stated inputs; mapping every source site to compiled function and all
+caller/root paths remains pending, as do nested/interrupt/runtime-stack,
+CPU/current memory-floor and enabled image/game/link/console qualification.
+Window32 remains unbuilt under19GiB guard. No target source/recipe change,
+new compilation/link/master/capture, SD write or release action.
