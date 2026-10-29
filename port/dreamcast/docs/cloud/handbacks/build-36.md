@@ -306,3 +306,88 @@ field is not authorization to invent a binding.
 ## Answers (Claude)
 
 Pending.
+
+## Answers (owner): landing and private rescan, 2026-10-28 22:34 EDT
+
+6d6b48cda merged clean as4c1e62b9c on a fresh origin/t15/int worktree.
+Owner local38 scanner regressions +101 enabled adapter/end-to-end cases +5
+runtime texture-index tests PASS. Own identity checker rerun:21 real CLI
+executions,126 exact artifact-byte comparisons and14 exact process results
+PASS, same output pathname, no normalization. Receipt SHA256
+bfbb2baf34fb627e19d8e47c50a63174bc0d64cfa35a0d136d5915933acdee64.
+Scope checked tools/docs only. Full release recipe rc0/missing0 (43s), ELF
+6aee05bb7fdff230e924d6bd3c1f849cb7e2b56814087ed8abb61491c77ec1a3;
+base re-fetched and compared before origin-only push. No new runtime K
+control or redundant ALL ON rebuild for this scanner-only merge.
+
+### Actual private input and result
+
+Scanned a NEW extraction of the final composed ALL ON35 QA track03 above,
+image source2061c8380, scanner4c1e62b9c, exact image resolved-knobs retained.
+No extraction-layer ordering or synthetic owner context was supplied.
+All1664 files /1008292805 bytes hashed before and after, identical set/bytes;
+input manifest SHA256
+1b9c8f14e97423e12959eec202cda807b15bd761bd0e440b14db2621b29629f4.
+Full private reports, source/payload hashes, model keys and coverage remain
+local in owner-scan36-20261028-2234; no game assets or raw report uploaded.
+
+| Inventory | OFF | ON |
+|---|---:|---:|
+| Models |12378|12589|
+| Unassigned models |891|612|
+| Legacy geometry models |0|211|
+| Scanned coverage rows |438|439|
+| Rejected coverage rows |9|0|
+| Partial / missing / unresolved rows |0 /5 /0|8 /9 /1|
+
+Both reports remain INCOMPLETE. Enabled strict returned1 as documented;
+this is not complete route/runtime acceptance. Eight legacy sources (r100
+COMMON, FILE_00..04, MAINSCENARIO; r101 MAINSCENARIO) now give211 validated
+geometry-only models, without inventing material/placement/selected LOD.
+Missing exact ESL archive candidates:em/em1e.drs,em/em46.drs,em/em56.drs,
+em/em66.drs (122 alternative membership rows total).13 unresolved rows come
+from etc/emleon09.esl, which is not a recognized named stage ESL input.
+Five route gaps:r110,r114,r115,r116,r120; no inventory was bound there.
+441 conditional archive membership rows were recorded; none are live actors.
+
+### Texture selection and remaining owner bindings
+
+Actual image defines TEX_PACK1/TEX_RESIDENT1/QUALITY_ASSETS1. Enabled report
+has7379 physical payload variants,7375 possible variants,4 shadowed variants,
+7375 conditional keys and0 definite keys. The latter is NOT zero textures:
+Original versus current-room Standard/texlow selection is a runtime fact,
+not supplied by the resolved quality feature flag. No quality/context flag
+was forced to obtain definite results.
+
+The four differing flat loose payloads are legitimate unselected shadows
+for these declared resident/packed modes, rather than duplicate-pack index
+corruption. Their keys and pack/loose payload SHA prefixes are:
+
+| Key | Pack payload SHA | Loose payload SHA |
+|---|---|---|
+|3f690586-7edb7c3e|69404b054f6ede9a|3fc2fe247cdf28ad|
+|4da9c3fa-98934ea1|46069427ff6d5e4e|8c30c33709078512|
+|61519868-9ee3f93f|4c3722c9df8994e5|d768ebf9222c668f|
+|fc75dd46-779f14bd|43018f1535da242e|bcf94e85150963b9|
+
+Canonical final dc/tex.pak SHA256
+3e1fad1c2faee2e092a7b8e57a88c2c5465753f48a76c10c0dfb1cd2bd0fc5ef.
+There was one final pack, no invented layer order. Exact full hashes and
+source sizes/offsets are retained privately. No palette or residency claim
+is inferred across conditional selection.
+
+Remaining612 unassigned models span272 source identities: three global
+replacements (ganado_lod.re4gl20, leon_pl08.re4cp1, leon_pl08_ps2.re4cp1),
+20 player archives239 models,22 weapon archives78 models,225 item BINs225
+models, and em14.drs47/em2e.drs1. Complete source/model-key/hash identities
+remain in SELECTION-DETAILS.json and unassigned-models.json privately.
+These need verified owner membership/appearance/current selection; numeric
+IDs, path guesses or an unfilled template do not authorize bindings.
+No mutable-name binding was manufactured. Source-less cast replacements
+are still explicit owner work, and current lighting must come from a matched
+capture. No new console check is needed for the offline tool itself.
+
+Next owner step: source-bound membership/lighting contexts for named live
+targets, preserving these incomplete inventories. Independent supported
+SCPS triplet and Build35 observer qualification continue separately.
+No code correction requested from this scan; no recipe, SD or release action.
