@@ -1160,6 +1160,24 @@ extern "C" int re4dc_registry_candidate(const cModel* m) {
 #endif
     return 0;
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+// Nomination only: the existing bind, skeleton, material certificate and
+// palette builders remain required. The source partner is Luis, not an
+// arbitrary model reusing id4 or a matching address from an earlier image.
+extern "C" int re4dc_registry_presentation32_class(const cModel* m) {
+    if(!m || m!=(const cModel*)pSUB || m->id!=4u || m->nParts!=90u || m->ot_type ||
+       !registry.generation || !registry_id(4u))return 0;
+    for(unsigned i=0;i<registry.descriptor_count;++i) {
+        const auto& d=registry.descriptors[i];
+        if(d.model_id==4u && d.bones==90u && d.sections==6u
+#if RE4DC_NMR_SLOTS
+           && registry_source_bones(d)==90u
+#endif
+           )return 1;
+    }
+    return 0;
+}
+#endif
 #if RE4DC_NMR_ASHLEY >= 2
 // PS2_ASHLEY=2 (user look decision pending): Ashley's head info carries the GC shape (morph) data (ModInfoMgr.create
 // sets be_flag 2 when shapeOfs != 0; cSubAshley::setFace blends shapes 0x6C / 0x6D on it). The PS2 head has no shapes,

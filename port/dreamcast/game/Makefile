@@ -3689,6 +3689,7 @@ include fallback_scan29.mk
 include water_layer29.mk
 include world_plan29.mk
 include actor_format32.mk
+include actor_presentation32.mk
 include skin_admit32.mk
 include prepared_binding34.mk
 include static_obj_batch33.mk
