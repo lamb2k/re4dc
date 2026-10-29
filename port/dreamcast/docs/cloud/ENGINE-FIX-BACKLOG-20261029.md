@@ -1,5 +1,7 @@
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
+**2026-10-29 progress 2:** DONE: made PS2/source-to-native semantic alignment and cross-system composition explicit completion requirements, reusing the established native conversion architecture. NEXT: carry required material, source identity, pose and lifetime meaning through the existing EF slices. The sixteen entries are the first implementation wave, not a declaration of complete game coverage.
+
 **2026-10-29 progress:** DONE: translated the source audit into implementable engine fixes, with explicit data/ownership/dispatch contracts and comparisons after implementation. NEXT: start the ready correctness and data-model changes below through the existing local build owners. This document contains proposed fixes, not claims that they are implemented.
 
 **Reviewed integration:** `origin/t15/int` at `df7a42a5e4fa1316ca8f245b6d7feab023e7eddf`. Runtime source was checked at `10f13fdc`; subsequent commits only change documentation, including the local owner's continuation notes. The cited runtime findings still apply.
@@ -37,6 +39,44 @@ Extend the existing `Re4dcModelPart`, `Re4dcActorChunk`, `NativeDrawPlan`, textu
 | Native geometry to SH4ZAM | Valid bounded compatible spans and explicit matrix/FPSCR/XMTRX ownership for the complete batch |
 
 Asset provenance and rendered coverage are distinct. A native-looking format tag does not authenticate its data, and a valid package does not prove a draw was submitted.
+
+### 2.1 Intended end state: aligned native semantics
+
+The destination is a coherent Dreamcast-native implementation of the selected game's visual concepts. Geometry, materials, lighting, current pose, effects, visibility and resource lifetimes must retain their required relationships across conversion, loading, preparation, drawing and retirement.
+
+This continues the existing [PS2-inspired visual profile][PROFILE], [asset residency plan][RESIDENCY] and native cutover contracts. The running game uses recovered GameCube code as behavior/state authority, with offline-converted GC/PS2 visual inputs and native Dreamcast services. We are not importing the PS2 gameplay engine. Preserve the intended asset/rendering meaning while implementing it through current Dreamcast packages, SH4ZAM/SH-4 work and the PowerVR backend. [Current port architecture][PORT_README]
+
+Converted PS2 animation data can supply source-selected motion while current game decisions, pose/event timing, attachments and gameplay remain authoritative. Correct format bytes and bounds alone do not establish that model/joint/material correspondence.
+
+The sixteen items below are the first source-supported engine-fix wave. They do not certify whole-game semantic completeness. If implementation exposes a required concept that an existing native representation cannot express, extend the affected card and producer/consumer contract immediately. Do not defer it behind a fresh profiling program.
+
+### 2.2 Concept mapping and composition requirements
+
+Use the same meanings across producer and consumer, with domain-appropriate existing layouts. This table is a design requirement for the current structures, not a request for a universal new asset object or intermediate-format framework.
+
+| Source concept | Native contract to preserve | Current backlog owner |
+|---|---|---|
+| Asset, instance and active source object | Explicit source-to-converted object/part/material association, variant, coordinate space, units, pivot/root transform, owner incarnation and current activation | EF01/EF02/EF07/EF09; current source registry stays authoritative |
+| Mesh, skeleton and deformation | Bounded topology/attribute/weight spans, bind-pose correspondence, current pose, attachments and supported LOD relationships | EF01/EF02/EF04/EF14 |
+| Surface/material operation | Texture and sampler meaning, UV transforms, vertex color/alpha, masks/layers, depth, blend, cull and required pass order | EF02/EF04/EF06/EF10/EF11/EF12/EF15 |
+| Lighting and environment | Explicit baked/prelit versus live-light treatment, source-selected changing light/fog state, correct color interpretation and no double lighting | EF02/EF04/EF09/EF10/EF12 through current source-lighting/material interfaces |
+| Effect or water definition | Exact source owner/record identity, shape/material, placement, phase and source timing; rendering state separated from simulation and completion | EF03/EF11/EF12/EF13 |
+| Visibility and batching | Valid conservative bounds, actual opaque completion, ordered transparent work and compatible producer composition | EF03/EF08/EF09/EF10 |
+| Residency and retirement | A source/image incarnation stays valid through every queued consumer and GPU ownership boundary; replacement revokes derived state | EF01/EF05/EF06/EF07/EF13/EF15 |
+
+Each supported source concept has one declared disposition: preserved by native execution, preserved by an equivalent offline conversion, intentionally changed by the approved visual policy, or still unsupported with a named engine fix. A successful load or handled return alone cannot mean semantic coverage. Silent loss of a material stage, source selector or required draw is an implementation gap.
+
+For a material, keep the source operation until the converter/native preparation can express it correctly. Static precomposition and native multipass are options only where their lighting, depth, blend, UV and order behavior permits the claimed result. A deliberate simpler material remains an explicit visual trade. Existing PS2 effect removals/additions and quality choices remain policy decisions; this work does not authorize wholesale PS2 effect-state import. [Visual profile][PROFILE] [Existing effect parity distinctions][FX_PARITY]
+
+Completion is also compositional. Portal receipts must coexist with the world producers they describe; material reuse must survive live texture replacement; actor optimization must retain current-pose generic continuation; effect/cloth queues must preserve source lifetime and ordering. Where the current API cannot support a required combination, implement that missing contract before removing the guard.
+
+Geometry identity, pose, material/texture state, camera/pass and resource generation must describe the same source frame and owner lifetime. Keep the existing single frame/PVR owner, deferred-pass ordering, RTT ownership and completion boundaries.
+
+The generic native route covers the declared supported native formats/material classes through existing decoding, clipping and packet emission. It does not imply a universal GX interpreter or PS2 runtime backend. An explicit refusal makes a missing capability visible; it does not complete required visual coverage.
+
+As native data becomes authoritative for rendering, adapt remaining readers and retire obsolete reference/derived backing through the existing residency mechanisms. Count all retained backing and loading overlap until retirement is complete. Ownership fixes alone are not recovered memory.
+
+SH4ZAM serves compatible native mathematics. It cannot supply missing material semantics, source correspondence or ownership. Complete those contracts and feed the existing kernels with suitable batches.
 
 ## 3. Ranked backlog
 
@@ -252,15 +292,15 @@ Start independent small EF03, EF05 and EF06 correctness slices, and EF01's bound
 
 **Gap.** Sprite and strip specializations accept limited source families, flags, blend modes and texture mappings. Nonidentity texture transforms, mask/spline and capture-dependent paths do not all have a complete generic native route. Actual private frequency remains unknown; source-defined unsupported routes are enough to implement adapters.
 
-**Target.** A native effect primitive carries current positions, per-corner UVs, texture mapping, color/alpha, depth/blend/cull, owner identity and any supported mask/capture operation. The efficient billboard is a specialization of that route.
+**Target.** A native effect primitive carries current positions, per-corner UVs, texture mapping, color/alpha, depth/blend/cull, exact source owner/record identity and any supported mask/capture operation. Preserve the required material operation and current source-selected phase. The efficient billboard is a specialization of that route.
 
 **Slices**
 
-1. Reuse the current quad/triangle/strip emitter through an explicit primitive/material description and EF03 result.
+1. Reuse the current quad/triangle/strip emitter through an explicit primitive/material description and EF03 result. Carry the existing archive/EFF/table/row and selected instance/owner-generation identity through the adapter where shared effect IDs or different EFF owners would be ambiguous; extend current tickets/identity tables.
 2. Implement source texture transforms and generic supported shapes that miss the billboard shortcut.
 3. Add named mask/spline families, then capture-dependent variants through existing RTT ownership. Record any deliberate approximation rather than silently dropping a material stage.
 
-**After implementation.** Exercise source flags, UV transforms/wrap, clipping, ordering, RTT lifetime and allocation failure. Compare existing covered effects to their native reference and newly covered effects to source semantics/look. Report restored output separately from speed.
+**After implementation.** Exercise source flags, shared selectors/different owners, source-selected timing, UV transforms/wrap, material stages, clipping, ordering, RTT lifetime and allocation failure. Compare existing covered effects to their native reference and newly covered effects to source semantics/look. Report restored output separately from speed.
 
 **Code.** `EspSpriteEligible/Emit`, `EspCommonTrans`, strip helpers, shimmer/negative and spline paths in [esp_sub.cpp][ESP]; [native_effect_strip21.inc][FX_NATIVE]; sprite/RTT/drain paths in [native_ui.cpp][UI]. Preserve existing effects simulation and approved quality policies.
 
@@ -373,6 +413,10 @@ Keep documented holds on optional visibility-table, extra clip-reuse, room-far a
 Paths name current implementations and functions, not measurements of their importance.
 
 [AUDIT]: handbacks/build-29-sweep.md
+[PROFILE]: ../PS2_INSPIRED_DREAMCAST_PROFILE.md
+[RESIDENCY]: ../R4_ASSET_RESIDENCY_PLAN.md
+[PORT_README]: ../../README.md
+[FX_PARITY]: ../PS2_FX_PARITY.md
 [B31]: handbacks/build-31.md
 [B32]: handbacks/build-32.md
 [B33]: handbacks/build-33.md

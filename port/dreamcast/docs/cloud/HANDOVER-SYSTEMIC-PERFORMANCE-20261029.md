@@ -1,5 +1,7 @@
 # Engine fixes after Builds 31-36: local agent handover
 
+**2026-10-29 progress 4:** DONE: clarified the destination as aligned Dreamcast-native semantics and composition across converted assets, current game state and rendering. The backlog now maps source concepts to existing native contracts and EF owners. NEXT: implement those requirements through the current slices, retaining deliberate visual policies and the existing native architecture.
+
 **2026-10-29 progress 3:** DONE: turned the audit into a ranked [engine-fix backlog][BACKLOG] and changed the execution order to architecture/source analysis, bounded implementation, correctness/coverage validation, then performance comparison. NEXT: implement ready data, ownership and dispatch corrections; extend native coverage using the current renderer and SH4ZAM integration. Console and private-input gaps hold only the checks that require them. This commit changes documentation; the proposed engine fixes are not yet implemented.
 
 **2026-10-29 progress 2:** Revision `461e8c97` removed the initial separate S0-S6 organization and resumed existing build owners, mechanisms and records. The local coordinator integrated it at `60d6aaae3`.
@@ -34,6 +36,16 @@ Uncertain policy choices still need measured comparison: cache capacity, packing
 The existing real NTSC hardware goal remains 30 fps and the planning budget remains gameplay <=24 ms, rendering <=6 ms with about 3.33 ms margin. These are targets. Preserve the playable menu/New Game -> r100 -> r101 -> r103 route and required simulation, events, collision, AI, animation and camera behavior. [Repository instructions][A0] [Contributor gates][A1]
 
 ## 2. What the audit established
+
+### End-state requirement carried into every engine slice
+
+The target is a Dreamcast-native system whose supported asset concepts retain their required relationships through conversion, loading, preparation, rendering and retirement. The current game uses recovered GameCube behavior/state with converted GC/PS2 visual inputs. Align asset meaning and the game-side contracts while implementing them through current Dreamcast packages and services. The established [PS2-inspired visual profile][PROFILE] and [asset residency plan][RESIDENCY] already define this direction.
+
+Use the backlog's concept mapping for geometry/skeletons, material operations, lighting, effects, visibility and ownership. A feature is not complete if it draws a narrow case but discards a required material stage, source identity or supported combination. Reuse current generic native routes and kernels; repair their missing contracts. Treat exact native execution, equivalent offline conversion, deliberate visual approximation and remaining unsupported concepts separately.
+
+The sixteen fixes are the first implementation wave. Add a discovered conceptual omission to its existing owner/card and implement it without a new pre-implementation census. Coverage means a complete native route and correct composition for the supported concept, not merely a successful converter, switch or isolated kernel. SH4ZAM accelerates compatible mathematics after those meanings are represented.
+
+### Source findings
 
 The Build 29 source sweep read 1,643 source files / 777,164 lines, discovered 6,257 candidate lines and reviewed 72 groups. Build 36 separately inventoried the supplied 1,664-file private image. The work covers substantially more than the barn; it does not claim every retail asset or runtime state was exercised. The 72 groups include required alternative algorithms, compile-time choices, intentional policies and correct failures as well as fix opportunities. [Source sweep][AUDIT] [Build 36][A9]
 
@@ -344,6 +356,8 @@ The companion base is the owner-verified base for the current 34-case CRLF repai
 The source sweep and runtime files support the conceptual findings; the backlog links the exact implementation paths and functions. Build handbacks support the retained completion and qualification states. Runtime review at `10f13fdc` remains applicable at the docs-only integration `df7a42a5`. Read newer owner answers before acting.
 
 [BACKLOG]: ENGINE-FIX-BACKLOG-20261029.md
+[PROFILE]: ../PS2_INSPIRED_DREAMCAST_PROFILE.md
+[RESIDENCY]: ../R4_ASSET_RESIDENCY_PLAN.md
 [AUDIT]: handbacks/build-29-sweep.md
 [OWNER]: handbacks/systemic-performance-20261029.md
 [A0]: ../../../../AGENTS.md
