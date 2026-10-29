@@ -752,3 +752,62 @@ allocation/prepare callback reentry. The new knob does not certify them safe.
 look/gameplay/STRICT/current memory and whole-frame hardware gates remain open.
 Host success is not target execution, full EF05 completion or a speed claim.
 Existing earlier Build33 receipts retain their exact scope.
+
+
+### EF05 target/OFF gate, 2026-10-29
+
+**DONE (IMPLEMENTED + TARGET BUILD VALIDATED, first SOB slice only):** local
+source commit `5905089fddff31f11fa194b7faa7512d34eb7dae` passes fresh full
+release builds with the control absent, explicit zero and one. All actual
+build logs and nonempty ELF files exist; each `missing.txt` exists and is empty.
+Compiler15.2.0, KOS804b3195 and pinned sh4zam33fa4850; release recipe SHA256
+`66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+The independently built shared control is source9ee386e3. After normalizing
+only owned worktree/output paths, every resolved definition agrees except the
+new `STATIC_OBJ_LIFETIME05` declaration (absent on control,0/0/1 on the arms).
+
+Control/absent/zero have identical complete3372036-byte programmes, SHA256
+`fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1`;
+all15 overlays and all11 allocated ELF sections agree, including addresses,
+sizes, types, flags, alignment and file-backed content. Both changed objects
+(`model_bridge.o`, `ui_bridge.o`) also match allocated sections for absent and
+zero. Whole ELF files differ; no whole-ELF or raw-disc byte identity is claimed.
+
+Enabled ELF SHA256
+`07eaeecf7d6c201c5becedecf4203ba8f03a1e259b634931a5f4b8b628cbb0a2`.
+Its new counter symbol is4 bytes and out-of-band owner12 bytes; linked BSS is
+32 bytes larger after alignment. Linked `.text` is192 bytes smaller because
+the unsafe retained-copy find/build path is excluded. These are section/symbol
+sizes, not peak heap, stack or timing results. The room-cell header and SOB
+State layout are unchanged; no copied-cache or loading-overlap saving is
+certified. Unknown source content still takes the raw path.
+
+Exact reproduction uses the current release recipe and bound private inputs,
+one fresh label per arm, and a separate programme directory with the shared
+registry disabled:
+
+```sh
+source <(sed 's/\r$//' "$TREE/port/dreamcast/tools/d367/rr/recipe.conf")
+# Repeat with EXTRA unset, STATIC_OBJ_LIFETIME05=0, then =1; unique LP each time.
+K="$LOGS" T="$TREE" LP="$FRESH_LABEL" CH2="$CH2 ${EXTRA:-}" \
+  ROUTE_PROGRAMS_DIR="$PROGRAMS" ROUTE_PROGRAMS_JSON='' \
+  bash "$TREE/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+```
+
+The owner checks fresh output paths before invoking this existing recipe,
+which otherwise removes a same-label output. SDK job finished and build slot
+returned; no live PID/session remains. Private exact builds, hashes, resolved
+settings, actual logs and both comparison receipts are retained in the owner's
+`engine-ef05-target-20261029` evidence. OFF receipt SHA256
+`ee870177c618e4c673c5a026b555bef65192f7101167f0b1d6e1e5b368eb4b74`;
+target bindings/object/footprint receipt SHA256
+`ec1be99e2dd724b83836d53dfe1bcc023f46c61db35991b220e99431a9767022`.
+
+**NEXT:** integrate default-off only through the coordinator's prescribed
+fresh-base process, then continue parser-bound source extents/content identity
+and the explicitly deferred sobdump/sobake lifetime sub-slice above. Reuse of
+copied source content remains disabled in the new arm until authority exists.
+**BLOCKED at actual-data acceptance only:** effective emitted order/output,
+current gameplay/STRICT/look, stack/headroom/loading overlap and total hardware
+cost remain distinct pending gates. No target execution, emulator, mastering,
+publication, SD/Pi action, recipe promotion or full EF05 completion is claimed.
