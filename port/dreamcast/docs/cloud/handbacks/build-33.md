@@ -546,3 +546,25 @@ exists. No broad look/effective-state equivalence PASS, post-close world-image
 proof or speed claim. Private hashes and scope: owner-allon33-off-20261028/
 FOLLOWUPS.json and FOLLOWUPS.md. No new Flycast observer/build or exactness
 lane introduced; owner continues encounter/look and current cloud fixes.
+
+### Answers (owner): bounded r100 house class coverage
+
+New view on preserved36643bf8a full programme/overlay twins, QA_LINK1;
+independent resolved delta only STATIC_OBJ_BATCH33=1/0 rechecked before
+launch. Existing source benchmark-r100house fixture identical per arm,
+SHA256 ee7841c24b7864babd0860555df09ec2ff6ef35a6627867dfec1ef119f6286f5.
+Each60s cache-interpreter/GDEMU1 runner complete/reader0/errors empty/
+owned process exited. No new source/build/data change. Actual counters:
+
+- off: overruns0=True, OOM/MISSING/HALT lines=0, last complete single/large/blended classes=not logged (OFF expected absent), reuse=not logged, cumulative saved bytes=not logged.
+- on: overruns0=True, OOM/MISSING/HALT lines=0, last complete single/large/blended classes={'single': [0, 0], 'large': [0, 0], 'blended': [0, 0]}, reuse=0, cumulative saved bytes=0.
+
+Class pairs are seen/reused (category_seen/category_reused), not vertices.
+These are bounded functional/counter observations, not a measured gain or
+full acceptance. Any zero class remains uncovered, and OFF's absent
+batching counters do not mean zero source workload. Static counts are not
+proof of a live bridge class. Actual effective-header/vertex oracle,
+aligned look/STRICT/gameplay, memory/stack, full-image identity and matched
+whole-frame console gates remain pending. Private exact receipts in
+owner-allon33-off-20261028/HOUSE-PROOF.json and HOUSE-RESULTS.json+md.
+No bespoke observer, SD copy, recipe promotion or publication.
