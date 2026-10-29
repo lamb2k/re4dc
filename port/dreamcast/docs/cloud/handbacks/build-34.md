@@ -1014,3 +1014,37 @@ admission267 was observed; header comparison count/mismatch result remains
 UNKNOWN. Emission, collection or path selection cause is not established.
 No identical farm retry or zero-mismatch claim. Next independent real-door
 triplet exercises a different lifecycle scope and cannot replace this hold.
+
+### Answers (owner): supported check-profile real door triplet, 2026-10-28 23:01 EDT
+
+All three matched validation-control/on/check images (source807a9102e,
+batch/PVS composition0 and private NMR_POOL_LOD1) completed a new60s actual
+r105->r101 source-button door case with the default equipped weapon.
+Reader0/errors empty/overruns0, no host keys/state-out; owned emulators exited.
+All3 source-door holds end at411, actual DISCRD room101 from=door, normal
+r101 gameplay PS2DYN at419. Both SCPS-on/check arms report room105 no section
+then room101 on/parts342. The disabled control's parser stays off.
+
+The original previously successful fixture was copied byte for byte:
+raw320B SHAbe0819c80cc74bfbc003a139067851b64fea88a2ccad6ba1d7a8cfb3338c1e62.
+Unchanged fp_run.py strips CR before writing the low-track fixture slot:
+staged300B SHA2498c1d7b1aa63b87034f3ea960dda5c6f827e66a531bd4a1ccf8fefdb079f39.
+Both identities bind to the prior source/receipts and all3 new runs. An
+initial raw-versus-harness hash assertion failed before any capture; source
+contract was inspected, the proof separated both hashes and reran PASS.
+No fixture bytes or harness behavior were modified to pass the check.
+
+This is scoped absent-to-present functional entry, NOT retirement/re-entry
+of an already-active SCPS table, movie/texture eviction, leak/KOS/s30/heap,
+effective-header/vertex output, look/gameplay decisions/STRICT or console
+performance acceptance. No PS2HDR comparison row was captured in any of
+these3 short door runs: no zero-mismatch inference or replacement for the
+separate farm check hold. Exact DOOR-RESULTS.json/md and original run/log/
+fixture/image receipts remain in owner-scps34-validation-20261028.
+Old batch1/cache1 production controls and unsupported batch1/cache2 Make
+failure remain distinct. No recipe enablement, SD copy or publication.
+
+Next owner step: source-bound actual active-SCPS retirement/re-entry fixture
+and missing farm telemetry diagnosis; no identical blocked farm retry.
+Console still needs user-selected named arms plus REMOTE LINK after swaps
+and matched camera/state/windows. No console inputs were sent.
