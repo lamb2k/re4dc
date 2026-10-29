@@ -1,0 +1,430 @@
+{
+  "date": "2026-10-29",
+  "code_commit": "cd57337c9747f8182487c625ae0895dd39315f80",
+  "baseline": "9ee386e3ef8d46bcd7ae8586d2064cd1ae22864e",
+  "source_sha256": {
+    "src/game/esp_sub.cpp": "adf15aa56705d212e48038c957cdce1e4d822b13b09e4f7160eeb91ffb2b2634",
+    "src/game/cloth.cpp": "6f368bc722ca1cb69caef929f46eb83ca6eff40960f21fb82f69557e36b0edcf",
+    "port/dreamcast/game/platform/native_ui.cpp": "c3ae6e4c505be78948b93ea82c0ccbb24e4962919d4c7f87ec7b2089898ce189",
+    "port/dreamcast/game/platform/include/native_draw_result.hpp": "1999d5e24702ab44eef1efdb5789faa3f4b8ceec15e20aacffdfd646d0ffcad6",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "84bf7004511113f30700258af1ad06f7d53042388acd3e494f0586b09bbfb4e6",
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481",
+    "port/dreamcast/game/effects30.mk": "cdf3f12b0218de4ea02ed4d268ef8569e964e6b622dbd09b8ac268eff9b45422",
+    "port/dreamcast/tools/cloud/build29/native_draw_outcomes_target.py": "6eaeea0eab6123bc45305e978148fbc5bbacf73a6941119e11931491ae96abb1"
+  },
+  "toolchain": {
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "compiler_sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053",
+    "kos_head": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "sdk_head": "33fa4850cacb30dd0ad35485ef035526ec4ce782"
+  },
+  "recipe_sha256": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+  "public_make_derived_affected_TUs": {
+    "parent": {
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_stack_frames": [
+          {
+            "function": "include/native_effect_strip21.inc:13:16:int re4dc_effect_quad(const Re4dcEffectQuad*)",
+            "bytes": 1060,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:113:16:int re4dc_effect_mesh21(const Re4dcEffectMesh21*)",
+            "bytes": 7200,
+            "kind": "static"
+          }
+        ]
+      },
+      "esp_sub": {
+        "sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+        "bytes": 81852,
+        "executable_bytes": 38864,
+        "allocated_bytes": 54161,
+        "zero_fill_bytes": 11482,
+        "selected_stack_frames": [
+          {
+            "function": "<stdin>:188:16:int re4dc_esp_strip21_draw(cEsp*, int, Vec*, u8, int)",
+            "bytes": 272,
+            "kind": "static"
+          }
+        ]
+      },
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_stack_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "absent": {
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_stack_frames": [
+          {
+            "function": "include/native_effect_strip21.inc:30:16:int re4dc_effect_quad(const Re4dcEffectQuad*)",
+            "bytes": 1060,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:149:16:int re4dc_effect_mesh21(const Re4dcEffectMesh21*)",
+            "bytes": 7200,
+            "kind": "static"
+          }
+        ]
+      },
+      "esp_sub": {
+        "sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+        "bytes": 81852,
+        "executable_bytes": 38864,
+        "allocated_bytes": 54161,
+        "zero_fill_bytes": 11482,
+        "selected_stack_frames": [
+          {
+            "function": "<stdin>:197:16:int re4dc_esp_strip21_draw(cEsp*, int, Vec*, u8, int)",
+            "bytes": 272,
+            "kind": "static"
+          }
+        ]
+      },
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_stack_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "zero": {
+      "native_ui": {
+        "sha256": "5b7be20c699ef49da0fd04414abac31953da0cc88c2256c46179a9e11c07590b",
+        "bytes": 413148,
+        "executable_bytes": 81726,
+        "allocated_bytes": 394016,
+        "zero_fill_bytes": 153375,
+        "selected_stack_frames": [
+          {
+            "function": "include/native_effect_strip21.inc:30:16:int re4dc_effect_quad(const Re4dcEffectQuad*)",
+            "bytes": 1060,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:149:16:int re4dc_effect_mesh21(const Re4dcEffectMesh21*)",
+            "bytes": 7200,
+            "kind": "static"
+          }
+        ]
+      },
+      "esp_sub": {
+        "sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3",
+        "bytes": 81852,
+        "executable_bytes": 38864,
+        "allocated_bytes": 54161,
+        "zero_fill_bytes": 11482,
+        "selected_stack_frames": [
+          {
+            "function": "<stdin>:197:16:int re4dc_esp_strip21_draw(cEsp*, int, Vec*, u8, int)",
+            "bytes": 272,
+            "kind": "static"
+          }
+        ]
+      },
+      "cloth": {
+        "sha256": "1edfae319ff11d9cc0ea3935e0fc8460621120cf148877ee3a1ef29d34879e9c",
+        "bytes": 13732,
+        "executable_bytes": 5716,
+        "allocated_bytes": 10238,
+        "zero_fill_bytes": 4288,
+        "selected_stack_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3600,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "enabled": {
+      "native_ui": {
+        "sha256": "98aee9083cfa427c3991ab798be4c5bd8c43d8e3cee4cb047843694155432d55",
+        "bytes": 415332,
+        "executable_bytes": 82930,
+        "allocated_bytes": 395232,
+        "zero_fill_bytes": 153375,
+        "selected_stack_frames": [
+          {
+            "function": "include/native_effect_strip21.inc:26:36:0(const Re4dcEffectQuad*)",
+            "bytes": 1064,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:26:36:re4dc::NativeDrawResult re4dc_effect_quad_result(const Re4dcEffectQuad*)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:135:16:int re4dc_effect_quad(const Re4dcEffectQuad*)",
+            "bytes": 16,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:146:36:re4dc::NativeDrawResult re4dc_effect_mesh21_result(const Re4dcEffectMesh21*)",
+            "bytes": 7260,
+            "kind": "static"
+          },
+          {
+            "function": "include/native_effect_strip21.inc:324:16:int re4dc_effect_mesh21(const Re4dcEffectMesh21*)",
+            "bytes": 24,
+            "kind": "static"
+          }
+        ]
+      },
+      "esp_sub": {
+        "sha256": "95b3c586e33e906df5ba8c2a777ffb0a4392965959f47c9288ff0ae212801ac4",
+        "bytes": 82420,
+        "executable_bytes": 39020,
+        "allocated_bytes": 54317,
+        "zero_fill_bytes": 11482,
+        "selected_stack_frames": [
+          {
+            "function": "<stdin>:193:36:re4dc::NativeDrawResult re4dc_esp_strip21_draw_result(cEsp*, int, Vec*, u8, int)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:231:16:int re4dc_esp_strip21_draw(cEsp*, int, Vec*, u8, int)",
+            "bytes": 20,
+            "kind": "static"
+          }
+        ]
+      },
+      "cloth": {
+        "sha256": "5d306270400222e22906f3c185f2d5f80a8d77b4f6771b07e812ac8e5335f48b",
+        "bytes": 13968,
+        "executable_bytes": 5944,
+        "allocated_bytes": 10466,
+        "zero_fill_bytes": 4288,
+        "selected_stack_frames": [
+          {
+            "function": "D:/Bio4/Prog/cloth.cpp:696:6:void clothTrans(Cloth*)",
+            "bytes": 3664,
+            "kind": "static"
+          }
+        ]
+      }
+    }
+  },
+  "off_checks": [
+    {
+      "arm": "absent",
+      "unit": "native_ui",
+      "exact_object": true
+    },
+    {
+      "arm": "absent",
+      "unit": "esp_sub",
+      "exact_object": true
+    },
+    {
+      "arm": "absent",
+      "unit": "cloth",
+      "exact_object": true
+    },
+    {
+      "arm": "zero",
+      "unit": "native_ui",
+      "exact_object": true
+    },
+    {
+      "arm": "zero",
+      "unit": "esp_sub",
+      "exact_object": true
+    },
+    {
+      "arm": "zero",
+      "unit": "cloth",
+      "exact_object": true
+    }
+  ],
+  "full_release": {
+    "baseline_elf_sha256": "6c5210fdb400926df5ad5412e5767315b2a620f1b0d67787561171649e0b53d8",
+    "off_elf_sha256": "6aa2fc222fbf1dc61d934205e489b36e4edf08ebca7c8672f65e1bf32e9b2138",
+    "on_elf_sha256": "3fdea8e3e6ac7d754fffaffe227139f309eb21827e1bd176c294e90d4989622e",
+    "off_raw_programme_sha256": "fbf2d3c94dfc02e109f5901b2aedfbb91106cabd3cb7b77d16d283e3662302c1",
+    "off_raw_programme_bytes": 3372036,
+    "programme_equal": true,
+    "overlays_equal": true,
+    "overlays": {
+      "em22.ovl": "6d503797cf0db4016dd1235e597a8379f21b5fb7d3569128531316d79ca6c2fd",
+      "em2b.ovl": "bcc9568360d689f95dfb8b5c06f91027a5451846c1ad61d52a42736ae83274d3",
+      "em2f.ovl": "598e6b2035509aaa0b23fe1318796f4ef44ecf6c82ba0889ea8a903eed1216e7",
+      "em35.ovl": "1fab31ab5a07331873bf3a80d68e4ce4afa54bc38e17d780faeed4d9a9c3d3d9",
+      "em3b.ovl": "4884ceb714458dd7ac2e6f2f461289eeb61efd8311882e27e16b2d2abe691a49",
+      "pl0f.ovl": "e2f4c77cbbc86dc82ccb70d6ea416fc3b612a6f880847eb48098ad88a7dcc1d1",
+      "pl11.ovl": "a5c126e320bd786a3deae5bdfd7c961361eff2f304d42041e9aed3618f67dde3",
+      "pl14.ovl": "d723ee0d8e5caea323b2945698bf9fb2d04f557f0c661bbda9151eb8d8c65900",
+      "sscrn.ovl": "59abe73837bb13ce734a02ccd6f3d4eb0084a3ca6fe7f9113d0c1550022fda88",
+      "st1_0.ovl": "c3a0d4cf65a78c80a3e9b52253233ccc9d33f83784e715bc8cabee259419cb8a",
+      "st1_1.ovl": "8f637068476effd1fcc86848897fe90185ba855ad31bfd240a88b61ff99355b5",
+      "st1_2.ovl": "e59aed067e3b39922a5e86bcb924f38285f434c287a31128612fdeda915c933e",
+      "st1_3.ovl": "e658d27569350b4d3886e35470f3f22034b71c706cffe81fddb395e5597a4495",
+      "st2_0.ovl": "38c3aaa6ad2d848de97b4b79831d292c662c54cd0ac9d7adae112082e2f64e62",
+      "wep04.ovl": "75c1f6013d0efd58f2bb847a5d3e8255ca8d3cc78afe82232d9b3a5ca4e46065"
+    },
+    "allocated_sections_equal": true,
+    "allocated_sections": {
+      ".text": {
+        "type": 1,
+        "flags": 6,
+        "address": 2348875776,
+        "bytes": 2418368,
+        "alignment": 32,
+        "sha256": "493bd6bd73b7f4ade71d667e55b0d74ea811f510b27fee2e7debc1e6132c4471"
+      },
+      ".init": {
+        "type": 1,
+        "flags": 6,
+        "address": 2351294144,
+        "bytes": 54,
+        "alignment": 4,
+        "sha256": "94e32908de4a7f285457807c7b88a44090e9de4aef03268564038629dbc20e2e"
+      },
+      ".fini": {
+        "type": 1,
+        "flags": 6,
+        "address": 2351294200,
+        "bytes": 42,
+        "alignment": 4,
+        "sha256": "67be1a0dd9425b2182b80b41f948579e257fd69e7a1e3ac44420ef5fd5089848"
+      },
+      ".rodata": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351294272,
+        "bytes": 275160,
+        "alignment": 32,
+        "sha256": "dc1ddc2dad47406bed3767745dab0ccde0e2ccb09dd4edc337fed2d789edeacd"
+      },
+      ".eh_frame": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351569432,
+        "bytes": 1340,
+        "alignment": 4,
+        "sha256": "822d881aa1726acf9b91e654d4bc86028c1e892ea47ac019226fdf0511072b58"
+      },
+      ".ctors": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351570900,
+        "bytes": 120,
+        "alignment": 4,
+        "sha256": "1f5cf343348dbe6517702daf476bd918952d28d9129cd5d23975665730aa57ea"
+      },
+      ".dtors": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351571020,
+        "bytes": 8,
+        "alignment": 4,
+        "sha256": "72a4fa3544e43a836ffcb268ce06ccdbc55d44d5e6b1b1c19216a53ea98301fd"
+      },
+      ".data": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351571040,
+        "bytes": 185240,
+        "alignment": 32,
+        "sha256": "6d6e20a5047f3a83d80e584c9477771f2a27b56a0034cdebd3895719081fd9bc"
+      },
+      ".re4dc_char_data": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351756288,
+        "bytes": 490592,
+        "alignment": 32,
+        "sha256": "b4adb8a422a6e5ce1b048c10675c0ef4177d58f6a17988951b4ec09449b8839c"
+      },
+      ".got": {
+        "type": 1,
+        "flags": 3,
+        "address": 2352247800,
+        "bytes": 12,
+        "alignment": 4,
+        "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b"
+      },
+      ".bss": {
+        "type": 8,
+        "flags": 3,
+        "address": 2352247840,
+        "bytes": 851124,
+        "alignment": 32,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "debug_elf_equal": false,
+    "off_missing_file_exists_and_empty": true,
+    "on_missing_file_exists_and_empty": true,
+    "off_end": "8c4170d4",
+    "on_end": "8c417674",
+    "end_delta_bytes": 1440,
+    "resolved_fields": {
+      "normalization": "Only exact per-arm output and checkout roots, then whitespace token spacing",
+      "base_off": [
+        {
+          "field": "NATIVE_DRAW_OUTCOMES",
+          "before": null,
+          "after": "0"
+        }
+      ],
+      "off_on": [
+        {
+          "field": "NATIVE_DRAW_OUTCOMES",
+          "before": "0",
+          "after": "1"
+        }
+      ]
+    }
+  },
+  "host_tests": {
+    "native_draw_outcomes": 5,
+    "effect_strip21": 4,
+    "sanitizers": "ASan+UBSan on actual emitter/source fixtures",
+    "broader_r200": "50 cases / 128729 assertions PASS before unrelated missing DFA26_HIT scaffold compile failure"
+  },
+  "local_evidence": {
+    "objects": "/root/probe/engine-ef03-20261029-target-r3/objects/result.json",
+    "full_OFF": "/root/probe/engine-ef03-20261029-target-r3/off-final.json",
+    "resolved": "/root/probe/engine-ef03-20261029-target-r3/resolved-normalized.json"
+  },
+  "limits": [
+    "Queued is FIFO ownership accepted, not presentation after a later abort",
+    "Public3TU profile differs from full private release; both are recorded",
+    "Selected local stack frames are not runtime headroom or whole-stack bounds",
+    "No Flycast, console, look, gameplay, restored family coverage or speed claim"
+  ],
+  "status": "IMPLEMENTED + TARGET VALIDATED; default0; acceptance pending"
+}

@@ -34,13 +34,13 @@ def main():
     parser.add_argument('--output',required=True,type=Path)
     parser.add_argument('--baseline',default='9ee386e3ef8d46bcd7ae8586d2064cd1ae22864e')
     parser.add_argument('--sh4-cxx',default='/opt/toolchains/dc/sh-elf/bin/sh-elf-g++',type=Path)
-    parser.add_argument('--kos-root',default='/root/work/kos-re4dc-d367804b3195',type=Path)
+    parser.add_argument('--kos-root',default='/root/work/kos-re4dc-d367',type=Path)
     args=parser.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     sdk=ROOT/'port/dreamcast/game/third_party/sh4zam';assert (sdk/'include/sh4zam/sh4zam.h').exists() or (sdk/'include').is_dir()
     toolchain={'compiler':subprocess.check_output([str(args.sh4_cxx),'--version'],text=True).splitlines()[0],
                'compiler_sha256':sha(args.sh4_cxx),'kos_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=args.kos_root,text=True).strip(),
                'sdk_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=sdk,text=True).strip()}
-    base=out/'parent';base.mkdir()
+    base=out/'parent-tree';base.mkdir()
     with tarfile.open(fileobj=io.BytesIO(subprocess.check_output(['git','archive',args.baseline],cwd=ROOT))) as archive:
         archive.extractall(base,filter='data')
     builder=profile.Build(out);arms={};cache={}
