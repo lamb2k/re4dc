@@ -780,3 +780,20 @@ endif
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
 endif
+
+# EF11 horizontal cloth tiles. Keep the prepared two-row workspace and emit
+# tiles in source row/column order, sharing one seam column (default off).
+CLOTH_TILES11 ?= 0
+ifneq ($(words $(CLOTH_TILES11)),1)
+$(error CLOTH_TILES11 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(CLOTH_TILES11)),)
+$(error CLOTH_TILES11 must be 0 or 1)
+endif
+ifeq ($(CLOTH_TILES11),1)
+ifneq ($(CLOTH_SHEET11),1)
+$(error CLOTH_TILES11 needs CLOTH_SHEET11=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
+endif
