@@ -674,9 +674,190 @@ static int WaterPs2ExtRoomOn(u32 room)
 }
 #endif
 
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+#include "water_layer29.h"
+#include "water_layer29_source.inc"
+extern "C" void re4dc_log(const char* fmt, ...);
+
+static_assert(unsigned(WATER29_SOURCE_VERSION) == unsigned(WATER29_VERSION), "water source metadata version");
+static const Water29SourceSpan* Water29Source(u32 room)
+{
+    for (unsigned i = 0; i < sizeof(kWater29SourceSpans) / sizeof(kWater29SourceSpans[0]); ++i) {
+        if (kWater29SourceSpans[i].room == room) return &kWater29SourceSpans[i];
+    }
+    return 0;
+}
+static uint32_t Water29SourceKey(u32 room)
+{
+    const Water29SourceSpan* span = Water29Source(room);
+    return span ? span->source_key : 0;
+}
+static int Water29RoomEnabled(u32 room)
+{
+    if (WaterPs2RoomOn(room)) return 1;
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+    if (WaterPs2ExtRoomOn(room)) return 1;
+#endif
+    return 0;
+}
+static Water29Store s_water29_bound;
+static Water29View s_water29_bound_view, s_water29_compiled_view;
+static u32 s_water29_compiled_room;
+static int s_water29_compiled_ready;
+static u32 s_water29_refused_room;
+static uint32_t s_water29_refused_source;
+static int s_water29_refused;
+static u32 s_water29_admission_refused, s_water29_partial;
+static u32 s_water29_last_log_frame = ~0U;
+static Water29Admission s_water29_last_admission;
+
+// A future package loader calls this with its owned, source-bound spans.
+// Publication copies rows, so caller mutation or backing reuse cannot affect
+// the current image's selection or a queued WaterNode.
+extern "C" int re4dc_water29_bind(const Water29Definition* def, unsigned available,
+                                   const Water29SourceBytes* main_source, const Water29SourceBytes* ext_source)
+{
+    if (!def || available < sizeof(*def) || (uintptr_t) def % alignof(Water29Definition)) {
+        return WATER29_REFUSED;
+    }
+    const uint32_t key = Water29RoomEnabled(def->room) ? Water29SourceKey(def->room) : 0;
+    const Water29Result r = key ? water29Publish(&s_water29_bound, def, available, main_source, ext_source,
+                                                 def->room, key, &s_water29_bound_view) : WATER29_REFUSED;
+    if (r == WATER29_REFUSED) {
+        s_water29_refused_room = def->room;
+        s_water29_refused_source = key;
+        s_water29_refused = 1;
+    } else {
+        s_water29_refused = 0;
+    }
+    return r;
+}
+extern "C" void re4dc_water29_retire(uint32_t owner, uint32_t incarnation)
+{
+    if (s_water29_bound.valid && s_water29_bound.definition.owner == owner &&
+        s_water29_bound.definition.incarnation == incarnation) {
+        s_water29_bound.valid = 0;
+    }
+}
+
+// Adapter: the original room table spans are copied neither at build nor per
+// frame. The same loader validates their counts, extents and source identity.
+static Water29Result Water29CompiledUncached(u32 room, Water29View* view)
+{
+    const Water29SourceSpan* span = Water29RoomEnabled(room) ? Water29Source(room) : 0;
+    if (!span) {
+        return water29Load(0, 0, 0, 0, room, 0, view);
+    }
+    const unsigned main_count = WaterPs2RoomOn(room) ? span->main_count : 0;
+    if (span->main_first + main_count > sizeof(kWaterPs2) / sizeof(kWaterPs2[0])) {
+        return water29Load(0, 0, 0, 0, room, 0, view);
+    }
+    const WaterPs2Row* main = main_count ? &kWaterPs2[span->main_first] : 0;
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+    const unsigned ext_count = WaterPs2ExtRoomOn(room) ? span->ext_count : 0;
+    if (span->ext_first + ext_count > sizeof(kWaterPs2Ext) / sizeof(kWaterPs2Ext[0])) {
+        return water29Load(0, 0, 0, 0, room, 0, view);
+    }
+    const WaterPs2ExtRow* ext = ext_count ? &kWaterPs2Ext[span->ext_first] : 0;
+    const Water29SourceBytes ext_source = {kWaterPs2Ext, sizeof(kWaterPs2Ext), 0x434F4D50u, 1};
+#else
+    const void* ext = 0;
+    unsigned ext_count = 0;
+#endif
+    if (!main_count && !ext_count) {
+        return water29Load(0, 0, 0, 0, room, span->source_key, view);
+    }
+    Water29Definition def = {};
+    def.magic = WATER29_MAGIC;
+    def.version = WATER29_VERSION;
+    def.extent = sizeof(def);
+    def.room = room;
+    def.source_key = span->source_key;
+    def.owner = 0x434F4D50u;  // COMP: immutable compiled source tables
+    def.incarnation = 1;
+    def.result = WATER29_BOUND;
+    def.main_count = main_count;
+    def.main_bytes = main_count * sizeof(WaterPs2Row);
+    def.ext_count = ext_count;
+    def.ext_index_base = ext_count ? span->ext_first : 0;
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+    def.ext_bytes = ext_count * sizeof(WaterPs2ExtRow);
+#endif
+    def.main_rows = main;
+    def.ext_rows = ext;
+    const Water29SourceBytes main_source = {kWaterPs2, sizeof(kWaterPs2), 0x434F4D50u, 1};
+    return water29Load(&def, sizeof(def), &main_source,
+#if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+                       &ext_source,
+#else
+                       0,
+#endif
+                       room, span->source_key, view);
+}
+static Water29Result Water29Compiled(u32 room, Water29View* view)
+{
+    if (s_water29_compiled_ready && s_water29_compiled_room == room) {
+        *view = s_water29_compiled_view;
+        return view->result;
+    }
+    const Water29Result r = Water29CompiledUncached(room, view);
+    s_water29_compiled_room = room;
+    s_water29_compiled_view = *view;
+    s_water29_compiled_ready = 1;
+    return r;
+}
+static Water29Result Water29Select(u32 room, Water29View* view)
+{
+    const uint32_t key = Water29RoomEnabled(room) ? Water29SourceKey(room) : 0;
+    if (s_water29_bound.valid && s_water29_bound.definition.room == room && key) {
+        if (s_water29_bound_view.source_key == key && s_water29_bound_view.owner == s_water29_bound.definition.owner &&
+            s_water29_bound_view.incarnation == s_water29_bound.definition.incarnation) {
+            *view = s_water29_bound_view;
+            return view->result;
+        }
+    }
+    const Water29Result r = Water29Compiled(room, view);
+    if (r == WATER29_UNBOUND && s_water29_refused && s_water29_refused_room == room &&
+        s_water29_refused_source == key) {
+        view->result = WATER29_REFUSED;
+        return WATER29_REFUSED;
+    }
+    return r;
+}
+
+// Admission is per layer. A wholly refused r10b image can still draw its
+// existing native GameCube generator surface; after partial publication it
+// cannot be undone, so report refusal without duplicating the accepted layers.
+static void Water29Finish(unsigned accepted, unsigned refused)
+{
+    s_water29_last_admission = refused ? (accepted ? WATER29_PARTIAL_REFUSAL : WATER29_TOTAL_REFUSAL) :
+                               (accepted ? WATER29_ADMITTED : WATER29_NOT_ATTEMPTED);
+    if (s_water29_last_admission != WATER29_PARTIAL_REFUSAL &&
+        s_water29_last_admission != WATER29_TOTAL_REFUSAL) {
+        return;
+    }
+    if (s_water29_last_admission == WATER29_PARTIAL_REFUSAL) {
+        ++s_water29_partial;
+    } else if (G_ROOM_ID == 0x10b && g_pWater45 && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) {
+        re4dc_water45_draw(g_pWater45);
+    }
+    const unsigned f = re4dc_ui_frame();
+    if (s_water29_last_log_frame == ~0U || f - s_water29_last_log_frame >= 600U) {
+        s_water29_last_log_frame = f;
+        re4dc_log("water29: room=%03x accepted=%u refused=%u partial=%u total_refused=%u\n",
+                  (unsigned) G_ROOM_ID, accepted, refused, (unsigned) s_water29_partial,
+                  (unsigned) s_water29_admission_refused);
+    }
+}
+#endif
+
 // 1 when the current room has PS2 water rows (and is in WATER_PS2_ROOMS).
 extern "C" int re4dc_water_ps2_rows(void)
 {
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    Water29View view;
+    return Water29Select(G_ROOM_ID, &view) == WATER29_BOUND;
+#else
 #if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
     if (WaterPs2ExtRoomOn(G_ROOM_ID)) {
         return 1;
@@ -691,6 +872,7 @@ extern "C" int re4dc_water_ps2_rows(void)
         }
     }
     return 0;
+#endif
 }
 
 // The pattern cEsp::AnmMove would show `tick` ticks into the loop (Anm_cnt += rate per tick; a pattern of time T
@@ -736,6 +918,14 @@ extern "C" void re4dc_water_ps2_draw(void*)
         return;
     }
     s_wps2_frame = f;
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    s_water29_last_admission = WATER29_NOT_ATTEMPTED;
+    Water29View selected;
+    if (Water29Select(G_ROOM_ID, &selected) != WATER29_BOUND) {
+        return;
+    }
+    unsigned accepted_count = 0, refused_count = 0;
+#endif
     const int live = (g_pWater45 != NULL && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) || re4dc_water42_live();
     const int level = re4dc_fx_level_get ? re4dc_fx_level_get() : 0;
     CameraCurrentProjection();
@@ -753,8 +943,15 @@ extern "C" void re4dc_water_ps2_draw(void*)
     if (fin_on) {
         EffGetFinalCol(&fin);
     }
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    const WaterPs2Row* main_rows = selected.main_rows;
+    const unsigned main_count = selected.main_count;
+    for (u32 i = 0; i < main_count; ++i) {
+        const WaterPs2Row& r = main_rows[i];
+#else
     for (u32 i = 0; i < sizeof(kWaterPs2) / sizeof(kWaterPs2[0]); ++i) {
         const WaterPs2Row& r = kWaterPs2[i];
+#endif
         if (r.room != G_ROOM_ID || level > r.level) {
             continue;
         }
@@ -806,12 +1003,32 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.argb = a << 24 | cr << 16 | cg << 8 | cb;
         L.src = r.src;
         L.dst = r.dst;
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+        const int accepted = re4dc_water_layer(&L);
+        if (!accepted) {
+            ++s_water29_admission_refused;
+            ++refused_count;
+        } else {
+            ++accepted_count;
+        }
+#else
         re4dc_water_layer(&L);
+#endif
     }
 #if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    if (!selected.ext_count) {
+        Water29Finish(accepted_count, refused_count);
+        return;
+    }
+    const WaterPs2ExtRow* ext_rows = selected.ext_rows;
+    const unsigned ext_count = selected.ext_count;
+    const unsigned ext_index_base = selected.ext_index_base;
+#else
     if (!WaterPs2ExtRoomOn(G_ROOM_ID)) {
         return;
     }
+#endif
     static u32 s_ext_room = 0, s_ext_missing = 0, s_ext_on = ~0U;   // missing pictures once per room; drawn-row mask
     if (s_ext_room != G_ROOM_ID) {
         s_ext_room = G_ROOM_ID;
@@ -820,21 +1037,35 @@ extern "C" void re4dc_water_ps2_draw(void*)
     }
     u32 on_mask = 0;
     const f32 ey = vi[1][3];
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    for (u32 i = 0; i < ext_count; ++i) {
+        const WaterPs2ExtRow& r = ext_rows[i];
+#else
     for (u32 i = 0; i < sizeof(kWaterPs2Ext) / sizeof(kWaterPs2Ext[0]); ++i) {
         const WaterPs2ExtRow& r = kWaterPs2Ext[i];
+#endif
         if (r.room != G_ROOM_ID || level > r.level) {
             continue;
         }
         if ((r.area >= 0 && !EffGetAreaState(r.area)) || (r.disp != 0xFF && !GetSstDispFlag(r.disp))) {
             continue;
         }
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+        on_mask |= 1u << ((i + ext_index_base) & 31);
+#else
         on_mask |= 1u << (i & 31);
+#endif
         memset(&L.image, 0, sizeof(L.image));
         if (r.tex != 0xF7) {
             const EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[r.tex];
             if (tw->Owner == 0xD2 || tw->pTpl == NULL || tw->pTpl->numDescriptors == 0) {
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+                if (!(s_ext_missing & (1u << ((i + ext_index_base) & 31)))) {
+                    s_ext_missing |= 1u << ((i + ext_index_base) & 31);
+#else
                 if (!(s_ext_missing & (1u << (i & 31)))) {
                     s_ext_missing |= 1u << (i & 31);
+#endif
                     re4dc_log("water ext: room=%03x row %u texture %02x not loaded (row skipped)\n", (unsigned) G_ROOM_ID,
                               (unsigned) i, (unsigned) r.tex);
                 }
@@ -884,12 +1115,25 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.argb = a << 24 | cr << 16 | cg << 8 | cb;
         L.src = r.src;
         L.dst = r.dst;
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+        const int accepted = re4dc_water_layer(&L);
+        if (!accepted) {
+            ++s_water29_admission_refused;
+            ++refused_count;
+        } else {
+            ++accepted_count;
+        }
+#else
         re4dc_water_layer(&L);
+#endif
     }
     if (on_mask != s_ext_on) {   // the rows whose area / display flag is on (table index bits), on each change
         s_ext_on = on_mask;
         re4dc_log("water ext: room=%03x rows on %08x\n", (unsigned) G_ROOM_ID, (unsigned) on_mask);
     }
+#endif
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    Water29Finish(accepted_count, refused_count);
 #endif
 }
 
@@ -914,9 +1158,17 @@ extern "C" void re4dc_water_ps2_queue(void)
 extern "C" void re4dc_water45_queue(EspgenWork* w)
 {
 #if RE4DC_WATER_PS2
+#if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+    Water29View selected;
+    const Water29Result result = Water29Select(G_ROOM_ID, &selected);
+    if (result == WATER29_BOUND || result == WATER29_NO_WATER) {
+        return;   // qualified source definition owns this room's water result
+    }
+#else
     if (re4dc_water_ps2_rows()) {
         return;   // WATER_PS2: the PS2 layers replace the GameCube surface (re4dc_water_ps2_queue)
     }
+#endif
 #endif
     if (G_ROOM_ID == 0x10b && (w->flag & 1) && !(w->flag & 2)) {
         AddOtDirect(0x10, w, (void (*)()) re4dc_water45_draw, 1, 0x80, NULL, 0.0f);

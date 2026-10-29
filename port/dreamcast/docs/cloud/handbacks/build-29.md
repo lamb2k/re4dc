@@ -553,6 +553,77 @@ NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/l
 EF13 water-layer producer/schema/compiled-adapter/current-consumer implementation is assigned to the cloud now, using public source tables and synthetic fixtures. Local EF11 retains cloth/effect include ownership; do not edit those files or effects30.mk. This is a scoped source implementation assignment, not accepted water coverage. Real private packages, live look/gameplay/lifecycle and console cost remain separate owner gates. See the [exact tasks, file grants and executable checks](systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Start from newest origin/t15/int, retain all prior answers, and hand back small buildable consumed changes with default0 and meaningful OFF/host evidence.
 
 
+## 2026-10-29 EF13 Build29: bounded, source-bound compiled water layer adapter
+
+**DONE (first public-source slice).** Against current integration `39ed524a3b0a4727148aaa5a45eaaea4d211cede` (the unchanged `espgen45.cpp` base blob is `130ffee540ccf28df31b5696312cb6993eac1bd6`), the default-off `WATER_LAYER29` fragment selects only `espgen45.o` and requires `ROUTE_CH13=1` and `WATER_PS2=1`. The primary game Makefile includes `water_layer29.mk` exactly once. The feature adds a versioned `Water29Definition`, explicit room/source-family key and owner/incarnation, a bound count of 32 rows, exact row byte extents, and per-family `Water29SourceBytes` backing with owner/incarnation, alignment and range checks before any row read. Publication uses overlap-safe `memmove` into one bounded store; invalid publications leave the prior bound view and compiled fallback intact. Misaligned or truncated headers, bad version/extents/counts, nonfinite or nonpositive geometry, wrong room/source/owner, misplaced row pointers and disabled room masks are refused. A retired owner/incarnation cannot retire a newly published different incarnation.
+
+The public `water_layer29_source.py` producer reads the already checked-in `water_ps2_table.inc` and `water_ps2_ext.inc`, verifies each row's original EFF-family provenance and contiguous room spans, and emits `water_layer29_source.inc` with version, source key, offset and count. The current `re4dc_water_ps2_rows`, queue, draw and r10b replacement path consume the adapter. One current-room compiled view and the published store view avoid repeated row/numeric validation in the queue and draw hot path. Existing layer encounter order, room/area/display predicates, FX-level filter, texture pattern and vblank phase, transform, color, blend, projection and viewport remain in the production draw loops. `Re4dcWaterLayer -> WaterNode -> water_emit` is unchanged; its native texture resolution and deferred node copy remain authoritative. Definition outcomes are `UNBOUND`, `NO_WATER`, `BOUND` and `REFUSED`; native return outcomes are separately `NOT_ATTEMPTED`, `ADMITTED`, `PARTIAL_REFUSAL` and `TOTAL_REFUSAL`. These native outcomes describe queue/immediate admission, not deferred completion. A fully refused r10b image falls back to its existing native GameCube surface; partial refusal is counted and logged without duplicating already admitted layers.
+
+**Validation.** `python3 port/dreamcast/tools/cloud/build29/water_layer29_fixture.py` passes 4 tests. `ASAN_OPTIONS=detect_leaks=0 WATER29_SANITIZE=1 python3 port/dreamcast/tools/cloud/build29/water_layer29_fixture.py` passes the same 4 tests under ASan/UBSan. The fixture extracts and compiles the actual production source table declarations, generated adapter, selector, draw, queue and replacement functions. It compares effective layer fields and order for feature OFF and ON across the six main rooms, three extension rooms, an unsupported room, three ticks (including animated selection), three FX levels, extension disabled and a main-room mask. It tests source metadata regeneration, malformed provenance, no-water/unbound, header/row-span truncation, version/count overflow, source and owner mismatch, aligned-range rejection before dereference, row mutation/address reuse, retirement, overlapping publication and full/partial native refusal. Its pinned `c027b26e` versus current feature-OFF preprocessing and non-debug host object-byte comparisons pass in the three profiles; the source blob is identical at the latest base. `git diff --check` passes.
+
+With a temporary empty KOS `Makefile.rules` solely for make dry-run parsing, `make -f Makefile -n obj/src/game/espgen45.o KOS_BASE=/tmp/water29-kos ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1` selects `-DRE4DC_WATER_LAYER29=1` alongside the existing water flags. Dry-run comparisons for `espgen45.o`, `espgen.o` and `platform/native_ui.o` show absent control equals explicit zero, while ON affects only `espgen45.o`. Empty, multi-token and invalid controls, missing route and missing WATER_PS2 are rejected. This primary-Makefile proof is part of the fixture. This is Make-selected flag proof, not a target compile.
+
+**Footprint.** Host x86-64 source-extracted `-O2` object with extension ON: `.text` 1829→6575 B, `.data` 12→20 B, `.bss` 6220→10732 B and `.rodata` 1344→3168 B. With extension OFF, `.text` is 1781→4543 B and `.bss` 6220→8268 B. The bound store is 4304 B host and 4288 B under a `g++ -m32 -nostdinc` compile of the actual schema header; with extension OFF it is 1872/1856 B. The 32-bit row sizes are 56 B main and 76 B extension, definition 60 B and view 40 B. Host `-fstack-usage` reports draw 368→528 B with extension ON (368→448 B OFF), water45 queue 8→80 B, new Select 192 B and bind 176 B (extension ON). These are host extracted-source numbers with fixture stubs, not a measured SH target delta; the native WaterNode and tessellator are unchanged. This slice spends fixed memory for source authority and does not claim memory savings.
+
+**NEXT.** The Build29 owner should build the affected SH target object with the pinned public SDK if available, then run the private full-image/overlay OFF identity and compatible ALL ON QA gates. A later source-package slice must establish actual loaded-package row spans/owner retirement at the asset-pipeline boundary and prove additional room definitions from authorized source packages. Compare current visual/look output, deferred completion and texture lifetime, room reentry, clipping/fog/extents, current heap/VRAM and console cost before acceptance.
+
+**BLOCKED external gates.** This cloud workspace has no `sh-elf-g++`, `kos-c++`, KOS SDK or private Build-Assets, and no physical-console/live image. Therefore no SH target compile, full image, private package generation, Flycast look, current-memory or console-timing claim is made. No asset replacement, release/media publication, SD copy or Pi restart is included.
+
+
+**NEXT for Claude — target and private qualification.** The public pins are KOS
+`804b3195` plus repository patches, GCC 15.2.0 / binutils 2.45.1 /
+newlib 4.6.0.20260123 and SH4ZAM
+`33fa4850cacb30dd0ad35485ef035526ec4ce782`. The cloud has no initialized pinned
+SDK. From the candidate checkout with that SDK and the existing private recipe
+inputs available, use fresh paths and labels:
+
+```bash
+set -euo pipefail
+: "${W29_BASE_TREE:?fresh base worktree path}"
+: "${W29_LOGS:?fresh log directory}"
+: "${W29_PROGRAMS:?fresh programme directory}"
+: "${W29_LABEL:?fresh lane label prefix}"
+W29_CANDIDATE_TREE="$PWD"
+git worktree add --detach "$W29_BASE_TREE" 39ed524a3b0a4727148aaa5a45eaaea4d211cede
+source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
+export ROUTE_PROGRAMS_DIR="$W29_PROGRAMS" ROUTE_PROGRAMS_JSON=''
+candidate_build() {
+  local tree="$1" label="$2" extra="$3"
+  local output="/root/probe/lanes/route/out-${label}rP"
+  test ! -e "$output"
+  T="$tree" K="$W29_LOGS" LP="$label" CH2="$CH2 $extra" \
+    bash "$tree/port/dreamcast/tools/d367/ch2/ch2-build.sh" rP
+  test -s "$output/re4dc-game.elf"
+  test -f "$output/missing.txt"
+  test ! -s "$output/missing.txt"
+}
+candidate_build "$W29_BASE_TREE" "${W29_LABEL}base" ""
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}absent" ""
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}off" "WATER_LAYER29=0"
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}ctrl" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=0"
+candidate_build "$W29_CANDIDATE_TREE" "${W29_LABEL}on" \
+  "ROUTE_CH13=1 WATER_PS2=1 WATER45_NATIVE=1 WATER_LAYER29=1"
+python3 -B port/dreamcast/tools/cloud/build34/upload_compare.py \
+  --baseline "/root/probe/lanes/route/out-${W29_LABEL}baserP" \
+  --arm "/root/probe/lanes/route/out-${W29_LABEL}absentrP" \
+  --arm "/root/probe/lanes/route/out-${W29_LABEL}offrP" \
+  --output "$W29_LOGS/water29-release-off.json"
+```
+
+Retain all resolved flags and build logs, and verify the intended definition on
+each affected TU. The release OFF comparison includes the complete programme,
+all overlays and allocated ELF sections. Keep the matched `ctrl/on` pair
+separate from release identity. After serialized integration, rebuild the
+compatible ALL ON QA with `QA_LINK=1` using the existing local QA workflow.
+Actual current-image look/gameplay/STRICT, memory margins, loaded-package
+lifetime and console timing remain local gates. This source commit does not
+enable a release default, publish media, copy to SD, restart the Pi or close
+the sixteen-card backlog.
+
+**Private water follow-up:** bind only definitions generated from the authorized loaded package, with the exact row backing extent and owner/incarnation. Re-run current r10b replacement plus main/extension rooms through the matched images; check partial refusal never replays accepted layers, full refusal preserves the current surface, and same-address reload/retirement cannot reuse old source or upload authority. The public compiled-source adapter and table regeneration are complete; new private room coverage is unclaimed.
+
+
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.

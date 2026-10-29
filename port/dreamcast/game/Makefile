@@ -3679,6 +3679,7 @@ include draw_fallback_audit.mk
 include fallback_audit29.mk
 include fallback_audit35.mk
 include fallback_scan29.mk
+include water_layer29.mk
 include world_plan29.mk
 include actor_format32.mk
 include static_obj_batch33.mk
