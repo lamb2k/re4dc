@@ -1,35 +1,42 @@
 # Build 36 — source-bound fallback scanner repairs
 
-**2026-10-29 — progress 2:** Done: isolated texture selection/provenance adapter
-and 40 public synthetic tests. Next: native-list and legacy-world adapters,
-then the opt-in scanner integration and exact private-data commands. Blocked:
-private-data completeness, to be handed to Claude after code qualification.
-The scanner CLI is unchanged in this checkpoint; no new mode is exposed yet.
+**2026-10-29 — progress 3:** Done: isolated native-list membership adapter and
+28 source-contract/identity tests. Next: legacy-world adapter, then the opt-in
+scanner integration and exact private-data commands. Blocked: private-data
+completeness. The scanner CLI is unchanged; no new mode is exposed yet.
+
+**2026-10-29 — progress 2:** Published texture selection/provenance and 40 tests
+as `0b1a3824`; native-list/world adapters and integration were next.
 
 **2026-10-29 — progress 1:** Published the source-contract documentation
 checkpoint as `95f5be02`; implementation and public qualification followed.
 
 Branch: `codex/fallback-scan-fixes-20261029`. Rebased integration:
-`2061c8380848695373714437d20462ef2b8a118d`.
+`bb5f18e0e3b3fac4c76bd42d0c9d8107385c568c`.
 
 ## This checkpoint
 
-Only `textures36.py`, `test_textures36.py`, and this hand-back are added/changed.
-The resolver is not imported by the existing scanner. It reuses the unchanged
-strict pack/texture readers. Canonical packed keys precede eligible loose data;
-explicit ordered pack layers replace whole files, including removal of keys
-omitted from the last pack. Unknown recipe/current-room quality stays
-conditional. Physical duplicate-index, ordering, checksum, extent and overlap
-refusals remain strict. Failed final layers do not restore replaced pack data.
-Sources/payloads, offsets, layers and possible/shadowed variants retain hashes.
+Only `room_lists36.py`, `test_rooms36.py`, and this hand-back are added/changed.
+The helper is not imported by the existing scanner. It reads all four 64-entry
+enemy tables, the 254-entry FileTbl and 11 stage list names from production
+source, then binds recognized native ESL records through exact loader paths
+and hashes to scanned ModelData keys. Player/costume/list alternatives remain
+conditional; all BIN members are potential and instance counts are unknown.
+The source-table hashes and list/record/archive/model provenance are retained.
 
-40 tests PASS: actual existing writer packages, malformed envelope/payloads,
-sector-boundary duplicate/order controls, declared layer order, flat/bucket/
-texlow selection, recipe unknowns, missing keys and JSON provenance.
+Mutable non-DLL filenames, unsupported/core IDs, missing targets and ambiguous
+case identities remain unresolved. Source-less replacements stay unassigned.
+Changed unsupported Ashley/DRS/normalization contracts refuse mapping. No
+filename is guessed from an enemy ID and no active actor/draw is asserted.
+
+28 tests PASS: actual source aliases and four player alternatives, Ashley
+costumes, mutable filenames, malformed source contracts, exact hashes,
+missing/rejected archives, ambiguous paths, retained list alternatives,
+source-less replacements, symlink containment and nonmutating output.
 
 ```bash
 python3 -B -m unittest discover \
-  -s port/dreamcast/tools/d367/fallback_scan -p 'test_textures36.py' -v
+  -s port/dreamcast/tools/d367/fallback_scan -p 'test_rooms36.py' -v
 ```
 
 The tracked scanner entry point, all target sources/headers, build recipes,
