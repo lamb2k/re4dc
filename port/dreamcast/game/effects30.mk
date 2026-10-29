@@ -767,3 +767,16 @@ endif
 $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
 endif
+
+# EF11 consumed single-texture cloth sheet; material gaps remain explicit.
+CLOTH_SHEET11 ?= 0
+ifneq ($(filter-out 0 1,$(CLOTH_SHEET11)),)
+$(error CLOTH_SHEET11 must be 0 or 1)
+endif
+ifeq ($(CLOTH_SHEET11),1)
+ifneq ($(CLOTH_NATIVE)$(NATIVE_DRAW_OUTCOMES)$(PS2_UPLOAD_INCARNATION),111)
+$(error CLOTH_SHEET11 needs CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
+endif
