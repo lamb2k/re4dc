@@ -820,3 +820,127 @@ DONE: `STATIC_OBJ_LIFETIME05` first slice merged default off with the other thre
 ALL ON K includes the four new controls. Fresh ALL ON QA at source77461a84, with QA_LINK=1 and all four controls resolved1, passed compile, existing empty missing.txt, loader/standard disc lint with zero violations, ZIP test and staged checksums. Track03 is1,185,760,800 bytes, SHA256 `e70b865a2f55469f2c279094e3a9a86d4576efe22869da0d76f8e464be902c62`. This is a prepared private QA artifact, not a runtime/look/STRICT/memory/timing or physical-console acceptance result. Nothing was copied to SD.
 
 NEXT/BLOCKED: retain this card's exact remaining source sub-slices and runtime/lifetime/look/current-memory/console gates. A first slice does not close the entire EF card. Use the verified image only for an explicitly selected compatible next check, with exact build/assets/scene/window and valid denominator. The user must select/swap intended verified media and establish reviewed link readiness where a console check requires it; current media/Pi/release holds remain. Independent EF02 producer, EF07 owner-scoped plan and EF08 producer-completion work proceeds from the integrated source. No default or frozen-release recipe promotion.
+
+
+## 2026-10-29 EF07: owner-scoped native plan slice
+
+**DONE (IMPLEMENTED + TARGET VALIDATED; default 0):** `PLAN_OWNER_SCOPED=1` (strict 0/1,
+default 0; requires `MODEL_DRAW_PLANS=1`) replaces whole-cache bind/unbind resets
+with existing owner-slot/incarnation identity. Topology entries carry their
+publisher; position bounds carry an independent position publisher. Same-address
+publication advances identity. Ambiguous overlapping publishers refuse immutable
+admission; newly overlapping bytes invalidate related old topology/bounds.
+Unknown mutation invalidation, global arena loans and room retirement retain the
+existing complete reset. No `Re4dcModelPart`/public ABI layout changes and no
+`native_ui.cpp` edits are needed: its current qualified bind/unbind and global
+invalidation adapters remain the producer boundaries.
+
+Replacing owner A tombstones A's topology entries and removes bounds belonging
+to A while other owners retain usable plans. A tombstone cannot terminate an
+open-addressed probe or hide a colliding owner B, including after malformed
+reinstallation. Outstanding plan/local/bounds leases keep their storage until
+returned. Dead plan/bounds metadata is packed only at the existing no-lease
+asset-registration boundary, in address order inside the same fixed arena;
+self-relative metadata moves without re-decoding its source. No heap allocator,
+per-draw compaction or per-draw allocation is added. The 256-entry/44-owner and
+8 KiB local/bounds budgets remain fixed; exhaustion selects the reference path.
+
+The native model's retained position, normal and static-light snapshots consume
+the same source/array stamps, so address equality alone cannot authorize reuse
+across a publication. Existing frame/current-pose and live material/light keys
+remain. Source archive retention and global source-view/queue invalidation still
+follow the existing owner services. This is not a main-RAM saving or a complete
+source-content/mutation authority claim. The entry owner fields consume more of
+the existing fixed metadata slab; target layout and total cost remain to check.
+
+```bash
+python3 -B port/dreamcast/tests/test_plan_owner_scoped.py
+python3 -B port/dreamcast/tests/test_native_draw_plan.py
+```
+
+The new suite passes four tests. The actual-production owner/arena fixture runs
+with ASan/UBSan in both `PLAN_ADMIT_LEAN=0` and `=1`: middle deletion in a
+three-owner collision chain, malformed tombstone reinsertion, same-pointer
+reload, unrelated-owner hits, independent position-bound/retained-state stamps,
+leased metadata, cold compaction, 700 replacements, incarnation wrap, aliases,
+256-entry and 44-owner exhaustion, explicit global reset and room retirement.
+The review fixture also forces an early token2 to repeat on incarnation wrap:
+the actual `native_ui::re4dc_model_invalidate_pending` calls the actual
+`native_model::re4dc_model_invalidate_static_lighting`, which rebuilds static
+contexts/values and invokes `PreparedModelBatch::invalidate` before reuse. Its
+position/normal/light/channel validity flags and local domain are all revoked;
+pending source views are discarded. These are the complete current raw stamp
+consumers, so the existing global wrap fence is retained.
+
+Review found that unknown/ambiguous stamps could compare equal in retained
+position/normal/static-light state even though generic native/reference callers
+do not require plan-owner admission. The corrected guarded consumers require
+valid source/array authority; otherwise they miss/recompute. The actual-code
+fixture forces unknown and overlapping ranges and verifies those misses.
+The other tests establish strict Make propagation to exactly owner/model
+consumers and parent/absent/zero host object identity. The existing native draw
+plan suite also passes. These are code/synthetic checks, not recovered-game
+output, lifecycle memory, look or hardware timing evidence.
+
+**Target checkpoint (original source `72b18fd2f7cfcfdcce3fbc0cd8d5b5aacbfc0273`):**
+public two-TU parent/absent/zero/ON gate passed four exact disabled objects and
+two enabled compiles. Full release OFF0 completed rc0/46s, ON rc0/43s, both with
+nonempty ELF and existing empty `missing.txt`. OFF raw programme, all 15 overlays
+and all 11 allocated ELF sections match the shared bound `77461a84` control;
+whole debug ELF equality is separate. The original ON is retained as pre-review
+output and does not qualify the corrected unknown-stamp consumers.
+
+Original receipts: `/root/probe/engine-ef07-20261029-target-r1/objects/result.json`
+and `off-final.json`; full arms `out-ef07w1offrP` / `out-ef07w1onrP` under
+`/root/probe/lanes/route`. Original OFF ELF SHA256
+`c218fe858a48238ce1b667acce890b855277034181f9f88a085949e5b8b8ed20`, ON
+`64392187b1d484360619cd5e009e4c3a234288654ec509a4255e0cd7d3eeede8`.
+
+**Reviewed target DONE (`c92df54c8f4b17e7b27767d61c8adac86da6d07c`):**
+the changed `native_model` parent/absent/zero/ON gate passed two exact disabled
+objects and one enabled compile. Its OFF object also matches the retained
+original matrix; the owner runtime source is unchanged. That closes the affected
+OFF dependency after review without rebuilding the identical full OFF candidate.
+One corrected full recipe ON completed real rc0/41s with nonempty ELF and an
+existing empty `missing.txt`, SHA256
+`b332ed715b64fc3f25382855e1e95ffa51787b7e1b4eeb712404fe351ff57352`.
+The actual normalized resolved fields differ solely by `PLAN_OWNER_SCOPED`
+absent -> 0 -> 1; recipe SHA256 remains `66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0`.
+
+The [compact target receipt](../../../tools/cloud/build33/receipts/plan-owner-scoped-target.json)
+records both source-bound matrices, full OFF programme/15-overlay/11-allocated-
+section identity, corrected ON, exact compiler/KOS/SH4ZAM/source bindings and
+selected local frames. Complete reviewed evidence is under
+`/root/probe/engine-ef07-20261029-target-r2/`; the corrected full ON is
+`/root/probe/lanes/route/out-ef07w2onrP`. No SDK job remains live.
+
+Target DWARF confirms Owner 16 -> 20 bytes and Entry 32 -> 44. The fixed 32 KiB
+metadata partition therefore uses an 11,264-byte entry table (was 8,192), the
+same 8,192-byte local arena and 13,312 bytes for plans/bounds (was 16,384).
+Source backing is still retained by the existing owners. PreparedModelBatch is
+11,608 bytes inside its existing 12,288-byte workspace. `_end` is OFF
+`8c4170d4`, corrected ON `8c417894` (+1,984 bytes). This is increased metadata /
+code footprint, not a RAM-saving or runtime-headroom result.
+
+**NEXT:** coordinator integration/review default off, then matched runtime
+replacement/reentry/movie-loan/output and complete-cost qualification. The
+existing source-content/mutable-authority boundaries remain; this slice does
+not silently declare the whole EF07 card hardware accepted.
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build33/plan_owner_target.py \
+  --output "$EF07_FRESH_TARGET_OUT"
+```
+
+`EF07_FRESH_TARGET_OUT` must be new. The helper uses base
+`77461a84ef85e978e44aab5d936a1b80a2cd93a4`, compiler15.2.0,
+`/root/work/kos-re4dc-d367` at `804b3195`, and the initialized pinned SH4ZAM
+submodule. It records actual Make/compiler commands, source/toolchain hashes,
+object identity/layout and selected stack frames. Full release command follows
+the existing `ch2/ch2-build.sh rP` workflow with the current recipe and the final
+`PLAN_OWNER_SCOPED=0` or `=1` override; retain private input bindings locally.
+
+**BLOCKED (acceptance only):** runtime owner replacement/reentry/movie-loan output, headroom /
+peak source-backing overlap and complete hardware cost remain acceptance gates
+for the optimization. No default promotion, emulator/console run or publication
+is claimed. The existing Build33 and EF05 evidence below retains its own scope.

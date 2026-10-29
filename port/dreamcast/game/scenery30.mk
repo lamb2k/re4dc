@@ -30,3 +30,15 @@ SCENERY30_PLATFORM = $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/nativ
 $(SCENERY30_GAME) $(SCENERY30_PLATFORM): $(OBJDIR)/scenery30.h
 $(SCENERY30_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/scenery30.h
 $(SCENERY30_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/scenery30.h
+
+# EF07: owner-incarnation draw-plan invalidation, fixed metadata arenas.
+PLAN_OWNER_SCOPED ?= 0
+ifneq ($(filter-out 0 1,$(PLAN_OWNER_SCOPED)),)
+$(error PLAN_OWNER_SCOPED must be 0 or 1)
+endif
+ifeq ($(PLAN_OWNER_SCOPED),1)
+ifneq ($(MODEL_DRAW_PLANS),1)
+$(error PLAN_OWNER_SCOPED needs MODEL_DRAW_PLANS=1)
+endif
+$(OBJDIR)/platform/native_draw_plan_owner.o $(OBJDIR)/platform/native_model.o: PLATFORM_CPPFLAGS += -DRE4DC_PLAN_OWNER_SCOPED=1
+endif

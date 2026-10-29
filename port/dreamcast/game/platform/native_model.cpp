@@ -14,6 +14,7 @@
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#include "native_draw_owner_stamp.hpp"
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -74,6 +75,9 @@ struct StaticLightContext {
     const void* part=nullptr;const void* positions=nullptr;const void* normals=nullptr;
     float modelview[12];re4dc::render::SourceLighting lighting;
     unsigned generation=0;
+#if RE4DC_PLAN_OWNER_SCOPED
+    Re4dcDrawOwnerStamp part_owner,position_owner,normal_owner;
+#endif
 };
 struct StaticLightValue { unsigned generation=0,position=0,normal=0,color=0;float rgb[3]; };
 struct StaticLighting {
@@ -92,10 +96,22 @@ StaticLightContext* prepare_room_static_lighting(const Re4dcModelPart& p){
         if(!context.part && !slot)slot=&context;
     }
     if(!slot)return nullptr;
+#if RE4DC_PLAN_OWNER_SCOPED
+    const auto part_owner=re4dc_model_draw_owner_stamp(p.part,32);
+    const auto position_owner=re4dc_model_draw_array_owner(p.positions,p.position_count,p.position_stride);
+    const auto normal_owner=re4dc_model_draw_array_owner(p.normals,p.normal_count,p.normal_stride);
+#endif
     if(slot->part!=p.part || slot->positions!=p.positions || slot->normals!=p.normals ||
+#if RE4DC_PLAN_OWNER_SCOPED
+       !part_owner.valid() || !position_owner.valid() || !normal_owner.valid() ||
+       !(slot->part_owner==part_owner) || !(slot->position_owner==position_owner) || !(slot->normal_owner==normal_owner) ||
+#endif
        std::memcmp(slot->modelview,p.modelview,sizeof(p.modelview)) ||
        std::memcmp(&slot->lighting,p.lighting,sizeof(slot->lighting))){
         slot->part=p.part;slot->positions=p.positions;slot->normals=p.normals;
+#if RE4DC_PLAN_OWNER_SCOPED
+        slot->part_owner=part_owner;slot->position_owner=position_owner;slot->normal_owner=normal_owner;
+#endif
         std::memcpy(slot->modelview,p.modelview,sizeof(p.modelview));slot->lighting=*p.lighting;
         slot->generation=++static_lighting->generation;++work_stats.static_light_invalidations;
     }
@@ -127,20 +143,46 @@ static_assert(sizeof(RetainedPreparation)==131072);
 struct PositionState {
     const void* model=nullptr;const void* info=nullptr;const unsigned char* array=nullptr;
     unsigned count=0,stride=0,shift=0;float modelview[12]{},projection[7]{},viewport[6]{};
+#if RE4DC_PLAN_OWNER_SCOPED
+    Re4dcDrawOwnerStamp source_owner,array_owner;
+#endif
     bool matches(const Re4dcModelPart& p)const {
         return model==p.model && info==p.info && array==p.positions && count==p.position_count &&
+#if RE4DC_PLAN_OWNER_SCOPED
+          source_owner.valid() && array_owner.valid() &&
+          source_owner==re4dc_model_draw_owner_stamp(p.part,32) &&
+          array_owner==re4dc_model_draw_array_owner(p.positions,p.position_count,p.position_stride) &&
+#endif
           stride==p.position_stride && shift==p.shift && !std::memcmp(modelview,p.modelview,sizeof(modelview)) &&
           !std::memcmp(projection,p.projection,sizeof(projection)) && !std::memcmp(viewport,p.viewport,sizeof(viewport));
     }
-    void assign(const Re4dcModelPart& p){model=p.model;info=p.info;array=p.positions;count=p.position_count;stride=p.position_stride;shift=p.shift;
+    void assign(const Re4dcModelPart& p){
+#if RE4DC_PLAN_OWNER_SCOPED
+        source_owner=re4dc_model_draw_owner_stamp(p.part,32);
+        array_owner=re4dc_model_draw_array_owner(p.positions,p.position_count,p.position_stride);
+#endif
+        model=p.model;info=p.info;array=p.positions;count=p.position_count;stride=p.position_stride;shift=p.shift;
         std::memcpy(modelview,p.modelview,sizeof(modelview));std::memcpy(projection,p.projection,sizeof(projection));std::memcpy(viewport,p.viewport,sizeof(viewport));}
 };
 struct NormalState {
     const void* model=nullptr;const void* info=nullptr;const unsigned char* array=nullptr;
     unsigned count=0,stride=0,shift=0;float matrix[12]{};
+#if RE4DC_PLAN_OWNER_SCOPED
+    Re4dcDrawOwnerStamp source_owner,array_owner;
+#endif
     bool matches(const Re4dcModelPart& p)const {return model==p.model && info==p.info && array==p.normals && count==p.normal_count &&
+#if RE4DC_PLAN_OWNER_SCOPED
+        source_owner.valid() && array_owner.valid() &&
+        source_owner==re4dc_model_draw_owner_stamp(p.part,32) &&
+        array_owner==re4dc_model_draw_array_owner(p.normals,p.normal_count,p.normal_stride) &&
+#endif
         stride==p.normal_stride && shift==p.normal_shift && !std::memcmp(matrix,p.lighting->normal_matrix,sizeof(matrix));}
-    void assign(const Re4dcModelPart& p){model=p.model;info=p.info;array=p.normals;count=p.normal_count;stride=p.normal_stride;shift=p.normal_shift;std::memcpy(matrix,p.lighting->normal_matrix,sizeof(matrix));}
+    void assign(const Re4dcModelPart& p){
+#if RE4DC_PLAN_OWNER_SCOPED
+        source_owner=re4dc_model_draw_owner_stamp(p.part,32);
+        array_owner=re4dc_model_draw_array_owner(p.normals,p.normal_count,p.normal_stride);
+#endif
+        model=p.model;info=p.info;array=p.normals;count=p.normal_count;stride=p.normal_stride;shift=p.normal_shift;std::memcpy(matrix,p.lighting->normal_matrix,sizeof(matrix));}
 };
 struct PreparedModelBatch {
     PositionSlot positions[re4dc::render::kLocalSlots];
