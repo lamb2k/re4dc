@@ -26,6 +26,9 @@ bool same_span_key(const SpanKey& a,const SpanKey& b) {
 }
 bool span_owner_current(const Re4dcModelPart& p) {
     const auto& a=p.source_span;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(p.native_pose)return native_pose_of(p)!=nullptr;
+#endif
     if(!a.owner_serial || a.owner_frame!=skin_frame)return false;
     const Re4dcActorSource* source=nullptr;
 #if RE4DC_ACTOR_SKIN_OWNER_POOL
@@ -60,7 +63,12 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
        a.position_bytes/8U<p.position_count || a.normal_bytes/8U<p.normal_count || !a.uv_bytes || (a.uv_bytes&3U) ||
        !ram(a.positions,a.position_bytes) || !ram(a.normals,a.normal_bytes) || !ram(p.uv,a.uv_bytes) ||
        !ram(p.stream,p.stream_bytes))return false;
-    const SpanKey key{a,p.info,p.uv,p.stream,p.stream_bytes,p.position_count,p.normal_count,p.flags&0x80000000U};
+    const SpanKey key{a,p.info,p.uv,p.stream,p.stream_bytes,p.position_count,p.normal_count,
+        (p.flags&0x80000000U)
+#if RE4DC_NATIVE_FE_CONTINUATION
+        | (p.native_pose?1U:0U)
+#endif
+    };
     for(const auto& e:span_entries)if(same_span_key(e.key,key)) {
         ++span_hits;if(certificate)*certificate=e.certificate;return true;
     }

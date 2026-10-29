@@ -1,0 +1,210 @@
+void continuation_abort(){++host::aborts;queue::stream_aborted=true;re4dc_actor_native_pose_retire();}
+void continuation_begin(){if(host::retire_in_begin){host::retire_in_begin=false;re4dc_actor_native_pose_retire();}}
+extern "C" int re4dc_model_defer_native_result(const Re4dcModelPart* p,re4dc::NativeDrawResult* r){return queue::defer_part(p,p->lighting,r);}
+extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+    // Exact native_model.cpp dispatch contract, before generic material/GX work.
+    // ACTUAL_MODEL_DISPATCH
+    ++host::gx_attempts;assert(false);
+}
+using Mtx=float[3][4];
+struct cParts {cParts* pList=nullptr;Mtx mat{};};
+struct ModelData {unsigned nVtx=0,nNrm=0,weight_ext_num=0,weight_palette_num=0;const void* vtxOrig=nullptr;};
+class cModelInfo {public:ModelData* pData=nullptr;cModelInfo* pList=nullptr;};
+class cModel {public:unsigned id=0,nParts=119,be_flag=0;cParts* pList=nullptr; cParts* pParts=nullptr;};
+struct Global {unsigned Frame_cnt=0;} global;
+Global* pG=&global;
+void PSMTXConcat(const Mtx a,const Mtx b,Mtx out){
+    Mtx tmp{};for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c){
+        for(unsigned k=0;k<3;++k)tmp[r][c]+=a[r][k]*b[k][c];if(c==3)tmp[r][c]+=a[r][3];}
+    std::memcpy(out,tmp,sizeof(tmp));
+}
+int PSMTXInverse(const Mtx m,Mtx out){
+    // Synthetic source matrices use orthonormal rotations and translation.
+    for(unsigned r=0;r<3;++r){for(unsigned c=0;c<3;++c)out[r][c]=m[c][r];
+        out[r][3]=0;for(unsigned c=0;c<3;++c)out[r][3]-=out[r][c]*m[c][3];}return 1;
+}
+bool coarse_finite(float v){return re4dc::render::is_finite(v);}
+unsigned fingerprint(const void* data){const auto* p=static_cast<const unsigned char*>(data);unsigned h=2166136261u;for(unsigned i=0;i<64;++i)h=(h^p[i])*16777619u;return h;}
+Mtx identity_bind={{1,0,0,0},{0,1,0,0},{0,0,1,0}};
+#define RE4DC_LEON_BIND_ROW(b,p) identity_bind
+#define RE4DC_LEON_HAIR_PALETTES 3
+struct Weight {unsigned char bone[3],count;float value[3];};
+struct SyntheticChunk {
+    const unsigned char* positions=nullptr;unsigned position_count=0,normal_count=0,palette_count=0;const Weight* weights=nullptr;unsigned triangles=4;
+};
+namespace leon4k {
+alignas(32) short i7_pos[48],i7_nrm[48];
+alignas(32) unsigned short i7_uv[24];
+alignas(32) unsigned char i7_gx[512];
+Weight i7_weights[3]={{{3,0,0},1,{1,0,0}},{{68,0,0},1,{1,0,0}},{{118,0,0},1,{1,0,0}}};
+struct Signature {unsigned positions=0,normals=0,palette=0,vertex_hash=0;} signatures[8];
+SyntheticChunk chunks[8];
+}
+namespace leon_hair_runs {
+alignas(32) unsigned char uv[48];
+struct Run {const unsigned char* stream;unsigned bytes,triangles,asset_id;} runs[1];
+constexpr unsigned run_count=1;
+}
+Re4dcUiImage hair_colours[1],hair_mask;
+#include "coarse_actor_transaction.h"
+// ACTUAL_PORTRAIT
+namespace test {
+unsigned checks=0;
+void need(bool condition,const char* why){++checks;if(!condition){std::fprintf(stderr,"check %u: %s\n",checks,why);std::abort();}}
+using Outcome=re4dc::NativeDrawOutcome;
+void begin(){
+    queue::reset_deferred();for(void* p:host::allocations)std::free(p);host::allocations.clear();
+    check::start();pG->Frame_cnt=check::serial;
+    queue::frame_ready=true;queue::stream_aborted=false;queue::source_draws_finished=false;queue::draining_parts=false;
+    queue::spill_ok=true;host::allocation_ok=true;host::retire_in_begin=false;
+    host::last={Outcome::Refused};host::emissions=host::gx_attempts=host::aborts=0;
+}
+struct Portrait {
+    check::Asset asset{3,1,12};
+    cParts bones[119];cModel model;ModelData data;cModelInfo info;
+    alignas(32) unsigned char source[64]{};
+    Portrait(){
+        model.pParts=model.pList=bones;
+        for(unsigned i=0;i<119;++i){bones[i].pList=i<118?bones+i+1:nullptr;std::memcpy(bones[i].mat,identity_bind,sizeof(Mtx));}
+        data={12,12,0,3,source};info.pData=&data;
+        leon4k::signatures[7]={12,12,3,fingerprint(source)};
+        std::memcpy(leon4k::i7_pos,asset.positions.data(),sizeof(leon4k::i7_pos));
+        std::memcpy(leon4k::i7_nrm,asset.wide_normals.data(),sizeof(leon4k::i7_nrm));
+        std::memcpy(leon4k::i7_uv,asset.uv.data(),sizeof(leon4k::i7_uv));
+        std::memcpy(leon_hair_runs::uv,asset.uv.data(),sizeof(leon_hair_runs::uv));
+        std::memcpy(leon4k::i7_gx,asset.stream.data(),asset.used);
+        leon4k::chunks[7]={reinterpret_cast<const unsigned char*>(leon4k::i7_pos),12,12,3,leon4k::i7_weights};
+        leon_hair_runs::runs[0]={leon4k::i7_gx,asset.used,4,29};
+        hair_colours[0]=asset.p.image;hair_mask=asset.p.image;
+        asset.p.model=&model;asset.p.info=&info;
+    }
+    re4dc_source::ChunkInput input(){auto c=leon4k::chunks[7];auto in=RE4DC_OWNER_INPUT(leon4k,i7,c,119);
+        in.uv=RE4DC_OWNER_SPAN(leon_hair_runs::uv);in.stream={leon4k::i7_gx,asset.used};in.triangles=4;return in;}
+    Re4dcModelPart part(){auto p=asset.p;p.info=&leon4k::chunks[7];p.positions=p.normals=nullptr;p.flags=0;p.colors=nullptr;
+        p.stream=leon4k::i7_gx;p.stream_bytes=asset.used;p.uv=reinterpret_cast<const unsigned char*>(leon_hair_runs::uv);
+        p.material_flags=4;p.normal_stride=6;p.normal_shift=14;p.position_stride=6;p.shift=4;return p;}
+    int queue(){return re4dc_portrait_hair(&model,&info,&asset.p);}
+    void pose(float x){
+        for(unsigned b:{3u,68u,118u}){const float a=x*(float(b)+1.0f)*0.001f;
+            bones[b].mat[0][0]=bones[b].mat[2][2]=std::cos(a);bones[b].mat[0][2]=std::sin(a);bones[b].mat[2][0]=-std::sin(a);
+            bones[b].mat[0][3]=x*float(b+1);}
+    }
+};
+void queued_lifecycle(Portrait& portrait){
+    begin();portrait.pose(0.1f);need(portrait.queue()==1,"real portrait accepted");
+    need(queue::deferred_count==1 && check::ta.empty(),"real masked portrait queues before drain");
+    auto view=queue::restore_view(queue::deferred_first);need(native_pose_of(view)!=nullptr,"queue retains exact ticket");
+    auto* snapshot=native_pose_of(view);float saved[36];std::memcpy(saved,pose_palette(*snapshot),sizeof(saved));
+    need(saved[9]!=saved[21] && saved[21]!=saved[33],"119-bone source uses current bones 3/68/118");
+    check::Asset ordinary{3,1,12};
+    std::array<unsigned,kSkins+1> infos{};
+    for(unsigned i=0;i<kSkins;++i){need(re4dc_actor_skin_register(check::serial,&infos[i],nullptr,ordinary.palette.data(),3),"ordinary slots fill");
+        check::sources.push_back({&infos[i],{reinterpret_cast<const unsigned char*>(ordinary.positions.data()),reinterpret_cast<const unsigned char*>(ordinary.wide_normals.data()),12,12,3,0}});}
+    need(!re4dc_actor_skin_register(check::serial,&infos.back(),nullptr,ordinary.palette.data(),3),"registry exhausted");
+    for(unsigned i=0;i<kSkins;++i){auto p=ordinary.p;p.info=&infos[i];need(prepare_frame(p,5,2000)!=nullptr,"unrelated actual frame preparation");
+        need(re4dc_actor_skin_register(check::serial,&infos[i],nullptr,ordinary.palette.data(),3),"ordinary skin churn");}
+    need(native_pose_of(view)!=nullptr,"prim-tail ticket survives frame_table/workspace_end reuse");
+    portrait.pose(0.9f);std::fill(&portrait_palette[0][0],&portrait_palette[0][0]+36,99.0f);
+    auto light=portrait.asset.lighting;portrait.asset.lighting.normal_matrix[0]=17;portrait.asset.lighting.lights[0].color[0]=1;
+    need(std::memcmp(saved,pose_palette(*native_pose_of(view)),sizeof(saved))==0,"palette snapshot owns values");
+    queue::re4dc_model_finish_source_draws();need(host::last.outcome==Outcome::Submitted && host::last.submitted,"actual queued replay submits");
+    need(host::gx_attempts==0 && host::emissions==1 && !check::ta.empty(),"native emitter consumed once");
+    need(!native_pose_of(view),"drain releases ticket");const auto expected=check::ta;
+    portrait.asset.lighting=light;
+    // Independent existing native skin-registry/frame-table route, same exact
+    // weighted current pose and selected light state. This checks positions,
+    // normal transforms, clipping, winding/UV and every emitted packet word.
+    begin();auto reference=view;reference.native_pose=nullptr;reference.native_pose_lease={};reference.source_span={};
+    auto reference_light=light;reference_light.tev_scale*=0.5f;reference_light.normal_matrix[7]=1.0e30f;reference.lighting=&reference_light;
+    auto in=portrait.input();check::sources.push_back({reference.info,{in.positions.data,in.normals.data,12,12,3,0}});
+    need(re4dc_actor_skin_register(check::serial,reference.info,nullptr,saved,3),"reference current skin binding");
+    need(re4dc_actor_submit(&reference),"existing native actor reference consumed");
+    need(check::ta==expected,"all queued output words match existing native pose/normal/clip emitter");
+    begin();portrait.pose(0.1f);need(portrait.queue()==1,"repeat original pose queue");queue::re4dc_model_finish_source_draws();
+    need(check::ta==expected,"queued current palette and selected lighting match unchanged reference");
+    begin();portrait.pose(0.2f);need(portrait.queue()==1,"next current pose queue");queue::re4dc_model_finish_source_draws();
+    need(check::ta!=expected,"current pose remains live across frames");
+    begin();for(unsigned i=0;i<kSkins;++i)need(re4dc_actor_skin_register(check::serial,&infos[i],nullptr,ordinary.palette.data(),3),"fill before portrait");
+    need(portrait.queue()==1,"portrait queues with registry already full");queue::re4dc_model_finish_source_draws();need(host::last.outcome==Outcome::Submitted,"fallback bypasses registry admission only");
+}
+void failures(Portrait& portrait){
+    begin();queue::deferred_top=8192;queue::spill_ok=false;
+    const unsigned queued=portrait_hair_queued,drawn=portrait_hair_drawn;
+    need(portrait.queue()==-1,"real queue exhaustion refuses without GC fallback");need(queue::deferred_count==0,"failed publication queues nothing");
+    need(portrait_hair_queued==queued&&portrait_hair_drawn==drawn,"refusal not covered/drawn");
+    unsigned allocations=host::allocations_made;need(portrait.queue()==-1&&host::allocations_made==allocations,"later source part remembers failure, not success");
+    begin();need(portrait.queue()==1,"queue before reset");auto stale=queue::restore_view(queue::deferred_first);
+    queue::reset_deferred();for(void* p:host::allocations)std::free(p);host::allocations.clear();
+    need(!native_pose_of(stale),"reset revokes before freed snapshot read");auto r=re4dc_actor_native_submit_result(&stale,1);
+    need(r.outcome==Outcome::PartialAbort&&host::aborts==1,"stale published replay aborts");
+    begin();need(portrait.queue()==1,"queue before abort");stale=queue::restore_view(queue::deferred_first);re4dc_model_packet_abort();
+    need(!native_pose_of(stale),"abort revokes ticket");queue::re4dc_model_finish_source_draws();need(host::emissions==0,"aborted frame does not drain");
+    begin();need(portrait.queue()==1,"queue before resource loss");check::reserve_ok=false;queue::re4dc_model_finish_source_draws();
+    need(host::last.outcome==Outcome::PartialAbort&&host::aborts,"queued resource failure remains explicit");
+    begin();check::reserve_ok=false;need(portrait.queue()==-1&&queue::deferred_count==0,"prepublication resource refusal");
+    begin();portrait.asset.lighting.attenuation=3;need(portrait.queue()==-1,"unsupported lighting refused before queue");portrait.asset.lighting.attenuation=1;
+    begin();need(portrait.queue()==1,"queue before retirement during begin");host::retire_in_begin=true;queue::re4dc_model_finish_source_draws();
+    need(host::last.outcome==Outcome::PartialAbort&&host::aborts,"texture begin owner loss aborts before palette read");
+    begin();queue::source_draws_finished=true;check::scratch_capacity=1;
+    need(portrait.queue()==-1&&host::aborts,"synchronous direct header-only failure aborts");
+    begin();queue::source_draws_finished=true;check::direct=false;check::capacity=kCacheSlots+63;
+    need(portrait.queue()==-1&&host::aborts,"synchronous packet header-only failure aborts");
+    begin();queue::source_draws_finished=true;check::direct=false;check::begin_ok=false;
+    need(portrait.queue()==-1&&!host::aborts,"packet begin refusal before publication remains refusal");
+    begin();queue::source_draws_finished=true;check::direct=false;
+    need(portrait.queue()==1&&!host::aborts&&portrait_hair_drawn,"synchronous packet path emits same continuation");
+    need(host::gx_attempts==0,"no negative result enters encoded GX");
+    begin();need(portrait.queue()==1,"queue before primitive owner retirement");stale=queue::restore_view(queue::deferred_first);
+    re4dc_actor_owner_retire();for(void* p:host::allocations)std::free(p);host::allocations.clear();
+    need(!native_pose_of(stale),"actual primitive retirement revokes before freed memory read");
+    r=re4dc_actor_native_submit_result(&stale,1);need(r.outcome==Outcome::PartialAbort,"primitive-retired replay stays failed");
+}
+void tickets(Portrait& portrait){
+    begin();auto input=portrait.input();std::vector<Re4dcModelPart> parts(65,portrait.part());
+    for(unsigned i=0;i<64;++i)need(re4dc_actor_native_pose_acquire(&parts[i],29,&input,portrait.asset.palette.data(),144,check::serial),"bounded workspace ticket");
+    need(!re4dc_actor_native_pose_acquire(&parts[64],29,&input,portrait.asset.palette.data(),144,check::serial),"fixed tickets exhausted");
+    auto stale=parts[0];for(unsigned i=0;i<64;++i)re4dc_actor_native_pose_release(&parts[i]);
+    need(!native_pose_of(stale),"released serial stale");
+    auto p=portrait.part();need(!re4dc_actor_native_pose_acquire(&p,29,&input,portrait.asset.palette.data(),140,check::serial),"truncated palette rejected");
+    p=portrait.part();p.flags=0x80000000u;need(!re4dc_actor_native_pose_acquire(&p,29,&input,portrait.asset.palette.data(),144,check::serial),"signed UV cannot borrow unsigned authority");
+    p=portrait.part();auto bad=input;--bad.positions.size;need(!re4dc_actor_native_pose_acquire(&p,29,&bad,portrait.asset.palette.data(),144,check::serial),"logical extent association exact");
+    bad=input;bad.palette_count=2;need(!re4dc_actor_native_pose_acquire(&p,29,&bad,portrait.asset.palette.data(),96,check::serial),"palette index/count association exact");
+    bad=input;--bad.stream.size;need(!re4dc_actor_native_pose_acquire(&p,29,&bad,portrait.asset.palette.data(),144,check::serial),"stream logical extent exact");
+    Re4dcActorWorkspaceLease ordinary{};need(re4dc_actor_workspace_acquire(32,&ordinary),"ordinary reservation");re4dc_actor_native_pose_retire();
+    need(re4dc_actor_workspace_validate(&ordinary),"snapshot retire preserves ordinary owner");re4dc_actor_workspace_release(&ordinary);
+    // Same pointer can be rebound only with a new out-of-band serial.
+    Re4dcActorWorkspaceLease a{},b{};need(re4dc_actor_workspace_acquire(32,&a),"reuse firstticket");int memory=0;
+    need(owned_workspace.bind(a,frame_serial,&memory,32),"first exact allocation binding");owned_workspace.retire_bound();
+    need(re4dc_actor_workspace_acquire(32,&b)&&owned_workspace.bind(b,frame_serial,&memory,32),"sameaddress fresh ticket");
+    need(!owned_workspace.bound(a,frame_serial,&memory)&&owned_workspace.bound(b,frame_serial,&memory),"sameaddress stale ticket refused");
+    re4dc_actor_workspace_release(&a);need(re4dc_actor_workspace_validate(&b),"stale release cannot revoke incarnation");re4dc_actor_workspace_release(&b);
+    // Actual current rig hair has 27 weighted palettes from the 119-bone
+    // source. Exercise that exact snapshot extent and the bounded API maximum.
+    for(unsigned count:{27u,256u}){
+        std::vector<Weight> weights(count,leon4k::i7_weights[0]);std::vector<float> matrices(count*12);
+        for(unsigned i=0;i<count;++i)std::memcpy(matrices.data()+i*12,portrait.asset.palette.data()+(i%3)*12,48);
+        auto expanded=input;expanded.palette_count=count;expanded.weights={reinterpret_cast<const unsigned char*>(weights.data()),weights.size()*sizeof(Weight)};
+        p=portrait.part();const unsigned id=count==27?30:31;
+        need(re4dc_actor_native_pose_acquire(&p,id,&expanded,matrices.data(),matrices.size()*4,check::serial),"27/current and256/max palette snapshot extent");
+        need(p.native_pose_lease.bytes==((pose_header_bytes+count*48+31)&~31u),"exact aligned snapshot footprint");
+        need(std::memcmp(pose_palette(*native_pose_of(p)),matrices.data(),matrices.size()*4)==0,"all exact current palette bytes owned");re4dc_actor_native_pose_release(&p);
+    }
+    for(unsigned levels=1;levels<=3;++levels){
+        std::vector<unsigned> stream((input.stream.size+3)/4);std::memcpy(stream.data(),input.stream.data,input.stream.size);
+        auto* bytes=reinterpret_cast<unsigned char*>(stream.data());bytes[3]=levels;
+        auto unsupported=input;unsupported.stream={bytes,input.stream.size};p=portrait.part();p.stream=bytes;
+        need(!re4dc_actor_native_pose_acquire(&p,31+levels,&unsupported,portrait.asset.palette.data(),144,check::serial),"every LOD prefix remains conservatively unsupported");
+    }
+    auto malformed=input;malformed.normals.size=7;p=portrait.part();
+    need(!re4dc_actor_native_pose_acquire(&p,35,&malformed,portrait.asset.palette.data(),144,check::serial),"normal array truncation refused before source read");
+    Weight invalid[3];std::memcpy(invalid,leon4k::i7_weights,sizeof(invalid));invalid[2].bone[0]=119;
+    malformed=input;malformed.weights={reinterpret_cast<const unsigned char*>(invalid),sizeof(invalid)};
+    need(!re4dc_actor_native_pose_acquire(&p,36,&malformed,portrait.asset.palette.data(),144,check::serial),"119-bone index bound refused");
+    auto nan_palette=portrait.asset.palette;nan_palette[35]=NAN;
+    need(!re4dc_actor_native_pose_acquire(&p,29,&input,nan_palette.data(),144,check::serial),"nonfinite current normal/pose matrix refused");
+    need(!re4dc_actor_native_pose_acquire(&p,28,&input,portrait.asset.palette.data(),144,check::serial),"unsupported producer asset cannot borrow hair authority");
+}
+}
+int main(){test::Portrait portrait;test::queued_lifecycle(portrait);test::failures(portrait);test::tickets(portrait);
+    std::printf("{\"checks\":%u,\"producer\":\"actual-119-bone-portrait\",\"queue\":\"actual-copy-lean\",\"gx_attempts\":%u}\n",test::checks,host::gx_attempts);
+    queue::reset_deferred();for(void* p:host::allocations)std::free(p);}

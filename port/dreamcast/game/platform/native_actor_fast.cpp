@@ -128,6 +128,17 @@ static unsigned abc_class_of(const void* model) {
 #include "actor_prof.h"
 #include "actor_plan.h"
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "include/native_actor_continuation.h"
+#include <new>
+#if defined(__sh__) && !defined(PLACEMENT_NEW_DEFINED)
+// This platform TU uses libstdc++ <new>, unlike the recovered game's shim.
+// Its placement overload already exists; honor the shared compatibility guard.
+#define PLACEMENT_NEW_DEFINED
+#endif
+#include "include/coarse_actor_geometry_once.h"
+extern "C" void* re4dc_prim_tail(unsigned,unsigned);
+#endif
 #if defined(RE4DC_ACTOR_PROBE_LIGHT) && RE4DC_ACTOR_PROBE_LIGHT
 #include "actor_light_probe.h"
 #endif
@@ -1898,6 +1909,9 @@ void* frame_table(unsigned bytes) {  // until the next re4dc_actor_frame
     workspace_end -= bytes;
     return workspace + workspace_end;
 }
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "include/native_actor_pose_snapshot.inc"
+#endif
 
 // Rows of the combined projection (see native_actor.cpp): X'/W and Y'/W are
 // the generic path's project() screen coordinates, W = -Zcamera.
@@ -3722,6 +3736,9 @@ struct Part {
     unsigned flat_primed = 0;
 #endif
     bool streaming = false, committed = false;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    struct NativeContinuationProgress* continuation=nullptr;
+#endif
 #if RE4DC_ACTOR_DIRECT
     bool direct = false;
     std::uint32_t* sq = nullptr;
@@ -3781,6 +3798,14 @@ struct Part {
 #endif
         if (!streaming) return false;
         re4dc_model_packet_commit(used); committed = true;
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(continuation && used) {
+            ++continuation->result.submitted;
+            continuation->result.outcome=re4dc::NativeDrawOutcome::Submitted;
+            Re4dcActorStreamState state{};
+            if(!re4dc_actor_stream_state(&state))return false;
+        }
+#endif
         used = 0; ++stats.flushes;
         return true;
     }
@@ -5467,7 +5492,11 @@ bool lazy_skin(const Re4dcModelPart& p) {
            src.normal_count == p.normal_count && bool(src.small_normals) == (p.normal_shift == 6);
 }
 
-bool qualifies(const Re4dcModelPart& p) {
+bool qualifies(const Re4dcModelPart& p
+#if RE4DC_NATIVE_FE_CONTINUATION
+    ,bool explicit_pose=false
+#endif
+) {
 #if RE4DC_ACTOR_SOURCE_SPAN
     // A published bounded view must never fall through to an unbounded FE
     // transform. Unknown views retain the existing conservative route.
@@ -5480,7 +5509,11 @@ bool qualifies(const Re4dcModelPart& p) {
            p.shift <= 30 && (p.position_stride == 6 || p.position_stride == 8) &&
            (p.normal_shift == 6 || p.normal_shift == 14) && p.normal_stride >= 3 &&
            p.position_count && p.normal_count && p.stream_bytes <= 1024 * 1024 && p.stream_bytes >= 32 &&
-           ((ram(p.positions, p.position_count * p.position_stride) &&
+           (
+#if RE4DC_NATIVE_FE_CONTINUATION
+            explicit_pose ||
+#endif
+            (ram(p.positions, p.position_count * p.position_stride) &&
              ram(p.normals, p.normal_count * p.normal_stride)) || lazy_skin(p)) &&
            ram(p.stream, p.stream_bytes) && p.uv &&
            p.projection[0] == 0 && p.viewport[2] > 0 && p.viewport[3] > 0;
@@ -6255,7 +6288,11 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }
 }  // namespace
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+static int actor_submit_impl(const Re4dcModelPart* part,Frame* explicit_frame,NativeContinuationProgress* progress) {
+#else
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
@@ -6308,7 +6345,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
     }
 #endif
-    if (!part || !qualifies(*part)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+    if (!part || !qualifies(*part
+#if RE4DC_NATIVE_FE_CONTINUATION
+        ,explicit_frame!=nullptr
+#endif
+    )) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
@@ -6340,15 +6381,26 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     if (!blob && !(blob = convert(p))) { DFA26_MODEL_HIT(ActorConvert, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress)progress->result.outcome=re4dc::NativeDrawOutcome::Culled;
+#endif
     if (p.cull == 3) { re4dc_model_result(0, 0, 0); PXF_EXIT(kCull3); return 1; }
     // Translucent parts keep the existing bounded drain; its replay re-enters
     // re4dc_model_submit and lands here again with draining set.
-    if (re4dc_model_defer_part(&p)) { ++stats.deferred; PXF_EXIT(kDefer); return 1; }
+    if (
+#if RE4DC_NATIVE_FE_CONTINUATION
+        !progress &&
+#endif
+        re4dc_model_defer_part(&p)) { ++stats.deferred; PXF_EXIT(kDefer); return 1; }
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     PXF_SPAN(def_us, pxt);
 #endif
 
-    Frame& f = *prepare_frame(p, near_distance, far_distance);
+    Frame& f =
+#if RE4DC_NATIVE_FE_CONTINUATION
+        explicit_frame?*explicit_frame:
+#endif
+        *prepare_frame(p, near_distance, far_distance);
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
     // RIGID_CENSUS=2 (benchmark census discs, lane cache20): every rigid part is counted (re4dc_rigid_census: parts,
     // meshlets, vertices of the parts that reached here this frame; the biggest part's model) and is not drawn only while
@@ -6580,13 +6632,24 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    e.continuation=progress;
+#endif
     e.streaming = re4dc_model_packet_streaming() != 0;
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     if (!re4dc_model_packet_reserve(&p, &e.packet)) {
             uv32::counters.note(re4dc::format32::BeginFailed, 3U);
-            RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+            RE4DC_DROP_ACTOR(&p, 0, 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
 #else
-    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
 #endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     const unsigned uv32_certificate = uv32::checked_certificate(p, *blob);
@@ -6603,12 +6666,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_ACTOR_DIRECT
     Re4dcModelDirect direct{};
     if (re4dc_model_direct_enabled() && re4dc_model_direct_begin(&p, &direct)) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress)progress->header=true;
+#endif
         if (direct.scratch_capacity < kCacheSlots) {
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
             uv32::counters.note(re4dc::format32::BeginFailed, 3U);
 #endif
             // Nothing sent yet beyond the header: an empty part.
-            re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0); re4dc_model_result(2, 0, 0); return 1;
+            re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); return 1;
         }
         e.direct = true; e.sq = direct.sq;
         e.packet.u_scale = direct.u_scale; e.packet.v_scale = direct.v_scale;
@@ -6626,11 +6696,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         DFA26_MODEL_HIT(ActorPacketPath, 1)
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+        const bool packet_begun=re4dc_model_packet_begin(&p,&e.packet)!=0;
+        if(progress && packet_begun)progress->header=true;
+        if (!packet_begun || e.packet.capacity < kCacheSlots + 64U) {
+#else
         if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
             uv32::counters.note(re4dc::format32::BeginFailed, 3U);
 #endif
             RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
             re4dc_model_result(2, 0, 0);
             return 1;
         }
@@ -6654,6 +6733,15 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     const unsigned long long pxf_l0 = re4dc_otp_now_us();
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress && !native_pose_of(p)) {
+        native_refused(progress);
+#if RE4DC_ACTOR_DIRECT
+        if(e.direct)re4dc_model_direct_end(0);
+#endif
+        return 1;
+    }
 #endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
@@ -6764,6 +6852,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     AbcEye abc_e;
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress && !native_pose_of(p)){ok=false;break;}
+#endif
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
         const unsigned nv = c.vertices(), ni = c.indices(), nt = c.triangles();
@@ -6908,6 +6999,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     if (e.direct) {
         if (!ok) re4dc_model_packet_abort();
         re4dc_model_direct_end(e.slots);
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress) {
+            Re4dcActorStreamState state{};
+            if(!ok || !re4dc_actor_stream_state(&state))native_refused(progress);
+            else if(e.slots){progress->result.outcome=re4dc::NativeDrawOutcome::Submitted;progress->result.submitted=1;}
+        }
+#endif
         re4dc_model_result(ok ? 0 : 3, e.input, ok ? e.output : 0);
         PXF_EXIT(kDraw);
         return 1;
@@ -6915,14 +7013,29 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     if (!ok) {
         if (e.committed) re4dc_model_packet_abort();
+#if RE4DC_NATIVE_FE_CONTINUATION
+        native_refused(progress);
+#endif
         re4dc_model_result(3, e.input, 0);
         return 1;
     }
     re4dc_model_packet_commit(e.used);
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress) {
+        if(e.used){++progress->result.submitted;progress->result.outcome=re4dc::NativeDrawOutcome::Submitted;}
+        Re4dcActorStreamState state{};
+        if(!re4dc_actor_stream_state(&state))native_refused(progress);
+    }
+#endif
     re4dc_model_result(0, e.input, e.output);
     PXF_EXIT(kDraw);
     return 1;
 }
+
+#if RE4DC_NATIVE_FE_CONTINUATION
+extern "C" int re4dc_actor_submit(const Re4dcModelPart* part){return actor_submit_impl(part,nullptr,nullptr);}
+#include "include/native_actor_continuation.inc"
+#endif
 
 #if RE4DC_COARSE_ONE_SUBMIT
 // ------------------------------------------------- one submission per actor --

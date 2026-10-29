@@ -803,3 +803,159 @@ NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/l
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
+
+
+## EF04 bounded portrait native continuation, 2026-10-29
+
+**DONE - SOURCE AND HOST, scoped opt-in; target qualification pending.**
+`NATIVE_FE_CONTINUATION=1` connects the existing PS2 portrait-hair producer
+to the existing validated native actor positions, current normal/lighting,
+clipping and packet emitter without requiring a free ordinary skin-registry
+slot. The source's unchanged 119-bone loop computes the current weighted
+palette; the compiled rig hair currently has 27 matrices. Immutable chunk
+proof and EF01's exact unsigned-Q15 array/stream spans remain mandatory.
+Mutable/unowned/LOD payloads gain no new authority or decoder.
+
+The actual caller is `model_bridge.cpp:re4dc_draw_model_part`'s portrait
+callback. `Render()` processes the model/UI OTs before `GXSetDrawSync(0xADEB)`;
+the source hook at that token drains native deferred parts. Hair uses the
+existing masked-material TR predicate, so its normal call really queues.
+The new result wrapper reports Queued only after the original bounded queue
+publishes its node. Its existing lossless view and selected-light snapshots
+retain material, camera/projection, normal matrix and current lighting.
+No stack palette is borrowed. Explicit identified refusal returns negative
+through the existing boolean caller, preventing GC fallback while recording
+neither a drawn nor successfully queued portrait. Native replay is dispatched
+before generic material/GX submission and keeps EF03 Refused/PartialAbort
+semantics at actual resource/header/packet boundaries.
+
+The palette copy is allocated through `re4dc_prim_tail`, with the existing
+16 KiB remaining-capacity reserve, and bound to an existing fixed
+WorkspaceReservations value ticket. Every snapshot read first validates live
+stream, render-frame allocation epoch, serial, exact pointer and logical
+extent. Unrelated skin registrations and `prepare_frame()`'s repeated
+`workspace_end` reset cannot overwrite it. Queue reset, frame abort, normal
+drain/release and the existing `sourceActorRetire -> transaction_retire ->
+actor_owner_retire` primitive-retirement chain revoke authority before reuse.
+There is no new registry, decoder, persistent pose cache or source owner.
+
+SH4 accounting: the guarded ModelPart fields add 20 bytes; extending the
+existing 64 reservation slots adds 512 fixed bytes. A snapshot has a 72-byte
+descriptor, rounded to 96, followed by exactly `palette_count * 48` pose
+bytes and final 32-byte alignment: the current 27-matrix allocation is 1,408
+bytes. Existing deferred view-difference storage grows according to its actual
+changed words. These are structural costs, not a measured heap/stack peak or
+performance claim. Zero/absent adds no Make definitions and preserves layout.
+Enabled Make composition requires FORMAT32, SOURCE_SPAN, transaction, native
+fast/lazy skin, the existing PS2 rig portrait option and LEON_LOD=0; new shared
+layout flags are appended to both GAME_CPPFLAGS and PLATFORM_CPPFLAGS.
+
+Public tests (synthetic arrays only):
+
+```sh
+python3 port/dreamcast/tools/cloud/build32/actor_continuation_host.py --output "$FRESH_HOST"
+python3 port/dreamcast/tools/cloud/build32/actor_continuation_host.py --sanitize --output "$FRESH_SAN"
+python3 port/dreamcast/tools/cloud/build32/actor_continuation_off.py --output "$FRESH_OFF"
+python3 port/dreamcast/tests/test_actor_source_span.py --output "$FRESH_EF01_REGRESSION"
+```
+
+The actual portrait body, immutable proof/cache, COPY_LEAN queue/view/light
+snapshot and drain bodies, native-model replay branch and whole actor TU
+execute with explicit hosted source-struct, primitive-allocation, SQ/AVK and
+texture-transport adapters. Normal and ASan/UBSan gates pass 390 checks in
+each ordinary/isolated owner-pool x FAST_ONLY=0/1 profile. The queue survives
+a full registry plus actual unrelated info/table churn and later submits;
+every emitted word matches an independent existing native skin/table route
+with the same current weighted pose and lights. Changed current pose changes
+the output. Tests cover exact 27/256-matrix spans, fixed-ticket exhaustion,
+same-address serial reuse/stale release, primitive retirement and freed
+snapshots, reset/abort/resource loss, queue-full refusal, direct/packet
+header-only failures, signedness, all unsupported LOD prefixes, malformed
+normal/stream/palette/119-bone/finite-matrix bounds, and zero GX attempts.
+Existing EF01 regression passes 214 checks in each owner profile.
+
+Hosted actor baseline `255964fdc`, control absent and explicit zero all retain
+4,358-check output and identical 82,672-byte selected allocated code/data
+image SHA256 `8c639930c50617ea0c0bf5c3a3a9727e3cd5b5ca265d57eafe9f137be01ca673`.
+This hosted actor control does not establish other target TUs or full-program
+identity. Private receipts are under `/root/probe/engine-ef04-20261029`;
+no generated artwork, private input, recipe or current package was changed.
+
+**NEXT:** Coordinator-granted target compile/full release control, bound
+enabled layout/macro propagation and actual current-data target emitter
+qualification, then separate current artwork/output/look/STRICT/heap/stack/
+full-cost and physical-console gates. This is the first bounded portrait
+continuation slice, not all encoded families or whole EF04 completion.
+
+**BLOCKED:** No source/host blocker. SDK slot is coordinator-controlled and
+has not been used for this slice. No emulator, mastering, SD/Pi action,
+push/integration, publication or private upload occurred.
+
+### EF04 target qualification and frozen delivery, 2026-10-29
+
+**DONE - TARGET COMPILE/LINK AND DISABLED IDENTITY, opt-in only.**
+Frozen source `1404434c5d319daa5631269317725fb274a670bd` passed the full
+release recipe with the new control absent and explicitly zero (41/42 s,
+rc=0, existing `missing.txt` present and empty). Against the bound runtime
+`064bfa4ea` output, both programmes, all 15 overlays and every one of the 11
+allocated ELF sections match in bytes and section metadata. Debug ELF hashes
+are distinct and are not substituted for this programme/section proof.
+
+The first enabled arm is retained as a real failed build: rc=1 after 26 s,
+no ELF and no `missing.txt`. A newly included source preflight header's
+recovered placement-new shim collided with libstdc++ `<new>` in this platform
+TU. Scoped repair `b77a61a9664ac1c0f414d5ac70e726d38996f4e7` uses the existing
+`PLACEMENT_NEW_DEFINED` guard only inside NATIVE_FE_CONTINUATION; no common
+header or runtime semantics changed. Post-repair normal host390 x4 passed.
+Both absent and zero complete hosted preprocessed byte streams are identical
+between the two frozen source tips (2,222,963 bytes each; SHA256
+`d20719d22a3263e0430a5fa7c335b749d80040eb508f9ea67293ead2b5abb17f`), and
+the affected baseline/absent/zero hosted allocated-code/data/output gate
+passed again. The earlier valid target OFF evidence remains applicable.
+
+The fresh enabled-only retry `ef04oct29v2onrP` on frozen `b77a61a9` passed
+rc=0 in 42 s, with the existing `missing.txt` present and empty. ELF SHA256:
+`e75b2d3a373001d7609b4cb59843df83686055c5fc398296dd107209af62dfac`.
+Recipe-derived explicit overrides were:
+
+```sh
+ACTOR_FORMAT32=1 NATIVE_ACTOR_UV16=1 ACTOR_TRANSACTION=1 \
+NATIVE_ACTOR_SKIN_LAZY=1 ACTOR_SOURCE_SPAN=1 NATIVE_FE_CONTINUATION=1
+```
+
+Actual resolved dependencies remain portrait=1, PS2_LEON=1, PS2 rig=1,
+LEON_LOD=0, transaction=1 and lazy skin=1. Unrelated release dependencies,
+look/LOD selections and guard exclusions are preserved. All 527 C++ compile
+commands in each arm were checked: both new shared-layout definitions are
+absent in OFF and present in ON across game, platform and modules. The actual
+coarse portrait object calls snapshot acquisition and the lower native
+submit; native_model calls the replay entrypoint; native_ui links retirement
+hooks. All new exports link. Target assertions passed for the 72-byte
+descriptor and current 1,408-byte primitive allocation; the linked current
+palette is 1,296 bytes (27 matrices) and the existing reservation object is
+1,032 bytes (512 additional guarded bytes).
+
+The exact current named private headers in PS2_LEON_DIR were hashed before
+launch and bound again after build: runtime
+`2e894b70fe971469765de96b3f6141324b33785e2914b51dcf63b442b4dc4c65`, hair
+`7c28382e175c24bdeb4eedf504dee0f7b5da76d82b4486b6e5e76e14677c76be`, pl08
+identity `c27c02300e55f06be5560855904be11ef4e446106b518def9530d0a2f7f5b17f`.
+They were consumed from their unchanged existing location; no regenerated
+asset or package was substituted. The enabled ELF section deltas including
+FORMAT32/SOURCE_SPAN dependencies are text +8,512, rodata +288 and BSS +1,632
+bytes; these are linked structural costs, not a runtime memory or speed result.
+Private source/header/resolved-compile/link/identity receipts remain in
+`/root/probe/engine-ef04-20261029/release{1,2}`; failed and passing arms remain
+separate. Original source trees and receipts are retained.
+
+**NEXT:** Coordinator integration of the exact qualified public code/test
+bytes with the newest owner documentation prefix preserved. Real current
+portrait artwork, admissions/refusals, effective output, look/STRICT,
+heap/stack/full cost and physical-console acceptance remain separate gates.
+The independently proved host producer/queue/emitter and target compile do
+not establish those live gates or other encoded producer families.
+
+**BLOCKED:** No source, host or target-build blocker for this bounded slice.
+Both runner sessions ended and the coordinator SDK slot was released. No
+emulator, disc mastering, SD/Pi action, asset/package overwrite, publication,
+push/integration or private upload occurred in this worker.

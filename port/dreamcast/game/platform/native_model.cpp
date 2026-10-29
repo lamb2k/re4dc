@@ -14,6 +14,9 @@
 // Only an explicitly enabled base-texture diagnostic currently uses this path.
 #include "re4dc_screen.h"
 #include "native_model.h"
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "native_actor_continuation.h"
+#endif
 #include "native_draw_owner_stamp.hpp"
 #if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
@@ -831,6 +834,11 @@ struct Scope {
 }  // namespace b28m
 #endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    // This view belongs to the existing deferred queue; it carries an exact
+    // primitive-owner snapshot ticket. No encoded failure can enter GX.
+    if(p && p->native_pose){re4dc_actor_native_submit_result(p,1);return;}
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28

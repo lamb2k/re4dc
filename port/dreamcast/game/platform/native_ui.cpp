@@ -406,6 +406,12 @@ extern "C" void* re4dc_rtt_override_texture(unsigned* w,unsigned* h);
 #endif
 #include "hud_source_mask.h"
 #include "native_model.h"
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "native_actor_continuation.h"
+#if !RE4DC_COPY_LEAN || !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM
+#error NATIVE_FE_CONTINUATION requires the existing copied deferred-view streaming owner
+#endif
+#endif
 #include "native_static.h"
 #include "native_render_profile.hpp"
 #include "pc_sampler.h"
@@ -1197,6 +1203,9 @@ unsigned avd_queue_epoch;
 void actor_fade_queue_reset();
 #endif
 void reset_deferred(){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    re4dc_actor_native_pose_retire();
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::DeferredReset);
 #endif
@@ -7861,6 +7870,9 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    re4dc_actor_native_pose_retire();
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::PacketAbort);
 #endif
@@ -8503,12 +8515,24 @@ namespace {
 // (nullptr: none) and the same queue layout and admission. The view diff is
 // taken once into stack scratch (it was walked twice: size, then fill) and a
 // found lighting record supplies its own light set (no second list scan).
-int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
+int defer_part(const Re4dcModelPart* p,const SourceLighting* source
+#if RE4DC_NATIVE_FE_CONTINUATION
+    ,re4dc::NativeDrawResult* result=nullptr
+#endif
+){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(result)*result={re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#endif
     if(draining_parts){AVD_EVENT(Direct,nullptr,p,0);return 0;}
     if(source_draws_finished){AVD_EVENT(Direct,nullptr,p,1);RE4DC_PROFILE_COUNT(DirectTR,1);return 0;}
     if(select_model_pass(p)==PVR_LIST_OP_POLY){AVD_EVENT(Direct,nullptr,p,2);RE4DC_PROFILE_COUNT(DirectOP,1);return 0;}
     RE4DC_PROFILE_SCOPE(TranslucentEnqueue);
-    if(!frame_ready || stream_aborted)return 1;
+    if(!frame_ready || stream_aborted) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(result){*result={re4dc::NativeDrawOutcome::Refused};re4dc_model_result(2,0,0);}
+#endif
+        return 1;
+    }
     DeferredLighting* lighting=nullptr;
     if(source)for(auto* l=deferred_lights;l;l=l->next)
         if(same_lighting(l,*source)){lighting=l;break;}
@@ -8534,6 +8558,9 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
     if(required>deferred_top || deferred_top-required<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){
+#if RE4DC_NATIVE_FE_CONTINUATION
+            if(result)*result={re4dc::NativeDrawOutcome::Refused};
+#endif
             RE4DC_WHD_ABORT(1,__builtin_return_address(0),required);
 #if RE4DC_WORLD_HOLE_FIX
             // WORLD_HOLE_FIX (worldhole.mk): the queue is full: drop this translucent part only. Nothing of it was
@@ -8569,6 +8596,9 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(result)*result={re4dc::NativeDrawOutcome::Queued,0,1};
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_HIT(DeferredModel)
 #endif
@@ -8583,6 +8613,12 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
 extern "C" int re4dc_model_defer_part_unlit(const Re4dcModelPart* p){return defer_part(p,nullptr);}
 #elif RE4DC_COPY_LEAN
 extern "C" int re4dc_model_defer_part_unlit(const Re4dcModelPart*){return 0;}
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+extern "C" int re4dc_model_defer_native_result(const Re4dcModelPart* p,re4dc::NativeDrawResult* result){
+    if(!p || !result){if(result)*result={re4dc::NativeDrawOutcome::Refused};return 1;}
+    return defer_part(p,p?p->lighting:nullptr,result);
+}
 #endif
 extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
 #if RE4DC_COPY_LEAN && RE4DC_D349_RENDERER_STACK
