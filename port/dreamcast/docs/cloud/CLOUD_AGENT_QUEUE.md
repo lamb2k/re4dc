@@ -53,6 +53,14 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 ## Status
 
+**Recovery activity 2026-10-29 17:31 EDT:** current GitHub integration `d45eb759dd92685255929625e04fae3d7a46bca7`;
+surviving cloud worktrees/commits and dirty world candidate preserved. Three
+observed workers actively validate EF15 OFF identity, EF08 corrected profile and
+EF14 real-target fixture. Other cards remain assigned/review-queued, not claimed
+active. [Full worker/task/deliverable/wait matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1731-edt).
+Root serializes shared documents and publication. No source slice in this
+checkpoint is integrated/enabled/accepted.
+
 | Build | What | State |
 |---|---|---|
 | Systemic 2026-10-29 | [Current architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) and [EF backlog](ENGINE-FIX-BACKLOG-20261029.md) | new7c4c9200 review integrated; cloud ASSIGNED all remaining public-source/synthetic implementation, including new actor/world/binding/simulation continuations. [Full matrix/file handoffs](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Local frozen EF04/09/11/16 finish qualification/delivery; then cloud owns their source follow-ons. Private/runtime/console gates remain local. No enabled/hardware acceptance claim. |

@@ -9,6 +9,16 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
+## Recovery execution checkpoint: 2026-10-29 17:31 EDT
+
+Integration fetched through GitHub is `d45eb759dd92685255929625e04fae3d7a46bca7`. Preserved unpublished candidates
+exist for the first three priorities and several independent follow-ons. EF15,
+EF08 and EF14 have observed active recovery workers; remaining cards are assigned,
+review-queued or waiting on exact file/producer boundaries. See the [truthful
+16-card and six-track activity matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-activity-2026-10-29-1731-edt).
+No full-card acceptance follows. Default0, exact disabled identity and local
+runtime/private/console/integration ownership remain unchanged.
+
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
 ## Current execution agreement
