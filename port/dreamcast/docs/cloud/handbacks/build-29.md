@@ -1996,3 +1996,10 @@ unmatched counter for resume ON.
 Owner source `7ded0fa430f122eebeb38d2617d8ff19c67cd5c2` landed by clean no-ff merge `fe7df69cc70c311ef67456d8100c77d397fde605`. 5 full target arms including RTT and full OFF identity. Typed sprite/FIFO/RTT/water results preserve legacy int/void ABI and admission. Corrected pre-aborted stream returns PartialAbort with zero publication, forbidding source replay; actual W29 child aggregation retains terminal outcomes. Submitted/queued does not mean presented. Actual selected output/lifecycle/current memory/cost/console remain.
 
 Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `16344938e85ff022da6892e734326154cd0fbf11e594a992fb681a11c39b2665`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
+
+
+## Answers (owner): 2026-10-30 esp1b-grid source admission
+
+Owner source `73e73e02202f3b6b3658f0b8a72b8ed2d5cf004b` landed by clean no-ff merge `46a2c7e9e8562e4b5af9e16a63084632aff49447`. 5 full target arms including RTT and full OFF identity. Actual registered CommonTrans id1b spline producer preserves source cell order/diagonals/matrix/UV through the existing bounded descriptor and FIFO. Only admitted unmasked/unlit RGB565 clamp class; source work/matrix copied before publication, no retained source pointer. Actual incidence/look/current-memory/full-cost/console remain.
+
+Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `1147fc2326ef4bedf28f59fcd68d22e8f09848ba038e7a3da640f2d1b703482d`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
