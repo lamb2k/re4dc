@@ -1,0 +1,181 @@
+using Outcome12=re4dc::NativeDrawOutcome;
+static unsigned alpha_cases12,guard_cases12,phase12;
+static void fresh12(){
+    reset();gate::packets.clear();raw_sends=abort_send=0;load_action12=0;cold12=false;trim_calls12=0;
+    for(auto& work:system12.Esp_tex_tbl)work={};
+    auto& base=system12.Esp_tex_tbl[0];auto& mask=system12.Esp_tex_tbl[1];
+    base.pTpl=&base_palette12;base.pTexObj=base_objects12;base.nTexObj=2;
+    mask.pTpl=&mask_palette12;
+    for(unsigned r=0;r<3;++r){base.mtx[r][r]=1;mask.mtx[r][r]=1;}
+    mask.mtx[0][0]=2;mask.mtx[0][3]=.25f; // distinct finite mask UVs are irrelevant to TEXA=1
+    for(unsigned i=0;i<2;++i){
+        base_desc12[i].textureHeader=&base_headers12[i];base_desc12[i].CLUTHeader=nullptr;
+        mask_desc12[i].textureHeader=&mask_headers12[i];mask_desc12[i].CLUTHeader=nullptr;
+        base_headers12[i]={(void*)(std::uintptr_t(i)+1),64,64,14};
+        mask_headers12[i]={(void*)(std::uintptr_t(i)+3),16,32,4};
+        GXInitTexObj(&base_objects12[i],base_headers12[i].data,64,64,14,0,0,0);
+    }
+    for(auto& callback:EspTransTbl)callback=nullptr;
+    EspTransTbl[0]=EspCommonTrans;s_effect_col={128,64,32,192};
+    rtt::capture_slot=-1;world_autosort=false;
+    level_accept12=true;level_calls12=0;channel_ok03=true;channel_calls03=0;
+    identity03(parent12.mat);identity03(pG->Cam.v_mat);
+}
+static cEsp effect12(){
+    cEsp e;e.m_Mat[0][0]=e.m_Mat[1][1]=1;e.m_Mat[2][3]=-10;return e;
+}
+static pvr_poly_hdr_t queued_header12(){
+    CHECK(deferred_first);pvr_poly_hdr_t header;
+    std::memcpy(&header,reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode,sizeof header);
+    return header;
+}
+static unsigned alpha_mode12(const pvr_poly_hdr_t& header){return (header.d2>>24)&1U;}
+static void no_publication12(const re4dc::NativeDrawResult& r,Outcome12 expected){
+    if(r.outcome!=expected || r.published() || deferred_count || raw_sends)
+        std::fprintf(stderr,"expected=%u actual=%u sent=%u queued=%u nodes=%u raw=%u alpha_case=%u phase=%u\n",
+            unsigned(expected),unsigned(r.outcome),r.submitted,r.queued,deferred_count,raw_sends,alpha_cases12,phase12);
+    CHECK(r.outcome==expected && !r.published() && !deferred_count && !raw_sends);++guard_cases12;
+}
+static void alpha12(){
+    for(unsigned base_alpha:{0U,128U,255U})for(unsigned scale:{0U,1U})for(unsigned alpha=0;alpha<256;++alpha){
+        fresh12();auto e=effect12();if(scale)e.m_Tool_flg|=0x20000;
+        s_effect_col.a=alpha;entries[0].package.sample12=(base_alpha<<24)|0x123456;
+        CHECK(EspSpriteEligible(&e));const auto result=EspSpriteEmitResult03(&e);
+        const unsigned expected=scale?std::min(255U,alpha*4):alpha;
+        if(expected<=1){no_publication12(result,Outcome12::Culled);CHECK(!lookups);}
+        else{
+            CHECK(result.outcome==Outcome12::Queued && result.queued==1 && entries[0].frame==frame);
+            const auto header=queued_header12();CHECK(alpha_mode12(header)==PVR_TXRALPHA_DISABLE);
+            CHECK(header.argb==(expected<<24|0x804020));
+            // Captured native operation: RGB uses the unchanged Entry and
+            // raster RGB; alpha is raster-only even for transparent colored base.
+            const auto sample=entries[0].package.sample12;
+            CHECK((sample&0xffffff)==0x123456 && (header.argb>>24)==expected);
+            CHECK(header.mode3==unsigned(std::uintptr_t(entries[0].package.address)));
+            CHECK(entries[0].package.upload_complete() && trim_calls12==0);
+        }
+        ++alpha_cases12;
+    }
+}
+static void material_headers12(){
+    fresh12();auto e=effect12();
+    // Ordinary/masked/masked/ordinary/masked: every actual emitted header
+    // must bind the right material even while both API paths share one Entry.
+    for(unsigned mask:{0U,1U,1U,0U,1U}){
+        e.m_Tool_flg=mask?0x4000:0;
+        CHECK(EspSpriteEmitResult03(&e).outcome==Outcome12::Queued);
+    }
+    CHECK(deferred_count==5);drain();CHECK(gate::packets.size()==5);
+    const unsigned wanted[]={PVR_TXRALPHA_ENABLE,PVR_TXRALPHA_DISABLE,PVR_TXRALPHA_DISABLE,PVR_TXRALPHA_ENABLE,PVR_TXRALPHA_DISABLE};
+    pvr_poly_hdr_t active{};unsigned index=0;
+    for(const auto& packet:gate::packets){
+        if(packet.bytes.size()==96)std::memcpy(&active,packet.bytes.data(),32);
+        else CHECK(packet.bytes.size()==64);
+        CHECK(alpha_mode12(active)==wanted[index++]);
+        CHECK(active.mode3==unsigned(std::uintptr_t(entries[0].package.address)));
+    }
+#if defined(RE4DC_ESP_SETUP_BATCH)
+    CHECK(gate::packets[2].bytes.size()==64);
+    CHECK(gate::packets[0].bytes.size()==96 && gate::packets[1].bytes.size()==96 && gate::packets[3].bytes.size()==96 && gate::packets[4].bytes.size()==96);
+#endif
+    fresh12();e=effect12();e.m_Tool_flg=0;CHECK(EspSpriteEmitResult03(&e).outcome==Outcome12::Queued);
+    const auto ordinary=queued_header12();CHECK(trim_calls12>0);fresh12();e=effect12();CHECK(EspSpriteEmitResult03(&e).outcome==Outcome12::Queued);
+    const auto masked=queued_header12();
+    CHECK(ordinary.mode1==masked.mode1 && ordinary.mode2==masked.mode2 && ordinary.mode3==masked.mode3);
+    CHECK(ordinary.argb==masked.argb && (ordinary.d2^masked.d2)==(1U<<24));
+}
+static void classes12(){
+    fresh12();auto e=effect12();CHECK(EspMaskClass12(&e));
+    for(unsigned bit:{0x40U,0x80U,0x2000U,0x10000U,0x100000U,0x200000U,0x8000U,0x800000U}){
+        fresh12();e=effect12();e.m_Tool_flg|=bit;CHECK(!EspMaskClass12(&e));
+        no_publication12(EspSpriteEmitResult03(&e),Outcome12::UnsupportedBeforePublication);
+    }
+    for(unsigned owner:{0xd1U,0xd2U,0xffU}){fresh12();e=effect12();e.info.owner=owner;CHECK(!EspMaskClass12(&e));}
+    fresh12();e=effect12();EspTransTbl[0]=nullptr;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.m_Id=0xff;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.m_Id=0x1b;EspTransTbl[0x1b]=EspCommonTrans;e.m_Flg=0x10;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.m_Shimmer_type=1;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.xA4=0;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.xA5=1;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.xA6=1;CHECK(!EspMaskClass12(&e));
+    for(unsigned format:{0U,1U,2U,3U,5U,6U,8U,9U,14U}){fresh12();e=effect12();mask_headers12[0].format=format;CHECK(!EspMaskClass12(&e));}
+    for(unsigned kind=0;kind<8;++kind){
+        fresh12();e=effect12();auto& base=system12.Esp_tex_tbl[0];auto& mask=system12.Esp_tex_tbl[1];
+        if(kind==0)mask.Owner=0xd2;if(kind==1)base.Owner=0xd2;if(kind==2)mask.pTpl=nullptr;
+        if(kind==3)e.m_Ptn_no=2;if(kind==4)e.m_MaskPtn_no=2;if(kind==5)mask_desc12[0].textureHeader=nullptr;
+        if(kind==6)base.pTexObj=nullptr;if(kind==7)mask_headers12[0].width=0;
+        CHECK(!EspMaskClass12(&e));
+    }
+    fresh12();e=effect12();system12.Esp_tex_tbl[0].mtx[0][3]=.1f;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();system12.Esp_tex_tbl[1].mtx[1][2]=NAN;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();system12.Esp_tex_tbl[0].mtx[2][0]=NAN;CHECK(EspMaskClass12(&e)); // row not loaded
+    fresh12();e=effect12();GXTexObj copy=base_objects12[0];system12.Esp_tex_tbl[0].pTexObj=&copy;
+    CHECK(EspMaskClass12(&e));copy.dummy[5]=0;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();GXInitTexObjLOD(&base_objects12[0],0,1,0,0,0,0,1,0);CHECK(!EspMaskClass12(&e));
+    GXInitTexObjLOD(&base_objects12[0],1,1,0,0,0,0,1,0);CHECK(EspMaskClass12(&e));
+    GXInitTexObjLOD(&base_objects12[0],1,1,0,0,.25f,0,1,0);CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();base_objects12[0].dummy[3]=1;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();e.m_Ptn_no=1;e.m_MaskPtn_no=1;CHECK(EspMaskClass12(&e));
+    CHECK(EspSpriteEmitResult03(&e).outcome==Outcome12::Queued && entries[1].frame==frame);
+    system12.Esp_tex_tbl[1].Owner=0xd2;CHECK(!EspMaskClass12(&e));
+    fresh12();e=effect12();rtt::capture_slot=0;CHECK(!EspMaskClass12(&e));rtt::capture_slot=-1;
+}
+static void boundaries12(){
+    // Representation provenance is checked after actual Entry acquisition.
+    for(unsigned invalid=0;invalid<7;++invalid){
+        fresh12();auto e=effect12();auto& p=entries[0].package;
+        if(invalid==0)p.h.flags=0x80000000U; // marked PS2/coverage replacement
+        if(invalid==1)p.h.flags=1;
+        if(invalid==2)p.t.payload=2; // VQ may erase alpha-zero RGB
+        if(invalid==3)p.t.format=3; // palette
+        if(invalid==4)p.t.flags=4; // mip chain
+        if(invalid==5)p.t.flags=8; // palette expansion
+        if(invalid==6)p.t.reserved_0=1;
+        no_publication12(EspSpriteEmitResult03(&e),Outcome12::Refused);
+        CHECK(lookups==1);
+    }
+    fresh12();auto e=effect12();cold12=true;
+    CHECK(EspSpriteEmitResult03(&e).outcome==Outcome12::Queued && load_opens==1 && entries[0].frame==frame);
+    for(unsigned action=1;action<=10;++action){
+        fresh12();e=effect12();cold12=true;load_action12=action;phase12=action;
+        no_publication12(EspSpriteEmitResult03(&e),action==5?Outcome12::PartialAbort:Outcome12::Refused);
+        CHECK(load_opens==1);
+    }
+    fresh12();e=effect12();texture_missing=true;no_publication12(EspSpriteEmitResult03(&e),Outcome12::Refused);
+    fresh12();e=effect12();stream_aborted=true;auto r=EspSpriteEmitResult03(&e);
+    no_publication12(r,Outcome12::PartialAbort);CHECK(!r.fallback_allowed() && !lookups);
+    fresh12();e=effect12();source_draws_finished=true;abort_send=1;r=EspSpriteEmitResult03(&e);
+    CHECK(r.outcome==Outcome12::PartialAbort && r.submitted==1 && !r.fallback_allowed());
+    fresh12();e=effect12();fx_frame=frame;fx_count=RE4DC_EFFECT_SPRITE_MAX;no_publication12(EspSpriteEmitResult03(&e),Outcome12::Refused);
+    fresh12();e=effect12();deferred_top=0;model_packets=nullptr;gate::allocation_ok=false;phase12=15;
+    no_publication12(EspSpriteEmitResult03(&e),Outcome12::Refused);gate::allocation_ok=true;
+    fresh12();auto sprite12=sprite();sprite12.color=0xc0804020;sprite12.pad=1;
+    no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,1),Outcome12::UnsupportedBeforePublication);
+    sprite12.pad=0;sprite12.u[0]=NAN;
+    no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,1),Outcome12::UnsupportedBeforePublication);
+    sprite12.u[0]=0;no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,2),Outcome12::UnsupportedBeforePublication);
+    const auto image12=sprite12.image;sprite12.image.pixels=nullptr;
+    no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,1),Outcome12::UnsupportedBeforePublication);
+    sprite12.image=image12;sprite12.image.width=0;
+    no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,1),Outcome12::UnsupportedBeforePublication);
+    sprite12.image=image12;
+    rtt::capture_slot=0;no_publication12(re4dc_effect_masked_sprite12_result(&sprite12,1),Outcome12::UnsupportedBeforePublication);rtt::capture_slot=-1;
+    fresh12();e=effect12();level_accept12=false;
+    no_publication12(EspSpriteEmitResult03(&e),Outcome12::PolicySkip);CHECK(level_calls12==1 && !lookups);
+    fresh12();e=effect12();level_accept12=false;s_effect_col.a=1;e.m_Tool_flg|=0x20000;
+    no_publication12(EspSpriteEmitResult03(&e),Outcome12::PolicySkip);CHECK(level_calls12==1 && !lookups);
+}
+static void callback12(){
+    for(unsigned scale:{0U,1U})for(unsigned alpha=0;alpha<256;++alpha){
+        fresh12();auto e=effect12();e.m_Pos.z=-10;e.m_Col_a=alpha;if(scale)e.m_Tool_flg|=0x20000;
+        EspCommonTrans(&e);const unsigned expected=scale?std::min(255U,alpha*4):alpha;
+        CHECK(channel_calls03==1);
+        if(expected<=1)CHECK(!deferred_count && !raw_sends);
+        else CHECK(deferred_count==1 && (queued_header12().argb>>24)==expected && alpha_mode12(queued_header12())==PVR_TXRALPHA_DISABLE);
+    }
+}
+int main(){
+    alpha12();material_headers12();classes12();boundaries12();callback12();
+    std::printf("{\"alpha_cases\":%u,\"refusals_and_culls\":%u,\"assertions\":%u,\"sprite_bytes\":%zu,\"fast\":%u,\"setup\":%u,\"grid\":%u}\n",
+        alpha_cases12,guard_cases12,gate::assertions,sizeof(Re4dcEffectSprite),RE4DC_ESP_SPRITE_FAST,RE4DC_ESP_SETUP_LEAN,RE4DC_ESP1B_GRID03);
+}

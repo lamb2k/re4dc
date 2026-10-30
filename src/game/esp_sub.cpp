@@ -322,21 +322,47 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #endif
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
 extern EspTransFunc EspTransTbl[0xFF];
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_EFFECT_LEAN || !RE4DC_NATIVE_DRAW_OUTCOMES
+#error EFFECT_MASK12 needs EFFECT_SPRITES, EFFECT_LEAN and NATIVE_DRAW_OUTCOMES
+#endif
+#include "effect_mask12.hpp"
+extern EspTransFunc EspTransTbl[0xFF];
+static int EspSpriteEligible12(cEsp* esp,bool mask12,bool grid03=false)
+#else
 static int EspSpriteEligible(cEsp* esp,bool grid03=false)
+#endif
 #define RE4DC_SPLINE_BLOCK03 ((esp->m_Flg & 0x10) && !grid03)
 #else
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_EFFECT_LEAN || !RE4DC_NATIVE_DRAW_OUTCOMES
+#error EFFECT_MASK12 needs EFFECT_SPRITES, EFFECT_LEAN and NATIVE_DRAW_OUTCOMES
+#endif
+#include "effect_mask12.hpp"
+extern EspTransFunc EspTransTbl[0xFF];
+static int EspSpriteEligible12(cEsp* esp,bool mask12,bool grid03=false)
+#else
 static int EspSpriteEligible(cEsp* esp)
+#endif
 #define RE4DC_SPLINE_BLOCK03 (esp->m_Flg & 0x10)
 #endif
 {
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    if(!esp)return 0;
+    const u32 tool12=esp->m_Tool_flg & (mask12?~0x4000U:~0U);
+#define RE4DC_ELIG_TOOL12 tool12
+    (void)grid03;
+#else
+#define RE4DC_ELIG_TOOL12 esp->m_Tool_flg
+#endif
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
     if(grid03 && (esp->m_Id!=0x1b || !(esp->m_Flg&0x10) || EspTransTbl[esp->m_Id]!=EspCommonTrans))return 0;
 #endif
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     // PVR_RTT (pvr_rtt.mk): inside a render target's OT bracket its effects draw into the target, whatever the owner.
     // Outside the bracket they never reach the screen: the GC draws them only into the target's EFB area.
-    if (esp->m_Tool_flg & 0x10000) {
-        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
+    if (RE4DC_ELIG_TOOL12 & 0x10000) {
+        return re4dc_rtt_capturing() && !((RE4DC_ELIG_TOOL12 & 0x4000) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
     }
 #endif
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
@@ -344,7 +370,7 @@ static int EspSpriteEligible(cEsp* esp)
     const u32 owner = esp->info.owner;
 #if defined(RE4DC_LAKE_NIGHT_FX) && RE4DC_LAKE_NIGHT_FX
     if (EspLakeNightOwner(owner)) {
-        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
+        const int ok = !((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
         if ((re4dc_lake_fx_seen++ & 0x3FF) == 0) {
             re4dc_lake_fx_log("lake fx: frame=%u room=%x seen=%u id=%x ok=%d\n", (unsigned) pG->Frame_cnt,
                               (unsigned) G_ROOM_ID, (unsigned) re4dc_lake_fx_seen, (unsigned) esp->m_Id, ok);
@@ -359,7 +385,7 @@ static int EspSpriteEligible(cEsp* esp)
     // mask / render-target / blend checks. Draw time only: no effect state, spawn or Rnd() change.
     if (owner == 0x22) {
         static u32 s_trap_room = ~0U;
-        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
+        const int ok = !((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
         if (s_trap_room != G_ROOM_ID) {
             s_trap_room = G_ROOM_ID;
             re4dc_log("trap fx: room=%03x first owner-22 sprite id=%02x tex=%02x ok=%d\n", (unsigned) G_ROOM_ID,
@@ -395,12 +421,20 @@ static int EspSpriteEligible(cEsp* esp)
         return 0; // muzzle flash (WEPxx), the shot's core effects, blood (EM10)
     }
 #endif
-    if ((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1) {
+    if ((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1) {
         return 0; // mask stage, texture-render target, Esp1b spline, non-blend modes
     }
     return 1;
 }
 #undef RE4DC_SPLINE_BLOCK03
+#undef RE4DC_ELIG_TOOL12
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#include "esp_mask12.inc"
+static int EspSpriteEligible(cEsp* esp,bool grid03=false){
+    if(esp && (esp->m_Tool_flg&0x4000))return !grid03 && EspMaskClass12(esp);
+    return EspSpriteEligible12(esp,false,grid03);
+}
+#endif
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
 #include "effect_uv12.hpp"
 static int Esp1bGridClass03(cEsp* esp){
