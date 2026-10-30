@@ -51,7 +51,7 @@ The surviving `codex/world-clip-20261029` candidate was not replaced. Its origin
 source commit `13109debcac832fac371df7420cd6ca4cd7deb2b` and synchronized tip
 `5fa74f503e2449cf354e63a35b52d7ab82869598` are preserved locally. To avoid leaving
 the substantive patch only in the ephemeral executor, its exact original
-format-patch is now [durably checkpointed as WIP](../recovery/20261029-world-clip-WIP.patch)
+format-patch is now [durably checkpointed as WIP](../recovery/20261029-world-clip-WIP.patch.gz)
 on the cloud recovery branch. SHA256: `b763c5395be96ac5def02f15d95b994f2f2c8210b79b4d5537546cdfd99d7fcc`.
 
 This is archival patch evidence, not applied production source, a new test run,
@@ -1023,3 +1023,7 @@ The final ALLON image and stock fixture base have identical primary geometry byt
 The distinct stock QA60 fixture reached r101 and source logs report the prepared plan admitted223 bounds/22951B, with planned39929 and declines0 by globalframe600. The r103 QA-menu endpoint was not observed. Source review shows its trigger requires300 consecutive eligible free-play polls and resets on any failed predicate; globalframe600 does not establish that interval. Damaged raw logs remain private and unchanged, so no absence-of-fault or memory PASS is inferred. No identical retry, guard change or source defect claim follows from this missing endpoint.
 
 Cloud continues the assigned ordered paging/whole-part completion, precise mutation and stream/clip source work using meaningful synthetic boundary fixtures; independent implementation does not wait for a private oversized example. Local retains actual package/lifecycle/output/look/memory/cost/console gates. All controls/defaults and file-writer ownership remain as the existing handoff.
+
+### Owner correction: exact WIP attachment transport, 2026-10-30
+
+The original 49,816-byte WIP patch is gzip packaged without changing any raw byte. Its [manifest](../recovery/20261029-world-clip-WIP.manifest.json) records both sizes and SHA256 values. Decompress with `gzip -dc 20261029-world-clip-WIP.patch.gz > /tmp/re4-world-clip-WIP.patch` to recover the original. This packaging correction passes the repository whitespace check without rewriting the patch or weakening that check. The attachment remains unfinished work; no clean application, source implementation, target execution or acceptance is implied.

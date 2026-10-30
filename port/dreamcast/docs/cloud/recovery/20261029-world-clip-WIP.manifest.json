@@ -1,0 +1,11 @@
+{
+  "format": "gzip",
+  "original_filename": "20261029-world-clip-WIP.patch",
+  "original_bytes": 49816,
+  "original_sha256": "b763c5395be96ac5def02f15d95b994f2f2c8210b79b4d5537546cdfd99d7fcc",
+  "archive_filename": "20261029-world-clip-WIP.patch.gz",
+  "archive_bytes": 14414,
+  "archive_sha256": "c4c5f110fdb62e329c247724aa0b13da3a8e76911ffdc96a696123cfab3f2e64",
+  "status": "WIP_NOT_ACCEPTED",
+  "scope": "Byte-exact transport of the original unfinished patch; no whitespace normalization, apply/compile/semantic acceptance or integration claim."
+}
