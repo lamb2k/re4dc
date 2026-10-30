@@ -1,0 +1,21 @@
+{
+  "baseline": "88e3045ac48ffce4253759c6229796c1755accce",
+  "recipe_reader": "port/dreamcast/tools/cloud/build18/build_profile.py:recipe_inputs",
+  "common_overrides": [
+    "ACTOR_TRANSACTION=1", "COARSE_SOURCE_ACTORS=1", "ACTOR_SKIN_RESERVE=1", "NATIVE_ACTOR_FAST=1",
+    "NATIVE_ACTOR_SKIN_LAZY=1", "NATIVE_MODEL_REGISTRY=1", "NATIVE_MODEL_REGISTRY_PACK=1", "ROUTE_CH22=1",
+    "ACTOR_SKIN_OWNER_POOL=0", "NATIVE_MODEL_REGISTRY_BONES=96", "NATIVE_ACTOR=1", "NATIVE_ACTOR_SKIN=1",
+    "SKIN_PALETTE_LAZY=1", "SKIN_ADMISSION32=1", "QA_MENU=0", "QA_LINK=0", "NMR_POOL_LOD=0"
+  ],
+  "arms": {
+    "both-absent": [],
+    "both-zero": ["ACTOR_PRESENTATION32=0", "SKIN_RECIPE32=0"],
+    "presentation-only": ["ACTOR_PRESENTATION32=1", "SKIN_RECIPE32=0"],
+    "recipe-only": ["ACTOR_PRESENTATION32=0", "SKIN_RECIPE32=1"],
+    "joint": ["ACTOR_PRESENTATION32=1", "SKIN_RECIPE32=1"]
+  },
+  "scoped_consumers": ["src/game/trans.o", "coarse_actor.o", "platform/native_actor_fast.o"],
+  "unaffected_scope_control": "platform/native_ui.o",
+  "status": "source/host qualified; primary Make accepted; no SDK; ACTOR_PRESENTATION32 remains parked outside broad ALLON",
+  "runtime_holds": "actual cabin r11c registry/package/pose/material/texture, look/gameplay/STRICT, current primitive/heap/stack/VRAM and console cost/acceptance"
+}
