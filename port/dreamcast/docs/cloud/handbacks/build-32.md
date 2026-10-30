@@ -1,5 +1,18 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 current-image first-radio route prerequisites
+
+Current b2/K40 fresh cases09 and10 completed181.2s and181.0s, each outer0/reader0/errors[]. They did not reach the first house fight, first-kill movie or radio. Zero combat shots and zero radio-close commands were attempted. Do not accept first-radio/async portrait/backing gates from these runs.
+
+The owner qualified a bounded read-only state helper against actual target ELF DWARF and then109 live samples per run,106 coherent play samples each. Current EmMgr is demand-backed: its logical60 slots and3552-byte element size are not a contiguous object array. The helper follows the actual alive list and checks source-frame, manager/Guid, serial, active flags and link identities; it skips frozen/subscreen phases. Synthetic guards rejected wrong shapes, cycles, stale serial/frame and retired pointers. Existing old helper assumptions about base layout/alive flags and Windows key posts were excluded. All controller inputs use explicit hexadecimal masks through existing native QA PAD.
+
+Case09's initial forest setup stopped far short of the house, so the nearby-combat gate sent no commands. A later external TCP connect was attempted after that owned guest had exited and failed before send; no command was sent or retried. Case10 added a source-bound normal approach toward the live class0x41 first-house door, with live/deadline checks before every RPC. Normal movement collided twice well before the door; the stall guard stopped it after ten acknowledged normal turn/movement commands, without A, shots or a forced path. A walkable ordinary route must be mapped from that measured endpoint before another distinct case; do not replay09/10 or force scene, coordinates, kill, radio, warp or state.
+
+The new title input fixture removes the old unused later movie-START entry so the first-kill movie cannot be skipped by a pending opening input. Natural movie EOF and spontaneous terminal-type open remain required. Existing inventory02 portrait/restore evidence and cloth08 camera scope retain their earlier limited meanings; no new render/material/memory/STRICT/cost/console/look acceptance follows.
+
+Before capture, the existing approved pruner was restricted to newly eligible idle>6h compiler objects/dependencies/precompiled headers. It removed48,293 files (2,675,861,143 logical bytes), with zero overlap with the previous candidate set and8,211 protected non-object hashes unchanged. Linked code/images, source, private inputs, captures and metadata remained protected; no runtime disk-floor override or SD/release/console action. Four source/tool correction blockers and CF11-PUB-01 remain unchanged. Local route work does not require cloud or user console input.
+
+
 ## Answers (owner): 2026-10-29 current K40 inventory runtime and exact input binding
 
 Current integrated runtimeb2c6cde32b2189dec2a0cf782387fc5bc195a569, compatible ALL ON K40 with QA_LINK1, now has a fresh Flycast ordinary-controller smoke on its own final image. The raw programme/all15 overlays and observer addresses were bound to the actual current ELF; all1648 non-code disc payloads match the retained earlier D13 runtime input (the four documented local controller/link slots are separate). This binds inputs and current code; no old D13 result was transferred.

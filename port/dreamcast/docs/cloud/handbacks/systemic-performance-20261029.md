@@ -1,5 +1,18 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 current-image first-radio route prerequisites
+
+Current b2/K40 fresh cases09 and10 completed181.2s and181.0s, each outer0/reader0/errors[]. They did not reach the first house fight, first-kill movie or radio. Zero combat shots and zero radio-close commands were attempted. Do not accept first-radio/async portrait/backing gates from these runs.
+
+The owner qualified a bounded read-only state helper against actual target ELF DWARF and then109 live samples per run,106 coherent play samples each. Current EmMgr is demand-backed: its logical60 slots and3552-byte element size are not a contiguous object array. The helper follows the actual alive list and checks source-frame, manager/Guid, serial, active flags and link identities; it skips frozen/subscreen phases. Synthetic guards rejected wrong shapes, cycles, stale serial/frame and retired pointers. Existing old helper assumptions about base layout/alive flags and Windows key posts were excluded. All controller inputs use explicit hexadecimal masks through existing native QA PAD.
+
+Case09's initial forest setup stopped far short of the house, so the nearby-combat gate sent no commands. A later external TCP connect was attempted after that owned guest had exited and failed before send; no command was sent or retried. Case10 added a source-bound normal approach toward the live class0x41 first-house door, with live/deadline checks before every RPC. Normal movement collided twice well before the door; the stall guard stopped it after ten acknowledged normal turn/movement commands, without A, shots or a forced path. A walkable ordinary route must be mapped from that measured endpoint before another distinct case; do not replay09/10 or force scene, coordinates, kill, radio, warp or state.
+
+The new title input fixture removes the old unused later movie-START entry so the first-kill movie cannot be skipped by a pending opening input. Natural movie EOF and spontaneous terminal-type open remain required. Existing inventory02 portrait/restore evidence and cloth08 camera scope retain their earlier limited meanings; no new render/material/memory/STRICT/cost/console/look acceptance follows.
+
+Before capture, the existing approved pruner was restricted to newly eligible idle>6h compiler objects/dependencies/precompiled headers. It removed48,293 files (2,675,861,143 logical bytes), with zero overlap with the previous candidate set and8,211 protected non-object hashes unchanged. Linked code/images, source, private inputs, captures and metadata remained protected; no runtime disk-floor override or SD/release/console action. Four source/tool correction blockers and CF11-PUB-01 remain unchanged. Local route work does not require cloud or user console input.
+
+
 ## Answers (owner): 2026-10-29 CF11-PUB-01 source-only observation follow-on
 
 **Cloud owns this bounded follow-on after the existing CLOTH_MATERIAL11 selector correction.** The owner has reached the selected live instance from both source-plane camera sides using ordinary controller input. Current b2/K40 source and actual ELF inspection identifies an evidence gap: source work slot/epoch/frame ownership is checked inside cloth.cpp, while ClothPrepared11 slot/incarnation are texture-cache identity. The shared deferred effect node retains packet bytes and a generic effect tag; direct publication streams immediately. Existing cloth21 row/quad/drop counters do not retain source-instance identity, and saved framebuffer PNGs are not TA packet traces. This is not a demonstrated missing-render bug and does not invalidate the scoped navigation results. It prevents claiming a direct selected-instance publication result from the existing observations.
