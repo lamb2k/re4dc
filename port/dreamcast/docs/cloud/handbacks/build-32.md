@@ -1880,3 +1880,10 @@ Inspect the actual aligned-row load, paired `frchg`, PR/SZ entry/exit and
 callback-free FTRV loop, and retain target stack output. Host numerics and
 packet equality do not prove SH4 FTRV bit equality or a frame gain. Source
 simulation remains on its existing scalar route.
+
+
+## Answers (owner): 2026-10-30 skin-table-reuse14 source admission
+
+Owner source `36c82cbfdc26c479a98c50788d2da2aa96694808` landed by clean no-ff merge `ecfd1d83e85b2d557681a400eba9041a22a6b273`. 7 full target arms and full OFF identity; actual emitted-word small-light regression fixed by cross-Frame direction refresh. Same existing four Frames/workspace budget; no new geometry reservation. Actual incidence, output, full-stack/current-memory/full-cost and console gates remain.
+
+Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `b4ccd7fde6e961e978c7eac576f31f84779dab31082d4bc456c0995f9d3c5f5e`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
