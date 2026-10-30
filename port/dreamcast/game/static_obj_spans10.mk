@@ -1,0 +1,24 @@
+# EF10: ordered original-GX spans through existing native plans; default off.
+STATIC_OBJ_SPANS10 ?= 0
+ifneq ($(words $(STATIC_OBJ_SPANS10)),1)
+$(error STATIC_OBJ_SPANS10 must be exactly 0 or 1)
+endif
+ifeq ($(filter-out 0 1,$(STATIC_OBJ_SPANS10)),)
+else
+$(error STATIC_OBJ_SPANS10 must be exactly 0 or 1)
+endif
+ifneq (x$(STATIC_OBJ_SPANS10),x$(strip $(STATIC_OBJ_SPANS10)))
+$(error STATIC_OBJ_SPANS10 must be exactly 0 or 1)
+endif
+ifeq ($(STATIC_OBJ_SPANS10),1)
+ifneq ($(STATIC_OBJ_BATCH),1)
+ifneq ($(STATIC_OBJ_BATCH),2)
+$(error STATIC_OBJ_SPANS10 requires STATIC_OBJ_BATCH=1 or 2)
+endif
+endif
+ifneq ($(STATIC_OBJ_LIFETIME05):$(MODEL_DRAW_PLANS):$(PLAN_OWNER_SCOPED):$(D349_RENDERER_STACK),1:1:1:1)
+$(error STATIC_OBJ_SPANS10 requires STATIC_OBJ_LIFETIME05=1 MODEL_DRAW_PLANS=1 PLAN_OWNER_SCOPED=1 D349_RENDERER_STACK=1)
+endif
+$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_STATIC_OBJ_SPANS10=1 -DRE4DC_MODEL_DRAW_PLANS=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/platform/native_model.o: PLATFORM_CPPFLAGS += -DRE4DC_STATIC_OBJ_SPANS10=1 -DRE4DC_STATIC_OBJ_BATCH=$(STATIC_OBJ_BATCH) -DRE4DC_STATIC_OBJ_LIFETIME05=1
+endif

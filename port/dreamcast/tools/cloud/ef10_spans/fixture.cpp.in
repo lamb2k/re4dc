@@ -1,0 +1,218 @@
+#include "native_model.h"
+#include "native_draw_owner_stamp.hpp"
+#include "static_obj_lifetime05.hpp"
+#include "static_obj_spans10.h"
+#include "static_obj_batch33.hpp"
+#include "native_draw_plan.hpp"
+#include "room_storage.hpp"
+#include "pvr_geometry.hpp"
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <array>
+#include <vector>
+#include <algorithm>
+#include <new>
+#ifdef __SANITIZE_ADDRESS__
+#include <sanitizer/asan_interface.h>
+#endif
+@ARENA@
+extern "C" void re4dc_log(const char*,...){}
+extern "C" void re4dc_missing(const char*){assert(false);}
+int pvr_prim(const void*,std::size_t){assert(false);return 0;}
+extern "C" int re4dc_ui_heap_free(){return 1024*1024;}
+extern "C" void re4dc_model_invalidate_pending(){}
+alignas(32) unsigned char metadata[64*1024],lighting_storage[8192],batch_storage[16384];
+extern "C" void* re4dc_model_metadata_storage(unsigned* n){*n=sizeof metadata;return metadata;}
+extern "C" void* re4dc_model_static_lighting_storage(unsigned* n){*n=sizeof lighting_storage;return lighting_storage;}
+extern "C" void* re4dc_model_preparation_storage(unsigned* n){*n=sizeof batch_storage;return batch_storage;}
+extern "C" void* re4dc_model_retained_storage(unsigned* n){*n=0;return nullptr;}
+extern "C" int re4dc_model_diagnostic_enabled(){return 1;}
+extern "C" int re4dc_actor_stream_encoded(const unsigned char*,unsigned){return 0;}
+
+unsigned room_generation=1,cell_incarnation=1;bool room_live=true,refuse_alloc=false;
+void* room_cell=nullptr;unsigned cell_bytes=0,allocations=0;
+extern "C" int re4dc_room4_live_generation(unsigned* n){*n=room_generation;return room_live;}
+extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned n,unsigned g){
+    return room_live && g==room_generation && p==room_cell && n<=cell_bytes?cell_incarnation:0;
+}
+extern "C" int re4dc_room4_cell_valid(const void* p,unsigned n,unsigned g){return re4dc_room4_cell_incarnation(p,n,g)!=0;}
+extern "C" void* re4dc_static_alloc(unsigned n){
+    if(refuse_alloc)return nullptr;
+    assert(!room_cell);room_cell=std::aligned_alloc(32,(n+31)&~31U);cell_bytes=n;++allocations;return room_cell;
+}
+extern "C" void re4dc_static_free(void* p){assert(p==room_cell);std::free(p);room_cell=nullptr;cell_bytes=0;++cell_incarnation;}
+extern "C" int re4dc_room4_state(unsigned* g,unsigned* c,unsigned* b,unsigned* s,unsigned* r){
+    *g=room_generation;*c=bool(room_cell);*b=cell_bytes;*s=*r=0;return room_live;
+}
+struct ModelPart {unsigned char pad[24];unsigned size,reserved;};
+struct ModelData {unsigned displist_num;};
+struct cModelInfo {const ModelData* pData;};
+struct cModel {unsigned kindid,id;};
+struct Global {unsigned Frame_cnt=1;} global;
+Global* pG=&global;
+#define DFA26_MODEL_HIT(reason,n)
+@SOB@
+struct PartBlob {ModelPart part;unsigned char list[32];};
+struct Archive {
+    alignas(32) PartBlob blobs[16];
+    alignas(32) unsigned char positions[9*8],normals[9*4],uv[9*4],colors[9*4];
+} archive{};
+extern "C" int re4dc_static_submit(const Re4dcModelPart*){return 0;}
+extern "C" int re4dc_actor_submit(const Re4dcModelPart*){return 0;}
+extern "C" void re4dc_actor_materialize(const Re4dcModelPart*){}
+extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p){
+    p->positions=archive.positions;p->normals=archive.normals;return 1;
+}
+unsigned header[8]{},serial=0,commits=0,begins=0,aborts=0,status=0,action=0;
+bool streaming=false,fail_reserve=false,fail_begin=false,fixture_static=false;unsigned packet_capacity=256;
+alignas(32) pvr_vertex_t packet[256];
+struct Effective {std::array<unsigned,8> header;pvr_vertex_t vertex;};
+std::vector<Effective> published;
+re4dc::sob33::Run header_run;
+void poison(){
+#ifdef __SANITIZE_ADDRESS__
+    __asan_poison_memory_region(&archive,sizeof archive);
+#endif
+}
+void unpoison(){
+#ifdef __SANITIZE_ADDRESS__
+    __asan_unpoison_memory_region(&archive,sizeof archive);
+#endif
+}
+void retire(){
+    re4dc_model_unbind_draw_owner(&archive);++room_generation;
+    if(room_cell){std::free(room_cell);room_cell=nullptr;cell_bytes=0;++cell_incarnation;}
+    poison();
+}
+extern "C" int re4dc_model_packet_reserve(const Re4dcModelPart*,Re4dcModelPacket* p){
+    *p={packet,packet_capacity,1,1};return !fail_reserve;
+}
+extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
+    ++begins;header[0]=0x80000000u;header[1]=p->image.format;header[2]=p->wrap_s;header[3]=p->material_flags;
+    header[4]=p->cull;header[5]=p->blend;header[6]=p->depth_mode;header[7]=p->source_key[2];
+    if(action==1){action=0;retire();}
+    if(action==2){action=0;out->u_scale=.5f;}
+    if(action==3){action=0;header_run.barrier();serial+=64;}
+    return !fail_begin;
+}
+extern "C" void re4dc_model_packet_commit(unsigned n){
+    ++commits;
+    if(!n){header_run.barrier();return;}
+    assert(n<=packet_capacity && packet[n-1].flags==PVR_CMD_VERTEX_EOL);
+    const auto decision=header_run.begin(header,global.Frame_cnt,0,serial,true);
+    serial+=(n+(decision==re4dc::sob33::Reuse?0:1))*32;
+    for(unsigned i=0;i<n;++i){Effective e{};std::copy(header,header+8,e.header.begin());e.vertex=packet[i];published.push_back(e);}
+    assert(header_run.finish(global.Frame_cnt,0,serial,n,true));
+    if(action==4){action=0;retire();}
+}
+extern "C" int re4dc_model_packet_streaming(){return streaming;}
+extern "C" void re4dc_model_packet_abort(){++aborts;published.clear();header_run.barrier();}
+extern "C" void re4dc_model_result(unsigned r,unsigned,unsigned){status=r;}
+extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){assert(!p->blend && p->alpha_state==255);return 0;}
+
+cModel model{0,0x41};ModelData data{3};cModelInfo info{&data};
+re4dc::render::SourceLighting light{};
+void be16(unsigned char* p,unsigned n){p[0]=n>>8;p[1]=n;}
+void le16(unsigned char* p,unsigned n){p[0]=n;p[1]=n>>8;}
+Re4dcModelPart record(unsigned i){
+    Re4dcModelPart p{};p.model=&model;p.info=&info;p.part=&archive.blobs[i].part;
+    p.stream=archive.blobs[i].list;p.stream_bytes=32;p.positions=archive.positions;p.position_count=9;p.position_stride=8;
+    p.normals=archive.normals;p.normal_count=9;p.normal_stride=4;p.normal_shift=6;p.uv=archive.uv;p.lighting=&light;
+    p.static_geometry=fixture_static;
+    p.modelview[0]=p.modelview[5]=p.modelview[10]=1;p.modelview[11]=-10;
+    p.projection[1]=p.projection[3]=1;p.projection[5]=-1.f/99;p.projection[6]=-100.f/99;
+    p.viewport[2]=640;p.viewport[3]=480;p.alpha_state=255;p.cull=0;p.source_key[3]=re4dc::sob33::marker(data.displist_num,0);
+    return p;
+}
+void prepare(){
+    re4dc_model_bind_draw_owner(&archive,&archive,sizeof archive,0);
+    assert(re4dc_model_begin_asset_update());
+    for(unsigned i=0;i<data.displist_num;++i){auto p=record(i);assert(re4dc_model_prepare_draw_plan(&p)==1);}
+    re4dc_model_finish_asset_update();
+}
+void reset(unsigned n=3){
+    unpoison();re4dc_sob_room_leave();re4dc_model_reset_draw_plans();++global.Frame_cnt;
+    data.displist_num=n;room_live=true;refuse_alloc=false;fail_reserve=fail_begin=false;
+    packet_capacity=256;streaming=false;fixture_static=false;action=0;published.clear();header_run.barrier();serial=begins=commits=aborts=status=0;
+    light={};
+    for(unsigned i=0;i<16;++i){auto& b=archive.blobs[i];b={};b.part.size=32;b.list[0]=0x98;be16(b.list+1,3);
+        for(unsigned k=0;k<3;++k){const auto v=(i%3)*3+k;be16(b.list+3+k*6,v);be16(b.list+5+k*6,v);be16(b.list+7+k*6,v);}}
+    for(unsigned i=0;i<9;++i){const int xy[3][2]={{-2,-2},{2,-2},{0,2}};
+        le16(archive.positions+i*8,xy[i%3][0]+int(i/3));le16(archive.positions+i*8+2,xy[i%3][1]);
+        archive.normals[i*4+2]=64;le16(archive.uv+i*4,(i%3==1)?32768:0);le16(archive.uv+i*4+2,(i%3==2)?32768:0);}
+    prepare();
+}
+bool take(unsigned i,Re4dcModelPart p){return sob::take(&model,&info,&data,&archive.blobs[i].part,p);}
+void run(bool spans){
+    for(unsigned i=0;i<data.displist_num;++i){auto p=record(i);
+        if(spans)assert(take(i,p));else re4dc_model_submit(&p);}
+}
+bool equal(const std::vector<Effective>& a,const std::vector<Effective>& b){
+    return a.size()==b.size() && (a.empty() || !std::memcmp(a.data(),b.data(),a.size()*sizeof(Effective)));
+}
+int main(){
+    reset();run(false);const auto expected=published;assert(expected.size()==9);assert(begins==3);
+    reset();const auto before=re4dc_model_work_stats()->part_preparations;run(true);assert(equal(expected,published));
+#if RE4DC_STATIC_OBJ_SPANS10
+    assert(begins==1 && re4dc_model_work_stats()->part_preparations==before+1);
+#else
+    assert(begins==3 && re4dc_model_work_stats()->part_preparations==before+3);
+#endif
+    assert(sob::S->count==0 && sob::st.built==0 && sob::S->bytes==0);
+    puts("PASS ordered effective headers/vertices, consumed plans, zero GX copy, shared setup");
+    reset();auto lazy=record(0);lazy.positions=nullptr;re4dc_model_submit(&lazy);
+    assert(published.size()==3 && status==0);puts("PASS ordinary lazy-source view keeps its native consumer lifetime");
+    for(unsigned n:{2u,16u}){reset(n);run(false);const auto control=published;reset(n);run(true);assert(equal(control,published));}
+    puts("PASS bounded 2/16-part runs and original strip boundaries");
+    reset();auto p=record(0);p.modelview[3]=2;re4dc_model_submit(&p);for(unsigned i=1;i<3;++i){p=record(i);re4dc_model_submit(&p);}
+    const auto moved=published;
+    reset();p=record(0);p.modelview[3]=2;assert(take(0,p));p=record(1);assert(take(1,p));assert(take(2,record(2)));
+    assert(equal(moved,published) && begins>=2);puts("PASS moving-door placement splits existing pending run exactly");
+    reset();p=record(0);p.wrap_s=1;assert(take(0,p));assert(take(1,record(1)));assert(take(2,record(2)));
+    assert(published.size()==9 && published[0].header[2]==1 && published[3].header[2]==0);
+    puts("PASS animated material split retains current selected state");
+    const auto bounds_case=[](){fixture_static=true;for(unsigned i=0;i<3;++i)le16(archive.positions+i*8,100);prepare();};
+    reset();bounds_case();run(false);const auto bounded=published;
+    reset();bounds_case();run(true);assert(equal(bounded,published) && published.size()==6);
+    puts("PASS per-span bounds cannot hide visible sibling geometry");
+    const auto mixed_case=[](){const unsigned ops[]={0x90,0x80,0xa0};
+        for(unsigned i=0;i<3;++i){auto* s=archive.blobs[i].list;s[0]=ops[i];be16(s+1,i==1?4:3);
+            if(i==1){be16(s+21,4);be16(s+23,4);be16(s+25,4);}}prepare();};
+    reset();mixed_case();run(false);const auto mixed=published;
+    reset();mixed_case();run(true);assert(equal(mixed,published));
+    puts("PASS mixed triangle/quad/fan topology keeps effective vertex order");
+    reset();run(true);header_run.barrier();serial+=64;auto next=record(0);next.wrap_s=1;re4dc_model_submit(&next);
+    assert(published.size()==12 && published.back().header[2]==1);puts("PASS foreign producer barrier and changed material retain encounter order");
+#if RE4DC_STATIC_OBJ_SPANS10
+    reset();auto* cell=sob::S;assert(!cell);Re4dcModelSpan10 spans[3];
+    for(unsigned i=0;i<3;++i)spans[i]={&archive.blobs[i].part,archive.blobs[i].list,32};
+    const auto alive=[](const void*){return room_live;};p=record(0);
+    assert(!re4dc_model_submit_spans10(&p,spans,1,alive,nullptr));
+    assert(!re4dc_model_submit_spans10(&p,spans,17,alive,nullptr));
+    p.blend=1;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
+    p.material_flags=4;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
+    p.positions=nullptr;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
+    spans[1].bytes=~0U;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));assert(published.empty());
+    puts("PASS count/material/unknown-array/source-extent refusal before output");
+    reset();re4dc_model_unbind_draw_owner(&archive);run(true);assert(equal(expected,published)&&begins==3);
+    puts("PASS unpublished topology uses existing uncached individual consumer");
+    reset();re4dc_model_unbind_draw_owner(&archive);archive.blobs[0].list[8]=8; // beyond old SOB sentinel
+    prepare();run(false);const auto mutated=published;reset();
+    re4dc_model_unbind_draw_owner(&archive);archive.blobs[0].list[8]=8;prepare();run(true);assert(equal(mutated,published));
+    puts("PASS changed immutable publication rebuilds existing plans without copied lists");
+    reset();action=1;run(true);assert(published.empty() && status==2);unpoison();
+    puts("PASS bind callback retirement refuses protected old source before publication");
+    reset();streaming=true;packet_capacity=3;action=4;run(true);assert(aborts==1 && published.empty());unpoison();
+    puts("PASS retirement after streamed prefix aborts before reading sibling source");
+    reset();fail_reserve=true;run(true);assert(published.empty() && status==2);
+    reset();fail_begin=true;run(true);assert(published.empty() && status==2);
+    reset();action=2;run(true);assert(published.size()==9 && begins==1);
+    puts("PASS packet OOM/bind failure and alternate UV retry are bounded");
+    reset();assert(take(0,record(0)));re4dc_sob_room_leave();assert(!sob::S);assert(published.empty());
+    puts("PASS room leave drops pending spans without retaining source pointers");
+#endif
+    unpoison();re4dc_sob_room_leave();re4dc_model_unbind_draw_owner(&archive);
+    printf("PASS spans=%u\n",unsigned(RE4DC_STATIC_OBJ_SPANS10));
+}

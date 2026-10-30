@@ -18,6 +18,9 @@
 #include "native_actor_continuation.h"
 #endif
 #include "native_draw_owner_stamp.hpp"
+#if defined(RE4DC_STATIC_OBJ_SPANS10) && RE4DC_STATIC_OBJ_SPANS10
+#include "include/static_obj_spans10.h"
+#endif
 #if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
 #include "include/model_prepared_binding34.h"
 #include <type_traits>
@@ -73,6 +76,9 @@ extern "C" void re4dc_halt(const char*,int);
 #define RE4DC_MODEL_POSITION_CACHE 1
 #endif
 namespace {
+#if RE4DC_STATIC_OBJ_SPANS10
+#include "include/static_obj_spans10.inc"
+#endif
 Re4dcModelWorkStats work_stats{};
 #if RE4DC_D349_RENDERER_STACK
 // Conservative subset of the historical static-light reuse: exact dependency
@@ -330,6 +336,10 @@ struct Builder {
     }
 #endif
     bool streaming=false,bound=false,submitted=false,restart_uv=false,resource_failed=false;
+#if RE4DC_STATIC_OBJ_SPANS10
+    const PreparedSpans10* spans10=nullptr;
+    bool current10(){if(!spans10 || spans10->current())return true;resource_failed=true;return false;}
+#endif
 #if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
     const Re4dcModelPreparedBinding34* prepared34=nullptr;
     const Re4dcModelPart* live34=nullptr;
@@ -355,6 +365,9 @@ struct Builder {
     static_assert(sizeof(positions)==2048);
 #endif
     bool bind(){
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(!current10())return false;
+#endif
         if(bound)return true;
         const float u=packet.u_scale,v=packet.v_scale;
 #if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
@@ -364,6 +377,9 @@ struct Builder {
         }
 #else
         if(!re4dc_model_packet_begin(&p,&packet)){resource_failed=true;return false;}
+#endif
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(!current10())return false;
 #endif
 #if RE4DC_D349_RENDERER_STACK && defined(__sh__)
         matrix_dirty=true; // texture/storage binding may yield to another task
@@ -383,6 +399,9 @@ struct Builder {
         ++preparation_stats.packet_flushes;
 #endif
         re4dc_model_packet_commit(used);re4dc::reuse_audit::commit(used);committed_strips();submitted=true;
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(!current10())return false;
+#endif
 #if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
         // A streamed commit may yield before the next source corner is read.
         if(!current34()){resource_failed=true;return false;}
@@ -707,7 +726,11 @@ struct Builder {
         }}
         return true;
     }
+#if RE4DC_STATIC_OBJ_SPANS10
+    bool walk_plan(const re4dc::render::NativeDrawPlan& plan,const unsigned char* source=nullptr){
+#else
     bool walk_plan(const re4dc::render::NativeDrawPlan& plan){
+#endif
         RE4DC_PROFILE_SCOPE(Topology);
         unsigned ordinal=0;
 #if RE4DC_D349_RENDERER_STACK
@@ -722,7 +745,11 @@ struct Builder {
             }
 #endif
             for(unsigned repeat=0;repeat<part.repeats();++repeat){
+#if RE4DC_STATIC_OBJ_SPANS10
+                const auto* corners=(source?source:p.stream)+part.corner_offset(repeat,stride);
+#else
                 const auto* corners=p.stream+part.corner_offset(repeat,stride);
+#endif
 #if RE4DC_D349_RENDERER_STACK
                 unsigned at=0;
                 while(at<part.corner_count){
@@ -866,7 +893,11 @@ struct Scope {
 };
 }  // namespace b28m
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+static void submit_spans10_native(const Re4dcModelPart* p,const PreparedSpans10* spans10){
+#else
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#endif
 #if RE4DC_NATIVE_FE_CONTINUATION
     // This view belongs to the existing deferred queue; it carries an exact
     // primitive-owner snapshot ticket. No encoded failure can enter GX.
@@ -930,7 +961,11 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if RE4DC_NATIVE_STATIC
     // A bound scroll part draws its prelit package batches instead (or defers,
     // or is covered by an earlier part with the same material key).
+#if RE4DC_STATIC_OBJ_SPANS10
+    if(p && !spans10 && re4dc_static_submit(p)){PP_PATH(1);return;}
+#else
     if(p && re4dc_static_submit(p)){PP_PATH(1);return;}
+#endif
     // A fallback part leaves the static identity words behind: they differ per
     // object, and the translucent queue snapshots parts as word differences.
 #if defined(RE4DC_ACTOR_NO_CLEAR) && RE4DC_ACTOR_NO_CLEAR
@@ -966,6 +1001,9 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         }
     }
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+    if(!spans10){ // prequalified source GX spans use the existing generic native consumer
+#endif
 #if RE4DC_NATIVE_ACTOR
     // Non-scenery parts (actors, weapons, room SMD objects): dense per-info
     // preparation (native_actor.cpp). It declines before any side effect and
@@ -994,6 +1032,9 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     }
 #endif
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+    }
+#endif
 #if RE4DC_NATIVE_ACTOR_SKIN
     // Declined part of an info whose source CalcSk1_x pass was deferred
     // (trans.cpp): fill its pPosBuf/pNrmBuf now, before the walker reads them.
@@ -1002,10 +1043,18 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // positions): allocate and skin them now; on failure the checks below
     // reject the part.
     Re4dcModelPart lazy_part;
+#if RE4DC_STATIC_OBJ_SPANS10
+    if(!spans10 && p && !p->positions){lazy_part=*p;re4dc_actor_materialize_lazy(&lazy_part);p=&lazy_part;}
+#else
     if(p && !p->positions){lazy_part=*p;re4dc_actor_materialize_lazy(&lazy_part);p=&lazy_part;}
+#endif
     else
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+    if(!spans10 && p)re4dc_actor_materialize(p);
+#else
     if(p)re4dc_actor_materialize(p);
+#endif
 #endif
 #if RE4DC_MODEL_STREAM_FIX && RE4DC_NATIVE_ACTOR_FAST
     // A previous part can materialize this info while a deferred view still
@@ -1058,6 +1107,10 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     ++work_stats.part_preparations;
     Builder b{*p,{},projection,{near,far,RE4DC_SCREEN_W,RE4DC_SCREEN_H,project,nullptr},0,0,
               (p->flags&0x80000000U)?8U:6U,pow2_neg(p->shift)};
+#if RE4DC_STATIC_OBJ_SPANS10
+    b.spans10=spans10;
+    if(!b.current10()){re4dc_model_result(2,0,0);return;}
+#endif
     b.clip.context=&b.projection;
 #if RE4DC_D349_RENDERER_STACK
     if(p->lighting){
@@ -1081,13 +1134,21 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     const re4dc::render::NativeDrawPlan* plan=nullptr;
 #if RE4DC_MODEL_DRAW_PLANS
     int invalid=0;
+#if RE4DC_STATIC_OBJ_SPANS10
+    plan=spans10?spans10->spans[0].plan:re4dc_model_acquire_draw_plan(p,&invalid);
+    struct PlanLease { const re4dc::render::NativeDrawPlan* p; ~PlanLease(){if(p)re4dc_model_release_draw_plan();} } lease{spans10?nullptr:plan};
+#else
     plan=re4dc_model_acquire_draw_plan(p,&invalid);
     struct PlanLease { const re4dc::render::NativeDrawPlan* p; ~PlanLease(){if(p)re4dc_model_release_draw_plan();} } lease{plan};
+#endif
     if(invalid){re4dc_model_result(1,0,0);return;}
 #endif
     if(plan){PP_PATH(3);
 #if RE4DC_D349_RENDERER_STACK
         b.bounds=re4dc_model_acquired_bounds();b.locals=re4dc_model_acquired_locals();
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(spans10)b.bounds=nullptr; // one span's bounds cannot reject its siblings
+#endif
         if(b.bounds && !re4dc::render::group_visible(b.bounds->group,p->modelview,p->projection,p->viewport,near,far,0)){
             ++work_stats.culled_groups;re4dc_model_result(0,0,0);return;
         }
@@ -1103,7 +1164,13 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         if(!b.walk(false)){re4dc_model_result(1,0,0);return;}
     }
 #if RE4DC_D349_RENDERER_STACK
+#if RE4DC_STATIC_OBJ_SPANS10
+    // Admission is the source's immediate opaque class (unmasked/depth0/
+    // alpha255). It cannot enqueue a view that omits the sibling spans.
+    if(!spans10 && re4dc_model_defer_part(p))return;
+#else
     if(re4dc_model_defer_part(p))return;
+#endif
 #if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
     static_assert(std::is_trivially_destructible<Re4dcModelPart>::value &&
                   std::is_trivially_destructible<re4dc::render::SourceLighting>::value,
@@ -1153,7 +1220,25 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ModelLegacy, 1)
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+    const auto emit=[&](){
+        if(spans10){
+            for(unsigned i=0;i<spans10->count;++i){
+                if(!b.current10())return false;
+                const auto& s=spans10->spans[i];b.bounds=s.bounds;b.locals=s.locals;
+                b.select_local(nullptr);b.strip_vertices=0; // preserve original part boundaries
+                if(b.bounds && !re4dc::render::group_visible(b.bounds->group,p->modelview,p->projection,p->viewport,near,far,0)){
+                    ++work_stats.culled_groups;continue;
+                }
+                if(!b.walk_plan(*s.plan,s.source.stream))return false;
+            }
+            return true;
+        }
+        return plan?b.walk_plan(*plan):b.walk(true);
+    };
+#else
     const auto emit=[&](){return plan?b.walk_plan(*plan):b.walk(true);};
+#endif
     bool okay=emit();
     if(okay && b.used)okay=b.bind();
     if(!okay && b.restart_uv){
@@ -1176,8 +1261,23 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         re4dc_model_result(2,b.input,0);return;
     }
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+    if(!b.current10()){
+        if(b.submitted)re4dc_model_packet_abort();
+        re4dc_model_result(2,b.input,0);return;
+    }
+#endif
     re4dc_model_packet_commit(b.used);re4dc::reuse_audit::commit(b.used);b.committed_strips();re4dc_model_result(0,b.input,b.output);
 }
+#if RE4DC_STATIC_OBJ_SPANS10
+extern "C" void re4dc_model_submit(const Re4dcModelPart* p){submit_spans10_native(p,nullptr);}
+extern "C" int re4dc_model_submit_spans10(const Re4dcModelPart* p,const Re4dcModelSpan10* spans,
+        unsigned count,bool (*current)(const void*),const void* context){
+    PreparedSpans10 prepared;
+    if(!p || !prepared.prepare(*p,spans,count,current,context))return 0;
+    submit_spans10_native(p,&prepared);return 1;
+}
+#endif
 
 extern "C" const Re4dcModelWorkStats* re4dc_model_work_stats(){return &work_stats;}
 
