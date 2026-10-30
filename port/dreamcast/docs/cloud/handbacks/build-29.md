@@ -1989,3 +1989,10 @@ nearest-tie and literal-control tasks are addressed by this dated section.
 Actual LINE_LEAF/TAIL target execution and matched live gameplay/STRICT/cost
 remain separate from the host source adapter, and ELC_W_LEAVES stays an
 unmatched counter for resume ON.
+
+
+## Answers (owner): 2026-10-30 ef03-outcomes source admission
+
+Owner source `7ded0fa430f122eebeb38d2617d8ff19c67cd5c2` landed by clean no-ff merge `fe7df69cc70c311ef67456d8100c77d397fde605`. 5 full target arms including RTT and full OFF identity. Typed sprite/FIFO/RTT/water results preserve legacy int/void ABI and admission. Corrected pre-aborted stream returns PartialAbort with zero publication, forbidding source replay; actual W29 child aggregation retains terminal outcomes. Submitted/queued does not mean presented. Actual selected output/lifecycle/current memory/cost/console remain.
+
+Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `16344938e85ff022da6892e734326154cd0fbf11e594a992fb681a11c39b2665`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
