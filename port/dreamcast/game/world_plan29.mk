@@ -39,13 +39,21 @@ $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=1
 endif
 
 # Build31: qualify the existing streamed indexed producer with queued portal
-# completion. No clip producer receives a witness under this control.
+# completion. Its default composition leaves clip producers excluded.
 WORLD_PORTAL_STREAM31 ?= 0
 ifneq ($(words $(WORLD_PORTAL_STREAM31)),1)
 $(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
 endif
 ifneq ($(filter-out 0 1,$(WORLD_PORTAL_STREAM31)),)
 $(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
+endif
+# Depth-safe, oversized SCENERY_CLIP_GATHER producer. Near-crossing and lost
+# triangles still cannot publish a portal witness.
+WORLD_PORTAL_CLIP_GATHER31 ?= 0
+ifneq ("$(WORLD_PORTAL_CLIP_GATHER31)","0")
+ifneq ("$(WORLD_PORTAL_CLIP_GATHER31)","1")
+$(error WORLD_PORTAL_CLIP_GATHER31 must be exactly 0 or 1)
+endif
 endif
 
 # EF08: queued portal completion is separately opt-in; legacy portal stays exact.
@@ -60,8 +68,13 @@ ifeq ($(WORLD_PORTAL_COMPLETION),1)
 ifneq ($(WORLD_PORTAL29)$(SCENERY_SUBMIT_BATCH)$(PS2_PVS_BATCH_COMPOSE),111)
 $(error WORLD_PORTAL_COMPLETION needs WORLD_PORTAL29=1 SCENERY_SUBMIT_BATCH=1 PS2_PVS_BATCH_COMPOSE=1)
 endif
-ifneq ($(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),00)
-$(error WORLD_PORTAL_COMPLETION requires explicit SCENERY_CLIP_GATHER=0 SCENERY_CLIP_INDEXED26=0)
+ifneq ($(SCENERY_CLIP_INDEXED26),0)
+$(error WORLD_PORTAL_COMPLETION requires SCENERY_CLIP_INDEXED26=0)
+endif
+ifneq ($(SCENERY_CLIP_GATHER),0)
+ifneq ($(WORLD_PORTAL_CLIP_GATHER31),1)
+$(error WORLD_PORTAL_COMPLETION with SCENERY_CLIP_GATHER needs WORLD_PORTAL_CLIP_GATHER31=1)
+endif
 endif
 ifneq ($(SCENERY_STREAM),0)
 ifneq ($(WORLD_PORTAL_STREAM31),1)
@@ -82,10 +95,24 @@ ifeq ($(WORLD_PORTAL_STREAM31),1)
 ifneq ($(WORLD_PORTAL_COMPLETION)$(SCENERY_STREAM)$(PS2_PVS_BATCH_COMPOSE),111)
 $(error WORLD_PORTAL_STREAM31 needs WORLD_PORTAL_COMPLETION=1 SCENERY_STREAM=1 PS2_PVS_BATCH_COMPOSE=1)
 endif
-ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),000)
-$(error WORLD_PORTAL_STREAM31 needs SCENERY_EMIT_PREFETCH=0 and both SCENERY_CLIP controls=0)
+ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_INDEXED26),00)
+$(error WORLD_PORTAL_STREAM31 needs SCENERY_EMIT_PREFETCH=0 SCENERY_CLIP_INDEXED26=0)
+endif
+ifneq ($(SCENERY_CLIP_GATHER),0)
+ifneq ($(WORLD_PORTAL_CLIP_GATHER31),1)
+$(error WORLD_PORTAL_STREAM31 with SCENERY_CLIP_GATHER needs WORLD_PORTAL_CLIP_GATHER31=1)
+endif
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_STREAM31=1
+endif
+ifeq ($(WORLD_PORTAL_CLIP_GATHER31),1)
+ifneq ($(WORLD_PORTAL_STREAM31)$(WORLD_PORTAL_COMPLETION)$(SCENERY_CLIP_GATHER)$(PS2_PVS_BATCH_COMPOSE),1111)
+$(error WORLD_PORTAL_CLIP_GATHER31 needs qualified stream, portal completion, clip gather and PVS batch compose)
+endif
+ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_INDEXED26)$(CPU_BACKFACE)$(MESH_CLIP_LEAN)$(MESH_CLIP_ACCEPT),00000)
+$(error WORLD_PORTAL_CLIP_GATHER31 needs prefetch, indexed clip, CPU backface and alternate clipper off)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_CLIP_GATHER31=1
 endif
 
 # EF09 prepared world facts; absent/zero preserves all preceding paths/layouts.

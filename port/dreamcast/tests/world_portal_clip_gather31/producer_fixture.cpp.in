@@ -1,0 +1,254 @@
+// Actual source-extracted streamed gather, strip walker, clipper and receipt.
+// Synthetic mesh data; pvr_geometry.cpp is the production triangle clipper.
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <vector>
+#define RE4DC_SCENERY_STREAM 1
+#define RE4DC_SCENERY_CLIP_GATHER 1
+#define RE4DC_SCENERY_CLIP_INDEXED26 0
+#define RE4DC_WORLD_PORTAL_STREAM31 1
+#define RE4DC_WORLD_PORTAL_CLIP_GATHER31 1
+#define RE4DC_WORLD_PORTAL_COMPLETION 1
+#define RE4DC_WORLD_PORTAL29 1
+#define RE4DC_WORLD_PREPARED09 1
+#ifndef RE4DC_WORLD_PAGES31
+#define RE4DC_WORLD_PAGES31 1
+#endif
+#define RE4DC_SCENERY_SUBMIT_BATCH 1
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 1
+#define RE4DC_PS2_PVS 1
+#define RE4DC_PS2_STRIP_GROUPS 0
+#define RE4DC_SG_SELECT_LEAN 0
+#define RE4DC_PS2_WORLD_TRANSITION_OWNER 0
+#define RE4DC_MESH_CLIP_LEAN 0
+#define RE4DC_MESH_CLIP_ACCEPT 0
+#define RE4DC_MESH_DIRECT 1
+#define RE4DC_PS2_VERTEX_ALPHA 0
+#define RE4DC_SCENERY_DEDUP 0
+#define RE4DC_COPY_LEAN 0
+#define RE4DC_HW_LEAN 0
+#define RE4DC_WORLD_CENSUS24 0
+#define RE4DC_DRAW_SETUP_AUDIT 0
+#define RE4DC_DRAW_FALLBACK_AUDIT 0
+#define RE4DC_INV255 /255.0f
+#include "@ROOT@/port/dreamcast/room/pvr_geometry.hpp"
+#include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
+#include "@ROOT@/port/dreamcast/game/platform/include/scenery_clip_gather.hpp"
+#include "@ROOT@/port/dreamcast/game/platform/include/world_portal29.hpp"
+#include "@ROOT@/port/dreamcast/game/platform/include/world_page31.hpp"
+namespace re4dc::render {struct StaticCorner {float x,y,z;std::uint16_t u,v;std::uint32_t argb;};}
+using Vertex=re4dc::room::CompactVertex12;
+using Record=re4dc::room::Meshlet;
+#define RE4DC_SCENERY_RECORD Record
+static constexpr unsigned kClipOnce=16;
+struct {unsigned strips_clipped=0,strips_culled=0,vertices=0,strips=0,triangles_clipped=0;} stats;
+std::uint32_t vp_words[512]{};
+float vp_host_xmtrx[4][4]={{1,0,0,0},{0,1,0,0},{0,0,1,1},{0,0,0,0}};
+int pvr_prim(const void*,std::size_t){return 0;}
+namespace re4dc::vp {
+inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* end,
+    const std::uint8_t* oc,const pvr_vertex_t* cache,unsigned limit,std::uint32_t*& q,
+    unsigned& culled,unsigned& emitted){
+    while(s<end){
+        const unsigned n=*s;const auto code=codes(oc,s+1,n);
+        if(code.all&depth_mask(kChecksAll)){++culled;s+=n+1;continue;}
+        if((code.any&depth_mask(kChecksAll))||n>limit)return s;
+        if(code.all&screen_mask(kChecksAll))++culled;
+        else {auto* dst=reinterpret_cast<pvr_vertex_t*>(q);auto* last=emit(dst,cache,s+1,n);
+              q=reinterpret_cast<std::uint32_t*>(last);++emitted;}
+        s+=n+1;
+    }
+    return s;
+}
+}
+struct ClipEmitter {
+    struct Package {
+        std::array<Vertex,65> pool{};
+        std::array<std::uint16_t,65> offsets{};
+        Record record{};
+        re4dc::room::MeshPart part{};
+        const Vertex* vertices()const{return pool.data();}
+        const std::uint16_t* pool_offsets(const Record&)const{return offsets.data();}
+        const re4dc::room::MeshPart* parts()const{return &part;}
+    } package;
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+    std::array<Vertex,65> gathered_storage{};
+    Vertex* gathered=gathered_storage.data();
+    const Record* stream_l=&package.record;
+    std::array<std::uint8_t,66> strip{};
+    std::array<std::uint8_t,256> codes{};
+    std::array<pvr_vertex_t,256> cache_storage{};
+    pvr_vertex_t* cache=cache_storage.data();
+    std::array<pvr_vertex_t,8> scratch{};
+    std::array<std::uint32_t,2048> sq_storage{};
+    std::array<std::uint32_t,512> lut{};
+    std::vector<pvr_vertex_t> sent;
+    pvr_vertex_t* dst=scratch.data();std::uint32_t* sq=sq_storage.data();
+    std::uint8_t* outcodes=codes.data();
+    re4dc::room::CompactBatch batch{};
+    re4dc::render::ClipParameters clip{};
+    struct P {unsigned cull=0;float uv_offset[2]{};} p;
+    struct Packet {float u_scale=1,v_scale=1;} packet;
+    float mvq[12]{1,0,0,0, 0,1,0,0, 0,0,-1,0};
+    float near=.5f,far=2.f;
+    unsigned alpha=0xff000000U,used=0,output=0,input=0,slots=0,limit=64;
+    bool ps2=true,submitted=true,vertex_alpha=false,portal_depth_safe_clip=true;
+    unsigned pvs_pending[3]{};
+    bool flush(){return false;}
+    void put(unsigned n){sent.insert(sent.end(),dst+used,dst+used+n);sq+=8*n;slots+=n;}
+    void end_direct(){sq=nullptr;}
+    static std::uint32_t argb1555(std::uint16_t c){return re4dc::vp::argb1555(c);}
+    re4dc::render::StaticCorner corner(const Vertex& in)const{
+        return {float(in.x),float(in.y),float(in.z),in.u,in.v,argb1555(in.color)};
+    }
+    float u(float value)const{return (value+p.uv_offset[0])*packet.u_scale;}
+    float v(float value)const{return (value+p.uv_offset[1])*packet.v_scale;}
+    static void project(float& x,float& y,float& z,void*){
+        const float inverse=1.0f/(-z);x=100+2*x*inverse;y=200+20*y*inverse;z=inverse;
+    }
+@CLIP_VERTEX@
+@STREAM_GATHER@
+@LEAN_FLUSH@
+@STRIPS_LEAN@
+@CLIP_STRIP@
+    void setup(unsigned lost){
+        sent.clear();portal_depth_safe_clip=true;output=input=slots=used=0;
+        std::fill(gathered_storage.begin(),gathered_storage.end(),Vertex{});
+        for(unsigned i=0;i<65;++i){
+            package.offsets[i]=std::uint16_t(64-i);
+            package.pool[64-i]={std::uint16_t(i),std::uint16_t(i&1U),std::uint16_t(i<lost?0:1),
+                                 std::uint16_t(i),std::uint16_t(i),0xffff};
+            strip[i+1]=std::uint8_t(i);
+        }
+        strip[0]=65;
+        batch.uv_scale[0]=batch.uv_scale[1]=1;
+        re4dc::vp::build_lut(lut.data());
+        re4dc::vp::Constants k{};k.su=k.sv=k.scale_u=k.scale_v=1;
+        k.near_distance=near;k.far_distance=far;k.and_mask=~0U;k.lut=lut.data();k.finish();
+        re4dc::vp::prime(cache,256);
+        re4dc::vp::transform_sched_ix(reinterpret_cast<const re4dc::vp::Vertex12*>(package.pool.data()),
+                                      package.offsets.data(),65,cache,codes.data(),k);
+        clip={near,far,640,480,project,this};stream_clip_gather.begin();
+    }
+    int run(bool full=false){
+        int result=1;strips_lean(strip.data(),strip.data()+66,full?gathered:nullptr,batch,result);
+        return result;
+    }
+};
+static re4dc::portal29::Completion receipt(const ClipEmitter& e,bool whole=true){
+    struct Pick {unsigned let,nr;};const Pick pick{0,0xff};
+    assert(re4dc::portal29::whole_source(&pick,1,0,1));
+    return re4dc::portal29::Completion::emitted(1,e.submitted,e.input,e.output,whole && e.portal_depth_safe_clip);
+}
+struct Ps2Part {std::uint32_t crc=1,fnv=2;std::uint16_t width=64,height=64;
+                std::uint8_t pass=0,cull=0,texture=0,reserved=0;};
+struct World {float view[12]{},projection[7]{},viewport[6]{};Ps2Part meta{};Ps2Part* parts=&meta;
+              const void* lut=nullptr;const void* gather=nullptr;} ps2w;
+unsigned frame=1,abort_count=0,receipt_count=0,finish_count=0,close_count=0;
+bool plan_valid=true;unsigned mutate_on_close=0;
+unsigned re4dc_ui_frame(){return frame;}
+namespace wplan29 {bool current(unsigned){return plan_valid;}}
+void re4dc_model_packet_abort(){++abort_count;}
+struct {unsigned aborts=0;} c;
+struct Batch {bool held=true;};
+void re4dc_ps2_world_batch_close(Batch* b){
+    if(!b->held)return;
+    b->held=false;++close_count;
+    if(mutate_on_close==1)ps2w.view[0]=1;
+    if(mutate_on_close==2)++ps2w.meta.fnv;
+    if(mutate_on_close==3)plan_valid=false;
+}
+namespace wp29 {
+void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Completion& result,const unsigned*){
+    assert(ticket.serial==1);++finish_count;if(result.witnessed())++receipt_count;
+}
+}
+@PAGE_INPUTS@
+int flush_page(ClipEmitter& e,re4dc::page31::Part& proof,unsigned first,bool last,int result){
+    struct Pick {unsigned let,nr;};Pick pick{first,0xff};
+    proof.selected(&pick,1);
+    proof.emitted(result,e.submitted,e.input,e.output);
+    auto& cpkg=e.package;const auto& wp29_source=cpkg.parts()[0];
+    struct X {unsigned index=0,count=1,key[6]{};
+              re4dc::portal29::Ticket wp29_ticket{1,0,7,0};} x;
+    struct {Batch batch;} submit_scope;
+    ChunkPageInputs inputs{};float affine[12]{};inputs.capture(ps2w.meta,affine);
+    auto* active_page=&proof;const auto* active_page_inputs=&inputs;
+    const float* active_page_affine=affine;
+    const unsigned active_page_index=0,active_page_plan=1;
+    const bool active_page_last=last;unsigned nctx=1,npk=1;
+#if RE4DC_WORLD_PAGES31
+    const bool wp29_whole=re4dc::portal29::whole_source(&pick,1,0,2);
+#else
+    const bool wp29_whole=re4dc::portal29::whole_source(&pick,1,0,1);
+#endif
+    (void)wp29_whole;
+@RECEIPT@
+    assert(!submit_scope.batch.held);
+    return result;
+}
+void page_cases(){
+    auto reset=[](){ps2w.meta={};ps2w.parts=&ps2w.meta;
+        std::fill(std::begin(ps2w.view),std::end(ps2w.view),0.f);
+        frame=1;plan_valid=true;mutate_on_close=0;
+        abort_count=receipt_count=finish_count=close_count=0;c={};};
+    reset();re4dc::page31::Part good(0,2);ClipEmitter a,b;
+    a.setup(0);b.setup(0);assert(a.run()==1 && b.run()==1);
+    assert(flush_page(a,good,0,false,1)==1 && receipt_count==0);
+    assert(flush_page(b,good,1,true,1)==1 && receipt_count==1 && close_count==2);
+    reset();re4dc::page31::Part crossing(0,2);ClipEmitter c0,c1;
+    c0.setup(3);c1.setup(0);assert(c0.run()==1 && c1.run()==1);
+    assert(flush_page(c0,crossing,0,false,1)==1);
+    assert(flush_page(c1,crossing,1,true,1)==1 && receipt_count==0);
+    reset();re4dc::page31::Part refused(0,2);ClipEmitter r0,r1;
+    r0.setup(0);r1.setup(0);assert(r0.run()==1 && r1.run()==1);
+    assert(flush_page(r0,refused,0,false,1)==1);
+    assert(flush_page(r1,refused,1,true,0)==-1 && receipt_count==0 && abort_count==1);
+    reset();re4dc::page31::Part first_refused(0,2);ClipEmitter rf;
+    rf.setup(0);assert(rf.run()==1);
+    assert(flush_page(rf,first_refused,0,false,0)==-1 && receipt_count==0 && abort_count==1);
+    for(unsigned mutation=1;mutation<=3;++mutation){
+        reset();re4dc::page31::Part mutated(0,2);ClipEmitter m0,m1;
+        m0.setup(0);m1.setup(0);assert(m0.run()==1 && m1.run()==1);
+        assert(flush_page(m0,mutated,0,false,1)==1);
+        mutate_on_close=mutation;
+        assert(flush_page(m1,mutated,1,true,1)==-1 && receipt_count==0 && abort_count==1);
+    }
+}
+int main(){
+    ClipEmitter sparse;stats={};sparse.setup(0);
+    assert(sparse.run()==1 && stats.strips_clipped==1 && sparse.portal_depth_safe_clip);
+    assert(sparse.input==63 && sparse.output==63 && sparse.sent.size()==189);
+    // Every emitted TA command comes from the production clipper. Sparse
+    // gather and the old full gather must send the same complete packet.
+    ClipEmitter full;stats={};full.setup(0);
+    for(unsigned i=0;i<65;++i)full.gathered[i]=full.package.pool[full.package.offsets[i]];
+    full.stream_l=nullptr;
+    assert(full.run(true)==1 && full.sent.size()==sparse.sent.size());
+    assert(std::memcmp(full.sent.data(),sparse.sent.data(),sparse.sent.size()*sizeof(pvr_vertex_t))==0);
+    assert(receipt(sparse).witnessed());
+    // Three wholly near-rejected corners followed by a near crossing can
+    // balance one lost and one split triangle: equal totals are insufficient.
+    ClipEmitter crossing;stats={};crossing.setup(3);
+    assert(crossing.run()==1 && !crossing.portal_depth_safe_clip);
+    assert(crossing.input==63 && crossing.output==63);
+    assert(!receipt(crossing).witnessed());
+    ClipEmitter culled;stats={};culled.setup(65);
+    assert(culled.run()==1 && !receipt(culled).witnessed());
+    ClipEmitter backface;stats={};backface.setup(0);backface.p.cull=3;
+    assert(backface.run()==1 && backface.portal_depth_safe_clip && backface.output==0);
+    assert(!receipt(backface).witnessed());
+#if RE4DC_WORLD_PAGES31
+    page_cases();
+#else
+    ClipEmitter direct;stats={};direct.setup(0);assert(direct.run()==1);
+    re4dc::page31::Part unused(0,1);
+    assert(flush_page(direct,unused,0,true,1)==1 && receipt_count==1);
+    ClipEmitter near_crossing;stats={};near_crossing.setup(3);assert(near_crossing.run()==1);
+    assert(flush_page(near_crossing,unused,0,true,1)==1 && receipt_count==1);
+#endif
+}
