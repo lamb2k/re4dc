@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-30 00:42 EDT
+
+RE4-PLAN-SYNC-20261029-1202: local private heap-observer qualification is PREPARED_NOT_LAUNCHED at unchanged b2/K40. The actual ELF layout now feeds a bounded read-only selected-heap sampler. It maps logical number to physical handle, checks both allocator lists, reciprocal links, ordering/coalescing, sizes/ranges/totals/overlap, and rereads cell/descriptor/heap identity with phase/frame guards. Forty host bytearray boundary checks pass, including unrelated Cell28 rejection, exact4096-node limit, capture/PID identity and process-read failure propagation. These are host safeguards, not a live heap or memory-acceptance result.
+
+A changed480s case17 is prepared with identical source/image/route/controller and heap metadata sampling every3s, at most4096 cells and a50ms soft elapsed budget. It performs no target function calls, allocation, suspension or writes. Non-atomic observations, soft-budget OS-read limits and the existing caller ownership checks remain explicit. No case17 guest was launched: C remains below the unchanged17,012,097,024B preflight requirement. No unsafe prune, source/build/recipe/media/permission change or source-engine implementation was made locally.
+
+Natural first-radio flow16 remains scoped PASS:467 direct FE Submitted, queued0/refused0, matching3MiB source backing restore and61.719s coherent alive gameplay. Cached active-heap99,200B/PVR-allocator99,488B notes remain scoped, with active heap ID still unmeasured in that run. Whole-card, async/other producers, audio/STRICT/complete memory/stack/cost/physical-console gates remain open. CLOUD retains the actual next producer/queue source boundary and four existing source/tool corrections; no identical blocked merge or nominal UI replay. Local next is changed-observer qualification when capacity permits, plus hold-aware storage review; all private/current/release/baseline/capture/archive-base holds remain.
+
+
 ## Answers (owner): 2026-10-30 00:21 EDT
 
 RE4-PLAN-SYNC-20261029-1202: first-radio natural flow remains scoped PASS16 at unchanged b2/K40; no new guest or SDK build. Cached phase logs provide additional resource evidence only. After natural return,17 diagnostic samples report99,200B from re4dc_ui_heap_free(), whose current source is OSCheckHeap(Heap[MemGetCurrentHeap()].handle). The heap number was not logged; this is free payload in the currently selected logical heap, not total16MiB free and not proof of a leak.
