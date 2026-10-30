@@ -1,0 +1,36 @@
+Re4dcActorSkinLease* joint_saved=nullptr;
+void joint_build_reentry(){
+    CHECK(skin_recipe_building&&joint_saved);
+    const auto old=joint_saved->old[0];const unsigned held=re4dc_prim_recipe_credit();
+    CHECK(!actor_presentation32_forget_source(*joint_saved));
+    CHECK(joint_saved->old[0].palette==old.palette&&re4dc_prim_recipe_credit()==held);
+}
+void saved_row_kinds(){
+    for(unsigned kind=0;kind<6;++kind){
+        reset();cModel m{4};
+        if(kind==0){const void* key=&info_keys[6];CHECK(re4dc_actor_skin_reserve(7,&key,1));pending(m,6);}
+        else{nominate(7);pending(m,6);}
+        for(unsigned i=0;i<6;++i){
+            if(kind==2)CHECK(re4dc_actor_skin_register(7,&info_keys[i],nullptr,owner_palette,1));
+            if(kind>=3){pending(m,i);if(kind==4)CHECK(palette(&info_keys[i],2));
+                if(kind==5){auto p=part(&info_keys[i]);CHECK(re4dc_actor_materialize_lazy(&p));CHECK(skins[i].materialized==kSkinRecipeDone);}}
+        }
+        Re4dcActorSkinBinding bindings[6];for(unsigned i=0;i<6;++i)bindings[i]=binding(&info_keys[i]);
+        Re4dcActorSkinLease lease{};CHECK(re4dc_actor_skin_acquire(7,bindings,6,&lease));
+        CHECK(actor_presentation32_forget_source(lease));
+        CHECK(re4dc_prim_recipe_credit()==credit(2));
+        for(unsigned i=0;i<6;++i)CHECK(!lease.old[i].info&&!lease.old[i].palette&&!lease.old[i].entries);
+        CHECK(re4dc_actor_skin_finish_owner(&lease)&&re4dc_actor_skin_release(&lease));
+        CHECK(re4dc_prim_recipe_credit()==credit(2)&&find_skin(&info_keys[6],nullptr)->materialized==kSkinRecipePending);
+    }
+    reset();cModel m{4};nominate(7);for(unsigned i=0;i<7;++i)pending(m,i);
+    Re4dcActorSkinBinding bindings[6];for(unsigned i=0;i<6;++i)bindings[i]=binding(&info_keys[i]);
+    Re4dcActorSkinLease lease{};CHECK(re4dc_actor_skin_acquire(7,bindings,6,&lease));
+    joint_saved=&lease;build_reentry=joint_build_reentry;CHECK(palette(&info_keys[6],2));build_reentry=nullptr;joint_saved=nullptr;
+    CHECK(actor_presentation32_forget_source(lease)&&re4dc_actor_skin_release(&lease)&&!re4dc_prim_recipe_credit());
+}
+int main(){
+    producer_and_readers();replacement_and_cpu_fallback();allocator_and_margin();full_oom_and_terminals();
+    native_completion_and_retire();reentry_and_geometry_failure();saved_row_kinds();
+    std::printf("demand checks=%u empty/nominee/ordinary/pending/ready/done; source readers and fallback preserved\n",checks);
+}

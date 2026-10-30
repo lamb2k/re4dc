@@ -19,11 +19,9 @@ ifneq ($(NATIVE_MODEL_REGISTRY_BONES),128)
 $(error ACTOR_PRESENTATION32 requires the existing Luis-capable NATIVE_MODEL_REGISTRY_BONES=96 or 128 profile)
 endif
 endif
-ifneq ($(strip $(SKIN_RECIPE32)),)
-ifneq ($(SKIN_RECIPE32),0)
-$(error ACTOR_PRESENTATION32 and SKIN_RECIPE32 require separate joint source-credit qualification)
-endif
-endif
+# Joint recipe credit is accounted by the current validated owner before the
+# direct image forgets its source backups. Other recipe prerequisites remain
+# enforced by skin_recipe32.mk; cabin/runtime qualification remains separate.
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_PRESENTATION32=1 -DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_PRESENTATION32=1
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_PRESENTATION32=1

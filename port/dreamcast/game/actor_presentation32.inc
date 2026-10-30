@@ -4,9 +4,6 @@
 #if RE4DC_NMR_BONES < 90
 #error ACTOR_PRESENTATION32 requires the existing Luis-capable registry skeleton capacity
 #endif
-#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
-#error ACTOR_PRESENTATION32 and SKIN_RECIPE32 require a separate joint source-credit qualification
-#endif
 extern "C" int re4dc_actor_presentation32_required(const cModel*);
 struct ActorPresentation32Ticket {
     bool direct;
@@ -40,6 +37,12 @@ bool actor_presentation32_reserve(const Re4dcActorPlan& p,unsigned frame) {
 }
 bool actor_presentation32_forget_source(Re4dcActorSkinLease& lease) {
     if(!re4dc_actor_skin_validate(&lease))return false;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    // Pending source backups also own primitive palette credit. Account for
+    // this validated lease before dropping its no-longer-promised source rows;
+    // other actors' recipes and prepared-image fallback remain untouched.
+    if(!re4dc_actor_skin_finish_owner(&lease))return false;
+#endif
     // There was no source-preparation promise for this image. Never restore a
     // prior primitive owner's source palette when this fresh native lease ends.
     for(unsigned i=0;i<lease.count;++i) {

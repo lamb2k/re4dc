@@ -97,7 +97,7 @@ def make_control():
         opts=[x for x in PROFILE if x!=dependency]+[key+'='+('1' if value=='0' else '0')]
         assert check('1',options=opts).returncode,dependency
     assert check('1').returncode==check('1',options=PROFILE+['SKIN_RECIPE32=0']).returncode==0
-    assert check('1',options=PROFILE+['SKIN_RECIPE32=1']).returncode
+    assert check('1',options=PROFILE+['SKIN_RECIPE32=1']).returncode==0
     for bones in ('48','64','80','%','96%','96 128','96 '):
         assert check('1',options=PROFILE+['NATIVE_MODEL_REGISTRY_BONES='+bones]).returncode,bones
     assert check('1',options=PROFILE+['NATIVE_MODEL_REGISTRY_BONES=128']).returncode==0
@@ -105,7 +105,7 @@ def make_control():
         p=check('1',target='fixture/'+target+'.o')
         assert p.returncode==0,p.stderr
         assert p.stdout.count('-DRE4DC_ACTOR_PRESENTATION32=1')==int('native_ui' not in target)
-    print('PASS literal/default0 controls, prerequisites, three-TU scope and recipe composition guard')
+    print('PASS literal/default0 controls, prerequisites, three-TU scope and source-qualified recipe composition')
 
 def primary_make(out):
     kos=out/'kos';kos.mkdir()
@@ -142,9 +142,11 @@ def primary_make(out):
         args=shlex.split(line)
         assert args.count('-DRE4DC_ACTOR_PRESENTATION32=1')==int('native_ui' not in target),line
         if 'trans.o' in target:assert args.count('-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1')==1,line
-    rejected,_=check(['ACTOR_PRESENTATION32=1','SKIN_RECIPE32=1'])
-    assert rejected.returncode and 'joint source-credit qualification' in rejected.stderr,rejected.stderr
-    print('PASS primary Make effective flags/OFF identity/recipe absent,0,1 guard; '+
+    joint,commands=check(['ACTOR_PRESENTATION32=1','SKIN_RECIPE32=1'])
+    assert joint.returncode==0 and len(commands)==4,joint.stderr
+    for line,target in zip(commands,targets):
+        assert shlex.split(line).count('-DRE4DC_SKIN_RECIPE32=1')==int('native_ui' not in target),line
+    print('PASS primary Make effective flags/OFF identity/recipe absent,0,1 source support; '+
         ('primary include' if includes else 'coordinator include pending, second makefile loaded'))
 
 def layout32(out):

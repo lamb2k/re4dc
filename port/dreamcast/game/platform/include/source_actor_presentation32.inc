@@ -6,9 +6,6 @@
     RE4DC_ACTOR_SKIN_OWNER_POOL
 #error ACTOR_PRESENTATION32 requires the shared-table cabin registry transaction profile
 #endif
-#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
-#error ACTOR_PRESENTATION32 and SKIN_RECIPE32 require a separate joint source-credit qualification
-#endif
 extern "C" int re4dc_registry_presentation32_class(const cModel*);
 namespace {
 bool sourceActorPresentation32Active;
