@@ -33,15 +33,30 @@ struct WaterCorner { float vx,vy,vz,depth,sx,sy,sz,fog,u,v; };
 struct WaterOut {
     alignas(32) pvr_vertex_t buf[32];
     unsigned n=0,total=0;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    bool aborted=false;
+#endif
     void put(const pvr_vertex_t& v){buf[n++]=v;++total;if(n==32)flush();}
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    void flush(){if(n){stream_send(buf,n*sizeof(pvr_vertex_t));n=0;
+        aborted|=stream_aborted;
+    }}
+#else
     void flush(){if(n){stream_send(buf,n*sizeof(pvr_vertex_t));n=0;}}
+#endif
 };
 
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#define RE4DC_WATER03_EMPTY(state) return {re4dc::NativeDrawOutcome::state}
+re4dc::NativeDrawResult water_emit_result03(const WaterNode& w){
+#else
+#define RE4DC_WATER03_EMPTY(state) return
 void water_emit(const WaterNode& w){
+#endif
     const Re4dcWaterLayer& L=w.layer;
     const float* P=L.projection;const float* V=L.viewport;
     const float near=P[6]/(P[5]-1.0f),far=P[6]/P[5];
-    if(!(near>0.0f) || !(far>near) || V[2]<=0.0f || V[3]<=0.0f)return;
+    if(!(near>0.0f) || !(far>near) || V[2]<=0.0f || V[3]<=0.0f)RE4DC_WATER03_EMPTY(UnsupportedBeforePublication);
     Re4dcSubscreenQuad q{};
     std::memcpy(q.projection,P,sizeof(q.projection));std::memcpy(q.viewport,V,sizeof(q.viewport));
     const re4dc::render::ClipParameters clip{near,far,RE4DC_SCREEN_WF,RE4DC_SCREEN_HF,re4dc::subscreen::project,&q};
@@ -55,13 +70,16 @@ void water_emit(const WaterNode& w){
         gx[i]=x<-L.half_x?-L.half_x:x>L.half_x?L.half_x:x;
         gz[i]=z<-L.half_z?-L.half_z:z>L.half_z?L.half_z:z;
     }
-    if(gx[n]-gx[0]<1.0f || gz[n]-gz[0]<1.0f)return;   // the plane is outside the reach
+    if(gx[n]-gx[0]<1.0f || gz[n]-gz[0]<1.0f)RE4DC_WATER03_EMPTY(Culled);   // the plane is outside the reach
     WaterCorner row[2][n+1];
     const unsigned a=(L.argb>>24)&0xFFU;
     const float lr=float((L.argb>>16)&0xFFU)*(1.0f/255.0f),lg=float((L.argb>>8)&0xFFU)*(1.0f/255.0f),
                 lb=float(L.argb&0xFFU)*(1.0f/255.0f),la=float(a)*(1.0f/255.0f);
     WaterOut out;
     stream_send(&w.header,sizeof(w.header));
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    const bool header_aborted=stream_aborted;
+#endif
     for(unsigned j=0;j<=n;++j){
         WaterCorner* cur=row[j&1];
         for(unsigned i=0;i<=n;++i){
@@ -143,15 +161,36 @@ void water_emit(const WaterNode& w){
     }
     out.flush();
     water_verts+=out.total;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    // Even zero visible vertices follow a published header. No replay is legal.
+    return {header_aborted || out.aborted || stream_aborted?re4dc::NativeDrawOutcome::PartialAbort:
+        re4dc::NativeDrawOutcome::Submitted,1,0};
+#endif
 }
+#undef RE4DC_WATER03_EMPTY
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+void water_emit(const WaterNode& w){
+    const auto result=water_emit_result03(w);
+    if(result.outcome==re4dc::NativeDrawOutcome::PartialAbort)stream_aborted=true;
+}
+#endif
 }  // namespace
 
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#define RE4DC_WATER03_RETURN(state,legacy,sent,queued) return {re4dc::NativeDrawOutcome::state,sent,queued}
+extern "C" re4dc::NativeDrawResult re4dc_water_layer_result(const Re4dcWaterLayer* L,int* legacy_admitted){
+    if(legacy_admitted)*legacy_admitted=0;
+    // Preserve the old zero admission while forbidding replay of a terminal frame.
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+#else
+#define RE4DC_WATER03_RETURN(state,legacy,sent,queued) return legacy
 extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){
-    if(!L || !frame_ready || stream_aborted || draining_parts)return 0;
-    if(L->projection[0]!=0.0f)return 0;
-    for(float f:L->projection)if(!re4dc::render::is_finite(f))return 0;
-    for(float f:L->viewport)if(!re4dc::render::is_finite(f))return 0;
-    for(const auto& r:L->mv)for(float f:r)if(!re4dc::render::is_finite(f))return 0;
+#endif
+    if(!L || !frame_ready || stream_aborted || draining_parts)RE4DC_WATER03_RETURN(Refused,0,0,0);
+    if(L->projection[0]!=0.0f)RE4DC_WATER03_RETURN(UnsupportedBeforePublication,0,0,0);
+    for(float f:L->projection)if(!re4dc::render::is_finite(f))RE4DC_WATER03_RETURN(UnsupportedBeforePublication,0,0,0);
+    for(float f:L->viewport)if(!re4dc::render::is_finite(f))RE4DC_WATER03_RETURN(UnsupportedBeforePublication,0,0,0);
+    for(const auto& r:L->mv)for(float f:r)if(!re4dc::render::is_finite(f))RE4DC_WATER03_RETURN(UnsupportedBeforePublication,0,0,0);
     if(frame-water_log_frame>=600U){
         water_log_frame=frame;
         re4dc_log("WATERPS2 f=%u queued=%u dropped=%u missing=%u cells=%u clipped=%u verts=%u cover=%u reach=%u\n",frame,
@@ -183,7 +222,7 @@ extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
         fx_resident_only=false;fx_new_loads+=load_opens-opens;
 #endif
-        if(!e){++water_missing;return 0;}
+        if(!e){++water_missing;RE4DC_WATER03_RETURN(Refused,0,0,0);}
         const auto& t=e->package.textures()[0];
         if(RE4DC_COVER_W(e->package,L->image.width)!=t.width || RE4DC_COVER_H(e->package,L->image.height)!=t.height)
             ++water_cover;   // a picture smaller than its texture: the repeat wraps at the texture edge
@@ -203,12 +242,19 @@ extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){
     c.gen.fog_type=PVR_FOG_DISABLE;
 #endif
     pvr_poly_compile(&w.header,&c);
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    if(source_draws_finished){AVD_EVENT(Direct,nullptr,nullptr,4);stream_select(PVR_LIST_TR_POLY);
+        if(legacy_admitted)*legacy_admitted=1;
+        const auto result=water_emit_result03(w);++water_queued;return result;
+    }
+#else
     if(source_draws_finished){AVD_EVENT(Direct,nullptr,nullptr,4);stream_select(PVR_LIST_TR_POLY);water_emit(w);++water_queued;return 1;}
+#endif
     const unsigned required=kWaterNode+((sizeof(WaterNode)+31)&~31U),margin=8192;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-        if(!deferred_spill || required>deferred_spill_top){++water_dropped;return 0;}
+        if(!deferred_spill || required>deferred_spill_top){++water_dropped;RE4DC_WATER03_RETURN(Refused,0,0,0);}
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};
@@ -219,5 +265,14 @@ extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){
     AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting)));
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
     ++water_queued;
-    return 1;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    if(legacy_admitted)*legacy_admitted=1;
+#endif
+    RE4DC_WATER03_RETURN(Queued,1,0,1);
 }
+#undef RE4DC_WATER03_RETURN
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){
+    int admitted=0;(void)re4dc_water_layer_result(L,&admitted);return admitted;
+}
+#endif

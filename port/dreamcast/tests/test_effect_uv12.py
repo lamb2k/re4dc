@@ -14,6 +14,21 @@ REPO = ROOT.parents[1]
 INCLUDE = ROOT / "game/platform/include"
 
 
+def uv12_baseline_with_sprite03(baseline, current):
+    """Composite only the separately owned EF03 sprite bridge for NDO=1.
+
+    Keep the historical pre-UV12 TU everywhere else, including the UV adapter.
+    Global NDO OFF still compares that untouched historical TU directly.
+    """
+    old_start = baseline.index("static void EspSpriteEmit(cEsp* esp)")
+    typed = current.index("static re4dc::NativeDrawResult EspSpriteEmitResult03(")
+    new_start = current.rfind("#if defined(RE4DC_NATIVE_DRAW_OUTCOMES)", 0, typed)
+    end_marker = '#if RE4DC_PS2_FX_COMMON_HAZE\n#include "ps2_fx_common_haze.inc"'
+    old_end = baseline.index(end_marker, old_start)
+    new_end = current.index(end_marker, typed)
+    return baseline[:old_start] + current[new_start:new_end] + baseline[old_end:]
+
+
 def strip_adapter(esp):
     start = esp.index("// No sprite eligibility, billboard bound or callback substitution for strips.")
     return esp[start:esp.index("\n#if defined(RE4DC_EFFECT_TORCH)", start)].rsplit("\n#endif", 1)[0]
@@ -333,7 +348,8 @@ class EffectUv12(unittest.TestCase):
                     if target:
                         command += ["-D__sh__"]
                     expanded = []
-                    for source, definitions in ((baseline, []), (current, []),
+                    control = uv12_baseline_with_sprite03(baseline, current) if outcomes else baseline
+                    for source, definitions in ((control, []), (current, []),
                                                 (current, ["-DRE4DC_EFFECT_UV12=0"])):
                         run = subprocess.run(command + definitions + ["-x", "c++", "-"],
                                              input=source, capture_output=True, cwd=REPO, text=True)
@@ -341,6 +357,15 @@ class EffectUv12(unittest.TestCase):
                         expanded.append(run.stdout)
                     self.assertEqual(expanded[0], expanded[1])
                     self.assertEqual(expanded[0], expanded[2])
+                    self.assertEqual(expanded[1], expanded[2])
+                    if outcomes and not target:
+                        # A source delta outside the granted sprite region is
+                        # still visible to the complete-TU identity check.
+                        mutation = current + '\nextern int ef03_outside_region_negative_control;\n'
+                        run = subprocess.run(command + ["-x", "c++", "-"], input=mutation,
+                                             capture_output=True, cwd=REPO, text=True)
+                        self.assertEqual(run.returncode, 0, run.stderr)
+                        self.assertNotEqual(expanded[0], run.stdout)
         # The actual adapter and native packet implementation also produce the
         # same host object. Fixture-only assertion locations are pinned at
         # extraction boundaries; the complete production-TU comparison above
