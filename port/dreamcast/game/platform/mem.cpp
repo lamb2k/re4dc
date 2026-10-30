@@ -14,6 +14,12 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+#if !defined(RE4DC_LOG_ATOMIC16) || !RE4DC_LOG_ATOMIC16
+#error LOG_PUBLICATION16 requires LOG_ATOMIC16
+#endif
+#include "include/log_publication16.hpp"
+#endif
 #if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
 #if !defined(RE4DC_LOG_ATOMIC16) || !RE4DC_LOG_ATOMIC16
 #error LOG_RECORD16 requires LOG_ATOMIC16
@@ -196,13 +202,17 @@ char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
 int re4dc_log_console = 1;
 unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
 
-#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16 && defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+#if ((defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16) || (defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16)) && defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
 // Both entry points still count as one append for the existing crash test.
 static void logCrashAppend16()
 {
     static unsigned long calls;
     if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
 }
+#endif
+
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+#include "include/source_log_publication16.inc"
 #endif
 
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
@@ -212,6 +222,9 @@ static void logCrashAppend16()
 // the whole supplied length remains inside the mask, pending a target IRQ-duration qualification.
 void re4dc_log_raw(const char* data, unsigned long len)
 {
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    (void) re4dc_log_write16(data, len);
+#else
 #if RE4DC_LOG_ATOMIC || (defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16)
     const int irq = irq_disable();
 #endif
@@ -239,8 +252,10 @@ void re4dc_log_raw(const char* data, unsigned long len)
     if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
 #endif
 #endif
+#endif // LOG_PUBLICATION16
 }
 
+#if !defined(RE4DC_LOG_PUBLICATION16) || !RE4DC_LOG_PUBLICATION16
 #if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
 // Only the formatter's automatic array can enter this path. Formatting and
 // this bounded length scan finish before masking. The record remains contiguous
@@ -279,6 +294,7 @@ static void logAppend(const char* s)
     re4dc_log_raw(s, strlen(s));
 }
 #endif
+#endif // legacy append helpers
 
 void re4dc_set_stage(unsigned long stage)
 {
@@ -287,16 +303,46 @@ void re4dc_set_stage(unsigned long stage)
 
 void re4dc_log(const char* fmt, ...)
 {
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    using namespace re4dc::log_publication16;
+    auto& state = re4dc_log_publication16_state;
+    // Claim before touching libc. Reentry never formats or waits for an owner.
+    Result result = state.claim();
+    if (result != accepted) { state.report(result); return; }
+    const int sr = logEntrySr16();
+    if ((sr & 0xf0) || irq_inside_int() || !fmt) {
+        state.release();
+        state.report(fmt ? context : invalid);
+        return;
+    }
+#endif
     char line[256];
     va_list ap;
     va_start(ap, fmt);
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    const int formatted = vsnprintf(line, sizeof(line), fmt, ap);
+#else
     vsnprintf(line, sizeof(line), fmt, ap);
+#endif
     va_end(ap);
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    if (formatted < 0) { state.release(); state.report(invalid); return; }
+    unsigned long len = 0;
+    while (len < window && line[len]) ++len;
+    result = logCopyOwned16(line, len, false);
+    state.release();
+    state.report(result);
+    if (result != accepted) return;
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    logCrashAppend16();
+#endif
+#else
 #if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
     logAppendRecord16(line);
 #else
     logAppend(line);
 #endif
+#endif // LOG_PUBLICATION16
     if (re4dc_log_console) {
         fputs(line, stdout);
     }
