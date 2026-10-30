@@ -58,6 +58,11 @@ extern f32 ZFAR;
 #ifndef RE4DC_EFFECT_SPRITES
 #define RE4DC_EFFECT_SPRITES 0
 #endif
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_EFFECT_LEAN || !RE4DC_FX_STRIP21 || !RE4DC_NATIVE_DRAW_OUTCOMES
+#error ESP1B_GRID03 needs EFFECT_SPRITES, EFFECT_LEAN, FX_STRIP21 and NATIVE_DRAW_OUTCOMES
+#endif
+#endif
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST && !(RE4DC_EFFECT_LEAN && RE4DC_EFFECT_SPRITES)
 #error ESP_SPRITE_FAST needs EFFECT_LEAN=1 and EFFECT_SPRITES=1
 #endif
@@ -315,13 +320,23 @@ extern "C" int re4dc_rtt_capturing();
 #if defined(RE4DC_TRAP_FX) && RE4DC_TRAP_FX
 extern "C" void re4dc_log(const char* fmt, ...);
 #endif
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+extern EspTransFunc EspTransTbl[0xFF];
+static int EspSpriteEligible(cEsp* esp,bool grid03=false)
+#define RE4DC_SPLINE_BLOCK03 ((esp->m_Flg & 0x10) && !grid03)
+#else
 static int EspSpriteEligible(cEsp* esp)
+#define RE4DC_SPLINE_BLOCK03 (esp->m_Flg & 0x10)
+#endif
 {
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    if(grid03 && (esp->m_Id!=0x1b || !(esp->m_Flg&0x10) || EspTransTbl[esp->m_Id]!=EspCommonTrans))return 0;
+#endif
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     // PVR_RTT (pvr_rtt.mk): inside a render target's OT bracket its effects draw into the target, whatever the owner.
     // Outside the bracket they never reach the screen: the GC draws them only into the target's EFB area.
     if (esp->m_Tool_flg & 0x10000) {
-        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
     }
 #endif
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
@@ -329,7 +344,7 @@ static int EspSpriteEligible(cEsp* esp)
     const u32 owner = esp->info.owner;
 #if defined(RE4DC_LAKE_NIGHT_FX) && RE4DC_LAKE_NIGHT_FX
     if (EspLakeNightOwner(owner)) {
-        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
         if ((re4dc_lake_fx_seen++ & 0x3FF) == 0) {
             re4dc_lake_fx_log("lake fx: frame=%u room=%x seen=%u id=%x ok=%d\n", (unsigned) pG->Frame_cnt,
                               (unsigned) G_ROOM_ID, (unsigned) re4dc_lake_fx_seen, (unsigned) esp->m_Id, ok);
@@ -344,7 +359,7 @@ static int EspSpriteEligible(cEsp* esp)
     // mask / render-target / blend checks. Draw time only: no effect state, spawn or Rnd() change.
     if (owner == 0x22) {
         static u32 s_trap_room = ~0U;
-        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
         if (s_trap_room != G_ROOM_ID) {
             s_trap_room = G_ROOM_ID;
             re4dc_log("trap fx: room=%03x first owner-22 sprite id=%02x tex=%02x ok=%d\n", (unsigned) G_ROOM_ID,
@@ -380,11 +395,22 @@ static int EspSpriteEligible(cEsp* esp)
         return 0; // muzzle flash (WEPxx), the shot's core effects, blood (EM10)
     }
 #endif
-    if ((esp->m_Tool_flg & (0x4000 | 0x10000)) || (esp->m_Flg & 0x10) || esp->xA4 != 1) {
+    if ((esp->m_Tool_flg & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1) {
         return 0; // mask stage, texture-render target, Esp1b spline, non-blend modes
     }
     return 1;
 }
+#undef RE4DC_SPLINE_BLOCK03
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+#include "effect_uv12.hpp"
+static int Esp1bGridClass03(cEsp* esp){
+    const s8 part=esp?(s8)esp->m_Parts_no:0;
+    return esp && esp->m_Id==0x1b && (esp->m_Flg&0x10) && !(part>=-8 && part<=-3) &&
+        !esp->m_Shimmer_type && !(esp->m_Tool_flg&(0x40|0x2000|0x4000|0x10000|0x100000|0x200000|0x808000)) &&
+        esp->xA5==4 && esp->xA6==5 && EspSpriteEligible(esp,true);
+}
+static re4dc::NativeDrawResult Esp1bGridDraw03(cEsp*);
+#endif
 #if RE4DC_PS2FX_DRAW
 #include "player.h"
 #if RE4DC_EFFECT_PS2_HAZE
@@ -2321,6 +2347,9 @@ extern "C" int re4dc_rtt_core_wanted(u32 core_flg);
 #endif
 extern "C" int re4dc_esp_sprite_class(cEsp* esp)
 {
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    if(Esp1bGridClass03(esp))return EspTransTbl[esp->m_Id]==EspCommonTrans;
+#endif
 #if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
     if(re4dc_esp_strip21_eligible(esp))return 1;
 #endif
@@ -2402,6 +2431,11 @@ extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
 #endif
         return 0;   // faded out: ChannelSet's alpha is (u8) m_Col_a here (before the final-colour scale), so 0
     }
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    // The live control offsets can extend beyond the ordinary sprite radius.
+    // Existing policy/fade cuts above remain; native cells clip the full grid.
+    if(Esp1bGridClass03(esp))return 1;
+#endif
     if ((u8) (esp->m_Parts_no + 8) <= 5 || (esp->m_Tool_flg & (0x1000 | 0x400000 | 0x400 | 0x800)) ||
         (esp->m_Flg & 8)) {
         return 1;
@@ -2572,7 +2606,11 @@ void EspCommonTrans(cEsp* esp)
     // (no GX draw follows): the body would only build m_Mat and GX state that no draw and no game logic
     // reads. The cached projection / texture are forgotten, so a following sprite that trusts an OT run of
     // sprites (OtGetPrevKind() == 8) sets them itself, as this one would have.
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    if (!EspSpriteEligible(esp) && !Esp1bGridClass03(esp)) {
+#else
     if (!EspSpriteEligible(esp)) {
+#endif
         s_proj_type = -1;
         s_tex_no = -1;
         return;
@@ -2835,6 +2873,11 @@ void EspCommonTrans(cEsp* esp)
         RE4DC_RENDER_MTXConcat(esp->parent->mat, esp->m_Mat, esp->m_Mat);
         RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, esp->m_Mat, esp->m_Mat);
     }
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    if(esp->m_Id==0x1b && (esp->m_Flg&0x10)){
+        Esp1b_SpTrans(esp);return; // never replay a partially published grid
+    }
+#endif
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
     // Eligible (tested above): the native sprite is the only output. The normal matrix (read by no sprite),
     // the mask stage (ineligible) and the GX draw (EFFECT_LEAN) are skipped.
@@ -4458,11 +4501,19 @@ struct Esp1bSpWork {
     Vec p2;    // 0x10
     Vec p3;    // 0x1C
 };
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+#include "esp1b_grid03.inc"
+#endif
 
 // Draws esp1b's deformed sprite: the unit quad with the three corner offsets of Esp1bSpWork,
 // subdivided div x div, as textured quads with an up normal.
 void Esp1b_SpTrans(cEsp* esp)
 {
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    // EFFECT_LEAN has no rendering GX fallback. Preserve the void callback;
+    // typed callers distinguish an unpublished refusal from consumed output.
+    (void)Esp1bGridDraw03(esp);return;
+#endif
     static Vec p0;
     static Vec p1;
     static Vec p2;
