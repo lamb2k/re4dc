@@ -1,5 +1,14 @@
 Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
 
+## Owner switch-tracking correction 2026-10-30 00:53 EDT
+
+RE4-PLAN-SYNC-20261029-1202: owner tracking correction only. The00:42 canonical rewrite of Build32 Status omitted the literal landed marker required by the existing scanner. Nine Build32 controls were skipped and two local aliases reappeared, changing the displayed count39 to32. All39 remained release-OFF throughout; no source, recipe, hold or acceptance changed. Marker landed2e0a59bea is restored by bbda0fbd9.
+
+The unchanged actual scanner now returns the exact39-name owner-ledger set. A private coordinator guard replays the exact broken6fa1542cb queue and rejects its seven missing names, then accepts the corrected queue. The plan-sync verifier now checks the real switch set as well as agreement markers and22 matching plan/OPT rows. Intentional future landings/promotions/holds must update the owner ledger explicitly; do not weaken the guard or silently drop rows.
+
+First-radio16 scoped PASS, private heap-observer40hostguards/case17 PREPARED_NOT_LAUNCHED, four cloud source/tool blockers, disk preflight block and all async/other-producer/audio/memory/stack/cost/console/whole-card gates remain unchanged. No SDK/guest/ALLON rebuild or release/media operation was performed for this documentation repair.
+
+
 ## Owner private heap qualification checkpoint 2026-10-30 00:42 EDT
 
 RE4-PLAN-SYNC-20261029-1202: local private heap-observer qualification is PREPARED_NOT_LAUNCHED at unchanged b2/K40. The actual ELF layout now feeds a bounded read-only selected-heap sampler. It maps logical number to physical handle, checks both allocator lists, reciprocal links, ordering/coalescing, sizes/ranges/totals/overlap, and rereads cell/descriptor/heap identity with phase/frame guards. Forty host bytearray boundary checks pass, including unrelated Cell28 rejection, exact4096-node limit, capture/PID identity and process-read failure propagation. These are host safeguards, not a live heap or memory-acceptance result.

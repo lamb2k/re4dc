@@ -53,6 +53,8 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 ## Status
 
+**Tracking contract:** Status cells for integrated controls must retain `landed <integration-sha>` when rewritten. The owner off-switch scanner uses that marker and the control names in this table. A display-count change alone is never recipe enablement, parking or acceptance. Preview the real scanner against a proposed queue and reconcile the exact switch set with the owner ledger.
+
 | Build | What | State |
 |---|---|---|
 | Systemic 2026-10-29 | [Current architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) and [EF backlog](ENGINE-FIX-BACKLOG-20261029.md) | new7c4c9200 review integrated; cloud ASSIGNED all remaining public-source/synthetic implementation, including new actor/world/binding/simulation continuations. [Full matrix/file handoffs](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Local frozen EF04/09/11/16 finish qualification/delivery; then cloud owns their source follow-ons. Private/runtime/console gates remain local. No enabled/hardware acceptance claim. |
