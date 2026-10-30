@@ -25,6 +25,7 @@ GX_TF_I4 = 0
 GX_TF_I8 = 1
 GX_TF_IA4 = 2
 GX_TF_IA8 = 3
+GX_TF_RGB565 = 4
 GX_TF_RGBA8 = 6
 GX_TF_C4 = 8
 GX_TF_C8 = 9
@@ -108,7 +109,7 @@ def _expected_image_size(width: int, height: int, image_format: int) -> int:
         return ((width + 7) // 8) * ((height + 7) // 8) * 32
     if image_format in (GX_TF_I8, GX_TF_IA4, GX_TF_C8):
         return ((width + 7) // 8) * ((height + 3) // 4) * 32
-    if image_format == GX_TF_IA8:
+    if image_format in (GX_TF_IA8, GX_TF_RGB565):
         return ((width + 3) // 4) * ((height + 3) // 4) * 32
     if image_format == GX_TF_RGBA8:
         return ((width + 3) // 4) * ((height + 3) // 4) * 64
@@ -379,6 +380,23 @@ def decode_indexed(image: TplImage) -> list[tuple[int, int, int, int]]:
     return pixels
 
 
+def decode_rgb565(image: TplImage) -> list[tuple[int, int, int, int]]:
+    # Same source layout used by extract_ui_images.decode_16: big-endian
+    # RGB565 in 4x4 tiles. Reuse the existing channel expansion; no tint/boost.
+    pixels = [(0, 0, 0, 255)] * (image.width * image.height)
+    offset = 0
+    for tile_y in range(0, image.height, 4):
+        for tile_x in range(0, image.width, 4):
+            for row in range(4):
+                for column in range(4):
+                    value = struct.unpack_from(">H", image.data, offset)[0]
+                    offset += 2
+                    x, y = tile_x + column, tile_y + row
+                    if x < image.width and y < image.height:
+                        pixels[y * image.width + x] = (*_expand_565(value), 255)
+    return pixels
+
+
 def decode_image(image: TplImage) -> list[tuple[int, int, int, int]]:
     if image.format == GX_TF_CMPR:
         return decode_cmpr(image)
@@ -390,6 +408,8 @@ def decode_image(image: TplImage) -> list[tuple[int, int, int, int]]:
         return decode_ia4(image)
     if image.format == GX_TF_IA8:
         return decode_ia8(image)
+    if image.format == GX_TF_RGB565:
+        return decode_rgb565(image)
     if image.format == GX_TF_RGBA8:
         return decode_rgba8(image)
     if image.format in (GX_TF_C4, GX_TF_C8):

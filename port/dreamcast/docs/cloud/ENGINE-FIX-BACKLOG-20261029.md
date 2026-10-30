@@ -452,6 +452,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF11. Represent cloth as a native sheet
 
+**2026-10-29 recovery source delivery:** Current bounded two-texture cloth class and public raw RGB565 producer implemented; actual source ownership, sampler, both upload contents, SQ drain and FIFO outcomes verified. Seven tests including156 source cases per normal/sanitizer arm, full producer-to-Package pipeline and scoped OFF/effective Make PASS after current-base sync. Default0; general material coverage and target cache/SQ/stack/look/runtime gates remain open. See [Build29](handbacks/build-29.md).
+
 **Gap.** `re4dc_cloth_native` declines a second texture and widths above 100 into source drawing that reaches the GX sink. Admitted sheets transform interior rows twice and repeat material/header work per band. Cloth simulation remains required.
 
 **Target.** A bounded native sheet view describes live grid spans, dimensions, transform, material and UV progression. Material state is prepared once, rows are transformed once, and partial output is explicit.

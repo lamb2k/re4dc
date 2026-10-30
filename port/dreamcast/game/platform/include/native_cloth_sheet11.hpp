@@ -8,7 +8,17 @@
 // Frame-scoped prepared native material; no source grid/pixel pointer retained.
 // This preserves CLOTH_NATIVE's existing single-texture approximation. Source
 // TEV scale/clamp, alpha>4/depth policy and pTobjA remain separate coverage gaps.
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+// Only the new synchronous material path retains a call-scoped validation
+// callback. The FIFO contains copied PVR packets, never this callback/context.
+struct Re4dcClothMaterial11 { alignas(32) unsigned char state[320]{}; };
+struct Re4dcClothCheck11 { const void* context;bool (*current)(const void*); };
+namespace re4dc::cloth_material11 { struct Source; }
+extern "C" int re4dc_cloth_material11(const Re4dcEffectMesh21*,const re4dc::cloth_material11::Source*,
+    Re4dcClothCheck11,Re4dcClothMaterial11*,re4dc::NativeDrawResult* stop);
+#else
 struct Re4dcClothMaterial11 { alignas(32) unsigned char state[256]{}; };
+#endif
 struct Re4dcClothBand11 {
     const float* top; const float* bottom;
     unsigned columns,first_column,row;
