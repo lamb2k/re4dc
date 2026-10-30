@@ -9,8 +9,8 @@
 #include "cloth_publication11.hpp"
 #endif
 // Frame-scoped prepared native material; no source grid/pixel pointer retained.
-// This preserves CLOTH_NATIVE's existing single-texture approximation. Source
-// TEV scale/clamp, alpha>4/depth policy and pTobjA remain separate coverage gaps.
+// Ordinary materials preserve the existing approximation. MATERIAL11 adds
+// bounded constant-white Esp4e and saturated pTobjA source proofs only.
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
 // Only the new synchronous material path retains a call-scoped validation
 // callback. The FIFO contains copied PVR packets, never this callback/context.

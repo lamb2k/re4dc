@@ -62,10 +62,11 @@ struct Source {
         single=false;return primary.capture(first) && primary.white() && secondary.capture(second);
     }
     bool capture_single(const void* first,const unsigned words[8]) {
-        single=true;return primary.capture_copied(first,words) && primary.white();
+        single=true;secondary={};return primary.capture_copied(first,words) && primary.white();
     }
     bool current() const { return primary.current() && (single || secondary.current()); }
 };
+static_assert(sizeof(Source)<=512,"bounded call-local source material proof");
 
 // Actual uploaded RGB565 is little-endian, 8x8 twiddled even when a legacy
 // linear package was twiddled by Package::upload(). GX RGB565 is big-endian

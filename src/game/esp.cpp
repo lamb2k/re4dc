@@ -3,8 +3,10 @@
 #endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
 extern "C" void re4dc_cloth_material_retire11();
+class cEsp;
+extern "C" void re4dc_cloth_esp4e_retire11(cEsp*);
 #define RE4DC_CLOTH_POOL_RETIRE11() re4dc_cloth_material_retire11();
-#define RE4DC_CLOTH_SLOT_RETIRE11(e) if((e)->m_Be_flg&1)re4dc_cloth_material_retire11();
+#define RE4DC_CLOTH_SLOT_RETIRE11(e) if(((e)->m_Be_flg&1) && (e)->m_Id==0x4e)re4dc_cloth_esp4e_retire11(e);
 #else
 #define RE4DC_CLOTH_POOL_RETIRE11()
 #define RE4DC_CLOTH_SLOT_RETIRE11(e)

@@ -13,6 +13,7 @@ namespace re4dc::cloth_material11 {
 // A completed Set in the same incarnation is the only reopening operation.
 // This four-byte mask never changes source gameplay be_flag or pool layout.
 inline unsigned open_slots=0;
+static_assert(sizeof(open_slots)==4 && sizeof(re4dc::cloth_pub11::grid_generation)==32);
 inline bool admitted(unsigned slot){return slot<8 && (open_slots&(1U<<slot));}
 inline void close(unsigned slot){if(slot<8)open_slots&=~(1U<<slot);}
 inline void reopen(unsigned slot,unsigned epoch){if(slot<8 && epoch)open_slots|=1U<<slot;}

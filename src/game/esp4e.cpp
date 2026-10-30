@@ -206,6 +206,9 @@ int cEsp4e::SetFreeWork(EspGenWork* gen, u32* seed)
     } else {
         wk->pCl->Set(m_Ang, m_Pos, nx, ny, width, &wk->tex, height * (3000.0f / d / 23.0f), NULL, d, NULL, flag);
     }
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!wk->pCl->m_pMem){wk->pCl=nullptr;return 0;}
+#endif
     if (gen->Blend_type) {
         wk->pCl->x74 = 1;
     }
@@ -231,6 +234,7 @@ asm(".section .sdata; .balign 8");
 extern Cloth ClothWk[8];
 extern EspCreateFunc EspCreateTbl[0xFF];
 extern "C" int re4dc_cloth_frame_open11();
+extern "C" void re4dc_cloth_material_retire_one11(Cloth*);
 // Called only after the fixed Cloth admission/epoch check. Never retain this
 // effect pointer across texture I/O: callers keep copied words and revalidate.
 extern "C" int re4dc_cloth_esp4e_words11(const Cloth* cloth,unsigned words[8]){
@@ -250,5 +254,11 @@ extern "C" int re4dc_cloth_esp4e_words11(const Cloth* cloth,unsigned words[8]){
     static_assert(sizeof effect->m_Free.tex==8*sizeof(unsigned));
     std::memcpy(words,&effect->m_Free.tex,8*sizeof(unsigned));
     return 1;
+}
+// The unretired wrapped allocator path can clear a live slot. Retire only
+// that Esp4e's cloth view; unrelated effects and cloth keep their admission.
+extern "C" void re4dc_cloth_esp4e_retire11(cEsp* effect){
+    if(effect && (effect->m_Be_flg&1) && effect->m_Id==0x4e)
+        re4dc_cloth_material_retire_one11(static_cast<cEsp4e*>(effect)->m_Free.pCl);
 }
 #endif

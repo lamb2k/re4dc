@@ -38,6 +38,12 @@ import prepare_native_ui as UI
 def fixture():
     stub, code = TILES.actual_source_fixture()
     code = code.split("int main(){", 1)[0]
+    code = 'unsigned handle_reset=1;\n' + code
+    # This existing capability fixture has no Esp4e producer. Its separate
+    # tests keep the archive-owned secondary class and decline the new class.
+    code = code.replace('using Outcome=re4dc::NativeDrawOutcome;',
+                        'extern "C" int re4dc_cloth_esp4e_words11(const Cloth*,unsigned*){return 0;}\n'
+                        'using Outcome=re4dc::NativeDrawOutcome;')
     # Use the pinned KOS setting values in this recorder. This still records
     # contexts; it does not pretend to execute pvr_poly_compile on hardware.
     for before, after in (("PVR_DEPTHCMP_GEQUAL=3", "PVR_DEPTHCMP_GEQUAL=6"),
@@ -113,6 +119,7 @@ void upload_source(){
 }
 void material_fresh(unsigned cols,unsigned rows,std::vector<Vec>& grid){
  fresh();set_sheet(cols,rows,grid);resolve_hook=nullptr;sq_hook=spill_hook=select_hook=nullptr;
+ re4dc::cloth_material11::open_slots=1;re4dc::cloth_pub11::grid_generation[0]=1;
  locks=waits=unlocks=0;missing_second=false;external_result=0;
  for(unsigned i=0;i<2;++i){entries[i]={};entries[i].package.pixels=reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096+i*256);}
  fill_source();upload_source();
@@ -153,6 +160,7 @@ void mutate_resolve(unsigned call){if(call==mutate_at)mutate();}
 void mutate_once(){mutate();sq_hook=spill_hook=select_hook=nullptr;}
 void mutate_after_send(){mutate();after_send_hook=nullptr;}
 int main(){
+ re4dc::cloth_material11::open_slots=1;
  auto* mapping=mmap(reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096),4096,PROT_READ|PROT_WRITE,
                     MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
  assert(mapping==reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096));std::vector<Vec> grid;
@@ -283,6 +291,7 @@ int fs_open(const char*,int){return -1;}int fs_close(int){return 0;}ssize_t fs_t
 void* fs_mmap(int){return nullptr;}ssize_t fs_read(int,void*,std::size_t){return -1;}off_t fs_seek(int,off_t,int){return -1;}
 std::uint64_t timer_us_gettime64(){return 0;}
 int main(){
+ re4dc::cloth_material11::open_slots=1; // synthetic archive-owned capability
  auto* mapping=mmap(reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096),4096,PROT_READ|PROT_WRITE,
                     MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
  assert(mapping==reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096));std::memset(mapping,0,4096);
@@ -333,6 +342,7 @@ class ClothMaterial11(unittest.TestCase):
                      "-DRE4DC_CLOTH_SHEET11=1", "-DRE4DC_CLOTH_TILES11=1", "-DRE4DC_PS2_UPLOAD_INCARNATION=1",
                      "-DRE4DC_UI_HANDLES=1", "-DRE4DC_TA_DIRECT=1", "-DRE4DC_EFFECT_SPRITE_MAX=256",
                      "-DRE4DC_CLOTH_MATERIAL11=1", "-DRE4DC_PLAN_OWNER_SCOPED=1", "-DRE4DC_MODEL_DRAW_PLANS=1",
+                     "-DRE4DC_CLOTH_LIGHT_ABI_FIX=1",
                      "-I" + str(tmp), "-I" + str(INC), "-I" + str(ROOT / "room"), *extra]
             if sanitize:
                 flags += ["-fsanitize=address,undefined", "-fno-omit-frame-pointer"]
@@ -669,10 +679,11 @@ int main(){Cloth c{0,{64,128,192,255}};cLight* lights[8]{};Vec pos{1,2,3};
             tmp = Path(td)
             (tmp / "Makefile.rules").write_text("")
             targets = ["obj/src/game/cloth.o", "obj/platform/native_ui.o", "obj/platform/gx_stub.o",
+                       "obj/src/game/esp.o", "obj/src/game/esp4e.o", "obj/platform/native_effect.o",
                        "obj/src/game/esp_sub.o", "obj/src/game/trans.o", "obj/platform/native_draw_plan_owner.o"]
             make = ["make", "--no-print-directory", "-f", "Makefile", "-n", "KOS_BASE=" + str(tmp)]
             deps = ["EFFECT_SPRITES=1", "FX_STRIP21=1", "CLOTH_NATIVE=1", "NATIVE_DRAW_OUTCOMES=1",
-                    "PS2_UPLOAD_INCARNATION=1", "CLOTH_SHEET11=1", "MODEL_DRAW_PLANS=1", "PLAN_OWNER_SCOPED=1"]
+                    "PS2_UPLOAD_INCARNATION=1", "CLOTH_SHEET11=1", "MODEL_DRAW_PLANS=1", "PLAN_OWNER_SCOPED=1", "CLOTH_LIGHT_ABI_FIX=1"]
             outputs = []
             # Pass assignments as individual argv entries, preserving trailing
             # whitespace rather than letting a shell remove the regression.
@@ -694,8 +705,8 @@ int main(){Cloth c{0,{64,128,192,255}};cLight* lights[8]{};Vec pos{1,2,3};
             for line in outputs[0]:
                 self.assertNotIn("-DRE4DC_CLOTH_MATERIAL11", line)
             for i, line in enumerate(outputs[2]):
-                self.assertEqual(line.count("-DRE4DC_CLOTH_MATERIAL11=1"), int(i < 3))
-                self.assertEqual(line.count("-DRE4DC_PLAN_OWNER_SCOPED=1"), int(i in (0, 1, 5)))
+                self.assertEqual(line.count("-DRE4DC_CLOTH_MATERIAL11=1"), int(i < 6))
+                self.assertEqual(line.count("-DRE4DC_PLAN_OWNER_SCOPED=1"), int(i in (0, 1, 8)))
             for value in ("", " ", "\t", "0 1", "1 0", "1 1", "0 0", "2", "-1", "01", "1.0", "yes",
                           "0 ", "1 ", "0\t", "1\t", " 0 ", " 1 ", "$(subst x, ,x)0", "$(subst x, ,x)1"):
                 with self.subTest(rejected=value):
@@ -703,10 +714,13 @@ int main(){Cloth c{0,{64,128,192,255}};cLight* lights[8]{};Vec pos{1,2,3};
                     self.assertNotEqual(run.returncode, 0, run.stdout)
                     self.assertIn("CLOTH_MATERIAL11 must be", run.stderr)
                     self.assertFalse(any(line.startswith("kos-c++") for line in run.stdout.splitlines()))
-            for dependency in ("CLOTH_SHEET11", "PLAN_OWNER_SCOPED"):
+            for dependency in ("CLOTH_SHEET11", "PLAN_OWNER_SCOPED", "CLOTH_LIGHT_ABI_FIX"):
                 run = subprocess.run([*make, targets[0], *deps, "CLOTH_MATERIAL11=1", dependency + "=0"], capture_output=True, text=True, cwd=ROOT / "game")
                 self.assertNotEqual(run.returncode, 0)
                 self.assertIn("CLOTH_MATERIAL11 needs", run.stderr)
+            run = subprocess.run([*make, *targets, *deps, "CLOTH_MATERIAL11=0", "CLOTH_LIGHT_ABI_FIX=0"], capture_output=True, text=True, cwd=ROOT / "game")
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertNotIn("-DRE4DC_CLOTH_MATERIAL11=1", run.stdout)
 
 
 if __name__ == "__main__":

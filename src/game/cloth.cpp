@@ -58,10 +58,18 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
 #include "native_cloth_sheet11.hpp"
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#if !defined(RE4DC_CLOTH_LIGHT_ABI_FIX) || !RE4DC_CLOTH_LIGHT_ABI_FIX
+#error CLOTH_MATERIAL11 requires CLOTH_LIGHT_ABI_FIX=1 for the real clothTrans caller
+#endif
 #include "cloth_material11_source.hpp"
 extern "C" void re4dc_cloth_material_retire11(){
     re4dc::cloth_material11::open_slots=0;
     for(auto& cloth:ClothWk)cloth11_replace(&cloth);
+}
+extern "C" void re4dc_cloth_material_retire_one11(Cloth* cloth){
+    const unsigned slot=cloth11_slot(cloth);
+    re4dc::cloth_material11::close(slot);
+    if(slot<8)cloth11_replace(cloth);
 }
 #endif
 #if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
@@ -251,12 +259,15 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
         return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
     m.cols=cols;m.rows=rows;
     Re4dcClothMaterial11 material;re4dc::NativeDrawResult stop{re4dc::NativeDrawOutcome::Refused};
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
     const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
         pCL->pVer==source && pCL->divH==cols && pCL->divV==rows
-#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
         && (!(second_material || single_selected11) || source_grid==re4dc::cloth_pub11::grid_generation[cloth11_slot(pCL)])
-#endif
         ;};
+#else
+    const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
+        pCL->pVer==source && pCL->divH==cols && pCL->divV==rows;};
+#endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
     const auto material_current=[&](){
         // Room/pool retirement and grid mutation reject the old view before
@@ -504,6 +515,12 @@ void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h,
     if (m_pMem == 0) {
         OSReport("ClothSet(): Can't allocate memory.\n");
         be_flag = 0;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        // mem_alloc can return null. Stay closed and let Esp4e report its
+        // ordinary creation failure instead of touching a missing grid.
+        pVer=pNor=pSpd=nullptr;
+        return;
+#endif
     }
     pp = (Vec*) m_pMem;
     pVer = pp;
@@ -928,11 +945,12 @@ static void ClothDraw_log_room()
             s_room = G_ROOM_ID;
             re4dc_log("cloth native: room=%03x sheets=%d grid0=%ux%u tex=%08x\n", (unsigned) G_ROOM_ID, n,
                       (unsigned) ClothWk[0].divH, (unsigned) ClothWk[0].divV,
-                      ClothWk[0].tex
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
-                      && re4dc::cloth_material11::admitted(0)
-#endif
+                      ClothWk[0].tex && re4dc::cloth_material11::admitted(0)
                       ? (unsigned) ((const u32*) ClothWk[0].tex)[0] : 0U);
+#else
+                      ClothWk[0].tex ? (unsigned) ((const u32*) ClothWk[0].tex)[0] : 0U);
+#endif
             for (i = 0; i < 8; i++) {
                 if (ClothWk[i].m_pMem) {
                     re4dc_log("cloth native: sheet %d be=%02x grid=%ux%u center=%d,%d,%d\n", i,
