@@ -1,0 +1,336 @@
+#include <cstdarg>
+#include <cmath>
+#include <limits>
+#define G_ROOM_ID (pG->room_id)
+#define ESP_OWN_STALE()
+#define ESPD_STEAL()
+#define BitSet(v,n) ((v)=(n))
+unsigned calls11=0,legacy11=0,logs11=0,common_moves11=0,random11=0;
+struct Log11{template<class... T>void err(T...){assert(false);}template<class... T>void warn(T...){}}log11,*pLog=&log11;
+extern "C" void OSReport(const char*,...){}
+extern "C" void re4dc_log(const char*,...){++logs11;}
+void identity11(Mtx m){PSMTXScale(m,1,1,1);}
+void PSMTXIdentity(Mtx m){identity11(m);}
+void RotMatrix(Mtx m,const Vec* v){assert(v->x==0&&v->y==0&&v->z==0);identity11(m);}
+void low_RotMatrix(Mtx m,const Vec* v){RotMatrix(m,v);}
+void TransMatrix(Mtx m,const Vec* v){m[0][3]=v->x;m[1][3]=v->y;m[2][3]=v->z;}
+void Matrix2AxisAngle(const Mtx,Vec* v){*v={};}
+void PSMTXInverse(const Mtx m,Mtx out){identity11(out);for(unsigned i=0;i<3;++i){assert(m[i][i]!=0);out[i][i]=1/m[i][i];out[i][3]=-m[i][3]/m[i][i];}}
+void PSMTXTranspose(const Mtx m,Mtx out){Mtx t{};for(unsigned r=0;r<3;++r)for(unsigned c=0;c<3;++c)t[r][c]=m[c][r];std::memcpy(out,t,sizeof t);}
+void PSVECScale(const Vec* a,Vec* b,float k){const Vec t={a->x*k,a->y*k,a->z*k};*b=t;}
+void PSVECAdd(const Vec* a,const Vec* b,Vec* c){const Vec t={a->x+b->x,a->y+b->y,a->z+b->z};*c=t;}
+void PSVECSubtract(const Vec* a,const Vec* b,Vec* c){const Vec t={a->x-b->x,a->y-b->y,a->z-b->z};*c=t;}
+float PSVECMag(const Vec* v){return std::sqrt(v->x*v->x+v->y*v->y+v->z*v->z);}
+void PSVECCrossProduct(const Vec* a,const Vec* b,Vec* c){*c={a->y*b->z-a->z*b->y,a->z*b->x-a->x*b->z,a->x*b->y-a->y*b->x};}
+void VECNormalize(const Vec* a,Vec* b){float n=PSVECMag(a);if(n)PSVECScale(a,b,1/n);else *b={};}
+float LIMIT_ANGLE(float f){return f;}
+float SINF(float f){return std::sin(f);}
+float fRand0_1(){++random11;return .5f;}
+float K_PARAM=7.5f,G_PARAM=.5f,T_PARAM=.06f;
+struct Allocation11{void* pointer;unsigned capacity;bool live;};std::vector<Allocation11> heap11;
+void(*free_hook11)()=nullptr;void(*alloc_hook11)()=nullptr;
+bool allocation_refused11=false;
+void* mem_alloc(unsigned n,const char*,int,int,int){
+ if(allocation_refused11)return nullptr;
+ if(alloc_hook11){auto fn=alloc_hook11;alloc_hook11=nullptr;fn();}
+ const unsigned bytes=(n+4095U)&~4095U;
+ for(auto& a:heap11)if(!a.live&&a.capacity>=bytes){assert(!mprotect(a.pointer,a.capacity,PROT_READ|PROT_WRITE));a.live=true;return a.pointer;}
+ void* p=mmap(nullptr,bytes,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0);assert(p!=MAP_FAILED);
+ heap11.push_back({p,bytes,true});return p;
+}
+void Mem_free(void* p){if(!p)return;for(auto& a:heap11)if(a.pointer==p){assert(a.live);a.live=false;assert(!mprotect(p,a.capacity,PROT_NONE));
+ if(free_hook11){auto fn=free_hook11;free_hook11=nullptr;fn();}return;}assert(false);}
+void* Debug_alloc(unsigned n,int){return mem_alloc(n,"debug",0,0,0);}
+void Debug_free(void* p){Mem_free(p);}
+void memclr_asm(void* p,unsigned n){std::memset(p,0,n);}
+#define MEM_ALLOC(n,a,b) mem_alloc(n,"actual source",0,a,b)
+struct TEXHeader{unsigned short height,width;unsigned format;void* data;};
+struct CLUTHeader{unsigned short numEntries;unsigned char unpacked,pad;unsigned format;void* data;};
+struct TEXDescriptor{TEXHeader* textureHeader;struct CLUTHeader* CLUTHeader;};
+struct TEXPalette{unsigned versionNumber,numDescriptors;TEXDescriptor* descriptorArray;};
+TEXDescriptor* TEXGet(TEXPalette* p,unsigned n){assert(p&&n<p->numDescriptors);return p->descriptorArray+n;}
+TEXPalette* source_tpl11=nullptr;int archive_key11;
+int EspGetTplAddr(unsigned,void** p){*p=source_tpl11;return 1;}
+struct Parent11{Mtx mat;};Parent11 world11;Parent11* pEffParentWorld=&world11;
+class cEsp{
+public:
+ virtual void move(){}virtual int SetFreeWork(struct EspGenWork*,u32*){return 1;}virtual void Destruct(){}
+ static void* operator new(std::size_t);
+ unsigned m_Be_flg=0,m_Id=0,m_Tool_flg=0;
+ Vec m_Pos{},m_Ang{},m_Speed{};float m_Col_r=255,m_Col_g=255,m_Col_b=255,m_Col_a=255;
+ float m_Size_base_x=12,m_Size_base_y=17;unsigned m_Tex_id=0;Parent11* parent=&world11;
+ bool CommonMove(){++common_moves11;return true;}
+};
+struct EspGenWork{Vec Vec0{};unsigned Tool_flg=0,Blend_type=0;int Work8[4]{},WorkSp8[4]{};
+ struct{struct{int xCC=0,xD0=0;}w;}prm;int xD4=0;};
+using EspCreateFunc=cEsp*(*)();EspCreateFunc EspCreateTbl[0xff]{};
+struct cEspSystem{unsigned char* pEspBuf=nullptr;unsigned nEsp=0,ActiveEspNum=0;cEsp* pDmyEsp=nullptr;
+ unsigned char* pEspBufSave=nullptr;unsigned nEspBack=0;}system11,*g_pEspSys=&system11;
+cEsp dummy11;
+int PullEsp(cEsp**,int);void PushEsp(cEsp*);int EspArrayFree();int EspArrayAlloc(u32);int EspArrayPush(u32);int EspArrayPop();
+extern "C" cEsp* Esp4e_Create();
+extern "C" void re4dc_cloth_material_retire_one11(Cloth*);
+struct LightInfo11{cLight* pLight[8]{};Vec Size{1,1,1};void init2(int,int,const Vec*,const Vec*,int){}}
+;
+struct cModel{Mtx mat;LightInfo11 LightInfo;Vec pos;};
+cLight* picked11[8]{};
+void LightManager::setClothN(cModel* model,int n){assert(n==8);std::memcpy(model->LightInfo.pLight,picked11,sizeof picked11);}
+void commonClothLightSet(cLight** list,int n,Vec*,float){assert(n==8);(void)list;}
+extern "C" {
+void GXInitTexObjCI(GXTexObj*,void*,u16,u16,int,int,int,u8,unsigned);
+void GXInitTlutObj(GXTlutObj*,void*,int,u16);void GXLoadTlut(GXTlutObj*,int);
+void GXSetCullMode(int);void GXSetZMode(u8,int,u8);void GXSetNumChans(u8);
+void GXSetTevColorIn(int,int,int,int,int);void GXSetTevColorOp(int,int,int,int,u8,int);
+void GXSetTevAlphaIn(int,int,int,int,int);void GXSetTevAlphaOp(int,int,int,int,u8,int);
+void GXSetTevOrder(int,int,int,int);void GXSetChanMatColor(int,GXColor);void GXSetNumTexGens(u8);
+void GXLoadTexObj(GXTexObj*,int);void GXLoadTexMtxImm(const Mtx,u32,int);
+void GXSetTexCoordGen2(int,int,int,u32,u8,u32);void GXSetBlendMode(int,int,int,int);
+void GXSetAlphaCompare(int,u8,int,int,u8);void GXSetZCompLoc(u8);void GXSetTevOp(int,int);
+void GXSetNumTevStages(u8);void GXLoadPosMtxImm(const Mtx,u32);void GXLoadNrmMtxImm(const Mtx,u32);
+void GXSetCurrentMtx(u32);void GXClearVtxDesc();void GXSetVtxDesc(int,int);void GXSetVtxAttrFmt(int,int,int,int,u8);
+void GXBegin(int,int,u16);void GXPosition3f32(float,float,float){}void GXNormal3f32(float,float,float){}void GXTexCoord2f32(float,float){}
+}
+void CameraSetProjection(int){}
+#define GXCallDisplayList(...) (++legacy11)
+#define GXBegin(...) (++legacy11)
+std::vector<Cloth*> ot11;
+void AddOtDirect(int table,Cloth* c,void(*)(),int,int,int,float){assert(table==13);ot11.push_back(c);}
+struct Binding11{void* archive;}bindings[6]{};
+void re4dc_effect_unbind(void*){}
+@ACTUAL_SOURCE@
+static_assert(sizeof(cEsp4e)<=0x150,"host source model must fit a real source slot");
+using O11=re4dc::NativeDrawOutcome;
+void source_archive11(){
+ assert(!mprotect(source_tpl11,4096,PROT_READ|PROT_WRITE));std::memset(source_tpl11,0,4096);
+ auto* desc=reinterpret_cast<TEXDescriptor*>((unsigned char*)source_tpl11+64);
+ auto* header=reinterpret_cast<TEXHeader*>((unsigned char*)source_tpl11+128);
+ auto* pixels=(unsigned char*)source_tpl11+256;
+ *source_tpl11={0x20af30,1,reinterpret_cast<TEXDescriptor*>(64)};
+ *desc={reinterpret_cast<TEXHeader*>(128),nullptr};*header={8,8,4,reinterpret_cast<void*>(256)};std::memset(pixels,255,128);
+ re4dc_model_unbind_draw_owner(&archive_key11);re4dc_model_bind_draw_owner(&archive_key11,source_tpl11,4096,0);
+}
+void native_fresh11(){
+ reset();packet_log.clear();pending.clear();send_calls=transforms=retire_at_transform=0;retired=false;after_send_hook=nullptr;
+ resolve_hook=nullptr;sq_hook=spill_hook=select_hook=nullptr;missing=false;missing_second=false;external_result=0;
+ source_draws_finished=true;stream_aborted=false;frame_ready=true;draining_parts=false;direct_open=false;
+ locks=waits=unlocks=opens=compiles=0;spill_available=true;ot11.clear();legacy11=0;
+}
+void source_fresh11(){
+ free_hook11=alloc_hook11=nullptr;allocation_refused11=false;g_pEspSys=&system11;
+ re4dc_cloth_material_retire11();
+ for(auto& a:heap11)if(a.live){a.live=false;assert(!mprotect(a.pointer,a.capacity,PROT_NONE));}
+ system11={};system11.pDmyEsp=&dummy11;ClothInit();native_fresh11();source_archive11();
+ for(auto& p:picked11)p=nullptr;LightMgr.e.AmbientScr={255,255,255,255};
+ identity11(pG->Cam.v_mat);identity11(world11.mat);pG->Frame_cnt=frame;
+ for(auto& e:entries){e.package.close();}allocations=upload_calls=readback_drains=0;
+ assert(entries[0].package.adopt(package0,sizeof package0)&&entries[0].package.upload()&&entries[0].package.release_payload());
+ entries[0].valid=true;entries[0].upload_incarnation=7;
+ assert(EspArrayAlloc(2));EspCreateTbl[0x4e]=Esp4e_Create;
+}
+cEsp4e* spawn11(unsigned cols=2,unsigned rows=3){
+ cEsp* base=nullptr;assert(PullEsp(&base,0x4e));auto* e=static_cast<cEsp4e*>(base);
+ e->m_Pos={0,0,-1000};e->m_Size_base_x=(float(cols)+.1f)*200/36;e->m_Size_base_y=(float(rows)+.1f)*200/24;
+ e->parent=&world11;e->m_Col_r=64;e->m_Col_g=128;e->m_Col_b=192;e->m_Col_a=255;
+ // Rebuild source offsets for each host invocation: the real relocator's
+ // negative-address "already relocated" test belongs to the GC address map,
+ // while ASan requires this synthetic archive in its low-memory region.
+ source_tpl11->descriptorArray=reinterpret_cast<TEXDescriptor*>(64);
+ reinterpret_cast<TEXDescriptor*>((unsigned char*)source_tpl11+64)->textureHeader=reinterpret_cast<TEXHeader*>(128);
+ reinterpret_cast<TEXHeader*>((unsigned char*)source_tpl11+128)->data=reinterpret_cast<void*>(256);
+ EspGenWork gen{};gen.Tool_flg=1;u32 seed=0;assert(e->SetFreeWork(&gen,&seed));
+ assert(e->m_Free.pCl->divH==cols&&e->m_Free.pCl->divV==rows&&e->m_Free.pCl->pTobjA==nullptr);
+ e->move();return e;
+}
+re4dc::NativeDrawResult draw11(cEsp4e* e){auto* c=e->m_Free.pCl;return re4dc_cloth_native(c,picked11,&c->center,1);}
+void verify11(unsigned bands){
+ assert(packet_log.size()==bands&&!legacy11);
+ for(const auto& p:packet_log){auto* h=reinterpret_cast<const unsigned*>(p.data());
+  assert(h[0]==4&&h[1]==5&&h[2]==PVR_DEPTHCMP_GEQUAL&&h[3]==PVR_DEPTHWRITE_ENABLE);
+  for(unsigned i=1;i<p.size();++i)assert(p[i].argb==0xffffffffU);assert(p.back().flags==PVR_CMD_VERTEX_EOL);}
+}
+unsigned cases11=0;
+void check11(const char* name){++cases11;std::printf("PASS %s\n",name);std::fflush(stdout);}
+Cloth* held11=nullptr;void* held_pool11=nullptr;void* held_grid11=nullptr;cEsp4e* replacement11=nullptr;Vec gap_position11{};
+void hold11(cEsp4e* e){held11=e->m_Free.pCl;held_pool11=system11.pEspBuf;held_grid11=held11->m_pMem;}
+void poison_heap11(){for(auto& a:heap11)if(a.live){a.live=false;assert(!mprotect(a.pointer,a.capacity,PROT_NONE));}
+ g_pEspSys=reinterpret_cast<cEspSystem*>(1);}
+void gap_probe11(){
+ const unsigned opened=opens,sent=send_calls;unsigned words[8];
+ assert(!re4dc_cloth_esp4e_words11(held11,words));
+ auto r=re4dc_cloth_native(held11,picked11,&gap_position11,1);assert(r.outcome==O11::PartialAbort&&!r.published()&&!r.fallback_allowed());
+ ot11.clear();ClothDraw();ClothDrawNow();clothTrans(held11);
+ assert(ot11.empty()&&opens==opened&&send_calls==sent&&!legacy11);
+}
+void room_poison11(){re4dc_effect_retire_room();poison_heap11();
+ re4dc_model_unbind_draw_owner(&archive_key11);assert(!mprotect(source_tpl11,4096,PROT_NONE));gap_probe11();}
+void room_resolve11(unsigned){resolve_hook=nullptr;room_poison11();}
+void pool_free_resolve11(unsigned){resolve_hook=nullptr;free_hook11=[](){poison_heap11();gap_probe11();};EspArrayFree();}
+void native_reset11(unsigned){resolve_hook=nullptr;++handle_reset;frame_ready=false;poison_heap11();
+ assert(!mprotect(source_tpl11,4096,PROT_NONE));gap_probe11();}
+void native_frame11(unsigned){resolve_hook=nullptr;++frame;poison_heap11();assert(!mprotect(source_tpl11,4096,PROT_NONE));}
+void grid_mutate11(unsigned){resolve_hook=nullptr;held11->move();Mem_free(held_grid11);g_pEspSys=reinterpret_cast<cEspSystem*>(1);}
+void pose_mutate11(unsigned){resolve_hook=nullptr;held11->SetPosAng(Vec{},Vec{1,0,-1000});Mem_free(held_grid11);g_pEspSys=reinterpret_cast<cEspSystem*>(1);}
+void replacement_resolve11(unsigned){
+ resolve_hook=nullptr;assert(EspArrayFree());Mem_free(held_grid11);ClothInit();assert(EspArrayAlloc(2));
+ assert(system11.pEspBuf==held_pool11);replacement11=spawn11();
+ assert(replacement11->m_Free.pCl==held11&&held11->m_pMem==held_grid11);
+}
+void terminal11(re4dc::NativeDrawResult r,unsigned submitted=0,unsigned queued=0){
+ if(r.outcome!=O11::PartialAbort||r.submitted!=submitted||r.queued!=queued)
+  std::fprintf(stderr,"terminal outcome=%u submitted=%u queued=%u expected=%u/%u\n",unsigned(r.outcome),r.submitted,r.queued,submitted,queued);
+ assert(r.outcome==O11::PartialAbort&&r.submitted==submitted&&r.queued==queued&&!r.fallback_allowed()&&!legacy11);
+}
+void producer_oom11(){
+ source_fresh11();cEsp* base=nullptr;assert(PullEsp(&base,0x4e));auto* effect=static_cast<cEsp4e*>(base);
+ EspGenWork gen{};u32 seed=0;cEsp* out=nullptr;allocation_refused11=true;
+ assert(actual_creation_failure_boundary11(effect,&gen,&seed,&out)==0);allocation_refused11=false;
+ assert(out==system11.pDmyEsp&&!(effect->m_Be_flg&1)&&system11.ActiveEspNum==0&&effect->m_Free.pCl==nullptr);
+ assert(!ClothWk[0].m_pMem&&!ClothWk[0].pVer&&!ClothWk[0].pNor&&!ClothWk[0].pSpd&&!ClothWk[0].be_flag&&!re4dc::cloth_material11::open_slots);
+ unsigned moved=transforms,rng=random11;effect->move();ClothDraw();ClothDrawNow();clothTrans(&ClothWk[0]);
+ assert(transforms==moved&&random11==rng&&!opens&&packet_log.empty()&&ot11.empty());
+ auto* recovered=spawn11();assert(draw11(recovered).outcome==O11::Submitted);verify11(2);
+ check11("actual-NULL-Set-caller-failure-PushEsp-no-stale-move-draw-and-Set-recovery");
+}
+int main(){
+ void* mapping=mmap(reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096),4096,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
+ assert(mapping==reinterpret_cast<void*>(PVR_RAM_INT_BASE+4096));
+ source_tpl11=(TEXPalette*)mmap((void*)0x50000000,4096,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
+ assert(source_tpl11==(void*)0x50000000);
+#if RE4DC_CLOTH_SINGLE_OOM_ONLY11
+ producer_oom11();
+#else
+ source_fresh11();auto* e=spawn11();auto* c=e->m_Free.pCl;
+ assert(!re4dc_model_draw_owner_stamp(c->tex,32).valid());
+ assert(re4dc_model_draw_owner_stamp(source_tpl11->descriptorArray[0].textureHeader->data,128).valid());
+ unsigned words[8];assert(re4dc_cloth_esp4e_words11(c,words));assert(c->color.r==64&&c->color.g==128&&c->color.b==192&&c->color.a==255);
+ ClothDraw();assert(ot11.size()==1);clothTrans(ot11[0]);verify11(2);assert(opens==1&&waits==1&&readback_drains==1);
+ check11("actual-SetFreeWork-Set-move-ClothDraw-clothTrans-no-object-archive-stamp");
+ // Every bounded source grid edge uses the real source constructor/move.
+ for(auto shape:std::vector<std::pair<unsigned,unsigned>>{{2,2},{100,2},{2,50},{100,50}}){
+  source_fresh11();e=spawn11(shape.first,shape.second);auto r=draw11(e);assert(r.complete()&&r.submitted&&r.submitted<=shape.second-1);
+  verify11(r.submitted);assert(e->m_Free.pCl->pTobjA==nullptr);
+ }check11("real-producer-bounds-2-to100-columns-2-to50-rows");
+ source_fresh11();e=spawn11();
+ for(unsigned channel=0;channel<4;++channel)for(unsigned value=64;value<256;++value){
+  e->m_Col_r=64;e->m_Col_g=128;e->m_Col_b=192;e->m_Col_a=255;
+  if(channel==0)e->m_Col_r=value;if(channel==1)e->m_Col_g=value;if(channel==2)e->m_Col_b=value;if(channel==3)e->m_Col_a=value;
+  e->move();packet_log.clear();fx_count=0;auto r=draw11(e);assert(r.outcome==O11::Submitted);verify11(2);
+ }check11("actual-move-color-all-768-channel-values-SCALE4-opaque-source-result");
+ for(unsigned channel=0;channel<4;++channel){source_fresh11();e=spawn11();
+  if(channel==0)e->m_Col_r=63;if(channel==1)e->m_Col_g=63;if(channel==2)e->m_Col_b=63;if(channel==3)e->m_Col_a=63;
+  e->move();auto r=draw11(e);assert(r.outcome==O11::Submitted&&waits==0);
+  auto* h=reinterpret_cast<const unsigned*>(packet_log[0].data());assert(h[3]==PVR_DEPTHWRITE_DISABLE);
+ }check11("preselection-below64-retains-existing-ordinary-approximation");
+ source_fresh11();e=spawn11();c=e->m_Free.pCl;c->x74=1;assert(draw11(e).outcome==O11::Submitted&&waits==0);
+ {auto* h=reinterpret_cast<const unsigned*>(packet_log[0].data());assert(h[0]==1&&h[1]==1&&h[3]==PVR_DEPTHWRITE_DISABLE);}
+ check11("additive-preselection-retains-existing-contract");
+ for(unsigned refusal=0;refusal<5;++refusal){source_fresh11();e=spawn11();c=e->m_Free.pCl;
+  if(refusal==0)((unsigned char*)source_tpl11->descriptorArray[0].textureHeader->data)[0]=0;
+  if(refusal==1)e->m_Free.tex.w[6]=0;
+  if(refusal==2)e->m_Free.tex.w[1]=0x00100008;
+  if(refusal==3)re4dc_model_unbind_draw_owner(&archive_key11);
+  if(refusal==4)LightMgr.e.AmbientScr.r=254;
+  auto r=draw11(e);assert(r.outcome==O11::Submitted&&waits==0);
+  assert(reinterpret_cast<const unsigned*>(packet_log[0].data())[3]==PVR_DEPTHWRITE_DISABLE);
+ }check11("unsupported-content-sampler-size-owner-ambient-preselection-unchanged");
+ source_fresh11();e=spawn11();c=e->m_Free.pCl;
+ auto* real_create=EspCreateTbl[0x4e];EspCreateTbl[0x4e]=nullptr;assert(!re4dc_cloth_esp4e_words11(c,words));EspCreateTbl[0x4e]=real_create;
+ e->m_Id=0;assert(!re4dc_cloth_esp4e_words11(c,words));e->m_Id=0x4e;
+ e->m_Be_flg=0;assert(!re4dc_cloth_esp4e_words11(c,words));e->m_Be_flg=1;
+ e->m_Free.pCl=&ClothWk[1];assert(!re4dc_cloth_esp4e_words11(c,words));e->m_Free.pCl=c;
+ c->tex=reinterpret_cast<GXTexObj*>(system11.pEspBuf+1);assert(!re4dc_cloth_esp4e_words11(c,words));c->tex=&e->m_Free.tex;
+ system11.nEsp=~0U;assert(!re4dc_cloth_esp4e_words11(c,words));system11.nEsp=2;
+ assert(!re4dc_cloth_esp4e_words11(reinterpret_cast<Cloth*>(1),words));
+ check11("actual-helper-foreign-constructor-slot-id-live-backpointer-tex-bounds");
+ // Force the source allocator's wrapped full-pool search. Reusing a generic
+ // effect cannot revoke an unrelated sheet; raw clearing an Esp4e revokes
+ // only its own cloth, including when the optional source recycle fix is0.
+ source_fresh11();spawn11();spawn11();
+ auto* zero=reinterpret_cast<cEsp*>(system11.pEspBuf);auto* one=static_cast<cEsp4e*>(reinterpret_cast<cEsp*>(system11.pEspBuf+0x150));
+ PushEsp(zero);EspCreateTbl[0]=[]()->cEsp*{return new cEsp;};cEsp* generic=nullptr;assert(PullEsp(&generic,0)&&generic==zero);
+ generic->m_Tool_flg=0x40000;const auto survivor_epoch=cloth11_epoch(one->m_Free.pCl);
+ cEsp* another=nullptr;assert(PullEsp(&another,0)&&another==zero);
+ assert(cloth11_epoch(one->m_Free.pCl)==survivor_epoch&&re4dc::cloth_material11::admitted(cloth11_slot(one->m_Free.pCl)));
+ assert(draw11(one).outcome==O11::Submitted);verify11(2);
+ PushEsp(another);auto* stolen=spawn11();assert(reinterpret_cast<cEsp*>(stolen)==zero);Cloth* stolen_cloth=stolen->m_Free.pCl;
+ stolen->m_Tool_flg=0x40000;packet_log.clear();assert(PullEsp(&another,0)&&another==zero);
+ assert(!re4dc::cloth_material11::admitted(cloth11_slot(stolen_cloth)));
+ assert(cloth11_epoch(one->m_Free.pCl)==survivor_epoch&&re4dc::cloth_material11::admitted(cloth11_slot(one->m_Free.pCl)));
+#if !RE4DC_ESP_POOL_RECYCLE
+ assert(stolen_cloth->be_flag==0x31); // metadata retirement did not run gameplay Destruct
+#endif
+ assert(draw11(one).outcome==O11::Submitted);verify11(2);
+ check11("actual-wrapped-slot-clear-is-owned4e-only-unrelated-effect-and-cloth-preserved");
+ source_fresh11();e=spawn11();hold11(e);PushEsp(e);assert(!re4dc::cloth_material11::admitted(0));
+ g_pEspSys=reinterpret_cast<cEspSystem*>(1);gap_probe11();g_pEspSys=&system11;
+ e=spawn11();assert(e->m_Free.pCl==held11);assert(draw11(e).outcome==O11::Submitted);verify11(2);
+ check11("PushEsp-virtual-Destruct-Destroy-closes-and-real-Set-reopens");
+ for(auto hook:{room_resolve11,pool_free_resolve11,native_reset11,native_frame11,grid_mutate11,pose_mutate11}){
+  source_fresh11();e=spawn11();hold11(e);resolve_hook=hook;terminal11(draw11(e));assert(packet_log.empty());
+ }check11("held-resolve-room-pool-native-reset-frame-grid-pose-poison-no-replay");
+ source_fresh11();e=spawn11();hold11(e);resolve_hook=replacement_resolve11;terminal11(draw11(e));assert(packet_log.empty());
+ packet_log.clear();assert(draw11(replacement11).outcome==O11::Submitted);verify11(2);
+ check11("same-frame-same-pool-grid-and-cloth-address-reentry-incarnation-rejects-old-view");
+ source_fresh11();assert(!re4dc::cloth_material11::open_slots);e=spawn11();hold11(e);room_poison11();
+ assert(held11->be_flag==0x31);gap_probe11();source_fresh11();assert(!re4dc::cloth_material11::open_slots);
+ e=spawn11();assert(draw11(e).outcome==O11::Submitted);verify11(2);
+ check11("fresh-admission-retired-gap-safe-before-ClothRoomInit-only-real-Set-recovers");
+ for(unsigned pool_action=0;pool_action<2;++pool_action){source_fresh11();e=spawn11();hold11(e);
+  if(pool_action==0){free_hook11=[](){g_pEspSys=reinterpret_cast<cEspSystem*>(1);gap_probe11();};assert(EspArrayFree());}
+  else {assert(EspArrayPush(2));assert(!re4dc::cloth_material11::open_slots);assert(EspArrayPop());assert(!re4dc::cloth_material11::open_slots);}
+ }check11("actual-pool-Free-Push-Pop-close-before-replacement-and-free-callback");
+ source_fresh11();e=spawn11();hold11(e);stream_aborted=true;poison_heap11();
+ assert(!mprotect(source_tpl11,4096,PROT_NONE));gap_probe11();
+ check11("preaborted-stream-zero-publication-no-source-read-or-replay");
+ source_fresh11();e=spawn11();hold11(e);sq_hook=room_poison11;terminal11(draw11(e));assert(locks==unlocks&&packet_log.empty());
+ check11("SQ-lock-yield-retirement-before-any-source-readback");
+ source_fresh11();e=spawn11();hold11(e);source_draws_finished=false;deferred_top=0;spill_hook=room_poison11;
+ terminal11(draw11(e));assert(!deferred_count&&packet_log.empty());
+ check11("spill-yield-retirement-before-queue-copy");
+ source_fresh11();e=spawn11();hold11(e);select_hook=room_poison11;terminal11(draw11(e));assert(!send_calls);
+ check11("stream-select-yield-retirement-before-first-send");
+ source_fresh11();e=spawn11();hold11(e);after_send_hook=room_poison11;terminal11(draw11(e),1);assert(packet_log.size()==1);
+ check11("after-first-send-retirement-sticky-partial-no-next-band-read");
+ source_fresh11();e=spawn11();source_draws_finished=false;spill_available=false;
+ deferred_top=16384+kEffectQuad21Node+5*sizeof(pvr_vertex_t);terminal11(draw11(e),0,1);assert(deferred_count==1&&packet_log.empty());
+ actual_drain();verify11(1);assert(!deferred_first);
+ check11("queue-exhaustion-after-accepted-band-no-producer-replay-real-drain");
+ source_fresh11();e=spawn11();source_draws_finished=false;auto queued=draw11(e);assert(queued.outcome==O11::Queued&&queued.queued==2&&!queued.fallback_allowed());
+ PushEsp(e);actual_drain();verify11(2);assert(!deferred_first);
+ check11("queued-copied-bands-survive-normal-effect-retirement");
+ source_fresh11();e=spawn11();source_draws_finished=false;assert(draw11(e).queued==2);
+ after_send_hook=[](){stream_aborted=true;after_send_hook=nullptr;};actual_drain();assert(packet_log.size()==1&&!deferred_first);
+ check11("actual-drain-abort-discards-pending-without-replay");
+ source_fresh11();e=spawn11();source_draws_finished=false;assert(draw11(e).queued==2);re4dc_effect_retire_room();reset_deferred();
+ assert(!deferred_first&&packet_log.empty());check11("room-retire-shared-reset-discards-queued-ownership");
+ source_fresh11();e=spawn11();missing=true;terminal11(draw11(e));assert(opens==1&&!legacy11&&packet_log.empty());
+ check11("selected-cold-refusal-terminal-even-zero-publication");
+ source_fresh11();e=spawn11();e->m_Free.pCl->pVer[0].x=std::numeric_limits<float>::quiet_NaN();auto malformed=draw11(e);
+ assert(malformed.outcome==O11::UnsupportedBeforePublication&&malformed.fallback_allowed()&&!opens&&!send_calls);
+ check11("malformed-grid-refuses-before-selection-acquisition");
+ source_fresh11();e=spawn11();hold11(e);resolve_hook=[](unsigned){resolve_hook=nullptr;held11->tex->w[6]=0;};
+ terminal11(draw11(e));assert(packet_log.empty());check11("embedded-object-value-change-after-yield-rejected-with-live-slot");
+ source_fresh11();e=spawn11();hold11(e);resolve_hook=[](unsigned){resolve_hook=nullptr;((unsigned char*)source_tpl11->descriptorArray[0].textureHeader->data)[9]=0;};
+ terminal11(draw11(e));assert(packet_log.empty());check11("backed-pixel-content-mutation-after-yield-rejected");
+ source_fresh11();e=spawn11();hold11(e);resolve_hook=[](unsigned){resolve_hook=nullptr;entries[0].valid=false;++entries[0].upload_incarnation;};
+ terminal11(draw11(e));assert(packet_log.empty());check11("Entry-retirement-after-acquisition-no-ordinary-replay");
+ for(unsigned mutation=0;mutation<3;++mutation){source_fresh11();e=spawn11();hold11(e);
+  if(mutation==0)resolve_hook=[](unsigned){resolve_hook=nullptr;held11->color.r=63;};
+  if(mutation==1)resolve_hook=[](unsigned){resolve_hook=nullptr;LightMgr.e.AmbientScr.r=254;};
+  if(mutation==2)resolve_hook=[](unsigned){resolve_hook=nullptr;static cLight light{};picked11[0]=&light;};
+  terminal11(draw11(e));assert(packet_log.empty());
+ }check11("selected-color-ambient-and-light-set-changes-no-approximate-replay");
+ producer_oom11();
+ source_fresh11();alloc_hook11=re4dc_cloth_material_retire11;e=spawn11();
+ assert(!re4dc::cloth_material11::open_slots);assert(draw11(e).outcome==O11::PartialAbort&&!opens);
+ check11("Set-interrupted-by-retirement-cannot-reopen");
+ source_fresh11();e=spawn11();re4dc::cloth_pub11::grid_generation[0]=0;auto unknown=draw11(e);
+ assert(unknown.outcome==O11::UnsupportedBeforePublication&&!opens);check11("exhausted-grid-cookie-refuses-exact-material");
+ source_fresh11();cloth11_incarnation[0]=~0U;e=spawn11();assert(!cloth11_incarnation[0]&&!re4dc::cloth_material11::open_slots);
+ assert(draw11(e).outcome==O11::PartialAbort&&!opens);ClothInit();assert(!cloth11_incarnation[0]);
+ check11("exhausted-owner-cookie-never-reopens-or-revives-ABA");
+#endif
+ std::printf("PASS real single material producer cases=%u source_slot_stride=336 source_snapshot_bytes=32 pixel_snapshot_bytes=128 metadata_bytes=36\n",cases11);
+ g_pEspSys=&system11;re4dc_cloth_material_retire11();for(auto& a:heap11)assert(!munmap(a.pointer,a.capacity));
+ entries[0].package.close();assert(!munmap(source_tpl11,4096));assert(!munmap(mapping,4096));
+}
