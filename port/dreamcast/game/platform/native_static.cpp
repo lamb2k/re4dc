@@ -192,6 +192,12 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #ifndef RE4DC_SCENERY_DIRECT_STRIPS
 #define RE4DC_SCENERY_DIRECT_STRIPS 0
 #endif
+#ifndef RE4DC_WORLD_ROUTE_SCRATCH31
+#define RE4DC_WORLD_ROUTE_SCRATCH31 0
+#endif
+#if RE4DC_WORLD_ROUTE_SCRATCH31 != 0 && RE4DC_WORLD_ROUTE_SCRATCH31 != 1
+#error WORLD_ROUTE_SCRATCH31 must be 0 or 1
+#endif
 #if RE4DC_SCENERY_LOCAL_INDEXED || RE4DC_SCENERY_DIRECT_STRIPS
 #if (RE4DC_SCENERY_LOCAL_INDEXED != 0 && RE4DC_SCENERY_LOCAL_INDEXED != 1) || \
     (RE4DC_SCENERY_DIRECT_STRIPS != 0 && RE4DC_SCENERY_DIRECT_STRIPS != 1) || \
@@ -388,6 +394,9 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 // the per-strip-corner Emitter path for every meshlet (A/B reference).
 #ifndef RE4DC_MESH_FASTPATH
 #define RE4DC_MESH_FASTPATH 1
+#endif
+#if RE4DC_WORLD_ROUTE_SCRATCH31 && (!RE4DC_SCENERY_DIRECT_STRIPS || !RE4DC_MESH_FASTPATH || RE4DC_SCENERY_STREAM || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_WORLD_SCRATCH || RE4DC_TA_HASH || RE4DC_CPU_BACKFACE || RE4DC_MESH_VP_SCHED != 1 || !RE4DC_HW_LEAN)
+#error WORLD_ROUTE_SCRATCH31 needs the qualified direct-strip route without stream, split records, relocated scratch or alternate diagnostics
 #endif
 #if RE4DC_SCENERY_CLIP_INDEXED26 && !RE4DC_MESH_FASTPATH
 #error SCENERY_CLIP_INDEXED26 needs MESH_FASTPATH=1
@@ -3301,6 +3310,19 @@ struct MeshDraw : Emitter {
     bool scratch_borrowed=false;
     ~MeshDraw(){if(scratch_borrowed)re4dc_world_scratch_release();}
 #endif
+#if RE4DC_WORLD_ROUTE_SCRATCH31
+    // Bound texture scales and current UV/alpha constants do not require a
+    // projected cache. Keep cache admission/priming in borrow() for fallback.
+    void prepare_route_constants(){
+        k={part.uv_scale[0],part.uv_bias[0],p.uv_offset[0],packet.u_scale,
+           part.uv_scale[1],part.uv_bias[1],p.uv_offset[1],packet.v_scale,near,far,
+           vertex_alpha?~0U:0x00ffffffU,vertex_alpha?0U:alpha,lut,{}};
+#if RE4DC_PS2_INTERIOR_CULL==2
+        if(pc_check){k.and_mask=0;k.or_bits=0xffff00ffU;}
+#endif
+        k.finish();
+    }
+#endif
     bool borrow(){
         if(cache)return true;
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -3336,6 +3358,9 @@ struct MeshDraw : Emitter {
         }
 #endif
         // After bind(): packet.u_scale/v_scale are the bound texture's.
+#if RE4DC_WORLD_ROUTE_SCRATCH31
+        prepare_route_constants();
+#else
         k={part.uv_scale[0],part.uv_bias[0],p.uv_offset[0],packet.u_scale,
            part.uv_scale[1],part.uv_bias[1],p.uv_offset[1],packet.v_scale,near,far,
            vertex_alpha?~0U:0x00ffffffU,vertex_alpha?0U:alpha,lut,{}};
@@ -3343,6 +3368,7 @@ struct MeshDraw : Emitter {
         if(pc_check){k.and_mask=0;k.or_bits=0xffff00ffU;} // the check run: every corner opaque magenta
 #endif
         k.finish();
+#endif
         return true;
     }
 #if RE4DC_SCENERY_DIRECT_STRIPS
@@ -3943,6 +3969,11 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
+#if RE4DC_WORLD_ROUTE_SCRATCH31
+        // This direct path preflights every strip before emitting any corner.
+        // A refusal still acquires the unchanged indexed/gather/clip scratch.
+        if(lut){prepare_route_constants();if(sequential_direct(l))return 1;}
+#endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
 #if RE4DC_WORLD_MUTATION31
         if(!mutation_current())return -1;
@@ -4186,6 +4217,15 @@ struct MeshDraw : Emitter {
         ++stats.batches;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
+#endif
+#if RE4DC_WORLD_ROUTE_SCRATCH31
+        // Subset picks retain the original cache/clip admission. No package
+        // or source view survives a yielding material bind without the epoch
+        // check above; constants are prepared only from that actual binding.
+        if(pk.nr==0xffU && lut){
+            prepare_route_constants();
+            if(sequential_direct(package.meshlets()[pk.let]))return 1;
+        }
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}

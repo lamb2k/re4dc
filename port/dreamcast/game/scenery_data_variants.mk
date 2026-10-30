@@ -1,6 +1,21 @@
 # Build 12: alternate world payloads; absent/0 changes no flags or objects.
 SCENERY_LOCAL_INDEXED ?= 0
 SCENERY_DIRECT_STRIPS ?= 0
+WORLD_ROUTE_SCRATCH31 ?= 0
+ifneq ($(WORLD_ROUTE_SCRATCH31),0)
+ifneq ($(WORLD_ROUTE_SCRATCH31),1)
+$(error WORLD_ROUTE_SCRATCH31 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(WORLD_ROUTE_SCRATCH31),1)
+ifneq ($(SCENERY_DIRECT_STRIPS)$(MESH_FASTPATH)$(MESH_VP_SCHED)$(HW_LEAN),1111)
+$(error WORLD_ROUTE_SCRATCH31 needs SCENERY_DIRECT_STRIPS=1 MESH_FASTPATH=1 MESH_VP_SCHED=1 HW_LEAN=1)
+endif
+ifneq ($(filter-out 0,$(SCENERY_STREAM) $(SCENERY_RECORD_SPLIT) $(WORLD_SCRATCH) $(TA_HASH) $(CPU_BACKFACE)),)
+$(error WORLD_ROUTE_SCRATCH31 does not qualify stream, split records, relocated scratch or alternate diagnostics)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_ROUTE_SCRATCH31=1
+endif
 ifneq ($(filter-out 0 1,$(SCENERY_LOCAL_INDEXED) $(SCENERY_DIRECT_STRIPS)),)
 $(error SCENERY_LOCAL_INDEXED and SCENERY_DIRECT_STRIPS must be 0 or 1)
 endif

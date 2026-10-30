@@ -1,0 +1,94 @@
+// Actual converted public synthetic package -> MeshDraw emit_pick -> original
+// binding/geometry/SQ sink. The package publisher's out-of-band epoch is a
+// controlled external boundary; mutation_current and all consumer checks are
+// extracted from production. No private input or target arithmetic is used.
+static bool route_mutation_current=true,route_mutate_on_bind=false;
+static bool worldPackageSelectionCurrent(unsigned epoch){return epoch==1 && route_mutation_current;}
+
+static void route_case(unsigned scenario,const char* mesh_path){
+    auto bytes=fixture_read(mesh_path);re4dc::room::MeshPackage package;
+    assert(package.adopt(bytes.data(),unsigned(bytes.size()),true,true));
+    const auto& cpkg=package;
+    const auto kind=re4dc::scenery_data::kind(package);
+    assert(!re4dc::scenery_data::validate(package,kind,package.header().reserved[1],package.header().reserved[2]));
+    const auto& l=cpkg.meshlets()[0];
+    unsigned longest=0;for(auto* s=cpkg.strip_begin(l);s<cpkg.strip_begin(l)+l.strip_bytes;s+=*s+1)longest=std::max(longest,unsigned(*s));
+    const unsigned capacities[]={longest,longest-1,327,328,329,1024,1024,1024,1024,1024,1024,1024,1024,1024,longest,1024,1024,1024,1024,longest,longest};
+    assert(scenario<std::size(capacities));const unsigned capacity=capacities[scenario];
+    route_packet_capacity=capacity;
+    re4dc::vp::build_lut(lut);
+    alignas(32) re4dc::room::CompactVertex12 gather[256];std::memset(gather,0xa5,sizeof gather);
+    std::memset(storage,0x6d,sizeof storage);
+    QueuePart p;p.cull=0;p.projection[1]=p.projection[3]=1;
+    p.viewport[2]=640;p.viewport[3]=480;
+    const float near=1,far=1000;
+    MeshDraw e{{p,{},near,far},cpkg,cpkg.parts()[0],scenario==6?nullptr:lut,gather};
+    unsigned key[6];key_for(0,0,0,key);e.ps2=key;e.direct=true;e.lean_part=true;e.cull_far=far;e.alpha=0xa5000000;
+    e.mvq[0]=e.mvq[5]=e.mvq[10]=1;
+    e.mvq[3]=-.5f*(l.bounds_min[0]+l.bounds_max[0]);
+    e.mvq[7]=-.5f*(l.bounds_min[1]+l.bounds_max[1]);
+    e.mvq[11]=-float(l.bounds_max[2])-300;
+    MeshDraw::Pick pick{0,255,0,0,255,{0,0}};
+    const float inside_z=e.mvq[11];
+    if(scenario==5 || scenario==15 || scenario==18){e.mvq[11]=-float(l.bounds_max[2])-1;}
+    if(scenario==6)pick.nr=0; // missing LUT still must refuse, even for empty selection
+    if(scenario==7 || scenario==17)source_valid=false;
+    if(scenario==8){acquire_invalid_at=1;acquire_invalid_kind=1;}
+    if(scenario==9)route_mutation_current=false;
+    if(scenario==10 || scenario==16)route_mutate_on_bind=true;
+    if(scenario==12)pick.nr=0; // supported empty subset never borrows a full-pick proof
+    const auto before=storage[kModelPacketBytes/32-1];
+    const int first=scenario>=14 && scenario<=17?e.draw(l):e.emit_pick(pick);
+    const unsigned cache1=e.cache?1:0,primed1=e.primed,limit1=e.limit;
+    if((scenario<=4 || scenario==14) && first>0 && RE4DC_WORLD_ROUTE_SCRATCH31){
+        assert(!e.cache && !e.outcodes && !e.primed);
+        assert(e.limit==capacity && !std::memcmp(&before,storage+kModelPacketBytes/32-1,32));
+    }
+    int second=0;
+    if(scenario==18 && first>0){
+        auto* retained=lean::prime_at;const unsigned retained_count=lean::primed,reuses=lean::st.prime_reuse;
+        std::vector<unsigned char> words(retained_count*32);std::memcpy(words.data(),retained,words.size());
+        e.end_direct();e.chunk_restart();e.mvq[11]=inside_z;
+        // The old reference needs its cache. New admission must render the
+        // same middle geometry with only the direct strip's output capacity.
+        route_packet_capacity=RE4DC_WORLD_ROUTE_SCRATCH31?longest:1024;
+        second=e.emit_pick(pick);
+        if(RE4DC_WORLD_ROUTE_SCRATCH31){
+            assert(second==1 && !e.cache && !e.primed && lean::prime_at==retained && lean::primed==retained_count);
+            assert(!std::memcmp(words.data(),retained,words.size()));
+        }
+        e.end_direct();e.chunk_restart();route_packet_capacity=1024;
+        e.mvq[11]=-float(l.bounds_max[2])-1;
+        assert(e.emit_pick(pick)==1 && e.cache && e.primed>=retained_count);
+        assert(lean::st.prime_reuse>reuses);
+    }
+    if((scenario==19 || scenario==20) && first>0){
+        if(scenario==19)pick.nr=0;else route_mutation_current=false;
+        second=e.emit_pick(pick);
+        assert(second<0); // published prefix cannot restart or fall back
+    }
+    if(scenario==11 && first>0){
+        e.end_direct();e.chunk_restart();
+        p.uv_offset[0]=.375f;p.uv_offset[1]=-.5f;
+        entries[0].package.texture.width=32;entries[0].package.texture.height=32;
+        second=e.emit_pick(pick);
+        if(RE4DC_WORLD_ROUTE_SCRATCH31){
+            assert(!e.cache && !e.primed);
+            assert(e.k.su==cpkg.parts()[0].uv_scale[0] && e.k.scale_u==e.packet.u_scale);
+        }
+    }
+    e.end_direct();
+    if(first<0 || second<0)re4dc_model_packet_abort();
+    assert(!locked && !direct_open && lock_calls==unlock_calls && !unsafe_calls);
+    if(scenario==7 || scenario==17)assert(first==0 && !direct_commits && !e.submitted);
+    if((scenario>=8 && scenario<=10) || scenario==16)assert(first<0 && !direct_commits);
+    if(scenario==6)assert(first<0 && !e.cache && !direct_commits);
+    if(scenario==12)assert(first>0 && e.cache && !direct_commits);
+    if(scenario==5 || scenario==15)assert(first>0 && e.cache && !direct_commits);
+    if(scenario==1)assert(first<0 && !e.cache && !direct_commits);
+    if((scenario==19 || scenario==20) && RE4DC_WORLD_ROUTE_SCRATCH31)
+        assert(first==1 && second<0 && packet_aborts==1 && direct_commits>0);
+    std::printf("{\"result\":%d,\"second\":%d,\"cache\":%u,\"primed\":%u,\"capacity\":%u,\"limit\":%u,\"commits\":%u,\"input\":%u,\"output\":%u,\"aborts\":%u,\"locks\":%u}\n",
+        first,second,cache1,primed1,capacity,limit1,direct_commits,e.input,e.output,packet_aborts,lock_calls);
+    std::printf("TA");for(auto word:sent)std::printf(" %08x",word);std::printf("\n");
+}
