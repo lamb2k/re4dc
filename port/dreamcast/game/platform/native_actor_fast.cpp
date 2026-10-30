@@ -1966,6 +1966,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
             same_words(f.viewport, p.viewport, 6)) {
 #endif
             // Mode is a function of (info, positions) within a frame.
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            table14_enter(f);
+#endif
 #if RE4DC_GC_ASSET_GATE
             gcasset_frame_check(f);
 #endif
@@ -2044,6 +2047,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
         f.screen[c * 4 + 0] = M[0][c] * k; f.screen[c * 4 + 1] = M[1][c] * k;
         f.screen[c * 4 + 2] = M[2][c] * k; f.screen[c * 4 + 3] = M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return &f;
 }
@@ -7248,10 +7254,20 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
 #else
             same_words(f.viewport, p.viewport, 6))
 #endif
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            {
+                table14_enter(f);
+#if RE4DC_GC_ASSET_GATE
+                gcasset_frame_check(f);
+#endif
+                return f;
+            }
+#else
 #if RE4DC_GC_ASSET_GATE
             {gcasset_frame_check(f);return f;}
 #else
             return f;
+#endif
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorFramePrepare, 1)
@@ -7321,6 +7337,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         f.screen[c * 4 + 0] = memo.M[0][c] * k; f.screen[c * 4 + 1] = memo.M[1][c] * k;
         f.screen[c * 4 + 2] = memo.M[2][c] * k; f.screen[c * 4 + 3] = memo.M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return f;
 }

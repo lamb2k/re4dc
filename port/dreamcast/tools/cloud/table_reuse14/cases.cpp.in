@@ -43,6 +43,39 @@ void sequence(Asset& a,Asset& b){
     draw(a);draw(b);draw(a);
 #endif
 }
+void light_draw(Asset& a){
+#if RE4DC_COARSE_ONE_SUBMIT
+    const Re4dcActorChunk chunk{a.p.info,a.p.stream,a.p.uv,a.p.modelview,
+        a.p.stream_bytes,a.p.position_count,a.p.normal_count};
+    auto p=a.p;require(re4dc_actor_submit_chunks(&p,&chunk,1)==1u);
+#else
+    draw(a);
+#endif
+}
+void light_boundary(float delta,bool immediate){
+    start();Asset a(1,1,12),b(1,1,12);Owner owner(a,b);
+    light_draw(a);if(!immediate)light_draw(b);ta.clear();
+    // Exact review witnesses: light X=400 -> 402/404 are below the existing
+    // direction tolerance but change emitted ARGB. Zero and 408 are controls.
+    a.lighting.lights[0].position[0]+=delta;
+    const unsigned before=table14_host_builds,dirs=stats.skin_dir_sets;
+    light_draw(a);const auto live=ta;
+    require(!live.empty());
+    require(table14_host_builds-before==unsigned(!immediate && !RE4DC_ACTOR_TABLE_REUSE14));
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    require(stats.skin_dir_sets-dirs==unsigned(!immediate || delta>=8));
+#endif
+    finish_case();ta.clear();owned_skin_invalidate_frames();light_draw(a);
+    require(ta.size()==live.size());
+    if(!immediate || delta==0 || delta>=8 || RE4DC_ACTOR_LIGHT_FAST_ONLY)require(ta==live);
+    else {
+        // Immediate same-info hits keep their legacy tolerant directions in
+        // both OFF and ON. Only ARGB may differ from a forced fresh Frame.
+        require(ta!=live);
+        for(unsigned i=0;i<ta.size();++i)if(ta[i]!=live[i])require((i&7u)==6u);
+    }
+    finish_case();owner.release();
+}
 void aba(bool bounded){
     start();Asset a(1,1,12),b(1,1,12);b.palette[9]=19;
     Owner owner(a,b,bounded?0:8);
@@ -105,6 +138,7 @@ void victims(){
 } // namespace check
 int main(int argc,char** argv){
     check::aba(false);check::aba(true);check::changes();check::replacement();check::unknown_and_capacity();check::victims();
+    for(float delta:{0.f,2.f,4.f,8.f})for(bool immediate:{false,true})check::light_boundary(delta,immediate);
     require(argc==2);FILE* out=std::fopen(argv[1],"wb");require(out);
     require(std::fwrite(check::all_words.data(),4,check::all_words.size(),out)==check::all_words.size());std::fclose(out);
     std::printf("{\"checks\":%u,\"words\":%zu,\"table_builds\":%u,\"matrix_builds\":%u,\"frame_bytes\":%zu}\n",
