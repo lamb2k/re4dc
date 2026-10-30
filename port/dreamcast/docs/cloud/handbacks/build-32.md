@@ -1,5 +1,16 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-30 source takeover and target admission
+
+RE4-PLAN-SYNC-20261029-1202
+
+Actor correction95702448 is integratedd789dd7c. Type-faithful primitive cursor capture and authoritative conditional pSUB declaration fixes pass host/sanitizer, six actual release target arms including96/128 bone profiles, empty missing.txt and exact full default-OFF programme/15-overlay/allocated-section checks. Compatible K40 QA_LINK1 is prepared. ACTOR_PRESENTATION32 remains parked under its separate SKIN_RECIPE32=0 profile; broad compatible QA keeps recipe1/presentation0. Cabin/source/material/pose/look/lifecycle/memory/cost/STRICT/console acceptance is not inferred.
+
+Cloth fixture correctionbf59 fixes controlled scratch Git discovery without changing unrelated ancestor metadata or selected SDK. Host21/sanitizer/source-pin tests pass; its handback conflicts only in this report with newer owner entries. No hand resolution, standalone SDK or numeric/FPSCR/TMU1 runtime acceptance is claimed; authorization to retain both dated reports is pending.
+
+EF04 source-entry test correction39ef retains actual current presentation capture, transaction and zero-admission refusal guards. Six host/sanitizer arms pass; fresh target/fullOFF admission remains next. Prior first-radio16 natural flow remains scoped actual b2/K40 evidence; source fixtures do not close async/other producer, memory, stack, cost or console gates.
+
+
 ## Answers (owner): 2026-10-30 00:53 EDT
 
 RE4-PLAN-SYNC-20261029-1202: owner tracking correction only. The00:42 canonical rewrite of Build32 Status omitted the literal landed marker required by the existing scanner. Nine Build32 controls were skipped and two local aliases reappeared, changing the displayed count39 to32. All39 remained release-OFF throughout; no source, recipe, hold or acceptance changed. Marker landed2e0a59bea is restored by bbda0fbd9.

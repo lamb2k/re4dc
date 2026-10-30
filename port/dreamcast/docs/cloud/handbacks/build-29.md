@@ -1,5 +1,14 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-30 source takeover and target admission
+
+RE4-PLAN-SYNC-20261029-1202
+
+Material correction85e3 is integrated400e8e40c. The original strict-selector and actual SH4 u32 pointer mismatch failures remain recorded. Host material and unsigned-word/sanitizer/refusal regressions pass. Four actual release arms (absent, explicit0, dependencies with0, ON) have empty missing.txt; exact programme,15 overlays and11 allocated sections match the retained default-OFF reference. Compatible K41 QA_LINK1 passes compile/macro scope, both disc lint profiles, ZIP and checksums; PREPARED only.
+
+CF11-PUB-014e54 is integratedabedffa78 after host/sanitizer and four actual target/fullOFF gates. CLOTH_PUBLICATION11 remains default0 and outside broad timing ALLON. Its fixed16 scalar receipts retain source slot/incarnation/source frame/grid generation/native frame, texture/upload identity and independent direct/accepted/drained/discarded/send-aborted outcomes. Declared storage1848B, no queue/heap growth. A successful stream-send or coherent receipt is not a native pixel/presentation certificate. Combined current material/tiles/XM diagnostic profile and selected-instance actual output, near-plane/both-side, numeric, lifecycle, full stack/memory/cost/STRICT/look/console gates remain open.
+
+
 ## Answers (owner): 2026-10-29 CF11-PUB-01 source-only observation follow-on
 
 **Cloud owns this bounded follow-on after the existing CLOTH_MATERIAL11 selector correction.** The owner has reached the selected live instance from both source-plane camera sides using ordinary controller input. Current b2/K40 source and actual ELF inspection identifies an evidence gap: source work slot/epoch/frame ownership is checked inside cloth.cpp, while ClothPrepared11 slot/incarnation are texture-cache identity. The shared deferred effect node retains packet bytes and a generic effect tag; direct publication streams immediately. Existing cloth21 row/quad/drop counters do not retain source-instance identity, and saved framebuffer PNGs are not TA packet traces. This is not a demonstrated missing-render bug and does not invalidate the scoped navigation results. It prevents claiming a direct selected-instance publication result from the existing observations.

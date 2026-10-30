@@ -1,5 +1,12 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-30 source takeover and target admission
+
+RE4-PLAN-SYNC-20261029-1202
+
+The user instruction finish cloud work transfers remaining source/synthetic implementation to the owner and assigned isolated workers; it supersedes historical cloud-only ownership. Original cloud refs, dirty trees, failed targets and private evidence are preserved. Actor957/d789 and material85e3/400e pass six/four actual target arms and fullOFF; CF11 publication4e54/abed passes four target/fullOFF arms. No whole-card or console acceptance follows. EF10 spans ef276, EF04 entry39ef and qualified clip d517 have source/host evidence and await target admission. Fixturebf59/recoverydocs43b8 are blocked on documentation-only conflicts pending explicit authorization. All controls default0; diagnostic, incompatible portal/presentation and logger holds remain. Progress emails remain stopped; cloud fetch/list snapshots continue every5m.
+
+
 ## Answers (owner): 2026-10-29 current-image first-radio route prerequisites
 
 Current b2/K40 fresh cases09 and10 completed181.2s and181.0s, each outer0/reader0/errors[]. They did not reach the first house fight, first-kill movie or radio. Zero combat shots and zero radio-close commands were attempted. Do not accept first-radio/async portrait/backing gates from these runs.

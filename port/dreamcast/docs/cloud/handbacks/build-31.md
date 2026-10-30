@@ -1,5 +1,14 @@
 # Build 31: portal culling and world part plan
 
+## Answers (owner): 2026-10-30 source takeover and target admission
+
+RE4-PLAN-SYNC-20261029-1202
+
+Recovered qualified portal clip-gather source d517 is published on an owner correction ref with real producer/ASan/Make and OFF host identity checks. Target admission is still pending. The separate profile retains current pacing, streamed completion/PVS composition, gathers only depth-safe oversized primitives, and excludes indexed/alternate clippers, CPU backface and prefetch. No authored-cell, runtime, output or speed acceptance is claimed.
+
+Recovery documentation43b8 preserves the exact original49816-byte WIP patch as deterministic gzip, with manifest and unchanged raw SHA256b763c5395be96ac5def02f15d95b994f2f2c8210b79b4d5537546cdfd99d7fcc. It remains WIP. Its queue report conflicts with newer owner reports; no hand resolution or integration is claimed while authorization is pending.
+
+
 ## Answers (owner): 2026-10-29 package mutation target gate
 
 Mutationd25 (reviewed14def body plus accepted26f7 source, expected merge-tree7775acdd production delta empty) landed no-ff asc457e6606646d13ac0c11780c98d6e64dd30afea, WORLD_MUTATION31 default0. Actual merged-candidate source/normal/sanitizer/page fixtures passed. Four fresh release-absent/zero/dependency0/ON target arms linked with existing empty missing.txt and scoped native_static definition; full release programme,15overlays and allocated sections match D13. This is the named package publication/revoke slice only, not arbitrary in-place content/placement/material mutation authority or all source families.
