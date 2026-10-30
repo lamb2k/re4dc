@@ -70,9 +70,13 @@ def fixture(baseline=False):
     # These are actual source caller predicates, not a guessed null-position lookup.
     prop_predicate = admit.region(t, '        if (info->pPosBuf[pG->vtx_buf_no] != 0 || !re4dc_actor_skin_lazy_known(info))', '        if (!propGateWeights(')
     native = read(ROOT / 'port/dreamcast/game/platform/native_model.cpp', baseline)
-    native_predicate = admit.region(native, '    Re4dcModelPart lazy_part;\n    if(p && !p->positions)', '#if RE4DC_MODEL_STREAM_FIX')
-    # Retain its preprocessor else pairing, whose opening is outside the region.
-    native_predicate = '#if RE4DC_NATIVE_ACTOR_SKIN\n#if RE4DC_NATIVE_ACTOR_SKIN_LAZY\n' + native_predicate
+    # Extract the complete balanced production block. Inner routing guards can
+    # change without losing either the lazy else or the ordinary materializer.
+    native_predicate = admit.region(native,
+        '#if RE4DC_NATIVE_ACTOR_SKIN\n    // Declined part of an info', '#if RE4DC_MODEL_STREAM_FIX')
+    assert native_predicate.count('Re4dcModelPart lazy_part;') == 1
+    assert 're4dc_actor_materialize_lazy(&lazy_part)' in native_predicate
+    assert 're4dc_actor_materialize(p)' in native_predicate
     one_chunk = admit.function(a, 'int one_chunk(Re4dcModelPart& p, OneWindow& w)')
     frame_call = '    Frame& f = one_frame(p, near_distance, far_distance, *se, src, w.screen);'
     one_guard = ''
@@ -241,6 +245,10 @@ def main():
             opts=common+(['-fsanitize=address,undefined','-fno-sanitize-recover=all','-fno-omit-frame-pointer','-fno-pie','-no-pie'] if sanitized else [])
             admit.run(['g++',*opts,str(current),'-o',str(exe)])
             print(f'PASS recipe sanitizer={int(sanitized)} '+admit.run([str(exe)],env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0')).strip())
+            exe=out/f'on-spans10-{sanitized}'
+            admit.run(['g++',*opts,'-DRE4DC_STATIC_OBJ_SPANS10=1',str(current),'-o',str(exe)])
+            print(f'PASS recipe/spans10 caller guard sanitizer={int(sanitized)} '+
+                  admit.run([str(exe)],env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0')).strip())
     print('PASS source digest='+hashlib.sha256((TRANS.read_bytes()+ACTOR.read_bytes()+(INC/'native_actor_skin_recipe32.inc').read_bytes())).hexdigest()[:16])
 
 if __name__=='__main__': main()
