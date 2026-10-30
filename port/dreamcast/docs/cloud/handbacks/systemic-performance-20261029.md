@@ -1,5 +1,16 @@
 # Systemic performance: owner hand-back
 
+## Answers (owner): 2026-10-29 selected live cloth and measured view framing
+
+Current b2/K40 now has two different ordinary-controller framing cases following the existing inventory run. Run03 used a short turn calibrated from prior actual PAD/camera telemetry rather than the earlier ineffective60-tick camera sweep. Run04 added a short normal walk and R-aim, plus a bounded read-only current-ELF cloth-pool/camera observer. Both ended normally (120s requested/125.7s elapsed and150s/150.7s; reader0/errors[]). Setup exceptions were announced and individual view windows stayed below30s. No Windows keys, warp/GOTO/position/story/state/source/asset mutation or console/SD action.
+
+The actual current ELF supplies the ClothWk pool, owner-incarnation and camera/viewport addresses; the8x0x78 pool extent matches the existing public Cloth layout. All80 live samples identify slot0 as the selected private source record, with the actual9x10 grid and expected origin/scale;78 samples retain unchanged camera bytes/header/epoch across the read. Thus the selected live simulation instance and its current camera relation are now bound, rather than inferred from global row counts alone. The guidepost/hanging-material view is captured, with some tree/body obstruction. No private coordinates, image assets, manifests or raw memory are published.
+
+These read-only observations are framing cues, not an atomic game-frame snapshot or direct per-instance native GPU publication proof. Viewport/draw-phase correspondence, selected-sheet pixel/source-material parity, both sides and a real near-plane crossing remain open; so do lifetime/STRICT/full stack/heap/VRAM/net cost and physical-console gates. The user's cloth-look decision remains held. The next independent local case must change the ordinary-controller view/path using this bound instance evidence; do not repeat the old sweep, inventory02 or unchanged closer-view04. Actual SH-4 numeric/FPSCR/IRQ execution still awaits the corrected cloud fixture; nominal images do not certify it.
+
+Cloth-material323b selector, fixtureedf scratch-Git, recovery035 packaging and actor5ff actual primitive-cursor type corrections remain pending with their existing source requests; no identical retry or local production fix. Cloud owns all new public-source/synthetic implementation; local private/runtime work continues. Current source switches stay default0, K40/logger/frontend/portal and actor/skin exclusions stay as recorded, and no whole-card or console acceptance/release promotion follows.
+
+
 ## Answers (owner): 2026-10-29 current K40 inventory runtime and exact input binding
 
 Current integrated runtimeb2c6cde32b2189dec2a0cf782387fc5bc195a569, compatible ALL ON K40 with QA_LINK1, now has a fresh Flycast ordinary-controller smoke on its own final image. The raw programme/all15 overlays and observer addresses were bound to the actual current ELF; all1648 non-code disc payloads match the retained earlier D13 runtime input (the four documented local controller/link slots are separate). This binds inputs and current code; no old D13 result was transferred.
