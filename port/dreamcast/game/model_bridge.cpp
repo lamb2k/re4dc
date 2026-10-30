@@ -21,6 +21,10 @@
 #include "model.h"
 #include "gx.h"
 #include "native_model.h"
+#if defined(RE4DC_STATIC_OBJ_SPANS10) && RE4DC_STATIC_OBJ_SPANS10
+#include "platform/include/static_obj_spans10.h"
+#include "platform/include/native_draw_owner_stamp.hpp"
+#endif
 #if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
 #include "gc_asset_members.h"
 #include "player.h"
@@ -460,6 +464,24 @@ Entry* build(const Pending& q){
     return &e;
 }
 #endif
+#if RE4DC_STATIC_OBJ_SPANS10
+struct SpanFence10 {const State* state;unsigned generation,incarnation;};
+bool span_current10(const void* context){
+    const auto& f=*static_cast<const SpanFence10*>(context);
+    return validate() && S==f.state && owner.generation==f.generation && owner.incarnation==f.incarnation;
+}
+bool submit_spans10(const Pending& q){
+    Re4dcModelSpan10 spans[kMaxParts];
+    for(unsigned i=0;i<q.n;++i){
+        // Unknown source extents retain the ordinary uncached path. Never
+        // inspect a source header using the room-cell token as its authority.
+        if(!re4dc_model_draw_owner_stamp(q.parts[i],32).valid())return false;
+        spans[i]={q.parts[i],list_of(q.parts[i]),q.parts[i]->size};
+    }
+    const SpanFence10 fence{S,owner.generation,owner.incarnation};
+    return re4dc_model_submit_spans10(&q.rec,spans,q.n,span_current10,&fence)!=0;
+}
+#endif
 void flush(){
 #if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
     if(!validate())return;
@@ -482,6 +504,9 @@ void flush(){
     ++st.groups;st.lists+=q.n;
     Re4dcModelPart r=q.rec;
     if(q.n>1){
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(submit_spans10(q)){++st.merged;st.saved+=q.n-1;return;}
+#endif
 #if !defined(RE4DC_STATIC_OBJ_LIFETIME05) || !RE4DC_STATIC_OBJ_LIFETIME05
         Entry* e=find(q);
         if(!e)e=build(q);

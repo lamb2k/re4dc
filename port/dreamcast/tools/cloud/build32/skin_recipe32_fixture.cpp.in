@@ -116,7 +116,11 @@ int prop_reader(cModelInfo*info){
 // @PROP_PREDICATE@
 return 1;
 }
-int generic_reader(const Re4dcModelPart*p){
+int generic_reader(const Re4dcModelPart*p
+#if RE4DC_STATIC_OBJ_SPANS10
+    ,const void* spans10=nullptr
+#endif
+){
 // @NATIVE_PREDICATE@
 return p&&p->positions&&p->normals;
 }
@@ -335,12 +339,29 @@ void reentry_and_geometry_failure(){
     reset();nominate();cModel m{3};pending(m);build_reentry=reentry_probe;CHECK(palette(&info_keys[0],2)&&palette_builds==1);build_reentry=nullptr;
     reset();nominate();pending(m);CHECK(GetPrimBuff(int(sizeof prim_storage-used()-credit(2))));auto p=part(&info_keys[0]);re4dc_actor_materialize(&p);CHECK(skins[0].materialized==kSkinRecipeReady&&!info_keys[0].pPosBuf[0]&&!skin_calls&&!re4dc_prim_recipe_credit());CHECK(!re4dc_actor_materialize_lazy(&p));
 }
+#if RE4DC_STATIC_OBJ_SPANS10
+void native_span_guard(){
+    reset();nominate();cModel m{3};pending(m);auto p=part(&info_keys[0]);
+    const unsigned cursor=used(),held=re4dc_prim_recipe_credit();
+    // A prequalified span must not materialize an unrelated source recipe.
+    // The opaque context is only the extracted caller's truth predicate; the
+    // EF10 suite separately exercises its complete source-plan consumer.
+    CHECK(!generic_reader(&p,&m));
+    CHECK(!matrix_builds&&!palette_builds&&!skin_calls&&used()==cursor&&re4dc_prim_recipe_credit()==held);
+    CHECK(skins[0].materialized==kSkinRecipePending);
+    // Ordinary source fallback still reaches the same current recipe reader.
+    CHECK(generic_reader(&p));CHECK(matrix_builds==1&&palette_builds==1&&skin_calls==2);
+}
+#endif
 #endif
 int main(){
 #if defined(RE4DC_SKIN_RECIPE32_TEMPORAL) && RE4DC_SKIN_RECIPE32_TEMPORAL
     temporal_contract();
 #elif RE4DC_SKIN_RECIPE32
     producer_and_readers();replacement_and_cpu_fallback();allocator_and_margin();full_oom_and_terminals();native_completion_and_retire();reentry_and_geometry_failure();
+#if RE4DC_STATIC_OBJ_SPANS10
+    native_span_guard();
+#endif
     std::printf("checks=%u descriptor=%u row=%zu backup=%zu\n",checks,kSkinRecipeBytes,sizeof(SkinEntry),sizeof(Re4dcActorSkinBackup));
 #endif
 }
