@@ -1,5 +1,14 @@
 # Build 33: ordered static-object output batches
 
+## Answers (owner): 2026-10-30 span target admission and correctness follow-up
+
+RE4-PLAN-SYNC-20261029-1202
+
+EF10 ordered static spans ea4cd26f5 is integrated41a65af35 after actual target type correction, six release arms (absent/zero/batch1control+ON/batch2control+ON), empty missing.txt and exact default-OFF programme/15-overlay/11-allocated-section checks. Source traversal, owner/plan leases and original span boundaries remain; no performance claim follows. Compatible K42 QA_LINK1 passes compile, both lint profiles, ZIP/checksums and macro binding, PREPARED only.
+
+Independent actual-source review found a supported non-null pending-skin state: with source skin materialization deferred, positions already exist but are not current. The span entry bypassed ordinary materialization. The retained actual SOB/native consumer witness has9 effective vertices in both arms but different output. Correction8600c597 is published on an owner source ref and restricts admission to rigid stride8 before any span-array/plan work, so the original per-part materialization fallback remains. Real registry/registration/materialization boundary tests pass normally and under ASan/UBSan across lazy0/1 and span0/1, with all output words equal; original41a65 fails that new regression. Rigid2/16-span, order/bounds/material/UV/OOM/retirement/prefix-abort tests and OFF/Make/recipe checks remain. Actual correction target gates and refreshed QA are next. K42 runtime use is HELD until then; no stale pending-skin, full-card, memory, cost or console acceptance.
+
+
 **2026-10-28 progress 2: DONE** guarded ordered header coalescing, per-cause
 barrier census, exact/sanitized host oracle and SH-4 identity/cost gates;
 **NEXT** Claude's private comparisons; cloud proceeds to Build 34; **BLOCKED** real coverage,

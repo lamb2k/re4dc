@@ -1,5 +1,12 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-30 source-entry target result
+
+RE4-PLAN-SYNC-20261029-1202
+
+EF04 source-entry fixture39ef10a7 is integrated115c61053 after six actual-source host/sanitizer profiles, full release/missing0 and exact programme/15-overlay/allocated-section OFF checks. Presentation capture/transaction/zero-admission source guard remains in the extracted production block. This is test/source boundary evidence, not new actual asynchronous producer incidence or whole-card acceptance. Prior b2 first-radio16 scope and all console/look/memory/cost gates remain.
+
+
 ## Answers (owner): 2026-10-30 source takeover and target admission
 
 RE4-PLAN-SYNC-20261029-1202
