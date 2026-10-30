@@ -1,6 +1,9 @@
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
 #include "fallback_audit35.h"
 #endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_NATIVE_ACTOR_SKIN && !RE4DC_NATIVE_ACTOR_SKIN_LAZY
+#include <string.h>
+#endif
 #line 1
 // game/trans.cpp: the model renderer. ModelTrans registers a model in the ordering tables,
 // commonScreenMatSub skins its vertices into the primitive buffer, ModelRender / commonModelTrans

@@ -33,7 +33,9 @@ struct PreparedSpans10 {
                  bool (*alive)(const void*),const void* user){
         if(!source || n<2 || n>capacity || !alive || !alive(user) || p.world ||
            p.blend || p.alpha_state!=255 || p.depth_mode || (p.material_flags&4) || p.mask.pixels ||
-           !p.position_count || !p.normal_count || !p.position_stride || !p.normal_stride ||
+           // Non-null stride-6 arrays may still await the registered source
+           // skinning pass. Keep their ordinary per-part materialization path.
+           p.position_stride!=8 || !p.position_count || !p.normal_count || !p.normal_stride ||
            p.position_count>~0U/p.position_stride || p.normal_count>~0U/p.normal_stride)return false;
         if(p.part!=source[0].part || p.stream!=source[0].stream || p.stream_bytes!=source[0].bytes)return false;
 #if RE4DC_NATIVE_FE_CONTINUATION
