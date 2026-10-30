@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 23:03 EDT normal-route execution receipts
+
+RE4-PLAN-SYNC-20261029-1202: current b2/K40 case11 finished181.6s outer0/reader0/errors[], but the host used pre-enqueue idle telemetry before ordinary setup completed and stopped its controller early. Preserve the raw result; this is a host orchestration ordering failure, not a rejected mapped route. Case12 with exact native PAD DONE IDs, subsequent fresh queue0 telemetry and coherent read-only state completed180.9s outer0/reader0/errors[],109/109 coherent samples,14 normal PAD commands/eight execution groups, reaching three of14 planned waypoints.
+
+Case12 then stopped after two one-tick movement pulses were judged against a60-unit displacement threshold. Those pulses do not establish a physical collision stall. Local case13 now tests a minimum12-tick normal movement and arrival-before-stall guard; the existing two-meaningful-stall limit and execution barrier remain. Synthetic ordering/arrival/stall guards passed; current runtime13 is pending review. Zero combat shots and no first-house kill, natural first-kill movie or first-radio call observed in11/12. No first-radio, async portrait/backing, whole-memory, performance, console or whole-card acceptance.
+
+Next local: review the changed normal-controller route, source events and exact execution receipts before any next profile. Candidate door class alone does not prove its story role. All public source/synthetic corrections remain CLOUD-owned: four known source/tool blockers and CF11-PUB-01 unchanged. Compatible K40/runtime source unchanged; no default switch, release recipe, SD, hardware, look, media or immutable archive-base hold changed.
+
+
 ## Answers (owner): 2026-10-29 current-image first-radio route prerequisites
 
 Current b2/K40 fresh cases09 and10 completed181.2s and181.0s, each outer0/reader0/errors[]. They did not reach the first house fight, first-kill movie or radio. Zero combat shots and zero radio-close commands were attempted. Do not accept first-radio/async portrait/backing gates from these runs.

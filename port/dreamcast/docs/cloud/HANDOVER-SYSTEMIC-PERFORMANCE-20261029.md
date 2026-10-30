@@ -1,5 +1,14 @@
 Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
 
+## Owner normal-route checkpoint 2026-10-29 23:03 EDT
+
+RE4-PLAN-SYNC-20261029-1202: current b2/K40 case11 finished181.6s outer0/reader0/errors[], but the host used pre-enqueue idle telemetry before ordinary setup completed and stopped its controller early. Preserve the raw result; this is a host orchestration ordering failure, not a rejected mapped route. Case12 with exact native PAD DONE IDs, subsequent fresh queue0 telemetry and coherent read-only state completed180.9s outer0/reader0/errors[],109/109 coherent samples,14 normal PAD commands/eight execution groups, reaching three of14 planned waypoints.
+
+Case12 then stopped after two one-tick movement pulses were judged against a60-unit displacement threshold. Those pulses do not establish a physical collision stall. Local case13 now tests a minimum12-tick normal movement and arrival-before-stall guard; the existing two-meaningful-stall limit and execution barrier remain. Synthetic ordering/arrival/stall guards passed; current runtime13 is pending review. Zero combat shots and no first-house kill, natural first-kill movie or first-radio call observed in11/12. No first-radio, async portrait/backing, whole-memory, performance, console or whole-card acceptance.
+
+Next local: review the changed normal-controller route, source events and exact execution receipts before any next profile. Candidate door class alone does not prove its story role. All public source/synthetic corrections remain CLOUD-owned: four known source/tool blockers and CF11-PUB-01 unchanged. Compatible K40/runtime source unchanged; no default switch, release recipe, SD, hardware, look, media or immutable archive-base hold changed.
+
+
 # Engine fixes after Builds 31-36: local agent handover
 
 ## Current execution agreement
