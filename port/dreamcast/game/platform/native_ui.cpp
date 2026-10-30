@@ -8880,10 +8880,19 @@ extern "C" unsigned re4dc_fog_enabled();
 #if defined(RE4DC_ESP_SETUP_BATCH)
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
     const DeferredPart* owner;unsigned color;
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    unsigned material12=0;
+#endif
 };
 alignas(32)
 #else
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
+    unsigned material12=0;
+};
+#else
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;};
+#endif
 #endif
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
@@ -8972,13 +8981,25 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #endif
 #if defined(RE4DC_ESP_SETUP_BATCH)
 bool fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+               const DeferredPart* previous=nullptr,unsigned material12=0){
+#else
                const DeferredPart* previous=nullptr){
+#endif
+#else
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,unsigned material12=0){
 #else
 void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
+#endif
 #endif
     const auto& t=e->package.textures()[0];
     auto* h=reinterpret_cast<pvr_poly_hdr_t*>(out);
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    // Material belongs to the header/body identity even for the same Entry.
+    if(fx_hdr_key.material12!=material12)fx_hdr_key.fmt=~0U;
+#endif
     const unsigned fmt=re4dc::texture::pvr_format(t);const void* txr=e->package.pvr_texture(0);
 #if defined(RE4DC_ESP_SETUP_BATCH)
     const bool same=fx_hdr_key.fmt==fmt && fx_hdr_key.w==t.width && fx_hdr_key.h==t.height && fx_hdr_key.txr==txr &&
@@ -9007,8 +9028,14 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if RE4DC_NATIVE_FOG
         c.gen.fog_type=s.screen?PVR_FOG_DISABLE:PVR_FOG_TABLE; // table: native_static.cpp re4dc_fog_frame
 #endif
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+        c.txr.alpha=material12?PVR_TXRALPHA_DISABLE:PVR_TXRALPHA_ENABLE;
+#endif
         pvr_sprite_compile(&fx_hdr_cache,&c);
         fx_hdr_key=FxHeaderKey{fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+        fx_hdr_key.material12=material12;
+#endif
     }
 #if defined(RE4DC_ESP_SETUP_BATCH)
     if(!body_only){DFA26_HIT(EffectBatchBreak)*h=fx_hdr_cache;h->argb=s.color;h->oargb=0;}
@@ -9035,6 +9062,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if RE4DC_NATIVE_FOG
     c.gen.fog_type=s.screen?PVR_FOG_DISABLE:PVR_FOG_TABLE; // table: native_static.cpp re4dc_fog_frame
 #endif
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    c.txr.alpha=material12?PVR_TXRALPHA_DISABLE:PVR_TXRALPHA_ENABLE;
+#endif
     pvr_sprite_compile(h,&c);h->argb=s.color;h->oargb=0;
 #endif
     auto* b=reinterpret_cast<pvr_sprite_txr_t*>(out+sizeof(pvr_poly_hdr_t));
@@ -9057,6 +9087,11 @@ extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE b
 #endif
 // EFFECT_SPRITES (effects30.mk): one effect sprite from EspCommonTrans. Never aborts the
 // frame: without texture, over the per-frame cap or without queue room the sprite is dropped.
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#if !RE4DC_NATIVE_DRAW_OUTCOMES || !RE4DC_UI_HANDLES
+#error EFFECT_MASK12 requires NATIVE_DRAW_OUTCOMES and UI_HANDLES
+#endif
+#endif
 #if RE4DC_GC_ASSET_GATE
 #define stream_send gcasset_fx_stream_send
 #endif
@@ -9069,12 +9104,40 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
 }
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+static re4dc::NativeDrawResult effectSpriteMaterial12(const Re4dcEffectSprite*,unsigned);
+#endif
 extern "C" re4dc::NativeDrawResult re4dc_effect_sprite_result(const Re4dcEffectSprite* s){
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    return effectSpriteMaterial12(s,re4dc::effect_mask12::sample_alpha);
+#else
     // The existing entry guard refuses a stopped stream before RTT selection.
     // A terminal frame cannot authorize whole-producer fallback, even at zero output.
     if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
 #include "native_effect_sprite03.inc"
+#endif
 }
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+static re4dc::NativeDrawResult effectSpriteMaterial12(const Re4dcEffectSprite* s,unsigned material12){
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+#include "native_effect_sprite03.inc"
+}
+extern "C" re4dc::NativeDrawResult re4dc_effect_masked_sprite12_result(const Re4dcEffectSprite* s,unsigned material){
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(material!=re4dc::effect_mask12::opaque_mask || !s || s->pad || s->src!=4 || s->dst!=5 || direct_open)
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    if(!s->image.pixels || !s->image.width || !s->image.height || s->image.width>1024 || s->image.height>1024 ||
+       !image_size(s->image) || (s->image.palette_bytes && !s->image.palette))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    if(rtt::capture_slot>=0)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#endif
+    for(unsigned i=0;i<4;++i)if(!std::isfinite(s->u[i]) || !std::isfinite(s->v[i]))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    if((s->color>>24)<=1)return {re4dc::NativeDrawOutcome::Culled};
+    return effectSpriteMaterial12(s,material);
+}
+#endif
 #endif
 #if defined(RE4DC_PS2_FX_COMMON_HAZE) && RE4DC_PS2_FX_COMMON_HAZE
 #include "include/native_effect_haze_batch.inc"

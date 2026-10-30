@@ -1,4 +1,8 @@
 #pragma once
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#include "native_draw_result.hpp"
+#include "effect_mask12.hpp"
+#endif
 // Narrow source-ID adapter, not a GX command interpreter.
 struct Re4dcUiImage {
     const void* pixels;
@@ -107,6 +111,10 @@ struct Re4dcUiGlyph {
 };
 extern "C" {
 int re4dc_effect_sprite(const Re4dcEffectSprite*);
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+// Separate material argument; unswitched callers keep the exact sprite ABI.
+re4dc::NativeDrawResult re4dc_effect_masked_sprite12_result(const Re4dcEffectSprite*,unsigned material);
+#endif
 #if defined(RE4DC_PS2_FX_COMMON_HAZE) && RE4DC_PS2_FX_COMMON_HAZE
 // Bounded same-texture replacement; returns success even when all quads cull.
 // Modifies private scratch coordinates for render resolution. Never uploads.
