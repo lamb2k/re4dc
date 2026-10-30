@@ -1,3 +1,8 @@
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+// Owns the cEspSystem layout and its C++-linkage g_pEspSys declaration.
+#include "espgen.h"
+#endif
+#line 1
 // game/esp4e: effect id 0x4E, cloth sheet (D:/Bio4/Prog/esp4e.cpp). A Cloth grid pulled from the
 // cloth pool follows the effect's position/angle and is disturbed by two sine fields (along x and
 // y) modulated by a global "wind" phase plus the effect's m_Speed. Entry points: Esp4e_Create,

@@ -28,6 +28,7 @@ python3 port/dreamcast/tests/test_cloth_single_material11.py --sanitize --output
 python3 port/dreamcast/tests/test_cloth_single_material11.py --pool-recycle 0 --output NEW_NORMAL0
 python3 port/dreamcast/tests/test_cloth_single_material11.py --sanitize --pool-recycle 0 --output NEW_SAN0
 python3 port/dreamcast/tests/test_cloth_single_material11_identity.py --output NEW_IDENTITY
+python3 port/dreamcast/tests/test_cloth_single_material11_declaration.py --output NEW_DECLARATION
 python3 -m unittest port/dreamcast/tests/test_cloth_material11.py port/dreamcast/tests/test_cloth_tiles11.py port/dreamcast/tests/test_cloth_publication11.py
 ```
 
@@ -38,5 +39,7 @@ Sanitizer qualification is strict ASan/UBSan with halt_on_error and clean-stderr
 Identity compares complete actual cloth/esp/esp4e/native_effect preprocessing, retaining real project headers and synthetic KOS declarations, against36b for absent/explicit0. An outside-helper producer change must fail this comparison. It also compares the complete includes-elided Esp4e TU object, actual Esp allocation-function object and complete native_effect host object, with ON differences, alongside historical adapter/native/GX objects in the original judges. Includes-elided objects use the documented host source model. These are not full SH4 objects, ELF or program identity; root owns those gates.
 
 Fixed selected metadata adds36bytes (32 initialized generation bytes +4 admission bytes) when diagnostics are OFF; with CF11 ON the generation table is shared, so the incremental mask is4bytes. Collector/logging is not enabled. Source proof is call-local and statically bounded<=512bytes, copied object32bytes/pixels128bytes; prepared state stays320bytes, packet/queue capacity is unchanged. Host stack-usage files are emitted; target stack/text/net cost is a separate gate.
+
+The first actual Material1 target compile found that Esp4e lacked the real effect-system declaration, hidden by the synthetic producer model's global. Esp4e now imports authoritative espgen.h only under Material1, with its original OFF line mapping restored. The separate declaration test compiles the complete actual include block against real project headers using host32 syntax-only (no modeled global); removing that include or using the old6d7 source must fail specifically on undeclared g_pEspSys. Absent/zero do not import the new header. The retained failed target log is /root/probe/lanes/route/out-finishclothsinglematerial30aonrP/build.log; the exact release-command Esp4e-only SH4 retry passes at /root/probe/cloth-single-material11-declaration-sdk-20261030. This is TU compilation evidence, not link/runtime acceptance.
 
 Private/current-instance frequency, GPU numerical interpolation/rounding/fog, look/order, full memory/cost, STRICT and physical-console acceptance remain open. Existing cabin and exact current-EFB prerequisites are unchanged.
