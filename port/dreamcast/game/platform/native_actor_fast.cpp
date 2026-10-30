@@ -1875,6 +1875,9 @@ struct Frame {  // per (info, matrices) per frame
     u8* skin_ready = nullptr;         // per entry: skin_positions entry built this frame
     u8* dirs_ready = nullptr;         // per entry: skin_dirs entry built for dirs_fold
     float dirs_fold[12]{};            // the light directions skin_dirs were built from
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    unsigned table_owner14=0,table_source_frame14=~0u;
+#endif
 #if RE4DC_AVK
     bool avk_all = false;             // ACTOR_VTX_KERNEL: every skin_positions entry built (avk_build_all)
 #endif
@@ -1932,6 +1935,9 @@ void* frame_table(unsigned bytes) {  // until the next re4dc_actor_frame
     workspace_end -= bytes;
     return workspace + workspace_end;
 }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+#include "include/native_actor_table_reuse14.inc"
+#endif
 #if RE4DC_NATIVE_FE_CONTINUATION
 #include "include/native_actor_pose_snapshot.inc"
 #endif
@@ -1954,8 +1960,15 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            same_words(f.viewport, p.viewport, 6) && table14_current(f,p)) {
+#else
             same_words(f.viewport, p.viewport, 6)) {
+#endif
             // Mode is a function of (info, positions) within a frame.
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            table14_enter(f);
+#endif
 #if RE4DC_GC_ASSET_GATE
             gcasset_frame_check(f);
 #endif
@@ -1989,6 +2002,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
             f.mode = kSkin; f.palette = palette; f.palette_entries = entries;
             f.positions = src.positions; f.position_stride = 8;
             f.normals = src.normals; f.normal_stride = src.small_normals ? 4U : 8U;
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            table14_prepare(f,p,entries);
+#else
             // One skin table at a time (parts arrive info by info): an older
             // skinned Frame is dropped from the cache and its table reused.
             for (Frame& o : frames)
@@ -1996,6 +2012,7 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
                     o.frame = ~0U; o.skin_positions = o.skin_dirs = nullptr; o.skin_ready = o.dirs_ready = nullptr;
                 }
             workspace_end = workspace_bytes;
+#endif
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
             f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
             if (f.skin_positions) {
@@ -2030,6 +2047,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
         f.screen[c * 4 + 0] = M[0][c] * k; f.screen[c * 4 + 1] = M[1][c] * k;
         f.screen[c * 4 + 2] = M[2][c] * k; f.screen[c * 4 + 3] = M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return &f;
 }
@@ -7229,11 +7249,25 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            same_words(f.viewport, p.viewport, 6) && table14_current(f,p))
+#else
             same_words(f.viewport, p.viewport, 6))
+#endif
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            {
+                table14_enter(f);
+#if RE4DC_GC_ASSET_GATE
+                gcasset_frame_check(f);
+#endif
+                return f;
+            }
+#else
 #if RE4DC_GC_ASSET_GATE
             {gcasset_frame_check(f);return f;}
 #else
             return f;
+#endif
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorFramePrepare, 1)
@@ -7257,11 +7291,15 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
     f.mode = kSkin; f.palette = se.palette; f.palette_entries = se.entries;
     f.positions = src.positions; f.position_stride = 8;
     f.normals = src.normals; f.normal_stride = src.small_normals ? 4U : 8U;
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_prepare(f,p,se.entries);
+#else
     for (Frame& o : frames)
         if (&o != &f && o.skin_positions) {
             o.frame = ~0U; o.skin_positions = o.skin_dirs = nullptr; o.skin_ready = o.dirs_ready = nullptr;
         }
     workspace_end = workspace_bytes;
+#endif
     const unsigned entries = se.entries;
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
     f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
@@ -7299,6 +7337,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         f.screen[c * 4 + 0] = memo.M[0][c] * k; f.screen[c * 4 + 1] = memo.M[1][c] * k;
         f.screen[c * 4 + 2] = memo.M[2][c] * k; f.screen[c * 4 + 3] = memo.M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return f;
 }

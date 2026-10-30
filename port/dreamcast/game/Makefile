@@ -3695,6 +3695,7 @@ include prepared_binding34.mk
 include static_obj_batch33.mk
 include static_obj_spans10.mk
 include skin_recipe32.mk
+include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).
