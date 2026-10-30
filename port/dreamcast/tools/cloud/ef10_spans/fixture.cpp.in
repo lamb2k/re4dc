@@ -59,9 +59,23 @@ struct Archive {
     alignas(32) PartBlob blobs[16];
     alignas(32) unsigned char positions[9*8],normals[9*4],uv[9*4],colors[9*4];
 } archive{};
+// Actual actor registry/materialize reader, with source CalcSk1 math adapted at
+// its existing callback boundary. Trans() can defer that pass with non-null
+// pPosBuf when NATIVE_ACTOR_SKIN_LAZY=0 (trans.cpp re4dc_skin_defer).
+struct {unsigned skin_registered=0,materialized_infos=0;} stats;
+#define DFA26_MODEL_SLOW(reason,n,code) code
+@SKIN_REGISTRY@
+unsigned pending_materializations=0;
+bool pending_skin=false;
+extern "C" int re4dc_skin_materialize(const void* info_ptr,const float*){
+    assert(pending_skin && info_ptr);
+    ++pending_materializations;pending_skin=false;
+    for(unsigned i=0;i<9;++i){archive.positions[i*6]=8;archive.positions[i*6+1]=0;}
+    return 1;
+}
+@SKIN_READERS@
 extern "C" int re4dc_static_submit(const Re4dcModelPart*){return 0;}
 extern "C" int re4dc_actor_submit(const Re4dcModelPart*){return 0;}
-extern "C" void re4dc_actor_materialize(const Re4dcModelPart*){}
 extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p){
     p->positions=archive.positions;p->normals=archive.normals;return 1;
 }
@@ -136,7 +150,10 @@ void reset(unsigned n=3){
     unpoison();re4dc_sob_room_leave();re4dc_model_reset_draw_plans();++global.Frame_cnt;
     data.displist_num=n;room_live=true;refuse_alloc=false;fail_reserve=fail_begin=false;
     packet_capacity=256;streaming=false;fixture_static=false;action=0;published.clear();header_run.barrier();serial=begins=commits=aborts=status=0;
-    light={};
+    light={};skin_count=0;skin_frame=~0U;pending_materializations=0;pending_skin=false;
+    std::memset(archive.positions,0,sizeof archive.positions);
+    std::memset(archive.normals,0,sizeof archive.normals);
+    std::memset(archive.uv,0,sizeof archive.uv);std::memset(archive.colors,0,sizeof archive.colors);
     for(unsigned i=0;i<16;++i){auto& b=archive.blobs[i];b={};b.part.size=32;b.list[0]=0x98;be16(b.list+1,3);
         for(unsigned k=0;k<3;++k){const auto v=(i%3)*3+k;be16(b.list+3+k*6,v);be16(b.list+5+k*6,v);be16(b.list+7+k*6,v);}}
     for(unsigned i=0;i<9;++i){const int xy[3][2]={{-2,-2},{2,-2},{0,2}};
@@ -162,8 +179,25 @@ int main(){
 #endif
     assert(sob::S->count==0 && sob::st.built==0 && sob::S->bytes==0);
     puts("PASS ordered effective headers/vertices, consumed plans, zero GX copy, shared setup");
+    const auto pending_record=[](unsigned i){auto p=record(i);p.position_stride=6;p.normal_stride=3;return p;};
+    float pending_palette[12]{};
+    const auto defer_pending=[&](){
+        pending_skin=true;
+        assert(re4dc_actor_skin_register(global.Frame_cnt,&info,archive.positions,pending_palette,1));
+    };
+    reset();defer_pending();
+    for(unsigned i=0;i<3;++i){auto p=pending_record(i);re4dc_model_submit(&p);}
+    const auto skinned=published;
+    assert(skinned.size()==9 && pending_materializations==1 && !pending_skin && begins==3);
+    reset();defer_pending();
+    for(unsigned i=0;i<3;++i)assert(take(i,pending_record(i)));
+    assert(equal(skinned,published) && pending_materializations==1 && !pending_skin && begins==3);
+    assert(sob::st.refused && sob::S->count==0 && sob::S->bytes==0);
+    puts("PASS actual SOB non-null pending skin registry falls back to source materialization and identical output");
+#if RE4DC_NATIVE_ACTOR_SKIN_LAZY
     reset();auto lazy=record(0);lazy.positions=nullptr;re4dc_model_submit(&lazy);
     assert(published.size()==3 && status==0);puts("PASS ordinary lazy-source view keeps its native consumer lifetime");
+#endif
     for(unsigned n:{2u,16u}){reset(n);run(false);const auto control=published;reset(n);run(true);assert(equal(control,published));}
     puts("PASS bounded 2/16-part runs and original strip boundaries");
     reset();auto p=record(0);p.modelview[3]=2;re4dc_model_submit(&p);for(unsigned i=1;i<3;++i){p=record(i);re4dc_model_submit(&p);}
@@ -194,6 +228,10 @@ int main(){
     p.blend=1;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
     p.material_flags=4;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
     p.positions=nullptr;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));p=record(0);
+    p.position_stride=6;
+    const auto plan_hits=re4dc_model_draw_plan_stats()->hits;
+    assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));
+    assert(plan_hits==re4dc_model_draw_plan_stats()->hits);p=record(0);
     spans[1].bytes=~0U;assert(!re4dc_model_submit_spans10(&p,spans,3,alive,nullptr));assert(published.empty());
     puts("PASS count/material/unknown-array/source-extent refusal before output");
     reset();re4dc_model_unbind_draw_owner(&archive);run(true);assert(equal(expected,published)&&begins==3);
