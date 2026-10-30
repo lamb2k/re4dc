@@ -1,5 +1,14 @@
 # Build 29 — whole-game fallback sweep and offline asset scan
 
+## Answers (owner): 2026-10-29 closer cloth path limit and fixed launcher
+
+Current b2/K40 changed ordinary-controller approach/turn case06 ran151.1s with reader0 and guest errors[]. The selected live sheet was observed79 times,76 with stable camera/header/epoch reads. Increasing the normal forward walk from25 to70 ticks ended at essentially the same forward position beside the guidepost; the final turn aimed away, with the selected sheet behind the camera. Source-plane side/depth sign changes during camera movement are framing cues, not opposite-side or near-plane output acceptance. Reviewed stills retain tree/body obstruction and the ordinary CHECK prompt; no action interaction was forced. Next local case must go around this obstacle through ordinary controller navigation and verify the view from actual camera/instance readback, rather than adding more forward ticks at the same point.
+
+The private launcher now executed the same permanent executable path in05 and06, with local QA Link connected, current-image reader output and per-run config/data snapshots. No firewall rules, elevation or broader permissions were changed. Earlier05 aborted on a local observer case-number allowlist before the changed views; its raw failure is retained and the case contract was corrected before06. After06's normal guest exit, the outer controller made a final read-only OpenProcess attempt and reported an observer error; guest completion and this teardown race are recorded separately, not relabelled an entirely clean harness run. Future observer sampling stops before the owned deadline, while failures during the live interval remain fatal. No identical replay merely to exercise teardown.
+
+No private assets, source coordinates or raw memory are published. Per-instance native publication/material/pixel/both-side/actual near-plane, numeric/FPSCR/IRQ, whole-memory/STRICT/cost/physical-console and the user cloth-look decision remain open. Four cloud source/tool corrections remain unchanged; do not repeat blocked integrations at identical relevant inputs. Source switches remain default0, current K40 and all release/console/media holds stay unchanged.
+
+
 ## Answers (owner): 2026-10-29 selected live cloth and measured view framing
 
 Current b2/K40 now has two different ordinary-controller framing cases following the existing inventory run. Run03 used a short turn calibrated from prior actual PAD/camera telemetry rather than the earlier ineffective60-tick camera sweep. Run04 added a short normal walk and R-aim, plus a bounded read-only current-ELF cloth-pool/camera observer. Both ended normally (120s requested/125.7s elapsed and150s/150.7s; reader0/errors[]). Setup exceptions were announced and individual view windows stayed below30s. No Windows keys, warp/GOTO/position/story/state/source/asset mutation or console/SD action.
