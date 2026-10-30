@@ -1,5 +1,6 @@
 #if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
 #include "platform/include/static_obj_lifetime05.hpp"
+#include "platform/include/static_obj_siblings05.hpp"
 #endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
 #include "platform/include/static_obj_batch33.hpp"
@@ -619,6 +620,13 @@ constexpr unsigned kBytes=384u*1024u,kSeen=160,kLines=8,kLine=96,kMods=48,kSettl
 struct State { unsigned generation,used,sent,nseen,done,nlist,nmod; const void* seen[kSeen][2]; const void* lists[kSeen];
                const void* mod[kMods]; unsigned mod_frame[kMods]; unsigned char data[kBytes]; };
 State* S=nullptr; unsigned frame_seen=~0U;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){S=owner.get();return S!=nullptr;}
+bool current(const re4dc::sob05::Cell<State>& held){
+    const bool ok=re4dc::sob05::current(owner,held);S=owner.get();return ok;
+}
+#endif
 inline bool target(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -637,9 +645,14 @@ void put(const void* p,unsigned n){
 void put32(unsigned v){put(&v,4);}
 void frame(){
     frame_seen=pG->Frame_cnt;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    const auto held=owner;
+#else
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf)){S=nullptr;return;}
     if(S && S->generation!=g)S=nullptr;
+#endif
     if(!S || S->done || S->used>kBytes)return;
     char line[16+2*kLine+2];
     for(unsigned n=0;n<kLines && S->sent<S->used;++n){
@@ -648,10 +661,27 @@ void frame(){
         for(unsigned i=0;i<k;++i){static const char hx[]="0123456789abcdef";line[o++]=hx[S->data[S->sent+i]>>4];line[o++]=hx[S->data[S->sent+i]&15];}
         line[o++]='\n';line[o]=0;
         re4dc_log("%s",line);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held))return;
+#endif
         S->sent+=k;
     }
 }
 bool ensure(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+    if(!S){
+        unsigned g=0;if(!re4dc_room4_live_generation(&g))return false;
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        // Allocation can reclaim a package or reenter a newer owner.
+        if(validate()){re4dc::sob05::discard(fresh,sizeof(State));return false;}
+        if(!owner.bind(fresh,g)){re4dc::sob05::discard(fresh,sizeof(State));return false;}
+        S=fresh;memset(S,0,sizeof(State)-kBytes);S->generation=g;
+        const auto held=owner;
+        re4dc_log("SOBX BEGIN room=%03x generation=%u\n",unsigned(pG->room_id),g);
+        if(!current(held))return false;
+    }
+#else
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf))return false;
     if(S && S->generation!=g)S=nullptr;
@@ -661,6 +691,7 @@ bool ensure(){
         memset(S,0,sizeof(State)-kBytes);S->generation=g;
         re4dc_log("SOBX BEGIN room=%03x generation=%u\n",unsigned(pG->room_id),g);
     }
+#endif
     return true;
 }
 void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelPart* pt,const Re4dcModelPart& p){
@@ -669,6 +700,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf))return;
     if(!ensure())return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    const auto held=owner;
+#endif
     {   // settle: the first frames of a model hold matrices the game has not set yet (zero / identity)
         unsigned k=0;
         while(k<S->nmod && S->mod[k]!=m)++k;
@@ -708,6 +742,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
         }
     }
     unsigned crc=0,fnvk=0;re4dc_ui_part_key(&p,&crc,&fnvk);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!current(held))return;
+#endif
     const unsigned list_bytes=encoded?0U:p.stream_bytes;
     const unsigned npos=p.position_count,nnrm=p.normal_count;
     const unsigned len=4*4+16*4+24*4+4*4+npos*p.position_stride+nnrm*p.normal_stride+nuv*4+nclr*4+list_bytes;
@@ -727,6 +764,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
     Re4dcModelPart q=p;
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
     if(!q.positions)re4dc_actor_materialize_lazy(&q);  // lazily skinned info: the source's own CPU skin of this frame
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!current(held))return;
+#endif
 #endif
     if(q.positions)put(q.positions,npos*p.position_stride);else put32(0xDEADBEEFU);
     if(q.normals)put(q.normals,nnrm*p.normal_stride);
@@ -797,9 +837,27 @@ const Entry kTable[]={
     {0x101,0,0x46,0x0e6ad519U,222},  // obj 13, 4 tris
 };
 constexpr unsigned kN=sizeof(kTable)/sizeof(kTable[0]);
-struct Obj { const cModel* m; const unsigned* rest; unsigned words,live; unsigned char ready,draw,prev,seen; };
+struct Obj { const cModel* m; const unsigned* rest; unsigned words,live; unsigned char ready,draw,prev,seen;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    unsigned rest_incarnation;
+#endif
+};
 struct State { unsigned generation,room,first,n,frames,drawn,switches,frame; Obj obj[kN]; };
 State* S=nullptr;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){S=owner.get();return S!=nullptr;}
+bool current(const re4dc::sob05::Cell<State>& held){
+    const bool ok=re4dc::sob05::current(owner,held);S=owner.get();return ok;
+}
+bool rest_current(const Obj& o){
+    return o.rest && o.words<=~0U/4 && o.rest_incarnation &&
+        re4dc_room4_cell_incarnation(o.rest,o.words*4,owner.generation)==o.rest_incarnation;
+}
+void live_fallback(unsigned room){
+    for(const auto& e:kTable)if(e.room==room)re4dc_ps2_place_gate(room,e.placement,0);
+}
+#endif
 inline bool cls(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -833,6 +891,10 @@ unsigned fnv(const unsigned* w,unsigned n){
     return h;
 }
 void bind(const cModel* m){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    const auto held=owner;
+#endif
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].m==m)return;
     const unsigned n=words_of(m);
     unsigned* t=nullptr;unsigned hash=0;
@@ -843,6 +905,12 @@ void bind(const cModel* m){
         if(hash!=e.rest)continue;
         unsigned* w=(unsigned*)re4dc_static_alloc(n*4);
         if(!w)return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held)){re4dc::sob05::discard(w,n*4);return;}
+        const unsigned token=re4dc_room4_cell_incarnation(w,n*4,held.generation);
+        if(!token){re4dc::sob05::discard(w,n*4);return;}
+        o.rest_incarnation=token;
+#endif
         memcpy(w,t,n*4);
         o.m=m;o.rest=w;o.words=n;
         re4dc_log("SOBAKE bind room=%03x placement=%u id=%02x model=%08x words=%u\n",S->room,e.placement,e.id,
@@ -863,22 +931,53 @@ extern "C" void re4dc_sob_bake_frame(){
     const unsigned room=pG->room_id;
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf)){S=nullptr;return;}
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+#else
     if(S && S->generation!=g)S=nullptr;          // the room heap was retired with its cells
+#endif
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(S && S->room!=room){
+        re4dc_sob_bake_room_leave();
+        if(validate())return; // a free callback installed a different state
+    }
+#else
     if(S && S->room!=room)re4dc_sob_bake_room_leave();  // same heap, the game moved on: give the cells back
+#endif
     if(!S){
         unsigned first=kN,n=0;
         for(unsigned i=0;i<kN;++i)if(kTable[i].room==room){if(first==kN)first=i;++n;}
         if(!n)return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        if(validate()){re4dc::sob05::discard(fresh,sizeof(State));return;}
+        if(!owner.bind(fresh,g)){re4dc::sob05::discard(fresh,sizeof(State));S=nullptr;return;}
+        S=fresh;
+#else
         S=(State*)re4dc_static_alloc(sizeof(State));
+#endif
         if(!S)return;
         memset(S,0,sizeof(State));S->generation=g;S->room=room;S->first=first;S->n=n;S->frame=~0U;
         for(unsigned i=0;i<n;++i)S->obj[i].live=~0U;
     }
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    const auto held=owner;
+    for(unsigned i=0;i<S->n;++i){
+        re4dc_ps2_place_own(room,kTable[S->first+i].placement);
+        if(!current(held))return;
+    }
+#else
     for(unsigned i=0;i<S->n;++i)re4dc_ps2_place_own(room,kTable[S->first+i].placement);
+#endif
     re4dc_ps2_place_prepare_fn(room,sobake::decide);
 }
 void sobake::decide(unsigned room){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate() || S->room!=room){live_fallback(room);return;}
+    const auto held=owner;
+#else
     if(!S || S->room!=room)return;
+#endif
     S->frame=re4dc_ui_frame();
     for(unsigned i=0;i<S->n;++i)S->obj[i].draw=S->obj[i].seen=0;
     for(unsigned table=0;table<OT_MAX;++table){
@@ -890,13 +989,29 @@ void sobake::decide(unsigned room){
             if(!cls(m) || m->invisible_factor*m->invisible_factor2==0.0f)continue;
             unsigned i=0;
             while(i<S->n && S->obj[i].m!=m)++i;
-            if(i==S->n){bind(m);i=0;while(i<S->n && S->obj[i].m!=m)++i;if(i==S->n)continue;}
+            if(i==S->n){bind(m);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+                if(!current(held)){live_fallback(room);return;}
+#endif
+                i=0;while(i<S->n && S->obj[i].m!=m)++i;if(i==S->n)continue;}
             Obj& o=S->obj[i];
             const unsigned placement=kTable[S->first+i].placement;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+            if(!o.ready){
+                const bool ready=re4dc_ps2_place_ready(room,placement)!=0;
+                if(!current(held)){live_fallback(room);return;}
+                o.ready=ready;
+            }
+#else
             if(!o.ready)o.ready=re4dc_ps2_place_ready(room,placement)!=0;
+#endif
             o.seen=1;
             if(o.live==S->frame)continue;  // ModelRender drew it live already this frame
-            o.draw=o.ready && words_of(m)==o.words && same(m,o.rest);
+            o.draw=o.ready && words_of(m)==o.words &&
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+                rest_current(o) &&
+#endif
+                same(m,o.rest);
         }
     }
     unsigned drawn=0;
@@ -904,12 +1019,19 @@ void sobake::decide(unsigned room){
         const unsigned placement=kTable[S->first+i].placement;
         Obj& o=S->obj[i];
         re4dc_ps2_place_gate(room,placement,o.draw);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held)){live_fallback(room);return;}
+#endif
         drawn+=o.draw;
         if(o.draw!=o.prev && o.m && S->switches<64){
             ++S->switches;
             // why live: seen 0 = no OT ModelRender entry (or invisible); else ready, words, first differing word
             unsigned k=~0U,was=0,now=0;
-            if(o.seen && o.ready && words_of(o.m)==o.words){
+            if(o.seen && o.ready && words_of(o.m)==o.words
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+               && rest_current(o)
+#endif
+            ){
                 unsigned* w=(unsigned*)__builtin_alloca(o.words*4);fill(o.m,w);
                 for(k=0;k<o.words && w[k]==o.rest[k];++k){}
                 if(k<o.words){was=o.rest[k];now=w[k];}
@@ -917,6 +1039,9 @@ void sobake::decide(unsigned room){
             re4dc_log("SOBAKE switch room=%03x frame=%u placement=%u id=%02x draw=%u seen=%u ready=%u words=%u/%u diff=%d %08x>%08x\n",
                       room,unsigned(pG->Frame_cnt),placement,kTable[S->first+i].id,o.draw,o.seen,o.ready,
                       o.seen?words_of(o.m):0U,o.words,int(k),was,now);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+            if(!current(held)){live_fallback(room);return;}
+#endif
         }
         o.prev=o.draw;
     }
@@ -927,15 +1052,34 @@ void sobake::decide(unsigned room){
 extern "C" void re4dc_static_free(void* data);
 extern "C" void re4dc_sob_bake_room_leave(){
     using namespace sobake;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    auto held=owner;State* state=held.get();
+    owner.clear();S=nullptr; // detach before frees can reenter a replacement
+    if(!state)return;
+    for(unsigned i=0;i<state->n;++i){
+        Obj& o=state->obj[i];
+        const unsigned* rest=o.rest;const unsigned words=o.words,token=o.rest_incarnation;
+        o.rest=nullptr;o.rest_incarnation=0;
+        if(words<=~0U/4 && token && re4dc_room4_cell_incarnation(rest,words*4,held.generation)==token)
+            re4dc_static_free(const_cast<unsigned*>(rest));
+        if(!held.get())return;
+    }
+    re4dc_static_free(state);
+#else
     if(!S)return;
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].rest)re4dc_static_free(const_cast<unsigned*>(S->obj[i].rest));
     re4dc_static_free(S);
     S=nullptr;
+#endif
 }
 // ModelRender (trans.cpp): 1 when this frame's decision draws the model from the world.
 extern "C" int re4dc_sob_bake_skip(const void* model){
     using namespace sobake;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return 0;
+#else
     if(!S)return 0;
+#endif
     const unsigned f=re4dc_ui_frame();
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].m==model){
         if(S->frame==f)return S->obj[i].draw;

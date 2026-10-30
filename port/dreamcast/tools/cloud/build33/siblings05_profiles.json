@@ -1,0 +1,16 @@
+{
+  "baseline": "7c1f53fa9b2f88251ab17998904a27d127c65aa0",
+  "recipe_reader": "port/dreamcast/tools/cloud/build18/build_profile.py:recipe_inputs",
+  "common_overrides": ["QA_MENU=0", "QA_LINK=0", "NMR_POOL_LOD=0", "STATIC_OBJ_BAKE=1", "PS2_PLACE_GATE=1", "WORLD_PREPARED09=0", "STATIC_OBJ_SPANS10=0"],
+  "arms": {
+    "absent": [],
+    "zero": ["STATIC_OBJ_LIFETIME05=0"],
+    "enabled": ["STATIC_OBJ_LIFETIME05=1"],
+    "dump-dependency": ["STATIC_OBJ_LIFETIME05=0", "SOB_DUMP=1"],
+    "diagnostic": ["STATIC_OBJ_LIFETIME05=1", "SOB_DUMP=1"]
+  },
+  "changed_existing_units": ["model_bridge.o"],
+  "existing_lifetime_provider": "ui_bridge.o",
+  "existing_bake_callers": ["src/game/trans.o", "model_asset_bridge.o", "platform/native_static.o"],
+  "status": "primary Make dry-run accepted; target slot and whole-programme OFF identity pending"
+}
