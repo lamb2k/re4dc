@@ -969,3 +969,10 @@ NEXT/BLOCKED: retain all remaining EF card sub-slices and current-asset/output/l
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
 The user assigns all remaining source/synthetic implementation in this build to the cloud, including the relevant continuations from7c4c9200. See the [ready parallel work, exact file handoffs and next consumed slices](systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Preserve the already-running local frozen slices and all existing evidence. Cloud owns their source follow-ons after published landing/file release; local owns private assets, actual runtime/console checks and serialized integration. No full-card or hardware acceptance is implied.
+
+
+## Answers (owner): 2026-10-30 span skin-admission safety correction
+
+The first span slice landed41a65af35 after six complete target builds and full OFF identity. Independent review then reproduced a real pending stride6 skin-array materialization bypass. Correction6b6e39c5 landed bba762626: the span candidate now accepts only rigid stride8 before acquiring source arrays/plans/leases; all other parts follow ordinary preparation. The actual old failing witness is retained; four lazy/eager and off/on host/sanitizer profiles match after the fix. The eager target diagnostic uses the committed complete dependency profile, with no linker stubs or judge weakening. Its eager-only missing memset declaration was corrected within the enabled branch.
+
+Six actual full target arms all link with empty missing.txt. Absent/zero programme,15 overlays and11 allocated sections match the retained release baseline. Refreshed compatible K42 QA at bba762626 passes compile, macro propagation, loader+standard lint, ZIP and checksums; its former correctness hold is superseded. This is preparation only. Current-source output, lifecycle, memory, full cost and console acceptance remain open; no release promotion or media copy.
