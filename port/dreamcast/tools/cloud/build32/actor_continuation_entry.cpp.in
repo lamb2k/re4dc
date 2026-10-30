@@ -2,12 +2,24 @@
 // below, synthetic source structs/current GX state and transaction result only.
 // No source shader/material callback or whole transaction implementation is
 // claimed here; those are independent contracts, not a fabricated live actor.
-namespace entry {extern unsigned transaction_calls;extern int transaction_result;}
-extern "C" int re4dc_actor_transaction_draw(cModel*){++entry::transaction_calls;return entry::transaction_result;}
+namespace entry {
+extern unsigned transaction_calls,presentation_calls;
+extern int transaction_result,required_after_transaction;
+extern bool presentation_required;
+}
+extern "C" int re4dc_actor_presentation32_required(const cModel*){
+    ++entry::presentation_calls;return entry::presentation_required;
+}
+extern "C" int re4dc_actor_transaction_draw(cModel*){
+    ++entry::transaction_calls;
+    if(entry::required_after_transaction>=0)entry::presentation_required=entry::required_after_transaction!=0;
+    return entry::transaction_result;
+}
 namespace entry {
 unsigned transaction_calls=0,bridge_calls=0,source_postludes=0,entry_generic=0;
-unsigned source_checks=0;
-int transaction_result=0;
+unsigned source_checks=0,presentation_calls=0;
+int transaction_result=0,required_after_transaction=-1;
+bool presentation_required=false;
 Re4dcUiImage selected{},mask{};
 unsigned mask_ref=256,mask_same_uv=0,wrap_s=0,wrap_t=0,current_alpha=255;
 float scroll_u=0,scroll_v=0;
@@ -48,7 +60,8 @@ void source(cModel* m,cModelInfo* info,ModelPart* part,const float mv[3][4],int 
 
 void reset(test::Portrait& p){
     test::begin();transaction_result=0;
-    transaction_calls=bridge_calls=source_postludes=entry_generic=0;
+    transaction_calls=bridge_calls=source_postludes=entry_generic=presentation_calls=0;
+    presentation_required=false;required_after_transaction=-1;
     pG->Status_flg[1]=0;p.model.ot_type=7;p.model.be_flag=0;p.info.be_flag=8;
     p.model.id=0;p.model.nParts=119;p.info.pList=nullptr;
     current_light=p.asset.lighting;selected=p.asset.p.image;mask=p.asset.p.mask;current_alpha=p.asset.p.alpha_state;
@@ -69,6 +82,9 @@ void cases(test::Portrait& p){
     need(transaction_calls==1 && bridge_calls==1 && source_postludes==1,"actual zero-admission source entry and postlude");
     need(queue::deferred_count==1 && check::ta.empty() && !queue::source_draws_finished,"non-UI source hair queues before completion");
     need(entry_generic==0 && host::gx_attempts==0,"identified replacement stays out of generic/GX tail");
+#if RE4DC_ACTOR_PRESENTATION32
+    need(presentation_calls==1,"ordinary source admission captures presentation requirement before transaction");
+#endif
     auto saved=queue::restore_view(queue::deferred_first);
     need(native_pose_of(saved)!=nullptr,"bridge queued view retains actual pose ticket");
     GXSetDrawSync(0);need(check::ta.empty() && queue::deferred_count==1,"unrelated source sync cannot drain queued hair");
@@ -85,6 +101,22 @@ void cases(test::Portrait& p){
         need(transaction_calls==1 && bridge_calls==0 && queue::deferred_count==0 && host::allocations.empty(),"whole-actor result excludes duplicate source nomination");
         need(source_postludes==unsigned(outcome>0),"source owner success preserves postlude and failure stops it");
     }
+#if RE4DC_ACTOR_PRESENTATION32
+    for(int outcome:{0,1,-1}){
+        reset(p);presentation_required=true;transaction_result=outcome;
+        // Direct-image Luis has no source arrays. This consumer boundary must
+        // never nominate the original bridge after native admission refuses.
+        p.model.id=4;
+        source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+        need(presentation_calls==1 && transaction_calls==1 && bridge_calls==0 &&
+             queue::deferred_count==0 && host::allocations.empty(),"actual direct-image guard excludes unavailable source continuation for every transaction outcome");
+        need(source_postludes==unsigned(outcome>0),"direct-image native success retains postlude; refusal and failure stop");
+    }
+    reset(p);presentation_required=true;required_after_transaction=0;p.model.id=4;
+    source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(!presentation_required && presentation_calls==1 && transaction_calls==1 &&
+         bridge_calls==0 && source_postludes==0 && host::allocations.empty(),"captured direct-image requirement survives transaction-time retirement before zero-admission guard");
+#endif
     for(unsigned flags:{0u,0x40u,8u,0x48u})for(unsigned second:{0u,1u}){
         reset(p);p.info.be_flag=flags;p.model.be_flag=second?0x08000000u:0u;
         source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
@@ -96,6 +128,9 @@ void cases(test::Portrait& p){
     need(bridge_calls==1 && queue::deferred_count==1,"actual status override bypasses only OT group filtering");
     reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview),1);
     need(transaction_calls==0 && bridge_calls==1 && queue::deferred_count==0 && host::allocations.empty(),"nonzero source pass skips transaction and bridge publication");
+#if RE4DC_ACTOR_PRESENTATION32
+    need(presentation_calls==0,"nonzero source pass skips presentation capture as well");
+#endif
     for(unsigned mismatch=0;mismatch<4;++mismatch){
         reset(p);
         if(mismatch==0)p.model.id=1;
