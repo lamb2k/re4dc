@@ -7,6 +7,7 @@ No private package, target ABI/codegen, visual or console acceptance is inferred
 from __future__ import annotations
 import os
 from pathlib import Path
+import re
 import shlex
 import subprocess
 import tempfile
@@ -22,6 +23,11 @@ def read(path,base=False):
     return subprocess.check_output(['git','show',f'{BASE}:{path.relative_to(ROOT)}'],cwd=ROOT).decode() if base else path.read_text()
 
 def fixture(base=False):
+    # Keep the synthetic Game declarations faithful to the recovered ABI.
+    # A pointer substitute hid an invalid integer reinterpret_cast on SH-4.
+    global_header=read(ROOT/'include/global.h',base)
+    for field in ('prim_cnt','nPrim'):
+        assert re.search(r'\bs32\s+'+field+r'\s*;',global_header),field+' fixture type needs review'
     trans=read(ROOT/'src/game/trans.cpp',base)
     fast=read(GAME/'platform/native_actor_fast.cpp',base)
     registry=read(GAME/'coarse_actor_owner_registry.inc',base)

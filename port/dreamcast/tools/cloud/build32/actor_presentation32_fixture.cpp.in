@@ -36,8 +36,11 @@ struct cModel:cCoord {unsigned id=4,serial=10,nParts=90,ot_type=0,be_flag=7;
 #include "coarse_skin.h"
 #include "actor_palette_arena.h"
 using namespace re4dc_source;
-struct Game {unsigned Frame_cnt=7,stage_no=1,room_no=0x1c,nPrim=512*1024,vtx_buf_no=0;
-    void* prim_cnt=nullptr;unsigned Status_flg[3]{},Disp_flg=0,Stop_flg=0;struct {Mtx v_mat{};}Cam;};
+// Match global.h's s32 fields. Host storage below is separate from the target
+// primitive address carried by prim_cnt; no native pointer is stored here.
+struct Game {unsigned Frame_cnt=7,stage_no=1,room_no=0x1c,vtx_buf_no=0;
+    std::int32_t prim_cnt=0,nPrim=512*1024;
+    unsigned Status_flg[3]{},Disp_flg=0,Stop_flg=0;struct {Mtx v_mat{};}Cam;};
 Game game,*pG=&game;cModel* pPL=nullptr; cModel* pSUB=nullptr;
 unsigned re4dc_alive_gen[3]{0,1,1},room_generation=17;bool room_live=true;
 unsigned sourceActorEpoch=1,sourceActorCount=0,sourceActorFailures=0;
@@ -185,8 +188,8 @@ void put16(unsigned at,unsigned n){stream[at]=u8(n);stream[at+1]=u8(n>>8);}
 void put32(unsigned at,unsigned n){put16(at,n);put16(at+2,n>>16);}
 void reset(){
     re4dc_actor_transaction_retire();sourceActorLedger.retire();sourceActorActive=sourceActorRenderActive=false;
-    game=Game{};pG=&game;pG->prim_cnt=primitive;identity_matrix(pG->Cam.v_mat);primitive_used=0;
-    sourceActorEpoch=1;sourceActorPrimBase=unsigned(reinterpret_cast<std::uintptr_t>(primitive));sourceActorPrimBytes=sizeof primitive;sourceActorPrimBuffer=0;
+    game=Game{};pG=&game;pG->prim_cnt=std::int32_t(0x8c100000u);identity_matrix(pG->Cam.v_mat);primitive_used=0;
+    sourceActorEpoch=1;sourceActorPrimBase=unsigned(pG->prim_cnt);sourceActorPrimBytes=sizeof primitive;sourceActorPrimBuffer=0;
     re4dc_alive_gen[1]=re4dc_alive_gen[2]=1;room_generation=17;room_live=true;
     skin_count=0;skin_frame=~0u;owned_skin_serial=0;skin_admission_pending={};skin_admission_serial=0;
     for(auto&s:skins)s={};for(auto&s:owned_skins)s={};
@@ -263,7 +266,7 @@ void mixed_passes(){
 void stale_and_duplicates(){
     for(unsigned mutation=0;mutation<9;++mutation){reset();SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);
         switch(mutation){case 0:++luis.serial;break;case 1:++room_generation;break;case 2:++re4dc_alive_gen[1];break;case 3:++re4dc_alive_gen[2];break;
-            case 4:pG->prim_cnt=primitive+32;break;case 5:pG->nPrim-=32;break;case 6:pG->vtx_buf_no=1;break;case 7:pSUB=nullptr;break;case 8:sourceActorActive=true;break;}
+            case 4:pG->prim_cnt+=32;break;case 5:pG->nPrim-=32;break;case 6:pG->vtx_buf_no=1;break;case 7:pSUB=nullptr;break;case 8:sourceActorActive=true;break;}
         FrameIdentity frame{};ModelIdentity model{};CHECK(re4dc_actor_transaction_identity(&luis,&frame,&model)==-1);
         source_consumer(&luis);CHECK(emitted_n==5&&!source_draws&&aborts==1);
     }
@@ -271,6 +274,23 @@ void stale_and_duplicates(){
     reset();{SourceActorPresentation32Scope scope;source_consumer(&luis);luis.ot_type=7;luis.be_flag|=0x08000000;source_consumer(&luis);CHECK(emitted_n==5&&!source_draws&&aborts==1);}
     reset();{SourceActorPresentation32Scope scope;sourceActorRetire();CHECK(!sourceActorPresentation32Active);}CHECK(!sourceActorPresentation32Active);
     reset();sourceActorEpoch=UINT_MAX;{SourceActorPresentation32Scope scope;source_consumer(&luis);CHECK(!emitted_n&&!source_draws&&aborts==1);}
+}
+void primitive_integer_identity(){
+    for(const auto cursor:{std::int32_t(0x00100000),INT32_MIN,std::int32_t(0x8c100000u),std::int32_t(-1)}){
+        reset();pG->prim_cnt=cursor;SourceActorPresentation32Scope scope;
+        FrameIdentity frame{};ModelIdentity model{};
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==1);
+        CHECK(partnerPresentation32.primitive==static_cast<std::uint32_t>(cursor));
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==1);
+        // A changed high bit is an owner change even with all other identity
+        // fields unchanged; do not resurrect the old image's sticky choice.
+        pG->prim_cnt=std::int32_t(static_cast<std::uint32_t>(cursor)^0x80000000u);
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==-1);
+    }
+    reset();pG->prim_cnt=0;SourceActorPresentation32Scope scope;
+    FrameIdentity frame{};ModelIdentity model{};
+    CHECK(partnerPresentation32Identity(&luis,&frame,&model)==-1);
+    CHECK(!partnerPresentation32.model.address);
 }
 void io_boundaries(){
     for(unsigned mutation=0;mutation<6;++mutation){reset();
@@ -327,7 +347,7 @@ void unavailable_and_state(){
 #endif
 int main(){legacy_contract();
 #if RE4DC_ACTOR_PRESENTATION32
-    inactive_images();mixed_passes();stale_and_duplicates();io_boundaries();multiple_materials();unavailable_and_state();
+    inactive_images();mixed_passes();stale_and_duplicates();primitive_integer_identity();io_boundaries();multiple_materials();unavailable_and_state();
     std::printf("presentation checks=%u record=%zu ticket=%zu\n",checks,sizeof(SourceActorPresentation32),sizeof(ActorPresentation32Ticket));
 #endif
 }

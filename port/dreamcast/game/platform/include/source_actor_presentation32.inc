@@ -23,7 +23,7 @@ struct SourceActorPresentation32Scope {
 };
 struct SourceActorPresentation32 {
     FrameIdentity frame{};ModelIdentity model{};
-    std::uintptr_t primitive=0;
+    std::uint32_t primitive=0;
     unsigned bytes=0,buffer=0,choice=0;
 };
 SourceActorPresentation32 partnerPresentation32;
@@ -49,7 +49,9 @@ int partnerPresentation32Identity(cModel* m,FrameIdentity* frame,ModelIdentity* 
     FrameIdentity now{};
     if(!sourceActorIdentity(now) || !pG->prim_cnt || !pG->nPrim || unsigned(pG->vtx_buf_no)>1u)return -1;
     const ModelIdentity id=sourceActorModel(m);
-    const auto primitive=reinterpret_cast<std::uintptr_t>(pG->prim_cnt);
+    // prim_cnt is an s32 carrying the target's 32-bit primitive address.
+    // Preserve those bits without treating the integer field as a pointer.
+    const auto primitive=static_cast<std::uint32_t>(pG->prim_cnt);
     auto& e=partnerPresentation32;
     if(e.model.address && e.frame.frame==now.frame && e.frame.primitive_epoch==now.primitive_epoch) {
         // Same image: a room/manager/model/primitive change is a refusal, not
