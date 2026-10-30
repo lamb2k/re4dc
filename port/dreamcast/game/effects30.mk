@@ -764,7 +764,7 @@ ifeq ($(NATIVE_DRAW_OUTCOMES),1)
 ifneq ($(FX_STRIP21),1)
 $(error NATIVE_DRAW_OUTCOMES needs FX_STRIP21=1)
 endif
-$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o $(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
 endif
 

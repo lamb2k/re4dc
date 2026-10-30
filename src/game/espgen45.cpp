@@ -610,6 +610,9 @@ extern "C" void re4dc_water45_draw(EspgenWork* w)
 #include <string.h>
 #include "tpl.h"
 #include "native_ui.h"
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#include "water_outcomes03.hpp"
+#endif
 struct WaterPs2Row {
     u16 room;
     s16 area;                        // effect area (EffGetAreaState); -1: while the room's water generator is live
@@ -874,7 +877,11 @@ static Water29Result Water29Select(u32 room, Water29View* view)
 // Admission is per layer. A wholly refused r10b image can still draw its
 // existing native GameCube generator surface; after partial publication it
 // cannot be undone, so report refusal without duplicating the accepted layers.
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+static void Water29Finish(unsigned accepted, unsigned refused,const re4dc::NativeDrawResult& output)
+#else
 static void Water29Finish(unsigned accepted, unsigned refused)
+#endif
 {
     s_water29_last_admission = refused ? (accepted ? WATER29_PARTIAL_REFUSAL : WATER29_TOTAL_REFUSAL) :
                                (accepted ? WATER29_ADMITTED : WATER29_NOT_ATTEMPTED);
@@ -884,7 +891,11 @@ static void Water29Finish(unsigned accepted, unsigned refused)
     }
     if (s_water29_last_admission == WATER29_PARTIAL_REFUSAL) {
         ++s_water29_partial;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    } else if (output.fallback_allowed() && G_ROOM_ID == 0x10b && g_pWater45 && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) {
+#else
     } else if (G_ROOM_ID == 0x10b && g_pWater45 && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) {
+#endif
         re4dc_water45_draw(g_pWater45);
     }
     const unsigned f = re4dc_ui_frame();
@@ -971,6 +982,9 @@ extern "C" void re4dc_water_ps2_draw(void*)
         return;
     }
     unsigned accepted_count = 0, refused_count = 0;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    re4dc::NativeDrawProgress output;
+#endif
 #endif
     const int live = (g_pWater45 != NULL && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) || re4dc_water42_live();
     const int level = re4dc_fx_level_get ? re4dc_fx_level_get() : 0;
@@ -1050,7 +1064,12 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.src = r.src;
         L.dst = r.dst;
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        int accepted=0;
+        re4dc_water03_observe(output,re4dc_water_layer_result(&L,&accepted));
+#else
         const int accepted = re4dc_water_layer(&L);
+#endif
         if (!accepted) {
             ++s_water29_admission_refused;
             ++refused_count;
@@ -1064,7 +1083,11 @@ extern "C" void re4dc_water_ps2_draw(void*)
 #if defined(RE4DC_WATER_PS2_EXT) && RE4DC_WATER_PS2_EXT
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
     if (!selected.ext_count) {
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        Water29Finish(accepted_count, refused_count,output.result);
+#else
         Water29Finish(accepted_count, refused_count);
+#endif
         return;
     }
     const WaterPs2ExtRow* ext_rows = selected.ext_rows;
@@ -1162,7 +1185,12 @@ extern "C" void re4dc_water_ps2_draw(void*)
         L.src = r.src;
         L.dst = r.dst;
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        int accepted=0;
+        re4dc_water03_observe(output,re4dc_water_layer_result(&L,&accepted));
+#else
         const int accepted = re4dc_water_layer(&L);
+#endif
         if (!accepted) {
             ++s_water29_admission_refused;
             ++refused_count;
@@ -1179,7 +1207,11 @@ extern "C" void re4dc_water_ps2_draw(void*)
     }
 #endif
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    Water29Finish(accepted_count, refused_count,output.result);
+#else
     Water29Finish(accepted_count, refused_count);
+#endif
 #endif
 }
 
