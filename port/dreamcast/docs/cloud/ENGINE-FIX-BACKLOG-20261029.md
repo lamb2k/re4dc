@@ -274,6 +274,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 
 ### EF01. Exact native geometry/UV spans and owner-generation authority
 
+**2026-10-29 recovery source delivery:** Bounded current-image cabin Luis route through existing actor ownership implemented; each yielding material acquisition revalidated, two-material retirement regression and200/212 normal/sanitizer checks PASS. Full trans OFF/HALT and actual primary Make gates PASS on149 integration. Default0; recipe composition guarded, target/private/runtime open. See [Build32](handbacks/build-32.md).
+
 **Gap.** `Re4dcModelPart` has position/normal counts and `stream_bytes`, but only a raw UV pointer; `Re4dcActorChunk` has the same missing UV extent. Build 32's `checked_certificate()` rereads referenced UV records. Its SH-4 RAM limit explicitly does not establish an allocation extent or immutable ownership. This is an interface deficiency with a conservative workaround, not a claim of an observed out-of-bounds draw.
 
 **Target.** A prepared capability belongs to an exact logical source segment, encoding and owner incarnation. Texture dimensions/scales and other live state remain draw-time inputs.
@@ -339,6 +341,8 @@ The first bounded EF01/02/03/05/06/07/08 slices are now integrated; use the curr
 **After implementation.** Compare effective vertices, attributes, headers and order between reused native routes. Exercise count/stride boundaries, corruption, current pose, texture state and publication failure. Keep invalid-input refusals intact. Measure coverage restored separately from speed.
 
 **Code.** `re4dc_model_submit`, `Builder::walk/walk_plan` in [native_model.cpp][MODEL]; `blob_of`, `Records`, `qualifies`, `pass_positions`, `avk_positions`, `positions_c` and materialization in [native_actor_fast.cpp][ACTOR]; source buffer adapters in [model_bridge.cpp][BRIDGE].
+
+**2026-10-29 related EF01 source delivery:** Bounded current-image cabin Luis route through existing actor ownership implemented; each yielding material acquisition revalidated, two-material retirement regression and200/212 normal/sanitizer checks PASS. Full trans OFF/HALT and actual primary Make gates PASS on149 integration. Default0; recipe composition guarded, target/private/runtime open. See [Build32](handbacks/build-32.md).
 
 ### EF05. Make static-object cache ownership safe before dereference
 

@@ -65,6 +65,11 @@ void re4dc_actor_workspace_release(Re4dcActorWorkspaceLease*);
 // their own placeholders; all other deferrals keep the usual eager fallback.
 int re4dc_actor_skin_reserve(unsigned source_frame,const void* const* infos,unsigned count);
 #endif
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+// Initialize a direct image's source-frame authority through the existing
+// reservation API. An already current frame retains any other live owners.
+int re4dc_actor_skin_presentation32_frame(unsigned,const void* const*,unsigned);
+#endif
 int re4dc_actor_skin_acquire(unsigned,const Re4dcActorSkinBinding*,unsigned,Re4dcActorSkinLease*);
 int re4dc_actor_skin_validate(const Re4dcActorSkinLease*);
 int re4dc_actor_skin_release(Re4dcActorSkinLease*);
