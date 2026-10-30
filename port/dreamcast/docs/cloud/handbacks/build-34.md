@@ -2004,3 +2004,10 @@ Cloud ownership takes effect at this exact integrated source SHA. Do not redo th
 Local next: bind actual final programme/overlays and private packages, choose a distinct stock current-image affected scene/fixture, then run supported output/look/gameplay/STRICT/current-memory/cost checks. No repeated no-input menu capture or unchanged failed-memory retry. Physical console gates require the intended media selected/swapped by the user and reviewed link readiness. Frozen Test24b, Pi/media/look/Castle/Ashley and all explicitly incomplete historical gates remain held.
 
 Exact shared-file grants: [systemic owner handoff](systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release).
+
+
+## Answers (owner): 2026-10-30 logger-publication16 source admission
+
+Owner source `d0fc4ff9acab2e29957c3f865ec30c7bb6f60a7c` landed by clean no-ff merge `88e3045ac48ffce4253759c6229796c1755accce`. 6 full target arms with RECORD16 off/on and full OFF identity. Nonblocking whole-call lease, bounded 255-store IRQ windows with exact SR restoration, explicit refusal and two immutable terminal-evidence slots; fixed416B target state. Installed KOS rollback and final target TUs independently reviewed. External KOS formatter, post-evidence crash-screen formatting, instruction-level duration/cache/raw-RAM/NMI/full-memory/console remain excluded or pending. Parked outside broad ALLON.
+
+Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `e9f89bf86433df526512baf549d9c4ca40069a87d1184f94c9d6340034ed0a4a`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
