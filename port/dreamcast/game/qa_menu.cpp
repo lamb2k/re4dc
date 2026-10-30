@@ -15,9 +15,15 @@
 #include <dc/video.h>
 #include <arch/timer.h>
 #include <stdarg.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+#include <stdlib.h>
+#include <ctype.h>
+#include <strings.h>
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "world_census24.h"
 #define QA_CENSUS_ROW A_CENSUS,
@@ -64,6 +70,20 @@ extern volatile unsigned long re4dc_log_head;                                   
 #define RE4DC_LOG_TRIM 0
 #endif
 extern char re4dc_logbuf[0x10000 - RE4DC_LOG_TRIM];                                            // mem.cpp RE4DC_LOG_SIZE
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// qa_link.cpp (QA_LINK=1): modem + PPP + UDP transport
+void re4dc_qalink_config(const char* number, const char* host, unsigned port, unsigned lport);
+int re4dc_qalink_start(void);
+void re4dc_qalink_stop(void);
+int re4dc_qalink_up(void);
+int re4dc_qalink_wanted(void);
+void re4dc_qalink_state_text(char* out, unsigned n);
+void re4dc_qalink_counters(unsigned* tx, unsigned* rx, unsigned* drops, unsigned* queued);
+int re4dc_qalink_send(const void* p, unsigned n);
+int re4dc_qalink_send_bulk(const void* p, unsigned n);
+unsigned re4dc_qalink_bulk_skips(void);
+int re4dc_qalink_recv(char* p, unsigned max);
+#endif
 }
 #include "third_party/qrcodegen/qrcodegen.h"
 
@@ -527,6 +547,13 @@ enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
 #define QA_WS_ROW
 #define QA_WS_ENUM
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+#define QA_LINK_ROW A_LINK,
+#define QA_LINK_ENUM , A_LINK
+#else
+#define QA_LINK_ROW
+#define QA_LINK_ENUM
+#endif
 enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     , A_PVS
@@ -534,7 +561,7 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     , A_CENSUS
 #endif
-    QA_WS_ENUM
+    QA_WS_ENUM QA_LINK_ENUM
 };
 struct Menu {
     bool boot;
@@ -578,6 +605,9 @@ void item_text(int a, char* out, unsigned n) {
     case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
                           re4dc_world_scratch_live == 1 ? "B HALF CACHE" : "A NORMAL"); break;
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    case A_LINK: { char st[64]; re4dc_qalink_state_text(st, sizeof(st)); snprintf(out, n, "REMOTE LINK: %s", st); break; }
+#endif
     default: out[0] = 0;
     }
 }
@@ -587,6 +617,656 @@ int presets_of(int ch, int* idx) {
         if (g_p[i].ch == ch) idx[n++] = i;
     return n;
 }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// ---------------------------------------------------------------- remote link protocol (QA_LINK; tools/qalink/README.md)
+// Console -> Pi, one UDP datagram each (text; the first line is the header):
+//   T <seq> <ms> <part>/<parts>   telemetry, once a second: the Diagnostics page's rows (DRAW_SETUP_AUDIT rows included)
+//                                 and a "link" row; split into parts of <= 1100 bytes
+//   L <seq> <dropped bytes>       new RAM log lines since the last L (at most 640 bytes a second; the rest is counted)
+//   R <id> <first tick>           RECORD: the wall time of each game tick (us, comma separated), 30 ticks a datagram
+//   A <id> <OK|ERR> <text>        the answer to command <id>
+//   D <id> <part>/<parts>         DIAG: the full Diagnostics snapshot (rows + the last 20 log lines)
+// Pi -> console: "<id> <COMMAND> [args]" (id = any token without spaces; the console echoes it):
+//   PING [x] | TELEPORT <preset file or label words> | QA <row> <value> | RECORD <ticks> | MENU | RESUME | DIAG | HELLO
+//   QA rows: LEON / PARTNER / ENEMY ON|OFF, SPEED ON|OFF, SHORE 30|45, HEALTH, TITLE, and with WORLD_METER: WOPQ / WXLU
+//   GAME|FULL|12.5|10|8, WSHELL GAME|ON|OFF, PVS ON|OFF; WORLD_SCRATCH: WSCR A|B|C.
+// Commands run on the game thread inside the QA menu's own handlers (no input is synthesized). TELEPORT / TITLE wait
+// for free play (the in-game menu's rule) and then take the menu's soft-reset path; MENU opens the in-game menu at the
+// next free-play tick; while it is open the menu itself answers commands (RESUME closes it).
+enum { LA_NONE, LA_TELEPORT, LA_TITLE, LA_HEALTH, LA_MENU, LA_RESUME };
+struct Link {
+    bool cfg_read, auto_start;
+    unsigned seq, log_seq;
+    unsigned long log_sent;
+    uint64_t next_ms, cost_us, cost_t0;
+    unsigned cost_last;                  // us spent in link_tick over the last whole second (game thread)
+    int pending;                          // LA_TELEPORT / LA_TITLE / LA_MENU waiting for free play
+    char pending_id[16];
+    char last_state[64];
+    // RECORD
+    char rec_id[16];
+    unsigned rec_left, rec_n, rec_first;
+    uint64_t rec_prev_us;
+    unsigned rec_us[1800];
+    char rec_line[400];
+    int rec_len;
+    void (*game)(void);
+} g_link;
+
+void link_send_text(const char* s, int n) { re4dc_qalink_send(s, (unsigned) n); }
+void link_reply(const char* id, bool ok, const char* fmt, ...) __attribute__((format(printf, 3, 4)));
+void link_reply(const char* id, bool ok, const char* fmt, ...) {
+    char b[300];
+    int k = snprintf(b, sizeof(b), "A %s %s ", id, ok ? "OK" : "ERR");
+    va_list ap;
+    va_start(ap, fmt);
+    const int m = vsnprintf(b + k, sizeof(b) - k, fmt, ap);
+    va_end(ap);
+    k = m < 0 ? k : (k + m >= (int) sizeof(b) ? (int) sizeof(b) - 1 : k + m);
+    link_send_text(b, k);
+}
+void link_read_cfg() {
+    if (g_link.cfg_read) return;
+    g_link.cfg_read = true;
+    char text[512];
+    const int len = re4dc_fixture_read("/cd/dc/qa/link.txt", text, sizeof(text) - 1);
+    char number[24] = "", host[24] = "";
+    unsigned port = 0, lport = 0;
+    if (len > 0) {
+        text[len] = 0;
+        for (char* line = text; line && *line;) {
+            char* next = strchr(line, '\n');
+            if (next) *next++ = 0;
+            char* cr = strchr(line, '\r');
+            if (cr) *cr = 0;
+            if (!strncmp(line, "number ", 7)) strncpy(number, line + 7, sizeof(number) - 1);
+            else if (!strncmp(line, "host ", 5)) strncpy(host, line + 5, sizeof(host) - 1);
+            else if (!strncmp(line, "port ", 5)) port = (unsigned) atoi(line + 5);
+            else if (!strncmp(line, "lport ", 6)) lport = (unsigned) atoi(line + 6);
+            else if (!strncmp(line, "auto ", 5)) g_link.auto_start = atoi(line + 5) != 0;
+            line = next;
+        }
+    }
+    re4dc_qalink_config(number, host, port, lport);
+    re4dc_log("qalink: config %s number=%s host=%s port=%u lport=%u auto=%d\n", len > 0 ? "link.txt" : "defaults",
+              number[0] ? number : "default", host[0] ? host : "peer", port, lport, (int) g_link.auto_start);
+}
+void link_toggle() {
+    link_read_cfg();
+    if (re4dc_qalink_wanted()) { re4dc_qalink_stop(); re4dc_log("qa: remote link off\n"); }
+    else { re4dc_qalink_start(); re4dc_log("qa: remote link on\n"); }
+}
+bool link_state_changed() {
+    char st[64];
+    re4dc_qalink_state_text(st, sizeof(st));
+    if (!strcmp(st, g_link.last_state)) return false;
+    strcpy(g_link.last_state, st);
+    return true;
+}
+bool word_is(const char* a, const char* b) { return !strcasecmp(a, b); }
+int on_off(const char* v) { return word_is(v, "ON") || word_is(v, "1") ? 1 : word_is(v, "OFF") || word_is(v, "0") ? 0 : -1; }
+// Finds a preset by its fixture file (with or without .txt) or by words of its label; -1 none.
+int find_preset(const char* q) {
+    for (int i = 0; i < g_np; ++i) {
+        const char* f = g_p[i].file;
+        const size_t ql = strlen(q);
+        if (!strcasecmp(f, q) || (!strncasecmp(f, q, ql) && !strcasecmp(f + ql, ".txt"))) return i;
+    }
+    for (int i = 0; i < g_np; ++i) {
+        char lab[48];
+        unsigned k = 0;
+        for (; g_p[i].label[k] && k < sizeof(lab) - 1; ++k) lab[k] = (char) toupper((unsigned char) g_p[i].label[k]);
+        lab[k] = 0;
+        char qq[48];
+        for (k = 0; q[k] && k < sizeof(qq) - 1; ++k) qq[k] = (char) toupper((unsigned char) q[k]);
+        qq[k] = 0;
+        if (strstr(lab, qq)) return i;
+    }
+    return -1;
+}
+// QA <row> <value>: the menu rows' own state changes. Returns LA_HEALTH / LA_TITLE for the rows that act on the game.
+int link_qa_row(const char* id, const char* row, const char* v) {
+    unsigned bit = word_is(row, "LEON") ? 1 : word_is(row, "PARTNER") ? 2 : word_is(row, "ENEMY") ? 4 : 0;
+    if (bit) {
+        const int o = on_off(v);
+        if (o < 0) { link_reply(id, false, "QA %s needs ON or OFF", row); return LA_NONE; }
+        g_flags = o ? (g_flags | bit) : (g_flags & ~bit);
+        re4dc_log("qa: toggles %x (link)\n", (unsigned) g_flags);
+        link_reply(id, true, "QA %s %s flags=%x", row, o ? "ON" : "OFF", (unsigned) g_flags);
+        return LA_NONE;
+    }
+    if (word_is(row, "SPEED")) {
+        const int o = on_off(v);
+        if (o < 0) { link_reply(id, false, "QA SPEED needs ON or OFF"); return LA_NONE; }
+        for (int k = 0; k < 4 && ((re4dc_quality_speed() & 2) != 0) != (o != 0); ++k) re4dc_speed_cycle();
+        link_reply(id, true, "QA SPEED %s", speed_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "SHORE")) {
+        if (!&re4dc_qa_shore_far_mm) { link_reply(id, false, "QA SHORE: not in this build (LAKE_FAR)"); return LA_NONE; }
+        re4dc_qa_shore_far_mm = atoi(v) == 30 ? 30000u : 0u;
+        link_reply(id, true, "QA SHORE %s", re4dc_qa_shore_far_mm ? "30 M" : "45 M");
+        return LA_NONE;
+    }
+    if (word_is(row, "HEALTH")) { link_reply(id, true, "QA HEALTH refilled"); return LA_HEALTH; }
+    if (word_is(row, "TITLE")) return LA_TITLE;
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    if (word_is(row, "WOPQ") || word_is(row, "WXLU")) {
+        const unsigned mm = word_is(v, "GAME") ? 0u : word_is(v, "FULL") ? 1u : (unsigned) (atof(v) * 1000.0 + 0.5);
+        const bool opq = word_is(row, "WOPQ");
+        bool okv = false;
+        if (opq) { for (unsigned x : kOpq) okv |= x == mm; } else { for (unsigned x : kXlu) okv |= x == mm; }
+        if (!okv) { link_reply(id, false, "QA %s: value not on the row", row); return LA_NONE; }
+        (opq ? re4dc_qa_wopq_mm : re4dc_qa_wxlu_mm) = mm;
+        link_reply(id, true, "QA world rows opq=%s xlu=%s shell=%s", wm_opq_name(), wm_xlu_name(), wm_shell_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "WSHELL")) {
+        const int s = word_is(v, "GAME") ? 0 : word_is(v, "ON") ? 1 : word_is(v, "OFF") ? 2 : -1;
+        if (s < 0) { link_reply(id, false, "QA WSHELL needs GAME, ON or OFF"); return LA_NONE; }
+        re4dc_qa_wshell = (unsigned) s;
+        link_reply(id, true, "QA WSHELL %s", wm_shell_name());
+        return LA_NONE;
+    }
+    if (word_is(row, "PVS")) {
+        const int o = on_off(v);
+        if (o < 0 || !re4dc_ps2_pvs_set) { link_reply(id, false, "QA PVS needs ON or OFF (and a PVS build)"); return LA_NONE; }
+        re4dc_ps2_pvs_set((unsigned) o);
+        link_reply(id, true, "QA PVS %s this boot", o ? "ON" : "OFF");
+        return LA_NONE;
+    }
+#endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+    if (word_is(row, "WSCR")) {
+        const int s = word_is(v, "A") ? 0 : word_is(v, "B") ? 1 : word_is(v, "C") ? 2 : -1;
+        if (s < 0) { link_reply(id, false, "QA WSCR needs A, B or C"); return LA_NONE; }
+        re4dc_world_scratch_live = (unsigned) s;
+        link_reply(id, true, "QA WSCR %c", 'A' + s);
+        return LA_NONE;
+    }
+#endif
+    link_reply(id, false, "QA: unknown row %s", row);
+    return LA_NONE;
+}
+// The full Diagnostics snapshot in parts (DIAG) / the rows only (telemetry).
+void link_send_parts(char kind, const char* id, const char* text, int len) {
+    constexpr int kPart = 1100;
+    const int parts = len ? (len + kPart - 1) / kPart : 1;
+    char b[kPart + 64];
+    for (int p = 0; p < parts; ++p) {
+        const int off = p * kPart, n = len - off < kPart ? len - off : kPart;
+        const int h = kind == 'T' ? snprintf(b, sizeof(b), "T %u %u %d/%d\n", g_link.seq,
+                                             (unsigned) (timer_ms_gettime64() & 0xFFFFFFFFu), p + 1, parts)
+                                  : snprintf(b, sizeof(b), "D %s %d/%d\n", id, p + 1, parts);
+        memcpy(b + h, text + off, n > 0 ? n : 0);
+        if (kind == 'T') re4dc_qalink_send_bulk(b, (unsigned) (h + (n > 0 ? n : 0)));   // telemetry: skipped when backlogged
+        else link_send_text(b, h + (n > 0 ? n : 0));
+    }
+}
+int drive_row(char* out, int n);   // remote driving (below): Leon's room / position / facing / camera and the queue
+void link_telemetry() {
+    if (g_link.game) g_link.game();
+    snap_diag();
+    const char* rows = strchr(g_diag, '\n');   // the stats rows after "RE4DCQA1"
+    rows = rows ? rows + 1 : g_diag;
+    int n = g_diag_stats - (int) (rows - g_diag);
+    static char t[sizeof(g_diag) + 160];
+    if (n < 0) n = 0;
+    memcpy(t, rows, n);
+    unsigned tx, rx, dr, q;
+    re4dc_qalink_counters(&tx, &rx, &dr, &q);
+    n += snprintf(t + n, sizeof(t) - n, "link tx=%u rx=%u drops=%u queued=%u skips=%u cost_us_per_s=%u\n", tx, rx, dr,
+                  q, re4dc_qalink_bulk_skips(), g_link.cost_last);
+    n += drive_row(t + n, (int) sizeof(t) - n);
+    ++g_link.seq;
+    link_send_parts('T', "", t, n);
+}
+void link_log() {   // new RAM log bytes since the last call, at most 640 a second
+    const unsigned long head = re4dc_log_head, size = sizeof(re4dc_logbuf);
+    if (!g_link.log_sent || head - g_link.log_sent > size) g_link.log_sent = head > size ? head - size : 0;
+    unsigned long n = head - g_link.log_sent, dropped = 0;
+    if (!n) return;
+    if (n > 640) { dropped = n - 640; g_link.log_sent += dropped; n = 640; }
+    char b[720];
+    int h = snprintf(b, sizeof(b), "L %u %lu\n", ++g_link.log_seq, dropped);
+    for (unsigned long i = 0; i < n; ++i) {
+        const char c = re4dc_logbuf[(g_link.log_sent + i) % size];
+        b[h++] = (c >= 32 && c < 127) || c == '\n' ? c : ' ';
+    }
+    g_link.log_sent += n;
+    re4dc_qalink_send_bulk(b, (unsigned) h);   // skipped (those bytes are not sent) when backlogged
+}
+void record_flush() {
+    if (g_link.rec_len) link_send_text(g_link.rec_line, g_link.rec_len);
+    g_link.rec_len = 0;
+}
+void record_tick(uint64_t now_us) {
+    if (!g_link.rec_left) return;
+    const unsigned us = g_link.rec_prev_us ? (unsigned) (now_us - g_link.rec_prev_us) : 0;
+    g_link.rec_prev_us = now_us;
+    if (!us) return;   // the first tick has no previous one
+    if (g_link.rec_n < sizeof(g_link.rec_us) / sizeof(g_link.rec_us[0])) g_link.rec_us[g_link.rec_n] = us;
+    if (!g_link.rec_len)
+        g_link.rec_len = snprintf(g_link.rec_line, sizeof(g_link.rec_line), "R %s %u\n", g_link.rec_id, g_link.rec_n);
+    g_link.rec_len += snprintf(g_link.rec_line + g_link.rec_len, sizeof(g_link.rec_line) - g_link.rec_len, "%u,", us);
+    ++g_link.rec_n;
+    if (g_link.rec_n % 30 == 0) record_flush();
+    if (--g_link.rec_left) return;
+    record_flush();
+    // summary: mean / p50 / p99 / max of the recorded ticks, then the phase rows (fps / ms10) of the Diagnostics page
+    const unsigned n = g_link.rec_n < 1800 ? g_link.rec_n : 1800;
+    unsigned* v = g_link.rec_us;
+    for (unsigned i = 1; i < n; ++i) {   // insertion sort (<= 1800 values, once per RECORD)
+        const unsigned x = v[i];
+        unsigned j = i;
+        for (; j && v[j - 1] > x; --j) v[j] = v[j - 1];
+        v[j] = x;
+    }
+    unsigned long long sum = 0;
+    for (unsigned i = 0; i < n; ++i) sum += v[i];
+    if (g_link.game) g_link.game();
+    snap_diag();
+    char rows[400];
+    int k = 0;
+    rows[0] = 0;
+    for (const char* p = g_diag; p && *p && p < g_diag + g_diag_stats;) {
+        const char* e = strchr(p, '\n');
+        const int len = e ? (int) (e - p) : (int) strlen(p);
+        if ((!strncmp(p, "fps", 3) || !strncmp(p, "ms10", 4)) && k + len + 3 < (int) sizeof(rows))
+            k += snprintf(rows + k, sizeof(rows) - k, " | %.*s", len, p);
+        p = e ? e + 1 : nullptr;
+    }
+    link_reply(g_link.rec_id, true, "RECORD ticks=%u mean_us=%u p50_us=%u p99_us=%u max_us=%u%s", n,
+               n ? (unsigned) (sum / n) : 0u, n ? v[n / 2] : 0u, n ? v[(n * 99) / 100 < n ? (n * 99) / 100 : n - 1] : 0u,
+               n ? v[n - 1] : 0u, rows);
+}
+// ---------------------------------------------------------------- remote driving (lane linkpad28, user 10-28)
+// PAD / GOTO / SCRIPT / MARK and TELEPORT POS: the PC moves Leon and cuts the session into sections. One queue of steps
+// (PAD: buttons + stick for N ticks; GOTO: autopilot to x/z; MARK: a marker), applied at the game's pad read
+// (platform/pad.cpp re4dc_qa_drive_pad, game thread) in free play only (no QA menu, movie, event, sub screen or door
+// load; a step with ANY runs anywhere). Any real pad input (or a fixture press) cancels the queue at once and blocks
+// driving for 3 s. The on-screen label "PC DRIVING" (the look label, native_static.cpp) shows while a step runs.
+enum { DK_PAD, DK_GOTO, DK_MARK };
+struct DriveStep {
+    unsigned char kind, run, any, verb;   // verb: 'P' PAD, 'G' GOTO, 'S' SCRIPT
+    unsigned short buttons, ticks;        // PAD: GameCube PAD_* bits, ticks; GOTO: timeout ticks
+    signed char lx, ly;
+    float x, z;
+    char id[16];
+    char label[40];                       // MARK label / SCRIPT name
+};
+struct Drive {
+    DriveStep q[64];
+    unsigned head, n;                     // ring
+    unsigned done_ticks;                  // ticks spent on the head step
+    bool feed, free_now;
+    unsigned room;
+    float x, y, z, ang, cam;
+    uint64_t block_until_ms, cancel_ms;
+    unsigned cancels;
+    unsigned short ob;                    // GOTO output, applied at the next pad read
+    signed char ox, oy;
+    float chk_x, chk_z;                   // GOTO stuck check
+    unsigned chk_t;
+    bool tpos_pending;
+    float tpos[4];
+    bool tpos_ang;
+    char tpos_id[16];
+} g_drv;
+const char* verb_name(unsigned char v) { return v == 'G' ? "GOTO" : v == 'S' ? "SCRIPT" : "PAD"; }
+DriveStep* drv_head() { return g_drv.n ? &g_drv.q[g_drv.head % 64] : nullptr; }
+bool drv_push(const DriveStep& s) {
+    if (g_drv.n >= 64) return false;
+    g_drv.q[(g_drv.head + g_drv.n) % 64] = s;
+    ++g_drv.n;
+    return true;
+}
+void drv_report(const DriveStep& s, const char* why) {
+    link_reply(s.id, true, "%s DONE %s room=%03x pos=%d,%d,%d ang=%d/1000", verb_name(s.verb), why, g_drv.room,
+               (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, (int) (g_drv.ang * 1000.0f));
+    re4dc_log("qadrive: %s %s DONE %s pos=%d,%d,%d\n", s.id, verb_name(s.verb), why, (int) g_drv.x, (int) g_drv.y,
+              (int) g_drv.z);
+}
+// The head step finished (why = reason): pop it; when no later step shares its id, the command is DONE. A failed GOTO
+// drops the rest of its command (a script stops where its walk failed).
+void drv_pop(const char* why, bool fail) {
+    DriveStep* h = drv_head();
+    if (!h) return;
+    const DriveStep s = *h;
+    g_drv.head = (g_drv.head + 1) % 64;
+    --g_drv.n;
+    g_drv.done_ticks = 0;
+    if (fail) while (g_drv.n && !strcmp(drv_head()->id, s.id)) { g_drv.head = (g_drv.head + 1) % 64; --g_drv.n; }
+    if (!g_drv.n || strcmp(drv_head()->id, s.id)) drv_report(s, why);
+}
+void drv_clear(const char* why) {
+    char last[16] = "";
+    while (g_drv.n) {
+        DriveStep* h = drv_head();
+        if (strcmp(last, h->id)) { drv_report(*h, why); strcpy(last, h->id); }
+        g_drv.head = (g_drv.head + 1) % 64;
+        --g_drv.n;
+    }
+    g_drv.done_ticks = 0;
+    g_drv.ob = 0; g_drv.ox = g_drv.oy = 0;
+}
+void drv_mark(const char* id, const char* label) {
+    char b[96];
+    const int k = snprintf(b, sizeof(b), "M %u %s", (unsigned) (timer_ms_gettime64() & 0xFFFFFFFFu), label);
+    link_send_text(b, k < (int) sizeof(b) ? k : (int) sizeof(b) - 1);
+    re4dc_log("qamark: %s\n", label);
+    if (id) link_reply(id, true, "MARK %s", label);
+}
+float wrap_pi(float a) {
+    while (a > 3.14159265f) a -= 6.2831853f;
+    while (a < -3.14159265f) a += 6.2831853f;
+    return a;
+}
+// GOTO, once per game tick (feed): the stick and buttons for the next pad read, or the step's end.
+// RE4's tank controls: stick X turns Leon (right = clockwise from above = his angle falls), stick Y walks; B + forward runs.
+void drv_goto_tick(DriveStep* s) {
+    // A straight line, no path finding (user 10-28: teleport to exact spots; a human walks the rest). Under 0.3 m of
+    // progress in 3 s = stuck.
+    const float dx = s->x - g_drv.x, dz = s->z - g_drv.z, d = sqrtf(dx * dx + dz * dz);
+    if (d < 500.0f) { drv_pop("arrived", false); return; }
+    if (g_drv.done_ticks >= s->ticks) { drv_pop("timeout", true); return; }
+    if (g_drv.done_ticks == 0) { g_drv.chk_t = 0; g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; }
+    if (g_drv.done_ticks - g_drv.chk_t >= 90) {
+        const float mx = g_drv.x - g_drv.chk_x, mz = g_drv.z - g_drv.chk_z;
+        if (mx * mx + mz * mz < 300.0f * 300.0f) { drv_pop("stuck", true); return; }
+        g_drv.chk_x = g_drv.x; g_drv.chk_z = g_drv.z; g_drv.chk_t = g_drv.done_ticks;
+    }
+    const float err = wrap_pi(atan2f(dx, dz) - g_drv.ang);
+    float sx = -err * 120.0f;   // stick right turns Leon clockwise (his angle falls); full rate from ~0.6 rad of error
+    if (sx > 70.0f) sx = 70.0f;
+    if (sx < -70.0f) sx = -70.0f;
+    const float ae = err < 0 ? -err : err;
+    g_drv.ox = (signed char) sx;
+    g_drv.oy = ae > 0.7f ? 0 : d < 1500.0f ? 45 : 70;
+    g_drv.ob = (s->run && ae < 0.3f && d > 2000.0f) ? 0x0200 : 0;   // PAD_BUTTON_B: run
+}
+// Button words: hex GameCube bits as the fixtures (0108), or names joined by '+' (A+B, UP, R+A, NONE).
+bool parse_buttons(const char* w, unsigned short* out) {
+    static const struct { const char* n; unsigned short b; } kN[] = {
+        {"LEFT", 0x1}, {"RIGHT", 0x2}, {"DOWN", 0x4}, {"UP", 0x8}, {"Z", 0x10}, {"R", 0x20}, {"L", 0x40},
+        {"A", 0x100}, {"B", 0x200}, {"X", 0x400}, {"Y", 0x800}, {"START", 0x1000}, {"NONE", 0}, {"-", 0}};
+    char* e = nullptr;
+    const unsigned long v = strtoul(w, &e, 16);
+    if (e && !*e && *w) { *out = (unsigned short) v; return true; }
+    unsigned short b = 0;
+    char tmp[48];
+    strncpy(tmp, w, sizeof(tmp) - 1);
+    tmp[sizeof(tmp) - 1] = 0;
+    char* sv = nullptr;
+    for (char* t = strtok_r(tmp, "+", &sv); t; t = strtok_r(nullptr, "+", &sv)) {
+        bool f = false;
+        for (const auto& k : kN) if (!strcasecmp(t, k.n)) { b |= k.b; f = true; break; }
+        if (!f) return false;
+    }
+    *out = b;
+    return true;
+}
+int clamp_stick(int v) { return v > 72 ? 72 : v < -72 ? -72 : v; }
+// SCRIPT <name>: /cd/dc/qa/pad/<name>.txt. Lines as the harness fixtures ("[+]frame buttons hold [state ...]": a
+// press due `frame` ticks after the previous press starts, held `hold` ticks; state qualifiers are ignored here),
+// plus "stick=<lx>,<ly>" on a press line, "goto <x> <z> [run] [timeout_s]", "mark <label>" and "wait <ticks>".
+int drv_script(const char* id, const char* name, bool any) {
+    char path[96];
+    snprintf(path, sizeof(path), "/cd/dc/qa/pad/%s%s", name, strchr(name, '.') ? "" : ".txt");
+    static char text[4096];
+    const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
+    if (len <= 0) return -1;
+    text[len] = 0;
+    int steps = 0;
+    unsigned t = 0, last_start = 0;
+    DriveStep s;
+    for (char* line = text; line && *line;) {
+        char* next = strchr(line, '\n');
+        if (next) *next++ = 0;
+        char* h = strchr(line, '#');
+        if (h) *h = 0;
+        char* sv = nullptr;
+        char* w[8] = {};
+        int nw = 0;
+        for (char* tk = strtok_r(line, " \t\r", &sv); tk && nw < 8; tk = strtok_r(nullptr, " \t\r", &sv)) w[nw++] = tk;
+        line = next;
+        if (!nw || !strcmp(w[0], "clock")) continue;
+        memset(&s, 0, sizeof(s));
+        strncpy(s.id, id, sizeof(s.id) - 1);
+        strncpy(s.label, name, sizeof(s.label) - 1);
+        s.verb = 'S';
+        s.any = any;
+        if (!strcasecmp(w[0], "goto") && nw >= 3) {
+            s.kind = DK_GOTO;
+            s.x = (float) atof(w[1]); s.z = (float) atof(w[2]);
+            s.run = nw >= 4 && !strcasecmp(w[3], "run");
+            const int to = nw >= 4 ? atoi(w[nw - 1]) : 0;
+            s.ticks = (unsigned short) ((to > 0 ? to : 20) * 30);
+        } else if (!strcasecmp(w[0], "mark") && nw >= 2) {
+            s.kind = DK_MARK;
+            strncpy(s.label, w[1], sizeof(s.label) - 1);
+        } else if (!strcasecmp(w[0], "wait") && nw >= 2) {
+            s.kind = DK_PAD; s.ticks = (unsigned short) atoi(w[1]);
+        } else if (nw >= 3) {
+            const bool rel = w[0][0] == '+';
+            const unsigned f = (unsigned) atoi(w[0] + rel);
+            const unsigned start = rel ? last_start + f : f;
+            if (start > t) {   // idle until the press is due
+                DriveStep idle = s;
+                idle.kind = DK_PAD; idle.ticks = (unsigned short) (start - t);
+                if (!drv_push(idle)) return -2;
+                ++steps;
+                t = start;
+            }
+            s.kind = DK_PAD;
+            if (!parse_buttons(w[1], &s.buttons)) continue;
+            s.ticks = (unsigned short) atoi(w[2]);
+            for (int k = 3; k < nw; ++k)
+                if (!strncasecmp(w[k], "stick=", 6)) {
+                    int lx = 0, ly = 0;
+                    sscanf(w[k] + 6, "%d,%d", &lx, &ly);
+                    s.lx = (signed char) clamp_stick(lx); s.ly = (signed char) clamp_stick(ly);
+                }
+            last_start = t;
+            t += s.ticks;
+        } else continue;
+        if (!drv_push(s)) return -2;
+        ++steps;
+    }
+    return steps;
+}
+// The command verbs. Returns true when `cmd` was one of them (answered here).
+bool drive_command(const char* id, const char* cmd, char* rest, bool in_menu) {
+    char* sv = nullptr;
+    char* w[8] = {};
+    int nw = 0;
+    if (word_is(cmd, "MARK")) {
+        drv_mark(id, rest && *rest ? rest : "-");
+        return true;
+    }
+    if (!word_is(cmd, "PAD") && !word_is(cmd, "GOTO") && !word_is(cmd, "SCRIPT")) return false;
+    char tmp[200];
+    strncpy(tmp, rest ? rest : "", sizeof(tmp) - 1);
+    tmp[sizeof(tmp) - 1] = 0;
+    for (char* tk = strtok_r(tmp, " ", &sv); tk && nw < 8; tk = strtok_r(nullptr, " ", &sv)) w[nw++] = tk;
+    bool any = false;
+    if (nw && word_is(w[nw - 1], "ANY")) { any = true; --nw; }
+    if (word_is(cmd, "PAD") && nw && word_is(w[0], "STOP")) {
+        drv_clear("stopped");
+        link_reply(id, true, "PAD STOP");
+        return true;
+    }
+    const uint64_t now = timer_ms_gettime64();
+    if (now < g_drv.block_until_ms) {
+        link_reply(id, false, "%s: real pad input %u ms ago; driving blocked for 3 s", cmd,
+                   (unsigned) (3000 - (g_drv.block_until_ms - now)));
+        return true;
+    }
+    if (in_menu && !any) { link_reply(id, false, "%s: the QA menu is open (RESUME first, or add ANY)", cmd); return true; }
+    DriveStep s;
+    memset(&s, 0, sizeof(s));
+    strncpy(s.id, id, sizeof(s.id) - 1);
+    s.any = any;
+    if (word_is(cmd, "PAD")) {
+        // PAD <buttons> <lx> <ly> <ticks> [ANY]
+        if (nw < 4 || !parse_buttons(w[0], &s.buttons)) {
+            link_reply(id, false, "PAD <buttons> <lx> <ly> <ticks> [ANY] | PAD STOP");
+            return true;
+        }
+        s.kind = DK_PAD; s.verb = 'P';
+        s.lx = (signed char) clamp_stick(atoi(w[1])); s.ly = (signed char) clamp_stick(atoi(w[2]));
+        const int t = atoi(w[3]);
+        s.ticks = (unsigned short) (t < 1 ? 1 : t > 1800 ? 1800 : t);
+        if (!drv_push(s)) { link_reply(id, false, "PAD: queue full (64 steps)"); return true; }
+        link_reply(id, true, "PAD queued %04x stick=%d,%d ticks=%u steps=%u", s.buttons, s.lx, s.ly, s.ticks, g_drv.n);
+        return true;
+    }
+    if (word_is(cmd, "GOTO")) {
+        // GOTO <x> <z> [run] [timeout_s] [ANY]
+        if (nw < 2) { link_reply(id, false, "GOTO <x> <z> [run] [timeout_s] [ANY]"); return true; }
+        s.kind = DK_GOTO; s.verb = 'G';
+        s.x = (float) atof(w[0]); s.z = (float) atof(w[1]);
+        int to = 20;
+        for (int k = 2; k < nw; ++k) { if (word_is(w[k], "RUN")) s.run = 1; else if (atoi(w[k]) > 0) to = atoi(w[k]); }
+        s.ticks = (unsigned short) ((to > 60 ? 60 : to) * 30);
+        if (!drv_push(s)) { link_reply(id, false, "GOTO: queue full"); return true; }
+        const float dx = s.x - g_drv.x, dz = s.z - g_drv.z;
+        link_reply(id, true, "GOTO started to %d,%d%s dist=%d timeout=%ds from %d,%d", (int) s.x, (int) s.z, s.run ? " run" : "",
+                   (int) sqrtf(dx * dx + dz * dz), to, (int) g_drv.x, (int) g_drv.z);
+        return true;
+    }
+    // SCRIPT <name> [ANY]
+    if (!nw) { link_reply(id, false, "SCRIPT <name> (/cd/dc/qa/pad/<name>.txt)"); return true; }
+    const unsigned before = g_drv.n;
+    const int n = drv_script(id, w[0], any);
+    if (n < 0) {
+        while (g_drv.n > before) --g_drv.n;   // drop a half-queued script
+        link_reply(id, false, n == -1 ? "SCRIPT: no /cd/dc/qa/pad/%s(.txt)" : "SCRIPT %s: more than 64 steps", w[0]);
+        return true;
+    }
+    link_reply(id, true, "SCRIPT %s started steps=%d", w[0], n);
+    return true;
+}
+// TELEPORT POS <x> <y> <z> [yaw]: Leon moved within this room at the next free-play tick (dbgwarp_bridge.cpp qa_poll,
+// the warp rig's `goto` path: setPos / setAng).
+bool tpos_command(const char* id, char* rest, bool in_menu) {
+    float v[4] = {0, 0, 0, 0};
+    const int n = rest ? sscanf(rest, "%*s %f %f %f %f", &v[0], &v[1], &v[2], &v[3]) : 0;
+    if (n < 3) { link_reply(id, false, "TELEPORT POS <x> <y> <z> [yaw]"); return true; }
+    if (in_menu) { link_reply(id, false, "TELEPORT POS: the QA menu is open (RESUME first)"); return true; }
+    if (!g_drv.free_now) { link_reply(id, false, "TELEPORT POS: not in free play (movie, event, door or sub screen)"); return true; }
+    memcpy(g_drv.tpos, v, sizeof(v));
+    g_drv.tpos_ang = n >= 4;
+    g_drv.tpos_pending = true;
+    strncpy(g_drv.tpos_id, id, sizeof(g_drv.tpos_id) - 1);
+    return true;
+}
+int drive_row(char* out, int n) {
+    if (n <= 0) return 0;
+    const DriveStep* h = g_drv.n ? &g_drv.q[g_drv.head % 64] : nullptr;
+    const uint64_t now = timer_ms_gettime64();
+    char st[64];
+    if (now < g_drv.block_until_ms) snprintf(st, sizeof(st), "HOLD(real pad)");
+    else if (!h) snprintf(st, sizeof(st), "IDLE");
+    else if (h->kind == DK_GOTO)
+        snprintf(st, sizeof(st), "GOTO %s to=%d,%d d=%d", h->id, (int) h->x, (int) h->z,
+                 (int) sqrtf((h->x - g_drv.x) * (h->x - g_drv.x) + (h->z - g_drv.z) * (h->z - g_drv.z)));
+    else snprintf(st, sizeof(st), "%s %s %04x %u/%u", verb_name(h->verb), h->id, h->buttons, g_drv.done_ticks, h->ticks);
+    const int k = snprintf(out, n, "drv room=%03x pos=%d,%d,%d ang=%d cam=%d free=%d q=%u cancels=%u %s\n", g_drv.room,
+                           (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, (int) (g_drv.ang * 1000.0f),
+                           (int) (g_drv.cam * 1000.0f), (int) g_drv.free_now, g_drv.n, g_drv.cancels, st);
+    return k < 0 ? 0 : k >= n ? n - 1 : k;
+}
+// One command datagram. in_menu: the in-game menu is open (MENU / RESUME differ).
+int link_command(char* line, bool in_menu) {
+    char* save = nullptr;
+    char* id = strtok_r(line, " \r\n", &save);
+    char* cmd = id ? strtok_r(nullptr, " \r\n", &save) : nullptr;
+    char* rest = save ? save + strspn(save, " ") : nullptr;
+    if (rest) { char* e = rest + strlen(rest); while (e > rest && (e[-1] == '\n' || e[-1] == '\r' || e[-1] == ' ')) *--e = 0; }
+    if (!id || !cmd) return LA_NONE;
+    if (strlen(id) > 15) id[15] = 0;
+    re4dc_log("qalink: cmd %s %s %s\n", id, cmd, rest ? rest : "");
+    if (word_is(cmd, "PING") || word_is(cmd, "HELLO")) {
+        link_reply(id, true, "PONG %s build=%s menu=%d", rest ? rest : "", RE4DC_QA_NAME, (int) in_menu);
+        return LA_NONE;
+    }
+    if (word_is(cmd, "DIAG")) {
+        if (g_link.game) g_link.game();
+        snap_diag();
+        link_send_parts('D', id, g_diag, g_diag_len);
+        return LA_NONE;
+    }
+    if (word_is(cmd, "RECORD")) {
+        const int n = rest ? atoi(rest) : 0;
+        if (n <= 0 || n > 1800) { link_reply(id, false, "RECORD needs 1..1800 ticks"); return LA_NONE; }
+        strncpy(g_link.rec_id, id, sizeof(g_link.rec_id) - 1);
+        g_link.rec_left = (unsigned) n; g_link.rec_n = 0; g_link.rec_prev_us = 0; g_link.rec_len = 0;
+        link_reply(id, true, "RECORD %d ticks started", n);
+        return LA_NONE;
+    }
+    if (drive_command(id, cmd, rest, in_menu)) return LA_NONE;
+    if (word_is(cmd, "TELEPORT") && rest && !strncasecmp(rest, "POS ", 4)) { tpos_command(id, rest, in_menu); return LA_NONE; }
+    int act = LA_NONE;
+    if (word_is(cmd, "QA")) {
+        char* s2 = nullptr;
+        char* row = rest ? strtok_r(rest, " ", &s2) : nullptr;
+        char* val = row ? strtok_r(nullptr, " ", &s2) : nullptr;
+        if (!row) { link_reply(id, false, "QA <row> <value>"); return LA_NONE; }
+        act = link_qa_row(id, row, val ? val : "");
+        if (act == LA_HEALTH) return in_menu ? LA_HEALTH : LA_HEALTH;
+    } else if (word_is(cmd, "TELEPORT")) {
+        load_presets();
+        const int i = rest && *rest ? find_preset(rest) : -1;
+        if (i < 0) { link_reply(id, false, "TELEPORT: no preset matches '%s' (%d presets)", rest ? rest : "", g_np); return LA_NONE; }
+        snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", g_p[i].file);
+        re4dc_log("qa: teleport %s (%s) (link)\n", g_path, g_p[i].label);
+        link_reply(id, true, "TELEPORT %s (%s)%s", g_p[i].file, g_p[i].label, in_menu ? "" : " at the next free-play tick");
+        act = LA_TELEPORT;
+    } else if (word_is(cmd, "MENU")) {
+        if (in_menu) { link_reply(id, true, "MENU already open"); return LA_NONE; }
+        link_reply(id, true, "MENU opens at the next free-play tick");
+        act = LA_MENU;
+    } else if (word_is(cmd, "RESUME")) {
+        if (!in_menu) { link_reply(id, true, "RESUME: the menu is not open"); return LA_NONE; }
+        link_reply(id, true, "RESUME");
+        return LA_RESUME;
+    } else {
+        link_reply(id, false, "unknown command %s", cmd);
+        return LA_NONE;
+    }
+    if (act == LA_TITLE) link_reply(id, true, "TITLE%s", in_menu ? "" : " at the next free-play tick");
+    if (in_menu) return act;
+    g_link.pending = act;   // TELEPORT / TITLE / MENU wait for free play
+    strncpy(g_link.pending_id, id, sizeof(g_link.pending_id) - 1);
+    return LA_NONE;
+}
+// Each pass: commands in, then once a second telemetry + log out. Returns an LA_ action for the caller.
+int link_pump(bool in_menu) {
+    const uint64_t t0 = timer_us_gettime64();
+    if (!g_link.cfg_read) {
+        link_read_cfg();
+        if (g_link.auto_start) re4dc_qalink_start();
+    }
+    if (!re4dc_qalink_up()) return LA_NONE;
+    int act = LA_NONE;
+    char buf[1400];
+    for (int k = 0; k < 4 && act == LA_NONE && re4dc_qalink_recv(buf, sizeof(buf)) >= 0; ++k) act = link_command(buf, in_menu);
+    const uint64_t ms = t0 / 1000;
+    if (ms >= g_link.next_ms) {
+        g_link.next_ms = ms + 1000;
+        link_telemetry();
+        link_log();
+    }
+    const uint64_t t1 = timer_us_gettime64();
+    g_link.cost_us += t1 - t0;
+    if (t1 - g_link.cost_t0 >= 1000000) {
+        g_link.cost_last = (unsigned) g_link.cost_us; g_link.cost_us = 0; g_link.cost_t0 = t1;
+    }
+    return act;
+}
+#endif
+
 void draw_screen(const Fb& fb, const Menu& m);
 // The screen, then a log line with the framebuffer for the harness captures (capture_ui_vram.py reads "fb=front,back" as
 // KOS pointers: 0xa5000000 + 2 x the display offset).
@@ -730,6 +1410,9 @@ int run(Menu& m, bool boot) {
                 else if (a == A_CENSUS) { m.census_page = 0; m.screen = M_CENSUS; }
 #endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+                else if (a == A_LINK) link_toggle();
+#endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
                 else if (a == A_WSCR) {   // live arm, this boot only: A -> B -> C -> A
                     re4dc_world_scratch_live = (re4dc_world_scratch_live + 1) % 3;
@@ -753,6 +1436,16 @@ int run(Menu& m, bool boot) {
                 if (a >= A_LEON && a <= A_ENEMY) re4dc_log("qa: toggles %x\n", (unsigned) g_flags);
             }
         }
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+        if (!boot) {   // remote commands while the in-game menu holds the frame loop
+            const int la = link_pump(true);
+            if (la == LA_TELEPORT) return -1;
+            if (la == LA_RESUME) return A_RESUME;
+            if (la == LA_TITLE) return A_TITLE;
+            if (la == LA_HEALTH) return A_HEALTH;
+            if (la != LA_NONE || link_state_changed()) dirty = true;
+        }
+#endif
         spin_us(16000);
     }
 }
@@ -776,6 +1469,90 @@ int re4dc_qa_combo(void) {
     return p.l > 200 && p.r > 200 && (p.buttons & CONT_DPAD_DOWN);
 }
 
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// The remote link's game-thread pass (dbgwarp_bridge.cpp qa_poll, every game tick). game() fills the Diagnostics
+// page's game side (room, Ganados alive, heap 4); free_play = the in-game menu could open now. Returns 0 nothing,
+// 1 teleport (*path), 2 quit to the title, 3 refill health, 4 open the in-game menu.
+int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path) {
+    g_link.game = game;
+    const uint64_t now = timer_us_gettime64();
+    int act = link_pump(false);
+    if (re4dc_qalink_up()) record_tick(now);
+    if (act == LA_HEALTH) return 3;
+    if (!g_link.pending || !free_play) return 0;
+    act = g_link.pending;
+    g_link.pending = LA_NONE;
+    re4dc_log("qalink: %s (command %s)\n", act == LA_TELEPORT ? "teleport" : act == LA_TITLE ? "quit to title" : "menu",
+              g_link.pending_id);
+    if (act == LA_TELEPORT) { *path = g_path; return 1; }
+    return act == LA_TITLE ? 2 : 4;
+}
+// Remote driving, game side (dbgwarp_bridge.cpp qa_poll, every tick before re4dc_qa_link_tick): Leon's state and
+// whether the game is in free play now. Runs the GOTO / MARK steps.
+void re4dc_qa_drive_feed(unsigned room, float x, float y, float z, float ang, float cam, int free_play) {
+    g_drv.feed = true;
+    g_drv.room = room; g_drv.x = x; g_drv.y = y; g_drv.z = z; g_drv.ang = ang; g_drv.cam = cam;
+    g_drv.free_now = free_play != 0;
+    g_drv.ob = 0; g_drv.ox = g_drv.oy = 0;
+    for (int guard = 0; guard < 8; ++guard) {
+        DriveStep* h = drv_head();
+        if (!h) return;
+        if (h->kind == DK_MARK) { drv_mark(nullptr, h->label); drv_pop("marked", false); continue; }
+        if (h->kind != DK_GOTO) return;
+        if (!free_play && !h->any) return;   // paused (event, door, movie); resumes in free play
+        drv_goto_tick(h);
+        if (drv_head() == h && g_drv.n) { ++g_drv.done_ticks; return; }
+    }
+}
+// TELEPORT POS, at the next free-play tick: 1 and the position (x y z yaw; *has_ang) when one is due.
+int re4dc_qa_link_tpos(float* p, int* has_ang) {
+    if (!g_drv.tpos_pending || !g_drv.free_now) return 0;
+    g_drv.tpos_pending = false;
+    memcpy(p, g_drv.tpos, sizeof(g_drv.tpos));
+    *has_ang = g_drv.tpos_ang;
+    link_reply(g_drv.tpos_id, true, "TELEPORT POS %d,%d,%d%s from %d,%d,%d room=%03x", (int) p[0], (int) p[1], (int) p[2],
+               *has_ang ? " yaw set" : "", (int) g_drv.x, (int) g_drv.y, (int) g_drv.z, g_drv.room);
+    return 1;
+}
+// platform/pad.cpp PADRead, port A, after the mapping: real = any real button / stick past 24 / fixture press. A real
+// input cancels driving (3 s block); otherwise the head step's buttons and stick go in.
+void re4dc_qa_drive_pad(unsigned short* buttons, signed char* sx, signed char* sy, unsigned char* trig_r, int real) {
+    if (real) {
+        if (g_drv.n) {
+            ++g_drv.cancels;
+            re4dc_log("qadrive: real pad input: driving cancelled (%u steps)\n", g_drv.n);
+            drv_clear("cancelled by real pad");
+            g_drv.cancel_ms = timer_ms_gettime64();
+        }
+        const uint64_t until = timer_ms_gettime64() + 3000;
+        if (g_drv.block_until_ms < until) g_drv.block_until_ms = until;
+        return;
+    }
+    DriveStep* h = drv_head();
+    if (!h || (!g_drv.free_now && !h->any)) {
+        // a PAD press interrupted by an event / door / movie ends there (no stale press after it)
+        if (h && h->kind == DK_PAD && g_drv.done_ticks) drv_pop("ended by an event", false);
+        return;
+    }
+    unsigned short b;
+    signed char x, y;
+    if (h->kind == DK_GOTO) { b = g_drv.ob; x = g_drv.ox; y = g_drv.oy; }
+    else if (h->kind == DK_PAD) {
+        b = h->buttons; x = h->lx; y = h->ly;
+        if (++g_drv.done_ticks >= h->ticks) drv_pop("ok", false);
+    } else return;
+    *buttons |= b;
+    if (x) *sx = x;
+    if (y) *sy = y;
+    if ((b & 0x20) && !*trig_r) *trig_r = 0xC0;   // R: the analog trigger the aim reads
+}
+// native_static.cpp re4dc_look_osd_text: the on-screen label while the PC drives (or holds after a real press).
+const char* re4dc_qa_drive_osd_text(void) {
+    if (g_drv.cancels && timer_ms_gettime64() < g_drv.cancel_ms + 3000) return "PC DRIVE: HOLD (PAD PRESSED)";
+    return g_drv.n ? "PC DRIVING (QA LINK)" : nullptr;
+}
+#endif
+
 unsigned re4dc_qa_flags(void) { return g_flags; }
 void re4dc_qa_set_flags(unsigned f) { g_flags = f & 7; }
 
@@ -794,9 +1571,9 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -849,9 +1626,9 @@ int re4dc_qa_menu(const char** path) {
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
-                         A_WOPQ, A_WXLU, A_WSHELL, QA_WS_ROW A_TITLE};
+                         A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));

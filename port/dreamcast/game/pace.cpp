@@ -321,6 +321,12 @@ void report(u32 now)
 u32 v_vb0;
 unsigned v_ticks, v_drawn, v_tries;
 unsigned long long v_cost_us;
+#if defined(RE4DC_PACE_COST_LOG) && RE4DC_PACE_COST_LOG
+// Keep drawn/skipped costs separate. The long legacy PACE line may be truncated
+// before draw_us/skip_us reaches the bounded RAM-log/QA-link transport.
+unsigned v_cost_draw_n, v_cost_skip_n;
+unsigned long long v_cost_draw_us, v_cost_skip_us;
+#endif
 vmufb_t v_lcd;
 
 #if RE4DC_PACE_VMU_GPU
@@ -477,6 +483,10 @@ void vmu_window(unsigned cost, u32 now)
     if (v_tries) vmu_try();
     if (!v_vb0) { v_vb0 = now; return; }
     ++v_ticks; v_cost_us += cost;
+#if defined(RE4DC_PACE_COST_LOG) && RE4DC_PACE_COST_LOG
+    if (re4dc_pace_skipping) { ++v_cost_skip_n; v_cost_skip_us += cost; }
+    else { ++v_cost_draw_n; v_cost_draw_us += cost; }
+#endif
     const u32 dvb = now - v_vb0;
     if (dvb < 60) return;
     const unsigned fps10 = unsigned(v_drawn * 59940ULL / 100 / dvb);   // 0.1 fps
@@ -567,6 +577,15 @@ void vmu_window(unsigned cost, u32 now)
 #endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     re4dc_disc_meter_window();
+#endif
+#if defined(RE4DC_PACE_COST_LOG) && RE4DC_PACE_COST_LOG
+    // Integer microsecond SUMS, not EMAs; dn+sn matches this window's ticks.
+    // Emission occurs after the measured work endpoint, identical in both arms.
+    re4dc_log("PCOST f=%u vb=%u dn=%u dus=%llu sn=%u sus=%llu\n",
+        pG ? unsigned(pG->Frame_cnt) : 0, unsigned(dvb), v_cost_draw_n,
+        v_cost_draw_us, v_cost_skip_n, v_cost_skip_us);
+    v_cost_draw_n = v_cost_skip_n = 0;
+    v_cost_draw_us = v_cost_skip_us = 0;
 #endif
     v_vb0 = now; v_ticks = v_drawn = 0; v_cost_us = 0;
 }

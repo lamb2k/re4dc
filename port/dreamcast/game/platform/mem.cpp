@@ -78,7 +78,10 @@ void re4dc_mem_init(void)
         const unsigned long limit = (unsigned long) _arch_mem_top - THD_KERNEL_STACK_SIZE;
         const unsigned long brk = (unsigned long) sbrk(0);
         const unsigned long room = (brk < limit ? limit - brk : 0) + (unsigned long) mi.keepcost;
-        const unsigned long reserve = RE4DC_ARENA_FIT_KOS_BYTES + 64;  // + chunk header, alignment
+#ifndef RE4DC_QA_LINK_KOS_BYTES
+#define RE4DC_QA_LINK_KOS_BYTES 0   // qalink.mk (QA_LINK=1): the remote link's own KOS use, given to KOS here
+#endif
+        const unsigned long reserve = RE4DC_ARENA_FIT_KOS_BYTES + RE4DC_QA_LINK_KOS_BYTES + 64;  // + chunk header, alignment
         const unsigned long fit = room > reserve ? (room - reserve) & ~0xFFFUL : 0;
         if (fit < want) {
             want = fit;

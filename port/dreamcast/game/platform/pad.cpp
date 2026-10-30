@@ -14,6 +14,10 @@
 #if RE4DC_VMU_DEBUG_SLOT
 extern "C" unsigned re4dc_dbgslot_pad(unsigned buttons);  // dbgslot_bridge.cpp
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+extern "C" void re4dc_qa_drive_pad(unsigned short* buttons, signed char* sx, signed char* sy, unsigned char* trig_r,
+                                   int real);  // qa_menu.cpp (qalink.mk QA_LINK)
+#endif
 #if RE4DC_DBG_WARP
 extern "C" void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* stickY);  // dbgwarp_bridge.cpp
 #endif
@@ -703,6 +707,14 @@ u32 PADRead(PADStatus* status)
         p->substickY = mapped.substickY;
         p->triggerLeft = mapped.triggerLeft;
         p->triggerRight = mapped.triggerRight;
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+        // QA_LINK remote driving (qa_menu.cpp): any real input (button, stick past 24, or a fixture press) cancels it
+        if (i == 0) {
+            const int real = mapped.button || (st->buttons & CONT_Z) || scripted || mapped.stickX > 24 || mapped.stickX < -24 ||
+                             mapped.stickY > 24 || mapped.stickY < -24;
+            re4dc_qa_drive_pad(&p->button, &p->stickX, &p->stickY, &p->triggerRight, real);
+        }
+#endif
 #if RE4DC_DBG_WARP
         if (i == 0) {
             re4dc_warp_pad(&p->button, &p->stickX, &p->stickY);  // test warp rig: boot card screen, door test

@@ -242,3 +242,19 @@ $(error PACE_PRECISE needs PACE_CATCHUP)
 endif
 $(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PACE_PRECISE=1
 endif
+
+# PACE_COST_LOG: bounded diagnostic drawn/skipped work sums per VMU window.
+# No decision/pacing change. Default0 has no macro, counters, strings or code.
+PACE_COST_LOG ?= 0
+ifneq ($(words $(PACE_COST_LOG)),1)
+$(error PACE_COST_LOG must be exactly 0 or 1)
+endif
+ifneq ($(filter $(PACE_COST_LOG),0 1),$(PACE_COST_LOG))
+$(error PACE_COST_LOG must be exactly 0 or 1)
+endif
+ifeq ($(PACE_COST_LOG),1)
+ifneq ($(PACE_VMU),1)
+$(error PACE_COST_LOG=1 needs PACE_VMU=1)
+endif
+$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PACE_COST_LOG=1
+endif

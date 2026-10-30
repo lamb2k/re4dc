@@ -1,0 +1,4 @@
+# QA link SCRIPT aim-hold: R (aim) held 3 s, then released (the laser sight and aiming pose in view).
+mark aim
+0 R 90
+mark aim-done

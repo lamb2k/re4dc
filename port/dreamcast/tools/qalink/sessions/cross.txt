@@ -1,0 +1,13 @@
+# qalink.py session cross.txt: the r101 village square by the cross (QA preset r101x = the benchmark's cross view),
+# 20 s with the crowd in view, then the same spot turned around (crowd behind Leon), 20 s.
+# python qalink.py --pi re4pi session sessions/cross.txt   -> console-<date>\cross-*.log + .summary.txt
+teleport r101x
+wait 22
+capture start cross-crowd
+wait 20
+capture stop cross-crowd
+teleport pos -7914 0 2000 -1.5708
+wait 4
+capture start cross-away
+wait 20
+capture stop cross-away
