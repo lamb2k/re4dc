@@ -797,3 +797,24 @@ endif
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
 endif
+
+# EF11 bounded source pTobjA class: captured non-mip linear/clamp samplers,
+# current 8x8 RGB565 source spans and exact current uploaded texels. All other
+# secondary materials remain refused. Runtime/readback/look/cost gates are open.
+CLOTH_MATERIAL11 ?= 0
+# Preserve the expanded value: word/filter checks would accept trailing space
+# even though the enablement comparison below would silently leave it off.
+ifneq ("$(CLOTH_MATERIAL11)","0")
+ifneq ("$(CLOTH_MATERIAL11)","1")
+$(error CLOTH_MATERIAL11 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(CLOTH_MATERIAL11),1)
+ifneq ($(CLOTH_SHEET11)$(PLAN_OWNER_SCOPED),11)
+$(error CLOTH_MATERIAL11 needs CLOTH_SHEET11=1 PLAN_OWNER_SCOPED=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+# The existing platform rule consumes this target-specific variable too.
+$(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
+endif

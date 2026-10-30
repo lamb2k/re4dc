@@ -16,6 +16,9 @@
 
 #include "re4dc_platform.h"
 #include "native_ui.h"
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#include "include/cloth_material11_sampler.hpp"
+#endif
 extern "C" void re4dc_model_finish_source_draws();
 #if defined(RE4DC_RAIN_PS2) && RE4DC_RAIN_PS2
 extern "C" void re4dc_rain_flush();
@@ -301,13 +304,22 @@ void GXInitTexObj(GXTexObj* o, void* image, u16 w, u16 h, int fmt, int ws, int w
 {
     memset(o, 0, sizeof(*o));
     o->w[0] = (u32) image; o->w[1] = ((u32) w << 16) | h; o->w[2] = (u32) fmt; o->w[3] = ((u32) ws << 8) | (u32) wt | ((u32) mip << 16);
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    re4dc::cloth_material11::init_sampler(o->w,mip);
+#endif
 }
 void GXInitTexObjCI(GXTexObj* o, void* image, u16 w, u16 h, int fmt, int ws, int wt, u8 mip, u32 tlut)
 {
     GXInitTexObj(o, image, w, h, fmt, ws, wt, mip);
     o->w[4] = tlut;
 }
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+void GXInitTexObjLOD(GXTexObj* o, int minf, int magf, f32 minl, f32 maxl, f32 bias, u8 bc, u8 edge, int aniso) {
+    re4dc::cloth_material11::lod_sampler(o->w,minf,magf,minl,maxl,bias,bc,edge,aniso);
+}
+#else
 void GXInitTexObjLOD(GXTexObj* o, int minf, int magf, f32 minl, f32 maxl, f32 bias, u8 bc, u8 edge, int aniso) { (void) o; (void) minf; (void) magf; (void) minl; (void) maxl; (void) bias; (void) bc; (void) edge; (void) aniso; }
+#endif
 void* GXGetTexObjData(GXTexObj* o) { return (void*) o->w[0]; }
 void GXLoadTexObj(GXTexObj* o, int id) { (void) o; (void) id; }
 void GXInitTlutObj(GXTlutObj* t, void* lut, int fmt, u16 n) { t->w[0] = (u32) lut; t->w[1] = (u32) fmt; t->w[2] = n; }

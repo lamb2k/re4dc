@@ -10,6 +10,12 @@
 #endif
 #include "platform/include/bfc_class.h"
 #include "global.h"
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+// Use the authoritative partner declaration; source nomination must not rely
+// on a host fixture supplying a pointer absent from this translation unit.
+#include "pl_npc.h"
+#endif
+#line 13 "coarse_actor.cpp"
 #include "model.h"
 #include "native_actor.hpp"
 #if RE4DC_NATIVE_FE_CONTINUATION
