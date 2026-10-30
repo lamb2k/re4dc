@@ -319,6 +319,9 @@ unsigned actor_source_lighting(cModel* m,ActorOwnedRecord& r) {
     return 0;
 }
 #endif
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+#include "actor_presentation32.inc"
+#endif
 ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
     const FrameIdentity& frame,const ModelIdentity& model,bool& failed
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
@@ -326,6 +329,9 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #endif
     ) {
     failed=false;
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    const ActorPresentation32Ticket presentation=actor_presentation32_capture(m);
+#endif
     if(!p.palette_bytes || p.palette_bytes>kActorPaletteCap){ATD(m,7,p.palette_bytes,kActorPaletteCap);return nullptr;}
     re4dc_bind_actor_frame(); // existing single frame owner, before its lease
     Re4dcActorTextureLease textures[kRe4dcActorMaterials]{};
@@ -335,7 +341,19 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
     for(;acquired<p.material_count;++acquired) {
         const auto& mat=p.materials[acquired];
         if(!re4dc_actor_texture_acquire(&mat.image,mat.crc,mat.fnv,&textures[acquired])) {ATD(m,8,acquired,p.material_count);release_textures();return nullptr;}
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+        // Every acquisition may yield. Reprove before even reading the next
+        // material's source image; include this newly acquired lease in unwind.
+        if(presentation.direct && !actor_presentation32_current(m,p,frame,model,presentation)) {
+            ++acquired;release_textures();failed=true;return nullptr;
+        }
+#endif
     }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    if(presentation.direct) {
+        if(!actor_presentation32_reserve(p,frame.frame)){release_textures();return nullptr;}
+    }
+#endif
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
     // All resource I/O is above this guard. The record allocation and every
     // operation after it are synchronous/non-yielding native proof routines.
@@ -431,6 +449,9 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
         ++order;
     }
     if(!re4dc_actor_skin_acquire(frame.frame,bindings,order,&r->skin)){ATD(m,14,order,0);return actor_decline(*r,failed);}
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    if(presentation.direct && !actor_presentation32_forget_source(r->skin))return actor_decline(*r,failed);
+#endif
 #if RE4DC_ACTOR_SOURCE_SPAN
     // Every refresh/mutation/re-LOD retires owned records first. Each new skin
     // lease gets a never-reused serial, even on same-address/same-frame reuse.

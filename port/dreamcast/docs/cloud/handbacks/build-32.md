@@ -773,6 +773,109 @@ Pi benchmark rows are from another earlier session and exact loaded-program
 identity remains unresolved; they do not qualify this candidate. No SD write,
 recipe enablement or publication.
 
+## 2026-10-29 recovery: current-image cabin Luis presentation
+
+**DONE (source and host, partial EF01/EF04 continuation):** implemented the
+selected current-image cabin Luis class through the existing actor registry,
+transaction, palettes, skin leases and original ModelRender/commonModelTrans
+route. Work began on d45; before publication root fetched and merged current
+integration `149bff3ae057b2e7220a145f903dc152a910735e`, which includes the now-landed
+EF15 frontend repair and owner runtime handback. The entire presentation suite
+was rerun successfully after that clean source merge and the primary Make
+include was attached. Other agents' integrated source and owner text remain.
+
+`ACTOR_PRESENTATION32=0|1` defaults to0. The first class requires live pSUB,
+model id4,90 joints,six registered roles and OT0, plus the existing Luis-capable
+96/128 registry profile and shared skin table. Capacity is not enlarged.
+`ACTOR_PRESENTATION32=1` with `SKIN_RECIPE32=1` is explicitly rejected until joint
+source-credit qualification. This independent slice does not depend on the
+unmerged recipe branch or claim compatible ALLON support.
+
+### Consumed current-image authority
+
+A bounded value-only record keys the existing frame, room/room generation,
+primitive epoch, enemy/object generations, model address/serial/manager,
+primitive base/bytes and vertex buffer. It preserves the existing sticky
+presentation choice0->1->2. Only the original source Render scope can nominate
+this route when the preparation ledger is inactive. Current registry binding,
+finite skeleton/pose, roles, static material semantics and ordinary transaction
+preflight remain mandatory. No source animation, material-frame or UV callback
+is run twice, and no stale pose/palette pointer is retained in the record.
+
+The direct route reproves identity, binding revision, registry generation,
+roles and material after **each successful yielding texture acquisition**,
+before another old material image may be consumed and before primitive record,
+workspace or palette allocation. Registry generation is checked before source
+identity nomination, since nomination itself scans descriptor storage. Fresh
+palettes use the live pose; ordinary release clears the old source backups for
+this route rather than restoring a retired primitive owner's source palette.
+Existing shared capacity permits Luis between Leon's two passes. Under the new
+control only, Leon transaction identity uses the actual room generation so both
+classes share the existing frame owner; Leon's sticky choice is unchanged.
+
+The commonModelTrans consumer captures the direct-image domain before texture
+I/O. A declined direct route cannot fall through to unavailable source arrays.
+Ordinary prepared/legacy routing remains on its original path. Unsupported
+animated/scrolling materials, unavailable pose, other registry classes and
+owner-pool profiles are not added by this slice.
+
+### Review correction and validation
+
+Root review found that the first implementation checked after the entire
+texture loop and its fixture used only one material. A first acquisition could
+retire or change the registry before a second stale material image was consumed.
+The corrected loop validates after each successful acquisition and includes the
+just-acquired lease in failure unwind. The actual registry fixture now has two
+independent materials and distinct leases. Restoring the old after-loop-only
+check fails the new regression, as expected; the weaker version is not shipped.
+
+```
+python3 -B port/dreamcast/tools/cloud/build32/actor_presentation32.py
+git diff --check
+```
+
+**PASS after primary Make attachment and fresh149 integration:** actual-source
+normal and ASan/UBSan arms report200 checks for Leon0 and212 for Leon2, retaining
+32 legacy checks in each arm. The fixture extracts current source owner hooks,
+registry bind/skeleton/palette/coverage/plan, reservation/acquire/release,
+ordinary transaction acquire/draw and commonModelTrans consumer. SDK arithmetic,
+source role/material certificates, texture I/O and TA transport are named
+adapters; this is not a private-package or complete-game rendering proof.
+
+Coverage includes inactive ledger, pause/reused primitive epoch, room transition,
+mixed Leon/Luis order and a live Leon lease, stale model/manager/room/primitive
+identities, duplicate and illegal Luis second pass, no available/nonfinite or
+singular pose, unsupported materials, OOM and exact source callback/postlude
+behavior. Two-material cases inject owner retirement, binding revision,
+registry generation with poisoned descriptor/chunk/texture pointers and
+material revocation after acquisition1 and2. They release exactly1 or2 leases,
+perform no subsequent stale image read, publish neither native nor source work,
+and allocate no primitive/workspace. A valid pose changed during I/O is freshly
+consumed. Both texture leases remain unpinned after every declined route.
+
+Complete trans.cpp SH-conditioned baseline/absent/explicit0 preprocessing is
+byte-identical for Leon0 (284441 bytes) and Leon2 (285496 bytes); both HALT
+literals preserve baseline values ON/OFF. Extracted host OFF objects match at
+70888/72472 bytes. The actual primary Makefile checks literal values, required
+profile, three-TU flag scope, default/zero command identity and recipe absent/0/1
+composition. Host32-bit data-model assertions give52-byte value record and
+12-byte ticket; these are not SH-4 ABI, stack or performance acceptance.
+
+**NEXT:** local review and serialized integration, pinned real-SH4 affected
+target/whole-programme/15-overlay/allocated-section OFF identity, then the actual
+current cabin registry/role/material package and live pose/owner-lifetime cases.
+Record target stack/storage/time and current look/gameplay/STRICT/memory/console
+results. The earlier scoped inventory portrait evidence belongs to its existing
+class and does not accept this new cabin route.
+
+**BLOCKED:** named target/private/runtime/console qualification only. Other
+classes, dynamic material semantics and recipe composition remain public-source
+continuations. Default0 and every release/private/look/console hold remain.
+This bounded slice is implemented and host-validated; publication does not
+make it integrated, enabled or accepted.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
+
 ## EF01 owned-source span slice, 2026-10-29
 
 **DONE - IMPLEMENTED / HOST VALIDATED, default off.** `ACTOR_SOURCE_SPAN=1`

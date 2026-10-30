@@ -1,0 +1,353 @@
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <climits>
+#include <new>
+#include <initializer_list>
+using u8=unsigned char;using f32=float;using Mtx=float[3][4];
+#define NMR_WHY(...) ((void)0)
+#define NMR_CENSUS(...)
+#define RE4DC_BFC_SCOPE(...)
+#define ATD(...)
+#define INVIS_NOTE(...)
+#define APROF_SPAN(...)
+#define APROF_STOP(...)
+#define DFA26_MODEL_SLOW(reason,count,...) __VA_ARGS__
+#define RE4DC_NMR_BLEND_IDLE(info,app) false
+#define RE4DC_PLAN_SHAPE(p,desc) ((p)->count==(desc)->sections)
+#define RE4DC_PLAN_SECTIONS(p,desc) ((desc)->sections)
+struct cCoord { Mtx mat{}; };
+struct cParts:cCoord { cParts* pList=nullptr;cCoord* pParent=nullptr;Mtx lt_inv_mat{}; };
+struct ModelTexInfo {unsigned frame=0,anim[2]{0,4},flags=0;float u=0,v=0,su=0,sv=0;};
+struct cModelInfo {cModelInfo* pList=nullptr;void* pData=nullptr;Mtx mat{};
+    float invisible_factor=1,uvU=0,uvV=0,uvScrollU=0,uvScrollV=0;
+    unsigned blend_mode=0,colorWord=~0u,flagsDC=0,nAddTex=0,be_flag=8;
+    void* pAddTpl=nullptr;void* texBlendTbl=nullptr;void* pTexAnim=nullptr;
+    unsigned tag=0;ModelTexInfo tex;
+};
+struct cModel:cCoord {unsigned id=4,serial=10,nParts=90,ot_type=0,be_flag=7;
+    cParts* pParts=nullptr;cParts* pList=nullptr;cModelInfo* pModelInfo=nullptr;
+    float invisible_factor=1,invisible_factor2=1;unsigned alpha_omit=255,z_mode=0,CullMode=0,Shader_type=0;
+    unsigned AddAmb_r=0,AddAmb_g=0,AddAmb_b=0;
+};
+#include "coarse_actor_transaction.h"
+#include "coarse_skin.h"
+#include "actor_palette_arena.h"
+using namespace re4dc_source;
+// Match global.h's s32 fields. Host storage below is separate from the target
+// primitive address carried by prim_cnt; no native pointer is stored here.
+struct Game {unsigned Frame_cnt=7,stage_no=1,room_no=0x1c,vtx_buf_no=0;
+    std::int32_t prim_cnt=0,nPrim=512*1024;
+    unsigned Status_flg[3]{},Disp_flg=0,Stop_flg=0;struct {Mtx v_mat{};}Cam;};
+Game game,*pG=&game;cModel* pPL=nullptr; cModel* pSUB=nullptr;
+unsigned re4dc_alive_gen[3]{0,1,1},room_generation=17;bool room_live=true;
+unsigned sourceActorEpoch=1,sourceActorCount=0,sourceActorFailures=0;
+unsigned sourceActorPrimBase=0,sourceActorPrimBytes=0,sourceActorPrimBuffer=0;
+bool sourceActorActive=false,sourceActorRenderActive=false;FrameLedger sourceActorLedger;
+extern "C" int re4dc_registry_candidate(const cModel*);
+extern "C" int re4dc_room4_state(unsigned*g,unsigned*c,unsigned*b,unsigned*s,unsigned*r){*g=room_generation;*c=*b=*s=*r=0;return room_live;}
+extern "C" void re4dc_log(const char*,...){}
+Re4dcActorStats stats{};
+// @SKINS@
+struct Frame{};Frame frames[4];
+unsigned char* workspace=nullptr;unsigned workspace_bytes=0,workspace_top=0,workspace_end=0,frame_serial=1;
+// @OWNER_WORKSPACE@
+// @REGISTER@
+
+// @REGISTRY_TYPES@
+constexpr unsigned kRegBones=96,kRegDescriptors=2,kRegGeometry=6,kRegTextures=2,kRegistryAsset0=1000;
+struct RegistryView {const nmr::Descriptor* descriptors;const nmr::Chunk* chunks;const nmr::Texture* textures;
+    unsigned descriptor_count,chunk_count,texture_count,geometry_count,generation;};
+RegistryView registry{};unsigned registry_tokens[kRegTextures]{},registry_id_mask[8]{};bool registry_mask_ready=false;
+unsigned char registry_skin_built[kRegGeometry]{},registry_skin_bone[kRegDescriptors][kRegBones]{};
+unsigned registry_skin_used[kRegDescriptors]{},registry_skin_state[kRegDescriptors]{},registry_skin_first[kRegGeometry]{},registry_skin_groups[kRegGeometry]{},registry_skin_next=0;
+alignas(32) unsigned char skin_storage[4096]{};unsigned char*registry_skin=skin_storage;unsigned registry_skin_cap=sizeof skin_storage;
+alignas(32) float registry_T[kRegBones][12]{};CoarseBoneJob registry_jobs[kRegBones];
+inline unsigned registry_geometry(unsigned chunk){return registry.chunks[chunk].geometry;}
+constexpr float kRegistryBindMm=.1f;
+// @REGISTRY_BINDING@
+unsigned binding_revision=1;bool roles_live=true,material_live=true,proof_live=true;
+unsigned re4dc_actor_binding_revision(cModel*){return roles_live?binding_revision:0;}
+bool re4dc_actor_role_bindings(cModel*m,unsigned appearance,cModelInfo**out,unsigned count){
+    if(!roles_live || m!=pSUB || appearance!=0x200u || count!=6u)return false;
+    auto*info=m->pModelInfo;for(unsigned i=0;i<count;++i){if(!info)return false;out[i]=info;info=info->pList;}return !info;
+}
+void identity_matrix(float m[3][4]){std::memset(m,0,48);m[0][0]=m[1][1]=m[2][2]=1;}
+void PSMTXConcat(const float a[3][4],const float b[3][4],float out[3][4]){
+    float t[3][4]{};for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c){for(unsigned k=0;k<3;++k)t[r][c]+=a[r][k]*b[k][c];if(c==3)t[r][c]+=a[r][3];}std::memcpy(out,t,sizeof t);
+}
+// Explicit SDK boundary: fixture poses use identity rotations + translation.
+int PSMTXInverse(const float in[3][4],float out[3][4]){
+    for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)if(!coarse_finite(in[r][c]) || (c<3 && in[r][c]!=float(r==c)))return 0;
+    identity_matrix(out);for(unsigned r=0;r<3;++r)out[r][3]=-in[r][3];return 1;
+}
+#define RE4DC_RENDER_MTXConcat PSMTXConcat
+unsigned bone_builds=0,group_builds=0;
+extern "C" void re4dc_coarse_skin_bones(const float*inv,const CoarseBoneJob*jobs,unsigned n){
+    ++bone_builds;Mtx matrix;for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)matrix[r][c]=inv[c*4+r];
+    for(unsigned i=0;i<n;++i){Mtx a,b;PSMTXConcat(matrix,reinterpret_cast<const float(*)[4]>(jobs[i].P),a);PSMTXConcat(a,reinterpret_cast<const float(*)[4]>(jobs[i].B),b);
+        for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)jobs[i].T[c*3+r]=b[r][c];}
+}
+extern "C" void re4dc_coarse_skin_groups(const void*stream,unsigned groups,const float*T,float*out,unsigned entries){
+    ++group_builds;const auto*p=static_cast<const unsigned char*>(stream);
+    for(unsigned g=0;g<groups;++g){const auto*h=reinterpret_cast<const CoarseGroupHeader*>(p);p+=sizeof(*h);
+        for(unsigned i=0;i<h->n;++i){const auto*e=reinterpret_cast<const CoarseGroupEntry*>(p);p+=sizeof(*e);
+            for(unsigned k=0;k<12;++k){float value=0;for(unsigned j=0;j<h->count;++j)value+=T[unsigned(h->offset[j])/4+k]*e->w[j];out[e->out/4+k]=value;}}}
+    (void)entries;
+}
+// @REGISTRY@
+extern "C" BlobError re4dc_actor_immutable_chunk_proof(unsigned id,const ChunkInput&c,ChunkProof&p){
+    return proof_live && id>=kRegistryAsset0 && id<kRegistryAsset0+kRegGeometry?preflight_chunk(c,p):BlobError::Array;
+}
+extern "C" int re4dc_actor_material_certificate(cModel*,const Re4dcActorPlan*){return material_live;}
+namespace {
+#if RE4DC_ACTOR_PRESENTATION32
+void sourceActorPresentation32Retire();
+#endif
+// @SOURCE@
+}
+// @HOOKS@
+
+alignas(32) unsigned char primitive[512*1024],actor_workspace[128*1024];unsigned primitive_used=0;
+bool allocation_ok=true,texture_ok=true,preflight_ok=true,submit_ok=true;
+void(*texture_yield)()=nullptr;
+unsigned texture_yield_at=1,stale_texture_reads=0;bool texture_source_live=true;
+re4dc_actor::TextureLeases<2> texture_leases;
+unsigned texture_acquires=0,texture_releases=0,aborts=0,submits=0,source_draws=0,postludes=0,source_callbacks=0;
+unsigned emitted[256]{},emitted_n=0;float emitted_pose[256]{};
+extern "C" void* re4dc_prim_tail(unsigned bytes,unsigned reserve){
+    bytes=(bytes+31u)&~31u;if(!allocation_ok || primitive_used>sizeof primitive || bytes>sizeof primitive-primitive_used || reserve>sizeof primitive-primitive_used-bytes)return nullptr;
+    void*p=primitive+primitive_used;primitive_used+=bytes;return p;
+}
+extern "C" void re4dc_bind_actor_frame(){if(!workspace){workspace=actor_workspace;workspace_bytes=sizeof actor_workspace;workspace_top=0;workspace_end=workspace_bytes;++frame_serial;}}
+extern "C" int re4dc_actor_texture_acquire(const Re4dcUiImage*image,unsigned,unsigned,Re4dcActorTextureLease*out){
+    ++texture_acquires;if(!texture_source_live){++stale_texture_reads;return 0;}
+    if(!texture_ok)return 0;
+    const unsigned entry=image && image->pixels==&registry_tokens[0]?0u:1u;
+    const bool ok=texture_leases.acquire(entry,frame_serial,*out);
+    if(texture_yield && texture_acquires==texture_yield_at){auto call=texture_yield;texture_yield=nullptr;call();}return ok;
+}
+extern "C" int re4dc_actor_texture_validate(const Re4dcActorTextureLease*t){unsigned entry;return t && texture_leases.resolve(*t,frame_serial,entry);}
+extern "C" void re4dc_actor_texture_release(Re4dcActorTextureLease*t){++texture_releases;if(t)texture_leases.release(*t);}
+extern "C" void re4dc_actor_texture_retire_all(){texture_leases.retire_frame();}
+extern "C" int re4dc_actor_stream_state(Re4dcActorStreamState*out){if(out)*out={frame_serial,0,0,0};return 1;}
+extern "C" void re4dc_model_packet_abort(){++aborts;}
+extern "C" void re4dc_actor_model_frame_retire(){}
+void GXGetProjectionv(float*p){for(unsigned i=0;i<7;++i)p[i]=float(i);}
+void GXGetViewportv(float*p){for(unsigned i=0;i<6;++i)p[i]=float(i);}
+re4dc::render::SourceLighting light{};
+// @RECORDS@
+re4dc_actor::PaletteArena actor_palette_arena;
+constexpr unsigned kActorPaletteCap=64*1024,kActorOwnerReserve=16*1024;
+void actor_fail(){re4dc_model_packet_abort();}
+// @FUNCTIONS@
+// @RETIRE@
+extern "C" int re4dc_actor_preflight_owned_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,unsigned,
+    const Re4dcActorOwnedMaterial*,unsigned n,const Re4dcActorWorkspaceLease*w,const Re4dcActorSkinLease*s,const Re4dcActorTextureLease*t){
+    if(!preflight_ok || !re4dc_actor_workspace_validate(w) || !re4dc_actor_skin_validate(s))return 0;
+    for(unsigned i=0;i<n;++i)if(!re4dc_actor_texture_validate(t+i))return 0;return 1;
+}
+extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart*b,const Re4dcActorDrawRun*r,unsigned n,
+    const Re4dcActorOwnedMaterial*m,unsigned count,const Re4dcActorWorkspaceLease*w,const Re4dcActorSkinLease*s,const Re4dcActorTextureLease*t){
+    if(!submit_ok || !re4dc_actor_preflight_owned_runs(b,r,n,m,count,w,s,t))return -1;
+    ++submits;for(unsigned i=0;i<n;++i){auto*info=static_cast<const cModelInfo*>(r[i].chunk.info);auto*skin=find_skin(info,nullptr);
+        if(!skin || !skin->palette || emitted_n==256)return -1;emitted[emitted_n]=info->tag;emitted_pose[emitted_n++]=skin->palette[9];}return 1;
+}
+cModelInfo leon_infos[2];
+int leon_palettes(cModel*,const Re4dcActorPlan&p,float*const*out){for(unsigned i=0;i<p.count;++i){std::memset(out[i],0,48);out[i][0]=out[i][4]=out[i][8]=1;out[i][9]=99;}return 1;}
+extern "C" int re4dc_actor_plan_leon(cModel*m,Re4dcActorPlan*p){
+    if(m!=pPL)return 0;*p={};p->count=2;p->appearance=0x100;p->palettes=leon_palettes;
+    for(unsigned i=0;i<2;++i){const auto&c=registry.chunks[i];ChunkInput input{{c.positions,24},{c.normals,24},{c.uv,12},{c.stream,64},{reinterpret_cast<const u8*>(c.weights),16},3,3,1,1,90};
+        re4dc_actor::plan_chunk(*p,i,&leon_infos[i],c,input);p->immutable_asset_id[i]=kRegistryAsset0+i;p->runs[i]={i,0,kRegistryAsset0+i,1,input.uv,input.stream};}
+    p->material_count=1;p->run_count=2;p->materials[0].image=registry_image(0);p->image=p->materials[0].image;return 1;
+}
+extern "C" int re4dc_actor_plan_ganado(cModel*,Re4dcActorPlan*){return 0;}
+// @DRAW@
+void source_consumer(cModel*m){unsigned flag=0;cModelInfo*info=m->pModelInfo;
+// @CONSUMER@
+    if(info)++source_draws;
+    ++postludes;
+}
+// @UV@
+void source_state(cModelInfo*info){auto*t=&info->tex;
+// @STATE@
+}
+void source_callback(cModel*m){++source_callbacks;for(auto*i=m->pModelInfo;i;i=i->pList)source_state(i);}
+
+#line 1 "actor_presentation32_fixture_checks"
+#define CHECK(x) do{if(!(x)){std::fprintf(stderr,"check line %u: %s\n",unsigned(__LINE__),#x);std::abort();}++checks;}while(0)
+unsigned checks=0;int data_keys[8]{};cModel luis,leon;cParts parts[90];cModelInfo infos[6];
+nmr::Descriptor descriptors[1];nmr::Chunk chunks[6];nmr::Texture textures[2];nmr::Weight weights[6];
+signed char parents[90];float bind_matrices[90][12];
+alignas(32) u8 positions[24]{},normals[24]{},uvs[12]{},stream[64]{};
+alignas(FrameEntry) unsigned char ledger_storage[sizeof(FrameEntry)*2];
+float source_palette[12]{};
+void put16(unsigned at,unsigned n){stream[at]=u8(n);stream[at+1]=u8(n>>8);}
+void put32(unsigned at,unsigned n){put16(at,n);put16(at+2,n>>16);}
+void reset(){
+    re4dc_actor_transaction_retire();sourceActorLedger.retire();sourceActorActive=sourceActorRenderActive=false;
+    game=Game{};pG=&game;pG->prim_cnt=std::int32_t(0x8c100000u);identity_matrix(pG->Cam.v_mat);primitive_used=0;
+    sourceActorEpoch=1;sourceActorPrimBase=unsigned(pG->prim_cnt);sourceActorPrimBytes=sizeof primitive;sourceActorPrimBuffer=0;
+    re4dc_alive_gen[1]=re4dc_alive_gen[2]=1;room_generation=17;room_live=true;
+    skin_count=0;skin_frame=~0u;owned_skin_serial=0;skin_admission_pending={};skin_admission_serial=0;
+    for(auto&s:skins)s={};for(auto&s:owned_skins)s={};
+    texture_yield=nullptr;allocation_ok=texture_ok=preflight_ok=submit_ok=true;roles_live=material_live=proof_live=true;
+    texture_yield_at=1;stale_texture_reads=0;texture_source_live=true;
+    texture_acquires=texture_releases=aborts=submits=source_draws=postludes=source_callbacks=emitted_n=bone_builds=group_builds=0;
+    binding_revision=1;registry_replace=0;registry_bound=nullptr;for(auto&b:registry_bindings)b={};
+    std::memset(registry_id_mask,0,sizeof registry_id_mask);registry_mask_ready=false;
+    std::memset(registry_skin_built,0,sizeof registry_skin_built);std::memset(registry_skin_state,0,sizeof registry_skin_state);registry_skin_next=0;
+    std::memset(stream,0,sizeof stream);stream[0]=0xfe;stream[1]=3;put16(4,1);put16(8,10);put16(10,15);put32(28,0x3f800000);put32(32,3u|(3u<<8)|(1u<<20));
+    for(unsigned i=0;i<3;++i){put16(40+i*6,i);put16(42+i*6,i);put16(44+i*6,i);stream[60+i]=u8(i|(i==2?128:0));}
+    luis=cModel{};leon=cModel{};pSUB=&luis;pPL=&leon;luis.pParts=luis.pList=&parts[0];luis.pModelInfo=&infos[0];
+    leon.id=0;leon.nParts=119;leon.ot_type=7;leon.pParts=&parts[0];leon.pModelInfo=&leon_infos[0];
+    for(unsigned i=0;i<90;++i){parts[i]={};identity_matrix(parts[i].mat);identity_matrix(parts[i].lt_inv_mat);std::memcpy(bind_matrices[i],parts[i].lt_inv_mat,48);
+        parents[i]=i?0:-1;parts[i].pParent=i?static_cast<cCoord*>(&parts[0]):static_cast<cCoord*>(&luis);parts[i].pList=i==89?nullptr:&parts[i+1];}
+    parts[1].mat[0][3]=7;
+    for(unsigned i=0;i<6;++i){infos[i]=cModelInfo{};infos[i].pData=&data_keys[i];infos[i].tag=i;infos[i].pList=i==5?nullptr:&infos[i+1];identity_matrix(infos[i].mat);
+        weights[i]={{1,0,0},1,{1,0,0}};chunks[i]={i,3,3,1,1,64,positions,normals,uvs,stream,&weights[i],12,0,40,i,i};}
+    chunks[2].geometry=1;chunks[2].draw_owner=1;chunks[2].weights=chunks[1].weights;
+    for(unsigned i=0;i<2;++i){leon_infos[i]=cModelInfo{};leon_infos[i].pData=&data_keys[6+i];leon_infos[i].tag=100+i;identity_matrix(leon_infos[i].mat);leon_infos[i].pList=i?nullptr:&leon_infos[1];}
+    leon_infos[1].be_flag|=0x40;
+    descriptors[0]={};descriptors[0].appearance=0x200;descriptors[0].model_id=4;descriptors[0].bones=90;descriptors[0].sections=6;descriptors[0].parents=parents;descriptors[0].bind=bind_matrices;
+    textures[0]={11,22,64,64};textures[1]={33,44,32,32};registry={descriptors,chunks,textures,1,6,1,6,23};
+#if RE4DC_ACTOR_PRESENTATION32
+    partnerPresentation32={};sourceActorPresentation32Active=false;
+#endif
+#if RE4DC_LEON_NO_GC_FRONT >= 2
+    leonDirectFrame={};leonDirectModel={};leonDirectPresentation=0;
+#endif
+}
+void prepare_source(){
+    FrameIdentity frame{};CHECK(sourceActorIdentity(frame));sourceActorActive=true;sourceActorRenderActive=true;
+    const auto id=sourceActorModel(&luis);CHECK(sourceActorLedger.begin(ledger_storage,sizeof ledger_storage,1,frame));
+    CHECK(sourceActorLedger.append(frame,id,ModelPath::Source,0)&&sourceActorLedger.seal(frame));PreparationTicket ticket{};
+    CHECK(sourceActorLedger.claim(frame,ticket));source_callback(&luis);
+    for(auto&info:infos)CHECK(re4dc_actor_skin_register(frame.frame,&info,nullptr,source_palette,1));
+    CHECK(sourceActorLedger.complete(frame,ticket,id));
+}
+void legacy_contract(){
+    reset();FrameIdentity frame{};ModelIdentity model{};CHECK(!re4dc_actor_transaction_identity(&luis,&frame,&model));
+    source_consumer(&luis);CHECK(source_draws==1&&postludes==1&&!source_callbacks);
+    reset();prepare_source();source_consumer(&luis);CHECK(submits==1&&emitted_n==5&&!source_draws&&postludes==1&&source_callbacks==1);
+    for(unsigned i=0;i<6;++i)CHECK(find_skin(&infos[i],nullptr)->palette==source_palette);
+    reset();infos[0].flagsDC=2;infos[0].tex.frame=3;infos[0].tex.flags=1;infos[0].tex.u=1.75f;infos[0].tex.su=.5f;
+    prepare_source();source_consumer(&luis);CHECK(!submits&&source_draws==1&&source_callbacks==1&&infos[0].tex.frame==0&&infos[0].tex.u==.25f);
+    std::printf("legacy checks=%u\n",checks);
+}
+#if RE4DC_ACTOR_PRESENTATION32
+void expect_luis(unsigned from,float pose){const unsigned order[]={0,1,3,4,5};CHECK(emitted_n==from+5);for(unsigned i=0;i<5;++i)CHECK(emitted[from+i]==order[i]&&emitted_pose[from+i]==pose);}
+void next_image(bool advance=true){sourceActorRetire();if(advance)++pG->Frame_cnt;primitive_used=0;std::memset(primitive,0xA5,sizeof primitive);}
+void inactive_images(){
+    reset();
+    {SourceActorPresentation32Scope scope;CHECK(re4dc_actor_transaction_candidate(&luis));source_consumer(&luis);expect_luis(0,7);
+        CHECK(!source_draws&&!source_callbacks&&postludes==1&&!texture_leases.pinned(0)&&!owned_workspace.maximum());
+        for(unsigned i=0;i<6;++i)CHECK(!find_skin(&infos[i],nullptr));}
+    // Paused numeric frame, then first image in a new room: retained source
+    // pose is reproved; primitive/lease addresses from the old image are poison.
+    pG->Stop_flg=~0u;next_image(false);
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(5,7);CHECK(!source_callbacks&&bone_builds==2);}
+    next_image();++pG->room_no;++room_generation;++registry.generation;++binding_revision;parts[1].mat[0][3]=13;
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(10,13);CHECK(!source_callbacks&&bone_builds==3&&actor_owned_frame.room_generation==room_generation);}
+    CHECK(!sourceActorPresentation32Active);
+}
+void mixed_passes(){
+#if RE4DC_LEON_NO_GC_FRONT >= 2
+    reset();const void*keys[]={&leon_infos[0],&leon_infos[1]};CHECK(re4dc_actor_skin_reserve(7,keys,2));
+    SourceActorPresentation32Scope scope;source_consumer(&leon);CHECK(emitted_n==1&&emitted[0]==100&&actor_owned_frame.room_generation==room_generation);
+    auto lease=actor_owned_head->skin;CHECK(re4dc_actor_skin_validate(&lease));
+    source_consumer(&luis);expect_luis(1,7);CHECK(re4dc_actor_skin_validate(&lease));
+    leon.be_flag|=0x08000000;source_consumer(&leon);CHECK(emitted_n==7&&emitted[6]==101&&!source_draws&&!source_callbacks);
+    CHECK(!re4dc_actor_skin_validate(&lease)&&!texture_leases.pinned(0)&&!owned_workspace.maximum());
+#endif
+}
+void stale_and_duplicates(){
+    for(unsigned mutation=0;mutation<9;++mutation){reset();SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);
+        switch(mutation){case 0:++luis.serial;break;case 1:++room_generation;break;case 2:++re4dc_alive_gen[1];break;case 3:++re4dc_alive_gen[2];break;
+            case 4:pG->prim_cnt+=32;break;case 5:pG->nPrim-=32;break;case 6:pG->vtx_buf_no=1;break;case 7:pSUB=nullptr;break;case 8:sourceActorActive=true;break;}
+        FrameIdentity frame{};ModelIdentity model{};CHECK(re4dc_actor_transaction_identity(&luis,&frame,&model)==-1);
+        source_consumer(&luis);CHECK(emitted_n==5&&!source_draws&&aborts==1);
+    }
+    reset();{SourceActorPresentation32Scope scope;source_consumer(&luis);source_consumer(&luis);CHECK(emitted_n==5&&!source_draws&&aborts==1);}
+    reset();{SourceActorPresentation32Scope scope;source_consumer(&luis);luis.ot_type=7;luis.be_flag|=0x08000000;source_consumer(&luis);CHECK(emitted_n==5&&!source_draws&&aborts==1);}
+    reset();{SourceActorPresentation32Scope scope;sourceActorRetire();CHECK(!sourceActorPresentation32Active);}CHECK(!sourceActorPresentation32Active);
+    reset();sourceActorEpoch=UINT_MAX;{SourceActorPresentation32Scope scope;source_consumer(&luis);CHECK(!emitted_n&&!source_draws&&aborts==1);}
+}
+void primitive_integer_identity(){
+    for(const auto cursor:{std::int32_t(0x00100000),INT32_MIN,std::int32_t(0x8c100000u),std::int32_t(-1)}){
+        reset();pG->prim_cnt=cursor;SourceActorPresentation32Scope scope;
+        FrameIdentity frame{};ModelIdentity model{};
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==1);
+        CHECK(partnerPresentation32.primitive==static_cast<std::uint32_t>(cursor));
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==1);
+        // A changed high bit is an owner change even with all other identity
+        // fields unchanged; do not resurrect the old image's sticky choice.
+        pG->prim_cnt=std::int32_t(static_cast<std::uint32_t>(cursor)^0x80000000u);
+        CHECK(partnerPresentation32Identity(&luis,&frame,&model)==-1);
+    }
+    reset();pG->prim_cnt=0;SourceActorPresentation32Scope scope;
+    FrameIdentity frame{};ModelIdentity model{};
+    CHECK(partnerPresentation32Identity(&luis,&frame,&model)==-1);
+    CHECK(!partnerPresentation32.model.address);
+}
+void io_boundaries(){
+    for(unsigned mutation=0;mutation<6;++mutation){reset();
+        switch(mutation){case 0:texture_yield=[](){++room_generation;};break;case 1:texture_yield=[](){++binding_revision;};break;
+            case 2:texture_yield=[](){++registry.generation;};break;case 3:texture_yield=[](){sourceActorRetire();pSUB=nullptr;};break;
+            case 4:texture_yield=[](){infos[0].uvScrollU=.5f;};break;case 5:texture_ok=false;break;}
+        SourceActorPresentation32Scope scope;source_consumer(&luis);CHECK(!emitted_n&&!source_draws&&!source_callbacks&&!primitive_used&&!texture_leases.pinned(0));
+    }
+    reset();texture_ok=false;{SourceActorPresentation32Scope scope;source_consumer(&luis);texture_ok=true;source_consumer(&luis);CHECK(!emitted_n&&!source_draws&&!source_callbacks&&texture_acquires==1);}
+    // A still-current skeleton may change during the acquisition callback.
+    // The ordinary registry palette producer must consume the fresh pose.
+    reset();texture_yield=[](){parts[1].mat[0][3]=13;};
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,13);CHECK(!source_draws&&!source_callbacks&&bone_builds==1);}
+}
+void multiple_materials(){
+    const auto two=[](){registry.texture_count=2;chunks[3].texture=1;};
+    reset();two();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);
+        CHECK(texture_acquires==2 && texture_releases==2 && !texture_leases.pinned(0) && !texture_leases.pinned(1));}
+    // The actual registry plan now has two material images. Any first/second
+    // acquisition may retire source storage; no later image may be consumed.
+    for(unsigned at=1;at<=2;++at)for(unsigned mutation=0;mutation<4;++mutation){
+        reset();two();texture_yield_at=at;
+        switch(mutation){
+        case 0:texture_yield=[](){sourceActorRetire();pSUB=nullptr;texture_source_live=false;
+            luis.pParts=reinterpret_cast<cParts*>(1);luis.pModelInfo=reinterpret_cast<cModelInfo*>(1);};break;
+        case 1:texture_yield=[](){++binding_revision;texture_source_live=false;
+            luis.pParts=reinterpret_cast<cParts*>(1);luis.pModelInfo=reinterpret_cast<cModelInfo*>(1);};break;
+        case 2:texture_yield=[](){++registry.generation;texture_source_live=false;
+            registry.descriptors=reinterpret_cast<const nmr::Descriptor*>(1);
+            registry.chunks=reinterpret_cast<const nmr::Chunk*>(1);registry.textures=reinterpret_cast<const nmr::Texture*>(1);};break;
+        case 3:texture_yield=[](){material_live=false;texture_source_live=false;};break;
+        }
+        SourceActorPresentation32Scope scope;source_consumer(&luis);
+        CHECK(texture_acquires==at && texture_releases==at && stale_texture_reads==0);
+        CHECK(!emitted_n && !source_draws && !source_callbacks && !primitive_used && !owned_workspace.maximum());
+        CHECK(!texture_leases.pinned(0) && !texture_leases.pinned(1));
+    }
+}
+void unavailable_and_state(){
+    for(unsigned reason=0;reason<7;++reason){reset();
+        switch(reason){case 0:parts[1].mat[0][0]=NAN;break;case 1:std::memset(parts[0].mat,0,sizeof(Mtx));break;
+            case 2:roles_live=false;break;case 3:material_live=false;break;case 4:infos[0].uvScrollU=.5f;break;
+            case 5:infos[0].flagsDC=2;infos[0].tex.frame=3;break;case 6:allocation_ok=false;break;}
+        const auto before=infos[0].tex;SourceActorPresentation32Scope scope;source_consumer(&luis);
+        CHECK(!emitted_n&&!source_draws&&!source_callbacks&&!texture_leases.pinned(0)&&!owned_workspace.maximum());
+        CHECK(std::memcmp(&before,&infos[0].tex,sizeof before)==0);
+    }
+    reset();infos[0].flagsDC=2;infos[0].tex.frame=3;infos[0].tex.flags=1;infos[0].tex.u=1.75f;infos[0].tex.su=.5f;
+    source_callback(&luis);CHECK(source_callbacks==1&&infos[0].tex.frame==0&&infos[0].tex.u==.25f);
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);source_consumer(&luis);CHECK(source_callbacks==1&&infos[0].tex.frame==0&&infos[0].tex.u==.25f&&!source_draws&&!emitted_n);}
+    reset();{SourceActorPresentation32Scope scope;luis.id=5;source_consumer(&luis);CHECK(source_draws==1&&!emitted_n);}
+}
+#endif
+int main(){legacy_contract();
+#if RE4DC_ACTOR_PRESENTATION32
+    inactive_images();mixed_passes();stale_and_duplicates();primitive_integer_identity();io_boundaries();multiple_materials();unavailable_and_state();
+    std::printf("presentation checks=%u record=%zu ticket=%zu\n",checks,sizeof(SourceActorPresentation32),sizeof(ActorPresentation32Ticket));
+#endif
+}
