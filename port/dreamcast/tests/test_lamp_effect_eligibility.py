@@ -33,8 +33,7 @@ struct cEsp { struct {unsigned owner;} info; unsigned m_Id,m_Tool_flg,m_Flg,xA4;
 void EspCommonTrans(cEsp*) {}
 void UnsupportedTrans(cEsp*) {}
 using EspTransFunc=void(*)(cEsp*);
-EspTransFunc EspTransTbl[255];
-"""+eligibility(source)+"\n"+r"""
+"""+eligibility(source)+"\nEspTransFunc EspTransTbl[255];\n"+r"""
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
 """+function(source,'static int Esp1bGridClass03(')+r"""
 #endif

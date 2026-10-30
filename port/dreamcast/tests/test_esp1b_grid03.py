@@ -45,7 +45,7 @@ struct cEsp{unsigned m_Id=0x1b,m_Flg=0x10,m_Parts_no=0xff,m_Tool_flg=0,m_Shimmer
  unsigned m_Tex_id=0,m_Ptn_no=0,m_MaskTex_id=0,xA4=1,xA5=4,xA6=5;struct{unsigned owner=0,Core_flg=0;}info;Mtx m_Mat{};
  float m_Size_base_x=1,m_Size_base_y=1,m_Size_mul=1,m_Col_a=192;Vec m_Pos{},m_Ang{};Parent03* parent=&parent03;int ChannelSet();
  alignas(4)u8 pad_EC[64]{};};
-void EspCommonTrans(cEsp*);void (*EspTransTbl[256])(cEsp*)={};
+void EspCommonTrans(cEsp*);using EspTransFunc=void(*)(cEsp*);
 TEXHeader header03{reinterpret_cast<void*>(1),64,64,4,0,0};
 TEXDescriptor desc03{&header03,nullptr};TEXPalette palette03{1};
 TEXDescriptor* TEXGet(TEXPalette*,unsigned){return &desc03;}
@@ -62,7 +62,7 @@ void PSMTXMultVec(const Mtx m,const Vec* a,Vec* o){const Vec v{
  m[0][0]*a->x+m[0][1]*a->y+m[0][2]*a->z+m[0][3],
  m[1][0]*a->x+m[1][1]*a->y+m[1][2]*a->z+m[1][3],
  m[2][0]*a->x+m[2][1]*a->y+m[2][2]*a->z+m[2][3]};*o=v;}
-''' + eligibility+'\n'+gate.definition(src,'void GetPosXY(')+'\n'+struct(src,'Esp1bSpWork')+r'''
+''' + eligibility+'\nEspTransFunc EspTransTbl[0xFF]{};\n'+gate.definition(src,'void GetPosXY(')+'\n'+struct(src,'Esp1bSpWork')+r'''
 std::vector<Re4dcEffectQuad> observed03;
 std::vector<re4dc::NativeDrawResult> children03;
 bool oracle_only03=false;unsigned retire_after03=0;
@@ -320,6 +320,12 @@ class Esp1bGrid03(unittest.TestCase):
                 args=['g++','-std=c++20','-O2','-ffp-contract=off','-fno-pie','-no-pie','-include',str(tmp/'config.h'),
                  '-I'+str(tmp),'-I'+str(INC),'-I'+str(gate.PLATFORM),'-I'+str(ROOT/'port/dreamcast/room')]
                 if san:args+=['-fsanitize=address,undefined','-fno-omit-frame-pointer']
+                if not san:
+                    bad=tmp/'missing-early-table.cpp'
+                    bad.write_text(code.replace('extern EspTransFunc EspTransTbl[0xFF];','',1))
+                    refused=subprocess.run(args+['-fsyntax-only',str(bad)],capture_output=True,text=True)
+                    self.assertNotEqual(refused.returncode,0)
+                    self.assertIn('EspTransTbl',refused.stderr);self.assertIn('not declared',refused.stderr)
                 run=subprocess.run(args+[str(cpp),str(ROOT/'port/dreamcast/room/pvr_geometry.cpp'),'-o',str(exe)],capture_output=True,text=True)
                 self.assertEqual(run.returncode,0,run.stderr)
                 run=subprocess.run([str(exe)],capture_output=True,text=True,env=dict(os.environ,ASAN_OPTIONS='detect_leaks=0:halt_on_error=1',UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=1'))

@@ -321,6 +321,7 @@ extern "C" int re4dc_rtt_capturing();
 extern "C" void re4dc_log(const char* fmt, ...);
 #endif
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+extern EspTransFunc EspTransTbl[0xFF];
 static int EspSpriteEligible(cEsp* esp,bool grid03=false)
 #define RE4DC_SPLINE_BLOCK03 ((esp->m_Flg & 0x10) && !grid03)
 #else
