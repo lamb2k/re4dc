@@ -312,6 +312,71 @@ export KOS_LDFLAGS="-T$KOS_BASE/utils/ldscripts/shlelf.xc $KOS_LIB_PATHS"
             with self.assertRaisesRegex(AssertionError, 'expected ' + DRIVER.KOS_PIN):
                 DRIVER.validate_sdk(kos, sdk, cxx)
 
+    def test_reviewed_header_scratch_stops_before_malformed_ancestor(self):
+        real_temporary_directory = tempfile.TemporaryDirectory
+        with real_temporary_directory(prefix='cloth-xm14-git-ceiling-') as scratch:
+            root = Path(scratch)
+            kos = root / 'kos'
+            profile, header, _ = self.patched_header_repo(kos)
+            selected = header.read_bytes()
+            ancestor = root / 'unrelated-ancestor'
+            ancestor.mkdir()
+            metadata = ancestor / '.git'
+            # Like a stale linked-worktree/submodule gitfile in an ancestor.
+            malformed = b'gitdir: ../../missing-checkout/.git/worktrees/stale\n'
+            metadata.write_bytes(malformed)
+            foreign = root / 'foreign-worktree' / DRIVER.PVR_HEADER
+            foreign.parent.mkdir(parents=True)
+            foreign.write_bytes(b'unrelated checkout must remain untouched')
+
+            def proof_directory(**kwargs):
+                return real_temporary_directory(dir=ancestor, **kwargs)
+
+            # Establish that this controlled ancestor reproduces Git discovery's
+            # failure, independently of any malformed metadata on the host.
+            clean_env = {key: value for key, value in os.environ.items()
+                         if not key.startswith('GIT_')}
+            clean_env.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull)
+            with proof_directory(prefix='unprotected-') as unprotected:
+                result = subprocess.run(['git', 'apply', '--check',
+                    '--include=' + DRIVER.PVR_HEADER,
+                    str(DRIVER.reviewed_patches(profile['manifest'])[0])],
+                    cwd=unprotected, env=clean_env, capture_output=True, text=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('not a git repository', result.stderr)
+
+            inherited = dict(GIT_WORK_TREE=str(root / 'foreign-worktree'),
+                             GIT_CEILING_DIRECTORIES=str(root / 'wrong-ceiling'),
+                             GIT_CONFIG_COUNT='0', GIT_TRACE='0')
+            with patch.object(DRIVER.tempfile, 'TemporaryDirectory', side_effect=proof_directory), \
+                 patch.dict(os.environ, inherited), \
+                 patch.object(DRIVER, 'command', wraps=DRIVER.command) as commands:
+                evidence = DRIVER.reviewed_header_evidence(kos, profile)
+            rule = profile['manifest']['headers'][DRIVER.PVR_HEADER]
+            self.assertEqual(evidence, {DRIVER.PVR_HEADER: rule['selected_sha256']})
+            applies = [call for call in commands.call_args_list if call.args[0][:2] == ['git', 'apply']]
+            self.assertEqual(len(applies), 2 * len(profile['manifest']['patches']))
+            for index, call in enumerate(applies):
+                args, env = call.args[0], call.kwargs['env']
+                self.assertEqual('--check' in args, index % 2 == 0)
+                self.assertEqual(env['GIT_CEILING_DIRECTORIES'], str(call.kwargs['cwd'].resolve().parent))
+                self.assertEqual({key for key in env if key.startswith('GIT_')},
+                                 {'GIT_CEILING_DIRECTORIES', 'GIT_CONFIG_NOSYSTEM', 'GIT_CONFIG_GLOBAL'})
+                self.assertEqual(env['GIT_CONFIG_NOSYSTEM'], '1')
+                self.assertEqual(env['GIT_CONFIG_GLOBAL'], os.devnull)
+            self.assertEqual(header.read_bytes(), selected)
+            self.assertEqual(metadata.read_bytes(), malformed)
+            self.assertEqual(foreign.read_bytes(), b'unrelated checkout must remain untouched')
+            self.assertEqual(list(ancestor.iterdir()), [metadata])
+
+            # The ceiling cannot turn an incomplete derivation into evidence.
+            with patch.object(DRIVER.tempfile, 'TemporaryDirectory', side_effect=proof_directory), \
+                 patch.object(DRIVER, 'reviewed_patches', return_value=[]), \
+                 self.assertRaisesRegex(AssertionError, 'do not derive the selected header'):
+                DRIVER.reviewed_header_evidence(kos, profile)
+            self.assertEqual(header.read_bytes(), selected)
+            self.assertEqual(metadata.read_bytes(), malformed)
+
     def test_reviewed_manifest_and_patch_changes_are_not_an_allowlist(self):
         original = DRIVER.REVIEWED_MANIFEST.read_bytes()
         manifest = DRIVER.reviewed_manifest(original)

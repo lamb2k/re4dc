@@ -187,9 +187,13 @@ def reviewed_header_evidence(kos, profile):
             destination.parent.mkdir(parents=True)
             destination.write_bytes(original)
             # An inherited GIT_WORK_TREE must not redirect these scratch-only
-            # patch operations to the selected SDK or another checkout.
+            # patch operations to the selected SDK or another checkout. Stop
+            # repository discovery at scratch too: an unrelated ancestor .git
+            # can be malformed, or make Git interpret paths relative to it.
+            # Git ignores a ceiling equal to cwd; its parent stops ascent.
             patch_env = {key: value for key, value in os.environ.items() if not key.startswith('GIT_')}
-            patch_env.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull)
+            patch_env.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull,
+                             GIT_CEILING_DIRECTORIES=str(root.resolve().parent))
             for patch in patches:
                 command(['git', 'apply', '--check', '--include=' + relative, patch], cwd=root, env=patch_env)
                 command(['git', 'apply', '--include=' + relative, patch], cwd=root, env=patch_env)
