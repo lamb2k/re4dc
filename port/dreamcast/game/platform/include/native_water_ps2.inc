@@ -180,6 +180,8 @@ void water_emit(const WaterNode& w){
 #define RE4DC_WATER03_RETURN(state,legacy,sent,queued) return {re4dc::NativeDrawOutcome::state,sent,queued}
 extern "C" re4dc::NativeDrawResult re4dc_water_layer_result(const Re4dcWaterLayer* L,int* legacy_admitted){
     if(legacy_admitted)*legacy_admitted=0;
+    // Preserve the old zero admission while forbidding replay of a terminal frame.
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
 #else
 #define RE4DC_WATER03_RETURN(state,legacy,sent,queued) return legacy
 extern "C" int re4dc_water_layer(const Re4dcWaterLayer* L){

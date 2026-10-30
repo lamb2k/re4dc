@@ -169,6 +169,9 @@ int main(){using O=re4dc::NativeDrawOutcome;
     CHECK(r.outcome==O::Submitted && r.submitted==1 && !r.queued);
     fresh03();source_draws_finished=true;abort_send=1;r=re4dc_effect_sprite_result(&s);
     CHECK(r.outcome==O::PartialAbort && r.published() && !r.fallback_allowed());
+    fresh03();stream_aborted=true;r=re4dc_effect_sprite_result(&s);
+    CHECK(r.outcome==O::PartialAbort && !r.published() && !r.fallback_allowed());
+    CHECK(re4dc_effect_sprite(&s)==0 && !deferred_count && !raw_sends);
     fresh03();s.pad=1;r=re4dc_effect_sprite_result(&s);CHECK(r.outcome==O::Queued && r.queued==1);
     drain();CHECK(raw_sends>0);fresh03();source_draws_finished=true;abort_send=1;
     r=re4dc_effect_sprite_result(&s);CHECK(r.outcome==O::PartialAbort && r.submitted==1);s=sprite();
@@ -185,6 +188,15 @@ int main(){using O=re4dc::NativeDrawOutcome;
     s.x[0]+=13;CHECK(std::memcmp(copied.data(),rtt::packets[0],kSpritePacket)==0);s=sprite();
     rtt::packet_count=rtt::kMaxSprites;
     r=re4dc_effect_sprite_result(&s);CHECK(r.outcome==O::Refused);re4dc_rtt_room_reset();
+    fresh03();re4dc_rtt_want(0);re4dc_rtt_capture_begin(0,32,32,64,64,0);stream_aborted=true;
+    r=re4dc_effect_sprite_result(&s);
+    CHECK(r.outcome==O::PartialAbort && !r.published() && !r.fallback_allowed() && rtt::packet_count==0);
+    // Independent capture retains its existing copy/policy decision. It is not
+    // the public sprite entry's already-aborted-stream refusal point.
+    r=rtt::capture_result03(&s);
+    CHECK(r.outcome==O::PartialAbort && r.queued==1 && rtt::packet_count==1);
+    s.color=0;r=rtt::capture_result03(&s);CHECK(r.outcome==O::PolicySkip && !r.published());
+    s=sprite();re4dc_rtt_room_reset();
     fresh03();re4dc_rtt_capture_begin(0,32,32,64,64,0);rtt::targets[0].want_frame=0;
     r=re4dc_effect_sprite_result(&s);CHECK(r.outcome==O::PolicySkip);re4dc_rtt_room_reset();
     fresh03();rtt_alloc_ok=false;re4dc_rtt_want(0);re4dc_rtt_capture_begin(0,32,32,64,64,0);
@@ -196,6 +208,9 @@ int main(){using O=re4dc::NativeDrawOutcome;
     s=sprite();texture_missing=true;r=re4dc_effect_sprite_result(&s);CHECK(r.outcome==O::Refused && rtt::packet_count==0);re4dc_rtt_room_reset();
     fresh03();auto w=water03();int admitted=-1;r=re4dc_water_layer_result(&w,&admitted);
     CHECK(admitted==1 && r.outcome==O::Queued && r.queued==1 && !raw_sends);drain();CHECK(raw_sends>0);
+    fresh03();stream_aborted=true;r=re4dc_water_layer_result(&w,&admitted);
+    CHECK(admitted==0 && r.outcome==O::PartialAbort && !r.published() && !r.fallback_allowed());
+    CHECK(re4dc_water_layer(&w)==0 && !deferred_count && !raw_sends);
     fresh03();source_draws_finished=true;w=water03();fog_amount=1;
     r=re4dc_water_layer_result(&w,&admitted);CHECK(admitted==1 && r.outcome==O::Submitted && r.submitted==1);
     CHECK(raw_sends==1 && gate::packets[0].bytes.size()==32 && !r.fallback_allowed());
@@ -228,6 +243,9 @@ int main(){using O=re4dc::NativeDrawOutcome;
     fresh03();tw.pTpl=nullptr;r=EspSpriteEmitResult03(&e);CHECK(r.outcome==O::Refused);tw.pTpl=&pal03;
     fresh03();source_draws_finished=true;abort_send=1;r=EspSpriteEmitResult03(&e);CHECK(r.outcome==O::PartialAbort);
     fresh03();EspSpriteEmit(&e);CHECK(deferred_count==1); // existing void caller contract
+    fresh03();stream_aborted=true;r=EspSpriteEmitResult03(&e);
+    CHECK(r.outcome==O::PartialAbort && !r.published() && !r.fallback_allowed());
+    EspSpriteEmit(&e);CHECK(!deferred_count && !raw_sends); // same source void ABI
     Water29Finish(0,1,{O::Refused});CHECK(fallback_calls03==1);
     Water29Finish(0,1,{O::PartialAbort,1,0});CHECK(fallback_calls03==1);
     Water29Finish(1,1,{O::PartialAbort,0,1});CHECK(fallback_calls03==1 && s_water29_partial==1);
@@ -246,6 +264,13 @@ int main(){using O=re4dc::NativeDrawOutcome;
     CHECK(finished03.fallback_allowed() && fallback_calls03==prior_fallback+1 && water_calls03==5);
     producer_fresh03();refuse_mask03=31;terminal_mask03=1;re4dc_water_ps2_draw(nullptr);
     CHECK(finished03.outcome==O::PartialAbort && !finished03.published() && fallback_calls03==prior_fallback+1);
+    // Actual native stream state, without the synthetic terminal bridge: every
+    // existing layer visit remains, but no legacy generator replay is allowed.
+    producer_fresh03();stream_aborted=true;const auto prior_terminal_fallback=fallback_calls03;
+    re4dc_water_ps2_draw(nullptr);
+    CHECK(visit03==std::vector<unsigned>({1,2,3,4,5}) && water_calls03==5);
+    CHECK(finished03.outcome==O::PartialAbort && !finished03.published() && !finished03.fallback_allowed());
+    CHECK(s_water29_last_admission==WATER29_TOTAL_REFUSAL && fallback_calls03==prior_terminal_fallback);
     std::printf("EF03 packet boundaries passed: %u assertions\n",gate::assertions);
 }
 '''

@@ -9070,6 +9070,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 }
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 extern "C" re4dc::NativeDrawResult re4dc_effect_sprite_result(const Re4dcEffectSprite* s){
+    // The existing entry guard refuses a stopped stream before RTT selection.
+    // A terminal frame cannot authorize whole-producer fallback, even at zero output.
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
 #include "native_effect_sprite03.inc"
 }
 #endif
