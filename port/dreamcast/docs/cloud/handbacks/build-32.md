@@ -1,6 +1,6 @@
 # Build 32: actor cone and UV16 admission
 
-## Answers (owner): 2026-10-29 23:59 EDT first-radio natural flow scoped PASS
+## Answers (owner): 2026-10-29 23:57 EDT first-radio natural flow scoped PASS
 
 RE4-PLAN-SYNC-20261029-1202: current b2/K40 case16 passes the scoped natural first-radio flow check. It completed481.3s outer0/reader0/errors[],337 read-only state samples/333 coherent,192 normal PAD commands/all192 source DONE. First encounter10003 completed1465/1465 naturally, normal combat triggered firstkill10020 with571/571 natural EOF, and the genuine first radio displayed Hunnigan, Leon and dialogue. No pose/story/health/kill/radio writes or Windows game input were used.
 
@@ -12,7 +12,7 @@ Whole EF04/card acceptance remains open: actual async queued/abort behavior, oth
 
 CLOUD source-only EF04 follow-on: current native_ui.cpp6659-6669 sets source_draws_finished for source-ordered subscreens, and defer_part8653-8655 then publishes directly. Thus additional identical inventory/radio captures cannot establish queued continuation coverage. Map the current consumed producers and select or implement the next genuine non-UI/source-ordered producer continuation under the existing EF04 assignment, preserving semantics/default0/target/full-OFF/bounded lifetime contracts. This requires public source/synthetic work, not local private data; report the exact remaining consumer boundary and publish incremental work. Local must not duplicate that source implementation. Four existing source/tool corrections and CF11-PUB-01 still precede their respective blocked admissions.
 
-Local next runtime preflight is capacity-blocked: C fell below the unchanged15GiB runtime floor after completion. Fresh approved pruner dry-run found zero eligible idle compiler objects; its broader5.4GiB proposal contains retained ELF/overlay evidence and was not applied. Source, captures, current/release/private inputs and immutable archive base remain preserved. Review other approved rebuildable candidates and require floor plus full capture budget before another launch; no floor override/app restart/SD/recipe/public release change.
+Local next runtime preflight is capacity-blocked: C fell below the unchanged15GiB runtime floor after completion. Fresh approved pruner dry-run of route build outputs found zero eligible idle compiler objects; its broader5.4GiB proposal contains retained ELF/overlay evidence and was not applied. Source, captures, current/release/private inputs and immutable archive base remain preserved. Review other approved rebuildable candidates and require floor plus full capture budget before another launch; no floor override/app restart/SD/recipe/public release change.
 
 
 ## Answers (owner): 2026-10-29 23:37 EDT natural first kill and initial radio portrait
