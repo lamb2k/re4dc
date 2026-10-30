@@ -223,3 +223,32 @@ int cEsp4e::SetFreeWork(EspGenWork* gen, u32* seed)
 }
 
 asm(".section .sdata; .balign 8");
+
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#include <cstdint>
+#include <cstring>
+#include "cloth_publication11.hpp"
+extern Cloth ClothWk[8];
+extern EspCreateFunc EspCreateTbl[0xFF];
+extern "C" int re4dc_cloth_frame_open11();
+// Called only after the fixed Cloth admission/epoch check. Never retain this
+// effect pointer across texture I/O: callers keep copied words and revalidate.
+extern "C" int re4dc_cloth_esp4e_words11(const Cloth* cloth,unsigned words[8]){
+    const auto address=reinterpret_cast<std::uintptr_t>(cloth),first=reinterpret_cast<std::uintptr_t>(ClothWk);
+    if(!words || address<first || address-first>=sizeof ClothWk || (address-first)%sizeof(Cloth) ||
+       !re4dc::cloth_material11::admitted(unsigned((address-first)/sizeof(Cloth))) || !re4dc_cloth_frame_open11())return 0;
+    if(EspCreateTbl[0x4e]!=Esp4e_Create || !g_pEspSys || !g_pEspSys->pEspBuf ||
+       !g_pEspSys->nEsp || g_pEspSys->nEsp>~0U/0x150U)return 0;
+    const auto base=reinterpret_cast<std::uintptr_t>(g_pEspSys->pEspBuf);
+    const auto tex=reinterpret_cast<std::uintptr_t>(cloth->tex);
+    if(tex<base || tex-base>=g_pEspSys->nEsp*0x150U)return 0;
+    const unsigned slot=unsigned((tex-base)/0x150U);
+    auto* live=reinterpret_cast<cEsp*>(g_pEspSys->pEspBuf+slot*0x150U);
+    if(!(live->m_Be_flg&1) || live->m_Id!=0x4e)return 0;
+    auto* effect=static_cast<cEsp4e*>(live);
+    if(&effect->m_Free.tex!=cloth->tex || effect->m_Free.pCl!=cloth)return 0;
+    static_assert(sizeof effect->m_Free.tex==8*sizeof(unsigned));
+    std::memcpy(words,&effect->m_Free.tex,8*sizeof(unsigned));
+    return 1;
+}
+#endif

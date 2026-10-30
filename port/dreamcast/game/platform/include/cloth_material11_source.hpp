@@ -14,12 +14,23 @@ struct TextureSource {
     unsigned words[8]{};
     unsigned char texels[128]{};
     Re4dcUiImage image{};
+    bool copied_object=false;
 
     bool capture(const void* source) {
-        object=source;
+        object=source;copied_object=false;
         object_owner=re4dc_model_draw_owner_stamp(source,sizeof words);
         if(!source || !object_owner.valid())return false;
         std::memcpy(words,source,sizeof words);
+        return capture_pixels();
+    }
+    // Embedded Esp4e GX objects belong to the effect slot, not an archive.
+    // The source check proves that slot before comparing these copied words.
+    bool capture_copied(const void* source,const unsigned snapshot[8]) {
+        object=source;copied_object=true;
+        std::memcpy(words,snapshot,sizeof words);
+        return capture_pixels();
+    }
+    bool capture_pixels() {
         // One bounded raw GX RGB565 class, no mip/palette/coverage extension.
         if(words[1]!=0x00080008U || words[2]!=4U || !linear_clamp(words))return false;
         image={reinterpret_cast<const void*>(std::uintptr_t(words[0])),nullptr,8,8,4,~0U,0};
@@ -32,10 +43,11 @@ struct TextureSource {
         return !(magic[0]==0x524e3452U && magic[1]==0x00004645U);
     }
     bool current() const {
-        return object_owner.valid() && pixel_owner.valid() &&
-            re4dc_model_draw_owner_stamp(object,sizeof words)==object_owner &&
+        return pixel_owner.valid() &&
             re4dc_model_draw_owner_stamp(image.pixels,sizeof texels)==pixel_owner &&
-            !std::memcmp(object,words,sizeof words) &&
+            (copied_object || (object_owner.valid() &&
+                re4dc_model_draw_owner_stamp(object,sizeof words)==object_owner &&
+                !std::memcmp(object,words,sizeof words))) &&
             !std::memcmp(image.pixels,texels,sizeof texels);
     }
     bool white() const {
@@ -45,10 +57,14 @@ struct TextureSource {
 };
 struct Source {
     TextureSource primary,secondary;
+    bool single=false;
     bool capture(const void* first,const void* second) {
-        return primary.capture(first) && primary.white() && secondary.capture(second);
+        single=false;return primary.capture(first) && primary.white() && secondary.capture(second);
     }
-    bool current() const { return primary.current() && secondary.current(); }
+    bool capture_single(const void* first,const unsigned words[8]) {
+        single=true;return primary.capture_copied(first,words) && primary.white();
+    }
+    bool current() const { return primary.current() && (single || secondary.current()); }
 };
 
 // Actual uploaded RGB565 is little-endian, 8x8 twiddled even when a legacy

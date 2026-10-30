@@ -15,6 +15,12 @@
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
 extern "C" void re4dc_water29_retire_archive();
 #endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+extern "C" void re4dc_cloth_material_retire11();
+#define RE4DC_CLOTH_ROOM_RETIRE11() re4dc_cloth_material_retire11();
+#else
+#define RE4DC_CLOTH_ROOM_RETIRE11()
+#endif
 #line 15
 #if RE4DC_EFFECT_BIND_DIAG
 extern "C" { unsigned re4dc_effect_bind_fail_line; }  // file scope: not in the unnamed namespace
@@ -175,7 +181,7 @@ extern "C" void re4dc_effect_unbind(void* archive) {
         b={};return;
     }
 }
-extern "C" void re4dc_effect_retire_room() {
+extern "C" void re4dc_effect_retire_room() { RE4DC_CLOTH_ROOM_RETIRE11()
     // The source has suspended room updates before replacing the room heap.
 #if defined(RE4DC_WATER_LAYER29) && RE4DC_WATER_LAYER29
     re4dc_water29_retire_archive();

@@ -843,7 +843,9 @@ ifneq ($(CLOTH_SHEET11)$(PLAN_OWNER_SCOPED),11)
 $(error CLOTH_MATERIAL11 needs CLOTH_SHEET11=1 PLAN_OWNER_SCOPED=1)
 endif
 $(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp4e.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/platform/native_effect.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
 # The existing platform rule consumes this target-specific variable too.
 $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
 endif
