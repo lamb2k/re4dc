@@ -1,6 +1,16 @@
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+extern "C" void re4dc_cloth_material_retire11();
+class cEsp;
+extern "C" void re4dc_cloth_esp4e_retire11(cEsp*);
+#define RE4DC_CLOTH_POOL_RETIRE11() re4dc_cloth_material_retire11();
+#define RE4DC_CLOTH_SLOT_RETIRE11(e) if(((e)->m_Be_flg&1) && (e)->m_Id==0x4e)re4dc_cloth_esp4e_retire11(e);
+#else
+#define RE4DC_CLOTH_POOL_RETIRE11()
+#define RE4DC_CLOTH_SLOT_RETIRE11(e)
+#endif
 #line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
@@ -409,7 +419,7 @@ found:
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
                 if (esp->m_Be_flg & 1) ESPD_STEAL();
 #endif
-                memclr_asm(esp, 0x150);
+                RE4DC_CLOTH_SLOT_RETIRE11(esp) memclr_asm(esp, 0x150);
                 old_hit = i + 1;
                 return esp;
             }
@@ -1176,7 +1186,7 @@ int EspArrayFree()
     if (sys->pEspBuf == NULL) {
         return 0;
     }
-    Mem_free(sys->pEspBuf);
+    RE4DC_CLOTH_POOL_RETIRE11() Mem_free(sys->pEspBuf);
     sys->pEspBuf = NULL;
     ESP_OWN_STALE();
     return 1;
@@ -1192,7 +1202,7 @@ int EspArrayPush(u32 n)
         return 0;
     }
     ESP_OWN_STALE();
-    sys->pEspBufSave = sys->pEspBuf;
+    RE4DC_CLOTH_POOL_RETIRE11() sys->pEspBufSave = sys->pEspBuf;
     sys->pEspBuf = (u8*) Debug_alloc(n * 0x150, 1);
     sys->nEspBack = sys->nEsp;
     sys->nEsp = n;
@@ -1208,7 +1218,7 @@ int EspArrayPop()
         return 0;
     }
     ESP_OWN_STALE();
-    Debug_free(sys->pEspBuf);
+    RE4DC_CLOTH_POOL_RETIRE11() Debug_free(sys->pEspBuf);
     sys->pEspBuf = sys->pEspBufSave;
     sys->pEspBufSave = NULL;
     sys->nEsp = sys->nEspBack;

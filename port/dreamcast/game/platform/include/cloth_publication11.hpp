@@ -1,4 +1,24 @@
 #pragma once
+#if (defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11) || (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11)
+namespace re4dc::cloth_pub11 {
+// The existing per-slot grid/pose generation also fences the exact material
+// reader. Unknown zero never wraps back into a valid held source view.
+inline unsigned grid_generation[8]={1,1,1,1,1,1,1,1};
+inline void grid_write(unsigned slot){if(slot<8 && grid_generation[slot])++grid_generation[slot];}
+}
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+namespace re4dc::cloth_material11 {
+// Source admission only: retirement closes before a pool/heap can disappear.
+// A completed Set in the same incarnation is the only reopening operation.
+// This four-byte mask never changes source gameplay be_flag or pool layout.
+inline unsigned open_slots=0;
+static_assert(sizeof(open_slots)==4 && sizeof(re4dc::cloth_pub11::grid_generation)==32);
+inline bool admitted(unsigned slot){return slot<8 && (open_slots&(1U<<slot));}
+inline void close(unsigned slot){if(slot<8)open_slots&=~(1U<<slot);}
+inline void reopen(unsigned slot,unsigned epoch){if(slot<8 && epoch)open_slots|=1U<<slot;}
+}
+#endif
 #if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
 #include "native_draw_result.hpp"
 namespace re4dc::cloth_pub11 {
@@ -30,8 +50,6 @@ static_assert(sizeof(unsigned)==4 && sizeof(Receipt)==112);
 // grid/pose write generation, even if the operation is a no-op. Set() has a new
 // owner incarnation and its settling move() calls advance this too. Zero means
 // exhausted/unknown, never a wrapped generation. This adds no simulation guard.
-inline unsigned grid_generation[8]={1,1,1,1,1,1,1,1};
-inline void grid_write(unsigned slot){if(slot<8 && grid_generation[slot])++grid_generation[slot];}
 inline void barrier(){asm volatile("" ::: "memory");}
 struct Collector {
     // External read: read sequence, reject odd/0, copy header/receipt, reread

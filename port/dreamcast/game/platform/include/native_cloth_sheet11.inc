@@ -15,7 +15,7 @@ struct ClothPrepared11 {
     unsigned observation;
 #endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
-    unsigned primary_slot,primary_incarnation;
+    unsigned primary_slot,primary_incarnation,reset_epoch;
     Re4dcClothCheck11 source_check;
 #endif
 };
@@ -31,6 +31,7 @@ bool cloth_ready11(const ClothPrepared11& m){
     return frame_ready && !stream_aborted && !draining_parts && m.frame==frame && m.slot<kTextureCount &&
         m.incarnation && entries[m.slot].valid && entries[m.slot].upload_incarnation==m.incarnation && entries[m.slot].frame==frame
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        && m.reset_epoch==handle_reset
         && (!m.primary_incarnation || (m.primary_slot<kTextureCount && entries[m.primary_slot].valid &&
             entries[m.primary_slot].upload_incarnation==m.primary_incarnation && entries[m.primary_slot].frame==frame))
         && (!m.source_check.current || m.source_check.current(m.source_check.context))
@@ -39,6 +40,8 @@ bool cloth_ready11(const ClothPrepared11& m){
 }
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
 re4dc::NativeDrawResult cloth_failure11(const ClothPrepared11& m){
+    if(m.source_check.current && (m.reset_epoch!=handle_reset || m.frame!=frame || !frame_ready || stream_aborted))
+        return {ClothOutcome11::PartialAbort};
     return {m.source_check.current && !m.source_check.current(m.source_check.context)?
         ClothOutcome11::PartialAbort:ClothOutcome11::Refused};
 }
@@ -109,6 +112,7 @@ extern "C" void re4dc_cloth_observe_bind11(Re4dcClothMaterial11* material,unsign
 }
 #endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+extern "C" int re4dc_cloth_frame_open11(){return frame_ready && !stream_aborted && !draining_parts;}
 static int cloth_prepare_impl11(const Re4dcEffectMesh21* m,Re4dcClothMaterial11* out,re4dc::NativeDrawResult* stop,bool source_depth){
 #else
 extern "C" int re4dc_cloth_prepare11(const Re4dcEffectMesh21* m,Re4dcClothMaterial11* out,re4dc::NativeDrawResult* stop){
@@ -123,6 +127,9 @@ extern "C" int re4dc_cloth_prepare11(const Re4dcEffectMesh21* m,Re4dcClothMateri
 #endif
     // Revoke any previous receipt before a failed prepare can expose it again.
     auto* prepared=new(out->state) ClothPrepared11{};
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    prepared->frame=frame;prepared->reset_epoch=handle_reset;
+#endif
     if(!frame_ready || stream_aborted || draining_parts){*stop={ClothOutcome11::Refused};return 0;}
 #if RE4DC_TA_DIRECT
     if(direct_open)return 0;
@@ -158,6 +165,13 @@ extern "C" int re4dc_cloth_prepare11(const Re4dcEffectMesh21* m,Re4dcClothMateri
 #endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     fx_resident_only=false;fx_new_loads+=load_opens-opens;
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    // resolve may retire/reset the room without advancing the source frame.
+    // Reject before consulting either source callback or acquired Entry data.
+    if(prepared->frame!=frame || prepared->reset_epoch!=handle_reset || !frame_ready || stream_aborted){
+        *stop={ClothOutcome11::PartialAbort};return 0;
+    }
 #endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreTextureAcquired(m->image,e);
@@ -218,11 +232,32 @@ extern "C" int re4dc_cloth_material11(const Re4dcEffectMesh21* m,const re4dc::cl
     *stop={ClothOutcome11::UnsupportedBeforePublication};
     if(!m || !source || !out || !check.current || m->color!=0xffffffffU ||
         m->src!=4 || m->dst!=5 || m->wrap_s || m->wrap_t || !source->primary.white())return 0;
-    const auto current=[&](){return check.current(check.context) && source->current();};
+    const unsigned held_frame=frame,held_reset=handle_reset;
+    const auto current=[&](){return (!source->single || (frame_ready && !stream_aborted && !draining_parts &&
+        held_frame==frame && held_reset==handle_reset)) && check.current(check.context) && source->current();};
     const auto retired=[&](){if(current())return false;*stop={ClothOutcome11::PartialAbort};return true;};
     if(retired())return 0;
     Key external{};
-    if(external_image_key(source->primary.image,external) || external_image_key(source->secondary.image,external))return 0;
+    if(external_image_key(source->primary.image,external) || (!source->single && external_image_key(source->secondary.image,external)))return 0;
+    if(source->single){
+        Re4dcEffectMesh21 single=*m;single.image=source->primary.image;
+        const int ready=cloth_prepare_impl11(&single,out,stop,true);
+        if(retired()){std::memset(out->state,0,sizeof out->state);return 0;}
+        if(!ready)return 0;
+        auto* prepared=reinterpret_cast<ClothPrepared11*>(out->state);prepared->source_check=check;
+        const auto fail=[&](ClothOutcome11 why){std::memset(out->state,0,sizeof out->state);*stop={why};return 0;};
+        const auto* upload=cloth_upload11(*prepared);
+        if(!upload)return fail(ClothOutcome11::UnsupportedBeforePublication);
+        sq_lock(const_cast<std::uint32_t*>(upload));
+        bool live=current() && cloth_ready11(*prepared),exact=false;
+        if(live){sq_wait();live=cloth_upload11(*prepared)==upload;
+            if(live)exact=re4dc::cloth_material11::uploaded_texels(upload,source->primary);}
+        sq_unlock();
+        if(!current())return fail(ClothOutcome11::PartialAbort);
+        if(!live || !cloth_ready11(*prepared))return fail(ClothOutcome11::Refused);
+        if(!exact)return fail(ClothOutcome11::UnsupportedBeforePublication);
+        return 1;
+    }
     Re4dcEffectMesh21 first=*m;first.image=source->primary.image;
     Re4dcClothMaterial11 primary_storage;
     const int first_ready=cloth_prepare_impl11(&first,&primary_storage,stop,false);

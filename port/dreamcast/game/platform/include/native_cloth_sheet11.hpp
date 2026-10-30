@@ -5,18 +5,24 @@
 #if RE4DC_CLOTH_SHEET11
 #include "native_ui.h"
 #include "native_draw_result.hpp"
-#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+#if (defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11) || (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11)
 #include "cloth_publication11.hpp"
 #endif
 // Frame-scoped prepared native material; no source grid/pixel pointer retained.
-// This preserves CLOTH_NATIVE's existing single-texture approximation. Source
-// TEV scale/clamp, alpha>4/depth policy and pTobjA remain separate coverage gaps.
+// Ordinary materials preserve the existing approximation. MATERIAL11 adds
+// bounded constant-white Esp4e and saturated pTobjA source proofs only.
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
 // Only the new synchronous material path retains a call-scoped validation
 // callback. The FIFO contains copied PVR packets, never this callback/context.
 struct Re4dcClothMaterial11 { alignas(32) unsigned char state[320]{}; };
 struct Re4dcClothCheck11 { const void* context;bool (*current)(const void*); };
 namespace re4dc::cloth_material11 { struct Source; }
+class Cloth;
+extern "C" int re4dc_cloth_esp4e_words11(const Cloth*,unsigned words[8]);
+// Existing cloth incarnation table fences source room/pool retirement too.
+extern "C" void re4dc_cloth_material_retire11();
+// Scalar source admission gate; no frame ownership or source pointer escapes.
+extern "C" int re4dc_cloth_frame_open11();
 extern "C" int re4dc_cloth_material11(const Re4dcEffectMesh21*,const re4dc::cloth_material11::Source*,
     Re4dcClothCheck11,Re4dcClothMaterial11*,re4dc::NativeDrawResult* stop);
 #else
