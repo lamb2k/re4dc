@@ -1,5 +1,16 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-30 00:21 EDT
+
+RE4-PLAN-SYNC-20261029-1202: first-radio natural flow remains scoped PASS16 at unchanged b2/K40; no new guest or SDK build. Cached phase logs provide additional resource evidence only. After natural return,17 diagnostic samples report99,200B from re4dc_ui_heap_free(), whose current source is OSCheckHeap(Heap[MemGetCurrentHeap()].handle). The heap number was not logged; this is free payload in the currently selected logical heap, not total16MiB free and not proof of a leak.
+
+The same phase reports minimum99,488B from pvr_mem_available(). Native UI diagnostic budget2,444,544B and used2,368,538B describe texture-cache policy/accounting; the free field comes from the KOS PVR allocator and must not be computed as budget-minus-used or added to another reserve. A full8MiB map, largest blocks, per-heap identity, stack/high-water and cost gates remain open. Radio retry1/evictions9 remain recorded; no memory/residency acceptance is promoted.
+
+Offline current-target preflight now binds CurrentHeap/Heap/HeapArray and actual debug types: MemHeap16B across12 agreeing definitions, OSAlloc HeapDesc12B and Cell12B. The unrelated Cell28B type is excluded by compile-unit identity. This is metadata/disassembly evidence from the pinned ELF, not a live heap sample. A future read-only observer must map logical number to physical handle, bound and validate lists and recheck phase/frame/metadata coherence; it must not execute target functions, pause the guest or write memory. Prepare such sampling independently, and capture only after capacity and a justified changed case are ready.
+
+Storage audit: the approved Windows pruner ran without Apply and emitted940 candidate records, but exited1 on DirectoryNotFoundException for some recursive paths. Its logical deletion estimates are not approval or physical recovery. Of58 large image paths reviewed,44 file identities were present, all already compressed and none read-only. No files were deleted, relinked or recompressed. All current/private/capture/baseline/release/media/immutable delta-base holds remain. New captures remain blocked below the unchanged15GiB floor plus full capture/preflight margin; continue exact hold-aware candidate review and cached analysis. Do not claim storage is solved or apply the broad incomplete list.
+
+
 ## Answers (owner): 2026-10-29 23:57 EDT first-radio natural flow scoped PASS
 
 RE4-PLAN-SYNC-20261029-1202: current b2/K40 case16 passes the scoped natural first-radio flow check. It completed481.3s outer0/reader0/errors[],337 read-only state samples/333 coherent,192 normal PAD commands/all192 source DONE. First encounter10003 completed1465/1465 naturally, normal combat triggered firstkill10020 with571/571 natural EOF, and the genuine first radio displayed Hunnigan, Leon and dialogue. No pose/story/health/kill/radio writes or Windows game input were used.
