@@ -1753,6 +1753,25 @@ endif
 $(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_RECORD16=1
 endif
 
+# LOG_PUBLICATION16: nonblocking whole-call writer lease, <=255-byte copy
+# windows, explicit device refusal, and two immutable copied terminal records.
+# External KOS formatting before write_buffer is outside the formatter lease.
+LOG_PUBLICATION16 ?= 0
+ifneq ($(LOG_PUBLICATION16),0)
+ifneq ($(LOG_PUBLICATION16),1)
+$(error LOG_PUBLICATION16 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(LOG_PUBLICATION16),1)
+ifneq ($(LOG_ATOMIC16),1)
+$(error LOG_PUBLICATION16 requires LOG_ATOMIC16=1)
+endif
+ifneq ($(OT_WALK_CHECK),0)
+$(error LOG_PUBLICATION16 requires OT_WALK_CHECK=0)
+endif
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_PUBLICATION16=1
+endif
+
 ifeq ($(LOGIC_TRACE),1)
 PLATFORM_OBJS += $(OBJDIR)/logic_trace.o
 # One uninterruptible append per re4dc_log call (platform/mem.cpp), so other threads' log lines
