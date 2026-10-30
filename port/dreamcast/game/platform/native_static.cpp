@@ -150,20 +150,29 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
 #ifndef RE4DC_WORLD_PORTAL_STREAM31
 #define RE4DC_WORLD_PORTAL_STREAM31 0
 #endif
+#ifndef RE4DC_WORLD_PORTAL_CLIP_GATHER31
+#define RE4DC_WORLD_PORTAL_CLIP_GATHER31 0
+#endif
 #if RE4DC_WORLD_PORTAL_COMPLETION != 0 && RE4DC_WORLD_PORTAL_COMPLETION != 1
 #error WORLD_PORTAL_COMPLETION must be 0 or 1
 #endif
 #if RE4DC_WORLD_PORTAL_STREAM31 != 0 && RE4DC_WORLD_PORTAL_STREAM31 != 1
 #error WORLD_PORTAL_STREAM31 must be 0 or 1
 #endif
-#if RE4DC_WORLD_PORTAL_STREAM31 && (RE4DC_WORLD_PORTAL_COMPLETION != 1 || RE4DC_SCENERY_STREAM != 1 || RE4DC_PS2_PVS != 1 || RE4DC_PS2_PVS_BATCH_COMPOSE != 1 || RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_TA_HASH)
-#error WORLD_PORTAL_STREAM31 needs streamed PVS/portal completion without prefetch, alternate records, direct strips or clip extensions
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 0 && RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 1
+#error WORLD_PORTAL_CLIP_GATHER31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 && (!RE4DC_WORLD_PORTAL_STREAM31 || !RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_CPU_BACKFACE || RE4DC_MESH_CLIP_LEAN || RE4DC_MESH_CLIP_ACCEPT)
+#error WORLD_PORTAL_CLIP_GATHER31 needs qualified stream and basic gather clipper with indexed clip and CPU backface off
+#endif
+#if RE4DC_WORLD_PORTAL_STREAM31 && (RE4DC_WORLD_PORTAL_COMPLETION != 1 || RE4DC_SCENERY_STREAM != 1 || RE4DC_PS2_PVS != 1 || RE4DC_PS2_PVS_BATCH_COMPOSE != 1 || RE4DC_SCENERY_EMIT_PREFETCH || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_TA_HASH)
+#error WORLD_PORTAL_STREAM31 needs streamed PVS/portal completion without prefetch, alternate records, direct strips or unqualified clip extensions
 #endif
 #if RE4DC_SCENERY_STREAM && RE4DC_PS2_PVS && !RE4DC_WORLD_PORTAL_STREAM31
 #error SCENERY_STREAM with PS2_PVS needs WORLD_PORTAL_STREAM31
 #endif
-#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || (RE4DC_SCENERY_STREAM && !RE4DC_WORLD_PORTAL_STREAM31) || RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26)
-#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching; stream needs WORLD_PORTAL_STREAM31 and clip remains unqualified
+#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || (RE4DC_SCENERY_STREAM && !RE4DC_WORLD_PORTAL_STREAM31) || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26)
+#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching; stream and gather clip need their scoped controls
 #endif
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
@@ -1332,6 +1341,11 @@ struct Emitter {
     unsigned limit=0; // packet slots strips may use: packet.capacity less any borrowed tail
     bool streaming=false,bound=false,submitted=false;
     bool vertex_alpha=false; // corner alpha from the colour palette (source vertex alpha)
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+    // The clipper lives in Emitter; the receipt reads this across every pick
+    // in the derived MeshDraw and folds it across page restarts.
+    bool portal_depth_safe_clip=true;
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     bool dsa_xlu()const{
 #if RE4DC_PS2_WORLD_MESH
@@ -1688,6 +1702,17 @@ struct Emitter {
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
 #endif
                    const Index* index,unsigned count){
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        // The existing input==output receipt is a coverage proof only while
+        // each input triangle can produce at most one output triangle. A long
+        // depth-inside strip takes this clipper for capacity, not near clipping.
+        if(!ps2 || !outcodes || count<=limit)portal_depth_safe_clip=false;
+        else {
+            constexpr unsigned depth=re4dc::vp::depth_mask(re4dc::vp::kChecksAll);
+            for(unsigned i=0;i<count;++i)
+                if(outcodes[index[i]]&depth){portal_depth_safe_clip=false;break;}
+        }
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
         re4dc::dfa26::hit(count>limit?re4dc::dfa26::WorldClipCapacity:re4dc::dfa26::WorldClipDepth);
         struct ClipAudit {
@@ -4327,6 +4352,9 @@ struct MeshDraw : Emitter {
         used=input=output=slots=0;
         bound=submitted=false;
         cache=nullptr;primed=0;
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        portal_depth_safe_clip=true;
+#endif
 #if RE4DC_PS2_PVS
         pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
 #endif
@@ -8515,7 +8543,9 @@ int ps2_pass(unsigned pass,float zfar){
             if(active_page)active_page->selected(cpk+x.first,x.count);
 #endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
+#if !RE4DC_WORLD_PORTAL_CLIP_GATHER31
             const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
+#endif
             const auto& wp29_source=cpkg.parts()[x.index];
             const bool wp29_whole=re4dc::portal29::whole_source(cpk+x.first,x.count,
                 wp29_source.first_meshlet,wp29_source.meshlet_count);
@@ -8589,9 +8619,22 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_WORLD_PORTAL_COMPLETION
 #if RE4DC_WORLD_PAGES31
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                if(active_page && !e.portal_depth_safe_clip)active_page->whole=false;
+#else
                 if(active_page && (stats.strips_clipped!=wp29_clipped || stats.strips_culled!=wp29_culled))
                     active_page->whole=false;
+#endif
                 if(!active_page || active_page_last){
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                    const auto completion=re4dc::portal29::Completion::emitted(
+                        active_page?active_page->result():result,
+                        active_page?active_page->published:e.submitted,
+                        active_page?active_page->input:e.input,
+                        active_page?active_page->output:e.output,
+                        active_page?active_page->complete(wp29_source.first_meshlet):
+                            wp29_whole && e.portal_depth_safe_clip);
+#else
                     const auto completion=re4dc::portal29::Completion::emitted(
                         active_page?active_page->result():result,
                         active_page?active_page->published:e.submitted,
@@ -8599,11 +8642,17 @@ int ps2_pass(unsigned pass,float zfar){
                         active_page?active_page->output:e.output,
                         active_page?active_page->complete(wp29_source.first_meshlet):
                             wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+#endif
                     wp29::finish(x.wp29_ticket,completion,x.key);
                 }
 #else
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
+                    wp29_whole && e.portal_depth_safe_clip);
+#else
                 const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
                     wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+#endif
                 wp29::finish(x.wp29_ticket,completion,x.key);
 #endif
 #else
