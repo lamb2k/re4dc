@@ -11,6 +11,9 @@ struct ClothPrepared11 {
     unsigned header[8],frame,slot,incarnation,cols,rows;
     float su,sv;
     Re4dcEffectQuad clip;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    unsigned observation;
+#endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
     unsigned primary_slot,primary_incarnation;
     Re4dcClothCheck11 source_check;
@@ -52,6 +55,9 @@ re4dc::NativeDrawResult cloth_publish11(const ClothPrepared11& m,const pvr_verte
     if(source_draws_finished){
         stream_select(PVR_LIST_TR_POLY);if(!cloth_ready11(m))return RE4DC_CLOTH_REFUSED11(m);
         stream_send(packet,bytes);++fx_direct;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+        re4dc_cloth_publication11.publication(m.observation,false);
+#endif
         return {stream_aborted || !cloth_ready11(m)?ClothOutcome11::PartialAbort:ClothOutcome11::Submitted,1,0};
     }
     const unsigned required=kEffectQuad21Node+bytes,margin=8192;
@@ -70,13 +76,38 @@ re4dc::NativeDrawResult cloth_publish11(const ClothPrepared11& m,const pvr_verte
     if(!cloth_ready11(m))return RE4DC_CLOTH_REFUSED11(m);
     *top-=required;auto* node=new(storage+*top) DeferredPart{};
     node->lighting=kEffectQuad21Tag;node->changed[0]=bytes;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    static_assert(sizeof(node->changed)>=2*sizeof(unsigned));
+    // Only effect-tag nodes use this scalar word; the shared drain consumes it
+    // before the model change-mask restore path. No queue storage grows.
+    node->changed[1]=m.observation;
+#endif
     std::memcpy(storage+*top+kEffectQuad21Node,packet,bytes);
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;++fx_queued;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc_cloth_publication11.publication(m.observation,true);
+#endif
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
     return {ClothOutcome11::Queued,0,1};
 }
 }
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+extern "C" unsigned re4dc_cloth_observe_begin11(re4dc::cloth_pub11::Source source){
+    return re4dc_cloth_publication11.begin(source,frame);
+}
+extern "C" void re4dc_cloth_observe_finish11(unsigned id,re4dc::NativeDrawResult result,unsigned epoch,unsigned source_frame,unsigned grid){
+    re4dc_cloth_publication11.finish(id,result,epoch,source_frame,grid,frame);
+}
+extern "C" void re4dc_cloth_observe_bind11(Re4dcClothMaterial11* material,unsigned id){
+    auto& m=*reinterpret_cast<ClothPrepared11*>(material->state);m.observation=id;
+    unsigned primary=~0U,primary_upload=0;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(m.primary_incarnation){primary=m.primary_slot;primary_upload=m.primary_incarnation;}
+#endif
+    re4dc_cloth_publication11.prepare(id,m.slot,m.incarnation,primary,primary_upload);
+}
+#endif
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
 static int cloth_prepare_impl11(const Re4dcEffectMesh21* m,Re4dcClothMaterial11* out,re4dc::NativeDrawResult* stop,bool source_depth){
 #else

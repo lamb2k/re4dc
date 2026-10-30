@@ -818,3 +818,18 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 
 # The existing platform rule consumes this target-specific variable too.
 $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
 endif
+
+# CF11-PUB-01 bounded diagnostic only; opt in separately from timing profiles.
+CLOTH_PUBLICATION11 ?= 0
+ifneq ("$(CLOTH_PUBLICATION11)","0")
+ifneq ("$(CLOTH_PUBLICATION11)","1")
+$(error CLOTH_PUBLICATION11 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(CLOTH_PUBLICATION11),1)
+ifneq ("$(CLOTH_SHEET11)","1")
+$(error CLOTH_PUBLICATION11 needs CLOTH_SHEET11=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_PUBLICATION11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_PUBLICATION11=1
+endif

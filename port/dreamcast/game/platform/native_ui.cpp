@@ -1,3 +1,6 @@
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+#include "include/cloth_publication11.inc"
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
 #include "include/static_obj_batch33.hpp"
 #endif
@@ -1205,7 +1208,13 @@ unsigned avd_queue_epoch;
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 void actor_fade_queue_reset();
 #endif
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+extern bool stream_aborted;
+#endif
 void reset_deferred(){
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc_cloth_publication11.reset(frame,stream_aborted);
+#endif
 #if RE4DC_NATIVE_FE_CONTINUATION
     re4dc_actor_native_pose_retire();
 #endif
@@ -7295,6 +7304,9 @@ extern "C" void re4dc_ui_end_frame(int present){
     completed_frame.present_requested=present;
 #if RE4DC_PVR_STREAM
     completed_frame.aborted=stream_aborted;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    if(stream_aborted)re4dc_cloth_publication11.abort(frame);
+#endif
 #endif
     asm volatile("" ::: "memory");
     completed_frame.sequence=completed_frame.sequence+1;
@@ -10703,7 +10715,16 @@ extern "C" void re4dc_model_finish_source_draws(){
         if(deferred_first->lighting==kEffectQuad21Tag){
             const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
             const unsigned bytes=deferred_first->changed[0];
-            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);continue;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+            // Effect-tag nodes use changed[0] only, never restore_view masks.
+            // Other effect producers value-initialize this unused token to 0.
+            const unsigned cloth_observation=deferred_first->changed[1];
+#endif
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+            re4dc_cloth_publication11.drain(cloth_observation,frame,stream_aborted);
+#endif
+            continue;
         }
 #endif
 #if defined(RE4DC_ESP_SETUP_BATCH)

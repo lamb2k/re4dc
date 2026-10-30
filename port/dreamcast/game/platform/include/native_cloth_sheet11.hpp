@@ -5,6 +5,9 @@
 #if RE4DC_CLOTH_SHEET11
 #include "native_ui.h"
 #include "native_draw_result.hpp"
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+#include "cloth_publication11.hpp"
+#endif
 // Frame-scoped prepared native material; no source grid/pixel pointer retained.
 // This preserves CLOTH_NATIVE's existing single-texture approximation. Source
 // TEV scale/clamp, alpha>4/depth policy and pTobjA remain separate coverage gaps.
@@ -25,5 +28,8 @@ struct Re4dcClothBand11 {
 };
 // 1: ready, nothing published. 0: stop holds the explicit draw outcome.
 extern "C" int re4dc_cloth_prepare11(const Re4dcEffectMesh21*,Re4dcClothMaterial11*,re4dc::NativeDrawResult* stop);
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+extern "C" void re4dc_cloth_observe_bind11(Re4dcClothMaterial11*,unsigned);
+#endif
 extern "C" re4dc::NativeDrawResult re4dc_cloth_band11(const Re4dcClothMaterial11*,const Re4dcClothBand11*);
 #endif
