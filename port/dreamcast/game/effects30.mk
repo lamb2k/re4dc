@@ -768,6 +768,20 @@ $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o $(OBJDIR)/src/game/espge
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
 endif
 
+# EF03: bounded unmasked Esp1b source cells through the existing quad FIFO.
+ESP1B_GRID03 ?= 0
+ifneq ("$(ESP1B_GRID03)","0")
+ifneq ("$(ESP1B_GRID03)","1")
+$(error ESP1B_GRID03 must be exactly 0 or 1)
+endif
+endif
+ifeq ("$(ESP1B_GRID03)","1")
+ifneq ($(EFFECT_SPRITES)$(EFFECT_LEAN)$(FX_STRIP21)$(NATIVE_DRAW_OUTCOMES),1111)
+$(error ESP1B_GRID03 needs EFFECT_SPRITES=1 EFFECT_LEAN=1 FX_STRIP21=1 NATIVE_DRAW_OUTCOMES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP1B_GRID03=1
+endif
+
 # EF11 consumed single-texture cloth sheet; material gaps remain explicit.
 CLOTH_SHEET11 ?= 0
 ifneq ($(filter-out 0 1,$(CLOTH_SHEET11)),)
