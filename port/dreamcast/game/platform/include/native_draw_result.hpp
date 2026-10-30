@@ -43,6 +43,15 @@ struct NativeDrawProgress {
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 struct Re4dcEffectQuad;
 struct Re4dcEffectMesh21;
+struct Re4dcEffectSprite;
+struct Re4dcWaterLayer;
+// Sprite counts are one submitted packet or copied FIFO/RTT packet. Water
+// counts are one layer once its header is sent, or one accepted WaterNode;
+// vertex/chunk/pixel counts and eventual presentation are separate facts.
+extern "C" re4dc::NativeDrawResult re4dc_effect_sprite_result(const Re4dcEffectSprite*);
+// Legacy water admission can be true even if direct emission is empty/invalid.
+// Copy it independently when the caller must preserve that original contract.
+extern "C" re4dc::NativeDrawResult re4dc_water_layer_result(const Re4dcWaterLayer*,int* legacy_admitted=nullptr);
 extern "C" re4dc::NativeDrawResult re4dc_effect_quad_result(const Re4dcEffectQuad*);
 extern "C" re4dc::NativeDrawResult re4dc_effect_mesh21_result(const Re4dcEffectMesh21*);
 #endif
