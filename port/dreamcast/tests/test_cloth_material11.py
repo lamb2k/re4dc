@@ -669,27 +669,40 @@ int main(){Cloth c{0,{64,128,192,255}};cLight* lights[8]{};Vec pos{1,2,3};
             tmp = Path(td)
             (tmp / "Makefile.rules").write_text("")
             targets = ["obj/src/game/cloth.o", "obj/platform/native_ui.o", "obj/platform/gx_stub.o",
-                       "obj/src/game/esp_sub.o", "obj/src/game/trans.o"]
+                       "obj/src/game/esp_sub.o", "obj/src/game/trans.o", "obj/platform/native_draw_plan_owner.o"]
             make = ["make", "--no-print-directory", "-f", "Makefile", "-n", "KOS_BASE=" + str(tmp)]
             deps = ["EFFECT_SPRITES=1", "FX_STRIP21=1", "CLOTH_NATIVE=1", "NATIVE_DRAW_OUTCOMES=1",
                     "PS2_UPLOAD_INCARNATION=1", "CLOTH_SHEET11=1", "MODEL_DRAW_PLANS=1", "PLAN_OWNER_SCOPED=1"]
             outputs = []
-            for value in (None, "0", "1"):
-                controls = [] if value is None else ["CLOTH_MATERIAL11=" + value]
-                run = subprocess.run([*make, *targets, *deps, *controls], capture_output=True, text=True, cwd=ROOT / "game")
-                self.assertEqual(run.returncode, 0, run.stderr)
-                lines = [line for line in run.stdout.splitlines() if line.startswith("kos-c++")]
-                self.assertEqual(len(lines), len(targets))
-                outputs.append(lines)
+            # Pass assignments as individual argv entries, preserving trailing
+            # whitespace rather than letting a shell remove the regression.
+            # Make strips whitespace directly after '='; its expanded values
+            # can still contain leading whitespace via a variable reference.
+            for value in (None, "0", "1", " 0", "\t0", " 1", "\t1"):
+                with self.subTest(accepted=value):
+                    controls = [] if value is None else ["CLOTH_MATERIAL11=" + value]
+                    run = subprocess.run([*make, *targets, *deps, *controls], capture_output=True, text=True, cwd=ROOT / "game")
+                    self.assertEqual(run.returncode, 0, run.stderr)
+                    lines = [line for line in run.stdout.splitlines() if line.startswith("kos-c++")]
+                    self.assertEqual(len(lines), len(targets))
+                    outputs.append(lines)
             self.assertEqual(outputs[0], outputs[1])
+            self.assertEqual(outputs[1], outputs[3])
+            self.assertEqual(outputs[1], outputs[4])
+            self.assertEqual(outputs[2], outputs[5])
+            self.assertEqual(outputs[2], outputs[6])
+            for line in outputs[0]:
+                self.assertNotIn("-DRE4DC_CLOTH_MATERIAL11", line)
             for i, line in enumerate(outputs[2]):
                 self.assertEqual(line.count("-DRE4DC_CLOTH_MATERIAL11=1"), int(i < 3))
-                if i < 2:
-                    self.assertIn("-DRE4DC_PLAN_OWNER_SCOPED=1", line)
-            for value in ("", "0 1", "1 1", "2", "-1"):
-                run = subprocess.run([*make, targets[0], *deps, "CLOTH_MATERIAL11=" + value], capture_output=True, text=True, cwd=ROOT / "game")
-                self.assertNotEqual(run.returncode, 0)
-                self.assertIn("CLOTH_MATERIAL11 must be", run.stderr)
+                self.assertEqual(line.count("-DRE4DC_PLAN_OWNER_SCOPED=1"), int(i in (0, 1, 5)))
+            for value in ("", " ", "\t", "0 1", "1 0", "1 1", "0 0", "2", "-1", "01", "1.0", "yes",
+                          "0 ", "1 ", "0\t", "1\t", " 0 ", " 1 ", "$(subst x, ,x)0", "$(subst x, ,x)1"):
+                with self.subTest(rejected=value):
+                    run = subprocess.run([*make, *targets, *deps, "CLOTH_MATERIAL11=" + value], capture_output=True, text=True, cwd=ROOT / "game")
+                    self.assertNotEqual(run.returncode, 0, run.stdout)
+                    self.assertIn("CLOTH_MATERIAL11 must be", run.stderr)
+                    self.assertFalse(any(line.startswith("kos-c++") for line in run.stdout.splitlines()))
             for dependency in ("CLOTH_SHEET11", "PLAN_OWNER_SCOPED"):
                 run = subprocess.run([*make, targets[0], *deps, "CLOTH_MATERIAL11=1", dependency + "=0"], capture_output=True, text=True, cwd=ROOT / "game")
                 self.assertNotEqual(run.returncode, 0)

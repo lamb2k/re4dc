@@ -802,11 +802,12 @@ endif
 # current 8x8 RGB565 source spans and exact current uploaded texels. All other
 # secondary materials remain refused. Runtime/readback/look/cost gates are open.
 CLOTH_MATERIAL11 ?= 0
-ifneq ($(words $(CLOTH_MATERIAL11)),1)
+# Preserve the expanded value: word/filter checks would accept trailing space
+# even though the enablement comparison below would silently leave it off.
+ifneq ("$(CLOTH_MATERIAL11)","0")
+ifneq ("$(CLOTH_MATERIAL11)","1")
 $(error CLOTH_MATERIAL11 must be exactly 0 or 1)
 endif
-ifneq ($(filter-out 0 1,$(CLOTH_MATERIAL11)),)
-$(error CLOTH_MATERIAL11 must be 0 or 1)
 endif
 ifeq ($(CLOTH_MATERIAL11),1)
 ifneq ($(CLOTH_SHEET11)$(PLAN_OWNER_SCOPED),11)
