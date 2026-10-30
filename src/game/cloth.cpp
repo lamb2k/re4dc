@@ -90,6 +90,14 @@ static re4dc::NativeDrawResult re4dc_cloth_native(Cloth* pCL, cLight** list, Vec
 static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #endif
 {
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    const unsigned observed_slot=cloth11_slot(pCL);
+    const unsigned observation=re4dc_cloth_observe_begin11({observed_slot,
+        cloth11_epoch(pCL),pG->Frame_cnt,
+        observed_slot<8?re4dc::cloth_pub11::grid_generation[observed_slot]:0,
+        observed_slot<8?unsigned(pCL->pTobjA!=nullptr):0});
+    const auto observed_draw=[&]()->re4dc::NativeDrawResult {
+#endif
 #if RE4DC_CLOTH_SHEET11
     if(cloth11_slot(pCL)>=8)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
     // A queued callback may arrive after Destroy/Init. Do not dereference its
@@ -237,6 +245,9 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     // including zero publication: the source GX fallback must not read it.
     if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
     if(!prepared)return stop;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc_cloth_observe_bind11(&material,observation);
+#endif
     f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
 #if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
     // Preparation can yield. Check source ownership before and after each
@@ -351,6 +362,13 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
 #else
     return 1;
 #endif
+#endif
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    };
+    const auto result=observed_draw();
+    re4dc_cloth_observe_finish11(observation,result,cloth11_epoch(pCL),pG->Frame_cnt,
+        observed_slot<8?re4dc::cloth_pub11::grid_generation[observed_slot]:0);
+    return result;
 #endif
 }
 #endif
@@ -474,6 +492,9 @@ void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h,
 // Moves the cloth's hanging matrix.
 void Cloth::SetPosAng(Vec ang, Vec pos_)
 {
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc::cloth_pub11::grid_write(cloth11_slot(this));
+#endif
     RotMatrix(mat, &ang);
     TransMatrix(mat, &pos_);
 }
@@ -763,6 +784,9 @@ int PullCloth(Cloth** out)
 // row(s).
 void Cloth::move()
 {
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc::cloth_pub11::grid_write(cloth11_slot(this));
+#endif
     Vec v;
     int i;
     int j;
