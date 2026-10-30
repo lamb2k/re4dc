@@ -1,5 +1,14 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 23:17 EDT house reached; natural encounter prerequisite open
+
+RE4-PLAN-SYNC-20261029-1202: source/current image remains b2/K40. Case13 completed181.2s outer0/reader0/errors[],96 read-only state samples/94 coherent,84 normal PAD commands/all84 source DONE, reaching nine of14 route waypoints without a stall before its action budget ended. Case14 expanded only the bounded budget and reached all14 waypoints, crossed the house entrance and observed the interior floor through ordinary input;170 PAD commands/all170 source DONE,161 samples/156 coherent.
+
+Case14 attempted five normal aim/fire sequences with no observed enemy HP reduction. The controller guard stopped it and the owner aborted that owned run after the eight-second capture tail. Preserve parent BLOCKED_RUN/exit1 separately from raw267.3s RUN_COMPLETE/errors[]/reader_exitNone; this is not a completed300s pass or a reader0 result. Neither the natural first encounter movie10003 nor first-kill10020/radio appeared. No first-radio, async portrait/backing, whole-memory, cost, hardware or whole-card acceptance.
+
+Source r100.cpp binds the encounter trigger to area0xA, runs natural10003 before first-actor activation/repositioning, and its death hook later runs10020 then the radio request. Current packaged AEV geometry is decoded locally; the final firing position was outside that trigger polygon. A nine-waypoint interior path toward the actual trigger is prepared only as a private base-collision candidate, not a runtime-accepted path. Next local: add a natural10003-completion gate before any combat input, qualify its controller boundary cases, then test the changed ordinary route with enough bounded time. No unchanged14 retry and no forced story/position/health/kill/radio. Four cloud source/tool corrections and CF11-PUB-01 remain unchanged; source-only ownership stays CLOUD. Existing release, look, console, media and immutable archive-base holds remain.
+
+
 ## Answers (owner): 2026-10-29 23:03 EDT normal-route execution receipts
 
 RE4-PLAN-SYNC-20261029-1202: current b2/K40 case11 finished181.6s outer0/reader0/errors[], but the host used pre-enqueue idle telemetry before ordinary setup completed and stopped its controller early. Preserve the raw result; this is a host orchestration ordering failure, not a rejected mapped route. Case12 with exact native PAD DONE IDs, subsequent fresh queue0 telemetry and coherent read-only state completed180.9s outer0/reader0/errors[],109/109 coherent samples,14 normal PAD commands/eight execution groups, reaching three of14 planned waypoints.
