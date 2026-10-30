@@ -1552,6 +1552,106 @@ this is not whole-EF11 closure. The SDK session completed and slot is released;
 no live job, source promotion, emulator, media change or publication follows.
 
 
+## 2026-10-29 recovery: current bounded cloth material and public RGB565 producer
+
+**DONE:** bounded source implementation, independent read-only review and host
+validation. Publication branch `codex/cloth-material-20261029`, freshly based on
+integration `26f7d8278be77388b157910765f5e6b182c39cc1`. Root verified all six modified production paths are
+unchanged between d45 and this integration, merged the fresh base, and reran the
+complete new suite:7 PASS in28.243s, including both normal and ASan/UBSan source
+arms, actual primary Make, producer/package pipeline and scoped OFF identity.
+**NEXT:** local target/OFF, selected source-material and runtime qualification.
+This is a source delivery; default0, not enabled or accepted, no full EF11 closure.
+
+The existing platform rule passes the new target-specific PLATFORM_CPPFLAGS to
+gx_stub.o. No primary Makefile change was required; the effective compiler-command
+test proves cloth.o/native_ui.o/gx_stub.o receive matching definitions. No private
+data, SDK changes, runtime/hardware/media action or emails were needed.
+
+### Source contract and why it is bounded
+
+The old native producer unconditionally refused every nonnull `pTobjA`. The new default0 `CLOTH_MATERIAL11` branch admits only this source class:
+
+- Both primary and secondary are current, registered, bounded raw GX RGB565 8x8 images. Each GX object has a valid current sampler capture made by the actual Dreamcast `GXInitTexObj`/`GXInitTexObjLOD` path. Only linear min/mag, clamp S/T, no mip/LOD/bias/anisotropy is qualified. Supported boolean edge/bias-clamp settings do not change this non-mip sampling class.
+- Primary CPU texels are uniformly white. Actual currently resolved primary **and secondary** uploads are compared texel-for-texel to the bounded current source bytes. There is no pointer/hash/offline white certificate. CPU-white with an older nonwhite primary upload, or a stale/tinted secondary upload, is refused.
+- Source `x74==0`; material RGBA channels are each at least64; `AmbientScr` RGB is255; all eight selected light pointers are null. The real `commonClothLightSet` installs its black light and uses full source ambient. Source stage0 multiplies white texture by raster color/alpha with SCALE4 and clamp, making every channel255. Stage1 modulation therefore returns the opaque secondary exactly, and alpha255 always passes source alpha>4. The new header keeps source src4/dst5 blend, normal Z-write enabled, reciprocal-depth GEQUAL, two-sided geometry and qualified linear/clamp sampling.
+- Existing source pose, row/column order, rolling two-row workspace, wide tiles, clipping, FIFO order and outcome accounting remain consumed. Unsupported classes still report `UnsupportedBeforePublication`; resource pressure reports `Refused`; a source change after yielding preparation is terminal `PartialAbort` with no stale GX replay; partial publication retains exact submitted/queued counts.
+
+The public tracked Esp4e producer currently passes null secondary, so no selected private material occurrence or gameplay benefit is asserted. Direct/local/dynamic lighting, nonwhite primary, other dimensions/formats, mip/filter variations, alpha/depth classes and general two-texture materials remain refused.
+
+### Ownership, content, upload and yield rules
+
+`re4dc_model_draw_owner_stamp` is used strictly as allocation extent/incarnation authority. It is not immutable-content authority. Each object span is queried before copying32 bytes; each texel span is queried before copying128 bytes. The copies are compared again only after confirming the current object/pixel owner stamps. Ambiguous overlapping owners, unknown spans, insufficient extents, proxy/external identity records, changed objects, changed texels and same-address incarnation replacement all fail closed. No content certificate is retained across calls.
+
+Both existing native Entry slots are frame-pinned and their upload incarnations remain in the prepared receipt. The primary is rechecked after secondary resolution. The existing SQ lock is acquired before readback; because it may yield, source/slot/incarnation/frame checks run again after acquisition. `sq_wait()` drains the final upload writes before64 total aligned volatile32-bit reads (32 words per image). Source/entry changes during SQ acquisition, direct-list selection or spill allocation are checked before packet publication. A change after a direct packet produces partial completion and forbids replay.
+
+The new receipt is **call-scoped**. Its callback context points to the synchronous cloth invocation; neither callback nor source pointer enters the FIFO. The FIFO contains copied PVR packets. Default-OFF receipt layout remains256 bytes. ON receipt is320 bytes; host `sizeof(Source)=448`, `sizeof(ClothPrepared11)=272`. Each image snapshot is128 bytes; the existing two100-column geometry rows remain unchanged. These are fixed source workspaces, not a measured target stack/CPU budget. Target stack/cost gates remain open.
+
+Actual package conditions are one texture, `upload_complete()`, RGB565,8x8, flags0, reserved0, data_size128, uncompressed linear/twiddled package. Legacy linear uploads are twiddled by the existing Package path too. VQ, mips, palettes, partial uploads, wrong shape or invalid P2/alignment/range refuse. Reads use `PVR_RAM_INT_BASE` through the actual current package pointer, limited to the retail8MiB interval; no cached alias conversion is assumed.
+
+### Pinned public contract review
+
+KOS pin: `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`.
+
+- `kernel/arch/dreamcast/include/dc/pvr/pvr_mem.h`: pvr_ptr_t is a directly SH-4-compatible pointer. Blob `b7f615787d4d8c37316d61d634679504208963e9`.
+- `kernel/arch/dreamcast/include/dc/pvr/pvr_regs.h`: PVR_RAM_INT_BASE0xa4000000 is the P2 texture/interleaved mapping. Blob `a69b3678b5af7c0f5ee893ceb4aa8c7d17418b85`.
+- `kernel/arch/dreamcast/include/dc/memory.h`: P2 is non-cacheable. Blob `cbe5fe21d6a8b69a8c8a3ff2ead4a9b311dc2404`.
+- `kernel/arch/dreamcast/hardware/pvr/pvr_init_shutdown.c`: initializes the texture allocator in that mapping. Blob `fc84cdf086d312e49a4c283b815a5153c9a86597`.
+- `hardware/pvr/pvr_mem.c` guarantees32-byte alignment (blob `3e70f71325c88988523cadd5f6aede734ec611f3`); its `pvr_mem_core.c` uses aligned32-bit metadata reads in the mapping (blob `b1e933420c70d33494c6fb73fc1d56cf464a3373`).
+- `hardware/pvr/pvr_texture.c` → `pvr_dma.c` → `hardware/sq.c`/`sq_fast_cpy.s`: pvr_txr_load uses SQ copy, and its final writes are not drained before return. `dc/sq.h` documents the shared SQ lock and sq_wait completion contract. Relevant blobs respectively `c4db43d9499069b0ae23cf179a9af29a61e252db`, `1f1764c859369ab0b20fe83b1cd1507152868799`, `83a68e48552b0765f13d0e8cca039b63d10c485c`, `b58544abbdb96a5582a98a65bc51e6827917fc9e`, `d64fbea2c0ddef0bae28a404a0ac4379f4a11a64`.
+- `dc/pvr/pvr_legacy.h`, `pvr_header.h`, `hardware/pvr/pvr_prim.c` confirm the depth-write, alpha, GEQUAL and modulation settings; their values are used in the new host context recorder. It records PVR contexts, not target header compilation or hardware behavior.
+
+URLs use `https://github.com/KallistiOS/KallistiOS/blob/<pin>/<path>`. All references were retrieved from that exact pin. The repository's actual `room/texture_package.cpp` upload/validation/pvr_format code was also reviewed and exercised by the new producer fixture. The source TEV setup and lighting are the actual recovered `clothTrans` and `commonClothLightSet`; the fixture compiles/captures their relevant code. Integer SCALE4-before-round/clamp arithmetic was checked against Dolphin software TEV at `3eb30c7620b4475b2e0404228ba0d2b238a132f1`, `Source/Core/VideoBackends/Software/Tev.cpp`; no external implementation was copied into production.
+
+### Sampler storage and public producer extension
+
+GX words0..4 remain image/shape/format/wrap/TLUT. Source searches found no existing port readers/writers consuming words5..7. Full object copies preserve captured state. The actual frontend `ftObj` reconstructs words0..3 and zeroes words4..7, so it remains unqualified; even a subsequent LOD call cannot promote an unknown object. Reinitialization resets/revokes old metadata; unsupported LOD calls revoke the previous qualification. These behaviors run through the actual gx_stub functions and the actual `ftObj` in tests. The recovered `src/lib/GXTexture.c` default/LOD functions are compiled as the source sampler oracle.
+
+Focused review found the standard native UI producer previously rejected raw GX RGB5654. Root approved the minimal existing-module extension: constant,4x4/32-byte source-size rule, big-endian decoder using existing `_expand_565`, and decode dispatch in `convert_tpl.py`. It introduces no package format, import cycle, tint, boost, resize or new certificate pipeline. `prepare_native_ui.prepare` now consumes this source class through its existing mirror observer and `build_package` route. Existing private packages were not accessed or changed.
+
+### Validation
+
+Primary command:
+
+```
+python3 -m unittest discover -s port/dreamcast/tests -p 'test_cloth_material11.py' -v
+```
+
+Seven tests cover:
+
+-156 actual-source adapter cases in normal and ASan/UBSan modes, linking the real GX capture functions and actual draw-owner registry; every primary/secondary upload word negative; owner extent/ambiguity/replacement; sampler unknown/reinit; material/light boundaries; both texture-acquisition yields; SQ-lock yields; direct/spill/queue/cap/clipping/wide/partial results. Acquisition mutation tests assert `opens==call`, proving first-load invalidation prevents second resolution.
+-Actual `prepare_native_ui.prepare` → real Package adopt/validate/upload/release_payload → real source adapter/FIFO in normal and ASan/UBSan modes. Synthetic SQ writes remain pending until sq_wait, so missing the drain would fail. Both actual uploads are checked and stale final-word negatives refuse.
+-Actual source SDK sampler defaults/LOD and frontend reconstruction, including unsupported floats/modes and renewal.
+-Actual source stage and fullambient lighting calls, numeric threshold64, alpha test, same UV stage routing, blend and normal depth-write.
+-d45/absent/explicit0 preprocessed-token and host object equality for the actual cloth adapter/native include chain, plus full gx_stub translation-unit identity across ordinary/COPY_LEAN/D349 profiles.
+-Actual top Makefile dry-run strict values, prerequisites and effective compiler definitions. CLOTH_MATERIAL11 reaches only cloth.o/native_ui.o/gx_stub.o; owner-scoped define reaches cloth/native_ui. The existing platform rule already consumes PLATFORM_CPPFLAGS, so no top Makefile edit was required by this worker.
+-All65536 RGB565 values round-trip under both PACK_ROUND modes;3x5 partial tile and truncation boundaries; independent nonuniform8x8 payload/twiddle comparison; all eight previously supported format classes retain decoded/package bytes under both pack modes and layout choices; other unsupported formats still refuse.
+
+Regression commands/results:
+
+```
+ASAN_OPTIONS=detect_leaks=0 python3 -m unittest discover -s port/dreamcast/tests -p 'test_native_cloth_sheet11.py' -v
+# PASS5 tests,11.733s
+ASAN_OPTIONS=detect_leaks=0 python3 -m unittest discover -s port/dreamcast/tests -p 'test_cloth_tiles11.py' -v
+# PASS3 tests,11.133s
+python3 -m unittest discover -s port/dreamcast/tests -p 'test_convert_tpl.py' -v
+# PASS16 tests
+git diff --check
+# PASS
+```
+
+Preserved failure evidence: the initial legacy sheet run without `ASAN_OPTIONS=detect_leaks=0` failed three runtime cases because LeakSanitizer cannot read `/proc/<pid>/task` under this environment's ptrace restriction. Re-running with only leak scanning disabled passed; AddressSanitizer and UndefinedBehaviorSanitizer remained enabled. Early new-fixture bring-up found and corrected fixture-only C/C++ linkage and its hardcoded64-pixel context stub; no production failure was hidden or waived. The original synthetic attempt to map hardware0xa4000000 collided with host ASan address layout, so the host PVR header explicitly maps its synthetic base to0x40000000. Production still uses the pinned KOS P2 macro. These host results do not qualify target mapping/cache/timing.
+
+Final detailed test log: `/tmp/ef11-material-tests-final.log`. Source hash receipt: `/tmp/ef11-material-recovery-receipt.json` (root should refresh after any synchronized edits).
+
+### Integration and remaining gates
+
+Effective enablement requires `CLOTH_MATERIAL11=1 CLOTH_SHEET11=1 PLAN_OWNER_SCOPED=1 MODEL_DRAW_PLANS=1`, plus the existing sheet prerequisites `CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1 FX_STRIP21=1 EFFECT_SPRITES=1`. Default remains0. Perform normal fresh target build/binary-identity qualification in the owner's selected SDK/profile; host objects are not target ELF/BIN identity evidence.
+
+Local still owns actual target readback/cache/SQ timing, target stack and full memory/cost, source-selected pTobjA appearance/coverage, both sides/near-plane/wide/material visual parity, console/STRICT/release acceptance and serialized integration. The latest owner's ordinary9x10 cloth Flycast observation does not qualify this new class. No performance win is inferred; this route adds bounded upload reads and sampler/source validation. Further independent source classes may proceed under new bounded ownership, but this slice does not close general EF11 materials.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
+
 ## 2026-10-29 EF11 Build29: row-major horizontal cloth tiles
 
 **DONE (first wide-width slice).** From current integration `ce38b99649bb61631fe4d4f622313ddc16be7c0f`, `CLOTH_TILES11` is a strict default-off control in `effects30.mk`, requiring the already landed `CLOTH_SHEET11=1`. It adds definitions only to `src/game/cloth.o` and `platform/native_ui.o`. Widths 2–100 retain the existing prepared rolling-row path and one transform per source vertex. Widths 101–255 use the same bounded two-row 100-column workspace, with an overlapping boundary column; each source row is completed left to right before the next row. The existing native `re4dc_cloth_band11` produces each tile using global `first_column` and full source width for UVs, so seam vertices agree, each cell is encountered once, and the source triangle-strip diagonal is retained. No simulation, RNG, callbacks, material policy, frame owner, tessellator or source table changes are made.

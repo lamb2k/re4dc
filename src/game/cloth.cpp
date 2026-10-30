@@ -57,6 +57,9 @@ static void cloth11_replace(Cloth* p){const unsigned slot=cloth11_slot(p);if(slo
 extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
 #include "native_cloth_sheet11.hpp"
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#include "cloth_material11_source.hpp"
+#endif
 #if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
 #include "re4dc_xm.h"
 #endif
@@ -95,10 +98,38 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     if(!(pCL->be_flag&0x20))return {re4dc::NativeDrawOutcome::PolicySkip};
 #endif
     const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    const bool second_material=pCL->pTobjA!=0;
+    re4dc::cloth_material11::Source material_source;
+    const u32 source_color=(u32(pCL->color.r)<<24)|(u32(pCL->color.g)<<16)|(u32(pCL->color.b)<<8)|pCL->color.a;
+    const auto saturated_source=[&](){
+        const auto& ambient=LightMgr.getEnvPtr()->AmbientScr;
+        if(pCL->x74 || pCL->color.r<64 || pCL->color.g<64 || pCL->color.b<64 || pCL->color.a<64 ||
+            ambient.r!=255 || ambient.g!=255 || ambient.b!=255)return false;
+        // commonClothLightSet installs its black light when this list is empty:
+        // full ambient leaves the source material channels unchanged. Refuse
+        // direct/per-vertex and local-ambient light lifetimes in this slice.
+        for(unsigned i=0;i<8;++i)if(list[i])return false;
+        return true;
+    };
+    if(second_material){
+        if(!saturated_source() || !material_source.capture(pCL->tex,pCL->pTobjA))
+            return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+        to=material_source.primary.words;
+    }
+#endif
 #if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if (to == 0 || to[0] == 0 || pCL->divH < 2 || pCL->divV < 2) {
+#else
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2) {
+#endif
+#else
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if (to == 0 || to[0] == 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
 #else
     if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+#endif
 #endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
         return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
@@ -160,6 +191,16 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     const f32 cg = pCL->color.g * (lg > 255.0f ? 255.0f : lg) * (1.0f / 255.0f);
     const f32 cb = pCL->color.b * (lb > 255.0f ? 255.0f : lb) * (1.0f / 255.0f);
     m.color = ((u32) pCL->color.a << 24) | ((u32) cr << 16) | ((u32) cg << 8) | (u32) cb;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(second_material){
+        // Source stage0 is white RGB565 * raster, SCALE4/clamp. Every source
+        // material channel>=64 saturates to255 under the admitted lighting.
+        // Stage1 modulates by the opaque secondary, leaving it unchanged;
+        // alpha255 always passes the source >4 test. Keep source4/5 blend,
+        // two-sided geometry and the normal Z-write policy in preparation.
+        m.image=material_source.secondary.image;m.color=0xffffffffU;
+    }
+#endif
     RE4DC_GXF_GET_PROJECTION(m.projection);
     RE4DC_GXF_GET_VIEWPORT(m.viewport);
     Mtx sc, tmp, mv;
@@ -179,7 +220,19 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     Re4dcClothMaterial11 material;re4dc::NativeDrawResult stop{re4dc::NativeDrawOutcome::Refused};
     const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
         pCL->pVer==source && pCL->divH==cols && pCL->divV==rows;};
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    const auto material_current=[&](){return source_current() && (!second_material ||
+        (pCL->tex==material_source.primary.object && pCL->pTobjA==material_source.secondary.object &&
+         source_color==((u32(pCL->color.r)<<24)|(u32(pCL->color.g)<<16)|(u32(pCL->color.b)<<8)|pCL->color.a) &&
+         saturated_source() && material_source.current()));};
+    const Re4dcClothCheck11 check{&material_current,[](const void* p){
+        return (*static_cast<const decltype(material_current)*>(p))();}};
+    const int prepared=second_material?re4dc_cloth_material11(&m,&material_source,check,&material,&stop):
+        re4dc_cloth_prepare11(&m,&material,&stop);
+    if(!material_current())return {re4dc::NativeDrawOutcome::PartialAbort};
+#else
     const int prepared=re4dc_cloth_prepare11(&m,&material,&stop);
+#endif
     // Even failed texture I/O may retire/reuse the source. This is terminal,
     // including zero publication: the source GX fallback must not read it.
     if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
