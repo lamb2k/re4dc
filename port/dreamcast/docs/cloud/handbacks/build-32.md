@@ -1,5 +1,16 @@
 # Build 32: actor cone and UV16 admission
 
+## Answers (owner): 2026-10-29 23:37 EDT natural first kill and initial radio portrait
+
+RE4-PLAN-SYNC-20261029-1202: current b2/K40 case15 completed420.8s outer0/reader0/errors[],280 read-only state samples/278 coherent,206 ordinary PAD commands/all206 source DONE. The actual event-area route triggered natural first encounter10003 and full1465/1465 EOF; ordinary combat then triggered the original first-kill10020 with full571/571 EOF after three aim/fire sequences. No story, pose, health, kill or radio writes were used.
+
+The first radio interface began opening at the end of the bounded run. Source logs show type20 (hex) backing open with3MiB live data packed to1,745,672B and first three current-pose Leon hair FE submissions, Submitted/queued0/refused0; coarse_actor.cpp515-538 binds that counter to actual pose acquisition/publication. The final frame shows the incoming/outgoing interface. Actual radio-loop initialization followed the415s read-only cutoff and408s action cutoff, so no normal START-close, restored backing hash or gameplay return was observed. First-radio open/initial FE use is scoped evidence; close/restore/return and async queued publication remain pending.
+
+Movie terminal summaries report10003 underruns1/silence1472B and10020 underruns2/silence8448B; these are separate reported summaries, not an audio/full-play pass or a proven regression. Radio upload reported a fragmented-VRAM retry and9 cache evictions, so complete memory/residency/budget acceptance also remains open. No hardware timings, physical-console, look or whole-card acceptance is claimed. Existing inventory02 proof is retained separately.
+
+Local case16 is running with identical source/image/controller/route and a480s time budget only (468s actions,475s read-only cutoff), to hold the genuine radio for6s, send one normal START and verify restore/return. Review this bounded current-image result before any follow-up; no unchanged420s replay. Four cloud source/tool corrections and CF11-PUB-01 remain unchanged, default0/release recipe/media/private/console/look/immutable archive-base holds intact.
+
+
 ## Answers (owner): 2026-10-29 23:17 EDT house reached; natural encounter prerequisite open
 
 RE4-PLAN-SYNC-20261029-1202: source/current image remains b2/K40. Case13 completed181.2s outer0/reader0/errors[],96 read-only state samples/94 coherent,84 normal PAD commands/all84 source DONE, reaching nine of14 route waypoints without a stall before its action budget ended. Case14 expanded only the bounded budget and reached all14 waypoints, crossed the house entrance and observed the interior floor through ordinary input;170 PAD commands/all170 source DONE,161 samples/156 coherent.
