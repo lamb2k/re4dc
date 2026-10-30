@@ -9,6 +9,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[3]
 # Published current stream/owner parent; the original WIP referenced an unpublished object.
 BASE = "750d9abafbafd96fd6a42d130aed1018d2e96db9"
+FAILED_SOURCE = "d5174e403165402b13166451af1f6dcdd144f257"
 NATIVE = ROOT / "port/dreamcast/game/platform/native_static.cpp"
 TEMPLATE = ROOT / "port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in"
 PROFILE_BUILDER = ROOT / "port/dreamcast/tools/cloud/build31/stream_portal_profile.py"
@@ -23,16 +24,14 @@ def run(args, **kw):
     return result.stdout
 
 
-def extract_methods():
+def extract_methods(source=None):
     path = ROOT / "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py"
     spec = importlib.util.spec_from_file_location("world_clip_extract", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    source = NATIVE.read_text()
-    # clip_strip is an Emitter member, while stream_gather and the receipt
-    # belong to MeshDraw. Keep the eligibility flag in the class whose method
-    # updates it; the combined host fixture alone would not catch a misplaced
-    # derived-only member.
+    source = NATIVE.read_text() if source is None else source
+    # Keep actual base/derived lookup: the base clipper must not see MeshDraw's
+    # outcodes directly. Only the actual successful borrow binds its proof view.
     before_draw = source.split("\n};\nstruct Draw : Emitter", 1)
     assert len(before_draw) == 2
     emitter = before_draw[0].split("struct Emitter {", 1)[1]
@@ -43,8 +42,11 @@ def extract_methods():
         "LEAN_FLUSH": "void lean_flush(",
         "STRIPS_LEAN": "const std::uint8_t* strips_lean(",
         "CLIP_STRIP": "template<class Vertex,class Index>\n    int clip_strip(",
+        "BORROW": "bool borrow(){",
+        "CHUNK_RESTART": "[[gnu::always_inline]] void chunk_restart(){",
     }
     bodies = {key: module.function(source, signature) for key, signature in methods.items()}
+    bodies["PROOF_FIELDS"] = emitter[emitter.index("bool portal_depth_safe_clip=true;"):].split("#endif",1)[0]
     bodies["CLIP_STRIP"] = bodies["CLIP_STRIP"].replace(
         "#endif\n                   const Index*", "                   const Index*", 1)
     assert "#endif\n                   const Index*" not in bodies["CLIP_STRIP"]
@@ -68,11 +70,24 @@ def producer(tmp):
         "#define PVR_CMD_VERTEX 0xe0000000U\n#define PVR_CMD_VERTEX_EOL 0xf0000000U\n"
         "int pvr_prim(const void*,std::size_t);\n")
     source = TEMPLATE.read_text().replace("@ROOT@", str(ROOT))
-    for key, body in extract_methods().items():
+    bodies = extract_methods()
+    for key, body in bodies.items():
         source = source.replace("@" + key + "@", body)
     assert "@" not in source
     cpp = tmp / "producer.cpp"
     cpp.write_text(source)
+    # Compile the actual failed clipper in the corrected class-aware fixture.
+    # A flattened host class used to hide this real base/derived lookup error.
+    old = run(["git", "show", f"{FAILED_SOURCE}:port/dreamcast/game/platform/native_static.cpp"])
+    old_clip = extract_methods(old)["CLIP_STRIP"]
+    assert "!outcodes" in old_clip and "portal_depth_outcodes" not in old_clip
+    negative = tmp / "producer-old-scope.cpp"
+    negative.write_text(source.replace(bodies["CLIP_STRIP"], old_clip, 1))
+    failed = subprocess.run(["g++", "-std=gnu++20", "-fsyntax-only", "-I", str(tmp / "stubs"),
+        "-I", str(ROOT / "port/dreamcast/room"), "-I", str(ROOT / "port/dreamcast/game/platform/include"),
+        "-I", str(ROOT / "port/dreamcast/tools/d367/world_scratch23/stubs"), str(negative)],
+        cwd=ROOT,text=True,capture_output=True)
+    assert failed.returncode != 0 and "outcodes" in failed.stderr and "not declared" in failed.stderr, failed.stderr
     for pages in (1, 0):
         for sanitizer in (False, True):
             exe = tmp / f"producer-pages{pages}{'-san' if sanitizer else ''}"
@@ -86,6 +101,7 @@ def producer(tmp):
                  cpp, ROOT / "port/dreamcast/room/pvr_geometry.cpp", "-o", exe])
             run([exe], env=dict(os.environ, ASAN_OPTIONS="detect_leaks=0:halt_on_error=1",
                                 UBSAN_OPTIONS="halt_on_error=1:print_stacktrace=1"))
+    print("actual class-scoped borrow/restart, no-cache proof refusal and old-scope negative compile pass")
     print("actual sparse gather/strip/clipper/page and direct receipt normal+ASan/UBSan pass")
 
 
@@ -114,6 +130,7 @@ def guards_and_off(tmp):
             module.function(source, "template<class Vertex,class Index>\n    int clip_strip(").replace(
                 "#endif\n                   const Index*", "                   const Index*", 1),
             module.function(source, "[[gnu::always_inline]] void chunk_restart(){"),
+            module.function(source, "bool borrow(){"),
             source.split("// PORTAL_COMPLETION_FLUSH_BEGIN", 1)[1].split(
                 "// PORTAL_COMPLETION_FLUSH_END", 1)[0],
         )
@@ -130,6 +147,8 @@ def guards_and_off(tmp):
         assert a.stdout == b.stdout, (index, len(a.stdout), len(b.stdout),
                                       next((i for i, pair in enumerate(zip(a.stdout, b.stdout))
                                             if pair[0] != pair[1]), None))
+        absent = pp(candidate, off_profile[:-1])
+        assert absent.returncode == 0 and absent.stdout == b.stdout, index
     definitions = {"WORLD_PORTAL_COMPLETION": 1, "WORLD_PORTAL29": 1,
                    "PS2_PVS_BATCH_COMPOSE": 1, "SCENERY_SUBMIT_BATCH": 1,
                    "SCENERY_STREAM": 1, "PS2_PVS": 1, "WORLD_PORTAL_STREAM31": 1,

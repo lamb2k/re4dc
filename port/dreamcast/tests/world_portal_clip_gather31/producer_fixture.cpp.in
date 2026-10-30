@@ -66,29 +66,13 @@ inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* e
 }
 }
 struct ClipEmitter {
-    struct Package {
-        std::array<Vertex,65> pool{};
-        std::array<std::uint16_t,65> offsets{};
-        Record record{};
-        re4dc::room::MeshPart part{};
-        const Vertex* vertices()const{return pool.data();}
-        const std::uint16_t* pool_offsets(const Record&)const{return offsets.data();}
-        const re4dc::room::MeshPart* parts()const{return &part;}
-    } package;
-    re4dc::scenery_clip24::Gather stream_clip_gather;
-    std::array<Vertex,65> gathered_storage{};
-    Vertex* gathered=gathered_storage.data();
-    const Record* stream_l=&package.record;
-    std::array<std::uint8_t,66> strip{};
-    std::array<std::uint8_t,256> codes{};
-    std::array<pvr_vertex_t,256> cache_storage{};
-    pvr_vertex_t* cache=cache_storage.data();
-    std::array<pvr_vertex_t,8> scratch{};
+    // Base owns clip_strip, but never MeshDraw's cache/outcodes/package.
+    // The cache borrows its real tail from this bounded packet slab.
+    std::array<pvr_vertex_t,512> scratch{};
     std::array<std::uint32_t,2048> sq_storage{};
-    std::array<std::uint32_t,512> lut{};
+    std::uint32_t* lut=nullptr;
     std::vector<pvr_vertex_t> sent;
     pvr_vertex_t* dst=scratch.data();std::uint32_t* sq=sq_storage.data();
-    std::uint8_t* outcodes=codes.data();
     re4dc::room::CompactBatch batch{};
     re4dc::render::ClipParameters clip{};
     struct P {unsigned cull=0;float uv_offset[2]{};} p;
@@ -96,7 +80,8 @@ struct ClipEmitter {
     float mvq[12]{1,0,0,0, 0,1,0,0, 0,0,-1,0};
     float near=.5f,far=2.f;
     unsigned alpha=0xff000000U,used=0,output=0,input=0,slots=0,limit=64;
-    bool ps2=true,submitted=true,vertex_alpha=false,portal_depth_safe_clip=true;
+    bool ps2=true,submitted=true,vertex_alpha=false,bound=false;
+@PROOF_FIELDS@
     unsigned pvs_pending[3]{};
     bool flush(){return false;}
     void put(unsigned n){sent.insert(sent.end(),dst+used,dst+used+n);sq+=8*n;slots+=n;}
@@ -111,12 +96,42 @@ struct ClipEmitter {
         const float inverse=1.0f/(-z);x=100+2*x*inverse;y=200+20*y*inverse;z=inverse;
     }
 @CLIP_VERTEX@
+@CLIP_STRIP@
+};
+struct ClipMeshDraw : ClipEmitter {
+    struct Package {
+        std::array<Vertex,65> pool{};
+        std::array<std::uint16_t,65> offsets{};
+        Record record{};
+        re4dc::room::MeshPart part{};
+        const Vertex* vertices()const{return pool.data();}
+        const std::uint16_t* pool_offsets(const Record&)const{return offsets.data();}
+        const re4dc::room::MeshPart* parts()const{return &part;}
+    } package;
+    const re4dc::room::MeshPart& part=package.part;
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+    std::array<Vertex,65> gathered_storage{};
+    Vertex* gathered=gathered_storage.data();
+    const Record* stream_l=&package.record;
+    std::array<std::uint8_t,66> strip{};
+    std::array<std::uint32_t,512> lut_storage{};
+    pvr_vertex_t* cache=nullptr;
+    std::uint8_t* outcodes=nullptr;
+    re4dc::vp::Constants k{};
+    unsigned primed=0;
+@BORROW@
+@CHUNK_RESTART@
 @STREAM_GATHER@
 @LEAN_FLUSH@
 @STRIPS_LEAN@
-@CLIP_STRIP@
     void setup(unsigned lost){
         sent.clear();portal_depth_safe_clip=true;output=input=slots=used=0;
+        submitted=true;bound=false;sq=sq_storage.data();dst=scratch.data();
+        cache=nullptr;outcodes=nullptr;portal_depth_outcodes=nullptr;
+        limit=re4dc::vp::kCacheSlots+64;lut=lut_storage.data();
+        package.part.uv_scale[0]=package.part.uv_scale[1]=1;
+        re4dc::vp::build_lut(lut);
+        assert(borrow() && portal_depth_outcodes==outcodes);
         std::fill(gathered_storage.begin(),gathered_storage.end(),Vertex{});
         for(unsigned i=0;i<65;++i){
             package.offsets[i]=std::uint16_t(64-i);
@@ -126,12 +141,10 @@ struct ClipEmitter {
         }
         strip[0]=65;
         batch.uv_scale[0]=batch.uv_scale[1]=1;
-        re4dc::vp::build_lut(lut.data());
-        re4dc::vp::Constants k{};k.su=k.sv=k.scale_u=k.scale_v=1;
-        k.near_distance=near;k.far_distance=far;k.and_mask=~0U;k.lut=lut.data();k.finish();
+        assert(limit==64);
         re4dc::vp::prime(cache,256);
         re4dc::vp::transform_sched_ix(reinterpret_cast<const re4dc::vp::Vertex12*>(package.pool.data()),
-                                      package.offsets.data(),65,cache,codes.data(),k);
+                                      package.offsets.data(),65,cache,outcodes,k);
         clip={near,far,640,480,project,this};stream_clip_gather.begin();
     }
     int run(bool full=false){
@@ -139,10 +152,40 @@ struct ClipEmitter {
         return result;
     }
 };
+template<class T> concept OwnsOutcodes=requires(T t){t.outcodes;};
+static_assert(!OwnsOutcodes<ClipEmitter> && OwnsOutcodes<ClipMeshDraw>);
 static re4dc::portal29::Completion receipt(const ClipEmitter& e,bool whole=true){
     struct Pick {unsigned let,nr;};const Pick pick{0,0xff};
     assert(re4dc::portal29::whole_source(&pick,1,0,1));
     return re4dc::portal29::Completion::emitted(1,e.submitted,e.input,e.output,whole && e.portal_depth_safe_clip);
+}
+void binding_cases(){
+    ClipMeshDraw missing;
+    assert(!missing.portal_depth_outcodes && !missing.cache && !missing.outcodes);
+    missing.limit=re4dc::vp::kCacheSlots+64;
+    assert(!missing.borrow() && !missing.portal_depth_outcodes); // no LUT
+    missing.lut=missing.lut_storage.data();missing.limit=re4dc::vp::kCacheSlots+63;
+    assert(!missing.borrow() && !missing.portal_depth_outcodes); // no cache capacity
+    ClipMeshDraw valid;valid.setup(0);
+    const auto* proof_codes=valid.portal_depth_outcodes;
+    assert(proof_codes==valid.outcodes && valid.borrow() && valid.portal_depth_outcodes==proof_codes);
+    valid.chunk_restart();
+    assert(!valid.cache && !valid.portal_depth_outcodes && valid.portal_depth_safe_clip);
+    valid.limit=re4dc::vp::kCacheSlots+64;
+    assert(valid.borrow() && valid.portal_depth_outcodes==valid.outcodes);
+    valid.setup(0);assert(valid.run()==1 && receipt(valid).witnessed());
+    // The compact base emits the same triangles but owns no cache proof.
+    ClipEmitter plain;plain.clip=valid.clip;plain.input=63;
+    assert(plain.clip_strip(valid.gathered,valid.batch,valid.strip.data()+1,65)==1);
+    assert(plain.output==63 && !plain.portal_depth_safe_clip && !receipt(plain).witnessed());
+    valid.setup(0);valid.portal_depth_outcodes=nullptr;
+    assert(valid.run()==1 && !valid.portal_depth_safe_clip && !receipt(valid).witnessed());
+    valid.setup(0);valid.ps2=false;
+    assert(valid.run()==1 && !valid.portal_depth_safe_clip && !receipt(valid).witnessed());
+    valid.setup(0);valid.ps2=true;valid.limit=65;valid.input=63;
+    for(unsigned i=0;i<65;++i)valid.gathered[i]=valid.package.pool[valid.package.offsets[i]];
+    assert(valid.clip_strip(valid.gathered,valid.batch,valid.strip.data()+1,65)==1);
+    assert(valid.output==63 && !valid.portal_depth_safe_clip && !receipt(valid).witnessed());
 }
 struct Ps2Part {std::uint32_t crc=1,fnv=2;std::uint16_t width=64,height=64;
                 std::uint8_t pass=0,cull=0,texture=0,reserved=0;};
@@ -168,7 +211,7 @@ void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Complet
 }
 }
 @PAGE_INPUTS@
-int flush_page(ClipEmitter& e,re4dc::page31::Part& proof,unsigned first,bool last,int result){
+int flush_page(ClipMeshDraw& e,re4dc::page31::Part& proof,unsigned first,bool last,int result){
     struct Pick {unsigned let,nr;};Pick pick{first,0xff};
     proof.selected(&pick,1);
     proof.emitted(result,e.submitted,e.input,e.output);
@@ -196,23 +239,23 @@ void page_cases(){
         std::fill(std::begin(ps2w.view),std::end(ps2w.view),0.f);
         frame=1;plan_valid=true;mutate_on_close=0;
         abort_count=receipt_count=finish_count=close_count=0;c={};};
-    reset();re4dc::page31::Part good(0,2);ClipEmitter a,b;
+    reset();re4dc::page31::Part good(0,2);ClipMeshDraw a,b;
     a.setup(0);b.setup(0);assert(a.run()==1 && b.run()==1);
     assert(flush_page(a,good,0,false,1)==1 && receipt_count==0);
     assert(flush_page(b,good,1,true,1)==1 && receipt_count==1 && close_count==2);
-    reset();re4dc::page31::Part crossing(0,2);ClipEmitter c0,c1;
+    reset();re4dc::page31::Part crossing(0,2);ClipMeshDraw c0,c1;
     c0.setup(3);c1.setup(0);assert(c0.run()==1 && c1.run()==1);
     assert(flush_page(c0,crossing,0,false,1)==1);
     assert(flush_page(c1,crossing,1,true,1)==1 && receipt_count==0);
-    reset();re4dc::page31::Part refused(0,2);ClipEmitter r0,r1;
+    reset();re4dc::page31::Part refused(0,2);ClipMeshDraw r0,r1;
     r0.setup(0);r1.setup(0);assert(r0.run()==1 && r1.run()==1);
     assert(flush_page(r0,refused,0,false,1)==1);
     assert(flush_page(r1,refused,1,true,0)==-1 && receipt_count==0 && abort_count==1);
-    reset();re4dc::page31::Part first_refused(0,2);ClipEmitter rf;
+    reset();re4dc::page31::Part first_refused(0,2);ClipMeshDraw rf;
     rf.setup(0);assert(rf.run()==1);
     assert(flush_page(rf,first_refused,0,false,0)==-1 && receipt_count==0 && abort_count==1);
     for(unsigned mutation=1;mutation<=3;++mutation){
-        reset();re4dc::page31::Part mutated(0,2);ClipEmitter m0,m1;
+        reset();re4dc::page31::Part mutated(0,2);ClipMeshDraw m0,m1;
         m0.setup(0);m1.setup(0);assert(m0.run()==1 && m1.run()==1);
         assert(flush_page(m0,mutated,0,false,1)==1);
         mutate_on_close=mutation;
@@ -220,12 +263,13 @@ void page_cases(){
     }
 }
 int main(){
-    ClipEmitter sparse;stats={};sparse.setup(0);
+    binding_cases();
+    ClipMeshDraw sparse;stats={};sparse.setup(0);
     assert(sparse.run()==1 && stats.strips_clipped==1 && sparse.portal_depth_safe_clip);
     assert(sparse.input==63 && sparse.output==63 && sparse.sent.size()==189);
     // Every emitted TA command comes from the production clipper. Sparse
     // gather and the old full gather must send the same complete packet.
-    ClipEmitter full;stats={};full.setup(0);
+    ClipMeshDraw full;stats={};full.setup(0);
     for(unsigned i=0;i<65;++i)full.gathered[i]=full.package.pool[full.package.offsets[i]];
     full.stream_l=nullptr;
     assert(full.run(true)==1 && full.sent.size()==sparse.sent.size());
@@ -233,22 +277,22 @@ int main(){
     assert(receipt(sparse).witnessed());
     // Three wholly near-rejected corners followed by a near crossing can
     // balance one lost and one split triangle: equal totals are insufficient.
-    ClipEmitter crossing;stats={};crossing.setup(3);
+    ClipMeshDraw crossing;stats={};crossing.setup(3);
     assert(crossing.run()==1 && !crossing.portal_depth_safe_clip);
     assert(crossing.input==63 && crossing.output==63);
     assert(!receipt(crossing).witnessed());
-    ClipEmitter culled;stats={};culled.setup(65);
+    ClipMeshDraw culled;stats={};culled.setup(65);
     assert(culled.run()==1 && !receipt(culled).witnessed());
-    ClipEmitter backface;stats={};backface.setup(0);backface.p.cull=3;
+    ClipMeshDraw backface;stats={};backface.setup(0);backface.p.cull=3;
     assert(backface.run()==1 && backface.portal_depth_safe_clip && backface.output==0);
     assert(!receipt(backface).witnessed());
 #if RE4DC_WORLD_PAGES31
     page_cases();
 #else
-    ClipEmitter direct;stats={};direct.setup(0);assert(direct.run()==1);
+    ClipMeshDraw direct;stats={};direct.setup(0);assert(direct.run()==1);
     re4dc::page31::Part unused(0,1);
     assert(flush_page(direct,unused,0,true,1)==1 && receipt_count==1);
-    ClipEmitter near_crossing;stats={};near_crossing.setup(3);assert(near_crossing.run()==1);
+    ClipMeshDraw near_crossing;stats={};near_crossing.setup(3);assert(near_crossing.run()==1);
     assert(flush_page(near_crossing,unused,0,true,1)==1 && receipt_count==1);
 #endif
 }

@@ -1345,6 +1345,9 @@ struct Emitter {
     // The clipper lives in Emitter; the receipt reads this across every pick
     // in the derived MeshDraw and folds it across page restarts.
     bool portal_depth_safe_clip=true;
+    // Only MeshDraw::borrow can bind authenticated transformed depth codes.
+    // Plain compact emitters have no cache and must decline this proof.
+    const std::uint8_t* portal_depth_outcodes=nullptr;
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     bool dsa_xlu()const{
@@ -1706,11 +1709,11 @@ struct Emitter {
         // The existing input==output receipt is a coverage proof only while
         // each input triangle can produce at most one output triangle. A long
         // depth-inside strip takes this clipper for capacity, not near clipping.
-        if(!ps2 || !outcodes || count<=limit)portal_depth_safe_clip=false;
+        if(!ps2 || !portal_depth_outcodes || count<=limit)portal_depth_safe_clip=false;
         else {
             constexpr unsigned depth=re4dc::vp::depth_mask(re4dc::vp::kChecksAll);
             for(unsigned i=0;i<count;++i)
-                if(outcodes[index[i]]&depth){portal_depth_safe_clip=false;break;}
+                if(portal_depth_outcodes[index[i]]&depth){portal_depth_safe_clip=false;break;}
         }
 #endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -3368,6 +3371,9 @@ struct MeshDraw : Emitter {
         if(pc_check){k.and_mask=0;k.or_bits=0xffff00ffU;} // the check run: every corner opaque magenta
 #endif
         k.finish();
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        portal_depth_outcodes=outcodes;
+#endif
         return true;
     }
 #if RE4DC_SCENERY_DIRECT_STRIPS
@@ -4354,6 +4360,7 @@ struct MeshDraw : Emitter {
         cache=nullptr;primed=0;
 #if RE4DC_WORLD_PORTAL_CLIP_GATHER31
         portal_depth_safe_clip=true;
+        portal_depth_outcodes=nullptr;
 #endif
 #if RE4DC_PS2_PVS
         pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
