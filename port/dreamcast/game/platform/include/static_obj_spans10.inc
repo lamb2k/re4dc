@@ -16,7 +16,8 @@ struct PreparedSpans10 {
         }
         bool current()const{return !bytes || owner==re4dc_model_draw_owner_stamp(address,bytes);}
     } arrays[4];
-    unsigned count=0,max_uv=0,max_color=0;
+    unsigned count=0;
+    std::uint32_t max_uv=0,max_color=0;
     bool (*fence)(const void*)=nullptr;const void* context=nullptr;
     ~PreparedSpans10(){while(count){--count;re4dc_model_release_draw_plan();}}
     bool current()const{
