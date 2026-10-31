@@ -151,3 +151,12 @@ first fit (D 0, I 4, store miss 70) for comparison only. Label results "MODELLED
 under-priced by a cause the model does not simulate (console/model: actor draw 1.11-1.19, world 1.07-1.19; logic
 0.96-1.03). MOVCA / store-miss levers are CLOSED: no store-miss lever is above 0.13 ms. Tools: miss/storemiss/refit.py,
 miss/reprice.py (default = refit, `--w70` = first fit).
+
+## Phase stamps: calibrating against console QA-link PT logs (2026-10-31)
+`hwsim --ticks <proc_tick> --tick-zero <zero_tick>` (addresses from `sh-elf-nm`: `__ZL9proc_tick`, `_zero_tick`) writes
+`PREFIX.ticks.tsv`: the modelled cycle of every store into debug.cpp's `proc_tick[]` / `zero_tick` per traced frame.
+`phases.py PREFIX.ticks.tsv [console_pt.json KEY]` turns them into the same phases tick_log.cpp reports on the console
+(setup, each move/trans marker, logic, trans, post, cpu), so a model run lines up with a GAME_TICK_LOG / QA-link capture
+phase by phase. `console_pt.py LOG...` averages the complete PT windows of QA-link logs. Model ticks are bimodal (drawn
+vs skipped): compare drawn-tick setup and all-tick logic. First fit (ALL ON 20318342, r100 A/B/C): logic x1.16,
+render setup per drawn tick x1.19, objTrans x0.73 (C:\Flycast-Evidence\re4-dreamcast\hwcal31-20261031\CALIBRATION.md).

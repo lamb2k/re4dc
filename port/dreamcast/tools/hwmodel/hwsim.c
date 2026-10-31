@@ -489,6 +489,8 @@ static int PH_ON = 0, PH_START = 0, cur_ph = 0, ph_sp = 0, ph_stk[64];
 static u32 ph_e_phase, ph_e_push, ph_e_iter; static signed char *ph_site;
 static double ph_t0, fph_cyc[NPH], fph_cat[NPH][C_NCAT]; static u64 ph_if0, ph_df0, fph_if[NPH], fph_df[NPH];
 static u64 ph_unknown, ph_marks;
+/* --ticks ADDR: stores into proc_tick[32] (debug.cpp) stamped with the modelled cycle (frame-relative) */
+static u32 TK_LO, TK_HI, TK_ZERO; static double tk_t0, tk_first[33], tk_last[33]; static int tk_n[33];
 static void charge(PcStat *s, int cat, double c)
 {
     if (c <= 0) return;
@@ -770,6 +772,12 @@ static void step(u32 pc, const Ev *ev, int nev, int taken_next, u32 next_pc)
             if (e->type == 3) stall += sq_store(t + stall, a, s);
             continue;
         }
+        if (TK_HI && e->type == 3 && (((a & 0x1FFFFFFFu) >= TK_LO && (a & 0x1FFFFFFFu) < TK_HI) || (a & 0x1FFFFFFFu) == TK_ZERO)) {
+            int k = (a & 0x1FFFFFFFu) == TK_ZERO ? 32 : (int)(((a & 0x1FFFFFFFu) - TK_LO) >> 2);
+            double st = t + stall - tk_t0;
+            if (!tk_n[k]) tk_first[k] = st;
+            tk_last[k] = st; tk_n[k]++;
+        }
         if (e->type == 2) s->reads++; else if (e->type == 3 || e->type == 8) s->writes++;
         if (cached_area(a)) {
             if (e->type != 4) stream_track(t + stall, a, pc, e->type); else q_stream_hit = 0;
@@ -842,6 +850,7 @@ static void run_trace(const char *path)
     size_t cap = 1 << 22; u32 *w = malloc(cap * 8);
     Ev *pend = malloc(sizeof(Ev) * (1 << 20)); u32 *pendpc = malloc(4 * (1 << 20)); int npend = 0;
     double t0 = t_prev;
+    tk_t0 = t0; memset(tk_n, 0, sizeof(tk_n));
     if (PH_ON) { cur_ph = PH_START; ph_sp = 0; ph_t0 = t_prev; ph_if0 = n_ifill; ph_df0 = n_fill;
                  memset(fph_cyc, 0, sizeof(fph_cyc)); memset(fph_cat, 0, sizeof(fph_cat));
                  memset(fph_if, 0, sizeof(fph_if)); memset(fph_df, 0, sizeof(fph_df)); }
@@ -937,6 +946,8 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--wa-nofill")) WA_NOFILL = 1;
         else if (!strcmp(a, "--phase")) phf = ARG;
         else if (!strcmp(a, "--phase-start")) PH_START = atoi(ARG);
+        else if (!strcmp(a, "--tick-zero")) TK_ZERO = (u32)strtoul(ARG, NULL, 16) & 0x1FFFFFFFu;
+        else if (!strcmp(a, "--ticks")) { TK_LO = (u32)strtoul(ARG, NULL, 16) & 0x1FFFFFFFu; TK_HI = TK_LO + 128; }
         else if (a[0] == '-') usage();
         else tr[ntr++] = a;
     }
@@ -988,6 +999,9 @@ int main(int argc, char **argv)
         for (int p = 0; p < NPH; p++) fprintf(pf, "\tcyc%d\timiss%d\tdmiss%d\tpfwait%d\tsq%d\tunc%d\tifill%d\tdfill%d", p, p, p, p, p, p, p, p);
         fprintf(pf, "\tunknown\tmarks\n");
     }
+    FILE *tkf = NULL;
+    if (TK_HI) { snprintf(path, sizeof(path), "%s.ticks.tsv", OUT); tkf = fopen(path, "w");
+                 fprintf(tkf, "trace\tidx\tfirst\tlast\tn\tframe_cycles\n"); }
     snprintf(path, sizeof(path), "%s.frames.tsv", OUT);
     FILE *ff = fopen(path, "w");
     fprintf(ff, "trace\tcycles\tms\n");
@@ -995,6 +1009,9 @@ int main(int argc, char **argv)
         /* caches stay warm across traced frames only if contiguous; we reset timing per frame */
         run_trace(tr[i]);
         fprintf(ff, "%s\t%.0f\t%.3f\n", tr[i], frame_cycles, frame_cycles / 200000.0);
+        if (tkf) { for (int k = 0; k < 33; k++) if (tk_n[k])
+                       fprintf(tkf, "%s\t%d\t%.0f\t%.0f\t%d\t%.0f\n", tr[i], k, tk_first[k], tk_last[k], tk_n[k], frame_cycles);
+                   fflush(tkf); }
         if (pf) {
             fprintf(pf, "%s\t%.0f", tr[i], frame_cycles);
             for (int p = 0; p < NPH; p++) fprintf(pf, "\t%.0f\t%.0f\t%.0f\t%.0f\t%.0f\t%.0f\t%llu\t%llu", fph_cyc[p], fph_cat[p][C_IMISS],
@@ -1006,6 +1023,7 @@ int main(int argc, char **argv)
         fflush(ff);
     }
     fclose(ff);
+    if (tkf) fclose(tkf);
     snprintf(path, sizeof(path), "%s.pcs.tsv", OUT);
     FILE *o = fopen(path, "w");
     fprintf(o, "pc\texec\tfly");
