@@ -28,13 +28,15 @@ struct ContentKey {
 };
 struct ContentEntry { ContentKey key{};unsigned certificate=0; };
 // 128 entries, 4-way by stream address (the barn draws ~100 distinct parts a frame; 64 direct-mapped slots thrashed).
-constexpr unsigned kContentWays=4,kContentSets=32,kContentEntries=kContentWays*kContentSets;
+constexpr unsigned kContentWays=8,kContentSets=32,kContentEntries=kContentWays*kContentSets;
 ContentEntry content_entries[kContentEntries];
 unsigned char content_next[kContentSets];
 unsigned content_hits;
-inline unsigned content_set(const u8* stream) {
-    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(stream));
-    return ((a>>5)^(a>>12))&(kContentSets-1U);
+// Unowned certificate calls: in place (memo-able) / memo hits / blob outside the stream (per-submit) / distinct stores.
+unsigned unowned_calls,unowned_hits,unowned_other,unowned_stores;
+inline unsigned content_set(const ContentKey& k) {
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(k.stream)),u=unsigned(reinterpret_cast<std::uintptr_t>(k.uv));
+    return ((a>>5)^(a>>12)^(u>>5))&(kContentSets-1U);
 }
 bool same_content(const ContentKey& a,const ContentKey& b) {
     return a.stream==b.stream && a.info==b.info && a.uv==b.uv && a.stream_bytes==b.stream_bytes && a.uv_bytes==b.uv_bytes &&
@@ -43,14 +45,16 @@ bool same_content(const ContentKey& a,const ContentKey& b) {
 }
 bool same_content(const ContentKey& a,const ContentKey& b);
 const ContentEntry* content_find(const ContentKey& k) {
-    const ContentEntry* e=content_entries+content_set(k.stream)*kContentWays;
+    const ContentEntry* e=content_entries+content_set(k)*kContentWays;
     for(unsigned w=0;w<kContentWays;++w)if(e[w].key.stream && same_content(e[w].key,k))return &e[w];
     return nullptr;
 }
 void content_store(const ContentKey& k,unsigned certificate) {
-    const unsigned set=content_set(k.stream);
+    // Instances of one model share a stream with different owners, so entries of one stream coexist; only an
+    // identical key is overwritten in place.
+    const unsigned set=content_set(k);
     ContentEntry* e=content_entries+set*kContentWays;
-    for(unsigned w=0;w<kContentWays;++w)if(e[w].key.stream==k.stream){e[w]={k,certificate};return;}
+    for(unsigned w=0;w<kContentWays;++w)if(e[w].key.stream && same_content(e[w].key,k)){e[w].certificate=certificate;return;}
     e[content_next[set]++%kContentWays]={k,certificate};
 }
 void content_forget(const void* p,unsigned bytes) {
@@ -120,7 +124,9 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
     }
 #if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
     ContentKey ck;
-    ck.info=p.info;ck.uv=p.uv;ck.stream=p.stream;ck.stream_bytes=p.stream_bytes;ck.uv_bytes=a.uv_bytes;
+    // No info: the scan never reads the owner's arrays, and the owner check above runs on every call, so instances
+    // of one model (same blob, UVs and counts) share one entry.
+    ck.uv=p.uv;ck.stream=p.stream;ck.stream_bytes=p.stream_bytes;ck.uv_bytes=a.uv_bytes;
     ck.positions=p.position_count;ck.normals=p.normal_count;ck.flags=key.flags|(unsigned(a.uv_encoding)<<8);
     ck.epoch=re4dc_actor_span_epoch;
     {const u32* h=reinterpret_cast<const u32*>(p.stream);ck.head[0]=h[0];ck.head[1]=h[1];ck.head[2]=h[2];ck.head[3]=h[3];}

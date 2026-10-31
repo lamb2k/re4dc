@@ -3591,8 +3591,8 @@ void log(unsigned frame) {
     re4dc_log("ASPAN f=%u preparations=%u hits=%u geometry_records=%u cache_bytes=%u span_bytes=%u\n",
         frame,span_preparations,span_hits,span_records,unsigned(sizeof(span_entries)),unsigned(sizeof(Re4dcActorSourceSpan)));
 #if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
-    re4dc_log("ASPAN31 f=%u content_hits=%u epoch=%u memo_bytes=%u\n",frame,content_hits,re4dc_actor_span_epoch,
-        unsigned(sizeof(content_entries)));
+    re4dc_log("ASPAN31 f=%u content_hits=%u epoch=%u memo_bytes=%u unowned=%u/%u/%u/%u\n",frame,content_hits,
+        re4dc_actor_span_epoch,unsigned(sizeof(content_entries)),unowned_calls,unowned_hits,unowned_stores,unowned_other);
 #endif
 #endif
 }
