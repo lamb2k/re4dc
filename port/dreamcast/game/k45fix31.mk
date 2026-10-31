@@ -28,3 +28,23 @@ endif
 GAME_CPPFLAGS += -DRE4DC_ACTOR_SPAN_MEMO31=1
 PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_SPAN_MEMO31=1
 endif
+
+# F1 ACTOR_TINY_KEEP31: keep the blob of a part whose GX list is too small to hold it in place (per-submit blobs were
+# rebuilt every draw: r100 ~43 a frame, K45 or not); 4 KB store keyed by the whole GX list and the conversion inputs.
+# F2 (cone split then unsplit) was these same parts reconverting; it ends with F1.
+ACTOR_TINY_KEEP31 ?= 0
+ifneq ($(ACTOR_TINY_KEEP31),0)
+ifneq ($(ACTOR_TINY_KEEP31),1)
+$(error ACTOR_TINY_KEEP31 must be exactly 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_ACTOR_TINY_KEEP31=1
+PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_TINY_KEEP31=1
+endif
+
+# K45DIAG31 (diagnostic, no draw change): "K45D" lines on why actor parts are converted again (in-place repeats vs
+# per-submit blobs larger than their GX list).
+K45DIAG31 ?= 0
+ifneq ($(K45DIAG31),0)
+GAME_CPPFLAGS += -DRE4DC_K45DIAG31=1
+PLATFORM_CPPFLAGS += -DRE4DC_K45DIAG31=1
+endif

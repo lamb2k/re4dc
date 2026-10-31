@@ -406,7 +406,8 @@ extern "C" void re4dc_actor_data_move(const void* p) {
     for(unsigned k=0;k<kArchives;++k)if(archives[k].key && span(archives[k].base,archives[k].bytes,p,1))revoke(k);
 }
 extern "C" void re4dc_actor_model_retire(cModel* m) {
-    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
+    // No span epoch here: this releases one instance's binding slot (also every model_changed, ~2 a frame), not model
+    // data; the memos key on the info, stream and arrays, and the owner check stays per draw.
     using namespace re4dc_material::life;
 #if RE4DC_NATIVE_MODEL_REGISTRY_CENSUS
     registry_note_retire(m,"retire");

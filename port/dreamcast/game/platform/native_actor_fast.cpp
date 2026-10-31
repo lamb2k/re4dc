@@ -5570,6 +5570,155 @@ bool qualifies(const Re4dcModelPart& p
            p.projection[0] == 0 && p.viewport[2] > 0 && p.viewport[3] > 0;
 }
 
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+// K45DIAG31 (k45fix31.mk; diagnostic, no draw change): why actor parts are converted again. "K45D" every 120
+// actor frames: in-place conversions (repeats of a stream already converted in place = its GX list came back),
+// per-submit blobs (larger than the GX list: rebuilt every draw), rejects; then the most frequent offenders.
+struct K45dEntry { const void* stream; const void* model; const void* info; unsigned stream_bytes, blob_bytes, count; };
+K45dEntry k45d_inplace[256], k45d_transient[256];
+unsigned k45d_n_inplace, k45d_n_idistinct, k45d_n_reconv, k45d_n_transient, k45d_n_tdistinct, k45d_n_fail, k45d_log;
+K45dEntry* k45d_slot(K45dEntry* t, const void* s) {
+    const unsigned h = unsigned(reinterpret_cast<std::uintptr_t>(s) >> 5) & 255U;
+    for (unsigned k = 0; k < 16; ++k) { K45dEntry& e = t[(h + k) & 255U]; if (e.stream == s || !e.stream) return &e; }
+    return &t[h];
+}
+void k45d_hit(K45dEntry* t, const Re4dcModelPart& p, unsigned size, unsigned& distinct, unsigned* repeat) {
+    K45dEntry* e = k45d_slot(t, p.stream);
+    if (e->stream == p.stream) { ++e->count; if (repeat) ++*repeat; e->blob_bytes = size; return; }
+    *e = {p.stream, p.model, p.info, p.stream_bytes, size, 1}; ++distinct;
+}
+void k45d_top(const char* kind, const K45dEntry* t) {
+    unsigned floor = ~0U;
+    for (unsigned n = 0; n < 6; ++n) {
+        const K45dEntry* best = nullptr;
+        for (unsigned i = 0; i < 256; ++i)
+            if (t[i].stream && t[i].count > 1 && t[i].count < floor && (!best || t[i].count > best->count)) best = &t[i];
+        if (!best) break;
+        floor = best->count;
+        re4dc_log("K45D top %s stream=%p model=%p info=%p gx=%u blob=%u n=%u\n", kind, best->stream, best->model,
+                  best->info, best->stream_bytes, best->blob_bytes, best->count);
+    }
+}
+unsigned k45d_bump_line[8], k45d_bump_n[8];
+void k45d_census() {
+    const unsigned f = frame_serial;
+    if (f - k45d_log < 120U) return;
+    k45d_log = f;
+    re4dc_log("K45D bumps %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u\n", k45d_bump_line[0], k45d_bump_n[0],
+              k45d_bump_line[1], k45d_bump_n[1], k45d_bump_line[2], k45d_bump_n[2], k45d_bump_line[3], k45d_bump_n[3],
+              k45d_bump_line[4], k45d_bump_n[4], k45d_bump_line[5], k45d_bump_n[5], k45d_bump_line[6], k45d_bump_n[6],
+              k45d_bump_line[7], k45d_bump_n[7]);
+    unsigned rparts = 0, rbytes = 0, tbytes = 0, tgx = 0;
+    for (const K45dEntry& e : k45d_inplace) if (e.stream && e.count > 1) { ++rparts; rbytes += e.stream_bytes; }
+    for (const K45dEntry& e : k45d_transient) if (e.stream) { tbytes += e.blob_bytes; tgx += e.stream_bytes; }
+    re4dc_log("K45D frame=%u inplace=%u distinct=%u repeat=%u repeat_parts=%u repeat_gx=%u transient=%u tparts=%u "
+              "tgx=%u tblob=%u rejects=%u\n", f, k45d_n_inplace, k45d_n_idistinct, k45d_n_reconv, rparts, rbytes,
+              k45d_n_transient, k45d_n_tdistinct, tgx, tbytes, k45d_n_fail);
+    k45d_top("inplace", k45d_inplace); k45d_top("transient", k45d_transient);
+}
+#define K45D_INPLACE(p, size) k45d_hit(k45d_inplace, p, size, k45d_n_idistinct, &k45d_n_reconv), ++k45d_n_inplace;
+#define K45D_TRANSIENT(p, size) k45d_hit(k45d_transient, p, size, k45d_n_tdistinct, nullptr), ++k45d_n_transient;
+#define K45D_REJECT() ++k45d_n_fail;
+#define K45D_CENSUS() k45d_census();
+#else
+#define K45D_INPLACE(p, size)
+#define K45D_TRANSIENT(p, size)
+#define K45D_REJECT()
+#define K45D_CENSUS()
+#endif
+
+#if defined(RE4DC_ACTOR_TINY_KEEP31) && RE4DC_ACTOR_TINY_KEEP31
+// ACTOR_TINY_KEEP31 (K45-FIX-PLAN F1; k45fix31.mk): a part whose GX list is too small to hold its blob in place
+// (32-64 byte lists, 52-92 byte blobs: the 32-byte header alone) was converted again on every draw as a per-submit
+// blob (r100: 23 parts, ~43 conversions a frame, with or without K45). The blob is kept here once, keyed by the
+// whole GX list and every input the conversion reads, and copied to scratch on later draws: the same bytes as a
+// fresh conversion. Only parts whose positions are model data (source arrays, or static rigid geometry) are kept;
+// the store clears on the model lifetime epoch and when full.
+namespace tiny31 {
+constexpr unsigned kGx = 128, kBlob = 256, kSlots = 64, kPool = 4096;
+struct Key {
+    const void* stream; const void* info; const void* uv; const void* positions; const void* normals;
+    unsigned gx, flags, shift, stride, cull, blend, depth, material, positions_n, normals_n, epoch;
+};
+struct Slot { Key k; unsigned off, blob_bytes; };
+Slot slots[kSlots];
+alignas(32) u8 pool[kPool];
+unsigned top, epoch_seen, hits, kept, clears, skipped, log_frame;
+void clear() { std::memset(slots, 0, sizeof slots); top = 0; ++clears; }
+bool key_of(const Re4dcModelPart& p, const SortSource& s, Key& k) {
+    if (p.stream_bytes > kGx) return false;
+    if (!((p.position_stride == 6 && s.positions) || (p.position_stride == 8 && p.static_geometry && p.positions))) {
+        ++skipped; return false;
+    }
+    if (epoch_seen != re4dc_actor_span_epoch) { clear(); epoch_seen = re4dc_actor_span_epoch; }
+    std::memset(&k, 0, sizeof k);
+    k.stream = p.stream; k.info = p.info; k.uv = p.uv; k.normals = s.normals;
+    k.positions = s.positions ? static_cast<const void*>(s.positions) : static_cast<const void*>(p.positions);
+    k.gx = p.stream_bytes; k.flags = p.flags; k.shift = p.shift; k.stride = p.position_stride; k.cull = p.cull;
+    k.blend = p.blend; k.depth = p.depth_mode; k.material = p.material_flags;
+    k.positions_n = s.positions ? s.position_count : p.position_count;
+    k.normals_n = s.normal_count | (s.small_normals ? 0x80000000U : 0U); k.epoch = epoch_seen;
+    return true;
+}
+Slot* slot_of(const Key& k, bool insert) {
+    const unsigned h = unsigned(reinterpret_cast<std::uintptr_t>(k.stream) >> 5) % kSlots;
+    for (unsigned i = 0; i < 4; ++i) {
+        Slot& e = slots[(h + i) % kSlots];
+        if (e.k.stream && !std::memcmp(&e.k, &k, sizeof k)) return &e;
+        if (!e.k.stream) return insert ? &e : nullptr;
+    }
+    return nullptr;
+}
+// A kept blob for p in fresh scratch, or nullptr (convert as before).
+const BlobHeader* find(const Re4dcModelPart& p, const SortSource& s) {
+    Key k;
+    if (!key_of(p, s, k)) return nullptr;
+    const Slot* e = slot_of(k, false);
+    if (!e || std::memcmp(pool + e->off, p.stream, p.stream_bytes)) return nullptr;
+    u8* out = static_cast<u8*>(scratch(e->blob_bytes));
+    if (!out) return nullptr;
+    std::memcpy(out, pool + e->off + ((p.stream_bytes + 31U) & ~31U), e->blob_bytes);
+    ++hits;
+    return reinterpret_cast<const BlobHeader*>(out);
+}
+void keep(const Re4dcModelPart& p, const SortSource& s, const u8* blob, unsigned blob_bytes) {
+    Key k;
+    if (blob_bytes > kBlob || !key_of(p, s, k)) return;
+    const unsigned need = ((p.stream_bytes + 31U) & ~31U) + ((blob_bytes + 31U) & ~31U);
+    Slot* e = slot_of(k, true);
+    if (!e || top + need > kPool) { clear(); e = slot_of(k, true); }
+    e->k = k; e->off = top; e->blob_bytes = blob_bytes;
+    std::memcpy(pool + top, p.stream, p.stream_bytes);
+    std::memcpy(pool + top + ((p.stream_bytes + 31U) & ~31U), blob, blob_bytes);
+    top += need; ++kept;
+}
+void census(unsigned frame) {
+    if (frame - log_frame < 120U) return;
+    log_frame = frame;
+    re4dc_log("ATK31 frame=%u hits=%u kept=%u clears=%u skipped=%u pool=%u/%u\n", frame, hits, kept, clears, skipped,
+              top, kPool);
+}
+}  // namespace tiny31
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+// Diagnostic proof: a hit still converts, and the kept blob is compared with the fresh one ("ATK31V same/differ").
+namespace tiny31 { unsigned verify_same, verify_differ; }
+#define TINY31_FIND(p, sort) const BlobHeader* const tiny_check = tiny31::find(p, sort);
+#define TINY31_KEEP(p, sort, out, bytes) \
+    if (tiny_check) { if (!std::memcmp(tiny_check, out, bytes)) ++tiny31::verify_same; else ++tiny31::verify_differ; } \
+    else tiny31::keep(p, sort, out, bytes);
+#define TINY31_CENSUS() tiny31::census(frame_serial); \
+    if (!(frame_serial % 120U)) re4dc_log("ATK31V same=%u differ=%u\n", tiny31::verify_same, tiny31::verify_differ);
+#else
+#define TINY31_FIND(p, sort) if (const BlobHeader* kept_blob = tiny31::find(p, sort)) return kept_blob;
+#define TINY31_KEEP(p, sort, out, bytes) tiny31::keep(p, sort, out, bytes);
+#define TINY31_CENSUS() tiny31::census(frame_serial);
+#endif
+#else
+#define TINY31_FIND(p, sort)
+#define TINY31_KEEP(p, sort, out, bytes)
+#define TINY31_CENSUS()
+#endif
+
 const BlobHeader* convert(const Re4dcModelPart& p) {
     SortSource sort;
     Re4dcActorSource src{};
@@ -5579,6 +5728,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             sort.normals = src.normals; sort.normal_count = src.normal_count; sort.small_normals = src.small_normals != 0;
         }
     }
+    TINY31_FIND(p, sort)
     const unsigned mark = workspace_top;
     // In place: built in scratch with the GX list's size as the limit.
     {
@@ -5655,6 +5805,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             gcasset_mutation.complete();
 #endif
             ++stats.conversions;
+            K45D_INPLACE(p, size)
             if (cp->level_count()) ++stats.lod_parts;
             return reinterpret_cast<const BlobHeader*>(p.stream);
         }
@@ -5682,12 +5833,14 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #if RE4DC_ACTOR_BACKFACE_CONE
     c.abc_no_split = true;
 #endif
-    if (!c.run()) { ++stats.conversion_rejects; workspace_top = mark; return nullptr; }
+    if (!c.run()) { ++stats.conversion_rejects; K45D_REJECT() workspace_top = mark; return nullptr; }
     workspace_top = unsigned(out - workspace) + ((c.bytes() + 31U) & ~31U);
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
     DFA26_MODEL_HIT(ActorTransient, 1)
 #endif
     ++stats.transient_conversions;
+    TINY31_KEEP(p, sort, out, c.bytes())
+    K45D_TRANSIENT(p, c.bytes())
     return reinterpret_cast<const BlobHeader*>(out);
 }
 
@@ -5819,6 +5972,8 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_bytes = memory ? bytes & ~31U : 0;
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
+    K45D_CENSUS()
+    TINY31_CENSUS()
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
     uv32::log(frame_serial);
 #endif
@@ -7140,9 +7295,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part){return actor_submit_impl(part,nullptr,nullptr);}
 #include "include/native_actor_continuation.inc"
 #endif
-#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
-// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3): lifetime epoch and per-stream forget of uv32's source-span content memo.
+#if (defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31) || (defined(RE4DC_ACTOR_TINY_KEEP31) && RE4DC_ACTOR_TINY_KEEP31)
+// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3) / ACTOR_TINY_KEEP31 (F1): model lifetime epoch of their memos.
 extern "C" { unsigned re4dc_actor_span_epoch=1; }
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+extern "C" void re4dc_k45d_bump(unsigned line) {
+    ++re4dc_actor_span_epoch;
+    for (unsigned i = 0; i < 8; ++i)
+        if (k45d_bump_line[i] == line || !k45d_bump_line[i]) { k45d_bump_line[i] = line; ++k45d_bump_n[i]; return; }
+}
+#endif
+#endif
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+// ACTOR_SPAN_MEMO31 (F3): per-stream forget of uv32's source-span content memo.
 extern "C" void re4dc_actor_span_forget(const void* stream,unsigned bytes){uv32::content_forget(stream,bytes);}
 #endif
 
