@@ -78,10 +78,9 @@ unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
         ck.positions=p.position_count;ck.normals=p.normal_count;
         ck.flags=(p.flags&0x80000000U)|0x40000000U;ck.epoch=re4dc_actor_span_epoch;
         std::memcpy(ck.head,p.stream,sizeof ck.head);
-        ContentEntry& ce=content_entries[content_slot(p.stream)];
-        if(same_content(ce.key,ck)){++content_hits;return ce.certificate;}
+        if(const ContentEntry* ce=content_find(ck)){++content_hits;return ce->certificate;}
         const unsigned certificate=scan_certificate(p,b);
-        ce={ck,certificate};
+        content_store(ck,certificate);
         return certificate;
     }
     return scan_certificate(p,b);

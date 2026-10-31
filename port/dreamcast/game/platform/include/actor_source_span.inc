@@ -27,14 +27,31 @@ struct ContentKey {
     unsigned stream_bytes=0,uv_bytes=0,positions=0,normals=0,flags=0,epoch=0;u32 head[4]={};
 };
 struct ContentEntry { ContentKey key{};unsigned certificate=0; };
-constexpr unsigned kContentEntries=64;
+// 128 entries, 4-way by stream address (the barn draws ~100 distinct parts a frame; 64 direct-mapped slots thrashed).
+constexpr unsigned kContentWays=4,kContentSets=32,kContentEntries=kContentWays*kContentSets;
 ContentEntry content_entries[kContentEntries];
+unsigned char content_next[kContentSets];
 unsigned content_hits;
-inline unsigned content_slot(const u8* stream){return unsigned(reinterpret_cast<std::uintptr_t>(stream)>>5)&(kContentEntries-1U);}
-inline bool same_content(const ContentKey& a,const ContentKey& b) {
+inline unsigned content_set(const u8* stream) {
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(stream));
+    return ((a>>5)^(a>>12))&(kContentSets-1U);
+}
+bool same_content(const ContentKey& a,const ContentKey& b) {
     return a.stream==b.stream && a.info==b.info && a.uv==b.uv && a.stream_bytes==b.stream_bytes && a.uv_bytes==b.uv_bytes &&
         a.positions==b.positions && a.normals==b.normals && a.flags==b.flags && a.epoch==b.epoch &&
         a.head[0]==b.head[0] && a.head[1]==b.head[1] && a.head[2]==b.head[2] && a.head[3]==b.head[3];
+}
+bool same_content(const ContentKey& a,const ContentKey& b);
+const ContentEntry* content_find(const ContentKey& k) {
+    const ContentEntry* e=content_entries+content_set(k.stream)*kContentWays;
+    for(unsigned w=0;w<kContentWays;++w)if(e[w].key.stream && same_content(e[w].key,k))return &e[w];
+    return nullptr;
+}
+void content_store(const ContentKey& k,unsigned certificate) {
+    const unsigned set=content_set(k.stream);
+    ContentEntry* e=content_entries+set*kContentWays;
+    for(unsigned w=0;w<kContentWays;++w)if(e[w].key.stream==k.stream){e[w]={k,certificate};return;}
+    e[content_next[set]++%kContentWays]={k,certificate};
 }
 void content_forget(const void* p,unsigned bytes) {
     const auto x=reinterpret_cast<std::uintptr_t>(p);
@@ -107,10 +124,9 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
     ck.positions=p.position_count;ck.normals=p.normal_count;ck.flags=key.flags|(unsigned(a.uv_encoding)<<8);
     ck.epoch=re4dc_actor_span_epoch;
     {const u32* h=reinterpret_cast<const u32*>(p.stream);ck.head[0]=h[0];ck.head[1]=h[1];ck.head[2]=h[2];ck.head[3]=h[3];}
-    ContentEntry& ce=content_entries[content_slot(p.stream)];
-    if(ce.key.stream && same_content(ce.key,ck)) {
-        ++content_hits;span_entries[span_next++%kSpanEntries]={key,ce.certificate};
-        if(certificate)*certificate=ce.certificate;return true;
+    if(const ContentEntry* ce=content_find(ck)) {
+        ++content_hits;span_entries[span_next++%kSpanEntries]={key,ce->certificate};
+        if(certificate)*certificate=ce->certificate;return true;
     }
 #endif
     ++span_preparations;
@@ -170,7 +186,7 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
     }
     span_entries[span_next++%kSpanEntries]={key,checked_code};
 #if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
-    ce={ck,checked_code};
+    content_store(ck,checked_code);
 #endif
     if(certificate)*certificate=checked_code;
     return true;
