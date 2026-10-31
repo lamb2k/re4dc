@@ -5982,10 +5982,17 @@ unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorl
 struct WorldPackageMemo { unsigned epoch,generation; bool valid,ok; };
 WorldPackageMemo worldPackageMemo{};
 #endif
-inline bool worldPackageCurrent(){
 #if RE4DC_WORLD_VALID_MEMO31
+bool worldPackageCurrentFull() __attribute__((noinline));
+// The memo test is inlined into the ~15 draw-loop sites; only a miss calls the full check.
+__attribute__((always_inline)) inline bool worldPackageCurrent(){
     const WorldPackageMemo& m=worldPackageMemo;
     if(m.valid && m.epoch==*re4dc_room4_epoch_ptr && m.generation==sourceWorldPackageGeneration)return m.ok;
+    return worldPackageCurrentFull();
+}
+bool worldPackageCurrentFull(){
+#else
+inline bool worldPackageCurrent(){
 #endif
     unsigned generation=0;
     const bool ok=re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&

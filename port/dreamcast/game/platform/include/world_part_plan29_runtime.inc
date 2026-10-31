@@ -31,11 +31,36 @@ unsigned refused_generation=~0U,unproven_return_bytes=0;
 #if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
 unsigned bound_package_generation=0;
 #endif
+#if RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): the room-4 half of current() (live generation, the two cell incarnations)
+// cannot change before the room-4 epoch moves, so a positive answer is kept under that epoch and the bound plan.
+struct CurrentMemo { unsigned epoch,token,allocation_incarnation,storage_incarnation; const void* allocation; const void* storage; };
+CurrentMemo current_memo{};
+#endif
 bool current(unsigned token){
     unsigned generation=0;
 #if RE4DC_WORLD_MUTATION31
     if(!worldPackageCurrent() || bound_package_generation!=sourceWorldPackageGeneration)return false;
 #endif
+#if RE4DC_WORLD_VALID_MEMO31
+    if(!(token && token==incarnation && token==bound_incarnation && records && allocation && allocation_incarnation &&
+         bound_storage==ps2w.storage && bound_storage_incarnation && bound_parts==ps2w.parts &&
+         bound_mesh==ps2w.package.parts() && bound_placements==ps2w.placements &&
+         bound_placements_count==ps2w.nplacements && bound_room==ps2w.room
+#if RE4DC_PS2_WORLD_SOURCE_OWNER && !RE4DC_WORLD_MUTATION31
+         && bound_package_generation==sourceWorldPackageGeneration
+#endif
+         ))return false;
+    const CurrentMemo& m=current_memo;
+    const unsigned epoch=*re4dc_room4_epoch_ptr;
+    if(m.epoch==epoch && m.token==token && m.allocation==allocation && m.storage==bound_storage &&
+       m.allocation_incarnation==allocation_incarnation && m.storage_incarnation==bound_storage_incarnation)return true;
+    const bool ok=re4dc_room4_live_generation(&generation) && generation==allocation_generation &&
+        re4dc_room4_cell_incarnation(allocation,allocation_bytes,generation)==allocation_incarnation &&
+        re4dc_room4_cell_incarnation(bound_storage,ps2w.bytes,generation)==bound_storage_incarnation;
+    if(ok)current_memo={epoch,token,allocation_incarnation,bound_storage_incarnation,allocation,bound_storage};
+    return ok;
+#else
     return token && token==incarnation && token==bound_incarnation && records && allocation &&
            re4dc_room4_live_generation(&generation) && generation==allocation_generation &&
            allocation_incarnation && re4dc_room4_cell_incarnation(allocation,allocation_bytes,generation)==allocation_incarnation &&
@@ -47,6 +72,7 @@ bool current(unsigned token){
            && bound_package_generation==sourceWorldPackageGeneration
 #endif
            ;
+#endif
 }
 #endif
 #if RE4DC_WORLD_PREPARED09
