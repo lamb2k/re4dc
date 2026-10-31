@@ -1,6 +1,10 @@
 // Include inside uv32 after BlobHeader/MeshletInfo/LevelInfo and counters.
 // A tag supplies a proposed bound, never authority over the current UV input.
 // No retained pointer proof, allocation, source write or changed geometry.
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+unsigned scan_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
+    using namespace re4dc::format32;
+#else
 unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
     using namespace re4dc::format32;
 #if RE4DC_ACTOR_SOURCE_SPAN
@@ -8,6 +12,7 @@ unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
         unsigned certificate=kUvSourceDeclined;
         return prepare_owned(p,&certificate)?certificate:kUvSourceDeclined;
     }
+#endif
 #endif
     const unsigned code = uv_excess_bits(b), exponent = uv_certificate_exponent(code);
     if (!exponent) return code; // Legacy/preconverted data declines without a scan.
@@ -55,3 +60,30 @@ unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
     }
     return code;
 }
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+unsigned checked_certificate(const Re4dcModelPart& p, const BlobHeader& b) {
+    using namespace re4dc::format32;
+#if RE4DC_ACTOR_SOURCE_SPAN
+    if(p.source_span.owner_serial) {
+        unsigned certificate=kUvSourceDeclined;
+        return prepare_owned(p,&certificate)?certificate:kUvSourceDeclined;
+    }
+#endif
+    // ACTOR_SPAN_MEMO31: parts without an owner scanned every UV record on every draw (r100 MODELLED 1.25 ms per
+    // drawn tick). The scan reads the blob and the UV array only, so its answer is kept per content in the same
+    // entries (marked unowned in flags); dropped on a stream rewrite and with the lifetime epoch.
+    if (p.stream == reinterpret_cast<const u8*>(&b) && p.stream_bytes >= 16U) {
+        ContentKey ck;
+        ck.info=p.info;ck.uv=p.uv;ck.stream=p.stream;ck.stream_bytes=p.stream_bytes;
+        ck.positions=p.position_count;ck.normals=p.normal_count;
+        ck.flags=(p.flags&0x80000000U)|0x40000000U;ck.epoch=re4dc_actor_span_epoch;
+        std::memcpy(ck.head,p.stream,sizeof ck.head);
+        ContentEntry& ce=content_entries[content_slot(p.stream)];
+        if(same_content(ce.key,ck)){++content_hits;return ce.certificate;}
+        const unsigned certificate=scan_certificate(p,b);
+        ce={ck,certificate};
+        return certificate;
+    }
+    return scan_certificate(p,b);
+}
+#endif

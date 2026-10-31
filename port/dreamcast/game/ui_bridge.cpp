@@ -700,13 +700,13 @@ unsigned room4_next_incarnation(){
 }
 #endif
 #if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
-// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): bumped by every event that can end a cell's validity (heap-4 open, close,
-// cell free). Validity memos (native_static worldPackageCurrent) key on it plus heap 4's handle and status.
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): bumped by every event that can end a cell's validity (room-4 open, close,
+// cell free; any heap create / destroy / suspend / resume, main_mem.cpp). The validity memo (native_static
+// worldPackageCurrent) keys on it.
 unsigned room4_epoch=1;
 }
 extern "C" const unsigned* const re4dc_room4_epoch_ptr=&room4_epoch;
-extern "C" const s32* const re4dc_heap4_handle_ptr=&Heap[4].handle;
-extern "C" const u8* const re4dc_heap4_status_ptr=&Heap[4].status;
+extern "C" void re4dc_world_heap_changed(void){++room4_epoch;}
 namespace {
 #endif
 #if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM

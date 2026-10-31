@@ -5976,17 +5976,16 @@ unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorl
 #if RE4DC_WORLD_VALID_MEMO31
 // WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): the draw loops ask worldPackageSelectionCurrent per part and chunk, thousands
 // of times a frame (room4_cell_valid / live_generation / worldPackageCurrent ~2 ms a frame MODELLED, r100). The full
-// check can only change its answer after a heap-4 open, close or cell free (room4 epoch), a heap-4 handle or status
-// change, or a package publish / revoke (both clear the memo), so a positive answer is kept under exactly those inputs.
-struct WorldPackageMemo { unsigned epoch,generation; const void* storage; unsigned bytes; std::int32_t handle; bool ok; };
+// check can only change its answer after a room-4 open, close or cell free or any heap create / destroy / suspend /
+// resume (room4 epoch), a package publish / revoke or a world package load / unload (these clear the memo), so its
+// answer is kept under the epoch and the package generation: two compares per call.
+struct WorldPackageMemo { unsigned epoch,generation; bool valid,ok; };
 WorldPackageMemo worldPackageMemo{};
 #endif
 inline bool worldPackageCurrent(){
 #if RE4DC_WORLD_VALID_MEMO31
     const WorldPackageMemo& m=worldPackageMemo;
-    if(m.ok && m.epoch==*re4dc_room4_epoch_ptr && m.generation==sourceWorldPackageGeneration && sourceWorldPackagePublished &&
-       m.storage==ps2w.storage && m.bytes==ps2w.bytes && m.handle==*re4dc_heap4_handle_ptr && !*re4dc_heap4_status_ptr)
-        return true;
+    if(m.valid && m.epoch==*re4dc_room4_epoch_ptr && m.generation==sourceWorldPackageGeneration)return m.ok;
 #endif
     unsigned generation=0;
     const bool ok=re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&
@@ -5995,7 +5994,7 @@ inline bool worldPackageCurrent(){
         generation==sourceWorldPackageRoomGeneration &&
         re4dc_room4_cell_incarnation(sourceWorldPackageStorage,sourceWorldPackageBytes,generation)==sourceWorldPackageCell;
 #if RE4DC_WORLD_VALID_MEMO31
-    worldPackageMemo={*re4dc_room4_epoch_ptr,sourceWorldPackageGeneration,ps2w.storage,ps2w.bytes,*re4dc_heap4_handle_ptr,ok};
+    worldPackageMemo={*re4dc_room4_epoch_ptr,sourceWorldPackageGeneration,true,ok};
 #endif
     return ok;
 }
@@ -6004,7 +6003,7 @@ inline bool worldPackageSelectionCurrent(unsigned selected){
 }
 inline void worldPackageRevoke(){
 #if RE4DC_WORLD_VALID_MEMO31
-    worldPackageMemo.ok=false;
+    worldPackageMemo.valid=false;
 #endif
     re4dc::world_mutation31::revoke(sourceWorldPackageGeneration,sourceWorldPackagePublished);
     sourceWorldPackageStorage=nullptr;sourceWorldPackageBytes=sourceWorldPackageRoomGeneration=sourceWorldPackageCell=0;
@@ -6012,7 +6011,7 @@ inline void worldPackageRevoke(){
 }
 inline bool worldPackagePublish(){
 #if RE4DC_WORLD_VALID_MEMO31
-    worldPackageMemo.ok=false;
+    worldPackageMemo.valid=false;
 #endif
     unsigned generation=0;
     sourceWorldPackageStorage=ps2w.storage;sourceWorldPackageBytes=ps2w.bytes;
@@ -7531,6 +7530,9 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
 #if RE4DC_GC_ASSET_GATE
     if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
     else static_manifest_note(gcasset_source,R4PW,Unproven);
@@ -10031,6 +10033,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
     ps2w.storage=nullptr;ps2w.bytes=0;ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.attempted=false;
 #if RE4DC_PS2_PASS_MASK
     ps2w.masked=false;

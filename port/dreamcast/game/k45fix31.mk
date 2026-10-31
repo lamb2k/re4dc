@@ -11,7 +11,7 @@ endif
 ifneq ($(WORLD_MUTATION31),1)
 $(error WORLD_VALID_MEMO31 needs WORLD_MUTATION31=1)
 endif
-$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_VALID_MEMO31=1
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/main_mem.o: GAME_CPPFLAGS += -DRE4DC_WORLD_VALID_MEMO31=1
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_VALID_MEMO31=1
 endif
 
