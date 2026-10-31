@@ -615,6 +615,11 @@ unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
 re4dc::cone32::Counters abc32_stats;
 #endif
 #endif
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+// ACTOR_CONE_GAIN31 counters ("ACG31" with the ABFC line): split parts kept / declined, records and meshlets of the
+// split and plain builds of every part that was compared.
+struct { unsigned kept, declined, split_records, plain_records, split_meshlets, plain_meshlets; } acg31;
+#endif
 class Converter {
 public:
     Converter(const Re4dcModelPart& part, const SortSource& sort, u8* out, unsigned out_bytes, Arena scratch, bool lod)
@@ -5766,6 +5771,24 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
         // ACTOR_BACKFACE_CONE: a split blob that no longer fits in place is built again unsplit (no cones).
         Converter c2(p, sort, out, p.stream_bytes, Arena{work, room}, false);
         if (!ok && c.split()) { c2.abc_no_split = true; ok = c2.run(); cp = &c2; ++abc_unsplit; }
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+        // ACTOR_CONE_GAIN31=N (K45-FIX-PLAN F2; k45fix31.mk): the cone split re-partitions strips per bone and facing,
+        // which copies shared vertices into more meshlets; at the barn it added more skinned vertices than the cones
+        // reject (~12%). Once per part, the plain blob is built too and the split kept only when its records grow
+        // by at most N%. Same triangles either way; a declined part draws as without BACKFACE_CONE.
+        const unsigned gain_gx = (p.stream_bytes + 31U) & ~31U;
+        Converter cg(p, sort, work, p.stream_bytes, Arena{work + gain_gx, room > gain_gx ? room - gain_gx : 0U}, false);
+        if (ok && cp->split() && room > 2U * gain_gx) {
+            cg.abc_no_split = true;
+            if (cg.run()) {
+                acg31.split_records += cp->record_count(); acg31.plain_records += cg.record_count();
+                acg31.split_meshlets += cp->meshlet_count(); acg31.plain_meshlets += cg.meshlet_count();
+                if (cp->record_count() * 100U > cg.record_count() * (100U + RE4DC_ACTOR_CONE_GAIN31)) {
+                    std::memcpy(out, work, cg.bytes()); cp = &cg; ++acg31.declined;
+                } else ++acg31.kept;
+            }
+        }
+#endif
 #endif
 #if defined(RE4DC_ACTOR_TEST)
         const double dt = test_now_us() - t0;
@@ -6509,6 +6532,11 @@ void abc_census() {
                   frame_serial, abc_splits, abc_built, abc_noroom, abc_cones, abc_nocone, abc_bad, abc_nmarks, abc_conv,
                   abc_conv_op, abc_conv_mk, abc_part_calls, abc_part_cull, abc_unsplit,
                   abc_rec_split, abc_rec_plain, abc_ml_split, abc_ml_plain);
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+        re4dc_log("ACG31 frame=%u limit=%u kept=%u declined=%u records=%u/%u meshlets=%u/%u\n", frame_serial,
+                  unsigned(RE4DC_ACTOR_CONE_GAIN31), acg31.kept, acg31.declined, acg31.split_records,
+                  acg31.plain_records, acg31.split_meshlets, acg31.plain_meshlets);
+#endif
         re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
                   "ashley=%u/%u/%u/%u/%u\n", frame_serial,
                   abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],

@@ -41,6 +41,17 @@ GAME_CPPFLAGS += -DRE4DC_ACTOR_TINY_KEEP31=1
 PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_TINY_KEEP31=1
 endif
 
+# F2 ACTOR_CONE_GAIN31=N: keep a part's back-face cone split only when its records (skinned vertices) grow by at most
+# N% over the plain build; decided once per part at conversion. 0 = off.
+ACTOR_CONE_GAIN31 ?= 0
+ifneq ($(ACTOR_CONE_GAIN31),0)
+ifneq ($(ACTOR_BACKFACE_CONE),1)
+$(error ACTOR_CONE_GAIN31 needs ACTOR_BACKFACE_CONE=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_ACTOR_CONE_GAIN31=$(ACTOR_CONE_GAIN31)
+PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_CONE_GAIN31=$(ACTOR_CONE_GAIN31)
+endif
+
 # K45DIAG31 (diagnostic, no draw change): "K45D" lines on why actor parts are converted again (in-place repeats vs
 # per-submit blobs larger than their GX list).
 K45DIAG31 ?= 0
