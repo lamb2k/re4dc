@@ -15,6 +15,35 @@ SpanEntry span_entries[kSpanEntries];
 static_assert(sizeof(void*)!=4 || sizeof(Re4dcActorSourceSpan)==32,"SH4 source span metadata");
 static_assert(sizeof(void*)!=4 || sizeof(span_entries)==1024,"SH4 bounded span memo");
 unsigned span_next,span_preparations,span_hits,span_records;
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3): span_entries key on the owner frame, so every part was scanned again each
+// frame (r100 MODELLED: 14 full scans, ~6.1k records a frame). The scan reads only the blob (tables, index lists,
+// records against the part's counts) and the UV array, never the owner's arrays, so its result is kept per content:
+// model info, stream, UV array, sizes, counts and blob header. Entries die with the actor lifetime epoch (model
+// unload / move / retire, re4dc_actor_span_epoch) or when their stream is rewritten (re4dc_actor_span_forget). The
+// owner check above still runs on every call.
+struct ContentKey {
+    const void* info=nullptr;const u8* uv=nullptr;const u8* stream=nullptr;
+    unsigned stream_bytes=0,uv_bytes=0,positions=0,normals=0,flags=0,epoch=0;u32 head[4]={};
+};
+struct ContentEntry { ContentKey key{};unsigned certificate=0; };
+constexpr unsigned kContentEntries=64;
+ContentEntry content_entries[kContentEntries];
+unsigned content_hits;
+inline unsigned content_slot(const u8* stream){return unsigned(reinterpret_cast<std::uintptr_t>(stream)>>5)&(kContentEntries-1U);}
+inline bool same_content(const ContentKey& a,const ContentKey& b) {
+    return a.stream==b.stream && a.info==b.info && a.uv==b.uv && a.stream_bytes==b.stream_bytes && a.uv_bytes==b.uv_bytes &&
+        a.positions==b.positions && a.normals==b.normals && a.flags==b.flags && a.epoch==b.epoch &&
+        a.head[0]==b.head[0] && a.head[1]==b.head[1] && a.head[2]==b.head[2] && a.head[3]==b.head[3];
+}
+void content_forget(const void* p,unsigned bytes) {
+    const auto x=reinterpret_cast<std::uintptr_t>(p);
+    for(auto& e:content_entries) {
+        const auto y=reinterpret_cast<std::uintptr_t>(e.key.stream);
+        if(e.key.stream && bytes && (x<=y ? y-x<bytes : x-y<e.key.stream_bytes))e={};
+    }
+}
+#endif
 
 bool same_span_key(const SpanKey& a,const SpanKey& b) {
     const auto& x=a.span;const auto& y=b.span;
@@ -72,6 +101,18 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
     for(const auto& e:span_entries)if(same_span_key(e.key,key)) {
         ++span_hits;if(certificate)*certificate=e.certificate;return true;
     }
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+    ContentKey ck;
+    ck.info=p.info;ck.uv=p.uv;ck.stream=p.stream;ck.stream_bytes=p.stream_bytes;ck.uv_bytes=a.uv_bytes;
+    ck.positions=p.position_count;ck.normals=p.normal_count;ck.flags=key.flags|(unsigned(a.uv_encoding)<<8);
+    ck.epoch=re4dc_actor_span_epoch;
+    {const u32* h=reinterpret_cast<const u32*>(p.stream);ck.head[0]=h[0];ck.head[1]=h[1];ck.head[2]=h[2];ck.head[3]=h[3];}
+    ContentEntry& ce=content_entries[content_slot(p.stream)];
+    if(ce.key.stream && same_content(ce.key,ck)) {
+        ++content_hits;span_entries[span_next++%kSpanEntries]={key,ce.certificate};
+        if(certificate)*certificate=ce.certificate;return true;
+    }
+#endif
     ++span_preparations;
     const auto& b=*reinterpret_cast<const BlobHeader*>(p.stream);
     // Mutable bake/pending-LOD records and vertex-colour arrays need their
@@ -128,6 +169,9 @@ bool prepare_owned(const Re4dcModelPart& p,unsigned* certificate=nullptr) {
             a.uv_encoding==Re4dcActorSourceSpan::S16Q8,counters.scanned_records,a.uv_bytes))checked_code=kUvSourceDeclined;
     }
     span_entries[span_next++%kSpanEntries]={key,checked_code};
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+    ce={ck,checked_code};
+#endif
     if(certificate)*certificate=checked_code;
     return true;
 }

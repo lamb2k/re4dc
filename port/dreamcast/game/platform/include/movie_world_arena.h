@@ -45,3 +45,16 @@ unsigned re4dc_room4_cell_incarnation(const void*, unsigned bytes, unsigned gene
 }
 #endif
 #endif
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+// WORLD_VALID_MEMO31 (ui_bridge.cpp): heap-4 epoch (open / close / cell free) and heap 4's handle and status words.
+extern const unsigned* const re4dc_room4_epoch_ptr;
+extern const int32_t* const re4dc_heap4_handle_ptr;
+extern const uint8_t* const re4dc_heap4_status_ptr;
+#ifdef __cplusplus
+}
+#endif
+#endif

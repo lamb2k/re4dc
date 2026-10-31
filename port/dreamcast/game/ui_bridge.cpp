@@ -699,6 +699,16 @@ unsigned room4_next_incarnation(){
     return room4_incarnation==~0U?0U:++room4_incarnation;
 }
 #endif
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): bumped by every event that can end a cell's validity (heap-4 open, close,
+// cell free). Validity memos (native_static worldPackageCurrent) key on it plus heap 4's handle and status.
+unsigned room4_epoch=1;
+}
+extern "C" const unsigned* const re4dc_room4_epoch_ptr=&room4_epoch;
+extern "C" const s32* const re4dc_heap4_handle_ptr=&Heap[4].handle;
+extern "C" const u8* const re4dc_heap4_status_ptr=&Heap[4].status;
+namespace {
+#endif
 #if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
 }
 // GC_CENSUS_TRIM (lane t2exact): sourceActorIdentity (trans.cpp, ~110-170 calls a frame) reads the two words it uses
@@ -740,6 +750,9 @@ void room_free4(void* p,const char* who){
         return;
     }
     cell->magic=0;--room4.live_cells;room4.live_bytes-=cell->bytes;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
     OSFreeToHeap(Heap[4].handle,cell);
 }
 #if RE4DC_NATIVE_STATIC && RE4DC_NATIVE_PKG_HIGH
@@ -820,9 +833,17 @@ extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned bytes,un
 }
 #endif
 // gameRoomMemInit rebuilt heap 4: a new generation of native cells may start.
-extern "C" void re4dc_room4_open(){++room4.generation;room4.live_cells=0;room4.live_bytes=0;room4.live=true;}
+extern "C" void re4dc_room4_open(){++room4.generation;room4.live_cells=0;room4.live_bytes=0;room4.live=true;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
+}
 // StageSet entry, after the native owners retired: no new cells until the rebuild.
-extern "C" void re4dc_room4_close(){room4.live=false;}
+extern "C" void re4dc_room4_close(){room4.live=false;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
+}
 extern "C" int re4dc_room4_state(unsigned* generation,unsigned* cells,unsigned* bytes,unsigned* stale,unsigned* refused){
     *generation=room4.generation;*cells=room4.live_cells;*bytes=room4.live_bytes;
     *stale=room4.stale_frees;*refused=room4.refused;return room4.live;

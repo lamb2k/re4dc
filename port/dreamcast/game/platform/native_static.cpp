@@ -5973,23 +5973,47 @@ unsigned sourceWorldPackageGeneration=1,sourceWorldSidecarCrc;
 bool sourceWorldPackagePublished=false;
 const void* sourceWorldPackageStorage=nullptr;
 unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorldPackageCell=0;
+#if RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): the draw loops ask worldPackageSelectionCurrent per part and chunk, thousands
+// of times a frame (room4_cell_valid / live_generation / worldPackageCurrent ~2 ms a frame MODELLED, r100). The full
+// check can only change its answer after a heap-4 open, close or cell free (room4 epoch), a heap-4 handle or status
+// change, or a package publish / revoke (both clear the memo), so a positive answer is kept under exactly those inputs.
+struct WorldPackageMemo { unsigned epoch,generation; const void* storage; unsigned bytes; std::int32_t handle; bool ok; };
+WorldPackageMemo worldPackageMemo{};
+#endif
 inline bool worldPackageCurrent(){
+#if RE4DC_WORLD_VALID_MEMO31
+    const WorldPackageMemo& m=worldPackageMemo;
+    if(m.ok && m.epoch==*re4dc_room4_epoch_ptr && m.generation==sourceWorldPackageGeneration && sourceWorldPackagePublished &&
+       m.storage==ps2w.storage && m.bytes==ps2w.bytes && m.handle==*re4dc_heap4_handle_ptr && !*re4dc_heap4_status_ptr)
+        return true;
+#endif
     unsigned generation=0;
-    return re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&
+    const bool ok=re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&
         sourceWorldPackageStorage==ps2w.storage && sourceWorldPackageBytes==ps2w.bytes &&
         sourceWorldPackageCell && re4dc_room4_live_generation(&generation) &&
         generation==sourceWorldPackageRoomGeneration &&
         re4dc_room4_cell_incarnation(sourceWorldPackageStorage,sourceWorldPackageBytes,generation)==sourceWorldPackageCell;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo={*re4dc_room4_epoch_ptr,sourceWorldPackageGeneration,ps2w.storage,ps2w.bytes,*re4dc_heap4_handle_ptr,ok};
+#endif
+    return ok;
 }
 inline bool worldPackageSelectionCurrent(unsigned selected){
     return selected && selected==sourceWorldPackageGeneration && worldPackageCurrent();
 }
 inline void worldPackageRevoke(){
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.ok=false;
+#endif
     re4dc::world_mutation31::revoke(sourceWorldPackageGeneration,sourceWorldPackagePublished);
     sourceWorldPackageStorage=nullptr;sourceWorldPackageBytes=sourceWorldPackageRoomGeneration=sourceWorldPackageCell=0;
     sourceWorldSidecarCrc=0;
 }
 inline bool worldPackagePublish(){
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.ok=false;
+#endif
     unsigned generation=0;
     sourceWorldPackageStorage=ps2w.storage;sourceWorldPackageBytes=ps2w.bytes;
     sourceWorldPackageRoomGeneration=0;sourceWorldPackageCell=0;

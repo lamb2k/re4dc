@@ -49,10 +49,21 @@ inline void re4dc_actor_data_move(const void*){}
 inline unsigned re4dc_actor_stream_begin(const void*,unsigned){return 0;}
 inline void re4dc_actor_stream_end(unsigned,const void*,unsigned){}
 #endif
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3): the source-span content memo (native_actor_fast.cpp) dies with this epoch
+// (model unload / move / retire, actor_lifetime.inc) and per stream when that stream is rewritten.
+extern "C" unsigned re4dc_actor_span_epoch;
+extern "C" void re4dc_actor_span_forget(const void* stream,unsigned bytes);
+#define RE4DC_SPAN_EPOCH_BUMP() ((void)++re4dc_actor_span_epoch)
+#define RE4DC_SPAN_FORGET(p,n) re4dc_actor_span_forget(p,n)
+#else
+#define RE4DC_SPAN_EPOCH_BUMP() ((void)0)
+#define RE4DC_SPAN_FORGET(p,n) ((void)0)
+#endif
 // Covers every early return of conversion/LOD/bake while a borrowed source
 // representation is being mutated. Unregistered scratch streams get ticket0.
 struct Re4dcActorStreamMutation {
     const void* p;unsigned bytes,ticket;
     Re4dcActorStreamMutation(const void* q,unsigned n):p(q),bytes(n),ticket(re4dc_actor_stream_begin(q,n)){}
-    ~Re4dcActorStreamMutation(){if(ticket)re4dc_actor_stream_end(ticket,p,bytes);}
+    ~Re4dcActorStreamMutation(){RE4DC_SPAN_FORGET(p,bytes);if(ticket)re4dc_actor_stream_end(ticket,p,bytes);}
 };

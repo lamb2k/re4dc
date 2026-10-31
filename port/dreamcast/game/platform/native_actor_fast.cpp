@@ -3585,6 +3585,10 @@ void log(unsigned frame) {
 #if RE4DC_ACTOR_SOURCE_SPAN
     re4dc_log("ASPAN f=%u preparations=%u hits=%u geometry_records=%u cache_bytes=%u span_bytes=%u\n",
         frame,span_preparations,span_hits,span_records,unsigned(sizeof(span_entries)),unsigned(sizeof(Re4dcActorSourceSpan)));
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+    re4dc_log("ASPAN31 f=%u content_hits=%u epoch=%u memo_bytes=%u\n",frame,content_hits,re4dc_actor_span_epoch,
+        unsigned(sizeof(content_entries)));
+#endif
 #endif
 }
 }
@@ -7135,6 +7139,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_NATIVE_FE_CONTINUATION
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part){return actor_submit_impl(part,nullptr,nullptr);}
 #include "include/native_actor_continuation.inc"
+#endif
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3): lifetime epoch and per-stream forget of uv32's source-span content memo.
+extern "C" { unsigned re4dc_actor_span_epoch=1; }
+extern "C" void re4dc_actor_span_forget(const void* stream,unsigned bytes){uv32::content_forget(stream,bytes);}
 #endif
 
 #if RE4DC_COARSE_ONE_SUBMIT

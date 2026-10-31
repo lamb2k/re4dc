@@ -141,6 +141,7 @@ bool info_current(const Info& i,unsigned role) {
 #define SS_PARK(stmt) ((void)0)
 #endif
 extern "C" void re4dc_actor_archive_retire(const void* key) {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
     SS_PARK(park_drop_key(key));
     if(!key)return;for(unsigned k=0;k<kArchives;++k)if(archives[k].key==key)revoke(k);
@@ -183,6 +184,7 @@ extern "C" void re4dc_actor_archive_adopt(const void* key,void* base,unsigned by
     changed();
 }
 extern "C" void re4dc_actor_archive_retire_transient() {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
     SS_PARK(park_drop_family(2));
     for(unsigned k=0;k<kArchives;++k)if(archives[k].key && archives[k].family==2)revoke(k);
@@ -191,6 +193,7 @@ extern "C" void re4dc_actor_archive_retire_transient() {
 void atd_drop(const char*,const re4dc_material::life::Info&,const void*,unsigned,const void*);
 #endif
 extern "C" void re4dc_actor_info_retire(const void* p) {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
     SS_PARK(park_info_retire(p));
     if(auto* i=find_info(p)){
@@ -339,6 +342,7 @@ void atd_drop(const char* how,const re4dc_material::life::Info& rec,const void* 
 #define ATD_DROP(how,info,a,b) ((void)0)
 #endif
 extern "C" void re4dc_actor_forget_range(const void* p,unsigned bytes) {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;if(!p || !bytes)return;
     SS_PARK(park_forget(p,bytes));
     for(unsigned k=0;k<kArchives;++k)if(archives[k].key && overlap(p,bytes,archives[k].base,archives[k].bytes))revoke(k);
@@ -347,6 +351,7 @@ extern "C" void re4dc_actor_forget_range(const void* p,unsigned bytes) {
     if(hit)changed();
 }
 extern "C" void re4dc_actor_forget_all() {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
     SS_PARK(park_drop_all());
     for(unsigned k=0;k<kArchives;++k)if(archives[k].key)revoke(k);
@@ -395,11 +400,13 @@ unsigned live_family(unsigned family) {
 } }
 #endif
 extern "C" void re4dc_actor_data_move(const void* p) {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
     SS_PARK(park_forget(p,1));
     for(unsigned k=0;k<kArchives;++k)if(archives[k].key && span(archives[k].base,archives[k].bytes,p,1))revoke(k);
 }
 extern "C" void re4dc_actor_model_retire(cModel* m) {
+    RE4DC_SPAN_EPOCH_BUMP(); // ACTOR_SPAN_MEMO31: model data retired / moved / forgotten
     using namespace re4dc_material::life;
 #if RE4DC_NATIVE_MODEL_REGISTRY_CENSUS
     registry_note_retire(m,"retire");
