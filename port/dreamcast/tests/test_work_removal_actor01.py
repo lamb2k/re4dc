@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[3]
 ACTOR = ROOT / "port/dreamcast/game/platform/native_actor_fast.cpp"
 MAKE = ROOT / "port/dreamcast/game/work_removal_actor01.mk"
 FIXTURE = ROOT / "port/dreamcast/tests/work_removal_actor01_padding.cpp.in"
+TRANS = ROOT / "src/game/trans.cpp"
+PROP_FIXTURE = ROOT / "port/dreamcast/tests/work_removal_actor01_prop.cpp.in"
 CXX = os.environ.get("CXX", "g++")
 
 
@@ -131,6 +133,122 @@ def make_profiles(directory):
     print("padding make default/0/1/invalid/prerequisite profiles: PASS")
 
 
+
+def prop_fragment(source):
+    start = source.index("static int propGate(cModel* m, Mtx viewMat)")
+    end = source.index("#endif\n// PROP_GATE_EARLY01 parent restore:", start)
+    return source[start:end]
+
+
+def weights_fragment(source):
+    start = source.index("static int propGateWeights(const Weight* w, u32 n, u32 parts)")
+    end = source.index("static int propGate(cModel* m, Mtx viewMat)", start)
+    return source[start:end].replace("static int propGateWeights(", "static int propGateWeights_body(", 1)
+
+
+def remove_prop_spike(source):
+    pattern = r"(?ms)^#if defined\(RE4DC_PROP_GATE_EARLY01\).*?\n.*?^#endif\n#line 2711\n"
+    restored, n = re.subn(pattern, "", source)
+    assert n == 1, "missing or ambiguous production prop spike"
+    for marker in ("parent", "outer"):
+        pattern = rf"(?ms)^// PROP_GATE_EARLY01 {marker} restore:.*?^#endif\n"
+        restored, n = re.subn(pattern, "", restored)
+        assert n == 1, f"missing {marker} prop line restoration"
+    return restored
+
+
+def prop_tokens(source):
+    baseline = remove_prop_spike(source)
+    native = ["__sh__=1", "RE4DC_FRONT_NATIVE=1", "RE4DC_FRONT_LEAN=1",
+              "RE4DC_SCENERY_GATE=1", "RE4DC_SKIN_PALETTE_LAZY=1",
+              "RE4DC_NATIVE_ACTOR_SKIN_LAZY=1"]
+    parents = [("minimal", []),
+               ("front-zero", ["__sh__=1", "RE4DC_FRONT_NATIVE=0"]),
+               ("front-no-sh", ["RE4DC_FRONT_NATIVE=1"])]
+    for scenery, lean in [(0, 0), (1, 0), (0, 1), (1, 1)]:
+        parents.append((f"prop-zero-scenery{scenery}-lean{lean}",
+                        ["__sh__=1", "RE4DC_FRONT_NATIVE=1", "RE4DC_PROP_GATE=0",
+                         f"RE4DC_SCENERY_GATE={scenery}", f"RE4DC_FRONT_LEAN={lean}"]))
+    for mode in [1, 2]:
+        parents.append((f"native-prop{mode}", native + [f"RE4DC_PROP_GATE={mode}"]))
+        parents.append((f"front2-prop{mode}",
+                        [x for x in native if x != "RE4DC_FRONT_NATIVE=1"] +
+                        ["RE4DC_FRONT_NATIVE=2", f"RE4DC_PROP_GATE={mode}"]))
+    profiles = [(f"{label}-{mode}", definitions + extra)
+                for label, definitions in parents
+                for mode, extra in [("undefined", []),
+                                    ("zero", ["RE4DC_PROP_GATE_EARLY01=0"])]]
+    # PPC profiles must not claim the SH architecture or enable a palette
+    # feature whose existing source guard explicitly disallows PPC.
+    profiles += [(f"{label}-PPC-one-inert", [x for x in definitions
+                  if not x.startswith(("__sh__=", "RE4DC_SKIN_PALETTE_LAZY=",
+                                       "RE4DC_NATIVE_ACTOR_SKIN_LAZY="))] +
+                  ["__PPC__=1", "RE4DC_PROP_GATE_EARLY01=1"])
+                 for label, definitions in parents]
+    for label, definitions in profiles:
+        a = preprocess(source, definitions, "trans.cpp")
+        b = preprocess(baseline, definitions, "trans.cpp")
+        assert a == b, label
+        assert preprocess_locations(source, definitions, "trans.cpp") == preprocess_locations(baseline, definitions, "trans.cpp"), label
+        print(f"prop full-TU tokens/locations/__LINE__ (include bodies elided): {label} PASS")
+    definitions = native + ["RE4DC_PROP_GATE=1", "RE4DC_PROP_GATE_EARLY01=1"]
+    assert preprocess(source, definitions, "trans.cpp") != preprocess(baseline, definitions, "trans.cpp")
+    print("prop ON preprocessed production body differs: PASS")
+
+
+def prop_make_profiles(directory):
+    harness = directory / "prop-profiles.mk"
+    harness.write_text(
+        "OBJDIR := obj\ninclude " + str(MAKE) + "\n"
+        "obj/src/game/trans.o:\n"
+        "\t@echo GAME_CPPFLAGS=$(GAME_CPPFLAGS)\n"
+    )
+    defaults = {"PROP_GATE_EARLY01": "1", "PROP_GATE": "1", "FRONT_NATIVE": "1",
+                "SCENERY_GATE": "1", "FRONT_LEAN": "1", "SKIN_PALETTE_LAZY": "1",
+                "NATIVE_ACTOR_SKIN_LAZY": "1"}
+    def profile(assignments, ok, flag):
+        run = subprocess.run(["make", "-s", "-f", str(harness), "obj/src/game/trans.o",
+                              *[f"{k}={v}" for k, v in assignments.items()]],
+                             text=True, capture_output=True)
+        assert (run.returncode == 0) == ok, (assignments, run.stdout, run.stderr)
+        if ok:
+            assert ("-DRE4DC_PROP_GATE_EARLY01=1" in run.stdout) == flag
+    profile({}, True, False)
+    profile({"PROP_GATE_EARLY01": "0"}, True, False)
+    profile(defaults, True, True)
+    for value in ["2", "-1", "yes", "", "0 1", "1 0"]:
+        profile({**defaults, "PROP_GATE_EARLY01": value}, False, False)
+    for name in defaults:
+        if name == "PROP_GATE_EARLY01":
+            continue
+        for bad in ["0", "", "1 0", "3"]:
+            profile({**defaults, name: bad}, False, False)
+    for name in ["PROP_GATE", "FRONT_NATIVE", "SKIN_PALETTE_LAZY"]:
+        profile({**defaults, name: "2"}, True, True)
+    profile({**defaults, "PROP_GATE": "2", "FRONT_NATIVE": "2", "SKIN_PALETTE_LAZY": "2"}, True, True)
+    print("prop make default/0/1/invalid/prerequisite/check profiles: PASS")
+
+
+def prop_checks(directory):
+    source = TRANS.read_text()
+    prop_tokens(source)
+    prop_make_profiles(directory)
+    body = prop_fragment(source)
+    cpp = (PROP_FIXTURE.read_text()
+           .replace("@ACTUAL_WEIGHTS@", weights_fragment(source))
+           .replace("@ACTUAL_CONTROL@", body.replace("static int propGate(", "static int propGate_control(", 1))
+           .replace("@ACTUAL_SPIKE@", body.replace("static int propGate(", "static int propGate_spike(", 1)))
+    assert "@ACTUAL_" not in cpp
+    path = directory / "prop.cpp"
+    path.write_text(cpp)
+    for mode in [1, 2]:
+        executable = directory / f"prop{mode}"
+        command([CXX, "-std=c++17", "-O2", "-ffp-contract=off", "-Wall", "-Wextra",
+                 f"-DPROP_MODE={mode}", str(path), "-o", str(executable)])
+        print(command([str(executable)]), end="")
+
+
+
 def main():
     source = ACTOR.read_text()
     token_identity(source)
@@ -145,6 +263,7 @@ def main():
         command([CXX, "-std=c++17", "-O2", "-Wall", "-Wextra", "-pedantic",
                  str(path), "-o", str(executable)])
         print(command([str(executable)]), end="")
+        prop_checks(directory)
     print("work_removal_actor01 host checks: PASS (no target/performance claim)")
 
 

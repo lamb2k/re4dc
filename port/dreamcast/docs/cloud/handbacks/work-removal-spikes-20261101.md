@@ -135,3 +135,34 @@ and pool-cleanup paths have no proven archive-current interval across children.
 No persistent cache or new generation mechanism was added to hide that gap.
 
 Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
+
+
+## Slice B — conservative prop eligibility before pose
+
+Control `PROP_GATE_EARLY01=0`, scoped to trans.o. Only the head info is examined
+early, after existing model/projection checks and before pose setup. New dereferences
+require full aligned cached-RAM spans. Empty list, existing reason4 metadata failures
+or an already materialized position buffer can refuse the gate; ordinary rendering
+continues. Unknown spans, hidden head infos and invalid buffer selectors retain the
+original path. No list walk, display-list/header read, weight memo, skin registry or
+lighting/palette operation is moved.
+
+This is narrower than the non-FE TinyKeep hypothesis: **non-FE-only header refusal
+still occurs late**. That larger change needs a stream-owner proof.
+
+Root reran actual complete propGate/propGateWeights extraction:665 cases in each
+PROP_GATE1 and checker2 pass, with matching return/continuation/postlude/checker/
+weight-memo effects. Definite early refusals for B=1..64 bones skip one inverse and
+2B concatenations. Positive inputs pay added metadata checks; net target cost is
+unknown. Simultaneous pose and early-metadata failures can report reason2 ->4/5/8;
+this diagnostic precedence change is explicit and tested.
+
+Independent review repaired inactive PROP_GATE and FRONT_NATIVE parent line exits
+before first publication.33 includes-elided token/location/__LINE__ profiles pass,
+including PROP0/1/2, FRONT0/1/2, scenery/lean combinations and PPC. Reconstructed
+pre-spike controls were verified byte-identical to frozen source. The final combined
+actor driver also passes the15 padding profiles and172245 cases.
+Run `python3 port/dreamcast/tests/test_work_removal_actor01.py`.
+Target programme/overlay/allocated-section OFF identity remains required.
+
+Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.

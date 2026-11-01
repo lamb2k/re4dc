@@ -688,3 +688,8 @@ Independent review caught an inactive ACTOR_REPLAY_SKIN parent line shift in ini
 ### Cloud 2026-11-01: C EFFECT_RECORD_PASS01
 
 A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_RECORD_PASS01 implemented;29 host cases/arm and selector OFF host identity PASS. B corrected source, D grid and E world host-ready for publication; cloth fixture active. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: B PROP_GATE_EARLY01
+
+A padding plus27337b42 correction, B PROP_GATE_EARLY01 and C EFFECT_RECORD_PASS01 implemented/host PASS. B has665 cases in each PROP1/2 and33 inactive-parent line profiles. Grid/world host-ready; cloth active. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
