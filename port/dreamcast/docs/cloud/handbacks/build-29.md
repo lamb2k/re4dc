@@ -2032,3 +2032,8 @@ A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_
 ### Cloud 2026-11-01: D ESP1B_EDGE_REUSE01
 
 A padding, B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01 and D ESP1B_EDGE_REUSE01 implemented/host PASS. Grid1082 cases/5728648 vertex records per arm, zero differences; default0. World host-ready; cloth active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+## Cloud 2026-11-01 final spike handoff to local
+
+Six bounded work-removal spikes are implemented and pushed (source bundle7b29e56d57203b8b521dae9c768f779bd8c72f47) with four reproducible public host suites. Actor A's initial inactive-parent location failure was corrected by27337b4284f505596755219b28578c6d1673185f; the initial A commit alone is superseded. All new controls default0. This closes the bounded source-spike delivery, not any whole EF card or target/runtime/performance gate. Local pickup is unobserved. [Draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [full SHA matrix, worker state, qualification order and risk boundaries](work-removal-spikes-20261101.md) are the handoff. Existing holds/blocked merges and stopped emails remain.

@@ -1,5 +1,138 @@
 # Work-removal spikes: local-agent handback, 2026-11-01
 
+## Latest local handoff — six source spikes pushed; qualification held
+
+Source bundle: `7b29e56d57203b8b521dae9c768f779bd8c72f47`; branch `codex/work-removal-spikes-20261101`.
+Shared with local through draft [PR #62](https://github.com/lamb2k/re4dc/pull/62)
+and existing Build29/31/32 handbacks. Local pickup/execution has not been observed.
+All six controls default0 and no recipe is changed. **Implemented and pushed** are
+complete for these bounded slices. **Integrated, enabled and accepted** are not
+claimed. The larger burst-decode and non-FE-header opportunities remain deferred.
+
+### Delivery commits
+
+| Slice | Exact pushed commit | Local scope |
+|---|---|---|
+| A actor padding | `d72663fa4998d1c8584c4cf2b06a900cb1ad6518` **plus** `27337b4284f505596755219b28578c6d1673185f` | Initial A alone is superseded; take the inactive-parent line correction |
+| B early prop refusal | `87f81a28016bb11faf2866aec8ef960c16ef1978` | Head metadata/materialized buffer only; normal rendering continues |
+| C immediate effect decode | `1632d433b51bb638c46da6418ceaa7056ca1e7ab` | Immediate selector call only; no burst reuse |
+| D grid edge reuse | `3c7608c06f9312cf8af2e48ef077758d5c6604cf` | Existing quad only; no row buffer |
+| E empty world preparation | `0415f16cb8cfc07ad36d66b9dcf2d677caa6440c` | Bind/header/owner/camera retained |
+| F deferred cloth normals | `7b29e56d57203b8b521dae9c768f779bd8c72f47` | Existing normal producer/fallback boundary;64-byte revision/pending state |
+
+These are serialized commits, with shared make fragments/test drivers and tracking
+updates. D extends C's make/test files; B extends A's actor driver. Use the final
+corrected branch tip for the combined source review. Cherry-picking individual
+runtime experiments requires their prerequisite make/test changes and all noted
+corrections; it does not authorize hand-resolving the three older blocked merges.
+
+### Truthful worker / task / next deliverable / dependency matrix
+
+| Worker | Observed execution state | Completed task | Next deliverable | Dependency wait |
+|---|---|---|---|---|
+| root/deep_actor | Completed; files frozen | A/B initial implementation; F cloth implementation and fixtures | None outstanding for the delivered bounded spikes | Local target/runtime gates |
+| root/deep_effects | Completed; files released | C/D implementation; independent actor/world/cloth review; actor line repairs | None outstanding | Burst sharing needs source lifetime proof; no private-data excuse for that deferred proof |
+| root/deep_world | Completed; files frozen | E implementation; independent effects review | None outstanding | Actual empty-pick incidence and target economics |
+| root | Source publication complete; final handoff verification | Main Makefile, exact-source application, repeated host checks, tracking, serialized pushes/readback, PR | Handback to local | Selected target SDK/runtime/console not accessible here |
+| Local coordinator | Pickup/activity not observed | No local execution claimed by cloud | Target OFF/ON qualification, one-switch cost arms, serialized integration decision | Local SDK, runtime/private scenes and console access |
+
+Assignment is not evidence of active execution. Cloud workers above delivered files
+and test results in this session and are no longer represented as running jobs.
+
+### Reproduce the public host gates
+
+From a complete checkout containing the pinned65fe3d1f baseline:
+
+```sh
+python3 port/dreamcast/tests/test_work_removal_actor01.py
+python3 port/dreamcast/tests/test_work_removal_effect01.py
+python3 port/dreamcast/tools/tests/test_world_empty_prep01.py
+python3 port/dreamcast/tests/test_cloth_normals_defer01.py
+```
+
+Root reapplied and reran all four suites in the assembled publication snapshot.
+Effects/world use immutable baseline source; cloth also supports
+`--baseline-root <frozen-source-root>`. Actor reconstruction was independently
+verified against exact frozen source. Includes-elided source location checks and
+host object/executable hashes are **not** target programme/allocated/overlay identity.
+
+New controls are registered through four make fragments included by the real game
+Makefile. Full Makefile knob resolution with an explicitly empty SDK-rules fixture
+reported all six0; object-specific isolated make gates also pass. This proves
+wiring/default resolution only. No selected SH-4 compiler was accessible. The owner
+off-switch scanner is not in the accessible public tree; it was not run. All51
+pre-existing `landed` Status rows are byte-for-byte preserved, and the new row does
+not mark these controls landed or enabled.
+
+### Local experiment order and stop conditions
+
+Qualify target OFF identity before any runtime comparison: absent and explicit0
+must preserve the complete program, allocated sections and overlays under the
+existing judge. Then compile each ON profile with its required parents and invalid
+guard controls. Grid/cloth require actual-target numeric/FPSCR checks. Host stubs
+do not qualify the real FIFO, material lifetime, native texture publication or task
+interactions.
+
+| Control | First useful positive arm | Required negative/cost arm | Added cost to include |
+|---|---|---|---|
+| ACTOR_PADDING_FIRST01 | A current actor workload with nonzero display-list headers | All-zero or zero-prefix padding lists | One branch; no persistent state |
+| EFFECT_RECORD_PASS01 | Natural packed EspEstSetSelect calls | Raw/retaining records and constructor failure paths | No added persistent state; raw-read diagnostics reclassified |
+| ESP1B_EDGE_REUSE01 | Admitted multi-cell grids at several divisions | Small grids, early budget refusal, partial publication and FPSCR variants | Two existing vertex copies per subsequent cell; no row buffer |
+| WORLD_EMPTY_PREP01 | Empty-first and all-empty selected parts | All-visible/nonempty worlds and mutation/resource failures | Early nr check; binding stays |
+| CLOTH_NORMALS_DEFER01 | Native-only cloth updates then fallback | 2x2 sheets, frequent fallback, reuse/retirement and degenerate diagnostics | 64-byte state; per-update and per-draw revision work |
+| PROP_GATE_EARLY01 | Definite head-info metadata/materialized-buffer refusals | Mostly eligible props and non-FE-only rejection (unchanged) | Additional head/span checks; diagnostic reason precedence changes |
+
+Use matched source/assets, same camera/enemy state and identical measurement/
+observer settings. Alternate control/candidate order, include cold and warm cases,
+and report whole-frame milliseconds and distribution plus CPU/PVR/wait components.
+Count natural qualifying operations and fallback/refusal rates; do not extrapolate
+the synthetic work savings to every object or frame. Report code/stack/data and
+heap/VRAM/arena thresholds, since tiny code/data growth can change real costs.
+
+Start with A and C, then D; qualify E where empty-first/all-empty incidence is real.
+F must include small grids and frequent fallback. B's larger non-FE opportunity is
+still unimplemented and its positive-path checks can lose time. Keep any candidate
+parked if net frame cost regresses or output/STRICT/lifetime evidence fails. Combine
+only individually worthwhile candidates and rerun combined memory/cost/identity
+gates. No speed claim, recipe promotion or hardware acceptance follows from this
+handoff.
+
+### Publication and recovery provenance
+
+Current integration was re-fetched between slices; last preserved upstream is
+`cff417dde421e4919825c740eac7f3e3be8a7270`. Its three follow-ups after65fe changed rr-qa and
+release documentation/kit, with no runtime overlap. Topic-only merges preserve
+those updates and published history; no force push or integration-branch write
+occurred. Older staged Blender-policy work and historical worktrees/branch tips
+remain untouched. Git CLI network access was unavailable at the configured proxy;
+GitHub Git-database APIs performed the authorized topic publication.
+
+Every entry below was followed by branch-ref readback. The final documentation
+commit will be identified by PR head and the cloud response.
+
+| Publication | SHA |
+|---|---|
+| Initial activity checkpoint | `03670a1d0da272e9c6dc07b225f6ced2b539cc71` |
+| Preserve current upstream rr-qa change | `e68bf9648698c45a074748d7f9ef869490e46946` |
+| A ACTOR_PADDING_FIRST01 | `d72663fa4998d1c8584c4cf2b06a900cb1ad6518` |
+| Preserve upstream Test25 docs and kit | `90b5be6127b59bb8b93013c918c8676624d3fe97` |
+| A correction: inactive-parent OFF line identity | `27337b4284f505596755219b28578c6d1673185f` |
+| Preserve upstream cff417dd | `fa55a2fa5592e2cc0305e2f4936fddd227aae868` |
+| C EFFECT_RECORD_PASS01 | `1632d433b51bb638c46da6418ceaa7056ca1e7ab` |
+| B PROP_GATE_EARLY01 | `87f81a28016bb11faf2866aec8ef960c16ef1978` |
+| D ESP1B_EDGE_REUSE01 | `3c7608c06f9312cf8af2e48ef077758d5c6604cf` |
+| E WORLD_EMPTY_PREP01 | `0415f16cb8cfc07ad36d66b9dcf2d677caa6440c` |
+| F CLOTH_NORMALS_DEFER01 | `7b29e56d57203b8b521dae9c768f779bd8c72f47` |
+
+Emails remain stopped. Existing private/release/look/console holds and the three
+older blocked merges remain; upstream's separately authorized release-document
+changes were preserved, not reclassified as acceptance of these spikes.
+
+
+---
+
+## Historical activity and bounded slice records
+
 ## Activity checkpoint — source work in progress
 
 User request: spike fixes for the six source-grounded opportunities from the blob-style

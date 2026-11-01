@@ -1926,3 +1926,8 @@ A padding plus27337b42 correction, B PROP_GATE_EARLY01 and C EFFECT_RECORD_PASS0
 ### Cloud 2026-11-01: F CLOTH_NORMALS_DEFER01
 
 All six bounded spikes A-F implemented/published with public host gates: ACTOR_PADDING_FIRST01 (requires27337b42 correction), PROP_GATE_EARLY01, EFFECT_RECORD_PASS01, ESP1B_EDGE_REUSE01, WORLD_EMPTY_PREP01, CLOTH_NORMALS_DEFER01. Cloth46752 assertions in each spring0/1/2 and24 OFF source profiles/file pass;64-byte state. Target/full OFF/runtime/net cost/console pending; no recipe promotion. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+## Cloud 2026-11-01 final spike handoff to local
+
+Six bounded work-removal spikes are implemented and pushed (source bundle7b29e56d57203b8b521dae9c768f779bd8c72f47) with four reproducible public host suites. Actor A's initial inactive-parent location failure was corrected by27337b4284f505596755219b28578c6d1673185f; the initial A commit alone is superseded. All new controls default0. This closes the bounded source-spike delivery, not any whole EF card or target/runtime/performance gate. Local pickup is unobserved. [Draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [full SHA matrix, worker state, qualification order and risk boundaries](work-removal-spikes-20261101.md) are the handoff. Existing holds/blocked merges and stopped emails remain.
