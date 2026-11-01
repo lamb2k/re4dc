@@ -22,6 +22,10 @@
 #     (disc-race, for the GDEMU race gate fullplay/gdemu_gate.sh: copy it to C: once, pass - as the fixture);
 #   7 every swapped disc passes disc_lint.py, loader and standard profiles (KIT_LINT_STANDARD= skips the standard
 #     profile, for a release made before test 16 in the legacy layout).
+#   8 (two-disc release, KIT_DISC2="<Disc 2 knob file>|<Disc 2 play build dir>"; lane castle-disc2-26): the Disc 2 knob
+#     file = the Disc 2 build's knobs, its *-Disc2-Build-Assets.zip passes zipcheck, the clean checkout builds the Disc 2
+#     program with build-public.sh RELEASE_KNOBS=<Disc 2 knob file> (image + overlays = the release's Disc 2), and
+#     swap-program.py --disc 2 puts it on the game zip's disc2/ disc (disc_lint loader + standard).
 # Then run, in Git Bash:  bash port/dreamcast/tools/d367/kit-boot.sh <WORK>   (Flycast: title, New Game, r101).
 # Env: WORK (default /root/probe/kit-check-<test>), JOBS, RE4DC_KOS_BASE (default the maintainers' KOS), RACE_FIXTURE,
 #      KIT_LINT_STANDARD.
@@ -52,7 +56,7 @@ step "2 knob file = release recipe"
 $RK check "$OUTR/candidate.txt" "$KF"
 
 step "3 Build-Assets zip"
-BA=$(ls "$PKG"/*-Build-Assets.zip); GD=$(ls "$PKG"/*-GDEMU.zip | grep -v "/RE4DC-QA-")   # not the QA disc zip
+BA=$(ls "$PKG"/*-Build-Assets.zip | grep -v -- '-Disc2-Build-Assets.zip$'); GD=$(ls "$PKG"/*-GDEMU.zip | grep -v "/RE4DC-QA-")   # not the QA disc zip
 want=$(sed -n 's/^# assets-zip: //p' "$KF")
 [ "$(basename "$BA")" = "$want" ] || { echo "kit-check: package has $(basename "$BA"), the knob file names $want"; exit 1; }
 DS=$(sed -n 's/^# disc-sets: //p' "$KF")   # test 15 on: the disc data files carried in re4dc-assets/disc/
@@ -105,5 +109,27 @@ for d in $DISCS; do
     echo "disc-$d: $(tail -1 "$WORK/disc_lint-$prof-$d.txt" | sed 's#/.*/##')"
   done
 done
+if [ -n "${KIT_DISC2:-}" ]; then
+  KF2=${KIT_DISC2%%|*}; OUT2=$(cd "${KIT_DISC2#*|}" && pwd)
+  case "$KF2" in /*) ;; *) KF2=$PORT/$KF2 ;; esac
+  step "8 Disc 2: $(basename "$KF2"), its Build-Assets zip, clean build, swap onto disc2/"
+  $RK check "$OUT2/candidate.txt" "$KF2"
+  BA2=$(ls "$PKG"/*-Disc2-Build-Assets.zip); want=$(sed -n 's/^# assets-zip: //p' "$KF2")
+  [ "$(basename "$BA2")" = "$want" ] || { echo "kit-check: package has $(basename "$BA2"), the Disc 2 knob file names $want"; exit 1; }
+  $RK zipcheck "$OUT2/candidate.txt" "$BA2" --objdir "$OUT2/obj"
+  mkdir -p "$WORK/assets2"; python3 -c "import sys,zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" "$BA2" "$WORK/assets2"
+  RELEASE_KNOBS=$KF2 ASSETS=$WORK/assets2/re4dc-assets OUT=$WORK/out-play2 $SLOT $BP | tail -1
+  want=$(sed -n 's/^# image-sha256: //p' "$KF2"); have=$(img "$WORK/out-play2/re4dc-game.elf"); rel_img=$(img "$OUT2/re4dc-game.elf")
+  echo "Disc 2 image: kit $have / release build $rel_img / knob file $want"
+  [ "$have" = "$want" ] && [ "$have" = "$rel_img" ] || { echo "kit-check: the kit's Disc 2 program image is not the release's"; exit 1; }
+  for f in "$OUT2"/*.ovl; do cmp "$f" "$WORK/out-play2/$(basename "$f")" || { echo "kit-check: Disc 2 overlay $(basename "$f") differs"; exit 1; }; done
+  python3 "$PORT/tools/swap-program.py" "$GD" "$WORK/out-play2" "$WORK/disc-play2" --disc 2 | tail -1
+  for prof in loader ${KIT_LINT_STANDARD-standard}; do
+    python3 "$PORT/tools/d367/disc_lint.py" --profile $prof "$WORK/disc-play2/disc.gdi" > "$WORK/disc_lint-$prof-play2.txt" ||
+      { grep -vE '^(ok|WARN) ' "$WORK/disc_lint-$prof-play2.txt"; echo "kit-check: disc-play2 fails disc_lint ($prof)"; exit 1; }
+    echo "disc-play2: $(tail -1 "$WORK/disc_lint-$prof-play2.txt" | sed 's#/.*/##')"
+  done
+  rm -rf "$WORK/out-play2/obj" "$WORK/assets2"
+fi
 echo
 echo "KIT-CHECK BUILD OK (test $TEST). Boot gate, in Git Bash: bash port/dreamcast/tools/d367/kit-boot.sh $WORK"

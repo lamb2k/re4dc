@@ -13,6 +13,11 @@ d1, ct, work = sys.argv[1:4]
 os.makedirs(work, exist_ok=True)
 HERE = os.path.dirname(os.path.abspath(__file__))
 OWN = re.compile(r'(^|/)(r2[0-9a-f]{2})[^/]*$|^dc/native/r2[0-9a-f]{2}/|^bgm/aica_str\.dat$|^em/pl01\.drs$|^dc/resident\.bin$')
+# D1_ROOMS (lane castle-disc2-26): rooms whose Disc 1 files win although they are r2xx (r200: the castle gate is also the
+# 2-3 end room of Disc 1, whose release package carries the PS2 cast; the castle21 J copy drew an em12 Ganado on the GC
+# path, CAST-GC r200 1143 frames). Default r200; D1_ROOMS= (empty) restores the castle31 rule.
+D1 = [r for r in os.environ.get('D1_ROOMS', 'r200').split() if r]
+D1RE = re.compile(r'(^|/)(%s)([^0-9a-f/][^/]*)?$|^dc/native/(%s)/' % ('|'.join(D1), '|'.join(D1))) if D1 else None
 
 
 def files(r):
@@ -28,6 +33,8 @@ A, C = files(d1), files(ct)
 rep, rem = {}, []
 for k in sorted(C):
     if k == 'dc/tex.pak':
+        continue
+    if k in A and D1RE and D1RE.search(k):
         continue
     if k not in A or OWN.search(k):
         rep[k] = os.path.join(ct, k)

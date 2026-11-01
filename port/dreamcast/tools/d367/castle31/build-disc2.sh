@@ -13,7 +13,7 @@ export K=${K:?Set K to the build log directory}
 export LP=${LP:?Set a fresh LP label}
 source "$T/port/dreamcast/tools/d367/rr/recipe.conf"
 if [ "${DISC1:-0}" = 1 ]; then
-  export CH2="$CH2 DISC_SET=1"
+  case " $CH2 " in *" DISC_SET=1 "*) ;; *) export CH2="$CH2 DISC_SET=1" ;; esac   # rr recipe RR_DISC2=1 already has it
 else
   PE2=${PE2:-/root/re4data/private/ps2enemy-ch2-20261016}
   PE3=${PE3:-/root/re4data/private/ps2enemy-ch34-20261018/PE3}
@@ -21,8 +21,10 @@ else
   eval "$(sed -n '/^CH4REC=/p' "$T/port/dreamcast/tools/d367/ch4found/ch4-build.sh")"
   # SS11_ROOM_EVICT=1: the Disc 2 load comes from the title (SS heap 11 preload pass); without the evict the title's
   # 1.08 MB dynamic set stays beside r200's preload and 6 entries are evicted (castle31 10-26, c31-d2fast).
-  export CH2="$CH2 $CH4REC DISC_SET=1 WEAPON_WEP05=1 SS11_ROOM_EVICT=1"
+  case " $CH2 " in *" DISC_SET=1 "*) ;; *) CH2="$CH2 DISC_SET=1" ;; esac
+  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1"
 fi
+export CH2
 mkdir -p "$K"
 printf '%s\n' "$CH2" > "$K/disc-knobs-$LP.txt"
 bash "$T/port/dreamcast/tools/d367/ch2/ch2-build.sh" "$@"

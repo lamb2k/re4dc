@@ -498,8 +498,9 @@ def gdi_tracks(gdi):
     return [l.split() for l in gdi.splitlines()[1:] if l.strip()]
 
 
-def unpack_release(src, out):
-    """Copy disc.gdi and its tracks from a zip or a directory into out."""
+def unpack_release(src, out, disc=1):
+    """Copy disc.gdi and its tracks from a zip or a directory into out. A two-disc game zip (Disc 1 in gdemu/, Disc 2 in
+    disc2/; test 26 on) gives the disc picked by --disc."""
     src = Path(src)
     out.mkdir(parents=True, exist_ok=True)
     if src.is_dir():
@@ -509,6 +510,10 @@ def unpack_release(src, out):
         return gdi
     with zipfile.ZipFile(src) as z:
         gdis = [n for n in z.namelist() if n.lower().endswith('disc.gdi')]
+        if len(gdis) > 1:
+            gdis = [n for n in gdis if n.lower() == ('disc2/disc.gdi' if disc == 2 else 'gdemu/disc.gdi')]
+        elif disc != 1:
+            die('%s holds one disc; --disc %d asked' % (src, disc))
         if len(gdis) != 1:
             die('expected one disc.gdi in %s, found %d' % (src, len(gdis)))
         base = gdis[0][:-len('disc.gdi')]
@@ -528,6 +533,7 @@ def main():
                     help='also replace another disc file, e.g. debug/config.txt=my.txt')
     ap.add_argument('--add', action='append', default=[], metavar='DISC/PATH=FILE',
                     help='add a file that is not on the disc yet, e.g. dc/padscript.txt=padscript-newgame.txt')
+    ap.add_argument('--disc', type=int, default=1, choices=(1, 2), help='which disc of a two-disc game zip (default 1)')
     ap.add_argument('--objcopy', default=os.environ.get('SH_OBJCOPY', 'sh-elf-objcopy'))
     ap.add_argument('--selftest', action='store_true', help='re-encode the first sectors and compare (EDC/ECC check)')
     a = ap.parse_args()
@@ -535,6 +541,8 @@ def main():
     if out.exists() and any(out.iterdir()):
         die('%s is not empty' % out)
     blobs = program_files(a.program, a.objcopy)
+    if a.disc == 2:   # Disc 2 carries no village rooms: discsets/mkdisc2.py drops the stage-1 overlays
+        blobs = {k: v for k, v in blobs.items() if not (k.startswith('/dc/st1_') and k.endswith('.ovl'))}
     for r in a.replace:
         k, v = r.split('=', 1)
         blobs['/' + k.strip('/').lower()] = Path(v).read_bytes()
@@ -542,7 +550,7 @@ def main():
     for r in a.add:
         k, v = r.split('=', 1)
         adds['/' + k.strip('/')] = Path(v).read_bytes()
-    gdi = unpack_release(a.release, out)
+    gdi = unpack_release(a.release, out, a.disc)
     lines = gdi_tracks(gdi)
     t3 = [l for l in lines if int(l[1]) == HD_LBA]
     if len(t3) != 1 or t3[0][3] not in (str(RAW), str(USER)):

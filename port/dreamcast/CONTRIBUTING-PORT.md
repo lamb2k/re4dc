@@ -178,6 +178,15 @@ To start a new game by itself (useful for repeatable tests), add the scripted pa
 
 Do not use that disc for normal play: the script presses buttons at fixed times.
 
+**Two-disc releases.** From the castle on, the game zip holds two discs: Disc 1 in `gdemu/` and Disc 2
+(chapter 3 on, the castle) in `disc2/`. Disc 1 asks for Disc 2 at the end of chapter 2-3; save, then boot
+Disc 2 and load that save. Each disc has its own program and its own knob file: the release also ships
+`release-knobs-disc2.txt` and a second `...-Disc2-Build-Assets.zip`. To build and swap the Disc 2 program:
+
+    RELEASE_KNOBS=port/dreamcast/tools/d367/<test>/release-knobs-disc2.txt \
+      ASSETS=<unpacked Disc2-Build-Assets zip>/re4dc-assets bash port/dreamcast/build-public.sh
+    python3 port/dreamcast/tools/swap-program.py <game zip> port/dreamcast/out-public mydisc2 --disc 2
+
 ## 4. Run it
 
 **Flycast:** open `mydisc/disc.gdi`. Keep the track files beside it.

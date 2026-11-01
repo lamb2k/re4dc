@@ -17,7 +17,7 @@ T=$TR/port/dreamcast/tools/d367
 if [ -s "$W/recipe.conf" ]; then . "$W/recipe.conf"; else . "$BIN/recipe.conf"; fi
 # RR_QA_LP / RR_QA_XON / RR_QA_KEEP (lane link28): a diagnostic QA disc from the same steps (its own label prefix,
 #   extra knobs after the QA ones, and a copy of the gdemu folder kept at RR_QA_KEEP); unset = the rr QA disc.
-LQ=${RR_QA_LP:-rr${S7}q}
+LQ=${RR_QA_LP:-${RR_PFX:-rr}${S7}q}
 L=${LQ}rW
 O=/root/probe/lanes/route/out-$L
 R=$W/qa

@@ -23,9 +23,9 @@ rm -rf "${W:?}/gca-bytes"
   python3 "$D/gc_port23/gca_bytes.py" "$W/gca-bytes/catalog/catalog.json" --base "$G/catalog/catalog.json" --json "$W/gca-bytes.json"; } ||
   echo "rr-gca: bytes catalog failed (report row only)"
 rm -rf "${W:?}/gca-bytes/raw"
-FP_TREE=$T FP_SKIP_IDENTITY=1 bash "$D/fullplay/fp_twin.sh" "$ROUTE/out-rr${S7}rP" "rr${S7}a" \
+FP_TREE=$T FP_SKIP_IDENTITY=1 bash "$D/fullplay/fp_twin.sh" "$ROUTE/out-${RR_PFX:-rr}${S7}rP" "${RR_PFX:-rr}${S7}a" \
   GC_ASSET_GATE=1 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-rr${S7}a.txt" 2>&1
-O=$ROUTE/out-fprr${S7}aW
+O=$ROUTE/out-fp${RR_PFX:-rr}${S7}aW
 [ -s "$O/re4dc-game.elf" ] && [ ! -s "$O/missing.txt" ] || { echo "rr-gca: gate twin failed"; tail -5 "$W/twin-rr${S7}a.txt"; exit 1; }
 grep -q "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" "$O/candidate.txt" || { echo "rr-gca: twin lacks the catalog pin"; exit 1; }
 F=$D/fullplay
