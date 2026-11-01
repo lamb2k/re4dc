@@ -65,6 +65,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
+| 29 / 31 / 32 | Work-removal spikes 2026-11-01 (actor, effect/grid, cloth, empty world) | WIP on codex/work-removal-spikes-20261101, base65fe3d1f. Three source workers and root active with exclusive files; actor-padding host slice ready for review. No target/runtime/identity acceptance or recipe change. [Activity and local handback](handbacks/work-removal-spikes-20261101.md). |
 | Systemic 2026-10-29 | Current architecture review and existing EF backlog | RE4-PLAN-SYNC-20261029-1202: user finish cloud work authorizes owner and assigned workers to finish remaining source/synthetic queue, superseding cloud-only ownership. Original cloud refs preserved; source, build, private runtime and console acceptance remain separate. No new Build37+. |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |

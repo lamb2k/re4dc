@@ -660,3 +660,16 @@ Paths name current implementations and functions, not measurements of their impo
 [XM]: ../../../../include/re4dc_xm.h
 [TRANS]: ../../../../src/game/trans.cpp
 [MEM]: ../../game/platform/mem.cpp
+
+
+## Work-removal spike activity, 2026-11-01
+
+User-requested bounded follow-ups on current origin/t15/int `65fe3d1f96ab269c136053725850101be9d3e692` are active
+on `codex/work-removal-spikes-20261101`: actor padding/prop early eligibility (existing Build32),
+immediate effect decode and horizontal grid reuse (Build29), deferred cloth normals
+(Build32/EF11) and empty-pick geometry preparation after binding (Build31/EF08-09).
+This supplements the ranked backlog; it does not close an EF card or alter any existing
+landed/default/acceptance marker. See [the worker matrix and local handback](handbacks/work-removal-spikes-20261101.md).
+Only the padding production-fragment host slice is ready for root review at this
+checkpoint. Other spikes remain WIP; all target/full OFF/runtime/cost/console gates
+are pending. No new build number, recipe enablement, private publication or email.
