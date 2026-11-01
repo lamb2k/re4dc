@@ -16,11 +16,11 @@ BIN=$(cd "$(dirname "$0")" && pwd)
 FORCE=0; TIER=quick
 while [ $# -gt 0 ]; do case $1 in --force) FORCE=1 ;; --tier) TIER=$2; shift ;; *) echo "rr-cycle: arg? $1" >&2; exit 2 ;; esac; shift; done
 MAIN=/root/work/re4-dreamcast
-TA=/root/work/lanes/rr; TB=/root/work/lanes/rr-b
+TA=${RR_TA:-/root/work/lanes/rr}; TB=${RR_TB:-/root/work/lanes/rr-b}
 ROUTE=/root/probe/lanes/route
 TOOL=/opt/toolchains/dc/sh-elf/bin
-CBASE="/mnt/c/Game Dev/Emulators/RE4DC-RR"
-EBASE=/mnt/c/Flycast-Evidence/re4-dreamcast/rr
+CBASE=${RR_CBASE:-"/mnt/c/Game Dev/Emulators/RE4DC-RR"}
+EBASE=${RR_EBASE:-/mnt/c/Flycast-Evidence/re4-dreamcast/rr}
 GITBASH="/mnt/c/Program Files/Git/bin/bash.exe"
 FLOOR_GB=${RR_FLOOR_GB:-20}
 mkdir -p "$RR_HOME/state" "$RR_HOME/work" "$RR_HOME/logs"
@@ -44,6 +44,9 @@ if [ "$TIER" = full ]; then
 else
   git -C "$MAIN" fetch -q origin t15/int
   SHA=$(git -C "$MAIN" rev-parse origin/t15/int)
+  # RR_SHA (lane castle-disc2-26): a lane runs the cycle on its own commit (with RR_PFX / RR_HOME / RR_TA / RR_TB /
+  # RR_CBASE / RR_EBASE / RR_REPORT of its own); the watcher never sets it
+  [ -z "${RR_SHA:-}" ] || SHA=$(git -C "$MAIN" rev-parse "$RR_SHA")
 fi
 S8=${SHA:0:8}; S7=${SHA:0:7}
 LAST=$(cat "$RR_HOME/state/last-tried" 2>/dev/null || true)
@@ -86,8 +89,8 @@ trees() {
 }
 build_release() {
   local tt=$TA/port/dreamcast/tools/d367
-  K=$W/k T=$TA LP=rr$S7 CH2="$CH2" bash "$tt/ch2/ch2-build.sh" rP 2>&1 | grep '^rc=' | cut -c1-200 | tee "$W/build-rP.txt"
-  local O=$ROUTE/out-rr${S7}rP
+  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash "$tt/ch2/ch2-build.sh" rP 2>&1 | grep '^rc=' | cut -c1-200 | tee "$W/build-rP.txt"
+  local O=$ROUTE/out-${RR_PFX:-rr}${S7}rP
   grep -q '^rc=0 ' "$W/build-rP.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "release build failed"; return 1; }
   [ ! -s "$O/missing.txt" ] || { echo "missing.txt not empty:"; head "$O/missing.txt"; return 1; }
   # DROP-PROOF (lane purge-audit26 10-26): every drop / cut / empty the built recipe makes (ETS_MATCH rows, NONE-cut keys,
@@ -101,19 +104,19 @@ build_release() {
 }
 twin() { # twin <tree> <label> [knobs...]
   local t=$1 l=$2; shift 2
-  FP_TREE=$t FP_SKIP_IDENTITY=1 bash "$t/port/dreamcast/tools/d367/fullplay/fp_twin.sh" "$ROUTE/out-rr${S7}rP" "$l" "$@" > "$W/twin-$l.txt" 2>&1
+  FP_TREE=$t FP_SKIP_IDENTITY=1 bash "$t/port/dreamcast/tools/d367/fullplay/fp_twin.sh" "$ROUTE/out-${RR_PFX:-rr}${S7}rP" "$l" "$@" > "$W/twin-$l.txt" 2>&1
   [ -s "$ROUTE/out-fp${l}W/re4dc-game.elf" ] && [ ! -s "$ROUTE/out-fp${l}W/missing.txt" ]
 }
 build_twins() {
   # A: g (the full-play gate's twin: h2 + GDEMU). B: c (census + KOS squeeze: registry census, KOS watch / squeeze,
   # W11 fixture). Two bases only: C: space (each base is a ~1 GB track03 in the disc cache).
-  twin "$TA" rr${S7}g & local pa=$!
-  twin "$TB" rr${S7}c KOS_WATCH=1 KOS_SQUEEZE=1 W11_FIXTURE=1 NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 & local pb=$!
+  twin "$TA" ${RR_PFX:-rr}${S7}g & local pa=$!
+  twin "$TB" ${RR_PFX:-rr}${S7}c KOS_WATCH=1 KOS_SQUEEZE=1 W11_FIXTURE=1 NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 & local pb=$!
   local rc=0; wait $pa || rc=1; wait $pb || rc=1
   tail -n 2 "$W"/twin-*.txt | cut -c1-200; return $rc
 }
 package() {
-  local tt=$TA/port/dreamcast/tools/d367 O=$ROUTE/out-rr${S7}rP
+  local tt=$TA/port/dreamcast/tools/d367 O=$ROUTE/out-${RR_PFX:-rr}${S7}rP
   # the newest published knob file = the one most recently committed (names do not sort: test122 is 12.2)
   local newest; newest=$(for f in "$tt"/test*/release-knobs.txt; do echo "$(git -C "$TA" log -1 --format=%ct -- "$f") $f"; done | sort -n | tail -1 | cut -d' ' -f2-)
   mkdir -p "$W/kit" "$W/pkg/fix"
@@ -123,9 +126,9 @@ package() {
     --assets-zip "RE4DC-TestRR-$S8-Build-Assets.zip" --disc-sets "$KSETS" > /dev/null
   { echo "newest published knob file: ${newest#$TA/}"
     diff <(grep -v '^#' "$newest") <(grep -v '^#' "$W/kit/release-knobs.txt") || true; } > "$W/knobs-diff.txt"
-  RE4DC_RESIDENT_STRICT=1 python3 "$tt/test11/t11-fix.py" rr${S7}rP "$W/pkg/fix/pkg-rr${S7}rP.json" --base payload --data "$DATA" | tail -1 | cut -c1-200
+  RE4DC_RESIDENT_STRICT=1 python3 "$tt/test11/t11-fix.py" ${RR_PFX:-rr}${S7}rP "$W/pkg/fix/pkg-${RR_PFX:-rr}${S7}rP.json" --base payload --data "$DATA" | tail -1 | cut -c1-200
   local CAND="$CBASE/cand-$S8"; mkdir -p "$CAND"
-  R=$W/pkg L=rr${S7}rP P="$CAND" SRC_SHA=$S8 TN=RR PKG_KIT_DIR=$W/kit KSETS=$KSETS NOZIP=1 bash "$tt/test16/t16-package.sh" > "$W/package.txt" 2>&1 \
+  R=$W/pkg L=${RR_PFX:-rr}${S7}rP P="$CAND" SRC_SHA=$S8 TN=RR PKG_KIT_DIR=$W/kit KSETS=$KSETS NOZIP=1 bash "$tt/test16/t16-package.sh" > "$W/package.txt" 2>&1 \
     || { tail -20 "$W/package.txt"; return 1; }
   grep -E 'disc_lint|boot file|PACKAGE|tracks-match' "$W/package.txt" | cut -c1-200
   cp "$W/pkg/logs/"disc_lint-*.txt "$EVU/" 2>/dev/null || true
@@ -138,7 +141,7 @@ bases() {
   python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/rel/tree" --manifest "$W/rel/manifest.json" --ipbin "$W/rel/IP.BIN" | tail -1
   local rc=0
   for x in g c; do
-    bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fprr${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
+    bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fp${RR_PFX:-rr}${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
   done   # one at a time: each base peaks ~2 GB on C: (ext4 vhdx + disc cache)
   # MEMBER-CENSUS (lane fix-r100-props26 10-26): every file / room-archive member / tex.pak key that differs from the
   # last published release tree ($MC_REF_TREE, recipe.conf) must be claimed by a row of $MC_CLAIMS (rr/member_census.py).
@@ -149,7 +152,7 @@ bases() {
   else echo "MEMBER-CENSUS skipped: no reference tree (MC_REF_TREE=${MC_REF_TREE:-})" > "$W/member-census.txt"; fi
   # MOTION-KEYS (lane cast-ps2-25 10-26): every dc/mot key a live MTC table of the candidate tree names exists in its dc/mot,
   # and the release fixture's remove list hits none of them (Test 25 r100 house siege: missing motion key halt).
-  python3 "$TA/port/dreamcast/tools/d367/motion/mot_refs.py" "$W/rel/tree" --fixture "$W/pkg/fix/pkg-rr${S7}rP.json" \
+  python3 "$TA/port/dreamcast/tools/d367/motion/mot_refs.py" "$W/rel/tree" --fixture "$W/pkg/fix/pkg-${RR_PFX:-rr}${S7}rP.json" \
     --json "$W/motion-keys.json" > "$W/motion-keys.txt" 2>&1 || true
   tail -n 1 "$W/motion-keys.txt"
   # EFFECT-CENSUS (lane fix-r100-props26 10-26): per route room, the effect sets (EFF sequences / paths / models /
@@ -172,17 +175,17 @@ gca() { bash "$BIN/rr-gca.sh" "$W" "$TA" "$S7" "$EVU"; }
 
 trace_arms() { # full tier: the recipe's trace arm (A) and the reference recipe's (B), then their bases
   local rc=0
-  K=$W/k T=$TA LP=rr$S7 CH2="$CH2" bash "$TA/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-rT.txt" &
+  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash "$TA/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-rT.txt" &
   local pa=$!
-  K=$W/kb T=$TB LP=rr${S7}ref CH2="$CH2_REF" bash "$TB/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-refrT.txt" &
+  K=$W/kb T=$TB LP=${RR_PFX:-rr}${S7}ref CH2="$CH2_REF" bash "$TB/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-refrT.txt" &
   wait $pa || rc=1; wait $! || rc=1
   cat "$W/build-rT.txt" "$W/build-refrT.txt"
   grep -q '^rc=0 ' "$W/build-rT.txt" && grep -q '^rc=0 ' "$W/build-refrT.txt" || return 1
   local F=$TA/port/dreamcast/tools/d367/fullplay CAND; CAND=$(cat "$W/cand.txt")
   [ -d "$W/rel/tree" ] || python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/rel/tree" --manifest "$W/rel/manifest.json" --ipbin "$W/rel/IP.BIN" | tail -1
-  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tT" "$ROUTE/out-rr${S7}rT" > "$W/master-tT.txt" 2>&1 &
+  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tT" "$ROUTE/out-${RR_PFX:-rr}${S7}rT" > "$W/master-tT.txt" 2>&1 &
   pa=$!
-  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tR" "$ROUTE/out-rr${S7}refrT" > "$W/master-tR.txt" 2>&1 || rc=1
+  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tR" "$ROUTE/out-${RR_PFX:-rr}${S7}refrT" > "$W/master-tR.txt" 2>&1 || rc=1
   wait $pa || rc=1
   rm -rf "${W:?}/rel/tree"; return $rc
 }
@@ -194,12 +197,14 @@ if [ "$TIER" = full ]; then
   LGW=$(sed -n 's/^work=//p' "$RR_HOME/state/last-good")
   for f in cand.txt image.sha256 knobs-diff.txt diff-log.txt; do cp "$LGW/$f" "$W/" 2>/dev/null || true; done
   # MOTION-KEYS reads the release fixture the quick cycle wrote in package(); the full tier does not package, so carry it
-  mkdir -p "$W/pkg/fix"; cp "$LGW/pkg/fix/pkg-rr${S7}rP.json" "$W/pkg/fix/" 2>/dev/null || echo "full: no release fixture in $LGW"
-  [ -s "$ROUTE/out-rr${S7}rP/re4dc-game.elf" ] || { echo "full: release build out-rr${S7}rP is gone"; ok=0; }
-  if [ $ok = 1 ] && { ! [ -s "$ROUTE/out-fprr${S7}gW/re4dc-game.elf" ] || ! [ -s "$ROUTE/out-fprr${S7}cW/re4dc-game.elf" ]; }; then
+  mkdir -p "$W/pkg/fix"; cp "$LGW/pkg/fix/pkg-${RR_PFX:-rr}${S7}rP.json" "$W/pkg/fix/" 2>/dev/null || echo "full: no release fixture in $LGW"
+  [ -s "$ROUTE/out-${RR_PFX:-rr}${S7}rP/re4dc-game.elf" ] || { echo "full: release build out-${RR_PFX:-rr}${S7}rP is gone"; ok=0; }
+  if [ $ok = 1 ] && { ! [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}gW/re4dc-game.elf" ] || ! [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}cW/re4dc-game.elf" ]; }; then
     step build-twins build_twins || ok=0
   fi
   [ $ok = 1 ] && { step bases bases || ok=0; }
+  # Disc 2 (castle-disc2-26): its bases again from the candidate's disc2/gdemu (no rebuild of the Disc 2 image)
+  if [ $ok = 1 ] && [ "${RR_DISC2:-0}" = 1 ]; then D2_MODE=bases step disc2 bash "$BIN/rr-disc2.sh" "$W" "$TA" "$TB" "$S7" "$EVU" || echo "Disc 2 bases failed"; fi
   if [ $ok = 1 ] && [ -n "${CH2_REF:-}" ]; then step trace-arms trace_arms || echo "trace arms failed: decisions not run"; fi
   # SPEED (lane guards28 10-28): candidate vs the live release (recipe.conf RR_SPEED_REF) on the five hwmodel benchmark
   # scenes, MODELLED; rr/speed/rr-speed.sh writes $W/speed.txt, rr-judge.py rows it. RR_SPEED=0 skips (row SKIP).
@@ -217,6 +222,9 @@ else
   [ $ok = 1 ] && { step package package || ok=0; }
   [ $ok = 1 ] && { step bases bases || ok=0; }
   if [ $ok = 1 ] && [ "${RR_GCA:-1}" != 0 ]; then step gca gca || echo "gca prep failed: the GC-ASSET check reports it"; fi
+  # Disc 2 (lane castle-disc2-26, recipe.conf RR_DISC2=1): the castle disc of this commit beside the Disc 1 candidate
+  # (<cand>/disc2/gdemu) and its census / GC-ASSET bases; rr-judge.py fails the cycle when it did not build (disc2.ok)
+  if [ $ok = 1 ] && [ "${RR_DISC2:-0}" = 1 ]; then step disc2 bash "$BIN/rr-disc2.sh" "$W" "$TA" "$TB" "$S7" "$EVU" || echo "Disc 2 arm failed: its row reports it"; fi
 fi
 if [ $ok = 1 ]; then
   if [ "$TIER" = full ]; then step jobs jobs_full || ok=0; else step jobs jobs_quick || ok=0; fi
@@ -231,7 +239,7 @@ if [ "$TIER" = full ]; then
   cp "$W/RELEASE-READY.md" "$RR_HOME/state/full-last.md" 2>/dev/null || true
   rm -rf "${EVU:?}/_discs"
   find "$EVU" \( -name 'track0*.iso' -o -name 'track03.bin' -o -name 'disc.bin' \) -delete
-  for a in rT refrT; do [ -d "$ROUTE/out-rr${S7}$a" ] && rm -rf "${ROUTE:?}/out-rr${S7}${a:?}"; done
+  for a in rT refrT; do [ -d "$ROUTE/out-${RR_PFX:-rr}${S7}$a" ] && rm -rf "${ROUTE:?}/out-${RR_PFX:-rr}${S7}${a:?}"; done
   exit 0
 fi
 
@@ -256,7 +264,7 @@ fi
 # QA disc (standing rule 8; user 10-21: right after the quick smoke test, first thing on the new candidate, before
 # the full tier). Never blocks: its own QA rows in RELEASE-READY.md; the game verdict and last-good stay as they are.
 # The QA zip stays in the candidate dir (RE4DC-QA-TestRR-<sha8>-<date>-GDEMU.zip) so it can go to testers first.
-if [ "$VERDICT" = PASS ]; then
+if [ "$VERDICT" = PASS ] && [ "${RR_QA:-1}" != 0 ]; then
   QV=$(bash "$BIN/rr-qa-tier.sh" "$W" "$TA" "$SHA" "$ID" 2>&1 | tee -a "$W/cycle.log" | tail -1) || true
   log "cycle $ID QA ${QV:-FAIL} (reported only; the game verdict is unchanged)"
 fi

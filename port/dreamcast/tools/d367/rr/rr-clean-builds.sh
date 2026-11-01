@@ -6,7 +6,7 @@ S7=${1:?sha7}
 [[ "$S7" =~ ^[0-9a-f]{7}$ ]] || { echo "rr-clean-builds: bad sha7 '$S7'" >&2; exit 2; }
 ROUTE=/root/probe/lanes/route
 M=/root/rr/logs/deleted-manifest.txt
-for d in "$ROUTE"/out-rr"$S7"* "$ROUTE"/out-fprr"$S7"*; do
+for d in "$ROUTE"/out-"${RR_PFX:-rr}$S7"* "$ROUTE"/out-fp"${RR_PFX:-rr}$S7"*; do
   [ -d "$d" ] || continue
   echo "$(date -Is) $d $(du -sh "$d" | cut -f1)" >> "$M"
   rm -rf "${d:?}"

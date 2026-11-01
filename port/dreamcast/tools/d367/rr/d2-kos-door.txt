@@ -1,0 +1,18 @@
+# Disc 2 KOS door scene (lane castle-disc2-26): castle31/warps/a-r200.txt without its squeeze line (kos_squeeze.sh adds it)
+name castle31-r200-door
+room 0x200
+chapter 6
+pos -94 9 -196
+ang 1.4270
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 200
+dump
+goto 300 90900 15871 -68800 1.41 sub
+act 330 fwd 40
+act 380 a 10
+act 420 a 10
+entry 2
+alivelog 60

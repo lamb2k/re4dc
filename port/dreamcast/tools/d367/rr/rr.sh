@@ -38,12 +38,12 @@ case "${1:-status}" in
     # package README: the newest committed test<N>/README-package.txt on origin/t15/int (same rule as the knob file)
     git -C /root/work/re4-dreamcast fetch -q origin t15/int || true
     mkdir -p "$W/kit"; echo "README: $(bash "$RR_HOME/bin/rr-newest.sh" 'test[^/]*' README-package.txt "$W/kit/README-package.txt")"
-    TT=/root/work/lanes/rr/port/dreamcast/tools/d367; O=/root/probe/lanes/route/out-rr${S7}rP
+    TT=/root/work/lanes/rr/port/dreamcast/tools/d367; O=/root/probe/lanes/route/out-${RR_PFX:-rr}${S7}rP
     [ "$(git -C /root/work/lanes/rr rev-parse HEAD)" = "$SHA" ] || git -C /root/work/lanes/rr checkout -q -f --detach "$SHA"
     python3 "$TT/release-knobs.py" write "$O/candidate.txt" "$W/kit/release-knobs.txt" --test "$TN" --tag "$TAG" --source "${SHA:0:8}" \
       --recipe port/dreamcast/tools/d367/ch2/ch2-build.sh --image-sha256 "$(lg image)" \
       --assets-zip "RE4DC-Test$TN-${SHA:0:8}-Build-Assets.zip" --disc-sets "$KSETS"
-    R=$W/pkg L=rr${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
+    R=$W/pkg L=${RR_PFX:-rr}${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
     echo "knob file for the release lane: $W/kit/release-knobs.txt"
     # the QA disc zip beside the game zip (standing rule 8)
     { bash "$RR_HOME/bin/rr-qa.sh" "$W" /root/work/lanes/rr "$SHA" "$TN" "$CAND" 2>&1 | tail -6; } \

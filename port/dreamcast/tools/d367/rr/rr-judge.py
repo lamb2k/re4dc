@@ -11,8 +11,9 @@ from pathlib import Path
 
 W, T, BIN = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
 D367 = T / 'port/dreamcast/tools/d367'
-REPORT = Path('/mnt/c/Game Dev/Emulators/RELEASE-READY.md')
+REPORT = Path(os.environ.get('RR_REPORT', '/mnt/c/Game Dev/Emulators/RELEASE-READY.md'))
 RR_HOME = Path(os.environ.get('RR_HOME', '/root/rr'))
+PFX = os.environ.get('RR_PFX', 'rr')   # build label prefix (lane castle-disc2-26: a lane can run the cycle on its own labels)
 env = dict(l.split('=', 1) for l in (W / 'cycle.env').read_text().split('\n') if '=' in l)
 QA = len(sys.argv) > 4 and sys.argv[4] == 'qa'   # qa <evidence>: the QA disc section only (never the game verdict)
 EVU = Path(sys.argv[5]) if QA else Path(env['ev']); J = EVU / '_jobs'
@@ -99,9 +100,9 @@ for s in ('trees', 'build-release', 'build-twins', 'package', 'bases'):
 
 image = rd(W / 'image.sha256').strip()
 add('missing.txt empty', build_ok or 'missing.txt not empty' not in rd(W / 'cycle.log'),
-    'release build out-rr%srP' % env['sha'][:7])
+    'release build out-%s%srP' % (PFX, env['sha'][:7]))
 for prof in ('loader', 'standard'):
-    t = rd(W / ('pkg/logs/disc_lint-%s-rr%srP.txt' % (prof, env['sha'][:7]))).strip().splitlines()
+    t = rd(W / ('pkg/logs/disc_lint-%s-%s%srP.txt' % (prof, PFX, env['sha'][:7]))).strip().splitlines()
     if t:   # t16-package.sh stops on any disc_lint violation, so a finished package step means both passed
         add('disc_lint ' + prof, 'package' in srt and srt['package'][3] == 0, t[-1][:120])
 
@@ -280,6 +281,79 @@ if build_ok and jobs:
                 halts.append(n)
         add('VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
         add('census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
+    # Disc 2 (lane castle-disc2-26; recipe.conf RR_DISC2=1, rr-disc2.sh + rr-jobs.sh disc2_jobs): the castle disc's build and
+    # disc checks, census of the 3-1 rooms (CAST-GC / LEON-GC / TEXCHK / VRAM / HALT, cap 4 peak), KOS 48 KiB, GDEMU, GC-ASSET.
+    if re.search(r'^RR_DISC2=1', rd(W / 'recipe.conf'), re.M):
+        de = dict(l.split('=', 1) for l in rd(W / 'disc2.env').splitlines() if '=' in l)
+        add('Disc 2 build + disc', (W / 'disc2.ok').exists(),
+            ('program %s end %s, %s files, %s sectors (limit 504000), village files pruned %s; disc_lint loader+standard 0' % (
+                de.get('prog', '?')[:16], de.get('end', '?'), de.get('files', '?'), de.get('sectors', '?'), de.get('village_pruned', '?'))
+             if (W / 'disc2.ok').exists() else 'rr-disc2.sh failed: see cycle.log'))
+        r2 = rd(W / 'd2-census-rooms.txt').split()
+        l2 = [EVU / ('d2cg-' + r) / 'run-output.txt' for r in r2 if (EVU / ('d2cg-' + r) / 'run-output.txt').exists()]
+        if r2 or (W / 'disc2.ok').exists():
+            add('Disc 2 census ran', bool(r2) and len(l2) == len(r2), '%d/%d rooms: %s' % (len(l2), len(r2), ' '.join(r2)))
+        if l2:
+            cg = subprocess.run(['python3', str(D367 / 'cast_gc.py')] + [str(x) for x in l2] + ['--label', 'rrd2', '--json', str(EVU / 'castgc-d2.json')],
+                                capture_output=True, text=True)
+            (EVU / 'castgc-d2.txt').write_text(cg.stdout + cg.stderr)
+            line = [l for l in cg.stdout.splitlines() if l.startswith('CAST-GC')]
+            add('Disc 2 CAST-GC', bool(line) and line[-1].rstrip().endswith('(PASS)'), line[-1][:160] if line else 'rc=%d' % cg.returncode)
+            lf = []
+            for x in l2:
+                r = subprocess.run(['python3', str(D367 / 'mcheck/leongc_check.py'), str(x)], capture_output=True, text=True)
+                if 'PASS' not in ((r.stdout.strip().splitlines() or [''])[-1]):
+                    lf.append(x.parent.name[5:])
+            add('Disc 2 LEON-GC', not lf, '%d/%d PASS%s' % (len(l2) - len(lf), len(l2), (' (fail: ' + ' '.join(lf) + ')') if lf else ''))
+            tx = subprocess.run(['bash', str(D367 / 'texchk/texchk.sh')] + [str(x) for x in l2], capture_output=True, text=True)
+            (EVU / 'texchk-d2.txt').write_text(tx.stdout + tx.stderr)
+            tf, cur = [], None
+            for l in tx.stdout.splitlines():
+                m2 = re.match(r'== .*/d2cg-(r[0-9a-f]+)/run-output\.txt', l)
+                if m2:
+                    cur = m2.group(1)
+                elif l.startswith('  TEXCHK FAIL') and cur:
+                    tf.append(cur); cur = None
+            unk = [r for r in tf if ('texchk-d2', r) not in known]
+            add('Disc 2 TEXCHK', not unk, '%d/%d PASS%s' % (len(l2) - len(tf), len(l2), (' (fail: ' + ' '.join(tf) + ')') if tf else ''))
+            vr, halts, peak = [], [], {}
+            for x in l2:
+                o = x.read_text(errors='replace').replace('\x00', '')
+                n = x.parent.name[5:]
+                if o.count('no contiguous'):
+                    vr.append('%s %d' % (n, o.count('no contiguous')))
+                if bad.search(o):
+                    halts.append(n)
+                peak[n] = max([int(v) for v in re.findall(r'warp: alive (\d+)', o)] or [0])
+            add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
+            add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
+            add('Disc 2 cap 4 (peak alive)', max(list(peak.values()) or [0]) <= 4, ' '.join('%s=%d' % kv for kv in sorted(peak.items())))
+        for n, _, _, rc in jobs:
+            if n == 'd2kos':
+                lg = rd(J / 'd2kos.log')
+                hr = [int(x) for x in re.findall(r'min_headroom=(\d+)', lg)]
+                add('Disc 2 KOS 48 KiB (r200 door, r202 fight)', 'GATE PASS' in lg,
+                    (', '.join(l.split(' held')[0] for l in lg.splitlines() if l.startswith(('PASS kos', 'FAIL kos')))[:300] +
+                     ('; min headroom %d' % min(hr) if hr else '')) or lg.strip()[-120:])
+            if n == 'd2gdemu':
+                lg = rd(J / 'd2gdemu.log')
+                g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
+                add('Disc 2 GDEMU race (r200 -> r202 door)', bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
+        g2 = sorted(EVU.glob('d2gca-*/run-output.txt'))
+        if g2:
+            G = D367 / 'gc_port23'
+            jj = W / 'gca-d2-judge.json'
+            rooms = sum([['--room', '0' + p.parent.name[7:]] for p in g2], [])
+            subprocess.run(['python3', str(G / 'judge.py'), *map(str, g2), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(G / 'allowlist.json'),
+                            '--unwired-baseline', str(G / 'unwired-baseline.json'), *rooms, '--json', str(jj)], capture_output=True, text=True)
+            try:
+                j = json.loads(jj.read_text())
+            except (OSError, ValueError):
+                j = {'pass': False, 'failures': ['judge.py did not run']}
+            nc = j.get('not_covered_errors') or {}
+            add('Disc 2 GC-ASSET gate', bool(j.get('pass')), ('not covered: %s' % ('; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items())))
+                for r, c in sorted(nc.items())) or 'none') + ('' if j.get('pass') else ' | ' + ' / '.join(j.get('failures', [])[:3])))[:600],
+                knownrow=os.environ.get('RR_GCA_MODE', 'gate') == 'report')
     # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
     sg = EVU / 'siege-r100' / 'run-output.txt'
     if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
