@@ -233,11 +233,19 @@ void burn(unsigned us)
 }
 
 // Full-screen UI, movies, loads and doors keep today's loop: in-room play only.
+#if defined(RE4DC_PACE_CALL26) && RE4DC_PACE_CALL26
+extern "C" int re4dc_ss_pace_call();   // sscrn_bridge.cpp: the codec, area swapped in (PACE_CALL26)
+#endif
 bool context_ok()
 {
     if (!pG || pG->Rno0 != 3) return false;
     if (pG->System_flg & (0x400 | 0x100000)) return false;   // held picture / room change
+#if defined(RE4DC_PACE_CALL26) && RE4DC_PACE_CALL26
+    // PACE_CALL26: a radio call paces like play once its area is in; every other sub screen as before.
+    if ((pG->Status_flg[2] & 0x04000000) && !re4dc_ss_pace_call()) return false;
+#else
     if (pG->Status_flg[2] & 0x04000000) return false;         // sub screen requested or open
+#endif
     if (re4dc_ui_movie_texture && re4dc_ui_movie_texture()) return false;
     return true;
 }

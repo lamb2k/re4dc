@@ -1173,6 +1173,17 @@ extern "C" int re4dc_portrait_hair(const void*,const void*,const Re4dcModelPart*
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
     if(!RE4DC_MODEL_DIAG() || pass)return;
+#if defined(RE4DC_CALL26_DIAG) && RE4DC_CALL26_DIAG
+    if(pG->Status_flg[2]&0x04000000){  // CALL26_DIAG: sub screen open: per-info census
+        struct E{const void* m;const void* i;unsigned id,np,parts,vtx,bytes,be,flags;};static E e[48];static unsigned ne,f0;
+        auto* cm=(const cModel*)model;auto* ci=(const cModelInfo*)info_ptr;const ModelData* cd=ci->pData;
+        unsigned k=0;for(;k<ne;++k)if(e[k].m==model&&e[k].i==info_ptr)break;
+        if(k==ne&&ne<48){e[ne]=E{model,info_ptr,unsigned(cm->id)|(unsigned(cm->kindid)<<8),unsigned(cm->nParts),0,cd?unsigned(cd->nVtx):0,0,unsigned(ci->be_flag),cd?unsigned(cd->flags):0};++ne;}
+        if(k<ne){++e[k].parts;e[k].bytes+=((const ModelPart*)part_ptr)->size;}
+        const unsigned fr=unsigned(pG->Frame_cnt);if(!f0)f0=fr;
+        if(fr-f0>=300){for(unsigned j=0;j<ne;++j)re4dc_log("CALL26 m=%p id=%x np=%u info=%p be=%x fl=%x vtx=%u parts/f=%u bytes/f=%u\n",e[j].m,e[j].id,e[j].np,e[j].i,e[j].be,e[j].flags,e[j].vtx,e[j].parts/(fr-f0),e[j].bytes/(fr-f0));ne=0;f0=fr;}
+    }
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     struct BridgeProf { const void* m; unsigned long long t0; unsigned b0;
         ~BridgeProf(){re4dc_pprof_add(m,9,unsigned(re4dc_otp_now_us()-t0),re4dc_stream_model_bytes_now()-b0);} }

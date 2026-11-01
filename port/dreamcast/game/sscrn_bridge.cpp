@@ -383,6 +383,11 @@ static void overlay_load(u32 lo, u32 limit, unsigned* reloc_us)
 // its current frame state only; no second subscreen lifetime or state cache.
 extern "C" int re4dc_ss_ui_order() { return swapped ? 1 : 0; }
 #endif
+#if defined(RE4DC_PACE_CALL26) && RE4DC_PACE_CALL26
+// PACE_CALL26 (call26.mk): the codec (type 0x20) with its area swapped in; pace.cpp lets it pace.
+static u32 swapped_type;
+extern "C" int re4dc_ss_pace_call() { return swapped && swapped_type == 0x20 ? 1 : 0; }
+#endif
 
 // SubScreenAramRead replacement (game start): the area layout, from the disc file sizes.
 extern "C" void re4dc_subscreen_aram_init(SubScreenWork* wk)
@@ -642,6 +647,9 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
 #endif
 #line 499
     swapped = true;
+#if defined(RE4DC_PACE_CALL26) && RE4DC_PACE_CALL26
+    swapped_type = u32(wk->type);
+#endif
     area_lo = lo;
     area_hi = hi;
 #if RE4DC_SS_CERT
