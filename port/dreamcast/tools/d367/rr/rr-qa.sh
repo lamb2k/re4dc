@@ -45,7 +45,8 @@ if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [
 [ -z "${RR_QA_LINKTXT:-}" ] || printf '%b\n' "$RR_QA_LINKTXT" > "$R/qa/link.txt"
 mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 # lane linkpad28: the remote-driving pad scripts (QA link SCRIPT <name> plays /cd/dc/qa/pad/<name>.txt)
-mkdir -p "$R/pkgtree/dc/qa/pad"; cp "$TR"/port/dreamcast/tools/qalink/pad/*.txt "$R/pkgtree/dc/qa/pad/"
+# the link pad pages exist from link28 on (the SPEED-GPU reference may predate it, like QL above)
+[ -z "$QL" ] || { mkdir -p "$R/pkgtree/dc/qa/pad"; cp "$TR"/port/dreamcast/tools/qalink/pad/*.txt "$R/pkgtree/dc/qa/pad/"; }
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)
 for prof in loader standard; do
