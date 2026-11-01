@@ -53,7 +53,7 @@ LAST=$(cat "$RR_HOME/state/last-tried" 2>/dev/null || true)
 if [ "$TIER" = quick ] && [ "$FORCE" = 0 ] && [ "$SHA" = "$LAST" ]; then exit 0; fi
 [ "$TIER" = full ] || echo "$SHA" > "$RR_HOME/state/last-tried"
 ID=$(date +%m%d-%H%M)-$S8; [ "$TIER" = quick ] || ID=$ID-full
-W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW='C:\Flycast-Evidence\re4-dreamcast\rr\'$ID
+W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW=$(echo "C:${EVU#/mnt/c}" | tr / '\\')   # follows RR_EBASE (default C:\Flycast-Evidence\re4-dreamcast\rr\<id>)
 mkdir -p "$W" "$EVU/_jobs" "$EVU/fixtures"
 STEPS=$W/steps.tsv; : > "$STEPS"
 exec > >(tee -a "$W/cycle.log") 2>&1
