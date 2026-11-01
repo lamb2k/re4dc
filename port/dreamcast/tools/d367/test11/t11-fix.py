@@ -913,6 +913,25 @@ def smdrel_all(smdrels, r, out, rec):
             nm, dest, chk['released_bins'], chk['saved'], sha(cur), sha(o)))
 
 
+def loopalign_all(aligns, r, out, rec):
+    """LOOPALIGN (lane fix60b-26 11-01, GitHub #60 item 6): a set's {'loopalign': {dest: N}} rounds the room-bank
+    (block 6) loop points of the composed archive to N AICA samples (tools/d367/fix60b/loop_align.py: start up, end
+    down; the sample data is not touched), after every set, graft and release, so no later set is undone."""
+    if not aligns:
+        return
+    import subprocess
+    tool = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fix60b', 'loop_align.py')
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, n in aligns:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('loopalign %s: no composed %s' % (nm, dest), cur)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        res = subprocess.run([sys.executable, tool, cur, o, '--align', str(n)], check=True, capture_output=True, text=True)
+        r[dest] = o
+        rec.append('%s loopalign %s %s onto %s -> %s' % (nm, dest, res.stdout.strip().splitlines()[-1], sha(cur), sha(o)))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -935,6 +954,7 @@ def main():
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
     grafts = []
     smdrels = []
+    aligns = []
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
@@ -962,6 +982,10 @@ def main():
                     assert os.path.exists(summary), (nm, dest, summary)
                     smdrels.append((nm, dest, summary))
                 continue
+            if k == 'loopalign':   # room-bank loop alignment on the composed archive, last (loopalign_all)
+                for dest, n in v.items():
+                    aligns.append((nm, dest, n))
+                continue
             if k == 'remove':   # paths the set takes off the disc (nostd20)
                 for p_ in v:
                     r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
@@ -977,6 +1001,7 @@ def main():
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     graft_all(grafts, r, out, rec)
     smdrel_all(smdrels, r, out, rec)
+    loopalign_all(aligns, r, out, rec)
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
@@ -1690,6 +1715,13 @@ if os.path.isdir(SMDREL26D):
 # composed st2/r200.dar as the recipe stands. Summary of convert_room_bins.py on the GC r200.das, same options.
 if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
     DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
+
+# snd60 (lane fix60b-26 11-01, GitHub #60 item 6, console A/B candidate): the r100 room bank's looped ambient samples
+# (the river / bridge loops: PS2 r100.snd VAG 13 and 10 loops land on GC sample 75, an odd AICA start at the 2x
+# decimation; GC-kept sample 11 likewise) get their loop start rounded up and loop end down to 4 AICA samples. Flycast
+# plays both the same (no restarts, no level steps in AICA_ROOM_LOG runs); the console's ADPCM loop is the suspect.
+# No store: computed on the composed archive (loopalign_all). Data only.
+DATA['snd60'] = {'loopalign': {'st1/r100.dar': 4}}
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
