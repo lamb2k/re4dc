@@ -3700,6 +3700,11 @@ include skin_recipe32.mk
 include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
+include work_removal_cloth01.mk
+include work_removal_world01.mk
+include work_removal_effect01.mk
+# Public work-removal spikes: each control defaults to 0; no recipe enablement.
+include work_removal_actor01.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).
 ifeq ($(WEAPON_WEP04_OVL),1)
 export RE4DC_LINK_OVERLAY += .ovl_wep04

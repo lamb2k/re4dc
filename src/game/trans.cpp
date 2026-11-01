@@ -4444,6 +4444,38 @@ static int propGate(cModel* m, Mtx viewMat)
         }
     }
     const f32 limit = cullFar * 1.001f + 10.0f;
+#if defined(RE4DC_PROP_GATE_EARLY01) && RE4DC_PROP_GATE_EARLY01 && !defined(__PPC__)
+    // Refusal only, for the head info: no info-list/header walk, skin lookup,
+    // weight memo or new cull. Prove full aligned RAM spans before reading
+    // metadata earlier than the original pose loop. Unknown spans fall through.
+    const cModelInfo* early_info = m->pModelInfo;
+    if (!early_info) {
+        return propGateNo(8);
+    }
+    const __UINTPTR_TYPE__ info_at = (__UINTPTR_TYPE__) early_info;
+    if (!(info_at & (__alignof__(cModelInfo) - 1u)) &&
+        info_at >= RE4_MEM_LO && info_at <= RE4_MEM_HI &&
+        sizeof(cModelInfo) - 1u <= RE4_MEM_HI - info_at && (early_info->be_flag & 8)) {
+        const ModelData* early_data = early_info->pData;
+        const __UINTPTR_TYPE__ data_at = (__UINTPTR_TYPE__) early_data;
+        if (!(data_at & (__alignof__(ModelData) - 1u)) &&
+            data_at >= RE4_MEM_LO && data_at <= RE4_MEM_HI &&
+            sizeof(ModelData) - 1u <= RE4_MEM_HI - data_at) {
+            if ((early_info->be_flag & 2) || early_data->weight_ext_num > 0xFF || early_data->shapeOfs ||
+                (early_data->weight_palette_num <= 1 && early_data->nParts == 1) ||
+                early_info->invisible_factor != 1.0f || early_data->nTex > 0xF7) {
+                return propGateNo(4);
+            }
+            // An invalid buffer selector stays with the original path. Nothing
+            // here dereferences arrays or calls the lazy-skin registry.
+            if (pG->vtx_buf_no < sizeof(early_info->pPosBuf) / sizeof(early_info->pPosBuf[0]) &&
+                early_info->pPosBuf[pG->vtx_buf_no] != 0) {
+                return propGateNo(5);
+            }
+        }
+    }
+#endif
+#line 2711
     // The parts matrices exactly as calcWeightMat builds them: translations and the largest column norm.
     f32 t[kPgParts][3];
     f32 s2 = 0.0f;
@@ -4633,6 +4665,15 @@ static int propGate(cModel* m, Mtx viewMat)
 #endif
 }
 #endif
+// PROP_GATE_EARLY01 parent restore: preserve the pre-spike mapping even when
+// PROP_GATE is absent; its earlier source #line differs in check/scenery modes.
+#if defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE && RE4DC_PROP_GATE != 2
+#line 2888
+#elif RE4DC_SCENERY_GATE && RE4DC_FRONT_LEAN
+#line 2897
+#else
+#line 2903
+#endif
 static void frontNativeRender(cModel* m, int dry)
 {
     CameraCurrentProjection();
@@ -4665,6 +4706,16 @@ static void frontNativeRender(cModel* m, int dry)
         m->drawAllBoundingBox(m->pModelInfo);
     }
 }
+#endif
+// PROP_GATE_EARLY01 outer restore: FRONT_NATIVE/__sh__ can skip both restores above.
+#if RE4DC_FRONT_NATIVE && defined(__sh__) && defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE && RE4DC_PROP_GATE != 2
+#line 2919
+#elif RE4DC_FRONT_NATIVE && defined(__sh__) && RE4DC_SCENERY_GATE && RE4DC_FRONT_LEAN
+#line 2928
+#elif RE4DC_FRONT_NATIVE && defined(__sh__)
+#line 2934
+#else
+#line 3311
 #endif
 
 // Applies the model's texture replacements (texture object `from` -> `to` pairs).

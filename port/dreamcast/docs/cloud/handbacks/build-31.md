@@ -1101,3 +1101,18 @@ WORLD_PORTAL_CLIP_GATHER31 stays default0 and parked outside broad ALLON because
 ## Answers (owner): 2026-10-30 route-scratch source conflict
 
 Owner branch codex/owner-fix-world-route-scratch-20261030 at c62fe030e remains unmerged. Fresh no-ff attempt against462bf570f stopped on one native_static.cpp content conflict before SDK work. The proposal keeps both source changes: close the route-constants conditional, then bind portal_depth_outcodes only after successful cache borrow/outcode completion; reset remains at chunk restart. Existing DirectStrips and portal ON profiles remain exclusive. No hand resolution is authorized yet, so no target build, merge, default change or acceptance is claimed. Preserve the exact failed tips/relevant conflict; independent units continue without repeating it.
+
+
+## Cloud activity: 2026-11-01 work-removal spikes (WIP)
+
+Base `65fe3d1f96ab269c136053725850101be9d3e692`; branch `codex/work-removal-spikes-20261101`. The latest user requests production spikes and local handoff for the source-grounded work-removal opportunities. See [exclusive worker matrix, scope and validation limits](work-removal-spikes-20261101.md). Existing results, blocked merges and acceptance holds above are unchanged. Root owns this report and shared build/tracking changes; source workers edit isolated assigned files. All new controls default0 and remain outside recipes. Implementation and public synthetic validation are underway; no target/full OFF/runtime/performance or console acceptance is claimed by this activity checkpoint.
+
+
+### Cloud 2026-11-01: E WORLD_EMPTY_PREP01
+
+A actor padding (corrected), B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01, D ESP1B_EDGE_REUSE01 and E WORLD_EMPTY_PREP01 implemented/published with host gates. All default0; cloth producer/lifecycle fixture still active. Full target/runtime/cost/console gates open. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+## Cloud 2026-11-01 final spike handoff to local
+
+Six bounded work-removal spikes are implemented and pushed (source bundle7b29e56d57203b8b521dae9c768f779bd8c72f47) with four reproducible public host suites. Actor A's initial inactive-parent location failure was corrected by27337b4284f505596755219b28578c6d1673185f; the initial A commit alone is superseded. All new controls default0. This closes the bounded source-spike delivery, not any whole EF card or target/runtime/performance gate. Local pickup is unobserved. [Draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [full SHA matrix, worker state, qualification order and risk boundaries](work-removal-spikes-20261101.md) are the handoff. Existing holds/blocked merges and stopped emails remain.

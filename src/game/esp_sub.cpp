@@ -4148,7 +4148,7 @@ int EspEstSetSelect(int owner, int id, int no, cEsp** out, int bNoSuspend)
     if (bNoSuspend == 1) {
         info.Core_flg |= 1;
     }
-#if defined(RE4DC_GAME) && !defined(__PPC__)
+#if defined(RE4DC_GAME) && !defined(__PPC__) && !(defined(RE4DC_EFFECT_RECORD_PASS01) && RE4DC_EFFECT_RECORD_PASS01)
     rec = reference;
 #endif
     return EspSeqSet(rec, &info, &seed, 0, &m, 0, 0.0f, out, 0, 0) == 1;

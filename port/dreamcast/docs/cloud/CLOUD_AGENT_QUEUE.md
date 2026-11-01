@@ -65,6 +65,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
+| 29 / 31 / 32 | Work-removal spikes 2026-11-01: ACTOR_PADDING_FIRST01, PROP_GATE_EARLY01, EFFECT_RECORD_PASS01, ESP1B_EDGE_REUSE01, WORLD_EMPTY_PREP01, CLOTH_NORMALS_DEFER01 | Six bounded source slices pushed on codex/work-removal-spikes-20261101, source tip7b29e56d; A requires27337b42 correction. Public host/source gates pass; all workers completed. Shared via [draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [exact SHA/worker/local-gate handback](handbacks/work-removal-spikes-20261101.md). All default0; no integration, enablement, target/full OFF, runtime/cost or console acceptance claimed. Burst reuse and larger non-FE rejection remain deferred. |
 | Systemic 2026-10-29 | Current architecture review and existing EF backlog | RE4-PLAN-SYNC-20261029-1202: user finish cloud work authorizes owner and assigned workers to finish remaining source/synthetic queue, superseding cloud-only ownership. Original cloud refs preserved; source, build, private runtime and console acceptance remain separate. No new Build37+. |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |

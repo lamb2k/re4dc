@@ -1,0 +1,310 @@
+// Production fragments are inserted by test_cloth_normals_defer01.py.
+// Host math/GX/engine substitutes expose ordering and exact within-host bytes.
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <limits>
+#include <set>
+#include <string>
+#include <vector>
+#define RE4DC_CLOTH_NATIVE 1
+#define RE4DC_NATIVE_DRAW_OUTCOMES 1
+#define RE4DC_CLOTH_LIGHT_ABI_FIX 1
+#define RE4DC_CLOTH_NORMALS_DEFER01 1
+#include "native_draw_result.hpp"
+
+using u8=std::uint8_t; using s8=std::int8_t; using u16=std::uint16_t;
+using u32=std::uint32_t; using s32=std::int32_t; using f32=float;
+struct Vec { float x,y,z; };
+using Mtx=float[3][4];
+struct GXTexObj { unsigned words[8]; };
+struct GXTlutObj { unsigned words[3]; };
+struct GXColor { u8 r,g,b,a; };
+static unsigned checks,normal_calls,normal_operations,rng_calls,native_calls,normal_diagnostics;
+static std::vector<char> events;
+static void event(char code){events.push_back(code);}
+static void check(bool condition){++checks;if(!condition){std::fprintf(stderr,"check %u failed\n",checks);std::abort();}}
+static void PSVECSubtract(const Vec*a,const Vec*b,Vec*c){*c={a->x-b->x,a->y-b->y,a->z-b->z};}
+static void PSVECAdd(const Vec*a,const Vec*b,Vec*c){*c={a->x+b->x,a->y+b->y,a->z+b->z};}
+static void PSVECScale(const Vec*a,Vec*b,float s){*b={a->x*s,a->y*s,a->z*s};}
+static float PSVECMag(const Vec*a){return std::sqrt(a->x*a->x+a->y*a->y+a->z*a->z);}
+static void PSVECCrossProduct(const Vec*a,const Vec*b,Vec*c){*c={a->y*b->z-a->z*b->y,a->z*b->x-a->x*b->z,a->x*b->y-a->y*b->x};}
+static void PSVECNormalize(const Vec*a,Vec*b){++normal_operations;float n=PSVECMag(a);check(n>0);PSVECScale(a,b,1.0f/n);}
+static std::function<void()> normal_callback;
+struct HostLog {
+    void err(int flag,int key,const char*format,const char*file,int line){
+        ++normal_diagnostics;event('L');check(flag==0&&key==0);
+        check(std::strcmp(format,"VECNormalize:[%s/%d]")==0);
+        check(std::strcmp(file,"D:/Bio4/Prog/cloth.cpp")==0&&line==622);
+        auto callback=normal_callback;normal_callback={};if(callback)callback();
+    }
+} host_log;
+static HostLog* pLog=&host_log;
+@ACTUAL_NORMAL_MACRO@
+static void PSMTXIdentity(Mtx m){std::memset(m,0,sizeof(Mtx));for(int i=0;i<3;++i)m[i][i]=1;}
+static void PSMTXScale(Mtx m,float x,float y,float z){PSMTXIdentity(m);m[0][0]=x;m[1][1]=y;m[2][2]=z;}
+static void PSMTXMultVec(const Mtx m,const Vec*v,Vec*out){Vec t={m[0][0]*v->x+m[0][1]*v->y+m[0][2]*v->z+m[0][3],m[1][0]*v->x+m[1][1]*v->y+m[1][2]*v->z+m[1][3],m[2][0]*v->x+m[2][1]*v->y+m[2][2]*v->z+m[2][3]};*out=t;}
+static void PSMTXConcat(const Mtx a,const Mtx b,Mtx out){Mtx t{};for(int i=0;i<3;++i){for(int j=0;j<3;++j)for(int k=0;k<3;++k)t[i][j]+=a[i][k]*b[k][j];t[i][3]=a[i][3];for(int k=0;k<3;++k)t[i][3]+=a[i][k]*b[k][3];}std::memcpy(out,t,sizeof t);}
+// Fixtures use identity rotation and diagonal scale; these are exact for that domain.
+static void PSMTXInverse(const Mtx in,Mtx out){Mtx t{};for(int i=0;i<3;++i){t[i][i]=1/in[i][i];t[i][3]=-in[i][3]/in[i][i];}std::memcpy(out,t,sizeof t);}
+static void PSMTXTranspose(const Mtx in,Mtx out){Mtx t{};for(int i=0;i<3;++i)for(int j=0;j<3;++j)t[i][j]=in[j][i];std::memcpy(out,t,sizeof t);}
+static void RotMatrix(Mtx m,const Vec*){PSMTXIdentity(m);}
+static void low_RotMatrix(Mtx m,const Vec*a){RotMatrix(m,a);}
+static void TransMatrix(Mtx m,const Vec*p){m[0][3]=p->x;m[1][3]=p->y;m[2][3]=p->z;}
+static void Matrix2AxisAngle(const Mtx,Vec*a){*a={0,0,0};}
+static std::set<void*> allocations;
+static void* host_alloc(std::size_t n){void*p=std::malloc(n);check(p!=nullptr);check(allocations.insert(p).second);return p;}
+static void Mem_free(void*p){check(allocations.erase(p)==1);std::free(p);}
+#define MEM_ALLOC(n,a,b) host_alloc(n)
+extern "C" void OSReport(const char*,...){}
+extern "C" void re4dc_log(const char*,...){}
+
+@ACTUAL_CLOTH_TYPE@
+Cloth ClothWk[8]{};
+@ACTUAL_NORMAL_STATE@
+f32 K_PARAM=7.5f,G_PARAM=0.5f,T_PARAM=0.06f;
+@ACTUAL_PHYSICS@
+@ACTUAL_METHODS@
+
+struct Parent { Mtx mat; } world_parent,local_parent;
+static Parent* pEffParentWorld=&world_parent;
+struct EspGenWork {};
+static bool common_move_allowed=true;
+class cEsp {
+public:
+    Vec m_Pos{},m_Speed{},m_Ang{};
+    float m_Col_r=255,m_Col_g=255,m_Col_b=255,m_Col_a=255;
+    Parent* parent=pEffParentWorld;
+    bool CommonMove(){event('C');m_Pos.x+=1;return common_move_allowed;}
+};
+static std::uint32_t rng_state=1;
+static float fRand0_1(){event('R');++rng_calls;rng_state=rng_state*1664525u+1013904223u;return float(rng_state>>8)*(1.0f/16777216.0f);}
+static float limit_angle(float f){return std::remainder(f,6.2831853071795864769f);}
+#define LIMIT_ANGLE(x) limit_angle(x)
+#define SINF(x) std::sin(x)
+@ACTUAL_ESP_TYPE@
+int cEsp4e::SetFreeWork(EspGenWork*,u32*){return 0;}
+@ACTUAL_ESP_DESTRUCT@
+@ACTUAL_ESP_MOVE@
+class cEsp4eControl: public cEsp4e { public: void move() override; };
+#undef RE4DC_CLOTH_NORMALS_DEFER01
+#define RE4DC_CLOTH_NORMALS_DEFER01 0
+@ACTUAL_ESP_CONTROL@
+#undef RE4DC_CLOTH_NORMALS_DEFER01
+#define RE4DC_CLOTH_NORMALS_DEFER01 1
+
+struct cLight {};
+struct LightInfoStub {
+    Vec Size{1,1,1};cLight* pLight[8]{};
+    void init2(int,int,const Vec*,const Vec*,int){}
+};
+struct cModel { Mtx mat;LightInfoStub LightInfo;Vec pos; };
+struct LightMgrStub { void setClothN(cModel*,int){} } LightMgr;
+struct Global { struct { Mtx v_mat; } Cam; } globals;
+static Global* pG=&globals;
+static void commonClothLightSet(cLight**,int,Vec*,float){}
+static void CameraSetProjection(int){}
+#define GX_NOOP(name) template<class... T> static void name(T...){}
+GX_NOOP(GXSetCullMode) GX_NOOP(GXSetZMode) GX_NOOP(GXSetNumChans)
+GX_NOOP(GXSetTevColorIn) GX_NOOP(GXSetTevColorOp) GX_NOOP(GXSetTevAlphaIn)
+GX_NOOP(GXSetTevAlphaOp) GX_NOOP(GXSetTevOrder) GX_NOOP(GXSetChanMatColor)
+GX_NOOP(GXSetNumTexGens) GX_NOOP(GXLoadTlut) GX_NOOP(GXLoadTexMtxImm)
+GX_NOOP(GXSetTexCoordGen2) GX_NOOP(GXSetBlendMode) GX_NOOP(GXSetAlphaCompare)
+GX_NOOP(GXSetZCompLoc) GX_NOOP(GXSetTevOp) GX_NOOP(GXSetNumTevStages)
+GX_NOOP(GXLoadPosMtxImm) GX_NOOP(GXLoadNrmMtxImm) GX_NOOP(GXSetCurrentMtx)
+GX_NOOP(GXClearVtxDesc) GX_NOOP(GXSetVtxDesc) GX_NOOP(GXSetVtxAttrFmt)
+GX_NOOP(GXTexCoord2f32)
+static unsigned gx_strips,gx_texture_loads;
+static std::vector<Vec> gx_positions,gx_normals;
+static void GXLoadTexObj(GXTexObj*,int){++gx_texture_loads;}
+static void GXBegin(int,int,int){++gx_strips;}
+static void GXPosition3f32(float x,float y,float z){gx_positions.push_back({x,y,z});}
+static void GXNormal3f32(float x,float y,float z){event('G');gx_normals.push_back({x,y,z});}
+using Outcome=re4dc::NativeDrawOutcome;
+static re4dc::NativeDrawResult native_outcome{Outcome::UnsupportedBeforePublication};
+static std::function<void(Cloth*)> native_callback;
+static re4dc::NativeDrawResult re4dc_cloth_native(Cloth*c,cLight**,Vec*,float){
+    ++native_calls;event('X');auto result=native_outcome;auto callback=native_callback;
+    native_callback={};if(callback)callback(c);return result;
+}
+@ACTUAL_VISIBLE@
+@ACTUAL_TRANS@
+
+static GXTexObj texture{};
+static GXTlutObj palette{};
+static void reset_draw(){gx_strips=gx_texture_loads=0;gx_positions.clear();gx_normals.clear();events.clear();native_callback={};native_outcome={Outcome::UnsupportedBeforePublication};}
+static unsigned cells(const Cloth&c){return unsigned(c.divH)*c.divV;}
+static bool bytes_equal(const Vec*a,const Vec*b,unsigned n){return std::memcmp(a,b,n*sizeof(Vec))==0;}
+static void cleanup(Cloth&c){if(allocations.count(c.m_pMem))c.Destroy();c.m_pMem=nullptr;}
+static void setup(Cloth&c,unsigned x=4,unsigned y=6,int mode=0){cleanup(c);Vec zero{},pos{0,0,-100};c.Set(zero,pos,u8(x),u8(y),5,&texture,7,nullptr,1,&palette,mode);}
+static void initialize_effect(cEsp4e&e,Cloth&c){
+    e.m_Free={};e.m_Free.pCl=&c;e.m_Pos={2,3,4};e.m_Speed={1,2,3};
+    e.m_Free.time_plus=3;e.m_Free.time_plus2=-2;e.m_Free.pow=5;e.m_Free.pow2=4;
+    e.m_Free.range=2.5f;e.m_Free.range2=1.3f;e.m_Free.offset=.2f;
+    e.m_Free.wind_time_plus=.07f;e.m_Free.wind_range_pow=.3f;e.m_Free.rand_ratio=.9f;
+}
+static void step(Cloth&c){cEsp4e effect;initialize_effect(effect,c);effect.move();}
+static void initialized_normals(const Cloth&c){for(unsigned i=0;i<cells(c);++i)check(c.pNor[i].x==0&&c.pNor[i].y==0&&c.pNor[i].z==1);}
+static std::vector<Vec> normals_copy(const Cloth&c){return {c.pNor,c.pNor+cells(c)};}
+static std::vector<Vec> expected_normals(const Cloth&c){
+    Cloth ref=c;std::vector<Vec> grid(c.pVer,c.pVer+cells(c));std::vector<Vec> normal(cells(c));
+    ref.pVer=grid.data();ref.pNor=normal.data();ref.calcNormal();return normal;
+}
+static void check_no_replay(unsigned before){check(normal_calls==before);check(gx_normals.empty());check(gx_positions.empty());check(gx_strips==0);check(gx_texture_loads==0);}
+static void paired_step(cEsp4e&candidate,cEsp4eControl&control,unsigned seed){
+    rng_state=seed;rng_calls=0;events.clear();candidate.move();auto candidate_rng=rng_state;
+    auto candidate_calls=rng_calls;auto candidate_trace=events;
+    rng_state=seed;rng_calls=0;events.clear();control.move();auto control_trace=events;
+    control_trace.erase(std::remove(control_trace.begin(),control_trace.end(),'N'),control_trace.end());
+    check(candidate_trace==control_trace);check(rng_state==candidate_rng);check(rng_calls==candidate_calls);
+    const Cloth&a=*candidate.m_Free.pCl;const Cloth&b=*control.m_Free.pCl;
+    check(bytes_equal(a.pVer,b.pVer,cells(a)));check(bytes_equal(a.pSpd,b.pSpd,cells(a)));
+    check(std::memcmp(a.mat,b.mat,sizeof a.mat)==0);check(std::memcmp(&a.color,&b.color,sizeof a.color)==0);
+    check(std::memcmp(&candidate.m_Pos,&control.m_Pos,sizeof(Vec))==0);
+    const auto&ca=candidate.m_Free;const auto&cb=control.m_Free;
+    const float phases_a[]={ca.time,ca.time2,ca.range,ca.range2,ca.offset,ca.wind_time,ca.wind_time_plus,ca.wind_range_pow,ca.rand_ratio};
+    const float phases_b[]={cb.time,cb.time2,cb.range,cb.range2,cb.offset,cb.wind_time,cb.wind_time_plus,cb.wind_range_pow,cb.rand_ratio};
+    check(std::memcmp(phases_a,phases_b,sizeof phases_a)==0);
+    check(ca.time_plus==cb.time_plus&&ca.time_plus2==cb.time_plus2&&ca.pow==cb.pow&&ca.pow2==cb.pow2);
+    check(candidate_calls==unsigned(a.divV)*(unsigned(a.divH)+1));
+}
+
+static void test_initial_fallback(){
+    auto&c=ClothWk[0];unsigned before=normal_calls;events.clear();setup(c);
+    check(normal_calls==before);check(std::count(events.begin(),events.end(),'M')==120);
+    check(std::count(events.begin(),events.end(),'S')==120*(RE4DC_CLOTH_SPRING==2?2:1));
+    check(cloth_normals01[0].pending==0);initialized_normals(c);
+    reset_draw();clothTrans(&c);check(normal_calls==before);check(gx_normals.size()==2u*c.divH*(c.divV-1));
+    for(auto n:gx_normals)check(n.x==0&&n.y==0&&n.z==1);
+    reset_draw();clothTrans(&c);check(normal_calls==before);cleanup(c);
+    std::puts("first fallback preserves Set's 120-tick warmup and initialized normals: PASS");
+}
+
+static void test_updates(){
+    for(auto dims:std::vector<std::pair<unsigned,unsigned>>{{2,2},{4,6},{36,24},{100,50}}){
+        for(int mode=0;mode<2;++mode){
+            auto&c=ClothWk[1];Cloth ref{};setup(c,dims.first,dims.second,mode);setup(ref,dims.first,dims.second,mode);
+            cEsp4e candidate;cEsp4eControl control;initialize_effect(candidate,c);initialize_effect(control,ref);
+            if(mode){candidate.parent=control.parent=&local_parent;}
+            auto initialized=normals_copy(c);
+            for(unsigned tick=0;tick<3;++tick){
+                paired_step(candidate,control,0x1234u+tick);check(cloth_normals01[1].pending==1);
+                check(bytes_equal(c.pNor,initialized.data(),cells(c)));
+                unsigned before=normal_calls;reset_draw();native_outcome={Outcome::Queued,0,1};clothTrans(&c);
+                check_no_replay(before);check(cloth_normals01[1].pending==1);
+            }
+            reset_draw();unsigned before=normal_calls,ops=normal_operations;clothTrans(&c);
+            check(normal_calls==before+1);check(normal_operations-ops==(dims.first-1)*(dims.second-1));
+            check(cloth_normals01[1].pending==0);check(bytes_equal(c.pNor,ref.pNor,cells(c)));
+            auto positions=gx_positions,normals=gx_normals;
+            check(std::find(events.begin(),events.end(),'X')<std::find(events.begin(),events.end(),'N'));
+            check(std::find(events.begin(),events.end(),'N')<std::find(events.begin(),events.end(),'G'));
+            reset_draw();clothTrans(&ref);check(normal_calls==before+1);
+            check(gx_positions.size()==positions.size()&&bytes_equal(gx_positions.data(),positions.data(),unsigned(positions.size())));
+            check(gx_normals.size()==normals.size()&&bytes_equal(gx_normals.data(),normals.data(),unsigned(normals.size())));
+            reset_draw();clothTrans(&c);check(normal_calls==before+1);cleanup(c);cleanup(ref);
+        }
+    }
+    std::puts("8 grid/pin profiles: native-only updates defer, fallback normal bytes match eager control, physics/speed/RNG traces unchanged: PASS");
+}
+
+static void test_outcomes(){
+    auto&c=ClothWk[2];setup(c);
+    for(auto outcome:{Outcome::Submitted,Outcome::Queued,Outcome::Culled,Outcome::PolicySkip,Outcome::UnsupportedBeforePublication,Outcome::Refused,Outcome::PartialAbort}){
+        for(unsigned submitted=0;submitted<2;++submitted)for(unsigned queued=0;queued<2;++queued){
+            step(c);unsigned before=normal_calls;reset_draw();native_outcome={outcome,submitted,queued};
+            const bool fallback=native_outcome.fallback_allowed();clothTrans(&c);
+            if(fallback){check(normal_calls==before+1);check(!gx_normals.empty());check(cloth_normals01[2].pending==0);}
+            else{check_no_replay(before);check(cloth_normals01[2].pending==1);}
+        }
+    }
+    step(c);unsigned before=normal_calls,native_before=native_calls;float z=c.center.z;c.center.z=100000;
+    reset_draw();clothTrans(&c);check_no_replay(before);check(native_calls==native_before);check(cloth_normals01[2].pending==1);
+    c.center.z=z;reset_draw();clothTrans(&c);check(normal_calls==before+1);cleanup(c);
+    std::puts("28 actual result outcome/publication combinations plus actual view cull: no normal calculation or GX replay after publication/partial abort: PASS");
+}
+
+static void test_pool_lifecycle(){
+    ClothInit();for(unsigned i=0;i<8;++i){setup(ClothWk[i]);step(ClothWk[i]);check(cloth_normals01[i].pending==1);}
+    Cloth* free=nullptr;check(!PullCloth(&free)&&free==nullptr);
+    ClothWk[3].Destroy();check(cloth_normals01[3].pending==0);check(PullCloth(&free)&&free==&ClothWk[3]);
+    setup(*free);initialized_normals(*free);unsigned before=normal_calls;reset_draw();clothTrans(free);check(normal_calls==before);
+    step(*free);void* previous=free->m_pMem;Vec zero{},pos{0,0,-100};
+    free->Set(zero,pos,3,5,5,&texture,7,nullptr,1,&palette,0);Mem_free(previous);
+    check(cloth_normals01[3].pending==0);initialized_normals(*free);
+    before=normal_calls;reset_draw();clothTrans(free);check(normal_calls==before);
+    auto allocations_before=allocations.size();ClothRoomInit();check(allocations.size()==allocations_before);
+    for(unsigned i=0;i<8;++i){check(cloth_normals01[i].pending==0);check(ClothWk[i].be_flag==0);cleanup(ClothWk[i]);}
+    std::puts("all 8 slots, PullCloth reuse, Destroy, Set, Init/RoomInit reset pending without new allocation/lifetime behavior: PASS");
+}
+
+static void test_callbacks(){
+    auto&c=ClothWk[4];setup(c);step(c);reset_draw();unsigned before=normal_calls;
+    native_callback=[](Cloth*p){p->Destroy();};clothTrans(&c);check_no_replay(before);check(cloth_normals01[4].pending==0);cleanup(c);
+    setup(c);step(c);reset_draw();before=normal_calls;
+    native_callback=[](Cloth*p){p->Destroy();setup(*p,3,7);step(*p);};clothTrans(&c);
+    check_no_replay(before);check(cloth_normals01[4].pending==1);auto expected=expected_normals(c);
+    reset_draw();before=normal_calls;clothTrans(&c);check(normal_calls==before+1);check(bytes_equal(c.pNor,expected.data(),cells(c)));
+    step(c);reset_draw();before=normal_calls;native_callback=[](Cloth*p){step(*p);};clothTrans(&c);
+    check_no_replay(before);check(cloth_normals01[4].pending==1);expected=expected_normals(c);
+    reset_draw();before=normal_calls;clothTrans(&c);check(normal_calls==before+1);check(bytes_equal(c.pNor,expected.data(),cells(c)));
+    step(c);reset_draw();before=normal_calls;native_outcome={Outcome::PartialAbort,0,1};native_callback=[](Cloth*p){step(*p);};clothTrans(&c);
+    check_no_replay(before);check(cloth_normals01[4].pending==1);
+    reset_draw();before=normal_calls;clothTrans(&c);check(normal_calls==before+1);
+    step(c);reset_draw();before=normal_calls;native_callback=[](Cloth*){ClothInit();};clothTrans(&c);
+    check_no_replay(before);check(cloth_normals01[4].pending==0);cleanup(c);
+    std::puts("native callback retirement/reuse/Init/same-cloth update: changed revision refuses stale fallback and preserves newer pending work: PASS");
+}
+
+static void test_eager_and_early_returns(){
+    Cloth external{};setup(external);check(cloth_normals_slot01(&external)==8);
+    unsigned before=normal_calls;step(external);check(normal_calls==before+1);auto expected=expected_normals(external);
+    check(bytes_equal(external.pNor,expected.data(),cells(external)));reset_draw();before=normal_calls;clothTrans(&external);check(normal_calls==before);
+    cleanup(external);
+    auto&c=ClothWk[5];setup(c);cEsp4e effect;initialize_effect(effect,c);auto revision=cloth_normals01[5].revision;
+    common_move_allowed=false;effect.move();common_move_allowed=true;check(cloth_normals01[5].revision==revision);
+    effect.m_Free.pCl=nullptr;effect.move();check(cloth_normals01[5].revision==revision);cleanup(c);
+    std::puts("off-pool eagerly calculates; CommonMove/null early returns do not mark: PASS");
+}
+
+static void test_normal_diagnostics(){
+    auto&c=ClothWk[5];setup(c);for(unsigned i=0;i<cells(c);++i)c.pVer[i]={0,0,0};
+    unsigned diagnostics=normal_diagnostics;step(c);check(normal_diagnostics==diagnostics);
+    reset_draw();native_outcome={Outcome::Queued,0,1};unsigned before=normal_calls;clothTrans(&c);
+    check_no_replay(before);check(normal_diagnostics==diagnostics);
+    reset_draw();clothTrans(&c);check(normal_calls==before+1);
+    check(normal_diagnostics-diagnostics==unsigned(c.divH-1)*(c.divV-1));
+    for(auto n:gx_normals)check(n.x==0&&n.y==0&&n.z==0);
+    setup(c);for(unsigned i=0;i<cells(c);++i)c.pVer[i]={0,0,0};step(c);
+    reset_draw();before=normal_calls;unsigned revision=cloth_normals01[5].revision;
+    normal_callback=[&](){step(c);};clothTrans(&c);
+    check(normal_calls==before+1);check(cloth_normals01[5].revision!=revision);
+    check(cloth_normals01[5].pending==1);check(gx_normals.empty());check(gx_strips==0);check(gx_texture_loads==0);
+    auto expected=expected_normals(c);reset_draw();before=normal_calls;clothTrans(&c);
+    check(normal_calls==before+1);check(cloth_normals01[5].pending==0);check(bytes_equal(c.pNor,expected.data(),cells(c)));
+    cleanup(c);
+    std::puts("actual VECNormalize macro: degenerate diagnostics deferred with normals; nonretiring diagnostic update keeps newer pending and refuses GX replay: PASS");
+}
+
+static void test_exhaustion(){
+    auto&c=ClothWk[6];setup(c);cloth_normals01[6].revision=std::numeric_limits<unsigned>::max();
+    unsigned before=normal_calls;step(c);check(normal_calls==before+1);check(cloth_normals01[6].revision==0);check(cloth_normals01[6].pending==0);
+    before=normal_calls;step(c);check(normal_calls==before+1);reset_draw();before=normal_calls;clothTrans(&c);check(normal_calls==before);
+    cleanup(c);setup(c);check(cloth_normals01[6].revision==0);before=normal_calls;step(c);check(normal_calls==before+1);cleanup(c);
+    auto&d=ClothWk[7];setup(d);step(d);cloth_normals01[7].revision=std::numeric_limits<unsigned>::max();
+    reset_draw();before=normal_calls;native_callback=[](Cloth*p){step(*p);};clothTrans(&d);
+    check(normal_calls==before+1);check(gx_normals.empty());check(gx_strips==0);check(cloth_normals01[7].revision==0);cleanup(d);
+    std::puts("revision exhaustion never reuses an old ticket: slot permanently resumes eager calculation; in-flight old ticket refuses replay: PASS");
+}
+
+int main(){
+    PSMTXIdentity(pG->Cam.v_mat);PSMTXIdentity(world_parent.mat);PSMTXIdentity(local_parent.mat);
+    check(sizeof cloth_normals01==64);ClothInit();
+    test_initial_fallback();test_updates();test_outcomes();test_pool_lifecycle();test_callbacks();test_eager_and_early_returns();test_normal_diagnostics();test_exhaustion();
+    check(allocations.empty());std::printf("CLOTH_SPRING=%d: %u assertions PASS; pending state 64 bytes; host-only, no target/performance claim\n",RE4DC_CLOTH_SPRING,checks);
+}

@@ -13,6 +13,10 @@
 #include "rnd.h"
 #include "esp.h"
 #include "cloth.h"
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+#include "cloth_normals_defer01.h"
+#endif
+#line 11
 
 struct Esp4eWork {
     Cloth* pCl;      // 0x00
@@ -111,7 +115,13 @@ void cEsp4e::move()
         c->calcSpeed(DAMPING);
     }
     c->move();
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+    re4dc_cloth_normals_defer01(c);
+#else
+#line 109
     c->calcNormal();
+#endif
+#line 110
 
     wk->wind_time += wk->wind_time_plus;
     rand = wk->rand_ratio;
