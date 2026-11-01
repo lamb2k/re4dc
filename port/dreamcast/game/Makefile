@@ -3691,6 +3691,7 @@ include world_plan29.mk
 include actor_format32.mk
 # K45 fix plan repairs (default off): needs the world/actor switch values above.
 include k45fix31.mk
+include call26.mk
 include actor_presentation32.mk
 include skin_admit32.mk
 include prepared_binding34.mk
