@@ -1307,6 +1307,11 @@ void flush()
         VoiceState& v = g_vpb[i].vs;
         if (!v.used || v.ch < 0) continue;
         if (v.dirty & 8) {
+#if defined(RE4DC_AICA_ROOM_LOG) && RE4DC_AICA_ROOM_LOG
+            if (v.blk == 6)
+                re4dc_log("aica: t=%u room-log off vpb=%d ch=%d aica=%06x pos=%u/%u loop=%u\n", (unsigned) g_nowMs, i, (int) v.ch,
+                          (unsigned) v.aica, (unsigned) v.pos, (unsigned) v.gc_len, (unsigned) v.loop);
+#endif
             ch_keyoff(w, v.ch, v.play_cont);
             chn_free(v.ch);
             v.ch = -1;
@@ -1323,11 +1328,22 @@ void flush()
             const auto asset_use=re4dc_gcasset::bank_ticket(v.blk<0 || v.blk>=14?14:unsigned(v.blk),v.blk<0 || v.blk>=14?0:g_blk[v.blk].asset_generation);
 #endif
             ch_start(w, v.ch, v.aica, v.len, v.loop, v.loop_start, freq, tl, pan, 31, 0, 0, 31, v.play_cont);
+#if defined(RE4DC_AICA_ROOM_LOG) && RE4DC_AICA_ROOM_LOG
+            if (v.blk == 6)
+                re4dc_log("aica: t=%u room-log on vpb=%d ch=%d aica=%06x len=%u loop=%u ls=%u shift=%u tl=%u pan=%u\n", (unsigned) g_nowMs, i,
+                          (int) v.ch, (unsigned) v.aica, (unsigned) v.len, (unsigned) v.loop, (unsigned) v.loop_start,
+                          (unsigned) v.shift, (unsigned) tl, (unsigned) pan);
+#endif
 #if RE4DC_GC_ASSET_GATE
             re4dc_gcasset::played(asset_use);
 #endif
             v.sent_tl = tl; v.sent_pan = pan; v.sent_freq = freq;
         } else {
+#if defined(RE4DC_AICA_ROOM_LOG) && RE4DC_AICA_ROOM_LOG
+            if (v.blk == 6 && (tl > v.sent_tl + 3 || tl + 3 < v.sent_tl))
+                re4dc_log("aica: t=%u room-log tl vpb=%d aica=%06x tl=%u->%u pan=%u\n", (unsigned) g_nowMs, i, (unsigned) v.aica,
+                          (unsigned) v.sent_tl, (unsigned) tl, (unsigned) pan);
+#endif
             if (tl != v.sent_tl) { w.w(v.ch, 0x28, ((u32) tl << 8) | 0x24); v.sent_tl = tl; }
             if (pan != v.sent_pan) { w.w(v.ch, 0x24, (0xFu << 8) | pan); v.sent_pan = pan; }
             if (freq != v.sent_freq) { w.w(v.ch, 0x18, freq); v.sent_freq = freq; }

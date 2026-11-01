@@ -697,7 +697,12 @@ static inline unsigned re4dc_look_cap(){return re4dc_looks[re4dc_look_mode%kLook
 static inline unsigned re4dc_look_rgb_pct(){return re4dc_looks[re4dc_look_mode%kLooks].rgb;}
 static inline unsigned re4dc_look_sky(){return re4dc_looks[re4dc_look_mode%kLooks].sky;}
 #define RE4DC_SKY_ANY 1
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT
+extern "C" unsigned re4dc_sky_event(void); // sky_event.cpp (SKY_EVENT): 1 while a scripted scene owns the camera
+static inline unsigned re4dc_sky_mode(){const unsigned m=re4dc_look_sky();return m?m:re4dc_sky_event();}
+#else
 static inline unsigned re4dc_sky_mode(){return re4dc_look_sky();}
+#endif
 #elif RE4DC_LOOK_ANY
 #ifndef RE4DC_FOG_CURVE
 #define RE4DC_FOG_CURVE 0

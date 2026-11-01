@@ -1509,6 +1509,13 @@ AICA_WEP_LOG ?= 0
 ifneq ($(AICA_WEP_LOG),0)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_WEP_LOG=1
 endif
+# AICA_ROOM_LOG=1 (test only, default 0: no effect; lane fix60b-26, #60 item 6): logs every room-bank (blk 6) SE voice
+# key on / key off and each attenuation step of more than 3 TL units, uncapped, so ambient loops (r100 river, bridge)
+# show whether a voice restarts or its volume steps. Audio state only; the game never reads it.
+AICA_ROOM_LOG ?= 0
+ifneq ($(AICA_ROOM_LOG),0)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_ROOM_LOG=1
+endif
 .PHONY: aica-audio-force
 $(OBJDIR)/aica-audio.h: aica-audio-force
 	@mkdir -p $(dir $@)
