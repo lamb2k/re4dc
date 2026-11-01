@@ -63,3 +63,25 @@ PPC token and __LINE__ output. Target binary identity and game benefit are unmea
 Other production spikes and fixtures are WIP. Subsequent sections will record each
 bounded result, exact pushed commit and next local action. No implemented/pushed/
 integrated/enabled/accepted state is inferred from this activity checkpoint.
+
+
+## Slice A — actor padding first byte (implemented; public host gates pass)
+
+Control `ACTOR_PADDING_FIRST01=0`; main Makefile wiring included in this slice.
+The original range guard remains first; a nonzero initial byte skips the remaining
+32..256-byte OR scan. A zero prefix retains a complete all-zero proof. No new cache,
+allocation, owner state, geometry or admission is introduced. Source lines are reset
+for exact disabled diagnostic expansion, and the PPC profile remains inert.
+
+Root reapplied the patch to exact GitHub blob-verified source and reran
+`python3 port/dreamcast/tests/test_work_removal_actor01.py`: 172,245 production-fragment
+cases pass with matching outcomes/side effects. Nonzero headers inspect 1 byte versus
+32/64/128/256 in the control. Make 0/1/invalid/prerequisite and includes-elided full-TU
+OFF/PPC token/__LINE__ checks pass. Whole Makefile default resolution reports 0 using
+an explicitly empty SDK rules fixture (build-wiring check only, no target compilation).
+
+Before publication, integration advanced to `44a073ca6d5a09145507aa1aa6dfa10649ec7961`;
+its sole rr-qa.sh padding fix has no runtime overlap. It is preserved in topic merge
+`e68bf9648698c45a074748d7f9ef869490e46946`, retaining already published history.
+Target programme/allocated/overlay OFF identity, target cost, actual incidence and
+runtime/console acceptance remain pending. No recipe enablement.

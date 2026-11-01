@@ -673,3 +673,8 @@ landed/default/acceptance marker. See [the worker matrix and local handback](han
 Only the padding production-fragment host slice is ready for root review at this
 checkpoint. Other spikes remain WIP; all target/full OFF/runtime/cost/console gates
 are pending. No new build number, recipe enablement, private publication or email.
+
+
+### 2026-11-01 bounded slice A
+
+ACTOR_PADDING_FIRST01 is implemented default0 on the spike branch, with main Makefile wiring and172245 actual-detector host cases passing. Existing range/all-zero and disabled diagnostic contracts are retained; measured synthetic byte visits fall to1 for a nonzero first byte. Integration44a073ca was fetched and preserved (rr-qa-only change). This does not close EF04/14 or establish target binary identity or game cost; the existing private/runtime/console holds remain. Full details: [work-removal handback](handbacks/work-removal-spikes-20261101.md#slice-a--actor-padding-first-byte-implemented-public-host-gates-pass).

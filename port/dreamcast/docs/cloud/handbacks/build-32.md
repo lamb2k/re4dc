@@ -1906,3 +1906,8 @@ Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 
 ## Cloud activity: 2026-11-01 work-removal spikes (WIP)
 
 Base `65fe3d1f96ab269c136053725850101be9d3e692`; branch `codex/work-removal-spikes-20261101`. The latest user requests production spikes and local handoff for the source-grounded work-removal opportunities. See [exclusive worker matrix, scope and validation limits](work-removal-spikes-20261101.md). Existing results, blocked merges and acceptance holds above are unchanged. Root owns this report and shared build/tracking changes; source workers edit isolated assigned files. All new controls default0 and remain outside recipes. Implementation and public synthetic validation are underway; no target/full OFF/runtime/performance or console acceptance is claimed by this activity checkpoint.
+
+
+### Cloud 2026-11-01: ACTOR_PADDING_FIRST01 source spike
+
+Default0 first-byte padding prefilter and main Makefile wiring implemented. Root reran172245 actual-production-fragment cases with matching results/side effects; zero-prefix lists retain full proof. Undefined/explicit0/PPC includes-elided TU token and diagnostic-line identity pass. Nonzero source reads32/64/128/256 ->1 are synthetic work counts, not milliseconds. Base65fe runtime unchanged at fetched44a073ca; rr-qa update preserved on topic. [Bounded handback](work-removal-spikes-20261101.md). Target/full-image OFF, runtime/STRICT, memory/cost and console remain pending; no recipe enablement or acceptance.
