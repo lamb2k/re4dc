@@ -3700,6 +3700,7 @@ include skin_recipe32.mk
 include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
+include work_removal_world01.mk
 include work_removal_effect01.mk
 # Public work-removal spikes: each control defaults to 0; no recipe enablement.
 include work_removal_actor01.mk

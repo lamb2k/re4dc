@@ -1,3 +1,13 @@
+// WORLD_EMPTY_PREP01 keeps binding/publication and skips only empty-pick geometry setup.
+#if defined(RE4DC_WORLD_EMPTY_PREP01) && RE4DC_WORLD_EMPTY_PREP01
+#if RE4DC_WORLD_EMPTY_PREP01 != 1
+#error WORLD_EMPTY_PREP01 must be 0 or 1
+#endif
+#if RE4DC_SCENERY_CHUNK != 1 || RE4DC_MESH_FASTPATH != 1 || RE4DC_MESH_DIRECT != 1 || RE4DC_PS2_WORLD_MESH != 1
+#error WORLD_EMPTY_PREP01 needs SCENERY_CHUNK, MESH_FASTPATH, MESH_DIRECT and PS2_WORLD_MESH
+#endif
+#endif
+#line 1
 #ifndef RE4DC_WORLD_PREPARED09
 #define RE4DC_WORLD_PREPARED09 0
 #endif
@@ -4218,6 +4228,18 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
+#if defined(RE4DC_WORLD_EMPTY_PREP01) && RE4DC_WORLD_EMPTY_PREP01
+        // Selection already proved there are no surviving strip groups.
+        // Keep bind(), its owner/camera/header side effects and the post-bind
+        // mutation check above. No geometry scratch or package read is needed.
+        if(!pk.nr){
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+            ++scn_cen[0]; // the ordinary empty-pick CenScope records zero corners/strips
+#endif
+            return 1;
+        }
+#endif
+#line 4221
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
 #if RE4DC_WORLD_MUTATION31
@@ -4444,6 +4466,7 @@ struct MeshDraw : Emitter {
         return 1;
     }
 #endif
+#line 4447
     int run(){
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
         DsaStaticPart dsa_part(input,output,dsa_xlu());
@@ -4580,6 +4603,7 @@ struct ScenerySelector {
 #pragma GCC pop_options
 #endif
 #endif
+#line 4583
 } // namespace
 
 extern "C" void re4dc_static_bind(const void* object,unsigned room,int block,unsigned work,

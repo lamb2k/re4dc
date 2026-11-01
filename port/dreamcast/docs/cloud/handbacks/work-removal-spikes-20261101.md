@@ -193,3 +193,33 @@ host shims: real FIFO/admission and stable SH-4 numeric/FPSCR behavior across em
 callbacks remain target gates. Run the combined effect test driver from Slice C.
 
 Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
+
+
+## Slice E — empty world picks skip geometry-only preparation
+
+Control `WORLD_EMPTY_PREP01=0`, main Makefile wired to native_static.o.
+The nr==0 return follows bind(), its header/owner/camera effects, the post-bind
+mutation check and existing accounting. Only gather/scratch/package geometry/
+constant/cache preparation is skipped. Empty replay records remain selected.
+
+Seven test methods pass in root and independent review, using complete production
+emit_pick/chunk_emit/chunk_restart, actual borrow members and real portal helpers:
+22 scenarios per compiled arm, mutation/stream combinations, bind/owner refusal,
+pre/post-bind/end mutation, scratch/gather failure, mixed empty/live order, partial
+output and restart. Empty completion stays Culled with no whole-source witness.
+The SCN_CENSUS empty increment is preserved.
+
+Intentional behavior change: unused geometry-resource refusal no longer aborts an
+empty pick. Nonempty resource failure and bind/owner/mutation failures retain their
+abort/refusal behavior. In the fresh64-corner indexed-empty fixture, one gather,
+one geometry borrow, one constant preparation, five package accesses and64 cache
+primes disappear while bind/header/owner/camera/end traces match. Do not multiply
+this saving by every empty pick; later records can share already prepared state.
+
+Four includes-elided whole-source token/logical-location profiles and extracted
+host object OFF identity pass (SHA256e96c964a17d837af836b7860dba3f6f5652023abd9f1069f56dda818356fc6bc).
+Run `python3 port/dreamcast/tools/tests/test_world_empty_prep01.py`.
+SH-4 object/link identity, target cost and real empty-first/all-empty incidence
+remain open. Binding elision and selector plane/gap changes are outside this spike.
+
+Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
