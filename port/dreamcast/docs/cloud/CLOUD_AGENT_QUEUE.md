@@ -65,7 +65,7 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 | Build | What | State |
 |---|---|---|
-| 29 / 31 / 32 | Work-removal spikes 2026-11-01 (actor, effect/grid, cloth, empty world) | WIP on codex/work-removal-spikes-20261101, base65fe3d1f. ACTOR_PADDING_FIRST01 implemented default0; initial d72663fa superseded by inactive-parent line correction. Host172245 plus15 logical-token profiles PASS; main Makefile wired. Prop/effect/grid/world slices under review; cloth worker active. Upstream44a073ca rr-qa-only change preserved. No target/runtime/identity acceptance or recipe change. [Activity and local handback](handbacks/work-removal-spikes-20261101.md). |
+| 29 / 31 / 32 | Work-removal spikes 2026-11-01 (actor, effect/grid, cloth, empty world) | A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_RECORD_PASS01 implemented;29 host cases/arm and selector OFF host identity PASS. B corrected source, D grid and E world host-ready for publication; cloth fixture active. Source on codex/work-removal-spikes-20261101; default0, no integration/enablement/acceptance claim. [Current handback](handbacks/work-removal-spikes-20261101.md). |
 | Systemic 2026-10-29 | Current architecture review and existing EF backlog | RE4-PLAN-SYNC-20261029-1202: user finish cloud work authorizes owner and assigned workers to finish remaining source/synthetic queue, superseding cloud-only ownership. Original cloud refs preserved; source, build, private runtime and console acceptance remain separate. No new Build37+. |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |

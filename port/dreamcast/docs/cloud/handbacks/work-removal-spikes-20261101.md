@@ -105,3 +105,33 @@ commit alone. A similar inactive-parent gap in the unpublished prop slice is bei
 repaired before its first publication.
 
 Integration was re-fetched at66260173711929c63386b552323fd1e2d5447c6a before this correction: upstream Test25 release docs/kit changes have no runtime or owned tracking overlap and are preserved by a topic merge. This spike does not modify those release decisions or enable any new control.
+
+
+## Slice C — immediate effect-record reuse
+
+Control `EFFECT_RECORD_PASS01=0`, scoped to esp_sub.o. EspEstSetSelect keeps
+the record it already decoded for Kind through its immediate EspSeqSet call.
+Raw/retaining records keep their original address. The single-line conditional
+change preserves source-line counts. No timer code, generator burst, ABI or
+archive lifecycle change is included.
+
+Root reapplied exact baseline source and reran the actual selector/adapter fixture:
+29 cases per arm;12 packed selections24 ->12 decodes and48 ->24 timer calls.
+Constructor entry is a boundary shim, not full constructor/RNG/STRICT execution.
+The retired-tag case tests adapter read after unbind, not retirement interleaved
+inside the selector. Enabled packed selections add a raw_reads increment for the
+predecoded-pointer branch; diagnostic classifications are intentionally changed.
+Tested record bytes, call arguments, return mapping and raw retaining addresses
+match. Independent review found no explicit yield in the immediate reuse interval.
+
+Includes-elided source OFF/PPC preprocessing and extracted host executable OFF
+identity pass (SHA25643960ebc27d81d2a9633079b4a42a60ccf76322c762fb2d015bff0b748753160).
+Make default/invalid controls pass; main Makefile wiring is included.
+Command: `python3 port/dreamcast/tests/test_work_removal_effect01.py`
+(the driver reads the pinned65fe baseline from Git).
+
+The larger espgen00 burst reuse is **deferred**. Mutable factory, virtual-constructor
+and pool-cleanup paths have no proven archive-current interval across children.
+No persistent cache or new generation mechanism was added to hide that gap.
+
+Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
