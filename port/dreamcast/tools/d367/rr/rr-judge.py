@@ -324,10 +324,12 @@ if build_ok and jobs:
                     vr.append('%s %d' % (n, o.count('no contiguous')))
                 if bad.search(o):
                     halts.append(n)
-                peak[n] = max([int(v) for v in re.findall(r'warp: alive (\d+)', o)] or [0])
+                # enemies only (em10..em3f classes in the alivelist 'cls*count@...' tokens; Ashley 0x01-0x0f, objects 0x40+ excluded)
+                peak[n] = max([sum(int(c) for k, c in re.findall(r'\b([0-9a-f]{2})\*(\d+)@', l) if 0x10 <= int(k, 16) < 0x40)
+                               for l in re.findall(r'warp: alivelist [^\n]*', o)] or [0])
             add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
             add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
-            add('Disc 2 cap 4 (peak alive)', max(list(peak.values()) or [0]) <= 4, ' '.join('%s=%d' % kv for kv in sorted(peak.items())))
+            add('Disc 2 cap 4 (peak enemies alive)', max(list(peak.values()) or [0]) <= 4, ' '.join('%s=%d' % kv for kv in sorted(peak.items())))
         for n, _, _, rc in jobs:
             if n == 'd2kos':
                 lg = rd(J / 'd2kos.log')
