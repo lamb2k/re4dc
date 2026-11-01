@@ -324,8 +324,8 @@ if build_ok and jobs:
                     vr.append('%s %d' % (n, o.count('no contiguous')))
                 if bad.search(o):
                     halts.append(n)
-                # enemies only (em10..em3f classes in the alivelist 'cls*count@...' tokens; Ashley 0x01-0x0f, objects 0x40+ excluded)
-                peak[n] = max([sum(int(c) for k, c in re.findall(r'\b([0-9a-f]{2})\*(\d+)@', l) if 0x10 <= int(k, 16) < 0x40)
+                # cap-rule classes only (Ganados + Novistadors em10..em2f in the alivelist 'cls*count@...' tokens; partners, em3x specials and objects excluded)
+                peak[n] = max([sum(int(c) for k, c in re.findall(r'\b([0-9a-f]{2})\*(\d+)@', l) if 0x10 <= int(k, 16) < 0x30)
                                for l in re.findall(r'warp: alivelist [^\n]*', o)] or [0])
             add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
             add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
@@ -355,7 +355,7 @@ if build_ok and jobs:
             nc = j.get('not_covered_errors') or {}
             add('Disc 2 GC-ASSET gate', bool(j.get('pass')), ('not covered: %s' % ('; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items())))
                 for r, c in sorted(nc.items())) or 'none') + ('' if j.get('pass') else ' | ' + ' / '.join(j.get('failures', [])[:3])))[:600],
-                knownrow=os.environ.get('RR_GCA_MODE', 'gate') == 'report')
+                knownrow=os.environ.get('RR_D2_GCA_MODE', os.environ.get('RR_GCA_MODE', 'gate')) == 'report')   # RR_D2_GCA_MODE=report: Disc 2 only
     # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
     sg = EVU / 'siege-r100' / 'run-output.txt'
     if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
