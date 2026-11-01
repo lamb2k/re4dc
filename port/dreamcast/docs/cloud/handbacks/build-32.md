@@ -1921,3 +1921,8 @@ Independent review caught an inactive ACTOR_REPLAY_SKIN parent line shift in ini
 ### Cloud 2026-11-01: B PROP_GATE_EARLY01
 
 A padding plus27337b42 correction, B PROP_GATE_EARLY01 and C EFFECT_RECORD_PASS01 implemented/host PASS. B has665 cases in each PROP1/2 and33 inactive-parent line profiles. Grid/world host-ready; cloth active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: F CLOTH_NORMALS_DEFER01
+
+All six bounded spikes A-F implemented/published with public host gates: ACTOR_PADDING_FIRST01 (requires27337b42 correction), PROP_GATE_EARLY01, EFFECT_RECORD_PASS01, ESP1B_EDGE_REUSE01, WORLD_EMPTY_PREP01, CLOTH_NORMALS_DEFER01. Cloth46752 assertions in each spring0/1/2 and24 OFF source profiles/file pass;64-byte state. Target/full OFF/runtime/net cost/console pending; no recipe promotion. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.

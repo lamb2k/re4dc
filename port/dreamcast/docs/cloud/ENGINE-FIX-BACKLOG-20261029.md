@@ -703,3 +703,8 @@ A padding, B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01 and D ESP1B_EDGE_REUSE01 
 ### Cloud 2026-11-01: E WORLD_EMPTY_PREP01
 
 A actor padding (corrected), B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01, D ESP1B_EDGE_REUSE01 and E WORLD_EMPTY_PREP01 implemented/published with host gates. All default0; cloth producer/lifecycle fixture still active. Full target/runtime/cost/console gates open. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: F CLOTH_NORMALS_DEFER01
+
+All six bounded spikes A-F implemented/published with public host gates: ACTOR_PADDING_FIRST01 (requires27337b42 correction), PROP_GATE_EARLY01, EFFECT_RECORD_PASS01, ESP1B_EDGE_REUSE01, WORLD_EMPTY_PREP01, CLOTH_NORMALS_DEFER01. Cloth46752 assertions in each spring0/1/2 and24 OFF source profiles/file pass;64-byte state. Target/full OFF/runtime/net cost/console pending; no recipe promotion. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.

@@ -223,3 +223,54 @@ SH-4 object/link identity, target cost and real empty-first/all-empty incidence
 remain open. Binding elision and selector plane/gap changes are outside this spike.
 
 Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
+
+
+## Slice F — deferred cloth normals
+
+Control `CLOTH_NORMALS_DEFER01=0`, requires CLOTH_NATIVE=1 and
+NATIVE_DRAW_OUTCOMES=1; only cloth.o and esp4e.o receive the flag. Main Makefile
+wiring is included. No Cloth ABI, normal allocation or geometry cache changes.
+
+Only Esp4e's original calcNormal site marks pending. The unchanged normal routine
+runs before an actual GX fallback consumes normals. Set's initialized{0,0,1}
+normals and120 warmup moves remain untouched until the original update site occurs.
+Native submitted/queued/partial-abort results never permit new GX replay.
+
+Eight revision/pending records occupy exactly64 bytes. Init/Set/Destroy reset and
+advance the slot. The draw snapshots revision around the native attempt; a changed
+slot refuses stale fallback and preserves newer pending work. Revision is checked
+again after calculation, before clearing pending or replay. Off-pool objects stay
+eager; exhaustion permanently restores eager calculation for that slot.
+
+Root applied the six-file patch to blob-verified baseline and reran:
+`python3 port/dreamcast/tests/test_cloth_normals_defer01.py`.
+The driver extracts actual spring/move/normal routines, both Esp4e move arms,
+Cloth lifecycle and full clothTrans, with host engine/math/GX/native boundaries.
+46752 assertions in each spring mode0/1/2 pass; these include per-normal checks,
+not46752 independent scenes. Eight grid/pin stress profiles,28 real result/
+publication combinations, first fallback, native-only updates then fallback,
+repeated fallback, all8 slots, reuse/retirement/update callbacks, off-pool and
+revision exhaustion pass. Host positions/speeds/phase/material/matrix/RNG traces
+and consumed fallback normal bytes match the eager control.
+
+Independent review fixed a native1/outcomes0 disabled line gap before publication.
+24 includes-elided token/diagnostic/every-active-line profiles per source pass
+against the frozen baseline.19 make/control/isolation profiles pass. ASan/UBSan
+pass all spring modes; LSan is disabled for restricted /proc inspection, with
+separate fixture allocation accounting. Whole Makefile resolution with empty
+SDK rules reports all six new controls0; this is wiring evidence, not a target build.
+
+**Enabled differences and limits:** zero-normal diagnostics are delayed until
+fallback and can be omitted on native-only frames. The actual VECNormalize macro
+and same-allocation diagnostic update are tested. The revision recheck preserves
+newer pending work and refuses stale replay; it does not prove safety if a grid
+were freed inside the unchanged normal loop. No such ordinary path was demonstrated
+by the source scheduler/logger audit, and no logger/lifetime architecture change
+is claimed. Host native outcomes do not qualify actual native admission or texture
+publication, especially for oversized stress grids.
+
+Measure tiny2x2 sheets and frequent-fallback scenes separately:64 bytes and update/
+draw bookkeeping can cost more than the saved normalization. Actual SH-4 numeric/
+FPSCR/exception behavior and complete memory/stack/net frame cost remain local gates.
+
+Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
