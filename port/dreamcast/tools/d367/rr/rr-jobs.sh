@@ -112,7 +112,7 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
 fi
 [ "${RR_DISC2:-0}" != 1 ] || disc2_jobs
 if [ "$TIER" = quick ]; then
-  job 2 kos"bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fp${RR_PFX:-rr}${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
+  job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fp${RR_PFX:-rr}${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"
 else
   for sc in fight call door leave100 leave103; do
