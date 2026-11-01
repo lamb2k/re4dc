@@ -24,9 +24,11 @@ R=$W/qa
 export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
 export PKG_SRC=$RE4DC_PAYLOAD_ROOT/tree
 rm -rf "${R:?}"; mkdir -p "$R/fix" "$R/logs" "$R/qa"
+# QA_LINK only when the built commit has it (SPEED-GPU builds the live release, which may predate link28)
+QL=QA_LINK=1; git -C "$TR" cat-file -e HEAD:port/dreamcast/game/qalink.mk 2>/dev/null || QL=
 if [ ! -s "$O/re4dc-game.elf" ]; then
   K=$W/kq T=$TR LP=$LQ CH2="$CH2" \
-    XON="QA_MENU=1 QA_LINK=1 WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8 ${RR_QA_XON:-}" \
+    XON="QA_MENU=1 $QL WARP_AFTER_RESET=1 GAME_TICK_LOG=60 PHASE_METER=1 DISC_READ_METER=1 QA_TEST=$TN QA_SRC=$S8 ${RR_QA_XON:-}" \
     bash "$T/ch2/ch2-build.sh" rW 2>&1 | grep '^rc=' | cut -c1-200 | tee "$R/logs/build.txt"
   grep -q '^rc=0 ' "$R/logs/build.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "QA build failed"; exit 1; }
 fi

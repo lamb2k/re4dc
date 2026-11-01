@@ -9,6 +9,7 @@ X=${1:?label}; SC=${2:?scene}; W=${3:?work}; EV=${4:?evidence}
 WIN=${5:-700:759}; ST=${6:-3}
 HERE=$(cd "$(dirname "$0")" && pwd)
 D367=$(dirname "$HERE"); D367=$(dirname "$D367")
+[ -f "$D367/test11/t11-fix.py" ] || D367=${RR_TREE:-/root/work/lanes/rr}/port/dreamcast/tools/d367   # installed copy
 TREE=$(cd "$D367/../../../.." && pwd)
 HW="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1"
 B=/root/probe/lanes/route/out-${X}rW

@@ -10,7 +10,8 @@
 set -euo pipefail
 G=${1:?gdemu}; SY=${2:?syms}; EV=${3:?evidence}; X=${4:?label}; SC=${5:?scene}
 HERE=$(cd "$(dirname "$0")" && pwd)
-FP=$(cd "$HERE/../../fullplay" && pwd)/fp_run.py
+FP=$HERE/../../fullplay/fp_run.py
+[ -f "$FP" ] || FP=${RR_TREE:-/root/work/lanes/rr}/port/dreamcast/tools/d367/fullplay/fp_run.py   # installed copy
 EXE=${SPEED_GPU_EXE:-C:\\Flycast-Evidence\\re4-dreamcast\\perf-cache27-20261027\\bin\\flycast-console-cstat.exe}
 mkdir -p "$EV/runs" "$EV/stats" "$EV/states"
 EW=$(cygpath -w "$EV")
