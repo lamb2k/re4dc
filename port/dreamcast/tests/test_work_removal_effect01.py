@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import shutil
 import struct
@@ -59,9 +60,17 @@ def make_checks(tmp):
     assert make()=='unchanged'
     assert make('EFFECT_RECORD_PASS01=0','ESP1B_EDGE_REUSE01=0')=='unchanged'
     assert make('EFFECT_RECORD_PASS01=1')=='unchanged -DRE4DC_EFFECT_RECORD_PASS01=1'
-    for knob in ('EFFECT_RECORD_PASS01',):
+    deps=['ESP1B_GRID03=1','EFFECT_UV12=1','NATIVE_DRAW_OUTCOMES=1']
+    assert make('ESP1B_EDGE_REUSE01=1',*deps)=='unchanged -DRE4DC_ESP1B_EDGE_REUSE01=1'
+    for knob in ('EFFECT_RECORD_PASS01','ESP1B_EDGE_REUSE01'):
         for bad in ('','2','-1','word','0 1','1 '):make(knob+'='+bad,ok=False)
-    return {'default_flags_unchanged':True,'invalid_values_rejected':True}
+    for dep in deps:
+        make('ESP1B_EDGE_REUSE01=1',*[d for d in deps if d!=dep],ok=False)
+    # Each prerequisite must be exactly one; concatenating values could admit
+    # ambiguous assignments such as GRID=11, UV=empty, OUTCOMES=1.
+    for values in (('11','','1'),('','11','1'),('1','','11'),('1','1','1 0')):
+        make('ESP1B_EDGE_REUSE01=1',*[d.split('=')[0]+'='+v for d,v in zip(deps,values)],ok=False)
+    return {'default_flags_unchanged':True,'invalid_values_and_missing_dependencies_rejected':True}
 
 def archive_fixture(tmp):
     spec=importlib.util.spec_from_file_location('effect01_codec',ROOT/'port/dreamcast/tools/compact_effect_records.py')
@@ -102,6 +111,38 @@ def select_checks(tmp,old_source,new_source):
     results['disabled_host_elf_sha256']=hashlib.sha256(executables['baseline']).hexdigest()
     return results
 
+def grid_checks(tmp,old_source,new_source,old_grid,new_grid):
+    flags=['-DRE4DC_GAME','-DRE4DC_FX_STRIP21=1','-DRE4DC_NATIVE_DRAW_OUTCOMES=1']
+    assert pp(old_grid,flags)==pp(new_grid,flags)
+    assert pp(old_grid,flags)==pp(new_grid,flags+['-DRE4DC_ESP1B_EDGE_REUSE01=0'])
+    assert pp(old_grid,flags+['-D__PPC__'])==pp(new_grid,flags+['-D__PPC__','-DRE4DC_ESP1B_EDGE_REUSE01=1'])
+    work=struct_definition(new_source,'Esp1bSpWork')+';'
+    getpos=definition(new_source,'void GetPosXY(').replace('void GetPosXY(', 'void SourceGetPosXY01(',1)
+    template=(HERE/'work_removal_effect01_grid.cpp.in').read_text().replace('@WORK_TYPE@',work).replace('@GETPOS_FUNCTION@',getpos)
+    (tmp/'grid-reference01.inc').write_text(old_grid)
+    file=tmp/'grid.cpp';file.write_text(template);exe=tmp/'grid'
+    executables={};results={}
+    for label,source,flag in [('baseline',old_grid,None),('implicit0',new_grid,None),('explicit0',new_grid,0),('enabled',new_grid,1)]:
+        (tmp/'grid-candidate01.inc').write_text(source)
+        control=[] if flag is None else ['-DRE4DC_ESP1B_EDGE_REUSE01='+str(flag)]
+        run(['g++','-std=c++20','-O2','-ffp-contract=off','-ffile-prefix-map='+str(tmp)+'=/work-removal-effect01',*flags,*control,
+             '-I'+str(tmp),'-I'+str(INC),str(file),'-o',str(exe)])
+        executables[label]=exe.read_bytes();results[label]=json.loads(run([str(exe),str(int(flag==1))]))
+    assert executables['baseline']==executables['implicit0']==executables['explicit0']
+    results['disabled_host_elf_sha256']=hashlib.sha256(executables['baseline']).hexdigest()
+    # The actual modified function is exercised once under ASan/UBSan for the
+    # same cases, addressing the new in-place corner copies and boundary exits.
+    sanitized=tmp/'grid-sanitized'
+    run(['g++','-std=c++20','-O1','-ffp-contract=off','-fsanitize=address,undefined','-fno-omit-frame-pointer','-fno-pie','-no-pie',
+         *flags,'-DRE4DC_ESP1B_EDGE_REUSE01=1','-I'+str(tmp),'-I'+str(INC),str(file),'-o',str(sanitized)])
+    # LeakSanitizer cannot inspect /proc task state in the managed sandbox.
+    # This check targets access/undefined behavior; no production allocation
+    # was added. Keep ASan/UBSan on and explicitly omit the leak detector.
+    env=dict(os.environ,ASAN_OPTIONS=os.environ.get('ASAN_OPTIONS','')+':detect_leaks=0')
+    assert json.loads(run([str(sanitized),'1'],env=env))==results['enabled']
+    results['asan_ubsan']='pass; leak detection disabled (restricted /proc)'
+    return results
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--baseline-root',type=Path)
     parser.add_argument('--output',type=Path);args=parser.parse_args()
@@ -112,10 +153,13 @@ def main():
         assert pp(new,flags+['-DRE4DC_EFFECT_RECORD_PASS01=0','-DRE4DC_ESP1B_EDGE_REUSE01=0'])==expected
     ppc=['-DRE4DC_GAME','-D__PPC__']
     assert pp(old,ppc)==pp(new,ppc+['-DRE4DC_EFFECT_RECORD_PASS01=1'])
+    old_grid=baseline('port/dreamcast/game/platform/include/esp1b_grid03.inc',args.baseline_root)
+    new_grid=(INC/'esp1b_grid03.inc').read_text()
     with tempfile.TemporaryDirectory(prefix='work-removal-effect01-') as directory:
         tmp=Path(directory)
         report={'source_base':BASE,'evidence':'host actual-source only; target/runtime/console pending',
-                'full_source_off_ppc_preprocessing':'identical','make':make_checks(tmp),'select':select_checks(tmp,old,new)}
+                'full_source_off_ppc_preprocessing':'identical','make':make_checks(tmp),'select':select_checks(tmp,old,new),
+                'grid':grid_checks(tmp,old,new,old_grid,new_grid)}
     if args.output:args.output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 

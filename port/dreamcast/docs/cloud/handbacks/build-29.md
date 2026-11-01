@@ -2027,3 +2027,8 @@ Base `65fe3d1f96ab269c136053725850101be9d3e692`; branch `codex/work-removal-spik
 ### Cloud 2026-11-01: C EFFECT_RECORD_PASS01
 
 A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_RECORD_PASS01 implemented;29 host cases/arm and selector OFF host identity PASS. B corrected source, D grid and E world host-ready for publication; cloth fixture active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: D ESP1B_EDGE_REUSE01
+
+A padding, B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01 and D ESP1B_EDGE_REUSE01 implemented/host PASS. Grid1082 cases/5728648 vertex records per arm, zero differences; default0. World host-ready; cloth active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.

@@ -166,3 +166,30 @@ Run `python3 port/dreamcast/tests/test_work_removal_actor01.py`.
 Target programme/overlay/allocated-section OFF identity remains required.
 
 Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
+
+
+## Slice D — Esp1b adjacent-corner reuse
+
+Control `ESP1B_EDGE_REUSE01=0`; requires ESP1B_GRID03=1, EFFECT_UV12=1 and
+NATIVE_DRAW_OUTCOMES=1 individually. Root strengthened the new make guard to reject
+ambiguous concatenated dependency values. Flag scope is esp_sub.o only.
+
+At j>0, old corner1 ->0 and2 ->3 are copied before either source slot is overwritten.
+Only corners1 and2 are evaluated; j=0 recomputes all four. The existing quad holds
+the values: no row buffer, persistent pointer, allocation or material batching.
+Repeated float addition, diagonals, cell order and terminal failures remain intact.
+
+Root and an independent reviewer ran the actual producer/interpolation/UV fixture:
+1082 cases,5728648 quad vertex records per arm, zero byte differences. Refusal,
+partial abort, overflow and live-input mutation after the initial capture are
+included. Complete d16 grids use1024 ->544 corner evaluations; d64 use16384 ->8320.
+These counts do not establish real-grid frequency, target instruction cost or FPS.
+
+Includes-elided source OFF/PPC checks and host ELF identity pass (grid
+SHA2569709a30eb835dcce0620624cd50d741eb69c0d9f8e736243fbef3b5e5f3d3e9c).
+ASan/UBSan pass; leak detection is disabled because sandbox /proc inspection is
+unavailable, and no production allocation is added. Matrix/emission boundaries are
+host shims: real FIFO/admission and stable SH-4 numeric/FPSCR behavior across emitter
+callbacks remain target gates. Run the combined effect test driver from Slice C.
+
+Integration re-fetched before this slice: `cff417dde421e4919825c740eac7f3e3be8a7270`. All new controls remain default0; target/full-image OFF identity, runtime/STRICT/output/look, net cost and console gates remain pending.
