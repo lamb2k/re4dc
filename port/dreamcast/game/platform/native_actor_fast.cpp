@@ -6644,6 +6644,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #line 6633
     }
 #endif
+#line 6635
     if (!part || !qualifies(*part
 #if RE4DC_NATIVE_FE_CONTINUATION
         ,explicit_frame!=nullptr

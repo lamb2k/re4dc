@@ -678,3 +678,8 @@ are pending. No new build number, recipe enablement, private publication or emai
 ### 2026-11-01 bounded slice A
 
 ACTOR_PADDING_FIRST01 is implemented default0 on the spike branch, with main Makefile wiring and172245 actual-detector host cases passing. Existing range/all-zero and disabled diagnostic contracts are retained; measured synthetic byte visits fall to1 for a nonzero first byte. Integration44a073ca was fetched and preserved (rr-qa-only change). This does not close EF04/14 or establish target binary identity or game cost; the existing private/runtime/console holds remain. Full details: [work-removal handback](handbacks/work-removal-spikes-20261101.md#slice-a--actor-padding-first-byte-implemented-public-host-gates-pass).
+
+
+### 2026-11-01 actor OFF-source correction
+
+Independent review caught an inactive ACTOR_REPLAY_SKIN parent line shift in initial d72663fa. The corrective slice restores the outer line and passes15 active-token logical-location profiles plus172245 production cases. The initial A commit alone is superseded; use its correction/final topic tip. Full target OFF identity remains required and the judge is unchanged. See [correction evidence](handbacks/work-removal-spikes-20261101.md#slice-a-corrective-review--disabled-parent-features).

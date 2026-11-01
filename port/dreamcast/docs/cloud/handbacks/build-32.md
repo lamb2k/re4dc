@@ -1911,3 +1911,8 @@ Base `65fe3d1f96ab269c136053725850101be9d3e692`; branch `codex/work-removal-spik
 ### Cloud 2026-11-01: ACTOR_PADDING_FIRST01 source spike
 
 Default0 first-byte padding prefilter and main Makefile wiring implemented. Root reran172245 actual-production-fragment cases with matching results/side effects; zero-prefix lists retain full proof. Undefined/explicit0/PPC includes-elided TU token and diagnostic-line identity pass. Nonzero source reads32/64/128/256 ->1 are synthetic work counts, not milliseconds. Base65fe runtime unchanged at fetched44a073ca; rr-qa update preserved on topic. [Bounded handback](work-removal-spikes-20261101.md). Target/full-image OFF, runtime/STRICT, memory/cost and console remain pending; no recipe enablement or acceptance.
+
+
+### 2026-11-01 actor OFF-source correction
+
+Independent review caught an inactive ACTOR_REPLAY_SKIN parent line shift in initial d72663fa. The corrective slice restores the outer line and passes15 active-token logical-location profiles plus172245 production cases. The initial A commit alone is superseded; use its correction/final topic tip. Full target OFF identity remains required and the judge is unchanged. See [correction evidence](work-removal-spikes-20261101.md#slice-a-corrective-review--disabled-parent-features).

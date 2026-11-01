@@ -85,3 +85,23 @@ its sole rr-qa.sh padding fix has no runtime overlap. It is preserved in topic m
 `e68bf9648698c45a074748d7f9ef869490e46946`, retaining already published history.
 Target programme/allocated/overlay OFF identity, target cost, actual incidence and
 runtime/console acceptance remain pending. No recipe enablement.
+
+
+## Slice A corrective review — disabled parent features
+
+The initially pushed A commit `d72663fa4998d1c8584c4cf2b06a900cb1ad6518` is
+**superseded as a standalone deliverable**. Independent review found that its source
+line restoration was inside ACTOR_REPLAY_SKIN: when that parent is disabled, later
+logical source lines shifted by12. The first host gate covered the enabled parent
+and therefore missed this configuration. No target judge was changed or waived.
+
+The corrective slice restores the old line immediately outside the parent block and
+extends the test to15 profiles (minimal, FAST0/1, REPLAY0/1, absent/zero, PPC explicit1).
+Every active token's logical filename/line and a downstream __LINE__ sentinel match
+the pre-spike source. Root reran these gates and172245 actual detector cases: PASS.
+Target programme/allocated/overlay OFF identity remains pending. Take A together
+with this correction, or use the final branch tip; do not cherry-pick the initial A
+commit alone. A similar inactive-parent gap in the unpublished prop slice is being
+repaired before its first publication.
+
+Integration was re-fetched at66260173711929c63386b552323fd1e2d5447c6a before this correction: upstream Test25 release docs/kit changes have no runtime or owned tracking overlap and are preserved by a topic merge. This spike does not modify those release decisions or enable any new control.
