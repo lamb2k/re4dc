@@ -541,6 +541,8 @@ def main():
     if out.exists() and any(out.iterdir()):
         die('%s is not empty' % out)
     blobs = program_files(a.program, a.objcopy)
+    if a.disc == 2:   # Disc 2 carries no village rooms: discsets/mkdisc2.py drops the stage-1 overlays
+        blobs = {k: v for k, v in blobs.items() if not (k.startswith('/dc/st1_') and k.endswith('.ovl'))}
     for r in a.replace:
         k, v = r.split('=', 1)
         blobs['/' + k.strip('/').lower()] = Path(v).read_bytes()
